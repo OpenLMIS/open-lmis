@@ -1,7 +1,9 @@
 package org.openlmis.report;
 
 import lombok.*;
+import org.openlmis.core.domain.Configuration;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.service.ConfigurationService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.report.exception.ReportException;
 import org.openlmis.report.exporter.ReportExporter;
@@ -36,6 +38,9 @@ public class ReportManager {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ConfigurationService configurationService;
 
     public ReportManager(ReportAccessAuthorizer reportAccessAuthorizer, ReportExporter reportExporter, List<Report> reports) {
 
@@ -110,7 +115,9 @@ public class ReportManager {
         params.put(Constants.REPORT_TITLE, report.getTitle());
         params.put(Constants.REPORT_VERSION, report.getVersion());
         params.put(Constants.REPORT_OUTPUT_OPTION, outputOption.toString());
-        params.put(Constants.LOGO,this.getClass().getClassLoader().getResourceAsStream("logo.png"));
+        Configuration configuration =  configurationService.getByKey(Constants.LOGO_FILE_NAME_KEY);
+        configurationService.getByKey(Constants.LOGO_FILE_NAME_KEY).getValue();
+        params.put(Constants.LOGO,this.getClass().getClassLoader().getResourceAsStream(configuration != null ? configuration.getValue() : "logo.png"));
         params.put(Constants.GENERATED_BY, generatedBy);
 
         return params;
