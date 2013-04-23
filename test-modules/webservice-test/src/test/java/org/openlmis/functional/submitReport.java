@@ -37,7 +37,7 @@ public class submitReport extends TestCaseHelper {
     public void tearDown() {
         driver.close();
     }
-/*
+
     @Test(groups = {"webservice"})
     public void testSubmitReportInvalidFacility() throws Exception {
         setupData();
@@ -173,7 +173,7 @@ public class submitReport extends TestCaseHelper {
 
         assertEquals(response, "{\"error\":\"Please provide a valid username\"}");
     }
-*/
+
     @Test(groups = {"webservice"})
     public void testSubmitAndApproveReportValidRnR() throws Exception {
         setupData();
