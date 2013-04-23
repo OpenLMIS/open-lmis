@@ -128,8 +128,14 @@ public class RequisitionService {
 
   public OpenLmisMessage submit(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
+    if (savedRnr.getStatus() != INITIATED) {
+      throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
+    }
 
-    checkPermission(rnr, savedRnr, CREATE_REQUISITION);
+    if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, CREATE_REQUISITION))
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+
+
     savedRnr.setStatus(SUBMITTED);
     savedRnr.setSubmittedDate(new Date());
 
@@ -147,7 +153,14 @@ public class RequisitionService {
 
   public OpenLmisMessage authorize(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
-    checkPermission(rnr, savedRnr, AUTHORIZE_REQUISITION);
+
+    if (savedRnr.getStatus() != SUBMITTED) {
+      throw new DataException(RNR_AUTHORIZATION_ERROR);
+    }
+
+    if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, AUTHORIZE_REQUISITION))
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+
     savedRnr.setStatus(AUTHORIZED);
     savedRnr.setSupervisoryNodeId(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram()).getId());
 
@@ -165,7 +178,12 @@ public class RequisitionService {
     requisition.validateForApproval();
     Rnr savedRnr = getFullRequisitionById(requisition.getId());
 
-    checkPermission(requisition, savedRnr, APPROVE_REQUISITION);
+    if (!requisitionPermissionService.hasPermission(requisition.getModifiedBy(), savedRnr, APPROVE_REQUISITION))
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+
+    if (savedRnr.getStatus() != AUTHORIZED && savedRnr.getStatus() != IN_APPROVAL) {
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+    }
 
     savedRnr.copyApproverEditableFields(requisition);
 
@@ -204,30 +222,6 @@ public class RequisitionService {
     fillFacilityPeriodProgram(asList(requisition));
     fillPreviousRequisitionsForAmc(requisition);
     return requisition;
-  }
-
-  private void checkPermission(Rnr rnr, Rnr savedRnr, Right right) {
-
-    if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, right))
-      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
-
-    switch (right) {
-      case CREATE_REQUISITION:
-        if (savedRnr.getStatus() != INITIATED) {
-          throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
-        }
-        break;
-      case AUTHORIZE_REQUISITION:
-        if (savedRnr.getStatus() != SUBMITTED) {
-          throw new DataException(RNR_AUTHORIZATION_ERROR);
-        }
-        break;
-      case APPROVE_REQUISITION:
-        if (savedRnr.getStatus() != AUTHORIZED && savedRnr.getStatus() != IN_APPROVAL) {
-          throw new DataException(RNR_OPERATION_UNAUTHORIZED);
-        }
-        break;
-    }
   }
 
   private void fillSupplyingFacility(Rnr... requisitions) {

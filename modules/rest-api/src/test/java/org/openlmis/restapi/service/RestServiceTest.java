@@ -78,7 +78,7 @@ public class RestServiceTest {
     whenNew(User.class).withNoArguments().thenReturn(user);
     when(userService.getByUsernameAndVendorId(user)).thenReturn(user);
     when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId()))
-      .thenReturn(requisition);
+        .thenReturn(requisition);
     mockStatic(Base64.class);
     encodedCredentialsBytes = encodedCredentials.getBytes();
   }
@@ -149,4 +149,20 @@ public class RestServiceTest {
     verify(requisitionService).approve(requisitionFromReport);
     verify(orderService).convertToOrder(asList(requisitionFromReport), user.getId());
   }
+
+  @Test
+  public void shouldValidateUserWithVendorIdAndThrowErrorIfUsernameDoesNotMatchVendorWhileApproving() throws Exception {
+    List<RnrLineItem> products = new ArrayList<>();
+    products.add(new RnrLineItem());
+    report.setProducts(products);
+    whenNew(User.class).withNoArguments().thenReturn(user);
+    when(vendorService.getByName(report.getVendor().getName())).thenReturn(report.getVendor());
+    when(userService.getByUsernameAndVendorId(user)).thenReturn(null);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(USER_USERNAME_INCORRECT);
+
+    service.approve(report);
+  }
+
 }

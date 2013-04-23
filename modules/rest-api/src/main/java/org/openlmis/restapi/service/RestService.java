@@ -75,6 +75,7 @@ public class RestService {
 
   @Transactional
   public Rnr approve(Report report) {
+    fillVendor(report);
     User user = getValidatedUser(report);
     Rnr requisition = report.getRequisition();
     requisition.setModifiedBy(user.getModifiedBy());
