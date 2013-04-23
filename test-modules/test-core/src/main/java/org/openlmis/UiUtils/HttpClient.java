@@ -30,6 +30,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.util.EntityUtils;
 
 import static org.apache.http.auth.AuthScope.ANY_HOST;
 import static org.apache.http.client.protocol.ClientContext.AUTH_CACHE;
@@ -82,6 +83,7 @@ public class HttpClient {
                     entity = response.getEntity();
                     BufferedReader rd = new BufferedReader(new InputStreamReader(entity.getContent()));
                     responseBody = rd.readLine();
+                    EntityUtils.consume(entity);
                     break;
 
             }

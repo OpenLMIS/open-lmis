@@ -213,7 +213,7 @@ public class submitReport extends TestCaseHelper {
     public void setupDataApprover() throws IOException, SQLException {
         List<String> rightsList = new ArrayList<String>();
         rightsList.add("APPROVE_REQUISITION");
-        rightsList.add("VIEW_REQUISITION");
+        //rightsList.add("VIEW_REQUISITION");
         rightsList.add("CONVERT_TO_ORDER");
         setupTestDataToApproveRnR("commTrack1", "701", "commTrack", rightsList);
     }
