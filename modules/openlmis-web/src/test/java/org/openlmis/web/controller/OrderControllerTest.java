@@ -77,10 +77,10 @@ public class OrderControllerTest {
   public void shouldDownloadOrderCsv() {
     Integer orderId = 1;
     Order expectedOrder = new Order();
-    when(orderService.getById(orderId)).thenReturn(expectedOrder);
+    when(orderService.getOrderForDownload(orderId)).thenReturn(expectedOrder);
     ModelAndView modelAndView = orderController.downloadOrderCsv(orderId);
     Order order = (Order) modelAndView.getModel().get(ORDER);
     assertThat(order, is(expectedOrder));
-    verify(orderService).getById(orderId);
+    verify(orderService).getOrderForDownload(orderId);
   }
 }

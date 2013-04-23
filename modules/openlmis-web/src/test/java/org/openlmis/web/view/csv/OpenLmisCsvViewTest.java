@@ -40,7 +40,6 @@ public class OpenLmisCsvViewTest {
     RnrLineItem rnrLineItem = mock(RnrLineItem.class);
     rnrLineItems.add(rnrLineItem);
     Facility facility = mock(Facility.class);
-    Date today = new Date();
 
     when(response.getWriter()).thenReturn(writer);
     when(rnr.getFullSupplyLineItems()).thenReturn(rnrLineItems);
@@ -48,21 +47,23 @@ public class OpenLmisCsvViewTest {
     when(rnr.getFacility()).thenReturn(facility);
     when(order.getRnr()).thenReturn(rnr);
     whenNew(BufferedWriter.class).withArguments(writer).thenReturn(bufferedWriter);
-    whenNew(Date.class).withNoArguments().thenReturn(today);
-    model.put(OrderController.ORDER, order);
-    String fileName = "O" + today + ".csv";
+    mockStatic(System.class);
+    long currentTimeMillies = 100l;
+    when(System.currentTimeMillis()).thenReturn(currentTimeMillies);
+     model.put(OrderController.ORDER, order);
+    String fileName = "O" + currentTimeMillies + ".csv";
 
     OpenLmisCsvView csvView = new OpenLmisCsvView();
 
     csvView.renderMergedOutputModel(model, request, response);
 
     verify(response).setHeader("Content-Disposition", "attachment; filename=" + fileName);
-    verify(rnrLineItem, times(2)).getProductCode();
     verify(rnrLineItem, times(2)).getPacksToShip();
+    verify(rnrLineItem, times(2)).getProductCode();
     verify(rnrLineItem, times(2)).getPackSize();
     verify(facility, times(2)).getCode();
-    verify(bufferedWriter, times(2)).newLine();
-    verify(bufferedWriter, times(2)).write(anyString());
+    verify(bufferedWriter, times(3)).newLine();
+    verify(bufferedWriter, times(3)).write(anyString());
     verify(rnr, times(2)).getId();
   }
 

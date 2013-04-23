@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,11 +45,11 @@ public class OrderController extends BaseController {
     return OpenLmisResponse.response(ORDERS, OrderDTO.getOrdersForView(orderService.getOrders()));
   }
 
-  @RequestMapping(value = "/download/orders", method = GET)
+  @RequestMapping(value = "/orders/{id}/download.csv", method = GET, headers = ACCEPT_CSV)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
-  public ModelAndView downloadOrderCsv(Integer orderId) {
-    ModelAndView modelAndView = new ModelAndView();
-    Order order = orderService.getById(orderId);
+  public ModelAndView downloadOrderCsv(@PathVariable Integer id) {
+    ModelAndView modelAndView = new ModelAndView("orderCSV");
+    Order order = orderService.getOrderForDownload(id);
     modelAndView.addObject(ORDER, order);
     return modelAndView;
   }

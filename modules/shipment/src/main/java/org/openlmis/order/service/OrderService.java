@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,9 +58,28 @@ public class OrderService {
     orderRepository.updateFulfilledAndShipmentIdForOrder(orders, fulfilled, shipmentId);
   }
 
-  public Order getById(Integer id) {
+  public Order getOrderForDownload(Integer id) {
     Order order = orderRepository.getById(id);
-    order.setRnr(requisitionService.getFullRequisitionById(order.getRnr().getId()));
+    Rnr requisition = requisitionService.getFullRequisitionById(order.getRnr().getId());
+    removeUnorderedProducts(requisition);
+    order.setRnr(requisition);
     return order;
+  }
+
+  private void removeUnorderedProducts(Rnr requisition) {
+    List<RnrLineItem> fullSupplyLineItems = requisition.getFullSupplyLineItems();
+    requisition.setFullSupplyLineItems(getLineItemsForOrder(fullSupplyLineItems));
+    List<RnrLineItem> nonFullSupplyLineItems = requisition.getNonFullSupplyLineItems();
+    requisition.setNonFullSupplyLineItems(getLineItemsForOrder(nonFullSupplyLineItems));
+  }
+
+  private List<RnrLineItem> getLineItemsForOrder(List<RnrLineItem> rnrLineItems) {
+    List<RnrLineItem> lineItemsForOrder = new ArrayList<>();
+    for(RnrLineItem rnrLineItem : rnrLineItems) {
+      if(rnrLineItem.getPacksToShip() > 0){
+        lineItemsForOrder.add(rnrLineItem);
+      }
+    }
+    return lineItemsForOrder;
   }
 }

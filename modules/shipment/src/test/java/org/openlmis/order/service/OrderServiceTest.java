@@ -14,6 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.service.RequisitionService;
 
 import java.util.ArrayList;
@@ -104,17 +105,30 @@ public class OrderServiceTest {
   }
 
   @Test
-  public void shouldGetOrderById() {
+  public void shouldGetOrderWithoutUnorderedProducts() {
     Integer orderId = 1;
     Integer rnrId = 1;
     Order order = new Order();
+
     Rnr rnr = new Rnr();
     rnr.setId(rnrId);
+    RnrLineItem rnrLineItem = new RnrLineItem();
+    List<RnrLineItem> lineItems = new ArrayList<>();
+    rnrLineItem.setPacksToShip(0);
+    lineItems.add(rnrLineItem);
+    rnr.setFullSupplyLineItems(lineItems);
+    rnr.setNonFullSupplyLineItems(lineItems);
     order.setRnr(rnr);
+
     when(orderRepository.getById(orderId)).thenReturn(order);
-    Order expectedOrder = orderService.getById(orderId);
+    when(requisitionService.getFullRequisitionById(rnr.getId())).thenReturn(rnr);
+
+    Order expectedOrder = orderService.getOrderForDownload(orderId);
+
     verify(orderRepository).getById(orderId);
     verify(requisitionService).getFullRequisitionById(rnr.getId());
+    assertThat(order.getRnr().getFullSupplyLineItems().size(), is(0));
+    assertThat(order.getRnr().getNonFullSupplyLineItems().size(), is(0));
     assertThat(expectedOrder, is(order));
   }
 }

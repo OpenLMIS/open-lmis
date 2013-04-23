@@ -15,4 +15,8 @@
         class="org.openlmis.web.view.pdf.OpenLmisPdfView">
   </bean>
 
+    <bean id="orderCSV"
+          class="org.openlmis.web.view.csv.OpenLmisCsvView">
+    </bean>
+
 </beans>
