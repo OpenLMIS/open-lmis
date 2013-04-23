@@ -13,13 +13,14 @@ function ViewOrderListController($scope, orders) {
     showFilter: false,
 
     columnDefs: [
-      {field: 'id', displayName: 'Order No.', cellTemplate:"<div class='ngCellText'><span ng-cell-text>ORD{{row.entity.id}}</span></div>"},
-      {field: 'facilityCode', displayName: 'Facility Code-Name', cellTemplate:"<div class='ngCellText'><span ng-cell-text>{{row.entity.facilityCode}} - {{row.entity.facilityName}}</span></div>"},
-      {field: 'programName', displayName: "Program Name"},
-      {field: 'periodName', displayName: "Period", cellTemplate:"<div class='ngCellText'><span ng-cell-text>{{row.entity.periodName}} ({{row.entity.periodStartDate | date: 'dd/MM/yyyy'}} - {{row.entity.periodEndDate | date: 'dd/MM/yyyy'}})</span></div>"},
-      {field: 'supplyingDepot', displayName: "Supplying Depot"},
-      {field: 'modifiedDate', displayName: "Order Date/Time", cellFilter: "date:'dd/MM/yyyy hh:mm:ss'"},
-      {field: 'status', displayName: "Order Status"}
+      {field: 'rnr.id', displayName: 'Order No.'},
+      {field: 'facilityCode', displayName: 'Facility Code-Name', cellTemplate:"<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.facilityCode}} - {{row.entity.rnr.facilityName}}</span></div>"},
+      {field: 'rnr.programName', displayName: "Program Name"},
+      {field: 'periodName', displayName: "Period", cellTemplate:"<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.periodName}} ({{row.entity.rnr.periodStartDate | date: 'dd/MM/yyyy'}} - {{row.entity.rnr.periodEndDate | date: 'dd/MM/yyyy'}})</span></div>"},
+      {field: 'rnr.supplyingDepot', displayName: "Supplying Depot"},
+      {field: 'createdDate', displayName: "Order Date/Time", cellFilter: "date:'dd/MM/yyyy hh:mm:ss'"},
+      {field: 'status', displayName: "Order Status",
+        cellTemplate:"<div class='ngCellText'><span ng-cell-text><div id=\"shippedOrderStaus\" ng-show=\"row.entity.fulfilled\">SHIPPED</div><div id=\"releasedOrderStaus\" ng-show=\"!row.entity.fulfilled\">RELEASED</div></span></div>"}
     ]
   };
 }

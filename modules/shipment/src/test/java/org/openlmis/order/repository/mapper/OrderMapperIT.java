@@ -106,6 +106,7 @@ public class OrderMapperIT {
     List<Order> orders = mapper.getAll();
     assertThat(orders.size(), is(2));
     assertThat(orders.get(1).getId(), is(order1.getId()));
+    assertThat(orders.get(1).getRnr().getId(), is(order1.getRnr().getId()));
     assertThat(orders.get(0).getId(), is(order2.getId()));
   }
 

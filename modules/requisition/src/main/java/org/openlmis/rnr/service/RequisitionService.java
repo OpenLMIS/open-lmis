@@ -183,6 +183,7 @@ public class RequisitionService {
   public Rnr getFullRequisitionById(Integer id) {
     Rnr savedRnr = requisitionRepository.getById(id);
     fillSupportingInfo(savedRnr);
+    fillSupplyingDepot(savedRnr);
     return savedRnr;
   }
 
@@ -233,10 +234,14 @@ public class RequisitionService {
 
   private void fillSupplyingFacility(Rnr... requisitions) {
     for (Rnr requisition : requisitions) {
-      if (requisition.getSupplyingFacility() != null) {
-        Facility facility = facilityService.getById(requisition.getSupplyingFacility().getId());
-        requisition.fillBasicInformationForSupplyingFacility(facility);
-      }
+      fillSupplyingDepot(requisition);
+    }
+  }
+
+  public void fillSupplyingDepot(Rnr requisition) {
+    if (requisition.getSupplyingFacility() != null) {
+      Facility facility = facilityService.getById(requisition.getSupplyingFacility().getId());
+      requisition.fillBasicInformationForSupplyingFacility(facility);
     }
   }
 

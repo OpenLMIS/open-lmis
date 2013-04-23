@@ -35,7 +35,7 @@ public class OrderService {
   public void convertToOrder(List<Rnr> rnrList, Integer userId) {
     requisitionService.releaseRequisitionsAsOrder(rnrList, userId);
     Order order;
-    for(Rnr rnr : rnrList) {
+    for (Rnr rnr : rnrList) {
       rnr.setModifiedBy(userId);
       order = new Order(rnr);
       orderRepository.save(order);
@@ -43,7 +43,13 @@ public class OrderService {
   }
 
   public List<Order> getOrders() {
-    return orderRepository.getOrders();
+    List<Order> orders = orderRepository.getOrders();
+    Rnr rnr;
+    for (Order order : orders) {
+      rnr = requisitionService.getFullRequisitionById(order.getRnr().getId());
+      order.setRnr(rnr);
+    }
+    return orders;
   }
 
   public void updateFulfilledAndShipmentIdForOrders(ArrayList<Integer> orderIds, Boolean fulfilled, Integer shipmentId) {

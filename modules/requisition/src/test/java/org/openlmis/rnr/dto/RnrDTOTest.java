@@ -63,22 +63,5 @@ public class RnrDTOTest {
     assertThat(rnrDTO.getStatus(), is(rnr.getStatus().name()));
   }
 
-  @Test
-  public void shouldPrepareRequisitionsForOrderBatch() throws Exception {
-    Rnr rnr = make(a(defaultRnr));
-    List<Rnr> rnrList = Arrays.asList(rnr);
-    List<RnrDTO> rnrDTOs = RnrDTO.prepareForOrderView(rnrList);
 
-    RnrDTO rnrDTO = rnrDTOs.get(0);
-    assertThat(rnrDTO.getId(), is(rnr.getId()));
-    assertThat(rnrDTO.getProgramId(), is(rnr.getProgram().getId()));
-    assertThat(rnrDTO.getFacilityId(), is(rnr.getFacility().getId()));
-    assertThat(rnrDTO.getProgramName(), is(rnr.getProgram().getName()));
-    assertThat(rnrDTO.getFacilityCode(), is(rnr.getFacility().getCode()));
-    assertThat(rnrDTO.getFacilityName(), is(rnr.getFacility().getName()));
-    assertThat(rnrDTO.getPeriodStartDate(), is(rnr.getPeriod().getStartDate()));
-    assertThat(rnrDTO.getPeriodEndDate(), is(rnr.getPeriod().getEndDate()));
-    assertThat(rnrDTO.getPeriodName(), is(rnr.getPeriod().getName()));
-    assertThat(rnrDTO.getSupplyingDepot(), is(rnr.getSupplyingFacility().getName()));
-  }
 }

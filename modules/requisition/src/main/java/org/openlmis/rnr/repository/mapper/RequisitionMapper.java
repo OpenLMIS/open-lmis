@@ -43,8 +43,6 @@ public interface RequisitionMapper {
       @Result(property = "facility.id", column = "facilityId"),
       @Result(property = "period.id", column = "periodId"),
       @Result(property = "supplyingFacility.id", column = "supplyingFacilityId"),
-      /*@Result(property = "orderBatch", javaType = OrderBatch.class, column = "orderBatchId",
-          one = @One(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getOrderBatchById")),*/
       @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
       @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",

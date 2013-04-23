@@ -6,15 +6,9 @@
 
 package org.openlmis.order.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.order.domain.Order;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 import java.util.List;
 
@@ -26,6 +20,9 @@ public interface OrderMapper {
   void insert(Order order);
 
   @Select("Select * from orders ORDER BY createdDate DESC")
+      @Results({
+          @Result(property = "rnr.id", column = "rnrId")
+      })
   List<Order> getAll();
 
   @Update("UPDATE orders SET shipmentId=#{shipmentId},fulfilled=#{fulfilled} where id=#{id}")

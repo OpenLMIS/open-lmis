@@ -73,7 +73,7 @@ public class RequisitionServiceTest {
   private static final Integer HIV = 1;
   private static final Facility FACILITY = new Facility(1);
   private static final Program PROGRAM = new Program(2);
-  private static final ProcessingPeriod PERIOD = make(a(defaultProcessingPeriod, with(id, 10), with(numberOfMonths, 1)));
+  private static final ProcessingPeriod PERIOD = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, 10), with(numberOfMonths, 1)));
   private static final Integer USER_ID = 1;
 
   @Rule
@@ -243,7 +243,7 @@ public class RequisitionServiceTest {
   public void shouldGetPreviousTwoRequisitionsNormalizedConsumptionsWhileGettingRequisition() throws Exception {
     final Integer lastPeriodId = 2;
     final int secondLastPeriodsId = 3;
-    ProcessingPeriod lastPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(id, lastPeriodId)));
+    ProcessingPeriod lastPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, lastPeriodId)));
 
     Rnr rnr = new Rnr(FACILITY, PROGRAM, PERIOD);
     final Rnr spyRnr = spy(rnr);
@@ -254,7 +254,7 @@ public class RequisitionServiceTest {
 
     when(processingScheduleService.getImmediatePreviousPeriod(period)).thenReturn(lastPeriod);
 
-    ProcessingPeriod secondLastPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(id, secondLastPeriodsId)));
+    ProcessingPeriod secondLastPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, secondLastPeriodsId)));
     when(processingScheduleService.getImmediatePreviousPeriod(lastPeriod)).thenReturn(secondLastPeriod);
 
     Rnr lastPeriodsRnr = new Rnr(FACILITY, PROGRAM, lastPeriod);
@@ -519,6 +519,7 @@ public class RequisitionServiceTest {
 
     when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
     when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
+    when(facilityService.getById(submittedRnr.getSupplyingFacility().getId())).thenReturn(FACILITY);
     when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
     when(requisitionRepository.getById(submittedRnr.getId())).thenReturn(savedRnr);
 
@@ -577,6 +578,7 @@ public class RequisitionServiceTest {
 
     when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
     when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
+    when(facilityService.getById(submittedRnr.getSupplyingFacility().getId())).thenReturn(FACILITY);
     when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
     when(requisitionRepository.getById(submittedRnr.getId())).thenReturn(savedRnr);
 
@@ -702,7 +704,7 @@ public class RequisitionServiceTest {
     ProcessingPeriod period = new ProcessingPeriod(10);
     Rnr someRequisition = createRequisition(period.getId(), null);
     Rnr previousRnr = make(a(defaultRnr));
-    ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(id, period.getId() - 1)));
+    ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, period.getId() - 1)));
     setupForInitRnr(date, someRequisition, period);
 
     Rnr spyRequisition = spy(someRequisition);
@@ -739,7 +741,7 @@ public class RequisitionServiceTest {
     whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityApprovedProducts, USER_ID).thenReturn(spyRequisition);
 
     int previousPeriodId = PERIOD.getId() - 1;
-    ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(id, previousPeriodId)));
+    ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, previousPeriodId)));
     when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
     when(processingScheduleService.getImmediatePreviousPeriod(PERIOD)).thenReturn(previousPeriod);
     when(requisitionRepository.getRequisitionWithLineItems(FACILITY, PROGRAM, previousPeriod)).thenReturn(null);
@@ -756,7 +758,7 @@ public class RequisitionServiceTest {
     ProcessingPeriod period = new ProcessingPeriod(10);
     Rnr someRequisition = createRequisition(period.getId(), null);
     Rnr previousRnr = make(a(defaultRnr));
-    ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(id, period.getId() - 1)));
+    ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, period.getId() - 1)));
     setupForInitRnr(date, someRequisition, period);
     when(rnrTemplateRepository.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(getRnrColumns());
 
@@ -832,6 +834,7 @@ public class RequisitionServiceTest {
     requisition.setProgram(PROGRAM);
     requisition.setPeriod(PERIOD);
     requisition.setId(requisitionId);
+    requisition.setSupplyingFacility(FACILITY);
     when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
     when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
     when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
@@ -840,7 +843,7 @@ public class RequisitionServiceTest {
     requisitionService.getFullRequisitionById(requisitionId);
 
     verify(requisitionRepository).getById(requisitionId);
-    verify(facilityService).getById(FACILITY.getId());
+    verify(facilityService, times(2)).getById(FACILITY.getId());
     verify(programService).getById(PROGRAM.getId());
     verify(processingScheduleService).getPeriodById(PERIOD.getId());
   }
@@ -938,7 +941,8 @@ public class RequisitionServiceTest {
     Rnr savedRnr = spy(rnr);
     when(requisitionPermissionService.hasPermission(USER_ID, savedRnr, right)).thenReturn(true);
     when(programService.getById(savedRnr.getProgram().getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(savedRnr.getProgram().getId())).thenReturn(FACILITY);
+    when(facilityService.getById(savedRnr.getFacility().getId())).thenReturn(FACILITY);
+    when(facilityService.getById(savedRnr.getSupplyingFacility().getId())).thenReturn(FACILITY);
     when(processingScheduleService.getPeriodById(savedRnr.getProgram().getId())).thenReturn(PERIOD);
     when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
     return savedRnr;

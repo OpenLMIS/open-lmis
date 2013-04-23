@@ -34,15 +34,17 @@ public class RequisitionBuilder {
   public static final Property<Rnr, Integer> modifiedBy = newProperty();
   public static final Property<Rnr, Facility> facility = newProperty();
   public static final Property<Rnr, Program> program = newProperty();
+  public static final Property<Rnr, Integer> id = newProperty();
 
   public static final Date SUBMITTED_DATE = new DateTime().withDate(2013, 3, 19).toDate();
   public static final Program PROGRAM = make(a(ProgramBuilder.defaultProgram, with(ProgramBuilder.programId, 3)));
+  public static final int ID = 1;
   public static final Instantiator<Rnr> defaultRnr = new Instantiator<Rnr>() {
 
     @Override
     public Rnr instantiate(PropertyLookup<Rnr> lookup) {
       Rnr rnr = new Rnr();
-      rnr.setId(1);
+      rnr.setId(lookup.valueOf(id, ID));
       Facility defaultFacility = make(a(FacilityBuilder.defaultFacility));
       defaultFacility.setId(3);
       rnr.setFacility(lookup.valueOf(facility, defaultFacility));

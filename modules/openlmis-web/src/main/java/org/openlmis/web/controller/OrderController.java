@@ -6,6 +6,7 @@
 
 package org.openlmis.web.controller;
 
+import org.openlmis.order.dto.OrderDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.web.form.RequisitionList;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -38,7 +39,7 @@ public class OrderController extends BaseController {
   @RequestMapping(value = "/orders", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER, CONVERT_TO_ORDER')")
   public ResponseEntity<OpenLmisResponse> getOrders() {
-    return OpenLmisResponse.response(ORDERS, orderService.getOrders());
+    return OpenLmisResponse.response(ORDERS, OrderDTO.getOrdersForView(orderService.getOrders()));
   }
 
 }

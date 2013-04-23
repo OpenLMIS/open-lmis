@@ -186,8 +186,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     ViewOrdersPage viewOrdersPage = homePagelmu.navigateViewOrders();
     String requisitionId = dbWrapper.getLatestRequisitionId();
-    //TODO Temporary. To be continued    !!
-//    viewOrdersPage.verifyOrderListElements(program, "ORD" + requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "RELEASED");
+    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "RELEASED");
   }
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, boolean adminRole) throws IOException, SQLException {

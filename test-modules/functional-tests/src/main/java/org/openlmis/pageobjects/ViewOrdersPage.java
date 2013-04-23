@@ -23,7 +23,7 @@ public class ViewOrdersPage extends RequisitionPage {
   @FindBy(how = How.ID, using = "NoRequisitionsPendingMessage")
   private static WebElement NoRequisitionsPendingMessage;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col0 colt0']/div[@class='ngCellText ng-scope']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col0 colt0']/span")
   private static WebElement orderNumberOnViewOrdersScreen;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
@@ -38,7 +38,7 @@ public class ViewOrdersPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col4 colt4']/span")
   private static WebElement supplyDepotOnViewOrderScreen;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col6 colt6']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCell col6 colt6']/div[@class='ngCellText ng-scope']/span/div[@id='releasedOrderStaus']")
   private static WebElement orderStatusOnViewOrderScreen;
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")

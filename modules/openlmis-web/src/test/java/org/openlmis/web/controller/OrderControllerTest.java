@@ -7,11 +7,12 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.order.domain.Order;
+import org.openlmis.order.dto.OrderDTO;
 import org.openlmis.order.service.OrderService;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.web.form.RequisitionList;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
@@ -26,7 +27,8 @@ import static org.mockito.Mockito.when;
 import static org.openlmis.web.controller.OrderController.ORDERS;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(OrderDTO.class)
 public class OrderControllerTest {
 
   private static final Integer USER_ID = 1;
@@ -55,14 +57,18 @@ public class OrderControllerTest {
   }
 
   @Test
-  public void shouldReturnAllFilledOrders() throws Exception {
-    List<Order> orderedRequisitions = new ArrayList<>();
-    mockStatic(RnrDTO.class);
-    when(orderService.getOrders()).thenReturn(orderedRequisitions);
+  public void shouldReturnAllOrders() throws Exception {
+    List<Order> orders = new ArrayList<Order>() {{
+      new Order();
+    }};
+    mockStatic(OrderDTO.class);
+    when(orderService.getOrders()).thenReturn(orders);
+    List<OrderDTO> orderDTOs = new ArrayList<>();
+    when(OrderDTO.getOrdersForView(orders)).thenReturn(orderDTOs);
 
     ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrders();
 
     verify(orderService).getOrders();
-    assertThat((List<Order>) fetchedOrders.getBody().getData().get(ORDERS), is(orderedRequisitions));
+    assertThat((List<OrderDTO>) fetchedOrders.getBody().getData().get(ORDERS), is(orderDTOs));
   }
 }

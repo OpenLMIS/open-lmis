@@ -8,28 +8,25 @@ package org.openlmis.order.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.repository.OrderRepository;
-import org.openlmis.order.service.OrderService;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.any;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.ignoreStubs;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -41,6 +38,7 @@ public class OrderServiceTest {
   @Mock
   private RequisitionService requisitionService;
 
+  @SuppressWarnings("unuse")
   @InjectMocks
   private OrderService orderService;
 
@@ -66,13 +64,30 @@ public class OrderServiceTest {
   }
 
   @Test
-  public void shouldGetOrders() throws Exception {
-    List<Order> expectedOrders = new ArrayList<>();
+  public void shouldGetOrdersFilledWithRequisition() throws Exception {
+    Rnr rnr1 = make(a(defaultRnr, with(id, 78)));
+    final Order order1 = new Order();
+    order1.setRnr(rnr1);
+
+    Rnr rnr2 = make(a(defaultRnr, with(periodId, 2), with(id, 72)));
+
+    final Order order2 = new Order();
+    order2.setRnr(rnr2);
+
+    List<Order> expectedOrders = new ArrayList<Order>() {{
+      add(order1);
+      add(order2);
+    }};
+
     when(orderRepository.getOrders()).thenReturn(expectedOrders);
+    when(requisitionService.getFullRequisitionById(rnr1.getId())).thenReturn(rnr1);
+    when(requisitionService.getFullRequisitionById(rnr2.getId())).thenReturn(rnr2);
 
     List<Order> orders = orderService.getOrders();
     assertThat(orders, is(expectedOrders));
     verify(orderRepository).getOrders();
+    verify(requisitionService).getFullRequisitionById(rnr1.getId());
+    verify(requisitionService).getFullRequisitionById(rnr2.getId());
   }
 
   @Test
