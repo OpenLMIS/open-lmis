@@ -1,0 +1,11 @@
+{
+"requisitionId" : "",
+"userId" : "commTrack1",
+"products" :[
+  {
+   "productCode" : "P10",
+  "approvedQuantity" : "65",
+  "remarks" : "1"
+  }]
+
+}

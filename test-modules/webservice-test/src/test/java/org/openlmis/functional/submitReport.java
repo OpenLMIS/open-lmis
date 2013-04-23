@@ -173,7 +173,33 @@ public class submitReport extends TestCaseHelper {
 
         assertEquals(response, "{\"error\":\"Please provide a valid username\"}");
     }
+/*
+    @Test(groups = {"webservice"})
+    public void testSubmitAndApproveReportValidRnR() throws Exception {
+        setupData();
+        setupDataApprover();
+        HttpClient client = new HttpClient();
+        client.createContext();
+        String fileName = this.getClass().getClassLoader().getResource("FullJSON.txt").getFile();
+        String json = readJSON(fileName);
+        json = updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
+        json = updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
+        json = updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
+        String response = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", "POST", "commTrack", dbWrapper.getAuthToken("commTrack"));
+        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+        assertTrue(response.contains("{\"R&R\":"));
 
+        String id= response.substring(response.lastIndexOf(":")+1,response.lastIndexOf("}"));
+
+        fileName = this.getClass().getClassLoader().getResource("FullJSON_Approve.txt").getFile();
+        json = readJSON(fileName);
+        json = updateJSON(json, "requisitionId", id);
+        response = client.SendJSON(json, "http://localhost:9091/rest-api/approverequisitions.json", "POST", "commTrack", dbWrapper.getAuthToken("commTrack"));
+        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+
+        assertTrue(response.contains("{\"R&R\":"));
+    }
+*/
     public void setupData() throws IOException, SQLException {
         dbWrapper.insertVendor("commTrack");
         List<String> rightsList = new ArrayList<String>();
@@ -182,6 +208,15 @@ public class submitReport extends TestCaseHelper {
         rightsList.add("AUTHORIZE_REQUISITION");
         setupTestDataToInitiateRnR(true,"HIV", "commTrack", "700", "commTrack", rightsList);
 
+    }
+
+    public void setupDataApprover() throws IOException, SQLException {
+        dbWrapper.insertVendor("commTrack");
+        List<String> rightsList = new ArrayList<String>();
+        rightsList.add("APPROVE_REQUISITION");
+        rightsList.add("VIEW_REQUISITION");
+        rightsList.add("CONVERT_TO_ORDER");
+        setupTestDataToInitiateRnR(true,"HIV", "commTrack1", "701", "commTrack", rightsList);
     }
 
     public String readJSON(String fileName) throws IOException {
