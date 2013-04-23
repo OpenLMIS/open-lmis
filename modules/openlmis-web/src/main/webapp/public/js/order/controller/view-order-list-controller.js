@@ -11,6 +11,7 @@ function ViewOrderListController($scope, orders) {
     showFooter: false,
     showColumnMenu: false,
     showFilter: false,
+    sortInfo: { field: 'createdDate', direction: 'DESC'},
 
     columnDefs: [
       {field: 'rnr.id', displayName: 'Order No.'},
@@ -20,7 +21,7 @@ function ViewOrderListController($scope, orders) {
       {field: 'rnr.supplyingDepot', displayName: "Supplying Depot"},
       {field: 'createdDate', displayName: "Order Date/Time", cellFilter: "date:'dd/MM/yyyy hh:mm:ss'"},
       {field: 'status', displayName: "Order Status",
-        cellTemplate:"<div class='ngCellText'><span ng-cell-text><div id=\"shippedOrderStaus\" ng-show=\"row.entity.fulfilled\">SHIPPED</div><div id=\"releasedOrderStaus\" ng-show=\"!row.entity.fulfilled\">RELEASED</div></span></div>"}
+        cellTemplate:"<div class='ngCellText'><span ng-cell-text><div id=\"shippedOrderStaus\" ng-show=\"row.entity.fulfilled\">SHIPPED</div><div id=\"releasedOrderStaus\" ng-show=\"!row.entity.fulfilled\">RELEASED</div></span></div>"},
     ]
   };
 }
