@@ -14,7 +14,8 @@ dependencies {
             'commons-lang:commons-lang:2.6',
             'commons-collections:commons-collections:20040616',
             'org.springframework.security:spring-security-core:3.1.2.RELEASE',
-            project(':modules:requisition')
+            project(':modules:requisition'),
+            project(':modules:shipment')
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
             project(path: ':modules:requisition', configuration: 'testFixtures')

@@ -12,12 +12,15 @@ import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.UserService;
 import org.openlmis.core.service.VendorService;
+import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static java.util.Arrays.asList;
 
 @Service
 @NoArgsConstructor
@@ -32,6 +35,9 @@ public class RestService {
 
   @Autowired
   private VendorService vendorService;
+
+  @Autowired
+  private OrderService orderService;
 
   @Transactional
   public Rnr submitReport(Report report) {
@@ -68,10 +74,10 @@ public class RestService {
   }
 
   public Rnr approve(Report report) {
-    Rnr requisition = new Rnr();
-    requisition.setId(report.getRnrId());
-    requisition.setFullSupplyLineItems(report.getProducts());
+    User user = getValidatedUser(report);
+    Rnr requisition = report.getRequisition();
     requisitionService.approve(requisition);
+    orderService.convertToOrder(asList(requisition), user.getId());
     return requisition;
   }
 }

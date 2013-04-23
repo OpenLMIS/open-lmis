@@ -24,6 +24,7 @@ import java.security.Principal;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.restapi.controller.RestController.RNR;
 import static org.openlmis.restapi.response.RestResponse.ERROR;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -53,7 +54,7 @@ public class RestControllerTest {
 
     ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
 
-    assertThat((Integer) response.getBody().getData().get("R&R"), is(1));
+    assertThat((Integer) response.getBody().getData().get(RNR), is(1));
   }
 
   @Test
@@ -91,12 +92,25 @@ public class RestControllerTest {
     Rnr expectedRnr = new Rnr();
     when(service.approve(report)).thenReturn(expectedRnr);
 
-    Rnr orderedRnr = controller.approve(id, report, principal);
+    ResponseEntity<RestResponse> response = controller.approve(id, report, principal);
 
-    assertThat(orderedRnr, is(expectedRnr));
+    assertThat((Integer) response.getBody().getData().get(RNR), is(expectedRnr.getId()));
     assertThat(report.getVendor().getName(), is("vendor name"));
-    assertThat(report.getRnrId(), is(1));
+    assertThat(report.getRequisitionId(), is(1));
     verify(service).approve(report);
+  }
+
+  @Test
+  public void shouldGiveErrorMessageIfSomeErrorOccursWhileApproving() throws Exception {
+    String errorMessage = "some error";
+    int requisitionId = 1;
+    Report report = new Report();
+
+    doThrow(new DataException(errorMessage)).when(service).approve(report);
+
+    ResponseEntity<RestResponse> response = controller.approve(requisitionId, report, principal);
+
+    assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
   }
 
   @Test

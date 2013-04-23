@@ -18,6 +18,7 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.UserService;
 import org.openlmis.core.service.VendorService;
+import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -30,9 +31,12 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.openlmis.restapi.builder.ReportBuilder.defaultReport;
 import static org.openlmis.restapi.service.RestService.USER_USERNAME_INCORRECT;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -47,16 +51,15 @@ public class RestServiceTest {
 
   @Mock
   RequisitionService requisitionService;
-
   @Mock
   UserService userService;
-
   @Mock
   VendorService vendorService;
+  @Mock
+  private OrderService orderService;
 
   @InjectMocks
   RestService service;
-
   Rnr requisition;
   Report report;
   User user;
@@ -137,12 +140,13 @@ public class RestServiceTest {
   @Test
   public void shouldApproveAndOrderRequisition() throws Exception {
     Rnr requisitionFromReport = new Rnr();
-    whenNew(Rnr.class).withNoArguments().thenReturn(requisitionFromReport);
 
-    service.approve(report);
+    Report spyReport = spy(report);
+    when(spyReport.getRequisition()).thenReturn(requisitionFromReport);
+    service.approve(spyReport);
 
+    verify(spyReport).getRequisition();
     verify(requisitionService).approve(requisitionFromReport);
-    assertThat(requisitionFromReport.getId(), is(report.getRnrId()));
-    assertThat(requisitionFromReport.getFullSupplyLineItems(), is(report.getProducts()));
+    verify(orderService).convertToOrder(asList(requisitionFromReport), user.getId());
   }
 }

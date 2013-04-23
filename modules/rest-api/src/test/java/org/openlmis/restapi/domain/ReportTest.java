@@ -6,10 +6,14 @@ import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.Vendor;
 import org.openlmis.restapi.builder.ReportBuilder;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.rnr.domain.Rnr;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.openlmis.restapi.builder.ReportBuilder.vendor;
 import static org.openlmis.restapi.domain.Report.ERROR_MANDATORY_FIELD_MISSING;
 
 public class ReportTest {
@@ -64,7 +68,7 @@ public class ReportTest {
   @Test
   public void shouldThrowExceptionIfReportDoesNotContainVendorId(){
     Vendor nullVendor = null;
-    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.vendor, nullVendor)));
+    Report report = make(a(ReportBuilder.defaultReport, with(vendor, nullVendor)));
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage(ERROR_MANDATORY_FIELD_MISSING);
@@ -72,4 +76,11 @@ public class ReportTest {
     report.validate();
   }
 
+  @Test
+  public void shouldGetRequisitionFromReport() throws Exception {
+    Report report = make(a(ReportBuilder.defaultReport, with(vendor, new Vendor())));
+    Rnr requisition = report.getRequisition();
+    assertThat(requisition.getId(), is(report.getRequisitionId()));
+    assertThat(requisition.getFullSupplyLineItems(), is(report.getProducts()));
+  }
 }

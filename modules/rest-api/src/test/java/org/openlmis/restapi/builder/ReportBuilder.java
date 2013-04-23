@@ -20,7 +20,7 @@ public class ReportBuilder {
     @Override
     public Report instantiate(PropertyLookup<Report> lookup) {
      Report report = new Report();
-      report.setRnrId(1);
+      report.setRequisitionId(1);
       report.setFacilityId(lookup.valueOf(facilityId, 1));
       report.setProgramId(lookup.valueOf(programId, 1));
       report.setPeriodId(lookup.valueOf(periodId, 1));

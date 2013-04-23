@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Report {
   public static final String ERROR_MANDATORY_FIELD_MISSING = "error.restapi.mandatory.missing";
-  private Integer rnrId;
+  private Integer requisitionId;
   private Integer facilityId;
   private Integer programId;
   private Integer periodId;
@@ -31,5 +32,12 @@ public class Report {
   public void validate() {
     if (facilityId == null || programId == null || periodId == null || userId == null || vendor == null)
       throw new DataException(ERROR_MANDATORY_FIELD_MISSING);
+  }
+
+  public Rnr getRequisition() {
+    Rnr rnr = new Rnr();
+    rnr.setId(requisitionId);
+    rnr.setFullSupplyLineItems(products);
+    return rnr;
   }
 }

@@ -35,6 +35,7 @@ public class RestController {
   public static final String ACCEPT_JSON = "Accept=application/json";
   public static final String UNEXPECTED_EXCEPTION = "unexpected.exception";
   public static final String FORBIDDEN_EXCEPTION = "forbidden.exception";
+  public static final String RNR = "R&R";
 
   @Autowired
   private RestService restService;
@@ -48,7 +49,7 @@ public class RestController {
     } catch (DataException e) {
       return RestResponse.error(e, HttpStatus.BAD_REQUEST);
     }
-    return RestResponse.response("R&R", requisition.getId());
+    return RestResponse.response(RNR, requisition.getId());
   }
 
 
@@ -61,9 +62,14 @@ public class RestController {
   }
 
   @RequestMapping(value = "/rest-api/requisitions/{id}/approve", method = POST, headers = ACCEPT_JSON)
-  public Rnr approve(@PathVariable Integer id,@RequestBody Report report, Principal principal) {
-    report.setRnrId(id);
+  public ResponseEntity<RestResponse> approve(@PathVariable Integer id, @RequestBody Report report, Principal principal) {
+    report.setRequisitionId(id);
     report.setVendor(new Vendor(principal.getName()));
-    return restService.approve(report);
+    try {
+      Rnr approveRnr = restService.approve(report);
+      return RestResponse.response(RNR, approveRnr.getId());
+    } catch (DataException e) {
+      return RestResponse.error(e, HttpStatus.BAD_REQUEST);
+    }
   }
 }
