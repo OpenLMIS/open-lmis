@@ -78,7 +78,7 @@ public class RestService {
     fillVendor(report);
     User user = getValidatedUser(report);
     Rnr requisition = report.getRequisition();
-    requisition.setModifiedBy(user.getModifiedBy());
+    requisition.setModifiedBy(user.getId());
     requisitionService.approve(requisition);
     orderService.convertToOrder(asList(requisition), user.getId());
     return requisition;

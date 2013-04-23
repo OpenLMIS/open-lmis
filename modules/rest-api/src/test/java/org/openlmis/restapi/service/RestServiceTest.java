@@ -143,8 +143,11 @@ public class RestServiceTest {
 
     Report spyReport = spy(report);
     when(spyReport.getRequisition()).thenReturn(requisitionFromReport);
+    when(vendorService.getByName(report.getVendor().getName())).thenReturn(report.getVendor());
+
     service.approve(spyReport);
 
+    assertThat(requisitionFromReport.getModifiedBy(), is(user.getId()));
     verify(spyReport).getRequisition();
     verify(requisitionService).approve(requisitionFromReport);
     verify(orderService).convertToOrder(asList(requisitionFromReport), user.getId());
