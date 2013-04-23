@@ -6,6 +6,7 @@
 
 package org.openlmis.web.controller;
 
+import org.openlmis.order.domain.Order;
 import org.openlmis.order.dto.OrderDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.web.form.RequisitionList;
@@ -16,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,6 +28,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class OrderController extends BaseController {
 
   public static final String ORDERS = "orders";
+  public static final String ORDER = "order";
 
   @Autowired
   private OrderService orderService;
@@ -36,9 +39,17 @@ public class OrderController extends BaseController {
   }
 
   @RequestMapping(value = "/orders", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER, CONVERT_TO_ORDER')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
   public ResponseEntity<OpenLmisResponse> getOrders() {
     return OpenLmisResponse.response(ORDERS, OrderDTO.getOrdersForView(orderService.getOrders()));
   }
 
+  @RequestMapping(value = "/download/orders", method = GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
+  public ModelAndView downloadOrderCsv(Integer orderId) {
+    ModelAndView modelAndView = new ModelAndView();
+    Order order = orderService.getById(orderId);
+    modelAndView.addObject(ORDER, order);
+    return modelAndView;
+  }
 }

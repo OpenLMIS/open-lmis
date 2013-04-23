@@ -30,4 +30,8 @@ public class OrderRepository {
   public void updateFulfilledAndShipmentIdForOrder(Integer orderId, Boolean fulfilled, Integer shipmentId) {
     orderMapper.updateFullfilledFlagAndShipmentId(orderId,fulfilled,shipmentId);
   }
+
+  public Order getById(Integer id) {
+    return orderMapper.getById(id);
+  }
 }

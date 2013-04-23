@@ -59,4 +59,13 @@ public class OrderRepositoryTest {
     verify(orderMapper).updateFullfilledFlagAndShipmentId(order.getId(), false, 1);
 
   }
+
+  @Test
+  public void shouldGetOrderById() throws Exception {
+    Order expectedOrder = new Order();
+    when(orderMapper.getById(1)).thenReturn(expectedOrder);
+    Order savedOrder = orderRepository.getById(1);
+    verify(orderMapper).getById(1);
+    assertThat(savedOrder, is(expectedOrder));
+  }
 }

@@ -92,14 +92,27 @@ public class OrderServiceTest {
 
   @Test
   public void shouldUpdateFulfilledAndShipmentIdForOrders() throws Exception {
-
     ArrayList<Integer> orders = new ArrayList<>();
     orders.add(1);
     orders.add(2);
 
-    orderService.updateFulfilledAndShipmentIdForOrders(orders,true,1);
+    orderService.updateFulfilledAndShipmentIdForOrders(orders, true, 1);
 
-    verify(orderRepository,times(2)).updateFulfilledAndShipmentIdForOrder(anyInt(),anyBoolean(),anyInt());
+    verify(orderRepository, times(2)).updateFulfilledAndShipmentIdForOrder(anyInt(), anyBoolean(), anyInt());
+  }
 
+  @Test
+  public void shouldGetOrderById() {
+    Integer orderId = 1;
+    Integer rnrId = 1;
+    Order order = new Order();
+    Rnr rnr = new Rnr();
+    rnr.setId(rnrId);
+    order.setRnr(rnr);
+    when(orderRepository.getById(orderId)).thenReturn(order);
+    Order expectedOrder = orderService.getById(orderId);
+    verify(orderRepository).getById(orderId);
+    verify(requisitionService).getFullRequisitionById(rnr.getId());
+    assertThat(expectedOrder, is(order));
   }
 }

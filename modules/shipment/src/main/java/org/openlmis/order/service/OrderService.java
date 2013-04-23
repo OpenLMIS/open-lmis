@@ -57,4 +57,10 @@ public class OrderService {
       orderRepository.updateFulfilledAndShipmentIdForOrder(orderId,fulfilled,shipmentId);
     }
   }
+
+  public Order getById(Integer id) {
+    Order order = orderRepository.getById(id);
+    order.setRnr(requisitionService.getFullRequisitionById(order.getRnr().getId()));
+    return order;
+  }
 }

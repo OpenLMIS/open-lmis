@@ -6,6 +6,7 @@
 
 package org.openlmis.order.repository.mapper;
 
+import org.hamcrest.Matcher;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +41,9 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.isNotNull;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
@@ -112,7 +115,6 @@ public class OrderMapperIT {
 
   @Test
   public void shouldUpdateFulfilledFlagAndShipmentIdForOrders() throws Exception {
-
     Order order = new Order();
     Rnr rnr = insertRequisition(1);
     order.setRnr(rnr);
@@ -127,7 +129,15 @@ public class OrderMapperIT {
 
     assertThat(resultSet.getBoolean("fulfilled"), is(true));
     assertThat(resultSet.getInt("shipmentId"), is(1));
+  }
 
+  @Test
+  public void shouldGetOrderById(){
+    Order expectedOrder = insertOrder(1);
+
+    Order savedOrder = mapper.getById(expectedOrder.getId());
+    assertThat(savedOrder.getId(), is(expectedOrder.getId()));
+    assertThat(savedOrder.getRnr().getId(), is(expectedOrder.getRnr().getId()));
   }
 
   private int updateOrderCreatedTime(Order order, Date date) throws SQLException {

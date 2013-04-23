@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.dto.OrderDTO;
@@ -16,6 +15,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.openlmis.web.controller.OrderController.ORDER;
 import static org.openlmis.web.controller.OrderController.ORDERS;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
@@ -70,5 +71,16 @@ public class OrderControllerTest {
 
     verify(orderService).getOrders();
     assertThat((List<OrderDTO>) fetchedOrders.getBody().getData().get(ORDERS), is(orderDTOs));
+  }
+
+  @Test
+  public void shouldDownloadOrderCsv() {
+    Integer orderId = 1;
+    Order expectedOrder = new Order();
+    when(orderService.getById(orderId)).thenReturn(expectedOrder);
+    ModelAndView modelAndView = orderController.downloadOrderCsv(orderId);
+    Order order = (Order) modelAndView.getModel().get(ORDER);
+    assertThat(order, is(expectedOrder));
+    verify(orderService).getById(orderId);
   }
 }
