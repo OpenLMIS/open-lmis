@@ -14,16 +14,27 @@ import java.io.File;
  */
 public class JasperReportCompiler {
 
-    @Getter
-    @Setter
     private String reportPath = "src/main/template";
 
-    @Getter
-    @Setter
     private String destinationPath = "src/main/resources/";
 
-    public static void main(String[] args) {
+    public String getReportPath() {
+        return reportPath;
+    }
 
+    public void setReportPath(String reportPath) {
+        this.reportPath = reportPath;
+    }
+
+    public String getDestinationPath() {
+        return destinationPath;
+    }
+
+    public void setDestinationPath(String destinationPath) {
+        this.destinationPath = destinationPath;
+    }
+
+    public static void main(String[] args) {
         JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
 
         if(args != null && args.length > 0 ){
