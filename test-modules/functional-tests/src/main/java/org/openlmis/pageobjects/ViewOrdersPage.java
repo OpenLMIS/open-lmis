@@ -38,7 +38,7 @@ public class ViewOrdersPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col4 colt4']/span")
   private static WebElement supplyDepotOnViewOrderScreen;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCell col6 colt6']/div[@class='ngCellText ng-scope']/span/div[@id='releasedOrderStaus']")
+  @FindBy(how = How.XPATH, using = "(//div[@id='releasedOrderStaus'])[1]")
   private static WebElement orderStatusOnViewOrderScreen;
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
