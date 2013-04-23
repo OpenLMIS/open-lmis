@@ -24,6 +24,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
@@ -100,6 +101,7 @@ public class OrderServiceTest {
     orderService.updateFulfilledAndShipmentIdForOrders(orders,true,1);
 
     verify(orderRepository).updateFulfilledAndShipmentIdForOrder(anyString(),anyBoolean(),anyInt());
+  }
 
   @Test
   public void shouldGetOrderById() {
