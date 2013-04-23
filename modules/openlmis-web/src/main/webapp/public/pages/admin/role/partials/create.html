@@ -74,17 +74,17 @@
           </span >
         </div >
 
-        <div class = "assigned-rights" ng-class = "{'is-disabled': role.adminRole == 'true'}" >
+        <div class = "assigned-rights" ng-class = "{'is-disabled': role.adminRole == 'false'}" >
           <h4 openlmis-message="">Program and facility-based rights</h4 >
 
           <div id = "nonAdminRights-{{nonAdminRight.right}}" class = "checkbox-list clearfix"
                ng-repeat = "nonAdminRight in nonAdminRights" >
             <input id = "{{nonAdminRight.right}}" type = "checkbox" ng-checked = "contains(nonAdminRight.right)"
                    ng-click = "updateRights(checked,nonAdminRight)" ng-model = "checked"
-                   ng-disabled = "areRelatedFieldsSelected(nonAdminRight) || role.adminRole == 'true'" />
+                   ng-disabled = "areRelatedFieldsSelected(nonAdminRight) || role.adminRole == 'false'" />
             <label for = "{{nonAdminRight.right}}" >{{nonAdminRight.rightName}}</label >
           </div >
-          <span class = "field-error" ng-show = "showRightError && role.adminRole=='false'" openlmis-message="create.role.selectRightWarning">
+          <span class = "field-error" ng-show = "showRightError && role.adminRole=='true'" openlmis-message="create.role.selectRightWarning">
           </span >
         </div >
 
