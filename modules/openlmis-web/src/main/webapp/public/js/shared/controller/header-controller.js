@@ -10,10 +10,6 @@ function HeaderController($scope, UserContext, $rootScope, localStorageService, 
 
   messageService.populate();
 
-  $rootScope.fixToolBar = function () {
-
-  };
-
   $scope.logout = function () {
     localStorageService.clearAll();
     window.location = "/j_spring_security_logout";

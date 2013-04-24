@@ -25,7 +25,23 @@ var OpenLmisDialog = {
         $scope.dialogOptions = _.extend(defaults, overrideOpts);
       }
     };
+    var closeCallback = function(result) {
+      callback(result);
+    };
 
-    $dialog.dialog(opts).open().then(callback);
+    var olDialog = $dialog.dialog(opts);
+    olDialog.open().then(closeCallback);
+
+    var autoFocus = function() {
+      if(olDialog.isOpen()) {
+        olDialog.modalEl.find(":tabbable").first().focus();
+      }
+      else {
+        setTimeout(function() {
+          autoFocus();
+        }, 10);
+      }
+    };
+    autoFocus();
   }
 };

@@ -7,6 +7,8 @@
 describe("User", function () {
 
   beforeEach(module('openlmis.services'));
+  beforeEach(module('ui.bootstrap.dialog'));
+  beforeEach(module('openlmis.localStorage'));
 
   describe("User Role Assignment Controller", function () {
 
@@ -121,15 +123,17 @@ describe("User", function () {
 
     it("should delete home facility roles from the list", function () {
       scope.rowNum = 1;
+      scope.supervisorRole = false;
       scope.user = {"homeFacilityRoles": [{"roleIds":[1]},{"roleIds":[1,2]},{"roleIds":[3]}]};
-      scope.deleteHomeFacilityRole();
+      scope.deleteFacilityRole(true);
       expect(scope.user.homeFacilityRoles).toEqual([{"roleIds":[1]},{"roleIds":[3]}])
     });
 
     it("should delete supervisory roles from the list", function () {
       scope.rowNum = 1;
+      scope.supervisorRole = true;
       scope.user = {"supervisorRoles": [{"roleIds":[1]},{"roleIds":[1,2]},{"roleIds":[3]}]};
-      scope.deleteSupervisorRole();
+      scope.deleteFacilityRole(true);
       expect(scope.user.supervisorRoles).toEqual([{"roleIds":[1]},{"roleIds":[3]}])
     });
 

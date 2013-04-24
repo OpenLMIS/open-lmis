@@ -4,40 +4,54 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function UserRoleAssignmentController($scope) {
+function UserRoleAssignmentController($scope, $dialog, messageService) {
 
   $scope.selectSuperviseProgramMessage = '--Select Program--';
   $scope.selectSupervisoryNodeMessage = '--Select Node--';
 
   $("#adminRoles").on("change", function (e) {
     if (e.removed) {
-      $scope.deleteAdminRolesModal = true;
+      var dialogOpts = {
+        id:"deleteAdminRolesModal",
+        header: messageService.get("create.user.deleteAdminRoleHeader"),
+        body: messageService.get("create.user.deleteAdminRoles")
+      };
+      OpenLmisDialog.new(dialogOpts, $scope.restoreAdminRole, $dialog);
+
       window.lastAdminRoleRemoved = e.removed;
     }
   });
 
-  $scope.restoreAdminRole = function () {
-    if (window.lastAdminRoleRemoved) {
-      $scope.user.adminRole.roleIds.push(window.lastAdminRoleRemoved.id);
+  $scope.restoreAdminRole = function (result) {
+    if(!result) {
+      if (window.lastAdminRoleRemoved) {
+        $scope.user.adminRole.roleIds.push(window.lastAdminRoleRemoved.id);
+      }
     }
-    $scope.deleteAdminRolesModal = false;
+    else {
+      return;
+    }
   };
 
-  $scope.deleteCurrentRow = function (rowNum) {
-    $scope.deleteRolesModal = true;
+  $scope.deleteCurrentRow = function (rowNum, supervisoryRole) {
+    var dialogOpts = {
+      id:"deleteRolesModal",
+      header: messageService.get("create.user.deleteRoles"),
+      body: messageService.get("create.user.homeRoles.delete.warning")
+    };
+
+    OpenLmisDialog.new(dialogOpts, $scope.deleteFacilityRole, $dialog);
     $scope.rowNum = rowNum;
+    $scope.supervisorRole =  supervisoryRole ? true : false;
   };
 
-  $scope.deleteHomeFacilityRole = function () {
-    $scope.user.homeFacilityRoles.splice($scope.rowNum, 1);
-    $scope.deleteRolesModal = false;
-    $scope.rowNum = undefined;
-  };
+  $scope.deleteFacilityRole = function (result) {
+    if(!result) return;
 
-  $scope.deleteSupervisorRole = function () {
-    $scope.user.supervisorRoles.splice($scope.rowNum, 1);
-    $scope.deleteRolesModal = false;
-    $scope.rowNum = undefined;
+    var rolesArray = $scope.supervisorRole? $scope.user.supervisorRoles : $scope.user.homeFacilityRoles;
+
+    rolesArray.splice($scope.rowNum, 1);
+    $scope.rowNum = $scope.supervisorRole = null;
   };
 
   $scope.availableSupportedProgramsWithStatus = function () {
