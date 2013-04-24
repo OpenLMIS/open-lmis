@@ -46,42 +46,33 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EManageRolesAndFacility(String user, String program, String[] credentials) throws Exception {
-    System.out.println("brute force"+"1");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    System.out.println("brute force"+"2");
     dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com", "openLmis");
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    System.out.println("brute force"+"3");
     CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
     String date_time = createFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy);
     String facility_code = facilityCodePrefix + date_time;
     String facility_name = facilityNamePrefix + date_time;
     createFacilityPage.verifyMessageOnFacilityScreen(facility_name, "created");
-    System.out.println("brute force"+"4");
     List<String> userRoleList = new ArrayList<String>();
     userRoleList.add(CREATE_REQUISITION);
     userRoleList.add(AUTHORIZE_REQUISITION);
     userRoleList.add(APPROVE_REQUISITION);
     createRoleAndAssignRights(homePage, userRoleList, LAB_IN_CHARGE, LAB_IN_CHARGE, true);
-    System.out.println("brute force"+"5");
     List<String> userRoleListLmu = new ArrayList<String>();
     userRoleListLmu.add(CONVERT_TO_ORDER_REQUISITION);
     userRoleListLmu.add(VIEW_ORDER_REQUISITION);
     createRoleAndAssignRights(homePage, userRoleListLmu, "lmu", "lmu", false);
-    System.out.println("brute force"+"6");
     RolesPage rolesPage = new RolesPage(testWebDriver);
     rolesPage.clickARole(LAB_IN_CHARGE);
     rolesPage.verifyAdminRoleRadioNonEditable();
     rolesPage.verifyRoleSelected(userRoleList);
     rolesPage.clickCancelButton();
-    System.out.println("brute force"+"7");
     rolesPage.clickARole(LMU);
     rolesPage.verifyProgramRoleRadioNonEditable();
     rolesPage.verifyRoleSelected(userRoleListLmu);
     rolesPage.clickCancelButton();
-    System.out.println("brute force"+"8");
     dbWrapper.insertSupervisoryNode(facility_code, "N1", "Node 1", "null");
-    System.out.println("brute force"+"9");
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     createUserAndAssignRoles(homePage, passwordUsers, "Jake_Doe@openlmis.com", "Jake", "Doe", LMU, facility_code, program, "Node 1", LMU, true);
     UserPage userPage = new UserPage(testWebDriver);
