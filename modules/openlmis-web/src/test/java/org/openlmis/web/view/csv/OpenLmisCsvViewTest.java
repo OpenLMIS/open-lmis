@@ -14,7 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedWriter;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
@@ -46,12 +49,10 @@ public class OpenLmisCsvViewTest {
     when(rnr.getNonFullSupplyLineItems()).thenReturn(rnrLineItems);
     when(rnr.getFacility()).thenReturn(facility);
     when(order.getRnr()).thenReturn(rnr);
+    when(order.getId()).thenReturn(1);
     whenNew(BufferedWriter.class).withArguments(writer).thenReturn(bufferedWriter);
-    mockStatic(System.class);
-    long currentTimeMillies = 100l;
-    when(System.currentTimeMillis()).thenReturn(currentTimeMillies);
-     model.put(OrderController.ORDER, order);
-    String fileName = "O" + currentTimeMillies + ".csv";
+    model.put(OrderController.ORDER, order);
+    String fileName = "O1.csv";
 
     OpenLmisCsvView csvView = new OpenLmisCsvView();
 
