@@ -21,7 +21,7 @@ public class OpenLmisCsvView extends AbstractView {
   protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) {
     Order order = (Order) model.get(ORDER);
 
-    String fileName = "O" + System.currentTimeMillis() + ".csv";
+    String fileName = "O" + order.getId() + ".csv";
     response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 
     try (BufferedWriter writer = new BufferedWriter(response.getWriter())) {

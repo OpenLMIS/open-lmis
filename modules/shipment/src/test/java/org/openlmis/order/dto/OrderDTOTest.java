@@ -49,8 +49,8 @@ public class OrderDTOTest {
     final RnrDTO dtoForOrder2 = new RnrDTO();
     dtoForOrder2.setId(2);
 
-    when(RnrDTO.prepareDTOWithSupplyingDepot(order1.getRnr())).thenReturn(dtoForOrder1);
-    when(RnrDTO.prepareDTOWithSupplyingDepot(order2.getRnr())).thenReturn(dtoForOrder2);
+    when(RnrDTO.prepareForOrderView(order1.getRnr())).thenReturn(dtoForOrder1);
+    when(RnrDTO.prepareForOrderView(order2.getRnr())).thenReturn(dtoForOrder2);
 
     List<Order> orders = new ArrayList<Order>() {{
       add(order1);

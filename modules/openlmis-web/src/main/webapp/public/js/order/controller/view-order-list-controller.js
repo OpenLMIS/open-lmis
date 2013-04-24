@@ -11,6 +11,7 @@ function ViewOrderListController($scope, orders) {
     showFooter: false,
     showColumnMenu: false,
     showFilter: false,
+    enableColumnResize:true,
     enableSorting: false,
     columnDefs: [
       {field: 'rnr.id', displayName: 'Order No.'},
@@ -22,7 +23,7 @@ function ViewOrderListController($scope, orders) {
       {field: 'status', displayName: "Order Status",
         cellTemplate:"<div class='ngCellText'><span ng-cell-text><div id=\"shippedOrderStaus\" ng-show=\"row.entity.fulfilled\">SHIPPED</div><div id=\"releasedOrderStaus\" ng-show=\"!row.entity.fulfilled\">RELEASED</div></span></div>"},
       {cellTemplate: "<div class='ngCellText'><a ng-show=\"row.entity.productsOrdered\" ng-href='/orders/{{row.entity.id}}/download.csv'>Download CSV</a>" +
-        "<span ng-show=\"!row.entity.productsOrdered\"  ng-cell-text>No Orders</span></div>"}
+        "<span ng-show=\"!row.entity.productsOrdered\"  ng-cell-text>No products in this order</span></div>"}
     ]
   };
 }
