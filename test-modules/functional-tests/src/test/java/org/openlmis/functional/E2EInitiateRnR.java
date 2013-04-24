@@ -186,7 +186,12 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     ViewOrdersPage viewOrdersPage = homePagelmu.navigateViewOrders();
     String requisitionId = dbWrapper.getLatestRequisitionId();
-    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "RELEASED");
+    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "RELEASED", true);
+    dbWrapper.updatePacksToShip("0");
+    homePagelmu.navigateConvertToOrder();
+    homePagelmu.navigateViewOrders();
+    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "RELEASED", false);
+
   }
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, boolean adminRole) throws IOException, SQLException {

@@ -39,12 +39,12 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public static final String facilityCodePrefix = "FCcode";
   public static final String facilityNamePrefix = "FCname";
 
-  @BeforeMethod(groups = {"functional"})
+  @BeforeMethod(groups = {"functional2"})
   public void setUp() throws Exception {
     super.setup();
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EManageFacility(String user, String program, String[] credentials) throws Exception {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -119,7 +119,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     rolesPage.createRole(roleName, roleDescription, userRoleList, programDependent);
   }
 
-  @AfterMethod(groups = {"functional"})
+  @AfterMethod(groups = {"functional2"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);

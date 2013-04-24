@@ -47,13 +47,19 @@ public class ViewOrdersPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//div[@id='NoRequisitionsPendingMessage']")
   private static WebElement noRequisitionPendingMessage;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Download CSV')]")
+  private static WebElement downloadCSVLink;
+
+  @FindBy(how = How.XPATH, using = "//span[contains(text(),'No products in this order')]")
+  private static WebElement noOrderMessage;
+
   public ViewOrdersPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
   }
 
-  public void verifyOrderListElements(String program, String orderNumber, String facilityCodeName, String periodDetails, String supplyFacilityName, String orderStatus) throws IOException {
+  public void verifyOrderListElements(String program, String orderNumber, String facilityCodeName, String periodDetails, String supplyFacilityName, String orderStatus, boolean downloadLinkPresent) throws IOException {
     testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
     SeleneseTestNgHelper.assertEquals(programOnViewOrderScreen.getText().trim(), program);
     SeleneseTestNgHelper.assertEquals(orderNumberOnViewOrdersScreen.getText().trim(), orderNumber);
@@ -61,6 +67,10 @@ public class ViewOrdersPage extends RequisitionPage {
     SeleneseTestNgHelper.assertEquals(periodDetailsOnViewOrderScreen.getText().trim(), periodDetails);
     SeleneseTestNgHelper.assertEquals(supplyDepotOnViewOrderScreen.getText().trim(), supplyFacilityName);
     SeleneseTestNgHelper.assertEquals(orderStatusOnViewOrderScreen.getText().trim(), orderStatus);
+    if (downloadLinkPresent)
+      SeleneseTestNgHelper.assertTrue("'Download CSV' link should show up", downloadCSVLink.isDisplayed());
+    else
+      SeleneseTestNgHelper.assertTrue("'No products in this order' message should show up", noOrderMessage.isDisplayed());
   }
 
 }

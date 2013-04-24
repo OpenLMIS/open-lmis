@@ -583,6 +583,10 @@ public class DBWrapper {
     update("INSERT INTO VENDORS (name, active) VALUES ('" + vendorName + "', true);");
   }
 
+  public void updatePacksToShip(String packsToShip) throws SQLException {
+    update("update requisition_line_items set packstoship='"+packsToShip+"';");
+  }
+
     public String getProgramID(String program) throws IOException, SQLException {
         String programID = null;
         ResultSet rs = query("SELECT ID from programs where code='" + program + "'");
