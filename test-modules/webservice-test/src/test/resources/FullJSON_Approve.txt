@@ -1,10 +1,10 @@
 {
 "requisitionId" : "",
-"userId" : "commTrack1",
+"userId" : "",
 "products" :[
   {
-   "productCode" : "P10",
-  "approvedQuantity" : "65",
+   "productCode" : "",
+  "quantityApproved" : "",
   "remarks" : "1"
   }]
 

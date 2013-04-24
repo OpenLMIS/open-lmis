@@ -17,6 +17,7 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.params.AuthPolicy;
 import org.apache.http.client.protocol.ClientContext;
 
@@ -57,11 +58,12 @@ public class HttpClient {
             httpContext.setAttribute(AUTH_CACHE, authCache);
 
         }
-        HttpPost httppost = new HttpPost(url);
-        httppost.setHeader(new BasicHeader("Content-Type", "application/json;charset=UTF-8"));
         HttpResponse response;
         HttpEntity entity;
         String responseBody = null;
+
+
+
         try {
 
 
@@ -76,12 +78,29 @@ public class HttpClient {
                     entity.getContent().close();
                     break;
                 case "POST":
+                    HttpPost httppost = new HttpPost(url);
+                    httppost.setHeader(new BasicHeader("Content-Type", "application/json;charset=UTF-8"));
+
                     httppost.setEntity(new StringEntity(json, UTF_8));
 
                     response = httpClient.execute(httppost, httpContext);
 
                     entity = response.getEntity();
                     BufferedReader rd = new BufferedReader(new InputStreamReader(entity.getContent()));
+                    responseBody = rd.readLine();
+                    EntityUtils.consume(entity);
+                    break;
+
+                case "PUT":
+                    HttpPut httpput = new HttpPut(url);
+                    httpput.setHeader(new BasicHeader("Content-Type", "application/json;charset=UTF-8"));
+
+                    httpput.setEntity(new StringEntity(json, UTF_8));
+
+                    response = httpClient.execute(httpput, httpContext);
+
+                    entity = response.getEntity();
+                    rd = new BufferedReader(new InputStreamReader(entity.getContent()));
                     responseBody = rd.readLine();
                     EntityUtils.consume(entity);
                     break;

@@ -95,7 +95,9 @@ public class TestCaseHelper {
             dbWrapper.assignRight("store in-charge", rights);
         String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
         dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "", vendorName);
-    }
+        dbWrapper.insertSupervisoryNodeSecond("F10", "N2", "Node 2", "N1");
+        dbWrapper.insertRoleAssignmentforSupervisoryNode(userId, "store in-charge","N2");
+        }
 
   public void setupProductTestData(String product1, String product2, String program, String facilityType) throws IOException, SQLException {
     dbWrapper.insertProducts(product1, product2);
@@ -117,5 +119,22 @@ public class TestCaseHelper {
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com", vendorName);
   }
+
+    public void setupDataExternalVendor() throws IOException, SQLException {
+        dbWrapper.insertVendor("commTrack");
+        List<String> rightsList = new ArrayList<String>();
+        rightsList.add("CREATE_REQUISITION");
+        rightsList.add("VIEW_REQUISITION");
+        rightsList.add("AUTHORIZE_REQUISITION");
+        setupTestDataToInitiateRnR(true,"HIV", "commTrack", "700", "commTrack", rightsList);
+
+    }
+
+    public void setupDataApproverExternalVendor() throws IOException, SQLException {
+        List<String> rightsList = new ArrayList<String>();
+        rightsList.add("APPROVE_REQUISITION");
+        rightsList.add("CONVERT_TO_ORDER");
+        setupTestDataToApproveRnR("commTrack1", "701", "commTrack", rightsList);
+    }
 
 }

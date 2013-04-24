@@ -221,6 +221,15 @@ public class DBWrapper {
       "    ('" + userID + "', (SELECT id FROM roles WHERE name = '" + roleName + "'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));");
   }
 
+    public void insertRoleAssignmentforSupervisoryNode(String userID, String roleName, String supervisoryNode) throws SQLException, IOException {
+        update("delete from role_assignments where userId='" + userID + "';");
+
+        update(" INSERT INTO role_assignments\n" +
+                "            (userId, roleId, programId, supervisoryNodeId) VALUES \n" +
+                "    ('" + userID + "', (SELECT id FROM roles WHERE name = '" + roleName + "'), 1, null),\n" +
+                "    ('" + userID + "', (SELECT id FROM roles WHERE name = '" + roleName + "'), 1, (SELECT id from supervisory_nodes WHERE code = '" + supervisoryNode + "'));");
+    }
+
   public void updateRoleAssignment(String userID, String supervisoryNode) throws SQLException, IOException {
     update("update role_assignments set supervisorynodeid=(select id from supervisory_nodes where code='" + supervisoryNode + "') where userid='" + userID + "';");
   }
@@ -575,13 +584,35 @@ public class DBWrapper {
   }
 
     public String getProgramID(String program) throws IOException, SQLException {
-        String facilityID = null;
+        String programID = null;
         ResultSet rs = query("SELECT ID from programs where code='" + program + "'");
 
         if (rs.next()) {
-            facilityID = rs.getString("id");
+            programID = rs.getString("id");
         }
-        return facilityID;
+        return programID;
+
+    }
+
+    public String getRequisitionStatus(String requisitionId) throws IOException, SQLException {
+        String requisitionStatus = null;
+        ResultSet rs = query("SELECT status from requisitions where id='" + requisitionId  + "'");
+
+        if (rs.next()) {
+            requisitionStatus = rs.getString("status");
+        }
+        return requisitionStatus;
+
+    }
+
+    public String getOrderId(String requisitionId) throws IOException, SQLException {
+        String orderId = null;
+        ResultSet rs = query("SELECT id from orders where rnrid='" + requisitionId  + "'");
+
+        if (rs.next()) {
+            orderId = rs.getString("id");
+        }
+        return orderId;
 
     }
 }
