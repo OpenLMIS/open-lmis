@@ -45,7 +45,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testE2EManageFacility(String user, String program, String[] credentials) throws Exception {
+  public void testE2EManageRolesAndFacility(String user, String program, String[] credentials) throws Exception {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com", "openLmis");
