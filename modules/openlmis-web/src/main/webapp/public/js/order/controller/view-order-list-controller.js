@@ -7,16 +7,11 @@
 function ViewOrderListController($scope, orders) {
   $scope.orders = orders;
 
-  $scope.downloadOrderCSV = function(orderId){
-
-  }
-
   $scope.gridOptions = { data: 'orders',
     showFooter: false,
     showColumnMenu: false,
     showFilter: false,
-    sortInfo: { field: 'createdDate', direction: 'DESC'},
-
+    enableSorting: false,
     columnDefs: [
       {field: 'rnr.id', displayName: 'Order No.'},
       {field: 'facilityCode', displayName: 'Facility Code-Name', cellTemplate:"<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.facilityCode}} - {{row.entity.rnr.facilityName}}</span></div>"},
@@ -26,7 +21,8 @@ function ViewOrderListController($scope, orders) {
       {field: 'createdDate', displayName: "Order Date/Time", cellFilter: "date:'dd/MM/yyyy hh:mm:ss'"},
       {field: 'status', displayName: "Order Status",
         cellTemplate:"<div class='ngCellText'><span ng-cell-text><div id=\"shippedOrderStaus\" ng-show=\"row.entity.fulfilled\">SHIPPED</div><div id=\"releasedOrderStaus\" ng-show=\"!row.entity.fulfilled\">RELEASED</div></span></div>"},
-      {cellTemplate: "<a ng-href='/orders/{{row.entity.id}}/download.csv'>Download CSV</a>"}
+      {cellTemplate: "<div class='ngCellText'><a ng-show=\"row.entity.productsOrdered\" ng-href='/orders/{{row.entity.id}}/download.csv'>Download CSV</a>" +
+        "<span ng-show=\"!row.entity.productsOrdered\"  ng-cell-text>No Orders</span></div>"}
     ]
   };
 }

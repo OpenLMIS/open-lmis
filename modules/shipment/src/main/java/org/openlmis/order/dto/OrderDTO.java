@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.order.domain.Order;
 import org.openlmis.rnr.dto.RnrDTO;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +26,7 @@ public class OrderDTO {
   private Integer id;
   private RnrDTO rnr;
   private Boolean fulfilled;
+  private Boolean productsOrdered;
 
   public static List<OrderDTO> getOrdersForView(List<Order> orders) {
     List<OrderDTO> orderDTOs = new ArrayList<>();
@@ -40,6 +42,11 @@ public class OrderDTO {
     orderDTO.setRnr(RnrDTO.prepareForOrderView(order.getRnr()));
     orderDTO.setCreatedDate(order.getCreatedDate());
     orderDTO.setFulfilled(order.getFulfilled());
+    if(order.getRnr().getFullSupplyLineItems().size() == 0 && order.getRnr().getNonFullSupplyLineItems().size() == 0) {
+      orderDTO.setProductsOrdered(false);
+    } else {
+      orderDTO.setProductsOrdered(true);
+    }
     return orderDTO;
   }
 

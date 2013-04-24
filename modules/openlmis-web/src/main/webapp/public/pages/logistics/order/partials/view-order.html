@@ -13,6 +13,8 @@
         <div class="alert alert-info" id="noOrdersPresent" ng-hide="orders.length">
             No R&Rs have been released as Orders yet
         </div>
+      <div class="alert alert-info" id="noOrders" ng-show="downloadMessage" ng-bind="downloadMessage">
+      </div>
         <div>
             <div class="gridStyle" ng-grid="gridOptions" ng-show="orders.length"></div>
         </div>

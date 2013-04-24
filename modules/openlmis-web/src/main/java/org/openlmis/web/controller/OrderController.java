@@ -48,8 +48,9 @@ public class OrderController extends BaseController {
   @RequestMapping(value = "/orders/{id}/download.csv", method = GET, headers = ACCEPT_CSV)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
   public ModelAndView downloadOrderCsv(@PathVariable Integer id) {
-    ModelAndView modelAndView = new ModelAndView("orderCSV");
+    ModelAndView modelAndView;
     Order order = orderService.getOrderForDownload(id);
+    modelAndView = new ModelAndView("orderCSV");
     modelAndView.addObject(ORDER, order);
     return modelAndView;
   }

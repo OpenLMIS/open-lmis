@@ -48,6 +48,7 @@ public class OrderService {
     Rnr rnr;
     for (Order order : orders) {
       rnr = requisitionService.getFullRequisitionById(order.getRnr().getId());
+      removeUnorderedProducts(rnr);
       order.setRnr(rnr);
     }
     return orders;
