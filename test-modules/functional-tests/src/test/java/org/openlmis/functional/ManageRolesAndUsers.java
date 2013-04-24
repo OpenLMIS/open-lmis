@@ -100,9 +100,15 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
     userPage.clickAllRemoveButton();
     userPage.clickSaveButton();
+    System.out.println("Before clickViewHere");
     userPage.clickViewHere();
+    System.out.println("After clickViewHere and before verifyRoleNotPresent");
     userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
+    System.out.println("After verifyRoleNotPresent and before verifyRemoveNotPresent");
     userPage.verifyRemoveNotPresent();
+    System.out.println("After verifyRemoveNotPresent and before navigateUploads");
+    homePage.navigateUploads();
+    System.out.println("After navigateUploads");
 
   }
 
@@ -125,6 +131,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
+    System.out.println("Inside tearDown");
   }
 
   @DataProvider(name = "Data-Provider-Function-Positive")
