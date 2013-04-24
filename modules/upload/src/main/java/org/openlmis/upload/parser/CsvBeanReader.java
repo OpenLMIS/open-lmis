@@ -36,10 +36,6 @@ public class CsvBeanReader {
     configureProcessors();
   }
 
-  public CsvBeanReader(Class<? extends Importable> clazz, File file) throws IOException {
-    this(new ModelClass(clazz, true), new FileInputStream(file));
-  }
-
   private void configureDozerBeanReader(InputStream inputStream) throws IOException {
     CsvPreference csvPreference = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
         .surroundingSpacesNeedQuotes(true).build();

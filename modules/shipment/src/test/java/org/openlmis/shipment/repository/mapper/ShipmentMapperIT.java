@@ -5,7 +5,6 @@
 
 package org.openlmis.shipment.repository.mapper;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
@@ -17,7 +16,6 @@ import org.openlmis.order.domain.Order;
 import org.openlmis.order.repository.mapper.OrderMapper;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShippedLineItem;
@@ -33,7 +31,6 @@ import java.util.Arrays;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
@@ -107,12 +104,6 @@ public class ShipmentMapperIT {
   }
 
   @Test
-  public void shouldFetchRecordForOrderIdAndShipmentFileInfoId() throws Exception {
-
-
-  }
-
-  @Test
   public void shouldInsertShipmentFileInfo() throws Exception {
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
     shipmentFileInfo.setName("abc");
@@ -129,10 +120,9 @@ public class ShipmentMapperIT {
 
     mapper.insertShippedLineItem(shippedLineItem);
 
-    ShippedLineItem returnedShippedLineItem = mapper.getShippedLineItemByOrderId(shippedLineItem.getOrderId());
+    ShippedLineItem returnedShippedLineItem = mapper.getShippedLineItem(shippedLineItem);
 
     assertThat(returnedShippedLineItem, is(shippedLineItem));
-
   }
 
   @Test
@@ -144,8 +134,8 @@ public class ShipmentMapperIT {
 
     mapper.updateShippedLineItem(shippedLineItem);
 
-    ShippedLineItem shippedLineItemFromDB = mapper.getShippedLineItemByOrderId(shippedLineItem.getOrderId());
+    ShippedLineItem shippedLineItemFromDB = mapper.getShippedLineItem(shippedLineItem);
 
-    assertThat(shippedLineItemFromDB.getQuantityShipped(),is(10));
+    assertThat(shippedLineItemFromDB.getQuantityShipped(), is(10));
   }
 }

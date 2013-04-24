@@ -18,19 +18,19 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ShipmentMapper {
 
-  @Insert({"INSERT INTO shipped_line_items (orderId, productCode, quantityShipped) " +
+  @Insert({"INSERT INTO shipped_line_items (orderId, productCode, quantityShipped, modifiedDate) " +
      "VALUES" +
-     "(#{orderId}, #{productCode}, #{quantityShipped})"})
+     "(#{orderId}, #{productCode}, #{quantityShipped}, #{modifiedDate})"})
    @Options(useGeneratedKeys = true)
    public void insertShippedLineItem(ShippedLineItem shippedLineItem);
 
-  @Insert({"INSERT INTO shipment_file_info (fileName,success) VALUES (#{name},#{success})"})
+  @Insert({"INSERT INTO shipment_file_info (fileName, processingError) VALUES (#{name},#{processingError})"})
   @Options(useGeneratedKeys = true)
   void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo);
 
-  @Select("SELECT * from shipped_line_items where orderId=#{orderId}")
-  ShippedLineItem getShippedLineItemByOrderId(Integer orderId);
+  @Select("SELECT * FROM shipped_line_items WHERE orderId=#{orderId} AND productCode=#{productCode}")
+  ShippedLineItem getShippedLineItem(ShippedLineItem shippedLineItem);
 
-  @Update("UPDATE shipped_line_items set orderId=#{orderId}, productCode=#{productCode},quantityShipped=#{quantityShipped} WHERE id=#{id}")
+  @Update("UPDATE shipped_line_items SET orderId=#{orderId}, productCode=#{productCode},quantityShipped=#{quantityShipped},modifiedDate=#{modifiedDate} WHERE id=#{id}")
   void updateShippedLineItem(ShippedLineItem shippedLineItem);
 }

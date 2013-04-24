@@ -28,7 +28,7 @@ public class OrderRepository {
   }
 
   public void updateFulfilledAndShipmentIdForOrder(String rnrIds, Boolean fulfilled, Integer shipmentId) {
-    orderMapper.updateFullfilledFlagAndShipmentId(rnrIds,fulfilled,shipmentId);
+    orderMapper.updateFulfilledFlagAndShipmentId(rnrIds, fulfilled, shipmentId);
   }
 
   public Order getById(Integer id) {

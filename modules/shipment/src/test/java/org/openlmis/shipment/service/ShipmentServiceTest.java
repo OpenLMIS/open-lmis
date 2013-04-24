@@ -13,15 +13,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.order.service.OrderService;
-import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
+import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -52,12 +52,12 @@ public class ShipmentServiceTest {
   public void shouldUpdateOrders() throws Exception {
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
     shipmentFileInfo.setId(1);
-    shipmentFileInfo.setSuccess(Boolean.TRUE);
+    shipmentFileInfo.setProcessingError(FALSE);
     List<Integer> orderIds = new ArrayList();
     orderIds.add(1);
 
     shipmentService.updateFulfilledFlagAndShipmentIdForOrders(orderIds, shipmentFileInfo);
 
-    verify(orderService).updateFulfilledAndShipmentIdForOrders(orderIds, Boolean.TRUE, 1);
+    verify(orderService).updateFulfilledAndShipmentIdForOrders(orderIds, TRUE, 1);
   }
 }

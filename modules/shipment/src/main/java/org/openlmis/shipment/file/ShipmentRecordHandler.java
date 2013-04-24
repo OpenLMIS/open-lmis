@@ -29,15 +29,18 @@ public class ShipmentRecordHandler implements RecordHandler {
   @Override
   public void execute(Importable importable, int rowNumber, AuditFields auditFields) {
     ShippedLineItem shippedLineItem = (ShippedLineItem) importable;
-    ShippedLineItem shippedLineItemFromDB = shipmentService.getShippedLineItemByOrderId(shippedLineItem.getOrderId());
-    if (shippedLineItemFromDB != null) {
-      if (!shippedLineItemFromDB.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
-        throw new DataException("Order Number Already Processed");
-      } else {
-        shipmentService.updateShippedLineItem(shippedLineItem);
-      }
+    shippedLineItem.setModifiedDate(auditFields.getCurrentTimestamp());
+
+    ShippedLineItem shippedLineItemFromDB = shipmentService.getShippedLineItem(shippedLineItem);
+
+    if (shippedLineItemFromDB == null) {
+      shipmentService.insertShippedLineItem(shippedLineItem);
       return;
     }
-    shipmentService.insertShippedLineItem(shippedLineItem);
+
+    if (!shippedLineItemFromDB.getModifiedDate().equals(auditFields.getCurrentTimestamp()))
+      throw new DataException("Order Number Already Processed");
+
+    shipmentService.updateShippedLineItem(shippedLineItem);
   }
 }

@@ -9,60 +9,65 @@ package org.openlmis.shipment.file;
 import lombok.NoArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.shipment.domain.ShipmentFileInfo;
+import org.openlmis.db.service.DbService;
 import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.file.csv.handler.ShipmentFilePostProcessHandler;
-import org.openlmis.shipment.repository.ShipmentRepository;
 import org.openlmis.shipment.service.ShipmentService;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.AuditFields;
 import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CSVParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.annotation.MessageEndpoint;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
 
-import static java.lang.Boolean.*;
+import static java.lang.Boolean.FALSE;
 
 @MessageEndpoint
 @NoArgsConstructor
 public class ShipmentFileProcessor {
-
-  private CSVParser csvParser;
-  private RecordHandler shipmentRecordHandler;
-  private ShipmentFilePostProcessHandler shipmentFilePostProcessHandler;
-  private ShipmentService shipmentService;
-  public static final boolean NO_ERROR = FALSE;
+  private static Logger logger = LoggerFactory.getLogger(ShipmentFileProcessor.class);
 
   @Autowired
-  public ShipmentFileProcessor(CSVParser csvParser, RecordHandler shipmentRecordHandler,
-                               ShipmentFilePostProcessHandler shipmentFileCsvPostProcessHandler,ShipmentService shipmentService){
-    this.csvParser = csvParser;
-    this.shipmentRecordHandler = shipmentRecordHandler;
-    this.shipmentFilePostProcessHandler = shipmentFileCsvPostProcessHandler;
-    this.shipmentService = shipmentService;
-  }
+  private CSVParser csvParser;
+  @Autowired
+  private RecordHandler shipmentRecordHandler;
+  @Autowired
+  private ShipmentFilePostProcessHandler shipmentFilePostProcessHandler;
+  @Autowired
+  private ShipmentService shipmentService;
+  @Autowired
+  private DbService dbService;
+
+  public static final boolean NO_ERROR = FALSE;
 
   public void process(Message message) throws IOException {
     File shipmentFile = (File) message.getPayload();
     boolean processingError = false;
     ModelClass modelClass = new ModelClass(ShippedLineItem.class, true);
-
     try (FileInputStream inputStream = new FileInputStream(shipmentFile)) {
-      csvParser.process(inputStream, modelClass, shipmentRecordHandler);
+      logger.info("Starting to process file " + shipmentFile.getName());
+      Date currentTimestamp = dbService.getCurrentTimestamp();
+      csvParser.process(inputStream, modelClass, shipmentRecordHandler, new AuditFields(currentTimestamp));
+      logger.info("Successfully processed file " + shipmentFile.getName());
     } catch (DataException | UploadException e) {
+      logger.info("Error processing file " + shipmentFile.getName() + "with error" + e.getMessage());
       processingError = true;
     } finally {
+      logger.info("Starting post processing file " + shipmentFile.getName());
       shipmentFilePostProcessHandler.process(shipmentFile, processingError);
-      FileUtils.deleteQuietly(shipmentFile);
+      logger.info("Updated order statuses for file " + shipmentFile.getName());
+      boolean deleteStatus = FileUtils.deleteQuietly(shipmentFile);
+      if (deleteStatus)
+        logger.info("Successfully deleted file " + shipmentFile.getName());
     }
   }
 

@@ -20,7 +20,8 @@ import org.openlmis.upload.model.AuditFields;
 import java.util.Calendar;
 import java.util.Date;
 
-import static org.mockito.Mockito.doThrow;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,7 +39,9 @@ public class ShipmentRecordHandlerTest {
   @Test
   public void shouldInsert() throws Exception {
     ShippedLineItem shippedLineItem = new ShippedLineItem();
-    shipmentRecordHandler.execute(shippedLineItem, 1, null);
+    Date currentTimestamp = new Date();
+    shipmentRecordHandler.execute(shippedLineItem, 1, new AuditFields(currentTimestamp));
+    assertThat(shippedLineItem.getModifiedDate(), is(currentTimestamp));
     verify(shipmentService).insertShippedLineItem(shippedLineItem);
   }
 
@@ -56,7 +59,7 @@ public class ShipmentRecordHandlerTest {
     ShippedLineItem shippedLineItemFromDB = new ShippedLineItem();
     shippedLineItemFromDB.setModifiedDate(date);
 
-    when(shipmentService.getShippedLineItemByOrderId(shippedLineItem.getOrderId())).thenReturn(shippedLineItemFromDB);
+    when(shipmentService.getShippedLineItem(shippedLineItem)).thenReturn(shippedLineItemFromDB);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Order Number Already Processed");
@@ -67,16 +70,17 @@ public class ShipmentRecordHandlerTest {
   @Test
   public void shouldUpdateShippedLineItemIfOrderIdPresentWithSameTimeStamp() throws Exception {
     ShippedLineItem shippedLineItem = new ShippedLineItem();
-    AuditFields auditFields = new AuditFields();
-    auditFields.setCurrentTimestamp(new Date());
+    Date currentTimestamp = new Date();
+    AuditFields auditFields = new AuditFields(currentTimestamp);
 
     ShippedLineItem shippedLineItemFromDB = new ShippedLineItem();
-    shippedLineItemFromDB.setModifiedDate(new Date());
+    shippedLineItemFromDB.setModifiedDate(currentTimestamp);
 
-    when(shipmentService.getShippedLineItemByOrderId(shippedLineItem.getOrderId())).thenReturn(shippedLineItemFromDB);
+    when(shipmentService.getShippedLineItem(shippedLineItem)).thenReturn(shippedLineItemFromDB);
 
     shipmentRecordHandler.execute(shippedLineItem,1,auditFields);
 
+    assertThat(shippedLineItem.getModifiedDate(), is(currentTimestamp));
     verify(shipmentService).updateShippedLineItem(shippedLineItem);
   }
 }

@@ -7,11 +7,13 @@ package org.openlmis.shipment.file.csv.handler;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CsvBeanReader;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -31,8 +33,12 @@ public class ShipmentFileReaderTest {
     RawShipment rawShipment1 = new RawShipment(1);
     RawShipment rawShipment2 = new RawShipment(2);
     RawShipment rawShipment3 = new RawShipment(1);
+    FileInputStream shipmentFileStream = mock(FileInputStream.class);
+    ModelClass modelClass = new ModelClass(RawShipment.class, true);
 
-    whenNew(CsvBeanReader.class).withArguments(RawShipment.class, shipmentFile).thenReturn(csvBeanReader);
+    whenNew(ModelClass.class).withArguments(RawShipment.class, true).thenReturn(modelClass);
+    whenNew(FileInputStream.class).withArguments(shipmentFile).thenReturn(shipmentFileStream);
+    whenNew(CsvBeanReader.class).withArguments(modelClass, shipmentFileStream).thenReturn(csvBeanReader);
     when(csvBeanReader.readWithCellProcessors()).thenReturn(rawShipment1).thenReturn(rawShipment2).thenReturn(rawShipment3).thenReturn(null);
 
     Set<Integer> result = new ShipmentFileReader().getOrderIds(shipmentFile);

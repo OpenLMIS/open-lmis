@@ -6,7 +6,6 @@
 
 package org.openlmis.order.repository.mapper;
 
-import org.hamcrest.Matcher;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +16,6 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProcessingSchedule;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.query.QueryExecutor;
-import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
@@ -38,13 +36,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.lang.Boolean.FALSE;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.isNotNull;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
@@ -118,7 +113,7 @@ public class OrderMapperIT {
   public void shouldUpdateFulfilledFlagAndShipmentIdForOrders() throws Exception {
     Order order = new Order();
     Rnr rnr = insertRequisition(1);
-    order.setFulfilled(Boolean.TRUE);
+    order.setFulfilled(FALSE);
     order.setShipmentId(1);
 
     order.setRnr(rnr);
@@ -127,7 +122,7 @@ public class OrderMapperIT {
 
     String orders = Arrays.asList(order.getRnr().getId()).toString().replace("[", "{").replace("]", "}");
 
-    mapper.updateFullfilledFlagAndShipmentId(orders, true,1);
+    mapper.updateFulfilledFlagAndShipmentId(orders, true, 1);
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE rnrid=?",Arrays.asList(order.getRnr().getId()));
 

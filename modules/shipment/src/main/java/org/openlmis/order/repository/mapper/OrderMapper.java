@@ -19,16 +19,16 @@ public interface OrderMapper {
   @Options(useGeneratedKeys = true)
   void insert(Order order);
 
-  @Select("Select * from orders ORDER BY createdDate DESC")
+  @Select("SELECT * FROM orders ORDER BY createdDate DESC")
       @Results({
           @Result(property = "rnr.id", column = "rnrId")
       })
   List<Order> getAll();
 
-  @Update("UPDATE orders SET shipmentId=#{shipmentId},fulfilled=#{fulfilled} where rnrid=ANY(#{rnrIds}::INTEGER[])")
-  void updateFullfilledFlagAndShipmentId(@Param(value = "rnrIds")String rnrIds,@Param(value = "fulfilled") Boolean fulfilled,@Param(value = "shipmentId") Integer shipmentId);
+  @Update("UPDATE orders SET shipmentId=#{shipmentId},fulfilled=#{fulfilled} WHERE rnrid=ANY(#{rnrIds}::INTEGER[]) AND fulfilled IS NOT true")
+  void updateFulfilledFlagAndShipmentId(@Param(value = "rnrIds") String rnrIds, @Param(value = "fulfilled") Boolean fulfilled, @Param(value = "shipmentId") Integer shipmentId);
 
-  @Select("Select * from orders WHERE id = #{id}")
+  @Select("SELECT * FROM orders WHERE id = #{id}")
   @Results({
     @Result(property = "rnr.id", column = "rnrId")
   })

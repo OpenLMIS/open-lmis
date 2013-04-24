@@ -9,6 +9,8 @@ package org.openlmis.shipment.file.csv.handler;
 import lombok.NoArgsConstructor;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.service.ShipmentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
@@ -23,6 +25,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class ShipmentFilePostProcessHandler {
 
+  private static Logger logger = LoggerFactory.getLogger(ShipmentFilePostProcessHandler.class);
   @Autowired
   private ShipmentService shipmentService;
   @Autowired
@@ -42,8 +45,9 @@ public class ShipmentFilePostProcessHandler {
   }
 
   private void sendErrorFileToFtp(File file) {
-    Message<?> message = MessageBuilder.withPayload(file).build();
+    Message<File> message = MessageBuilder.withPayload(file).build();
     ftpOutputChannel.send(message);
+    logger.info("Sent  error file to FTP " + file.getName());
   }
 
 }

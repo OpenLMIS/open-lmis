@@ -6,5 +6,5 @@ CREATE TABLE shipped_line_items (
   orderId INTEGER NOT NULL REFERENCES orders(id),
   productCode VARCHAR(50) NOT NULL REFERENCES products(code),
   quantityShipped INTEGER  NOT NULL,
-  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  modifiedDate TIMESTAMP
 );

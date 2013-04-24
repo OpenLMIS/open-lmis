@@ -42,8 +42,8 @@ public class ShipmentRepository {
   public void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {
     shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
   }
-  public ShippedLineItem getShippedLineItemByOrderId(Integer orderId){
-    return shipmentMapper.getShippedLineItemByOrderId(orderId);
+  public ShippedLineItem getShippedLineItem(ShippedLineItem shippedLineItem){
+    return shipmentMapper.getShippedLineItem(shippedLineItem);
   }
 
   public void updateShippedLineItem(ShippedLineItem shippedLineItem) {

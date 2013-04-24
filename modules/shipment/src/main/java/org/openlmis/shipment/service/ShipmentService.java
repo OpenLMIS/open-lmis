@@ -14,9 +14,7 @@ import org.openlmis.shipment.repository.ShipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @NoArgsConstructor
@@ -40,11 +38,11 @@ public class ShipmentService {
   }
 
   public void updateFulfilledFlagAndShipmentIdForOrders(List<Integer> orderIds, ShipmentFileInfo shipmentFileInfo) {
-    orderService.updateFulfilledAndShipmentIdForOrders(orderIds,shipmentFileInfo.isSuccess(),shipmentFileInfo.getId());
+    orderService.updateFulfilledAndShipmentIdForOrders(orderIds,!shipmentFileInfo.isProcessingError(),shipmentFileInfo.getId());
 
   }
-  public ShippedLineItem getShippedLineItemByOrderId(Integer orderId){
-    return shipmentRepository.getShippedLineItemByOrderId(orderId);
+  public ShippedLineItem getShippedLineItem(ShippedLineItem shippedLineItem){
+    return shipmentRepository.getShippedLineItem(shippedLineItem);
   }
 
   public void updateShippedLineItem(ShippedLineItem shippedLineItem) {
