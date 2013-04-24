@@ -22,6 +22,12 @@ public class Constants {
     public static String LOGO = "LOGO";
 
 
+    /**
+     * Configuration keys
+     */
+    public static String LOGO_FILE_NAME_KEY = "logo_file_name";
+
+
 
 
 }
