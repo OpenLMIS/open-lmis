@@ -41,6 +41,7 @@ public class ShipmentRecordHandler implements RecordHandler {
     if (!shippedLineItemFromDB.getModifiedDate().equals(auditFields.getCurrentTimestamp()))
       throw new DataException("Order Number Already Processed");
 
+    shippedLineItem.setId(shippedLineItemFromDB.getId());
     shipmentService.updateShippedLineItem(shippedLineItem);
   }
 }

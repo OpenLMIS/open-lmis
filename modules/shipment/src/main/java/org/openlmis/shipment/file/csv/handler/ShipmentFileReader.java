@@ -29,7 +29,7 @@ public class ShipmentFileReader {
     try (FileInputStream inputStream = new FileInputStream(shipmentFile)) {
       CsvBeanReader csvBeanReader = new CsvBeanReader(new ModelClass(RawShipment.class, true), inputStream);
       RawShipment rawShipment;
-      while ((rawShipment = (RawShipment) csvBeanReader.readWithCellProcessors()) != null) {
+      while ((rawShipment = (RawShipment) csvBeanReader.read()) != null) {
         orderIds.add(rawShipment.getOrderNumber());
       }
     } catch (IOException e) {

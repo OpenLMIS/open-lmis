@@ -21,7 +21,7 @@ import java.util.Map;
 public class CsvCellProcessors {
 
     private static final String format = "dd/MM/yyyy";
-    public static Map<String, CellProcessor> typeMappings = new HashMap<String, CellProcessor>();
+    public static Map<String, CellProcessor> typeMappings = new HashMap<>();
     static {
         typeMappings.put("int", new ParseInt());
         typeMappings.put("long", new ParseLong());

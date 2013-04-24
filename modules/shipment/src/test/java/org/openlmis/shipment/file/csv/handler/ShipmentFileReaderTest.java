@@ -39,7 +39,7 @@ public class ShipmentFileReaderTest {
     whenNew(ModelClass.class).withArguments(RawShipment.class, true).thenReturn(modelClass);
     whenNew(FileInputStream.class).withArguments(shipmentFile).thenReturn(shipmentFileStream);
     whenNew(CsvBeanReader.class).withArguments(modelClass, shipmentFileStream).thenReturn(csvBeanReader);
-    when(csvBeanReader.readWithCellProcessors()).thenReturn(rawShipment1).thenReturn(rawShipment2).thenReturn(rawShipment3).thenReturn(null);
+    when(csvBeanReader.read()).thenReturn(rawShipment1).thenReturn(rawShipment2).thenReturn(rawShipment3).thenReturn(null);
 
     Set<Integer> result = new ShipmentFileReader().getOrderIds(shipmentFile);
 

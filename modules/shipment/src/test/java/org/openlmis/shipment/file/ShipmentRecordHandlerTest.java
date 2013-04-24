@@ -73,14 +73,17 @@ public class ShipmentRecordHandlerTest {
     Date currentTimestamp = new Date();
     AuditFields auditFields = new AuditFields(currentTimestamp);
 
+    int shippedLineItemFromDbId = 1;
     ShippedLineItem shippedLineItemFromDB = new ShippedLineItem();
     shippedLineItemFromDB.setModifiedDate(currentTimestamp);
+    shippedLineItemFromDB.setId(shippedLineItemFromDbId);
 
     when(shipmentService.getShippedLineItem(shippedLineItem)).thenReturn(shippedLineItemFromDB);
 
     shipmentRecordHandler.execute(shippedLineItem,1,auditFields);
 
     assertThat(shippedLineItem.getModifiedDate(), is(currentTimestamp));
+    assertThat(shippedLineItem.getId(), is(shippedLineItemFromDbId));
     verify(shipmentService).updateShippedLineItem(shippedLineItem);
   }
 }

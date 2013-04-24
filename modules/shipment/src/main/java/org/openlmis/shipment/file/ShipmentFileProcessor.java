@@ -59,7 +59,7 @@ public class ShipmentFileProcessor {
       csvParser.process(inputStream, modelClass, shipmentRecordHandler, new AuditFields(currentTimestamp));
       logger.info("Successfully processed file " + shipmentFile.getName());
     } catch (DataException | UploadException e) {
-      logger.info("Error processing file " + shipmentFile.getName() + "with error" + e.getMessage());
+      logger.info("Error processing file " + shipmentFile.getName() + " with error " + e.getMessage());
       processingError = true;
     } finally {
       logger.info("Starting post processing file " + shipmentFile.getName());
