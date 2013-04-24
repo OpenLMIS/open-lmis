@@ -18,6 +18,19 @@
         </layout>
     </appender>
 
+    <appender name="consoleAppender" class="org.apache.log4j.ConsoleAppender">
+        <param name="Append" value="true"/>
+        <param name="Encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.EnhancedPatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} [%-5p][%-16.16t][%40.40c] - %m%n"/>
+        </layout>
+    </appender>
+
+    <logger name="java.sql" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
     <logger name="org.openlmis.web">
         <level value="INFO"/>
         <appender-ref ref="logFileAppender"/>
