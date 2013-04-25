@@ -1,0 +1,44 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+apply plugin: 'cobertura'
+
+dependencies {
+    compile 'org.springframework:spring-core:3.1.1.RELEASE',
+            'org.springframework:spring-aspects:3.1.1.RELEASE',
+            'org.springframework:spring-web:3.1.1.RELEASE',
+            'org.springframework:spring-webmvc:3.1.1.RELEASE',
+            'org.springframework:spring-jdbc:3.1.1.RELEASE',
+            'postgresql:postgresql:9.1-901.jdbc4',
+            'c3p0:c3p0:0.9.0.4',
+            'javax.servlet:servlet-api:2.5',
+            'org.aspectj:aspectjrt:1.7.0',
+            'commons-lang:commons-lang:2.6',
+            'commons-collections:commons-collections:20040616',
+            'net.sf.jasperreports:jasperreports:5.0.4',
+            'com.lowagie:itext:4.2.0',
+            project(':modules:core')
+
+    testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
+            'postgresql:postgresql:9.1-901.jdbc4',
+            project(path: ':modules:core', configuration: 'testFixtures')
+
+    configurations {
+        testFixtures {
+            extendsFrom testRuntime
+        }
+    }
+
+    task testJar(type: Jar) {
+        from sourceSets.test.output
+        classifier = 'test'
+    }
+
+    artifacts {
+        testFixtures testJar
+    }
+
+}

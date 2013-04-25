@@ -5,7 +5,7 @@
  */
 
 include "modules:core", "modules:authentication",
-        "modules:openlmis-web", "modules:db","modules:upload",
+        "modules:openlmis-web", "modules:db","modules:upload","modules:reporting",
         "modules:requisition","modules:email","modules:rest-api","test-modules:webservice-test",
         "modules:shipment","test-modules:functional-tests","test-modules:test-core"
 

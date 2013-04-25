@@ -7,12 +7,14 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class SupervisoryNode extends BaseModel implements Importable {
 
   @ImportField(name = "Supervisory Node Code", mandatory = true)
