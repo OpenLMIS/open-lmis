@@ -91,8 +91,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.clickViewHere();
     System.out.println("brute force" + "12");
     userPage.verifyRoleNotPresent(LMU);
-    System.out.println("brute force" + "13");
-    userPage.clickCancelButton();
     System.out.println("brute force" + "14");
     createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, false);
     System.out.println("brute force" + "15");
@@ -119,10 +117,15 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   }
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, boolean adminRole) throws IOException, SQLException {
+    System.out.println("brute force" + "14.1");
     UserPage userPage = homePage.navigateToUser();
+    System.out.println("brute force" + "14.2");
     String userID = userPage.enterAndverifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dburlGlobal);
+    System.out.println("brute force" + "14.3");
     dbWrapper.updateUser(passwordUsers, userEmail);
+    System.out.println("brute force" + "14.4");
     userPage.enterMyFacilityAndMySupervisedFacilityData(userFirstName, userLastName, facility, program, supervisoryNode, role, adminRole);
+    System.out.println("brute force" + "14.5");
     return userID;
   }
 
