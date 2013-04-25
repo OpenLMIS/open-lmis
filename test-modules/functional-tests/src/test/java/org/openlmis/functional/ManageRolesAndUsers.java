@@ -47,22 +47,27 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EManageRolesAndFacility(String user, String program, String[] credentials) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+
     dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com", "openLmis");
+
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
     String date_time = createFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy);
     String facility_code = facilityCodePrefix + date_time;
     String facility_name = facilityNamePrefix + date_time;
     createFacilityPage.verifyMessageOnFacilityScreen(facility_name, "created");
+
     List<String> userRoleList = new ArrayList<String>();
     userRoleList.add(CREATE_REQUISITION);
     userRoleList.add(AUTHORIZE_REQUISITION);
     userRoleList.add(APPROVE_REQUISITION);
     createRoleAndAssignRights(homePage, userRoleList, LAB_IN_CHARGE, LAB_IN_CHARGE, true);
+
     List<String> userRoleListLmu = new ArrayList<String>();
     userRoleListLmu.add(CONVERT_TO_ORDER_REQUISITION);
     userRoleListLmu.add(VIEW_ORDER_REQUISITION);
-    createRoleAndAssignRights(homePage, userRoleListLmu, "lmu", "lmu", false);
+    createRoleAndAssignRights(homePage, userRoleListLmu, LMU, LMU, false);
+
     RolesPage rolesPage = new RolesPage(testWebDriver);
     rolesPage.clickARole(LAB_IN_CHARGE);
     rolesPage.verifyAdminRoleRadioNonEditable();
@@ -71,6 +76,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     rolesPage.clickARole(LMU);
     rolesPage.verifyProgramRoleRadioNonEditable();
     rolesPage.verifyRoleSelected(userRoleListLmu);
+
     rolesPage.clickCancelButton();
     dbWrapper.insertSupervisoryNode(facility_code, "N1", "Node 1", "null");
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
@@ -88,7 +94,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     System.out.println("brute force"+"13");
     userPage.clickCancelButton();
     System.out.println("brute force"+"14");
-
     createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, false);
     userPage.clickViewHere();
     userPage.removeRole(1, false);
@@ -99,16 +104,14 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     System.out.println("brute force"+"16");
     userPage.clickAllRemoveButton();
     userPage.clickSaveButton();
-    System.out.println("brute force"+"Before clickViewHere");
+    System.out.println("brute force"+"17");
     userPage.clickViewHere();
-    System.out.println("brute force"+"After clickViewHere and before verifyRoleNotPresent");
+    System.out.println("brute force"+"18");
     userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
-    System.out.println("brute force"+"After verifyRoleNotPresent and before verifyRemoveNotPresent");
+    System.out.println("brute force"+"19");
     userPage.verifyRemoveNotPresent();
-    System.out.println("brute force"+"After verifyRemoveNotPresent and before navigateUploads");
+    System.out.println("brute force"+"20");
     homePage.navigateUploads();
-    System.out.println("brute force"+"After navigateUploads");
-
   }
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, boolean adminRole) throws IOException, SQLException {
@@ -130,7 +133,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
-    System.out.println("brute force"+"Inside tearDown");
   }
 
   @DataProvider(name = "Data-Provider-Function-Positive")
