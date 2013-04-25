@@ -84,12 +84,9 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     UserPage userPage = new UserPage(testWebDriver);
     userPage.clickViewHere();
     userPage.removeRole(1, true);
-    System.out.println("brute force" + "10");
     userPage.verifyRoleNotPresent(LMU);
-    System.out.println("brute force" + "11");
     userPage.clickSaveButton();
     userPage.clickViewHere();
-    System.out.println("brute force" + "12");
     userPage.verifyRoleNotPresent(LMU);
     System.out.println("brute force" + "14");
     createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, false);

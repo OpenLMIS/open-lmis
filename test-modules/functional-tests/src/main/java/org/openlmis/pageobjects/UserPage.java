@@ -123,26 +123,44 @@ public class UserPage extends Page {
   }
 
   public String enterAndverifyUserDetails(String userName, String email, String firstName, String lastName, String baseurl, String dburl) throws IOException, SQLException {
+    System.out.println("brute force" + "14.2.1");
     testWebDriver.waitForElementToAppear(addNewButton);
+    System.out.println("brute force" + "14.2.2");
     addNewButton.click();
+    System.out.println("brute force" + "14.2.3");
     testWebDriver.waitForElementToAppear(userNameField);
+    System.out.println("brute force" + "14.2.4");
     userNameField.clear();
+    System.out.println("brute force" + "14.2.5");
     userNameField.sendKeys(userName);
+    System.out.println("brute force" + "14.2.6");
     emailField.clear();
+    System.out.println("brute force" + "14.2.7");
     emailField.sendKeys(email);
+    System.out.println("brute force" + "14.2.8");
     firstNameField.clear();
+    System.out.println("brute force" + "14.2.9");
     firstNameField.sendKeys(firstName);
+    System.out.println("brute force" + "14.2.10");
     lastNameField.clear();
+    System.out.println("brute force" + "14.2.11");
     lastNameField.sendKeys(lastName);
+    System.out.println("brute force" + "14.2.12");
 
     saveButton.click();
+    System.out.println("brute force" + "14.2.13");
     testWebDriver.waitForElementToAppear(viewHereLink);
+    System.out.println("brute force" + "14.2.14");
 
     SeleneseTestNgHelper.assertTrue("User '" + firstName + " " + lastName + "' has been successfully created, password link sent on registered Email address message is not getting displayed", successMessage.isDisplayed());
+    System.out.println("brute force" + "14.2.15");
     viewHereLink.click();
 
+    System.out.println("brute force" + "14.2.16");
     DBWrapper dbWrapper = new DBWrapper(baseurl, dburl);
+    System.out.println("brute force" + "14.2.17");
     String userID = dbWrapper.getUserID(userName);
+    System.out.println("brute force" + "14.2.18");
 
     return userID;
 
