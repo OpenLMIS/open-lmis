@@ -1,0 +1,42 @@
+configurations {
+    flyway
+    classpath
+}
+
+dependencies {
+    compile 'org.springframework:spring-core:3.1.1.RELEASE',
+            'org.springframework:spring-web:3.1.1.RELEASE',
+            'org.springframework:spring-context:3.1.1.RELEASE',
+            'org.springframework:spring-aop:3.1.1.RELEASE',
+            'org.springframework:spring-context-support:3.1.1.RELEASE',
+            'org.codehaus.groovy:groovy-all:2.1.1',
+            'com.googlecode.flyway:flyway-core:1.7',
+            'com.googlecode.flyway:flyway-ant:1.7',
+            project(':modules:db')
+
+    flyway 'com.googlecode.flyway:flyway-ant:1.7',
+            'postgresql:postgresql:9.1-901.jdbc4'
+
+    classpath 'postgresql:postgresql:9.1-901.jdbc4'
+}
+
+task setupmigrationDB() << {
+    ext.flyway_classpath = files(configurations.flyway)
+    ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
+    ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword, table: newmigtable  )
+    tasks.migratemoduleDB.execute()
+}
+
+jar.doFirst {
+    tasks.migratemoduleDB.execute()
+}
+
+task migratemoduleDB() << {
+    println("migrateDBmodule:")
+    ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
+    ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
+    ant.flywayMigrate( driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword, table: newmigtable, baseDir: newmigpath , basePackage: newmigpath)
+}
+
+
+
