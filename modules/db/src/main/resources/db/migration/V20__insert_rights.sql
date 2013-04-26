@@ -3,6 +3,7 @@
 
 INSERT INTO rights (name, adminRight, description) VALUES
  ('UPLOADS',TRUE,'Permission to upload'),
+ ('UPLOAD_REPORT',TRUE,'Permission to upload reports'),
  ('MANAGE_FACILITY',TRUE,'Permission to manage facilities(crud)'),
  ('MANAGE_ROLE',TRUE,'Permission to create and edit roles in the system'),
  ('MANAGE_SCHEDULE',TRUE,'Permission to create and edit schedules in the system'),

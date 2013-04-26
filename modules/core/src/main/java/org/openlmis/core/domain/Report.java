@@ -8,8 +8,9 @@ package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Map;
+import java.io.IOException;
 
 @Data
 @NoArgsConstructor
@@ -21,4 +22,9 @@ public class Report extends BaseModel {
 
   private String parameters;
 
+  public Report(MultipartFile file, Integer modifiedBy) throws IOException {
+    this.name = file.getName();
+    this.data = file.getBytes();
+    this.modifiedBy = modifiedBy;
+  }
 }

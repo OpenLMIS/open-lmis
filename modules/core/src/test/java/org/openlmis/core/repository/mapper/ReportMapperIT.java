@@ -9,7 +9,6 @@ package org.openlmis.core.repository.mapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.Report;
-import org.openlmis.core.repository.mapper.ReportMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
@@ -43,7 +42,7 @@ public class ReportMapperIT {
     Date currentTimeStamp = new Date();
     report.setModifiedDate(currentTimeStamp);
 
-    reportMapper.insertReport(report);
+    reportMapper.insert(report);
 
     Report returnedReport = reportMapper.getByName("Sample Report");
 
@@ -62,6 +61,6 @@ public class ReportMapperIT {
     report.setModifiedDate(new Date());
     report.setModifiedBy(1);
 
-    reportMapper.insertReport(report);
+    reportMapper.insert(report);
   }
 }

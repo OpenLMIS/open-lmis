@@ -9,12 +9,16 @@ package org.openlmis.web.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.Report;
+import org.openlmis.core.service.ReportService;
 import org.openlmis.core.upload.ProductPersistenceHandler;
 import org.openlmis.db.service.DbService;
 import org.openlmis.upload.RecordHandler;
@@ -38,9 +42,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-//@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class UploadControllerTest {
 
   public static final Integer USER = 1;
@@ -50,6 +53,9 @@ public class UploadControllerTest {
 
   @Mock
   DbService dbService;
+
+  @Mock
+  ReportService reportService;
 
   RecordHandler handler = new ProductPersistenceHandler(null);
 
@@ -70,7 +76,6 @@ public class UploadControllerTest {
 
   @Before
   public void setUp() throws Exception {
-    initMocks(this);
     request = new MockHttpServletRequest();
     MockHttpSession session = new MockHttpSession();
     session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, USER);
@@ -184,5 +189,39 @@ public class UploadControllerTest {
 
     verify(csvParser).process(eq(mockInputStream), argThat(modelMatcher(Product.class)), eq(handler), eq(auditFields));
     verify(dbService).getCurrentTimestamp();
+  }
+
+  @Test
+  public void shouldThrowErrorIfFileNotOfTypeJasperXML() throws Exception {
+    ResponseEntity<OpenLmisResponse> response = controller.uploadJasperTemplate(request, new MockMultipartFile("report.pdf", new byte[1]));
+
+    assertThat(response.getBody().getErrorMsg(), is("error.jasper.upload.type"));
+    verify(reportService, never()).insert(any(Report.class));
+  }
+
+  @Test
+  public void shouldThrowErrorIfFileEmpty() throws Exception {
+    ResponseEntity<OpenLmisResponse> response = controller.uploadJasperTemplate(request, new MockMultipartFile("report.jrxml", new byte[0]));
+
+    assertThat(response.getBody().getErrorMsg(), is("error.jasper.upload.empty"));
+    verify(reportService, never()).insert(any(Report.class));
+  }
+
+  @Test
+  public void shouldThrowErrorIfFileNotPresent() throws Exception {
+    ResponseEntity<OpenLmisResponse> response = controller.uploadJasperTemplate(request, null);
+
+    assertThat(response.getBody().getErrorMsg(), is("error.jasper.upload.file.missing"));
+    verify(reportService, never()).insert(any(Report.class));
+  }
+
+  @Test
+  public void shouldUploadJasperTemplateFileIfValid() throws Exception {
+    doNothing().when(reportService).insert(any(Report.class));
+
+    ResponseEntity<OpenLmisResponse> response = controller.uploadJasperTemplate(request, new MockMultipartFile("template.jrxml", new byte[1]));
+
+    assertThat(response.getBody().getSuccessMsg(), is("jasper.upload.success"));
+    verify(reportService).insert(any(Report.class));
   }
 }

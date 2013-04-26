@@ -7,7 +7,9 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Report;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.ReportService;
 import org.openlmis.db.service.DbService;
 import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.AuditFields;
@@ -31,16 +33,28 @@ import java.util.Date;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 @Controller
 @NoArgsConstructor
 public class UploadController extends BaseController {
 
+  public static final String JASPER_UPLOAD_SUCCESS = "jasper.upload.success";
+  public static final String ERROR_JASPER_UPLOAD_EMPTY = "error.jasper.upload.empty";
+  public static final String ERROR_JASPER_UPLOAD_TYPE = "error.jasper.upload.type";
+  public static final String ERROR_JASPER_UPLOAD_FILE_MISSING = "error.jasper.upload.file.missing";
+  public static final String ERROR_JASPER_UPLOAD = "error.jasper.upload";
   @Autowired
   private CSVParser csvParser;
   @Autowired
   DbService dbService;
   @Resource
   private Map<String, UploadBean> uploadBeansMap;
+  @Autowired
+  ReportService reportService;
+
 
   private static ResourceBundle resourceBundle = ResourceBundle.getBundle("messages");
 
@@ -54,7 +68,12 @@ public class UploadController extends BaseController {
     this.dbService = dbService;
   }
 
-  @RequestMapping(value = "/upload", method = RequestMethod.POST)
+  public UploadController(CSVParser csvParser, Map<String, UploadBean> uploadBeansMap, DbService dbService, ReportService reportService) {
+    this(csvParser, uploadBeansMap, dbService);
+    this.reportService = reportService;
+  }
+
+  @RequestMapping(value = "/upload", method = POST)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UPLOADS')")
   public String upload(@RequestParam(value = "csvFile", required = true) MultipartFile csvFile,
                        @RequestParam(value = "model", required = true) String model,
@@ -116,4 +135,24 @@ public class UploadController extends BaseController {
     return uploadPage + "model=" + model + "&error=" + error;
   }
 
+  @RequestMapping(value = "/reports", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UPLOAD_REPORT')")
+  public ResponseEntity<OpenLmisResponse> uploadJasperTemplate(HttpServletRequest request, MultipartFile file) {
+
+    Report report;
+
+    if(file == null) return error(ERROR_JASPER_UPLOAD_FILE_MISSING, BAD_REQUEST);
+    if(!file.getName().endsWith(".jrxml")) return error(ERROR_JASPER_UPLOAD_TYPE, BAD_REQUEST);
+    if (file.isEmpty()) return error(ERROR_JASPER_UPLOAD_EMPTY, BAD_REQUEST);
+
+    try {
+      report = new Report(file, loggedInUserId(request));
+    } catch (IOException e) {
+      return error(ERROR_JASPER_UPLOAD, BAD_REQUEST);
+    }
+
+    reportService.insert(report);
+
+    return OpenLmisResponse.success(JASPER_UPLOAD_SUCCESS);
+  }
 }

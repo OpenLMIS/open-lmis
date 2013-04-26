@@ -22,6 +22,6 @@ public interface ReportMapper {
 
   @Insert("INSERT INTO Reports (name, data, parameters, modifiedBy, modifiedDate) " +
     "VALUES (#{name}, #{data}, #{parameters}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))")
-  void insertReport(Report report);
+  void insert(Report report);
 
 }

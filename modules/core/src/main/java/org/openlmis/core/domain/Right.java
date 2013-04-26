@@ -30,6 +30,7 @@ public enum Right{
   MANAGE_SCHEDULE("Admin - Manage Schedules", TRUE, "Permission to create and edit schedules in the system"),
   MANAGE_USERS("Admin - Manage Users", TRUE, "Permission to manage users(crud)"),
   UPLOADS("Admin - Uploads", TRUE, "Permission to upload"),
+  UPLOAD_REPORT("Admin - Upload reports", TRUE, "Permission to upload reports"),
   CREATE_REQUISITION("Requisition - Create", FALSE, "Permission to create, edit, submit and recall requisitions"),
   AUTHORIZE_REQUISITION("Requisition - Authorize", FALSE, "Permission to edit, authorize and recall requisitions"),
   APPROVE_REQUISITION("Requisition - Approve", FALSE, "Permission to approve requisitions"),
