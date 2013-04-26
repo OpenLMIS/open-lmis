@@ -6,7 +6,6 @@
 
 package org.openlmis.reporting.controller;
 
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -14,13 +13,15 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Report;
 import org.openlmis.core.repository.mapper.ReportMapper;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.jasperreports.AbstractJasperReportsSingleFormatView;
 
 import javax.sql.DataSource;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReportControllerTest {
@@ -38,15 +39,20 @@ public class ReportControllerTest {
   @InjectMocks
   ReportController reportController;
 
+  MockHttpServletRequest request;
+
   @Test
   public void shouldGeneratePdfReport() throws Exception {
-    int requisition_id = 36;
     Report report = new Report();
-    report.setData(new byte[1]);
-    report.setName("Sample Report");
-    report.setParameters("<rnrId, Integer>");
-    when(reportMapper.getById(requisition_id)).thenReturn(report);
-    ModelAndView modelAndView = reportController.generatePdfReport(requisition_id, "pdf");
-    assertThat(modelAndView, is(Matchers.notNullValue()));
+    when(reportMapper.getById(1)).thenReturn(report);
+    request = new MockHttpServletRequest();
+    AbstractJasperReportsSingleFormatView mockView = mock(AbstractJasperReportsSingleFormatView.class);
+    when(viewFactory.getJasperReportsView(report, "pdf")).thenReturn(mockView);
+
+    ModelAndView modelAndView = reportController.generatePdfReport(request, 1, "pdf");
+
+    assertThat((AbstractJasperReportsSingleFormatView) modelAndView.getView(), is(mockView));
+    verify(viewFactory).getJasperReportsView(report, "pdf");
+    verify(reportMapper).getById(1);
   }
 }

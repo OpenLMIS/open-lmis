@@ -6,35 +6,43 @@
 
 package org.openlmis.reporting.controller;
 
+import org.openlmis.core.domain.Report;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.view.jasperreports.*;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.io.File;
+import java.io.IOException;
 
+import static java.io.File.createTempFile;
+import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
 import static org.springframework.web.context.ContextLoader.getCurrentWebApplicationContext;
 
-@Resource
 @Service
 public class JasperReportsViewFactory {
+
+  public static final String CSV_VIEW = "csv";
+  public static final String HTML_VIEW = "html";
+  public static final String EXCEL_VIEW = "xls";
+  public static final String PDF_VIEW = "pdf";
 
   @Autowired
   DataSource replicationDataSource;
 
   public AbstractJasperReportsSingleFormatView getJasperReportsView(
-    String url, String format) {
-    String viewFormat = format == null ? "pdf" : format;
+    Report report, String format) throws IOException {
+    String viewFormat = format == null ? PDF_VIEW : format;
 
     // get jasperView class based on the format supplied
     // defaults to pdf
-    AbstractJasperReportsSingleFormatView jasperView = null;
-    if (viewFormat.equals("csv")) {
+    AbstractJasperReportsSingleFormatView jasperView;
+    if (viewFormat.equals(CSV_VIEW)) {
       jasperView = new JasperReportsCsvView();
-    } else if (viewFormat.equals("html")) {
+    } else if (viewFormat.equals(HTML_VIEW)) {
       jasperView = new JasperReportsHtmlView();
-    } else if (viewFormat.equals("xls")) {
+    } else if (viewFormat.equals(EXCEL_VIEW)) {
       jasperView = new JasperReportsXlsView();
     } else {
       jasperView = new JasperReportsPdfView();
@@ -44,11 +52,16 @@ public class JasperReportsViewFactory {
     WebApplicationContext ctx = getCurrentWebApplicationContext();
 
     jasperView.setJdbcDataSource(replicationDataSource);
-    jasperView.setUrl(url);
+    jasperView.setUrl(getReportURLForReportData(report.getData()));
     if (ctx != null)
       jasperView.setApplicationContext(ctx);
 
     return jasperView;
   }
 
+  private String getReportURLForReportData(byte[] reportData) throws IOException {
+    File tmpFile = createTempFile("report", ".jrxml");
+    writeByteArrayToFile(tmpFile, reportData);
+    return tmpFile.toURI().toURL().toString();
+  }
 }
