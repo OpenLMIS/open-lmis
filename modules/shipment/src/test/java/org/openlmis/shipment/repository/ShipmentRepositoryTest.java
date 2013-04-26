@@ -51,7 +51,7 @@ public class ShipmentRepositoryTest {
   public void shouldThrowExceptionIfShipmentFileHasIncorrectOrderNumber() throws Exception {
     ShippedLineItem shippedLineItem = new ShippedLineItem();
     shippedLineItem.setRnrId(1);
-    doThrow(new DataIntegrityViolationException("violates foreign key constraint \"shipped_line_items_orderid_fkey\"")).when(shipmentMapper).insertShippedLineItem(shippedLineItem);
+    doThrow(new DataIntegrityViolationException("violates foreign key constraint \"shipped_line_items_rnrid_fkey\"")).when(shipmentMapper).insertShippedLineItem(shippedLineItem);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Unknown order number");

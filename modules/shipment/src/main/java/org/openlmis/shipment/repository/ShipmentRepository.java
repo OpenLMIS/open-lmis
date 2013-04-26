@@ -30,7 +30,7 @@ public class ShipmentRepository {
     try {
       shipmentMapper.insertShippedLineItem(shippedLineItem);
     } catch (DataIntegrityViolationException exception) {
-      if (exception.getMessage().contains("violates foreign key constraint \"shipped_line_items_orderid_fkey\""))
+      if (exception.getMessage().contains("violates foreign key constraint \"shipped_line_items_rnrid_fkey\""))
         throw new DataException("Unknown order number");
 
       if(exception.getMessage().contains("violates foreign key constraint \"shipped_line_items_productcode_fkey\""))
