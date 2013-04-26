@@ -11,6 +11,7 @@ import org.openlmis.core.repository.VendorRepository;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,7 +29,6 @@ public class VendorServiceTest {
   public void shouldGetVendor() throws Exception {
     Vendor expectedVendor = new Vendor();
     when(vendorRepository.getByName("vendor")).thenReturn(expectedVendor);
-
 
     Vendor vendor = service.getByName("vendor");
 
@@ -64,5 +64,12 @@ public class VendorServiceTest {
 
     assertTrue(authenticated);
     verify(vendorRepository).getToken(vendor.getName());
+  }
+
+  @Test
+  public void shouldReturnFalseIfVendorIsInvalid() {
+    Vendor vendor = mock(Vendor.class);
+    when(vendor.isValid()).thenReturn(false);
+    assertThat(service.authenticate(vendor), is(Boolean.FALSE));
   }
 }

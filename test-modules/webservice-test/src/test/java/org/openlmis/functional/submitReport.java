@@ -7,182 +7,235 @@
 package org.openlmis.functional;
 
 import org.openlmis.UiUtils.HttpClient;
+import org.openlmis.UiUtils.ResponseEntity;
+import org.openlmis.UiUtils.TestCaseHelper;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import org.openlmis.UiUtils.TestCaseHelper;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
+import static org.openlmis.UiUtils.HttpClient.GET;
+import static org.openlmis.UiUtils.HttpClient.POST;
 
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.*;
 
+public class SubmitReport extends TestCaseHelper {
 
-public class submitReport extends TestCaseHelper {
-    public WebDriver driver;
-    public Utils  utillity = new Utils();
-    @BeforeMethod(groups = {"webservice"})
-    public void setUp() throws Exception {
-        driver = new FirefoxDriver();
-        driver.get("http://localhost:9091");
-        super.setup();
-        super.setupDataExternalVendor();
-    }
-    @AfterMethod(groups = {"webservice"})
-    public void tearDown() {
-        driver.close();
-    }
+  public static final String MINIMUM_JSON_TXT_FILE_NAME = "MinimumJson.txt";
+  public static final String FULL_JSON_TXT_FILE_NAME = "FullJson.txt";
+  public static final String PRODUCT_JSON_TXT_FILE_NAME = "ProductJson.txt";
 
-    @Test(groups = {"webservice"})
-    public void testSubmitReportInvalidFacility() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
-        String fileName = this.getClass().getClassLoader().getResource("FullJSON.txt").getFile();
-        String json = utillity.readJSON(fileName);
-        json = utillity.updateJSON(json, "facilityId", "100");
-        json = utillity.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
-        json = utillity.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
-        String response = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", "POST", "commTrack", dbWrapper.getAuthToken("commTrack"));
-        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+  public WebDriver driver;
 
-        assertEquals(response, "{\"error\":\"User doesn't have access to Program & Facility.\"}");
-    }
+  public Utils utility = new Utils();
 
-    @Test(groups = {"webservice"})
-    public void testSubmitReportInvalidProgram() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
-        String fileName = this.getClass().getClassLoader().getResource("FullJSON.txt").getFile();
-        String json = utillity.readJSON(fileName);
-        json = utillity.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
-        json = utillity.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
-        json = utillity.updateJSON(json, "programId", "500");
-        String response = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", "POST", "commTrack", dbWrapper.getAuthToken("commTrack"));
-        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+  @BeforeMethod(groups = {"webservice"})
+  public void setUp() throws Exception {
+    driver = new FirefoxDriver();
+    driver.get("http://localhost:9091");
+    super.setup();
+    super.setupDataExternalVendor();
+  }
 
-        assertEquals(response, "{\"error\":\"User doesn't have access to Program & Facility.\"}");
-    }
+  @AfterMethod(groups = {"webservice"})
+  public void tearDown() {
+    driver.close();
+  }
 
-    @Test(groups = {"webservice"})
-    public void testSubmitReportValidRnR() throws Exception {
-        String response = utillity.submitReport();
-        assertTrue(response.contains("{\"R&R\":"));
-    }
+  @Test(groups = {"webservice"})
+  public void testSubmitReportInvalidFacility() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    String json = utility.readJSON(FULL_JSON_TXT_FILE_NAME);
+    json = utility.updateJSON(json, "facilityId", "100");
+    json = utility.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
+    json = utility.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
 
-    @Test(groups = {"webservice"})
-    public void testDuplicateSubmitReport() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
-        String fileName = this.getClass().getClassLoader().getResource("FullJSON.txt").getFile();
-        String json = utillity.readJSON(fileName);
-        json = utillity.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
-        json = utillity.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
-        json = utillity.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
-        String response = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", "POST", "commTrack", dbWrapper.getAuthToken("commTrack"));
-        //client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+    ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,
+        "commTrack",
+        dbWrapper.getAuthToken("commTrack"));
 
-        response = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", "POST", "commTrack", dbWrapper.getAuthToken("commTrack"));
-        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+    String response = responseEntity.getResponse();
+    client.SendJSON("", "http://localhost:9091/", GET, "", "");
 
-        assertEquals(response, "{\"error\":\"Invalid period.\"}");
-    }
+    assertEquals(response, "{\"error\":\"User doesn't have access to Program & Facility.\"}");
+  }
 
-    @Test(groups = {"webservice"})
-    public void testBlankProductSubmitReport() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
-        String fileName = this.getClass().getClassLoader().getResource("ProductJSON.txt").getFile();
-        String json = utillity.readJSON(fileName);
-        json = utillity.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
-        json = utillity.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
-        json = utillity.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
-        String response = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", "POST", "commTrack", dbWrapper.getAuthToken("commTrack"));
-        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+  @Test(groups = {"webservice"})
+  public void testSubmitReportInvalidProgram() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
 
-        assertEquals(response, "{\"error\":\"Invalid data.\"}");
-    }
+    String json = utility.readJSON(FULL_JSON_TXT_FILE_NAME);
+    json = utility.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
+    json = utility.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
+    json = utility.updateJSON(json, "programId", "500");
 
-    @Test(groups = {"webservice"})
-    public void testInvalidProductSubmitReport() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
-        String fileName = this.getClass().getClassLoader().getResource("ProductJSON.txt").getFile();
-        String json = utillity.readJSON(fileName);
-        json = utillity.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
-        json = utillity.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
-        json = utillity.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
-        json = utillity.updateJSON(json, "productCode", "P10000");
+    ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
 
-        String response = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", "POST", "commTrack", dbWrapper.getAuthToken("commTrack"));
-        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+    String response = responseEntity.getResponse();
+    client.SendJSON("", "http://localhost:9091/", GET, "", "");
 
-        assertEquals(response, "{\"error\":\"Invalid data.\"}");
-    }
+    assertEquals(response, "{\"error\":\"User doesn't have access to Program & Facility.\"}");
+  }
 
-    @Test(groups = {"webservice"})
-    public void testBlankBeginningBalanceSubmitReport() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
-        String fileName = this.getClass().getClassLoader().getResource("ProductJSON.txt").getFile();
-        String json = utillity.readJSON(fileName);
-        json = utillity.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
-        json = utillity.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
-        json = utillity.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
-        json = utillity.updateJSON(json, "productCode", "P10");
-        String response = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", "POST", "commTrack", dbWrapper.getAuthToken("commTrack"));
-        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+  @Test(groups = {"webservice"})
+  public void testSubmitReportValidRnR() throws Exception {
+    String response = utility.submitReport();
+    assertTrue(response.contains("{\"R&R\":"));
+  }
 
-        assertEquals(response, "{\"error\":\"Invalid data.\"}");
-    }
+  @Test(groups = {"webservice"})
+  public void testDuplicateSubmitReport() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    String json = utility.readJSON(FULL_JSON_TXT_FILE_NAME);
+    json = utility.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
+    json = utility.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
+    json = utility.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
 
-    @Test(groups = {"webservice"})
-    public void testMinimumSubmitReportValidRnR() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
-        String fileName = this.getClass().getClassLoader().getResource("MinimumJSON.txt").getFile();
-        String json = utillity.readJSON(fileName);
-        json = utillity.updateJSON(json, "userId", "commTrack");
-        json = utillity.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
-        json = utillity.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
-        json = utillity.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
-        json = utillity.updateJSON(json, "productCode", "P10");
-        String response = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", "POST", "commTrack", dbWrapper.getAuthToken("commTrack"));
-        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+    client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
 
-        assertTrue(response.contains("{\"R&R\":"));
-    }
+    ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
 
-    @Test(groups = {"webservice"})
-    public void testSubmitReportInvalidUser() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
-        String fileName = this.getClass().getClassLoader().getResource("MinimumJSON.txt").getFile();
-        String json = utillity.readJSON(fileName);
-        json = utillity.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
-        json = utillity.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
-        json = utillity.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
-        json = utillity.updateJSON(json, "productCode", "P10");
-        json = utillity.updateJSON(json, "userId", "commTrack100");
-        String response = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", "POST", "commTrack", dbWrapper.getAuthToken("commTrack"));
-        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+    client.SendJSON("", "http://localhost:9091/", GET, "", "");
 
-        assertEquals(response, "{\"error\":\"Please provide a valid username\"}");
-    }
+    assertEquals(responseEntity.getResponse(), "{\"error\":\"Invalid period.\"}");
+  }
 
-    @Test(groups = {"webservice"})
-    public void testMinimumSubmitReportInvalidVendor() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
-        String fileName = this.getClass().getClassLoader().getResource("MinimumJSON.txt").getFile();
-        String json = utillity.readJSON(fileName);
-        json = utillity.updateJSON(json, "userId", "commTrack");
-        json = utillity.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
-        json = utillity.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
-        json = utillity.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
-        json = utillity.updateJSON(json, "productCode", "P10");
-        String response = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", "POST", "commTrack100", dbWrapper.getAuthToken("commTrack"));
-        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+  @Test(groups = {"webservice"})
+  public void testBlankProductSubmitReport() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    String json = utility.readJSON(PRODUCT_JSON_TXT_FILE_NAME);
+    json = utility.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
+    json = utility.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
+    json = utility.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
 
-        assertEquals(response, "<html>");
+    ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
 
-    }
+    String response = responseEntity.getResponse();
+    client.SendJSON("", "http://localhost:9091/", GET, "", "");
+
+    assertEquals(response, "{\"error\":\"Invalid data.\"}");
+  }
+
+  @Test(groups = {"webservice"})
+  public void testInvalidProductSubmitReport() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    String json = utility.readJSON(PRODUCT_JSON_TXT_FILE_NAME);
+    json = utility.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
+    json = utility.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
+    json = utility.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
+    json = utility.updateJSON(json, "productCode", "P10000");
+
+    ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+
+    String response = responseEntity.getResponse();
+
+    client.SendJSON("", "http://localhost:9091/", GET, "", "");
+
+    assertEquals(response, "{\"error\":\"Invalid data.\"}");
+  }
+
+  @Test(groups = {"webservice"})
+  public void testBlankBeginningBalanceSubmitReport() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    String json = utility.readJSON(PRODUCT_JSON_TXT_FILE_NAME);
+    json = utility.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
+    json = utility.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
+    json = utility.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
+    json = utility.updateJSON(json, "productCode", "P10");
+
+    ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+
+    String response = responseEntity.getResponse();
+
+    client.SendJSON("", "http://localhost:9091/", GET, "", "");
+
+    assertEquals(response, "{\"error\":\"Invalid data.\"}");
+  }
+
+  @Test(groups = {"webservice"})
+  public void testMinimumSubmitReportValidRnR() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    String json = utility.readJSON(MINIMUM_JSON_TXT_FILE_NAME);
+    json = utility.updateJSON(json, "userId", "commTrack");
+    json = utility.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
+    json = utility.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
+    json = utility.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
+    json = utility.updateJSON(json, "productCode", "P10");
+
+    ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+
+    String response = responseEntity.getResponse();
+
+    client.SendJSON("", "http://localhost:9091/", GET, "", "");
+
+    assertTrue(response.contains("{\"R&R\":"));
+  }
+
+  @Test(groups = {"webservice"})
+  public void testSubmitReportInvalidUser() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    String json = utility.readJSON(MINIMUM_JSON_TXT_FILE_NAME);
+    json = utility.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
+    json = utility.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
+    json = utility.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
+    json = utility.updateJSON(json, "productCode", "P10");
+    json = utility.updateJSON(json, "userId", "commTrack100");
+
+    ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+
+    String response = responseEntity.getResponse();
+
+    client.SendJSON("", "http://localhost:9091/", GET, "", "");
+
+    assertEquals(response, "{\"error\":\"Please provide a valid username\"}");
+  }
+
+  @Test(groups = {"webservice"})
+  public void testMinimumSubmitReportInvalidVendor() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    String json = utility.readJSON(MINIMUM_JSON_TXT_FILE_NAME);
+    json = utility.updateJSON(json, "userId", "commTrack");
+    json = utility.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
+    json = utility.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
+    json = utility.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
+    json = utility.updateJSON(json, "productCode", "P10");
+
+    ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,
+      "commTrack100", dbWrapper.getAuthToken("commTrack"));
+
+    String response = responseEntity.getResponse();
+
+    client.SendJSON("", "http://localhost:9091/", GET, "", "");
+
+    assertEquals(response, "<html>");
+  }
 }
 
