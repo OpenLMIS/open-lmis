@@ -21,7 +21,7 @@ import static org.openlmis.UiUtils.HttpClient.GET;
 import static org.openlmis.UiUtils.HttpClient.POST;
 
 
-public class SubmitReport1 extends TestCaseHelper {
+public class SubmitReport extends TestCaseHelper {
 
   public static final String MINIMUM_JSON_TXT_FILE_NAME = "MinimumJson.txt";
   public static final String FULL_JSON_TXT_FILE_NAME = "FullJson.txt";

@@ -19,7 +19,7 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
 
 
-public class ApproveRequisition1 extends TestCaseHelper {
+public class ApproveRequisition extends TestCaseHelper {
   public static final String FULL_JSON_APPROVE_TXT_FILE_NAME = "FullJsonApprove.txt";
   public WebDriver driver;
   public Utils utility = new Utils();
