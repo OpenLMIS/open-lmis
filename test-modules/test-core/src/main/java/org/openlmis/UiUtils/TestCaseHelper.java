@@ -90,6 +90,32 @@ public class TestCaseHelper {
     dbWrapper.insertSupplyLines("N1", program, "F10");
   }
 
+    public void setupRnRTestDataRnRForCommTrack(boolean configureGenericTemplate, String program, String userSIC, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
+        setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
+        dbWrapper.insertFacilities("F10", "F11");
+
+        setupTestUserRoleRightsData(userId, userSIC, vendorName, rightsList);
+        dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+        dbWrapper.insertRoleAssignment(userId, "store in-charge");
+        dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
+        dbWrapper.insertSchedule("M", "Monthly", "Month");
+        setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
+        dbWrapper.insertSupplyLines("N1", program, "F10");
+        if (configureGenericTemplate)
+        {
+            dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
+            dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
+            dbWrapper.configureTemplate(program);
+        }
+            else
+        {
+            dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "M");
+            dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
+            dbWrapper.configureTemplateForCommTrack(program);
+            dbWrapper.insertPastPeriodRequisitionAndLineItems("F10","HIV","Period1","P10");
+        }
+    }
+
     public void setupTestDataToApproveRnR(String userSIC, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
         for (String rights : rightsList)
             dbWrapper.assignRight("store in-charge", rights);
@@ -120,13 +146,16 @@ public class TestCaseHelper {
     dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com", vendorName);
   }
 
-    public void setupDataExternalVendor() throws IOException, SQLException {
+    public void setupDataExternalVendor(boolean isPreviousPeriodRnRRequired) throws IOException, SQLException {
         dbWrapper.insertVendor("commTrack");
         List<String> rightsList = new ArrayList<String>();
         rightsList.add("CREATE_REQUISITION");
         rightsList.add("VIEW_REQUISITION");
         rightsList.add("AUTHORIZE_REQUISITION");
-        setupTestDataToInitiateRnR(true,"HIV", "commTrack", "700", "commTrack", rightsList);
+        if (isPreviousPeriodRnRRequired)
+            setupRnRTestDataRnRForCommTrack(false,"HIV", "commTrack", "700", "commTrack", rightsList);
+        else
+            setupRnRTestDataRnRForCommTrack(true,"HIV", "commTrack", "700", "commTrack", rightsList);
 
     }
 

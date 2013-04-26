@@ -24,7 +24,7 @@ public class submitReport extends TestCaseHelper {
         driver = new FirefoxDriver();
         driver.get("http://localhost:9091");
         super.setup();
-        super.setupDataExternalVendor();
+        super.setupDataExternalVendor(false);
     }
     @AfterMethod(groups = {"webservice"})
     public void tearDown() {

@@ -28,7 +28,7 @@ public class approveRequisition extends TestCaseHelper {
         driver = new FirefoxDriver();
         driver.get("http://localhost:9091");
         super.setup();
-        super.setupDataExternalVendor();
+        super.setupDataExternalVendor(false);
         super.setupDataApproverExternalVendor();
     }
     @AfterMethod(groups = {"webservice"})
