@@ -12,7 +12,6 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.db.service.DbService;
 import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.file.csv.handler.ShipmentFilePostProcessHandler;
-import org.openlmis.shipment.service.ShipmentService;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.AuditFields;
@@ -29,8 +28,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Date;
 
-import static java.lang.Boolean.FALSE;
-
 @MessageEndpoint
 @NoArgsConstructor
 public class ShipmentFileProcessor {
@@ -43,11 +40,7 @@ public class ShipmentFileProcessor {
   @Autowired
   private ShipmentFilePostProcessHandler shipmentFilePostProcessHandler;
   @Autowired
-  private ShipmentService shipmentService;
-  @Autowired
   private DbService dbService;
-
-  public static final boolean NO_ERROR = FALSE;
 
   public void process(Message message) throws IOException {
     File shipmentFile = (File) message.getPayload();

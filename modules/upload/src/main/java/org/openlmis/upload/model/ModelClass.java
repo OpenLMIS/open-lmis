@@ -37,6 +37,7 @@ public class ModelClass {
   }
 
   public void validateHeaders(List<String> headers) {
+    validateNullHeaders(headers);
     List<String> lowerCaseHeaders = lowerCase(headers);
     if (!acceptExtraHeaders) validateInvalidHeaders(lowerCaseHeaders);
     validateMandatoryFields(lowerCaseHeaders);
@@ -53,7 +54,7 @@ public class ModelClass {
         } else {
           fieldMappings.add(importField.getField().getName() + "." + nestedProperty);
         }
-      }else{
+      } else {
         fieldMappings.add(null);
       }
 
@@ -89,6 +90,14 @@ public class ModelClass {
     }
 
     return result;
+  }
+
+  private void validateNullHeaders(List<String> headers) throws UploadException {
+    for (int i = 0; i < headers.size(); i++) {
+      if (headers.get(i) == null) {
+        throw new UploadException("Header for column " + (i + 1) + " is missing.");
+      }
+    }
   }
 
   private void validateMandatoryFields(List<String> headers) {

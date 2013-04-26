@@ -8,10 +8,7 @@ package org.openlmis.upload.parser;
 
 import lombok.Getter;
 import org.openlmis.upload.Importable;
-import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.ModelClass;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.dozer.CsvDozerBeanReader;
 import org.supercsv.prefs.CsvPreference;
@@ -25,7 +22,6 @@ import java.util.List;
 import static java.util.Arrays.asList;
 
 public class CsvBeanReader {
-  private static Logger logger = LoggerFactory.getLogger(CsvBeanReader.class);
 
   private ModelClass modelClass;
   private CsvDozerBeanReader dozerBeanReader;
@@ -45,25 +41,18 @@ public class CsvBeanReader {
 
     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
     dozerBeanReader = new CsvDozerBeanReader(bufferedReader, csvPreference);
-    headers = dozerBeanReader.getHeader(true);
+    headers = readHeaders();
     String[] mappings = modelClass.getFieldNameMappings(headers);
     dozerBeanReader.configureBeanMapping(modelClass.getClazz(), mappings);
+  }
 
+  private String[] readHeaders() throws IOException {
+    String[] headers = dozerBeanReader.getHeader(true);
+    return headers == null ? new String[0] : headers;
   }
 
   public Importable read() throws IOException {
     return dozerBeanReader.read(modelClass.getClazz());
-  }
-
-  public void validateHeaders() throws UploadException {
-    for (int i = 0; i < headers.length; i++) {
-      if (headers[i] == null) {
-        throw new UploadException("Header for column " + (i + 1) + " is missing.");
-      }
-      headers[i] = headers[i].trim();
-    }
-    List<String> headerList = asList(headers);
-    modelClass.validateHeaders(headerList);
   }
 
   public Importable readWithCellProcessors() throws IOException {
@@ -81,5 +70,9 @@ public class CsvBeanReader {
   private void configureProcessors() {
     List<CellProcessor> cellProcessors = CsvCellProcessors.getProcessors(modelClass, asList(headers));
     processors = cellProcessors.toArray(new CellProcessor[cellProcessors.size()]);
+  }
+
+  public void validateHeaders() {
+    modelClass.validateHeaders(asList(headers));
   }
 }
