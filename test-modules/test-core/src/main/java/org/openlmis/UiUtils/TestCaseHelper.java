@@ -77,7 +77,7 @@ public class TestCaseHelper {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertFacilities("F10", "F11");
     if (configureTemplate)
-      dbWrapper.configureTemplate(program);
+        dbWrapper.configureTemplate(program);
 
     setupTestUserRoleRightsData(userId, userSIC, vendorName, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
