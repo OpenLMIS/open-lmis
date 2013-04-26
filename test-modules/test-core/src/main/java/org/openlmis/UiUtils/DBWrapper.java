@@ -391,7 +391,7 @@ public class DBWrapper {
 
   }
 
-  public void updateRequisition(String facilityCode) throws IOException, SQLException {
+  public void updateSupplyingFacilityForRequisition(String facilityCode) throws IOException, SQLException {
     update("update requisitions set supplyingfacilityid=(select id from facilities where code='" + facilityCode + "');");
 
   }
