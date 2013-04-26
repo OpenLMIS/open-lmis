@@ -76,53 +76,41 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     rolesPage.clickARole(LMU);
     rolesPage.verifyProgramRoleRadioNonEditable();
     rolesPage.verifyRoleSelected(userRoleListLmu);
-
     rolesPage.clickCancelButton();
     dbWrapper.insertSupervisoryNode(facility_code, "N1", "Node 1", "null");
+
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    createUserAndAssignRoles(homePage, passwordUsers, "Jake_Doe@openlmis.com", "Jake", "Doe", LMU, facility_code, program, "Node 1", LMU, true);
     UserPage userPage = new UserPage(testWebDriver);
+    System.out.println("brute force" + "14");
+    createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, false);
+    System.out.println("brute force" + "15");
+    userPage.clickViewHere();
+    userPage.removeRole(1, false);
+    userPage.verifyRolePresent(LAB_IN_CHARGE);
+    userPage.removeRole(1, false);
+    userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
+    userPage.clickAllRemoveButton();
+    userPage.clickSaveButton();
+    userPage.clickViewHere();
+    userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
+    userPage.verifyRemoveNotPresent();
+
+    System.out.println("brute force" + "16");
+    createUserAndAssignRoles(homePage, passwordUsers, "Jake_Doe@openlmis.com", "Jake", "Doe", LMU, facility_code, program, "Node 1", LMU, true);
+    System.out.println("brute force" + "17");
     userPage.clickViewHere();
     userPage.removeRole(1, true);
     userPage.verifyRoleNotPresent(LMU);
     userPage.clickSaveButton();
     userPage.clickViewHere();
     userPage.verifyRoleNotPresent(LMU);
-    System.out.println("brute force" + "14");
-    createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, false);
-    System.out.println("brute force" + "15");
-    userPage.clickViewHere();
-    System.out.println("brute force" + "16");
-    userPage.removeRole(1, false);
-    System.out.println("brute force" + "17");
-    userPage.verifyRolePresent(LAB_IN_CHARGE);
-    System.out.println("brute force" + "18");
-    userPage.removeRole(1, false);
-    System.out.println("brute force" + "19");
-    userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
-    System.out.println("brute force" + "20");
-    userPage.clickAllRemoveButton();
-    userPage.clickSaveButton();
-    System.out.println("brute force" + "21");
-    userPage.clickViewHere();
-    System.out.println("brute force" + "22");
-    userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
-    System.out.println("brute force" + "23");
-    userPage.verifyRemoveNotPresent();
-    System.out.println("brute force" + "24");
-    homePage.navigateUploads();
   }
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, boolean adminRole) throws IOException, SQLException {
-    System.out.println("brute force" + "14.1");
     UserPage userPage = homePage.navigateToUser();
-    System.out.println("brute force" + "14.2");
     String userID = userPage.enterAndverifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dburlGlobal);
-    System.out.println("brute force" + "14.3");
     dbWrapper.updateUser(passwordUsers, userEmail);
-    System.out.println("brute force" + "14.4");
     userPage.enterMyFacilityAndMySupervisedFacilityData(userFirstName, userLastName, facility, program, supervisoryNode, role, adminRole);
-    System.out.println("brute force" + "14.5");
     return userID;
   }
 

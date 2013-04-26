@@ -452,16 +452,12 @@ public class DBWrapper {
   }
 
   public String getUserID(String userName) throws IOException, SQLException {
-    System.out.println("brute force" + "14.2.17.1");
     String facilityID = null;
     ResultSet rs = query("select id from users where username='" + userName + "'");
-    System.out.println("brute force" + "14.2.17.2");
 
     if (rs.next()) {
-      System.out.println("brute force" + "14.2.17.3");
       facilityID = rs.getString("id");
     }
-    System.out.println("brute force" + "14.2.17.4");
     return facilityID;
 
   }
