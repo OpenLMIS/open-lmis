@@ -50,7 +50,8 @@ DROP INDEX "public"."ucsupervisorynodecode";
 ALTER TABLE "public"."users" ALTER COLUMN "email" DROP NOT NULL;
 ALTER TABLE "public"."users" ADD COLUMN "vendorid" int4;
 
-CREATE UNIQUE INDEX "uc_users_username_vendor" ON "public"."users" ("vendorid" ASC);
+CREATE UNIQUE INDEX uc_users_username_vendor ON users USING btree (lower(username::text) COLLATE pg_catalog."default", vendorid);
+
 DROP INDEX "public"."uc_users_username";
 CREATE TABLE "public"."vendors" (
 "id" SERIAL NOT NULL,
