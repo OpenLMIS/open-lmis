@@ -147,11 +147,17 @@ public class Rnr {
     this.modifiedBy = rnr.getModifiedBy();
     for (RnrLineItem thisLineItem : this.fullSupplyLineItems) {
       RnrLineItem otherLineItem = rnr.findCorrespondingLineItem(thisLineItem);
+      if(otherLineItem == null)  {
+        throw new DataException(RNR_VALIDATION_ERROR);
+      }
       thisLineItem.copyApproverEditableFields(otherLineItem);
       thisLineItem.setModifiedBy(rnr.getModifiedBy());
     }
     for (RnrLineItem thisLineItem : this.nonFullSupplyLineItems) {
       RnrLineItem otherLineItem = rnr.findCorrespondingLineItem(thisLineItem);
+      if(otherLineItem == null)  {
+        throw new DataException(RNR_VALIDATION_ERROR);
+      }
       thisLineItem.copyApproverEditableFields(otherLineItem);
       thisLineItem.setModifiedBy(rnr.getModifiedBy());
     }

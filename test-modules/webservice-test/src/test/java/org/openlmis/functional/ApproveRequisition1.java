@@ -19,7 +19,7 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
 
 
-public class ApproveRequisition extends TestCaseHelper {
+public class ApproveRequisition1 extends TestCaseHelper {
   public static final String FULL_JSON_APPROVE_TXT_FILE_NAME = "FullJsonApprove.txt";
   public WebDriver driver;
   public Utils utility = new Utils();
@@ -104,7 +104,7 @@ public class ApproveRequisition extends TestCaseHelper {
     response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
 
-//        assertEquals(response, "{\"error\":\"Invalid data.\"}");
+    assertEquals(response, "{\"error\":\"Invalid data.\"}");
 
 
   }

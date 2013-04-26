@@ -21,7 +21,7 @@ import static org.openlmis.UiUtils.HttpClient.GET;
 import static org.openlmis.UiUtils.HttpClient.POST;
 
 
-public class SubmitReport extends TestCaseHelper {
+public class SubmitReport1 extends TestCaseHelper {
 
   public static final String MINIMUM_JSON_TXT_FILE_NAME = "MinimumJson.txt";
   public static final String FULL_JSON_TXT_FILE_NAME = "FullJson.txt";
@@ -73,8 +73,7 @@ public class SubmitReport extends TestCaseHelper {
     json = utility.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
     json = utility.updateJSON(json, "programId", "500");
 
-    ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,
-      "commTrack",
+    ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,"commTrack",
       dbWrapper.getAuthToken("commTrack"));
 
     String response = responseEntity.getResponse();
@@ -229,7 +228,7 @@ public class SubmitReport extends TestCaseHelper {
     json = utility.updateJSON(json, "productCode", "P10");
 
     ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,
-      "commTrack100", dbWrapper.getAuthToken("commTrack"));
+      "commTrack1000", dbWrapper.getAuthToken("commTrack"));
 
     String response = responseEntity.getResponse();
 
