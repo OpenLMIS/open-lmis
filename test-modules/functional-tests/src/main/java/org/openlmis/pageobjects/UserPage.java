@@ -122,7 +122,7 @@ public class UserPage extends Page {
 
   }
 
-  public String enterAndverifyUserDetails(String userName, String email, String firstName, String lastName, String baseurl, String dburl) throws IOException, SQLException {
+  public String enterAndVerifyUserDetails(String userName, String email, String firstName, String lastName, String baseurl, String dburl) throws IOException, SQLException {
     testWebDriver.waitForElementToAppear(addNewButton);
     addNewButton.click();
     testWebDriver.waitForElementToAppear(userNameField);
@@ -135,7 +135,10 @@ public class UserPage extends Page {
     lastNameField.clear();
     lastNameField.sendKeys(lastName);
     System.out.println("brute force" + "14.2.1");
+    testWebDriver.waitForElementToAppear(saveButton);
+    testWebDriver.sleep(1500);
     saveButton.click();
+    testWebDriver.sleep(1500);
     System.out.println("brute force" + "14.2.2");
     testWebDriver.waitForElementToAppear(viewHereLink);
 

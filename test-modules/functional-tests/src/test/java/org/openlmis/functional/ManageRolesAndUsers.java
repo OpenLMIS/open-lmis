@@ -108,7 +108,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, boolean adminRole) throws IOException, SQLException {
     UserPage userPage = homePage.navigateToUser();
-    String userID = userPage.enterAndverifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dburlGlobal);
+    String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dburlGlobal);
     dbWrapper.updateUser(passwordUsers, userEmail);
     userPage.enterMyFacilityAndMySupervisedFacilityData(userFirstName, userLastName, facility, program, supervisoryNode, role, adminRole);
     return userID;
