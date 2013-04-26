@@ -21,7 +21,7 @@ function ViewOrderListController($scope, orders) {
       {field: 'rnr.supplyingDepot', displayName: "Supplying Depot"},
       {field: 'createdDate', displayName: "Order Date/Time", cellFilter: "date:'dd/MM/yyyy hh:mm:ss'"},
       {field: 'status', displayName: "Order Status",
-        cellTemplate:"<div class='ngCellText'><span ng-cell-text><div id=\"shippedOrderStaus\" ng-show=\"row.entity.fulfilled\">SHIPPED</div><div id=\"releasedOrderStaus\" ng-show=\"!row.entity.fulfilled\">RELEASED</div></span></div>"},
+        cellTemplate:"<div class='ngCellText'><span ng-cell-text><div id=\"orderStatus\">{{row.entity.status}} <span ng-show='row.entity.shipmentError' >(Shipment File Error)</span></div> "},
       {cellTemplate: "<div class='ngCellText'><a ng-show=\"row.entity.productsOrdered\" ng-href='/orders/{{row.entity.id}}/download.csv'>Download CSV</a>" +
         "<span ng-show=\"!row.entity.productsOrdered\"  ng-cell-text>No products in this order</span></div>"}
     ]

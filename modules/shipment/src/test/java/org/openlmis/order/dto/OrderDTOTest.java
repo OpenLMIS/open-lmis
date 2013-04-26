@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.openlmis.order.domain.Order;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.dto.RnrDTO;
+import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -40,10 +41,10 @@ public class OrderDTOTest {
     Date createdDate = new Date();
     order1.setCreatedDate(createdDate);
     order1.setRnr(make(a(defaultRnr)));
-
+    order1.setShipmentFileInfo(new ShipmentFileInfo("1.csv", false));
     final Order order2 = new Order();
     order2.setRnr(make(a(defaultRnr, with(RequisitionBuilder.periodId, 2))));
-
+    order2.setShipmentFileInfo(new ShipmentFileInfo("2.csv", true));
     final RnrDTO dtoForOrder1 = new RnrDTO();
     dtoForOrder1.setId(1);
     final RnrDTO dtoForOrder2 = new RnrDTO();
@@ -62,5 +63,6 @@ public class OrderDTOTest {
     assertThat(orderDTOs.get(0).getRnr(), is(dtoForOrder1));
     assertThat(orderDTOs.get(1).getRnr(), is(dtoForOrder2));
     assertThat(orderDTOs.get(0).getCreatedDate(), is(createdDate));
+    assertThat(orderDTOs.get(0).getShipmentError(), is(false));
   }
 }

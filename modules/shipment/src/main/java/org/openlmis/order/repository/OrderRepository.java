@@ -27,11 +27,13 @@ public class OrderRepository {
     return orderMapper.getAll();
   }
 
-  public void updateFulfilledAndShipmentIdForOrder(String rnrIds, Boolean fulfilled, Integer shipmentId) {
-    orderMapper.updateFulfilledFlagAndShipmentId(rnrIds, fulfilled, shipmentId);
-  }
-
   public Order getById(Integer id) {
     return orderMapper.getById(id);
+  }
+
+  public void updateStatusAndShipmentIdForOrder(List<Order> orders) {
+    for (Order order : orders) {
+      orderMapper.updateShipmentInfo(order);
+    }
   }
 }

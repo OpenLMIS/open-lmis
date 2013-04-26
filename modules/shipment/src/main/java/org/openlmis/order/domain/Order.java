@@ -6,13 +6,15 @@
 
 package org.openlmis.order.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.shipment.domain.ShipmentFileInfo;
 
 import java.util.Date;
-import static java.lang.Boolean.*;
+
+import static org.openlmis.order.domain.OrderStatus.PACKED;
+import static org.openlmis.order.domain.OrderStatus.RELEASED;
 
 @Data
 @NoArgsConstructor
@@ -20,13 +22,22 @@ public class Order {
   public Order(Rnr rnr) {
     this.rnr = rnr;
     this.createdBy = rnr.getModifiedBy();
-    this.fulfilled = FALSE;
+    this.status = RELEASED;
   }
 
   private Integer id;
-  private Boolean fulfilled;
-  private Integer shipmentId;
+  private OrderStatus status;
+  private ShipmentFileInfo shipmentFileInfo;
   private Date createdDate;
   private Integer createdBy;
   private Rnr rnr;
+
+  public Order(Integer id) {
+    this.id = id;
+  }
+
+  public void updateShipmentFileInfo(ShipmentFileInfo shipmentFileInfo){
+    this.shipmentFileInfo = shipmentFileInfo;
+    this.status = shipmentFileInfo.isProcessingError()? RELEASED : PACKED;
+  }
 }

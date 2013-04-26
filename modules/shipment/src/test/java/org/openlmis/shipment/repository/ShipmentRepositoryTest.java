@@ -13,15 +13,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
+import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.repository.mapper.ShipmentMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import static org.junit.rules.ExpectedException.*;
+import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ShipmentRepositoryTest {
@@ -51,7 +50,7 @@ public class ShipmentRepositoryTest {
   @Test
   public void shouldThrowExceptionIfShipmentFileHasIncorrectOrderNumber() throws Exception {
     ShippedLineItem shippedLineItem = new ShippedLineItem();
-    shippedLineItem.setOrderId(1);
+    shippedLineItem.setRnrId(1);
     doThrow(new DataIntegrityViolationException("violates foreign key constraint \"shipped_line_items_orderid_fkey\"")).when(shipmentMapper).insertShippedLineItem(shippedLineItem);
 
     expectedException.expect(DataException.class);

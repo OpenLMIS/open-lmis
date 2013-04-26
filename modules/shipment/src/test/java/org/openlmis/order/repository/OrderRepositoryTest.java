@@ -17,9 +17,10 @@ import org.openlmis.order.repository.mapper.OrderMapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -51,12 +52,16 @@ public class OrderRepositoryTest {
   }
 
   @Test
-  public void shouldUpdateFulfilledAndShipmentIdForOrder() throws Exception {
-    doNothing().when(orderMapper).updateFulfilledFlagAndShipmentId("{1}", false, 1);
-    orderRepository.updateFulfilledAndShipmentIdForOrder("{1}", false, 1);
+  public void shouldUpdateStatusAndShipmentIdForOrder() throws Exception {
+    List<Order> orders = new ArrayList<>();
+    Order order1 = new Order();
+    Order order2 = new Order();
+    orders.add(order1);
+    orders.add(order2);
 
-    verify(orderMapper).updateFulfilledFlagAndShipmentId("{1}", false, 1);
+    orderRepository.updateStatusAndShipmentIdForOrder(orders);
 
+    verify(orderMapper, times(2)).updateShipmentInfo(any(Order.class));
   }
 
   @Test

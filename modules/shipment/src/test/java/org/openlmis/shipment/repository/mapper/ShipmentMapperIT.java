@@ -12,7 +12,6 @@ import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
-import org.openlmis.order.domain.Order;
 import org.openlmis.order.repository.mapper.OrderMapper;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
@@ -74,13 +73,12 @@ public class ShipmentMapperIT {
     String fetchShipmentFileInfoQuery = "Select * from shipped_line_items where id = ?";
     ResultSet shipmentFileInfoResultSet = queryExecutor.execute(fetchShipmentFileInfoQuery, Arrays.asList(shippedLineItem.getId()));
     shipmentFileInfoResultSet.next();
-    assertThat(shipmentFileInfoResultSet.getInt("orderId"), is(shippedLineItem.getOrderId()));
+    assertThat(shipmentFileInfoResultSet.getInt("rnrId"), is(shippedLineItem.getRnrId()));
     assertThat(shipmentFileInfoResultSet.getString("productCode"), is(shippedLineItem.getProductCode()));
     assertThat(shipmentFileInfoResultSet.getInt("quantityShipped"), is(shippedLineItem.getQuantityShipped()));
   }
 
   private ShippedLineItem createShippedLineItem() {
-    Integer userId = 1;
     Product product = make(a(defaultProduct));
     Facility facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
@@ -93,25 +91,33 @@ public class ShipmentMapperIT {
     programMapper.insert(program);
     Rnr requisition = make(a(defaultRnr, with(RequisitionBuilder.facility, facility), with(RequisitionBuilder.periodId, period.getId())));
     requisitionMapper.insert(requisition);
-    requisition.setModifiedBy(userId);
-    Order order = new Order(requisition);
-
-    orderMapper.insert(order);
 
     productMapper.insert(product);
 
-    return new ShippedLineItem(order.getId(), product.getCode(), 23);
+    return new ShippedLineItem(requisition.getId(), product.getCode(), 23);
   }
 
   @Test
   public void shouldInsertShipmentFileInfo() throws Exception {
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
-    shipmentFileInfo.setName("abc");
+    shipmentFileInfo.setFileName("abc");
 
     mapper.insertShipmentFileInfo(shipmentFileInfo);
 
     assertThat(shipmentFileInfo.getId(), is(notNullValue()));
 
+  }
+
+  @Test
+  public void shouldGetShipmentFileInfoById() throws Exception {
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
+    shipmentFileInfo.setFileName("abc");
+
+    mapper.insertShipmentFileInfo(shipmentFileInfo);
+
+    ShipmentFileInfo result = mapper.getShipmentFileInfo(shipmentFileInfo.getId());
+
+    assertThat(result.getId(), is(shipmentFileInfo.getId()));
   }
 
   @Test

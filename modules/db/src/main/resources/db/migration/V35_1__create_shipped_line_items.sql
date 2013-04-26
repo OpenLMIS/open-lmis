@@ -3,7 +3,7 @@
 
 CREATE TABLE shipped_line_items (
   id  SERIAL PRIMARY KEY,
-  orderId INTEGER NOT NULL REFERENCES orders(id),
+  rnrId INTEGER NOT NULL REFERENCES requisitions(id),
   productCode VARCHAR(50) NOT NULL REFERENCES products(code),
   quantityShipped INTEGER  NOT NULL,
   modifiedDate TIMESTAMP

@@ -23,10 +23,6 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -94,14 +90,11 @@ public class OrderServiceTest {
 
   @Test
   public void shouldUpdateFulfilledAndShipmentIdForOrders() throws Exception {
+    List<Order> orders = new ArrayList<>();
 
-    ArrayList<Integer> orders = new ArrayList<>();
-    orders.add(1);
-    orders.add(2);
+    orderService.updateFulfilledAndShipmentIdForOrders(orders);
 
-    orderService.updateFulfilledAndShipmentIdForOrders(orders,true,1);
-
-    verify(orderRepository).updateFulfilledAndShipmentIdForOrder(anyString(),anyBoolean(),anyInt());
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(orders);
   }
 
   @Test

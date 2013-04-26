@@ -54,11 +54,6 @@ public class OrderService {
     return orders;
   }
 
-  public void updateFulfilledAndShipmentIdForOrders(List<Integer> orderIds, Boolean fulfilled, Integer shipmentId) {
-    String orders = orderIds.toString().replace("[", "{").replace("]", "}");
-    orderRepository.updateFulfilledAndShipmentIdForOrder(orders, fulfilled, shipmentId);
-  }
-
   public Order getOrderForDownload(Integer id) {
     Order order = orderRepository.getById(id);
     Rnr requisition = requisitionService.getFullRequisitionById(order.getRnr().getId());
@@ -76,11 +71,15 @@ public class OrderService {
 
   private List<RnrLineItem> getLineItemsForOrder(List<RnrLineItem> rnrLineItems) {
     List<RnrLineItem> lineItemsForOrder = new ArrayList<>();
-    for(RnrLineItem rnrLineItem : rnrLineItems) {
-      if(rnrLineItem.getPacksToShip() > 0){
+    for (RnrLineItem rnrLineItem : rnrLineItems) {
+      if (rnrLineItem.getPacksToShip() > 0) {
         lineItemsForOrder.add(rnrLineItem);
       }
     }
     return lineItemsForOrder;
+  }
+
+  public void updateFulfilledAndShipmentIdForOrders(List<Order> orders) {
+    orderRepository.updateStatusAndShipmentIdForOrder(orders);
   }
 }

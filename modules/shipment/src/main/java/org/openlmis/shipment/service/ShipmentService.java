@@ -7,13 +7,16 @@
 package org.openlmis.shipment.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
-import org.openlmis.shipment.domain.ShippedLineItem;
+import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
+import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,8 +40,14 @@ public class ShipmentService {
     shipmentRepository.insertShipmentFileInfo(shipmentFileInfo);
   }
 
-  public void updateFulfilledFlagAndShipmentIdForOrders(List<Integer> orderIds, ShipmentFileInfo shipmentFileInfo) {
-    orderService.updateFulfilledAndShipmentIdForOrders(orderIds,!shipmentFileInfo.isProcessingError(),shipmentFileInfo.getId());
+  public void updateStatusAndShipmentIdForOrders(List<Integer> rnrIds, ShipmentFileInfo shipmentFileInfo) {
+    List<Order> orders = new ArrayList<>();
+    for (Integer id : rnrIds) {
+      Order order = new Order(new Rnr(id));
+      order.updateShipmentFileInfo(shipmentFileInfo);
+      orders.add(order);
+    }
+    orderService.updateFulfilledAndShipmentIdForOrders(orders);
 
   }
   public ShippedLineItem getShippedLineItem(ShippedLineItem shippedLineItem){

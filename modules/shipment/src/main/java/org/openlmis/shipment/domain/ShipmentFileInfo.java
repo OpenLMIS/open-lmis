@@ -14,6 +14,6 @@ import org.openlmis.core.domain.BaseModel;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShipmentFileInfo extends BaseModel{
-  private String name;
+  private String fileName;
   private boolean processingError;
 }

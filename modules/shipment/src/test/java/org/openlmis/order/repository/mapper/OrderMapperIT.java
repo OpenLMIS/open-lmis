@@ -23,6 +23,8 @@ import org.openlmis.order.domain.Order;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
+import org.openlmis.shipment.domain.ShipmentFileInfo;
+import org.openlmis.shipment.repository.mapper.ShipmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,12 +39,13 @@ import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.lang.Boolean.FALSE;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
+import static org.openlmis.order.domain.OrderStatus.PACKED;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -62,6 +65,9 @@ public class OrderMapperIT {
   @Autowired
   private RequisitionMapper requisitionMapper;
   @Autowired
+  private ShipmentMapper shipmentMapper;
+
+  @Autowired
   private QueryExecutor queryExecutor;
 
   private ProcessingSchedule processingSchedule;
@@ -79,10 +85,8 @@ public class OrderMapperIT {
 
   @Test
   public void shouldInsertOrder() throws Exception {
-    Order order = new Order();
     Rnr rnr = insertRequisition(1);
-    order.setRnr(rnr);
-    order.setCreatedBy(1);
+    Order order = new Order(rnr);
     mapper.insert(order);
     List<Integer> orderIds = new ArrayList();
     orderIds.add(order.getId());
@@ -106,34 +110,49 @@ public class OrderMapperIT {
     assertThat(orders.size(), is(2));
     assertThat(orders.get(1).getId(), is(order1.getId()));
     assertThat(orders.get(1).getRnr().getId(), is(order1.getRnr().getId()));
+    assertThat(orders.get(1).getShipmentFileInfo(), is(nullValue()));
     assertThat(orders.get(0).getId(), is(order2.getId()));
   }
 
   @Test
-  public void shouldUpdateFulfilledFlagAndShipmentIdForOrders() throws Exception {
-    Order order = new Order();
-    Rnr rnr = insertRequisition(1);
-    order.setFulfilled(FALSE);
-    order.setShipmentId(1);
+  public void shouldGetShipmentFileInfoWhileFetchingOrders() throws Exception {
+    Order order1 = insertOrder(3);
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
+    shipmentFileInfo.setFileName("abc.csv");
+    shipmentFileInfo.setProcessingError(false);
+    shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
 
-    order.setRnr(rnr);
-    order.setCreatedBy(1);
-    mapper.insert(order);
+    order1.updateShipmentFileInfo(shipmentFileInfo);
+    mapper.updateShipmentInfo(order1);
 
-    String orders = Arrays.asList(order.getRnr().getId()).toString().replace("[", "{").replace("]", "}");
-
-    mapper.updateFulfilledFlagAndShipmentId(orders, true, 1);
-
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE rnrid=?",Arrays.asList(order.getRnr().getId()));
-
-    resultSet.next();
-
-    assertThat(resultSet.getBoolean("fulfilled"), is(true));
-    assertThat(resultSet.getInt("shipmentId"), is(1));
+    List<Order> orders = mapper.getAll();
+    assertThat(orders.get(0).getShipmentFileInfo().getFileName(), is("abc.csv"));
+    assertThat(orders.get(0).getShipmentFileInfo().isProcessingError(), is(false));
   }
 
   @Test
-  public void shouldGetOrderById(){
+  public void shouldUpdateStatusAndShipmentIdForOrder() throws Exception {
+    Rnr rnr = insertRequisition(1);
+    Order order = new Order(rnr);
+    mapper.insert(order);
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
+    shipmentFileInfo.setFileName("ord_1.csv");
+    shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
+
+    order.updateShipmentFileInfo(shipmentFileInfo);
+
+    mapper.updateShipmentInfo(order);
+
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE rnrid=?", Arrays.asList(order.getRnr().getId()));
+
+    resultSet.next();
+
+    assertThat(resultSet.getString("status"), is(PACKED.name()));
+    assertThat(resultSet.getInt("shipmentId"), is(shipmentFileInfo.getId()));
+  }
+
+  @Test
+  public void shouldGetOrderById() {
     Order expectedOrder = insertOrder(1);
 
     Order savedOrder = mapper.getById(expectedOrder.getId());
@@ -149,10 +168,8 @@ public class OrderMapperIT {
   }
 
   private Order insertOrder(Integer programId) {
-    Order order = new Order();
     Rnr rnr = insertRequisition(programId);
-    order.setRnr(rnr);
-    order.setCreatedBy(1);
+    Order order = new Order(rnr);
     mapper.insert(order);
     return order;
   }

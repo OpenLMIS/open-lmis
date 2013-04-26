@@ -9,9 +9,11 @@ package org.openlmis.shipment.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShippedLineItem;
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -56,8 +58,15 @@ public class ShipmentServiceTest {
     List<Integer> orderIds = new ArrayList();
     orderIds.add(1);
 
-    shipmentService.updateFulfilledFlagAndShipmentIdForOrders(orderIds, shipmentFileInfo);
+    shipmentService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
 
-    verify(orderService).updateFulfilledAndShipmentIdForOrders(orderIds, TRUE, 1);
+    ArgumentMatcher<List<Order>> argumentMatcher = new ArgumentMatcher<List<Order>>() {
+      @Override
+      public boolean matches(Object argument) {
+        List<Order> orders = (List<Order>) argument;
+        return true;  //To change body of implemented methods use File | Settings | File Templates.
+      }
+    };
+    verify(orderService).updateFulfilledAndShipmentIdForOrders(argThat(argumentMatcher));
   }
 }

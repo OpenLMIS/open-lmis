@@ -68,6 +68,10 @@ public class Rnr {
     this.period = period;
   }
 
+  public Rnr(Integer id) {
+    this.id = id;
+  }
+
   public void add(RnrLineItem rnrLineItem, Boolean fullSupply) {
     if (fullSupply) {
       fullSupplyLineItems.add(rnrLineItem);

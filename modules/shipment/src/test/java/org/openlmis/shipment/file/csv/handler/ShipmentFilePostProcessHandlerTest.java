@@ -53,7 +53,7 @@ public class ShipmentFilePostProcessHandlerTest {
     shipmentFilePostProcessHandler.process(shipmentFile, processingError);
 
     verify(shipmentService).insertShipmentFileInfo(shipmentFileInfo);
-    verify(shipmentService).updateFulfilledFlagAndShipmentIdForOrders(new ArrayList(orderIds), shipmentFileInfo);
+    verify(shipmentService).updateStatusAndShipmentIdForOrders(new ArrayList(orderIds), shipmentFileInfo);
     verify(ftpOutputChannel, never()).send(any(Message.class));
   }
 
@@ -72,7 +72,7 @@ public class ShipmentFilePostProcessHandlerTest {
     shipmentFilePostProcessHandler.process(shipmentFile, processingError);
 
     verify(shipmentService).insertShipmentFileInfo(shipmentFileInfo);
-    verify(shipmentService).updateFulfilledFlagAndShipmentIdForOrders(new ArrayList(orderIds), shipmentFileInfo);
+    verify(shipmentService).updateStatusAndShipmentIdForOrders(new ArrayList(orderIds), shipmentFileInfo);
     verify(ftpOutputChannel).send(any(Message.class));
   }
 }

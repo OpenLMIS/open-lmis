@@ -4,8 +4,8 @@
 CREATE TABLE orders (
   id          SERIAL PRIMARY KEY,
   rnrId       INTEGER NOT NULL REFERENCES requisitions (id),
-  shipmentId  INTEGER,
-  fulfilled   BOOLEAN,
+  shipmentId  INTEGER REFERENCES shipment_file_info(id),
+  status      VARCHAR(20) NOT NULL,
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   createdBy   INTEGER NOT NULL REFERENCES users (id)
 );

@@ -10,8 +10,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.rnr.dto.RnrDTO;
-import org.springframework.web.servlet.ModelAndView;
+import org.openlmis.shipment.domain.ShipmentFileInfo;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,8 +26,9 @@ public class OrderDTO {
   Date createdDate;
   private Integer id;
   private RnrDTO rnr;
-  private Boolean fulfilled;
   private Boolean productsOrdered;
+  private OrderStatus status;
+  private Boolean shipmentError;
 
   public static List<OrderDTO> getOrdersForView(List<Order> orders) {
     List<OrderDTO> orderDTOs = new ArrayList<>();
@@ -41,7 +43,9 @@ public class OrderDTO {
     orderDTO.setId(order.getId());
     orderDTO.setRnr(RnrDTO.prepareForOrderView(order.getRnr()));
     orderDTO.setCreatedDate(order.getCreatedDate());
-    orderDTO.setFulfilled(order.getFulfilled());
+    orderDTO.setStatus(order.getStatus());
+    ShipmentFileInfo shipmentFileInfo = order.getShipmentFileInfo();
+    if(shipmentFileInfo != null) orderDTO.setShipmentError(shipmentFileInfo.isProcessingError());
     if(order.getRnr().getFullSupplyLineItems().size() == 0 && order.getRnr().getNonFullSupplyLineItems().size() == 0) {
       orderDTO.setProductsOrdered(false);
     } else {
@@ -49,5 +53,4 @@ public class OrderDTO {
     }
     return orderDTO;
   }
-
-}
+ }
