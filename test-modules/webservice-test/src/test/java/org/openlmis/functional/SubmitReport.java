@@ -54,8 +54,8 @@ public class SubmitReport extends TestCaseHelper {
     json = utility.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
 
     ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,
-        "commTrack",
-        dbWrapper.getAuthToken("commTrack"));
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
 
     String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
@@ -73,7 +73,8 @@ public class SubmitReport extends TestCaseHelper {
     json = utility.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
     json = utility.updateJSON(json, "programId", "500");
 
-    ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,"commTrack",
+    ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,
+      "commTrack",
       dbWrapper.getAuthToken("commTrack"));
 
     String response = responseEntity.getResponse();
@@ -216,7 +217,7 @@ public class SubmitReport extends TestCaseHelper {
   }
 
   @Test(groups = {"webservice"})
-  public void testMinimumSubmitReportInvalidVendor() throws Exception {
+  public void shouldReturn401StatusWhenSubmittingReportWithInvalidVendor() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -230,11 +231,7 @@ public class SubmitReport extends TestCaseHelper {
     ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", POST,
       "commTrack1000", dbWrapper.getAuthToken("commTrack"));
 
-    String response = responseEntity.getResponse();
-
-    client.SendJSON("", "http://localhost:9091/", GET, "", "");
-
-    assertEquals(response, "<html>");
+    assertEquals(401, responseEntity.getStatus());
   }
 }
 
