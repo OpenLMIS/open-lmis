@@ -7,9 +7,9 @@
                     <div class="box-icon">
                         <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
                         <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
-                        <a href="#" ng-click="export('pdf')" class='btn-small btn-info'>PDF</a>
-                        <a href="#" ng-click="export('xls')" class='btn-small btn-info'>Excel</a>
-                        <a href="#" ng-click="export('mailing-list')" class='btn-small btn-info'>Mailing Label</a>
+                        <a id="pdf-button" href="#" ng-click="export('pdf')" class='btn-small btn-info'>PDF</a>
+                        <a id="xls-button" href="#" ng-click="export('xls')" class='btn-small btn-info'>Excel</a>
+                        <a id="mailing-button" href="#" ng-click="export('mailing-list')" class='btn-small btn-info'>Mailing Label</a>
 
                     </div>
                 </div>
@@ -21,7 +21,7 @@
                                     <label class="labels">Facility Name</label>
 
                                     <div class="form-field">
-                                        <input type="text" ng-change="filterGrid()" ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
+                                        <input id="name" type="text" ng-change="filterGrid()" ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
                                     </div>
                                 </div>
 
@@ -30,14 +30,14 @@
                                     <label class="labels">Facility Code</label>
 
                                     <div class="form-field">
-                                        <input ng-change="filterGrid()" type="text" ng-model="facilityCodeFilter" placeholder="facility code" class="input_text" />
+                                        <input id="code" ng-change="filterGrid()" type="text" ng-model="facilityCodeFilter" placeholder="facility code" class="input_text" />
                                     </div>
                                 </div>
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select ng-change="filterGrid()" name="facilityType" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
+                                        <select id="facility-type" ng-change="filterGrid()" name="facilityType" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
 
                                         </select>
                                     </div>

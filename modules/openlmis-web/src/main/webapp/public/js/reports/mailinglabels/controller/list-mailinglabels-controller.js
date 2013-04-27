@@ -38,7 +38,7 @@ function ListMailinglabelsController($scope, MailingLabels, FacilityTypes, $http
 
         FacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.push({'name': '- Please Selct One -'});
+            $scope.facilityTypes.push({'name': '- Please Select One -'});
         });
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
