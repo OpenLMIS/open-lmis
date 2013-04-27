@@ -9,5 +9,5 @@ include "modules:core", "modules:authentication",
         "modules:requisition","modules:email","test-modules:functional-tests","test-modules:service-tests",
         "test-modules:test-core","modules:report",
         "modules:requisition","modules:email","modules:rest-api","test-modules:webservice-test",
-        "modules:shipment","test-modules:functional-tests","test-modules:test-core"
+        "modules:shipment","test-modules:functional-tests","test-modules:test-core","modules:migration"
 
