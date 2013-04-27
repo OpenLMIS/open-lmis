@@ -161,6 +161,21 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
   private static WebElement errorMsg;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Reports')]")
+  private static WebElement ReportsMenuItem;
+
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Facility List (V1)')]")
+  private static WebElement FacilityListingReportMenu;
+
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Facility List (V2)')]")
+  private static WebElement FacilityMailingListReportMenu;
+
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Summary Report')]")
+  private static WebElement SummaryReportMenu;
+
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Facility List')]")
+  private static WebElement facilityListingReportPageHeader;
+
 
   public HomePage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -366,4 +381,34 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(errorMsg);
     SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "Requisition not initiated yet");
   }
+
+  public FacilityMailingListReportPage navigateViewFacilityMailingListReport() throws IOException {
+    SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(ReportsMenuItem);
+    testWebDriver.keyPress(ReportsMenuItem);
+    testWebDriver.waitForElementToAppear(FacilityMailingListReportMenu);
+    testWebDriver.keyPress(FacilityMailingListReportMenu);
+    testWebDriver.waitForElementToAppear(facilityListingReportPageHeader);
+    return new FacilityMailingListReportPage(testWebDriver);
+  }
+
+  public FacilityListingReportPage navigateViewFacilityListingReport() throws IOException {
+    SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(ReportsMenuItem);
+    testWebDriver.keyPress(ReportsMenuItem);
+    testWebDriver.waitForElementToAppear(FacilityListingReportMenu);
+    testWebDriver.keyPress(FacilityListingReportMenu);
+    return new FacilityListingReportPage(testWebDriver);
+  }
+
+  public SummaryReportPage navigateViewSummaryReport() throws IOException{
+    SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(ReportsMenuItem);
+    testWebDriver.keyPress(ReportsMenuItem);
+    testWebDriver.waitForElementToAppear(SummaryReportMenu);
+    testWebDriver.keyPress(SummaryReportMenu);
+    return new SummaryReportPage(testWebDriver);
+  }
+
+
 }
