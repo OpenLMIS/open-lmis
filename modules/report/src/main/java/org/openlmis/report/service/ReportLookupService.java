@@ -2,6 +2,7 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.report.mapper.ProductReportMapper;
+import org.openlmis.report.mapper.RequisitionGroupReportMapper;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,15 +18,23 @@ import java.util.List;
  */
 @Service
 @NoArgsConstructor
-public class ProductReportService {
+public class ReportLookupService {
 
-    @Autowired
+
     private ProductReportMapper productMapper;
-    public ProductReportService(ProductReportMapper productMapper){
+    private RequisitionGroupReportMapper rgMapper;
+    @Autowired
+    public ReportLookupService(ProductReportMapper productMapper, RequisitionGroupReportMapper rgMapper){
         this.productMapper = productMapper;
+        this.rgMapper = rgMapper;
     }
 
     public List<Product> getAllProducts(){
         return productMapper.getAll();
     }
+
+    public List<RequisitionGroup> getAllRequisitionGroups(){
+        return this.rgMapper.getAll();
+    }
+
 }

@@ -4,26 +4,24 @@ import lombok.NoArgsConstructor;
 import org.openlmis.report.Report;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.ReportOutputOption;
-import org.openlmis.report.model.dto.Product;
-import org.openlmis.report.model.report.FacilityReport;
 import org.openlmis.report.model.Pages;
 import org.openlmis.report.model.report.ConsumptionReport;
+import org.openlmis.report.model.report.FacilityReport;
 import org.openlmis.report.model.report.MailingLabelReport;
 import org.openlmis.report.model.report.SummaryReport;
-import org.openlmis.report.service.ProductReportService;
+import org.openlmis.report.service.ReportLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import static org.springframework.web.bind.annotation.RequestMethod.*;
-
 import java.util.List;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
 
@@ -36,12 +34,12 @@ public class ReportController  extends BaseController {
     public static final String USER_ID = "USER_ID";
 
     private ReportManager reportManager;
-    private ProductReportService productReportService;
+    private ReportLookupService reportService;
 
     @Autowired
-    public ReportController(ReportManager reportManager, ProductReportService productReportService) {
+    public ReportController(ReportManager reportManager, ReportLookupService reportService) {
         this.reportManager  = reportManager;
-        this.productReportService = productReportService;
+        this.reportService = reportService;
     }
 
     @RequestMapping(value = "/download/{reportKey}/{outputOption}")
