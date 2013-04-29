@@ -95,15 +95,15 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
     userPage.verifyRemoveNotPresent();
 
-    System.out.println("brute force" + "16");
-    createUserAndAssignRoles(homePage, passwordUsers, "Jake_Doe@openlmis.com", "Jake", "Doe", LMU, facility_code, program, "Node 1", LMU, true);
-    System.out.println("brute force" + "17");
-    userPage.clickViewHere();
-    userPage.removeRole(1, true);
-    userPage.verifyRoleNotPresent(LMU);
-    userPage.clickSaveButton();
-    userPage.clickViewHere();
-    userPage.verifyRoleNotPresent(LMU);
+//    System.out.println("brute force" + "16");
+//    createUserAndAssignRoles(homePage, passwordUsers, "Jake_Doe@openlmis.com", "Jake", "Doe", LMU, facility_code, program, "Node 1", LMU, true);
+//    System.out.println("brute force" + "17");
+//    userPage.clickViewHere();
+//    userPage.removeRole(1, true);
+//    userPage.verifyRoleNotPresent(LMU);
+//    userPage.clickSaveButton();
+//    userPage.clickViewHere();
+//    userPage.verifyRoleNotPresent(LMU);
   }
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, boolean adminRole) throws IOException, SQLException {
