@@ -17,6 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
+import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.spy;
@@ -41,6 +43,7 @@ public class RequisitionPdfModelTest {
   private Map<String, Object> model;
   private Rnr requisition;
   private RequisitionPdfModel requisitionPdfModel;
+  private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
 
   @Before
   public void setUp() throws Exception {
@@ -52,6 +55,9 @@ public class RequisitionPdfModelTest {
     List<RnrColumn> rnrTemplate = make(a(defaultRnrTemplate)).getRnrColumns();
     model.put(RequisitionController.RNR_TEMPLATE, rnrTemplate);
     requisitionPdfModel = new RequisitionPdfModel(model);
+    LossesAndAdjustmentsType additive1 = new LossesAndAdjustmentsType("TRANSFER_IN", "TRANSFER IN", true, 1);
+    lossesAndAdjustmentsList = asList(additive1);
+    RnrLineItem.setLossesAndAdjustmentsTypes(lossesAndAdjustmentsList);
   }
 
   @Test
