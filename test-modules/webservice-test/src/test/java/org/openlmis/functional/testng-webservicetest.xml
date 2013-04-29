@@ -16,6 +16,8 @@
       </class>
       <class name="org.openlmis.functional.ApproveRequisition">
       </class>
+        <class name="org.openlmis.functional.CommTrackTemplateTest">
+        </class>
     </classes>
   </test>
 </suite>

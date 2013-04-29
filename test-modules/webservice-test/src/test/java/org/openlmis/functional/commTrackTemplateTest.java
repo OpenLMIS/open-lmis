@@ -20,6 +20,7 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
 
 
 public class CommTrackTemplateTest extends TestCaseHelper {
+    public static final String FULL_COMMTRACK_JSON_TXT_FILE_NAME = "CommTrack_JSON.txt";
     public WebDriver driver;
     public Utils  utillity = new Utils();
     @BeforeMethod(groups = {"webservice"})
@@ -39,8 +40,7 @@ public class CommTrackTemplateTest extends TestCaseHelper {
     public void testCommTrackSubmitReportValidRnR() throws Exception {
         HttpClient client = new HttpClient();
         client.createContext();
-        String fileName = this.getClass().getClassLoader().getResource("CommTrack_JSON.txt").getFile();
-        String json = utillity.readJSON(fileName);
+        String json = utillity.readJSON(FULL_COMMTRACK_JSON_TXT_FILE_NAME);
         json = utillity.updateJSON(json, "userId", "commTrack");
         json = utillity.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
         json = utillity.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
