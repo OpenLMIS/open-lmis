@@ -108,7 +108,12 @@ ORDER BY F.code asc, F.typeid asc]]>
 				<text><![CDATA[Line#]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2ba4a9ef-e063-4ecc-b8e9-bfd8f2d0ec15" mode="Transparent" x="356" y="1" width="59" height="27" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="2ba4a9ef-e063-4ecc-b8e9-bfd8f2d0ec15" mode="Transparent" x="356" y="0" width="59" height="27" forecolor="#000000" backcolor="#333333">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -124,7 +129,7 @@ ORDER BY F.code asc, F.typeid asc]]>
 				<text><![CDATA[Ownership]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="7dead886-2f0f-4150-b690-a2a4b6c4351b" mode="Transparent" x="495" y="2" width="142" height="27" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="7dead886-2f0f-4150-b690-a2a4b6c4351b" mode="Transparent" x="495" y="0" width="142" height="27" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="3"/>
@@ -132,7 +137,7 @@ ORDER BY F.code asc, F.typeid asc]]>
 				<text><![CDATA[Address]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="cf83c565-ba90-4028-8f77-6b135c14f219" mode="Transparent" x="637" y="2" width="96" height="27" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="cf83c565-ba90-4028-8f77-6b135c14f219" mode="Transparent" x="637" y="0" width="96" height="27" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="3"/>
@@ -140,7 +145,12 @@ ORDER BY F.code asc, F.typeid asc]]>
 				<text><![CDATA[Phone Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="f1132144-de2f-464a-8ced-cbacc437e986" mode="Transparent" x="733" y="2" width="70" height="27" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="f1132144-de2f-464a-8ced-cbacc437e986" mode="Transparent" x="733" y="0" width="70" height="27" forecolor="#000000" backcolor="#333333">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="3"/>
