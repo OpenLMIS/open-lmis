@@ -7,6 +7,7 @@
 package org.openlmis.functional;
 
 import org.openlmis.UiUtils.HttpClient;
+import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -45,10 +46,10 @@ public class commTrackTemplateTest extends TestCaseHelper {
         json = utillity.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
         json = utillity.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
         json = utillity.updateJSON(json, "productCode", "P10");
-        String response = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", "POST", "commTrack", dbWrapper.getAuthToken("commTrack"));
+        ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", "POST", "commTrack", dbWrapper.getAuthToken("commTrack"));
         client.SendJSON("", "http://localhost:9091/", "GET", "", "");
 
-        assertTrue(response.contains("{\"R&R\":"));
+        assertTrue(responseEntity.getResponse().contains("{\"R&R\":"));
     }
 
 
