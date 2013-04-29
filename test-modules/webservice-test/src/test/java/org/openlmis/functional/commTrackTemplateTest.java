@@ -19,7 +19,7 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
 
 
-public class commTrackTemplateTest extends TestCaseHelper {
+public class CommTrackTemplateTest extends TestCaseHelper {
     public WebDriver driver;
     public Utils  utillity = new Utils();
     @BeforeMethod(groups = {"webservice"})
