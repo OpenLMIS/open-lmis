@@ -100,7 +100,10 @@ order by productcategory asc, product asc
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="38" y="41" width="52" height="15" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="38" y="13" width="52" height="44" forecolor="#000000" backcolor="#333333">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 					<paragraph leftIndent="3"/>
@@ -108,7 +111,7 @@ order by productcategory asc, product asc
 				<text><![CDATA[Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="6f22b5e8-59ea-4512-b209-ce093fe70dbe" mode="Transparent" x="260" y="41" width="40" height="16" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="6f22b5e8-59ea-4512-b209-ce093fe70dbe" mode="Transparent" x="260" y="13" width="40" height="44" forecolor="#000000" backcolor="#333333"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 					<paragraph leftIndent="3"/>
@@ -116,7 +119,10 @@ order by productcategory asc, product asc
 				<text><![CDATA[Unit]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="1138c634-4150-46c6-a83e-b93243223977" mode="Transparent" x="90" y="41" width="170" height="15" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="1138c634-4150-46c6-a83e-b93243223977" mode="Transparent" x="90" y="13" width="170" height="44" forecolor="#000000" backcolor="#333333">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 					<paragraph leftIndent="3"/>
@@ -124,7 +130,7 @@ order by productcategory asc, product asc
 				<text><![CDATA[Product]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="41788e7d-4689-46e2-a21c-80eb3813d273" mode="Transparent" x="355" y="1" width="55" height="56" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="41788e7d-4689-46e2-a21c-80eb3813d273" mode="Transparent" x="355" y="13" width="55" height="44" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
@@ -132,7 +138,7 @@ order by productcategory asc, product asc
 				<text><![CDATA[Received Quantity]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="b11ec1c7-ab15-44a6-987b-b949c3660b2d" mode="Transparent" x="411" y="40" width="55" height="17" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="b11ec1c7-ab15-44a6-987b-b949c3660b2d" mode="Transparent" x="411" y="13" width="55" height="44" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
@@ -140,7 +146,12 @@ order by productcategory asc, product asc
 				<text><![CDATA[Actual]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="598e05cc-a6dd-4e63-907d-c5843cd2e88d" mode="Transparent" x="522" y="40" width="53" height="17" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="598e05cc-a6dd-4e63-907d-c5843cd2e88d" mode="Transparent" x="520" y="13" width="55" height="44" forecolor="#000000" backcolor="#333333">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
@@ -148,7 +159,7 @@ order by productcategory asc, product asc
 				<text><![CDATA[Adjusted]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2f7e127e-7884-416e-8c31-b52ef2c9ca40" mode="Transparent" x="300" y="23" width="55" height="34" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="2f7e127e-7884-416e-8c31-b52ef2c9ca40" mode="Transparent" x="300" y="13" width="55" height="44" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 					<paragraph leftIndent="3" rightIndent="2"/>
@@ -156,7 +167,7 @@ order by productcategory asc, product asc
 				<text><![CDATA[Opening Balance]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="ce0b6684-1b56-4d42-9e71-f519aa99b78e" mode="Transparent" x="577" y="23" width="55" height="34" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="ce0b6684-1b56-4d42-9e71-f519aa99b78e" mode="Transparent" x="576" y="13" width="56" height="44" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
@@ -164,7 +175,7 @@ order by productcategory asc, product asc
 				<text><![CDATA[Balance on Hand]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="e67adeff-7f85-4c79-a683-32dc6dad9ef1" mode="Transparent" x="466" y="40" width="54" height="16" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="e67adeff-7f85-4c79-a683-32dc6dad9ef1" mode="Transparent" x="466" y="13" width="54" height="43" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
@@ -172,7 +183,7 @@ order by productcategory asc, product asc
 				<text><![CDATA[Adjusted]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="4d1fd6ec-eaaf-4ef6-8371-f74cacda3ba6" mode="Transparent" x="632" y="23" width="67" height="34" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="4d1fd6ec-eaaf-4ef6-8371-f74cacda3ba6" mode="Transparent" x="632" y="13" width="67" height="44" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
@@ -180,7 +191,7 @@ order by productcategory asc, product asc
 				<text><![CDATA[Product Reporting Rate]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="39c2cbba-f2be-46da-bfba-72058005697c" mode="Transparent" x="699" y="23" width="60" height="34" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="39c2cbba-f2be-46da-bfba-72058005697c" mode="Transparent" x="699" y="13" width="60" height="44" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
@@ -188,7 +199,7 @@ order by productcategory asc, product asc
 				<text><![CDATA[Stocked out rate]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="53308b53-498a-41ae-a37a-05fde552be68" x="0" y="13" width="70" height="20"/>
+				<reportElement uuid="53308b53-498a-41ae-a37a-05fde552be68" x="0" y="13" width="70" height="44"/>
 				<textElement verticalAlignment="Middle"/>
 				<text><![CDATA[Category]]></text>
 			</staticText>
@@ -300,7 +311,12 @@ order by productcategory asc, product asc
 				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="0e377173-71d5-46f7-88d7-a2b6a958fd8b" x="89" y="0" width="171" height="20"/>
+				<reportElement uuid="0e377173-71d5-46f7-88d7-a2b6a958fd8b" x="90" y="0" width="170" height="20">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -314,28 +330,42 @@ order by productcategory asc, product asc
 				<textFieldExpression><![CDATA[$F{unit}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement uuid="67c025da-835c-4796-9802-daffdff95172" x="411" y="0" width="54" height="20"/>
+				<reportElement uuid="67c025da-835c-4796-9802-daffdff95172" x="411" y="0" width="55" height="20">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<paragraph leftIndent="5" rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{actualDispensedQuantity}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement uuid="722124a8-e21f-490c-a641-d047f6d2c867" x="356" y="0" width="54" height="20"/>
+				<reportElement uuid="722124a8-e21f-490c-a641-d047f6d2c867" x="355" y="0" width="55" height="20">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<paragraph leftIndent="5" rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{quantityReceived}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement uuid="a985ef8d-9a20-42cc-8ce6-923e2c21286e" x="466" y="0" width="56" height="20"/>
+				<reportElement uuid="a985ef8d-9a20-42cc-8ce6-923e2c21286e" x="466" y="0" width="54" height="20">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<paragraph leftIndent="5" rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{adjustedDispensedQuantity}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement uuid="4010add3-b1d0-4263-9231-e180b0630895" mode="Transparent" x="300" y="0" width="56" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="4010add3-b1d0-4263-9231-e180b0630895" mode="Transparent" x="300" y="0" width="55" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="5" rightIndent="5"/>
@@ -343,21 +373,36 @@ order by productcategory asc, product asc
 				<textFieldExpression><![CDATA[$F{openingBalance}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement uuid="9368f837-0f29-41a6-8cad-8b296c4878c1" x="522" y="0" width="54" height="20"/>
+				<reportElement uuid="9368f837-0f29-41a6-8cad-8b296c4878c1" x="520" y="0" width="55" height="20">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<paragraph leftIndent="5" rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{adjustedDistributedQuantity}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement uuid="6c0a51b8-264e-48d7-baf1-ebe5ba4329a8" x="577" y="0" width="54" height="20"/>
+				<reportElement uuid="6c0a51b8-264e-48d7-baf1-ebe5ba4329a8" x="576" y="0" width="55" height="20">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<paragraph leftIndent="5" rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{balanceOnHand}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##%" isBlankWhenNull="true">
-				<reportElement uuid="be94130b-c834-47e7-9f0d-77f5148abb85" x="631" y="0" width="68" height="20"/>
+				<reportElement uuid="be94130b-c834-47e7-9f0d-77f5148abb85" x="632" y="0" width="67" height="20">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<paragraph leftIndent="5" rightIndent="5"/>
 				</textElement>
