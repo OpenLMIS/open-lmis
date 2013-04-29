@@ -227,3 +227,10 @@ services.factory('SummaryReport', function($resource){
     return $resource('/reports/summary.json', {}, {});
 }) ;
 
+services.factory('NonReportingFacilities', function($resource){
+    return $resource('/reports/non_reporting.json', {}, {});
+});
+
+services.factory('RequisitionGroups', function($resource){
+    return $resource('/reports/rgroups.json', {}, {});
+});
