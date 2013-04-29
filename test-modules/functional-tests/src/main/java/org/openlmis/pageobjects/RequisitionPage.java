@@ -106,6 +106,7 @@ public class RequisitionPage extends Page {
   }
 
   public void clickOk() {
+    testWebDriver.sleep(250);
     okButton.click();
     testWebDriver.sleep(250);
   }
