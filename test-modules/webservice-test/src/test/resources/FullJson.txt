@@ -10,7 +10,7 @@
     "quantityDispensed" : "1",
     "quantityReceived" : "0",
     "lossesAndAdjustments" : [
-      {"type": {"name": "TRANSFER_OUT","additive" : "false" }, "quantity" : 2}],
+      {"type": {"name": "TRANSFER_OUT"}, "quantity" : 2}],
    "stockInHand" : "0",
    "approvedQuantity" : "65",
 "newPatientCount" : "2",

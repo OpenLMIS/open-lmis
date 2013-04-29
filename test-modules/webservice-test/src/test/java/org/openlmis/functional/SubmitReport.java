@@ -60,6 +60,7 @@ public class SubmitReport extends TestCaseHelper {
         String response = responseEntity.getResponse();
         client.SendJSON("", "http://localhost:9091/", GET, "", "");
 
+        assertEquals(400, responseEntity.getStatus());
         assertEquals(response, "{\"error\":\"User doesn't have access to Program & Facility.\"}");
     }
 
@@ -79,7 +80,7 @@ public class SubmitReport extends TestCaseHelper {
 
         String response = responseEntity.getResponse();
         client.SendJSON("", "http://localhost:9091/", GET, "", "");
-
+        assertEquals(400, responseEntity.getStatus());
         assertEquals(response, "{\"error\":\"User doesn't have access to Program & Facility.\"}");
     }
 
@@ -107,7 +108,7 @@ public class SubmitReport extends TestCaseHelper {
                 dbWrapper.getAuthToken("commTrack"));
 
         client.SendJSON("", "http://localhost:9091/", GET, "", "");
-
+        assertEquals(400, responseEntity.getStatus());
         assertEquals(responseEntity.getResponse(), "{\"error\":\"Invalid period.\"}");
     }
 
@@ -126,7 +127,7 @@ public class SubmitReport extends TestCaseHelper {
 
         String response = responseEntity.getResponse();
         client.SendJSON("", "http://localhost:9091/", GET, "", "");
-
+        assertEquals(400, responseEntity.getStatus());
         assertEquals(response, "{\"error\":\"Invalid data.\"}");
     }
 
@@ -147,7 +148,7 @@ public class SubmitReport extends TestCaseHelper {
         String response = responseEntity.getResponse();
 
         client.SendJSON("", "http://localhost:9091/", GET, "", "");
-
+        assertEquals(400, responseEntity.getStatus());
         assertEquals(response, "{\"error\":\"Invalid data.\"}");
     }
 
@@ -168,7 +169,7 @@ public class SubmitReport extends TestCaseHelper {
         String response = responseEntity.getResponse();
 
         client.SendJSON("", "http://localhost:9091/", GET, "", "");
-
+        assertEquals(400, responseEntity.getStatus());
         assertEquals(response, "{\"error\":\"Invalid data.\"}");
     }
 
@@ -190,7 +191,7 @@ public class SubmitReport extends TestCaseHelper {
         String response = responseEntity.getResponse();
 
         client.SendJSON("", "http://localhost:9091/", GET, "", "");
-
+        assertEquals(200, responseEntity.getStatus());
         assertTrue(response.contains("{\"R&R\":"));
     }
 
@@ -212,7 +213,7 @@ public class SubmitReport extends TestCaseHelper {
         String response = responseEntity.getResponse();
 
         client.SendJSON("", "http://localhost:9091/", GET, "", "");
-
+        assertEquals(400, responseEntity.getStatus());
         assertEquals(response, "{\"error\":\"Please provide a valid username\"}");
     }
 

@@ -59,7 +59,7 @@ public class ApproveRequisition extends TestCaseHelper {
                 dbWrapper.getAuthToken("commTrack"));
         response = responseEntity.getResponse();
         client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-
+        assertEquals(200, responseEntity.getStatus());
         assertTrue(response.contains("{\"R&R\":"));
         assertEquals(dbWrapper.getRequisitionStatus(id), "RELEASED");
     }
@@ -82,7 +82,7 @@ public class ApproveRequisition extends TestCaseHelper {
                 "commTrack", dbWrapper.getAuthToken("commTrack"));
         response = responseEntity.getResponse();
         client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-
+        assertEquals(400, responseEntity.getStatus());
         assertEquals(response, "{\"error\":\"Please provide a valid username\"}");
     }
 
@@ -104,7 +104,7 @@ public class ApproveRequisition extends TestCaseHelper {
                 "commTrack", dbWrapper.getAuthToken("commTrack"));
         response = responseEntity.getResponse();
         client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-
+        assertEquals(400, responseEntity.getStatus());
         assertEquals(response, "{\"error\":\"Invalid data.\"}");
 
 
@@ -130,7 +130,7 @@ public class ApproveRequisition extends TestCaseHelper {
                 "commTrack", dbWrapper.getAuthToken("commTrack"));
         response = responseEntity.getResponse();
         client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-
+        assertEquals(400, responseEntity.getStatus());
         assertEquals(response, "{\"error\":\"Requisition Not Found\"}");
 
 
@@ -154,7 +154,7 @@ public class ApproveRequisition extends TestCaseHelper {
                 "commTrack", dbWrapper.getAuthToken("commTrack"));
         response = responseEntity.getResponse();
         client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-
+        assertEquals(400, responseEntity.getStatus());
         assertEquals(response, "{\"error\":\"Invalid data.\"}");
 
 
