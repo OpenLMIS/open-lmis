@@ -6,7 +6,8 @@ public enum ReportOutputOption {
 
     HTML("html"),
     PDF("pdf"),
-    XLS("xls");
+    XLS("xls"),
+    CSV("csv");
 
     private String option;
 
