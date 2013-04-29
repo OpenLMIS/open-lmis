@@ -78,16 +78,19 @@ public class RequisitionService {
 
   @Transactional
   public Rnr initiate(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
-    if (!requisitionPermissionService.hasPermission(modifiedBy, new Facility(facilityId), new Program(programId), CREATE_REQUISITION))
+    if (!requisitionPermissionService.hasPermission(modifiedBy, new Facility(facilityId), new Program(programId),
+      CREATE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(programId, rnrTemplateRepository.fetchColumnsForRequisition(programId));
+    ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(programId,
+      rnrTemplateRepository.fetchColumnsForRequisition(programId));
     if (rnrTemplate.getRnrColumns().size() == 0)
       throw new DataException(RNR_TEMPLATE_NOT_INITIATED_ERROR);
 
     validateIfRnrCanBeInitiatedFor(facilityId, programId, periodId);
 
-    List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId);
+    List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
+      facilityId, programId);
 
     Rnr requisition = new Rnr(facilityId, programId, periodId, facilityApprovedProducts, modifiedBy);
 
@@ -108,7 +111,8 @@ public class RequisitionService {
     if (!requisitionPermissionService.hasPermissionToSave(rnr.getModifiedBy(), savedRnr))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    savedRnr.copyEditableFields(rnr, rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId()));
+    savedRnr.copyEditableFields(rnr, rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(
+      savedRnr.getProgram().getId()));
 
     requisitionRepository.update(savedRnr);
   }
@@ -123,7 +127,10 @@ public class RequisitionService {
 
 
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
-    return requisitionRepository.getLossesAndAdjustmentsTypes();
+    if (RnrLineItem.getLossesAndAdjustmentTypes() == null) {
+      RnrLineItem.setLossesAndAdjustmentsTypes(requisitionRepository.getLossesAndAdjustmentsTypes());
+    }
+    return RnrLineItem.getLossesAndAdjustmentTypes();
   }
 
   public OpenLmisMessage submit(Rnr rnr) {
@@ -140,8 +147,10 @@ public class RequisitionService {
     savedRnr.setSubmittedDate(new Date());
 
 
-    List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId());
+    List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(
+      savedRnr.getProgram().getId());
     savedRnr.copyUserEditableFields(rnr, rnrColumns);
+    RnrLineItem.setLossesAndAdjustmentsTypes(getLossesAndAdjustmentsTypes());
     savedRnr.calculate(rnrColumns);
     update(savedRnr);
 
@@ -164,7 +173,9 @@ public class RequisitionService {
     savedRnr.setStatus(AUTHORIZED);
     savedRnr.setSupervisoryNodeId(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram()).getId());
 
-    List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId());
+    List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(
+      savedRnr.getProgram().getId());
+    RnrLineItem.setLossesAndAdjustmentsTypes(getLossesAndAdjustmentsTypes());
     savedRnr.copyUserEditableFields(rnr, rnrColumns);
     savedRnr.calculate(rnrColumns);
     update(savedRnr);
@@ -239,10 +250,12 @@ public class RequisitionService {
 
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Integer facilityId, Integer programId) {
     Date programStartDate = programService.getProgramStartDate(facilityId, programId);
-    Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(facilityId, programId);
+    Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(
+      facilityId, programId);
 
     Integer periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ? null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
-    return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
+    return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate,
+      periodIdOfLastRequisitionToEnterPostSubmitFlow);
   }
 
 
@@ -261,11 +274,12 @@ public class RequisitionService {
   }
 
   private Rnr getPreviousRequisition(Rnr requisition) {
-    ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(requisition.getPeriod());
+    ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(
+      requisition.getPeriod());
     Rnr previousRequisition = null;
     if (immediatePreviousPeriod != null)
       previousRequisition = requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(),
-          requisition.getProgram(), immediatePreviousPeriod);
+        requisition.getProgram(), immediatePreviousPeriod);
     return previousRequisition;
   }
 
@@ -305,12 +319,14 @@ public class RequisitionService {
     ProcessingPeriod lastPeriod = processingScheduleService.getImmediatePreviousPeriod(requisition.getPeriod());
     if (lastPeriod == null) return null;
 
-    return requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(), requisition.getProgram(), lastPeriod);
+    return requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(), requisition.getProgram(),
+      lastPeriod);
   }
 
 
   private OpenLmisMessage approveAndAssignToNextSupervisoryNode(Rnr requisition, SupervisoryNode parent) {
-    final User nextApprover = supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parent, requisition.getProgram());
+    final User nextApprover = supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parent,
+      requisition.getProgram());
     requisition.setStatus(IN_APPROVAL);
     requisition.setSupervisoryNodeId(parent.getId());
     update(requisition);

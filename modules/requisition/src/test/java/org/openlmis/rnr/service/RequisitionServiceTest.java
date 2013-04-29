@@ -26,10 +26,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.builder.RequisitionBuilder;
-import org.openlmis.rnr.domain.Comment;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrColumn;
-import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.factory.RequisitionSearchStrategyFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
@@ -936,6 +933,32 @@ public class RequisitionServiceTest {
     assertThat(commentUser.getUserName(), is(user.getUserName()));
     assertThat(comments, is(returnedComments));
   }
+
+  @Test
+  public void shouldGetAllLossesAndAdjustmentTypesFromRequisitionLineItemStaticCacheIfExists() throws Exception {
+    List<LossesAndAdjustmentsType> lossesAndAdjustmentList = new ArrayList<>();
+    RnrLineItem.setLossesAndAdjustmentsTypes(lossesAndAdjustmentList);
+    assertThat(requisitionService.getLossesAndAdjustmentsTypes(), is(lossesAndAdjustmentList));
+    verify(requisitionRepository, never()).getLossesAndAdjustmentsTypes();
+    clearRnrLineItemCache();
+  }
+
+  private void clearRnrLineItemCache() {
+    RnrLineItem.setLossesAndAdjustmentsTypes(null);
+  }
+
+  @Test
+  public void shouldGetAllLossesAndAdjustmentTypesFromDBAndUpdateCacheWhenRequisitionLineItemsStaticCacheDoesNotExist() throws Exception {
+    clearRnrLineItemCache();
+
+    List<LossesAndAdjustmentsType> lossesAndAdjustmentList = new ArrayList<>();
+    when(requisitionRepository.getLossesAndAdjustmentsTypes()).thenReturn(lossesAndAdjustmentList);
+
+    assertThat(requisitionService.getLossesAndAdjustmentsTypes(), is(lossesAndAdjustmentList));
+    assertThat(RnrLineItem.getLossesAndAdjustmentTypes(), is(lossesAndAdjustmentList));
+  }
+
+
 
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {
     Rnr savedRnr = spy(rnr);

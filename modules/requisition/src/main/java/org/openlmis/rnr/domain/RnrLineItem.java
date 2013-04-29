@@ -8,6 +8,8 @@ package org.openlmis.rnr.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -92,6 +94,7 @@ public class RnrLineItem {
   private Money price;
 
   private static Logger logger = LoggerFactory.getLogger(RnrLineItem.class);
+  private transient static List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
 
   public RnrLineItem(Integer rnrId, FacilityApprovedProduct facilityApprovedProduct, Integer modifiedBy) {
     this.rnrId = rnrId;
@@ -264,12 +267,26 @@ public class RnrLineItem {
   public void calculateTotalLossesAndAdjustments() {
     totalLossesAndAdjustments = 0;
     for (LossesAndAdjustments lossAndAdjustment : lossesAndAdjustments) {
-      if (lossAndAdjustment.getType().getAdditive()) {
+      if (getAdditive(lossAndAdjustment)) {
         totalLossesAndAdjustments += lossAndAdjustment.getQuantity();
       } else {
         totalLossesAndAdjustments -= lossAndAdjustment.getQuantity();
       }
     }
+  }
+
+  private boolean getAdditive(final LossesAndAdjustments lossAndAdjustment) {
+    Predicate predicate = new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return lossAndAdjustment.getType().getName().equals(((LossesAndAdjustmentsType) o).getName());
+      }
+    };
+
+    LossesAndAdjustmentsType lossAndAdjustmentTypeFromList = (LossesAndAdjustmentsType) CollectionUtils.find(
+      RnrLineItem.getLossesAndAdjustmentTypes(), predicate);
+
+    return lossAndAdjustmentTypeFromList.getAdditive();
   }
 
   public void addPreviousNormalizedConsumptionFrom(RnrLineItem rnrLineItem) {
@@ -357,6 +374,14 @@ public class RnrLineItem {
   }
 
   public void validateForApproval() {
-    if(quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
+    if (quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
+  }
+
+  public static void setLossesAndAdjustmentsTypes(List<LossesAndAdjustmentsType> lossesAndAdjustmentList) {
+    lossesAndAdjustmentsTypes = lossesAndAdjustmentList;
+  }
+
+  public static List<LossesAndAdjustmentsType> getLossesAndAdjustmentTypes() {
+    return lossesAndAdjustmentsTypes;
   }
 }

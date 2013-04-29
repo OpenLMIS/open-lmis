@@ -32,6 +32,7 @@ import static org.openlmis.core.builder.ProductBuilder.productCategoryDisplayOrd
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.lossesAndAdjustments;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.LOSSES_AND_ADJUSTMENTS;
 import static org.openlmis.rnr.domain.RnRColumnSource.CALCULATED;
 import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
@@ -50,6 +51,7 @@ public class RnrLineItemTest {
   private RnrLineItem lineItem;
   private List<RnrColumn> templateColumns;
   private ProcessingPeriod period;
+  private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
 
   @Before
   public void setUp() throws Exception {
@@ -59,6 +61,14 @@ public class RnrLineItemTest {
     templateColumns = new ArrayList<>();
     addVisibleColumns(templateColumns);
     lineItem = make(a(defaultRnrLineItem));
+
+    LossesAndAdjustmentsType additive1 = new LossesAndAdjustmentsType("TRANSFER_IN", "TRANSFER IN", true, 1);
+    LossesAndAdjustmentsType additive2 = new LossesAndAdjustmentsType("additive2", "Additive 2", true, 2);
+    LossesAndAdjustmentsType subtractive1 = new LossesAndAdjustmentsType("subtractive1", "Subtractive 1", false, 3);
+    LossesAndAdjustmentsType subtractive2 = new LossesAndAdjustmentsType("subtractive2", "Subtractive 2", false, 4);
+    lossesAndAdjustmentsList = asList(
+      new LossesAndAdjustmentsType[]{additive1, additive2, subtractive1, subtractive2});
+    RnrLineItem.setLossesAndAdjustmentsTypes(lossesAndAdjustmentsList);
   }
 
   private void addVisibleColumns(List<RnrColumn> templateColumns) {
@@ -103,7 +113,8 @@ public class RnrLineItemTest {
   public void shouldConstructRnrLineItem() {
 
     Program program = make(a(defaultProgram));
-    Product product = make(a(defaultProduct, with(code, "ASPIRIN"), with(productCategoryDisplayOrder, 3), with(displayOrder, 9)));
+    Product product = make(
+      a(defaultProduct, with(code, "ASPIRIN"), with(productCategoryDisplayOrder, 3), with(displayOrder, 9)));
     product.setDispensingUnit("Strip");
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true);
@@ -258,9 +269,9 @@ public class RnrLineItemTest {
   @Test
   public void shouldRecalculateTotalLossesAndAdjustments() throws Exception {
     LossesAndAdjustmentsType additive = new LossesAndAdjustmentsType();
+    additive.setName("TRANSFER_IN");
     LossesAndAdjustmentsType subtractive = new LossesAndAdjustmentsType();
-    additive.setAdditive(true);
-    subtractive.setAdditive(false);
+    subtractive.setName("subtractive1");
     LossesAndAdjustments add10 = new LossesAndAdjustments(1, additive, 10);
     LossesAndAdjustments sub5 = new LossesAndAdjustments(1, subtractive, 5);
     LossesAndAdjustments add20 = new LossesAndAdjustments(1, additive, 20);

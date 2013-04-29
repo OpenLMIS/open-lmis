@@ -6,16 +6,16 @@
 
 package org.openlmis.rnr.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class LossesAndAdjustmentsType {
-
     private String name;
     private String description;
     private Boolean additive;
     private Integer displayOrder;
-
 }
