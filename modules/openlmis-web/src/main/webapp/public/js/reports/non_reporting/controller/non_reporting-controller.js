@@ -1,4 +1,4 @@
-function NonReportingController($scope, SummaryReport , Periods , $http, $routeParams,$location) {
+function NonReportingController($scope, RequisitionGroups, NonReportingFacilities, FacilityTypes , Periods , $http, $routeParams,$location) {
         //to minimize and maximize the filter section
         var section = 1;
 
@@ -27,7 +27,9 @@ function NonReportingController($scope, SummaryReport , Periods , $http, $routeP
 
         //filter form data section
         $scope.filterOptions = {
-            period:$scope.period,
+            period: $scope.period,
+            ftype: $scope.facilityType,
+            rgroup: $scope.rgroup,
             filterText: "",
             useExternalFilter: false
         };
@@ -40,6 +42,16 @@ function NonReportingController($scope, SummaryReport , Periods , $http, $routeP
 
         };
 
+        RequisitionGroups.get(function(data){
+            $scope.requisitionGroups = data.requisitionGroupList;
+            $scope.requisitionGroups.push({'name':'All requsition groups'});
+        })
+
+        FacilityTypes.get(function(data) {
+            $scope.facilityTypes = data.facilityTypes;
+            $scope.facilityTypes.push({'name': '- Please Select One -'});
+        });
+
         Periods.get({scheduleId:1},function(data) {
             $scope.periods = data.periods;
             $scope.periods.push({'name': '- Please Selct One -'});
@@ -48,7 +60,7 @@ function NonReportingController($scope, SummaryReport , Periods , $http, $routeP
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
         $scope.export   = function (type){
-            var url = '/reports/download/summary/' + type +'?period=' + $scope.period;
+            var url = '/reports/download/non_reporting/' + type +'?period=' + $scope.period + '&rgroup=' + $scope.rgroup + '&ftype=' + $scope.facilityType;
             window.location.href = url;
         }
 
@@ -60,10 +72,8 @@ function NonReportingController($scope, SummaryReport , Periods , $http, $routeP
         $scope.$watch("currentPage", function () {  //good watch no problem
 
             if($scope.currentPage != undefined && $scope.currentPage != 1){
-              //when clicked using the links they have done updated the paging info no problem here
-               //or using the url page param
-              //$scope.pagingOptions.currentPage = $scope.currentPage;
-                $location.search("page", $scope.currentPage);
+               //when clicked using the links they have done updated the paging info no problem here
+               $location.search("page", $scope.currentPage);
             }
         });
 
@@ -97,7 +107,9 @@ function NonReportingController($scope, SummaryReport , Periods , $http, $routeP
                                                };
                         }
                         params.period = $scope.period;
-                        SummaryReport.get(params, function(data) {
+                        params.rgroup = $scope.rgroup;
+                        params.ftype = $scope.facilityType;
+                        NonReportingFacilities.get(params, function(data) {
                         $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
                         });
 
@@ -126,14 +138,9 @@ function NonReportingController($scope, SummaryReport , Periods , $http, $routeP
         columnDefs:
             [
 
-                { field: 'category', displayName: 'Category', width: "*" },
-                { field: 'code', displayName: 'Code', width: "*", resizable: false},
-                { field: 'product', displayName: 'Product', width: "***" },
-                { field: 'unit', displayName: 'Unit', width : "*"},
-                { field: 'openingBalance', displayName: 'B. Balance', width : "*"},
-                { field: 'quantityReceived', displayName: 'Received', width : "*"},
-                { field: 'actualDispensedQuantity', displayName: 'Dispensed', width : "*"},
-                { field: 'balanceOnHand', displayName: 'Balance On Hand', width : "*"}
+                { field: 'code', displayName: 'Code', width: "*" },
+                { field: 'name', displayName: 'Facility Name', width: "*", resizable: false},
+                { field: 'location', displayName: 'Location', width: "***" }
             ],
         enablePaging: true,
         enableSorting :true,
