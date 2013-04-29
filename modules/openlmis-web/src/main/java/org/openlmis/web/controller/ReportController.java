@@ -44,12 +44,6 @@ public class ReportController  extends BaseController {
         this.productReportService = productReportService;
     }
 
-    //TODO: take this out to an appropriate class
-    @RequestMapping(value="/products", method = GET, headers = ACCEPT_JSON)
-    public List<Product> getProducts(){
-          return this.productReportService.getAllProducts();
-    }
-
     @RequestMapping(value = "/download/{reportKey}/{outputOption}")
     public void showReport(
             @PathVariable(value = "reportKey") String reportKey
