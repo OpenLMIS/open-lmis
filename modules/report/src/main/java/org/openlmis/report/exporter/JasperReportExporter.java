@@ -35,7 +35,7 @@ public class JasperReportExporter implements ReportExporter {
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportInputStream);
 
             //removes pagination in exel output. It allows to remove repeating column header
-            if(reportExtraParams != null && (outputOption != null && outputOption.equals(ReportOutputOption.XLS))){
+            if(reportExtraParams != null && (outputOption != null && !outputOption.equals(ReportOutputOption.PDF))){
                 reportExtraParams.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
             }
 
@@ -73,6 +73,8 @@ public class JasperReportExporter implements ReportExporter {
                 return exportPdf(jasperPrint, outputFileName, response, byteArrayOutputStream);
             case XLS:
                 return exportXls(jasperPrint, outputFileName, response, byteArrayOutputStream);
+            case CSV:
+                return exportCsv(jasperPrint, outputFileName, response, byteArrayOutputStream);
             case HTML:
                 return exportHtml(jasperPrint, outputFileName, response, byteArrayOutputStream);
         }
@@ -168,6 +170,44 @@ public class JasperReportExporter implements ReportExporter {
 
         return response;
     }
+
+    /**
+     *
+     * @param jasperPrint
+     * @param response
+     * @param byteArrayOutputStream
+     * @return
+     */
+    public HttpServletResponse exportCsv(JasperPrint jasperPrint, String outputFileName, HttpServletResponse response, ByteArrayOutputStream byteArrayOutputStream){
+
+        JRCsvExporter exporter = new JRCsvExporter();
+
+        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
+
+        exporter.setParameter(JRXlsAbstractExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
+        exporter.setParameter(JRXlsAbstractExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
+        exporter.setParameter(JRXlsAbstractExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS, Boolean.TRUE);
+        exporter.setParameter(JRXlsAbstractExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
+        exporter.setParameter(JRXlsExporterParameter.IS_IGNORE_GRAPHICS, Boolean.FALSE);
+
+
+        try {
+            exporter.exportReport();
+
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
+
+        String fileName = outputFileName.isEmpty()? "openlmisReport.csv" : outputFileName+".csv";
+        response.setHeader("Content-Disposition", "inline; filename=" + fileName);
+
+        response.setContentType(Constants.MEDIA_TYPE_EXCEL);
+        response.setContentLength(byteArrayOutputStream.size());
+
+        return response;
+    }
+
 
     /**
      * @param response

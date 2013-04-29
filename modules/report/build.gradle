@@ -30,7 +30,7 @@ dependencies {
     task compileJasperReport(type: JavaExec) {
         main = 'org.openlmis.report.util.JasperReportCompiler'
         //  args = "".split().toList()
-          classpath sourceSets.main.output.classesDir
+        classpath sourceSets.main.output.classesDir
         classpath configurations.runtime
     }
 
