@@ -31,12 +31,13 @@ public enum Right {
   VIEW_REQUISITION("Requisition - View", FALSE, "Permission to view requisitions"),
   VIEW_ORDER("Requisition - View Orders", TRUE, "Permission to view orders"),
   VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", TRUE, "Permission to view Facility List Report"),
-  VIEW_MAILING_LABEL_REPORT("Report - Facility Listing (V2)", TRUE, "Permission to view Mailing labels for Facilities"),
+  VIEW_MAILING_LABEL_REPORT("Report - Facility Listing (V2)", TRUE, "Permission to view mailing labels for facilities"),
   VIEW_SUMMARY_REPORT("Report - Summary Report", TRUE, "Permission to view Sumamry Report"),
-  VIEW_CONSUMPTION_REPORT("Report - Consumption Report", TRUE, "Permission to view Consumption Report"),
-  VIEW_REPORTING_RATE_REPORT("Report - Reporting Rate Report", TRUE, "Permission to view Reporting Rate Report");
+  VIEW_CONSUMPTION_REPORT("Report - Consumption Report", TRUE, "Permission to view consumption report"),
+  VIEW_REPORTING_RATE_REPORT("Report - Reporting Rate Report", TRUE, "Permission to view reporting rate report"),
+  VIEW_NON_REPORTING_FACILITIES("Report - Non Reporting Facility Report", TRUE, "Permission to view Non reporting facilities report");
 
-    @Getter
+  @Getter
   private final String rightName;
 
   @Getter
