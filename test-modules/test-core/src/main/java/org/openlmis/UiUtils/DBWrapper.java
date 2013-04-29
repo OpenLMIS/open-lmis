@@ -340,9 +340,9 @@ public class DBWrapper {
                 "(1, (select id from programs where code = '" + program + "'),  true, 'R', 1,  'Product Code'),\n" +
                 "(2, (select id from programs where code = '" + program + "'),  true, 'R', 2,  'Product'),\n" +
                 "(3, (select id from programs where code = '" + program + "'),  true, 'R', 3,  'Unit/Unit of Issue'),\n" +
-                "(4, (select id from programs where code = '" + program + "'),  true, 'C', 4,  'Beginning Balance'),\n" +
-                "(5, (select id from programs where code = '" + program + "'),  true, 'C', 5,  'Total Received Quantity'),\n" +
-                "(6, (select id from programs where code = '" + program + "'),  true, 'C', 6,  'Total Consumed Quantity'),\n" +
+                "(4, (select id from programs where code = '" + program + "'),  false, 'C', 4,  'Beginning Balance'),\n" +
+                "(5, (select id from programs where code = '" + program + "'),  false, 'C', 5,  'Total Received Quantity'),\n" +
+                "(6, (select id from programs where code = '" + program + "'),  false, 'C', 6,  'Total Consumed Quantity'),\n" +
                 "(7, (select id from programs where code = '" + program + "'),  true, 'U', 7,  'Total Losses / Adjustments'),\n" +
                 "(8, (select id from programs where code = '" + program + "'),  true, 'U', 8,  'Stock on Hand'),\n" +
                 "(9, (select id from programs where code = '" + program + "'),  true, 'U', 9, 'New Patients'),\n" +
@@ -645,5 +645,18 @@ public class DBWrapper {
         return orderId;
 
     }
-}
+    public void insertPastPeriodRequisitionAndLineItems(String facilityCode, String program, String periodName, String product) throws IOException, SQLException {
+        update("DELETE FROM requisition_line_item_losses_adjustments;");
+        update("DELETE FROM requisition_line_items;");
+        update("DELETE FROM requisitions;");
 
+        update("INSERT INTO requisitions \n" +
+                "  (facilityid, programid, periodid, status) VALUES\n" +
+                "  ((SELECT id FROM facilities WHERE code = '" + facilityCode + "'), (SELECT ID from programs where code='" + program + "'), (select id from processing_periods where name='" + periodName + "'), 'RELEASED');");
+
+        update("INSERT INTO requisition_line_items \n" +
+                "  (rnrid, productcode, beginningbalance, quantityreceived, quantitydispensed, stockinhand, normalizedconsumption, dispensingunit, maxmonthsofstock, dosespermonth, dosesperdispensingunit,packsize,fullsupply) VALUES\n" +
+                "  ((SELECT id FROM requisitions), '" + product + "', '0', '11' , '1', '10', '1' ,'Strip','0', '0', '0', '10','t');");
+
+    }
+}
