@@ -5,10 +5,7 @@ import org.openlmis.report.Report;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.ReportOutputOption;
 import org.openlmis.report.model.Pages;
-import org.openlmis.report.model.report.ConsumptionReport;
-import org.openlmis.report.model.report.FacilityReport;
-import org.openlmis.report.model.report.MailingLabelReport;
-import org.openlmis.report.model.report.SummaryReport;
+import org.openlmis.report.model.report.*;
 import org.openlmis.report.service.ReportLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -133,7 +130,7 @@ public class ReportController  extends BaseController {
 
     @RequestMapping(value = "/summary", method = GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_SUMMARY_REPORT')")
-    public Pages getConsumptionData( //@PathVariable(value = "reportKey") String reportKey,
+    public Pages getSummaryData( //@PathVariable(value = "reportKey") String reportKey,
                                      @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                      @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                                      @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
@@ -150,4 +147,22 @@ public class ReportController  extends BaseController {
         return new Pages(page,totalRecCount,max,reportList);
     }
 
+    @RequestMapping(value = "/non_reporting", method = GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_NON_REPORTING_FACILITIES')")
+    public Pages getNonReportingFacilitiesData( //@PathVariable(value = "reportKey") String reportKey,
+                                 @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                 @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                 @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
+                                 HttpServletRequest request
+    ) {
+
+
+
+        Report report = reportManager.getReportByKey("non_reporting");
+        List<NonReportingFacility> reportList =
+                (List<NonReportingFacility>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),null,page,max);
+        int totalRecCount = 0;
+
+        return new Pages(page,totalRecCount,max,reportList);
+    }
 }

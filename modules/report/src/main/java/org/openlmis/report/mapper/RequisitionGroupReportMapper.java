@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface RequisitionGroupReportMapper {
 
-    @Select("SELECT id, name " +
+    @Select("SELECT id, name, code " +
             "   FROM " +
             "       requisition_groups")
     List<RequisitionGroup> getAll();

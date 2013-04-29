@@ -16,5 +16,6 @@ import lombok.NoArgsConstructor;
 public class RequisitionGroup {
     private Integer id;
     private String name;
+    private String code;
 
 }
