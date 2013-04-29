@@ -65,7 +65,7 @@ public class ReportController  extends BaseController {
                 reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.PDF, response);
                 break;
             case "XLS":
-                reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.XLS, response);
+                reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.CSV, response);
                 break;
             case "HTML":
                 reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.HTML, response);
