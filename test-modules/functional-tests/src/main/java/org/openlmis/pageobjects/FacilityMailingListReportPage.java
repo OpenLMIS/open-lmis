@@ -8,6 +8,7 @@ package org.openlmis.pageobjects;
 
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
+import org.openlmis.UiUtils.SeleniumFileDownloadUtil;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -15,6 +16,7 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.openqa.selenium.support.How.*;
@@ -45,6 +47,7 @@ public class FacilityMailingListReportPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
   private static WebElement columnFacilityType;
+
 
   private String facilityNameFilter;
   private String facilityCodeFilter;
@@ -90,8 +93,17 @@ public class FacilityMailingListReportPage extends Page {
       SeleneseTestNgHelper.assertEquals(columnFacilityType.getText().trim(), facilityTypeFilter);
   }
 
-  public void verifyPdfReportOutputOnFacilityMailingListScreen(){
+    public void verifyPdfReportOutputOnFacilityMailingListScreen() throws Exception {
       PdfButton.click();
+      testWebDriver.sleep(500);
+
+      SeleniumFileDownloadUtil downloadHandler = new SeleniumFileDownloadUtil(TestWebDriver.getDriver());
+      downloadHandler.setURI(testWebDriver.getCurrentUrl());
+      File downloadedFile = downloadHandler.downloadFile(this.getClass().getSimpleName(), ".pdf");
+      SeleneseTestNgHelper.assertEquals(downloadHandler.getLinkHTTPStatus(),200);
+      SeleneseTestNgHelper.assertEquals(downloadedFile.exists(), true);
+
+      testWebDriver.sleep(500);
   }
 
 }

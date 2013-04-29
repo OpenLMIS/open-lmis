@@ -9,6 +9,7 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
+import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,9 +63,11 @@ public class E2EViewReport extends TestCaseHelper {
       FacilityMailingListReportPage facilityMailingListReportPage = homePage.navigateViewFacilityMailingListReport();
       facilityMailingListReportPage.enterFilterValuesInFacilityMailingListReport(facilityNamePrefix + date_time, facilityCodePrefix + date_time, facilityType);
       facilityMailingListReportPage.verifyHTMLReportOutputOnFacilityMailingListScreen();
+      facilityMailingListReportPage.verifyPdfReportOutputOnFacilityMailingListScreen();
+      TestWebDriver.getDriver().navigate().back();
+      testWebDriver.sleep(500);
 
-    //  facilityMailingListReportPage.verifyPdfReportOutputOnFacilityMailingListScreen();
-  }
+ }
 
 
    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
