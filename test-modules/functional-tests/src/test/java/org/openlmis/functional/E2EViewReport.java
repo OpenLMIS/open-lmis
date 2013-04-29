@@ -40,7 +40,7 @@ public class E2EViewReport extends TestCaseHelper {
     super.setup();
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive", priority = 1)
+ @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void verifyFacilityMailingListReport(String[] credentials) throws Exception {
 
       String geoZone = "Ngorongoro";
@@ -67,7 +67,7 @@ public class E2EViewReport extends TestCaseHelper {
   }
 
 
-   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive", priority = 2)
+   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
    public void verifyFacilityListingReport(String[] credentials) throws Exception{
 
        String geoZone = "Ngorongoro";
@@ -93,7 +93,7 @@ public class E2EViewReport extends TestCaseHelper {
    }
 
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive", priority = 0)
+  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void verifySummaryReport(String[] credentials) throws Exception{
       List<String> rightsList = new ArrayList<String>();
       rightsList.add("CREATE_REQUISITION");
@@ -101,17 +101,76 @@ public class E2EViewReport extends TestCaseHelper {
       setupTestDataToInitiateRnR(true, "HIV", credentials[2], "200", "openLmis", rightsList);
       dbWrapper.assignRight(STORE_IN_CHARGE, APPROVE_REQUISITION);
       dbWrapper.assignRight(STORE_IN_CHARGE, CONVERT_TO_ORDER);
+      LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+      HomePage homePage = loginPage.loginAs(credentials[2], credentials[3]);
+      homePage.navigateAndInitiateRnr("HIV");
+      InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+      HomePage homePage1 = initiateRnRPage.clickHome();
+
+      ViewRequisitionPage viewRequisitionPage = homePage1.navigateViewRequisition();
+      viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
       dbWrapper.insertValuesInRequisition();
       dbWrapper.updateRequisitionStatus(SUBMITTED);
+      viewRequisitionPage.enterViewSearchCriteria();
+      viewRequisitionPage.clickSearch();
+      viewRequisitionPage.verifyNoRequisitionFound();
       dbWrapper.updateRequisitionStatus(AUTHORIZED);
+      viewRequisitionPage.clickSearch();
+      viewRequisitionPage.clickRnRList();
+
+      HomePage homePageAuthorized = viewRequisitionPage.verifyFieldsPreApproval("12.50", "1");
+      ViewRequisitionPage viewRequisitionPageAuthorized = homePageAuthorized.navigateViewRequisition();
+      viewRequisitionPageAuthorized.enterViewSearchCriteria();
+      viewRequisitionPageAuthorized.clickSearch();
+      viewRequisitionPageAuthorized.verifyStatus(AUTHORIZED);
+      viewRequisitionPageAuthorized.clickRnRList();
+
+      HomePage homePageInApproval = viewRequisitionPageAuthorized.verifyFieldsPreApproval("12.50", "1");
       dbWrapper.updateRequisitionStatus(IN_APPROVAL);
+      ViewRequisitionPage viewRequisitionPageInApproval = homePageInApproval.navigateViewRequisition();
+      viewRequisitionPageInApproval.enterViewSearchCriteria();
+      viewRequisitionPageInApproval.clickSearch();
+      viewRequisitionPageInApproval.verifyStatus(IN_APPROVAL);
 
-      LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+      ApprovePage approvePageTopSNUser = homePageInApproval.navigateToApprove();
+      approvePageTopSNUser.verifyAndClickRequisitionPresentForApproval();
+      approvePageTopSNUser.editApproveQuantityAndVerifyTotalCostViewRequisition("20");
+      approvePageTopSNUser.addComments("Dummy Comments");
+      approvePageTopSNUser.approveRequisition();
+      approvePageTopSNUser.clickOk();
+      approvePageTopSNUser.verifyNoRequisitionPendingMessage();
+      ViewRequisitionPage viewRequisitionPageApproved = homePageInApproval.navigateViewRequisition();
+      viewRequisitionPageApproved.enterViewSearchCriteria();
+      viewRequisitionPageApproved.clickSearch();
+      viewRequisitionPageApproved.verifyStatus(APPROVED);
+      viewRequisitionPageApproved.clickRnRList();
+      viewRequisitionPageApproved.verifyComment("Dummy Comments", "storeincharge", 1);
+      viewRequisitionPageApproved.verifyCommentBoxNotPresent();
 
-      HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+      HomePage homePageApproved = viewRequisitionPageApproved.verifyFieldsPostApproval("25.00", "1");
+
+      dbWrapper.updateRequisition("F10");
+      ConvertOrderPage convertOrderPage = homePageApproved.navigateConvertToOrder();
+      convertOrderPage.convertToOrder();
+      ViewRequisitionPage viewRequisitionPageOrdered = homePageApproved.navigateViewRequisition();
+      viewRequisitionPageOrdered.enterViewSearchCriteria();
+      viewRequisitionPageOrdered.clickSearch();
+      viewRequisitionPageOrdered.verifyStatus(RELEASED);
+      viewRequisitionPageOrdered.clickRnRList();
+      viewRequisitionPageOrdered.verifyFieldsPostApproval("25.00", "1");
+      viewRequisitionPageOrdered.verifyApprovedQuantityFieldPresent();
+
+      homePage = new HomePage(testWebDriver);
+      homePage.logout(baseUrlGlobal);
+
+      loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+
+      homePage = loginPage.loginAs(credentials[0], credentials[1]);
+
       SummaryReportPage summaryReportPage = homePage.navigateViewSummaryReport();
-      summaryReportPage.enterFilterValuesInSummaryReport("period");
+      summaryReportPage.enterFilterValuesInSummaryReport("Period2");
       summaryReportPage.verifyHTMLReportOutputOnSummaryReportScreen();
+
   }
 
   @AfterMethod(groups = {"functional"})
@@ -125,7 +184,7 @@ public class E2EViewReport extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-            {new String[]{"Admin123", "Admin123","storeincharge", "Admin123"}}
+            {new String[]{"Admin123", "Admin123", "storeincharge", "Admin123"}}
     };
   }
 

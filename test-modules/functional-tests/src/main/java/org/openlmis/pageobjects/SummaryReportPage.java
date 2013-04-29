@@ -43,6 +43,20 @@ public class SummaryReportPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
   private static WebElement columnFacilityType;
 
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col4 colt4']/span")
+  private static WebElement columnBeginingBalance;
+
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col5 colt5']/span")
+  private static WebElement columnReceived;
+
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col6 colt6']/span")
+  private static WebElement columnDispensed;
+
+
+
+
+
+
 
   public SummaryReportPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -54,20 +68,19 @@ public class SummaryReportPage extends Page {
   public void enterFilterValuesInSummaryReport(String periodValue){
 
       testWebDriver.waitForElementToAppear(period);
-     // testWebDriver.selectByVisibleText(period, periodValue);
+      testWebDriver.selectByVisibleText(period,periodValue);
       testWebDriver.sleep(500);
   }
 
   public void verifyHTMLReportOutputOnSummaryReportScreen(){
 
-    //verify facility list grid has the filtered record
     testWebDriver.waitForElementToAppear(summaryReportListGrid);
+    testWebDriver.sleep(500);
+    SeleneseTestNgHelper.assertEquals(columnBeginingBalance.getText().trim(), 1);
 
-    /*SeleneseTestNgHelper.assertEquals(columnFacilityType.getText().trim(), facilityTypeFilter);
+    SeleneseTestNgHelper.assertEquals(columnReceived.getText().trim(), 1);
 
-    SeleneseTestNgHelper.assertEquals(columnZone.getText().trim(), zoneFilter);
-
-    SeleneseTestNgHelper.assertEquals(columnActive.getText().trim(), statusFilter);*/
+    SeleneseTestNgHelper.assertEquals(columnDispensed.getText().trim(), 1);
   }
 
 }
