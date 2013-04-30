@@ -20,12 +20,16 @@ public class Constants {
     public static String REPORT_ID = "REPORT_ID";
     public static String GENERATED_BY = "GENERATED_BY";
     public static String LOGO = "LOGO";
+    public static String OPERATOR_LOGO = "OPERATOR_LOGO";
+    public static String REPORT_SUB_TITLE = "REPORT_SUB_TITLE";
+    public static String REPORT_FILTER_PARAM_VALUES = "REPORT_FILTER_PARAM_VALUES";
 
 
     /**
      * Configuration keys
      */
     public static String LOGO_FILE_NAME_KEY = "logo_file_name";
+    public static String OPERATOR_LOGO_FILE_NAME_KEY = "operator_logo_file_name";
 
 
 
