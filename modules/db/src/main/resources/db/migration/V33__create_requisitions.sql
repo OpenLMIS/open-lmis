@@ -15,9 +15,9 @@ CREATE TABLE requisitions (
   orderBatchId                    INTEGER REFERENCES order_batches(id),
   submittedDate                   TIMESTAMP,
   modifiedBy                      INTEGER,
-  modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedDate                    TIMESTAMP DEFAULT NOW(),
   createdBy                       INTEGER,
-  createdDate                     TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+  createdDate                     TIMESTAMP DEFAULT NOW(),
   UNIQUE (facilityId, programId, periodId)
 );
 

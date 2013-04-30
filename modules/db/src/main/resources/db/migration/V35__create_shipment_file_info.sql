@@ -5,6 +5,6 @@ CREATE TABLE shipment_file_info (
   id SERIAL PRIMARY KEY,
   fileName VARCHAR(200) NOT NULL,
   processingError BOOLEAN  NOT NULL,
-  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  modifiedDate TIMESTAMP DEFAULT NOW()
 );
 

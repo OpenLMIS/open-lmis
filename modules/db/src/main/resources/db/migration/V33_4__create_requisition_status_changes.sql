@@ -7,5 +7,5 @@ CREATE TABLE requisition_status_changes (
   rnrId                           INTEGER     NOT NULL REFERENCES requisitions (id),
   status                          VARCHAR(20) NOT NULL,
   statusChangedBy                 INTEGER NOT NULL REFERENCES users(id),
-  statusChangeDate                TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  statusChangeDate                TIMESTAMP DEFAULT NOW()
 );

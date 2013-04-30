@@ -7,5 +7,5 @@ CREATE TABLE report_templates (
   data          BYTEA       NOT NULL,
   parameters    VARCHAR,
   modifiedBy    INTEGER,
-  modifiedDate  TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+  modifiedDate  TIMESTAMP DEFAULT NOW()
 );

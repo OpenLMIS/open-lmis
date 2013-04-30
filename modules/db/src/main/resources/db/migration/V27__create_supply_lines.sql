@@ -8,9 +8,9 @@ CREATE TABLE supply_lines (
   programId             INTEGER REFERENCES programs(id) NOT NULL,
   supplyingFacilityId   INTEGER REFERENCES facilities(id) NOT NULL,
   modifiedBy            INTEGER,
-  modifiedDate          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedDate          TIMESTAMP DEFAULT NOW(),
   createdBy             INTEGER,
-  createdDate           TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+  createdDate           TIMESTAMP DEFAULT NOW(),
 
   CONSTRAINT unique_supply_line UNIQUE ( supervisoryNodeId , programId , supplyingFacilityId)
 );

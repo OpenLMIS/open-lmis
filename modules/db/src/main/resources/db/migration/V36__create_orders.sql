@@ -6,6 +6,6 @@ CREATE TABLE orders (
   rnrId       INTEGER NOT NULL REFERENCES requisitions (id),
   shipmentId  INTEGER REFERENCES shipment_file_info(id),
   status      VARCHAR(20) NOT NULL,
-  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  createdDate TIMESTAMP DEFAULT NOW(),
   createdBy   INTEGER NOT NULL REFERENCES users (id)
 );

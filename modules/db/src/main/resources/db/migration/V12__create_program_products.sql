@@ -12,7 +12,7 @@ CREATE TABLE program_products (
     modifiedBy INTEGER,
     modifiedDate TIMESTAMP,
     createdBy INTEGER,
-    createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+    createdDate TIMESTAMP DEFAULT NOW(),
     UNIQUE (productId, programId)
 );
 

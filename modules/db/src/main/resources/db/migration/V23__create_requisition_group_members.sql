@@ -6,9 +6,9 @@ CREATE TABLE requisition_group_members (
   requisitionGroupId INT NOT NULL REFERENCES requisition_groups(id),
   facilityId INT NOT NULL REFERENCES facilities(id),
   modifiedBy INTEGER,
-  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedDate TIMESTAMP DEFAULT NOW(),
   createdBy INTEGER,
-  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+  createdDate TIMESTAMP DEFAULT NOW(),
   UNIQUE (requisitionGroupId, facilityId)
 );
 

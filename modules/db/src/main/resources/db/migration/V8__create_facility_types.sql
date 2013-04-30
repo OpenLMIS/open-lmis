@@ -12,9 +12,9 @@ CREATE TABLE facility_types (
   displayOrder INTEGER,
   active BOOLEAN,
   modifiedBy INTEGER,
-  lastModifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  lastModifiedDate TIMESTAMP DEFAULT NOW(),
   createdBy INTEGER,
-  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+  createdDate TIMESTAMP DEFAULT NOW()
 );
 
 

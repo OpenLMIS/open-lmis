@@ -18,9 +18,9 @@ CREATE TABLE users (
   active BOOLEAN DEFAULT FALSE,
   vendorId INTEGER references vendors(id),
   modifiedBy INTEGER,
-  modifiedDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+  modifiedDate TIMESTAMP DEFAULT NOW(),
   createdBy INTEGER,
-  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+  createdDate TIMESTAMP DEFAULT NOW(),
 
   constraint email_not_null check
     (

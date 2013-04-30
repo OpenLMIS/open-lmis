@@ -10,9 +10,9 @@ CREATE TABLE processing_periods (
   endDate TIMESTAMP NOT NULL,
   numberOfMonths INTEGER,
   modifiedBy INTEGER,
-  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedDate TIMESTAMP DEFAULT NOW(),
   createdBy INTEGER,
-  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+  createdDate TIMESTAMP DEFAULT NOW()
 );
 
 CREATE UNIQUE INDEX uc_processing_period_name_scheduleId ON processing_periods(LOWER(name), scheduleId);

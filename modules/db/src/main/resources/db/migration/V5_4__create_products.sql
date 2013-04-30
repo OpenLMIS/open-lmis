@@ -53,7 +53,7 @@ CREATE TABLE products (
   archived BOOLEAN,
   packRoundingThreshold SMALLINT NOT NULL,
   modifiedBy INTEGER,
-  modifiedDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+  modifiedDate TIMESTAMP DEFAULT NOW(),
   createdBy INTEGER,
-  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+  createdDate TIMESTAMP DEFAULT NOW()
 );

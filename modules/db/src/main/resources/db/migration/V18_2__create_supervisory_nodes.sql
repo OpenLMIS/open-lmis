@@ -9,9 +9,9 @@ CREATE TABLE supervisory_nodes (
   code VARCHAR(50) UNIQUE NOT NULL,
   description VARCHAR(250),
   modifiedBy INTEGER,
-  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedDate TIMESTAMP DEFAULT NOW(),
   createdBy INTEGER,
-  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+  createdDate TIMESTAMP DEFAULT NOW()
 );
 
 CREATE INDEX i_supervisory_node_parentId ON supervisory_nodes(parentId);

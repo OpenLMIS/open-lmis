@@ -9,9 +9,9 @@ CREATE TABLE requisition_group_program_schedules (
   directDelivery BOOLEAN NOT NULL,
   dropOffFacilityId INTEGER REFERENCES facilities(id),
   modifiedBy INTEGER,
-  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedDate TIMESTAMP DEFAULT NOW(),
   createdBy INTEGER,
-  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+  createdDate TIMESTAMP DEFAULT NOW(),
   UNIQUE (requisitionGroupId, programId)
 );
 

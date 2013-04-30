@@ -37,9 +37,9 @@ packRoundingThreshold                 INTEGER,
 fullSupply                            BOOLEAN NOT NULL,
 previousStockInHandAvailable          BOOLEAN NOT NULL DEFAULT FALSE,
 modifiedBy                            INTEGER,
-modifiedDate                          TIMESTAMP  DEFAULT  CURRENT_TIMESTAMP,
+modifiedDate                          TIMESTAMP  DEFAULT  NOW(),
 createdBy                             INTEGER,
-createdDate                           TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+createdDate                           TIMESTAMP DEFAULT NOW()
 );
 
 CREATE INDEX i_requisition_line_items_rnrId ON requisition_line_items(rnrId);

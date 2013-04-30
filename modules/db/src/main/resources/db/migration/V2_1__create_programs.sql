@@ -9,9 +9,9 @@ CREATE TABLE programs (
     active BOOLEAN,
     templateConfigured BOOLEAN,
     lastModifiedBy INTEGER,
-    lastModifiedDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+    lastModifiedDate TIMESTAMP DEFAULT NOW(),
     createdBy INTEGER,
-    createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+    createdDate TIMESTAMP DEFAULT NOW(),
     budgetingApplies BOOLEAN,
     usesDar BOOLEAN
 );
