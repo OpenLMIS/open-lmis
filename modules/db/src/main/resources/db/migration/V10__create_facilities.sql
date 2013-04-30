@@ -24,7 +24,7 @@ CREATE TABLE facilities (
     sdp BOOLEAN NOT NULL,
     online BOOLEAN,
     satellite BOOLEAN,
-    satelliteParentCode VARCHAR(6) REFERENCES facilities(code),
+    satelliteParentId INTEGER REFERENCES facilities(id),
     hasElectricity BOOLEAN,
     hasElectronicScc BOOLEAN,
     hasElectronicDar BOOLEAN,

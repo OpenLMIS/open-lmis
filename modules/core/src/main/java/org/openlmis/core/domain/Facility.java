@@ -110,7 +110,7 @@ public class Facility extends BaseModel implements Importable {
   private Boolean satellite;
 
   @ImportField(name = "Satellite Parent ID")
-  private String satelliteParentCode;
+  private Integer satelliteParentId;
 
   @ImportField(name = "Facility Comments")
   private String comment;

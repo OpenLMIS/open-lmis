@@ -20,7 +20,7 @@ public interface FacilityMapper {
   @Insert("Insert into facilities(code, name, description, gln, mainPhone, fax, address1, address2, " +
     "geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById," +
     "coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, online," +
-    "satellite, satelliteParentCode, hasElectricity, hasElectronicScc, hasElectronicDar, active," +
+    "satellite, satelliteParentId, hasElectricity, hasElectronicScc, hasElectronicDar, active," +
     "goLiveDate, goDownDate, comment, dataReportable, modifiedBy, modifiedDate) " +
     "values(#{code}, #{name}, #{description}, #{gln}, #{mainPhone}, #{fax}, #{address1}, #{address2}," +
     "#{geographicZone.id}," +
@@ -28,7 +28,7 @@ public interface FacilityMapper {
     "#{catchmentPopulation}, #{latitude}, #{longitude}, #{altitude}," +
     "#{operatedBy.id}," +
     "#{coldStorageGrossCapacity}, #{coldStorageNetCapacity}, #{suppliesOthers}, #{sdp},#{online}," +
-    "#{satellite}, #{satelliteParentCode}, #{hasElectricity}, #{hasElectronicScc}, #{hasElectronicDar}, #{active}," +
+    "#{satellite}, #{satelliteParentId}, #{hasElectricity}, #{hasElectronicScc}, #{hasElectronicDar}, #{active}," +
     "#{goLiveDate}, #{goDownDate}, #{comment}, #{dataReportable}, #{modifiedBy}, " +
     "COALESCE(#{modifiedDate}, NOW()))")
   @Options(useGeneratedKeys = true)
@@ -78,7 +78,7 @@ public interface FacilityMapper {
     "longitude = #{longitude}, altitude = #{altitude}," +
     "operatedById = #{operatedBy.id}," +
     "coldStorageGrossCapacity = #{coldStorageGrossCapacity}, coldStorageNetCapacity = #{coldStorageNetCapacity}," +
-    "suppliesOthers = #{suppliesOthers}, sdp = #{sdp}, online = #{online}, satellite = #{satellite}, satelliteParentCode = #{satelliteParentCode}," +
+    "suppliesOthers = #{suppliesOthers}, sdp = #{sdp}, online = #{online}, satellite = #{satellite}, satelliteParentId = #{satelliteParentId}," +
     "hasElectricity = #{hasElectricity}, hasElectronicScc = #{hasElectronicScc}, hasElectronicDar = #{hasElectronicDar}, active = #{active}," +
     "goLiveDate = #{goLiveDate}, goDownDate = #{goDownDate}," +
     "comment = #{comment}, dataReportable = #{dataReportable}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
