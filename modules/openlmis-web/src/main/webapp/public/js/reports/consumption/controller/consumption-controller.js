@@ -126,7 +126,7 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Facil
 
 
         $scope.filterGrid = function (){
-            $scope.$apply();
+           // $scope.$apply();
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
@@ -147,7 +147,9 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Facil
              fromMonth: $scope.fromMonth,
              toYear: $scope.toYear,
              toMonth: $scope.toMonth,
-             product: $scope.product
+             product: $scope.product,
+             facility : $scope.facilityId
+
         };
 
         FacilityTypes.get(function(data) {
@@ -158,6 +160,13 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Facil
         Products.get(function(data){
             $scope.products = data.products;
         });
+
+        $scope.facilities         = [
+            {'name':'One','value':'1'},
+            {'name':'Two','value':'2'},
+            {'name':'Three','value':'3'},
+            {'name':'Four','value':'4'}
+        ];
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
@@ -191,6 +200,24 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Facil
                 $scope.filterObject.facilityTypeId =  0;
             }
         });
+
+        $scope.$watch('fromYear', function(selection){
+            if(selection != undefined || selection == ""){
+                $scope.filterObject.fromYear =  selection;
+            }else{
+                $scope.filterObject.fromYear =  2010;
+            }
+        });
+
+        $scope.$watch('periodType', function(selection){
+            if(selection != undefined || selection == ""){
+                $scope.filterObject.periodType =  selection;
+            }else{
+                $scope.filterObject.periodType =  "monthly";
+            }
+        });
+
+
 
         $scope.export   = function (type){
             var url = '/reports/download/summary/' + type +'?zone=' + $scope.zone + '&facilityType=' + $scope.facilityType;

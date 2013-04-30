@@ -21,7 +21,8 @@ public class ConsumptionReportFilter implements ReportData {
     private int monthTo;
 
     private int facilityTypeId;
-
+    private int zoneId;
     private int productId;
+    private int facilityId;
 
 }
