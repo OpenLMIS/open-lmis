@@ -52,12 +52,6 @@ public class SummaryReportPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col6 colt6']/span")
   private static WebElement columnDispensed;
 
-
-
-
-
-
-
   public SummaryReportPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
