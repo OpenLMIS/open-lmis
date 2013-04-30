@@ -37,7 +37,7 @@
                     <property name="reportDataProvider" ref="mailingLabelReportDataProvider"/>
                     <property name="id" value="RP-MAL-LAB"/>
                     <property name="name" value="Facility List: Lists facilities with contact addresses"/>
-                    <property name="title" value=" Facility List"/>
+                    <property name="title" value="Facility List"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
