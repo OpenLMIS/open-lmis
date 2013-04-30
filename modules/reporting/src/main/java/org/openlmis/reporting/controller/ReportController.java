@@ -14,12 +14,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.jasperreports.AbstractJasperReportsSingleFormatView;
+import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class ReportController {
+  public static final String PDF_VIEW = "pdf";
 
   @Autowired
   private JasperReportsViewFactory jasperReportsViewFactory;
@@ -31,11 +34,16 @@ public class ReportController {
   public ModelAndView generateReport(HttpServletRequest request, @PathVariable("id") Integer id
       , @PathVariable("format") String format) throws Exception {
 
+    String viewFormat = format == null ? PDF_VIEW : format;
+
     ReportTemplate reportTemplate = reportMapper.getById(id);
 
-    AbstractJasperReportsSingleFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(reportTemplate, format);
+    JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(reportTemplate);
 
-    return new ModelAndView(jasperView, request.getParameterMap());
+    Map map = new HashMap();
+    map.put("format", viewFormat);
+
+    return new ModelAndView(jasperView, map);
   }
 
 }

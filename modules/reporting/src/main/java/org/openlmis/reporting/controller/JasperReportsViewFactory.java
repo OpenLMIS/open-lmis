@@ -10,13 +10,11 @@ import org.openlmis.core.domain.ReportTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.view.jasperreports.AbstractJasperReportsSingleFormatView;
+import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 import static java.io.File.createTempFile;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
@@ -25,25 +23,16 @@ import static org.springframework.web.context.ContextLoader.getCurrentWebApplica
 @Service
 public class JasperReportsViewFactory {
 
-  public static final String PDF_VIEW = "pdf";
-
   @Autowired
   DataSource replicationDataSource;
 
-  @Resource
-  Map<String, AbstractJasperReportsSingleFormatView> jasperViews;
-
-  public AbstractJasperReportsSingleFormatView getJasperReportsView(ReportTemplate reportTemplate, String format) throws IOException {
-    String viewFormat = format == null ? PDF_VIEW : format;
-
-    AbstractJasperReportsSingleFormatView jasperView = jasperViews.get(viewFormat);
-
+  public JasperReportsMultiFormatView getJasperReportsView(ReportTemplate reportTemplate) throws IOException {
+    JasperReportsMultiFormatView jasperView = new JasperReportsMultiFormatView();
     setDataSourceAndURLAndApplicationContext(reportTemplate, jasperView);
-
     return jasperView;
   }
 
-  private void setDataSourceAndURLAndApplicationContext(ReportTemplate reportTemplate, AbstractJasperReportsSingleFormatView jasperView) throws IOException {
+  private void setDataSourceAndURLAndApplicationContext(ReportTemplate reportTemplate, JasperReportsMultiFormatView jasperView) throws IOException {
     WebApplicationContext ctx = getCurrentWebApplicationContext();
 
     jasperView.setJdbcDataSource(replicationDataSource);

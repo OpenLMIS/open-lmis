@@ -16,20 +16,4 @@
     <import resource="classpath:applicationContext-reporting-db.xml"/>
     <import resource="classpath:applicationContext-core.xml"/>
 
-    <bean id="jasperViews" class="java.util.HashMap">
-        <constructor-arg>
-            <map>
-                <entry key="csv">
-                    <bean class="org.springframework.web.servlet.view.jasperreports.JasperReportsCsvView"/>
-                </entry>
-                <entry key="pdf">
-                    <bean class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView"/>
-                </entry>
-                <entry key="html">
-                    <bean class="org.springframework.web.servlet.view.jasperreports.JasperReportsHtmlView"/>
-                </entry>
-            </map>
-        </constructor-arg>
-    </bean>
-
 </beans>

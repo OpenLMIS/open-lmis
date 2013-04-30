@@ -15,54 +15,43 @@ import org.openlmis.core.domain.ReportTemplate;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.view.jasperreports.AbstractJasperReportsSingleFormatView;
-import org.springframework.web.servlet.view.jasperreports.JasperReportsCsvView;
+import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 
 import javax.sql.DataSource;
-import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ContextLoader.class)
+@PrepareForTest(JasperReportsViewFactory.class)
 public class JasperReportsViewFactoryTest {
-
-  public static final String VIEW_FORMAT = "pdf";
-
-  @Mock
-  private Map<String, AbstractJasperReportsSingleFormatView> jasperViews;
-
-  @Mock
-  private WebApplicationContext webContext;
 
   @Mock
   private DataSource dataSource;
 
   @InjectMocks
   private JasperReportsViewFactory viewFactory;
+
   private ReportTemplate reportTemplate;
 
-  private AbstractJasperReportsSingleFormatView jasperReportsView;
+  private JasperReportsMultiFormatView jasperReportsView;
 
   @Before
   public void setUp() throws Exception {
     initMocks(this);
     reportTemplate = new ReportTemplate(new MockMultipartFile("facilityReport.jrxml", new byte[1]), 1);
-    mockStatic(ContextLoader.class);
-    when(ContextLoader.getCurrentWebApplicationContext()).thenReturn(null);
-    jasperReportsView = spy(new JasperReportsCsvView());
-    when(jasperViews.get(VIEW_FORMAT)).thenReturn(jasperReportsView);
+    jasperReportsView = spy(new JasperReportsMultiFormatView());
   }
 
   @Test
   public void shouldGetRequestedViewAndSetDataSourceAndWebContextInJasperView() throws Exception {
-    AbstractJasperReportsSingleFormatView reportView = viewFactory.getJasperReportsView(reportTemplate, VIEW_FORMAT);
+    whenNew(JasperReportsMultiFormatView.class).withNoArguments().thenReturn(jasperReportsView);
+
+    JasperReportsMultiFormatView reportView = viewFactory.getJasperReportsView(reportTemplate);
 
     assertThat(reportView, is(jasperReportsView));
     verify(jasperReportsView).setJdbcDataSource(dataSource);

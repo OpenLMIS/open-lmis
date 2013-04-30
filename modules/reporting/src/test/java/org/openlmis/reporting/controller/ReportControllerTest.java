@@ -15,7 +15,7 @@ import org.openlmis.core.domain.ReportTemplate;
 import org.openlmis.core.repository.mapper.ReportMapper;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.jasperreports.AbstractJasperReportsSingleFormatView;
+import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 
 import javax.sql.DataSource;
 
@@ -46,13 +46,13 @@ public class ReportControllerTest {
     ReportTemplate reportTemplate = new ReportTemplate();
     when(reportMapper.getById(1)).thenReturn(reportTemplate);
     request = new MockHttpServletRequest();
-    AbstractJasperReportsSingleFormatView mockView = mock(AbstractJasperReportsSingleFormatView.class);
-    when(viewFactory.getJasperReportsView(reportTemplate, "pdf")).thenReturn(mockView);
+    JasperReportsMultiFormatView mockView = mock(JasperReportsMultiFormatView.class);
+    when(viewFactory.getJasperReportsView(reportTemplate)).thenReturn(mockView);
 
     ModelAndView modelAndView = reportController.generateReport(request, 1, "pdf");
 
-    assertThat((AbstractJasperReportsSingleFormatView) modelAndView.getView(), is(mockView));
-    verify(viewFactory).getJasperReportsView(reportTemplate, "pdf");
+    assertThat((JasperReportsMultiFormatView) modelAndView.getView(), is(mockView));
+    verify(viewFactory).getJasperReportsView(reportTemplate);
     verify(reportMapper).getById(1);
   }
 }
