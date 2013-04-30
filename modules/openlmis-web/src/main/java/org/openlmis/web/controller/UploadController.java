@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -41,11 +42,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @NoArgsConstructor
 public class UploadController extends BaseController {
 
-  public static final String JASPER_UPLOAD_SUCCESS = "jasper.upload.success";
-  public static final String ERROR_JASPER_UPLOAD_EMPTY = "error.jasper.upload.empty";
-  public static final String ERROR_JASPER_UPLOAD_TYPE = "error.jasper.upload.type";
-  public static final String ERROR_JASPER_UPLOAD_FILE_MISSING = "error.jasper.upload.file.missing";
-  public static final String ERROR_JASPER_UPLOAD = "error.jasper.upload";
   @Autowired
   private CSVParser csvParser;
   @Autowired
@@ -135,24 +131,4 @@ public class UploadController extends BaseController {
     return uploadPage + "model=" + model + "&error=" + error;
   }
 
-  @RequestMapping(value = "/reports", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UPLOAD_REPORT')")
-  public ResponseEntity<OpenLmisResponse> uploadJasperTemplate(HttpServletRequest request, MultipartFile file) {
-
-    Report report;
-
-    if(file == null) return error(ERROR_JASPER_UPLOAD_FILE_MISSING, BAD_REQUEST);
-    if(!file.getName().endsWith(".jrxml")) return error(ERROR_JASPER_UPLOAD_TYPE, BAD_REQUEST);
-    if (file.isEmpty()) return error(ERROR_JASPER_UPLOAD_EMPTY, BAD_REQUEST);
-
-    try {
-      report = new Report(file, loggedInUserId(request));
-    } catch (IOException e) {
-      return error(ERROR_JASPER_UPLOAD, BAD_REQUEST);
-    }
-
-    reportService.insert(report);
-
-    return OpenLmisResponse.success(JASPER_UPLOAD_SUCCESS);
-  }
 }

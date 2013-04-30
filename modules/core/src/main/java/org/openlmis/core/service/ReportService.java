@@ -18,6 +18,7 @@ public class ReportService {
   ReportRepository repository;
 
   public void insert(Report report) {
+    report.validate();
     repository.insert(report);
   }
 

@@ -14,6 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Report;
 import org.openlmis.core.repository.ReportRepository;
 
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -27,10 +28,11 @@ public class ReportServiceTest {
 
   @Test
   public void shouldInsertReport() throws Exception {
-    Report report = new Report();
+    Report report = spy(new Report());
 
     service.insert(report);
 
+    verify(report).validate();
     verify(repository).insert(report);
   }
 

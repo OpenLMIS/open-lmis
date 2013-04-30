@@ -27,7 +27,7 @@ public class ReportController {
   @Autowired
   private ReportMapper reportMapper;
 
-  @RequestMapping(method = RequestMethod.GET, value = "/report/{id}/{format}")
+  @RequestMapping(method = RequestMethod.GET, value = "/reports/{id}/{format}")
   public ModelAndView generatePdfReport(HttpServletRequest request, @PathVariable("id") Integer id
     , @PathVariable("format") String format) throws Exception {
 
