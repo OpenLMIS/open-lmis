@@ -7,7 +7,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Report;
+import org.openlmis.core.domain.ReportTemplate;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ReportService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -44,8 +44,8 @@ public class ReportTemplateController extends BaseController {
   public ResponseEntity<OpenLmisResponse> uploadJasperTemplate(HttpServletRequest request, MultipartFile file, String name) {
 
     try {
-      Report report = new Report(file, loggedInUserId(request));
-      reportService.insert(report);
+      ReportTemplate reportTemplate = new ReportTemplate(file, loggedInUserId(request));
+      reportService.insert(reportTemplate);
       return success(JASPER_UPLOAD_SUCCESS);
     } catch (IOException e) {
       return error(ERROR_JASPER_UPLOAD, BAD_REQUEST);

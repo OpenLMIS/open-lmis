@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * CReportht © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -16,7 +16,7 @@ import java.io.IOException;
 
 @Data
 @NoArgsConstructor
-public class Report extends BaseModel {
+public class ReportTemplate extends BaseModel {
   public static final String ERROR_JASPER_UPLOAD_EMPTY = "error.jasper.upload.empty";
   public static final String ERROR_JASPER_UPLOAD_TYPE = "error.jasper.upload.type";
   public static final String ERROR_JASPER_UPLOAD_FILE_MISSING = "error.jasper.upload.file.missing";
@@ -27,7 +27,7 @@ public class Report extends BaseModel {
 
   private String parameters;
 
-  public Report(MultipartFile file, Integer modifiedBy) throws IOException {
+  public ReportTemplate(MultipartFile file, Integer modifiedBy) throws IOException {
     validateFile(file);
     this.name = file.getName();
     this.data = file.getBytes();
@@ -38,9 +38,5 @@ public class Report extends BaseModel {
     if (file == null) throw new DataException(ERROR_JASPER_UPLOAD_FILE_MISSING);
     if (!file.getName().endsWith(".jrxml")) throw new DataException(ERROR_JASPER_UPLOAD_TYPE);
     if (file.isEmpty()) throw new DataException(ERROR_JASPER_UPLOAD_EMPTY);
-  }
-
-  public void validate() {
-
   }
 }

@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Report;
+import org.openlmis.core.domain.ReportTemplate;
 import org.openlmis.core.repository.mapper.ReportMapper;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -42,17 +42,17 @@ public class ReportControllerTest {
   MockHttpServletRequest request;
 
   @Test
-  public void shouldGeneratePdfReport() throws Exception {
-    Report report = new Report();
-    when(reportMapper.getById(1)).thenReturn(report);
+  public void shouldGenerateReportInRequestedFormat() throws Exception {
+    ReportTemplate reportTemplate = new ReportTemplate();
+    when(reportMapper.getById(1)).thenReturn(reportTemplate);
     request = new MockHttpServletRequest();
     AbstractJasperReportsSingleFormatView mockView = mock(AbstractJasperReportsSingleFormatView.class);
-    when(viewFactory.getJasperReportsView(report, "pdf")).thenReturn(mockView);
+    when(viewFactory.getJasperReportsView(reportTemplate, "pdf")).thenReturn(mockView);
 
-    ModelAndView modelAndView = reportController.generatePdfReport(request, 1, "pdf");
+    ModelAndView modelAndView = reportController.generateReport(request, 1, "pdf");
 
     assertThat((AbstractJasperReportsSingleFormatView) modelAndView.getView(), is(mockView));
-    verify(viewFactory).getJasperReportsView(report, "pdf");
+    verify(viewFactory).getJasperReportsView(reportTemplate, "pdf");
     verify(reportMapper).getById(1);
   }
 }

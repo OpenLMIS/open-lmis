@@ -12,10 +12,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
-import org.openlmis.core.domain.Report;
+import org.openlmis.core.domain.ReportTemplate;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ReportService;
-import org.openlmis.upload.model.AuditFields;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -23,18 +22,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.web.client.MockHttpRequest;
-
-import javax.servlet.http.HttpServletRequest;
-
-import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -64,8 +56,8 @@ public class ReportTemplateControllerTest {
   @Test
   public void shouldUploadJasperTemplateFileIfValid() throws Exception {
     MockMultipartFile reportTemplateFile = new MockMultipartFile("template.jrxml", new byte[1]);
-    Report report = new Report(reportTemplateFile, USER);
-    whenNew(Report.class).withArguments(reportTemplateFile, USER).thenReturn(report);
+    ReportTemplate report = new ReportTemplate(reportTemplateFile, USER);
+    whenNew(ReportTemplate.class).withArguments(reportTemplateFile, USER).thenReturn(report);
     ResponseEntity<OpenLmisResponse> response = controller.uploadJasperTemplate(request, reportTemplateFile, "template");
 
     assertThat(response.getBody().getSuccessMsg(), is("jasper.upload.success"));
@@ -74,7 +66,7 @@ public class ReportTemplateControllerTest {
 
   @Test
   public void shouldGiveErrorForInvalidReport() throws Exception {
-    whenNew(Report.class).withAnyArguments().thenThrow(new DataException("Error message"));
+    whenNew(ReportTemplate.class).withAnyArguments().thenThrow(new DataException("Error message"));
 
     ResponseEntity<OpenLmisResponse> response = controller.uploadJasperTemplate(request, null, "template");
 

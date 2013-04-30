@@ -17,8 +17,6 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Report;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ReportService;
 import org.openlmis.core.upload.ProductPersistenceHandler;
 import org.openlmis.db.service.DbService;

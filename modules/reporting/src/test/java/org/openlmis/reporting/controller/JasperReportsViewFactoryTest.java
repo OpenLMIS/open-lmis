@@ -11,10 +11,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.Report;
+import org.openlmis.core.domain.ReportTemplate;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.beans.BeansException;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
@@ -47,14 +46,14 @@ public class JasperReportsViewFactoryTest {
 
   @InjectMocks
   private JasperReportsViewFactory viewFactory;
-  private Report report;
+  private ReportTemplate reportTemplate;
 
   private AbstractJasperReportsSingleFormatView jasperReportsView;
 
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    report = new Report(new MockMultipartFile("facilityReport.jrxml", new byte[1]), 1);
+    reportTemplate = new ReportTemplate(new MockMultipartFile("facilityReport.jrxml", new byte[1]), 1);
     mockStatic(ContextLoader.class);
     when(ContextLoader.getCurrentWebApplicationContext()).thenReturn(null);
     jasperReportsView = spy(new JasperReportsCsvView());
@@ -63,7 +62,7 @@ public class JasperReportsViewFactoryTest {
 
   @Test
   public void shouldGetRequestedViewAndSetDataSourceAndWebContextInJasperView() throws Exception {
-    AbstractJasperReportsSingleFormatView reportView = viewFactory.getJasperReportsView(report, VIEW_FORMAT);
+    AbstractJasperReportsSingleFormatView reportView = viewFactory.getJasperReportsView(reportTemplate, VIEW_FORMAT);
 
     assertThat(reportView, is(jasperReportsView));
     verify(jasperReportsView).setJdbcDataSource(dataSource);

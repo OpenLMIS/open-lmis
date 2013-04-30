@@ -8,20 +8,20 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
-import org.openlmis.core.domain.Report;
+import org.openlmis.core.domain.ReportTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReportMapper {
 
-  @Select("SELECT * from reports WHERE name=#{name}")
-  Report getByName(String name);
+  @Select("SELECT * from report_templates WHERE name=#{name}")
+  ReportTemplate getByName(String name);
 
-  @Select("SELECT * from reports WHERE id=#{id}")
-  Report getById(Integer id);
+  @Select("SELECT * from report_templates WHERE id=#{id}")
+  ReportTemplate getById(Integer id);
 
-  @Insert("INSERT INTO Reports (name, data, parameters, modifiedBy, modifiedDate) " +
+  @Insert("INSERT INTO report_templates (name, data, parameters, modifiedBy, modifiedDate) " +
     "VALUES (#{name}, #{data}, #{parameters}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))")
-  void insert(Report report);
+  void insert(ReportTemplate reportTemplate);
 
 }

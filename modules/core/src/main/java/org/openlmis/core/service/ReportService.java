@@ -6,7 +6,7 @@
 
 package org.openlmis.core.service;
 
-import org.openlmis.core.domain.Report;
+import org.openlmis.core.domain.ReportTemplate;
 import org.openlmis.core.repository.ReportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +17,8 @@ public class ReportService {
   @Autowired
   ReportRepository repository;
 
-  public void insert(Report report) {
-    report.validate();
-    repository.insert(report);
+  public void insert(ReportTemplate reportTemplate) {
+    repository.insert(reportTemplate);
   }
 
 }

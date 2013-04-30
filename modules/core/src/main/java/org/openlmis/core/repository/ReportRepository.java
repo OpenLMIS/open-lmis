@@ -6,7 +6,7 @@
 
 package org.openlmis.core.repository;
 
-import org.openlmis.core.domain.Report;
+import org.openlmis.core.domain.ReportTemplate;
 import org.openlmis.core.repository.mapper.ReportMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -17,7 +17,7 @@ public class ReportRepository {
   @Autowired
   ReportMapper mapper;
 
-  public void insert(Report report) {
-    mapper.insert(report);
+  public void insert(ReportTemplate reportTemplate) {
+    mapper.insert(reportTemplate);
   }
 }

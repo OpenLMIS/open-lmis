@@ -7,7 +7,6 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Report;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ReportService;
 import org.openlmis.db.service.DbService;
@@ -35,7 +34,6 @@ import java.util.ResourceBundle;
 
 import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.success;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller

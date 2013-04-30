@@ -6,7 +6,7 @@
 
 package org.openlmis.reporting.controller;
 
-import org.openlmis.core.domain.Report;
+import org.openlmis.core.domain.ReportTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
@@ -33,29 +33,29 @@ public class JasperReportsViewFactory {
   @Resource
   Map<String, AbstractJasperReportsSingleFormatView> jasperViews;
 
-  public AbstractJasperReportsSingleFormatView getJasperReportsView(Report report, String format) throws IOException {
+  public AbstractJasperReportsSingleFormatView getJasperReportsView(ReportTemplate reportTemplate, String format) throws IOException {
     String viewFormat = format == null ? PDF_VIEW : format;
 
     AbstractJasperReportsSingleFormatView jasperView = jasperViews.get(viewFormat);
 
-    setDataSourceAndURLAndApplicationContext(report, jasperView);
+    setDataSourceAndURLAndApplicationContext(reportTemplate, jasperView);
 
     return jasperView;
   }
 
-  private void setDataSourceAndURLAndApplicationContext(Report report, AbstractJasperReportsSingleFormatView jasperView) throws IOException {
+  private void setDataSourceAndURLAndApplicationContext(ReportTemplate reportTemplate, AbstractJasperReportsSingleFormatView jasperView) throws IOException {
     WebApplicationContext ctx = getCurrentWebApplicationContext();
 
     jasperView.setJdbcDataSource(replicationDataSource);
-    jasperView.setUrl(getReportURLForReportData(report));
+    jasperView.setUrl(getReportURLForReportData(reportTemplate));
 
     if (ctx != null)
       jasperView.setApplicationContext(ctx);
   }
 
-  public String getReportURLForReportData(Report report) throws IOException {
-    File tmpFile = createTempFile(report.getName(), ".jrxml");
-    writeByteArrayToFile(tmpFile, report.getData());
+  public String getReportURLForReportData(ReportTemplate reportTemplate) throws IOException {
+    File tmpFile = createTempFile(reportTemplate.getName(), ".jrxml");
+    writeByteArrayToFile(tmpFile, reportTemplate.getData());
     return tmpFile.toURI().toURL().toString();
   }
 }

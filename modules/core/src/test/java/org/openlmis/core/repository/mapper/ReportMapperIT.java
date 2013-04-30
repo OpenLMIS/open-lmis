@@ -8,7 +8,7 @@ package org.openlmis.core.repository.mapper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.core.domain.Report;
+import org.openlmis.core.domain.ReportTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
@@ -34,33 +34,33 @@ public class ReportMapperIT {
 
   @Test
   public void shouldGetById() throws Exception {
-    Report report = new Report();
-    report.setName("Sample Report");
-    report.setData(new byte[1]);
-    report.setParameters("SampleParameters");
-    report.setModifiedBy(1);
+    ReportTemplate reportTemplate = new ReportTemplate();
+    reportTemplate.setName("Sample Report");
+    reportTemplate.setData(new byte[1]);
+    reportTemplate.setParameters("SampleParameters");
+    reportTemplate.setModifiedBy(1);
     Date currentTimeStamp = new Date();
-    report.setModifiedDate(currentTimeStamp);
+    reportTemplate.setModifiedDate(currentTimeStamp);
 
-    reportMapper.insert(report);
+    reportMapper.insert(reportTemplate);
 
-    Report returnedReport = reportMapper.getByName("Sample Report");
+    ReportTemplate returnedTemplate = reportMapper.getByName("Sample Report");
 
-    assertThat(returnedReport, is(report));
+    assertThat(returnedTemplate, is(reportTemplate));
   }
 
   @Test
   public void shouldInsertReportForXmlTemplateFile() throws Exception {
 
-    Report report = new Report();
-    report.setName("Requisition report");
-    report.setParameters("<rnrId, Integer>");
+    ReportTemplate reportTemplate = new ReportTemplate();
+    reportTemplate.setName("Requisition reportTemplate");
+    reportTemplate.setParameters("<rnrId, Integer>");
     File file = new ClassPathResource("report1.jrxml").getFile();
 
-    report.setData(readFileToByteArray(file));
-    report.setModifiedDate(new Date());
-    report.setModifiedBy(1);
+    reportTemplate.setData(readFileToByteArray(file));
+    reportTemplate.setModifiedDate(new Date());
+    reportTemplate.setModifiedBy(1);
 
-    reportMapper.insert(report);
+    reportMapper.insert(reportTemplate);
   }
 }

@@ -6,7 +6,7 @@
 
 package org.openlmis.reporting.controller;
 
-import org.openlmis.core.domain.Report;
+import org.openlmis.core.domain.ReportTemplate;
 import org.openlmis.core.repository.mapper.ReportMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,12 +28,12 @@ public class ReportController {
   private ReportMapper reportMapper;
 
   @RequestMapping(method = RequestMethod.GET, value = "/reports/{id}/{format}")
-  public ModelAndView generatePdfReport(HttpServletRequest request, @PathVariable("id") Integer id
-    , @PathVariable("format") String format) throws Exception {
+  public ModelAndView generateReport(HttpServletRequest request, @PathVariable("id") Integer id
+      , @PathVariable("format") String format) throws Exception {
 
-    Report dbReport = reportMapper.getById(id);
+    ReportTemplate reportTemplate = reportMapper.getById(id);
 
-    AbstractJasperReportsSingleFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(dbReport, format);
+    AbstractJasperReportsSingleFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(reportTemplate, format);
 
     return new ModelAndView(jasperView, request.getParameterMap());
   }
