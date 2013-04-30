@@ -13,6 +13,6 @@ public class NonReportingFacility implements ReportData {
     private String id;
     private String code;
     private String name;
-
+    private String facilityType;
     private String location;
 }
