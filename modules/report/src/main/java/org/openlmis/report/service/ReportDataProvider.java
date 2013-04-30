@@ -23,7 +23,14 @@ public abstract class ReportDataProvider {
     public final List<? extends ReportData> getReportDataByFilterCriteria(Map<String, String[]> params){
         return getReportDataByFilterCriteria(params, DataSourceType.BEAN_COLLECTION_DATA_SOURCE);
     }
-
+    public ReportData getReportFilterData(Map<String, String[]> params){
+        return new ReportData() {
+            @Override
+            public String toString() {
+                return "";
+            }
+        };
+    }
     protected abstract List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> params);
     protected abstract List<? extends ReportData> getResultSetReportData(Map<String, String[]> params);
     public abstract List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filter , Map<String, String[]> sorter ,int page,int pageSize);
