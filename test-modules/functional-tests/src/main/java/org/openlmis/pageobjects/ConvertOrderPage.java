@@ -72,19 +72,17 @@ public class ConvertOrderPage extends RequisitionPage {
     SeleneseTestNgHelper.assertEquals(supplyDepotOnOrderScreen.getText().trim(), supplyFacilityName);
   }
 
-  public void clickConvertToOrderButton(){
+  public void clickConvertToOrderButton() {
     testWebDriver.waitForElementToAppear(convertToOrderButton);
     convertToOrderButton.click();
   }
 
-  public void clickCheckBoxConvertToOrder()
-  {
+  public void clickCheckBoxConvertToOrder() {
     testWebDriver.waitForElementToAppear(checkboxOnOrderScreen);
     checkboxOnOrderScreen.click();
   }
 
-  public void verifyMessageOnOrderScreen(String message)
-  {
+  public void verifyMessageOnOrderScreen(String message) {
     testWebDriver.sleep(500);
     SeleneseTestNgHelper.assertTrue(message, noRequisitonSelectedDiv.isDisplayed());
   }

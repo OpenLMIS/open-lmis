@@ -81,9 +81,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     UserPage userPage = new UserPage(testWebDriver);
-    System.out.println("brute force" + "14");
     createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, false);
-    System.out.println("brute force" + "15");
     userPage.clickViewHere();
     userPage.removeRole(1, false);
     userPage.verifyRolePresent(LAB_IN_CHARGE);
@@ -95,9 +93,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
     userPage.verifyRemoveNotPresent();
 
-//    System.out.println("brute force" + "16");
 //    createUserAndAssignRoles(homePage, passwordUsers, "Jake_Doe@openlmis.com", "Jake", "Doe", LMU, facility_code, program, "Node 1", LMU, true);
-//    System.out.println("brute force" + "17");
 //    userPage.clickViewHere();
 //    userPage.removeRole(1, true);
 //    userPage.verifyRoleNotPresent(LMU);

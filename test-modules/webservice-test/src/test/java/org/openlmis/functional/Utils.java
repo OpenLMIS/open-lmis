@@ -57,7 +57,6 @@ public class Utils extends TestCaseHelper {
     String updateValue = "\"" + field + "\" : \"" + value + "\"";
     String originalValue = "\"" + field + "\" : \"\"";
 
-    System.out.println(json.contains(originalValue));
     json = json.replace(originalValue, updateValue);
 
     return json;

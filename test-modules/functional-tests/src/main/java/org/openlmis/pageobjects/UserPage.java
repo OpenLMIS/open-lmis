@@ -134,12 +134,9 @@ public class UserPage extends Page {
     firstNameField.sendKeys(firstName);
     lastNameField.clear();
     lastNameField.sendKeys(lastName);
-    System.out.println("brute force" + "14.2.1");
     testWebDriver.waitForElementToAppear(saveButton);
-    testWebDriver.sleep(1500);
     saveButton.click();
     testWebDriver.sleep(1500);
-    System.out.println("brute force" + "14.2.2");
     testWebDriver.waitForElementToAppear(viewHereLink);
 
     SeleneseTestNgHelper.assertTrue("User '" + firstName + " " + lastName + "' has been successfully created, password link sent on registered Email address message is not getting displayed", successMessage.isDisplayed());
