@@ -36,6 +36,12 @@ public class FacilityMailingListReportPage extends Page {
   @FindBy(how = ID, using = "pdf-button")
   private static WebElement PdfButton;
 
+  @FindBy(how = ID, using = "mailing-button")
+  private static WebElement MailingReportButton;
+
+  @FindBy(how = ID, using = "xls-button")
+  private static WebElement XLSButton;
+
   @FindBy(how = How.XPATH, using = "//div[@ng-grid='gridOptions']")
   private static WebElement facilityListGrid;
 
@@ -93,7 +99,8 @@ public class FacilityMailingListReportPage extends Page {
       SeleneseTestNgHelper.assertEquals(columnFacilityType.getText().trim(), facilityTypeFilter);
   }
 
-    public void verifyPdfReportOutputOnFacilityMailingListScreen() throws Exception {
+  public void verifyPdfReportOutputOnFacilityMailingListScreen() throws Exception {
+      testWebDriver.waitForElementToAppear(XLSButton);
       PdfButton.click();
       testWebDriver.sleep(500);
 
@@ -105,5 +112,34 @@ public class FacilityMailingListReportPage extends Page {
 
       testWebDriver.sleep(500);
   }
+
+  public void verifyMailingReportOutputOnFacilityMailingListScreen() throws Exception {
+      testWebDriver.waitForElementToAppear(XLSButton);
+      MailingReportButton.click();
+      testWebDriver.sleep(500);
+
+      SeleniumFileDownloadUtil downloadHandler = new SeleniumFileDownloadUtil(TestWebDriver.getDriver());
+      downloadHandler.setURI(testWebDriver.getCurrentUrl());
+      File downloadedFile = downloadHandler.downloadFile(this.getClass().getSimpleName()+"_mailing_label", ".pdf");
+      SeleneseTestNgHelper.assertEquals(downloadHandler.getLinkHTTPStatus(),200);
+      SeleneseTestNgHelper.assertEquals(downloadedFile.exists(), true);
+
+      testWebDriver.sleep(500);
+  }
+  public void verifyXlsReportOutputOnFacilityMailingListScreen() throws Exception {
+      testWebDriver.waitForElementToAppear(XLSButton);
+      XLSButton.click();
+      testWebDriver.sleep(500);
+
+      SeleniumFileDownloadUtil downloadHandler = new SeleniumFileDownloadUtil(TestWebDriver.getDriver());
+      downloadHandler.setURI(testWebDriver.getCurrentUrl());
+      File downloadedFile = downloadHandler.downloadFile(this.getClass().getSimpleName(), ".xls");
+      SeleneseTestNgHelper.assertEquals(downloadHandler.getLinkHTTPStatus(),200);
+      SeleneseTestNgHelper.assertEquals(downloadedFile.exists(), true);
+
+        testWebDriver.sleep(500);
+    }
+
+
 
 }

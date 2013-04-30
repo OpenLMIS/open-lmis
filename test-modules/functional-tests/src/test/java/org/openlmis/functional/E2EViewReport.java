@@ -64,8 +64,12 @@ public class E2EViewReport extends TestCaseHelper {
       facilityMailingListReportPage.enterFilterValuesInFacilityMailingListReport(facilityNamePrefix + date_time, facilityCodePrefix + date_time, facilityType);
       facilityMailingListReportPage.verifyHTMLReportOutputOnFacilityMailingListScreen();
       facilityMailingListReportPage.verifyPdfReportOutputOnFacilityMailingListScreen();
-      TestWebDriver.getDriver().navigate().back();
       testWebDriver.sleep(500);
+      homePage.goBack();
+      facilityMailingListReportPage.verifyMailingReportOutputOnFacilityMailingListScreen();
+      homePage.goBack();
+     /* facilityMailingListReportPage.verifyXlsReportOutputOnFacilityMailingListScreen();
+      homePage.goBack();*/
 
  }
 
@@ -173,6 +177,9 @@ public class E2EViewReport extends TestCaseHelper {
       SummaryReportPage summaryReportPage = homePage.navigateViewSummaryReport();
       summaryReportPage.enterFilterValuesInSummaryReport("Period2");
       summaryReportPage.verifyHTMLReportOutputOnSummaryReportScreen();
+      summaryReportPage.verifyPdfReportOutputOnSummaryReportScreen();
+      testWebDriver.sleep(500);
+      homePage.goBack();
 
   }
 
@@ -180,7 +187,7 @@ public class E2EViewReport extends TestCaseHelper {
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
-    dbWrapper.deleteData();
+    //dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 
