@@ -105,7 +105,7 @@ public class ProductRepositoryTest {
     when(mockedMapper.getDosageUnitIdForCode("valid code")).thenReturn(1);
 
     repository.insert(product);
-    assertThat(product.getDosageUnit().getId(), is(1L));
+    assertThat(product.getDosageUnit().getId(), is(1));
   }
 
   @Test
@@ -126,7 +126,7 @@ public class ProductRepositoryTest {
     when(mockedMapper.getProductFormIdForCode("valid code")).thenReturn(1);
 
     repository.insert(product);
-    assertThat(product.getForm().getId(), is(1L));
+    assertThat(product.getForm().getId(), is(1));
   }
 
   @Test

@@ -18,8 +18,6 @@ import org.openlmis.upload.annotation.ImportField;
 @EqualsAndHashCode(callSuper = false)
 public class RequisitionGroupProgramSchedule extends BaseModel implements Importable {
 
-  private Integer id;
-
   @ImportField(mandatory = true, name = "RG Code", nested = "code")
   private RequisitionGroup requisitionGroup;
 

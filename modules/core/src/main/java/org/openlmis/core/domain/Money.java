@@ -8,6 +8,7 @@ package org.openlmis.core.domain;
 
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.serializer.MoneyDeSerializer;
@@ -20,7 +21,9 @@ import static java.math.BigDecimal.ROUND_HALF_UP;
 @Data
 @JsonSerialize(using = MoneySerializer.class)
 @JsonDeserialize(using = MoneyDeSerializer.class)
-public class Money {
+@EqualsAndHashCode(callSuper = false)
+public class Money extends BaseModel {
+
   private BigDecimal value ;
 
   public Money(String value) {
@@ -35,21 +38,20 @@ public class Money {
       return new Money(value.multiply(decimal));
   }
 
-  public Integer compareTo(Money other) {
-    return value.compareTo(other.value);
+  public boolean isNegative() {
+    return value.signum()<0;
   }
 
   public Money add(Money other) {
     return new Money(value.add(other.value));
   }
 
+  public Integer compareTo(Money other) {
+    return value.compareTo(other.value);
+  }
 
   @Override
   public String toString() {
     return value.toString();
-  }
-
-  public boolean isNegative() {
-    return value.signum()<0;
   }
 }

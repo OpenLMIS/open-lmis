@@ -20,7 +20,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GeographicZone extends BaseModel implements Importable {
@@ -39,10 +39,7 @@ public class GeographicZone extends BaseModel implements Importable {
 
 
   public GeographicZone(Integer id, String code, String name, GeographicLevel level, GeographicZone parent) {
-    this.code = code;
-    this.name = name;
-    this.level = level;
-    this.parent = parent;
+    this(code, name, level, parent);
     this.id = id;
   }
 }

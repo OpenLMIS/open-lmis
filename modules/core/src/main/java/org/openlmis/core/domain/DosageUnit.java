@@ -7,13 +7,13 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class DosageUnit {
-
-    private long id;
+@EqualsAndHashCode(callSuper = false)
+public class DosageUnit extends BaseModel{
     private String code;
     private int displayOrder;
 }

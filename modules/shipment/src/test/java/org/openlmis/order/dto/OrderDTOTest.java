@@ -8,6 +8,7 @@ package org.openlmis.order.dto;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openlmis.core.domain.Program;
 import org.openlmis.order.domain.Order;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.dto.RnrDTO;
@@ -43,7 +44,7 @@ public class OrderDTOTest {
     order1.setRnr(make(a(defaultRnr)));
     order1.setShipmentFileInfo(new ShipmentFileInfo("1.csv", false));
     final Order order2 = new Order();
-    order2.setRnr(make(a(defaultRnr, with(RequisitionBuilder.periodId, 2))));
+    order2.setRnr(make(a(defaultRnr, with(RequisitionBuilder.periodId, 2), with(RequisitionBuilder.program, new Program(11, "name")))));
     order2.setShipmentFileInfo(new ShipmentFileInfo("2.csv", true));
     final RnrDTO dtoForOrder1 = new RnrDTO();
     dtoForOrder1.setId(1);

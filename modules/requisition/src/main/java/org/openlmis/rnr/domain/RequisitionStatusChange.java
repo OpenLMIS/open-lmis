@@ -15,7 +15,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequisitionStatusChange {
+public class RequisitionStatusChange{
   private Integer id;
 
   private Integer rnrId;

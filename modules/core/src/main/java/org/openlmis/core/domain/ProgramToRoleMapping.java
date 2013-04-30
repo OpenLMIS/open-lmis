@@ -9,6 +9,7 @@ package org.openlmis.core.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -16,7 +17,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProgramToRoleMapping {
+@EqualsAndHashCode(callSuper = false)
+public class ProgramToRoleMapping extends BaseModel{
   Program program;
   List<Role> roles;
 }

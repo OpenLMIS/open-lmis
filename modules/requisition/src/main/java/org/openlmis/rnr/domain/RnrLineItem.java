@@ -7,6 +7,7 @@
 package org.openlmis.rnr.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -35,17 +36,17 @@ import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_EMPTY)
-public class RnrLineItem {
+@EqualsAndHashCode(callSuper = false)
+public class RnrLineItem extends BaseModel{
 
   public static final String RNR_VALIDATION_ERROR = "rnr.validation.error";
 
   public static final Float MULTIPLIER = 3f;
   public static final Float NUMBER_OF_DAYS = 30f;
-  private Integer id;
 
   private Integer rnrId;
 
-  //todo hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
+  //TODO : hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
   private String product;
   private Integer productDisplayOrder;
   private String productCode;
@@ -85,11 +86,6 @@ public class RnrLineItem {
   private List<Integer> previousNormalizedConsumptions = new ArrayList<>();
 
   private Boolean previousStockInHandAvailable = false;
-  @JsonIgnore
-  private Integer modifiedBy;
-
-  @JsonIgnore
-  private Date modifiedDate;
 
   private Money price;
 

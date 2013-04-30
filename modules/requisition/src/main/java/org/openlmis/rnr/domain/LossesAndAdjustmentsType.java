@@ -8,12 +8,15 @@ package org.openlmis.rnr.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LossesAndAdjustmentsType {
+@EqualsAndHashCode(callSuper = false)
+public class LossesAndAdjustmentsType extends BaseModel{
     private String name;
     private String description;
     private Boolean additive;

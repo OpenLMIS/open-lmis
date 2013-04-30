@@ -7,13 +7,15 @@
 package org.openlmis.rnr.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 
 @Data
 @NoArgsConstructor
-public class RnrColumn {
+@EqualsAndHashCode(callSuper = false)
+public class RnrColumn extends BaseModel{
 
-    private Integer id;
     private String name;
     private int position;
     private RnRColumnSource source;

@@ -77,8 +77,10 @@ public class RequisitionRepositoryTest {
     rnr = new Rnr();
     rnrLineItem1 = new RnrLineItem();
     rnrLineItem1.setId(1);
+    rnrLineItem1.setBeginningBalance(10);
     rnrLineItem2 = new RnrLineItem();
     rnrLineItem2.setId(2);
+    rnrLineItem2.setBeginningBalance(5);
     rnr.add(rnrLineItem1, true);
     rnr.add(rnrLineItem2, true);
     rnrLineItem1.addLossesAndAdjustments(lossAndAdjustmentForLineItem);

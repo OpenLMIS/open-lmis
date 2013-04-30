@@ -8,6 +8,7 @@ package org.openlmis.core.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -16,9 +17,9 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Vendor {
+@EqualsAndHashCode(callSuper = false)
+public class Vendor extends BaseModel{
 
-  private Integer id;
   private String name;
   private Boolean active;
 

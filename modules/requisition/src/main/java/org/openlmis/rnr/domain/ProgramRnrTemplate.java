@@ -30,6 +30,10 @@ public class ProgramRnrTemplate {
   public static final String COST = "cost";
   public static final String PRICE = "price";
   public static final String PRODUCT = "product";
+  public static final String USER_NEEDS_TO_ENTER_DEPENDENT_FIELD = "user.needs.to.enter.dependent.field";
+  public static final String INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED = "interdependent.fields.can.not.be.calculated";
+  public static final String COLUMN_SHOULD_BE_VISIBLE_IF_USER_INPUT = "column.should.be.visible.if.user.input";
+  public static final String USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON = "user.needs.to.enter.requested.quantity.reason";
 
   @Getter
   private Map<String, RnrColumn> rnrColumnsMap = new HashMap<>();
@@ -39,10 +43,6 @@ public class ProgramRnrTemplate {
   private Integer programId;
   @Getter
   private List<RnrColumn> rnrColumns;
-  private static final String USER_NEEDS_TO_ENTER_DEPENDENT_FIELD = "user.needs.to.enter.dependent.field";
-  private static final String INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED = "interdependent.fields.can.not.be.calculated";
-  public static final String COLUMN_SHOULD_BE_VISIBLE_IF_USER_INPUT = "column.should.be.visible.if.user.input";
-  private static final String USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON = "user.needs.to.enter.requested.quantity.reason";
 
   public ProgramRnrTemplate(Integer programId, List<RnrColumn> rnrColumns) {
     this.programId = programId;
@@ -147,9 +147,9 @@ public class ProgramRnrTemplate {
     } else {
       for (RnrColumn rnrColumn : rnrColumns) {
         if (rnrColumn.getName().equals("product") || rnrColumn.getName().equals("productCode") ||
-          rnrColumn.getName().equals("dispensingUnit") || rnrColumn.getName().equals("quantityRequested") ||
-          rnrColumn.getName().equals("packsToShip") || rnrColumn.getName().equals("price") ||
-          rnrColumn.getName().equals("cost") || rnrColumn.getName().equals("quantityApproved")){
+            rnrColumn.getName().equals("dispensingUnit") || rnrColumn.getName().equals("quantityRequested") ||
+            rnrColumn.getName().equals("packsToShip") || rnrColumn.getName().equals("price") ||
+            rnrColumn.getName().equals("cost") || rnrColumn.getName().equals("quantityApproved")) {
           if (rnrColumn.isVisible()) {
             visibleRnrColumns.add(rnrColumn);
           }

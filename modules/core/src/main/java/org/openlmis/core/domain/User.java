@@ -23,7 +23,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
 public class User extends BaseModel implements Importable {
   @ImportField(mandatory = true, name = "User Name")

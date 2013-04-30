@@ -49,7 +49,7 @@ public class GeographicZoneServiceTest {
     geographicZone.setCode("some code");
     geographicZone.setModifiedDate(new Date());
     geographicZone.setLevel(new GeographicLevel(null, "abc", null, null));
-    geographicZone.setParent(new GeographicZone(null, "xyz", null, null, null));
+    geographicZone.setParent(new GeographicZone("xyz", null, null, null));
   }
 
   @Test
@@ -109,7 +109,6 @@ public class GeographicZoneServiceTest {
   public void shouldUpdateZoneIfZonePreviouslyPresent() throws Exception {
     GeographicLevel level = new GeographicLevel(1, "abc", "abc", 1);
     GeographicZone parent = new GeographicZone(1, "xyz", "xyz", null, null);
-
 
     when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(level);
     when(repository.getByCode(geographicZone.getParent().getCode())).thenReturn(parent);

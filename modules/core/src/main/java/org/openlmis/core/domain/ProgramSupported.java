@@ -22,7 +22,7 @@ import static org.openlmis.core.service.FacilityService.SUPPORTED_PROGRAMS_INVAL
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProgramSupported extends BaseModel implements Importable {
 

@@ -96,7 +96,7 @@ public class CommentMapperIT {
 
   @Test
   public void shouldInsertAComment() throws Exception {
-    Comment comment = new Comment(null, requisition.getId(), user, "A new Comment", null);
+    Comment comment = new Comment(requisition.getId(), user, "A new Comment", null);
     int numberOfRows = mapper.insert(comment);
 
     assertThat(numberOfRows, is(notNullValue()));
@@ -104,7 +104,7 @@ public class CommentMapperIT {
 
   @Test
   public void shouldGetAllCommentsForARnR() throws Exception {
-    mapper.insert(new Comment(null, requisition.getId(), user, "A new Comment1",null));
+    mapper.insert(new Comment(requisition.getId(), user, "A new Comment1",null));
 
     List<Comment> listOfComments = mapper.getByRnrId(requisition.getId());
 

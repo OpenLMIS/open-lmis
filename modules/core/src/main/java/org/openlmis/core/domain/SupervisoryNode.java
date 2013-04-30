@@ -6,6 +6,7 @@
 
 package org.openlmis.core.domain;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

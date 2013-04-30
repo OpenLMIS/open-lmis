@@ -15,7 +15,7 @@ import org.openlmis.upload.annotation.ImportField;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class ProgramProduct extends BaseModel implements Importable {
 
   @ImportField(name = "Program Code", type = "String", nested = "code", mandatory = true)

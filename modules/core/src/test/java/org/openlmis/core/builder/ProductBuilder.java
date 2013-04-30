@@ -56,7 +56,7 @@ public class ProductBuilder {
       product.setStrength("strength");
       DosageUnit dosageUnit = new DosageUnit();
       dosageUnit.setCode("mg");
-      dosageUnit.setId(1L);
+      dosageUnit.setId(1);
       product.setDosageUnit(dosageUnit);
       product.setDispensingUnit("Strip");
       product.setPackSize(10);
@@ -66,7 +66,7 @@ public class ProductBuilder {
       product.setDosesPerDispensingUnit(10);
       ProductForm form = new ProductForm();
       form.setCode("Tablet");
-      form.setId(1L);
+      form.setId(1);
       product.setForm(form);
 
       ProductCategory category = new ProductCategory();

@@ -7,7 +7,9 @@
 package org.openlmis.order.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 
@@ -18,19 +20,19 @@ import static org.openlmis.order.domain.OrderStatus.RELEASED;
 
 @Data
 @NoArgsConstructor
-public class Order {
+@EqualsAndHashCode(callSuper = false)
+public class Order extends BaseModel{
+  private Rnr rnr;
+  private OrderStatus status;
+  private ShipmentFileInfo shipmentFileInfo;
+  private Date createdDate;
+  private Integer createdBy;
+
   public Order(Rnr rnr) {
     this.rnr = rnr;
     this.createdBy = rnr.getModifiedBy();
     this.status = RELEASED;
   }
-
-  private Integer id;
-  private OrderStatus status;
-  private ShipmentFileInfo shipmentFileInfo;
-  private Date createdDate;
-  private Integer createdBy;
-  private Rnr rnr;
 
   public Order(Integer id) {
     this.id = id;

@@ -14,9 +14,8 @@ import org.openlmis.upload.annotation.ImportField;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class RequisitionGroupMember extends BaseModel implements Importable {
-  private Integer id;
 
   @ImportField(mandatory = true, name = "RG Code", nested = "code")
   private RequisitionGroup requisitionGroup;

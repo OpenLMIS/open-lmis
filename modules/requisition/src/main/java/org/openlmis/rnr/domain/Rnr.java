@@ -7,6 +7,7 @@
 package org.openlmis.rnr.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -28,8 +29,8 @@ import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_NULL)
-public class Rnr {
-  private Integer id;
+@EqualsAndHashCode(callSuper = false)
+public class Rnr extends BaseModel{
   private Facility facility;
   private Program program;
   private ProcessingPeriod period;
@@ -42,8 +43,6 @@ public class Rnr {
 
   private Facility supplyingFacility;
   private Integer supervisoryNodeId;
-  private Integer modifiedBy;
-  private Date modifiedDate;
   private Date submittedDate;
   private List<Comment> comments = new ArrayList<>();
 
