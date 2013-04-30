@@ -54,10 +54,10 @@ public class RequisitionPdfModelTest {
     model.put(RequisitionController.RNR, requisition);
     List<RnrColumn> rnrTemplate = make(a(defaultRnrTemplate)).getRnrColumns();
     model.put(RequisitionController.RNR_TEMPLATE, rnrTemplate);
-    requisitionPdfModel = new RequisitionPdfModel(model);
     LossesAndAdjustmentsType additive1 = new LossesAndAdjustmentsType("TRANSFER_IN", "TRANSFER IN", true, 1);
     lossesAndAdjustmentsList = asList(additive1);
-    RnrLineItem.setLossesAndAdjustmentsTypes(lossesAndAdjustmentsList);
+    model.put(RequisitionController.LOSSES_AND_ADJUSTMENT_TYPES, lossesAndAdjustmentsList);
+    requisitionPdfModel = new RequisitionPdfModel(model);
   }
 
   @Test

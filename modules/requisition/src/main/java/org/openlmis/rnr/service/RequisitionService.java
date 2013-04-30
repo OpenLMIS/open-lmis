@@ -127,10 +127,7 @@ public class RequisitionService {
 
 
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
-    if (RnrLineItem.getLossesAndAdjustmentTypes() == null) {
-      RnrLineItem.setLossesAndAdjustmentsTypes(requisitionRepository.getLossesAndAdjustmentsTypes());
-    }
-    return RnrLineItem.getLossesAndAdjustmentTypes();
+    return requisitionRepository.getLossesAndAdjustmentsTypes();
   }
 
   public OpenLmisMessage submit(Rnr rnr) {
@@ -150,8 +147,7 @@ public class RequisitionService {
     List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(
       savedRnr.getProgram().getId());
     savedRnr.copyUserEditableFields(rnr, rnrColumns);
-    RnrLineItem.setLossesAndAdjustmentsTypes(getLossesAndAdjustmentsTypes());
-    savedRnr.calculate(rnrColumns);
+    savedRnr.calculate(rnrColumns, getLossesAndAdjustmentsTypes());
     update(savedRnr);
 
     SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram());
@@ -175,9 +171,8 @@ public class RequisitionService {
 
     List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(
       savedRnr.getProgram().getId());
-    RnrLineItem.setLossesAndAdjustmentsTypes(getLossesAndAdjustmentsTypes());
     savedRnr.copyUserEditableFields(rnr, rnrColumns);
-    savedRnr.calculate(rnrColumns);
+    savedRnr.calculate(rnrColumns, getLossesAndAdjustmentsTypes());
     update(savedRnr);
 
     User approver = supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram());

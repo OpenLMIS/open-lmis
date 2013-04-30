@@ -94,7 +94,6 @@ public class RnrLineItem {
   private Money price;
 
   private static Logger logger = LoggerFactory.getLogger(RnrLineItem.class);
-  private transient static List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
 
   public RnrLineItem(Integer rnrId, FacilityApprovedProduct facilityApprovedProduct, Integer modifiedBy) {
     this.rnrId = rnrId;
@@ -135,9 +134,9 @@ public class RnrLineItem {
   }
 
 
-  public void calculate(ProcessingPeriod period, List<RnrColumn> rnrColumns, RnrStatus rnrStatus) {
+  public void calculate(ProcessingPeriod period, List<RnrColumn> rnrColumns, RnrStatus rnrStatus, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
-    calculateTotalLossesAndAdjustments();
+    calculateTotalLossesAndAdjustments(lossesAndAdjustmentsTypes);
     if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
     if (template.columnsCalculated(QUANTITY_DISPENSED))
       calculateQuantityDispensed();
@@ -264,10 +263,10 @@ public class RnrLineItem {
     normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
   }
 
-  public void calculateTotalLossesAndAdjustments() {
+  public void calculateTotalLossesAndAdjustments(List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     totalLossesAndAdjustments = 0;
     for (LossesAndAdjustments lossAndAdjustment : lossesAndAdjustments) {
-      if (getAdditive(lossAndAdjustment)) {
+      if (getAdditive(lossAndAdjustment, lossesAndAdjustmentsTypes)) {
         totalLossesAndAdjustments += lossAndAdjustment.getQuantity();
       } else {
         totalLossesAndAdjustments -= lossAndAdjustment.getQuantity();
@@ -275,7 +274,7 @@ public class RnrLineItem {
     }
   }
 
-  private boolean getAdditive(final LossesAndAdjustments lossAndAdjustment) {
+  private boolean getAdditive(final LossesAndAdjustments lossAndAdjustment, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     Predicate predicate = new Predicate() {
       @Override
       public boolean evaluate(Object o) {
@@ -284,7 +283,7 @@ public class RnrLineItem {
     };
 
     LossesAndAdjustmentsType lossAndAdjustmentTypeFromList = (LossesAndAdjustmentsType) CollectionUtils.find(
-      RnrLineItem.getLossesAndAdjustmentTypes(), predicate);
+      lossesAndAdjustmentsTypes, predicate);
 
     return lossAndAdjustmentTypeFromList.getAdditive();
   }
@@ -377,11 +376,4 @@ public class RnrLineItem {
     if (quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
   }
 
-  public static void setLossesAndAdjustmentsTypes(List<LossesAndAdjustmentsType> lossesAndAdjustmentList) {
-    lossesAndAdjustmentsTypes = lossesAndAdjustmentList;
-  }
-
-  public static List<LossesAndAdjustmentsType> getLossesAndAdjustmentTypes() {
-    return lossesAndAdjustmentsTypes;
-  }
 }

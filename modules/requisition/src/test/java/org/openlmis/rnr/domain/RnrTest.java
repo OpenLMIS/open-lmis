@@ -36,10 +36,12 @@ public class RnrTest {
   @Rule
   public ExpectedException exception = ExpectedException.none();
   private Rnr rnr;
+  List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
 
   @Before
   public void setUp() throws Exception {
     rnr = make(a(defaultRnr));
+    lossesAndAdjustmentsTypes = mock(ArrayList.class);
   }
 
   @Test
@@ -54,7 +56,7 @@ public class RnrTest {
     rnr.setNonFullSupplyLineItems(asList(rnrLineItem2));
 
     List<RnrColumn> programRnrColumns = new ArrayList<>();
-    rnr.calculate(programRnrColumns);
+    rnr.calculate(programRnrColumns, lossesAndAdjustmentsTypes);
 
     verify(rnrLineItem1).validateMandatoryFields(programRnrColumns);
     verify(rnrLineItem1).validateCalculatedFields(programRnrColumns);
@@ -180,9 +182,9 @@ public class RnrTest {
     Money nonFullSupplyItemSubmittedCost = new Money("20");
     when(firstLineItem.calculateCost()).thenReturn(fullSupplyItemSubmittedCost);
     when(secondLineItem.calculateCost()).thenReturn(nonFullSupplyItemSubmittedCost);
-    rnr.calculate(programRequisitionColumns);
+    rnr.calculate(programRequisitionColumns, lossesAndAdjustmentsTypes);
 
-    verify(firstLineItem).calculate(period, programRequisitionColumns, SUBMITTED);
+    verify(firstLineItem).calculate(period, programRequisitionColumns, SUBMITTED, lossesAndAdjustmentsTypes);
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(fullSupplyItemSubmittedCost));
     assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(nonFullSupplyItemSubmittedCost));
   }
@@ -210,11 +212,11 @@ public class RnrTest {
   @Test
   public void testCalculatePacksToShip() throws Exception {
     RnrLineItem lineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem,
-        with(roundToZero, true),
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10),
-        with(roundToZero, false)));
+      with(roundToZero, true),
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10),
+      with(roundToZero, false)));
     rnr.setFullSupplyLineItems(asList(lineItem));
 
     rnr.calculateForApproval();

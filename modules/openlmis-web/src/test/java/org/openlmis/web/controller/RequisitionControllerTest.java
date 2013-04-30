@@ -21,6 +21,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Comment;
+import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.dto.RnrDTO;
@@ -28,7 +29,6 @@ import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.configurationReader.StaticReferenceDataReader;
-import org.openlmis.web.form.RnrList;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -343,12 +343,15 @@ public class RequisitionControllerTest {
     when(requisitionService.getFullRequisitionById(rnrId)).thenReturn(rnr);
     when(requisitionService.getCategoryCount(rnr, true)).thenReturn(10);
     when(requisitionService.getCategoryCount(rnr, false)).thenReturn(5);
+    List<LossesAndAdjustmentsType> lossesAndAdjustmentTypes = new ArrayList<>();
+    when(requisitionService.getLossesAndAdjustmentsTypes()).thenReturn(lossesAndAdjustmentTypes);
     when(rnrTemplateService.fetchColumnsForRequisition(programId)).thenReturn(rnrTemplate);
     when(staticReferenceDataReader.getCurrency()).thenReturn("$");
     ModelAndView modelAndView = controller.printRequisition(rnrId);
 
     assertThat((Rnr) modelAndView.getModel().get(RNR), is(rnr));
     assertThat((String) modelAndView.getModel().get(CURRENCY), is("$"));
+    assertThat((ArrayList<LossesAndAdjustmentsType>) modelAndView.getModel().get(LOSSES_AND_ADJUSTMENT_TYPES), is(lossesAndAdjustmentTypes));
     assertThat((ArrayList<RnrColumn>) modelAndView.getModel().get(RNR_TEMPLATE), is(rnrTemplate));
 
   }
@@ -358,14 +361,14 @@ public class RequisitionControllerTest {
   @Test
   public void shouldInsertComment() throws Exception {
     Comment comment = new Comment();
-    List comments = new ArrayList();
+    List<Comment> comments = new ArrayList<Comment>();
     comments.add(comment);
     when(requisitionService.getCommentsByRnrId(rnr.getId())).thenReturn(comments);
 
     ResponseEntity<OpenLmisResponse> response = controller.insertComment(comment, rnr.getId(), request);
 
     verify(requisitionService).insertComment(comment);
-    assertThat((List) response.getBody().getData().get(COMMENTS), is(comments));
+    assertThat((List<Comment>) response.getBody().getData().get(COMMENTS), is(comments));
     assertThat(comment.getRnrId(), is(rnr.getId()));
     assertThat(comment.getAuthor().getId(), is(USER_ID));
   }

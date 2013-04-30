@@ -17,7 +17,6 @@ import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.configurationReader.StaticReferenceDataReader;
-import org.openlmis.web.form.RnrList;
 import org.openlmis.web.model.RnrReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
-import static org.openlmis.rnr.dto.RnrDTO.*;
+import static org.openlmis.rnr.dto.RnrDTO.prepareForListApproval;
+import static org.openlmis.rnr.dto.RnrDTO.prepareForView;
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
@@ -57,6 +57,7 @@ public class RequisitionController extends BaseController {
   private RequisitionService requisitionService;
   private RnrTemplateService rnrTemplateService;
   private StaticReferenceDataReader staticReferenceDataReader;
+  public static final String LOSSES_AND_ADJUSTMENT_TYPES = "lossesAndAdjustmentTypes";
 
   @Autowired
   public RequisitionController(RequisitionService requisitionService, RnrTemplateService rnrTemplateService, StaticReferenceDataReader staticReferenceDataReader) {
@@ -219,6 +220,7 @@ public class RequisitionController extends BaseController {
     ModelAndView modelAndView = new ModelAndView("requisitionPDF");
     Rnr requisition = requisitionService.getFullRequisitionById(id);
     modelAndView.addObject(RNR, requisition);
+    modelAndView.addObject(LOSSES_AND_ADJUSTMENT_TYPES, requisitionService.getLossesAndAdjustmentsTypes());
     modelAndView.addObject(RNR_TEMPLATE, rnrTemplateService.fetchColumnsForRequisition(requisition.getProgram().getId()));
     modelAndView.addObject(CURRENCY, staticReferenceDataReader.getCurrency());
     return modelAndView;

@@ -13,8 +13,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -46,12 +44,12 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.numberOfMonths;
 import static org.openlmis.core.builder.ProductBuilder.code;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
-import static org.openlmis.rnr.builder.RequisitionBuilder.modifiedBy;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
@@ -98,7 +96,7 @@ public class RequisitionServiceTest {
 
 
   @InjectMocks
-  private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory ;
+  private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
   @Mock
   private RequisitionPermissionService requisitionPermissionService;
@@ -109,11 +107,11 @@ public class RequisitionServiceTest {
   private RequisitionService requisitionService;
 
 
-
   private Rnr submittedRnr;
   private Rnr initiatedRnr;
   private Rnr authorizedRnr;
   private ArrayList<RnrColumn> rnrColumns;
+  private List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
 
   @Before
   public void setup() {
@@ -124,6 +122,8 @@ public class RequisitionServiceTest {
     rnrColumns = new ArrayList<RnrColumn>() {{
       add(new RnrColumn());
     }};
+    lossesAndAdjustmentsTypes = mock(ArrayList.class);
+    when(requisitionService.getLossesAndAdjustmentsTypes()).thenReturn(lossesAndAdjustmentsTypes);
   }
 
   @Test
@@ -380,11 +380,11 @@ public class RequisitionServiceTest {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
     when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(PROGRAM.getId())).thenReturn(rnrColumns);
     doNothing().when(savedRnr).copyApproverEditableFields(initiatedRnr);
-    doNothing().when(savedRnr).calculate(rnrColumns);
+    doNothing().when(savedRnr).calculate(rnrColumns, lossesAndAdjustmentsTypes);
 
     requisitionService.submit(initiatedRnr);
 
-    verify(savedRnr).calculate(rnrColumns);
+    verify(savedRnr).calculate(rnrColumns, lossesAndAdjustmentsTypes);
     verify(requisitionRepository).update(savedRnr);
     verify(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
   }
@@ -394,11 +394,11 @@ public class RequisitionServiceTest {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
     when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(PROGRAM.getId())).thenReturn(rnrColumns);
     doNothing().when(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
-    doNothing().when(savedRnr).calculate(rnrColumns);
+    doNothing().when(savedRnr).calculate(rnrColumns, lossesAndAdjustmentsTypes);
 
     OpenLmisMessage message = requisitionService.submit(initiatedRnr);
 
-    verify(savedRnr).calculate(rnrColumns);
+    verify(savedRnr).calculate(rnrColumns, lossesAndAdjustmentsTypes);
     verify(requisitionRepository).update(savedRnr);
     verify(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
     verify(requisitionRepository).update(savedRnr);
@@ -409,7 +409,7 @@ public class RequisitionServiceTest {
   public void shouldSubmitValidRnrWithSubmittedDateAndSetMessage() {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
     doNothing().when(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
-    doNothing().when(savedRnr).calculate(rnrColumns);
+    doNothing().when(savedRnr).calculate(rnrColumns, lossesAndAdjustmentsTypes);
     when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(new SupervisoryNode());
     when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(PROGRAM.getId())).thenReturn(rnrColumns);
 
@@ -426,7 +426,7 @@ public class RequisitionServiceTest {
   public void shouldAuthorizeAValidRnrAndTagWithSupervisoryNode() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
     doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
-    doNothing().when(savedRnr).calculate(rnrColumns);
+    doNothing().when(savedRnr).calculate(rnrColumns, lossesAndAdjustmentsTypes);
     when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(PROGRAM.getId())).thenReturn(rnrColumns);
     when(supervisoryNodeService.getApproverFor(FACILITY, PROGRAM)).thenReturn(new User());
     SupervisoryNode approverNode = new SupervisoryNode();
@@ -447,7 +447,7 @@ public class RequisitionServiceTest {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
     doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
-    doNothing().when(savedRnr).calculate(rnrColumns);
+    doNothing().when(savedRnr).calculate(rnrColumns, lossesAndAdjustmentsTypes);
 
     SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(node);
@@ -468,7 +468,7 @@ public class RequisitionServiceTest {
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(node);
     doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
-    doNothing().when(savedRnr).calculate(rnrColumns);
+    doNothing().when(savedRnr).calculate(rnrColumns, lossesAndAdjustmentsTypes);
 
     OpenLmisMessage openLmisMessage = requisitionService.authorize(submittedRnr);
 
@@ -933,32 +933,6 @@ public class RequisitionServiceTest {
     assertThat(commentUser.getUserName(), is(user.getUserName()));
     assertThat(comments, is(returnedComments));
   }
-
-  @Test
-  public void shouldGetAllLossesAndAdjustmentTypesFromRequisitionLineItemStaticCacheIfExists() throws Exception {
-    List<LossesAndAdjustmentsType> lossesAndAdjustmentList = new ArrayList<>();
-    RnrLineItem.setLossesAndAdjustmentsTypes(lossesAndAdjustmentList);
-    assertThat(requisitionService.getLossesAndAdjustmentsTypes(), is(lossesAndAdjustmentList));
-    verify(requisitionRepository, never()).getLossesAndAdjustmentsTypes();
-    clearRnrLineItemCache();
-  }
-
-  private void clearRnrLineItemCache() {
-    RnrLineItem.setLossesAndAdjustmentsTypes(null);
-  }
-
-  @Test
-  public void shouldGetAllLossesAndAdjustmentTypesFromDBAndUpdateCacheWhenRequisitionLineItemsStaticCacheDoesNotExist() throws Exception {
-    clearRnrLineItemCache();
-
-    List<LossesAndAdjustmentsType> lossesAndAdjustmentList = new ArrayList<>();
-    when(requisitionRepository.getLossesAndAdjustmentsTypes()).thenReturn(lossesAndAdjustmentList);
-
-    assertThat(requisitionService.getLossesAndAdjustmentsTypes(), is(lossesAndAdjustmentList));
-    assertThat(RnrLineItem.getLossesAndAdjustmentTypes(), is(lossesAndAdjustmentList));
-  }
-
-
 
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {
     Rnr savedRnr = spy(rnr);
