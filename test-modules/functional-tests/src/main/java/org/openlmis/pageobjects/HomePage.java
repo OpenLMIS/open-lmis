@@ -410,5 +410,9 @@ public class HomePage extends Page {
     return new SummaryReportPage(testWebDriver);
   }
 
+  public void goBack(){
+      TestWebDriver.getDriver().navigate().back();
+  }
+
 
 }
