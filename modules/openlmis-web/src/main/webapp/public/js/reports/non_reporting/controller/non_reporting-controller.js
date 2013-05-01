@@ -49,7 +49,7 @@ function NonReportingController($scope, RequisitionGroups, NonReportingFacilitie
 
         FacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.push({'name': '- Please Select One -'});
+            $scope.facilityTypes.push({'name': 'All Facility Types -'});
         });
 
         Periods.get({scheduleId:1},function(data) {
@@ -61,7 +61,7 @@ function NonReportingController($scope, RequisitionGroups, NonReportingFacilitie
 
         $scope.export   = function (type){
             var url = '/reports/download/non_reporting/' + type +'?period=' + $scope.period + '&rgroup=' + $scope.rgroup + '&ftype=' + $scope.facilityType;
-            window.location.href = url;
+            window.open(url);
         }
 
         $scope.goToPage = function (page, event) {
@@ -137,10 +137,10 @@ function NonReportingController($scope, RequisitionGroups, NonReportingFacilitie
         data: 'myData',
         columnDefs:
             [
-
                 { field: 'code', displayName: 'Code', width: "*" },
-                { field: 'name', displayName: 'Facility Name', width: "*", resizable: false},
-                { field: 'location', displayName: 'Location', width: "***" }
+                { field: 'name', displayName: 'Facility Name', width: "***", resizable: false},
+                { field: 'facilityType', displayName: 'Facility Type', width: "*", resizable: false},
+                { field: 'location', displayName: 'Location', width: "*" }
             ],
         enablePaging: true,
         enableSorting :true,

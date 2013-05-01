@@ -46,5 +46,13 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
         return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
+    @Override
+    public ReportData getReportFilterData(Map<String, String[]> params) {
+       return new ReportData() {
+                        @Override
+                        public String toString() {
+                            return "The Period: " ;
+                        }
+                    };
+     }
 }

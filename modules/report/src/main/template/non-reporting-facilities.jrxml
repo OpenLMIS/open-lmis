@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="mailing-labels" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -14,7 +16,6 @@
 	<parameter name="REPORT_ID" class="java.lang.String"/>
 	<parameter name="LOGO" class="java.io.InputStream"/>
 	<parameter name="REPORT_OUTPUT_OPTION" class="java.lang.String"/>
-	<parameter name="OPERATOR_LOGO" class="java.io.InputStream"/>
 	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
 	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
 	<queryString>
@@ -37,7 +38,7 @@ ORDER BY F.code asc, F.typeid asc]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="79" splitType="Stretch">
+		<band height="81" splitType="Stretch">
 			<subreport>
 				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
@@ -51,17 +52,8 @@ ORDER BY F.code asc, F.typeid asc]]>
 				<subreportParameter name="LOGO">
 					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="REPORT_SUB_TITLE">
-					<subreportParameterExpression><![CDATA[$P{REPORT_SUB_TITLE}]]></subreportParameterExpression>
-				</subreportParameter>
 				<subreportParameter name="REPORT_NAME">
 					<subreportParameterExpression><![CDATA[$P{REPORT_NAME}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="REPORT_FILTER_PARAM_VALUES">
-					<subreportParameterExpression><![CDATA[$P{REPORT_FILTER_PARAM_VALUES}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="OPERATOR_LOGO">
-					<subreportParameterExpression><![CDATA[$P{OPERATOR_LOGO}]]></subreportParameterExpression>
 				</subreportParameter>
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
 				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
