@@ -137,10 +137,10 @@ function NonReportingController($scope, RequisitionGroups, NonReportingFacilitie
         data: 'myData',
         columnDefs:
             [
-
                 { field: 'code', displayName: 'Code', width: "*" },
-                { field: 'name', displayName: 'Facility Name', width: "*", resizable: false},
-                { field: 'location', displayName: 'Location', width: "***" }
+                { field: 'name', displayName: 'Facility Name', width: "***", resizable: false},
+                { field: 'facilityType', displayName: 'Facility Type', width: "*", resizable: false},
+                { field: 'location', displayName: 'Location', width: "*" }
             ],
         enablePaging: true,
         enableSorting :true,
