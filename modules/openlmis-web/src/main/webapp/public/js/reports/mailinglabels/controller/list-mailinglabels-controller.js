@@ -74,7 +74,7 @@ function ListMailinglabelsController($scope, MailingLabels, FacilityTypes, $http
         if(type == "mailing-list"){
             url = '/reports/download/mailinglabels/list/' + "pdf" +'?facilityCodeFilter=' +  $scope.filterObject.facilityCodeFilter + '&facilityNameFilter=' +  $scope.filterObject.facilityNameFilter + '&facilityTypeId=' +  $scope.filterObject.facilityTypeId ;
         }
-        window.location.href = url;
+        window.open(url);
     }
         $scope.goToPage = function (page, event) {
             angular.element(event.target).parents(".dropdown").click();

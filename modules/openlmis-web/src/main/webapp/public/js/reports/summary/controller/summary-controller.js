@@ -49,7 +49,7 @@ function SummaryReportController($scope, SummaryReport , Periods , $http, $route
 
         $scope.export   = function (type){
             var url = '/reports/download/summary/' + type +'?period=' + $scope.period;
-            window.location.href = url;
+            window.open(url);
         }
 
         $scope.goToPage = function (page, event) {
