@@ -110,12 +110,7 @@ public class ReportController  extends BaseController {
                                              @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                              @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                                              HttpServletRequest request
-                                            // @RequestParam(value = "facilityCodeFilter", required = false, defaultValue = "0") String facilityCodeFilter,
-                                            // @RequestParam(value = "facilityTypeId", required = false, defaultValue = "0") int facilityTypeId,
-                                            // @RequestParam(value = "facilityNameFilter", required = false, defaultValue = "" ) String facilityNameFilter,
-                                            // @RequestParam(value = "code", required = false, defaultValue = "ASC") String code,
-                                            // @RequestParam(value = "facilityName", required = false, defaultValue = "") String facilityName,
-                                            // @RequestParam(value = "facilityType", required = false, defaultValue = "ASC") String facilityType
+
     ) {
 
 
@@ -127,6 +122,24 @@ public class ReportController  extends BaseController {
 
         return new Pages(page,totalRecCount,max,consumptionReportList);
     }
+
+    @RequestMapping(value = "/reportdata/averageConsumption", method = GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_AVERAGE_CONSUMPTION_REPORT')")
+    public Pages getAverageConsumptionData( //@PathVariable(value = "reportKey") String reportKey,
+                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                     @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                     HttpServletRequest request
+
+    ) {
+
+        Report report = reportManager.getReportByKey("average_consumption");
+        List<AverageConsumptionReport> averageConsumptionReportList =
+                (List<AverageConsumptionReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
+        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());;
+
+        return new Pages(page,totalRecCount,max,averageConsumptionReportList);
+    }
+
 
 
     @RequestMapping(value = "/summary", method = GET, headers = ACCEPT_JSON)

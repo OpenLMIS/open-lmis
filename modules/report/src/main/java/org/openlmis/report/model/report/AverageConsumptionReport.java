@@ -12,6 +12,8 @@ public class AverageConsumptionReport implements ReportData {
 
     private String productDescription;
     private Double average;
-
+    private String product;
+    private String reportingGroup;
+    private String category;
 
 }

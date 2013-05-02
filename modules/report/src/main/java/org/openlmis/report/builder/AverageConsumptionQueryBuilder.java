@@ -1,6 +1,12 @@
 package org.openlmis.report.builder;
 
+import org.openlmis.report.model.filter.AverageConsumptionReportFilter;
+
 import java.util.Map;
+
+import static org.apache.ibatis.jdbc.SqlBuilder.*;
+import static org.apache.ibatis.jdbc.SqlBuilder.FROM;
+import static org.apache.ibatis.jdbc.SqlBuilder.SQL;
 
 /**
  * User: Elias
@@ -14,4 +20,75 @@ public class AverageConsumptionQueryBuilder {
                 "from products p " +
                 "inner join program_products pp on p.id = pp.productId ";
     }
+
+    public static String SelectFilteredSortedPagedAverageConsumptionSql(Map params){
+
+        AverageConsumptionReportFilter filter  = (AverageConsumptionReportFilter)params.get("filterCriteria");
+        //ConsumptionReportSorter sorter = (ConsumptionReportSorter)params.get("SortCriteria");
+        BEGIN();
+
+        SELECT("avg(quantitydispensed) average, product, productcategory category, ft.name facilityType, f.name facility");
+        FROM("requisition_line_items li");
+        JOIN("requisitions r on r.id = li.rnrid");
+        JOIN("facilities f on r.facilityid = f.id");
+        JOIN("facility_types ft on ft.id = f.typeid");
+        JOIN("processing_periods pp on pp.id = r.periodid");
+
+        if(filter != null){
+            if (filter.getFacilityTypeId() != 0) {
+                WHERE("ft.id = #{filterCriteria.facilityTypeId}");
+            }
+            if (filter.getZoneId() != 0) {
+                WHERE("f.geographiczoneid = #{filterCriteria.zoneId}");
+            }
+            if (filter.getStartDate() != null) {
+                WHERE("pp.startDate >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
+            }
+            if (filter.getEndDate() != null) {
+                WHERE("pp.endDate <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
+            }
+
+        }
+        GROUP_BY("li.product, li.productcategory,  f.name, ft.name");
+        ORDER_BY("li.productCategory, li.product");
+        return SQL();
+    }
+
+    public static String SelectFilteredSortedPagedAverageConsumptionCountSql(Map params){
+
+        AverageConsumptionReportFilter filter  = (AverageConsumptionReportFilter)params.get("filterCriteria");
+        //ConsumptionReportSorter sorter = (ConsumptionReportSorter)params.get("SortCriteria");
+
+        BEGIN();
+        SELECT("COUNT(*) perCounts");
+        FROM("requisition_line_items li");
+        JOIN("requisitions r on r.id = li.rnrid");
+        JOIN("facilities f on r.facilityid = f.id");
+        JOIN("facility_types ft on ft.id = f.typeid");
+        JOIN("processing_periods pp on pp.id = r.periodid");
+
+        if(filter != null){
+            if (filter.getFacilityTypeId() != 0) {
+                WHERE("ft.id = #{filterCriteria.facilityTypeId}");
+            }
+            if (filter.getZoneId() != 0) {
+                WHERE("f.geographiczoneid = #{filterCriteria.zoneId}");
+            }
+            if (filter.getStartDate() != null) {
+                WHERE("pp.startDate >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
+            }
+            if (filter.getEndDate() != null) {
+                WHERE("pp.endDate <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
+            }
+
+        }
+        GROUP_BY("li.product, li.productcategory, f.name, ft.name");
+        String subQuery = SQL().toString();
+
+        BEGIN();
+        SELECT("COUNT(*)");
+        FROM("( "+ subQuery +" ) as counts");
+        return SQL();
+    }
+
 }

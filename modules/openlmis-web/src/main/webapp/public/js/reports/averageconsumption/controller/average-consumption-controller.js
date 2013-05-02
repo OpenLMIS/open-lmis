@@ -1,4 +1,4 @@
-function ConsumptionReportController($scope, ConsumptionReport, Products , FacilityTypes, GeographicZones, $http, $routeParams,$location) {
+function AverageConsumptionReportController($scope, AverageConsumptionReport, Products , FacilityTypes, GeographicZones, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -251,7 +251,7 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Facil
 
 
         $scope.export   = function (type){
-            var url = '/reports/download/consumption/' + type +'?zone=' + $scope.zone + '&facilityType=' + $scope.facilityType;
+            var url = '/reports/download/averageconsumption/' + type +'?zone=' + $scope.zone + '&facilityType=' + $scope.facilityType;
             window.location.href = url;
         }
 
@@ -304,7 +304,7 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Facil
                                 params[index] = value;
                         });
 
-                        ConsumptionReport.get(params, function(data) {
+                        AverageConsumptionReport.get(params, function(data) {
                             $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
                         });
 
@@ -333,13 +333,14 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Facil
         columnDefs:
             [
                 //{ field: 'period', displayName: 'Period', width: "*", resizable: false},
-                { field: 'category', displayName: 'Category', width: "*" },
-                { field: 'product', displayName: 'Product', width: "*" },
-                { field: 'facilityType', displayName: 'Facility Type', width : "*"},
-                { field: 'facility', displayName: 'Facility', width : "*"},
+
+                { field: 'category', displayName: 'Product', width: "*" },
+                { field: 'product', displayName: 'Product Description', width: "*" },
+               // { field: 'facilityType', displayName: 'Facility Type', width : "*"},
+               // { field: 'facility', displayName: 'Facility', width : "*"},
                 //{ field: 'supplier', displayName: 'Supplying Facility', width : "*"},
                 //{ field: 'reportingGroup', displayName: 'Reporting Group', width : "*"},
-                { field: 'consumption', displayName: 'Consumption', width : "*"}
+                { field: 'average', displayName: 'Average Monthly Consumption', width : "*"}
             ],
         enablePaging: true,
         enableSorting :true,
