@@ -16,6 +16,7 @@
 
   <import resource="classpath*:applicationContext-db.xml"/>
   <import resource="classpath*:applicationContext-core.xml"/>
+  <import resource="classpath*:atomFeedContext.xml" />
 
   <context:component-scan base-package="org.openlmis"/>
 
