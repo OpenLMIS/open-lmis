@@ -8,11 +8,10 @@ import org.openlmis.report.model.ReportData;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NonReportingFacility implements ReportData {
+public class AverageConsumptionReport implements ReportData {
 
-    private String id;
-    private String code;
-    private String name;
-    private String facilityType;
-    private String location;
+    private String productDescription;
+    private Double average;
+
+
 }

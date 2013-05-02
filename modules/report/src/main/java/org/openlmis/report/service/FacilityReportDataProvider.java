@@ -68,15 +68,6 @@ public class FacilityReportDataProvider extends ReportDataProvider {
     public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
         RowBounds rowBounds = new RowBounds((page-1)*pageSize,pageSize);
 
-        FacilityReportFilter facilityReportFilter = null;
-
-        if(filterCriteria != null){
-            facilityReportFilter = new FacilityReportFilter();
-            facilityReportFilter.setZoneId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
-            facilityReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-            facilityReportFilter.setStatusId(filterCriteria.get("statusId") == null || filterCriteria.get("statusId")[0].isEmpty() ? null : Boolean.valueOf(filterCriteria.get("statusId")[0]));
-        }
-
         FacilityReportSorter facilityReportSorter = null;
         if(sortCriteria != null){
             facilityReportSorter = new FacilityReportSorter();
@@ -86,13 +77,18 @@ public class FacilityReportDataProvider extends ReportDataProvider {
         }
 
 
-        return facilityReportMapper.SelectFilteredSortedPagedFacilities(facilityReportFilter,facilityReportSorter,rowBounds);
+        return facilityReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(filterCriteria),facilityReportSorter,rowBounds);
     }
 
     @Override
     public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
 
-        FacilityReportFilter facilityReportFilter = null;
+        return (int)facilityReportMapper.SelectFilteredFacilitiesCount(getReportFilterData(filterCriteria));
+    }
+
+    @Override
+    public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
+        FacilityReportFilter facilityReportFilter = new FacilityReportFilter();
 
         if(filterCriteria != null){
 
@@ -101,7 +97,7 @@ public class FacilityReportDataProvider extends ReportDataProvider {
             facilityReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
             facilityReportFilter.setStatusId(filterCriteria.get("statusId") == null || filterCriteria.get("statusId")[0].isEmpty() ? null : Boolean.valueOf(filterCriteria.get("statusId")[0]));
         }
-        return (int)facilityReportMapper.SelectFilteredFacilitiesCount(facilityReportFilter);
-    }
 
+        return facilityReportFilter;
+    }
 }

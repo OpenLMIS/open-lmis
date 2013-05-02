@@ -82,7 +82,7 @@ public class ReportManager {
 
        // Read the report template from file.
        InputStream reportInputStream =  this.getClass().getClassLoader().getResourceAsStream(report.getTemplate()) ;
-       HashMap<String, Object> extraParams = getReportExtraParams(report, currentUser.getUserName(), outputOption.name()) ;
+       HashMap<String, Object> extraParams = getReportExtraParams(report, currentUser.getUserName(), outputOption.name(), params ) ;
        reportExporter.exportReport(reportInputStream,extraParams, dataSource, outputOption, response);
 
     }
@@ -101,11 +101,13 @@ public class ReportManager {
      /**
      * Used to extract extra parameters that are used by report header and footer.
      *
+      *
       * @param report
       * @param outputOption
+      * @param filterCriteria
       * @return
      */
-    private HashMap<String, Object> getReportExtraParams(Report report, String generatedBy, String outputOption){
+    private HashMap<String, Object> getReportExtraParams(Report report, String generatedBy, String outputOption, Map<String, String[]> filterCriteria){
 
         if (report == null) return null;
 
@@ -113,14 +115,19 @@ public class ReportManager {
         params.put(Constants.REPORT_NAME, report.getName());
         params.put(Constants.REPORT_ID, report.getId());
         params.put(Constants.REPORT_TITLE, report.getTitle());
+        params.put(Constants.REPORT_SUB_TITLE, report.getSubTitle());
         params.put(Constants.REPORT_VERSION, report.getVersion());
         params.put(Constants.REPORT_OUTPUT_OPTION, outputOption.toString());
         Configuration configuration =  configurationService.getByKey(Constants.LOGO_FILE_NAME_KEY);
         configurationService.getByKey(Constants.LOGO_FILE_NAME_KEY).getValue();
         params.put(Constants.LOGO,this.getClass().getClassLoader().getResourceAsStream(configuration != null ? configuration.getValue() : "logo.png"));
         params.put(Constants.GENERATED_BY, generatedBy);
+        configuration =  configurationService.getByKey(Constants.OPERATOR_LOGO_FILE_NAME_KEY);
 
+        params.put(Constants.OPERATOR_LOGO, this.getClass().getClassLoader().getResourceAsStream(configuration != null ? configuration.getValue() : "logo.png"));
+        params.put(Constants.REPORT_FILTER_PARAM_VALUES, report.getReportDataProvider().getReportFilterData(filterCriteria).toString());
         return params;
+
     }
 
     /*

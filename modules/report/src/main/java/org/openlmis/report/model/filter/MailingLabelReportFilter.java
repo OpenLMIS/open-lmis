@@ -23,6 +23,20 @@ public class MailingLabelReportFilter implements ReportData {
     private int facilityTypeId;
     private int zoneId;
 
+    @Override
+    public String toString(){
+        if(this == null ) return null;
+        StringBuilder filterDescription = new StringBuilder("");
+
+        if(facilityName != null && !facilityName.isEmpty())
+            filterDescription.append("Facility Name : ").append(facilityName).append("\n");
+        if(facilityCode != null && !facilityCode.isEmpty())
+            filterDescription.append("Facility Code : ").append(facilityCode).append("\n");
+        if(facilityTypeId != 0)
+           filterDescription.append("Facility Type : ").append(facilityTypeId).append("\n");
+
+        return filterDescription.toString().isEmpty() ? null : filterDescription.toString();
+    }
 
 }
 

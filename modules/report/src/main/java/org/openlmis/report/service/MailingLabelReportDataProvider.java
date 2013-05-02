@@ -68,14 +68,6 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
 
         RowBounds rowBounds = new RowBounds((page-1)*pageSize,pageSize);
 
-        MailingLabelReportFilter mailingLabelReportFilter = null;
-        if(filterCriteria != null){
-            mailingLabelReportFilter =  new MailingLabelReportFilter();
-            mailingLabelReportFilter.setFacilityCode(filterCriteria.get("facilityCodeFilter") == null ? "" : filterCriteria.get("facilityCodeFilter")[0]);
-            mailingLabelReportFilter.setFacilityTypeId((filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])));
-            mailingLabelReportFilter.setFacilityName(filterCriteria.get("facilityNameFilter") == null ? "" : filterCriteria.get("facilityNameFilter")[0]);
-        }
-
         MailingLabelReportSorter mailingLabelReportSorter = null;
 
         if(sorterCriteria != null){
@@ -85,13 +77,17 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
             mailingLabelReportSorter.setFacilityType(sorterCriteria.get("facilityType") == null ? "ASC" : sorterCriteria.get("facilityType")[0]);
         }
 
-        return mailingLabelReportMapper.SelectFilteredSortedPagedFacilities(mailingLabelReportFilter,mailingLabelReportSorter,rowBounds);
+        return mailingLabelReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(filterCriteria),mailingLabelReportSorter,rowBounds);
     }
-
 
     @Override
     public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
 
+        return (int)mailingLabelReportMapper.SelectFilteredFacilitiesCount(getReportFilterData(filterCriteria));
+    }
+
+    @Override
+    public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
         MailingLabelReportFilter mailingLabelReportFilter = new MailingLabelReportFilter();
         if(filterCriteria != null){
 
@@ -99,7 +95,8 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
             mailingLabelReportFilter.setFacilityTypeId((filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])));
             mailingLabelReportFilter.setFacilityName(filterCriteria.get("facilityNameFilter") == null ? "" : filterCriteria.get("facilityNameFilter")[0]);
         }
-        return (int)mailingLabelReportMapper.SelectFilteredFacilitiesCount(mailingLabelReportFilter);
+
+        return mailingLabelReportFilter;
     }
 
 }

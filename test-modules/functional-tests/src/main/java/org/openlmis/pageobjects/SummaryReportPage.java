@@ -8,6 +8,7 @@ package org.openlmis.pageobjects;
 
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
+import org.openlmis.UiUtils.SeleniumFileDownloadUtil;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -15,8 +16,10 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import java.io.File;
 import java.io.IOException;
 
+import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.NAME;
 
 
@@ -24,12 +27,6 @@ public class SummaryReportPage extends Page {
 
   @FindBy(how = NAME, using = "period")
   private static WebElement period;
-
-  /*@FindBy(how = NAME, using = "facilityType")
-  private static WebElement facilityType;
-
-  @FindBy(how = NAME, using = "status")
-  private static WebElement status;*/
 
   @FindBy(how = How.XPATH, using = "//div[@ng-grid='gridOptions']")
   private static WebElement summaryReportListGrid;
@@ -51,6 +48,12 @@ public class SummaryReportPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col6 colt6']/span")
   private static WebElement columnDispensed;
+
+  @FindBy(how = ID, using = "pdf-button")
+  private static WebElement PdfButton;
+
+  @FindBy(how = ID, using = "xls-button")
+  private static WebElement XLSButton;
 
   public SummaryReportPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -76,5 +79,19 @@ public class SummaryReportPage extends Page {
 
     SeleneseTestNgHelper.assertEquals(columnDispensed.getText().trim(), 1);
   }
+
+  public void verifyPdfReportOutputOnSummaryReportScreen() throws Exception {
+      testWebDriver.waitForElementToAppear(XLSButton);
+      PdfButton.click();
+      testWebDriver.sleep(500);
+
+      SeleniumFileDownloadUtil downloadHandler = new SeleniumFileDownloadUtil(TestWebDriver.getDriver());
+      downloadHandler.setURI(testWebDriver.getCurrentUrl());
+      File downloadedFile = downloadHandler.downloadFile(this.getClass().getSimpleName(), ".pdf");
+      SeleneseTestNgHelper.assertEquals(downloadHandler.getLinkHTTPStatus(),200);
+      SeleneseTestNgHelper.assertEquals(downloadedFile.exists(), true);
+
+      testWebDriver.sleep(500);
+    }
 
 }

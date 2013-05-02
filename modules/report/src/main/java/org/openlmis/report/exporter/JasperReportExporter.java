@@ -214,17 +214,24 @@ public class JasperReportExporter implements ReportExporter {
      * @param byteArrayOutputStream
      */
     private void writeToServletOutputStream(HttpServletResponse response, ByteArrayOutputStream byteArrayOutputStream) {
-
+        ServletOutputStream outputStream = null;
         try {
 
-            ServletOutputStream outputStream = response.getOutputStream();
+            outputStream = response.getOutputStream();
 
             byteArrayOutputStream.writeTo(outputStream);
 
-            outputStream.flush();
-
-        } catch (Exception e) {
+        }catch (Exception e) {
             throw new RuntimeException(e);
+
+        }finally {
+            if(outputStream != null){
+                try {
+                    outputStream.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
