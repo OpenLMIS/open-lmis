@@ -65,8 +65,8 @@ public class RoleRightsServiceTest {
     assertThat(allRights.get(2), is(Right.MANAGE_ROLE));
     assertThat(allRights.get(3), is(Right.MANAGE_SCHEDULE));
     assertThat(allRights.get(4), is(Right.MANAGE_USERS));
-    assertThat(allRights.get(5), is(Right.UPLOAD_REPORT));
-    assertThat(allRights.get(6), is(Right.UPLOADS));
+    assertThat(allRights.get(5), is(Right.UPLOADS));
+    assertThat(allRights.get(6), is(Right.MANAGE_REPORTS));
     assertThat(allRights.get(7), is(Right.APPROVE_REQUISITION));
     assertThat(allRights.get(8), is(Right.AUTHORIZE_REQUISITION));
     assertThat(allRights.get(9), is(Right.CONVERT_TO_ORDER));

@@ -81,7 +81,11 @@
                             <li ng-show="hasPermission('MANAGE_USERS')">
                                 <a href="/public/pages/admin/user/index.html#/search">Users</a>
                             </li>
-                            <li class="beak"></li>
+                            <li ng-show="hasPermission('MANAGE_REPORTS')">
+                               <a href="/public/pages/report/index.html">Reports</a>
+                            </li>
+
+                          <li class="beak"></li>
                         </ul>
                       </div>
                   </li>

@@ -12,6 +12,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ReportService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -39,19 +40,20 @@ public class ReportTemplateController extends BaseController {
     this.reportService = reportService;
   }
 
-  @RequestMapping(value = "/report-templates", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UPLOAD_REPORT')")
+  @RequestMapping(value = "/report-templates", method = POST)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REPORTS')")
   public ResponseEntity<OpenLmisResponse> uploadJasperTemplate(HttpServletRequest request, MultipartFile file, String name) {
-
     try {
       ReportTemplate reportTemplate = new ReportTemplate(file, loggedInUserId(request));
       reportService.insert(reportTemplate);
-      return success(JASPER_UPLOAD_SUCCESS);
+      return success(JASPER_UPLOAD_SUCCESS, MediaType.TEXT_HTML_VALUE);
     } catch (IOException e) {
-      return error(ERROR_JASPER_UPLOAD, BAD_REQUEST);
+      return error(ERROR_JASPER_UPLOAD, BAD_REQUEST, MediaType.TEXT_HTML_VALUE);
     } catch (DataException e) {
-      return error(e, BAD_REQUEST);
+      return OpenLmisResponse.error(e, BAD_REQUEST, MediaType.TEXT_HTML_VALUE);
     }
   }
+
+
 
 }
