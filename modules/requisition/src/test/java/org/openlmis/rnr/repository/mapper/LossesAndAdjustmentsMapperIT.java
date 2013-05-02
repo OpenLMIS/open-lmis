@@ -29,6 +29,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
@@ -108,6 +109,8 @@ public class LossesAndAdjustmentsMapperIT {
     assertThat(lossesAndAdjustmentsList.size(), is(1));
     assertThat(lineItemLossAndAdjustment.getQuantity(), is(lossAndAdjustment.getQuantity()));
     assertThat(lineItemLossAndAdjustment.getType().getName(), is(lossAndAdjustment.getType().getName()));
+    assertThat(lineItemLossAndAdjustment.getModifiedBy(), is(MODIFIED_BY));
+    assertThat(lineItemLossAndAdjustment.getModifiedDate(), is(notNullValue()));
   }
 
   @Test

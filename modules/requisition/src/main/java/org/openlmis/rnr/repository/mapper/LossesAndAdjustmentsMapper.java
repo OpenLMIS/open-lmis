@@ -17,8 +17,8 @@ import java.util.List;
 @Repository
 public interface LossesAndAdjustmentsMapper {
 
-  @Insert("INSERT INTO requisition_line_item_losses_adjustments(requisitionLineItemId, type, quantity) " +
-      "VALUES(#{rnrLineItem.id}, #{lossesAndAdjustments.type.name}, #{lossesAndAdjustments.quantity})")
+  @Insert("INSERT INTO requisition_line_item_losses_adjustments(requisitionLineItemId, type, quantity, modifiedBy) " +
+      "VALUES(#{rnrLineItem.id}, #{lossesAndAdjustments.type.name}, #{lossesAndAdjustments.quantity}, #{rnrLineItem.modifiedBy})")
   public Integer insert(@Param(value = "rnrLineItem") RnrLineItem rnrLineItem, @Param(value = "lossesAndAdjustments") LossesAndAdjustments lossesAndAdjustments);
 
 
