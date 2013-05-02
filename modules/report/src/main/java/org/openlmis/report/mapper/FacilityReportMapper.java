@@ -47,12 +47,9 @@ public interface FacilityReportMapper {
             @Param("filterCriteria") ReportData filterCriteria,
             @Param("SortCriteria") ReportData SortCriteria ,
             @Param("RowBounds")RowBounds rowBounds
-    //        @Param("page") int page,
-    //        @Param("pageSize") int pageSize
     );
 
     @SelectProvider(type=FacilityReportQueryBuilder.class, method="SelectFilteredFacilitiesCountSql")
-    //@Selcet("select count(*) from facilities")
     public Integer SelectFilteredFacilitiesCount(@Param("filterCriteria") ReportData filterCriteria);
 
 

@@ -7,11 +7,18 @@ import org.openlmis.report.model.ReportData;
 
 import java.util.Date;
 
+/**
+ * Created with IntelliJ IDEA.
+ * User: user
+ * Date: 5/2/13
+ * Time: 1:00 PM
+ * To change this template use File | Settings | File Templates.
+ */
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConsumptionReportFilter implements ReportData {
+public class AverageConsumptionReportFilter  implements ReportData {
 
     //top filters
     private int userId;
@@ -30,5 +37,6 @@ public class ConsumptionReportFilter implements ReportData {
 
     private Date startDate;
     private Date endDate;
-
 }
+
+
