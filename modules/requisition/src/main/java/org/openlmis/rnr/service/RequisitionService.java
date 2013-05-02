@@ -6,8 +6,6 @@
 
 package org.openlmis.rnr.service;
 
-import org.ict4h.atomfeed.server.service.EventService;
-import org.ict4h.atomfeed.server.service.EventServiceImpl;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -68,8 +66,6 @@ public class RequisitionService {
   @Autowired
   private UserService userService;
 
-  private EventService eventService = new EventServiceImpl(null);
-
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
   @Autowired
@@ -96,12 +92,19 @@ public class RequisitionService {
 
     fillFieldsForInitiatedRequisitionAccordingToTemplate(requisition, rnrTemplate);
 
-    insert(requisition);
-
+    requisitionRepository.insert(requisition);
+    requisitionRepository.logStatusChange(requisition);
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodId);
 
     List<Rnr> rnrList = get(criteria);
     return (rnrList == null || rnrList.isEmpty()) ? null : rnrList.get(0);
+  }
+
+  public List<Rnr> get(RequisitionSearchCriteria criteria) {
+    RequisitionSearchStrategy strategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
+    List<Rnr> requisitions = strategy.search();
+    fillFacilityPeriodProgram(requisitions);
+    return requisitions;
   }
 
   public void save(Rnr rnr) {
@@ -114,21 +117,9 @@ public class RequisitionService {
     requisitionRepository.update(savedRnr);
   }
 
-  public List<Rnr> get(RequisitionSearchCriteria criteria) {
-    RequisitionSearchStrategy strategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
-    List<Rnr> requisitions = strategy.search();
-    //fillFacilityPeriodProgram(requisitions);
-    for (Rnr rnr : requisitions) {
-      fillSupportingInfo(rnr);
-    }
-    return requisitions;
-  }
-
-
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
     return requisitionRepository.getLossesAndAdjustmentsTypes();
   }
-
 
   public OpenLmisMessage submit(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
@@ -234,7 +225,6 @@ public class RequisitionService {
     return requisition;
   }
 
-
   private void fillSupplyingFacility(Rnr... requisitions) {
     for (Rnr requisition : requisitions) {
       fillSupplyingDepot(requisition);
@@ -333,7 +323,6 @@ public class RequisitionService {
     return new OpenLmisMessage(RNR_APPROVED_SUCCESSFULLY);
   }
 
-
   private OpenLmisMessage doFinalApproval(Rnr rnr) {
     rnr.setStatus(APPROVED);
     SupervisoryNode supervisoryNode = new SupervisoryNode();
@@ -371,16 +360,6 @@ public class RequisitionService {
   private void update(Rnr requisition) {
     requisitionRepository.update(requisition);
     requisitionRepository.logStatusChange(requisition);
-  }
-
-  private void insert(Rnr requisition) {
-    requisitionRepository.insert(requisition);
-    requisitionRepository.logStatusChange(requisition);
-//    try {
-//      eventService.notify(new RequisitionStatusChangeEvent(requisition));
-//    } catch (URISyntaxException e) {
-//      throw new DataException("error.malformed.uri");
-//    }
   }
 
   public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {

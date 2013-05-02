@@ -39,9 +39,6 @@ subprojects {
         maven {
             url "http://repo.springsource.org/plugins-release/"
         }
-        maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
     }
     dependencies {
         compile 'org.projectlombok:lombok:0.10.8',
