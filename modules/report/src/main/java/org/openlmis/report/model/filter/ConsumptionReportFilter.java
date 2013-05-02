@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
 
+import java.util.Date;
+
 
 @Data
 @NoArgsConstructor
@@ -15,6 +17,7 @@ public class ConsumptionReportFilter implements ReportData {
     private int userId;
 
     // period selections
+    //private String periodType;
     private int yearFrom;
     private int yearTo;
     private int monthFrom;
@@ -24,5 +27,8 @@ public class ConsumptionReportFilter implements ReportData {
     private int zoneId;
     private int productId;
     private int facilityId;
+
+    private Date startDate;
+    private Date endDate;
 
 }

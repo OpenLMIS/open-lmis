@@ -35,22 +35,23 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Facil
             {'name':'2010','value':'2010'},
             {'name':'2011','value':'2011'},
             {'name':'2012','value':'2012'},
-            {'name':'2013','value':'2013'}
+            {'name':'2013','value':'2013'},
+            {'name':'2014','value':'2014'}
         ] ;
 
         $scope.endYears ;
 
-        $scope.startMonth = 1;
+       // $scope.startMonth = 1;
 
         // TODO: clear this hardcoded start year.
-        $scope.startYear = 2012
+       // $scope.startYear = 2012
 
         $scope.startMonths  = [];
 
         // TODO: clear this hardcoded end year
-        $scope.endYear = 2013;
+       // $scope.endYear = 2013;
 
-        $scope.endMonth = 4;
+      //  $scope.endMonth = 4;
 
         $scope.endMonths;
 
@@ -100,7 +101,7 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Facil
             {'name':'One','value':'1'},
             {'name':'Two','value':'2'},
             {'name':'Three','value':'3'},
-            {'name':'Four','value':'4'},
+            {'name':'Four','value':'4'}
         ];
 
         $scope.product;
@@ -126,7 +127,7 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Facil
 
 
         $scope.filterGrid = function (){
-           // $scope.$apply();
+            $scope.$apply();
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
@@ -201,13 +202,39 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Facil
             }
         });
 
-        $scope.$watch('fromYear', function(selection){
+        $scope.$watch('startYear', function(selection){
+        if(selection != undefined || selection == ""){
+            $scope.filterObject.fromYear =  selection;
+        }else{
+            $scope.filterObject.fromYear =  Date.getYear();
+        }
+        });
+
+        $scope.$watch('endYear', function(selection){
             if(selection != undefined || selection == ""){
-                $scope.filterObject.fromYear =  selection;
+                $scope.filterObject.toYear =  selection;
             }else{
-                $scope.filterObject.fromYear =  2010;
+                $scope.filterObject.toYear =  Date.getYear();
             }
         });
+
+        $scope.$watch('startMonth', function(selection){
+            if(selection != undefined || selection == ""){
+                $scope.filterObject.fromMonth =  selection;
+            }else{
+                $scope.filterObject.fromMonth =  Date.getMonth();
+            }
+        });
+
+        $scope.$watch('endMonth', function(selection){
+            if(selection != undefined || selection == ""){
+                $scope.filterObject.toMonth =  selection;
+            }else{
+                $scope.filterObject.toMonth =  Date.getMonth();;
+            }
+        });
+
+
 
         $scope.$watch('periodType', function(selection){
             if(selection != undefined || selection == ""){
