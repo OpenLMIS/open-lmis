@@ -13,9 +13,9 @@ import org.openlmis.core.service.*;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.factory.RequisitionSearchStrategyFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
-import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.strategy.RequisitionSearchStrategy;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,11 +44,10 @@ public class RequisitionService {
   public static final String RNR_APPROVED_SUCCESSFULLY = "rnr.approved.success";
   public static final String RNR_TEMPLATE_NOT_INITIATED_ERROR = "rnr.template.not.defined.error";
 
-
   @Autowired
   private RequisitionRepository requisitionRepository;
   @Autowired
-  private RnrTemplateRepository rnrTemplateRepository;
+  private RnrTemplateService rnrTemplateService;
   @Autowired
   private FacilityApprovedProductService facilityApprovedProductService;
   @Autowired
@@ -63,34 +62,32 @@ public class RequisitionService {
   private FacilityService facilityService;
   @Autowired
   private SupplyLineService supplyLineService;
-
-  private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
   @Autowired
   private RequisitionPermissionService requisitionPermissionService;
   @Autowired
   private UserService userService;
+
+  private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
   @Autowired
   public void setRequisitionSearchStrategyFactory(RequisitionSearchStrategyFactory requisitionSearchStrategyFactory) {
     this.requisitionSearchStrategyFactory = requisitionSearchStrategyFactory;
   }
 
-
   @Transactional
   public Rnr initiate(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
-    if (!requisitionPermissionService.hasPermission(modifiedBy, new Facility(facilityId), new Program(programId),
-      CREATE_REQUISITION))
+    if (!requisitionPermissionService.hasPermission(modifiedBy, new Facility(facilityId), new Program(programId), CREATE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(programId,
-      rnrTemplateRepository.fetchColumnsForRequisition(programId));
+    ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(programId, rnrTemplateService.fetchColumnsForRequisition(programId));
+
     if (rnrTemplate.getRnrColumns().size() == 0)
       throw new DataException(RNR_TEMPLATE_NOT_INITIATED_ERROR);
 
     validateIfRnrCanBeInitiatedFor(facilityId, programId, periodId);
 
-    List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
-      facilityId, programId);
+    List<FacilityApprovedProduct> facilityApprovedProducts;
+    facilityApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId);
 
     Rnr requisition = new Rnr(facilityId, programId, periodId, facilityApprovedProducts, modifiedBy);
 
@@ -102,21 +99,7 @@ public class RequisitionService {
 
     List<Rnr> rnrList = get(criteria);
     return (rnrList == null || rnrList.isEmpty()) ? null : rnrList.get(0);
-
   }
-
-  public void save(Rnr rnr) {
-    Rnr savedRnr = getFullRequisitionById(rnr.getId());
-
-    if (!requisitionPermissionService.hasPermissionToSave(rnr.getModifiedBy(), savedRnr))
-      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
-
-    savedRnr.copyEditableFields(rnr, rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(
-      savedRnr.getProgram().getId()));
-
-    requisitionRepository.update(savedRnr);
-  }
-
 
   public List<Rnr> get(RequisitionSearchCriteria criteria) {
     RequisitionSearchStrategy strategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
@@ -125,6 +108,15 @@ public class RequisitionService {
     return requisitions;
   }
 
+  public void save(Rnr rnr) {
+    Rnr savedRnr = getFullRequisitionById(rnr.getId());
+
+    if (!requisitionPermissionService.hasPermissionToSave(rnr.getModifiedBy(), savedRnr))
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+
+    savedRnr.copyEditableFields(rnr, rnrTemplateService.fetchAllRnRColumns(savedRnr.getProgram().getId()));
+    requisitionRepository.update(savedRnr);
+  }
 
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
     return requisitionRepository.getLossesAndAdjustmentsTypes();
@@ -132,28 +124,34 @@ public class RequisitionService {
 
   public OpenLmisMessage submit(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
-    if (savedRnr.getStatus() != INITIATED) {
-      throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
-    }
 
-    if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, CREATE_REQUISITION))
-      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+    validateIfRequisitionCanBeSubmitted(savedRnr, rnr.getModifiedBy());
 
-
-    savedRnr.setStatus(SUBMITTED);
-    savedRnr.setSubmittedDate(new Date());
-
-
-    List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(
-      savedRnr.getProgram().getId());
-    savedRnr.copyUserEditableFields(rnr, rnrColumns);
-    savedRnr.calculate(rnrColumns, getLossesAndAdjustmentsTypes());
+    setAuditFieldsForSubmittingRequisition(savedRnr, rnr.getModifiedBy());
+    List<RnrColumn> rnrColumns = rnrTemplateService.fetchAllRnRColumns(savedRnr.getProgram().getId());
+    savedRnr.calculateAndValidate(rnrColumns, getLossesAndAdjustmentsTypes());
     update(savedRnr);
 
     SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram());
     String msg = (supervisoryNode == null) ? NO_SUPERVISORY_NODE_CONTACT_ADMIN : RNR_SUBMITTED_SUCCESSFULLY;
 
     return new OpenLmisMessage(msg);
+  }
+
+  private void setAuditFieldsForSubmittingRequisition(Rnr savedRnr, Integer submittedBy) {
+    savedRnr.setStatus(SUBMITTED);
+    Date submittedDate = new Date();
+    savedRnr.setSubmittedDate(submittedDate);
+    savedRnr.setModifiedDate(submittedDate);
+    savedRnr.setModifiedBy(submittedBy);
+  }
+
+  private void validateIfRequisitionCanBeSubmitted(Rnr savedRnr, Integer submittedBy) {
+    if (savedRnr.getStatus() != INITIATED)
+      throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
+
+    if (!requisitionPermissionService.hasPermission(submittedBy, savedRnr, CREATE_REQUISITION))
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
   }
 
   public OpenLmisMessage authorize(Rnr rnr) {
@@ -169,10 +167,9 @@ public class RequisitionService {
     savedRnr.setStatus(AUTHORIZED);
     savedRnr.setSupervisoryNodeId(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram()).getId());
 
-    List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(
-      savedRnr.getProgram().getId());
+    List<RnrColumn> rnrColumns = rnrTemplateService.fetchAllRnRColumns(savedRnr.getProgram().getId());
     savedRnr.copyUserEditableFields(rnr, rnrColumns);
-    savedRnr.calculate(rnrColumns, getLossesAndAdjustmentsTypes());
+    savedRnr.calculateAndValidate(rnrColumns, getLossesAndAdjustmentsTypes());
     update(savedRnr);
 
     User approver = supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram());
@@ -221,7 +218,6 @@ public class RequisitionService {
     requisition.setFieldsAccordingToTemplate(template);
   }
 
-
   private Rnr fillSupportingInfo(Rnr requisition) {
     if (requisition == null) return null;
 
@@ -246,13 +242,12 @@ public class RequisitionService {
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Integer facilityId, Integer programId) {
     Date programStartDate = programService.getProgramStartDate(facilityId, programId);
     Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(
-      facilityId, programId);
+        facilityId, programId);
 
     Integer periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ? null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
     return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate,
-      periodIdOfLastRequisitionToEnterPostSubmitFlow);
+        periodIdOfLastRequisitionToEnterPostSubmitFlow);
   }
-
 
   public Rnr getRnrForApprovalById(Integer id, Integer userId) {
     Rnr savedRnr = getFullRequisitionById(id);
@@ -264,17 +259,16 @@ public class RequisitionService {
       savedRnr.prepareForApproval();
       requisitionRepository.update(savedRnr);
     }
-
     return savedRnr;
   }
 
   private Rnr getPreviousRequisition(Rnr requisition) {
     ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(
-      requisition.getPeriod());
+        requisition.getPeriod());
     Rnr previousRequisition = null;
     if (immediatePreviousPeriod != null)
       previousRequisition = requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(),
-        requisition.getProgram(), immediatePreviousPeriod);
+          requisition.getProgram(), immediatePreviousPeriod);
     return previousRequisition;
   }
 
@@ -315,13 +309,12 @@ public class RequisitionService {
     if (lastPeriod == null) return null;
 
     return requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(), requisition.getProgram(),
-      lastPeriod);
+        lastPeriod);
   }
-
 
   private OpenLmisMessage approveAndAssignToNextSupervisoryNode(Rnr requisition, SupervisoryNode parent) {
     final User nextApprover = supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parent,
-      requisition.getProgram());
+        requisition.getProgram());
     requisition.setStatus(IN_APPROVAL);
     requisition.setSupervisoryNodeId(parent.getId());
     update(requisition);
@@ -386,6 +379,5 @@ public class RequisitionService {
     }
     return comments;
   }
-
 }
 

@@ -55,10 +55,8 @@ import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(RnrDTO.class)
+@PrepareForTest({RnrDTO.class, RequisitionController.class})
 public class RequisitionControllerTest {
-
-
   public static final String FACILITY_CODE = "F14";
   public static final String FACILITY_NAME = "Facility";
   public static final String PROGRAM_NAME = "HIV";
@@ -174,8 +172,11 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldAllowSubmittingOfRnrAndTagWithModifiedBy() throws Exception {
+    Rnr rnr = new Rnr();
+    whenNew(Rnr.class).withNoArguments().thenReturn(rnr);
     when(requisitionService.submit(rnr)).thenReturn(new OpenLmisMessage("test.msg.key"));
-    ResponseEntity<OpenLmisResponse> response = controller.submit(rnr, rnr.getId(), request);
+
+    ResponseEntity<OpenLmisResponse> response = controller.submit(rnr.getId(), request);
     assertThat(response.getBody().getSuccessMsg(), is("test.msg.key"));
     verify(requisitionService).submit(rnr);
     assertThat(rnr.getModifiedBy(), is(USER_ID));
@@ -183,9 +184,11 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldReturnErrorMessageIfRnrNotValid() throws Exception {
+    Rnr rnr = new Rnr();
+    whenNew(Rnr.class).withNoArguments().thenReturn(rnr);
     doThrow(new DataException(new OpenLmisMessage("some error"))).when(requisitionService).submit(rnr);
 
-    ResponseEntity<OpenLmisResponse> response = controller.submit(rnr, rnr.getId(), request);
+    ResponseEntity<OpenLmisResponse> response = controller.submit(rnr.getId(), request);
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("some error"));
   }

@@ -79,7 +79,7 @@ public class Rnr extends BaseModel{
     }
   }
 
-  public void calculate(List<RnrColumn> programRnrColumns, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+  public void calculateAndValidate(List<RnrColumn> programRnrColumns, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.validateMandatoryFields(programRnrColumns);
       lineItem.calculate(period, programRnrColumns, this.getStatus(), lossesAndAdjustmentsTypes);

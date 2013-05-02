@@ -56,7 +56,7 @@ public class RnrTest {
     rnr.setNonFullSupplyLineItems(asList(rnrLineItem2));
 
     List<RnrColumn> programRnrColumns = new ArrayList<>();
-    rnr.calculate(programRnrColumns, lossesAndAdjustmentsTypes);
+    rnr.calculateAndValidate(programRnrColumns, lossesAndAdjustmentsTypes);
 
     verify(rnrLineItem1).validateMandatoryFields(programRnrColumns);
     verify(rnrLineItem1).validateCalculatedFields(programRnrColumns);
@@ -182,7 +182,7 @@ public class RnrTest {
     Money nonFullSupplyItemSubmittedCost = new Money("20");
     when(firstLineItem.calculateCost()).thenReturn(fullSupplyItemSubmittedCost);
     when(secondLineItem.calculateCost()).thenReturn(nonFullSupplyItemSubmittedCost);
-    rnr.calculate(programRequisitionColumns, lossesAndAdjustmentsTypes);
+    rnr.calculateAndValidate(programRequisitionColumns, lossesAndAdjustmentsTypes);
 
     verify(firstLineItem).calculate(period, programRequisitionColumns, SUBMITTED, lossesAndAdjustmentsTypes);
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(fullSupplyItemSubmittedCost));

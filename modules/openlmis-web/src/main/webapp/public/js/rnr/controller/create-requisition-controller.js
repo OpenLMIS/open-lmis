@@ -71,6 +71,9 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   });
 
   $scope.saveRnr = function (preventMessage) {
+    if (!$scope.saveRnrForm.$dirty) {
+      return;
+    }
     resetFlags();
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "save"}, rnr, function (data) {
@@ -106,10 +109,10 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.submitRnr = function () {
     resetFlags();
     resetErrorPages();
+    $scope.saveRnr(true);
     var errorMessage = validateAndSetErrorClass();
     if (errorMessage) {
       setErrorPages();
-      $scope.saveRnr(true);
       $scope.submitError = errorMessage;
       return;
     }
@@ -117,9 +120,8 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   };
 
   var submitValidatedRnr = function () {
-    var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "submit"},
-      rnr, function (data) {
+      {}, function (data) {
         $scope.rnr.status = "SUBMITTED";
         $scope.formDisabled = !$scope.hasPermission('AUTHORIZE_REQUISITION');
         $scope.submitMessage = data.success;
@@ -129,9 +131,9 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   };
 
   $scope.dialogCloseCallback = function (result) {
-    if(result && $scope.rnr.status == 'INITIATED')
+    if (result && $scope.rnr.status == 'INITIATED')
       submitValidatedRnr();
-    if(result && $scope.rnr.status == 'SUBMITTED')
+    if (result && $scope.rnr.status == 'SUBMITTED')
       authorizeValidatedRnr();
   };
 
@@ -157,7 +159,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     showConfirmModal();
   };
 
-  var authorizeValidatedRnr = function() {
+  var authorizeValidatedRnr = function () {
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "authorize"}, rnr, function (data) {
       resetFlags();

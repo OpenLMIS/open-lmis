@@ -111,10 +111,10 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions/{id}/submit", method = PUT, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> submit(@RequestBody Rnr rnr,
-                                                 @PathVariable("id") Integer id,
+  public ResponseEntity<OpenLmisResponse> submit(@PathVariable("id") Integer id,
                                                  HttpServletRequest request) {
     try {
+      Rnr rnr = new Rnr();
       rnr.setId(id);
       rnr.setModifiedBy(loggedInUserId(request));
       return success(requisitionService.submit(rnr));
