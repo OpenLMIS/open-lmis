@@ -149,10 +149,10 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.authorizeRnr = function () {
     resetFlags();
     resetErrorPages();
+    $scope.saveRnr(true);
     var errorMessage = validateAndSetErrorClass();
     if (errorMessage) {
       setErrorPages();
-      $scope.saveRnr(true);
       $scope.submitError = errorMessage;
       return;
     }
@@ -160,8 +160,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   };
 
   var authorizeValidatedRnr = function () {
-    var rnr = removeExtraDataForPostFromRnr();
-    Requisitions.update({id: $scope.rnr.id, operation: "authorize"}, rnr, function (data) {
+    Requisitions.update({id: $scope.rnr.id, operation: "authorize"}, {}, function (data) {
       resetFlags();
       $scope.rnr.status = "AUTHORIZED";
       $scope.formDisabled = true;

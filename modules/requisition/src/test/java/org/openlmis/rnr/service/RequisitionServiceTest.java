@@ -439,22 +439,6 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldUseSavedRnrWithEditableDataFromUserSuppliedRnrToAuthorize() {
-    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
-    doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
-    doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
-    doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
-
-    SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
-    when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(node);
-    when(rnrTemplateService.fetchAllRnRColumns(submittedRnr.getProgram().getId())).thenReturn(rnrColumns);
-
-    requisitionService.authorize(submittedRnr);
-
-    verify(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
-  }
-
-  @Test
   public void shouldAuthorizeAValidRnrAndAdviseUserIfRnrDoesNotHaveApprover() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
 
@@ -462,7 +446,6 @@ public class RequisitionServiceTest {
     when(supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(null);
     SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(node);
-    doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
     doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
 

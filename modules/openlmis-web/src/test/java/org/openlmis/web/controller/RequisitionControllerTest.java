@@ -172,8 +172,8 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldAllowSubmittingOfRnrAndTagWithModifiedBy() throws Exception {
-    Rnr rnr = new Rnr();
-    whenNew(Rnr.class).withNoArguments().thenReturn(rnr);
+    Rnr rnr = new Rnr(1);
+    whenNew(Rnr.class).withArguments(1).thenReturn(rnr);
     when(requisitionService.submit(rnr)).thenReturn(new OpenLmisMessage("test.msg.key"));
 
     ResponseEntity<OpenLmisResponse> response = controller.submit(rnr.getId(), request);
@@ -184,8 +184,8 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldReturnErrorMessageIfRnrNotValid() throws Exception {
-    Rnr rnr = new Rnr();
-    whenNew(Rnr.class).withNoArguments().thenReturn(rnr);
+    Rnr rnr = new Rnr(1);
+    whenNew(Rnr.class).withArguments(1).thenReturn(rnr);
     doThrow(new DataException(new OpenLmisMessage("some error"))).when(requisitionService).submit(rnr);
 
     ResponseEntity<OpenLmisResponse> response = controller.submit(rnr.getId(), request);
@@ -198,9 +198,11 @@ public class RequisitionControllerTest {
     String code = RequisitionService.RNR_AUTHORIZED_SUCCESSFULLY;
     String message = "R&R authorized successfully!";
 
+    Rnr rnr = new Rnr(1);
+    whenNew(Rnr.class).withArguments(1).thenReturn(rnr);
     when(requisitionService.authorize(rnr)).thenReturn(new OpenLmisMessage(code));
 
-    ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr, rnr.getId(), request);
+    ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr.getId(), request);
 
     verify(requisitionService).authorize(rnr);
     assertThat(response.getBody().getSuccessMsg(), is(message));
@@ -210,8 +212,11 @@ public class RequisitionControllerTest {
   @Test
   public void shouldNotAuthorizeRnrAndGiveErrorMessage() throws Exception {
     String errorMessage = "some error";
+    Rnr rnr = new Rnr(1);
+    whenNew(Rnr.class).withArguments(1).thenReturn(rnr);
+
     doThrow(new DataException(new OpenLmisMessage(errorMessage))).when(requisitionService).authorize(rnr);
-    ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr, rnr.getId(), request);
+    ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr.getId(), request);
 
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
   }

@@ -114,8 +114,7 @@ public class RequisitionController extends BaseController {
   public ResponseEntity<OpenLmisResponse> submit(@PathVariable("id") Integer id,
                                                  HttpServletRequest request) {
     try {
-      Rnr rnr = new Rnr();
-      rnr.setId(id);
+      Rnr rnr = new Rnr(id);
       rnr.setModifiedBy(loggedInUserId(request));
       return success(requisitionService.submit(rnr));
     } catch (DataException e) {
@@ -131,11 +130,10 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions/{id}/authorize", method = PUT, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> authorize(@RequestBody Rnr rnr,
-                                                    @PathVariable("id") Integer id,
+  public ResponseEntity<OpenLmisResponse> authorize(@PathVariable("id") Integer id,
                                                     HttpServletRequest request) {
     try {
-      rnr.setId(id);
+      Rnr rnr = new Rnr(id);
       rnr.setModifiedBy(loggedInUserId(request));
       OpenLmisMessage openLmisMessage = requisitionService.authorize(rnr);
       return success(openLmisMessage);
