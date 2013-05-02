@@ -110,7 +110,8 @@ function NonReportingController($scope, RequisitionGroups, NonReportingFacilitie
                         params.rgroup = $scope.rgroup;
                         params.ftype = $scope.facilityType;
                         NonReportingFacilities.get(params, function(data) {
-                        $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
+                            $scope.setPagingData(data.pages.rows[0].details,page,pageSize,data.pages.total);
+                            $scope.summaries    =  data.pages.rows[0].summary;
                         });
 
         };

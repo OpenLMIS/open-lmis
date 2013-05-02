@@ -19,7 +19,7 @@
                                     <label class="labels">Reporting Groups</label>
 
                                     <div class="form-field">
-                                        <select name="requisitionGroup" ng-change="filterGrid()" ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
+                                        <select class="input-large" name="requisitionGroup" ng-change="filterGrid()" ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
 
                                         </select>
                                     </div>
@@ -43,6 +43,13 @@
 
                                         </select>
                                     </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters">
+                                         <div ng-repeat="summary in summaries">
+                                             <div><span class="input-large">{{summary.name}}</span> : {{summary.count}}</div>
+                                         </div>
+
                                 </div>
                             </div>
                          </form>

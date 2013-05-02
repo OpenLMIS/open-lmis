@@ -3,6 +3,7 @@ package org.openlmis.report.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.report.model.ReportData;
 
 /**
  * e-lmis
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NameCount {
+public class NameCount implements ReportData {
 
     private String name;
     private String count;

@@ -6,7 +6,9 @@ import org.openlmis.report.mapper.SummaryReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.openlmis.report.model.report.NonReportingFacilityReport;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +30,15 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
     @Override
     protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
 
-        return reportMapper.getReport(filterCriteria);
+        List<NonReportingFacilityReport> reportList = new ArrayList<NonReportingFacilityReport>();
+        NonReportingFacilityReport report = new NonReportingFacilityReport();
+        report.details =  reportMapper.getReport(filterCriteria);
+        report.summary = reportMapper.getReportSummary(filterCriteria);
+        reportList.add( report );
+
+        List<? extends ReportData> list;
+        list = reportList;
+        return list;
     }
 
     @Override
@@ -38,7 +48,15 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
 
     @Override
     public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
-        return reportMapper.getReport(filterCriteria);
+        List<NonReportingFacilityReport> reportList = new ArrayList<NonReportingFacilityReport>();
+        NonReportingFacilityReport report = new NonReportingFacilityReport();
+        report.details =  reportMapper.getReport(filterCriteria);
+        report.summary = reportMapper.getReportSummary(filterCriteria);
+        reportList.add( report );
+
+        List<? extends ReportData> list;
+        list = reportList;
+        return list;
     }
 
     @Override

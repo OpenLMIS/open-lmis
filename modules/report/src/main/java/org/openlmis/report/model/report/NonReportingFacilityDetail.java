@@ -8,7 +8,7 @@ import org.openlmis.report.model.ReportData;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NonReportingFacility implements ReportData {
+public class NonReportingFacilityDetail implements ReportData {
 
     private String id;
     private String code;
