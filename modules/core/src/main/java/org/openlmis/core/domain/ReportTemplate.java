@@ -35,16 +35,17 @@ public class ReportTemplate extends BaseModel {
 
   private String parameters;
 
-  public ReportTemplate(MultipartFile file, Integer modifiedBy) throws IOException {
+
+  public ReportTemplate(String name, MultipartFile file, Integer modifiedBy) throws IOException {
     validateFile(file);
-    this.name = file.getName();
+    this.name = name;
     this.data = file.getBytes();
     this.modifiedBy = modifiedBy;
   }
 
   private void validateFile(MultipartFile file) {
     if (file == null) throw new DataException(ERROR_JASPER_UPLOAD_FILE_MISSING);
-    if (!file.getName().endsWith(".jrxml")) throw new DataException(ERROR_JASPER_UPLOAD_TYPE);
+    if (!file.getOriginalFilename().endsWith(".jrxml")) throw new DataException(ERROR_JASPER_UPLOAD_TYPE);
     if (file.isEmpty()) throw new DataException(ERROR_JASPER_UPLOAD_EMPTY);
   }
 }

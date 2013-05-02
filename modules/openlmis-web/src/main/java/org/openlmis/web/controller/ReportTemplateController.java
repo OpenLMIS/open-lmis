@@ -24,7 +24,7 @@ import java.io.IOException;
 
 import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.success;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
@@ -44,13 +44,13 @@ public class ReportTemplateController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REPORTS')")
   public ResponseEntity<OpenLmisResponse> uploadJasperTemplate(HttpServletRequest request, MultipartFile file, String name) {
     try {
-      ReportTemplate reportTemplate = new ReportTemplate(file, loggedInUserId(request));
+      ReportTemplate reportTemplate = new ReportTemplate(name, file, loggedInUserId(request));
       reportService.insert(reportTemplate);
       return success(JASPER_UPLOAD_SUCCESS, MediaType.TEXT_HTML_VALUE);
     } catch (IOException e) {
-      return error(ERROR_JASPER_UPLOAD, BAD_REQUEST, MediaType.TEXT_HTML_VALUE);
+      return error(ERROR_JASPER_UPLOAD, OK, MediaType.TEXT_HTML_VALUE);
     } catch (DataException e) {
-      return OpenLmisResponse.error(e, BAD_REQUEST, MediaType.TEXT_HTML_VALUE);
+      return OpenLmisResponse.error(e, OK, MediaType.TEXT_HTML_VALUE);
     }
   }
 

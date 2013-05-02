@@ -50,14 +50,14 @@ public class ReportTemplateControllerTest {
     MockHttpSession session = new MockHttpSession();
     session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, USER);
     request.setSession(session);
-    }
+  }
 
   @Test
   public void shouldUploadJasperTemplateFileIfValid() throws Exception {
-    MockMultipartFile reportTemplateFile = new MockMultipartFile("template.jrxml", new byte[1]);
-    ReportTemplate report = new ReportTemplate(reportTemplateFile, USER);
-    whenNew(ReportTemplate.class).withArguments(reportTemplateFile, USER).thenReturn(report);
-    ResponseEntity<OpenLmisResponse> response = controller.uploadJasperTemplate(request, reportTemplateFile, "template");
+    MockMultipartFile reportTemplateFile = new MockMultipartFile("template.jrxml","template.jrxml","", new byte[1]);
+    ReportTemplate report = new ReportTemplate("reportName",reportTemplateFile, USER);
+    whenNew(ReportTemplate.class).withArguments("reportName", reportTemplateFile, USER).thenReturn(report);
+    ResponseEntity<OpenLmisResponse> response = controller.uploadJasperTemplate(request, reportTemplateFile, "reportName");
 
     assertThat(response.getBody().getSuccessMsg(), is("jasper.upload.success"));
     verify(reportService).insert(report);

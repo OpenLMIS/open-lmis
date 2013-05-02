@@ -5,24 +5,26 @@
 
 function CreateReportController($scope) {
 
+
   $scope.$on('$viewContentLoaded', function () {
     var options = {
-      target:'#output1',
       beforeSubmit:validate,
       success:showResponse,
-      error: showResponse
+      error:showResponse
     };
     $('#reportForm').ajaxForm(options);
 
   });
   function validate(formData, jqForm, options) {
     var queryString = $.param(formData);
-    alert('About to submit: \n\n' + queryString);
     return true;
   }
 
   function showResponse(responseText, statusText, xhr, $form) {
-    alert('status: ' + statusText + '\n\nresponseText: \n' + responseText+
-      '\n\nThe output div should have already been updated with the responseText.');
-  }
+    var responseJson = JSON.parse(responseText) ;
+    $scope.$apply(function () {
+      $scope.errorMessage = responseJson.error;
+      $scope.successMessage = responseJson.success;
+    });
+ }
 }

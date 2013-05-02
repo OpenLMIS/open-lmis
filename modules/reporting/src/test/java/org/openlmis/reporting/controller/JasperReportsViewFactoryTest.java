@@ -43,7 +43,7 @@ public class JasperReportsViewFactoryTest {
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    reportTemplate = new ReportTemplate(new MockMultipartFile("facilityReport.jrxml", new byte[1]), 1);
+    reportTemplate = new ReportTemplate("facilityReport", new MockMultipartFile("facilityReport.jrxml","facilityReport.jrxml","", new byte[1]), 1);
     jasperReportsView = spy(new JasperReportsMultiFormatView());
   }
 
