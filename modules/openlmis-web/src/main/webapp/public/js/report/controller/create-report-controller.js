@@ -9,22 +9,32 @@ function CreateReportController($scope) {
   $scope.$on('$viewContentLoaded', function () {
     var options = {
       beforeSubmit:validate,
-      success:showResponse,
-      error:showResponse
+      success:processResponse,
+      error:processResponse
     };
     $('#reportForm').ajaxForm(options);
 
   });
+
   function validate(formData, jqForm, options) {
-    var queryString = $.param(formData);
-    return true;
+    $scope.showError = false;
+    _.each(formData, function (input) {
+      if (utils.isEmpty(input.value)) {
+        $scope.$apply(function () {
+          $scope.showError = true;
+          return false;
+        });
+      }
+    });
+
+    return !$scope.showError;
   }
 
-  function showResponse(responseText, statusText, xhr, $form) {
-    var responseJson = JSON.parse(responseText) ;
+  function processResponse(responseText, statusText, xhr, $form) {
+    var responseJson = JSON.parse(responseText);
     $scope.$apply(function () {
-      $scope.errorMessage = responseJson.error;
       $scope.successMessage = responseJson.success;
+      $scope.errorMessage = responseJson.error;
     });
- }
+  }
 }

@@ -59,7 +59,7 @@ public class ReportTemplateControllerTest {
     whenNew(ReportTemplate.class).withArguments("reportName", reportTemplateFile, USER).thenReturn(report);
     ResponseEntity<OpenLmisResponse> response = controller.uploadJasperTemplate(request, reportTemplateFile, "reportName");
 
-    assertThat(response.getBody().getSuccessMsg(), is("jasper.upload.success"));
+    assertThat(response.getBody().getSuccessMsg(), is("Report created successfully"));
     verify(reportService).insert(report);
   }
 

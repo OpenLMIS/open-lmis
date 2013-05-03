@@ -43,7 +43,6 @@
 
     <bean id="replicationSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="replicationDataSource"/>
-        <property name="typeHandlersPackage" value="org.openlmis.reporting.typehandler"/>
     </bean>
 
 </beans>

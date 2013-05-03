@@ -23,8 +23,8 @@
 
           <div>
             <input ng-model="reportTemplate.file" name="file" id="file" type="file" maxlength="50"
-                   ng-required="true"/>
-            <span class="field-error" ng-show="reportForm.name.$error.required && showError" openlmis-message="missing.value">
+                   required="true" accept=".jrxml"/>
+            <span class="field-error" ng-show="reportForm.file.$error.required && showError" openlmis-message="missing.value">
             </span>
           </div>
         </div>
@@ -37,10 +37,10 @@
       <div class="form-cell button-row pull-left">
         <input id="saveReport" class="btn btn-primary save-button" type="submit" value="Save"/>
       </div>
-      <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
+      <div id="error" class="toolbar-error" openlmis-message="errorMessage" ng-show="errorMessage"></div>
+      <div id="success" class="toolbar-success" openlmis-message="successMessage" ng-show="successMessage"></div>
+
     </div>
   </form>
-  <div id="error" openlmis-message="errorMessage" ng-show="errorMessage"></div>
-  <div id="success" openlmis-message="successMessage" ng-show="successMessage"></div>
 </div>
 

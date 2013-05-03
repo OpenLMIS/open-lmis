@@ -40,7 +40,12 @@ var utils = {
   isValidPage: function (pageNumber, totalPages) {
     pageNumber = parseInt(pageNumber, 10);
     return !!pageNumber && pageNumber > 0 && pageNumber <= totalPages;
+  },
+
+  isEmpty: function (value) {
+    return (value == null || value == undefined || value.toString().trim().length == 0);
   }
+
 };
 
 String.prototype.format = function() {

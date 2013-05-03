@@ -12,6 +12,9 @@ import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
 import org.springframework.mock.web.MockMultipartFile;
 
+import static org.openlmis.core.domain.ReportTemplate.CREATE_REPORT_ERROR_FILE_EMPTY;
+import static org.openlmis.core.domain.ReportTemplate.CREATE_REPORT_ERROR_FILE_TYPE;
+
 public class ReportTemplateTest {
 
   @Rule
@@ -20,14 +23,14 @@ public class ReportTemplateTest {
   @Test
   public void shouldThrowErrorIfFileNotOfTypeJasperXML() throws Exception {
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.jasper.upload.type");
+    expectedException.expectMessage(CREATE_REPORT_ERROR_FILE_TYPE);
     new ReportTemplate("report",new MockMultipartFile("report.pdf", new byte[1]), 1);
   }
 
   @Test
   public void shouldThrowErrorIfFileEmpty() throws Exception {
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.jasper.upload.empty");
+    expectedException.expectMessage(CREATE_REPORT_ERROR_FILE_EMPTY);
     MockMultipartFile file = new MockMultipartFile("report.jrxml", "report.jrxml","",new byte[0]);
 
     new ReportTemplate("report", file, 1);
@@ -36,7 +39,7 @@ public class ReportTemplateTest {
   @Test
   public void shouldThrowErrorIfFileNotPresent() throws Exception {
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.jasper.upload.file.missing");
+    expectedException.expectMessage(ReportTemplate.CREATE_REPORT_ERROR_FILE_MISSING);
     new ReportTemplate("report", null, 1);
   }
 }

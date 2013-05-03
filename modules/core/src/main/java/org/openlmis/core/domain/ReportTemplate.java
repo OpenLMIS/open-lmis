@@ -25,9 +25,9 @@ import java.io.IOException;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class ReportTemplate extends BaseModel {
-  public static final String ERROR_JASPER_UPLOAD_EMPTY = "error.jasper.upload.empty";
-  public static final String ERROR_JASPER_UPLOAD_TYPE = "error.jasper.upload.type";
-  public static final String ERROR_JASPER_UPLOAD_FILE_MISSING = "error.jasper.upload.file.missing";
+  public static final String CREATE_REPORT_ERROR_FILE_EMPTY = "report.template.error.file.empty";
+  public static final String CREATE_REPORT_ERROR_FILE_TYPE = "report.template.error.file.type";
+  public static final String CREATE_REPORT_ERROR_FILE_MISSING = "report.template.error.file.missing";
 
   private String name;
 
@@ -44,8 +44,8 @@ public class ReportTemplate extends BaseModel {
   }
 
   private void validateFile(MultipartFile file) {
-    if (file == null) throw new DataException(ERROR_JASPER_UPLOAD_FILE_MISSING);
-    if (!file.getOriginalFilename().endsWith(".jrxml")) throw new DataException(ERROR_JASPER_UPLOAD_TYPE);
-    if (file.isEmpty()) throw new DataException(ERROR_JASPER_UPLOAD_EMPTY);
+    if (file == null) throw new DataException(CREATE_REPORT_ERROR_FILE_MISSING);
+    if (!file.getOriginalFilename().endsWith(".jrxml")) throw new DataException(CREATE_REPORT_ERROR_FILE_TYPE);
+    if (file.isEmpty()) throw new DataException(CREATE_REPORT_ERROR_FILE_EMPTY);
   }
 }

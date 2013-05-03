@@ -30,8 +30,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Controller
 @NoArgsConstructor
 public class ReportTemplateController extends BaseController {
-  public static final String JASPER_UPLOAD_SUCCESS = "jasper.upload.success";
-  public static final String ERROR_JASPER_UPLOAD = "error.jasper.upload";
+  public static final String JASPER_CREATE_REPORT_SUCCESS = "create.report.success";
+  public static final String JASPER_CREATE_REPORT_ERROR = "create.report.error";
 
   ReportService reportService;
 
@@ -46,9 +46,9 @@ public class ReportTemplateController extends BaseController {
     try {
       ReportTemplate reportTemplate = new ReportTemplate(name, file, loggedInUserId(request));
       reportService.insert(reportTemplate);
-      return success(JASPER_UPLOAD_SUCCESS, MediaType.TEXT_HTML_VALUE);
+      return success(JASPER_CREATE_REPORT_SUCCESS, MediaType.TEXT_HTML_VALUE);
     } catch (IOException e) {
-      return error(ERROR_JASPER_UPLOAD, OK, MediaType.TEXT_HTML_VALUE);
+      return error(JASPER_CREATE_REPORT_ERROR, OK, MediaType.TEXT_HTML_VALUE);
     } catch (DataException e) {
       return OpenLmisResponse.error(e, OK, MediaType.TEXT_HTML_VALUE);
     }
