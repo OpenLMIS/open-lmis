@@ -15,5 +15,5 @@ public interface RequisitionStatusChangeMapper {
   void insert(RequisitionStatusChange statusChange);
 
   @Select("SELECT * FROM requisition_status_changes WHERE id = #{id}")
-  RequisitionStatusChange getById(Integer id);
+  RequisitionStatusChange getById(Long id);
 }

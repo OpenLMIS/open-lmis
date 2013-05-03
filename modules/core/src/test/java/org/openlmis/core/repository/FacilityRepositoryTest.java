@@ -49,7 +49,7 @@ public class FacilityRepositoryTest {
 
   private FacilityRepository repository;
   private DateTime now;
-  private GeographicLevel defaultGeographicLevel = new GeographicLevel(1, "levelCode", "levelName", 4);
+  private GeographicLevel defaultGeographicLevel = new GeographicLevel(1L, "levelCode", "levelName", 4);
 
   @Before
   public void setUp() {
@@ -127,10 +127,10 @@ public class FacilityRepositoryTest {
   public void shouldSetFacilityOperatorIdWhenCodeIsValid() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.getOperatedBy().setCode("valid code");
-    when(mapper.getOperatedByIdForCode("valid code")).thenReturn(1);
+    when(mapper.getOperatedByIdForCode("valid code")).thenReturn(1L);
 
     repository.save(facility);
-    assertThat(facility.getOperatedBy().getId(), is(1));
+    assertThat(facility.getOperatedBy().getId(), is(1L));
   }
 
   @Test
@@ -159,16 +159,16 @@ public class FacilityRepositoryTest {
     Facility facility = make(a(defaultFacility));
     facility.getFacilityType().setCode("valid code");
     FacilityType facilityType = new FacilityType("code");
-    facilityType.setId(1);
+    facilityType.setId(1L);
     when(mapper.getFacilityTypeForCode("valid code")).thenReturn(facilityType);
 
     repository.save(facility);
-    assertThat(facility.getFacilityType().getId(), is(1));
+    assertThat(facility.getFacilityType().getId(), is(1L));
   }
 
   @Test
   public void shouldGetFacilityById() throws Exception {
-    Integer facilityId = 1;
+    Long facilityId = 1L;
     Facility facility = new Facility();
     facility.setId(facilityId);
 
@@ -182,7 +182,7 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldUpdateFacilityIfIDIsSet() throws Exception {
     Facility facility = make(a(defaultFacility));
-    facility.setId(1);
+    facility.setId(1L);
 
     repository.save(facility);
     verify(mapper).update(facility);
@@ -207,8 +207,8 @@ public class FacilityRepositoryTest {
 
   @Test
   public void shouldReturnIdForTheGivenCode() {
-    when(mapper.getIdForCode("ABC")).thenReturn(10);
-    assertThat(repository.getIdForCode("ABC"), is(10));
+    when(mapper.getIdForCode("ABC")).thenReturn(10L);
+    assertThat(repository.getIdForCode("ABC"), is(10L));
   }
 
   @Test
@@ -233,7 +233,7 @@ public class FacilityRepositoryTest {
   public void shouldSetGeographicZoneFromCodeAfterValidation() throws Exception {
     Facility facility = make(a(defaultFacility));
     GeographicZone existingZone = new GeographicZone();
-    int existingId = 1;
+    Long existingId = 1L;
     existingZone.setId(existingId);
     existingZone.setLevel(defaultGeographicLevel);
     when(geographicZoneRepository.getByCode(facility.getGeographicZone().getCode())).thenReturn(existingZone);
@@ -276,11 +276,11 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldGetHomeFacilityForUserWithRight() throws Exception {
     Facility expectedFacility = new Facility();
-    when(mapper.getHomeFacilityWithRights(1, "{APPROVE_REQUISITION, CREATE_REQUISITION}")).thenReturn(expectedFacility);
-    Facility userHomeFacility = repository.getHomeFacilityForRights(1, Right.APPROVE_REQUISITION, Right.CREATE_REQUISITION);
+    when(mapper.getHomeFacilityWithRights(1L, "{APPROVE_REQUISITION, CREATE_REQUISITION}")).thenReturn(expectedFacility);
+    Facility userHomeFacility = repository.getHomeFacilityForRights(1L, Right.APPROVE_REQUISITION, Right.CREATE_REQUISITION);
 
     assertThat(userHomeFacility, is(expectedFacility));
-    verify(mapper).getHomeFacilityWithRights(1, "{APPROVE_REQUISITION, CREATE_REQUISITION}");
+    verify(mapper).getHomeFacilityWithRights(1L, "{APPROVE_REQUISITION, CREATE_REQUISITION}");
   }
 
 }

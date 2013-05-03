@@ -67,7 +67,7 @@ public class RequisitionStatusChangeMapperIT {
     processingPeriod = insertPeriod("Period 1");
     supervisoryNode = insertSupervisoryNode();
     Program program = new Program();
-    program.setId(1);
+    program.setId(1L);
 
     Rnr requisition = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.periodId, processingPeriod.getId()),
       with(RequisitionBuilder.facility, facility), with(RequisitionBuilder.program, program)));

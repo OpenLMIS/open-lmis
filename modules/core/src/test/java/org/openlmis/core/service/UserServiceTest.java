@@ -111,7 +111,7 @@ public class UserServiceTest {
     User user = new User();
     user.setUserName("Admin");
     user.setEmail("random@random.com");
-    user.setId(1111);
+    user.setId(1111L);
 
     EmailMessage emailMessage = new EmailMessage("random@random.com", "Forgot password email subject", "email body");
     when(userRepository.getByEmail(user.getEmail())).thenReturn(user);
@@ -162,13 +162,13 @@ public class UserServiceTest {
     List<RoleAssignment> homeFacilityRoles = Arrays.asList(new RoleAssignment());
     List<RoleAssignment> supervisorRoles = Arrays.asList(new RoleAssignment());
 
-    when(userRepository.getById(1)).thenReturn(user);
-    when(roleAssignmentService.getHomeFacilityRoles(1)).thenReturn(homeFacilityRoles);
-    when(roleAssignmentService.getSupervisorRoles(1)).thenReturn(supervisorRoles);
+    when(userRepository.getById(1L)).thenReturn(user);
+    when(roleAssignmentService.getHomeFacilityRoles(1L)).thenReturn(homeFacilityRoles);
+    when(roleAssignmentService.getSupervisorRoles(1L)).thenReturn(supervisorRoles);
     RoleAssignment adminRole = new RoleAssignment();
-    when(roleAssignmentService.getAdminRole(1)).thenReturn(adminRole);
+    when(roleAssignmentService.getAdminRole(1L)).thenReturn(adminRole);
 
-    User returnedUser = userService.getById(1);
+    User returnedUser = userService.getById(1L);
 
     assertThat(returnedUser, is(user));
     assertThat(returnedUser.getHomeFacilityRoles(), is(homeFacilityRoles));
@@ -188,7 +188,7 @@ public class UserServiceTest {
   @Test
   public void shouldSaveUserWithProgramRoleMapping() throws Exception {
     User user = new User();
-    RoleAssignment userRoleAssignment = new RoleAssignment(1, 2, 3, null);
+    RoleAssignment userRoleAssignment = new RoleAssignment(1L, 2L, 3L, null);
     List<RoleAssignment> homeFacilityRoles = new ArrayList<>();
     homeFacilityRoles.add(userRoleAssignment);
     user.setHomeFacilityRoles(homeFacilityRoles);
@@ -202,7 +202,7 @@ public class UserServiceTest {
   @Test
   public void shouldSaveUsersSupervisoryRoles() throws Exception {
     User user = new User();
-    final RoleAssignment roleAssignment = new RoleAssignment(1, 1, 1, new SupervisoryNode(1));
+    final RoleAssignment roleAssignment = new RoleAssignment(1L, 1L, 1L, new SupervisoryNode(1L));
     List<RoleAssignment> supervisorRoles = Arrays.asList(roleAssignment);
     user.setSupervisorRoles(supervisorRoles);
 
@@ -216,10 +216,10 @@ public class UserServiceTest {
   @Test
   public void shouldSaveUsersWithAllRoles() throws Exception {
     User user = new User();
-    final RoleAssignment roleAssignment = new RoleAssignment(1, 1, 1, new SupervisoryNode(1));
+    final RoleAssignment roleAssignment = new RoleAssignment(1L, 1L, 1L, new SupervisoryNode(1L));
     List<RoleAssignment> supervisorRoles = Arrays.asList(roleAssignment);
     RoleAssignment adminRoleAssignment = new RoleAssignment();
-    adminRoleAssignment.setRoleId(1);
+    adminRoleAssignment.setRoleId(1L);
     user.setAdminRole(adminRoleAssignment);
     user.setSupervisorRoles(supervisorRoles);
 
@@ -234,7 +234,7 @@ public class UserServiceTest {
   @Test
   public void shouldUpdateUser() throws Exception {
     User user = new User();
-    final RoleAssignment roleAssignment = new RoleAssignment(1, 1, 1, new SupervisoryNode(1));
+    final RoleAssignment roleAssignment = new RoleAssignment(1L, 1L, 1L, new SupervisoryNode(1L));
     List<RoleAssignment> supervisorRoles = Arrays.asList(roleAssignment);
     user.setSupervisorRoles(supervisorRoles);
 
@@ -261,10 +261,10 @@ public class UserServiceTest {
   @Test
   public void shouldReturnUserIdIfPasswordResetTokenIsValid() throws Exception {
     String validToken = "validToken";
-    Integer expectedUserId = 1;
+    Long expectedUserId = 1L;
     when(userRepository.getUserIdForPasswordResetToken(validToken)).thenReturn(expectedUserId);
 
-    Integer userId = userService.getUserIdByPasswordResetToken(validToken);
+    Long userId = userService.getUserIdByPasswordResetToken(validToken);
 
     verify(userRepository).getUserIdForPasswordResetToken(validToken);
     assertThat(userId, is(expectedUserId));

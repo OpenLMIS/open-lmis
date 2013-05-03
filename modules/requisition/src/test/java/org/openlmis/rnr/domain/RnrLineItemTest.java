@@ -116,15 +116,15 @@ public class RnrLineItemTest {
     product.setDispensingUnit("Strip");
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true);
-    RnrLineItem rnrLineItem = new RnrLineItem(1, new FacilityApprovedProduct("warehouse", programProduct, 3), 1);
+    RnrLineItem rnrLineItem = new RnrLineItem(1L, new FacilityApprovedProduct("warehouse", programProduct, 3), 1L);
 
     assertThat(rnrLineItem.getFullSupply(), is(product.getFullSupply()));
     assertThat(rnrLineItem.getMaxMonthsOfStock(), is(3));
-    assertThat(rnrLineItem.getRnrId(), is(1));
+    assertThat(rnrLineItem.getRnrId(), is(1L));
     assertThat(rnrLineItem.getDispensingUnit(), is("Strip"));
     assertThat(rnrLineItem.getProductCode(), is("ASPIRIN"));
     assertThat(rnrLineItem.getDosesPerMonth(), is(30));
-    assertThat(rnrLineItem.getModifiedBy(), is(1));
+    assertThat(rnrLineItem.getModifiedBy(), is(1L));
     assertThat(rnrLineItem.getDosesPerDispensingUnit(), is(10));
     assertThat(rnrLineItem.getProductCategoryDisplayOrder(), is(3));
     assertThat(rnrLineItem.getProductDisplayOrder(), is(9));
@@ -270,9 +270,9 @@ public class RnrLineItemTest {
     additive.setName("TRANSFER_IN");
     LossesAndAdjustmentsType subtractive = new LossesAndAdjustmentsType();
     subtractive.setName("subtractive1");
-    LossesAndAdjustments add10 = new LossesAndAdjustments(1, additive, 10);
-    LossesAndAdjustments sub5 = new LossesAndAdjustments(1, subtractive, 5);
-    LossesAndAdjustments add20 = new LossesAndAdjustments(1, additive, 20);
+    LossesAndAdjustments add10 = new LossesAndAdjustments(1L, additive, 10);
+    LossesAndAdjustments sub5 = new LossesAndAdjustments(1L, subtractive, 5);
+    LossesAndAdjustments add20 = new LossesAndAdjustments(1L, additive, 20);
     RnrLineItem lineItem = make(a(defaultRnrLineItem, with(RnrLineItemBuilder.lossesAndAdjustments, add10)));
     lineItem.addLossesAndAdjustments(sub5);
     lineItem.addLossesAndAdjustments(add20);

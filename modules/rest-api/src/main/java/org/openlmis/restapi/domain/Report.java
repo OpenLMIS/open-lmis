@@ -21,10 +21,10 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Report {
   public static final String ERROR_MANDATORY_FIELD_MISSING = "error.restapi.mandatory.missing";
-  private Integer requisitionId;
-  private Integer facilityId;
-  private Integer programId;
-  private Integer periodId;
+  private Long requisitionId;
+  private Long facilityId;
+  private Long programId;
+  private Long periodId;
   private String userId;
   private Vendor vendor;
   private List<RnrLineItem> products;

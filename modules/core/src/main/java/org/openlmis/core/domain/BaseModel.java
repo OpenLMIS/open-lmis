@@ -20,10 +20,10 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 public abstract class BaseModel {
 
-  protected Integer id;
+  protected Long id;
 
   @JsonIgnore
-  protected Integer modifiedBy;
+  protected Long modifiedBy;
 
   @JsonIgnore
   protected Date modifiedDate;
@@ -39,12 +39,12 @@ public abstract class BaseModel {
   }
 
   @JsonProperty("modifiedBy")
-  public Integer getModifiedBy() {
+  public Long getModifiedBy() {
     return modifiedBy;
   }
 
   @JsonIgnore
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(Long modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 }

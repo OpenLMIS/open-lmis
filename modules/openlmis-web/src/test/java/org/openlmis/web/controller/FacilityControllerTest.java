@@ -35,7 +35,7 @@ import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
 
 public class FacilityControllerTest {
 
-  public static final Integer userId = 1;
+  public static final Long userId = 1L;
   private ProgramService programService;
   private FacilityService facilityService;
   private FacilityController facilityController;
@@ -138,18 +138,18 @@ public class FacilityControllerTest {
 
   @Test
   public void shouldGetFacilityById() throws Exception {
-    Integer Id = 1;
-    facilityController.getFacility(Id);
-    verify(facilityService).getById(Id);
+    Long id = 1L;
+    facilityController.getFacility(id);
+    verify(facilityService).getById(id);
   }
 
   @Test
   public void shouldUpdateDataReportableAndActiveForFacilityDelete() throws Exception {
     Facility facility = new Facility();
-    facility.setId(123);
+    facility.setId(123L);
     facility.setName("Test Facility");
     facility.setCode("Test Code");
-    when(facilityService.getById(123)).thenReturn(facility);
+    when(facilityService.getById(123L)).thenReturn(facility);
     ResponseEntity responseEntity = facilityController.updateDataReportableAndActive(facility, "delete", httpServletRequest);
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
 
@@ -165,10 +165,10 @@ public class FacilityControllerTest {
   public void shouldUpdateDataReportableAndActiveForFacilityRestore() throws Exception {
     MockHttpServletRequest httpServletRequest = httpRequest();
     Facility facility = new Facility();
-    facility.setId(123);
+    facility.setId(123L);
     facility.setName("Test Facility");
     facility.setCode("Test Code");
-    when(facilityService.getById(123)).thenReturn(facility);
+    when(facilityService.getById(123L)).thenReturn(facility);
 
     ResponseEntity responseEntity = facilityController.updateDataReportableAndActive(facility, "restore", httpServletRequest);
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
@@ -180,7 +180,7 @@ public class FacilityControllerTest {
 
   @Test
   public void shouldReturnUserSupervisedFacilitiesForAProgram() {
-    Integer programId = 1;
+    Long programId = 1L;
     List<Facility> facilities = new ArrayList<>();
     when(facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(facilities);
     ResponseEntity<ModelMap> responseEntity = facilityController.getUserSupervisedFacilitiesSupportingProgram(programId, httpServletRequest);

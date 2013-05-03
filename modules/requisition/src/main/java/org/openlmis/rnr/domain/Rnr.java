@@ -42,11 +42,11 @@ public class Rnr extends BaseModel{
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
 
   private Facility supplyingFacility;
-  private Integer supervisoryNodeId;
+  private Long supervisoryNodeId;
   private Date submittedDate;
   private List<Comment> comments = new ArrayList<>();
 
-  public Rnr(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
+  public Rnr(Long facilityId, Long programId, Long periodId, Long modifiedBy) {
     facility = new Facility();
     facility.setId(facilityId);
     program = new Program();
@@ -56,7 +56,7 @@ public class Rnr extends BaseModel{
     this.modifiedBy = modifiedBy;
   }
 
-  public Rnr(Integer facilityId, Integer programId, Integer periodId, List<FacilityApprovedProduct> facilityApprovedProducts, Integer modifiedBy) {
+  public Rnr(Long facilityId, Long programId, Long periodId, List<FacilityApprovedProduct> facilityApprovedProducts, Long modifiedBy) {
     this(facilityId, programId, periodId, modifiedBy);
     fillLineItems(facilityApprovedProducts);
   }
@@ -67,7 +67,7 @@ public class Rnr extends BaseModel{
     this.period = period;
   }
 
-  public Rnr(Integer id) {
+  public Rnr(Long id) {
     this.id = id;
   }
 
@@ -229,7 +229,7 @@ public class Rnr extends BaseModel{
       copyUserEditableFields(otherRnr, programRnrColumns);
   }
 
-  public void convertToOrder(Integer userId) {
+  public void convertToOrder(Long userId) {
     this.status = RELEASED;
     this.modifiedBy = userId;
   }

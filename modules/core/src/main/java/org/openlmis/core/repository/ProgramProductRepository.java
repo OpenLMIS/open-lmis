@@ -38,12 +38,12 @@ public class ProgramProductRepository {
 
 
   public void save(ProgramProduct programProduct) {
-    Integer programId = programRepository.getIdByCode(programProduct.getProgram().getCode());
+    Long programId = programRepository.getIdByCode(programProduct.getProgram().getCode());
     programProduct.getProgram().setId(programId);
 
     validateProductCode(programProduct.getProduct().getCode());
 
-    Integer productId = productRepository.getIdByCode(programProduct.getProduct().getCode());
+    Long productId = productRepository.getIdByCode(programProduct.getProduct().getCode());
     programProduct.getProduct().setId(productId);
 
     try {
@@ -57,8 +57,8 @@ public class ProgramProductRepository {
     }
   }
 
-  public Integer getIdByProgramIdAndProductId(Integer programId, Integer productId) {
-    Integer programProductId = mapper.getIdByProgramAndProductId(programId, productId);
+  public Long getIdByProgramIdAndProductId(Long programId, Long productId) {
+    Long programProductId = mapper.getIdByProgramAndProductId(programId, productId);
 
     if (programProductId == null)
       throw new DataException(PROGRAM_PRODUCT_INVALID);
@@ -81,7 +81,7 @@ public class ProgramProductRepository {
       productRepository.getIdByCode(programProduct.getProduct().getCode()));
   }
 
-  public ProgramProduct getByProgramAndProductId(Integer programId, Integer productId) {
+  public ProgramProduct getByProgramAndProductId(Long programId, Long productId) {
     return mapper.getByProgramAndProductId(programId, productId);
   }
 

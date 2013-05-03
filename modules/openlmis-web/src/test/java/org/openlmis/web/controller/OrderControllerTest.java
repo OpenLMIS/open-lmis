@@ -32,7 +32,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @PrepareForTest(OrderDTO.class)
 public class OrderControllerTest {
 
-  private static final Integer USER_ID = 1;
+  private static final Long USER_ID = 1L;
   private MockHttpServletRequest request;
   private static final String USER = "user";
 
@@ -54,7 +54,7 @@ public class OrderControllerTest {
 
     RequisitionList rnrList = new RequisitionList();
     orderController.convertToOrder(rnrList, request);
-    verify(orderService).convertToOrder(rnrList, 1);
+    verify(orderService).convertToOrder(rnrList, 1L);
   }
 
   @Test
@@ -75,7 +75,7 @@ public class OrderControllerTest {
 
   @Test
   public void shouldDownloadOrderCsv() {
-    Integer orderId = 1;
+    Long orderId = 1L;
     Order expectedOrder = new Order();
     when(orderService.getOrderForDownload(orderId)).thenReturn(expectedOrder);
     ModelAndView modelAndView = orderController.downloadOrderCsv(orderId);

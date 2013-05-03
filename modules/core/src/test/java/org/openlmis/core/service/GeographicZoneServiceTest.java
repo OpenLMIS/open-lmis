@@ -55,23 +55,23 @@ public class GeographicZoneServiceTest {
   @Test
   public void shouldSaveGeographicZone() throws Exception {
     when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
-      new GeographicLevel(1, "abc", "abc", 1));
+      new GeographicLevel(1L, "abc", "abc", 1));
     when(repository.getByCode(geographicZone.getParent().getCode())).thenReturn(
-      new GeographicZone(1, "xyz", "xyz", null, null));
+      new GeographicZone(1L, "xyz", "xyz", null, null));
 
     service.save(geographicZone);
 
     verify(repository).getGeographicLevelByCode("abc");
     verify(repository).getByCode("xyz");
-    assertThat(geographicZone.getLevel().getId(), is(1));
-    assertThat(geographicZone.getParent().getId(), is(1));
+    assertThat(geographicZone.getLevel().getId(), is(1L));
+    assertThat(geographicZone.getParent().getId(), is(1L));
     verify(repository).insert(geographicZone);
   }
 
   @Test
   public void shouldThrowAnExceptionIfParentCodeIsInvalid() throws Exception {
     when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
-      new GeographicLevel(1, "abc", "abc", 1));
+      new GeographicLevel(1L, "abc", "abc", 1));
     when(repository.getByCode(geographicZone.getParent().getCode())).thenReturn(null);
 
     expectedEx.expect(DataException.class);
@@ -93,9 +93,9 @@ public class GeographicZoneServiceTest {
 
   @Test
   public void shouldSetRootAsParentIfParentIsNull() throws Exception {
-    GeographicZone expected = new GeographicZone(1, "Root", "Root", null, null);
+    GeographicZone expected = new GeographicZone(1L, "Root", "Root", null, null);
     when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
-      new GeographicLevel(1, "abc", "abc", 1));
+      new GeographicLevel(1L, "abc", "abc", 1));
     when(repository.getByCode(ROOT_GEOGRAPHIC_ZONE_CODE)).thenReturn(expected);
     geographicZone.setParent(null);
 
@@ -107,13 +107,13 @@ public class GeographicZoneServiceTest {
 
   @Test
   public void shouldUpdateZoneIfZonePreviouslyPresent() throws Exception {
-    GeographicLevel level = new GeographicLevel(1, "abc", "abc", 1);
-    GeographicZone parent = new GeographicZone(1, "xyz", "xyz", null, null);
+    GeographicLevel level = new GeographicLevel(1L, "abc", "abc", 1);
+    GeographicZone parent = new GeographicZone(1L, "xyz", "xyz", null, null);
 
     when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(level);
     when(repository.getByCode(geographicZone.getParent().getCode())).thenReturn(parent);
 
-    geographicZone.setId(1);
+    geographicZone.setId(1L);
     service.save(geographicZone);
 
     verify(repository).update(geographicZone);

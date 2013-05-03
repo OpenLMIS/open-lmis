@@ -39,15 +39,15 @@ public interface FacilityApprovedProductMapper {
       @Result(property = "programProduct", column = "programProductID", javaType = ProgramProduct.class,
           one = @One(select = "org.openlmis.core.repository.mapper.ProgramProductMapper.getById")),
       @Result(property = "facilityType.id", column = "facilityTypeId")})
-  List<FacilityApprovedProduct> getProductsByFacilityProgramAndFullSupply(@Param("facilityId") Integer facilityId,
-                                                                          @Param("programId") Integer programId,
+  List<FacilityApprovedProduct> getProductsByFacilityProgramAndFullSupply(@Param("facilityId") Long facilityId,
+                                                                          @Param("programId") Long programId,
                                                                           @Param("fullSupply") Boolean fullSupply);
 
   @Select({"SELECT fap.id, fap.facilityTypeId, fap.programProductId, fap.maxMonthsOfStock, fap.modifiedDate, fap.modifiedBy",
       "FROM facility_approved_products fap, facility_types ft",
       "where fap.programProductId = #{programProductId} and",
       "ft.code = #{facilityTypeCode} and ft.id = fap.facilityTypeId"})
-  FacilityApprovedProduct getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(@Param("programProductId") Integer programProductId,
+  FacilityApprovedProduct getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(@Param("programProductId") Long programProductId,
                                                                                           @Param("facilityTypeCode") String facilityTypeCode);
 
   @Update("UPDATE facility_approved_products set " +

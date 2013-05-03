@@ -42,24 +42,24 @@ public class RoleAssignmentService {
     saveRoles(user, user.getAdminRole());
   }
 
-  public void deleteAllRoleAssignmentsForUser(Integer id) {
+  public void deleteAllRoleAssignmentsForUser(Long id) {
     roleAssignmentRepository.deleteAllRoleAssignmentsForUser(id);
   }
 
-  public List<RoleAssignment> getHomeFacilityRoles(Integer userId) {
+  public List<RoleAssignment> getHomeFacilityRoles(Long userId) {
     return roleAssignmentRepository.getHomeFacilityRoles(userId);
   }
 
-  public List<RoleAssignment> getSupervisorRoles(Integer userId) {
+  public List<RoleAssignment> getSupervisorRoles(Long userId) {
     return roleAssignmentRepository.getSupervisorRoles(userId);
   }
 
   private void saveRoles(User user, List<RoleAssignment> roleAssignments) {
     if (roleAssignments == null) return;
     for (RoleAssignment roleAssignment : roleAssignments) {
-      for (Integer role : roleAssignment.getRoleIds()) {
+      for (Long role : roleAssignment.getRoleIds()) {
         SupervisoryNode node = roleAssignment.getSupervisoryNode();
-        Integer supervisoryNodeId = null;
+        Long supervisoryNodeId = null;
         if (node != null) supervisoryNodeId = node.getId();
         roleAssignmentRepository.insertRoleAssignment(user.getId(), roleAssignment.getProgramId(), supervisoryNodeId, role);
       }
@@ -68,20 +68,20 @@ public class RoleAssignmentService {
 
   private void saveRoles(User user, RoleAssignment adminRole) {
     if (adminRole == null) return;
-    for (Integer role : adminRole.getRoleIds()) {
+    for (Long role : adminRole.getRoleIds()) {
       roleAssignmentRepository.insertRoleAssignment(user.getId(), null, null, role);
     }
   }
 
-  public List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(Integer userId, Integer programId, Right... rights) {
+  public List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(Long userId, Long programId, Right... rights) {
     return roleAssignmentRepository.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, rights);
   }
 
-  public List<RoleAssignment> getRoleAssignments(Right right, Integer userId) {
+  public List<RoleAssignment> getRoleAssignments(Right right, Long userId) {
     return roleAssignmentRepository.getRoleAssignmentsForUserWithRight(right, userId);
   }
 
-  public RoleAssignment getAdminRole(Integer userId) {
+  public RoleAssignment getAdminRole(Long userId) {
     return roleAssignmentRepository.getAdminRole(userId);
   }
 

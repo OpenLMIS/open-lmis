@@ -78,20 +78,20 @@ public class RoleRightsRepository {
     return roleRightsMapper.getAllRoles();
   }
 
-  public Role getRole(int roleId) {
+  public Role getRole(Long roleId) {
     return roleRightsMapper.getRole(roleId);
   }
 
 
-  public Set<Right> getAllRightsForUser(Integer userId) {
+  public Set<Right> getAllRightsForUser(Long userId) {
     return roleRightsMapper.getAllRightsForUserById(userId);
   }
 
-  public List<Right> getRightsForUserOnSupervisoryNodeAndProgram(Integer userId, List<SupervisoryNode> supervisoryNodes, Program program) {
+  public List<Right> getRightsForUserOnSupervisoryNodeAndProgram(Long userId, List<SupervisoryNode> supervisoryNodes, Program program) {
     return roleRightsMapper.getRightsForUserOnSupervisoryNodeAndProgram(userId, commaSeparator.commaSeparateIds(supervisoryNodes), program);
   }
 
-  public List<Right> getRightsForUserOnHomeFacilityAndProgram(Integer userId, Program program) {
+  public List<Right> getRightsForUserOnHomeFacilityAndProgram(Long userId, Program program) {
     return roleRightsMapper.getRightsForUserOnHomeFacilityAndProgram(userId, program);
   }
 }

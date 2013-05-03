@@ -71,8 +71,8 @@ public class RequisitionGroupRepositoryTest {
 
   @Test
   public void shouldGetRequisitionGroupForFacilityAndProgram() throws Exception {
-    Facility facility = new Facility(1);
-    Program program = new Program(1);
+    Facility facility = new Facility(1L);
+    Program program = new Program(1L);
     repository.getRequisitionGroupForProgramAndFacility(program, facility);
     verify(mapper).getRequisitionGroupForProgramAndFacility(program, facility);
   }

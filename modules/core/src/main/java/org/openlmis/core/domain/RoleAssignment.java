@@ -23,20 +23,20 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL
 @JsonSerialize(include = NON_NULL)
 @EqualsAndHashCode(callSuper = false)
 public class RoleAssignment extends BaseModel{
-  private Integer userId;
-  private List<Integer> roleIds = new ArrayList<>();
+  private Long userId;
+  private List<Long> roleIds = new ArrayList<>();
 
-  private Integer programId;
+  private Long programId;
   private SupervisoryNode supervisoryNode;
 
-  public RoleAssignment(Integer userId, Integer roleId, Integer programId, SupervisoryNode supervisoryNode) {
+  public RoleAssignment(Long userId, Long roleId, Long programId, SupervisoryNode supervisoryNode) {
     this.userId = userId;
     this.roleIds.add(roleId);
     this.programId = programId;
     this.supervisoryNode = supervisoryNode;
   }
 
-  public RoleAssignment(Integer userId, List<Integer> roleIds, Integer programId, SupervisoryNode supervisoryNode) {
+  public RoleAssignment(Long userId, List<Long> roleIds, Long programId, SupervisoryNode supervisoryNode) {
     this.userId = userId;
     this.roleIds = roleIds;
     this.programId = programId;
@@ -44,7 +44,7 @@ public class RoleAssignment extends BaseModel{
   }
 
   @SuppressWarnings("unused (used for mybatis mapping)")
-  public void setRoleId(Integer roleId) {
+  public void setRoleId(Long roleId) {
     this.roleIds.add(roleId);
   }
 
@@ -57,7 +57,7 @@ public class RoleAssignment extends BaseModel{
     roleIds = roleIds.replace("{", "").replace("}", "");
     String[] roleIdsArray = roleIds.split(",");
     for (String roleId : roleIdsArray) {
-      this.roleIds.add(Integer.parseInt(roleId));
+      this.roleIds.add(Long.parseLong(roleId));
     }
   }
 

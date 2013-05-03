@@ -53,7 +53,7 @@ public class RequisitionGroupProgramScheduleServiceTest {
   public void shouldUpdateRequisitionGroupProgramScheduleWhenIdIsNotNull() throws Exception {
 
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
-    requisitionGroupProgramSchedule.setId(1);
+    requisitionGroupProgramSchedule.setId(1L);
     RequisitionGroupProgramScheduleRepository spyRequisitionGroupProgramScheduleRepository = spy(new RequisitionGroupProgramScheduleRepository());
     service = new RequisitionGroupProgramScheduleService(spyRequisitionGroupProgramScheduleRepository);
 

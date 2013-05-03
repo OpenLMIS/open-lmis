@@ -39,11 +39,11 @@ public class FacilityApprovedProductRepository {
     this.productMapper = productMapper;
   }
 
-  public List<FacilityApprovedProduct> getFullSupplyProductsByFacilityAndProgram(Integer facilityId, Integer programId) {
+  public List<FacilityApprovedProduct> getFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
     return facilityApprovedProductMapper.getProductsByFacilityProgramAndFullSupply(facilityId, programId, TRUE);
   }
 
-  public List<FacilityApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(Integer facilityId, Integer programId) {
+  public List<FacilityApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
     return facilityApprovedProductMapper.getProductsByFacilityProgramAndFullSupply(facilityId, programId, FALSE);
   }
 

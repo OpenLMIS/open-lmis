@@ -38,26 +38,26 @@ public class ProgramServiceTest {
   @Test
   public void shouldGetProgramStartDate() throws Exception {
     Date programStartDate = now().toDate();
-    when(programSupportedRepository.getProgramStartDate(1, 2)).thenReturn(programStartDate);
+    when(programSupportedRepository.getProgramStartDate(1L, 2L)).thenReturn(programStartDate);
 
-    assertThat(service.getProgramStartDate(1, 2), is(programStartDate));
+    assertThat(service.getProgramStartDate(1L, 2L), is(programStartDate));
   }
 
   @Test
   public void shouldGetProgramById() throws Exception {
     final Program expectedProgram = new Program();
-    when(programRepository.getById(1)).thenReturn(expectedProgram);
+    when(programRepository.getById(1L)).thenReturn(expectedProgram);
 
-    final Program actualProgram = service.getById(1);
+    final Program actualProgram = service.getById(1L);
 
-    verify(programRepository).getById(1);
+    verify(programRepository).getById(1L);
     assertThat(actualProgram, is(expectedProgram));
   }
 
   @Test
   public void shouldSetTemplateConfiguredFlag() {
-    service.setTemplateConfigured(1);
-    verify(programRepository).setTemplateConfigured(1);
+    service.setTemplateConfigured(1L);
+    verify(programRepository).setTemplateConfigured(1L);
 
   }
 }

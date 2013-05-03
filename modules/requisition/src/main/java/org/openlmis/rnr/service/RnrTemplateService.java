@@ -28,7 +28,7 @@ public class RnrTemplateService {
   @Autowired
   private ProgramService programService;
 
-  public List<RnrColumn> fetchAllRnRColumns(Integer programId) {
+  public List<RnrColumn> fetchAllRnRColumns(Long programId) {
     return rnrRepository.fetchRnrTemplateColumnsOrMasterColumns(programId);
   }
 
@@ -46,7 +46,7 @@ public class RnrTemplateService {
   }
 
 
-  public List<RnrColumn> fetchColumnsForRequisition(Integer programId) {
+  public List<RnrColumn> fetchColumnsForRequisition(Long programId) {
     return rnrRepository.fetchColumnsForRequisition(programId);
   }
 }

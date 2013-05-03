@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class RnrTemplateRepositoryTest {
 
-  public static final Integer EXISTING_PROGRAM_ID = 1;
+  public static final Long EXISTING_PROGRAM_ID = 1L;
   ProgramRnrTemplate template;
 
   @Mock
@@ -84,7 +84,7 @@ public class RnrTemplateRepositoryTest {
   @Test
   public void shouldReturnFormulaValidatedFlag() throws Exception {
     boolean expectedFormulaValidated = true;
-    Integer programId = 1;
+    Long programId = 1L;
     Program program = new Program(programId);
     when(rnrColumnMapper.isFormulaValidationRequired(program)).thenReturn(expectedFormulaValidated);
 

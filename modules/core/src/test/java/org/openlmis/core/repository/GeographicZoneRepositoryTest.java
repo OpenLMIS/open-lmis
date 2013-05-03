@@ -54,8 +54,10 @@ public class GeographicZoneRepositoryTest {
 
   @Test
   public void shouldThrowErrorIfIncorrectDataLengthWhileInserting() throws Exception {
-    when(mapper.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(new GeographicLevel(1, "abc", "abc", 1));
-    when(mapper.getGeographicZoneByCode(geographicZone.getParent().getCode())).thenReturn(new GeographicZone(1, "xyz", "xyz", null, null));
+    when(mapper.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
+      new GeographicLevel(1L, "abc", "abc", 1));
+    when(mapper.getGeographicZoneByCode(geographicZone.getParent().getCode())).thenReturn(
+      new GeographicZone(1L, "xyz", "xyz", null, null));
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Incorrect Data Length");
@@ -67,8 +69,10 @@ public class GeographicZoneRepositoryTest {
 
   @Test
   public void shouldThrowErrorIfIncorrectDataLengthWhileUpdating() throws Exception {
-    when(mapper.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(new GeographicLevel(1, "abc", "abc", 1));
-    when(mapper.getGeographicZoneByCode(geographicZone.getParent().getCode())).thenReturn(new GeographicZone(1, "xyz", "xyz", null, null));
+    when(mapper.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
+      new GeographicLevel(1L, "abc", "abc", 1));
+    when(mapper.getGeographicZoneByCode(geographicZone.getParent().getCode())).thenReturn(
+      new GeographicZone(1L, "xyz", "xyz", null, null));
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Incorrect Data Length");

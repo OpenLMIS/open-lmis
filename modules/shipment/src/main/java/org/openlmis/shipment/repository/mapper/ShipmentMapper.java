@@ -29,7 +29,7 @@ public interface ShipmentMapper {
   void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo);
 
   @Select("Select * from shipment_file_info where id = #{id}")
-  ShipmentFileInfo getShipmentFileInfo(Integer id);
+  ShipmentFileInfo getShipmentFileInfo(Long id);
 
   @Select("SELECT * FROM shipped_line_items WHERE rnrId=#{rnrId} AND productCode=#{productCode}")
   ShippedLineItem getShippedLineItem(ShippedLineItem shippedLineItem);

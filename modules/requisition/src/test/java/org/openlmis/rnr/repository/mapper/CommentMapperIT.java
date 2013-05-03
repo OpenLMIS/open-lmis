@@ -36,8 +36,8 @@ import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 @Transactional
 public class CommentMapperIT {
 
-  public static final int MODIFIED_BY = 1;
-  public static final Integer HIV = 1;
+  public static final Long MODIFIED_BY = 1L;
+  public static final Long HIV = 1L;
   private Rnr requisition;
 
   @Autowired

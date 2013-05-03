@@ -26,17 +26,17 @@ public interface LossesAndAdjustmentsMapper {
   @Results(value = {
       @Result(property = "type", column = "type", javaType = String.class, one = @One(select = "getLossesAndAdjustmentTypeByName"))
   })
-  List<LossesAndAdjustments> getByRnrLineItem(Integer rnrLineItemId);
+  List<LossesAndAdjustments> getByRnrLineItem(Long rnrLineItemId);
 
   @Select("SELECT * FROM losses_adjustments_types WHERE name = #{lossesAndAdjustmentsTypeName}")
   LossesAndAdjustmentsType getLossesAndAdjustmentTypeByName(String lossesAndAdjustmentsTypeName);
 
   @Delete("DELETE FROM requisition_line_item_losses_adjustments WHERE id = #{lossesAndAdjustmentsId}")
-  void delete(Integer lossesAndAdjustmentsId);
+  void delete(Long lossesAndAdjustmentsId);
 
   @Select("SELECT * FROM losses_adjustments_types ORDER BY displayOrder")
   List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes();
 
   @Delete("DELETE FROM requisition_line_item_losses_adjustments WHERE requisitionLineItemId = #{rnrLineItemId}")
-  void deleteByLineItemId(Integer rnrLineItemId);
+  void deleteByLineItemId(Long rnrLineItemId);
 }

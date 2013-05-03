@@ -56,7 +56,7 @@ public class RequisitionGroupProgramScheduleMapperIT {
   public void setUp() throws Exception {
     requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
 
-    requisitionGroupProgramSchedule.setModifiedBy(1);
+    requisitionGroupProgramSchedule.setModifiedBy(1L);
     requisitionGroupProgramSchedule.setModifiedDate(new Date(0));
 
     requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
@@ -110,7 +110,7 @@ public class RequisitionGroupProgramScheduleMapperIT {
 
     requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
 
-    List<Integer> resultProgramId = requisitionGroupProgramScheduleMapper.getProgramIDsById(requisitionGroupProgramSchedule.getRequisitionGroup().getId());
+    List<Long> resultProgramId = requisitionGroupProgramScheduleMapper.getProgramIDsById(requisitionGroupProgramSchedule.getRequisitionGroup().getId());
 
     assertThat(resultProgramId.size(), is(1));
     assertThat(resultProgramId.get(0), is(requisitionGroupProgramSchedule.getProgram().getId()));

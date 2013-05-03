@@ -26,17 +26,17 @@ public interface ProgramSupportedMapper {
   @Results({
     @Result(property = "program", javaType = Program.class, column = "programId", one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
   })
-  ProgramSupported getBy(@Param("facilityId") Integer facilityId, @Param("programId") Integer programId);
+  ProgramSupported getBy(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
   @Delete("DELETE FROM programs_supported WHERE facilityId = #{facilityId} AND programId = #{programId}")
-  void delete(@Param(value = "facilityId") Integer facilityId, @Param(value = "programId") Integer programId);
+  void delete(@Param(value = "facilityId") Long facilityId, @Param(value = "programId") Long programId);
 
   @Select("SELECT * FROM programs_supported " +
     "WHERE facilityId = #{facilityId}")
   @Results({
     @Result(property = "program", javaType = Program.class, column = "programId", one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
   })
-  List<ProgramSupported> getAllByFacilityId(Integer facilityId);
+  List<ProgramSupported> getAllByFacilityId(Long facilityId);
 
   @Update("UPDATE programs_supported set active=#{active}, startDate=#{startDate}, modifiedDate=#{modifiedDate}, modifiedBy=#{modifiedBy}" +
     "where facilityId=#{facilityId} AND programId=#{program.id}")

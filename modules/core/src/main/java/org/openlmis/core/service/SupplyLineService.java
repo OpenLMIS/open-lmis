@@ -59,7 +59,7 @@ public class SupplyLineService {
   }
 
   private void validateIfSupervisoryNodeIsTopmostNode(SupplyLine supplyLine) {
-    Integer supervisoryNodeParentId = supervisoryNodeRepository.getSupervisoryNodeParentId(supplyLine.getSupervisoryNode().getId());
+    Long supervisoryNodeParentId = supervisoryNodeRepository.getSupervisoryNodeParentId(supplyLine.getSupervisoryNode().getId());
     if (supervisoryNodeParentId != null)
       throw new DataException("Supervising Node is not the Top node");
   }

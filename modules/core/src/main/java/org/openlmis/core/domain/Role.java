@@ -28,7 +28,7 @@ public class Role extends BaseModel {
     this(name, adminRole, description, null);
   }
 
-  public Role(Integer id, String name, Boolean adminRole, String description, Set<Right> rights) {
+  public Role(Long id, String name, Boolean adminRole, String description, Set<Right> rights) {
     this(name, adminRole, description, rights);
     this.id = id;
   }

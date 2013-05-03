@@ -24,7 +24,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class RequisitionGroupHandlerTest {
 
-  public static final Integer USER = 1;
+  public static final Long USER = 1L;
   RequisitionGroupHandler requisitionGroupHandler;
 
   @Mock

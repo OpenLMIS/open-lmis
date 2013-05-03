@@ -40,14 +40,14 @@ public class ProcessingPeriodController extends BaseController {
 
   @RequestMapping(value = "/schedules/{scheduleId}/periods", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
-  public ResponseEntity<OpenLmisResponse> getAll(@PathVariable("scheduleId") Integer scheduleId) {
+  public ResponseEntity<OpenLmisResponse> getAll(@PathVariable("scheduleId") Long scheduleId) {
     List<ProcessingPeriod> periodList = processingScheduleService.getAllPeriods(scheduleId);
     return OpenLmisResponse.response(PERIODS, periodList);
   }
 
   @RequestMapping(value = "/schedules/{scheduleId}/periods", method = RequestMethod.POST, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
-  public ResponseEntity<OpenLmisResponse> save(@PathVariable("scheduleId") Integer scheduleId, @RequestBody ProcessingPeriod processingPeriod, HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> save(@PathVariable("scheduleId") Long scheduleId, @RequestBody ProcessingPeriod processingPeriod, HttpServletRequest request) {
     processingPeriod.setScheduleId(scheduleId);
     processingPeriod.setModifiedBy(loggedInUserId(request));
     try {
@@ -62,7 +62,7 @@ public class ProcessingPeriodController extends BaseController {
 
   @RequestMapping(value = "/periods/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
-  public ResponseEntity<OpenLmisResponse> delete(@PathVariable("id") Integer id) {
+  public ResponseEntity<OpenLmisResponse> delete(@PathVariable("id") Long id) {
     try {
       processingScheduleService.deletePeriod(id);
     } catch (DataException e) {

@@ -22,7 +22,7 @@ public interface RequisitionGroupProgramScheduleMapper {
   Integer insert(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule);
 
   @Select("SELECT programId FROM requisition_group_program_schedules WHERE requisitionGroupId = #{requisitionGroupId}")
-  List<Integer> getProgramIDsById(Integer requisitionGroupId);
+  List<Long> getProgramIDsById(Long requisitionGroupId);
 
   @Select("SELECT * FROM requisition_group_program_schedules WHERE requisitionGroupId = #{requisitionGroupId} AND programId = #{programId}")
   @Results(value = {
@@ -32,8 +32,8 @@ public interface RequisitionGroupProgramScheduleMapper {
     @Result(property = "dropOffFacility.id", column = "dropOffFacilityId")
   })
   RequisitionGroupProgramSchedule getScheduleForRequisitionGroupIdAndProgramId(
-    @Param(value = "requisitionGroupId") Integer requisitionGroupId,
-    @Param(value = "programId") Integer programId);
+    @Param(value = "requisitionGroupId") Long requisitionGroupId,
+    @Param(value = "programId") Long programId);
 
   @Select({"SELECT rgps.* FROM Requisition_Group_Program_Schedules rgps",
     "INNER JOIN Programs p ON rgps.programId = p.id",

@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Select;
 import org.openlmis.rnr.domain.Comment;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -22,6 +21,5 @@ public interface CommentMapper {
     @Result(property = "id", column = "id"),
     @Result(property = "author.id", column = "authorId")
   })
-
-  List<Comment> getByRnrId(Integer rnrId);
+  List<Comment> getByRnrId(Long rnrId);
 }

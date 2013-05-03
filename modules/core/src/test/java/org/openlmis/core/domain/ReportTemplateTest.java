@@ -24,7 +24,7 @@ public class ReportTemplateTest {
   public void shouldThrowErrorIfFileNotOfTypeJasperXML() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage(CREATE_REPORT_ERROR_FILE_TYPE);
-    new ReportTemplate("report",new MockMultipartFile("report.pdf", new byte[1]), 1);
+    new ReportTemplate("report",new MockMultipartFile("report.pdf", new byte[1]), 1L);
   }
 
   @Test
@@ -33,13 +33,13 @@ public class ReportTemplateTest {
     expectedException.expectMessage(CREATE_REPORT_ERROR_FILE_EMPTY);
     MockMultipartFile file = new MockMultipartFile("report.jrxml", "report.jrxml","",new byte[0]);
 
-    new ReportTemplate("report", file, 1);
+    new ReportTemplate("report", file, 1L);
   }
 
   @Test
   public void shouldThrowErrorIfFileNotPresent() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage(ReportTemplate.CREATE_REPORT_ERROR_FILE_MISSING);
-    new ReportTemplate("report", null, 1);
+    new ReportTemplate("report", null, 1L);
   }
 }

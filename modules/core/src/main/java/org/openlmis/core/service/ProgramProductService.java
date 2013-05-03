@@ -31,7 +31,7 @@ public class ProgramProductService {
     this.productRepository = productRepository;
   }
 
-  public Integer getIdByProgramIdAndProductId(Integer programId, Integer productId) {
+  public Long getIdByProgramIdAndProductId(Long programId, Long productId) {
     return programProductRepository.getIdByProgramIdAndProductId(programId, productId);
   }
 
@@ -65,8 +65,8 @@ public class ProgramProductService {
   }
 
   private void populateProgramProductIds(ProgramProduct programProduct) {
-    Integer programId = programRepository.getIdByCode(programProduct.getProgram().getCode());
-    Integer productId = productRepository.getIdByCode(programProduct.getProduct().getCode());
+    Long programId = programRepository.getIdByCode(programProduct.getProgram().getCode());
+    Long productId = productRepository.getIdByCode(programProduct.getProduct().getCode());
     programProduct.setId(programProductRepository.getIdByProgramIdAndProductId(programId, productId));
   }
 

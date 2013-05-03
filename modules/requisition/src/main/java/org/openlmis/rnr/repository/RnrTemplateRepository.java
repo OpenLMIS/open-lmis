@@ -42,11 +42,11 @@ public class RnrTemplateRepository {
     }
   }
 
-  public List<RnrColumn> fetchColumnsForRequisition(Integer programId) {
+  public List<RnrColumn> fetchColumnsForRequisition(Long programId) {
     return rnrColumnMapper.fetchDefinedRnrColumnsForProgram(programId);
   }
 
-  public List<RnrColumn> fetchRnrTemplateColumnsOrMasterColumns(Integer programId) {
+  public List<RnrColumn> fetchRnrTemplateColumnsOrMasterColumns(Long programId) {
     if (rnrColumnMapper.isRnrTemplateDefined(programId)) {
       return rnrColumnMapper.fetchDefinedRnrColumnsForProgram(programId);
     } else {

@@ -72,9 +72,9 @@ public class RestServiceTest {
     report = make(a(defaultReport));
     String encodedCredentials = "1:correct token";
     requisition = new Rnr();
-    requisition.setId(2);
+    requisition.setId(2L);
     user = new User();
-    user.setId(1);
+    user.setId(1L);
     whenNew(User.class).withNoArguments().thenReturn(user);
     when(userService.getByUsernameAndVendorId(user)).thenReturn(user);
     when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId()))

@@ -58,14 +58,14 @@ public class ProgramProductPriceMapperIT {
     String source = "MoH";
     Money pricePerDosage = new Money("1.50");
     ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, pricePerDosage, source);
-    programProductPrice.setModifiedBy(1);
+    programProductPrice.setModifiedBy(1L);
 
     programProductPriceMapper.insertNewCurrentPrice(programProductPrice);
-    programProductPrice.setModifiedBy(2);
+    programProductPrice.setModifiedBy(2L);
     programProductPriceMapper.closeLastActivePrice(programProductPrice);
     ProgramProductPrice result = programProductPriceMapper.getById(programProductPrice.getId());
     assertThat(result.getEndDate(), is(notNullValue()));
-    assertThat(result.getModifiedBy(), is(2));
+    assertThat(result.getModifiedBy(), is(2L));
   }
 
   @Test
@@ -73,12 +73,12 @@ public class ProgramProductPriceMapperIT {
     String source = "MoH";
     Money pricePerDosage = new Money("1.50");
     ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, pricePerDosage, source);
-    programProductPrice.setModifiedBy(1);
+    programProductPrice.setModifiedBy(1L);
     programProductPriceMapper.insertNewCurrentPrice(programProductPrice);
     ProgramProductPrice result = programProductPriceMapper.getById(programProductPrice.getId());
     assertThat(result.getEndDate(), is(nullValue()));
     assertThat(result.getStartDate(), is(notNullValue()));
-    assertThat(result.getModifiedBy(), is(1));
+    assertThat(result.getModifiedBy(), is(1L));
     assertThat(result.getPricePerDosage(), is(pricePerDosage));
     assertThat(result.getProgramProduct().getCurrentPrice(), is(programProduct.getCurrentPrice()));
   }
@@ -88,7 +88,7 @@ public class ProgramProductPriceMapperIT {
     String source = "MoH";
     Money pricePerDosage = new Money("1.50");
     ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, pricePerDosage, source);
-    programProductPrice.setModifiedBy(1);
+    programProductPrice.setModifiedBy(1L);
 
     programProductPriceMapper.insertNewCurrentPrice(programProductPrice);
 

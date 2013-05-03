@@ -44,7 +44,7 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class UploadControllerTest {
 
-  public static final Integer USER = 1;
+  public static final Long USER = 1L;
 
   @Mock
   CSVParser csvParser;

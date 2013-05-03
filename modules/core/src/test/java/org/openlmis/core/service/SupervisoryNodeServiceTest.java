@@ -56,11 +56,11 @@ public class SupervisoryNodeServiceTest {
   public void setUp() throws Exception {
     initMocks(this);
     supervisoryNodeWithParent = new SupervisoryNode();
-    supervisoryNodeWithParent.setId(10);
+    supervisoryNodeWithParent.setId(10L);
     supervisoryNodeWithParent.setFacility(new Facility());
     SupervisoryNode parent = new SupervisoryNode();
     parent.setCode("PSN");
-    parent.setId(20);
+    parent.setId(20L);
     supervisoryNodeWithParent.setParent(parent);
 
     supervisoryNodeService = new SupervisoryNodeService(supervisoryNodeRepository, userRepository, facilityRepository);
@@ -68,8 +68,8 @@ public class SupervisoryNodeServiceTest {
 
   @Test
   public void shouldGetUserSupervisedNodesInHierarchyByUserAndProgram() {
-    Integer userId = 1;
-    Integer programId = 1;
+    Long userId = 1L;
+    Long programId = 1L;
     supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, CREATE_REQUISITION);
     verify(supervisoryNodeRepository).getAllSupervisoryNodesInHierarchyBy(userId, programId, CREATE_REQUISITION);
   }
@@ -77,8 +77,8 @@ public class SupervisoryNodeServiceTest {
   @Test
   public void shouldGetSupervisoryNodeForProgramAndFacility() throws Exception {
     SupervisoryNode expectedNode = new SupervisoryNode();
-    Facility facility = new Facility(1);
-    Program program = new Program(1);
+    Facility facility = new Facility(1L);
+    Program program = new Program(1L);
     when(supervisoryNodeRepository.getFor(facility, program)).thenReturn(expectedNode);
     final SupervisoryNode result = supervisoryNodeService.getFor(facility, program);
     verify(supervisoryNodeRepository).getFor(facility, program);
@@ -87,9 +87,9 @@ public class SupervisoryNodeServiceTest {
 
   @Test
   public void shouldGetApproverForProgramAndFacility() throws Exception {
-    Integer supervisoryNodeId = 1;
-    Facility facility = new Facility(1);
-    Program program = new Program(1);
+    Long supervisoryNodeId = 1L;
+    Facility facility = new Facility(1L);
+    Program program = new Program(1L);
     User user = new User();
 
     SupervisoryNode supervisoryNode = new SupervisoryNode();
@@ -107,10 +107,10 @@ public class SupervisoryNodeServiceTest {
 
   @Test
   public void shouldGetApproverFromParentSupervisoryNodeIfNotFoundInImmediateSupervisoryNode() throws Exception {
-    Facility facility = new Facility(1);
-    Program program = new Program(2);
-    SupervisoryNode parentNode = new SupervisoryNode(4);
-    int nodeId = 1;
+    Facility facility = new Facility(1L);
+    Program program = new Program(2L);
+    SupervisoryNode parentNode = new SupervisoryNode(4L);
+    Long nodeId = 1L;
     final User approver = new User();
     List<User> users = Arrays.asList(approver);
     SupervisoryNode node = new SupervisoryNode(nodeId);
@@ -128,9 +128,9 @@ public class SupervisoryNodeServiceTest {
 
   @Test
   public void shouldReturnNullIfNoApproverFound() throws Exception {
-    Facility facility = new Facility(1);
-    Program program = new Program(2);
-    int nodeId = 1;
+    Facility facility = new Facility(1L);
+    Program program = new Program(2L);
+    Long nodeId = 1L;
     SupervisoryNode node = new SupervisoryNode(nodeId);
     when(supervisoryNodeRepository.getFor(facility, program)).thenReturn(node);
     when(userRepository.getUsersWithRightInNodeForProgram(program, node, APPROVE_REQUISITION)).thenReturn(new ArrayList<User>());
@@ -145,8 +145,8 @@ public class SupervisoryNodeServiceTest {
 
   @Test
   public void shouldReturnNullIfNoSupervisoryNodeFoundForFacilityAndProgram() throws Exception {
-    Facility facility = new Facility(1);
-    Program program = new Program(2);
+    Facility facility = new Facility(1L);
+    Program program = new Program(2L);
     when(supervisoryNodeRepository.getFor(facility, program)).thenReturn(null);
     User user = supervisoryNodeService.getApproverFor(facility, program);
 
@@ -157,16 +157,16 @@ public class SupervisoryNodeServiceTest {
   @Test
   public void shouldGetParentSupervisoryNodeForGivenSupervisoryNode() throws Exception {
     SupervisoryNode expected = new SupervisoryNode();
-    when(supervisoryNodeRepository.getParent(1)).thenReturn(expected);
-    final SupervisoryNode actual = supervisoryNodeService.getParent(1);
-    verify(supervisoryNodeRepository).getParent(1);
+    when(supervisoryNodeRepository.getParent(1L)).thenReturn(expected);
+    final SupervisoryNode actual = supervisoryNodeService.getParent(1L);
+    verify(supervisoryNodeRepository).getParent(1L);
     assertThat(actual, is(expected));
   }
 
   @Test
   public void shouldGetSupervisorForGivenSupervisoryNodeAndProgram() throws Exception {
-    SupervisoryNode supervisoryNode = new SupervisoryNode(1);
-    Program program = new Program(2);
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
+    Program program = new Program(2L);
     final User approver = new User();
     List<User> listOfUsers = Arrays.asList(approver);
     when(userRepository.getUsersWithRightInNodeForProgram(program, supervisoryNode, APPROVE_REQUISITION)).thenReturn(listOfUsers);
@@ -180,8 +180,8 @@ public class SupervisoryNodeServiceTest {
 
   @Test
   public void shouldReturnNullIfNoSupervisorIsAssignedToGivenSupervisoryNodeAndProgram() throws Exception {
-    SupervisoryNode supervisoryNode = new SupervisoryNode(1);
-    Program program = new Program(1);
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
+    Program program = new Program(1L);
 
     List<User> listOfUsers = new ArrayList<>();
     when(userRepository.getUsersWithRightInNodeForProgram(program, supervisoryNode, APPROVE_REQUISITION)).thenReturn(listOfUsers);
@@ -207,7 +207,7 @@ public class SupervisoryNodeServiceTest {
   @Test
   public void shouldGetAllParentSupervisoryNodesInHierarchy() throws Exception {
     List<SupervisoryNode> expected = new ArrayList<>();
-    SupervisoryNode supervisoryNode = new SupervisoryNode(1);
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
     when(supervisoryNodeRepository.getAllParentSupervisoryNodesInHierarchy(supervisoryNode)).thenReturn(expected);
 
     List<SupervisoryNode> actual = supervisoryNodeService.getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
@@ -228,7 +228,7 @@ public class SupervisoryNodeServiceTest {
   @Test
   public void shouldUpdateExistingSupervisoryNode() throws Exception {
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
-    supervisoryNode.setId(1);
+    supervisoryNode.setId(1L);
 
     supervisoryNodeService.save(supervisoryNode);
 
@@ -249,7 +249,7 @@ public class SupervisoryNodeServiceTest {
 
   @Test
   public void shouldGiveErrorIfFacilityCodeDoesNotExist() throws Exception {
-    when(supervisoryNodeRepository.getIdForCode(supervisoryNodeWithParent.getParent().getCode())).thenReturn(1);
+    when(supervisoryNodeRepository.getIdForCode(supervisoryNodeWithParent.getParent().getCode())).thenReturn(1L);
     when(facilityRepository.getIdForCode(supervisoryNodeWithParent.getFacility().getCode())).thenThrow(new DataException("Invalid Facility Code"));
 
     expectedEx.expect(DataException.class);

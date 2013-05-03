@@ -49,16 +49,16 @@ public class ProgramProductServiceTest {
   public void shouldUpdateCurrentPriceOfProgramProductCodeCombinationAndUpdatePriceHistory() throws Exception {
     ProgramProduct programProduct = make(a(defaultProgramProduct));
     ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, new Money("1"), "source");
-    programProductPrice.setModifiedBy(1);
+    programProductPrice.setModifiedBy(1L);
 
     ProgramProduct returnedProgramProduct = new ProgramProduct();
-    returnedProgramProduct.setId(123);
+    returnedProgramProduct.setId(123L);
     when(programProductRepository.getByProgramAndProductCode(programProduct)).thenReturn(returnedProgramProduct);
 
     programProductService.updateProgramProductPrice(programProductPrice);
 
-    assertThat(programProductPrice.getProgramProduct().getId(), is(123));
-    assertThat(programProductPrice.getProgramProduct().getModifiedBy(), is(1));
+    assertThat(programProductPrice.getProgramProduct().getId(), is(123L));
+    assertThat(programProductPrice.getProgramProduct().getModifiedBy(), is(1L));
     verify(programProductRepository).getByProgramAndProductCode(programProduct);
     verify(programProductRepository).updateCurrentPrice(programProduct);
     verify(programProductRepository).updatePriceHistory(programProductPrice);
@@ -79,7 +79,7 @@ public class ProgramProductServiceTest {
   public void shouldThrowExceptionIfProgramProductByProgramAndProductCodesNotFound() throws Exception {
     ProgramProduct programProduct = make(a(defaultProgramProduct));
     ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, new Money("1"), "source");
-    programProductPrice.setModifiedBy(1);
+    programProductPrice.setModifiedBy(1L);
 
     when(programProductRepository.getByProgramAndProductCode(programProduct)).thenReturn(null);
 

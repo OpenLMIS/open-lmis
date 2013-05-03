@@ -107,12 +107,12 @@ public class SupplyLineMapperIT {
     mapper.insert(supplyLine);
 
     supplyLine.setDescription("New Description");
-    supplyLine.setModifiedBy(2);
+    supplyLine.setModifiedBy(2L);
 
     mapper.update(supplyLine);
 
     assertThat(supplyLine.getDescription(), is("New Description"));
-    assertThat(supplyLine.getModifiedBy(), is(2));
+    assertThat(supplyLine.getModifiedBy(), is(2L));
   }
 
   @Test

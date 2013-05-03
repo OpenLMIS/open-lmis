@@ -18,7 +18,7 @@ import static com.natpryce.makeiteasy.Property.newProperty;
 public class UserBuilder {
 
   public static final Property<User, String> userName = newProperty();
-  public static final Property<User, Integer> facilityId = newProperty();
+  public static final Property<User, Long> facilityId = newProperty();
   public static final Property<User, String> firstName = newProperty();
   public static final Property<User, String> lastName = newProperty();
   public static final Property<User, String> employeeId = newProperty();
@@ -27,9 +27,9 @@ public class UserBuilder {
   public static final Property<User, String> officePhone = newProperty();
   public static final Property<User, String> cellPhone = newProperty();
   public static final Property<User, String> email = newProperty();
-  public static final Property<User, Integer> supervisorId = newProperty();
+  public static final Property<User, Long> supervisorId = newProperty();
   public static final Property<User, String> supervisorUserName = newProperty();
-  public static final Property<User, Integer> vendorId = newProperty();
+  public static final Property<User, Long> vendorId = newProperty();
 
   public static final String defaultUserName = "User123";
   public static final String defaultPassword = "not-in-use";
@@ -41,9 +41,9 @@ public class UserBuilder {
   public static final String defaultOfficePhone = "0041-298-28904863";
   public static final String defaultCellPhone = "0041-9876389574";
   public static final String defaultEmail = "mizengo_pinda@openlmis.com";
-  public static final Integer defaultSupervisorId = 1;
+  public static final Long defaultSupervisorId = 1L;
   public static final String defaultSupervisorUserName = "supervisorUserName";
-  public static final Integer defaultVendorId = 1;
+  public static final Long defaultVendorId = 1L;
 
 
   public static final Instantiator<User> defaultUser = new Instantiator<User>() {
@@ -52,7 +52,7 @@ public class UserBuilder {
     public User instantiate(PropertyLookup<User> lookup) {
       User user = new User();
       user.setUserName(lookup.valueOf(userName, defaultUserName));
-      user.setFacilityId(lookup.valueOf(facilityId, 9999));
+      user.setFacilityId(lookup.valueOf(facilityId, 9999L));
       user.setFirstName(lookup.valueOf(firstName, defaultFirstName));
       user.setLastName(lookup.valueOf(lastName, defaultLastName));
       user.setEmployeeId(lookup.valueOf(employeeId, defaultEmployeeId));

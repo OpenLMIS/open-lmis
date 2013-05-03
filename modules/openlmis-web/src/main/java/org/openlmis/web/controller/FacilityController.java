@@ -11,7 +11,6 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
-import org.openlmis.db.service.DbService;
 import org.openlmis.web.model.FacilityReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.success;
@@ -69,14 +67,14 @@ public class FacilityController extends BaseController {
   public Map getReferenceData() {
     FacilityReferenceData facilityReferenceData = new FacilityReferenceData();
     return facilityReferenceData.addFacilityTypes(facilityService.getAllTypes()).
-        addFacilityOperators(facilityService.getAllOperators()).
-        addGeographicZones(facilityService.getAllZones()).
-        addPrograms(programService.getAll()).get();
+      addFacilityOperators(facilityService.getAllOperators()).
+      addGeographicZones(facilityService.getAllZones()).
+      addPrograms(programService.getAll()).get();
   }
 
   @RequestMapping(value = "/facilities/{id}", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public ResponseEntity<ModelMap> getFacility(@PathVariable(value = "id") Integer id) {
+  public ResponseEntity<ModelMap> getFacility(@PathVariable(value = "id") Long id) {
     ModelMap modelMap = new ModelMap();
     modelMap.put("facility", facilityService.getById(id));
     return new ResponseEntity<>(modelMap, HttpStatus.OK);
@@ -84,7 +82,8 @@ public class FacilityController extends BaseController {
 
   @RequestMapping(value = "/facility/update/{operation}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public ResponseEntity<OpenLmisResponse> updateDataReportableAndActive(@RequestBody Facility facility, @PathVariable(value = "operation") String operation,
+  public ResponseEntity<OpenLmisResponse> updateDataReportableAndActive(@RequestBody Facility facility, @PathVariable(
+    value = "operation") String operation,
                                                                         HttpServletRequest request) {
     facility.setModifiedBy(loggedInUserId(request));
     String message;
@@ -104,16 +103,19 @@ public class FacilityController extends BaseController {
       errorResponse.getBody().addData("facility", facility);
       return errorResponse;
     }
-    final ResponseEntity<OpenLmisResponse> successResponse = success("\"" + facility.getName() + "\" / \"" + facility.getCode() + "\" " + message + " successfully");
+    final ResponseEntity<OpenLmisResponse> successResponse = success(
+      "\"" + facility.getName() + "\" / \"" + facility.getCode() + "\" " + message + " successfully");
     successResponse.getBody().addData("facility", facility);
     return successResponse;
   }
 
   @RequestMapping(value = "/create/requisition/supervised/{programId}/facilities.json", method = GET)
-  public ResponseEntity<ModelMap> getUserSupervisedFacilitiesSupportingProgram(@PathVariable(value = "programId") Integer programId, HttpServletRequest request) {
+  public ResponseEntity<ModelMap> getUserSupervisedFacilitiesSupportingProgram(@PathVariable(
+    value = "programId") Long programId, HttpServletRequest request) {
     ModelMap modelMap = new ModelMap();
-    Integer userId = (Integer) request.getSession().getAttribute(USER_ID);
-    List<Facility> facilities = facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
+    Long userId = loggedInUserId(request);
+    List<Facility> facilities = facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION,
+      AUTHORIZE_REQUISITION);
     modelMap.put("facilities", facilities);
     return new ResponseEntity<>(modelMap, HttpStatus.OK);
   }
@@ -150,7 +152,8 @@ public class FacilityController extends BaseController {
 
   @RequestMapping(value = "/user/facilities/view", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> listForViewing(HttpServletRequest request) {
-    return OpenLmisResponse.response("facilities", facilityService.getForUserAndRights(loggedInUserId(request), VIEW_REQUISITION));
+    return OpenLmisResponse.response("facilities",
+      facilityService.getForUserAndRights(loggedInUserId(request), VIEW_REQUISITION));
   }
 
   private ResponseEntity<OpenLmisResponse> createErrorResponse(Facility facility, DataException exception) {

@@ -58,14 +58,14 @@ public class ProductService {
     if (category == null) return;
     String categoryCode = category.getCode();
     if (categoryCode == null || categoryCode.isEmpty()) return;
-    Integer categoryId = categoryService.getProductCategoryIdByCode(category.getCode());
+    Long categoryId = categoryService.getProductCategoryIdByCode(category.getCode());
     if (categoryId == null) {
       throw new DataException(INVALID_PRODUCT_CATEGORY_CODE);
     }
     category.setId(categoryId);
   }
 
-  public Integer getIdForCode(String code) {
+  public Long getIdForCode(String code) {
     return repository.getIdByCode(code);
   }
 

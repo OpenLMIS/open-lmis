@@ -26,7 +26,7 @@ public class Order extends BaseModel{
   private OrderStatus status;
   private ShipmentFileInfo shipmentFileInfo;
   private Date createdDate;
-  private Integer createdBy;
+  private Long createdBy;
 
   public Order(Rnr rnr) {
     this.rnr = rnr;
@@ -34,7 +34,7 @@ public class Order extends BaseModel{
     this.status = RELEASED;
   }
 
-  public Order(Integer id) {
+  public Order(Long id) {
     this.id = id;
   }
 

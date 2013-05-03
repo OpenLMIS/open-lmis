@@ -16,7 +16,7 @@ import java.util.List;
 public class CommaSeparator<T extends BaseModel> {
 
     public String commaSeparateIds(List<T> list) {
-        List<Integer> ids = new ArrayList<>();
+        List<Long> ids = new ArrayList<>();
 
         for (T t : list) {
             ids.add(t.getId());

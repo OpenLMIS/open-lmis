@@ -30,7 +30,7 @@ public class RequisitionGroupService {
   }
 
   public void save(RequisitionGroup requisitionGroup) {
-    Integer supervisoryNodeId = supervisoryNodeRepository.getIdForCode(requisitionGroup.getSupervisoryNode().getCode());
+    Long supervisoryNodeId = supervisoryNodeRepository.getIdForCode(requisitionGroup.getSupervisoryNode().getCode());
     requisitionGroup.getSupervisoryNode().setId(supervisoryNodeId);
 
     if (requisitionGroup.getId() == null)

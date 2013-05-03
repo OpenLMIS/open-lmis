@@ -40,12 +40,12 @@ public class ProcessingPeriodControllerTest {
 
   @Mock
   private ProcessingScheduleService service;
-  private final Integer SCHEDULE_ID = 123;
-  private final Integer USER_ID = 5;
+  private final Long SCHEDULE_ID = 123L;
+  private final Long USER_ID = 5L;
   private MockHttpServletRequest request;
-  private final int PROCESSING_PERIOD_ID = 1;
-  private final Integer FACILITY_ID = 1;
-  private final Integer PROGRAM_ID = 2;
+  private final Long PROCESSING_PERIOD_ID = 1L;
+  private final Long FACILITY_ID = 1L;
+  private final Long PROGRAM_ID = 2L;
 
   @Before
   public void setUp() throws Exception {

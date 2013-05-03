@@ -23,16 +23,16 @@ public class Program extends BaseModel {
   private Boolean active;
   private boolean templateConfigured;
 
-  public Program(Integer id) {
+  public Program(Long id) {
     this.id = id;
   }
 
-  public Program(Integer id, String name) {
+  public Program(Long id, String name) {
     this.id = id;
     this.name = name;
   }
 
-  public Program(Integer id, String code, String name, String description, Boolean active, boolean templateConfigured) {
+  public Program(Long id, String code, String name, String description, Boolean active, boolean templateConfigured) {
     this.code = code;
     this.name = name;
     this.description = description;

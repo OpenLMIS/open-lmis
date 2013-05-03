@@ -77,12 +77,12 @@ public class FacilityMapperIT {
       with(code, "TRZ001"),
       with(name, "Ngorongoro Hospital"),
       with(type, "warehouse"),
-      with(geographicZoneId, 1)));
+      with(geographicZoneId, 1L)));
     Facility trz002 = make(a(defaultFacility,
       with(code, "TRZ002"),
       with(name, "Rural Clinic"),
       with(type, "lvl3_hospital"),
-      with(geographicZoneId, 2)));
+      with(geographicZoneId, 2L)));
     mapper.insert(trz001);
     mapper.insert(trz002);
 
@@ -209,8 +209,8 @@ public class FacilityMapperIT {
 
   @Test
   public void shouldReturnFacilityOperatorIdForCode() {
-    Integer id = mapper.getOperatedByIdForCode(OPERATED_BY_MOH);
-    assertThat(id, is(1));
+    Long id = mapper.getOperatedByIdForCode(OPERATED_BY_MOH);
+    assertThat(id, is(1L));
 
     id = mapper.getOperatedByIdForCode("InValid");
     assertThat(id, is(nullValue()));
@@ -219,7 +219,7 @@ public class FacilityMapperIT {
   @Test
   public void shouldReturnFacilityTypeForCode() {
     FacilityType facilityType = mapper.getFacilityTypeForCode(FACILITY_TYPE_CODE);
-    assertThat(facilityType.getId(), is(1));
+    assertThat(facilityType.getId(), is(1L));
 
     facilityType = mapper.getFacilityTypeForCode("InValid");
     assertThat(facilityType, is(nullValue()));
@@ -237,7 +237,7 @@ public class FacilityMapperIT {
 
   @Test
   public void shouldReturnFacilityOperatorById() throws Exception {
-    Integer id = mapper.getOperatedByIdForCode(OPERATED_BY_MOH);
+    Long id = mapper.getOperatedByIdForCode(OPERATED_BY_MOH);
 
     FacilityOperator operator = mapper.getFacilityOperatorById(id);
     assertThat(operator.getId(), is(id));
@@ -250,14 +250,14 @@ public class FacilityMapperIT {
     mapper.insert(facility);
     facility.setDataReportable(false);
     facility.setActive(false);
-    facility.setModifiedBy(1);
+    facility.setModifiedBy(1L);
     mapper.updateDataReportableAndActiveFor(facility);
 
     Facility updatedFacility = mapper.getById(facility.getId());
 
     assertThat(updatedFacility.getDataReportable(), is(false));
     assertThat(updatedFacility.getActive(), is(false));
-    assertThat(updatedFacility.getModifiedBy(), is(1));
+    assertThat(updatedFacility.getModifiedBy(), is(1L));
   }
 
   @Test
@@ -339,7 +339,7 @@ public class FacilityMapperIT {
     User user = make(a(defaultUser, with(facilityId, homeFacility.getId())));
 
     userMapper.insert(user);
-    roleAssignmentMapper.insertRoleAssignment(user.getId(), 1, null, r1.getId());
+    roleAssignmentMapper.insertRoleAssignment(user.getId(), 1L, null, r1.getId());
 
     //Act
     Facility returnedFacility = mapper.getHomeFacilityWithRights(user.getId(), "{CONFIGURE_RNR}");

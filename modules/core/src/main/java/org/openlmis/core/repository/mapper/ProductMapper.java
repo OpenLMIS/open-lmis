@@ -64,10 +64,10 @@ public interface ProductMapper {
   Integer insert(Product product);
 
   @Select("SELECT id FROM dosage_Units WHERE LOWER(code) = LOWER(#{code})")
-  Integer getDosageUnitIdForCode(String code);
+  Long getDosageUnitIdForCode(String code);
 
   @Select("SELECT id FROM product_forms WHERE LOWER(code) = LOWER(#{code})")
-  Integer getProductFormIdForCode(String code);
+  Long getProductFormIdForCode(String code);
 
   // Used by ProgramProductMapper
   @Select("SELECT * FROM products WHERE id = #{id}")
@@ -76,10 +76,10 @@ public interface ProductMapper {
     @Result(property = "category", column = "categoryId", javaType = ProductCategory.class, one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getProductCategoryById")),
     @Result(property = "dosageUnit", column = "dosageUnitId", javaType = ProductForm.class, one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById"))
   })
-  Product getById(Integer id);
+  Product getById(Long id);
 
   @Select("SELECT id FROM products WHERE LOWER(code) = LOWER(#{code})")
-  Integer getIdByCode(String code);
+  Long getIdByCode(String code);
 
   @Select("SELECT * FROM products WHERE LOWER(code)=LOWER(#{code})")
   Product getByCode(String code);

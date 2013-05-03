@@ -45,8 +45,8 @@ public class ProductRepository {
     }
   }
 
-  public Integer getIdByCode(String code) {
-    Integer productCode = mapper.getIdByCode(code);
+  public Long getIdByCode(String code) {
+    Long productCode = mapper.getIdByCode(code);
 
     if (productCode == null)
       throw new DataException("product.code.invalid");
@@ -61,7 +61,7 @@ public class ProductRepository {
     String productFormCode = form.getCode();
     if (productFormCode == null || productFormCode.isEmpty()) return;
 
-    Integer productFormId = mapper.getProductFormIdForCode(productFormCode);
+    Long productFormId = mapper.getProductFormIdForCode(productFormCode);
     if (productFormId == null) throw new DataException("Invalid reference data 'Product Form'");
 
     form.setId(productFormId);
@@ -74,7 +74,7 @@ public class ProductRepository {
     String dosageUnitCode = dosageUnit.getCode();
     if (dosageUnitCode == null || dosageUnitCode.isEmpty()) return;
 
-    Integer dosageUnitId = mapper.getDosageUnitIdForCode(dosageUnitCode);
+    Long dosageUnitId = mapper.getDosageUnitIdForCode(dosageUnitCode);
     if (dosageUnitId == null)
       throw new DataException("Invalid reference data 'Dosage Unit'");
 
@@ -88,10 +88,10 @@ public class ProductRepository {
   public void update(Product product) {
     mapper.update(product);
   }
-  public Integer getDosageUnitIdForCode(String code){
+  public Long getDosageUnitIdForCode(String code){
     return mapper.getDosageUnitIdForCode(code);
   }
-  public Integer getProductFormIdForCode(String code){
+  public Long getProductFormIdForCode(String code){
     return mapper.getProductFormIdForCode(code);
   }
 

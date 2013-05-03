@@ -30,7 +30,7 @@ import static org.junit.Assert.assertThat;
 
 public class CSVParserTest {
 
-  public static final int MODIFIED_BY = 1;
+  public static final Long MODIFIED_BY = 1L;
   private CSVParser csvParser;
   private DummyRecordHandler recordHandler;
 
@@ -65,8 +65,8 @@ public class CSVParserTest {
     List<Importable> importedObjects = recordHandler.getImportedObjects();
     assertEquals(23, ((DummyImportable) importedObjects.get(0)).getMandatoryIntField());
     assertEquals("Random1", ((DummyImportable) importedObjects.get(0)).getMandatoryStringField());
-    assertEquals(25, ((DummyImportable) importedObjects.get(MODIFIED_BY)).getMandatoryIntField());
-    assertEquals("Random2", ((DummyImportable) importedObjects.get(MODIFIED_BY)).getMandatoryStringField());
+    assertEquals(25, ((DummyImportable) importedObjects.get(1)).getMandatoryIntField());
+    assertEquals("Random2", ((DummyImportable) importedObjects.get(1)).getMandatoryStringField());
   }
 
 

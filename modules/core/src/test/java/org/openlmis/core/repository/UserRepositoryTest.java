@@ -55,8 +55,8 @@ public class UserRepositoryTest {
   @Test
   public void shouldGetUsersWithRightInNodeForProgram() throws Exception {
     List<User> users = new ArrayList<>();
-    SupervisoryNode node = new SupervisoryNode(1);
-    Program program = new Program(1);
+    SupervisoryNode node = new SupervisoryNode(1L);
+    Program program = new Program(1L);
     when(userMapper.getUsersWithRightInNodeForProgram(program, node, APPROVE_REQUISITION)).thenReturn(users);
 
     List<User> result = userRepository.getUsersWithRightInNodeForProgram(program, node, APPROVE_REQUISITION);
@@ -169,7 +169,7 @@ public class UserRepositoryTest {
   @Test
   public void shouldUpdateUserIfUserDataIsValid() throws Exception {
     User user = new User();
-    user.setId(1);
+    user.setId(1L);
     userRepository.update(user);
     verify(userMapper).update(user);
   }
@@ -178,9 +178,9 @@ public class UserRepositoryTest {
   public void shouldReturnUserIfIdIsValid() throws Exception {
     User user = new User();
 
-    when(userMapper.getById(1)).thenReturn(user);
+    when(userMapper.getById(1L)).thenReturn(user);
 
-    User userReturned = userRepository.getById(1);
+    User userReturned = userRepository.getById(1L);
 
     assertThat(userReturned, is(user));
   }
@@ -188,9 +188,9 @@ public class UserRepositoryTest {
   @Test
   public void shouldReturnUserIdForPasswordResetTokens() throws Exception {
     String passwordResetToken = "test";
-    when(userMapper.getUserIdForPasswordResetToken(passwordResetToken)).thenReturn(1);
+    when(userMapper.getUserIdForPasswordResetToken(passwordResetToken)).thenReturn(1L);
 
-    assertThat(userRepository.getUserIdForPasswordResetToken(passwordResetToken), is(1));
+    assertThat(userRepository.getUserIdForPasswordResetToken(passwordResetToken), is(1L));
   }
 
 
@@ -198,7 +198,7 @@ public class UserRepositoryTest {
   public void shouldUpdateUserIfUserWithUserNameAlreadyExist() throws Exception {
     User user = make(a(defaultUser));
     user.setUserName("userBeingUploaded");
-    user.setId(1);
+    user.setId(1L);
 
     User supervisorUser = new User();
 

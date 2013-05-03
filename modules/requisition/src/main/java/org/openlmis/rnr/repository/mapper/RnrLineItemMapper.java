@@ -37,7 +37,7 @@ public interface RnrLineItemMapper {
     @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
   })
-  public List<RnrLineItem> getRnrLineItemsByRnrId(Integer rnrId);
+  public List<RnrLineItem> getRnrLineItemsByRnrId(Long rnrId);
 
   @Update("UPDATE requisition_line_items " +
     "SET quantityReceived = #{quantityReceived}, " +
@@ -80,11 +80,11 @@ public interface RnrLineItemMapper {
   void insertNonFullSupply(RnrLineItem requisitionLineItem);
 
   @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false")
-  public List<RnrLineItem> getNonFullSupplyRnrLineItemsByRnrId(Integer rnrId);
+  public List<RnrLineItem> getNonFullSupplyRnrLineItemsByRnrId(Long rnrId);
 
 
   @Delete("DELETE FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false")
-  void deleteAllNonFullSupplyForRequisition(Integer rnrId);
+  void deleteAllNonFullSupplyForRequisition(Long rnrId);
 
   @Select(
     "SELECT COUNT(DISTINCT productCategory) FROM requisition_line_items WHERE rnrId=#{rnr.id} AND fullSupply = #{isFullSupply}")

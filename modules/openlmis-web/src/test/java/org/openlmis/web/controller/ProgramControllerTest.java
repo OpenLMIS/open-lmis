@@ -35,7 +35,7 @@ import static org.openlmis.web.controller.ProgramController.PROGRAMS;
 
 public class ProgramControllerTest {
 
-  public static final Integer USER_ID = 1;
+  public static final Long USER_ID = 1L;
   @Mock
   @SuppressWarnings("unused")
   private ProgramService programService;
@@ -60,7 +60,7 @@ public class ProgramControllerTest {
     Program program = new Program();
     List<Program> programs = new ArrayList<>(Arrays.asList(program));
 
-    Integer facilityId = 12345;
+    Long facilityId = 12345L;
 
     Set<Right> rights = new LinkedHashSet<Right>() {{
       add(Right.CREATE_REQUISITION);
@@ -76,7 +76,7 @@ public class ProgramControllerTest {
   @Test
   public void shouldGetListOfActiveProgramsForAUserWithCreateRequisitionRight() throws Exception {
 
-    List<Program> expectedPrograms = new ArrayList<Program>();
+    List<Program> expectedPrograms = new ArrayList<>();
 
     when(programService.getUserSupervisedActiveProgramsWithRights(USER_ID, CREATE_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(expectedPrograms);
 
@@ -102,10 +102,10 @@ public class ProgramControllerTest {
   @Test
   public void shouldGetProgramById() throws Exception {
     Program expectedProgram = new Program();
-    when(programService.getById(1)).thenReturn(expectedProgram);
-    ResponseEntity<OpenLmisResponse> response = controller.get(1);
+    when(programService.getById(1L)).thenReturn(expectedProgram);
+    ResponseEntity<OpenLmisResponse> response = controller.get(1L);
 
     assertThat((Program) response.getBody().getData().get(PROGRAM), is(expectedProgram));
-    verify(programService).getById(1);
+    verify(programService).getById(1L);
   }
 }

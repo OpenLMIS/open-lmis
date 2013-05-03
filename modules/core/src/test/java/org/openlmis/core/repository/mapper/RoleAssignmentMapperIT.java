@@ -110,9 +110,9 @@ public class RoleAssignmentMapperIT {
     supervisoryNodeMapper.insert(supervisoryNode);
 
 
-    mapper.insertRoleAssignment(user.getId(), 1, supervisoryNode.getId(), r1.getId());
-    mapper.insertRoleAssignment(user.getId(), 1, supervisoryNode.getId(), r2.getId());
-    mapper.insertRoleAssignment(user.getId(), 1, null, r1.getId());
+    mapper.insertRoleAssignment(user.getId(), 1L, supervisoryNode.getId(), r1.getId());
+    mapper.insertRoleAssignment(user.getId(), 1L, supervisoryNode.getId(), r2.getId());
+    mapper.insertRoleAssignment(user.getId(), 1L, null, r1.getId());
 
     List<RoleAssignment> roleAssignments = mapper.getSupervisorRoles(user.getId());
 
@@ -134,8 +134,8 @@ public class RoleAssignmentMapperIT {
     supervisoryNodeMapper.insert(supervisoryNode);
 
 
-    mapper.insertRoleAssignment(user.getId(), 1, null, r2.getId());
-    mapper.insertRoleAssignment(user.getId(), 1, null, r1.getId());
+    mapper.insertRoleAssignment(user.getId(), 1L, null, r2.getId());
+    mapper.insertRoleAssignment(user.getId(), 1L, null, r1.getId());
 
     List<RoleAssignment> roleAssignments = mapper.getHomeFacilityRoles(user.getId());
 
@@ -146,7 +146,7 @@ public class RoleAssignmentMapperIT {
 
   @Test
   public void shouldGetHomeFacilityRolesForAUserOnAGivenProgramWithRights() throws Exception {
-    int programId = 1;
+    Long programId = 1L;
     Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
     Role r2 = new Role("r2", FALSE, "random description");
@@ -170,8 +170,8 @@ public class RoleAssignmentMapperIT {
 
   @Test
   public void shouldDeleteRoleAssignmentsForAUser() throws Exception {
-    Integer userId = user.getId();
-    mapper.insertRoleAssignment(userId, 2, null, 1);
+    Long userId = user.getId();
+    mapper.insertRoleAssignment(userId, 2L, null, 1L);
 
     mapper.deleteAllRoleAssignmentsForUser(userId);
 
@@ -181,7 +181,7 @@ public class RoleAssignmentMapperIT {
 
   @Test
   public void shouldGetAdminRolesForUser() throws Exception {
-    Integer userId = user.getId();
+    Long userId = user.getId();
 
     final Role adminRole = new Role("r1", TRUE, "admin role");
     roleRightsMapper.insertRole(adminRole);
@@ -189,7 +189,7 @@ public class RoleAssignmentMapperIT {
     roleRightsMapper.insertRole(nonAdminRole);
 
     mapper.insertRoleAssignment(userId, null, null, adminRole.getId());
-    mapper.insertRoleAssignment(userId, 2, null, nonAdminRole.getId());
+    mapper.insertRoleAssignment(userId, 2L, null, nonAdminRole.getId());
 
     RoleAssignment adminRoles = mapper.getAdminRole(userId);
 
@@ -198,7 +198,7 @@ public class RoleAssignmentMapperIT {
     assertTrue(exists(adminRoles.getRoleIds(), new Predicate() {
       @Override
       public boolean evaluate(Object o) {
-        Integer roleId = (Integer) o;
+        Long roleId = (Long) o;
         return roleId.equals(adminRole.getId());
       }
     }));

@@ -21,10 +21,11 @@ public class ReportTest {
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 
+  private final Long nullLong = null;
+
   @Test
   public void shouldThrowExceptionIfReportDoesNotContainFacilityId(){
-    Integer nullInteger = null;
-    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.facilityId, nullInteger)));
+    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.facilityId, nullLong)));
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage(ERROR_MANDATORY_FIELD_MISSING);
@@ -34,8 +35,7 @@ public class ReportTest {
 
   @Test
   public void shouldThrowExceptionIfReportDoesNotContainProgramId(){
-    Integer nullInteger = null;
-    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.programId, nullInteger)));
+    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.programId, nullLong)));
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage(ERROR_MANDATORY_FIELD_MISSING);
@@ -45,8 +45,8 @@ public class ReportTest {
 
   @Test
   public void shouldThrowExceptionIfReportDoesNotContainUserId(){
-    String nullInteger = null;
-    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.userId, nullInteger)));
+    String nullString = null;
+    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.userId, nullString)));
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage(ERROR_MANDATORY_FIELD_MISSING);
@@ -56,8 +56,7 @@ public class ReportTest {
 
   @Test
   public void shouldThrowExceptionIfReportDoesNotContainPeriodId(){
-    Integer nullInteger = null;
-    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.periodId, nullInteger)));
+    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.periodId, nullLong)));
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage(ERROR_MANDATORY_FIELD_MISSING);

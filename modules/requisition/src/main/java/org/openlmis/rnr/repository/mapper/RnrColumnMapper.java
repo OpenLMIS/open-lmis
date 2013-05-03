@@ -22,10 +22,10 @@ public interface RnrColumnMapper {
       "VALUES",
       "(#{programId}, #{rnrColumn.id},  #{rnrColumn.visible}, #{rnrColumn.label},",
       "#{rnrColumn.position}, #{rnrColumn.source.code}, #{rnrColumn.formulaValidationRequired})"})
-  int insert(@Param("programId") Integer programId, @Param("rnrColumn") RnrColumn rnrColumn);
+  int insert(@Param("programId") Long programId, @Param("rnrColumn") RnrColumn rnrColumn);
 
   @Select("select 0<(select count(id) as count from program_rnr_columns where programId = #{programId})")
-  boolean isRnrTemplateDefined(@Param("programId") Integer programId);
+  boolean isRnrTemplateDefined(@Param("programId") Long programId);
 
   @Select({"SELECT m.id, m.name, m.description, m.formula, m.indicator, m.used, m.mandatory, m.sourceConfigurable,",
       "p.position, p.label, p.visible, p.source as sourceString, p.formulaValidationRequired",
@@ -33,7 +33,7 @@ public interface RnrColumnMapper {
       "ON p.masterColumnId = m.id",
       "WHERE p.programId = #{programId}",
       "ORDER BY visible DESC, position"})
-  List<RnrColumn> fetchDefinedRnrColumnsForProgram(Integer programId);
+  List<RnrColumn> fetchDefinedRnrColumnsForProgram(Long programId);
 
   @Update("UPDATE program_rnr_columns SET " +
       "visible = #{rnrColumn.visible}, " +
@@ -42,7 +42,7 @@ public interface RnrColumnMapper {
       "source = #{rnrColumn.source.code}, " +
       "formulaValidationRequired = #{rnrColumn.formulaValidationRequired} " +
       "WHERE programId = #{programId} AND masterColumnId = #{rnrColumn.id}")
-  void update(@Param("programId") Integer programId, @Param("rnrColumn") RnrColumn rnrColumn);
+  void update(@Param("programId") Long programId, @Param("rnrColumn") RnrColumn rnrColumn);
 
   @Select({"SELECT m.id, m.name, m.description, m.used, m.mandatory, m.formula, m.indicator,",
       "p.position, p.label, p.visible , p.source as sourceString, p.formulaValidationRequired",
@@ -50,7 +50,7 @@ public interface RnrColumnMapper {
       "ON p.masterColumnId = m.id",
       "WHERE p.programId = #{programId} AND p.visible = 'true'",
       "ORDER BY visible DESC, position"})
-  List<RnrColumn> getVisibleProgramRnrColumns(Integer programId);
+  List<RnrColumn> getVisibleProgramRnrColumns(Long programId);
 
 
   @Select("SELECT * FROM master_rnr_columns")

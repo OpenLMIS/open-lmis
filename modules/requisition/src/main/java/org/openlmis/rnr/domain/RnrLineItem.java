@@ -44,7 +44,7 @@ public class RnrLineItem extends BaseModel{
   public static final Float MULTIPLIER = 3f;
   public static final Float NUMBER_OF_DAYS = 30f;
 
-  private Integer rnrId;
+  private Long rnrId;
 
   //TODO : hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
   private String product;
@@ -91,7 +91,7 @@ public class RnrLineItem extends BaseModel{
 
   private static Logger logger = LoggerFactory.getLogger(RnrLineItem.class);
 
-  public RnrLineItem(Integer rnrId, FacilityApprovedProduct facilityApprovedProduct, Integer modifiedBy) {
+  public RnrLineItem(Long rnrId, FacilityApprovedProduct facilityApprovedProduct, Long modifiedBy) {
     this.rnrId = rnrId;
 
     this.maxMonthsOfStock = facilityApprovedProduct.getMaxMonthsOfStock();

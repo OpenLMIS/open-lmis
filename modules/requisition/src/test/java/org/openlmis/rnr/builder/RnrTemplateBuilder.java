@@ -25,7 +25,7 @@ public class RnrTemplateBuilder {
 
     @Override
     public ProgramRnrTemplate instantiate(PropertyLookup<ProgramRnrTemplate> lookup) {
-       return new ProgramRnrTemplate(1, asList(
+       return new ProgramRnrTemplate(1L, asList(
            rnrColumn(QUANTITY_REQUESTED, true, null, "Requested Quantity"),
            rnrColumn(REASON_FOR_REQUESTED_QUANTITY, true, null, "Requested Quantity Reason"),
            rnrColumn(STOCK_OUT_DAYS, true, CALCULATED, "stockOutDays"),

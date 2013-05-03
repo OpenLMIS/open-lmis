@@ -105,7 +105,7 @@ public class FacilityRepository {
     String operatedByCode = facility.getOperatedBy().getCode();
     if (operatedByCode == null || operatedByCode.isEmpty()) return;
 
-    Integer operatedById = mapper.getOperatedByIdForCode(operatedByCode);
+    Long operatedById = mapper.getOperatedByIdForCode(operatedByCode);
     if (operatedById == null) throw new DataException("Invalid reference data 'Operated By'");
 
     facility.getOperatedBy().setId(operatedById);
@@ -119,11 +119,11 @@ public class FacilityRepository {
     return mapper.getAllOperators();
   }
 
-  public Facility getHomeFacility(Integer userId) {
+  public Facility getHomeFacility(Long userId) {
     return mapper.getHomeFacility(userId);
   }
 
-  public Facility getById(Integer id) {
+  public Facility getById(Long id) {
     return mapper.getById(id);
   }
 
@@ -132,7 +132,7 @@ public class FacilityRepository {
 
   }
 
-  public List<Facility> getFacilitiesBy(Integer programId, List<RequisitionGroup> requisitionGroups) {
+  public List<Facility> getFacilitiesBy(Long programId, List<RequisitionGroup> requisitionGroups) {
     return mapper.getFacilitiesBy(programId, commaSeparator.commaSeparateIds(requisitionGroups));
   }
 
@@ -140,8 +140,8 @@ public class FacilityRepository {
     return mapper.getAllInRequisitionGroups(commaSeparator.commaSeparateIds(requisitionGroups));
   }
 
-  public Integer getIdForCode(String code) {
-    Integer facilityId = mapper.getIdForCode(code);
+  public Long getIdForCode(String code) {
+    Long facilityId = mapper.getIdForCode(code);
 
     if (facilityId == null)
       throw new DataException("Invalid Facility Code");
@@ -153,7 +153,7 @@ public class FacilityRepository {
     return mapper.searchFacilitiesByCodeOrName(searchParam);
   }
 
-  public Facility getHomeFacilityForRights(Integer userId, Right... rights) {
+  public Facility getHomeFacilityForRights(Long userId, Right... rights) {
     return mapper.getHomeFacilityWithRights(userId, commaSeparateRightNames(rights));
   }
 

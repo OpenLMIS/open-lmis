@@ -65,7 +65,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   public void shouldGetProgramsWhichAreActiveByFacilityCode() {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
-    Program program = make(a(defaultProgram, with(programId, 1)));
+    Program program = make(a(defaultProgram, with(programId, 1L)));
     programMapper.insert(program);
     ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()), with(supportedProgram, program)));
     programSupportedMapper.addSupportedProgram(programSupported);
@@ -87,7 +87,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   public void shouldGetProgramsSupportedByFacility() throws Exception {
     Facility facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
-    Program program = make(a(defaultProgram, with(programId, 1)));
+    Program program = make(a(defaultProgram, with(programId, 1L)));
     programMapper.insert(program);
     ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program)));
@@ -236,7 +236,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   }
 
   private Role insertRoleAssignments(Program program, User user, Role role, SupervisoryNode supervisoryNode) {
-    Integer supervisoryNodeId = supervisoryNode == null ? null : supervisoryNode.getId();
+    Long supervisoryNodeId = supervisoryNode == null ? null : supervisoryNode.getId();
     roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), supervisoryNodeId, role.getId());
     return role;
   }

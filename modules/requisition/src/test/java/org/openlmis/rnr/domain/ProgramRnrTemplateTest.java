@@ -26,7 +26,7 @@ public class ProgramRnrTemplateTest {
 
   @Before
   public void setup() {
-    template = new ProgramRnrTemplate(1, asList(
+    template = new ProgramRnrTemplate(1L, asList(
         rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
         rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
         rnrColumn(STOCK_OUT_DAYS, false, CALCULATED, "stockOutDays"),
@@ -41,7 +41,7 @@ public class ProgramRnrTemplateTest {
 
   @Test
   public void shouldNotGiveErrorIfDependentsAreNotMissing() throws Exception {
-    Map<String, OpenLmisMessage> errors = new ProgramRnrTemplate(1, asList(
+    Map<String, OpenLmisMessage> errors = new ProgramRnrTemplate(1L, asList(
         rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
         rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
         rnrColumn(STOCK_OUT_DAYS, false, CALCULATED, "stockOutDays"),

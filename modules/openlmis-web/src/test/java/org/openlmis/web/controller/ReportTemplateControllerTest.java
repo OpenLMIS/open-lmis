@@ -45,7 +45,7 @@ public class ReportTemplateControllerTest {
   private ReportTemplateController controller;
 
   private MockHttpServletRequest request;
-  private static final Integer USER = 1;
+  private static final Long USER = 1L;
 
   @Before
   public void setUp() throws Exception {

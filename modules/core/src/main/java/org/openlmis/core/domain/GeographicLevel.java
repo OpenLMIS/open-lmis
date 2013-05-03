@@ -20,7 +20,7 @@ public class GeographicLevel extends BaseModel{
   String name;
   Integer levelNumber;
 
-  public GeographicLevel(Integer id, String code, String name, Integer levelNumber){
+  public GeographicLevel(Long id, String code, String name, Integer levelNumber){
     this(code, name, levelNumber);
     this.id = id;
   }

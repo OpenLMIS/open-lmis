@@ -61,7 +61,7 @@ public class RestController {
   }
 
   @RequestMapping(value = "/rest-api/requisitions/{id}/approve", method = PUT, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> approve(@PathVariable Integer id, @RequestBody Report report, Principal principal) {
+  public ResponseEntity<RestResponse> approve(@PathVariable Long id, @RequestBody Report report, Principal principal) {
     report.setRequisitionId(id);
     report.setVendor(new Vendor(principal.getName()));
     try {

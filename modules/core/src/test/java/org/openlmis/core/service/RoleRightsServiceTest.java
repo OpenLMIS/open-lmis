@@ -107,7 +107,7 @@ public class RoleRightsServiceTest {
   @Test
   public void shouldGetRoleById() throws Exception {
     Role role = new Role();
-    int roleId = 1;
+    Long roleId = 1L;
     when(roleRightsRepository.getRole(roleId)).thenReturn(role);
 
     assertThat(roleRightsService.getRole(roleId), is(role));
@@ -124,11 +124,11 @@ public class RoleRightsServiceTest {
 
   @Test
   public void shouldGetRightsForAUserOnSupervisedFacilityAndProgram() throws Exception {
-    Integer userId = 1;
-    Facility facility = new Facility(2);
-    Program program = new Program(3);
+    Long userId = 1L;
+    Facility facility = new Facility(2L);
+    Program program = new Program(3L);
     List<Right> expected = asList(CREATE_REQUISITION);
-    SupervisoryNode supervisoryNode = new SupervisoryNode(4);
+    SupervisoryNode supervisoryNode = new SupervisoryNode(4L);
     List<SupervisoryNode> supervisoryNodes = asList(supervisoryNode);
 
     when(supervisoryNodeService.getFor(facility, program)).thenReturn(supervisoryNode);
@@ -145,9 +145,9 @@ public class RoleRightsServiceTest {
 
   @Test
   public void shouldGetRightsForAUserOnHomeFacilityAndProgram() throws Exception {
-    Integer userId = 1;
-    Facility facility = new Facility(2);
-    Program program = new Program(3);
+    Long userId = 1L;
+    Facility facility = new Facility(2L);
+    Program program = new Program(3L);
     List<Right> expected = asList(CREATE_REQUISITION);
 
     when(facilityService.getHomeFacility(userId)).thenReturn(facility);

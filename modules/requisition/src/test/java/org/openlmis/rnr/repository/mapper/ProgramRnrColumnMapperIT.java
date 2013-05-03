@@ -30,7 +30,7 @@ import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
 @TransactionConfiguration(defaultRollback = true)
 public class ProgramRnrColumnMapperIT {
 
-  public static final int PROGRAM_ID = 1;
+  public static final Long PROGRAM_ID = 1L;
   @Autowired
   RnrColumnMapper rnrColumnMapper;
 
@@ -135,7 +135,7 @@ public class ProgramRnrColumnMapperIT {
     return rnrColumnMapper.insert(PROGRAM_ID, rnrColumn);
   }
 
-  private void updateProgramRnrColumn(Integer id, int position, boolean visible, String label, RnRColumnSource columnSource, Boolean validated) {
+  private void updateProgramRnrColumn(Long id, int position, boolean visible, String label, RnRColumnSource columnSource, Boolean validated) {
     RnrColumn rnrColumn = new RnrColumn();
     rnrColumn.setId(id);
     rnrColumn.setLabel(label);

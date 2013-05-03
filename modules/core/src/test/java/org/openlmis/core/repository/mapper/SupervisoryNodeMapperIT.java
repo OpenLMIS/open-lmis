@@ -108,7 +108,7 @@ public class SupervisoryNodeMapperIT {
   public void shouldGetSupervisoryNodeIdByCode() throws Exception {
     supervisoryNodeMapper.insert(supervisoryNode);
 
-    Integer fetchedId = supervisoryNodeMapper.getIdForCode(supervisoryNode.getCode());
+    Long fetchedId = supervisoryNodeMapper.getIdForCode(supervisoryNode.getCode());
 
     assertThat(fetchedId, is(supervisoryNode.getId()));
   }
@@ -271,7 +271,7 @@ public class SupervisoryNodeMapperIT {
   }
 
   private Role insertRoleAssignments(Program program, User user, Role role, SupervisoryNode supervisoryNode) {
-    Integer supervisoryNodeId = supervisoryNode == null ? null : supervisoryNode.getId();
+    Long supervisoryNodeId = supervisoryNode == null ? null : supervisoryNode.getId();
     roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), supervisoryNodeId, role.getId());
     return role;
   }

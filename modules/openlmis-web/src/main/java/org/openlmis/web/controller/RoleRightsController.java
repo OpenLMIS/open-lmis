@@ -71,14 +71,14 @@ public class RoleRightsController extends BaseController {
 
   @RequestMapping(value = "/roles/{id}", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
-  public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Integer id) {
+  public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Long id) {
     Role role = roleRightsService.getRole(id);
     return response(ROLE, role);
   }
 
   @RequestMapping(value = "/roles/{id}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
-  public ResponseEntity<OpenLmisResponse> updateRole(@PathVariable("id") Integer id, @RequestBody Role role, HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> updateRole(@PathVariable("id") Long id, @RequestBody Role role, HttpServletRequest request) {
     role.setModifiedBy(loggedInUserId(request));
     try {
       role.setId(id);
@@ -91,7 +91,7 @@ public class RoleRightsController extends BaseController {
   }
 
   @RequestMapping(value = "facility/{facilityId}/program/{programId}/rights")
-  public ResponseEntity<OpenLmisResponse> getRightsForUserAndFacilityProgram(@PathVariable("facilityId")Integer facilityId, @PathVariable("programId") Integer programId, HttpServletRequest httpServletRequest) {
+  public ResponseEntity<OpenLmisResponse> getRightsForUserAndFacilityProgram(@PathVariable("facilityId")Long facilityId, @PathVariable("programId") Long programId, HttpServletRequest httpServletRequest) {
     return response(RIGHTS, roleRightsService.getRightsForUserAndFacilityProgram(loggedInUserId(httpServletRequest), new Facility(facilityId), new Program(programId)));
   }
 }

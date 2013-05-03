@@ -38,49 +38,51 @@ public class RoleAssignmentRepositoryTest {
 
   @Test
   public void shouldInsertUserProgramRoleMapping() throws Exception {
-    repository.insertRoleAssignment(1, 3, 1, 2);
+    repository.insertRoleAssignment(1L, 3L, 1L, 2L);
 
-    verify(mapper).insertRoleAssignment(1, 3, 1, 2);
+    verify(mapper).insertRoleAssignment(1L, 3L, 1L, 2L);
   }
 
   @Test
   public void shouldDeleteAllRoleAssignmentsForTheUser() throws Exception {
-    repository.deleteAllRoleAssignmentsForUser(1);
+    repository.deleteAllRoleAssignmentsForUser(1L);
 
-    verify(mapper).deleteAllRoleAssignmentsForUser(1);
+    verify(mapper).deleteAllRoleAssignmentsForUser(1L);
   }
 
   @Test
   public void shouldGetSupervisorRoles() throws Exception {
     List<RoleAssignment> expected = new ArrayList<>();
-    when(mapper.getSupervisorRoles(1)).thenReturn(expected);
-    List<RoleAssignment> actual = repository.getSupervisorRoles(1);
+    when(mapper.getSupervisorRoles(1L)).thenReturn(expected);
+    List<RoleAssignment> actual = repository.getSupervisorRoles(1L);
     assertThat(actual, is(expected));
   }
 
   @Test
   public void shouldGetHomeFacilityRoles() throws Exception {
     List<RoleAssignment> expected = new ArrayList<>();
-    when(mapper.getHomeFacilityRoles(1)).thenReturn(expected);
-    List<RoleAssignment> actual = repository.getHomeFacilityRoles(1);
+    when(mapper.getHomeFacilityRoles(1L)).thenReturn(expected);
+    List<RoleAssignment> actual = repository.getHomeFacilityRoles(1L);
     assertThat(actual, is(expected));
   }
 
   @Test
   public void shouldGetAdminRoles() throws Exception {
     RoleAssignment expected = new RoleAssignment();
-    when(mapper.getAdminRole(1)).thenReturn(expected);
-    RoleAssignment actual = repository.getAdminRole(1);
+    when(mapper.getAdminRole(1L)).thenReturn(expected);
+    RoleAssignment actual = repository.getAdminRole(1L);
     assertThat(actual, is(expected));
   }
 
   @Test
   public void shouldGetRoleAssignmentsForAGivenUserOnAGivenProgramWithRights() throws Exception {
-    Integer userId = 1;
-    Integer programId = 2;
+    Long userId = 1L;
+    Long programId = 2L;
     List<RoleAssignment> expected = new ArrayList<>();
-    when(mapper.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, "['CREATE_REQUISITION', 'AUTHORIZE_REQUISITION']")).thenReturn(expected);
-    List<RoleAssignment> actual = repository.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
+    when(mapper.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId,
+      "['CREATE_REQUISITION', 'AUTHORIZE_REQUISITION']")).thenReturn(expected);
+    List<RoleAssignment> actual = repository.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId,
+      CREATE_REQUISITION, AUTHORIZE_REQUISITION);
     assertThat(actual, is(expected));
   }
 }

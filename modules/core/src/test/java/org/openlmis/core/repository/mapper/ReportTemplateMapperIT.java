@@ -47,7 +47,7 @@ public class ReportTemplateMapperIT {
     reportTemplate.setName(name);
     reportTemplate.setData(new byte[1]);
     reportTemplate.setParameters("SampleParameters");
-    reportTemplate.setModifiedBy(1);
+    reportTemplate.setModifiedBy(1L);
     Date currentTimeStamp = new Date();
     reportTemplate.setModifiedDate(currentTimeStamp);
     reportTemplateMapper.insert(reportTemplate);
@@ -64,7 +64,7 @@ public class ReportTemplateMapperIT {
 
     reportTemplate.setData(readFileToByteArray(file));
     reportTemplate.setModifiedDate(new Date());
-    reportTemplate.setModifiedBy(1);
+    reportTemplate.setModifiedBy(1L);
 
     reportTemplateMapper.insert(reportTemplate);
   }

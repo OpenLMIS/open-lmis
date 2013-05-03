@@ -61,13 +61,13 @@ public class FacilityApprovedProductServiceTest {
 
     FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
 
-    Integer programId = 45;
-    Integer productId = 10;
-    Integer programProductId = 100;
+    Long programId = 45L;
+    Long productId = 10L;
+    Long programProductId = 100L;
 
     when(programService.getIdForCode(defaultProgramCode)).thenReturn(programId);
     when(productService.getIdForCode(defaultProductCode)).thenReturn(productId);
-    when(programProductService.getIdByProgramIdAndProductId(programId, productId)).thenReturn(100);
+    when(programProductService.getIdByProgramIdAndProductId(programId, productId)).thenReturn(100L);
     when(facilityService.getFacilityTypeByCode(facilityApprovedProduct.getFacilityType())).thenReturn(new FacilityType());
 
     facilityApprovedProductService.save(facilityApprovedProduct);
@@ -116,8 +116,8 @@ public class FacilityApprovedProductServiceTest {
   public void shouldNotSaveFacilityApprovedProductAndThrowAnExceptionWhenProgramProductDoesNotExist() throws Exception {
     FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
 
-    Integer programId = 1;
-    Integer productId = 2;
+    Long programId = 1L;
+    Long productId = 2L;
 
     when(programService.getIdForCode(defaultProgramCode)).thenReturn(programId);
     when(productService.getIdForCode(defaultProductCode)).thenReturn(productId);

@@ -20,7 +20,7 @@ public interface RoleRightsMapper {
 
   @Insert("INSERT INTO role_rights(roleId, rightName) VALUES " +
       "(#{roleId}, #{right})")
-  int createRoleRight(@Param(value = "roleId") Integer roleId, @Param(value = "right") Right right);
+  int createRoleRight(@Param(value = "roleId") Long roleId, @Param(value = "right") Right right);
 
   @Select({"SELECT RR.rightName",
       "FROM users U, role_assignments RA, role_rights RR WHERE",
@@ -32,7 +32,7 @@ public interface RoleRightsMapper {
   //used below
   @SuppressWarnings("unused")
   @Select("SELECT rightName FROM role_rights RR WHERE roleId = #{roleId}")
-  Set<Right> getAllRightsForRole(Integer roleId);
+  Set<Right> getAllRightsForRole(Long roleId);
 
   @Insert({"INSERT INTO roles",
       "(name, adminRole, description, modifiedBy) VALUES",
@@ -46,7 +46,7 @@ public interface RoleRightsMapper {
       @Result(property = "rights", javaType = Set.class, column = "id",
           many = @Many(select = "getAllRightsForRole"))
   })
-  Role getRole(Integer id);
+  Role getRole(Long id);
 
   @Select("SELECT * FROM roles ORDER BY id")
   @Results(value = {
@@ -60,22 +60,22 @@ public interface RoleRightsMapper {
   void updateRole(Role role);
 
   @Delete("DELETE FROM role_rights WHERE roleId=#{roleId}")
-  int deleteAllRightsForRole(int roleId);
+  int deleteAllRightsForRole(Long roleId);
 
   @Select({"SELECT RR.rightName",
       "FROM users U, role_assignments RA, role_rights RR WHERE",
       "U.id = #{userId}",
       "AND U.id = RA.userId",
       "AND RA.roleId = RR.roleId"})
-  Set<Right> getAllRightsForUserById(@Param("userId") Integer userId);
+  Set<Right> getAllRightsForUserById(@Param("userId") Long userId);
 
   @Select({"SELECT DISTINCT RR.rightName " +
       "FROM role_rights RR INNER JOIN role_assignments RA ON RR.roleId = RA.roleId " +
       "WHERE RA.userId = #{userId} AND RA.supervisoryNodeId = ANY(#{commaSeparatedSupervisoryNodeIds}::INTEGER[]) AND RA.programId = #{program.id}"})
-  List<Right> getRightsForUserOnSupervisoryNodeAndProgram(@Param("userId") Integer userId, @Param("commaSeparatedSupervisoryNodeIds") String commaSeparatedSupervisoryNodeIds, @Param("program") Program program);
+  List<Right> getRightsForUserOnSupervisoryNodeAndProgram(@Param("userId") Long userId, @Param("commaSeparatedSupervisoryNodeIds") String commaSeparatedSupervisoryNodeIds, @Param("program") Program program);
 
   @Select({"SELECT DISTINCT RR.rightName " +
       "FROM role_rights RR INNER JOIN role_assignments RA ON RR.roleId = RA.roleId " +
       "WHERE RA.userId = #{userId} AND RA.supervisoryNodeId IS NULL AND RA.programId = #{program.id}"})
-  List<Right> getRightsForUserOnHomeFacilityAndProgram(@Param("userId") Integer userId, @Param("program") Program program);
+  List<Right> getRightsForUserOnHomeFacilityAndProgram(@Param("userId") Long userId, @Param("program") Program program);
 }

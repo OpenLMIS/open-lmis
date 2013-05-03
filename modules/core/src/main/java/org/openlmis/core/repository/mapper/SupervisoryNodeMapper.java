@@ -20,7 +20,7 @@ public interface SupervisoryNodeMapper {
       @Result(property = "parent.id", column = "parentId"),
       @Result(property = "facility.id", column = "facilityId")
   })
-  SupervisoryNode getSupervisoryNode(Integer id);
+  SupervisoryNode getSupervisoryNode(Long id);
 
   @Insert("INSERT INTO supervisory_nodes " +
       "(code, name, parentId, facilityId, description, modifiedBy, modifiedDate)" +
@@ -29,7 +29,7 @@ public interface SupervisoryNodeMapper {
   Integer insert(SupervisoryNode supervisoryNode);
 
   @Select("SELECT id FROM supervisory_nodes WHERE LOWER(code) = LOWER(#{code})")
-  Integer getIdForCode(String code);
+  Long getIdForCode(String code);
 
   @Select("WITH  recursive  supervisoryNodesRec AS " +
       "   (" +
@@ -49,7 +49,7 @@ public interface SupervisoryNodeMapper {
       "   ON sn.parentId = supervisoryNodesRec.id " +
       "   )" +
       "SELECT * FROM supervisoryNodesRec")
-  List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(@Param(value = "userId") Integer userId, @Param(value = "programId") Integer programId,
+  List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(@Param(value = "userId") Long userId, @Param(value = "programId") Long programId,
                                                             @Param(value = "commaSeparatedRights") String commaSeparatedRights);
 
   @Select({"SELECT SN.* FROM supervisory_nodes SN INNER JOIN requisition_groups RG ON RG.supervisoryNodeId = SN.id",
@@ -65,7 +65,7 @@ public interface SupervisoryNodeMapper {
       @Result(property = "parent.id", column = "parentId"),
       @Result(property = "facility.id", column = "facilityId")
   })
-  SupervisoryNode getParent(Integer id);
+  SupervisoryNode getParent(Long id);
 
   @Select("SELECT * FROM supervisory_nodes")
   List<SupervisoryNode> getAll();
@@ -87,7 +87,8 @@ public interface SupervisoryNodeMapper {
     "   ON sn.parentId = supervisoryNodesRec.id ",
     "   )",
     "SELECT * FROM supervisoryNodesRec"})
-  List<SupervisoryNode> getAllSupervisoryNodesInHierarchyByUserAndRights(@Param("userId") Integer userId, @Param("commaSeparatedRights") String commaSeparatedRights);
+  List<SupervisoryNode> getAllSupervisoryNodesInHierarchyByUserAndRights(@Param("userId") Long userId,
+                                                                         @Param("commaSeparatedRights") String commaSeparatedRights);
 
   @Select({"WITH  recursive  supervisoryNodesRec AS ",
       "   (",

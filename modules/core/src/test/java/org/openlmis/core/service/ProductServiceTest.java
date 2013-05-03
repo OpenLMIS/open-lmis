@@ -84,7 +84,7 @@ public class ProductServiceTest {
   @Test
   public void shouldUpdateProductIfPresent() {
     Product product = new Product();
-    product.setId(2);
+    product.setId(2L);
 
     productService.save(product);
 

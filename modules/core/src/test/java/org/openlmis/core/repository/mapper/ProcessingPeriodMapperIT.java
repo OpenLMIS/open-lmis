@@ -79,7 +79,7 @@ public class ProcessingPeriodMapperIT {
     ProcessingPeriod period1 = make(a(defaultProcessingPeriod, with(scheduleId, schedule.getId())));
     mapper.insert(period1);
 
-    List<ProcessingPeriod> fetchedPeriods = mapper.getAll(1233);
+    List<ProcessingPeriod> fetchedPeriods = mapper.getAll(1233L);
     assertTrue(fetchedPeriods.isEmpty());
   }
 
@@ -101,7 +101,7 @@ public class ProcessingPeriodMapperIT {
     assertThat(insertedPeriod.getStartDate(), is(date1));
     assertThat(insertedPeriod.getEndDate(), is(date2));
     assertThat(insertedPeriod.getNumberOfMonths(), is(3));
-    assertThat(insertedPeriod.getModifiedBy(), is(1));
+    assertThat(insertedPeriod.getModifiedBy(), is(1L));
     assertThat(insertedPeriod.getModifiedDate(), is(notNullValue()));
   }
 

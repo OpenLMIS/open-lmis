@@ -43,7 +43,7 @@ public class RequisitionSearchStrategyFactoryTest {
 
   @Test
   public void shouldGetSearchStrategyForFacilityProgramAndDateRange() throws Exception {
-    Integer facilityId = 1, programId = 1;
+    Long facilityId = 1L, programId = 1L;
     Date periodStartDate = new Date(), periodEndDate = new Date();
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodStartDate, periodEndDate);
 
@@ -54,7 +54,7 @@ public class RequisitionSearchStrategyFactoryTest {
 
   @Test
   public void shouldGetSearchStrategyForFacilityAndDateRange() throws Exception {
-    Integer facilityId = 1, programId = null;
+    Long facilityId = 1L, programId = null;
     Date periodStartDate = new Date(), periodEndDate = new Date();
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodStartDate, periodEndDate);
     whenNew(FacilityDateRangeSearch.class).withArguments(criteria, processingScheduleService, requisitionRepository, programService)

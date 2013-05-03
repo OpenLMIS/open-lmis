@@ -100,11 +100,11 @@ public class RequisitionGroupProgramScheduleRepository {
       throw new DataException("Drop off facility code is not present");
   }
 
-  public RequisitionGroupProgramSchedule getScheduleForRequisitionGroupAndProgram(Integer requisitionGroupId, Integer programId) {
+  public RequisitionGroupProgramSchedule getScheduleForRequisitionGroupAndProgram(Long requisitionGroupId, Long programId) {
     return mapper.getScheduleForRequisitionGroupIdAndProgramId(requisitionGroupId, programId);
   }
 
-  public List<Integer> getProgramIDsForRequisitionGroup(Integer requisitionGroupId) {
+  public List<Long> getProgramIDsForRequisitionGroup(Long requisitionGroupId) {
     return mapper.getProgramIDsById(requisitionGroupId);
   }
 

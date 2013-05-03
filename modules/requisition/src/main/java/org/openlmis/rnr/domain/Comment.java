@@ -19,7 +19,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = false)
 public class Comment extends BaseModel {
 
-  private Integer rnrId;
+  private Long rnrId;
   private User author;
   private String commentText;
   private Date createdDate;

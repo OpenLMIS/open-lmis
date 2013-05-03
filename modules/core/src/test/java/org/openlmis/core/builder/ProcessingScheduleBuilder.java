@@ -15,17 +15,17 @@ import static com.natpryce.makeiteasy.Property.newProperty;
 
 public class ProcessingScheduleBuilder {
 
-    public static final Property<ProcessingSchedule, Integer> id = newProperty();
+    public static final Property<ProcessingSchedule, Long> id = newProperty();
     public static final Property<ProcessingSchedule, String> code = newProperty();
     public static final Property<ProcessingSchedule, String> name = newProperty();
     public static final Property<ProcessingSchedule, String> description = newProperty();
-    public static final Property<ProcessingSchedule, Integer> modifiedBy = newProperty();
+    public static final Property<ProcessingSchedule, Long> modifiedBy = newProperty();
 
     public static final String SCHEDULE_CODE = "Q1stM";
     public static final String SCHEDULE_NAME = "QuarterMonthly";
     public static final String SCHEDULE_DESCRIPTION = "QuarterMonth";
-    public static final Integer SCHEDULE_MODIFIED_BY = 1;
-    public static final Integer SCHEDULE_ID = 1;
+    public static final Long SCHEDULE_MODIFIED_BY = 1L;
+    public static final Long SCHEDULE_ID = 1L;
     public static final Instantiator<ProcessingSchedule> defaultProcessingSchedule = new Instantiator<ProcessingSchedule>() {
 
         @Override

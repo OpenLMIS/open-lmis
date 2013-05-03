@@ -18,7 +18,6 @@ import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupplyLineMapper;
-import org.springframework.dao.DuplicateKeyException;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -51,10 +50,10 @@ public class SupplyLineRepositoryTest {
 
   @Test
   public void shouldInsertSupplyLine() {
-    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1)).thenReturn(null);
+    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1L);
+    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1L);
+    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1L);
+    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1L)).thenReturn(null);
 
     supplyLineRepository.insert(supplyLine);
     verify(supplyLineMapper).insert(supplyLine);
@@ -62,10 +61,10 @@ public class SupplyLineRepositoryTest {
 
   @Test
   public void shouldThrowExceptionForDuplicateSupplyLines() {
-    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1)).thenReturn(null);
+    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1L);
+    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1L);
+    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1L);
+    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1L)).thenReturn(null);
     doThrow(new DataException("Duplicate entry for Supply Line found")).when(supplyLineMapper).insert(supplyLine);
 
     expectedEx.expect(DataException.class);
@@ -75,7 +74,7 @@ public class SupplyLineRepositoryTest {
   }
 
   @Test
-  public void shouldReturnSupplyLineBySupervisoryNodeAndProgram(){
+  public void shouldReturnSupplyLineBySupervisoryNodeAndProgram() {
     Program program = new Program();
     SupervisoryNode supervisoryNode = new SupervisoryNode();
     when(supplyLineMapper.getSupplyLineBy(supervisoryNode, program)).thenReturn(supplyLine);

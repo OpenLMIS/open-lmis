@@ -24,7 +24,7 @@ import java.util.List;
 public class OrderDTO {
 
   Date createdDate;
-  private Integer id;
+  private Long id;
   private RnrDTO rnr;
   private Boolean productsOrdered;
   private OrderStatus status;

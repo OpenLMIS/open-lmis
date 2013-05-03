@@ -85,20 +85,20 @@ public class OrderMapperIT {
 
   @Test
   public void shouldInsertOrder() throws Exception {
-    Rnr rnr = insertRequisition(1);
+    Rnr rnr = insertRequisition(1L);
     Order order = new Order(rnr);
     mapper.insert(order);
-    List<Integer> orderIds = new ArrayList();
+    List<Long> orderIds = new ArrayList();
     orderIds.add(order.getId());
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id = ?", orderIds);
     resultSet.next();
-    assertThat(resultSet.getInt("id"), is(order.getId()));
+    assertThat(resultSet.getLong("id"), is(order.getId()));
   }
 
   @Test
   public void shouldGetAllOrders() throws Exception {
-    Order order1 = insertOrder(3);
-    Order order2 = insertOrder(1);
+    Order order1 = insertOrder(3L);
+    Order order2 = insertOrder(1L);
 
     Date today = DateTime.now().toDate();
     Date oneYearBack = DateTime.now().minusYears(1).toDate();
@@ -116,7 +116,7 @@ public class OrderMapperIT {
 
   @Test
   public void shouldGetShipmentFileInfoWhileFetchingOrders() throws Exception {
-    Order order1 = insertOrder(3);
+    Order order1 = insertOrder(3L);
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
     shipmentFileInfo.setFileName("abc.csv");
     shipmentFileInfo.setProcessingError(false);
@@ -132,7 +132,7 @@ public class OrderMapperIT {
 
   @Test
   public void shouldUpdateStatusAndShipmentIdForOrder() throws Exception {
-    Rnr rnr = insertRequisition(1);
+    Rnr rnr = insertRequisition(1L);
     Order order = new Order(rnr);
     mapper.insert(order);
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
@@ -148,12 +148,12 @@ public class OrderMapperIT {
     resultSet.next();
 
     assertThat(resultSet.getString("status"), is(PACKED.name()));
-    assertThat(resultSet.getInt("shipmentId"), is(shipmentFileInfo.getId()));
+    assertThat(resultSet.getLong("shipmentId"), is(shipmentFileInfo.getId()));
   }
 
   @Test
   public void shouldGetOrderById() {
-    Order expectedOrder = insertOrder(1);
+    Order expectedOrder = insertOrder(1L);
 
     Order savedOrder = mapper.getById(expectedOrder.getId());
     assertThat(savedOrder.getId(), is(expectedOrder.getId()));
@@ -167,14 +167,14 @@ public class OrderMapperIT {
     return queryExecutor.executeUpdate("UPDATE orders SET createdDate = ? WHERE id = ?", paramList);
   }
 
-  private Order insertOrder(Integer programId) {
+  private Order insertOrder(Long programId) {
     Rnr rnr = insertRequisition(programId);
     Order order = new Order(rnr);
     mapper.insert(order);
     return order;
   }
 
-  private Rnr insertRequisition(Integer programId) {
+  private Rnr insertRequisition(Long programId) {
     Rnr rnr = make(a(defaultRnr, with(RequisitionBuilder.facility, facility),
         with(periodId, processingPeriod.getId()), with(program, new Program(programId))));
     requisitionMapper.insert(rnr);

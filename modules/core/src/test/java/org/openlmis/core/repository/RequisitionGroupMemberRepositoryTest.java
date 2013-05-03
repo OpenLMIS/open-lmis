@@ -80,7 +80,9 @@ public class RequisitionGroupMemberRepositoryTest {
     programIdList.add(1);
 
     initMocks(this);
-    repository = new RequisitionGroupMemberRepository(requisitionGroupMemberMapper, requisitionGroupProgramScheduleMapper, requisitionGroupMapper, facilityRepository, programMapper, requisitionGroupRepository);
+    repository = new RequisitionGroupMemberRepository(requisitionGroupMemberMapper,
+      requisitionGroupProgramScheduleMapper, requisitionGroupMapper, facilityRepository, programMapper,
+      requisitionGroupRepository);
   }
 
   @Test
@@ -104,8 +106,8 @@ public class RequisitionGroupMemberRepositoryTest {
 
   @Test
   public void shouldGetMappingForRequisitionGroupIdAndFacilityId() throws Exception {
-    requisitionGroup.setId(5);
-    facility.setId(4);
+    requisitionGroup.setId(5L);
+    facility.setId(4L);
     when(requisitionGroupMemberMapper.
       getMappingByRequisitionGroupIdAndFacilityId(requisitionGroup, facility)).
       thenReturn(requisitionGroupMember);

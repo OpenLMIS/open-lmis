@@ -18,7 +18,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 public class ProcessingPeriod extends BaseModel {
 
-  private Integer scheduleId;
+  private Long scheduleId;
 
   private String name;
   private String description;
@@ -26,11 +26,11 @@ public class ProcessingPeriod extends BaseModel {
   private Date endDate;
   private Integer numberOfMonths;
 
-  public ProcessingPeriod(Integer id) {
+  public ProcessingPeriod(Long id) {
     this.id = id;
   }
 
-  public ProcessingPeriod(Integer id, Date startDate, Date endDate, Integer numberOfMonths, String name) {
+  public ProcessingPeriod(Long id, Date startDate, Date endDate, Integer numberOfMonths, String name) {
     this.id = id;
     this.startDate = startDate;
     this.endDate = endDate;

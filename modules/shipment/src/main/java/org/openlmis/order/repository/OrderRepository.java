@@ -27,7 +27,7 @@ public class OrderRepository {
     return orderMapper.getAll();
   }
 
-  public Order getById(Integer id) {
+  public Order getById(Long id) {
     return orderMapper.getById(id);
   }
 

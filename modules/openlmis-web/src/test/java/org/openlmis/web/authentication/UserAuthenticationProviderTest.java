@@ -41,14 +41,14 @@ public class UserAuthenticationProviderTest {
     User user = new User();
     user.setUserName(validUser);
     user.setPassword(password);
-    when(userService.authorizeUser(user)).thenReturn(new UserToken(validUser, 1, true));
+    when(userService.authorizeUser(user)).thenReturn(new UserToken(validUser, 1L, true));
     Authentication authentication = new TestingAuthenticationToken(validUser, password);
 
     Authentication authenticate = userAuthenticationProvider.authenticate(authentication);
 
 
     assertThat(authenticate, instanceOf(UsernamePasswordAuthenticationToken.class));
-    assertThat((Integer)authenticate.getPrincipal(), is(equalTo(1)));
+    assertThat((Long)authenticate.getPrincipal(), is(equalTo(1L)));
     assertThat(authenticate.getCredentials(), is(equalTo(null)));
     assertThat(authenticate.isAuthenticated(), is(true));
   }

@@ -30,11 +30,11 @@ public class ProgramSupportedRepository {
     this.programSupportedMapper = programSupportedMapper;
   }
 
-  public Date getProgramStartDate(Integer facilityId, Integer programId) {
+  public Date getProgramStartDate(Long facilityId, Long programId) {
     return programSupportedMapper.getBy(facilityId, programId).getStartDate();
   }
 
-  public void deleteSupportedPrograms(Integer facilityId, Integer programId) {
+  public void deleteSupportedPrograms(Long facilityId, Long programId) {
     programSupportedMapper.delete(facilityId, programId);
   }
 
@@ -80,11 +80,11 @@ public class ProgramSupportedRepository {
     }
   }
 
-  public List<ProgramSupported> getAllByFacilityId(Integer facilityId) {
+  public List<ProgramSupported> getAllByFacilityId(Long facilityId) {
     return programSupportedMapper.getAllByFacilityId(facilityId);
   }
 
-  public ProgramSupported getByFacilityIdAndProgramId(Integer facilityId, Integer programId) {
+  public ProgramSupported getByFacilityIdAndProgramId(Long facilityId, Long programId) {
     return programSupportedMapper.getBy(facilityId,programId);
   }
 

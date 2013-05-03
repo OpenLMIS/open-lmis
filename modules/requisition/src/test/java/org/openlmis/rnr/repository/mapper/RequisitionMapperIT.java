@@ -44,9 +44,9 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 public class RequisitionMapperIT {
-  public static final int MODIFIED_BY = 1;
-  public static final Integer PROGRAM_ID = 1;
-  public static final int USER_ID = 2;
+  public static final Long MODIFIED_BY = 1L;
+  public static final Long PROGRAM_ID = 1L;
+  public static final Long USER_ID = 2L;
 
   private Facility facility;
   private ProcessingSchedule processingSchedule;
@@ -116,7 +116,7 @@ public class RequisitionMapperIT {
     lineItemMapper.insert(nonFullSupplyLineItem);
 
     User author = new User();
-    author.setId(1);
+    author.setId(1L);
     Comment comment = new Comment(requisition.getId(), author, "A comment", null);
     commentMapper.insert(comment);
 
@@ -220,7 +220,7 @@ public class RequisitionMapperIT {
     Rnr requisition = insertRequisition(processingPeriod1, AUTHORIZED);
     requisition.setSupervisoryNodeId(supervisoryNode.getId());
     mapper.update(requisition);
-    RoleAssignment roleAssignment = new RoleAssignment(USER_ID, 1, PROGRAM_ID, supervisoryNode);
+    RoleAssignment roleAssignment = new RoleAssignment(USER_ID, 1L, PROGRAM_ID, supervisoryNode);
 
     List<Rnr> requisitions = mapper.getAuthorizedRequisitions(roleAssignment);
 
@@ -298,7 +298,7 @@ public class RequisitionMapperIT {
   }
 
   private RnrLineItem insertRnrLineItem(Rnr rnr, FacilityApprovedProduct facilityApprovedProduct) {
-    RnrLineItem item = new RnrLineItem(rnr.getId(), facilityApprovedProduct, 1);
+    RnrLineItem item = new RnrLineItem(rnr.getId(), facilityApprovedProduct, 1L);
     lineItemMapper.insert(item);
     return item;
   }

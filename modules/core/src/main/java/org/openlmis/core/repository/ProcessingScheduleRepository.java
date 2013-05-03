@@ -39,7 +39,7 @@ public class ProcessingScheduleRepository {
     }
   }
 
-  public ProcessingSchedule get(Integer id) {
+  public ProcessingSchedule get(Long id) {
     return processingScheduleMapper.get(id);
   }
 

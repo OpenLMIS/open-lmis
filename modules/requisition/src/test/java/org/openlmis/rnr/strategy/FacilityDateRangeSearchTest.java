@@ -48,7 +48,7 @@ public class FacilityDateRangeSearchTest {
   public void shouldSearchRequisitionsWithFacilityAndDateRange() throws Exception {
     //Arrange
     Date dateRangeStart = new Date(), dateRangeEnd = new Date();
-    Integer facilityId = 1, programId = null, userId = 1;
+    Long facilityId = 1L, programId = null, userId = 1L;
     Facility facility = new Facility(facilityId);
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, userId, dateRangeStart, dateRangeEnd);
     FacilityDateRangeSearch strategy = new FacilityDateRangeSearch(criteria, processingScheduleService, requisitionRepository, programService);
@@ -63,7 +63,7 @@ public class FacilityDateRangeSearchTest {
     List<ProcessingPeriod> periodsForProgram1 = new ArrayList<>();
     List<ProcessingPeriod> periodsForProgram2 = new ArrayList<>();
     ArrayList<Rnr> requisitionsForProgram2 = new ArrayList<>();
-    when(programService.getProgramsSupportedByFacilityForUserWithRights(1, 1, VIEW_REQUISITION)).thenReturn(programs);
+    when(programService.getProgramsSupportedByFacilityForUserWithRights(1L, 1L, VIEW_REQUISITION)).thenReturn(programs);
     when(processingScheduleService.getAllPeriodsForDateRange(facility, program1, dateRangeStart, dateRangeEnd)).thenReturn(periodsForProgram1);
     when(processingScheduleService.getAllPeriodsForDateRange(facility, program2, dateRangeStart, dateRangeEnd)).thenReturn(periodsForProgram2);
     when(requisitionRepository.get(facility, program1, periodsForProgram1)).thenReturn(requisitions);
@@ -75,7 +75,7 @@ public class FacilityDateRangeSearchTest {
     //Assert
     requisitions.addAll(requisitionsForProgram2);
     assertThat(actualRequisitions, is(requisitions));
-    verify(programService).getProgramsSupportedByFacilityForUserWithRights(1, 1, VIEW_REQUISITION);
+    verify(programService).getProgramsSupportedByFacilityForUserWithRights(1L, 1L, VIEW_REQUISITION);
     verify(processingScheduleService).getAllPeriodsForDateRange(facility, program1, dateRangeStart, dateRangeEnd);
     verify(processingScheduleService).getAllPeriodsForDateRange(facility, program2, dateRangeStart, dateRangeEnd);
     verify(requisitionRepository).get(facility, program1, periodsForProgram1);

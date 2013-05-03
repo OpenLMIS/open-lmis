@@ -36,7 +36,7 @@ public class ReportTemplate extends BaseModel {
   private String parameters;
 
 
-  public ReportTemplate(String name, MultipartFile file, Integer modifiedBy) throws IOException {
+  public ReportTemplate(String name, MultipartFile file, Long modifiedBy) throws IOException {
     validateFile(file);
     this.name = name;
     this.data = file.getBytes();

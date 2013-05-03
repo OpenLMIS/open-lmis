@@ -34,7 +34,7 @@ public class RnrTemplateServiceTest {
 
   @InjectMocks
   private RnrTemplateService service;
-  private final static Integer EXISTING_PROGRAM_ID = 1;
+  private final static Long EXISTING_PROGRAM_ID = 1L;
 
 
   @Test
@@ -48,11 +48,11 @@ public class RnrTemplateServiceTest {
     ProgramRnrTemplate programRnrTemplate = mock(ProgramRnrTemplate.class);
     ArrayList<RnrColumn> rnrColumns = new ArrayList<>();
     when(programRnrTemplate.getRnrColumns()).thenReturn(rnrColumns);
-    when(programRnrTemplate.getProgramId()).thenReturn(1);
+    when(programRnrTemplate.getProgramId()).thenReturn(1L);
     when(programRnrTemplate.validateToSave()).thenReturn(new HashMap<String, OpenLmisMessage>());
     service.saveRnRTemplateForProgram(programRnrTemplate);
     verify(repository).saveProgramRnrTemplate(programRnrTemplate);
-    verify(programService).setTemplateConfigured(1);
+    verify(programService).setTemplateConfigured(1L);
   }
 
   @Test

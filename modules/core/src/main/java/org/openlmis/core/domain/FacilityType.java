@@ -31,7 +31,7 @@ public class FacilityType extends BaseModel{
     this.code = code;
   }
 
-  public FacilityType(Integer id) {
+  public FacilityType(Long id) {
     this.id = id;
   }
 }

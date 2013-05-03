@@ -32,7 +32,7 @@ public class ProgramRepository {
     this.mapper = programMapper;
   }
 
-  public List<Program> getByFacility(Integer facilityId) {
+  public List<Program> getByFacility(Long facilityId) {
     return mapper.getByFacilityId(facilityId);
   }
 
@@ -40,16 +40,16 @@ public class ProgramRepository {
     return mapper.getAll();
   }
 
-  public List<Program> getUserSupervisedActiveProgramsWithRights(Integer userId, Right... rights) {
+  public List<Program> getUserSupervisedActiveProgramsWithRights(Long userId, Right... rights) {
     return mapper.getUserSupervisedActivePrograms(userId, commaSeparateRightNames(rights));
   }
 
-  public List<Program> getProgramsSupportedByFacilityForUserWithRights(Integer facilityId, Integer userId, Right... rights) {
+  public List<Program> getProgramsSupportedByFacilityForUserWithRights(Long facilityId, Long userId, Right... rights) {
     return mapper.getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, commaSeparateRightNames(rights));
   }
 
-  public Integer getIdByCode(String code) {
-    Integer programId = mapper.getIdForCode(code);
+  public Long getIdByCode(String code) {
+    Long programId = mapper.getIdForCode(code);
 
     if (programId == null) {
       throw new DataException(new OpenLmisMessage(PROGRAM_CODE_INVALID));
@@ -58,15 +58,15 @@ public class ProgramRepository {
     return programId;
   }
 
-  public List<Program> getActiveProgramsForUserWithRights(Integer userId, Right... rights) {
+  public List<Program> getActiveProgramsForUserWithRights(Long userId, Right... rights) {
     return mapper.getActiveProgramsForUserWithRights(userId, commaSeparateRightNames(rights));
   }
 
-  public Program getById(Integer id) {
+  public Program getById(Long id) {
     return mapper.getById(id);
   }
 
-  public void setTemplateConfigured(int id) {
+  public void setTemplateConfigured(Long id) {
     mapper.setTemplateConfigured(id);
   }
 }

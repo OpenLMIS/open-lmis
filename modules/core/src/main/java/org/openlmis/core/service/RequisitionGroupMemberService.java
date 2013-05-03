@@ -58,7 +58,7 @@ public class RequisitionGroupMemberService {
   }
 
   private void validateIfFacilityIsAlreadyAssignedToRequistionGroupForProgram(RequisitionGroupMember requisitionGroupMember) {
-    List<Integer> commonProgramIds = getCommonProgramIdsForRequisitionGroupAndFacility(requisitionGroupMember);
+    List<Long> commonProgramIds = getCommonProgramIdsForRequisitionGroupAndFacility(requisitionGroupMember);
 
     if (commonProgramIds.size() > 0) {
       Program duplicateProgram = programRepository.getById(commonProgramIds.get(0));
@@ -70,11 +70,11 @@ public class RequisitionGroupMemberService {
     }
   }
 
-  private List<Integer> getCommonProgramIdsForRequisitionGroupAndFacility(RequisitionGroupMember requisitionGroupMember) {
-    List<Integer> requisitionGroupProgramIdsForFacility = requisitionGroupMemberRepository.
+  private List<Long> getCommonProgramIdsForRequisitionGroupAndFacility(RequisitionGroupMember requisitionGroupMember) {
+    List<Long> requisitionGroupProgramIdsForFacility = requisitionGroupMemberRepository.
       getRequisitionGroupProgramIdsForFacilityId(requisitionGroupMember.getFacility().getId());
 
-    List<Integer> programIDsForRG = requisitionGroupProgramScheduleRepository.
+    List<Long> programIDsForRG = requisitionGroupProgramScheduleRepository.
       getProgramIDsForRequisitionGroup(requisitionGroupMember.getRequisitionGroup().getId());
 
     if (programIDsForRG.size() == 0)
@@ -90,7 +90,7 @@ public class RequisitionGroupMemberService {
       throw new DataException("Requisition Group does not exist");
     requisitionGroupMember.getRequisitionGroup().setId(requisitionGroup.getId());
 
-    Integer facilityId = facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode());
+    Long facilityId = facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode());
     requisitionGroupMember.getFacility().setId(facilityId);
   }
 

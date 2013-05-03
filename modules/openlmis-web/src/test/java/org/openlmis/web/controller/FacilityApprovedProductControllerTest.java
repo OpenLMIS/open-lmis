@@ -32,8 +32,8 @@ public class FacilityApprovedProductControllerTest {
   FacilityApprovedProductController facilityApprovedProductController;
   @Test
   public void shouldGetAllNonFullSupplyProductsByFacilityAndProgram() throws Exception {
-    Integer facilityId = 1;
-    Integer programId = 1;
+    Long facilityId = 1L;
+    Long programId = 1L;
     facilityApprovedProductController = new FacilityApprovedProductController(facilityApprovedProductService);
     ArrayList<FacilityApprovedProduct> nonFullSupplyProducts = new ArrayList<>();
     when(facilityApprovedProductService.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId)).thenReturn(nonFullSupplyProducts);

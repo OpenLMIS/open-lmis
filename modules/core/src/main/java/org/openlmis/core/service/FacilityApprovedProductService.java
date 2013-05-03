@@ -40,11 +40,11 @@ public class FacilityApprovedProductService {
     this.facilityService = facilityService;
   }
 
-  public List<FacilityApprovedProduct> getFullSupplyFacilityApprovedProductByFacilityAndProgram(Integer facilityId, Integer programId) {
+  public List<FacilityApprovedProduct> getFullSupplyFacilityApprovedProductByFacilityAndProgram(Long facilityId, Long programId) {
     return repository.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
 
-  public List<FacilityApprovedProduct> getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(Integer facilityId, Integer programId){
+  public List<FacilityApprovedProduct> getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(Long facilityId, Long programId){
     return repository.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
 
@@ -68,9 +68,9 @@ public class FacilityApprovedProductService {
   }
 
   private void fillProgramProductIds(FacilityApprovedProduct facilityApprovedProduct) {
-    Integer programId = programService.getIdForCode(facilityApprovedProduct.getProgramProduct().getProgram().getCode());
-    Integer productId = productService.getIdForCode(facilityApprovedProduct.getProgramProduct().getProduct().getCode());
-    Integer programProductId = programProductService.getIdByProgramIdAndProductId(programId, productId);
+    Long programId = programService.getIdForCode(facilityApprovedProduct.getProgramProduct().getProgram().getCode());
+    Long productId = productService.getIdForCode(facilityApprovedProduct.getProgramProduct().getProduct().getCode());
+    Long programProductId = programProductService.getIdByProgramIdAndProductId(programId, productId);
     facilityApprovedProduct.getProgramProduct().getProgram().setId(programId);
     facilityApprovedProduct.getProgramProduct().getProduct().setId(productId);
     facilityApprovedProduct.getProgramProduct().setId(programProductId);

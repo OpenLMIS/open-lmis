@@ -81,8 +81,8 @@ public class ProcessingScheduleRepositoryTest {
   @Test
   public void shouldGetAScheduleById() throws Exception {
     ProcessingSchedule mockedProcessingSchedule = mock(ProcessingSchedule.class);
-    when(processingScheduleMapper.get(1)).thenReturn(mockedProcessingSchedule);
-    ProcessingSchedule fetchedSchedule = repository.get(1);
+    when(processingScheduleMapper.get(1L)).thenReturn(mockedProcessingSchedule);
+    ProcessingSchedule fetchedSchedule = repository.get(1L);
     assertThat(fetchedSchedule, is(mockedProcessingSchedule));
   }
 

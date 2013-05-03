@@ -22,8 +22,12 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = false)
 public class LossesAndAdjustments extends BaseModel {
 
-    private Integer id;
-    private LossesAndAdjustmentsType type;
-    private Integer quantity;
+  private LossesAndAdjustmentsType type;
+  private Integer quantity;
 
+  public LossesAndAdjustments(Long id, LossesAndAdjustmentsType type, Integer quantity) {
+    this.id = id;
+    this.type = type;
+    this.quantity = quantity;
+  }
 }

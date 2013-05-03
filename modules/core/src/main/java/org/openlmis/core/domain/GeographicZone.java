@@ -38,7 +38,7 @@ public class GeographicZone extends BaseModel implements Importable {
   private GeographicZone parent;
 
 
-  public GeographicZone(Integer id, String code, String name, GeographicLevel level, GeographicZone parent) {
+  public GeographicZone(Long id, String code, String name, GeographicLevel level, GeographicZone parent) {
     this(code, name, level, parent);
     this.id = id;
   }

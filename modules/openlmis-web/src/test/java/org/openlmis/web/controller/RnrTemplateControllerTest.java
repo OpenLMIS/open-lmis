@@ -28,7 +28,7 @@ public class RnrTemplateControllerTest {
     private RnrTemplateService rnrTemplateService;
     private RnrTemplateController rnrTemplateController;
 
-    private Integer existingProgramId = 1;
+    private Long existingProgramId = 1L;
 
     @Before
     public void setUp() throws Exception {

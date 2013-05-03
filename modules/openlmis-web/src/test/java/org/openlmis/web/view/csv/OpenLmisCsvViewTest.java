@@ -49,7 +49,7 @@ public class OpenLmisCsvViewTest {
     when(rnr.getNonFullSupplyLineItems()).thenReturn(rnrLineItems);
     when(rnr.getFacility()).thenReturn(facility);
     when(order.getRnr()).thenReturn(rnr);
-    when(order.getId()).thenReturn(1);
+    when(order.getId()).thenReturn(1L);
     whenNew(BufferedWriter.class).withArguments(writer).thenReturn(bufferedWriter);
     model.put(OrderController.ORDER, order);
     String fileName = "O1.csv";

@@ -69,9 +69,9 @@ public class FacilityService {
   public void uploadSupportedProgram(ProgramSupported programSupported) {
     programSupported.isValid();
 
-    Integer facilityId = facilityRepository.getIdForCode(programSupported.getFacilityCode());
+    Long facilityId = facilityRepository.getIdForCode(programSupported.getFacilityCode());
     programSupported.setFacilityId(facilityId);
-    Integer programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
+    Long programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
     programSupported.setProgram(new Program(programId));
 
     if (programSupported.getId() == null) {
@@ -94,11 +94,11 @@ public class FacilityService {
     return geographicZoneRepository.getAllGeographicZones();
   }
 
-  public Facility getHomeFacility(Integer userId) {
+  public Facility getHomeFacility(Long userId) {
     return facilityRepository.getHomeFacility(userId);
   }
 
-  public Facility getById(Integer id) {
+  public Facility getById(Long id) {
     Facility facility = facilityRepository.getById(id);
     facility.setSupportedPrograms(programSupportedRepository.getAllByFacilityId(id));
     return facility;
@@ -108,7 +108,7 @@ public class FacilityService {
     facilityRepository.updateDataReportableAndActiveFor(facility);
   }
 
-  public List<Facility> getUserSupervisedFacilities(Integer userId, Integer programId, Right... rights) {
+  public List<Facility> getUserSupervisedFacilities(Long userId, Long programId, Right... rights) {
     List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, rights);
     List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes);
     return facilityRepository.getFacilitiesBy(programId, requisitionGroups);
@@ -125,7 +125,7 @@ public class FacilityService {
     facilityRepository.save(facility);
   }
 
-  public List<Facility> getForUserAndRights(Integer userId, Right... rights) {
+  public List<Facility> getForUserAndRights(Long userId, Right... rights) {
     List<SupervisoryNode> supervisoryNodesInHierarchy = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, rights);
     List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodesInHierarchy);
     final Set<Facility> userFacilities = new HashSet<>(facilityRepository.getAllInRequisitionGroups(requisitionGroups));
@@ -146,8 +146,8 @@ public class FacilityService {
   }
 
   public ProgramSupported getProgramSupported(ProgramSupported programSupported) {
-    Integer facilityId = facilityRepository.getIdForCode(programSupported.getFacilityCode());
-    Integer programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
+    Long facilityId = facilityRepository.getIdForCode(programSupported.getFacilityCode());
+    Long programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
 
     return programSupportedRepository.getByFacilityIdAndProgramId(facilityId, programId);
   }

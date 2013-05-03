@@ -26,7 +26,7 @@ public class ProductCategoryPersistenceHandlerTest {
     ProductCategoryService productCategoryService = mock(ProductCategoryService.class);
     ProductCategory productCategory = new ProductCategory();
 
-    new ProductCategoryPersistenceHandler(productCategoryService).execute(productCategory, 0, new AuditFields(1, null));
+    new ProductCategoryPersistenceHandler(productCategoryService).execute(productCategory, 0, new AuditFields(1L, null));
     verify(productCategoryService).save(productCategory);
   }
 }

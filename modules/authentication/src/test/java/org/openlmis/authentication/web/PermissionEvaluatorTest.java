@@ -41,7 +41,7 @@ public class PermissionEvaluatorTest {
       add(Right.CONFIGURE_RNR);
       add(Right.AUTHORIZE_REQUISITION);
     }};
-    Integer userId = 1;
+    Long userId = 1L;
     when(roleRightsService.getRights(userId)).thenReturn(rights);
 
     assertThat(evaluator.hasPermission(userId, "AUTHORIZE_REQUISITION, CONFIGURE_RNR"), is(true));

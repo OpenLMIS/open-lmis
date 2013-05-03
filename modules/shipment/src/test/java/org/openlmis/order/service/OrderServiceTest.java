@@ -53,7 +53,7 @@ public class OrderServiceTest {
     List<Rnr> rnrList = new ArrayList<>();
     Rnr rnr = new Rnr();
     rnrList.add(rnr);
-    Integer userId = 1;
+    Long userId = 1L;
     orderService.convertToOrder(rnrList, userId);
     Order order = new Order(rnr);
     whenNew(Order.class).withArguments(rnr).thenReturn(order);
@@ -63,11 +63,11 @@ public class OrderServiceTest {
 
   @Test
   public void shouldGetOrdersFilledWithRequisition() throws Exception {
-    Rnr rnr1 = make(a(defaultRnr, with(id, 78)));
+    Rnr rnr1 = make(a(defaultRnr, with(id, 78L)));
     final Order order1 = new Order();
     order1.setRnr(rnr1);
 
-    Rnr rnr2 = make(a(defaultRnr, with(periodId, 2), with(id, 72)));
+    Rnr rnr2 = make(a(defaultRnr, with(periodId, 2L), with(id, 72L)));
 
     final Order order2 = new Order();
     order2.setRnr(rnr2);
@@ -99,8 +99,8 @@ public class OrderServiceTest {
 
   @Test
   public void shouldGetOrderWithoutUnorderedProducts() {
-    Integer orderId = 1;
-    Integer rnrId = 1;
+    Long orderId = 1L;
+    Long rnrId = 1L;
     Order order = new Order();
 
     Rnr rnr = new Rnr();

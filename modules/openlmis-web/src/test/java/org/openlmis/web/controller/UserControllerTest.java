@@ -38,7 +38,7 @@ import static org.openlmis.web.controller.UserController.TOKEN_VALID;
 
 public class UserControllerTest {
 
-  public static final Integer userId = 1;
+  public static final Long userId = 1L;
 
   private MockHttpSession session;
 
@@ -97,7 +97,7 @@ public class UserControllerTest {
     User user = new User();
     user.setUserName("Manan");
     user.setEmail("manan@thoughtworks.com");
-    userController.sendPasswordTokenEmail(user, httpServletRequest);
+    userController.sendPasswordTokenEmail(user);
     verify(userService).sendForgotPasswordEmail(eq(user), eq("http://localhost:9091/public/pages/reset-password.html#/token/"));
   }
 
@@ -107,7 +107,7 @@ public class UserControllerTest {
     HttpServletRequest request = mock(HttpServletRequest.class);
     doThrow(new DataException("some error")).when(userService).sendForgotPasswordEmail(eq(user), anyString());
 
-    ResponseEntity<OpenLmisResponse> response = userController.sendPasswordTokenEmail(user, request);
+    ResponseEntity<OpenLmisResponse> response = userController.sendPasswordTokenEmail(user);
 
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("some error"));
@@ -130,12 +130,12 @@ public class UserControllerTest {
   @Test
   public void shouldUpdateUser() throws Exception {
     User user = new User();
-    user.setId(1);
+    user.setId(1L);
     user.setPassword("password");
     httpServletRequest.getSession().setAttribute(USER_ID, userId);
     httpServletRequest.getSession().setAttribute(USER, USER);
 
-    ResponseEntity<OpenLmisResponse> response = userController.update(user, 1, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = userController.update(user, 1L, httpServletRequest);
 
     verify(userService).update(user);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -170,9 +170,9 @@ public class UserControllerTest {
   @Test
   public void shouldReturnUserIfIdExists() throws Exception {
     User user = new User();
-    when(userService.getById(1)).thenReturn(user);
+    when(userService.getById(1L)).thenReturn(user);
 
-    User returnedUser = userController.get(1);
+    User returnedUser = userController.get(1L);
 
     assertThat(returnedUser, is(user));
 

@@ -29,7 +29,7 @@ public class ProgramService {
     this.programSupportedRepository = programSupportedRepository;
   }
 
-  public List<Program> getByFacility(Integer facilityId) {
+  public List<Program> getByFacility(Long facilityId) {
     return programRepository.getByFacility(facilityId);
   }
 
@@ -37,27 +37,27 @@ public class ProgramService {
     return programRepository.getAll();
   }
 
-  public List<Program> getProgramsSupportedByFacilityForUserWithRights(Integer facilityId, Integer userId, Right... rights) {
+  public List<Program> getProgramsSupportedByFacilityForUserWithRights(Long facilityId, Long userId, Right... rights) {
     return programRepository.getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, rights);
   }
 
-  public List<Program> getUserSupervisedActiveProgramsWithRights(Integer userId, Right... rights) {
+  public List<Program> getUserSupervisedActiveProgramsWithRights(Long userId, Right... rights) {
     return programRepository.getUserSupervisedActiveProgramsWithRights(userId, rights);
   }
 
-  public Integer getIdForCode(String code) {
+  public Long getIdForCode(String code) {
     return programRepository.getIdByCode(code);
   }
 
-  public Date getProgramStartDate(Integer facilityId, Integer programId) {
+  public Date getProgramStartDate(Long facilityId, Long programId) {
     return programSupportedRepository.getProgramStartDate(facilityId, programId);
   }
 
-  public Program getById(Integer id) {
+  public Program getById(Long id) {
     return programRepository.getById(id);
   }
 
-  public void setTemplateConfigured(int id) {
+  public void setTemplateConfigured(Long id) {
     programRepository.setTemplateConfigured(id);
   }
 }

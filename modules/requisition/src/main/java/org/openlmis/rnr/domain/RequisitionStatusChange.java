@@ -16,11 +16,11 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequisitionStatusChange{
-  private Integer id;
+  private Long id;
 
-  private Integer rnrId;
+  private Long rnrId;
   private RnrStatus status;
-  private Integer statusChangedBy;
+  private Long statusChangedBy;
   private Date statusChangeDate;
 
   public RequisitionStatusChange(Rnr requisition) {

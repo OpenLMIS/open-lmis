@@ -158,7 +158,7 @@ public class FacilityApprovedProductMapperIT {
   }
 
 
-  private FacilityApprovedProduct insertFacilityApprovedProduct(Integer facilityTypeId, ProgramProduct programProduct) {
+  private FacilityApprovedProduct insertFacilityApprovedProduct(Long facilityTypeId, ProgramProduct programProduct) {
     FacilityType facilityType = new FacilityType();
     facilityType.setId(facilityTypeId);
 

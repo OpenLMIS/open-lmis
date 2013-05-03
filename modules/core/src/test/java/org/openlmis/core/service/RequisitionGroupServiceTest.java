@@ -54,7 +54,7 @@ public class RequisitionGroupServiceTest {
   public void shouldUpdateExistingRequisitionGroup() {
     SupervisoryNode supervisoryNode = make(a(defaultSupervisoryNode));
     RequisitionGroup requisitionGroup = make(a(defaultRequisitionGroup));
-    requisitionGroup.setId(1);
+    requisitionGroup.setId(1L);
     requisitionGroup.setSupervisoryNode(supervisoryNode);
 
     requisitionGroupService.save(requisitionGroup);

@@ -53,10 +53,10 @@ public class ShipmentServiceTest {
   @Test
   public void shouldUpdateOrders() throws Exception {
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
-    shipmentFileInfo.setId(1);
+    shipmentFileInfo.setId(1L);
     shipmentFileInfo.setProcessingError(FALSE);
-    List<Integer> orderIds = new ArrayList();
-    orderIds.add(1);
+    List<Long> orderIds = new ArrayList();
+    orderIds.add(1L);
 
     shipmentService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
 

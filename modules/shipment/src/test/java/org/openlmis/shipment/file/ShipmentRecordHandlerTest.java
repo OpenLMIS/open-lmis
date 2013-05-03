@@ -73,7 +73,7 @@ public class ShipmentRecordHandlerTest {
     Date currentTimestamp = new Date();
     AuditFields auditFields = new AuditFields(currentTimestamp);
 
-    int shippedLineItemFromDbId = 1;
+    Long shippedLineItemFromDbId = 1L;
     ShippedLineItem shippedLineItemFromDB = new ShippedLineItem();
     shippedLineItemFromDB.setModifiedDate(currentTimestamp);
     shippedLineItemFromDB.setId(shippedLineItemFromDbId);

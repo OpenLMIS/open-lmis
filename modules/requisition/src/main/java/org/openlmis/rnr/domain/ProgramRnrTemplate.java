@@ -40,11 +40,11 @@ public class ProgramRnrTemplate {
   private Map<String, OpenLmisMessage> errorMap = new HashMap<>();
 
   @Getter
-  private Integer programId;
+  private Long programId;
   @Getter
   private List<RnrColumn> rnrColumns;
 
-  public ProgramRnrTemplate(Integer programId, List<RnrColumn> rnrColumns) {
+  public ProgramRnrTemplate(Long programId, List<RnrColumn> rnrColumns) {
     this.programId = programId;
     this.rnrColumns = rnrColumns;
 

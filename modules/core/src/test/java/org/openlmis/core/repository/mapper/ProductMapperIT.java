@@ -61,8 +61,8 @@ public class ProductMapperIT {
 
   @Test
   public void shouldReturnDosageUnitIdForCode() {
-    Integer id = productMapper.getDosageUnitIdForCode(PRODUCT_DOSAGE_UNIT_MG);
-    assertThat(id, CoreMatchers.is(1));
+    Long id = productMapper.getDosageUnitIdForCode(PRODUCT_DOSAGE_UNIT_MG);
+    assertThat(id, CoreMatchers.is(1L));
 
     id = productMapper.getDosageUnitIdForCode("invalid dosage unit");
     assertThat(id, CoreMatchers.is(nullValue()));
@@ -70,8 +70,8 @@ public class ProductMapperIT {
 
   @Test
   public void shouldReturnProductFormIdForCode() {
-    Integer id = productMapper.getProductFormIdForCode(PRODUCT_FORM_TABLET);
-    assertThat(id, CoreMatchers.is(1));
+    Long id = productMapper.getProductFormIdForCode(PRODUCT_FORM_TABLET);
+    assertThat(id, CoreMatchers.is(1L));
 
     id = productMapper.getProductFormIdForCode("invalid product form");
     assertThat(id, CoreMatchers.is(nullValue()));
@@ -80,7 +80,7 @@ public class ProductMapperIT {
   @Test
   public void shouldReturnNullForInvalidProductCode() {
     String code = "invalid_code";
-    Integer productId = productMapper.getIdByCode(code);
+    Long productId = productMapper.getIdByCode(code);
     assertThat(productId, is(nullValue()));
   }
 
@@ -88,7 +88,7 @@ public class ProductMapperIT {
   public void shouldReturnProductIdForValidProductCode() {
     Product product = make(a(ProductBuilder.defaultProduct));
     productMapper.insert(product);
-    Integer id = productMapper.getIdByCode(product.getCode());
+    Long id = productMapper.getIdByCode(product.getCode());
     assertThat(id, is(product.getId()));
   }
 

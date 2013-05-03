@@ -40,10 +40,10 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @PrepareForTest(RequisitionStatusChange.class)
 public class RequisitionRepositoryTest {
 
-  public static final Integer FACILITY_ID = 1;
-  public static final Integer PROGRAM_ID = 1;
-  public static final Integer PERIOD_ID = 1;
-  public static final Integer HIV = 1;
+  public static final Long FACILITY_ID = 1L;
+  public static final Long PROGRAM_ID = 1L;
+  public static final Long PERIOD_ID = 1L;
+  public static final Long HIV = 1L;
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -76,10 +76,10 @@ public class RequisitionRepositoryTest {
   public void setUp() throws Exception {
     rnr = new Rnr();
     rnrLineItem1 = new RnrLineItem();
-    rnrLineItem1.setId(1);
+    rnrLineItem1.setId(1L);
     rnrLineItem1.setBeginningBalance(10);
     rnrLineItem2 = new RnrLineItem();
-    rnrLineItem2.setId(2);
+    rnrLineItem2.setId(2L);
     rnrLineItem2.setBeginningBalance(5);
     rnr.add(rnrLineItem1, true);
     rnr.add(rnrLineItem2, true);
@@ -94,14 +94,14 @@ public class RequisitionRepositoryTest {
 
   @Test
   public void shouldInsertRnrAndItsLineItems() throws Exception {
-    rnr.setId(1);
+    rnr.setId(1L);
     requisitionRepository.insert(rnr);
     assertThat(rnr.getStatus(), is(INITIATED));
     verify(requisitionMapper).insert(rnr);
     verify(rnrLineItemMapper, times(2)).insert(any(RnrLineItem.class));
     verify(lossesAndAdjustmentsMapper, never()).insert(any(RnrLineItem.class), any(LossesAndAdjustments.class));
     RnrLineItem rnrLineItem = rnr.getFullSupplyLineItems().get(0);
-    assertThat(rnrLineItem.getRnrId(), is(1));
+    assertThat(rnrLineItem.getRnrId(), is(1L));
   }
 
   @Test
@@ -130,7 +130,7 @@ public class RequisitionRepositoryTest {
   @Test
   public void shouldGetRnrById() throws Exception {
     Rnr expectedRnr = new Rnr();
-    Integer rnrId = 1;
+    Long rnrId = 1L;
     when(requisitionMapper.getById(rnrId)).thenReturn(expectedRnr);
     Rnr returnedRnr = requisitionRepository.getById(rnrId);
     assertThat(returnedRnr, is(expectedRnr));
@@ -138,7 +138,7 @@ public class RequisitionRepositoryTest {
 
   @Test
   public void shouldThrowExceptionIfRnrNotFound() throws Exception {
-    Integer rnrId = 1;
+    Long rnrId = 1L;
     when(requisitionMapper.getById(rnrId)).thenReturn(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Requisition Not Found");
@@ -184,9 +184,9 @@ public class RequisitionRepositoryTest {
 
   @Test
   public void shouldGetRequisitionsForFacilityProgramAndPeriods() throws Exception {
-    Facility facility = new Facility(1);
-    Program program = new Program(1);
-    List<ProcessingPeriod> periods = asList(new ProcessingPeriod(1), new ProcessingPeriod(2));
+    Facility facility = new Facility(1L);
+    Program program = new Program(1L);
+    List<ProcessingPeriod> periods = asList(new ProcessingPeriod(1L), new ProcessingPeriod(2L));
     when(separator.commaSeparateIds(periods)).thenReturn("{1, 2}");
     List<Rnr> expected = new ArrayList<>();
     when(requisitionMapper.get(facility, program, "{1, 2}")).thenReturn(expected);
@@ -214,9 +214,9 @@ public class RequisitionRepositoryTest {
   @Test
   public void shouldGetCommentsForARnR() throws Exception {
     List<Comment> comments = new ArrayList<>();
-    when(commentMapper.getByRnrId(1)).thenReturn(comments);
-    List<Comment> returnedComments = requisitionRepository.getCommentsByRnrID(1);
-    verify(commentMapper).getByRnrId(1);
+    when(commentMapper.getByRnrId(1L)).thenReturn(comments);
+    List<Comment> returnedComments = requisitionRepository.getCommentsByRnrID(1L);
+    verify(commentMapper).getByRnrId(1L);
     assertThat(returnedComments, is(comments));
   }
 

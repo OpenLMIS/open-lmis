@@ -40,12 +40,12 @@ public class FacilityProgramDateRangeSearchTest {
   public void testSearch() throws Exception {
     //Arrange
     Date dateRangeStart = new Date(), dateRangeEnd = new Date();
-    Integer facilityId = 1, programId = 1;
+    Long facilityId = 1L, programId = 1L;
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, dateRangeStart, dateRangeEnd);
     FacilityProgramDateRangeSearch facilityProgramDateRangeSearch = new FacilityProgramDateRangeSearch(criteria, processingScheduleService, requisitionRepository);
     List<ProcessingPeriod> periods = new ArrayList<>();
-    Facility facility = new Facility(1);
-    Program program = new Program(1);
+    Facility facility = new Facility(1L);
+    Program program = new Program(1L);
     List<Rnr> requisitions = new ArrayList<>();
     when(processingScheduleService.getAllPeriodsForDateRange(facility, program, dateRangeStart, dateRangeEnd)).thenReturn(periods);
     when(requisitionRepository.get(facility, program, periods)).thenReturn(requisitions);

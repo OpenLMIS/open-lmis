@@ -32,7 +32,7 @@ public interface OrderMapper {
   @Results({
     @Result(property = "rnr.id", column = "rnrId")
   })
-  Order getById(Integer id);
+  Order getById(Long id);
 
   @Update("UPDATE orders SET shipmentId=#{shipmentFileInfo.id},status=#{status} WHERE rnrid=#{rnr.id} AND STATUS='RELEASED'")
   void updateShipmentInfo(Order order);

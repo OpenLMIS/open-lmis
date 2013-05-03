@@ -23,9 +23,9 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 public class RnrDTO {
 
-  private Integer id;
+  private Long id;
   private String programName;
-  private Integer programId;
+  private Long programId;
   private String facilityName;
   private String facilityCode;
   private Date submittedDate;
@@ -33,10 +33,10 @@ public class RnrDTO {
   private Date periodStartDate;
   private Date periodEndDate;
   private String periodName;
-  private Integer facilityId;
+  private Long facilityId;
   private String supplyingDepot;
   private String status;
-  private Integer modifiedBy;
+  private Long modifiedBy;
 
   public static List<RnrDTO> prepareForListApproval(List<Rnr> requisitions) {
     List<RnrDTO> result = new ArrayList<>();

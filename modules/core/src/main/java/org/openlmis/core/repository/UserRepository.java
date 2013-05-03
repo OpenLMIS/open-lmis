@@ -104,7 +104,7 @@ public class UserRepository {
     return userMapper.getUserWithSearchedName(userSearchParam);
   }
 
-  public User getById(Integer id) {
+  public User getById(Long id) {
     return userMapper.getById(id);
   }
 
@@ -112,15 +112,15 @@ public class UserRepository {
     userMapper.insertPasswordResetToken(user, passwordResetToken);
   }
 
-  public Integer getUserIdForPasswordResetToken(String token) {
+  public Long getUserIdForPasswordResetToken(String token) {
     return userMapper.getUserIdForPasswordResetToken(token);
   }
 
-  public void deletePasswordResetTokenForUser(Integer userId) {
+  public void deletePasswordResetTokenForUser(Long userId) {
     userMapper.deletePasswordResetTokenForUser(userId);
   }
 
-  public void updateUserPassword(Integer userId, String password) {
+  public void updateUserPassword(Long userId, String password) {
     userMapper.updateUserPassword(userId, password);
   }
 

@@ -29,6 +29,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
@@ -64,9 +65,9 @@ public class ProgramProductRepositoryTest {
     programProduct = make(a(ProgramProductBuilder.defaultProgramProduct));
     programProduct.setModifiedDate(new Date());
 
-    when(productRepository.getIdByCode("productCode")).thenReturn(1);
+    when(productRepository.getIdByCode("productCode")).thenReturn(1L);
 
-    when(programProductMapper.getByProgramAndProductId(anyInt(), anyInt())).thenReturn(programProduct);
+    when(programProductMapper.getByProgramAndProductId(anyLong(), anyLong())).thenReturn(programProduct);
   }
 
   @Test
@@ -78,7 +79,7 @@ public class ProgramProductRepositoryTest {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProduct.setModifiedDate(new Date());
 
-    when(programProductMapper.getByProgramAndProductId(anyInt(), anyInt())).thenReturn(null);
+    when(programProductMapper.getByProgramAndProductId(anyLong(), anyLong())).thenReturn(null);
 
     programProductRepository.save(programProduct);
     verify(programProductMapper).insert(programProduct);
@@ -99,7 +100,7 @@ public class ProgramProductRepositoryTest {
   @Test
   public void shouldThrowErrorWhenInsertingInvalidProductForAProgram() {
     Program program = make(a(defaultProgram));
-    when(programRepository.getIdByCode(program.getCode())).thenReturn(1);
+    when(programRepository.getIdByCode(program.getCode())).thenReturn(1L);
     ProgramProduct programProduct = new ProgramProduct(program, new Product(), 10, true);
 
     expectedEx.expect(DataException.class);
@@ -110,18 +111,18 @@ public class ProgramProductRepositoryTest {
 
   @Test
   public void shouldGetProgramProductIdByProgramAndProductId() {
-    when(programProductMapper.getIdByProgramAndProductId(1, 2)).thenReturn(3);
+    when(programProductMapper.getIdByProgramAndProductId(1L, 2L)).thenReturn(3L);
 
-    assertThat(programProductRepository.getIdByProgramIdAndProductId(1, 2), is(3));
-    verify(programProductMapper).getIdByProgramAndProductId(1, 2);
+    assertThat(programProductRepository.getIdByProgramIdAndProductId(1L, 2L), is(3L));
+    verify(programProductMapper).getIdByProgramAndProductId(1L, 2L);
   }
 
   @Test
   public void shouldThrowExceptionIfNoProgramProductExistForGivenProgramIdAndProductId() {
-    when(programProductMapper.getIdByProgramAndProductId(1, 2)).thenReturn(null);
+    when(programProductMapper.getIdByProgramAndProductId(1L, 2L)).thenReturn(null);
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage(PROGRAM_PRODUCT_INVALID);
-    programProductRepository.getIdByProgramIdAndProductId(1, 2);
+    programProductRepository.getIdByProgramIdAndProductId(1L, 2L);
   }
 
 
@@ -129,9 +130,9 @@ public class ProgramProductRepositoryTest {
   public void shouldGetProgramProductByProgramAndProductCodes() throws Exception {
     ProgramProduct programProduct = make(a(ProgramProductBuilder.defaultProgramProduct));
 
-    final int programId = 123;
+    final Long programId = 123L;
     when(programRepository.getIdByCode(PROGRAM_CODE)).thenReturn(programId);
-    final int productId = 12;
+    final Long productId = 12L;
     when(productRepository.getIdByCode(PRODUCT_CODE)).thenReturn(productId);
     ProgramProduct expectedProgramProduct = new ProgramProduct();
     when(programProductMapper.getByProgramAndProductId(programId, productId)).thenReturn(expectedProgramProduct);
@@ -164,17 +165,17 @@ public class ProgramProductRepositoryTest {
 
   @Test
   public void shouldUpdateProgramProductIfExist() throws Exception {
-    int programId = 88;
-    int productId = 99;
+    Long programId = 88L;
+    Long productId = 99L;
 
-    programProduct.setId(1);
+    programProduct.setId(1L);
     when(programRepository.getIdByCode(anyString())).thenReturn(programId);
     when(productRepository.getIdByCode(anyString())).thenReturn(productId);
 
     programProductRepository.save(programProduct);
 
-    assertThat(programProduct.getProgram().getId(), is(88));
-    assertThat(programProduct.getProduct().getId(), is(99));
+    assertThat(programProduct.getProgram().getId(), is(88L));
+    assertThat(programProduct.getProduct().getId(), is(99L));
     verify(programProductMapper).update(programProduct);
   }
 

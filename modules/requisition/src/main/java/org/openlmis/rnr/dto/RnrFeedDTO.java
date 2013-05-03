@@ -19,10 +19,10 @@ import java.io.IOException;
 @Data
 @AllArgsConstructor
 public class RnrFeedDTO {
-  private Integer requisitionId;
-  private Integer facilityId;
-  private Integer programId;
-  private Integer periodId;
+  private Long requisitionId;
+  private Long facilityId;
+  private Long programId;
+  private Long periodId;
   private RnrStatus requisitionStatus;
 
   public static RnrFeedDTO populate(Rnr rnr) {

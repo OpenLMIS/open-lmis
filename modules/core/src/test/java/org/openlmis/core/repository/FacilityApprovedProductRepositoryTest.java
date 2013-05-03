@@ -16,16 +16,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.springframework.dao.DataIntegrityViolationException;
-
-import java.util.Calendar;
-import java.util.Date;
 
 import static org.junit.rules.ExpectedException.none;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FacilityApprovedProductRepositoryTest {
@@ -43,33 +39,35 @@ public class FacilityApprovedProductRepositoryTest {
 
   @Before
   public void setUp() {
-    facilityApprovedProductRepository = new FacilityApprovedProductRepository(facilityApprovedProductMapper, facilityMapper, null);
+    facilityApprovedProductRepository = new FacilityApprovedProductRepository(facilityApprovedProductMapper,
+      facilityMapper, null);
   }
 
   @Test
   public void shouldInsertAFacilitySupportedProduct() {
     FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct();
     ProgramProduct programProduct = new ProgramProduct();
-    programProduct.setId(1);
+    programProduct.setId(1L);
     facilityApprovedProduct.setProgramProduct(programProduct);
     facilityApprovedProduct.setFacilityType(new FacilityType("warehouse"));
 
-    when(facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(1, "warehouse")).thenReturn(null);
+    when(facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(1L,
+      "warehouse")).thenReturn(null);
 
     facilityApprovedProductRepository.insert(facilityApprovedProduct);
     verify(facilityApprovedProductMapper).insert(facilityApprovedProduct);
   }
 
   @Test
-  public void shouldGetFullSupplyFacilityApprovedProducts(){
-    facilityApprovedProductRepository.getFullSupplyProductsByFacilityAndProgram(5,8);
-    verify(facilityApprovedProductMapper).getProductsByFacilityProgramAndFullSupply(5, 8, true);
+  public void shouldGetFullSupplyFacilityApprovedProducts() {
+    facilityApprovedProductRepository.getFullSupplyProductsByFacilityAndProgram(5L, 8L);
+    verify(facilityApprovedProductMapper).getProductsByFacilityProgramAndFullSupply(5L, 8L, true);
   }
 
   @Test
-  public void shouldGetNonFullSupplyFacilityApprovedProducts(){
-    facilityApprovedProductRepository.getNonFullSupplyProductsByFacilityAndProgram(5,8);
-    verify(facilityApprovedProductMapper).getProductsByFacilityProgramAndFullSupply(5, 8, false);
+  public void shouldGetNonFullSupplyFacilityApprovedProducts() {
+    facilityApprovedProductRepository.getNonFullSupplyProductsByFacilityAndProgram(5L, 8L);
+    verify(facilityApprovedProductMapper).getProductsByFacilityProgramAndFullSupply(5L, 8L, false);
   }
 
   @Test

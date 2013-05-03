@@ -67,9 +67,9 @@ public class OrderRepositoryTest {
   @Test
   public void shouldGetOrderById() throws Exception {
     Order expectedOrder = new Order();
-    when(orderMapper.getById(1)).thenReturn(expectedOrder);
-    Order savedOrder = orderRepository.getById(1);
-    verify(orderMapper).getById(1);
+    when(orderMapper.getById(1L)).thenReturn(expectedOrder);
+    Order savedOrder = orderRepository.getById(1L);
+    verify(orderMapper).getById(1L);
     assertThat(savedOrder, is(expectedOrder));
   }
 }

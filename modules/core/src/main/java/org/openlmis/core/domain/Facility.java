@@ -120,11 +120,11 @@ public class Facility extends BaseModel implements Importable {
 
   List<ProgramSupported> supportedPrograms = new ArrayList<>();
 
-  public Facility(Integer id) {
+  public Facility(Long id) {
     this.id = id;
   }
 
-  public Facility(Integer id, String code, String name, FacilityOperator operatedBy, GeographicZone geographicZone, FacilityType facilityType) {
+  public Facility(Long id, String code, String name, FacilityOperator operatedBy, GeographicZone geographicZone, FacilityType facilityType) {
     this.id = id;
     this.code = code;
     this.name = name;

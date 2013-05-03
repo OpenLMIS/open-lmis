@@ -43,12 +43,12 @@ public class ProgramController extends BaseController {
 
   @RequestMapping(value = "/facilities/{facilityId}/programs", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION, MANAGE_USERS')")
-  public List<Program> getProgramsForFacility(@PathVariable(value = "facilityId") Integer facilityId) {
+  public List<Program> getProgramsForFacility(@PathVariable(value = "facilityId") Long facilityId) {
     return programService.getByFacility(facilityId);
   }
 
   @RequestMapping(value = "/facility/{facilityId}/user/programs", method = GET, headers = ACCEPT_JSON)
-  public List<Program> getProgramsSupportedByFacilityForUserWithRights(@PathVariable(value = "facilityId") Integer facilityId, @RequestParam("rights") Set<Right> rights, HttpServletRequest request) {
+  public List<Program> getProgramsSupportedByFacilityForUserWithRights(@PathVariable(value = "facilityId") Long facilityId, @RequestParam("rights") Set<Right> rights, HttpServletRequest request) {
     return programService.getProgramsSupportedByFacilityForUserWithRights(facilityId, loggedInUserId(request), rights.toArray(new Right[rights.size()]));
   }
 
@@ -66,7 +66,7 @@ public class ProgramController extends BaseController {
 
   @RequestMapping(value = "programs/{id}", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_RNR')")
-  public ResponseEntity<OpenLmisResponse> get(@PathVariable int id) {
+  public ResponseEntity<OpenLmisResponse> get(@PathVariable Long id) {
     return OpenLmisResponse.response(PROGRAM, programService.getById(id));
   }
 }

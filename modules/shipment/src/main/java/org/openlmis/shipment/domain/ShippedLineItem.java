@@ -20,7 +20,7 @@ import org.openlmis.upload.annotation.ImportField;
 @EqualsAndHashCode(callSuper = false)
 public class ShippedLineItem extends BaseModel implements Importable{
   @ImportField(mandatory = true, type = "int", name = "Order Number")
-  private Integer rnrId;
+  private Long rnrId;
 
   @ImportField(mandatory = true, name = "Product Code")
   private String productCode;

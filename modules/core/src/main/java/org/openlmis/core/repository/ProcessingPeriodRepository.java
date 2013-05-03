@@ -29,7 +29,7 @@ public class ProcessingPeriodRepository {
     this.mapper = processingPeriodMapper;
   }
 
-  public List<ProcessingPeriod> getAll(Integer scheduleId) {
+  public List<ProcessingPeriod> getAll(Long scheduleId) {
     return mapper.getAll(scheduleId);
   }
 
@@ -49,7 +49,7 @@ public class ProcessingPeriodRepository {
       throw new DataException("Period's Start Date is smaller than Previous Period's End Date");
   }
 
-  public void delete(Integer processingPeriodId) {
+  public void delete(Long processingPeriodId) {
     ProcessingPeriod processingPeriod = mapper.getById(processingPeriodId);
     validateStartDateGreaterThanCurrentDate(processingPeriod);
     mapper.delete(processingPeriodId);
@@ -61,13 +61,13 @@ public class ProcessingPeriodRepository {
     }
   }
 
-  public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Integer scheduleId, Integer startPeriodId, Date afterDate, Date beforeDate) {
+  public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Long scheduleId, Long startPeriodId, Date afterDate, Date beforeDate) {
     return startPeriodId == null ?
       mapper.getAllPeriodsAfterDate(scheduleId, afterDate, beforeDate) :
       mapper.getAllPeriodsAfterDateAndPeriod(scheduleId, startPeriodId, afterDate, beforeDate);
   }
 
-  public ProcessingPeriod getById(Integer id) {
+  public ProcessingPeriod getById(Long id) {
     return mapper.getById(id);
   }
 
@@ -75,7 +75,7 @@ public class ProcessingPeriodRepository {
     return mapper.getImmediatePreviousPeriodFor(period);
   }
 
-  public List<ProcessingPeriod> getAllPeriodsForDateRange(Integer scheduleId, Date startDate, Date endDate) {
+  public List<ProcessingPeriod> getAllPeriodsForDateRange(Long scheduleId, Date startDate, Date endDate) {
       return mapper.getAllPeriodsForDateRange(scheduleId, startDate, endDate);
   }
 }

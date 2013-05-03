@@ -108,7 +108,7 @@ public class RoleRightsMapperIT {
 
   @Test
   public void shouldGetRoleAndRights() throws Exception {
-    Role role = new Role(111, "role name", Boolean.FALSE, "description", null);
+    Role role = new Role(111L, "role name", Boolean.FALSE, "description", null);
     roleRightsMapper.insertRole(role);
 
     roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
@@ -116,7 +116,7 @@ public class RoleRightsMapperIT {
 
     Role resultRole = roleRightsMapper.getRole(role.getId());
 
-    assertThat(resultRole.getId(), is(not(111)));
+    assertThat(resultRole.getId(), is(not(111L)));
     assertThat(resultRole.getId(), is(notNullValue()));
     assertThat(resultRole.getName(), is(role.getName()));
     assertThat(resultRole.getDescription(), is(role.getDescription()));
@@ -153,13 +153,13 @@ public class RoleRightsMapperIT {
 
   @Test
   public void shouldUpdateRole() {
-    Role role = new Role(11, "Right Name", Boolean.FALSE, "Right Desc", null);
+    Role role = new Role(11L, "Right Name", Boolean.FALSE, "Right Desc", null);
     roleRightsMapper.insertRole(role);
 
     role.setName("Right2");
     role.setRights(new HashSet<>(asList(CREATE_REQUISITION)));
     role.setDescription("Right Description Changed");
-    role.setModifiedBy(222);
+    role.setModifiedBy(222L);
     role.setAdminRole(true);
 
     roleRightsMapper.updateRole(role);
@@ -167,13 +167,13 @@ public class RoleRightsMapperIT {
     Role updatedRole = roleRightsMapper.getRole(role.getId());
     assertThat(updatedRole.getName(), is("Right2"));
     assertThat(updatedRole.getDescription(), is("Right Description Changed"));
-    assertThat(updatedRole.getModifiedBy(), is(222));
+    assertThat(updatedRole.getModifiedBy(), is(222L));
     assertThat(updatedRole.getAdminRole(), is(true));
   }
 
   @Test
   public void shouldDeleteRights() throws Exception {
-    Role role = new Role(11, "Right Name", Boolean.FALSE, "Right Desc", null);
+    Role role = new Role(11L, "Right Name", Boolean.FALSE, "Right Desc", null);
     roleRightsMapper.insertRole(role);
     roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
     roleRightsMapper.createRoleRight(role.getId(), UPLOADS);

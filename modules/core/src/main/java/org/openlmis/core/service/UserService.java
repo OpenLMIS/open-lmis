@@ -126,7 +126,7 @@ public class UserService {
     return userRepository.searchUser(userSearchParam);
   }
 
-  public User getById(Integer id) {
+  public User getById(Long id) {
     User user = userRepository.getById(id);
     user.setHomeFacilityRoles(roleAssignmentService.getHomeFacilityRoles(id));
     user.setSupervisorRoles(roleAssignmentService.getSupervisorRoles(id));
@@ -134,8 +134,8 @@ public class UserService {
     return user;
   }
 
-  public Integer getUserIdByPasswordResetToken(String token) {
-    Integer userId = userRepository.getUserIdForPasswordResetToken(token);
+  public Long getUserIdByPasswordResetToken(String token) {
+    Long userId = userRepository.getUserIdForPasswordResetToken(token);
     if (userId == null) {
       throw new DataException(PASSWORD_RESET_TOKEN_INVALID);
     }
@@ -143,7 +143,7 @@ public class UserService {
   }
 
   public void updateUserPassword(String token, String password) {
-    Integer userId = getUserIdByPasswordResetToken(token);
+    Long userId = getUserIdByPasswordResetToken(token);
     userRepository.updateUserPassword(userId, Encoder.hash(password));
     userRepository.deletePasswordResetTokenForUser(userId);
   }

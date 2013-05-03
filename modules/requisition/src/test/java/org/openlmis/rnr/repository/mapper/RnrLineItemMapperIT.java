@@ -9,7 +9,6 @@ package org.openlmis.rnr.repository.mapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.FacilityApprovedProductBuilder;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
@@ -45,7 +44,7 @@ import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
 public class RnrLineItemMapperIT {
-  public static final int MODIFIED_BY = 1;
+  public static final Long MODIFIED_BY = 1L;
 
   @Autowired
   private FacilityMapper facilityMapper;
@@ -171,7 +170,7 @@ public class RnrLineItemMapperIT {
     requisitionMapper.insert(rnr);
     RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
     rnrLineItemMapper.insert(lineItem);
-    int anotherModifiedBy = 2;
+    Long anotherModifiedBy = 2L;
     lineItem.setModifiedBy(anotherModifiedBy);
     lineItem.setBeginningBalance(43);
     lineItem.setTotalLossesAndAdjustments(20);
@@ -183,7 +182,8 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItems.get(0).getBeginningBalance(), is(43));
     assertThat(rnrLineItems.get(0).getTotalLossesAndAdjustments(), is(20));
     assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name Tablet strength mg"));
-    assertThat(rnrLineItems.get(0).getReasonForRequestedQuantity(), is("Quantity Requested more in liu of coming rains"));
+    assertThat(rnrLineItems.get(0).getReasonForRequestedQuantity(),
+      is("Quantity Requested more in liu of coming rains"));
   }
 
 
@@ -225,8 +225,10 @@ public class RnrLineItemMapperIT {
     rnrLineItemMapper.deleteAllNonFullSupplyForRequisition(rnr.getId());
 
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).size(), is(1));
-    assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCode(), is(lineItem2.getProductCode()));
-    assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCategory(), is(lineItem2.getProductCategory()));
+    assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCode(),
+      is(lineItem2.getProductCode()));
+    assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCategory(),
+      is(lineItem2.getProductCategory()));
   }
 
 
@@ -241,7 +243,8 @@ public class RnrLineItemMapperIT {
       category.setName("Category " + index);
       category.setDisplayOrder(1);
       categoryMapper.insert(category);
-      Product product = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, productCode), with(ProductBuilder.fullSupply, fullSupplyFlag)));
+      Product product = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, productCode),
+        with(ProductBuilder.fullSupply, fullSupplyFlag)));
       product.setCategory(category);
       productMapper.insert(product);
 
@@ -252,7 +255,7 @@ public class RnrLineItemMapperIT {
       facilityApprovedProduct.setProgramProduct(programProduct);
       facilityApprovedProductMapper.insert(facilityApprovedProduct);
 
-      RnrLineItem item = new RnrLineItem(rnr.getId(), facilityApprovedProduct, 1);
+      RnrLineItem item = new RnrLineItem(rnr.getId(), facilityApprovedProduct, 1L);
       rnrLineItemMapper.insert(item);
     }
     assertThat(rnrLineItemMapper.getCategoryCount(rnr, fullSupplyFlag), is(10));

@@ -27,7 +27,7 @@ public interface RequisitionGroupMemberMapper {
     "INNER JOIN requisition_group_program_schedules rgps ON rg.id = rgps.requisitionGroupId",
     "INNER JOIN requisition_group_members rgm ON rg.id = rgm.requisitionGroupId",
     "WHERE rgm.facilityId = #{facilityId}"})
-  List<Integer> getRequisitionGroupProgramIdsForFacilityId(Integer facilityId);
+  List<Long> getRequisitionGroupProgramIdsForFacilityId(Long facilityId);
 
   @Select({"SELECT *",
     "FROM requisition_group_members",

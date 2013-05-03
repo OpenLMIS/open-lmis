@@ -48,7 +48,7 @@ public interface RequisitionMapper {
       @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId")),
   })
-  Rnr getById(Integer rnrId);
+  Rnr getById(Long rnrId);
 
   @Select({"SELECT id, programId, facilityId, periodId, submittedDate, modifiedDate",
       "FROM requisitions ",
@@ -86,8 +86,8 @@ public interface RequisitionMapper {
       @Result(property = "program.id", column = "programId"),
       @Result(property = "period.id", column = "periodId"),
   })
-  Rnr getLastRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Integer facilityId,
-                                                 @Param(value = "programId") Integer programId);
+  Rnr getLastRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Long facilityId,
+                                                 @Param(value = "programId") Long programId);
 
   @Select("SELECT id, programId, facilityId, periodId, supplyingFacilityId, submittedDate, modifiedDate FROM requisitions WHERE STATUS='APPROVED' ORDER BY submittedDate")
   @Results(value = {

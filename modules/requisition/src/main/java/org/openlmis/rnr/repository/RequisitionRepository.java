@@ -91,7 +91,7 @@ public class RequisitionRepository {
     return lossesAndAdjustmentsMapper.getLossesAndAdjustmentsTypes();
   }
 
-  public Rnr getById(Integer rnrId) {
+  public Rnr getById(Long rnrId) {
     Rnr requisition = requisitionMapper.getById(rnrId);
     if (requisition == null) throw new DataException("Requisition Not Found");
     return requisition;
@@ -101,7 +101,7 @@ public class RequisitionRepository {
     return requisitionMapper.getAuthorizedRequisitions(roleAssignment);
   }
 
-  public Rnr getLastRequisitionToEnterThePostSubmitFlow(Integer facilityId, Integer programId) {
+  public Rnr getLastRequisitionToEnterThePostSubmitFlow(Long facilityId, Long programId) {
     return requisitionMapper.getLastRequisitionToEnterThePostSubmitFlow(facilityId, programId);
   }
 
@@ -117,7 +117,7 @@ public class RequisitionRepository {
     return rnrLineItemMapper.getCategoryCount(requisition, fullSupply);
   }
 
-  public List<Comment> getCommentsByRnrID(Integer rnrId) {
+  public List<Comment> getCommentsByRnrID(Long rnrId) {
     return commentMapper.getByRnrId(rnrId);
   }
 

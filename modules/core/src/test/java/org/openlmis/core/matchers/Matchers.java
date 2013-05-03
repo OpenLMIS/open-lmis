@@ -14,7 +14,7 @@ import org.openlmis.core.domain.Program;
 
 public class Matchers {
 
-  public static Matcher<Program> programMatcher(final int id) {
+  public static Matcher<Program> programMatcher(final Long id) {
     return new ArgumentMatcher<Program>() {
       @Override
       public boolean matches(Object argument) {
@@ -24,7 +24,7 @@ public class Matchers {
     };
   }
 
-  public static Matcher<ProcessingPeriod> periodMatcher(final int id) {
+  public static Matcher<ProcessingPeriod> periodMatcher(final Long id) {
     return new ArgumentMatcher<ProcessingPeriod>() {
       @Override
       public boolean matches(Object argument) {
@@ -34,7 +34,7 @@ public class Matchers {
     };
   }
 
-  public static Matcher<Facility> facilityMatcher(final int id) {
+  public static Matcher<Facility> facilityMatcher(final Long id) {
     return new ArgumentMatcher<Facility>() {
       @Override
       public boolean matches(Object argument) {

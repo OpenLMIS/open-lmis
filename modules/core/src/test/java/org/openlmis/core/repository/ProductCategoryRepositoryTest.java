@@ -83,9 +83,9 @@ public class ProductCategoryRepositoryTest {
   @Test
   public void shouldGetCategoryIdByCode(){
     String categoryCode = "category code";
-    Integer categoryId = 1;
+    Long categoryId = 1L;
     when(productCategoryMapper.getProductCategoryIdByCode(categoryCode)).thenReturn(categoryId);
-    Integer returnedCategoryId = productCategoryRepository.getProductCategoryIdByCode(categoryCode);
+    Long returnedCategoryId = productCategoryRepository.getProductCategoryIdByCode(categoryCode);
 
     verify(productCategoryMapper).getProductCategoryIdByCode(categoryCode);
     assertThat(returnedCategoryId, is(categoryId));

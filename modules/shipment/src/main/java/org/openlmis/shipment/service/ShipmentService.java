@@ -40,9 +40,9 @@ public class ShipmentService {
     shipmentRepository.insertShipmentFileInfo(shipmentFileInfo);
   }
 
-  public void updateStatusAndShipmentIdForOrders(List<Integer> rnrIds, ShipmentFileInfo shipmentFileInfo) {
+  public void updateStatusAndShipmentIdForOrders(List<Long> rnrIds, ShipmentFileInfo shipmentFileInfo) {
     List<Order> orders = new ArrayList<>();
-    for (Integer id : rnrIds) {
+    for (Long id : rnrIds) {
       Order order = new Order(new Rnr(id));
       order.updateShipmentFileInfo(shipmentFileInfo);
       orders.add(order);

@@ -33,7 +33,7 @@ public class OrderService {
   }
 
   @Transactional
-  public void convertToOrder(List<Rnr> rnrList, Integer userId) {
+  public void convertToOrder(List<Rnr> rnrList, Long userId) {
     requisitionService.releaseRequisitionsAsOrder(rnrList, userId);
     Order order;
     for (Rnr rnr : rnrList) {
@@ -54,7 +54,7 @@ public class OrderService {
     return orders;
   }
 
-  public Order getOrderForDownload(Integer id) {
+  public Order getOrderForDownload(Long id) {
     Order order = orderRepository.getById(id);
     Rnr requisition = requisitionService.getFullRequisitionById(order.getRnr().getId());
     removeUnorderedProducts(requisition);

@@ -20,17 +20,17 @@ public class CommaSeparatorTest {
     @Test
     public void shouldGetIdsInCommaSeparatedForm() {
         List<BaseModel> models = new ArrayList<>();
-        models.add(model(1));
-        models.add(model(2));
+        models.add(model(1L));
+        models.add(model(2L));
         CommaSeparator commaSeparator = new CommaSeparator();
         String result = commaSeparator.commaSeparateIds(models);
         assertThat(result, is("{1, 2}"));
     }
 
-    private BaseModel model(final int i) {
+    private BaseModel model(final Long i) {
         return new BaseModel() {
             @Override
-            public Integer getId() {
+            public Long getId() {
                 return i;
             }
         };

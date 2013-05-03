@@ -16,7 +16,7 @@ public class VendorTest {
   @Before
   public void setUp() throws Exception {
     vendor = new Vendor();
-    vendor.setId(1);
+    vendor.setId(1L);
     vendor.setAuthToken(UUID.randomUUID().toString());
     vendor.setActive(true);
     vendor.setName("test vendor");

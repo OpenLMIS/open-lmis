@@ -37,9 +37,9 @@ public class ProductCategoryServiceTest {
   @Test
   public void shouldGetProductCategoryIdByCode(){
     String categoryCode = "category code";
-    Integer categoryId = 1;
+    Long categoryId = 1L;
     when(productCategoryRepository.getProductCategoryIdByCode(categoryCode)).thenReturn(categoryId);
-    Integer productCategoryIdByCode = productCategoryService.getProductCategoryIdByCode(categoryCode);
+    Long productCategoryIdByCode = productCategoryService.getProductCategoryIdByCode(categoryCode);
 
     verify(productCategoryRepository).getProductCategoryIdByCode(categoryCode);
     assertThat(productCategoryIdByCode, is(categoryId));
@@ -48,7 +48,7 @@ public class ProductCategoryServiceTest {
   @Test
   public void shouldUpdateProductCategoryIfAlreadyExists() {
     ProductCategory productCategory = new ProductCategory();
-    productCategory.setId(1);
+    productCategory.setId(1L);
     productCategoryService.save(productCategory);
     verify(productCategoryRepository).update(productCategory);
     verify(productCategoryRepository, never()).insert(productCategory);

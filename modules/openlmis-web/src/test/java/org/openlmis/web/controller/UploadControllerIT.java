@@ -41,7 +41,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 @ContextConfiguration(locations = "classpath*:applicationContext.xml")
 public class UploadControllerIT {
 
-  public static final Integer USER = 1;
+  public static final Long USER = 1L;
 
   @Autowired
   CSVParser csvParser;
@@ -72,7 +72,7 @@ public class UploadControllerIT {
 
   @Test
   public void shouldParseCsvWithMandatoryFields() throws Exception {
-    InputStream inputStream = UploadControllerIT.class.getClassLoader()
+    InputStream inputStream = this.getClass().getClassLoader()
       .getResourceAsStream("mandatory-fields.csv");
 
     MockMultipartFile multiPartFile = new MockMultipartFile("csvFile", "mock.csv", null, inputStream);
@@ -88,7 +88,7 @@ public class UploadControllerIT {
       "&success=File uploaded successfully. 'Number of records created: 2', 'Number of records updated : 0'"));
 
     ArgumentCaptor<MandatoryFields> validUploadTypeArgumentCaptor = ArgumentCaptor.forClass(MandatoryFields.class);
-    verify(handler).execute(validUploadTypeArgumentCaptor.capture(), eq(2), eq(new AuditFields(1, null)));
+    verify(handler).execute(validUploadTypeArgumentCaptor.capture(), eq(2), eq(new AuditFields(1L, null)));
 
     assertThat(validUploadTypeArgumentCaptor.getValue().getFieldA(), is("Val11"));
     assertThat(validUploadTypeArgumentCaptor.getValue().getFieldB(), is("Val12"));
@@ -110,7 +110,7 @@ public class UploadControllerIT {
       "&success=File uploaded successfully. 'Number of records created: 2', 'Number of records updated : 1'"));
 
     ArgumentCaptor<NonMandatoryFields> nonMandatoryFieldsArgumentCaptor = ArgumentCaptor.forClass(NonMandatoryFields.class);
-    verify(handler).execute(nonMandatoryFieldsArgumentCaptor.capture(), eq(4), eq(new AuditFields(1, null)));
+    verify(handler).execute(nonMandatoryFieldsArgumentCaptor.capture(), eq(4), eq(new AuditFields(1L, null)));
 
   }
 

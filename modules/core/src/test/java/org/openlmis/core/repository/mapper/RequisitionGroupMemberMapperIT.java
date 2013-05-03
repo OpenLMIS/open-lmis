@@ -69,7 +69,7 @@ public class RequisitionGroupMemberMapperIT {
 
     requisitionGroupMember.setFacility(facility);
     requisitionGroupMember.setRequisitionGroup(requisitionGroup);
-    requisitionGroupMember.setModifiedBy(1);
+    requisitionGroupMember.setModifiedBy(1L);
 
     processingScheduleMapper.insert(processingSchedule);
   }
@@ -91,7 +91,7 @@ public class RequisitionGroupMemberMapperIT {
     requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
     requisitionGroupMemberMapper.insert(requisitionGroupMember);
 
-    List<Integer> programIds = requisitionGroupMemberMapper.getRequisitionGroupProgramIdsForFacilityId(requisitionGroupMember.getFacility().getId());
+    List<Long> programIds = requisitionGroupMemberMapper.getRequisitionGroupProgramIdsForFacilityId(requisitionGroupMember.getFacility().getId());
 
     assertThat(programIds.size(), is(1));
     assertThat(programIds.get(0), is(requisitionGroupProgramSchedule.getProgram().getId()));

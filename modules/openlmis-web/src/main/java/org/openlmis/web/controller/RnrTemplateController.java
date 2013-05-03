@@ -42,7 +42,7 @@ public class RnrTemplateController extends BaseController{
 
   @RequestMapping(value = "/program/{programId}/rnr-template", method = RequestMethod.GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_RNR')")
-  public RnrTemplateForm fetchAllProgramRnrColumnList(@PathVariable("programId") Integer programId) {
+  public RnrTemplateForm fetchAllProgramRnrColumnList(@PathVariable("programId") Long programId) {
     List<RnRColumnSource> sources = new ArrayList<>();
     sources.add(RnRColumnSource.USER_INPUT);
     sources.add(RnRColumnSource.CALCULATED);
@@ -51,13 +51,13 @@ public class RnrTemplateController extends BaseController{
 
   @RequestMapping(value = "/rnr/{programId}/columns", method = RequestMethod.GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
-  public List<RnrColumn> fetchColumnsForRequisition(@PathVariable("programId") Integer programId) {
+  public List<RnrColumn> fetchColumnsForRequisition(@PathVariable("programId") Long programId) {
     return rnrTemplateService.fetchColumnsForRequisition(programId);
   }
 
   @RequestMapping(value = "/program/{programId}/rnr-template", method = RequestMethod.POST, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_RNR')")
-  public ResponseEntity saveRnRTemplateForProgram(@PathVariable("programId") Integer programId,
+  public ResponseEntity saveRnRTemplateForProgram(@PathVariable("programId") Long programId,
                                                   @RequestBody RnrColumnList rnrColumnList) {
       ProgramRnrTemplate programRnrTemplate = new ProgramRnrTemplate(programId, rnrColumnList);
       Map<String, OpenLmisMessage> validationErrors = rnrTemplateService.saveRnRTemplateForProgram(programRnrTemplate);

@@ -63,12 +63,12 @@ public class ProductCategoryMapperIT {
     ProductCategory productCategory = new ProductCategory();
     productCategory.setCode("category code");
     productCategory.setName("category name");
-    productCategory.setModifiedBy(1);
+    productCategory.setModifiedBy(1L);
     productCategory.setDisplayOrder(1);
     productCategoryMapper.insert(productCategory);
 
     productCategory.setName("updated category name");
-    productCategory.setModifiedBy(2);
+    productCategory.setModifiedBy(2L);
     productCategory.setDisplayOrder(2);
     productCategoryMapper.update(productCategory);
 
@@ -87,7 +87,7 @@ public class ProductCategoryMapperIT {
     productCategory.setDisplayOrder(1);
     productCategoryMapper.insert(productCategory);
 
-    Integer categoryId = productCategoryMapper.getProductCategoryIdByCode(productCategory.getCode());
+    Long categoryId = productCategoryMapper.getProductCategoryIdByCode(productCategory.getCode());
 
     assertThat(categoryId, is(productCategory.getId()));
   }

@@ -28,10 +28,10 @@ public interface RequisitionGroupMapper {
     @Results(value = {
             @Result(property = "supervisoryNode.id", column = "supervisoryNodeId")
     })
-    RequisitionGroup getRequisitionGroupById(Integer id);
+    RequisitionGroup getRequisitionGroupById(Long id);
 
     @Select("SELECT id FROM requisition_groups where LOWER(code) = LOWER(#{code})")
-    Integer getIdForCode(String code);
+    Long getIdForCode(String code);
 
     @Select("SELECT id FROM requisition_groups where supervisoryNodeId = ANY(#{supervisoryNodeIdsAsString}::INTEGER[])")
     List<RequisitionGroup> getRequisitionGroupBySupervisoryNodes(String supervisoryNodeIdsAsString);

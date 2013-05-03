@@ -44,12 +44,12 @@ public class OrderDTOTest {
     order1.setRnr(make(a(defaultRnr)));
     order1.setShipmentFileInfo(new ShipmentFileInfo("1.csv", false));
     final Order order2 = new Order();
-    order2.setRnr(make(a(defaultRnr, with(RequisitionBuilder.periodId, 2), with(RequisitionBuilder.program, new Program(11, "name")))));
+    order2.setRnr(make(a(defaultRnr, with(RequisitionBuilder.periodId, 2L), with(RequisitionBuilder.program, new Program(11L, "name")))));
     order2.setShipmentFileInfo(new ShipmentFileInfo("2.csv", true));
     final RnrDTO dtoForOrder1 = new RnrDTO();
-    dtoForOrder1.setId(1);
+    dtoForOrder1.setId(1L);
     final RnrDTO dtoForOrder2 = new RnrDTO();
-    dtoForOrder2.setId(2);
+    dtoForOrder2.setId(2L);
 
     when(RnrDTO.prepareForOrderView(order1.getRnr())).thenReturn(dtoForOrder1);
     when(RnrDTO.prepareForOrderView(order2.getRnr())).thenReturn(dtoForOrder2);
