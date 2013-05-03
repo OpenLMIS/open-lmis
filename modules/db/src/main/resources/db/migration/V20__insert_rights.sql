@@ -12,7 +12,8 @@ INSERT INTO rights (name, adminRight, description) VALUES
  ('APPROVE_REQUISITION',FALSE,'Permission to approve requisitions'),
  ('AUTHORIZE_REQUISITION',FALSE,'Permission to edit, authorize and recall requisitions'),
  ('MANAGE_USERS',TRUE,'Permission to create and view users'),
- ('MANAGE_REPORTS',TRUE,'Permission to manage reports'),
  ('CONVERT_TO_ORDER',TRUE,'Permission to convert requisitions to order'),
  ('VIEW_ORDER',TRUE,'Permission to view orders'),
- ('VIEW_REQUISITION',FALSE,'Permission to view requisition');
+ ('VIEW_REQUISITION',FALSE,'Permission to view requisition'),
+ ('VIEW_REPORTS',TRUE,'Permission to view reports'),
+ ('MANAGE_REPORTS',TRUE,'Permission to manage reports');

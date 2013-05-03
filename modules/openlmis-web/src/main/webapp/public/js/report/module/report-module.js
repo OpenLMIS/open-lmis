@@ -11,5 +11,5 @@ angular.module('report', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog
     when('/list', {controller:ListReportController, templateUrl:'partials/list.html', resolve:ListReportController.resolve}).
     otherwise({redirectTo:'/list'});
 }]).run(function ($rootScope, AuthorizationService) {
-    AuthorizationService.preAuthorize('MANAGE_REPORTS');
+    AuthorizationService.preAuthorize('VIEW_REPORTS');
   });

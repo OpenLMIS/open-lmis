@@ -5,7 +5,7 @@
 
 <div>
   <h2>Reports
-    <a ng-href="#/create" class="pull-right btn btn-primary">Add new</a>
+    <a ng-href="#/create" class="pull-right btn btn-primary" ng-show="hasPermission('MANAGE_REPORTS')">Add new</a>
   </h2>
 
   <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>

@@ -24,7 +24,7 @@ public class RightTest {
     Right[] rights = {CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION};
 
     for (Right right : rights) {
-      List<Right> dependentRights = right.getDependentRights();
+      List<Right> dependentRights = right.getDefaultRights();
       assertThat(dependentRights.size(), is(1));
       assertThat(dependentRights.get(0), is(VIEW_REQUISITION));
     }
@@ -32,11 +32,11 @@ public class RightTest {
 
 
   @Test
-  public void shouldReturnEmptyListWhenNoDependentRightIsAvailable() throws Exception {
+  public void shouldReturnEmptyListWhenNoDfaultRightIsAvailable() throws Exception {
     Right[] rights = {CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_ROLE, MANAGE_SCHEDULE, MANAGE_USERS, UPLOADS, VIEW_REQUISITION};
 
     for (Right right : rights) {
-      assertThat(right.getDependentRights().size(), is(0));
+      assertThat(right.getDefaultRights().size(), is(0));
     }
   }
 

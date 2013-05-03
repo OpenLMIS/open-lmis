@@ -9,3 +9,5 @@ CREATE TABLE report_templates (
   modifiedBy    INTEGER,
   modifiedDate  TIMESTAMP DEFAULT NOW()
 );
+
+CREATE UNIQUE INDEX uc_report_templates_name ON report_templates(LOWER(name));

@@ -69,7 +69,7 @@ public class RoleRightsRepository {
     Set<Right> rights = new HashSet<>();
     for (Right right : rightList) {
       rights.add(right);
-      rights.addAll(right.getDependentRights());
+      rights.addAll(right.getDefaultRights());
     }
     return rights;
   }
