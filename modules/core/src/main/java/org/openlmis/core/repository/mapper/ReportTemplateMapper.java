@@ -7,12 +7,15 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.ReportTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public interface ReportMapper {
+public interface ReportTemplateMapper {
 
   @Select("SELECT * from report_templates WHERE name=#{name}")
   ReportTemplate getByName(String name);
@@ -22,6 +25,9 @@ public interface ReportMapper {
 
   @Insert("INSERT INTO report_templates (name, data, parameters, modifiedBy, modifiedDate) " +
     "VALUES (#{name}, #{data}, #{parameters}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))")
+  @Options(useGeneratedKeys = true)
   void insert(ReportTemplate reportTemplate);
 
+  @Select("SELECT id, name from report_templates")
+  List<ReportTemplate> getAll();
 }

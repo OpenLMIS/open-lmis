@@ -7,18 +7,23 @@
 package org.openlmis.core.service;
 
 import org.openlmis.core.domain.ReportTemplate;
-import org.openlmis.core.repository.ReportRepository;
+import org.openlmis.core.repository.ReportTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class ReportService {
+public class ReportTemplateService {
 
   @Autowired
-  ReportRepository repository;
+  ReportTemplateRepository repository;
 
   public void insert(ReportTemplate reportTemplate) {
     repository.insert(reportTemplate);
   }
 
+  public List<ReportTemplate> getAll() {
+    return repository.getAll();
+  }
 }

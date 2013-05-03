@@ -12,19 +12,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.ReportTemplate;
-import org.openlmis.core.repository.ReportRepository;
+import org.openlmis.core.repository.ReportTemplateRepository;
 
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ReportServiceTest {
+public class ReportTemplateServiceTest {
 
   @Mock
-  ReportRepository repository;
+  ReportTemplateRepository repository;
 
   @InjectMocks
-  ReportService service;
+  ReportTemplateService service;
 
   @Test
   public void shouldInsertReport() throws Exception {

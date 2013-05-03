@@ -18,35 +18,40 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
-public class ReportMapperIT {
+public class ReportTemplateMapperIT {
 
   @Autowired
-  ReportMapper reportMapper;
+  ReportTemplateMapper reportTemplateMapper;
 
   @Test
   public void shouldGetById() throws Exception {
+    ReportTemplate reportTemplate = createReportTemplate("Sample Report");
+
+    ReportTemplate returnedTemplate = reportTemplateMapper.getByName("Sample Report");
+
+    assertThat(returnedTemplate, is(reportTemplate));
+  }
+
+  private ReportTemplate createReportTemplate(String name) {
     ReportTemplate reportTemplate = new ReportTemplate();
-    reportTemplate.setName("Sample Report");
+    reportTemplate.setName(name);
     reportTemplate.setData(new byte[1]);
     reportTemplate.setParameters("SampleParameters");
     reportTemplate.setModifiedBy(1);
     Date currentTimeStamp = new Date();
     reportTemplate.setModifiedDate(currentTimeStamp);
-
-    reportMapper.insert(reportTemplate);
-
-    ReportTemplate returnedTemplate = reportMapper.getByName("Sample Report");
-
-    assertThat(returnedTemplate, is(reportTemplate));
+    reportTemplateMapper.insert(reportTemplate);
+    return reportTemplate;
   }
 
   @Test
@@ -61,6 +66,20 @@ public class ReportMapperIT {
     reportTemplate.setModifiedDate(new Date());
     reportTemplate.setModifiedBy(1);
 
-    reportMapper.insert(reportTemplate);
+    reportTemplateMapper.insert(reportTemplate);
+  }
+
+  @Test
+  public void shouldGetAllReportTemplates() throws Exception {
+    ReportTemplate reportTemplate1 = createReportTemplate("report1");
+    ReportTemplate reportTemplate2 = createReportTemplate("report2");
+
+    List<ReportTemplate> result = reportTemplateMapper.getAll();
+
+    assertThat(result.size(), is(2));
+    assertThat(result.get(0).getName(), is("report1"));
+    assertThat(result.get(0).getId(), is(reportTemplate1.getId()));
+//    assertThat(result, hasItem(reportTemplate1));
+//    assertThat(result, hasItem(reportTemplate2));
   }
 }

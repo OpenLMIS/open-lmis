@@ -8,7 +8,7 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.ReportService;
+import org.openlmis.core.service.ReportTemplateService;
 import org.openlmis.db.service.DbService;
 import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.AuditFields;
@@ -32,8 +32,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import static org.openlmis.web.response.OpenLmisResponse.error;
-import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
@@ -47,7 +45,7 @@ public class UploadController extends BaseController {
   @Resource
   private Map<String, UploadBean> uploadBeansMap;
   @Autowired
-  ReportService reportService;
+  ReportTemplateService reportTemplateService;
 
 
   private static ResourceBundle resourceBundle = ResourceBundle.getBundle("messages");
@@ -62,9 +60,9 @@ public class UploadController extends BaseController {
     this.dbService = dbService;
   }
 
-  public UploadController(CSVParser csvParser, Map<String, UploadBean> uploadBeansMap, DbService dbService, ReportService reportService) {
+  public UploadController(CSVParser csvParser, Map<String, UploadBean> uploadBeansMap, DbService dbService, ReportTemplateService reportTemplateService) {
     this(csvParser, uploadBeansMap, dbService);
-    this.reportService = reportService;
+    this.reportTemplateService = reportTemplateService;
   }
 
   @RequestMapping(value = "/upload", method = POST)

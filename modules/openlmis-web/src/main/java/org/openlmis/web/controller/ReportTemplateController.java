@@ -9,7 +9,7 @@ package org.openlmis.web.controller;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ReportTemplate;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.ReportService;
+import org.openlmis.core.service.ReportTemplateService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.success;
@@ -33,11 +34,11 @@ public class ReportTemplateController extends BaseController {
   public static final String JASPER_CREATE_REPORT_SUCCESS = "create.report.success";
   public static final String JASPER_CREATE_REPORT_ERROR = "create.report.error";
 
-  ReportService reportService;
+  ReportTemplateService reportTemplateService;
 
   @Autowired
-  public ReportTemplateController(ReportService reportService) {
-    this.reportService = reportService;
+  public ReportTemplateController(ReportTemplateService reportTemplateService) {
+    this.reportTemplateService = reportTemplateService;
   }
 
   @RequestMapping(value = "/report-templates", method = POST)
@@ -45,7 +46,7 @@ public class ReportTemplateController extends BaseController {
   public ResponseEntity<OpenLmisResponse> uploadJasperTemplate(HttpServletRequest request, MultipartFile file, String name) {
     try {
       ReportTemplate reportTemplate = new ReportTemplate(name, file, loggedInUserId(request));
-      reportService.insert(reportTemplate);
+      reportTemplateService.insert(reportTemplate);
       return success(JASPER_CREATE_REPORT_SUCCESS, MediaType.TEXT_HTML_VALUE);
     } catch (IOException e) {
       return error(JASPER_CREATE_REPORT_ERROR, OK, MediaType.TEXT_HTML_VALUE);
@@ -54,6 +55,7 @@ public class ReportTemplateController extends BaseController {
     }
   }
 
-
-
+  public List<ReportTemplate> getAll() {
+    return reportTemplateService.getAll();
+  }
 }

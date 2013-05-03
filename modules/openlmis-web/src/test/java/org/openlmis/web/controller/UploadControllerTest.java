@@ -17,7 +17,6 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Product;
-import org.openlmis.core.service.ReportService;
 import org.openlmis.core.upload.ProductPersistenceHandler;
 import org.openlmis.db.service.DbService;
 import org.openlmis.upload.RecordHandler;
@@ -41,7 +40,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UploadControllerTest {
@@ -53,9 +51,6 @@ public class UploadControllerTest {
 
   @Mock
   DbService dbService;
-
-  @Mock
-  ReportService reportService;
 
   RecordHandler handler = new ProductPersistenceHandler(null);
 

@@ -14,7 +14,7 @@ import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.ReportTemplate;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.ReportService;
+import org.openlmis.core.service.ReportTemplateService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -23,10 +23,14 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 
@@ -35,7 +39,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class ReportTemplateControllerTest {
 
   @Mock
-  private ReportService reportService;
+  private ReportTemplateService reportTemplateService;
 
   @InjectMocks
   private ReportTemplateController controller;
@@ -60,7 +64,7 @@ public class ReportTemplateControllerTest {
     ResponseEntity<OpenLmisResponse> response = controller.uploadJasperTemplate(request, reportTemplateFile, "reportName");
 
     assertThat(response.getBody().getSuccessMsg(), is("Report created successfully"));
-    verify(reportService).insert(report);
+    verify(reportTemplateService).insert(report);
   }
 
   @Test
@@ -70,5 +74,13 @@ public class ReportTemplateControllerTest {
     ResponseEntity<OpenLmisResponse> response = controller.uploadJasperTemplate(request, null, "template");
 
     assertThat(response.getBody().getErrorMsg(), is("Error message"));
+  }
+
+  @Test
+  public void shouldGetAllReportTemplates() throws Exception {
+    List<ReportTemplate> expected = new ArrayList<>();
+    when(reportTemplateService.getAll()).thenReturn(expected);
+
+    assertThat(controller.getAll(), is(expected));
   }
 }

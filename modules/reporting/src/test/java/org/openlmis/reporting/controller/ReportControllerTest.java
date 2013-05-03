@@ -12,7 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.ReportTemplate;
-import org.openlmis.core.repository.mapper.ReportMapper;
+import org.openlmis.core.repository.mapper.ReportTemplateMapper;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
@@ -28,7 +28,7 @@ public class ReportControllerTest {
 
 
   @Mock
-  ReportMapper reportMapper;
+  ReportTemplateMapper reportTemplateMapper;
 
   @Mock
   private JasperReportsViewFactory viewFactory;
@@ -44,7 +44,7 @@ public class ReportControllerTest {
   @Test
   public void shouldGenerateReportInRequestedFormat() throws Exception {
     ReportTemplate reportTemplate = new ReportTemplate();
-    when(reportMapper.getById(1)).thenReturn(reportTemplate);
+    when(reportTemplateMapper.getById(1)).thenReturn(reportTemplate);
     request = new MockHttpServletRequest();
     JasperReportsMultiFormatView mockView = mock(JasperReportsMultiFormatView.class);
     when(viewFactory.getJasperReportsView(reportTemplate)).thenReturn(mockView);
@@ -53,6 +53,7 @@ public class ReportControllerTest {
 
     assertThat((JasperReportsMultiFormatView) modelAndView.getView(), is(mockView));
     verify(viewFactory).getJasperReportsView(reportTemplate);
-    verify(reportMapper).getById(1);
+    verify(reportTemplateMapper).getById(1);
   }
+
 }
