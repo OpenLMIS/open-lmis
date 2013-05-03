@@ -6,6 +6,7 @@
 
 package org.openlmis.rnr.service;
 
+import org.ict4h.atomfeed.server.service.EventService;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -25,9 +26,10 @@ import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.dto.RnrFeedDTO;
+import org.openlmis.rnr.event.RequisitionStatusChangeEvent;
 import org.openlmis.rnr.factory.RequisitionSearchStrategyFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
-import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.strategy.RequisitionSearchStrategy;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -57,12 +59,12 @@ import static org.openlmis.rnr.service.RequisitionService.*;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(RequisitionService.class)
+@PrepareForTest({RequisitionService.class, RnrFeedDTO.class})
 public class RequisitionServiceTest {
 
   private static final Integer HIV = 1;
@@ -94,14 +96,17 @@ public class RequisitionServiceTest {
   @Mock
   private SupplyLineService supplyLineService;
 
-
-  @InjectMocks
-  private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
+  @Mock
+  EventService eventService;
 
   @Mock
   private RequisitionPermissionService requisitionPermissionService;
+
   @Mock
   private UserService userService;
+
+  @InjectMocks
+  private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
   @InjectMocks
   private RequisitionService requisitionService;
@@ -236,7 +241,6 @@ public class RequisitionServiceTest {
 
 
   @Test
-  @Ignore
   public void shouldGetPreviousTwoRequisitionsNormalizedConsumptionsWhileGettingRequisition() throws Exception {
     final Integer lastPeriodId = 2;
     final int secondLastPeriodsId = 3;
@@ -245,7 +249,7 @@ public class RequisitionServiceTest {
     Rnr rnr = new Rnr(FACILITY, PROGRAM, PERIOD);
     final Rnr spyRnr = spy(rnr);
 
-    when(requisitionRepository.getRequisitionWithLineItems(FACILITY, PROGRAM, PERIOD)).thenReturn(spyRnr);
+    when(requisitionRepository.getRequisitionWithLineItems(new Facility(FACILITY.getId()), new Program(PROGRAM.getId()), new ProcessingPeriod(PERIOD.getId()))).thenReturn(spyRnr);
     ProcessingPeriod period = new ProcessingPeriod(PERIOD.getId(), PERIOD.getStartDate(), PERIOD.getEndDate(), PERIOD.getNumberOfMonths(), PERIOD.getName());
     when(processingScheduleService.getPeriodById(10)).thenReturn(period);
 
@@ -264,7 +268,9 @@ public class RequisitionServiceTest {
     when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
     when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId());
+
     final Rnr actual = requisitionService.get(criteria).get(0);
+
     assertThat(actual, is(spyRnr));
     verify(spyRnr).fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
   }
@@ -368,6 +374,16 @@ public class RequisitionServiceTest {
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
       thenReturn(Arrays.asList(validPeriod));
+  }
+
+  private void setupForInitRnr(Rnr requisition) {
+    Date date = new Date();
+    when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
+    when(rnrTemplateService.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(getRnrColumns());
+    when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
+    when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
+    when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
+      thenReturn(asList(PERIOD));
   }
 
   @Test
@@ -769,15 +785,15 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  @Ignore
   public void shouldGetRequisitionsForViewForGivenFacilityProgramsAndPeriodRange() throws Exception {
     final Rnr requisition = make(a(RequisitionBuilder.defaultRnr));
+
     final List<Rnr> expected = new ArrayList<Rnr>() {{
       add(requisition);
     }};
-    Program expectedProgram = new Program();
-    Facility expectedFacility = new Facility();
-    ProcessingPeriod expectedPeriod = new ProcessingPeriod();
+    Program expectedProgram = requisition.getProgram();
+    Facility expectedFacility = requisition.getFacility();
+    ProcessingPeriod expectedPeriod = requisition.getPeriod();
     when(programService.getById(3)).thenReturn(expectedProgram);
     when(facilityService.getById(3)).thenReturn(expectedFacility);
     when(processingScheduleService.getPeriodById(3)).thenReturn(expectedPeriod);
@@ -789,13 +805,15 @@ public class RequisitionServiceTest {
     Date dateRangeEnd = DateTime.parse("2013-02-14").toDate();
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facility.getId(), program.getId(), dateRangeStart, dateRangeEnd);
     RequisitionSearchStrategy searchStrategy = mock(RequisitionSearchStrategy.class);
-    when(requisitionSearchStrategyFactory.getSearchStrategy(criteria)).thenReturn(searchStrategy);
+    RequisitionSearchStrategyFactory spyFactory = spy(requisitionSearchStrategyFactory);
+    requisitionService.setRequisitionSearchStrategyFactory(spyFactory);
+    when(spyFactory.getSearchStrategy(criteria)).thenReturn(searchStrategy);
     when(searchStrategy.search()).thenReturn(expected);
 
     List<Rnr> actual = requisitionService.get(criteria);
 
     assertThat(actual, is(expected));
-    verify(requisitionSearchStrategyFactory).getSearchStrategy(criteria);
+    verify(spyFactory).getSearchStrategy(criteria);
     verify(programService).getById(3);
     verify(facilityService).getById(3);
     verify(processingScheduleService).getPeriodById(3);
@@ -885,6 +903,22 @@ public class RequisitionServiceTest {
     Comment comment = new Comment();
     requisitionService.insertComment(comment);
     verify(requisitionRepository).insertComment(comment);
+  }
+
+  @Test @Ignore
+  public void shouldNotifyStatusChangeEvent() throws Exception {
+    mockStatic(RnrFeedDTO.class);
+    Rnr requisition = createRequisition(PERIOD.getId(), INITIATED);
+    setupForInitRnr(requisition);
+    whenNew(Rnr.class).withAnyArguments().thenReturn(requisition);
+
+    RequisitionStatusChangeEvent event = mock(RequisitionStatusChangeEvent.class);
+    whenNew(RequisitionStatusChangeEvent.class).withArguments(requisition).thenReturn(event);
+
+    requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1);
+
+    verifyNew(RequisitionStatusChangeEvent.class).withArguments(requisition);
+    verify(eventService).notify(event);
   }
 
   @Test

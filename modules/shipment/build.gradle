@@ -27,6 +27,7 @@ dependencies {
         exclude module: 'commons-beanutils'
     }
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
+            'org.ict4h:atomfeed-spring-server:0.9-SNAPSHOT',
             project(path : ':modules:core', configuration: 'testFixtures'),
             project(path : ':modules:requisition', configuration: 'testFixtures')
 
