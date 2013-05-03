@@ -12,6 +12,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.event.RequisitionStatusChangeEvent;
 import org.openlmis.rnr.factory.RequisitionSearchStrategyFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -116,11 +118,14 @@ public class RequisitionService {
   public List<Rnr> get(RequisitionSearchCriteria criteria) {
     RequisitionSearchStrategy strategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
     List<Rnr> requisitions = strategy.search();
-    //fillFacilityPeriodProgram(requisitions);
+    fillSupportingInfo(requisitions);
+    return requisitions;
+  }
+
+  private void fillSupportingInfo(List<Rnr> requisitions) {
     for (Rnr rnr : requisitions) {
       fillSupportingInfo(rnr);
     }
-    return requisitions;
   }
 
 
@@ -375,11 +380,11 @@ public class RequisitionService {
   private void insert(Rnr requisition) {
     requisitionRepository.insert(requisition);
     requisitionRepository.logStatusChange(requisition);
-//    try {
-//      eventService.notify(new RequisitionStatusChangeEvent(requisition));
-//    } catch (URISyntaxException e) {
-//      throw new DataException("error.malformed.uri");
-//    }
+    try {
+      eventService.notify(new RequisitionStatusChangeEvent(requisition));
+    } catch (URISyntaxException e) {
+      throw new DataException("error.malformed.uri");
+    }
   }
 
   public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {

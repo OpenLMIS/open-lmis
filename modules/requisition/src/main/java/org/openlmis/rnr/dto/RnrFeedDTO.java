@@ -6,10 +6,38 @@
 
 package org.openlmis.rnr.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrStatus;
 
+import java.io.IOException;
+
+@Data
+@AllArgsConstructor
 public class RnrFeedDTO {
+  private Integer requisitionId;
+  private Integer facilityId;
+  private Integer programId;
+  private Integer periodId;
+  private RnrStatus requisitionStatus;
+
   public static RnrFeedDTO populate(Rnr rnr) {
-    return null;  //To change body of created methods use File | Settings | File Templates.
+    return new RnrFeedDTO(rnr.getId(), rnr.getFacility().getId(), rnr.getProgram().getId(), rnr.getPeriod().getId(), rnr.getStatus());
+  }
+
+  @JsonIgnore
+  public String getSerializedContents() {
+    ObjectMapper mapper = new ObjectMapper();
+    String feed;
+    try {
+      feed = mapper.writeValueAsString(this);
+    } catch (IOException e) {
+      throw new DataException("error.serialization");
+    }
+    return feed;
   }
 }

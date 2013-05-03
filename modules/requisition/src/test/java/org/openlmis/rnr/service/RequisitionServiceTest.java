@@ -9,7 +9,6 @@ package org.openlmis.rnr.service;
 import org.ict4h.atomfeed.server.service.EventService;
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -905,7 +904,7 @@ public class RequisitionServiceTest {
     verify(requisitionRepository).insertComment(comment);
   }
 
-  @Test @Ignore
+  @Test
   public void shouldNotifyStatusChangeEvent() throws Exception {
     mockStatic(RnrFeedDTO.class);
     Rnr requisition = createRequisition(PERIOD.getId(), INITIATED);
