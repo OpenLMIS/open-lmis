@@ -202,4 +202,7 @@ services.factory('Orders', function ($resource) {
 });
 
 
+services.factory('ReportTemplates', function ($resource) {
+  return $resource('/report-templates.json', {}, {});
+});
 

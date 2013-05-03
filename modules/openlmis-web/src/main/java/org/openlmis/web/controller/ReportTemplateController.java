@@ -26,6 +26,7 @@ import java.util.List;
 import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
@@ -55,6 +56,7 @@ public class ReportTemplateController extends BaseController {
     }
   }
 
+  @RequestMapping(value = "/report-templates", method = GET)
   public List<ReportTemplate> getAll() {
     return reportTemplateService.getAll();
   }
