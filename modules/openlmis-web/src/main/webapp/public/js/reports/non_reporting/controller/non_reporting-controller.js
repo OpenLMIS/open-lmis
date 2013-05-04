@@ -12,8 +12,8 @@ function NonReportingController($scope, RequisitionGroups, NonReportingFacilitie
         // lookups and references
 
         $scope.pagingOptions = {
-            pageSizes: [ 20, 40, 50, 100],
-            pageSize: 20,
+            pageSizes: [5, 10, 20, 40, 50, 100],
+            pageSize: 10,
             totalServerItems: 0,
             currentPage: 1
         };
@@ -106,6 +106,13 @@ function NonReportingController($scope, RequisitionGroups, NonReportingFacilitie
                                                 "page" : page
                                                };
                         }
+                        
+                        $.each($scope.sortInfo.fields, function(index, value) {
+                            if(value != undefined) {
+                            	params['sort-'$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+                            }
+                        });
+                        
                         params.period = $scope.period;
                         params.rgroup = $scope.rgroup;
                         params.ftype = $scope.facilityType;
