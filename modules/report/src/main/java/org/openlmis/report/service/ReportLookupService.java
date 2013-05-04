@@ -1,6 +1,7 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.report.mapper.ProductCategoryReportMapper;
 import org.openlmis.report.mapper.ProductReportMapper;
 import org.openlmis.report.mapper.RequisitionGroupReportMapper;
 import org.springframework.beans.factory.annotation.Autowire;
@@ -23,10 +24,13 @@ public class ReportLookupService {
 
     private ProductReportMapper productMapper;
     private RequisitionGroupReportMapper rgMapper;
+    private ProductCategoryReportMapper productCategoryMapper;
+
     @Autowired
-    public ReportLookupService(ProductReportMapper productMapper, RequisitionGroupReportMapper rgMapper){
+    public ReportLookupService(ProductReportMapper productMapper, RequisitionGroupReportMapper rgMapper, ProductCategoryReportMapper productCategoryMapper){
         this.productMapper = productMapper;
         this.rgMapper = rgMapper;
+        this.productCategoryMapper = productCategoryMapper;
     }
 
     public List<Product> getAllProducts(){
@@ -36,5 +40,10 @@ public class ReportLookupService {
     public List<RequisitionGroup> getAllRequisitionGroups(){
         return this.rgMapper.getAll();
     }
+
+    public List<ProductCategory> getAllProductCategories(){
+        return this.productCategoryMapper.getAll();
+    }
+
 
 }

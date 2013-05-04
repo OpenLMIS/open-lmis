@@ -2,6 +2,7 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.dto.Product;
+import org.openlmis.report.model.dto.ProductCategory;
 import org.openlmis.report.model.dto.RequisitionGroup;
 import org.openlmis.report.service.ReportLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,11 @@ public class ReportLookupController extends BaseController {
     public List<RequisitionGroup> getRequisitionGroups(){
         return this.productReportService.getAllRequisitionGroups();
     }
+
+    @RequestMapping(value="/productCategories", method = GET, headers = ACCEPT_JSON)
+    public List<ProductCategory> getProductCategories(){
+        return this.productReportService.getAllProductCategories();
+    }
+
 
 }

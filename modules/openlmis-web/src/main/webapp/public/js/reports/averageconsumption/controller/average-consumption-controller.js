@@ -1,4 +1,4 @@
-function AverageConsumptionReportController($scope, AverageConsumptionReport, Products , FacilityTypes, GeographicZones, $http, $routeParams,$location) {
+function AverageConsumptionReportController($scope, AverageConsumptionReport, Products , ProductCategories, FacilityTypes, GeographicZones, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -107,6 +107,7 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
         $scope.product;
 
 
+
         // copy over the start month and end months
         // this is just for initial loading.
         $(function (){
@@ -149,6 +150,7 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
              toYear: $scope.toYear,
              toMonth: $scope.toMonth,
              product: $scope.product,
+             productCategoryId : $scope.productCategory,
              facility : $scope.facilityId
 
         };
@@ -161,6 +163,12 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
         Products.get(function(data){
             $scope.products = data.products;
         });
+
+        ProductCategories.get(function(data){
+            $scope.productCategories = data.productCategoryList;
+            $scope.productCategories.push({'name': '- Please Selct One -'});
+        });
+
 
         $scope.facilities         = [
             {'name':'One','value':'1'},
@@ -234,11 +242,9 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
                 $scope.filterObject.toMonth =  selection;
             }else{
                 var date = new Date();
-                $scope.filterObject.toMonth =  date.getMonth();;
+                $scope.filterObject.toMonth =  date.getMonth();
             }
         });
-
-
 
         $scope.$watch('periodType', function(selection){
             if(selection != undefined || selection == ""){
@@ -248,6 +254,13 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
             }
         });
 
+        $scope.$watch('productCategory', function(selection){
+            if(selection != undefined || selection == ""){
+                $scope.filterObject.productCategoryId =  selection;
+            }else{
+                $scope.filterObject.productCategoryId =  0;
+            }
+        });
 
 
         $scope.export   = function (type){

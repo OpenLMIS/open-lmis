@@ -33,6 +33,8 @@ public class AverageConsumptionQueryBuilder {
         JOIN("facilities f on r.facilityid = f.id");
         JOIN("facility_types ft on ft.id = f.typeid");
         JOIN("processing_periods pp on pp.id = r.periodid");
+        JOIN("products pr on pr.code = li.productcode");
+        JOIN("product_categories prc on prc.id = pr.categoryid");
 
         if(filter != null){
             if (filter.getFacilityTypeId() != 0) {
@@ -46,6 +48,9 @@ public class AverageConsumptionQueryBuilder {
             }
             if (filter.getEndDate() != null) {
                 WHERE("pp.endDate <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
+            }
+            if(filter.getProductCategoryId() != 0 ){
+                WHERE("prc.id = #{filterCriteria.productCategoryId}");
             }
 
         }
@@ -66,6 +71,8 @@ public class AverageConsumptionQueryBuilder {
         JOIN("facilities f on r.facilityid = f.id");
         JOIN("facility_types ft on ft.id = f.typeid");
         JOIN("processing_periods pp on pp.id = r.periodid");
+        JOIN("products pr on pr.code = li.productcode");
+        JOIN("product_categories prc on prc.id = pr.categoryid");
 
         if(filter != null){
             if (filter.getFacilityTypeId() != 0) {
@@ -79,6 +86,9 @@ public class AverageConsumptionQueryBuilder {
             }
             if (filter.getEndDate() != null) {
                 WHERE("pp.endDate <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
+            }
+            if(filter.getProductCategoryId() != 0 ){
+                WHERE("prc.id = #{filterCriteria.productCategoryId}");
             }
 
         }

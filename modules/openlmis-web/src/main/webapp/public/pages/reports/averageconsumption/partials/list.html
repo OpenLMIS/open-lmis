@@ -94,10 +94,20 @@
                                     </div>
                                 </div>
                                 <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Product</label>
+                                   <label class="labels">Product</label>
+
+                                   <div class="form-field">
+                                    <select name="product" ng-change="filterGrid()" ng-model="product" ng-options="option.id as option.name for option in products">
+
+                                    </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Product Category</label>
 
                                     <div class="form-field">
-                                        <select name="product" ng-change="filterGrid()" ng-model="product" ng-options="option.id as option.name for option in products">
+                                        <select name="productCategory" ng-change="filterGrid()" ng-model="productCategory" ng-options="option.id as option.name for option in productCategories">
 
                                         </select>
                                     </div>
