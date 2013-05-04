@@ -23,4 +23,8 @@ public class VendorService {
 
     return vendor.getAuthToken().equals(repository.getToken(vendor.getName()));
   }
+
+  public Vendor getByUserId(Long id) {
+    return repository.getByUserId(id);
+  }
 }

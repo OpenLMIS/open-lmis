@@ -6,7 +6,6 @@
 
 package org.openlmis.rnr.service;
 
-import org.ict4h.atomfeed.server.service.EventService;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
@@ -25,8 +24,6 @@ import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.*;
-import org.openlmis.rnr.dto.RnrFeedDTO;
-import org.openlmis.rnr.event.RequisitionStatusChangeEvent;
 import org.openlmis.rnr.factory.RequisitionSearchStrategyFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
@@ -58,12 +55,12 @@ import static org.openlmis.rnr.service.RequisitionService.*;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({RequisitionService.class, RnrFeedDTO.class})
+@PrepareForTest(RequisitionService.class)
 public class RequisitionServiceTest {
 
   private static final Long HIV = 1L;
@@ -96,7 +93,7 @@ public class RequisitionServiceTest {
   private SupplyLineService supplyLineService;
 
   @Mock
-  EventService eventService;
+  RequisitionEventService requisitionEventService;
 
   @Mock
   private RequisitionPermissionService requisitionPermissionService;
@@ -906,18 +903,13 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldNotifyStatusChangeEvent() throws Exception {
-    mockStatic(RnrFeedDTO.class);
     Rnr requisition = createRequisition(PERIOD.getId(), INITIATED);
     setupForInitRnr(requisition);
     whenNew(Rnr.class).withAnyArguments().thenReturn(requisition);
 
-    RequisitionStatusChangeEvent event = mock(RequisitionStatusChangeEvent.class);
-    whenNew(RequisitionStatusChangeEvent.class).withArguments(requisition).thenReturn(event);
-
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1L);
 
-    verifyNew(RequisitionStatusChangeEvent.class).withArguments(requisition);
-    verify(eventService).notify(event);
+    verify(requisitionEventService).notifyForStatusChange(requisition);
   }
 
   @Test

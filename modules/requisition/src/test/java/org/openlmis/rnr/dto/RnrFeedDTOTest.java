@@ -8,6 +8,7 @@ package org.openlmis.rnr.dto;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
+import org.openlmis.core.domain.Vendor;
 import org.openlmis.rnr.domain.Rnr;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -21,20 +22,24 @@ public class RnrFeedDTOTest {
   public void shouldPopulateFeedFromRequisition() throws Exception {
     Rnr rnr = make(a(defaultRnr));
 
-    RnrFeedDTO feed = RnrFeedDTO.populate(rnr);
+    Vendor vendor = new Vendor();
+    vendor.setName("external system");
+    RnrFeedDTO feed = RnrFeedDTO.populate(rnr, vendor);
 
     assertThat(feed.getRequisitionId(), is(rnr.getId()));
     assertThat(feed.getFacilityId(), is(rnr.getFacility().getId()));
     assertThat(feed.getProgramId(), is(rnr.getProgram().getId()));
     assertThat(feed.getPeriodId(), is(rnr.getPeriod().getId()));
     assertThat(feed.getRequisitionStatus(), is(rnr.getStatus()));
+    assertThat(feed.getExternalSystem(), is(vendor.getName()));
   }
 
   @Test
   public void shouldGetSerializedContentsFromRequisition() throws Exception {
     ObjectMapper mapper = new ObjectMapper();
     Rnr requisition = make(a(defaultRnr));
-    RnrFeedDTO feedDTO = RnrFeedDTO.populate(requisition);
+    Vendor vendor = new Vendor();
+    RnrFeedDTO feedDTO = RnrFeedDTO.populate(requisition, vendor);
 
     String serializedContents = feedDTO.getSerializedContents();
 

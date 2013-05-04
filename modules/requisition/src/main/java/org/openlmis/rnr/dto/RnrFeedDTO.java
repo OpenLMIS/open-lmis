@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
@@ -24,9 +25,10 @@ public class RnrFeedDTO {
   private Long programId;
   private Long periodId;
   private RnrStatus requisitionStatus;
+  private String externalSystem;
 
-  public static RnrFeedDTO populate(Rnr rnr) {
-    return new RnrFeedDTO(rnr.getId(), rnr.getFacility().getId(), rnr.getProgram().getId(), rnr.getPeriod().getId(), rnr.getStatus());
+  public static RnrFeedDTO populate(Rnr rnr, Vendor vendor) {
+    return new RnrFeedDTO(rnr.getId(), rnr.getFacility().getId(), rnr.getProgram().getId(), rnr.getPeriod().getId(), rnr.getStatus(), vendor.getName());
   }
 
   @JsonIgnore

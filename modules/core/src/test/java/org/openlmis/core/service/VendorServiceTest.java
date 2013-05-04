@@ -67,6 +67,17 @@ public class VendorServiceTest {
   }
 
   @Test
+  public void shouldGetVendorByUserId() throws Exception {
+    Vendor expectedVendor = new Vendor();
+    when(vendorRepository.getByUserId(1L)).thenReturn(expectedVendor);
+
+    Vendor actualVendor = service.getByUserId(1L);
+
+    assertThat(actualVendor, is((expectedVendor)));
+    verify(vendorRepository).getByUserId(1L);
+  }
+
+  @Test
   public void shouldReturnFalseIfVendorIsInvalid() {
     Vendor vendor = mock(Vendor.class);
     when(vendor.isValid()).thenReturn(false);

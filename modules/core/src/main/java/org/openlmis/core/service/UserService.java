@@ -6,7 +6,6 @@
 
 package org.openlmis.core.service;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
@@ -21,27 +20,20 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@NoArgsConstructor
 public class UserService {
   public static final String USER_EMAIL_NOT_FOUND = "user.email.not.found";
   public static final String USER_EMAIL_INCORRECT = "user.email.incorrect";
   public static final String PASSWORD_RESET_TOKEN_INVALID = "user.password.reset.token.invalid";
   private static final String USER_USERNAME_INCORRECT = "user.username.incorrect";
 
-  private UserRepository userRepository;
-
-  private EmailService emailService;
-
-  private RoleAssignmentService roleAssignmentService;
-  private MessageService messageService;
-
   @Autowired
-  public UserService(UserRepository userRepository, RoleAssignmentService roleAssignmentService, EmailService emailService, MessageService messageService) {
-    this.userRepository = userRepository;
-    this.emailService = emailService;
-    this.roleAssignmentService = roleAssignmentService;
-    this.messageService = messageService;
-  }
+  private UserRepository userRepository;
+  @Autowired
+  private EmailService emailService;
+  @Autowired
+  private RoleAssignmentService roleAssignmentService;
+  @Autowired
+  private MessageService messageService;
 
 
   public void create(User user, String resetPasswordLink) {

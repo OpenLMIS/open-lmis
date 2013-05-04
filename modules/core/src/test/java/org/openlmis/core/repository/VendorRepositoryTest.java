@@ -46,4 +46,15 @@ public class VendorRepositoryTest {
     assertThat(token, is("some token"));
     verify(vendorMapper).getToken(vendor);
   }
+
+  @Test
+  public void shouldGetVendorForUserId() throws Exception {
+    Vendor expectedVendor = new Vendor();
+    when(vendorMapper.getByUserId(1L)).thenReturn(expectedVendor);
+
+    Vendor vendor = vendorRepository.getByUserId(1L);
+
+    assertThat(vendor, is(expectedVendor));
+    verify(vendorMapper).getByUserId(1L);
+  }
 }

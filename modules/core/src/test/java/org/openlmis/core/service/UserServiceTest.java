@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.SupervisoryNode;
@@ -62,15 +63,14 @@ public class UserServiceTest {
   @Mock
   private MessageService messageService;
 
+  @InjectMocks
+  private UserService userService;
 
   @Before
   public void setUp() throws Exception {
-    userService = new UserService(userRepository, roleAssignmentService, emailService, messageService);
     when(messageService.message("accountcreated.email.subject")).thenReturn("Account created message");
     when(messageService.message("forgotpassword.email.subject")).thenReturn("Forgot password email subject");
   }
-
-  private UserService userService;
 
   private Matcher<EmailMessage> emailMessageMatcher(final EmailMessage that) {
     return new ArgumentMatcher<EmailMessage>() {

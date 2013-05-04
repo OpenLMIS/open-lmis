@@ -9,6 +9,7 @@ package org.openlmis.rnr.event;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openlmis.core.domain.Vendor;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrFeedDTO;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -34,15 +35,16 @@ public class RequisitionStatusChangeEventTest {
     mockStatic(RnrFeedDTO.class);
 
     Rnr rnr = make(a(defaultRnr));
+    Vendor vendor = new Vendor();
 
     DateTime date = DateTime.now();
     when(DateTime.now()).thenReturn(date);
 
     RnrFeedDTO feedDTO = mock(RnrFeedDTO.class);
-    when(RnrFeedDTO.populate(rnr)).thenReturn(feedDTO);
+    when(RnrFeedDTO.populate(rnr, vendor)).thenReturn(feedDTO);
     when(feedDTO.getSerializedContents()).thenReturn("serializedContents");
 
-    RequisitionStatusChangeEvent event = new RequisitionStatusChangeEvent(rnr);
+    RequisitionStatusChangeEvent event = new RequisitionStatusChangeEvent(rnr, vendor);
 
     assertThat(event.getTitle(), is("Requisition"));
     assertThat(event.getTimeStamp(), is(date));
