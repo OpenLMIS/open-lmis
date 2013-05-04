@@ -14,8 +14,8 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
         // lookups and references
 
         $scope.pagingOptions = {
-            pageSizes: [ 20, 40, 50, 100],
-            pageSize: 20,
+            pageSizes: [5, 10, 20, 40, 50, 100],
+            pageSize: 10,
             totalServerItems: 0,
             currentPage: 1
         };
@@ -220,7 +220,7 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
             $scope.filterObject.fromYear =  selection;
         }else{
             var date = new Date();
-            $scope.filterObject.fromYear =  date.getYear();
+            $scope.filterObject.fromYear =  date.getFullYear();
         }
         });
 
@@ -229,7 +229,7 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
                 $scope.filterObject.toYear =  selection;
             }else{
                 var date = new Date();
-                $scope.filterObject.toYear =  date.getYear();
+                $scope.filterObject.toYear =  date.getFullYear();
             }
         });
 
@@ -277,7 +277,8 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
 
 
         $scope.export   = function (type){
-            var url = '/reports/download/averageconsumption/' + type +'?zone=' + $scope.zone + '&facilityType=' + $scope.facilityType;
+            var params = jQuery.param($scope.filterObject);
+            var url = '/reports/download/averageconsumption/' + params;//type +'?zone=' + $scope.zoneId + '&facilityType=' + $scope.facilityTypeId;
             window.location.href = url;
         }
 
