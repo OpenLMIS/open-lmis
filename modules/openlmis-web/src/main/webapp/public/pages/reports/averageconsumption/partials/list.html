@@ -112,6 +112,16 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Reporting Groups</label>
+
+                                    <div class="form-field">
+                                        <select name="requisitionGroup" ng-change="filterGrid()" ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
+
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="form-cell button-row horizontalFilter">
                                     <input type="submit" class="btn btn-primary save-button pull-right" value="Filter"/>
                                 </div>

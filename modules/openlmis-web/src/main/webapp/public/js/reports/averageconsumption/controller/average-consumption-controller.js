@@ -1,4 +1,4 @@
-function AverageConsumptionReportController($scope, AverageConsumptionReport, Products , ProductCategories, FacilityTypes, GeographicZones, $http, $routeParams,$location) {
+function AverageConsumptionReportController($scope, AverageConsumptionReport, Products , ProductCategories, RequisitionGroups , FacilityTypes, GeographicZones, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -106,6 +106,10 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
 
         $scope.product;
 
+        RequisitionGroups.get(function(data){
+            $scope.requisitionGroups = data.requisitionGroupList;
+            $scope.requisitionGroups.push({'name':'All requsition groups'});
+        });
 
 
         // copy over the start month and end months
@@ -142,8 +146,8 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
 
         //filter form data section
         $scope.filterObject =  {
-             facilityType : $scope.facilityType,
-             zone : $scope.zone,
+             facilityTypeId : $scope.facilityType,
+             zoneId : $scope.zone,
              periodType: $scope.periodType,
              fromYear: $scope.fromYear,
              fromMonth: $scope.fromMonth,
@@ -151,13 +155,14 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
              toMonth: $scope.toMonth,
              product: $scope.product,
              productCategoryId : $scope.productCategory,
+             rgroupId : $scope.rgroup,
              facility : $scope.facilityId
 
         };
 
         FacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.push({'name': '- Please Selct One -'});
+            $scope.facilityTypes.push({'name': 'All Facility Types'});
         });
 
         Products.get(function(data){
@@ -166,7 +171,7 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
 
         ProductCategories.get(function(data){
             $scope.productCategories = data.productCategoryList;
-            $scope.productCategories.push({'name': '- Please Selct One -'});
+            $scope.productCategories.push({'name': 'All Product Categories'});
         });
 
 
@@ -179,7 +184,7 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
-            $scope.zones.push({'name': '- Please Selct One -'});
+            $scope.zones.push({'name': 'All Geographic Zones'});
         });
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
@@ -259,6 +264,14 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
                 $scope.filterObject.productCategoryId =  selection;
             }else{
                 $scope.filterObject.productCategoryId =  0;
+            }
+        });
+
+        $scope.$watch('rgroup', function(selection){
+            if(selection != undefined || selection == ""){
+                $scope.filterObject.rgroupId =  selection;
+            }else{
+                $scope.filterObject.rgroupId =  0;
             }
         });
 
