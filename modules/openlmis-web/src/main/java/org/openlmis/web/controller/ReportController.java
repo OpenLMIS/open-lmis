@@ -174,7 +174,7 @@ public class ReportController  extends BaseController {
 
         Report report = reportManager.getReportByKey("non_reporting");
         List<NonReportingFacilityReport> reportList =
-                (List<NonReportingFacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),null,page,max);
+                (List<NonReportingFacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
         int totalRecCount = 0;
 
         return new Pages(page,totalRecCount,max,reportList);
