@@ -15,6 +15,6 @@ public interface DosageUnitMapper {
 
     // Used by mapper
     @Select("SELECT * FROM dosage_units WHERE id = #{id}")
-    DosageUnit getById(Integer id);
+    DosageUnit getById(Long id);
 
 }
