@@ -29,6 +29,12 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Requisitions')]")
   private static WebElement requisitionMenuItem;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Reports')]")
+  private static WebElement reportMenuItem;
+
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Reports')]")
+  private static WebElement reportsTitle;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Orders')]")
   private static WebElement ordersMenuItem;
 
@@ -275,6 +281,14 @@ public class HomePage extends Page {
     testWebDriver.keyPress(viewRequisitonMenuItem);
     testWebDriver.waitForElementToAppear(viewRequisitonHeader);
     return new ViewRequisitionPage(testWebDriver);
+  }
+
+  public ReportPage navigateReportScreen() throws IOException {
+    SeleneseTestNgHelper.assertTrue(reportMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(reportMenuItem);
+    testWebDriver.keyPress(reportMenuItem);
+    testWebDriver.waitForElementToAppear(reportsTitle);
+    return new ReportPage(testWebDriver);
   }
 
   public DeleteFacilityPage navigateSearchFacility() throws IOException {
