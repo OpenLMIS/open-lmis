@@ -32,66 +32,41 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
     @Override
     protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
 
-        return reportMapper.getReportData(filterCriteria);
+        return getReportDataByFilterCriteriaAndPagingAndSorting(filterCriteria,null,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+       // return reportMapper.getReportData(filterCriteria);
     }
 
     @Override
     protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
-        return null;
+        return getReportDataByFilterCriteriaAndPagingAndSorting(filterCriteria,null,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
     }
 
     @Override
     public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
         RowBounds rowBounds = new RowBounds((page-1)*pageSize,pageSize);
-        AverageConsumptionReportFilter averageConsumptionReportFilter = null;
-
-        if(filterCriteria != null){
-            averageConsumptionReportFilter = new AverageConsumptionReportFilter();
-            Date originalStart =  new Date();
-            Date originalEnd =  new Date();
-
-            averageConsumptionReportFilter.setZoneId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
-            averageConsumptionReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-            averageConsumptionReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
-            averageConsumptionReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
-            averageConsumptionReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
-
-            averageConsumptionReportFilter.setYearFrom(filterCriteria.get("fromYear") == null ? originalStart.getYear() : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0
-            averageConsumptionReportFilter.setYearTo(filterCriteria.get("toYear") == null ? originalEnd.getYear() : Integer.parseInt(filterCriteria.get("toYear")[0])); //defaults to 0
-            averageConsumptionReportFilter.setMonthFrom(filterCriteria.get("fromMonth") == null ? originalStart.getMonth() : Integer.parseInt(filterCriteria.get("fromMonth")[0])); //defaults to 0
-            averageConsumptionReportFilter.setMonthTo(filterCriteria.get("toMonth") == null ? originalEnd.getMonth() : Integer.parseInt(filterCriteria.get("toMonth")[0])); //defaults to 0
-
-
-            //first day of the selected/default month
-            Calendar calendar1 = Calendar.getInstance();
-            calendar1.setTime(originalStart);
-
-            calendar1.set(Calendar.YEAR, averageConsumptionReportFilter.getYearFrom()); //originalStart.setYear(consumptionReportFilter.getYearFrom());
-            calendar1.set(Calendar.MONTH, averageConsumptionReportFilter.getMonthFrom());//originalStart.setMonth(consumptionReportFilter.getMonthFrom());
-            calendar1.set(Calendar.DAY_OF_MONTH, 1);//originalStart.setDate(1);
-            originalStart = calendar1.getTime();
-            averageConsumptionReportFilter.setStartDate(originalStart);
-
-            //last day of the selected/default month
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(originalEnd);
-
-            calendar.set(Calendar.YEAR, averageConsumptionReportFilter.getYearTo());//originalEnd.setYear(consumptionReportFilter.getYearTo());
-            calendar.set(Calendar.MONTH, averageConsumptionReportFilter.getMonthTo());//originalEnd.setMonth(consumptionReportFilter.getMonthTo());
-
-            calendar.add(Calendar.MONTH, 1);
-            calendar.set(Calendar.DAY_OF_MONTH, 1);
-            calendar.add(Calendar.DATE, -1);
-            originalEnd = calendar.getTime();
-
-            averageConsumptionReportFilter.setEndDate(originalEnd);
-
-        }
-        return reportMapper.getFilteredSortedPagedAverageConsumptionReport(averageConsumptionReportFilter, null, rowBounds);
+        return reportMapper.getFilteredSortedPagedAverageConsumptionReport(getReportFilterData(filterCriteria), null, rowBounds);
     }
 
     @Override
     public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
+
+        return (int) reportMapper.getFilteredSortedPagedAverageConsumptionReportCount(getReportFilterData(filterCriteria));
+    }
+
+   /* @Override
+    public ReportData getReportFilterData(final Map<String, String[]> params) {
+       return new ReportData() {
+                        @Override
+                        public String toString() {
+                            return "The Period: " + params.get("fromMonth")[0].toString() + ",  " + params.get("fromYear")[0].toString() +" - "+ params.get("toMonth")[0].toString() +" , "+ params.get("toYear")[0].toString() +"\n"
+
+                                    ;
+                        }
+                    };
+     }*/
+
+    @Override
+    public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
         AverageConsumptionReportFilter averageConsumptionReportFilter = null;
 
         if(filterCriteria != null){
@@ -101,6 +76,8 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
 
             averageConsumptionReportFilter.setZoneId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
             averageConsumptionReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
+            averageConsumptionReportFilter.setFacilityType(filterCriteria.get("facilityType")[0]);
+
             averageConsumptionReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
             averageConsumptionReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
             averageConsumptionReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
@@ -138,16 +115,17 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
             averageConsumptionReportFilter.setEndDate(originalEnd);
 
         }
-        return (int) reportMapper.getFilteredSortedPagedAverageConsumptionReportCount(averageConsumptionReportFilter);
+        return averageConsumptionReportFilter;
+
     }
 
     @Override
-    public ReportData getReportFilterData(Map<String, String[]> params) {
-       return new ReportData() {
-                        @Override
-                        public String toString() {
-                            return "The Period: " ;
-                        }
-                    };
-     }
+    public String filterDataToString(Map<String, String[]> filterCriteria){
+        AverageConsumptionReportFilter  averageConsumptionReportFilter = (AverageConsumptionReportFilter) getReportFilterData(filterCriteria);
+
+        return "Period : "+  averageConsumptionReportFilter.getStartDate().toString() +" - "+ averageConsumptionReportFilter.getEndDate().toString() +" \n" +
+                "Facilty Types : "+ averageConsumptionReportFilter.getFacilityType();
+
+    }
+
 }

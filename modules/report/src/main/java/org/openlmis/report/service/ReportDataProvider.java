@@ -23,11 +23,11 @@ public abstract class ReportDataProvider {
     public final List<? extends ReportData> getReportDataByFilterCriteria(Map<String, String[]> params){
         return getReportDataByFilterCriteria(params, DataSourceType.BEAN_COLLECTION_DATA_SOURCE);
     }
-    public ReportData getReportFilterData(Map<String, String[]> params){
+    public ReportData getReportFilterData(final Map<String, String[]> params){
         return new ReportData() {
             @Override
             public String toString() {
-                return "";
+                return filterDataToString(params);
             }
         };
     }
@@ -36,4 +36,7 @@ public abstract class ReportDataProvider {
     public abstract List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filter , Map<String, String[]> sorter ,int page,int pageSize);
     public abstract int getReportDataCountByFilterCriteria(Map<String, String[]> filter);
 
+    public String filterDataToString(Map<String, String[]> params) {
+        return "";
+    }
 }

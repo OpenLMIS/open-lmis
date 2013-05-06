@@ -66,10 +66,9 @@
                                 </div>
 
                                 <div class="form-cell horizontalFilters pull-right">
-                                     <br />
-                                     <div ng-repeat="summary in summaries">
-                                         <div><span class="report-label">{{summary.name}}</span> : <span>{{summary.count}}</span></div>
-                                     </div>
+                                     <span ng-repeat="summary in summaries">
+                                         <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
+                                     </span>
 
                                 </div>
                             </div>
