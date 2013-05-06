@@ -111,6 +111,14 @@ function SummaryReportController($scope, SummaryReport, Schedules, Programs , Pe
                         }
                         params.period   = $scope.period;
                         params.program  = $scope.program;
+
+                        // put out the sort order
+                        $.each($scope.sortInfo.fields, function(index, value) {
+                            if(value != undefined) {
+                                params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+                            }
+                        });
+
                         SummaryReport.get(params, function(data) {
                         $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
                         });
