@@ -48,6 +48,7 @@
         <intercept-url pattern="/forgot-password*" access="permitAll" requires-channel="any"/>
         <intercept-url pattern="/user/validatePasswordResetToken/*" access="permitAll" requires-channel="any"/>
         <intercept-url pattern="/user/resetPassword/*" access="permitAll" requires-channel="any"/>
+        <intercept-url pattern="/feeds/**" access="permitAll" requires-channel="any" />
         <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="any"/>
 
         <form-login login-page="/public/pages/login.html"

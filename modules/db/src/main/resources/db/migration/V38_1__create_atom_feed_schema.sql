@@ -19,3 +19,5 @@ CREATE TABLE atomfeed.chunking_history (
   start  BIGINT NOT NULL
 );
 
+
+INSERT INTO atomfeed.chunking_history(chunk_length, start) VALUES(5,1);
