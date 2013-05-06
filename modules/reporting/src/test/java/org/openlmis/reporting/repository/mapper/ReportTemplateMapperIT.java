@@ -4,11 +4,13 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.core.repository.mapper;
+package org.openlmis.reporting.repository.mapper;
 
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.core.domain.ReportTemplate;
+import org.openlmis.reporting.model.ReportTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
@@ -22,10 +24,9 @@ import java.util.List;
 
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
+@ContextConfiguration(locations = "classpath:test-applicationContext-reporting.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
 public class ReportTemplateMapperIT {
@@ -39,7 +40,7 @@ public class ReportTemplateMapperIT {
 
     ReportTemplate returnedTemplate = reportTemplateMapper.getByName("Sample Report");
 
-    assertThat(returnedTemplate, is(reportTemplate));
+    Assert.assertThat(returnedTemplate, is(reportTemplate));
   }
 
   private ReportTemplate createReportTemplate(String name) {
@@ -72,14 +73,12 @@ public class ReportTemplateMapperIT {
   @Test
   public void shouldGetAllReportTemplates() throws Exception {
     ReportTemplate reportTemplate1 = createReportTemplate("report1");
-    ReportTemplate reportTemplate2 = createReportTemplate("report2");
+    createReportTemplate("report2");
 
     List<ReportTemplate> result = reportTemplateMapper.getAll();
 
-    assertThat(result.size(), is(2));
-    assertThat(result.get(0).getName(), is("report1"));
-    assertThat(result.get(0).getId(), is(reportTemplate1.getId()));
-//    assertThat(result, hasItem(reportTemplate1));
-//    assertThat(result, hasItem(reportTemplate2));
+    Assert.assertThat(result.size(), CoreMatchers.is(2));
+    Assert.assertThat(result.get(0).getName(), CoreMatchers.is("report1"));
+    Assert.assertThat(result.get(0).getId(), is(reportTemplate1.getId()));
   }
 }

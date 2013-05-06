@@ -12,9 +12,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
-import org.openlmis.core.domain.ReportTemplate;
+import org.openlmis.reporting.model.ReportTemplate;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.ReportTemplateService;
+import org.openlmis.reporting.service.ReportTemplateService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -59,9 +59,9 @@ public class ReportTemplateControllerTest {
   @Test
   public void shouldUploadJasperTemplateFileIfValid() throws Exception {
     MockMultipartFile reportTemplateFile = new MockMultipartFile("template.jrxml","template.jrxml","", new byte[1]);
-    ReportTemplate report = new ReportTemplate("reportName",reportTemplateFile, USER);
+    ReportTemplate report = new ReportTemplate();
     whenNew(ReportTemplate.class).withArguments("reportName", reportTemplateFile, USER).thenReturn(report);
-    ResponseEntity<OpenLmisResponse> response = controller.uploadJasperTemplate(request, reportTemplateFile, "reportName");
+    ResponseEntity<OpenLmisResponse> response = controller.createJasperReportTemplate(request, reportTemplateFile, "reportName");
 
     assertThat(response.getBody().getSuccessMsg(), is("Report created successfully"));
     verify(reportTemplateService).insert(report);
@@ -71,7 +71,7 @@ public class ReportTemplateControllerTest {
   public void shouldGiveErrorForInvalidReport() throws Exception {
     whenNew(ReportTemplate.class).withAnyArguments().thenThrow(new DataException("Error message"));
 
-    ResponseEntity<OpenLmisResponse> response = controller.uploadJasperTemplate(request, null, "template");
+    ResponseEntity<OpenLmisResponse> response = controller.createJasperReportTemplate(request, null, "template");
 
     assertThat(response.getBody().getErrorMsg(), is("Error message"));
   }

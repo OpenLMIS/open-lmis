@@ -7,9 +7,9 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.ReportTemplate;
+import org.openlmis.reporting.model.ReportTemplate;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.ReportTemplateService;
+import org.openlmis.reporting.service.ReportTemplateService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -44,7 +44,7 @@ public class ReportTemplateController extends BaseController {
 
   @RequestMapping(value = "/report-templates", method = POST)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REPORTS')")
-  public ResponseEntity<OpenLmisResponse> uploadJasperTemplate(HttpServletRequest request, MultipartFile file, String name) {
+  public ResponseEntity<OpenLmisResponse> createJasperReportTemplate(HttpServletRequest request, MultipartFile file, String name) {
     try {
       ReportTemplate reportTemplate = new ReportTemplate(name, file, loggedInUserId(request));
       reportTemplateService.insert(reportTemplate);
@@ -57,6 +57,7 @@ public class ReportTemplateController extends BaseController {
   }
 
   @RequestMapping(value = "/report-templates", method = GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REPORTS')")
   public List<ReportTemplate> getAll() {
     return reportTemplateService.getAll();
   }

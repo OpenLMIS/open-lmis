@@ -11,10 +11,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.ReportTemplate;
+import org.openlmis.reporting.model.ReportTemplate;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 
 import javax.sql.DataSource;
@@ -22,9 +21,9 @@ import javax.sql.DataSource;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JasperReportsViewFactory.class)
@@ -43,7 +42,9 @@ public class JasperReportsViewFactoryTest {
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    reportTemplate = new ReportTemplate("facilityReport", new MockMultipartFile("facilityReport.jrxml","facilityReport.jrxml","", new byte[1]), 1L);
+    reportTemplate = mock(ReportTemplate.class);
+    when(reportTemplate.getName()).thenReturn("report1.jrxml");
+    when(reportTemplate.getData()).thenReturn(new byte[1]);
     jasperReportsView = spy(new JasperReportsMultiFormatView());
   }
 

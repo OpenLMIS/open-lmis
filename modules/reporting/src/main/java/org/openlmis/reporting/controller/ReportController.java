@@ -6,8 +6,8 @@
 
 package org.openlmis.reporting.controller;
 
-import org.openlmis.core.domain.ReportTemplate;
-import org.openlmis.core.repository.mapper.ReportTemplateMapper;
+import org.openlmis.reporting.model.ReportTemplate;
+import org.openlmis.reporting.repository.mapper.ReportTemplateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
