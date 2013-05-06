@@ -36,6 +36,8 @@ task setupDB(dependsOn: ["createDB", clean]) << {
     ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
     ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword)
     tasks.migrateDB.execute()
+    ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword, table: newmigtable  )
+    //tasks.migrateDB.execute()
 }
 
 task createDB(dependsOn: "dropDB") << {

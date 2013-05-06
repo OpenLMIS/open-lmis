@@ -56,6 +56,9 @@ public class AverageConsumptionQueryBuilder {
             if(filter.getRgroupId() != 0){
                 WHERE("rgm.id = #{filterCriteria.rgroupId}");
             }
+            if(filter.getProductId() != 0){
+                WHERE("pr.id = #{filterCriteria.productId}");
+            }
 
         }
         GROUP_BY("li.product, li.productcategory,  f.name, ft.name");
@@ -97,6 +100,9 @@ public class AverageConsumptionQueryBuilder {
             }
             if(filter.getRgroupId() != 0){
                 WHERE("rgm.id = #{filterCriteria.rgroupId}");
+            }
+            if(filter.getProductId() != 0){
+                WHERE("pr.id = #{filterCriteria.productId}");
             }
 
         }
