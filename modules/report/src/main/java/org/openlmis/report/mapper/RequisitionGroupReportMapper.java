@@ -19,4 +19,18 @@ public interface RequisitionGroupReportMapper {
             "   FROM " +
             "       requisition_groups")
     List<RequisitionGroup> getAll();
+
+    @Select("SELECT id, name, code " +
+            "   FROM " +
+            "       requisition_groups where id = #{param1}")
+    List<RequisitionGroup> getById(int id);
+
+    @Select("SELECT g.id, g.name, g.code " +
+            "   FROM " +
+            "       requisition_groups g" +
+            "       join requisition_group_program_schedules ps on ps.requisitiongroupid = g.id " +
+            " where " +
+            " ps.programid = #{param1} and ps.scheduleid = #{param2}")
+    List<RequisitionGroup> getByProgramAndSchedule(int program, int schedule);
+
 }

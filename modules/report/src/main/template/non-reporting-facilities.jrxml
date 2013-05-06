@@ -18,6 +18,8 @@
 	<parameter name="REPORT_OUTPUT_OPTION" class="java.lang.String"/>
 	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
 	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
+	<parameter name="TOTAL_FACILITIES" class="java.lang.String"/>
+	<parameter name="TOTAL_NON_REPORTING" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT F.code, F.name facilityName, F.active as active, F.address1, F.address2 , FT.name as facilityType, GZ.name as region, FO.code as owner, F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates, CASE WHEN U.officePhone IS NULL THEN '' ELSE U.officePhone || ' ,' END || CASE WHEN U.cellPhone IS NULL THEN '' ELSE U.cellPhone || ' ,' END || F.mainPhone as phoneNumber, U.email email, F.fax as fax, U.firstName || ' ' || U.lastName || ', ' || jobtitle contact
 						FROM facilities F
@@ -159,4 +161,33 @@
 			</textField>
 		</band>
 	</detail>
+	<summary>
+		<band height="109">
+			<staticText>
+				<reportElement uuid="54c733aa-d9cd-40d9-88de-d10534597dbb" x="520" y="30" width="130" height="21"/>
+				<textElement/>
+				<text><![CDATA[Non reporting facilities]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4f84be12-d811-4f4f-bd4b-0d0ecb2e75d4" x="520" y="51" width="130" height="20"/>
+				<textElement/>
+				<text><![CDATA[Total facilities]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6a52ba43-5266-4eee-89a2-5e34bae518b6" x="520" y="71" width="130" height="20"/>
+				<textElement/>
+				<text><![CDATA[% not reporting]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="f25da274-6a65-48c7-a355-b9b15fa28588" x="660" y="31" width="70" height="18"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{TOTAL_NON_REPORTING}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="992853e5-7ddb-4d79-96fa-0f23ccc3f9eb" x="660" y="52" width="70" height="18"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{TOTAL_FACILITIES}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
 </jasperReport>

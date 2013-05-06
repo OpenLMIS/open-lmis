@@ -2,7 +2,13 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.repository.FacilityRepository;
+import org.openlmis.core.repository.ProcessingPeriodRepository;
+import org.openlmis.core.repository.ProgramRepository;
+import org.openlmis.core.repository.RequisitionGroupRepository;
+import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.report.mapper.NonReportingFacilityReportMapper;
+import org.openlmis.report.mapper.RequisitionGroupReportMapper;
 import org.openlmis.report.mapper.SummaryReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.openlmis.report.model.report.NonReportingFacilityReport;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,11 +28,12 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
 
 
     private NonReportingFacilityReportMapper reportMapper;
-
+    private RequisitionGroupReportMapper requisitionGroupMapper;
 
     @Autowired
-    public NonReportingFacilityReportDataProvider(NonReportingFacilityReportMapper mapper) {
+    public NonReportingFacilityReportDataProvider(NonReportingFacilityReportMapper mapper, RequisitionGroupReportMapper rgMapper) {
         this.reportMapper = mapper;
+        this.requisitionGroupMapper = rgMapper;
     }
 
     @Override
@@ -80,4 +88,41 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
                         }
                     };
      }
+
+
+
+    @Override
+    public HashMap<String, String> getAdditionalReportData(Map params){
+        HashMap<String, String> result = new HashMap<String, String>() ;
+
+        // spit out the summary section on the report.
+        result.put("TOTAL_FACILITIES", reportMapper.getTotalFacilities(params).get(0).toString());
+        result.put("TOTAL_NON_REPORTING", reportMapper.getTotalFacilities(params).get(0).toString());
+
+        // Interprate the different reporting parameters that were selected on the UI
+        String period           = ((String[])params.get("period"))[0];
+        String reportingGroup   = ((String[])params.get("rgroup"))[0] ;
+        String facilityType     = ((String[])params.get("ftype"))[0] ;
+        String program          = ((String[])params.get("program"))[0];
+
+        // compose the filter text as would be presented on the pdf reports.
+        String header = "";
+        if(program != "" && !program.endsWith("undefined")){
+            header += "Program : " + this.reportMapper.getProgram(Integer.parseInt(program)).get(0).getName();
+        }
+        if(reportingGroup != "" && !reportingGroup.endsWith( "undefined")){
+            header = "\nRequisition Group : " + this.requisitionGroupMapper.getById(Integer.parseInt(reportingGroup)).get(0).getName();
+        }
+        if(facilityType != "" && !facilityType.endsWith( "undefined")){
+            header += "Facility Type : " + this.reportMapper.getFacilityType(Integer.parseInt(facilityType)).get(0).getName();
+        }
+        if(period != "" && !period.endsWith("undefined")){
+            header += "\nPeriod : " + this.reportMapper.getPeriodId(Integer.parseInt(period)).get(0).getName();
+        }
+        result.put("REPORT_FILTER_PARAM_VALUES", header);
+
+        return    result;
+    }
+
+
 }

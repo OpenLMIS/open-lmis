@@ -7,8 +7,7 @@ import org.openlmis.report.model.ReportData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  */
@@ -46,6 +45,8 @@ public class SummaryReportDataProvider extends ReportDataProvider {
     public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
         return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
+
+
 
 
 }
