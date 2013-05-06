@@ -30,9 +30,9 @@ public class ShipmentFileReaderTest {
   public void shouldGetUniqueOrderIdsFromShipmentFile() throws Exception {
     File shipmentFile = mock(File.class);
     CsvBeanReader csvBeanReader = mock(CsvBeanReader.class);
-    RawShipment rawShipment1 = new RawShipment(1);
-    RawShipment rawShipment2 = new RawShipment(2);
-    RawShipment rawShipment3 = new RawShipment(1);
+    RawShipment rawShipment1 = new RawShipment(1L);
+    RawShipment rawShipment2 = new RawShipment(2L);
+    RawShipment rawShipment3 = new RawShipment(1L);
     FileInputStream shipmentFileStream = mock(FileInputStream.class);
     ModelClass modelClass = new ModelClass(RawShipment.class, true);
 
@@ -41,7 +41,26 @@ public class ShipmentFileReaderTest {
     whenNew(CsvBeanReader.class).withArguments(modelClass, shipmentFileStream).thenReturn(csvBeanReader);
     when(csvBeanReader.read()).thenReturn(rawShipment1).thenReturn(rawShipment2).thenReturn(rawShipment3).thenReturn(null);
 
-    Set<Integer> result = new ShipmentFileReader().getOrderIds(shipmentFile);
+    Set<Long> result = new ShipmentFileReader().getOrderIds(shipmentFile);
+
+    assertThat(result.size(), is(2));
+  }
+
+  @Test
+  public void shouldGetIgnoreInvalidOrderIds() throws Exception {
+    File shipmentFile = mock(File.class);
+    CsvBeanReader csvBeanReader = mock(CsvBeanReader.class);
+    RawShipment rawShipment1 = new RawShipment(1L);
+    RawShipment rawShipment2 = new RawShipment(3L);
+    FileInputStream shipmentFileStream = mock(FileInputStream.class);
+    ModelClass modelClass = new ModelClass(RawShipment.class, true);
+
+    whenNew(ModelClass.class).withArguments(RawShipment.class, true).thenReturn(modelClass);
+    whenNew(FileInputStream.class).withArguments(shipmentFile).thenReturn(shipmentFileStream);
+    whenNew(CsvBeanReader.class).withArguments(modelClass, shipmentFileStream).thenReturn(csvBeanReader);
+    when(csvBeanReader.read()).thenReturn(rawShipment1).thenThrow(new RuntimeException("any exception")).thenReturn(rawShipment2).thenReturn(null);
+
+    Set<Long> result = new ShipmentFileReader().getOrderIds(shipmentFile);
 
     assertThat(result.size(), is(2));
   }

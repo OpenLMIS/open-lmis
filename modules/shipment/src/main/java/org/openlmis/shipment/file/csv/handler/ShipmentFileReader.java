@@ -24,14 +24,24 @@ public class ShipmentFileReader {
 
   private static Logger logger = LoggerFactory.getLogger(ShipmentFileReader.class);
 
-  public Set<Integer> getOrderIds(File shipmentFile) {
-    Set<Integer> orderIds = new HashSet<>();
+  public Set<Long> getOrderIds(File shipmentFile) {
+    Set<Long> orderIds = new HashSet<>();
     try (FileInputStream inputStream = new FileInputStream(shipmentFile)) {
       CsvBeanReader csvBeanReader = new CsvBeanReader(new ModelClass(RawShipment.class, true), inputStream);
       RawShipment rawShipment;
-      while ((rawShipment = (RawShipment) csvBeanReader.read()) != null) {
-        orderIds.add(rawShipment.getOrderNumber());
+      while (true) {
+        try {
+          rawShipment = (RawShipment) csvBeanReader.read();
+          if (rawShipment != null) {
+            orderIds.add(rawShipment.getOrderNumber());
+          } else {
+            break;
+          }
+        } catch (RuntimeException e) {
+          logger.error("Invalid order number in shipment file " + shipmentFile.getName() + " " + e.getMessage());
+        }
       }
+
     } catch (IOException e) {
       logger.error("Error processing file during processErrorFile for shipment file " + shipmentFile.getName() + " " + e.getMessage());
     }

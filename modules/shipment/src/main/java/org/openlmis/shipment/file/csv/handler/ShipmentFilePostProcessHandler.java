@@ -38,7 +38,7 @@ public class ShipmentFilePostProcessHandler {
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo(shipmentFile.getName(), processingError);
     shipmentService.insertShipmentFileInfo(shipmentFileInfo);
 
-    Set<Integer> orderIds = shipmentFileReader.getOrderIds(shipmentFile);
+    Set<Long> orderIds = shipmentFileReader.getOrderIds(shipmentFile);
     shipmentService.updateStatusAndShipmentIdForOrders(new ArrayList(orderIds), shipmentFileInfo);
 
     if (processingError) sendErrorFileToFtp(shipmentFile);

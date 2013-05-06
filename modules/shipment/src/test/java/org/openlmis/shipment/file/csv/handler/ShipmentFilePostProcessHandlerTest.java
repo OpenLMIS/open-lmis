@@ -39,7 +39,7 @@ public class ShipmentFilePostProcessHandlerTest {
 
   @Test
   public void shouldAddShipmentFileInfo() throws Exception {
-    Set<Integer> orderIds = new HashSet<>();
+    Set<Long> orderIds = new HashSet<>();
     boolean processingError = false;
     File shipmentFile = mock(File.class);
     String fileName = "FileName";
@@ -59,7 +59,7 @@ public class ShipmentFilePostProcessHandlerTest {
 
   @Test
   public void shouldAddShipmentFileInfoAndSendFileToFtpOutputChannelWhenFileHasError() throws Exception {
-    Set<Integer> orderIds = new HashSet<>();
+    Set<Long> orderIds = new HashSet<>();
     boolean processingError = true;
     File shipmentFile = mock(File.class);
     String fileName = "FileName";
