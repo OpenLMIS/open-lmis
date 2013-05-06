@@ -15,6 +15,28 @@
                         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
                             <div class="clearfix ">
 
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Program</label>
+
+                                    <div class="form-fields">
+                                        <select class="large-input" name="program" ng-change="filterGrid()" ng-model="program" ng-options="option.id as option.name for option in programs">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Schedule</label>
+
+                                    <div class="form-fields">
+                                        <select class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="schedule" ng-options="option.id as option.name for option in schedules">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+
                                 <div class="form-cell horizontalFilters">
                                     <label class="labels">Period</label>
 

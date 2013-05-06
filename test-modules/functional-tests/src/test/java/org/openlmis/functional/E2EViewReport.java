@@ -9,7 +9,6 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,8 +69,8 @@ public class E2EViewReport extends TestCaseHelper {
       homePage.goBack();
       facilityMailingListReportPage.verifyMailingReportOutputOnFacilityMailingListScreen();
       homePage.goBack();
-     /* facilityMailingListReportPage.verifyXlsReportOutputOnFacilityMailingListScreen();
-      homePage.goBack();*/
+      facilityMailingListReportPage.verifyXlsReportOutputOnFacilityMailingListScreen();
+      homePage.goBack();
 
  }
 
@@ -126,7 +125,7 @@ public class E2EViewReport extends TestCaseHelper {
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
         HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
         NonReportingFacilityReportPage nonReportingFacilityReportPage = homePage.navigateViewNonReportingFacilityReport();
-        nonReportingFacilityReportPage.enterFilterValues("Requistion Group 1","Lvl3 Hospital","Period2");
+        nonReportingFacilityReportPage.enterFilterValues("HIV","Monthly" , "Period2", "Requistion Group 2", "Lvl3 Hospital");
         nonReportingFacilityReportPage.verifyHTMLReportOutput();
         nonReportingFacilityReportPage.verifyPdfReportOutput();
         testWebDriver.sleep(500);

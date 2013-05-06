@@ -34,6 +34,14 @@ public class NonReportingFacilityReportPage extends Page {
   @FindBy(how = NAME, using = "period")
   private static WebElement period;
 
+  @FindBy(how = NAME, using = "program")
+  private static WebElement program;
+
+  @FindBy(how = NAME, using = "schedule")
+  private static WebElement schedule;
+
+
+
   @FindBy(how = How.XPATH, using = "//div[@ng-grid='gridOptions']")
   private static WebElement nonReportingFacilityReportListGrid;
 
@@ -62,8 +70,10 @@ public class NonReportingFacilityReportPage extends Page {
 
   }
 
-  public void enterFilterValues(String reportingGroupValue, String facilityTypeValue, String periodValue){
-
+  public void enterFilterValues(String programValue, String scheduleValue, String periodValue, String reportingGroupValue, String facilityTypeValue){
+      testWebDriver.waitForElementToAppear(program);
+      testWebDriver.selectByVisibleText(program,programValue);
+      testWebDriver.selectByVisibleText(schedule, scheduleValue);
       testWebDriver.waitForElementToAppear(requisitionGroup);
       testWebDriver.selectByVisibleText(requisitionGroup,reportingGroupValue);
       testWebDriver.waitForElementToAppear(facilityTypeElement);

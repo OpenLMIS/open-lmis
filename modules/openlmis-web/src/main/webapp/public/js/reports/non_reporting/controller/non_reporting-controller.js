@@ -74,7 +74,7 @@ function NonReportingController($scope, RequisitionGroups, NonReportingFacilitie
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
         $scope.export   = function (type){
-            var url = '/reports/download/non_reporting/' + type +'?period=' + $scope.period + '&rgroup=' + $scope.rgroup + '&ftype=' + $scope.facilityType;
+            var url = '/reports/download/non_reporting/' + type +'?period=' + $scope.period + '&rgroup=' + $scope.rgroup + '&ftype=' + $scope.facilityType + '&program=' + $scope.program;
             window.open(url);
         }
 

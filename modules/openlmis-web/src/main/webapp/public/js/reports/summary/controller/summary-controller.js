@@ -1,4 +1,4 @@
-function SummaryReportController($scope, SummaryReport , Periods , $http, $routeParams,$location) {
+function SummaryReportController($scope, SummaryReport, Schedules, Programs , Periods , $http, $routeParams,$location) {
         //to minimize and maximize the filter section
         var section = 1;
 
@@ -40,15 +40,28 @@ function SummaryReportController($scope, SummaryReport , Periods , $http, $route
 
         };
 
-        Periods.get({scheduleId:1},function(data) {
-            $scope.periods = data.periods;
-            $scope.periods.push({'name': '- Please Selct One -'});
-        });
+        Programs.get(function(data){
+            $scope.programs = data.programs;
+            $scope.programs.push({'name':'Select a Program'});
+        })
+
+        Schedules.get(function(data){
+            $scope.schedules = data.schedules;
+            $scope.schedules.push({'name':'Select a Schedule'});
+        })
+
+
+        $scope.ChangeSchedule = function(){
+            Periods.get({ scheduleId : $scope.schedule },function(data) {
+                $scope.periods = data.periods;
+                $scope.periods.push({'name': 'Select Period'});
+            });
+        }
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
         $scope.export   = function (type){
-            var url = '/reports/download/summary/' + type +'?period=' + $scope.period;
+            var url = '/reports/download/summary/' + type +'?period=' + $scope.period + '&program=' + $scope.program;
             window.open(url);
         }
 
@@ -96,7 +109,8 @@ function SummaryReportController($scope, SummaryReport , Periods , $http, $route
                                                 "page" : page
                                                };
                         }
-                        params.period = $scope.period;
+                        params.period   = $scope.period;
+                        params.program  = $scope.program;
                         SummaryReport.get(params, function(data) {
                         $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
                         });
