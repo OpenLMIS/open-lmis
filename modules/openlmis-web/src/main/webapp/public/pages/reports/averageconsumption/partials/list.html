@@ -122,6 +122,17 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Program</label>
+
+                                    <div class="form-fields">
+                                        <select class="large-input" name="program" ng-change="filterGrid()" ng-model="program" ng-options="option.id as option.name for option in programs">
+
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="form-cell button-row horizontalFilter">
                                     <input type="submit" class="btn btn-primary save-button pull-right" value="Filter"/>
                                 </div>
