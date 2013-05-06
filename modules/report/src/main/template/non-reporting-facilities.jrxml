@@ -29,7 +29,7 @@ ORDER BY F.code asc, F.typeid asc]]>
 	</queryString>
 	<field name="code" class="java.lang.String"/>
 	<field name="name" class="java.lang.String"/>
-	<field name="location" class="java.lang.Boolean"/>
+	<field name="location" class="java.lang.String"/>
 	<field name="facilityType" class="java.lang.String"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>

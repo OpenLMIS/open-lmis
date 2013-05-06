@@ -34,15 +34,16 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
 
         List<NonReportingFacilityReport> reportList = new ArrayList<NonReportingFacilityReport>();
         NonReportingFacilityReport report = new NonReportingFacilityReport();
-        report.details =  reportMapper.getReport(filterCriteria,rowBounds);
-        report.summary = reportMapper.getReportSummary(filterCriteria);
 
-        reportList.add( report );
+        return reportMapper.getReport(filterCriteria,rowBounds);
+        //report.details =  reportMapper.getReport(filterCriteria,rowBounds);
+        //report.summary = reportMapper.getReportSummary(filterCriteria);
+
+        //reportList.add( report );
         // cast the list of reports to
-        List<? extends ReportData> list;
-        list = reportList;
-
-        return list;
+        //List<? extends ReportData> list;
+        //list = reportList;
+        //return list;
     }
 
     @Override
