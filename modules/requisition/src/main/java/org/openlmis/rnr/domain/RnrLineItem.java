@@ -11,7 +11,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
@@ -22,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static java.lang.Boolean.TRUE;
@@ -297,6 +295,7 @@ public class RnrLineItem extends BaseModel{
   public void copyApproverEditableFields(RnrLineItem item) {
     if (item == null) return;
     this.quantityApproved = item.quantityApproved;
+    calculatePacksToShip();
     this.remarks = item.remarks;
   }
 

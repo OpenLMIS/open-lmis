@@ -144,7 +144,8 @@ public class Rnr extends BaseModel{
 
   public void copyApproverEditableFields(Rnr rnr) {
     this.modifiedBy = rnr.getModifiedBy();
-    for (RnrLineItem thisLineItem : this.fullSupplyLineItems) {
+
+    for (RnrLineItem thisLineItem : getAllLineItems()) {
       RnrLineItem otherLineItem = rnr.findCorrespondingLineItem(thisLineItem);
       if(otherLineItem == null)  {
         throw new DataException(RNR_VALIDATION_ERROR);
@@ -152,14 +153,13 @@ public class Rnr extends BaseModel{
       thisLineItem.copyApproverEditableFields(otherLineItem);
       thisLineItem.setModifiedBy(rnr.getModifiedBy());
     }
-    for (RnrLineItem thisLineItem : this.nonFullSupplyLineItems) {
-      RnrLineItem otherLineItem = rnr.findCorrespondingLineItem(thisLineItem);
-      if(otherLineItem == null)  {
-        throw new DataException(RNR_VALIDATION_ERROR);
-      }
-      thisLineItem.copyApproverEditableFields(otherLineItem);
-      thisLineItem.setModifiedBy(rnr.getModifiedBy());
-    }
+  }
+
+  private List<RnrLineItem> getAllLineItems() {
+    List<RnrLineItem> fullAndNonFullLineItems = new ArrayList<>();
+    fullAndNonFullLineItems.addAll(this.fullSupplyLineItems);
+    fullAndNonFullLineItems.addAll(this.nonFullSupplyLineItems);
+    return fullAndNonFullLineItems;
   }
 
   public void fillBasicInformation(Facility facility, Program program, ProcessingPeriod period) {
@@ -181,10 +181,7 @@ public class Rnr extends BaseModel{
   }
 
   private RnrLineItem findCorrespondingLineItem(final RnrLineItem item) {
-    List<RnrLineItem> allLineItems = new ArrayList<>();
-    allLineItems.addAll(fullSupplyLineItems);
-    allLineItems.addAll(nonFullSupplyLineItems);
-    return (RnrLineItem) find(allLineItems, new Predicate() {
+    return (RnrLineItem) find(getAllLineItems(), new Predicate() {
       @Override
       public boolean evaluate(Object o) {
         RnrLineItem lineItem = (RnrLineItem) o;

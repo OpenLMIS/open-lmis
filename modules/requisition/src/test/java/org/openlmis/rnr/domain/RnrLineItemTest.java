@@ -451,6 +451,7 @@ public class RnrLineItemTest {
 
     lineItem.copyApproverEditableFields(editedLineItem);
 
+    assertThat(lineItem.getPacksToShip(), is(312));
     assertThat(lineItem.getQuantityApproved(), is(1872));
     assertThat(lineItem.getRemarks(), is("Approved"));
     assertThat(lineItem.getStockInHand(), is(RnrLineItemBuilder.STOCK_IN_HAND));
