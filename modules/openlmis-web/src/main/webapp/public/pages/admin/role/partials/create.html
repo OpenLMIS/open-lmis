@@ -6,11 +6,11 @@
 
 <div ng-hide = "rights && role" openlmis-message="message.loading"></div >
 
-<div ng-show = "rights && role" >
+<div ng-show = "rights && role">
   <div ng-hide = "role.id" ><h2 openlmis-message="create.role.addNew"></h2 ></div >
   <div ng-show = "role.id" ><h2 openlmis-message="edit.role.edit"></h2 ></div >
   <form ng-submit = "saveRole()" id = "create-role" name = "roleForm" novalidate >
-    <div class = "app-form roles-form" >
+    <div class = "app-form roles-form" tab-scroll>
 
       <div class = "row-fluid clearfix" >
         <div class = "span5" >
@@ -62,8 +62,8 @@
         <div class = "assigned-rights" ng-class = "{'is-disabled': role.adminRole == 'false'}" >
           <h4 openlmis-message="create.role.adminRights"></h4 >
 
-          <div class = "rights-list" >
-            <div id = "rights-{{right.right}}" class = "checkbox-list clearfix" ng-repeat = "right in adminRights" >
+          <div class = "rights-list">
+            <div id = "rights-{{right.right}}" class = "checkbox-list clearfix" ng-repeat = "right in adminRights" tab-scroll>
               <input id = "{{right.right}}" type = "checkbox" ng-checked = "contains(right.right)"
                      ng-click = "updateRights(checked,right)" ng-model = "checked"
                      ng-disabled = "areRelatedFieldsSelected(right) || role.adminRole == 'false'" />
@@ -75,10 +75,10 @@
         </div >
 
         <div class = "assigned-rights" ng-class = "{'is-disabled': role.adminRole == 'true'}" >
-          <h4 openlmis-message="">Program and facility-based rights</h4 >
+          <h4 openlmis-message="">Program and facility-based rights</h4>
 
           <div id = "nonAdminRights-{{nonAdminRight.right}}" class = "checkbox-list clearfix"
-               ng-repeat = "nonAdminRight in nonAdminRights" >
+               ng-repeat = "nonAdminRight in nonAdminRights" tab-scroll>
             <input id = "{{nonAdminRight.right}}" type = "checkbox" ng-checked = "contains(nonAdminRight.right)"
                    ng-click = "updateRights(checked,nonAdminRight)" ng-model = "checked"
                    ng-disabled = "areRelatedFieldsSelected(nonAdminRight) || role.adminRole == 'true'" />

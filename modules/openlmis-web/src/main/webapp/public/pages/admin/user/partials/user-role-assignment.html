@@ -21,7 +21,7 @@
         </div>
       </div>
 
-      <div class="row-fluid" ng-repeat="roleAssignment in user.homeFacilityRoles">
+      <div class="row-fluid" ng-repeat="roleAssignment in user.homeFacilityRoles" tab-scroll>
         <div class="span3">
           <div class="fluid-grid-cell">
             <label ng-bind="getProgramName(roleAssignment.programId)"></label>
@@ -43,7 +43,7 @@
       </div>
     </div>
 
-    <div class="add-role-row">
+    <div class="add-role-row" tab-scroll>
       <div class="row-fluid">
 
         <div class="span3">

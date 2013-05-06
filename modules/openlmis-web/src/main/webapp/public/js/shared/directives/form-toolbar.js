@@ -17,11 +17,6 @@ app.directive('formToolbar',function () {
       fixToolbarWidth();
       $(window).on('resize', fixToolbarWidth);
 
-      $("input, select, textarea").on('focus', function () {
-        if (($(window).height() - ($(this).offset().top - $(window).scrollTop())) < 100) {
-          $(window).scrollTop($(window).scrollTop() + 100);
-        }
-      });
     }
   };
 });
