@@ -197,7 +197,7 @@ public class HomePage extends Page {
   private void clickCreateFacilityButton() {
     testWebDriver.waitForElementToAppear(createFacility);
     testWebDriver.sleep(1000);
-    testWebDriver.keyPress(createFacility) ;
+    testWebDriver.keyPress(createFacility);
   }
 
   private void verifyHeader(String headingToVerify) {
@@ -352,15 +352,15 @@ public class HomePage extends Page {
     return new ConvertOrderPage(testWebDriver);
   }
 
-    public ViewOrdersPage navigateViewOrders() throws IOException {
-        SeleneseTestNgHelper.assertTrue(ordersMenuItem.isDisplayed());
-        testWebDriver.waitForElementToAppear(ordersMenuItem);
-        testWebDriver.keyPress(ordersMenuItem);
-        testWebDriver.waitForElementToAppear(viewOrdersMenuItem);
-        testWebDriver.keyPress(viewOrdersMenuItem);
-        testWebDriver.waitForElementToAppear(viewOrdersHeader);
-        return new ViewOrdersPage(testWebDriver);
-    }
+  public ViewOrdersPage navigateViewOrders() throws IOException {
+    SeleneseTestNgHelper.assertTrue(ordersMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(ordersMenuItem);
+    testWebDriver.keyPress(ordersMenuItem);
+    testWebDriver.waitForElementToAppear(viewOrdersMenuItem);
+    testWebDriver.keyPress(viewOrdersMenuItem);
+    testWebDriver.waitForElementToAppear(viewOrdersHeader);
+    return new ViewOrdersPage(testWebDriver);
+  }
 
   public void verifyErrorMessage() {
     testWebDriver.waitForElementToAppear(errorMsg);

@@ -549,7 +549,7 @@ public class InitiateRnRPage extends RequisitionPage {
   public void verifyColumnsHeadingPresent(String xpathTillTrTag, String heading, int noOfColumns) {
     boolean flag = false;
     String actualColumnHeading = null;
-    for (int i = 0; i < noOfColumns; i++) {
+    for (int i = 0; i <= noOfColumns; i++) {
       try {
         testWebDriver.sleep(100);
         WebElement columnElement = testWebDriver.getElementByXpath(xpathTillTrTag + "/th[" + (i + 1) + "]");
@@ -560,7 +560,7 @@ public class InitiateRnRPage extends RequisitionPage {
       } catch (NoSuchElementException e) {
         continue;
       }
-      if (actualColumnHeading.trim().toUpperCase().contains(heading.toUpperCase())) {
+      if (actualColumnHeading.trim().toUpperCase().equals(heading.toUpperCase())) {
         flag = true;
         break;
       }
@@ -571,7 +571,7 @@ public class InitiateRnRPage extends RequisitionPage {
   public void verifyColumnHeadingNotPresent(String xpathTillTrTag, String heading, int noOfColumns) {
     boolean flag = false;
     String actualColumnHeading = null;
-    for (int i = 0; i < noOfColumns; i++) {
+    for (int i = 0; i <= noOfColumns; i++) {
       try {
         testWebDriver.sleep(100);
         WebElement columnElement = testWebDriver.getElementByXpath(xpathTillTrTag + "/th[" + (i + 1) + "]");
@@ -582,7 +582,7 @@ public class InitiateRnRPage extends RequisitionPage {
       } catch (NoSuchElementException e) {
         continue;
       }
-      if (actualColumnHeading.trim().toUpperCase().contains(heading.toUpperCase())) {
+      if (actualColumnHeading.trim().toUpperCase().equals(heading.toUpperCase())) {
         flag = true;
         break;
       }
