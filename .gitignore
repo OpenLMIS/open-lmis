@@ -70,3 +70,5 @@ test-modules/test-core/.classpath
 test-modules/test-core/.project
 test-modules/test-core/test-core.eml
 test-modules/test-modules.eml
+modules/report/src/main/resources/mailing-labels_bak.jasper
+modules/report/src/main/resources/non-reporting-facilities.jasper

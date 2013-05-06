@@ -10,7 +10,6 @@ import org.openlmis.report.builder.NonReportingFacilityQueryBuilder;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.dto.NameCount;
 import org.openlmis.report.model.report.AverageConsumptionReport;
-import org.openlmis.report.model.report.NonReportingFacility;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
