@@ -72,7 +72,6 @@ public class RequisitionServiceTest {
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
-
   @Mock
   private FacilityApprovedProductService facilityApprovedProductService;
   @Mock
@@ -627,6 +626,7 @@ public class RequisitionServiceTest {
 
     verify(requisitionRepository).update(savedRnr);
     verify(requisitionRepository).logStatusChange(savedRnr);
+    verify(requisitionEventService).notifyForStatusChange(savedRnr);
     assertThat(savedRnr.getStatus(), is(IN_APPROVAL));
     assertThat(savedRnr.getSupervisoryNodeId(), is(2L));
     assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY));
@@ -913,6 +913,35 @@ public class RequisitionServiceTest {
   }
 
   @Test
+  public void shouldNotifyStatusChangeOnAuthorize() throws Exception {
+    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
+    doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
+    doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
+    when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
+    when(supervisoryNodeService.getApproverFor(FACILITY, PROGRAM)).thenReturn(new User());
+    SupervisoryNode approverNode = new SupervisoryNode();
+    when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(approverNode);
+
+    requisitionService.authorize(submittedRnr);
+
+    verify(requisitionEventService).notifyForStatusChange(savedRnr);
+  }
+
+  @Test
+  public void shouldNotifyStatusChangeOnSubmit() throws Exception {
+    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
+    doNothing().when(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
+    doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
+    when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
+
+    requisitionService.submit(initiatedRnr);
+
+    verify(requisitionEventService).notifyForStatusChange(savedRnr);
+  }
+
+
+
+  @Test
   public void shouldGetAllCommentsForARnrWithUsername() throws Exception {
     User user = make(a(UserBuilder.defaultUser));
     ArrayList<Comment> comments = new ArrayList<>();
@@ -936,6 +965,34 @@ public class RequisitionServiceTest {
     verify(spyUser).basicInformation();
     assertThat(commentUser.getUserName(), is(user.getUserName()));
     assertThat(comments, is(returnedComments));
+  }
+
+  @Test
+  public void shouldReleaseRequisitionAsOrder() throws Exception {
+    when(requisitionPermissionService.hasPermission(USER_ID, CONVERT_TO_ORDER)).thenReturn(true);
+    final Rnr rnr = spy(authorizedRnr);
+    when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(rnr);
+    List<Rnr> rnrList = new ArrayList<Rnr>() {{
+      add(rnr);
+    }};
+
+    requisitionService.releaseRequisitionsAsOrder(rnrList, USER_ID);
+
+    verify(rnr).convertToOrder(USER_ID);
+  }
+
+  @Test
+  public void shouldNotifyStatusChangeToReleased() throws Exception {
+    when(requisitionPermissionService.hasPermission(USER_ID, CONVERT_TO_ORDER)).thenReturn(true);
+    final Rnr rnr = spy(authorizedRnr);
+    when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(rnr);
+    List<Rnr> rnrList = new ArrayList<Rnr>() {{
+      add(rnr);
+    }};
+
+    requisitionService.releaseRequisitionsAsOrder(rnrList, USER_ID);
+
+    verify(requisitionEventService).notifyForStatusChange(rnr);
   }
 
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {

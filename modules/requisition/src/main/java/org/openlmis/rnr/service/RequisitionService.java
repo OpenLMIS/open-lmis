@@ -376,6 +376,7 @@ public class RequisitionService {
   private void update(Rnr requisition) {
     requisitionRepository.update(requisition);
     requisitionRepository.logStatusChange(requisition);
+    requisitionEventService.notifyForStatusChange(requisition);
   }
 
   private void insert(Rnr requisition) {
