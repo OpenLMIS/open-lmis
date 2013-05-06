@@ -3,14 +3,20 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function CreateReportController($scope) {
+function CreateReportController($scope, $location) {
+  $scope.$parent.successMessage = "";
+
+  var successHandler = function (data) {
+    $scope.$parent.successMessage = data.success;
+    $scope.$parent.$error = "";
+    $location.path('list');
+  };
 
 
   $scope.$on('$viewContentLoaded', function () {
     var options = {
       beforeSubmit:validate,
-      success:processResponse,
-      error:processResponse
+      success:processResponse
     };
     $('#reportForm').ajaxForm(options);
 
@@ -19,12 +25,14 @@ function CreateReportController($scope) {
   function validate(formData, jqForm, options) {
     $scope.showError = false;
     _.each(formData, function (input) {
-      if (utils.isEmpty(input.value)) {
-        $scope.$apply(function () {
+      $scope.$apply(function () {
+        if (utils.isEmpty(input.value)) {
           $scope.showError = true;
-          return false;
-        });
-      }
+          $scope.reportForm[input.name].$error.required = true;
+        } else {
+          $scope.reportForm[input.name].$error.required = false;
+        }
+      });
     });
 
     return !$scope.showError;
@@ -33,8 +41,9 @@ function CreateReportController($scope) {
   function processResponse(responseText, statusText, xhr, $form) {
     var responseJson = JSON.parse(responseText);
     $scope.$apply(function () {
-      $scope.successMessage = responseJson.success;
+      if (responseJson.success) successHandler(responseJson);
       $scope.errorMessage = responseJson.error;
     });
   }
+
 }

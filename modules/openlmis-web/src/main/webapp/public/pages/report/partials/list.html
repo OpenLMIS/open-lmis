@@ -8,7 +8,8 @@
     <a ng-href="#/create" class="pull-right btn btn-primary" ng-show="hasPermission('MANAGE_REPORTS')">Add new</a>
   </h2>
 
-  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="successMessage" ng-show="successMessage"/>
+
   <div class="alert alert-info" ng-hide="reportTemplates.length">
     No Reports
   </div>
@@ -33,6 +34,7 @@
           <a href="/reports/{{reportTemplate.id}}/pdf" target="_blank">PDF</a>
           <a href="/reports/{{reportTemplate.id}}/xls" target="_blank">XLS</a>
           <a href="/reports/{{reportTemplate.id}}/csv" target="_blank">CSV</a>
+          <a href="/reports/{{reportTemplate.id}}/html" target="_blank">HTML</a>
         </div>
       </td>
     </tr>
