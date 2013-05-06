@@ -1,4 +1,4 @@
-function AverageConsumptionReportController($scope, AverageConsumptionReport, Products , ProductCategories, RequisitionGroups , FacilityTypes, GeographicZones, $http, $routeParams,$location) {
+function AverageConsumptionReportController($scope, AverageConsumptionReport, Products , Programs, ProductCategories, RequisitionGroups , FacilityTypes, GeographicZones, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -157,6 +157,7 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
              productId: $scope.product,
              productCategoryId : $scope.productCategory,
              rgroupId : $scope.rgroup,
+             programId : $scope.program,
              facility : $scope.facilityId
 
         };
@@ -187,6 +188,11 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
             $scope.zones.push({'name': 'All Geographic Zones'});
+        });
+
+        Programs.get(function(data){
+            $scope.programs = data.programs;
+            $scope.programs.push({'name':'All Programs'});
         });
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
@@ -251,20 +257,20 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
         $scope.$watch('startMonth', function(selection){
             var date = new Date();
             if(selection != undefined || selection == ""){
-                $scope.filterObject.fromMonth =  selection;
+                $scope.filterObject.fromMonth =  selection-1;
             }else{
-                $scope.startMonth = (date.getMonth() +1 ).toString();
-                $scope.filterObject.fromMonth =  date.getMonth();
+                $scope.startMonth = (date.getMonth()+1 ).toString();
+                $scope.filterObject.fromMonth =  (date.getMonth()+1);
             }
         });
 
         $scope.$watch('endMonth', function(selection){
             var date = new Date();
             if(selection != undefined || selection == ""){
-                $scope.filterObject.toMonth =  selection;
+                $scope.filterObject.toMonth =  selection-1;
             }else{
                 $scope.endMonth = (date.getMonth() +1 ).toString();
-                $scope.filterObject.toMonth =  date.getMonth();
+                $scope.filterObject.toMonth =  (date.getMonth()+1);
             }
         });
 
@@ -312,6 +318,14 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
                 $scope.filterObject.rgroupId =  selection;
             }else{
                 $scope.filterObject.rgroupId =  0;
+            }
+        });
+
+        $scope.$watch('program', function(selection){
+            if(selection != undefined || selection == ""){
+                $scope.filterObject.programId =  selection;
+            }else{
+                $scope.filterObject.programId =  0;
             }
         });
 

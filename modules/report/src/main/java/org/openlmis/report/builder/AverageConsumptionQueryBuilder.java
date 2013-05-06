@@ -36,6 +36,7 @@ public class AverageConsumptionQueryBuilder {
         JOIN("products pr on pr.code = li.productcode");
         JOIN("product_categories prc on prc.id = pr.categoryid");
         JOIN("requisition_group_members rgm on rgm.facilityid = f.id");
+       // JOIN("programs p on p.id = r.programid");
 
         if(filter != null){
             if (filter.getFacilityTypeId() != 0) {
@@ -58,6 +59,9 @@ public class AverageConsumptionQueryBuilder {
             }
             if(filter.getProductId() != 0){
                 WHERE("pr.id = #{filterCriteria.productId}");
+            }
+            if(filter.getProgramId() != 0){
+                WHERE("r.programid = #{filterCriteria.programId}");
             }
 
         }
@@ -81,6 +85,7 @@ public class AverageConsumptionQueryBuilder {
         JOIN("products pr on pr.code = li.productcode");
         JOIN("product_categories prc on prc.id = pr.categoryid");
         JOIN("requisition_group_members rgm on rgm.facilityid = f.id");
+       // JOIN("programs p on p.id = r.programid");
 
         if(filter != null){
             if (filter.getFacilityTypeId() != 0) {
@@ -101,8 +106,8 @@ public class AverageConsumptionQueryBuilder {
             if(filter.getRgroupId() != 0){
                 WHERE("rgm.id = #{filterCriteria.rgroupId}");
             }
-            if(filter.getProductId() != 0){
-                WHERE("pr.id = #{filterCriteria.productId}");
+            if(filter.getProgramId() != 0){
+                WHERE("r.programid = #{filterCriteria.programId}");
             }
 
         }
