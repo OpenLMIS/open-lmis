@@ -251,20 +251,20 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
         $scope.$watch('startMonth', function(selection){
             var date = new Date();
             if(selection != undefined || selection == ""){
-                $scope.filterObject.fromMonth =  selection;
+                $scope.filterObject.fromMonth =  selection-1;
             }else{
-                $scope.startMonth = (date.getMonth() +1 ).toString();
-                $scope.filterObject.fromMonth =  date.getMonth();
+                $scope.startMonth = (date.getMonth()+1 ).toString();
+                $scope.filterObject.fromMonth =  (date.getMonth()+1);
             }
         });
 
         $scope.$watch('endMonth', function(selection){
             var date = new Date();
             if(selection != undefined || selection == ""){
-                $scope.filterObject.toMonth =  selection;
+                $scope.filterObject.toMonth =  selection-1;
             }else{
                 $scope.endMonth = (date.getMonth() +1 ).toString();
-                $scope.filterObject.toMonth =  date.getMonth();
+                $scope.filterObject.toMonth =  (date.getMonth()+1);
             }
         });
 
