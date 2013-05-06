@@ -125,7 +125,7 @@ public class ReportManager {
         configuration =  configurationService.getByKey(Constants.OPERATOR_LOGO_FILE_NAME_KEY);
 
         params.put(Constants.OPERATOR_LOGO, this.getClass().getClassLoader().getResourceAsStream(configuration != null ? configuration.getValue() : "logo.png"));
-        params.put(Constants.REPORT_FILTER_PARAM_VALUES, report.getReportDataProvider().getReportFilterData(filterCriteria).toString());
+        params.put(Constants.REPORT_FILTER_PARAM_VALUES, report.getReportDataProvider().filterDataToString(filterCriteria).toString());
         return params;
 
     }
