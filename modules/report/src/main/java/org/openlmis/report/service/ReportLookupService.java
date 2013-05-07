@@ -41,9 +41,15 @@ public class ReportLookupService {
         return this.rgMapper.getAll();
     }
 
+    public List<RequisitionGroup> getRequisitionGroupsByProgramAndSchedule(int program, int schedule){
+        return this.rgMapper.getByProgramAndSchedule(program, schedule);
+    }
+
+
     public List<ProductCategory> getAllProductCategories(){
         return this.productCategoryMapper.getAll();
     }
+
 
 
 }

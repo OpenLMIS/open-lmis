@@ -8,6 +8,7 @@ import org.openlmis.report.service.ReportLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -23,27 +24,36 @@ public class ReportLookupController extends BaseController {
 
     public static final String USER_ID = "USER_ID";
 
-    private ReportLookupService productReportService;
+    private ReportLookupService reportLookupService;
 
     @Autowired
     public ReportLookupController(ReportLookupService productReportService) {
-        this.productReportService = productReportService;
+        this.reportLookupService = productReportService;
     }
 
 
     @RequestMapping(value="/products", method = GET, headers = ACCEPT_JSON)
     public List<Product> getProducts(){
-          return this.productReportService.getAllProducts();
+          return this.reportLookupService.getAllProducts();
     }
 
     @RequestMapping(value="/rgroups", method = GET, headers = ACCEPT_JSON)
     public List<RequisitionGroup> getRequisitionGroups(){
-        return this.productReportService.getAllRequisitionGroups();
+        return this.reportLookupService.getAllRequisitionGroups();
     }
+
+    @RequestMapping(value="/reporting_groups_by_program_schedule", method = GET, headers = ACCEPT_JSON)
+    public List<RequisitionGroup> getRequisitionGroupsByProgramSchedule(
+            @RequestParam(value = "program", required = true, defaultValue = "1") int program,
+            @RequestParam(value = "schedule", required = true, defaultValue = "10") int schedule
+    ){
+        return this.reportLookupService.getRequisitionGroupsByProgramAndSchedule(program,schedule);
+    }
+
 
     @RequestMapping(value="/productCategories", method = GET, headers = ACCEPT_JSON)
     public List<ProductCategory> getProductCategories(){
-        return this.productReportService.getAllProductCategories();
+        return this.reportLookupService.getAllProductCategories();
     }
 
 

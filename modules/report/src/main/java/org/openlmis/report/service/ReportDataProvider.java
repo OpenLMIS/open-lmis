@@ -3,6 +3,7 @@ package org.openlmis.report.service;
 import org.openlmis.report.DataSourceType;
 import org.openlmis.report.model.ReportData;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,5 +39,8 @@ public abstract class ReportDataProvider {
 
     public String filterDataToString(Map<String, String[]> params) {
         return "";
+    }
+    public HashMap<String,String> getAdditionalReportData(Map params){
+        return null;
     }
 }

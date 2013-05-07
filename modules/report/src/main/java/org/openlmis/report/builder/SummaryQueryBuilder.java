@@ -29,7 +29,24 @@ public class SummaryQueryBuilder {
                 " from requisition_line_items li join requisitions r on r.id =li.rnrid" +
                 " where r.periodid = " + period + " and r.programid = " + program +
                 " group by li.productcode, li.productcategory, li.product, li.dispensingunit" +
-                " order by productcategory asc, product asc;";
+                " order by " + getSortOrder(params);
             return query;
+    }
+
+    private static String getSortOrder(Map params){
+        String sortOrder = "";
+
+        for (Object entryObject : params.keySet())
+        {
+            String entry = entryObject.toString();
+            if(entry.startsWith("sort-")){
+                if(sortOrder == ""){
+                    sortOrder = entry.substring(5) + " " + ((String[])params.get(entry))[0];
+                }else{
+                    sortOrder = ", " + entry.substring(5) + " " + ((String[])params.get(entry))[0];
+                }
+            }
+        }
+        return ((sortOrder == "")?"productcategory asc, product asc" : sortOrder);
     }
 }
