@@ -217,10 +217,16 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
         $scope.$watch('facilityType.value', function(selection){
             if(selection != undefined || selection == ""){
                 $scope.filterObject.facilityTypeId =  selection;
-                $scope.filterObject.facilityType = $scope.facilityTypes[selection].name;
+                $.each( $scope.facilityTypes,function( item,idx){
+                    if(idx.id == selection){
+                        $scope.filterObject.facilityType = idx.name;
+                    }
+                });
+                //skillsSelect.options[skillsSelect.selectedIndex].text
                 //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
             }else{
                 $scope.filterObject.facilityTypeId =  0;
+                $scope.filterObject.facilityType = "";
             }
         });
 
@@ -258,7 +264,6 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
             var date = new Date();
             if(selection != undefined || selection == ""){
                 $scope.filterObject.fromMonth =  selection-1;
-                console.log(this);
             }else{
                 $scope.startMonth = (date.getMonth()+1 ).toString();
                 $scope.filterObject.fromMonth =  (date.getMonth()+1);
@@ -317,8 +322,14 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
         $scope.$watch('rgroup', function(selection){
             if(selection != undefined || selection == ""){
                 $scope.filterObject.rgroupId =  selection;
+                $.each( $scope.requisitionGroups,function( item,idx){
+                    if(idx.id == selection){
+                        $scope.filterObject.rgroup = idx.name;
+                    }
+                });
             }else{
                 $scope.filterObject.rgroupId =  0;
+                $scope.filterObject.rgroup = "";
             }
         });
 
@@ -415,11 +426,10 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
         columnDefs:
             [
                 //{ field: 'period', displayName: 'Period', width: "*", resizable: false},
-
                 { field: 'category', displayName: 'Product', width: "*" },
-                { field: 'product', displayName: 'Product Description', width: "**" },
                 { field: 'facilityType', displayName: 'Facility Type', width : "*"},
                 { field: 'facilityName', displayName: 'Facility', width : "*"},
+                { field: 'product', displayName: 'Product Description', width: "**" },
                 //{ field: 'supplier', displayName: 'Supplying Facility', width : "*"},
                 //{ field: 'reportingGroup', displayName: 'Reporting Group', width : "*"},
                 { field: 'average', displayName: 'Average Monthly Consumption', width : "*"}

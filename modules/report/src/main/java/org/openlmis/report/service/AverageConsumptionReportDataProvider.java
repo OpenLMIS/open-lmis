@@ -9,6 +9,10 @@ import org.openlmis.report.model.filter.AverageConsumptionReportFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -76,7 +80,8 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
 
             averageConsumptionReportFilter.setZoneId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
             averageConsumptionReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-          //  averageConsumptionReportFilter.setFacilityType(filterCriteria.get("facilityType")[0]);
+            averageConsumptionReportFilter.setFacilityType( (filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "ALL Facilities" : filterCriteria.get("facilityType")[0]);
+            averageConsumptionReportFilter.setRgroup( (filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "ALL Reporting Groups" : filterCriteria.get("rgroup")[0]);
 
             averageConsumptionReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
             averageConsumptionReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
@@ -123,9 +128,13 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
     @Override
     public String filterDataToString(Map<String, String[]> filterCriteria){
         AverageConsumptionReportFilter  averageConsumptionReportFilter = (AverageConsumptionReportFilter) getReportFilterData(filterCriteria);
+        SimpleDateFormat df = new SimpleDateFormat();
+        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
+       // dateOut = dateFormatter.format(today);
 
-        return "Period : "+  averageConsumptionReportFilter.getStartDate().toString() +" - "+ averageConsumptionReportFilter.getEndDate().toString() +" \n" +
-                "Facilty Types : "+ averageConsumptionReportFilter.getFacilityType();
+        return "Period : "+  dateFormatter.format(averageConsumptionReportFilter.getStartDate()) +" - "+ dateFormatter.format(averageConsumptionReportFilter.getEndDate()) +" \n" +
+                "Facilty Types : "+ averageConsumptionReportFilter.getFacilityType() +"\n " +
+                "Reporting Groups : "+ averageConsumptionReportFilter.getRgroup();
 
     }
 
