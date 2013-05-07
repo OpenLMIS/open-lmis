@@ -14,22 +14,26 @@ dependencies {
             'org.seleniumhq.selenium:selenium-chrome-driver:2.25.0',
             'net.sf.json-lib:json-lib:0.9',
             'postgresql:postgresql:9.0-801.jdbc4',
-            project(':test-modules:test-core')
+            'org.codehaus.jackson:jackson-mapper-asl:1.9.9',
+            project(':test-modules:test-core'),
+            project(':modules:rest-api')
 
+    testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
+            'org.seleniumhq.selenium:selenium-java:2.25.0',
+            'org.seleniumhq.selenium:selenium-ie-driver:2.25.0',
+            'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0',
+            'org.seleniumhq.selenium:selenium-chrome-driver:2.25.0',
+            'org.testng:testng:6.1.1',
+            'com.google.inject:guice:3.0',
+            'net.sf.json-lib:json-lib:0.9',
+            'postgresql:postgresql:9.0-801.jdbc4',
+            'org.codehaus.jackson:jackson-mapper-asl:1.9.9',
+            project(':test-modules:test-core'),
+            project(':modules:rest-api')
 
-    testCompile 'org.springframework:spring-test:3.1.1.RELEASE'
-    testCompile 'org.seleniumhq.selenium:selenium-java:2.25.0'
-    testCompile 'org.seleniumhq.selenium:selenium-ie-driver:2.25.0'
-    testCompile 'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0'
-    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:2.25.0'
-    testCompile 'org.testng:testng:6.1.1'
-    testCompile group: 'com.google.inject', name: 'guice', version: '3.0'
     testCompile("org.uncommons:reportng:1.1.2") {
         exclude group: "org.testng", module: "testng"
     }
-    testCompile 'net.sf.json-lib:json-lib:0.9'
-    testCompile 'postgresql:postgresql:9.0-801.jdbc4'
-    testCompile project(':test-modules:test-core')
 }
 
 test {

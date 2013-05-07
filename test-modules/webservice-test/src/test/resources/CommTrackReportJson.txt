@@ -1,0 +1,22 @@
+{
+    "facilityId": "",
+    "programId": "",
+    "periodId": "",
+    "userId": "",
+    "products": [
+        {
+            "productCode": "",
+            "stockInHand": "0",
+            "lossesAndAdjustments": [
+                {
+                    "type": {
+                        "name": "TRANSFER_OUT"
+                    },
+                    "quantity": 2
+                }
+            ],
+            "newPatientCount": "0",
+            "stockOutDays": "2"
+        }
+    ]
+}

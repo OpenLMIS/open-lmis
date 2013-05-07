@@ -50,6 +50,8 @@ public class RestService {
 
     requisition.setFullSupplyLineItems(report.getProducts());
 
+    requisitionService.save(requisition);
+
     requisitionService.submit(requisition);
 
     requisitionService.authorize(requisition);

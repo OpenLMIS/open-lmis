@@ -370,23 +370,23 @@ public class DBWrapper {
     return id;
   }
 
-  public String getFacilityID(String facilityCode) throws IOException, SQLException {
-    String id = null;
+  public Long getFacilityID(String facilityCode) throws IOException, SQLException {
+    Long id = null;
     ResultSet rs = query("select id from facilities where code='" + facilityCode + "';");
 
     if (rs.next()) {
-      id = rs.getString("id");
+      id = rs.getLong("id");
     }
     return id;
   }
 
 
-  public String getPeriodID(String periodName) throws IOException, SQLException {
-    String id = null;
+  public Long getPeriodID(String periodName) throws IOException, SQLException {
+    Long id = null;
     ResultSet rs = query("select id from processing_periods where name='" + periodName + "';");
 
     if (rs.next()) {
-      id = rs.getString("id");
+      id = rs.getLong("id");
     }
     return id;
   }
@@ -612,20 +612,20 @@ public class DBWrapper {
     update("update requisition_line_items set packstoship='" + packsToShip + "';");
   }
 
-  public String getProgramID(String program) throws IOException, SQLException {
-    String programID = null;
+  public Long getProgramID(String program) throws IOException, SQLException {
+    Long programID = null;
     ResultSet rs = query("SELECT ID from programs where code='" + program + "'");
 
     if (rs.next()) {
-      programID = rs.getString("id");
+      programID = rs.getLong("id");
     }
     return programID;
 
   }
 
-  public String getRequisitionStatus(String requisitionId) throws IOException, SQLException {
+  public String getRequisitionStatus(Long requisitionId) throws IOException, SQLException {
     String requisitionStatus = null;
-    ResultSet rs = query("SELECT status from requisitions where id='" + requisitionId + "'");
+    ResultSet rs = query("SELECT status from requisitions where id=" + requisitionId);
 
     if (rs.next()) {
       requisitionStatus = rs.getString("status");

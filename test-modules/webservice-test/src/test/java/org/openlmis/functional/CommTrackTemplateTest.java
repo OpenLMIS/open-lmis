@@ -9,49 +9,57 @@ package org.openlmis.functional;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.UiUtils.TestCaseHelper;
+import org.openlmis.restapi.domain.Report;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
+import static org.openlmis.functional.JsonUtility.getJsonStringFor;
+import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
 
 public class CommTrackTemplateTest extends TestCaseHelper {
-    public static final String FULL_COMMTRACK_JSON_TXT_FILE_NAME = "CommTrack_JSON.txt";
-    public WebDriver driver;
-    public Utils  utillity = new Utils();
-    @BeforeMethod(groups = {"webservice"})
-    public void setUp() throws Exception {
-        driver = new FirefoxDriver();
-        driver.get("http://localhost:9091");
-        super.setup();
-        super.setupDataExternalVendor(true);
-    }
-    @AfterMethod(groups = {"webservice"})
-    public void tearDown() {
-        driver.close();
-    }
+  public static final String FULL_COMMTRACK_JSON_TXT_FILE_NAME = "CommTrackReportJson.txt";
+  public WebDriver driver;
 
+  @BeforeMethod(groups = {"webservice"})
+  public void setUp() throws Exception {
+    driver = new FirefoxDriver();
+    driver.get("http://localhost:9091");
+    super.setup();
+    super.setupDataExternalVendor(true);
+  }
 
-    @Test(groups = {"webservice"})
-    public void testCommTrackSubmitReportValidRnR() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
-        String json = utillity.readJSON(FULL_COMMTRACK_JSON_TXT_FILE_NAME);
-        json = utillity.updateJSON(json, "userId", "commTrack");
-        json = utillity.updateJSON(json, "facilityId", dbWrapper.getFacilityID("F10"));
-        json = utillity.updateJSON(json, "periodId", dbWrapper.getPeriodID("Period2"));
-        json = utillity.updateJSON(json, "programId", dbWrapper.getProgramID("HIV"));
-        json = utillity.updateJSON(json, "productCode", "P10");
-        ResponseEntity responseEntity = client.SendJSON(json, "http://localhost:9091/rest-api/requisitions.json", "POST", "commTrack", dbWrapper.getAuthToken("commTrack"));
-        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+  @AfterMethod(groups = {"webservice"})
+  public void tearDown() {
+    driver.close();
+  }
 
-        assertTrue(responseEntity.getResponse().contains("{\"R&R\":"));
-    }
+  @Test(groups = {"webservice"})
+  public void testCommTrackSubmitReportValidRnR() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
 
+    Report reportFromJson = readObjectFromFile(FULL_COMMTRACK_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setUserId("commTrack");
+    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
+    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
+    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
+    reportFromJson.getProducts().get(0).setProductCode("P10");
 
+    ResponseEntity responseEntity =
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions.json",
+        "POST",
+        "commTrack",
+        dbWrapper.getAuthToken("commTrack"));
+
+    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+
+    assertTrue(responseEntity.getResponse().contains("{\"R&R\":"));
+  }
 }
 
