@@ -34,7 +34,8 @@ public class ShipmentService {
   }
 
   public void insertShippedLineItem(ShippedLineItem shippedLineItem) {
-     shipmentRepository.insertShippedLineItem(shippedLineItem);
+    shippedLineItem.validateForSave();
+    shipmentRepository.insertShippedLineItem(shippedLineItem);
   }
 
   public void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {

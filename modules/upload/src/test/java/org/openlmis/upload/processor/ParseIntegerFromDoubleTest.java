@@ -52,8 +52,8 @@ public class ParseIntegerFromDoubleTest {
   @Test
   public void shouldThrowExceptionIfValueIsGreaterThanMaxIntValue() throws Exception {
     expectedException.expect(SuperCsvCellProcessorException.class);
-    expectedException.expectMessage("'2147483648.99999999999999' could not be parsed as an Integer");
-    parseIntegerFromDouble.execute("2147483648.99999999999999", context);
+    expectedException.expectMessage("'2147483648' could not be parsed as an Integer");
+    parseIntegerFromDouble.execute("2147483648", context);
   }
 
   @Test

@@ -27,8 +27,7 @@ import static java.lang.Boolean.FALSE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ShipmentServiceTest {
@@ -42,8 +41,11 @@ public class ShipmentServiceTest {
 
   @Test
   public void shouldInsertShipment() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem();
+    ShippedLineItem shippedLineItem = mock(ShippedLineItem.class);
+
     shipmentService.insertShippedLineItem(shippedLineItem);
+
+    verify(shippedLineItem).validateForSave();
     verify(shipmentRepository).insertShippedLineItem(shippedLineItem);
   }
 
