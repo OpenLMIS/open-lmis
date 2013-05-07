@@ -66,43 +66,14 @@
 		</group>
 	</subDataset>
 	<queryString>
-		<![CDATA[select * from facilities where active= true]]>
+		<![CDATA[select f.code as facilitycode, f.name as facilityname, ft.code as facilitytypecode, fo.code as facilityoperatedbycode, f.sdp as sdp, f.golivedate as golivedate from facilities f, facility_types ft, facility_operators fo where f.active= true and  ft.id=f.typeid and fo.id=f.operatedbyid]]>
 	</queryString>
-	<field name="id" class="java.lang.Integer"/>
-	<field name="code" class="java.lang.String"/>
-	<field name="name" class="java.lang.String"/>
-	<field name="description" class="java.lang.String"/>
-	<field name="gln" class="java.lang.String"/>
-	<field name="mainphone" class="java.lang.String"/>
-	<field name="fax" class="java.lang.String"/>
-	<field name="address1" class="java.lang.String"/>
-	<field name="address2" class="java.lang.String"/>
-	<field name="geographiczoneid" class="java.lang.Integer"/>
-	<field name="typeid" class="java.lang.Integer"/>
-	<field name="catchmentpopulation" class="java.lang.Integer"/>
-	<field name="latitude" class="java.math.BigDecimal"/>
-	<field name="longitude" class="java.math.BigDecimal"/>
-	<field name="altitude" class="java.math.BigDecimal"/>
-	<field name="operatedbyid" class="java.lang.Integer"/>
-	<field name="coldstoragegrosscapacity" class="java.math.BigDecimal"/>
-	<field name="coldstoragenetcapacity" class="java.math.BigDecimal"/>
-	<field name="suppliesothers" class="java.lang.Boolean"/>
-	<field name="sdp" class="java.lang.Boolean"/>
-	<field name="online" class="java.lang.Boolean"/>
-	<field name="satellite" class="java.lang.Boolean"/>
-	<field name="satelliteparentid" class="java.lang.Integer"/>
-	<field name="haselectricity" class="java.lang.Boolean"/>
-	<field name="haselectronicscc" class="java.lang.Boolean"/>
-	<field name="haselectronicdar" class="java.lang.Boolean"/>
-	<field name="active" class="java.lang.Boolean"/>
-	<field name="golivedate" class="java.sql.Date"/>
-	<field name="godowndate" class="java.sql.Date"/>
-	<field name="comment" class="java.lang.String"/>
-	<field name="datareportable" class="java.lang.Boolean"/>
-	<field name="modifiedby" class="java.lang.Integer"/>
-	<field name="modifieddate" class="java.sql.Timestamp"/>
-	<field name="createdby" class="java.lang.Integer"/>
-	<field name="createddate" class="java.sql.Timestamp"/>
+	<field name="facilitycode" class="java.lang.String"/>
+	<field name="facilityname" class="java.lang.String"/>
+	<field name="facilitytypecode" class="java.lang.String"/>
+	<field name="facilityoperatedbycode" class="java.lang.String"/>
+	<field name="sdp" class="java.lang.String"/>
+	<field name="golivedate" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -152,7 +123,7 @@
 				<textElement>
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Facility Type ID]]></text>
+				<text><![CDATA[Facility Type Code]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="d949733d-046b-41aa-a2a4-3d5c0bd9170a" x="12" y="5" width="111" height="20"/>
@@ -177,28 +148,28 @@
 				<textElement>
 					<font fontName="Arial" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{facilitycode}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="70a35c82-b9a3-4c1e-980c-6e20451ed89f" x="133" y="3" width="120" height="20"/>
 				<textElement>
 					<font fontName="Arial" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{facilityname}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="871fa864-f591-49dc-8cdc-613a1d372dff" x="261" y="2" width="135" height="20"/>
 				<textElement>
 					<font fontName="Arial" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{typeid}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{facilitytypecode}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="82939d7e-fb59-4d75-96f1-53581ae1e4c6" x="407" y="3" width="130" height="20"/>
 				<textElement>
 					<font fontName="Arial" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{operatedbyid}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{facilityoperatedbycode}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="8a53a747-4dff-422b-bd24-991f34be8fe6" x="549" y="2" width="110" height="20"/>
