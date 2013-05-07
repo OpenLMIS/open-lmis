@@ -84,8 +84,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
 
     var periodWithRnrStatus;
     if (periods == null || periods.length == 0) {
-      periodWithRnrStatus = new Object();
-      periodWithRnrStatus.name = "No period(s) available";
+      periodWithRnrStatus = {name: "No period(s) available"};
       $scope.selectedPeriod = null;
       $scope.periodGridData.push(periodWithRnrStatus);
       return;
