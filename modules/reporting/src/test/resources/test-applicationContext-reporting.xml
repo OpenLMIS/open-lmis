@@ -14,7 +14,7 @@
     <context:annotation-config/>
     <context:spring-configured/>
 
-    <import resource="classpath*:test-applicationContext-core.xml"/>
+    <import resource="classpath*:applicationContext-db.xml"/>
 
     <context:component-scan base-package="org.openlmis.*.repository.mapper"/>
 
