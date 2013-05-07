@@ -3,6 +3,7 @@ package org.openlmis.report.builder;
 import org.openlmis.report.model.filter.AverageConsumptionReportFilter;
 
 import java.util.Map;
+import java.util.Set;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 import static org.apache.ibatis.jdbc.SqlBuilder.FROM;
@@ -21,10 +22,13 @@ public class AverageConsumptionQueryBuilder {
                 "inner join program_products pp on p.id = pp.productId ";
     }
 
+
+
+
     public static String SelectFilteredSortedPagedAverageConsumptionSql(Map params){
 
         AverageConsumptionReportFilter filter  = (AverageConsumptionReportFilter)params.get("filterCriteria");
-        //ConsumptionReportSorter sorter = (ConsumptionReportSorter)params.get("SortCriteria");
+        Map<String, String[]> sorter = ( Map<String, String[]>)params.get("SortCriteria");
         BEGIN();
 
         SELECT("avg(quantitydispensed) average, product, productcategory category, ft.name facilityType, f.name facilityName");
@@ -66,8 +70,24 @@ public class AverageConsumptionQueryBuilder {
 
         }
         GROUP_BY("li.product, li.productcategory,  f.name, ft.name");
-        ORDER_BY("li.productCategory, li.product");
+        ORDER_BY( getSortOrder(sorter));
+        //ORDER_BY("li.productCategory, li.product");
         return SQL();
+    }
+
+    private static String getSortOrder(Map params){
+        String sortOrder = "";
+
+        if(params != null){
+            for (Object entryObject : params.keySet())
+            {
+                String entry = entryObject.toString();
+                if(entry.startsWith("sort-")){
+                        ORDER_BY( entry.substring(5) + " " + ((String[])params.get(entry))[0]);
+                }
+            }
+        }
+        return ((sortOrder == "")?" product " : sortOrder);
     }
 
     public static String SelectFilteredSortedPagedAverageConsumptionCountSql(Map params){

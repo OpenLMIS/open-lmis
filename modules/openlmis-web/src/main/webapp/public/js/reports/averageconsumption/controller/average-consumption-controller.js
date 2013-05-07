@@ -158,8 +158,9 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
              productCategoryId : $scope.productCategory,
              rgroupId : $scope.rgroup,
              programId : $scope.program,
-             facility : $scope.facilityId
-
+             facility : $scope.facilityId,
+             facilityType : "",
+             rgroup : ""
         };
 
         FacilityTypes.get(function(data) {
@@ -392,6 +393,13 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
                                                 "page" : page
                                                };
                         }
+
+                        $.each($scope.sortInfo.fields, function(index, value) {
+                            if(value != undefined) {
+                                params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+                            }
+                        });
+
                         $.each($scope.filterObject, function(index, value) {
                             if(value != undefined)
                                 params[index] = value;
@@ -415,8 +423,8 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
         $scope.$watch('sortInfo', function () {
 
             $.each($scope.sortInfo.fields, function(index, value) {
-                if(value != undefined)
-                    $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+               // if(value != undefined)
+                   // $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
             });
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
         }, true);
