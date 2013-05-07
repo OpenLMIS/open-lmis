@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
 
+import java.lang.String;
+import java.text.DateFormat;
 import java.util.Date;
 
 /**
@@ -42,6 +44,17 @@ public class AverageConsumptionReportFilter  implements ReportData {
 
     private Date startDate;
     private Date endDate;
+
+    @Override
+    public String toString(){
+
+        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
+
+        return "Period : "+  dateFormatter.format(this.getStartDate()) +" - "+ dateFormatter.format(this.getEndDate()) +" \n" +
+                "Facility Types : "+ this.getFacilityType() +"\n " +
+                "Reporting Groups : "+ this.getRgroup();
+
+    }
 }
 
 

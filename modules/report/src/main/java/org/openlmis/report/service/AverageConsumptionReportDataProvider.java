@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.lang.String;
 
 /**
  */
@@ -133,7 +134,7 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
        // dateOut = dateFormatter.format(today);
 
         return "Period : "+  dateFormatter.format(averageConsumptionReportFilter.getStartDate()) +" - "+ dateFormatter.format(averageConsumptionReportFilter.getEndDate()) +" \n" +
-                "Facilty Types : "+ averageConsumptionReportFilter.getFacilityType() +"\n " +
+                "Facility Types : "+ averageConsumptionReportFilter.getFacilityType() +"\n " +
                 "Reporting Groups : "+ averageConsumptionReportFilter.getRgroup();
 
     }

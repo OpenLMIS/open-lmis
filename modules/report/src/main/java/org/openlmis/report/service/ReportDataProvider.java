@@ -24,11 +24,12 @@ public abstract class ReportDataProvider {
     public final List<? extends ReportData> getReportDataByFilterCriteria(Map<String, String[]> params){
         return getReportDataByFilterCriteria(params, DataSourceType.BEAN_COLLECTION_DATA_SOURCE);
     }
-    public ReportData getReportFilterData(final Map<String, String[]> params){
+
+    public ReportData getReportFilterData(Map<String, String[]> params){
         return new ReportData() {
             @Override
             public String toString() {
-                return filterDataToString(params);
+                return "";
             }
         };
     }
