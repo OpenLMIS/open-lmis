@@ -26,15 +26,35 @@ var OpenLmisDialog = {
       }
     };
     var closeCallback = function(result) {
+      var tabbables = olDialog.modalEl.find(":tabbable");
+      tabbables.last().unbind("keydown");
+      tabbables.first().unbind("keydown");
+
       callback(result);
     };
 
     var olDialog = $dialog.dialog(opts);
     olDialog.open().then(closeCallback);
 
+
+
     var autoFocus = function() {
       if(olDialog.isOpen()) {
-        olDialog.modalEl.find(":tabbable").first().focus();
+        var tabbables = olDialog.modalEl.find(":tabbable");
+        tabbables.first().focus();
+        tabbables.last().bind("keydown", function(e) {
+          if (e.which == 9 && !e.shiftKey) {
+            tabbables.first().focus();
+            e.preventDefault();
+          }
+
+        });
+        tabbables.first().bind("keydown", function(e) {
+          if (e.which == 9 && e.shiftKey) {
+            tabbables.last().focus();
+            e.preventDefault();
+          }
+        });
       }
       else {
         setTimeout(function() {
