@@ -18,16 +18,45 @@
 	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
 	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select p.code || ' ' || p.manufacturer as productDescription, pp.dosespermonth average
-from products p
-inner join program_products pp on p.id = pp.productId
-]]>
+		<![CDATA[select avg(quantitydispensed) average, product, productcategory category, ft.name facilityType, f.name facilityName
+        from requisition_line_items li
+        inner join requisitions r on r.id = li.rnrid
+        inner join facilities f on r.facilityid = f.id
+        inner join facility_types ft on ft.id = f.typeid
+        inner join processing_periods pp on pp.id = r.periodid
+        inner join products pr on pr.code = li.productcode
+        inner join product_categories prc on prc.id = pr.categoryid
+        inner join requisition_group_members rgm on rgm.facilityid = f.id
+ group by li.product, li.productcategory,  f.name, ft.name
+ order by li.productCategory, li.product]]>
 	</queryString>
-	<field name="productDescription" class="java.lang.String"/>
-	<field name="average" class="java.lang.Integer"/>
+	<field name="average" class="java.math.BigDecimal"/>
+	<field name="product" class="java.lang.String"/>
+	<field name="category" class="java.lang.String"/>
+	<field name="facilityType" class="java.lang.String"/>
+	<field name="facilityName" class="java.lang.String"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
+	<group name="GroupByFacility">
+		<groupHeader>
+			<band height="21">
+				<staticText>
+					<reportElement uuid="38513982-ac35-4c72-9d2a-16bf93a7be2c" mode="Opaque" x="2" y="0" width="801" height="20" backcolor="#F4F4F4"/>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement uuid="af7c583d-5296-4cdd-a184-536f61d29588" mode="Transparent" x="2" y="1" width="799" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Facility : " + ($F{facilityName}=="NULL"?" ":$F{facilityName})]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -73,12 +102,12 @@ inner join program_products pp on p.id = pp.productId
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="72" y="0" width="508" height="29" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="72" y="0" width="145" height="29" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Products]]></text>
+				<text><![CDATA[Product]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b" mode="Transparent" x="0" y="0" width="72" height="29" forecolor="#000000" backcolor="#333333"/>
@@ -89,12 +118,36 @@ inner join program_products pp on p.id = pp.productId
 				<text><![CDATA[Line#]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="f5478500-0fc0-4759-85c4-ab472097bdd7" mode="Transparent" x="580" y="0" width="101" height="29" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="f5478500-0fc0-4759-85c4-ab472097bdd7" mode="Transparent" x="684" y="1" width="117" height="29" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
 				</textElement>
 				<text><![CDATA[Average Monthly Consumption]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="729f7fff-095d-4688-b327-6b0da6522653" mode="Transparent" x="217" y="1" width="145" height="29" forecolor="#000000" backcolor="#333333"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Product Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4e8427ce-5f64-4d99-853c-ee16d40cfa61" mode="Transparent" x="362" y="1" width="145" height="29" forecolor="#000000" backcolor="#333333"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Facility Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d44f0abb-9306-4e45-b018-81e1fbce2c02" mode="Transparent" x="507" y="1" width="145" height="29" forecolor="#000000" backcolor="#333333"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Facility]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -121,20 +174,45 @@ inner join program_products pp on p.id = pp.productId
 				</graphicElement>
 			</line>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement uuid="1ac27f1d-893c-4baf-9d67-bcc50c886b8d" mode="Transparent" x="72" y="0" width="508" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{productDescription}]]></textFieldExpression>
-			</textField>
-			<textField pattern="" isBlankWhenNull="false">
-				<reportElement uuid="a720b2eb-4c11-4820-9617-aefbdc467bac" mode="Transparent" x="579" y="0" width="102" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="a720b2eb-4c11-4820-9617-aefbdc467bac" mode="Transparent" x="652" y="0" width="145" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{average}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="ab6907da-4c02-445c-9699-b776060d5a36" mode="Transparent" x="217" y="0" width="145" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{category}.toUpperCase()=="NULL"?" ":$F{category})
+]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="5520d7f4-1ba1-426e-863c-20acec1f2d10" mode="Transparent" x="362" y="0" width="145" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{facilityType}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="ee6bf1df-594e-421d-9601-f886d398e2d8" mode="Transparent" x="507" y="0" width="145" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{facilityName}=="NULL"?" ":$F{facilityName})]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="1ac27f1d-893c-4baf-9d67-bcc50c886b8d" mode="Transparent" x="71" y="0" width="145" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{product}=="NULL"?" ":$F{product})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
