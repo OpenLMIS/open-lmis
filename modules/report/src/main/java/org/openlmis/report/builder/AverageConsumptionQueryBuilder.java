@@ -27,7 +27,7 @@ public class AverageConsumptionQueryBuilder {
         //ConsumptionReportSorter sorter = (ConsumptionReportSorter)params.get("SortCriteria");
         BEGIN();
 
-        SELECT("avg(quantitydispensed) average, product, productcategory category, ft.name facilityType, f.name facility");
+        SELECT("avg(quantitydispensed) average, product, productcategory category, ft.name facilityType, f.name facilityName");
         FROM("requisition_line_items li");
         JOIN("requisitions r on r.id = li.rnrid");
         JOIN("facilities f on r.facilityid = f.id");

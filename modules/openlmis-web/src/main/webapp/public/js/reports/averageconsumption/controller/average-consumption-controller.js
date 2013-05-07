@@ -108,7 +108,7 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
 
         RequisitionGroups.get(function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.push({'name':'All requsition groups'});
+            $scope.requisitionGroups.push({'name':'All Reporting Groups'});
         });
 
 
@@ -133,7 +133,7 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
 
 
         $scope.filterGrid = function (){
-            //$scope.$apply();
+            $scope.$apply();
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
@@ -258,6 +258,7 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
             var date = new Date();
             if(selection != undefined || selection == ""){
                 $scope.filterObject.fromMonth =  selection-1;
+                console.log(this);
             }else{
                 $scope.startMonth = (date.getMonth()+1 ).toString();
                 $scope.filterObject.fromMonth =  (date.getMonth()+1);
@@ -416,9 +417,9 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
                 //{ field: 'period', displayName: 'Period', width: "*", resizable: false},
 
                 { field: 'category', displayName: 'Product', width: "*" },
-                { field: 'product', displayName: 'Product Description', width: "*" },
-               // { field: 'facilityType', displayName: 'Facility Type', width : "*"},
-               // { field: 'facility', displayName: 'Facility', width : "*"},
+                { field: 'product', displayName: 'Product Description', width: "**" },
+                { field: 'facilityType', displayName: 'Facility Type', width : "*"},
+                { field: 'facilityName', displayName: 'Facility', width : "*"},
                 //{ field: 'supplier', displayName: 'Supplying Facility', width : "*"},
                 //{ field: 'reportingGroup', displayName: 'Reporting Group', width : "*"},
                 { field: 'average', displayName: 'Average Monthly Consumption', width : "*"}
