@@ -20,11 +20,15 @@ import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static java.lang.Boolean.FALSE;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ShipmentServiceTest {
@@ -68,5 +72,19 @@ public class ShipmentServiceTest {
       }
     };
     verify(orderService).updateFulfilledAndShipmentIdForOrders(argThat(argumentMatcher));
+  }
+
+
+  @Test
+  public void shouldGetProcessedTimeStampByOrderId() throws Exception {
+    ShippedLineItem shippedLineItem = new ShippedLineItem();
+    shippedLineItem.setRnrId(1L);
+    Date expectedTimestamp = new Date();
+    when(shipmentRepository.getProcessedTimeStamp(shippedLineItem)).thenReturn(expectedTimestamp);
+
+    Date processTimeStamp = shipmentService.getProcessedTimeStamp(shippedLineItem);
+
+    assertThat(processTimeStamp, is(expectedTimestamp));
+    verify(shipmentRepository).getProcessedTimeStamp(shippedLineItem);
   }
 }

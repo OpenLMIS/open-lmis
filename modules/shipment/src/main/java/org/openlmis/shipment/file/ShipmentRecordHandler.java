@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component("shipmentRecordHandler")
 @NoArgsConstructor
 public class ShipmentRecordHandler implements RecordHandler {
@@ -31,15 +33,17 @@ public class ShipmentRecordHandler implements RecordHandler {
     ShippedLineItem shippedLineItem = (ShippedLineItem) importable;
     shippedLineItem.setModifiedDate(auditFields.getCurrentTimestamp());
 
+
+    Date processTimeStamp = shipmentService.getProcessedTimeStamp(shippedLineItem);
+    if (processTimeStamp != null && !processTimeStamp.equals(shippedLineItem.getModifiedDate()))
+      throw new DataException("Order Number Already Processed");
+
     ShippedLineItem shippedLineItemFromDB = shipmentService.getShippedLineItem(shippedLineItem);
 
     if (shippedLineItemFromDB == null) {
       shipmentService.insertShippedLineItem(shippedLineItem);
       return;
     }
-
-    if (!shippedLineItemFromDB.getModifiedDate().equals(auditFields.getCurrentTimestamp()))
-      throw new DataException("Order Number Already Processed");
 
     shippedLineItem.setId(shippedLineItemFromDB.getId());
     shipmentService.updateShippedLineItem(shippedLineItem);

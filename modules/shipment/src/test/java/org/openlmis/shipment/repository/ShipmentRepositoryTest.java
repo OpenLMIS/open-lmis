@@ -18,9 +18,14 @@ import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.repository.mapper.ShipmentMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import java.util.Date;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ShipmentRepositoryTest {
@@ -88,5 +93,18 @@ public class ShipmentRepositoryTest {
     ShippedLineItem shippedLineItem = new ShippedLineItem();
     shipmentRepository.updateShippedLineItem(shippedLineItem);
     verify(shipmentMapper).updateShippedLineItem(shippedLineItem);
+  }
+
+  @Test
+  public void shouldGetProcessedTimeStampByOrderId() throws Exception {
+    ShippedLineItem shippedLineItem = new ShippedLineItem();
+    shippedLineItem.setRnrId(1L);
+    Date expectedTimestamp = new Date();
+    when(shipmentMapper.getProcessedTimeStamp(shippedLineItem)).thenReturn(expectedTimestamp);
+
+    Date processTimeStamp = shipmentRepository.getProcessedTimeStamp(shippedLineItem);
+
+    assertThat(processTimeStamp, is(expectedTimestamp));
+    verify(shipmentMapper).getProcessedTimeStamp(shippedLineItem);
   }
 }

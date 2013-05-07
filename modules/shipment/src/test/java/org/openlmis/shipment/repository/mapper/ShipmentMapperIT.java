@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.util.Arrays;
+import java.util.Date;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -144,4 +145,18 @@ public class ShipmentMapperIT {
 
     assertThat(shippedLineItemFromDB.getQuantityShipped(), is(10));
   }
+
+  @Test
+  public void shouldGetProcessedTimestampForShippedLineItem() throws Exception {
+    ShippedLineItem shippedLineItem = createShippedLineItem();
+    mapper.insertShippedLineItem(shippedLineItem);
+
+    ShippedLineItem shippedLineItemFromDB = mapper.getShippedLineItem(shippedLineItem);
+
+    Date date = mapper.getProcessedTimeStamp(shippedLineItem);
+
+    assertThat(date, is(shippedLineItemFromDB.getModifiedDate()));
+  }
+
+
 }

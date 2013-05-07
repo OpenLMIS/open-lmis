@@ -14,6 +14,8 @@ import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+
 
 @Repository
 public interface ShipmentMapper {
@@ -36,4 +38,7 @@ public interface ShipmentMapper {
 
   @Update("UPDATE shipped_line_items SET rnrId=#{rnrId}, productCode=#{productCode},quantityShipped=#{quantityShipped},modifiedDate=#{modifiedDate} WHERE id=#{id}")
   void updateShippedLineItem(ShippedLineItem shippedLineItem);
+
+  @Select("SELECT modifiedDate FROM shipped_line_items WHERE rnrId = #{rnrId} LIMIT 1")
+  Date getProcessedTimeStamp(ShippedLineItem shippedLineItem);
 }

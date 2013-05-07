@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+
 @Repository
 @NoArgsConstructor
 public class ShipmentRepository {
@@ -49,5 +51,9 @@ public class ShipmentRepository {
 
   public void updateShippedLineItem(ShippedLineItem shippedLineItem) {
     shipmentMapper.updateShippedLineItem(shippedLineItem);
+  }
+
+  public Date getProcessedTimeStamp(ShippedLineItem shippedLineItem) {
+    return shipmentMapper.getProcessedTimeStamp(shippedLineItem);
   }
 }

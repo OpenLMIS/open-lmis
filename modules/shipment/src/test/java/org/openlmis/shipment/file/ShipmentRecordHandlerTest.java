@@ -40,7 +40,10 @@ public class ShipmentRecordHandlerTest {
   public void shouldInsert() throws Exception {
     ShippedLineItem shippedLineItem = new ShippedLineItem();
     Date currentTimestamp = new Date();
+    when(shipmentService.getProcessedTimeStamp(shippedLineItem)).thenReturn(null);
+
     shipmentRecordHandler.execute(shippedLineItem, 1, new AuditFields(currentTimestamp));
+
     assertThat(shippedLineItem.getModifiedDate(), is(currentTimestamp));
     verify(shipmentService).insertShippedLineItem(shippedLineItem);
   }
@@ -56,10 +59,7 @@ public class ShipmentRecordHandlerTest {
     AuditFields auditFields = new AuditFields();
     auditFields.setCurrentTimestamp(new Date());
 
-    ShippedLineItem shippedLineItemFromDB = new ShippedLineItem();
-    shippedLineItemFromDB.setModifiedDate(date);
-
-    when(shipmentService.getShippedLineItem(shippedLineItem)).thenReturn(shippedLineItemFromDB);
+    when(shipmentService.getProcessedTimeStamp(shippedLineItem)).thenReturn(date);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Order Number Already Processed");
@@ -85,5 +85,24 @@ public class ShipmentRecordHandlerTest {
     assertThat(shippedLineItem.getModifiedDate(), is(currentTimestamp));
     assertThat(shippedLineItem.getId(), is(shippedLineItemFromDbId));
     verify(shipmentService).updateShippedLineItem(shippedLineItem);
+  }
+
+  @Test
+  public void shouldThrowErrorIfOrderAlreadyProcessedButProductCodeIsNew() throws Exception {
+    ShippedLineItem shippedLineItem = new ShippedLineItem();
+
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.DATE, -1);
+    Date processedDate = new Date(calendar.getTimeInMillis());
+
+    AuditFields auditFields = new AuditFields();
+    auditFields.setCurrentTimestamp(new Date());
+
+    when(shipmentService.getProcessedTimeStamp(shippedLineItem)).thenReturn(processedDate);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("Order Number Already Processed");
+
+    shipmentRecordHandler.execute(shippedLineItem,1,auditFields);
   }
 }
