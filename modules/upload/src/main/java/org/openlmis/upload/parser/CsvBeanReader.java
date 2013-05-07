@@ -9,6 +9,7 @@ package org.openlmis.upload.parser;
 import lombok.Getter;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.ModelClass;
+import org.openlmis.upload.processor.CsvCellProcessors;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.dozer.CsvDozerBeanReader;
 import org.supercsv.prefs.CsvPreference;

@@ -25,7 +25,7 @@ public class ShippedLineItem extends BaseModel implements Importable{
   @ImportField(mandatory = true, name = "Product Code")
   private String productCode;
 
-  @ImportField(mandatory = true, type = "double", name = "Quantity Shipped")
+  @ImportField(mandatory = true, type = "intFromDouble", name = "Quantity Shipped")
   private Integer quantityShipped;
 
 }

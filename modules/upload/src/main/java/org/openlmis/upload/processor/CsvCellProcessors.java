@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.upload.parser;
+package org.openlmis.upload.processor;
 
 import org.openlmis.upload.model.Field;
 import org.openlmis.upload.model.ModelClass;
@@ -27,6 +27,7 @@ public class CsvCellProcessors {
         typeMappings.put("long", new ParseLong());
         typeMappings.put("boolean", new ParseBool());
         typeMappings.put("double", new ParseDouble());
+        typeMappings.put("intFromDouble", new ParseIntegerFromDouble());
         typeMappings.put("Date", new StrRegEx("^\\d{1,2}/\\d{1,2}/\\d{4}$", new ParseDate(format))); //second parameter for leniency
         typeMappings.put("String", new Trim());
         typeMappings.put("BigDecimal", new ParseBigDecimal());
