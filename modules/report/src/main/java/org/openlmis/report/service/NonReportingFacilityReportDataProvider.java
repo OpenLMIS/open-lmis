@@ -76,18 +76,9 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
 
     @Override
     public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return reportMapper.getNonReportingTotalFacilities(filterCriteria).get(0);
     }
 
-    @Override
-    public ReportData getReportFilterData(Map<String, String[]> params) {
-       return new ReportData() {
-                        @Override
-                        public String toString() {
-                            return "The Period: " ;
-                        }
-                    };
-     }
 
 
 
@@ -96,8 +87,9 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
         HashMap<String, String> result = new HashMap<String, String>() ;
 
         // spit out the summary section on the report.
-        result.put("TOTAL_FACILITIES", reportMapper.getTotalFacilities(params).get(0).toString());
-        result.put("TOTAL_NON_REPORTING", reportMapper.getTotalFacilities(params).get(0).toString());
+        result.put("TOTAL_FACILITIES", reportMapper.getTotalFacilities( params ).get(0).toString());
+
+        result.put("TOTAL_NON_REPORTING", reportMapper.getNonReportingTotalFacilities( params ).get(0).toString());
 
         // Interprate the different reporting parameters that were selected on the UI
         String period           = ((String[])params.get("period"))[0];

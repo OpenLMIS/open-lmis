@@ -35,13 +35,15 @@ public class NonReportingFacilityQueryBuilder {
          WHERE("facilities.id not in (select r.facilityid from requisitions r where r.periodid = " + period + " and r.programid = " + program + ")");
          writePredicates(program, period, reportingGroup, facilityType);
          ORDER_BY(getSortOrder(params));
-         return SQL();
+         // cache the string query for debugging purposes
+         String strQuery = SQL();
+         return strQuery;
      }
 
      private static void writePredicates(String program, String period, String reportingGroup, String facilityType) {
 
          if(reportingGroup != "" && !reportingGroup.endsWith( "undefined")){
-             WHERE("requisitiongroupid = " + reportingGroup);
+             WHERE("rgm.requisitiongroupid = " + reportingGroup);
          }
          if(facilityType != "" && !facilityType.endsWith( "undefined")){
              WHERE("facilities.typeid = " + facilityType);
@@ -97,6 +99,7 @@ public class NonReportingFacilityQueryBuilder {
          INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id") ;
          INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
          INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.id and ps.programid = rgps.programid");
+         WHERE("facilities.id not in (select r.facilityid from requisitions r where r.periodid = " + period + " and r.programid = " + program + ")");
          writePredicates(program, period, reportingGroup, facilityType);
          return SQL();
      }
