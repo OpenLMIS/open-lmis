@@ -72,6 +72,18 @@ public class ShipmentRepositoryTest {
   }
 
   @Test
+  public void shouldThrowExceptionIfShipmentFileHasIncorrectDataLength() throws Exception {
+    ShippedLineItem shippedLineItem = new ShippedLineItem();
+    shippedLineItem.setProductCode("R10");
+    doThrow(new DataIntegrityViolationException("Incorrect data length")).when(shipmentMapper).insertShippedLineItem(shippedLineItem);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("Invalid data length");
+
+    shipmentRepository.insertShippedLineItem(shippedLineItem);
+  }
+
+  @Test
   public void shouldUpdateShippedLineItem() throws Exception {
     ShippedLineItem shippedLineItem = new ShippedLineItem();
     shipmentRepository.updateShippedLineItem(shippedLineItem);

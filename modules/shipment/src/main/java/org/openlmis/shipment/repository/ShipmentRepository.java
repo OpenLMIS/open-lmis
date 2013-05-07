@@ -36,6 +36,7 @@ public class ShipmentRepository {
       if(exception.getMessage().contains("violates foreign key constraint \"shipped_line_items_productcode_fkey\""))
         throw new DataException("Unknown product code");
 
+      throw new DataException("Invalid data length");
     }
   }
 
