@@ -132,6 +132,20 @@ public class E2EViewReport extends TestCaseHelper {
         homePage.goBack();
     }
 
+    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifyAverageConsumptionReport(String[] credentials) throws Exception{
+
+        setupRnRData(credentials);
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+        AverageConsumptionReportPage averageConsumptionReportPage = homePage.navigateViewAverageConsumptionReport();
+        averageConsumptionReportPage.enterFilterValues("Monthly", "2013","Jan","2013","May","Root","Antibiotics","Lvl3 Hospital","Requistion Group 2","TDF/FTC/EFV","HIV");
+        averageConsumptionReportPage.verifyHTMLReportOutput();
+        averageConsumptionReportPage.verifyPdfReportOutput();
+        testWebDriver.sleep(500);
+        homePage.goBack();
+    }
+
     private void setupRnRData(String[] credentials) throws IOException, SQLException {
         List<String> rightsList = new ArrayList<String>();
         rightsList.add("CREATE_REQUISITION");
@@ -206,7 +220,7 @@ public class E2EViewReport extends TestCaseHelper {
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
-    dbWrapper.deleteData();
+    //dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 

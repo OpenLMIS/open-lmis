@@ -176,6 +176,9 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Non Reporting Facilities')]")
   private static WebElement NonReportingFacilityReportMenu;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Average Consumption Report')]")
+  private static WebElement AverageConsumptionReportMenu;
+
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Facility List')]")
   private static WebElement facilityListingReportPageHeader;
 
@@ -420,6 +423,16 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(NonReportingFacilityReportMenu);
     testWebDriver.keyPress(NonReportingFacilityReportMenu);
     return new NonReportingFacilityReportPage(testWebDriver);
+  }
+
+  public AverageConsumptionReportPage navigateViewAverageConsumptionReport() throws IOException{
+
+    SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(ReportsMenuItem);
+    testWebDriver.keyPress(ReportsMenuItem);
+    testWebDriver.waitForElementToAppear(AverageConsumptionReportMenu);
+    testWebDriver.keyPress(AverageConsumptionReportMenu);
+    return new AverageConsumptionReportPage(testWebDriver);
   }
 
   public void goBack(){
