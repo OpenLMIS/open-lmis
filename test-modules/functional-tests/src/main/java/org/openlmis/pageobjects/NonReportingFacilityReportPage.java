@@ -97,7 +97,7 @@ public class NonReportingFacilityReportPage extends Page {
   }
 
   public void verifyPdfReportOutput() throws Exception {
-      testWebDriver.waitForElementToAppear(XLSButton);
+      testWebDriver.waitForElementToAppear(PdfButton);
       PdfButton.click();
       testWebDriver.sleep(500);
 
