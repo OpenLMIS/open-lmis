@@ -14,7 +14,8 @@ app.directive('tabScroll',function () {
           var distance = $(window).height() - ($(this).offset().top - $(window).scrollTop());
           var offset = 0 - distance;
           var bottomOffset = attrs.bottomOffset || 100;
-          var scrollAmount = bottomOffset + offset;
+          var scrollAmount = parseInt(bottomOffset + offset);
+          
           if (distance < 120) {
             $(window).scrollTop($(window).scrollTop() + scrollAmount);
           }
