@@ -6,21 +6,22 @@
 
 package org.openlmis.upload.model;
 
-import lombok.Getter;
+import lombok.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.collections.Predicate;
 import org.openlmis.upload.Importable;
-import org.openlmis.upload.annotation.ImportField;
-import org.openlmis.upload.annotation.ImportFields;
+import org.openlmis.upload.annotation.*;
 import org.openlmis.upload.exception.UploadException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
 public class ModelClass {
-  @Getter
+
   private Class<? extends Importable> clazz;
 
   private List<Field> importFields;

@@ -57,7 +57,7 @@ public class CommTrackTemplateTest extends TestCaseHelper {
         "commTrack",
         dbWrapper.getAuthToken("commTrack"));
 
-    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
 
     assertTrue(responseEntity.getResponse().contains("{\"R&R\":"));
   }

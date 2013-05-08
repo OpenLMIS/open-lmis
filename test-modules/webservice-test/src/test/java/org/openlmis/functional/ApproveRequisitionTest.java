@@ -70,10 +70,20 @@ public class ApproveRequisitionTest extends TestCaseHelper {
         dbWrapper.getAuthToken("commTrack"));
 
     response = responseEntity.getResponse();
-    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-    assertEquals(200, responseEntity.getStatus());
+    ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/recent", "GET", "", "");
+
+    assertEquals(responseEntity.getStatus(),200);
     assertTrue(response.contains("{\"R&R\":"));
     assertEquals(dbWrapper.getRequisitionStatus(id), "RELEASED");
+
+    assertEquals(responseEntity.getStatus(),200);
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10")+ ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"INITIATED\",\"externalSystem\":\"commTrack\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10")+ ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"SUBMITTED\",\"externalSystem\":\"commTrack\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10")+ ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"AUTHORIZED\",\"externalSystem\":\"commTrack\"}"));
+    //assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10")+ ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"APPROVED\",\"externalSystem\":\"commTrack\"}"));
+    //assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10")+ ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"RELEASED\",\"externalSystem\":\"commTrack\"}"));
+
+
   }
 
   @Test(groups = {"webservice"})
@@ -94,7 +104,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
       "commTrack", dbWrapper.getAuthToken("commTrack"));
     response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-    assertEquals(400, responseEntity.getStatus());
+    assertEquals(responseEntity.getStatus(), 400);
     assertEquals(response, "{\"error\":\"Please provide a valid username\"}");
   }
 
@@ -120,7 +130,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
 
     response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-    assertEquals(400, responseEntity.getStatus());
+    assertEquals(responseEntity.getStatus(), 400);
     assertEquals(response, "{\"error\":\"Invalid data.\"}");
   }
 
@@ -143,7 +153,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
       "commTrack", dbWrapper.getAuthToken("commTrack"));
     response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-    assertEquals(400, responseEntity.getStatus());
+    assertEquals(responseEntity.getStatus(), 400);
     assertEquals(response, "{\"error\":\"Requisition Not Found\"}");
   }
 
@@ -169,7 +179,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
 
     response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-    assertEquals(400, responseEntity.getStatus());
+    assertEquals(responseEntity.getStatus(), 400);
     assertEquals(response, "{\"error\":\"Invalid data.\"}");
   }
 
@@ -191,7 +201,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
       "commTrack1", dbWrapper.getAuthToken("commTrack"));
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
 
-    assertEquals(401, responseEntity.getStatus());
+    assertEquals(responseEntity.getStatus(), 401);
   }
 
   public String submitReport() throws Exception {
@@ -217,6 +227,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
 
     return responseEntity.getResponse();
   }
+
 
   private Long getRequisitionIdFromResponse(String response) {
     return Long.parseLong(response.substring(response.lastIndexOf(":") + 1, response.lastIndexOf("}")));

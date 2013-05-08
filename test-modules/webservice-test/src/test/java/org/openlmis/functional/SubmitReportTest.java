@@ -68,7 +68,7 @@ public class SubmitReportTest extends TestCaseHelper {
     String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
 
-    assertEquals(400, responseEntity.getStatus());
+    assertEquals(responseEntity.getStatus(), 400);
     assertEquals(response, "{\"error\":\"User doesn't have access to Program & Facility.\"}");
   }
 
@@ -90,7 +90,7 @@ public class SubmitReportTest extends TestCaseHelper {
 
     String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
-    assertEquals(400, responseEntity.getStatus());
+    assertEquals(responseEntity.getStatus(), 400);
     assertEquals(response, "{\"error\":\"User doesn't have access to Program & Facility.\"}");
   }
 
@@ -124,7 +124,7 @@ public class SubmitReportTest extends TestCaseHelper {
       dbWrapper.getAuthToken("commTrack"));
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
-    assertEquals(400, responseEntity.getStatus());
+    assertEquals(responseEntity.getStatus(), 400);
     assertEquals(responseEntity.getResponse(), "{\"error\":\"Invalid period.\"}");
   }
 
@@ -143,7 +143,7 @@ public class SubmitReportTest extends TestCaseHelper {
 
     String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
-    assertThat(responseEntity.getStatus(), is(400));
+      assertEquals(responseEntity.getStatus(), 400);
     assertEquals(response, "{\"error\":\"Invalid data.\"}");
   }
 
@@ -168,7 +168,7 @@ public class SubmitReportTest extends TestCaseHelper {
     String response = responseEntity.getResponse();
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
-    assertEquals(400, responseEntity.getStatus());
+    assertEquals(responseEntity.getStatus(), 400);
     assertEquals(response, "{\"error\":\"Invalid data.\"}");
   }
 
@@ -194,7 +194,7 @@ public class SubmitReportTest extends TestCaseHelper {
     String response = responseEntity.getResponse();
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
-    assertEquals(400, responseEntity.getStatus());
+    assertEquals(responseEntity.getStatus(), 400);
     assertEquals(response, "{\"error\":\"Invalid data.\"}");
   }
 
@@ -221,7 +221,7 @@ public class SubmitReportTest extends TestCaseHelper {
     String response = responseEntity.getResponse();
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
-    assertEquals(200, responseEntity.getStatus());
+    assertEquals(responseEntity.getStatus(), 200);
     assertTrue(response.contains("{\"R&R\":"));
   }
 
@@ -246,7 +246,7 @@ public class SubmitReportTest extends TestCaseHelper {
     String response = responseEntity.getResponse();
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
-    assertEquals(400, responseEntity.getStatus());
+    assertEquals(responseEntity.getStatus(), 400);
     assertEquals(response, "{\"error\":\"Please provide a valid username\"}");
   }
 
@@ -270,7 +270,7 @@ public class SubmitReportTest extends TestCaseHelper {
         "commTrack1000",
         dbWrapper.getAuthToken("commTrack"));
 
-    assertEquals(401, responseEntity.getStatus());
+    assertEquals(responseEntity.getStatus(), 401);
   }
 
   public String submitReport() throws Exception {

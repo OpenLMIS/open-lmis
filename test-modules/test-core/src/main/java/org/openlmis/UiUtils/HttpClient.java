@@ -42,7 +42,7 @@ public class HttpClient {
   private BasicHttpContext httpContext;
 
   public ResponseEntity SendJSON(String json, String url, String commMethod, String username, String password) {
-    if (StringUtils.isEmpty(username) && StringUtils.isEmpty(password)) return null;
+//    if (StringUtils.isEmpty(username) && StringUtils.isEmpty(password)) return null;
 
     HttpHost targetHost = new HttpHost(HOST, PORT, PROTOCOL);
     AuthScope localhost = new AuthScope(HOST, PORT);
@@ -70,6 +70,8 @@ public class HttpClient {
     HttpResponse response;
     HttpEntity entity;
     BufferedReader rd;
+    String sCurrentLine;
+    String sCompleteResponse="";
 
     HttpRequestBase httpRequest = getHttpRequest(commMethod, url);
 
@@ -82,7 +84,11 @@ public class HttpClient {
 
     ResponseEntity responseEntity = new ResponseEntity();
     responseEntity.setStatus(response.getStatusLine().getStatusCode());
-    responseEntity.setResponse(rd.readLine());
+
+      while ((sCurrentLine = rd.readLine()) != null) {
+          sCompleteResponse= sCompleteResponse + (sCurrentLine);
+      }
+    responseEntity.setResponse(sCompleteResponse);
 
     EntityUtils.consume(entity);
 

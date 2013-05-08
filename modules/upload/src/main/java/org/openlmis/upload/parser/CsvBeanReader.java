@@ -6,6 +6,7 @@
 
 package org.openlmis.upload.parser;
 
+import lombok.Data;
 import lombok.Getter;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.ModelClass;
@@ -27,6 +28,7 @@ public class CsvBeanReader {
   private ModelClass modelClass;
   private CsvDozerBeanReader dozerBeanReader;
   private CellProcessor[] processors;
+
   @Getter
   private String[] headers;
 
