@@ -8,15 +8,15 @@
   <h2>Schedules<a href="#" class="pull-right btn btn-primary" ng-click="startAddNewSchedule()">Add new</a></h2>
 
 
-  <div ng-hide="scheduleLoaded()">Loading...</div>
+  <div ng-hide="scheduleLoaded()" openlmis-message="message.loading"></div>
   <div ng-show="scheduleLoaded()">
     <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
     <div class="row-fluid schedule-header">
       <div class="span1">&nbsp;</div>
-      <div class="span2">Code</div>
-      <div class="span2">Name</div>
-      <div class="span4">Description</div>
-      <div class="span2">Last Modified</div>
+      <div class="span2" openlmis-message="header.code"></div>
+      <div class="span2" openlmis-message="header.name"></div>
+      <div class="span4" openlmis-message="header.description"></div>
+      <div class="span2" openlmis-message="header.lastModified"></div>
       <div class="span1">&nbsp;</div>
     </div>
 

@@ -5,18 +5,18 @@
   -->
 
 <div tab-scroll>
-  <h2>Configure Report and Requisition Template</h2>
+  <h2 openlmis-message="requisition.template.header"></h2>
 
   <div class="info-box">
-    <p><strong>Program:</strong> {{ program.name }} <a ng-href="{{selectProgramUrl}}">(Change)</a>
+    <p><span openlmis-message="template.programName"></span> {{program.name}} <a ng-href="{{selectProgramUrl}}" openlmis-message="template.change"></a>
     </p>
   </div>
 
   <div class="rnr-template-head">
-    <span class="tpl-visible">Display</span>
+    <span class="tpl-visible" openlmis-message="template.header.display"></span>
     <span class="tpl-indicator">&nbsp;</span>
-    <span class="tpl-label">Label</span>
-    <span class="tpl-source">Source</span>
+    <span class="tpl-label" openlmis-message="template.header.label"></span>
+    <span class="tpl-source" openlmis-message="template.header.source"></span>
   </div>
   <form name="configureRnRTemplateForm" ng-submit="save()">
     <div class="rnr-template-columns">
@@ -52,14 +52,11 @@
 
     <div class="alert alert-info arithmetic-valid-msg" ng-show="arithmeticValidationMessageShown">
       <div class="row-fluid">
-        <div class="span9">
-          Total Quantity Consumed (C) and Stock On Hand (E) are configured as user inputs. Validation of inputs (C = A +
-          B +/- D -E) is <strong>{{arithmeticValidationStatusLabel}}</strong>.
-          {{arithmeticValidationMessage}}
+        <div class="span9" openlmis-message="message.arithmeticValidation.status|arithmeticValidationStatusLabel|arithmeticValidationMessage">
         </div>
         <div class="span3">
           <a href="javascript:void(0);" class="btn btn-primary btn-mini pull-right"
-             ng-click="toggleValidateFormulaFlag()">Turn {{arithmeticValidationToggleLabel}}</a>
+             ng-click="toggleValidateFormulaFlag()" openlmis-message="message.arithmeticValidation.toggle|arithmeticValidationToggleLabel"></a>
         </div>
       </div>
     </div>
@@ -68,7 +65,7 @@
     <div form-toolbar class="action-buttons">
       <div class="form-cell button-row">
         <input type="submit" class="btn btn-primary save-button" value="Save"/>
-        <a ng-href="{{selectProgramUrl}}" class="btn btn-cancel cancel-button">Cancel</a>
+        <a ng-href="{{selectProgramUrl}}" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
       </div>
       <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
     </div>

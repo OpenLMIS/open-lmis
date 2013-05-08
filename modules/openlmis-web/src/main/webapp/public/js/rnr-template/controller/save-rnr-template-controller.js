@@ -70,7 +70,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     } else {
       $scope.arithmeticValidationStatusLabel = 'OFF';
       $scope.arithmeticValidationToggleLabel = 'ON';
-      $scope.arithmeticValidationMessage = '';
+      $scope.arithmeticValidationMessage = "";
     }
   };
   setArithmeticValidationLabel();

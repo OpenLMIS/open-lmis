@@ -61,7 +61,10 @@ function isUndefined(value) {
 function replaceArgs(scope, displayMessage, args) {
   $.each(args, function (index, arg) {
     if (index > 0) {
-      var value = scope[arg] || arg;
+      var value = scope[arg];
+      if(value == null || value == undefined) {
+        value = arg;
+      }
       displayMessage = displayMessage.replace("{" + (index - 1) + "}", value);
     }
   });
