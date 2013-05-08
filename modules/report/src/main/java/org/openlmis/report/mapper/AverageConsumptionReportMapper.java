@@ -28,7 +28,7 @@ public interface AverageConsumptionReportMapper {
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<AverageConsumptionReport> getFilteredSortedPagedAverageConsumptionReport(
             @Param("filterCriteria") ReportData filterCriteria,
-            @Param("SortCriteria") ReportData SortCriteria ,
+            @Param("SortCriteria") Map<String, String[]> SortCriteria ,
             @Param("RowBounds")RowBounds rowBounds
     );
 
