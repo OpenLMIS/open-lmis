@@ -30,7 +30,7 @@ public interface RequisitionGroupReportMapper {
             "       requisition_groups g" +
             "       join requisition_group_program_schedules ps on ps.requisitiongroupid = g.id " +
             " where " +
-            " ps.programid = #{param1} and ps.scheduleid = #{param2}")
+            " ps.programid = cast( #{param1} as int4) and ps.scheduleid = cast( #{param2} as int4) ")
     List<RequisitionGroup> getByProgramAndSchedule(int program, int schedule);
 
 }
