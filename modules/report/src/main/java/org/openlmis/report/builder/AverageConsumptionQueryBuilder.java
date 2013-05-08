@@ -70,13 +70,11 @@ public class AverageConsumptionQueryBuilder {
 
         }
         GROUP_BY("li.product, li.productcategory,  f.name, ft.name");
-        ORDER_BY( getSortOrder(sorter));
-        //ORDER_BY("li.productCategory, li.product");
+        appendSortOrder(sorter);
         return SQL();
     }
 
-    private static String getSortOrder(Map params){
-        String sortOrder = "";
+    private static void appendSortOrder(Map params){
 
         if(params != null){
             for (Object entryObject : params.keySet())
@@ -87,7 +85,6 @@ public class AverageConsumptionQueryBuilder {
                 }
             }
         }
-        return ((sortOrder == "")?" product " : sortOrder);
     }
 
     public static String SelectFilteredSortedPagedAverageConsumptionCountSql(Map params){
