@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facilities-listings" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -59,11 +60,10 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 			</subreport>
 		</band>
 	</title>
-	<pageHeader>
-		<band height="35" splitType="Stretch"/>
-	</pageHeader>
 	<columnHeader>
-		<band height="21" splitType="Stretch">
+		<band height="20" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="1" width="802" height="19" forecolor="#FFFFFF" backcolor="#3D9297">
 					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
@@ -109,7 +109,10 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 				<text><![CDATA[Ownership]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="b11ec1c7-ab15-44a6-987b-b949c3660b2d" mode="Transparent" x="493" y="1" width="142" height="20" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="b11ec1c7-ab15-44a6-987b-b949c3660b2d" mode="Transparent" x="493" y="0" width="142" height="20" forecolor="#000000" backcolor="#333333">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -208,31 +211,4 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="45" splitType="Stretch"/>
-	</columnFooter>
-	<pageFooter>
-		<band height="54" splitType="Stretch">
-			<subreport>
-				<reportElement uuid="4333eb33-1f53-47fb-8e3d-d52a31257b37" x="1" y="0" width="801" height="54"/>
-				<subreportParameter name="PAGE_NO">
-					<subreportParameterExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of" + " " + $V{PAGE_NUMBER}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="REPORT_VERSION">
-					<subreportParameterExpression><![CDATA[$P{REPORT_VERSION}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="GENERATED_BY">
-					<subreportParameterExpression><![CDATA[$P{GENERATED_BY}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="REPORT_ID">
-					<subreportParameterExpression><![CDATA[$P{REPORT_ID}]]></subreportParameterExpression>
-				</subreportParameter>
-				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
-				<subreportExpression><![CDATA["openlmis-report-footer-landscape.jasper"]]></subreportExpression>
-			</subreport>
-		</band>
-	</pageFooter>
-	<summary>
-		<band height="42" splitType="Stretch"/>
-	</summary>
 </jasperReport>
