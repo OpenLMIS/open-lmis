@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function FacilityController($scope, facilityReferenceData, $routeParams, $http, facility, Facility, $location, $dialog) {
+function FacilityController($scope, facilityReferenceData, $routeParams, $http, facility, Facility, $location, $dialog, messageService) {
 
   $scope.message = "";
   initialize();
@@ -158,6 +158,33 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
       body:"'{0}' / '{1}' will be deleted from the system.".format($scope.originalFacilityName, $scope.originalFacilityCode)
     };
     OpenLmisDialog.new(dialogOpts, $scope.deleteFacilityCallBack, $dialog);
+  };
+
+  $scope.showConfirmFacilityRestore = function () {
+    var dialogOpts = {
+      id: "restoreConfirmModal",
+      header: messageService.get("create.facility.restoreFacility"),
+      body: "'{0}' / '{1}' will be restored to the system.".format($scope.originalFacilityName, $scope.originalFacilityCode)
+    };
+    OpenLmisDialog.new(dialogOpts, $scope.restoreFacilityCallBack, $dialog);
+  };
+
+  $scope.restoreFacilityCallBack = function(result) {
+    if (!result) return;
+    $scope.showConfirmFacilityActivate();
+  };
+
+  $scope.showConfirmFacilityActivate = function () {
+    var dialogOpts = {
+      id: "activeConfirmModel",
+      header: messageService.get("create.facility.activateFacility"),
+      body: messageService.get("create.facility.setFacilityActive")
+    };
+    OpenLmisDialog.new(dialogOpts, $scope.activateFacilityCallBack, $dialog);
+  };
+
+  $scope.activateFacilityCallBack = function(result) {
+    $scope.restoreFacility(result);
   };
 
   function updateProgramsToDisplay() {

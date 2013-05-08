@@ -7,6 +7,7 @@
 describe("Facility Controller", function () {
   beforeEach(module('openlmis.services'));
   beforeEach(module('ui.bootstrap.dialog'));
+  beforeEach(module('openlmis.localStorage'));
 
   describe("Create Facility", function () {
     var scope, $httpBackend, ctrl, routeParams, facility;
