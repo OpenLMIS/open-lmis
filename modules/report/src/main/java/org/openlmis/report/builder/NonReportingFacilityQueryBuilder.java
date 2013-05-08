@@ -32,9 +32,9 @@ public class NonReportingFacilityQueryBuilder {
          INNER_JOIN("facility_types ft on ft.id = facilities.typeid");
          INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id");
          INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.id and ps.programid = rgps.programid");
-         WHERE("facilities.id not in (select r.facilityid from requisitions r where r.periodid = " + period + " and r.programid = " + program + ")");
+         WHERE("facilities.id not in (select r.facilityid from requisitions r where r.periodid = cast (" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
          writePredicates(program, period, reportingGroup, facilityType);
-         ORDER_BY(getSortOrder(params));
+         ORDER_BY(QueryHelpers.getSortOrder(params, "name"));
          // cache the string query for debugging purposes
          String strQuery = SQL();
          return strQuery;
@@ -43,33 +43,18 @@ public class NonReportingFacilityQueryBuilder {
      private static void writePredicates(String program, String period, String reportingGroup, String facilityType) {
 
          if(reportingGroup != "" && !reportingGroup.endsWith( "undefined")){
-             WHERE("rgm.requisitiongroupid = " + reportingGroup);
+             WHERE("rgm.requisitiongroupid = cast (" + reportingGroup + " as int4)");
          }
          if(facilityType != "" && !facilityType.endsWith( "undefined")){
-             WHERE("facilities.typeid = " + facilityType);
+             WHERE("facilities.typeid = cast(" + facilityType+ " as int4)");
          }
          if(program != "" && !program.endsWith("undefined")){
-            WHERE("ps.programid = " + program);
+            WHERE("ps.programid = cast(" + program+ " as int4)");
          }
      }
 
 
-     private static String getSortOrder(Map params){
-    	String sortOrder = "";
 
-        for (Object entryObject : params.keySet())
-        {
-            String entry = entryObject.toString();
-            if(entry.startsWith("sort-")){
-            	if(sortOrder == ""){
-            		sortOrder = entry.substring(5) + " " + ((String[])params.get(entry))[0];
-            	}else{
-            		sortOrder = ", " + entry.substring(5) + " " + ((String[])params.get(entry))[0];
-            	}
-            }
-        }
-        return ((sortOrder == "")?"name" : sortOrder);
-    }
 
     public static String getTotalFacilities(Map params){
         String period           = ((String[])params.get("period"))[0];
@@ -99,7 +84,7 @@ public class NonReportingFacilityQueryBuilder {
          INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id") ;
          INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
          INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.id and ps.programid = rgps.programid");
-         WHERE("facilities.id not in (select r.facilityid from requisitions r where r.periodid = " + period + " and r.programid = " + program + ")");
+         WHERE("facilities.id not in (select r.facilityid from requisitions r where r.periodid = cast(" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
          writePredicates(program, period, reportingGroup, facilityType);
          return SQL();
      }
@@ -120,7 +105,7 @@ public class NonReportingFacilityQueryBuilder {
         INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id") ;
         INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id") ;
         INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.id and ps.programid = rgps.programid");
-        WHERE("facilities.id not in (select r.facilityid from requisitions r where r.periodid = " + period + " and r.programid = " + program + ")");
+        WHERE("facilities.id not in (select r.facilityid from requisitions r where r.periodid = cast(" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
         writePredicates(program, period, reportingGroup, facilityType);
 
         String query = SQL();
