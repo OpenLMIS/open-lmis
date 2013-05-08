@@ -66,7 +66,8 @@ public class AverageConsumptionQueryBuilder {
 
         }
         GROUP_BY("li.product, li.productcategory,  f.name, ft.name");
-        ORDER_BY("li.productCategory, li.product");
+        //ORDER_BY("li.productCategory, li.product");
+        ORDER_BY( QueryHelpers.getSortOrder(params, "li.productCategory, li.product") );
         return SQL();
     }
 
@@ -112,6 +113,7 @@ public class AverageConsumptionQueryBuilder {
 
         }
         GROUP_BY("li.product, li.productcategory, f.name, ft.name");
+        //ORDER_BY(QueryHelpers.getSortOrder(params, "li.productCategory, li.product"));
         String subQuery = SQL().toString();
 
         BEGIN();
