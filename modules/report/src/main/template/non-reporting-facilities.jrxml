@@ -69,7 +69,9 @@
 		</band>
 	</title>
 	<columnHeader>
-		<band height="29" splitType="Stretch">
+		<band height="27" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="39" y="0" width="57" height="27" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
@@ -79,7 +81,10 @@
 				<text><![CDATA[Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="6f22b5e8-59ea-4512-b209-ce093fe70dbe" mode="Transparent" x="290" y="0" width="230" height="27" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="6f22b5e8-59ea-4512-b209-ce093fe70dbe" mode="Transparent" x="256" y="0" width="160" height="27" forecolor="#000000" backcolor="#333333">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -87,7 +92,10 @@
 				<text><![CDATA[Facility Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="1138c634-4150-46c6-a83e-b93243223977" mode="Transparent" x="96" y="0" width="194" height="27" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="1138c634-4150-46c6-a83e-b93243223977" mode="Transparent" x="96" y="0" width="160" height="27" forecolor="#000000" backcolor="#333333">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -103,9 +111,8 @@
 				<text><![CDATA[Line#]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2ba4a9ef-e063-4ecc-b8e9-bfd8f2d0ec15" mode="Transparent" x="520" y="0" width="160" height="27" forecolor="#000000" backcolor="#333333">
+				<reportElement uuid="2ba4a9ef-e063-4ecc-b8e9-bfd8f2d0ec15" mode="Transparent" x="416" y="0" width="160" height="27" forecolor="#000000" backcolor="#333333">
 					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -113,12 +120,14 @@
 					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Region]]></text>
+				<text><![CDATA[Location]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="21" splitType="Stretch">
+		<band height="20" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField pattern="" isBlankWhenNull="true">
 				<reportElement uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60" mode="Transparent" x="0" y="0" width="39" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
@@ -136,7 +145,10 @@
 				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="2ed64d73-ed87-4e35-a5ad-0d4f0d7d977a" mode="Transparent" x="96" y="0" width="194" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="2ed64d73-ed87-4e35-a5ad-0d4f0d7d977a" mode="Transparent" x="96" y="0" width="160" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -144,7 +156,12 @@
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="99773021-35ed-4897-bb47-a7a2e95ee643" mode="Transparent" x="290" y="0" width="230" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="99773021-35ed-4897-bb47-a7a2e95ee643" mode="Transparent" x="256" y="0" width="160" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -152,7 +169,10 @@
 				<textFieldExpression><![CDATA[$F{facilityType}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="56fa579b-f8be-4f08-bcb3-14f443e36267" mode="Transparent" x="520" y="0" width="160" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="56fa579b-f8be-4f08-bcb3-14f443e36267" mode="Transparent" x="416" y="0" width="160" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -164,27 +184,37 @@
 	<summary>
 		<band height="109">
 			<staticText>
-				<reportElement uuid="54c733aa-d9cd-40d9-88de-d10534597dbb" x="520" y="30" width="130" height="21"/>
+				<reportElement uuid="54c733aa-d9cd-40d9-88de-d10534597dbb" x="520" y="30" width="130" height="21">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
+				</reportElement>
 				<textElement/>
 				<text><![CDATA[Non reporting facilities]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="4f84be12-d811-4f4f-bd4b-0d0ecb2e75d4" x="520" y="51" width="130" height="20"/>
+				<reportElement uuid="4f84be12-d811-4f4f-bd4b-0d0ecb2e75d4" x="520" y="51" width="130" height="20">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
+				</reportElement>
 				<textElement/>
 				<text><![CDATA[Total facilities]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="6a52ba43-5266-4eee-89a2-5e34bae518b6" x="520" y="71" width="130" height="20"/>
+				<reportElement uuid="6a52ba43-5266-4eee-89a2-5e34bae518b6" x="520" y="71" width="130" height="20">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
+				</reportElement>
 				<textElement/>
 				<text><![CDATA[% not reporting]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="f25da274-6a65-48c7-a355-b9b15fa28588" x="660" y="31" width="70" height="18"/>
+				<reportElement uuid="f25da274-6a65-48c7-a355-b9b15fa28588" x="660" y="31" width="70" height="18">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
+				</reportElement>
 				<textElement/>
 				<textFieldExpression><![CDATA[$P{TOTAL_NON_REPORTING}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="992853e5-7ddb-4d79-96fa-0f23ccc3f9eb" x="660" y="52" width="70" height="18"/>
+				<reportElement uuid="992853e5-7ddb-4d79-96fa-0f23ccc3f9eb" x="660" y="52" width="70" height="18">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
+				</reportElement>
 				<textElement/>
 				<textFieldExpression><![CDATA[$P{TOTAL_FACILITIES}]]></textFieldExpression>
 			</textField>

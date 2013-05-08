@@ -74,7 +74,10 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
         $scope.export   = function (type){
-            var url = '/reports/download/non_reporting/' + type +'?period=' + $scope.period + '&rgroup=' + $scope.rgroup + '&ftype=' + $scope.facilityType + '&program=' + $scope.program;
+
+            var param = $scope.getParams(1, 1);
+            var paramString = jQuery.param(param);
+            var url = '/reports/download/non_reporting/' + type + '?' + paramString;
             window.open(url);
         }
 
@@ -112,25 +115,32 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
 
         };
 
+
+        $scope.getParams = function(pageSize, page){
+            var params  = {};
+            if(pageSize != undefined && page != undefined ){
+                var params =  {
+                    "max" : pageSize,
+                    "page" : page
+                };
+            }
+
+            $.each($scope.sortInfo.fields, function(index, value) {
+                if(value != undefined) {
+                    params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+                }
+            });
+
+            params.period   = $scope.period;
+            params.rgroup   = $scope.rgroup;
+            params.ftype    = $scope.facilityType;
+            params.program  = $scope.program;
+            params.schedule = $scope.schedule;
+            return params;
+        }
+
         $scope.getPagedDataAsync = function (pageSize, page) {
-                        var params  = {};
-                        if(pageSize != undefined && page != undefined ){
-                                var params =  {
-                                                "max" : pageSize,
-                                                "page" : page
-                                               };
-                        }
-                        
-                        $.each($scope.sortInfo.fields, function(index, value) {
-                            if(value != undefined) {
-                            	params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-                            }
-                        });
-                        
-                        params.period   = $scope.period;
-                        params.rgroup   = $scope.rgroup;
-                        params.ftype    = $scope.facilityType;
-                        params.program  = $scope.program;
+                        var params = $scope.getParams(pageSize, page);
                         NonReportingFacilities.get(params, function(data) {
                             $scope.setPagingData(data.pages.rows[0].details,page,pageSize,data.pages.total);
                             $scope.summaries    =  data.pages.rows[0].summary;

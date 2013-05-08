@@ -3,7 +3,6 @@ package org.openlmis.report.builder;
 import org.openlmis.report.model.filter.AverageConsumptionReportFilter;
 
 import java.util.Map;
-import java.util.Set;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 import static org.apache.ibatis.jdbc.SqlBuilder.FROM;
@@ -22,13 +21,10 @@ public class AverageConsumptionQueryBuilder {
                 "inner join program_products pp on p.id = pp.productId ";
     }
 
-
-
-
     public static String SelectFilteredSortedPagedAverageConsumptionSql(Map params){
 
         AverageConsumptionReportFilter filter  = (AverageConsumptionReportFilter)params.get("filterCriteria");
-        Map<String, String[]> sorter = ( Map<String, String[]>)params.get("SortCriteria");
+        //ConsumptionReportSorter sorter = (ConsumptionReportSorter)params.get("SortCriteria");
         BEGIN();
 
         SELECT("coalesce( avg(quantitydispensed),0) average, product, productcategory category, ft.name facilityType, f.name facilityName");
@@ -70,6 +66,8 @@ public class AverageConsumptionQueryBuilder {
 
         }
         GROUP_BY("li.product, li.productcategory,  f.name, ft.name");
+        //ORDER_BY("li.productCategory, li.product");
+        ORDER_BY( QueryHelpers.getSortOrder(params, "li.productCategory, li.product") );
         appendSortOrder(sorter);
         return SQL();
     }
