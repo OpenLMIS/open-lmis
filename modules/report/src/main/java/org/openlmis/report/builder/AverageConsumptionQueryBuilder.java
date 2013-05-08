@@ -63,9 +63,11 @@ public class AverageConsumptionQueryBuilder {
             if(filter.getProgramId() != 0){
                 WHERE("r.programid = #{filterCriteria.programId}");
             }
-
         }
         GROUP_BY("li.product, li.productcategory,  f.name, ft.name");
+        if(filter.getPdformat() != 0){
+            ORDER_BY("f.name");
+        }
         //ORDER_BY("li.productCategory, li.product");
         //ORDER_BY( QueryHelpers.getSortOrder(params, "li.productCategory, li.product") );
         appendSortOrder(sorter);

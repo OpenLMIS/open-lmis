@@ -160,7 +160,8 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
              programId : $scope.program,
              facility : $scope.facilityId,
              facilityType : "",
-             rgroup : ""
+             rgroup : "",
+             pdformat : 0
         };
 
         FacilityTypes.get(function(data) {
@@ -344,6 +345,8 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
 
 
         $scope.export   = function (type){
+
+            $scope.filterObject.pdformat =1;
             var params = jQuery.param($scope.filterObject);
             var url = '/reports/download/average_consumption/' + type +'?' + params;//type +'?zone=' + $scope.zoneId + '&facilityType=' + $scope.facilityTypeId;
             window.location.href = url;
