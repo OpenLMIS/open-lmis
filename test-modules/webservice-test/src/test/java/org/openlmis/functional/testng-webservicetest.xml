@@ -12,9 +12,9 @@
       </run>
     </groups>
     <classes preserver-order="true">
-      <class name="org.openlmis.functional.SubmitReportTest">
-      </class>
       <class name="org.openlmis.functional.ApproveRequisitionTest">
+      </class>
+      <class name="org.openlmis.functional.SubmitReportTest">
       </class>
         <class name="org.openlmis.functional.CommTrackTemplateTest">
         </class>
