@@ -17,13 +17,23 @@
                             <div class="clearfix ">
 
                                 <div class="form-cell horizontalFilters">
-                                    <label class="labels">Period Type</label>
+                                    <div >
+                                        <label class="labels">Program</label>
 
+                                        <div class="form-fields">
+                                            <select class="input-medium" name="program" ng-change="filterGrid()" ng-model="program" ng-options="option.id as option.name for option in programs">
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br />
                                     <div class="form-field">
                                         <select class="input-medium" ng-required="true" ng-change="filterGrid()" name="periodType" ng-model="periodType" ng-options="option.value as option.name for option in periodTypes">
 
                                         </select>
                                     </div>
+
+
                                 </div>
 
                                 <div class="form-cell horizontalFilters" style="width:180px">
@@ -123,15 +133,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Program</label>
 
-                                    <div class="form-fields">
-                                        <select class="large-input" name="program" ng-change="filterGrid()" ng-model="program" ng-options="option.id as option.name for option in programs">
-
-                                        </select>
-                                    </div>
-                                </div>
 
                                 <div class="form-cell button-row horizontalFilter">
                                     <input type="submit" class="btn btn-primary save-button pull-right" value="Filter"/>
