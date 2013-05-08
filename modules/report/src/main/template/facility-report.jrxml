@@ -46,9 +46,14 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="54" splitType="Stretch">
+		<band height="60" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<subreport>
-				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="-10" width="802" height="60"/>
+				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="802" height="60">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<subreportParameter name="REPORT_TITLE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_TITLE}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -63,11 +68,10 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 			</subreport>
 		</band>
 	</title>
-	<pageHeader>
-		<band height="7" splitType="Stretch"/>
-	</pageHeader>
 	<columnHeader>
-		<band height="28" splitType="Stretch">
+		<band height="27" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="1" width="802" height="26" forecolor="#FFFFFF" backcolor="#3D9297">
 					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
@@ -119,7 +123,10 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 				<text><![CDATA[Ownership]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="b11ec1c7-ab15-44a6-987b-b949c3660b2d" mode="Transparent" x="493" y="1" width="142" height="27" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="b11ec1c7-ab15-44a6-987b-b949c3660b2d" mode="Transparent" x="493" y="0" width="142" height="27" forecolor="#000000" backcolor="#333333">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="3"/>
@@ -137,7 +144,9 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="21" splitType="Stretch">
+		<band height="20" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F3F3F3">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
