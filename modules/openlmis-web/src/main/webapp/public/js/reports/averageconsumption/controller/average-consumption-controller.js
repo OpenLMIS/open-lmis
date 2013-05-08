@@ -394,12 +394,6 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
                                                };
                         }
 
-                        $.each($scope.sortInfo.fields, function(index, value) {
-                            if(value != undefined) {
-                                params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-                            }
-                        });
-
                         $.each($scope.filterObject, function(index, value) {
                             if(value != undefined)
                                 params[index] = value;

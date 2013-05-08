@@ -24,7 +24,7 @@ public class AverageConsumptionQueryBuilder {
     public static String SelectFilteredSortedPagedAverageConsumptionSql(Map params){
 
         AverageConsumptionReportFilter filter  = (AverageConsumptionReportFilter)params.get("filterCriteria");
-        //ConsumptionReportSorter sorter = (ConsumptionReportSorter)params.get("SortCriteria");
+        Map<String, String[]> sorter = ( Map<String, String[]>)params.get("SortCriteria");
         BEGIN();
 
         SELECT("coalesce( avg(quantitydispensed),0) average, product, productcategory category, ft.name facilityType, f.name facilityName");
@@ -67,7 +67,7 @@ public class AverageConsumptionQueryBuilder {
         }
         GROUP_BY("li.product, li.productcategory,  f.name, ft.name");
         //ORDER_BY("li.productCategory, li.product");
-        ORDER_BY( QueryHelpers.getSortOrder(params, "li.productCategory, li.product") );
+        //ORDER_BY( QueryHelpers.getSortOrder(params, "li.productCategory, li.product") );
         appendSortOrder(sorter);
         return SQL();
     }
