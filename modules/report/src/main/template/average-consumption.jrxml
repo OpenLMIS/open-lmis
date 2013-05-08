@@ -38,8 +38,8 @@
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
-	<group name="GroupByFacility">
-		<groupExpression><![CDATA[$F{facilityName}$F{facilityType}]]></groupExpression>
+	<group name="GroupByFacility" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{facilityName}]]></groupExpression>
 		<groupHeader>
 			<band height="74">
 				<staticText>
