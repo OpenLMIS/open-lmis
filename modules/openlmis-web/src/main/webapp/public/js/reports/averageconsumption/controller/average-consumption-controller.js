@@ -433,13 +433,13 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
         data: 'myData',
         columnDefs:
             [
-                //{ field: 'period', displayName: 'Period', width: "*", resizable: false},
-                { field: 'category', displayName: 'Product', width: "*" },
+
+                //{ field: 'reportingGroup', displayName: 'Reporting Group', width : "*"},
                 { field: 'facilityType', displayName: 'Facility Type', width : "*"},
                 { field: 'facilityName', displayName: 'Facility', width : "*"},
-                { field: 'product', displayName: 'Product Description', width: "**" },
                 //{ field: 'supplier', displayName: 'Supplying Facility', width : "*"},
-                //{ field: 'reportingGroup', displayName: 'Reporting Group', width : "*"},
+                { field: 'category', displayName: 'Product', width: "*" },
+                { field: 'product', displayName: 'Product Description', width: "**" },
                 { field: 'average', displayName: 'Average Monthly Consumption', width : "*"}
             ],
         enablePaging: true,
