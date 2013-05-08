@@ -58,19 +58,20 @@ public class ShipmentServiceTest {
 
   @Test
   public void shouldUpdateOrders() throws Exception {
-    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
+    final ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
     shipmentFileInfo.setId(1L);
     shipmentFileInfo.setProcessingError(FALSE);
-    List<Long> orderIds = new ArrayList();
+    List<Long> orderIds = new ArrayList<>();
     orderIds.add(1L);
 
     shipmentService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
 
-    ArgumentMatcher<List<Order>> argumentMatcher = new ArgumentMatcher<List<Order>>() {
+    final ArgumentMatcher<List<Order>> argumentMatcher = new ArgumentMatcher<List<Order>>() {
       @Override
       public boolean matches(Object argument) {
         List<Order> orders = (List<Order>) argument;
-        return true;  //To change body of implemented methods use File | Settings | File Templates.
+        Order order = orders.get(0);
+        return order.getShipmentFileInfo().equals(shipmentFileInfo) && order.getRnr().getId().equals(1L);
       }
     };
     verify(orderService).updateFulfilledAndShipmentIdForOrders(argThat(argumentMatcher));
