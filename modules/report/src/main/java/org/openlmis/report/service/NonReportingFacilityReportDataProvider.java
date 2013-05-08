@@ -87,9 +87,18 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
         HashMap<String, String> result = new HashMap<String, String>() ;
 
         // spit out the summary section on the report.
-        result.put("TOTAL_FACILITIES", reportMapper.getTotalFacilities( params ).get(0).toString());
+        String totalFacilities = reportMapper.getTotalFacilities( params ).get(0).toString();
+        String nonReporting = reportMapper.getNonReportingTotalFacilities( params ).get(0).toString();
+        result.put("TOTAL_FACILITIES", totalFacilities);
+        result.put("TOTAL_NON_REPORTING", nonReporting);
 
-        result.put("TOTAL_NON_REPORTING", reportMapper.getNonReportingTotalFacilities( params ).get(0).toString());
+        // Assume by default that the 100% of facilities didn't report
+        Long percent = Long.parseLong("100");
+        if(totalFacilities != "0"){
+            percent = Math.round((Double.parseDouble(nonReporting) /  Double.parseDouble(totalFacilities)) * 100);
+
+        }
+        result.put("PERCENTAGE_NON_REPORTING",percent.toString());
 
         // Interprate the different reporting parameters that were selected on the UI
         String period           = ((String[])params.get("period"))[0];
@@ -106,7 +115,7 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
             header = "\nRequisition Group : " + this.requisitionGroupMapper.getById(Integer.parseInt(reportingGroup)).get(0).getName();
         }
         if(facilityType != "" && !facilityType.endsWith( "undefined")){
-            header += "Facility Type : " + this.reportMapper.getFacilityType(Integer.parseInt(facilityType)).get(0).getName();
+            header += "\nFacility Type : " + this.reportMapper.getFacilityType(Integer.parseInt(facilityType)).get(0).getName();
         }
         if(period != "" && !period.endsWith("undefined")){
             header += "\nPeriod : " + this.reportMapper.getPeriodId(Integer.parseInt(period)).get(0).getName();
