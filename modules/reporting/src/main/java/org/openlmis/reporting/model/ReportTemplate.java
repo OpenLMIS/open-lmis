@@ -16,11 +16,14 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 
 @Data
@@ -42,18 +45,23 @@ public class ReportTemplate extends BaseModel {
   public ReportTemplate(String name, MultipartFile file, Long modifiedBy) throws IOException {
     validateFile(file);
     this.name = name;
-    this.data = file.getBytes();
+    //this.data = file.getBytes();
     this.modifiedBy = modifiedBy;
   }
 
   private void validateFile(MultipartFile file) {
     if (file == null) throw new DataException(CREATE_REPORT_ERROR_FILE_MISSING);
-    if (!file.getOriginalFilename().endsWith(".jrxml")) throw new DataException(CREATE_REPORT_ERROR_FILE_TYPE);
+    if (!file.getOriginalFilename().endsWith(".jrxml"))
+      throw new DataException(CREATE_REPORT_ERROR_FILE_TYPE);
     if (file.isEmpty()) throw new DataException(CREATE_REPORT_ERROR_FILE_EMPTY);
     try {
-      JasperCompileManager.compileReport(file.getInputStream());
+      JasperReport report = JasperCompileManager.compileReport(file.getInputStream());
+      ByteArrayOutputStream bos = new ByteArrayOutputStream();
+      ObjectOutputStream out = new ObjectOutputStream(bos);
+      out.writeObject(report);
+      this.data = bos.toByteArray();
     } catch (JRException e) {
-       throw new DataException(CREATE_REPORT_ERROR_FILE_INVALID);
+      throw new DataException(CREATE_REPORT_ERROR_FILE_INVALID);
     } catch (IOException e) {
       throw new DataException(CREATE_REPORT_ERROR_READING_FILE);
     }

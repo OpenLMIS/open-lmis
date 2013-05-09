@@ -43,7 +43,7 @@ public class JasperReportsViewFactory {
   }
 
   public String getReportURLForReportData(ReportTemplate reportTemplate) throws IOException {
-    File tmpFile = createTempFile(reportTemplate.getName(), ".jrxml");
+    File tmpFile = createTempFile(reportTemplate.getName(), ".jasper");
     writeByteArrayToFile(tmpFile, reportTemplate.getData());
     return tmpFile.toURI().toURL().toString();
   }
