@@ -27,7 +27,7 @@ public class AverageConsumptionQueryBuilder {
         Map<String, String[]> sorter = ( Map<String, String[]>)params.get("SortCriteria");
         BEGIN();
 
-        SELECT("coalesce( avg(quantitydispensed),0) average, product, productcategory category, ft.name facilityType, f.name facilityName");
+        SELECT("coalesce( avg(quantitydispensed),0) average, product, productcategory category, ft.name facilityType, f.name facilityName,  MAX(s.name) supplyingFacility, MAX(li.maxmonthsofstock) MaxMOS, MAX(li.maxmonthsofstock) minMOS");
         FROM("requisition_line_items li");
         JOIN("requisitions r on r.id = li.rnrid");
         JOIN("facilities f on r.facilityid = f.id");
@@ -36,7 +36,8 @@ public class AverageConsumptionQueryBuilder {
         JOIN("products pr on pr.code = li.productcode");
         JOIN("product_categories prc on prc.id = pr.categoryid");
         JOIN("requisition_group_members rgm on rgm.facilityid = f.id");
-       // JOIN("programs p on p.id = r.programid");
+        JOIN("supply_lines sl on sl.supervisorynodeid = r.supervisorynodeid and r.programid = sl.programid");
+        JOIN("facilities s on s.id = sl.supplyingfacilityid");
 
         if(filter != null){
             if (filter.getFacilityTypeId() != 0) {

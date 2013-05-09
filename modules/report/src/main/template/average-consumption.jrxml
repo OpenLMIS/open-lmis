@@ -18,7 +18,7 @@
 	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
 	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select avg(quantitydispensed) average, product, productcategory category, ft.name facilityType, f.name facilityName
+		<![CDATA[select avg(quantitydispensed) average, product, productcategory category, ft.name facilityType, f.name facilityName, MAX(s.name) supplyingFacility, MAX(li.maxmonthsofstock) MaxMOS, MAX(li.maxmonthsofstock) minMOS
         from requisition_line_items li
         inner join requisitions r on r.id = li.rnrid
         inner join facilities f on r.facilityid = f.id
@@ -27,6 +27,8 @@
         inner join products pr on pr.code = li.productcode
         inner join product_categories prc on prc.id = pr.categoryid
         inner join requisition_group_members rgm on rgm.facilityid = f.id
+        inner join supply_lines sl on sl.supervisorynodeid = r.supervisorynodeid and r.programid = sl.programid
+inner join facilities s on s.id = sl.supplyingfacilityid
  group by li.product, li.productcategory,  f.name, ft.name
  order by li.productCategory, li.product]]>
 	</queryString>
@@ -35,22 +37,25 @@
 	<field name="category" class="java.lang.String"/>
 	<field name="facilityType" class="java.lang.String"/>
 	<field name="facilityName" class="java.lang.String"/>
+	<field name="supplyingFacility" class="java.lang.String"/>
+	<field name="maxMOS" class="java.lang.Integer"/>
+	<field name="minMOS" class="java.lang.Integer"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
 	<group name="GroupByFacility" isStartNewPage="true">
-		<groupExpression><![CDATA[$F{facilityName}]]></groupExpression>
+		<groupExpression><![CDATA[$F{product}+$F{category}+$F{facilityName}+$F{facilityType}]]></groupExpression>
 		<groupHeader>
-			<band height="74">
+			<band height="96">
 				<staticText>
-					<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="45" width="802" height="28" forecolor="#FFFFFF" backcolor="#3D9297">
+					<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="67" width="802" height="29" forecolor="#FFFFFF" backcolor="#3D9297">
 						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 					</reportElement>
 					<textElement/>
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="45" y="44" width="317" height="29" forecolor="#000000" backcolor="#333333"/>
+					<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="45" y="67" width="317" height="29" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -58,7 +63,7 @@
 					<text><![CDATA[Product]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b" mode="Transparent" x="0" y="44" width="45" height="29" forecolor="#000000" backcolor="#333333"/>
+					<reportElement uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b" mode="Transparent" x="0" y="67" width="45" height="29" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="2"/>
@@ -66,7 +71,7 @@
 					<text><![CDATA[Line#]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="f5478500-0fc0-4759-85c4-ab472097bdd7" mode="Transparent" x="684" y="45" width="117" height="29" forecolor="#000000" backcolor="#333333"/>
+					<reportElement uuid="f5478500-0fc0-4759-85c4-ab472097bdd7" mode="Transparent" x="684" y="67" width="117" height="29" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
@@ -74,7 +79,7 @@
 					<text><![CDATA[Average Monthly Consumption]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="729f7fff-095d-4688-b327-6b0da6522653" mode="Transparent" x="362" y="45" width="290" height="29" forecolor="#000000" backcolor="#333333"/>
+					<reportElement uuid="729f7fff-095d-4688-b327-6b0da6522653" mode="Transparent" x="362" y="67" width="290" height="29" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -82,7 +87,7 @@
 					<text><![CDATA[Product Description]]></text>
 				</staticText>
 				<textField pattern="" isBlankWhenNull="false">
-					<reportElement uuid="fca03595-8a93-412d-9f00-c0888af0ba62" mode="Transparent" x="87" y="4" width="145" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+					<reportElement uuid="fca03595-8a93-412d-9f00-c0888af0ba62" mode="Transparent" x="86" y="5" width="145" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -90,7 +95,7 @@
 					<textFieldExpression><![CDATA[($F{facilityName}=="NULL"?" ":$F{facilityName})]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement uuid="9098ed58-4948-4050-8705-3cfbfa8a7be7" mode="Transparent" x="1" y="4" width="86" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement uuid="9098ed58-4948-4050-8705-3cfbfa8a7be7" mode="Transparent" x="0" y="5" width="86" height="20" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -98,7 +103,7 @@
 					<text><![CDATA[Facility]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="3464a40b-2a53-4b5d-8d08-519cf79d2b33" mode="Transparent" x="1" y="24" width="86" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement uuid="3464a40b-2a53-4b5d-8d08-519cf79d2b33" mode="Transparent" x="0" y="25" width="86" height="20" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -106,12 +111,60 @@
 					<text><![CDATA[Type]]></text>
 				</staticText>
 				<textField pattern="" isBlankWhenNull="false">
-					<reportElement uuid="f807daed-1465-4ff3-8bfc-d67ccc26a1d7" mode="Transparent" x="87" y="24" width="145" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+					<reportElement uuid="f807daed-1465-4ff3-8bfc-d67ccc26a1d7" mode="Transparent" x="86" y="25" width="145" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{facilityType}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="e102daf7-6475-41b2-a8ab-8ba50e7b9035" mode="Transparent" x="0" y="45" width="86" height="20" forecolor="#000000" backcolor="#333333"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Supplying Facility]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="0d752afd-8f4b-4ea5-b97b-a66b06176e83" mode="Transparent" x="515" y="5" width="169" height="20" forecolor="#000000" backcolor="#333333"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single" rightIndent="2"/>
+					</textElement>
+					<text><![CDATA[Minimum Months of Stock]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="2b5a84f5-2cf1-485b-9274-b068cf1c1c86" mode="Transparent" x="515" y="25" width="169" height="20" forecolor="#000000" backcolor="#333333"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single" rightIndent="2"/>
+					</textElement>
+					<text><![CDATA[Maximum Months of Stock]]></text>
+				</staticText>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement uuid="5085c676-46bf-4d74-91f7-0dfe3c6ab1b5" mode="Transparent" x="86" y="45" width="145" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{supplyingFacility}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement uuid="b0080e04-9a4b-4bc3-b229-92ce1614d8fd" mode="Transparent" x="684" y="5" width="118" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single" leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{maxMOS}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement uuid="f3d6687b-e85e-4b5f-bdb4-10a4cb4a9f8a" mode="Transparent" x="684" y="25" width="118" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single" leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{minMOS}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -174,7 +227,7 @@
 				</graphicElement>
 			</line>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement uuid="a720b2eb-4c11-4820-9617-aefbdc467bac" mode="Transparent" x="652" y="0" width="145" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="a720b2eb-4c11-4820-9617-aefbdc467bac" mode="Transparent" x="652" y="0" width="150" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
