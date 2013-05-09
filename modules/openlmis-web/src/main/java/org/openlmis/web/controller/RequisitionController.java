@@ -19,6 +19,8 @@ import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.configurationReader.StaticReferenceDataReader;
 import org.openlmis.web.model.RnrReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +60,8 @@ public class RequisitionController extends BaseController {
   private RnrTemplateService rnrTemplateService;
   private StaticReferenceDataReader staticReferenceDataReader;
   public static final String LOSSES_AND_ADJUSTMENT_TYPES = "lossesAndAdjustmentTypes";
+
+  private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
 
   @Autowired
   public RequisitionController(RequisitionService requisitionService, RnrTemplateService rnrTemplateService, StaticReferenceDataReader staticReferenceDataReader) {
@@ -149,7 +153,8 @@ public class RequisitionController extends BaseController {
     try {
       return success(requisitionService.approve(rnr));
     } catch (DataException dataException) {
-      return error(dataException, HttpStatus.BAD_REQUEST);
+      logger.warn("Error in approving requisition #{}", id, dataException);
+      return error(dataException, BAD_REQUEST);
     }
   }
 
