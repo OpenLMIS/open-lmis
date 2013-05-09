@@ -213,9 +213,9 @@ public class DeleteFacilityPage extends Page {
     testWebDriver.waitForElementToAppear(isActiveMessageOnAlert);
     String isActiveMessageOnAlertValue = isActiveMessageOnAlert.getText();
     SeleneseTestNgHelper.assertEquals(isActiveMessageOnAlertValue, expectedIsActiveMessageOnAlert);
-    testWebDriver.waitForElementToAppear(yesLink);
+    testWebDriver.waitForElementToAppear(okLink);
     testWebDriver.sleep(1000);
-    yesLink.click();
+    okLink.click();
 
     verifyRestoredFacility();
 
