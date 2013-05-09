@@ -60,6 +60,12 @@ public class ReportPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//a[contains(text(),'HTML')]")
   private static WebElement HTML;
 
+  @FindBy(how = XPATH, using = "(//span[contains(text(),'Please fill this value')])[1]")
+  private static WebElement errorReportName;
+
+  @FindBy(how = XPATH, using = "(//span[contains(text(),'Please fill this value')])[2]")
+  private static WebElement errorFile;
+
 
 
   public ReportPage(TestWebDriver driver) throws IOException {
@@ -122,6 +128,18 @@ public class ReportPage extends RequisitionPage {
   {
     testWebDriver.sleep(500);
     assertTrue("Report created successfully message not displayed",saveSuccessMessage.isDisplayed());
+  }
+
+  public void verifyErrorMessageDivReportName()
+  {
+    testWebDriver.sleep(500);
+    assertTrue("Error message 'Please fill this value' should show up",errorReportName.isDisplayed());
+  }
+
+  public void verifyErrorMessageDivUploadFile()
+  {
+    testWebDriver.sleep(500);
+    assertTrue("Error message 'Please fill this value' should show up",errorFile.isDisplayed());
   }
 
   public void verifyReportNameInList(String reportName,int reportIndex)

@@ -27,6 +27,35 @@ public class ManageReport extends TestCaseHelper {
   }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
+  public void invalidScenariosReports(String[] credentials) throws Exception {
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    ReportPage reportPage = homePage.navigateReportScreen();
+    reportPage.verifyNoReportsMessage();
+    reportPage.clickAddNewButton();
+    reportPage.verifyItemsOnReportUploadScreen();
+
+    String reportName="Test-Report"+reportPage.getCurrentDateAndTime();
+    String fileName="activefacility.jrxml";
+
+    reportPage.clickSaveButton();
+    reportPage.verifyErrorMessageDivReportName();
+    reportPage.verifyErrorMessageDivUploadFile();
+
+    reportPage.enterReportName(reportName);
+    reportPage.clickSaveButton();
+    reportPage.verifyErrorMessageDivUploadFile();
+
+    reportPage.enterReportName("");
+    reportPage.uploadFile(fileName);
+    reportPage.clickSaveButton();
+    reportPage.verifyErrorMessageDivReportName();
+
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
   public void uploadManageReport(String[] credentials) throws Exception {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
