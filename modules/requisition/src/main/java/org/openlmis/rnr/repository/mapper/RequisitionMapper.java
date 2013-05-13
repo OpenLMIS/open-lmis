@@ -109,19 +109,4 @@ public interface RequisitionMapper {
   })
   List<Rnr> get(@Param("facility") Facility facility, @Param("program") Program program, @Param("periods") String periodIds);
 
-
-/*  @Select({"SELECT R.*, O.id orderBatchId, O.createdByUserId orderBatchCreatedByUserId, O.createTimeStamp createTimeStamp FROM",
-      "requisitions R INNER JOIN order_Batches O on R.orderbatchId = O.id",
-      "WHERE R.status = #{status}",
-      "ORDER BY O.createTimeStamp DESC"})
-  @Results(value = {
-      @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "program.id", column = "programId"),
-      @Result(property = "period.id", column = "periodId"),
-      @Result(property = "supplyingFacility.id", column = "supplyingFacilityId"),
-      @Result(property = "orderBatch.id", column = "orderBatchId"),
-      @Result(property = "orderBatch.createTimeStamp", column = "createTimeStamp"),
-      @Result(property = "orderBatch.createdByUserId", column = "orderBatchCreatedByUserId")
-  })
-  List<Rnr> getByStatus(RnrStatus status);*/
 }
