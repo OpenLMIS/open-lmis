@@ -1,0 +1,149 @@
+<div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+
+    <div class="row-fluid sortable ui-sortable">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Adjustment Summary Report</h2>
+                    <div class="box-icon">
+                        <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                        <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
+                        <a id="pdf-button" href="#" ng-click="export('PDF')" class='btn-small btn-info'>PDF</a>
+                        <a id="xls-button" href="#" ng-click="export('XLS')" class='btn-small btn-info'>Excel</a>
+                    </div>
+                </div>
+            <div class="box-content" ng-show="show(1)">
+                <div class="app-form" style="padding: 5px;">
+                        <form ng-submit="filterGrid()"  name="filterForm" novalidate>
+                            <div class="clearfix ">
+
+                                <div class="form-cell horizontalFilters">
+                                    <div >
+                                        <label class="labels">Program</label>
+
+                                        <div class="form-fields">
+                                            <select class="input-medium" name="program" ng-change="filterGrid()" ng-model="program" ng-options="option.id as option.name for option in programs">
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="form-field">
+                                        <select class="input-medium" ng-required="true" ng-change="filterGrid()" name="periodType" ng-model="periodType" ng-options="option.value as option.name for option in periodTypes">
+
+                                        </select>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="form-cell horizontalFilters" style="width:180px">
+                                    <label class="labels">From</label>
+
+                                    <div class="form-field">
+                                        <span style="width:70px;display:inline-block">Year</span>
+                                        <select class="input-small" ng-required="true" ng-change="filterGrid()" name="startYear" ng-model="startYear" ng-options="option.value as option.name for option in startYears">
+
+                                        </select>
+                                        <br />
+                                        <div ng-show="isMonthly()">
+                                            <span style="width:70px;display:inline-block">Month</span>
+                                            <select class="input-small" ng-required="true" ng-change="filterGrid()" name="startMonth" ng-model="startMonth" ng-options="option.value as option.name for option in startMonths">
+
+                                            </select>
+                                        </div>
+                                        <div ng-show="isQuarterly()">
+                                            <span style="width:70px;display:inline-block">Quarter</span>
+                                            <select class="input-small" ng-required="true" ng-change="filterGrid()" name="startQuarter" ng-model="startQuarter" ng-options="option.value as option.name for option in startQuarters">
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters" style="width:180px">
+                                    <label class="labels">To</label>
+
+                                    <div class="form-field">
+                                        <span style="width:70px;display:inline-block">Year</span>
+                                        <select class="input-small" ng-required="true" ng-change="filterGrid()" name="endYear" ng-model="endYear" ng-options="option.value as option.name for option in endYears">
+
+                                        </select>
+                                        <br />
+                                        <div ng-show="isMonthly()">
+                                            <span style="width:70px;display:inline-block">Month</span>
+                                            <select class="input-small" ng-required="true" ng-change="filterGrid()" name="endMonth" ng-model="endMonth" ng-options="option.value as option.name for option in endMonths">
+
+                                            </select>
+                                        </div>
+                                        <div ng-show="isQuarterly()">
+                                            <span style="width:70px;display:inline-block">Quarter</span>
+                                            <select class="input-small" ng-required="true" ng-change="filterGrid()" name="endQuarter" ng-model="endQuarter" ng-options="option.value as option.name for option in endQuarters">
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-cell horizontalFilters">
+                                    <label class="labels">Zone</label>
+
+                                    <div class="form-field">
+                                        <select ng-required="true" ng-change="filterGrid()" name="zone" ng-model="zone.value" ng-options="option.id as option.name for option in zones">
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Facility Type</label>
+
+                                    <div class="form-field">
+                                        <select name="facilityType" ng-change="filterGrid()" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-cell horizontalFilters" >
+                                   <label class="labels">Product</label>
+
+                                   <div class="form-field">
+                                    <select name="product" ng-change="filterGrid()" ng-model="product" ng-options="option.id as option.name for option in products">
+
+                                    </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Product Category</label>
+
+                                    <div class="form-field">
+                                        <select name="productCategory" ng-change="filterGrid()" ng-model="productCategory" ng-options="option.id as option.name for option in productCategories">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Reporting Groups</label>
+
+                                    <div class="form-field">
+                                        <select name="requisitionGroup" ng-change="filterGrid()" ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="form-cell button-row horizontalFilter">
+                                    <input type="submit" class="btn btn-primary save-button pull-right" value="Filter"/>
+                                </div>
+
+                            </div>
+                         </form>
+                </div>
+            </div>
+               <div class="gridStyleReport" ng-grid="gridOptions"></div>
+   </div>
+  </div>
+

@@ -42,3 +42,6 @@ services.factory('RequisitionGroupsByProgramSchedule', function($resource){
     return $resource('/reports/reporting_groups_by_program_schedule.json', {}, {});
 });
 
+services.factory('AdjustmentSummaryReport', function ($resource) {
+    return $resource('/reports/reportdata/adjustmentSummary.json', {}, {});
+});
