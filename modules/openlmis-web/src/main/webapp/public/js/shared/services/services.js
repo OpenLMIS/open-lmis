@@ -55,9 +55,8 @@ services.factory('UserFacilityWithViewRequisition', function ($resource) {
   return $resource('/user/facilities/view.json', {}, {});
 });
 
-//todo add right/operation code as param
-services.factory('UserSupportedProgramInFacilityForAnOperation', function ($resource) {
-  return $resource('/facility/:facilityId/user/programs.json', {}, {});
+services.factory('ProgramsToViewRequisitions', function ($resource) {
+  return $resource('/facility/:facilityId/view/requisition/programs.json', {}, {});
 });
 
 services.factory('RequisitionHeader', function ($resource) {
@@ -88,8 +87,8 @@ services.factory('Roles', function ($resource) {
   return $resource('/roles.json', {}, {});
 });
 
-services.factory('UserSupervisedProgramList', function ($resource) {
-  return $resource('/create/requisition/supervised/programs.json', {}, {})
+services.factory('CreateRequisitionProgramList', function ($resource) {
+  return $resource('/create/requisition/programs.json', {}, {})
 });
 
 services.factory('UserSupervisedFacilitiesForProgram', function ($resource) {

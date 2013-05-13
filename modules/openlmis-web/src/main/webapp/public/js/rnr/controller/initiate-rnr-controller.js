@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function InitiateRnrController($scope, $location, $rootScope, Requisition, PeriodsForFacilityAndProgram, UserFacilityList, UserSupportedProgramInFacilityForAnOperation, UserSupervisedProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights) {
+function InitiateRnrController($scope, $location, $rootScope, Requisition, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights) {
 
   var DEFAULT_FACILITY_MESSAGE = '--choose facility--';
   var DEFAULT_PROGRAM_MESSAGE = '--choose program--';
@@ -33,7 +33,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
           $scope.facilityDisplayName = $scope.myFacility.code + '-' + $scope.myFacility.name;
           $scope.selectedFacilityId = $scope.myFacility.id;
 
-          UserSupportedProgramInFacilityForAnOperation.get({facilityId:$scope.selectedFacilityId, rights:['CREATE_REQUISITION', 'AUTHORIZE_REQUISITION']}, function (data) {
+          CreateRequisitionProgramList.get({facilityId:$scope.selectedFacilityId}, function (data) {
             $scope.programs = data.programList;
           }, {});
         } else {
@@ -43,7 +43,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
         }
       }, {});
     } else if (selectedType == 1) { // Supervised facility
-      UserSupervisedProgramList.get({}, function (data) {
+      CreateRequisitionProgramList.get({}, function (data) {
         $scope.programs = data.programList;
       }, {});
     }
@@ -84,7 +84,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
 
     var periodWithRnrStatus;
     if (periods == null || periods.length == 0) {
-      periodWithRnrStatus = {name: "No period(s) available"};
+      periodWithRnrStatus = {name:"No period(s) available"};
       $scope.selectedPeriod = null;
       $scope.periodGridData.push(periodWithRnrStatus);
       return;

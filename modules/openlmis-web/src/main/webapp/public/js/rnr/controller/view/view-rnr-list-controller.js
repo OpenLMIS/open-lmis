@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ViewRnrListController($scope, facilities, RequisitionsForViewing, UserSupportedProgramInFacilityForAnOperation, $location) {
+function ViewRnrListController($scope, facilities, RequisitionsForViewing, ProgramsToViewRequisitions, $location) {
   $scope.facilities = facilities;
   $scope.facilityLabel = (!$scope.facilities.length) ? "--None Assigned--" : "--Select Facility--";
   $scope.programLabel = "--None Assigned--";
@@ -51,7 +51,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, UserS
   }
 
   $scope.loadProgramsForFacility = function () {
-    UserSupportedProgramInFacilityForAnOperation.get({facilityId:$scope.selectedFacilityId, rights:"VIEW_REQUISITION"},
+    ProgramsToViewRequisitions.get({facilityId:$scope.selectedFacilityId},
       function (data) {
         $scope.programs = data.programList;
         setProgramsLabel();

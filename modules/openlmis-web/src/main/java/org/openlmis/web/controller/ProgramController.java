@@ -21,10 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Set;
 
-import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.Right.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
@@ -47,15 +45,25 @@ public class ProgramController extends BaseController {
     return programService.getByFacility(facilityId);
   }
 
-  @RequestMapping(value = "/facility/{facilityId}/user/programs", method = GET, headers = ACCEPT_JSON)
-  public List<Program> getProgramsSupportedByFacilityForUserWithRights(@PathVariable(value = "facilityId") Long facilityId, @RequestParam("rights") Set<Right> rights, HttpServletRequest request) {
-    return programService.getProgramsSupportedByFacilityForUserWithRights(facilityId, loggedInUserId(request), rights.toArray(new Right[rights.size()]));
+  @RequestMapping(value = "/facility/{facilityId}/view/requisition/programs", method = GET, headers = ACCEPT_JSON)
+  public List<Program> getProgramsToViewRequisitions(@PathVariable(value = "facilityId") Long facilityId,
+                                                     HttpServletRequest request) {
+    return programService.getProgramsSupportedByFacilityForUserWithRights(facilityId, loggedInUserId(request), VIEW_REQUISITION);
   }
 
+  @RequestMapping(value = "/create/requisition/programs")
+  public List<Program> getProgramsForCreateOrAuthorizeRequisition(@RequestParam(value = "facilityId", required = false) Long facilityId,
+                                                                  HttpServletRequest request) {
+    Right[] rights = {CREATE_REQUISITION, AUTHORIZE_REQUISITION};
+    List<Program> programList;
+    if (facilityId == null) {
+      programList = programService.getUserSupervisedActiveProgramsWithRights(loggedInUserId(request), rights);
+    } else {
+      programList = programService.getProgramsSupportedByFacilityForUserWithRights(facilityId, loggedInUserId(request), rights);
+    }
 
-  @RequestMapping(value = "/create/requisition/supervised/programs", method = GET, headers = ACCEPT_JSON)
-  public List<Program> getUserSupervisedActiveProgramsForCreateAndAuthorizeRequisition(HttpServletRequest request) {
-    return programService.getUserSupervisedActiveProgramsWithRights(loggedInUserId(request), CREATE_REQUISITION, AUTHORIZE_REQUISITION);
+    return programList;
+
   }
 
   @RequestMapping(value = "/programs", method = GET, headers = ACCEPT_JSON)

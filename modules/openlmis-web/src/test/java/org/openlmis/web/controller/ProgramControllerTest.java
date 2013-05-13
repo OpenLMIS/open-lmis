@@ -11,14 +11,15 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
@@ -28,8 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
-import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.web.controller.ProgramController.PROGRAM;
 import static org.openlmis.web.controller.ProgramController.PROGRAMS;
 
@@ -62,14 +62,9 @@ public class ProgramControllerTest {
 
     Long facilityId = 12345L;
 
-    Set<Right> rights = new LinkedHashSet<Right>() {{
-      add(Right.CREATE_REQUISITION);
-      add(Right.AUTHORIZE_REQUISITION);
-    }};
+    when(programService.getProgramsSupportedByFacilityForUserWithRights(facilityId, USER_ID, VIEW_REQUISITION)).thenReturn(programs);
 
-    when(programService.getProgramsSupportedByFacilityForUserWithRights(facilityId, USER_ID, Right.CREATE_REQUISITION, Right.AUTHORIZE_REQUISITION)).thenReturn(programs);
-
-    assertEquals(programs, controller.getProgramsSupportedByFacilityForUserWithRights(facilityId, rights, httpServletRequest));
+    assertEquals(programs, controller.getProgramsToViewRequisitions(facilityId, httpServletRequest));
 
   }
 
@@ -80,7 +75,7 @@ public class ProgramControllerTest {
 
     when(programService.getUserSupervisedActiveProgramsWithRights(USER_ID, CREATE_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(expectedPrograms);
 
-    List<Program> result = controller.getUserSupervisedActiveProgramsForCreateAndAuthorizeRequisition(httpServletRequest);
+    List<Program> result = controller.getProgramsForCreateOrAuthorizeRequisition(null, httpServletRequest);
 
     verify(programService).getUserSupervisedActiveProgramsWithRights(USER_ID, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
     assertThat(result, is(equalTo(expectedPrograms)));
