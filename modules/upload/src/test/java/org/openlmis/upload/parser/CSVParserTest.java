@@ -21,12 +21,15 @@ import org.openlmis.upload.model.ModelClass;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 public class CSVParserTest {
 
@@ -171,5 +174,22 @@ public class CSVParserTest {
     DummyImportable dummyImportable = (DummyImportable) recordHandler.getImportedObjects().get(0);
     assertThat(dummyImportable.getMultipleNestedFields().getEntityCode1(), is("code1-1"));
     assertThat(dummyImportable.getMultipleNestedFields().getEntityCode2(), is("code1-2"));
+  }
+
+  @Test
+  public void shouldPostProcessRecordsAfterSuccessfulUpload() throws UnsupportedEncodingException {
+    String csvInput = "mandatory string field   , mandatoryIntField, entity 1 code, entity 2 code\n" +
+      " Random1               , 23, code1-1, code1-2\n" +
+      " Random2                , 25, code2-1, code2-2\n";
+
+    InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
+
+
+    DummyRecordHandler spyRecordHandler = spy(recordHandler);
+    csvParser.process(inputStream, dummyImportableClass, spyRecordHandler, auditFields);
+    DummyImportable dummyImportable = (DummyImportable) spyRecordHandler.getImportedObjects().get(0);
+    assertThat(dummyImportable.getMultipleNestedFields().getEntityCode1(), is("code1-1"));
+    assertThat(dummyImportable.getMultipleNestedFields().getEntityCode2(), is("code1-2"));
+    verify(spyRecordHandler).postProcess();
   }
 }

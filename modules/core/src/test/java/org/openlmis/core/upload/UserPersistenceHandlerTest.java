@@ -12,16 +12,20 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.UserService;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import java.util.ArrayList;
+
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.core.upload.UserPersistenceHandler.RESET_PASSWORD_PATH;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(UserPersistenceHandler.class)
 public class UserPersistenceHandlerTest {
 
   private UserPersistenceHandler userPersistenceHandler;
@@ -34,17 +38,42 @@ public class UserPersistenceHandlerTest {
 
   String baseUrl;
 
+  private ArrayList users;
+
   @Before
   public void setUp() throws Exception {
     baseUrl = "http://localhost:9091/";
-    userPersistenceHandler = new UserPersistenceHandler(userService, baseUrl);
   }
 
   @Test
   public void shouldSaveAUser() throws Exception {
     User user = new User();
+    user.setEmail("abc@def.com");
+    user.setId(1l);
+    User lwUser = User.getLWUser(user);
+    users = mock(ArrayList.class);
+    whenNew(ArrayList.class).withNoArguments().thenReturn(users);
+    userPersistenceHandler = new UserPersistenceHandler(userService, baseUrl);
     userPersistenceHandler.save(user);
-    verify(userService).create(user, baseUrl + RESET_PASSWORD_PATH);
+    verify(userService).createUser(user);
+    verify(users).add(lwUser);
+  }
+
+  @Test
+  public void shouldSendUserCreationEmailAfterAllUsersAreUploaded() throws Exception {
+    ArrayList<User> users = new ArrayList<>();
+    User lwUser1 = User.getLWUser(new User());
+    users.add(lwUser1);
+    User user = new User();
+    user.setEmail("abc@def.com");
+    User lwUser2 = User.getLWUser(user);
+    users.add(lwUser2);
+    whenNew(ArrayList.class).withNoArguments().thenReturn(users);
+    userPersistenceHandler = new UserPersistenceHandler(userService, baseUrl);
+    userPersistenceHandler.postProcess();
+
+    verify(userService).sendUserCreationEmail(lwUser1, baseUrl + RESET_PASSWORD_PATH);
+    verify(userService).sendUserCreationEmail(lwUser2, baseUrl + RESET_PASSWORD_PATH);
   }
 
 }

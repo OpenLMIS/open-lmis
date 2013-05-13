@@ -50,6 +50,10 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
     }
   }
 
+  public void postProcess() {
+    // File is processed successfully
+  }
+
   protected abstract BaseModel getExisting(BaseModel record);
 
   protected abstract void save(BaseModel record);

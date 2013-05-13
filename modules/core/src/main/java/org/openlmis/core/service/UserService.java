@@ -36,8 +36,13 @@ public class UserService {
   private MessageService messageService;
 
 
+
   public void create(User user, String resetPasswordLink) {
     validateAndSave(user);
+    sendUserCreationEmail(user, resetPasswordLink);
+  }
+
+  public void sendUserCreationEmail(User user, String resetPasswordLink) {
     EmailMessage emailMessage = accountCreatedEmailMessage(user, resetPasswordLink);
     sendEmail(emailMessage);
   }
@@ -146,5 +151,9 @@ public class UserService {
 
   public User selectUserByUserNameAndPassword(String userName, String password) {
     return userRepository.selectUserByUserNameAndPassword(userName, password);
+  }
+
+  public void createUser(User user) {
+    validateAndSave(user);
   }
 }

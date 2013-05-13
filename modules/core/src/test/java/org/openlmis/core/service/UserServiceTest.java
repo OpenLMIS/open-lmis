@@ -38,6 +38,7 @@ import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.service.UserService.PASSWORD_RESET_TOKEN_INVALID;
+import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
@@ -66,10 +67,12 @@ public class UserServiceTest {
   @InjectMocks
   private UserService userService;
 
+
   @Before
   public void setUp() throws Exception {
     when(messageService.message("accountcreated.email.subject")).thenReturn("Account created message");
     when(messageService.message("forgotpassword.email.subject")).thenReturn("Forgot password email subject");
+
   }
 
   private Matcher<EmailMessage> emailMessageMatcher(final EmailMessage that) {
@@ -268,5 +271,17 @@ public class UserServiceTest {
 
     verify(userRepository).getUserIdForPasswordResetToken(validToken);
     assertThat(userId, is(expectedUserId));
+  }
+
+  @Test
+  public void shouldCreateUserInDB() {
+    User user = new User();
+    userService.createUser(user);
+    verify(userRepository).create(user);
+    EmailMessage emailMessage = mock(EmailMessage.class);
+    verify(emailService, never()).send(emailMessage);
+    verify(roleAssignmentService).saveHomeFacilityRoles(user);
+    verify(roleAssignmentService).saveSupervisoryRoles(user);
+    verify(roleAssignmentService).saveAdminRole(user);
   }
 }

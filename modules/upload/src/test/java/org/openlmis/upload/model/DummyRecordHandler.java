@@ -22,4 +22,9 @@ public class DummyRecordHandler implements RecordHandler<DummyImportable> {
     public void execute(DummyImportable importable, int rowNumber, AuditFields auditFields) {
         this.importedObjects.add(importable);
     }
+
+  @Override
+  public void postProcess() {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
 }

@@ -48,4 +48,9 @@ public class ShipmentRecordHandler implements RecordHandler {
     shippedLineItem.setId(shippedLineItemFromDB.getId());
     shipmentService.updateShippedLineItem(shippedLineItem);
   }
+
+  @Override
+  public void postProcess() {
+    //File processed successfully.
+  }
 }

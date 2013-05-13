@@ -73,6 +73,12 @@ public class User extends BaseModel implements Importable {
     this.userName = userName;
   }
 
+  public static User getLWUser(User user) {
+    User lwUSer = new User();
+    lwUSer.setId(user.getId());
+    lwUSer.setEmail(user.getEmail());
+    return lwUSer;
+  }
 
   public void validate() {
     validateEmail();
