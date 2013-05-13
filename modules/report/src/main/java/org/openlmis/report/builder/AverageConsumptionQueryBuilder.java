@@ -27,7 +27,7 @@ public class AverageConsumptionQueryBuilder {
         Map<String, String[]> sorter = ( Map<String, String[]>)params.get("SortCriteria");
         BEGIN();
 
-        SELECT("coalesce( avg(quantitydispensed),0) average, product, productcategory category, ft.name facilityType, f.name facilityName,  MAX(s.name) supplyingFacility, MAX(li.maxmonthsofstock) MaxMOS, MAX(li.maxmonthsofstock) minMOS");
+        SELECT("coalesce( avg(quantitydispensed),0) average, product, productcode, productcategory category, ft.name facilityType, f.name facilityName,  MAX(s.name) supplyingFacility, MAX(li.maxmonthsofstock) MaxMOS, MAX(li.maxmonthsofstock) minMOS");
         FROM("requisition_line_items li");
         JOIN("requisitions r on r.id = li.rnrid");
         JOIN("facilities f on r.facilityid = f.id");
@@ -36,8 +36,8 @@ public class AverageConsumptionQueryBuilder {
         JOIN("products pr on pr.code = li.productcode");
         JOIN("product_categories prc on prc.id = pr.categoryid");
         JOIN("requisition_group_members rgm on rgm.facilityid = f.id");
-        JOIN("supply_lines sl on sl.supervisorynodeid = r.supervisorynodeid and r.programid = sl.programid");
-        JOIN("facilities s on s.id = sl.supplyingfacilityid");
+        LEFT_OUTER_JOIN("supply_lines sl on sl.supervisorynodeid = r.supervisorynodeid and r.programid = sl.programid");
+        LEFT_OUTER_JOIN("facilities s on s.id = sl.supplyingfacilityid");
 
         if(filter != null){
             if (filter.getFacilityTypeId() != 0) {
@@ -65,9 +65,10 @@ public class AverageConsumptionQueryBuilder {
                 WHERE("r.programid = #{filterCriteria.programId}");
             }
         }
-        GROUP_BY("li.product, li.productcategory,  f.name, ft.name");
+        GROUP_BY("li.product, li.productcategory,  f.name, ft.name, li.productcode");
+
         if(filter.getPdformat() != 0){
-            ORDER_BY("f.name");
+            ORDER_BY("f.name,ft.name");//f.name,ft.name,li.productcategory,supplyingFacility");  //ORDER_BY("f.name"); //
         }
         //ORDER_BY("li.productCategory, li.product");
         //ORDER_BY( QueryHelpers.getSortOrder(params, "li.productCategory, li.product") );
@@ -103,6 +104,8 @@ public class AverageConsumptionQueryBuilder {
         JOIN("products pr on pr.code = li.productcode");
         JOIN("product_categories prc on prc.id = pr.categoryid");
         JOIN("requisition_group_members rgm on rgm.facilityid = f.id");
+        LEFT_OUTER_JOIN("supply_lines sl on sl.supervisorynodeid = r.supervisorynodeid and r.programid = sl.programid");
+        LEFT_OUTER_JOIN("facilities s on s.id = sl.supplyingfacilityid");
        // JOIN("programs p on p.id = r.programid");
 
         if(filter != null){
@@ -129,7 +132,7 @@ public class AverageConsumptionQueryBuilder {
             }
 
         }
-        GROUP_BY("li.product, li.productcategory, f.name, ft.name");
+        GROUP_BY("li.product, li.productcategory, f.name, ft.name, li.productcode");
         String subQuery = SQL().toString();
 
         BEGIN();
