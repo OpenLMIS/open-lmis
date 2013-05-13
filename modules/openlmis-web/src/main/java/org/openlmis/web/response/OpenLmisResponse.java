@@ -88,6 +88,14 @@ public class OpenLmisResponse {
     return new ResponseEntity<>(response, status);
   }
 
+  public static ResponseEntity<OpenLmisResponse> response(Map<String, OpenLmisMessage> messages, HttpStatus status, String contentType) {
+    MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+    headers.add("Content-Type", contentType);
+    OpenLmisResponse response = new OpenLmisResponse();
+    response.setData(messages);
+    return new ResponseEntity<>(response, headers, status);
+  }
+
   @JsonAnyGetter
   @SuppressWarnings("unused")
   public Map<String, Object> getData() {

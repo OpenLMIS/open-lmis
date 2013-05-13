@@ -7,6 +7,7 @@
 package org.openlmis.web.controller;
 
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +22,9 @@ import org.openlmis.upload.parser.CSVParser;
 import org.openlmis.web.controller.upload.MandatoryFields;
 import org.openlmis.web.controller.upload.NonMandatoryFields;
 import org.openlmis.web.model.UploadBean;
+import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
@@ -32,6 +35,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -80,12 +84,12 @@ public class UploadControllerIT {
     when(dbService.getCount("products")).thenReturn(10).thenReturn(12);
 
 
-    String uploadPage = controller.upload(multiPartFile, "mandatoryFields", request);
+    ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(multiPartFile, "mandatoryFields", request);
 
-
-    assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?" +
-      "model=mandatoryFields" +
-      "&success=File uploaded successfully. 'Number of records created: 2', 'Number of records updated : 0'"));
+    assertThat(uploadResponse.getBody().getSuccessMsg(), is("File uploaded successfully. " +
+      "'Number of records created: 2', " +
+      "'Number of records updated: 0'"));
+    assertThat(uploadResponse.getBody().getData().get("model").toString(), is("mandatoryFields"));
 
     ArgumentCaptor<MandatoryFields> validUploadTypeArgumentCaptor = ArgumentCaptor.forClass(MandatoryFields.class);
     verify(handler).execute(validUploadTypeArgumentCaptor.capture(), eq(2), eq(new AuditFields(1L, null)));
@@ -103,15 +107,15 @@ public class UploadControllerIT {
 
     when(dbService.getCount("products")).thenReturn(10).thenReturn(12);
 
-    String uploadPage = controller.upload(multiPart, "nonMandatoryFields", request);
+    ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(multiPart, "nonMandatoryFields", request);
 
-    assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?" +
-      "model=nonMandatoryFields" +
-      "&success=File uploaded successfully. 'Number of records created: 2', 'Number of records updated : 1'"));
+    assertThat(uploadResponse.getBody().getSuccessMsg(), is("File uploaded successfully. " +
+      "'Number of records created: 2', " +
+      "'Number of records updated: 1'"));
+    assertThat(uploadResponse.getBody().getData().get("model").toString(), is("nonMandatoryFields"));
 
     ArgumentCaptor<NonMandatoryFields> nonMandatoryFieldsArgumentCaptor = ArgumentCaptor.forClass(NonMandatoryFields.class);
     verify(handler).execute(nonMandatoryFieldsArgumentCaptor.capture(), eq(4), eq(new AuditFields(1L, null)));
-
   }
 
 
