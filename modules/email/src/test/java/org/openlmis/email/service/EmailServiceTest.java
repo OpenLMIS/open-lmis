@@ -6,14 +6,20 @@
 
 package org.openlmis.email.service;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.email.builder.EmailMessageBuilder;
 import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.concurrent.ExecutionException;
 
@@ -22,36 +28,54 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class EmailServiceTest {
 
   @Rule
   public ExpectedException expectedException = none();
 
+  private JavaMailSender mailSender;
+
+
+  @Before
+  public void setUp() throws Exception {
+    mailSender = mock(JavaMailSenderImpl.class);
+  }
 
   @Test
   public void shouldSendEmailMessage() throws Exception {
-    JavaMailSender mailSender = mock(JavaMailSender.class);
-    SimpleMailMessage mailMessage = mock(SimpleMailMessage.class);
-    EmailService service = new EmailService(mailSender);
+    Boolean mailSendingFlag = true;
     EmailMessage message = make(a(EmailMessageBuilder.defaultEmailMessage,
       with(EmailMessageBuilder.to, "alert.open.lmis@gmail.com")));
+    EmailService service = new EmailService(mailSender, mailSendingFlag);
     boolean status = service.send(message).get();
     assertTrue(status);
     verify(mailSender).send(any(SimpleMailMessage.class));
   }
 
+
+
   @Test
   public void shouldGiveErrorIfMessageToNotSet() throws ExecutionException, InterruptedException {
-    JavaMailSender mailSender = mock(JavaMailSender.class);
-    SimpleMailMessage mailMessage = mock(SimpleMailMessage.class);
-    EmailService service = new EmailService(mailSender);
     EmailMessage message = make(a(EmailMessageBuilder.defaultEmailMessage,
       with(EmailMessageBuilder.to, "")));
     expectedException.expect(EmailException.class);
     expectedException.expectMessage("Message 'To' not set");
-
+    Boolean mailSendingFlag = true;
+    EmailService service = new EmailService(mailSender, mailSendingFlag);
     service.send(message).get();
+  }
+
+  @Test
+  public void shouldNotSendEmailIfMailSendingFlagIsFalse() throws ExecutionException, InterruptedException {
+    Boolean mailSendingFlag = false;
+    EmailMessage message = make(a(EmailMessageBuilder.defaultEmailMessage,
+      with(EmailMessageBuilder.to, "alert.open.lmis@gmail.com")));
+    EmailService service = new EmailService(mailSender, mailSendingFlag);
+    boolean status = service.send(message).get();
+    assertTrue(status);
   }
 }

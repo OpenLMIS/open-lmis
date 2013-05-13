@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.scheduling.annotation.Async;
@@ -23,17 +24,21 @@ import java.util.concurrent.Future;
 public class EmailService {
 
 
+  private Boolean mailSendingFlag;
+
+
   private MailSender mailSender;
 
-
   @Autowired
-  public EmailService(MailSender mailSender) {
+  public EmailService(MailSender mailSender,@Value("${mail.sending.flag}") Boolean mailSendingFlag) {
     this.mailSender = mailSender;
+    this.mailSendingFlag = mailSendingFlag;
   }
 
   @Async
   public Future<Boolean> send(EmailMessage emailMessage) {
-
+    if(!mailSendingFlag)
+      return new AsyncResult(true);
     mailSender.send(copyToSimpleMailMessage(emailMessage));
     return new AsyncResult(true);
   }
