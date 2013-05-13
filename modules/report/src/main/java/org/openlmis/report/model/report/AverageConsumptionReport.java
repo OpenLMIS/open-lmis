@@ -20,5 +20,5 @@ public class AverageConsumptionReport implements ReportData {
     private String supplyingFacility;
     private Integer minMOS;     //Minimum Months of Stock
     private Integer maxMOS;     //Maximum Months of Stock
-
+    private String productCode;
 }
