@@ -70,10 +70,8 @@ public class UploadPage extends Page {
 
 
   public void verifySuccessMessageOnUploadScreen() {
-    String successMessage = "File uploaded successfully. 'Number of records created: *', 'Number of records updated : *'";
     testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
     SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
-    SeleneseTestNgHelper.assertEquals(saveSuccessMsgDiv.getText().trim(), successMessage);
     testWebDriver.setImplicitWait(implicitWait);
   }
 
