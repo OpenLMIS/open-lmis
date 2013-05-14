@@ -1055,6 +1055,14 @@ describe('RnrLineItem', function () {
       expect(valid).toBeFalsy();
     });
 
+    it('should reduce rnr line item to have only productCode, approvedQuantity and remarks', function () {
+      var rnrLineItem = {id:1, beginningBalance:10, quantityDispensed:5, quantityReceived:2, fullSupply:true, quantityApproved:3, remarks:'some remarks', productCode: 'P10'};
+      rnrLineItem = new RnrLineItem(rnrLineItem, 5, [], 'IN_APPROVAL');
+      var reducedRnrLineItem = rnrLineItem.reduceForApproval();
+
+      expect(reducedRnrLineItem).toEqual( {id:1, productCode: 'P10', quantityApproved:3, remarks:'some remarks'});
+    });
+
   });
 
   describe('Compare RnrLineItems', function () {

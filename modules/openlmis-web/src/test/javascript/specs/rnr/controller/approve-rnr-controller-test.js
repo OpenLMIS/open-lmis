@@ -44,7 +44,7 @@ describe('Approve Requisition controller', function () {
   });
 
   it('should save work in progress for rnr', function () {
-    scope.rnr = {"id":"rnrId"};
+    scope.rnr = new Rnr({"id":"rnrId"});
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success':"R&R saved successfully!"});
     scope.saveRnr();
     httpBackend.flush();
@@ -203,7 +203,7 @@ describe('Approve Requisition controller', function () {
   });
 
   it('should set message while saving if set message flag true', function () {
-    scope.rnr = {"id":"rnrId"};
+    scope.rnr = new Rnr({"id":"rnrId"});
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success':"success message"});
     scope.saveRnr(false);
     httpBackend.flush();
@@ -211,7 +211,7 @@ describe('Approve Requisition controller', function () {
   });
 
   it('should not set message while saving if set message flag false', function () {
-    scope.rnr = {"id":"rnrId"};
+    scope.rnr = new Rnr({"id":"rnrId"});
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success':"success message"});
     scope.saveRnr(true);
     httpBackend.flush();

@@ -20,6 +20,10 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.lossesAndAdjustments = tempLossesAndAdjustments;
   };
 
+  RnrLineItem.prototype.reduceForApproval = function() {
+    return _.pick(this, 'id', 'productCode', 'quantityApproved', 'remarks');
+  };
+
   RnrLineItem.prototype.init = function () {
     this.initLossesAndAdjustments();
     if (this.previousNormalizedConsumptions == undefined || this.previousNormalizedConsumptions == null)
