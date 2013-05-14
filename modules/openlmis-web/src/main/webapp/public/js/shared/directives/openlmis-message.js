@@ -4,10 +4,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-app.directive('openlmisMessage',function (messageService) {
+directives.directive('openlmisMessage', function (messageService) {
   return {
-    restrict:'A',
-    link:function (scope, element, attrs) {
+    restrict: 'A',
+    link: function (scope, element, attrs) {
       var key = scope[attrs.openlmisMessage] || attrs.openlmisMessage;
       var keyWithArgs = key.split("|");
       scope.$watch("[" + keyWithArgs.toString() + "]", function () {

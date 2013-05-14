@@ -4,12 +4,16 @@
  */
 
 'use strict';
-angular.module('report', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
-  config(['$routeProvider', function ($routeProvider) {
-  $routeProvider.
-    when('/create', {controller:CreateReportController, templateUrl:'partials/create.html'}).
-    when('/list', {controller:ListReportController, templateUrl:'partials/list.html', resolve:ListReportController.resolve}).
-    otherwise({redirectTo:'/list'});
-}]).run(function ($rootScope, AuthorizationService) {
-    AuthorizationService.preAuthorize('VIEW_REPORTS');
-  });
+require(['../../shared/app', '../controller/create-report-controller', '../controller/list-report-controller'], function (app) {
+  app.loadApp();
+  angular.module('report', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
+    config(['$routeProvider', function ($routeProvider) {
+      $routeProvider.
+        when('/create', {controller: CreateReportController, templateUrl: 'partials/create.html'}).
+        when('/list', {controller: ListReportController, templateUrl: 'partials/list.html', resolve: ListReportController.resolve}).
+        otherwise({redirectTo: '/list'});
+    }]).run(function ($rootScope, AuthorizationService) {
+      AuthorizationService.preAuthorize('VIEW_REPORTS');
+    });
+  angular.bootstrap(document, ['report']);
+});

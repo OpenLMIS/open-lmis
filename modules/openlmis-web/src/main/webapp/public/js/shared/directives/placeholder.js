@@ -4,11 +4,11 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-app.directive('placeholder',function () {
+directives.directive('placeholder', function () {
   return {
-    restrict:'A',
-    require:'ngModel',
-    link:function (scope, element, attr, ctrl) {
+    restrict: 'A',
+    require: 'ngModel',
+    link: function (scope, element, attr, ctrl) {
       var value;
 
       if (!jQuery.support.placeholder) {
@@ -53,3 +53,7 @@ app.directive('placeholder',function () {
     }
   };
 });
+
+jQuery.support.placeholder = !!function () {
+  return "placeholder" in document.createElement("input");
+}();

@@ -5,13 +5,17 @@
  */
 
 'use strict';
-angular.module('role', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).config(['$routeProvider', function ($routeProvider) {
-  $routeProvider.
-    when('/create', {controller:RoleController, templateUrl:'partials/create.html'}).
-    when('/list', {controller:ListRoleController, templateUrl:'partials/list.html'}).
-    when('/edit/:id', {controller:RoleController, templateUrl:'partials/create.html'}).
-    otherwise({redirectTo:'/list'});
-}]).run(function($rootScope, AuthorizationService) {
-    $rootScope.roleSelected = "selected";
-    AuthorizationService.preAuthorize('MANAGE_ROLE');
-  });
+require(['../../shared/app', '../controller/role-controller', '../controller/list-role-controller'], function (app) {
+  app.loadApp();
+  angular.module('role', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).config(['$routeProvider', function ($routeProvider) {
+      $routeProvider.
+        when('/create', {controller: RoleController, templateUrl: 'partials/create.html'}).
+        when('/list', {controller: ListRoleController, templateUrl: 'partials/list.html'}).
+        when('/edit/:id', {controller: RoleController, templateUrl: 'partials/create.html'}).
+        otherwise({redirectTo: '/list'});
+    }]).run(function ($rootScope, AuthorizationService) {
+      $rootScope.roleSelected = "selected";
+      AuthorizationService.preAuthorize('MANAGE_ROLE');
+    });
+  angular.bootstrap(document, ['role']);
+});
