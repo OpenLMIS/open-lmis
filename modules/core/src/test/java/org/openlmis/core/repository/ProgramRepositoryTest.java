@@ -47,11 +47,11 @@ public class ProgramRepositoryTest {
     Long facilityId = 1L;
     Long userId = 1L;
     List<Program> programs = new ArrayList<>();
-    when(programMapper.getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, "{AUTHORIZE_REQUISITION, CREATE_REQUISITION}")).thenReturn(programs);
+    when(programMapper.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, "{AUTHORIZE_REQUISITION, CREATE_REQUISITION}")).thenReturn(programs);
 
-    List<Program> result = programRepository.getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, AUTHORIZE_REQUISITION, CREATE_REQUISITION);
+    List<Program> result = programRepository.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, AUTHORIZE_REQUISITION, CREATE_REQUISITION);
 
-    verify(programMapper).getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, "{AUTHORIZE_REQUISITION, CREATE_REQUISITION}");
+    verify(programMapper).getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, "{AUTHORIZE_REQUISITION, CREATE_REQUISITION}");
     assertThat(result, is(programs));
   }
 
@@ -104,6 +104,17 @@ public class ProgramRepositoryTest {
 
     assertThat(programs, is(expectedPrograms));
     verify(programMapper, times(1)).getByFacilityId(1L);
+  }
+
+  @Test
+  public void shouldGetSupportedProgramsForFacilityForAUserForGivenRights() throws Exception {
+    List<Program> expectedPrograms = new ArrayList<>();
+    when(programMapper.getProgramsForUserByFacilityAndRights(1L, 1L, "{AUTHORIZE_REQUISITION, VIEW_REQUISITION}")).thenReturn(expectedPrograms);
+
+    List<Program> programs = programRepository.getProgramsForUserByFacilityAndRights(1L, 1L, AUTHORIZE_REQUISITION, VIEW_REQUISITION);
+
+    assertThat(programs, is(expectedPrograms));
+    verify(programMapper, times(1)).getProgramsForUserByFacilityAndRights(1L, 1L, "{AUTHORIZE_REQUISITION, VIEW_REQUISITION}");
   }
 
   @Test

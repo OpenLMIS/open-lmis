@@ -48,7 +48,7 @@ public class ProgramController extends BaseController {
   @RequestMapping(value = "/facility/{facilityId}/view/requisition/programs", method = GET, headers = ACCEPT_JSON)
   public List<Program> getProgramsToViewRequisitions(@PathVariable(value = "facilityId") Long facilityId,
                                                      HttpServletRequest request) {
-    return programService.getProgramsSupportedByFacilityForUserWithRights(facilityId, loggedInUserId(request), VIEW_REQUISITION);
+    return programService.getProgramsForUserByFacilityAndRights(facilityId, loggedInUserId(request), VIEW_REQUISITION);
   }
 
   @RequestMapping(value = "/create/requisition/programs")
@@ -58,7 +58,7 @@ public class ProgramController extends BaseController {
     if (facilityId == null) {
       return programService.getProgramForSupervisedFacilities(loggedInUserId(request), rights);
     } else {
-      return programService.getProgramsSupportedByFacilityForUserWithRights(facilityId, loggedInUserId(request), rights);
+      return programService.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, loggedInUserId(request), rights);
     }
   }
 

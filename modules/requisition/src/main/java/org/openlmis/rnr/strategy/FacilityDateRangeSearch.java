@@ -39,8 +39,8 @@ public class FacilityDateRangeSearch implements RequisitionSearchStrategy {
   @Override
   public List<Rnr> search() {
     Facility facility = new Facility(criteria.getFacilityId());
-    List<Program> programs = programService.getProgramsSupportedByFacilityForUserWithRights(criteria.getFacilityId(),
-        criteria.getUserId(), VIEW_REQUISITION);
+    List<Program> programs = programService.getProgramsSupportedByUserHomeFacilityWithRights(criteria.getFacilityId(),
+      criteria.getUserId(), VIEW_REQUISITION);
     List<Rnr> requisitions = new ArrayList<>();
     for (Program program : programs) {
       List<ProcessingPeriod> periods = processingScheduleService.getAllPeriodsForDateRange(facility, program,

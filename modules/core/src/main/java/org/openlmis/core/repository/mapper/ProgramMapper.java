@@ -71,9 +71,9 @@ public interface ProgramMapper {
       "AND ra.userId = #{userId}",
       "AND ps.facilityId = #{facilityId}",
       "AND rr.rightName = ANY(#{commaSeparatedRights}::VARCHAR[])"})
-  List<Program> getProgramsSupportedByFacilityForUserWithRights(@Param("facilityId") Long facilityId,
-                                                                @Param("userId") Long userId,
-                                                                @Param("commaSeparatedRights") String commaSeparatedRights);
+  List<Program> getProgramsSupportedByUserHomeFacilityWithRights(@Param("facilityId") Long facilityId,
+                                                                 @Param("userId") Long userId,
+                                                                 @Param("commaSeparatedRights") String commaSeparatedRights);
 
   @Select({"SELECT DISTINCT p.*",
       "FROM programs p",
@@ -88,4 +88,16 @@ public interface ProgramMapper {
 
   @Update("UPDATE programs SET templateConfigured = true WHERE id = #{id}")
   void setTemplateConfigured(Long id);
+
+  @Select({"SELECT DISTINCT p.* FROM programs p INNER JOIN programs_supported ps ON p.id = ps.programId",
+    "INNER JOIN role_assignments ra ON ra.programId = p.id",
+    "INNER JOIN role_rights rr ON rr.roleId = ra.roleId",
+    "AND p.active = TRUE",
+    "AND ps.active= TRUE",
+    "AND ra.userId = #{userId}",
+    "AND ps.facilityId = #{facilityId}",
+    "AND rr.rightName = ANY(#{commaSeparatedRights}::VARCHAR[])"})
+  List<Program> getProgramsForUserByFacilityAndRights(@Param("facilityId") Long facilityId,
+                                                      @Param("userId") Long userId,
+                                                      @Param("commaSeparatedRights") String commaSeparatedRights);
 }

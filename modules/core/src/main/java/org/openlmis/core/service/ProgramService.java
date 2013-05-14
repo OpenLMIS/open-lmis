@@ -37,8 +37,8 @@ public class ProgramService {
     return programRepository.getAll();
   }
 
-  public List<Program> getProgramsSupportedByFacilityForUserWithRights(Long facilityId, Long userId, Right... rights) {
-    return programRepository.getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, rights);
+  public List<Program> getProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, Right... rights) {
+    return programRepository.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, rights);
   }
 
   public List<Program> getProgramForSupervisedFacilities(Long userId, Right... rights) {
@@ -59,5 +59,9 @@ public class ProgramService {
 
   public void setTemplateConfigured(Long id) {
     programRepository.setTemplateConfigured(id);
+  }
+
+  public List<Program> getProgramsForUserByFacilityAndRights(Long facilityId, Long userId, Right... rights) {
+    return programRepository.getProgramsForUserByFacilityAndRights(facilityId, userId, rights);
   }
 }

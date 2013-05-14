@@ -44,8 +44,8 @@ public class ProgramRepository {
     return mapper.getUserSupervisedActivePrograms(userId, commaSeparateRightNames(rights));
   }
 
-  public List<Program> getProgramsSupportedByFacilityForUserWithRights(Long facilityId, Long userId, Right... rights) {
-    return mapper.getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, commaSeparateRightNames(rights));
+  public List<Program> getProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, Right... rights) {
+    return mapper.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, commaSeparateRightNames(rights));
   }
 
   public Long getIdByCode(String code) {
@@ -68,5 +68,9 @@ public class ProgramRepository {
 
   public void setTemplateConfigured(Long id) {
     mapper.setTemplateConfigured(id);
+  }
+
+  public List<Program> getProgramsForUserByFacilityAndRights(Long facilityId, Long userId, Right... rights) {
+    return mapper.getProgramsForUserByFacilityAndRights(facilityId, userId, commaSeparateRightNames(rights));
   }
 }

@@ -13,7 +13,9 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.joda.time.DateTime.now;
@@ -21,6 +23,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
+import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
 
 public class ProgramServiceTest {
   @Mock
@@ -52,6 +56,17 @@ public class ProgramServiceTest {
 
     verify(programRepository).getById(1L);
     assertThat(actualProgram, is(expectedProgram));
+  }
+
+  @Test
+  public void shouldGetProgramsForFacilityUserAndRights() throws Exception {
+    final List<Program> expectedPrograms = new ArrayList<>();
+    when(programRepository.getProgramsForUserByFacilityAndRights(1L, 1L, VIEW_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(expectedPrograms);
+
+    List<Program> programs = service.getProgramsForUserByFacilityAndRights(1l, 1l, VIEW_REQUISITION, AUTHORIZE_REQUISITION);
+
+    verify(programRepository).getProgramsForUserByFacilityAndRights(1l, 1l, VIEW_REQUISITION, AUTHORIZE_REQUISITION);
+    assertThat(programs, is(expectedPrograms));
   }
 
   @Test

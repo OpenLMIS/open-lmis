@@ -62,7 +62,7 @@ public class ProgramControllerTest {
 
     Long facilityId = 12345L;
 
-    when(programService.getProgramsSupportedByFacilityForUserWithRights(facilityId, USER_ID, VIEW_REQUISITION)).thenReturn(programs);
+    when(programService.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, USER_ID, VIEW_REQUISITION)).thenReturn(programs);
 
     assertEquals(programs, controller.getProgramsToViewRequisitions(facilityId, httpServletRequest));
 
@@ -92,6 +92,19 @@ public class ProgramControllerTest {
     verify(programService).getAll();
     List<Program> actual = (List<Program>) response.getBody().getData().get(PROGRAMS);
     assertThat(actual, is(equalTo(expectedPrograms)));
+  }
+
+  @Test
+  public void shouldGetProgramsForViewRightAndFacilityForUser() throws Exception {
+
+    List<Program> expectedPrograms = new ArrayList<>();
+
+    when(programService.getProgramsForUserByFacilityAndRights(1L, USER_ID, VIEW_REQUISITION)).thenReturn(expectedPrograms);
+
+    List<Program> result = controller.getProgramsToViewRequisitions(1L, httpServletRequest);
+
+    verify(programService).getProgramsForUserByFacilityAndRights(1L, USER_ID, VIEW_REQUISITION);
+    assertThat(result, is(equalTo(expectedPrograms)));
   }
 
   @Test

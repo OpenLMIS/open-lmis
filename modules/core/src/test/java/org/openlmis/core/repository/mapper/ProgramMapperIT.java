@@ -172,7 +172,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
     final String rights = "{CREATE_REQUISITION, AUTHORIZE_REQUISITION}";
 
-    List<Program> programs = programMapper.getProgramsSupportedByFacilityForUserWithRights(facility.getId(), user.getId(), rights);
+    List<Program> programs = programMapper.getProgramsSupportedByUserHomeFacilityWithRights(facility.getId(), user.getId(), rights);
     assertThat(programs.size(), is(2));
     assertTrue(programs.contains(activeProgram));
     assertTrue(programs.contains(anotherActiveProgram));
@@ -210,6 +210,31 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     Program returnedProgram = programMapper.getById(program.getId());
 
     assertThat(returnedProgram.isTemplateConfigured(), is(true));
+  }
+
+  @Test
+  public void shouldGetProgramsForAUserByFacilityAndRights() throws Exception {
+    Program activeProgram = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+    Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p3"), with(programStatus, false))));
+
+    Facility facility = insertFacility(make(a(defaultFacility)));
+    User user = insertUser(facility);
+
+    Role r1 = new Role("r1", FALSE, "random description");
+    roleRightsMapper.insertRole(r1);
+    roleRightsMapper.createRoleRight(r1.getId(), Right.VIEW_REQUISITION);
+
+    insertRoleAssignments(activeProgram, user, r1, null);
+    insertRoleAssignments(inactiveProgram, user, r1, null);
+
+    insertProgramSupportedForFacility(activeProgram, facility, true);
+    insertProgramSupportedForFacility(inactiveProgram, facility, true);
+
+    final String rights = "{VIEW_REQUISITION}";
+
+    List<Program> programs = programMapper.getProgramsForUserByFacilityAndRights(facility.getId(), user.getId(), rights);
+    assertThat(programs.size(), is(1));
+    assertTrue(programs.contains(activeProgram));
   }
 
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {
