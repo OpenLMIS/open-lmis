@@ -153,7 +153,13 @@ public class UserService {
     return userRepository.selectUserByUserNameAndPassword(userName, password);
   }
 
-  public void createUser(User user) {
+  public void createUser(User user, String passwordResetLink) {
     validateAndSave(user);
+    prepareForEmailNotification(user, passwordResetLink);
+  }
+
+  private void prepareForEmailNotification(User user, String passwordResetLink) {
+    EmailMessage emailMessage = accountCreatedEmailMessage(user, passwordResetLink);
+    userRepository.insertEmailNotification(emailMessage);
   }
 }

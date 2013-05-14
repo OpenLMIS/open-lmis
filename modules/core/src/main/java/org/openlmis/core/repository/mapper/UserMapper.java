@@ -8,6 +8,7 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.*;
+import org.openlmis.email.domain.EmailMessage;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -71,4 +72,7 @@ public interface UserMapper {
   @Update("UPDATE users SET password = #{password}, active = TRUE WHERE id = #{userId}")
   void updateUserPassword(@Param(value = "userId") Long userId, @Param(value = "password") String password);
 
+  @Insert("INSERT INTO email_notifications(receiver, subject, content) VALUES (#{to}, #{subject}, #{text})")
+  @Options(useGeneratedKeys = true)
+  int insertEmailNotification(EmailMessage emailMessage);
 }

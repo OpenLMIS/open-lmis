@@ -81,8 +81,6 @@ public class RequisitionMapperIT {
   private ProgramMapper programMapper;
   @Autowired
   private CommentMapper commentMapper;
-  @Autowired
-  private QueryExecutor queryExecutor;
 
   private SupervisoryNode supervisoryNode;
 

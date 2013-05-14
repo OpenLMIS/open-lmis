@@ -42,9 +42,11 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.core.service.UserService.PASSWORD_RESET_TOKEN_INVALID;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 @Category(UnitTests.class)
+
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(Encoder.class)
+@PrepareForTest({Encoder.class, UserService.class})
 public class UserServiceTest {
 
   public static final String FORGET_PASSWORD_LINK = "http://openLMIS.org";
@@ -125,7 +127,7 @@ public class UserServiceTest {
     when(Encoder.hash(anyString())).thenReturn("token");
 
     when(messageService.message("passwordreset.email.body", new String[]{FORGET_PASSWORD_LINK + "token"}))
-      .thenReturn("email body");
+        .thenReturn("email body");
 
     userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
 
@@ -146,19 +148,6 @@ public class UserServiceTest {
     expectedException.expectMessage(UserService.USER_EMAIL_NOT_FOUND);
 
     userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
-  }
-
-  @Test
-  public void shouldReturnSearchResultsWhenUserExists() throws Exception {
-    User user = new User();
-    String userSearchParam = "abc";
-    List<User> listOfUsers = Arrays.asList(new User());
-
-    when(userRepository.searchUser(userSearchParam)).thenReturn(listOfUsers);
-
-    List<User> listOfReturnedUsers = userService.searchUser(userSearchParam);
-
-    assertTrue(listOfReturnedUsers.contains(user));
   }
 
   @Test
@@ -202,6 +191,19 @@ public class UserServiceTest {
 
     verify(userRepository).create(user);
     verify(roleAssignmentService).saveHomeFacilityRoles(user);
+  }
+
+  @Test
+  public void shouldReturnSearchResultsWhenUserExists() throws Exception {
+    User user = new User();
+    String userSearchParam = "abc";
+    List<User> listOfUsers = Arrays.asList(new User());
+
+    when(userRepository.searchUser(userSearchParam)).thenReturn(listOfUsers);
+
+    List<User> listOfReturnedUsers = userService.searchUser(userSearchParam);
+
+    assertTrue(listOfReturnedUsers.contains(user));
   }
 
   @Test
@@ -276,11 +278,18 @@ public class UserServiceTest {
   }
 
   @Test
-  public void shouldCreateUserInDB() {
+  public void shouldCreateUserInDB() throws Exception {
     User user = new User();
-    userService.createUser(user);
+
+    EmailMessage emailMessage = new EmailMessage();
+    whenNew(EmailMessage.class).withNoArguments().thenReturn(emailMessage);
+
+    when(messageService.message("accountcreated.email.subject")).thenReturn("Account created message");
+
+    userService.createUser(user, "resetPasswordLink");
+
     verify(userRepository).create(user);
-    EmailMessage emailMessage = mock(EmailMessage.class);
+    verify(userRepository).insertEmailNotification(emailMessage);
     verify(emailService, never()).send(emailMessage);
     verify(roleAssignmentService).saveHomeFacilityRoles(user);
     verify(roleAssignmentService).saveSupervisoryRoles(user);

@@ -52,30 +52,9 @@ public class UserPersistenceHandlerTest {
     User user = new User();
     user.setEmail("abc@def.com");
     user.setId(1l);
-    User lwUser = User.getLWUser(user);
-    users = mock(ArrayList.class);
-    whenNew(ArrayList.class).withNoArguments().thenReturn(users);
     userPersistenceHandler = new UserPersistenceHandler(userService, baseUrl);
     userPersistenceHandler.save(user);
-    verify(userService).createUser(user);
-    verify(users).add(lwUser);
+    verify(userService).createUser(user, baseUrl + RESET_PASSWORD_PATH);
   }
-
-  @Test
-  public void shouldSendUserCreationEmailAfterAllUsersAreUploaded() throws Exception {
-    ArrayList<User> users = new ArrayList<>();
-    User lwUser1 = User.getLWUser(new User());
-    users.add(lwUser1);
-    User user = new User();
-    user.setEmail("abc@def.com");
-    User lwUser2 = User.getLWUser(user);
-    users.add(lwUser2);
-    whenNew(ArrayList.class).withNoArguments().thenReturn(users);
-    userPersistenceHandler = new UserPersistenceHandler(userService, baseUrl);
-    userPersistenceHandler.postProcess();
-
-    verify(userService).sendUserCreationEmail(lwUser1, baseUrl + RESET_PASSWORD_PATH);
-    verify(userService).sendUserCreationEmail(lwUser2, baseUrl + RESET_PASSWORD_PATH);
-  }
-
 }
+

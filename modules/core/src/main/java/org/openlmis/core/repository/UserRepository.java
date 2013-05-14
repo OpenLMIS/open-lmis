@@ -14,6 +14,7 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.repository.mapper.UserMapper;
+import org.openlmis.email.domain.EmailMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -32,8 +33,6 @@ public class UserRepository {
   public static final String DUPLICATE_EMPLOYEE_ID_FOUND = "duplicate.employee.id.found";
   public static final String DUPLICATE_EMAIL_FOUND = "duplicate.email.found";
   public static final String DUPLICATE_USER_NAME_FOUND = "duplicate.user.name.found";
-
-
 
   @Autowired
   public UserRepository(UserMapper userMapper) {
@@ -126,5 +125,9 @@ public class UserRepository {
 
   public User selectUserByUserNameAndPassword(String userName, String password) {
     return userMapper.selectUserByUserNameAndPassword(userName, password);
+  }
+
+  public void insertEmailNotification(EmailMessage emailMessage) {
+    userMapper.insertEmailNotification(emailMessage);
   }
 }

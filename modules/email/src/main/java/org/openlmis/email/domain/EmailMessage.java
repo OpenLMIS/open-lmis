@@ -10,12 +10,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmailMessage {
-
+public class EmailMessage{
+  private Long id;
   private String to;
   private String subject;
   private String text;
+
+  public EmailMessage(String to, String subject, String text){
+    this.to = to;
+    this.subject = subject;
+    this.text = text;
+  }
 }

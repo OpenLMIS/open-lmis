@@ -26,14 +26,11 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
   private UserService userService;
   private String baseUrl;
   public static final String RESET_PASSWORD_PATH = "public/pages/reset-password.html#/token/";
-  private List<User> users;
-
 
   @Autowired
   public UserPersistenceHandler(UserService userService, @Value("${mail.base.url}") String baseUrl) {
     this.userService = userService;
     this.baseUrl = baseUrl;
-    this.users = new ArrayList<>();
   }
 
   @Override
@@ -44,16 +41,7 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
   @Override
   protected void save(BaseModel record) {
     User user = (User) record;
-    userService.createUser(user);
-    users.add(User.getLWUser(user));
-  }
-
-  @Override
-  public void postProcess(){
-    for(User user : users) {
-      userService.sendUserCreationEmail(user, baseUrl + RESET_PASSWORD_PATH);
-    }
-    users = new ArrayList<>();
+    userService.createUser(user, baseUrl + RESET_PASSWORD_PATH);
   }
 
   @Override
