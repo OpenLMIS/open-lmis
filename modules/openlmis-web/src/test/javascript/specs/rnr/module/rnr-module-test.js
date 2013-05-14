@@ -4,18 +4,16 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-describe('RnrModuleTest', function () {
-
-    beforeEach(module('rnr'));
+require(['rnrModule'],function(){
+  describe('RnrModuleTest', function () {
 
     it('should validate  integer field', function () {
-        expect(rnrModule.positiveInteger(100)).toEqual(true);
-        expect(rnrModule.positiveInteger(0)).toEqual(true);
-        expect(rnrModule.positiveInteger(-1)).toEqual(false);
-        expect(rnrModule.positiveInteger('a')).toEqual(false);
-        expect(rnrModule.positiveInteger(5.5)).toEqual(false);
+      expect(rnrModule.positiveInteger(100)).toEqual(true);
+      expect(rnrModule.positiveInteger(0)).toEqual(true);
+      expect(rnrModule.positiveInteger(-1)).toEqual(false);
+      expect(rnrModule.positiveInteger('a')).toEqual(false);
+      expect(rnrModule.positiveInteger(5.5)).toEqual(false);
     });
-
-
+  });
 });
 

@@ -10,7 +10,6 @@ var loadFirst = ['jQuery', 'underscore', 'angular'];
 
 requirejs.config({
   baseUrl: '/public/js/shared',
-
   paths: {
     jQuery: '../../lib/jquery/jquery-1.8.2.min',
     jQueryUi: '../../lib/jquery/jquery-ui-1.9.2.custom.min',
@@ -36,9 +35,12 @@ requirejs.config({
     tabScroll: 'directives/tab-scroll',
     uiNav: 'directives/ui-nav',
     ngGrid: '../../lib/angular-ui/ng-grid/ng-grid-2.0.2.min',
-    jQueryForm: '../../lib/jquery/jquery.form'
+    jQueryForm: '../../lib/jquery/jquery.form' ,
+    select2: '../../lib/select2/select2',
+    select2Ext: 'select2-ext'
   },
   shim: {
+    'angular':{deps:['jQuery']},
     'messageService': {deps: loadNext},
     'authorizationService': {deps: loadNext},
     'loginController': {deps: loadNext},
@@ -63,12 +65,14 @@ requirejs.config({
     'placeholder': { deps: ['directives']},
     'tabScroll': {deps: ['directives']},
     'uiNav': {deps: ['directives']},
-    'jQueryForm': {deps: ['jQuery']}
+    'jQueryForm': {deps: ['jQuery']},
+    'select2': {deps: ['angularResource']},
+    'select2Ext': {deps: ['angularResource']}
   }
 });
 
 define(["messageService", "authorizationService", "loginController", "headerController", "navigationController", "localStorageKeys", "util", "open-lmis-dialog",
-  'commentBox', 'formToolbar', 'openlmisMessage', 'openlmisPagination', 'placeholder', 'tabScroll', 'uiNav', 'ngGrid', 'jQueryForm'], function () {
+  'commentBox', 'formToolbar', 'openlmisMessage', 'openlmisPagination', 'placeholder', 'tabScroll', 'uiNav', 'ngGrid', 'jQueryForm', 'select2', 'select2Ext'], function () {
 
   var loadApp = function () {
 
