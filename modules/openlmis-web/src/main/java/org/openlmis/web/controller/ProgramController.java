@@ -55,15 +55,11 @@ public class ProgramController extends BaseController {
   public List<Program> getProgramsForCreateOrAuthorizeRequisition(@RequestParam(value = "facilityId", required = false) Long facilityId,
                                                                   HttpServletRequest request) {
     Right[] rights = {CREATE_REQUISITION, AUTHORIZE_REQUISITION};
-    List<Program> programList;
     if (facilityId == null) {
-      programList = programService.getUserSupervisedActiveProgramsWithRights(loggedInUserId(request), rights);
+      return programService.getProgramForSupervisedFacilities(loggedInUserId(request), rights);
     } else {
-      programList = programService.getProgramsSupportedByFacilityForUserWithRights(facilityId, loggedInUserId(request), rights);
+      return programService.getProgramsSupportedByFacilityForUserWithRights(facilityId, loggedInUserId(request), rights);
     }
-
-    return programList;
-
   }
 
   @RequestMapping(value = "/programs", method = GET, headers = ACCEPT_JSON)

@@ -73,11 +73,11 @@ public class ProgramControllerTest {
 
     List<Program> expectedPrograms = new ArrayList<>();
 
-    when(programService.getUserSupervisedActiveProgramsWithRights(USER_ID, CREATE_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(expectedPrograms);
+    when(programService.getProgramForSupervisedFacilities(USER_ID, CREATE_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(expectedPrograms);
 
     List<Program> result = controller.getProgramsForCreateOrAuthorizeRequisition(null, httpServletRequest);
 
-    verify(programService).getUserSupervisedActiveProgramsWithRights(USER_ID, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
+    verify(programService).getProgramForSupervisedFacilities(USER_ID, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
     assertThat(result, is(equalTo(expectedPrograms)));
   }
 

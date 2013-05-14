@@ -41,7 +41,7 @@ public class ProgramService {
     return programRepository.getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, rights);
   }
 
-  public List<Program> getUserSupervisedActiveProgramsWithRights(Long userId, Right... rights) {
+  public List<Program> getProgramForSupervisedFacilities(Long userId, Right... rights) {
     return programRepository.getUserSupervisedActiveProgramsWithRights(userId, rights);
   }
 

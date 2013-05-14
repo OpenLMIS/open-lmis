@@ -60,7 +60,9 @@ public interface ProgramMapper {
   List<Program> getUserSupervisedActivePrograms(@Param(value = "userId") Long userId,
                                                 @Param(value = "commaSeparatedRights") String commaSeparatedRights);
 
-  @Select({"SELECT DISTINCT p.* FROM programs p INNER JOIN programs_supported ps ON p.id = ps.programId",
+  @Select({"SELECT DISTINCT p.* ",
+      "FROM programs p",
+      "INNER JOIN programs_supported ps ON p.id = ps.programId",
       "INNER JOIN role_assignments ra ON ra.programId = p.id",
       "INNER JOIN role_rights rr ON rr.roleId = ra.roleId",
       "WHERE ra.supervisoryNodeId IS NULL",
