@@ -161,6 +161,9 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
              facility : $scope.facilityId,
              facilityType : "",
              rgroup : "",
+             pdformat : 0,
+             adjustmentTypeId : $scope.adjustmentType,
+             adjustmentType : "",
              pdformat : 0
         };
 
@@ -349,12 +352,26 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             }
         });
 
+    $scope.$watch('adjustmentType', function(selection){
+        if(selection != undefined || selection == ""){
+            $scope.filterObject.adjustmentTypeId =  selection;
+            $.each( $scope.adjustmentTypes,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.adjustmentType = idx.name;
+                }
+            });
+        }else{
+            $scope.filterObject.adjustmentTypeId =  0;
+            $scope.filterObject.adjustmentType = "";
+        }
+    });
+
 
         $scope.export   = function (type){
 
             $scope.filterObject.pdformat =1;
             var params = jQuery.param($scope.filterObject);
-            var url = '/reports/download/adjustment_summary/' + type +'?' + params;//type +'?zone=' + $scope.zoneId + '&facilityType=' + $scope.facilityTypeId;
+            var url = '/reports/download/adjustment_summary/' + type +'?' + params;
             window.location.href = url;
         }
 
@@ -446,8 +463,8 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 
                 { field: 'facilityType', displayName: 'Facility Type', width : "*"},
                 { field: 'facilityName', displayName: 'Facility', width : "*"},
-                { field: 'category', displayName: 'Product', width: "*" },
-                { field: 'product', displayName: 'Product Description', width: "**" },
+                { field: 'supplyingFacility', displayName: 'Supplying Facility', width: "*" },
+                { field: 'productDescription', displayName: 'Product Description', width: "**" },
                 { field: 'adjustmentType', displayName: 'Adjustment Type', width : "*"},
                 { field: 'adjustment', displayName: 'Adjustment', width : "*"}
 

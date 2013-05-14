@@ -133,6 +133,15 @@
                                     </div>
                                 </div>
 
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Adjustment Types</label>
+
+                                    <div class="form-field">
+                                        <select name="adjustmentType0" ng-change="filterGrid()" ng-model="adjustmentType" ng-options="option.id as option.name for option in adjustmentTypes">
+
+                                        </select>
+                                    </div>
+                                </div>
 
 
                                 <div class="form-cell button-row horizontalFilter">

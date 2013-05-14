@@ -85,6 +85,15 @@
                     <property name="title" value="Consumption Averages By Product"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="adjustment_summary"/>
+                    <property name="template" value="average-consumption.jasper"/>
+                    <property name="reportDataProvider" ref="adjustmentSummaryReportDataProvider"/>
+                    <property name="id" value="RP-Adjustment-Summary-Reporting"/>
+                    <property name="name" value="Adjustment Summary Reporting"/>
+                    <property name="title" value="Adjustment Summary By Product"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>
