@@ -28,8 +28,9 @@ function CreateFullSupplyController($scope) {
     $scope.lossesAndAdjustmentsModal = false;
   };
 
-  $scope.resetModalError = function () {
+  $scope.resetModalErrorAndSetFormDirty = function () {
     $scope.modalError = '';
+    $scope.saveRnrForm.$dirty = true;
   };
 
   $scope.showLossesAndAdjustments = function (lineItem) {
@@ -41,8 +42,7 @@ function CreateFullSupplyController($scope) {
   $scope.removeLossAndAdjustment = function (lossAndAdjustmentToDelete) {
     $scope.currentRnrLineItem.removeLossAndAdjustment(lossAndAdjustmentToDelete);
     updateLossesAndAdjustmentTypesToDisplayForLineItem($scope.currentRnrLineItem);
-    $scope.resetModalError();
-    $scope.saveRnrForm.$dirty = true;
+    $scope.resetModalErrorAndSetFormDirty();
   };
 
   $scope.addLossAndAdjustment = function (newLossAndAdjustment) {

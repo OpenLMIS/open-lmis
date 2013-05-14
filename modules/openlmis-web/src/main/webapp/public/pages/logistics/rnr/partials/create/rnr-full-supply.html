@@ -274,7 +274,7 @@
                      name = "{{adjustment.type.displayOrder}}"
                      type = "text"
                      ng-model = "adjustment.quantity"
-                     ng-change = "currentRnrLineItem.reEvaluateTotalLossesAndAdjustments(rnr, programRnrColumnList); resetModalError()"
+                     ng-change = "currentRnrLineItem.reEvaluateTotalLossesAndAdjustments(rnr, programRnrColumnList); resetModalErrorAndSetFormDirty()"
                      rnr-validator = "positiveInteger"
                      maxlength = "8"
                      ng-class = "highlightRequiredFieldInModal(adjustment.quantity)"
