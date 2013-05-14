@@ -1,0 +1,82 @@
+    <div class="row-fluid sortable ui-sortable">
+            <div class="box span12">
+                    <div class="box-header">
+                        <h2><i class="icon-edit"></i><span class="break"></span>Stocked Out Products Report</h2>
+                        <div class="box-icon">
+                            <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                            <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
+                            <a id="pdf-button" href="#" ng-click="export('PDF')" class='btn-small btn-info'>PDF</a>
+                            <a id="xls-button" href="#" ng-click="export('xls')" class='btn-small btn-info'>Excel</a>
+                        </div>
+                    </div>
+
+            <div class="box-content"  ng-show="show(1)">
+                <div class="app-form" style="padding: 5px;">
+                        <form ng-submit="filterGrid()"  name="filterForm" novalidate>
+                            <div class="clearfix ">
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Program</label>
+
+                                    <div class="form-fields">
+                                        <select class="large-input" name="program" ng-change="ChangeSchedule()" ng-model="program" ng-options="option.id as option.name for option in programs">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Schedule</label>
+
+                                    <div class="form-fields">
+                                        <select class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="schedule" ng-options="option.id as option.name for option in schedules">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters">
+                                    <label class="labels">Period</label>
+
+                                    <div class="form-field">
+                                        <select class="input-large" ng-required="true" ng-change="filterGrid()" name="period" ng-model="period" ng-options="option.id as option.name for option in periods">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Reporting Groups</label>
+
+                                    <div class="form-fields">
+                                        <select class="extra-large-input" name="requisitionGroup" ng-change="filterGrid()" ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Facility Type</label>
+
+                                    <div class="form-field">
+                                        <select name="facilityTypeElement" ng-change="filterGrid()" ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters pull-right">
+                                     <span ng-repeat="summary in summaries">
+                                         <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
+                                     </span>
+
+                                </div>
+                            </div>
+                         </form>
+                </div>
+            </div>
+
+          <div class="gridStyleReport" ng-grid="gridOptions"></div>
+   </div>
+  </div>
+
