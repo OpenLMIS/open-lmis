@@ -87,7 +87,7 @@
                 </bean>
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="adjustment_summary"/>
-                    <property name="template" value="average-consumption.jasper"/>
+                    <property name="template" value="adjustment-summary.jasper"/>
                     <property name="reportDataProvider" ref="adjustmentSummaryReportDataProvider"/>
                     <property name="id" value="RP-Adjustment-Summary-Reporting"/>
                     <property name="name" value="Adjustment Summary Reporting"/>
