@@ -7,12 +7,17 @@
 package org.openlmis.core.service;
 
 
+import org.ict4h.atomfeed.server.service.Event;
+import org.ict4h.atomfeed.server.service.EventService;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.FacilityFeedDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
@@ -26,6 +31,8 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -33,6 +40,7 @@ import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.openlmis.core.service.FacilityService.SUPPORTED_PROGRAMS_INVALID;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 public class FacilityServiceTest {
   @Rule
@@ -54,11 +62,14 @@ public class FacilityServiceTest {
 
   private FacilityService facilityService;
 
+  @Mock
+  private EventService eventService;
+
   @Before
   public void setUp() throws Exception {
     initMocks(this);
     facilityService = new FacilityService(facilityRepository, programSupportedRepository, programRepository, supervisoryNodeService,
-      requisitionGroupService, geographicZoneRepository);
+      requisitionGroupService, geographicZoneRepository, eventService);
   }
 
   @Test
@@ -181,12 +192,15 @@ public class FacilityServiceTest {
 
   @Test
   public void shouldInsertFacility() throws Exception {
-    Facility facility = new Facility();
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+
+    whenNew(FacilityFeedDTO.class).withArguments(facility).thenReturn(new FacilityFeedDTO(facility));
 
     facilityService.insert(facility);
 
     verify(facilityRepository).save(facility);
     verify(programSupportedRepository).addSupportedProgramsFor(facility);
+    verify(eventService).notify(any(Event.class));
   }
 
   @Test
@@ -225,17 +239,19 @@ public class FacilityServiceTest {
 
   @Test
   public void shouldUpdateFacility() throws Exception {
-    Facility facility = new Facility();
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
     List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported)));
       add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L, "ARV")))));
     }};
     when(programSupportedRepository.getAllByFacilityId(facility.getId())).thenReturn(programsForFacility);
+    whenNew(FacilityFeedDTO.class).withArguments(facility).thenReturn(new FacilityFeedDTO(facility));
 
     facilityService.update(facility);
 
     verify(facilityRepository).save(facility);
     verify(programSupportedRepository).updateSupportedPrograms(facility, programsForFacility);
+    verify(eventService).notify(any(Event.class));
   }
 
   @Test

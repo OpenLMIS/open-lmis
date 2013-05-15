@@ -19,6 +19,7 @@ dependencies {
             'org.codehaus.jackson:jackson-mapper-asl:1.9.11',
             'joda-time:joda-time:2.1',
             'commons-codec:commons-codec:1.7',
+            'org.ict4h:atomfeed-spring-server:0.9.1',
             project(':modules:db'),
             project(':modules:email'),
             project(':modules:upload')

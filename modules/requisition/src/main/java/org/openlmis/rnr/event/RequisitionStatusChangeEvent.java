@@ -20,7 +20,7 @@ import java.util.UUID;
 public class RequisitionStatusChangeEvent extends Event {
 
   public RequisitionStatusChangeEvent(Rnr requisition, Vendor vendor) throws URISyntaxException {
-    this(UUID.randomUUID().toString(), "Requisition", DateTime.now(), "", RnrFeedDTO.populate(requisition, vendor).getSerializedContents(), null);
+    this(UUID.randomUUID().toString(), "Requisition", DateTime.now(), "", RnrFeedDTO.populate(requisition, vendor).getSerializedContents(), "requisition");
   }
 
   public RequisitionStatusChangeEvent(String uuid, String title, DateTime timeStamp, URI uri, String serializedContents, String category) {

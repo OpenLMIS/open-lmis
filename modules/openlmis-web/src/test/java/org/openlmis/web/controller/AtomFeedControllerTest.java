@@ -25,13 +25,13 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(EventFeedServiceHelper.class)
-public class RequisitionFeedControllerTest {
+public class AtomFeedControllerTest {
 
   @Mock
   EventFeedService eventFeedService;
 
   @InjectMocks
-  RequisitionFeedController controller;
+  AtomFeedController controller;
 
   MockHttpServletRequest request;
 

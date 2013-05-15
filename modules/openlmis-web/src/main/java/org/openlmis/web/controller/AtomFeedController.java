@@ -6,6 +6,7 @@
 
 package org.openlmis.web.controller;
 
+import com.sun.syndication.feed.atom.Feed;
 import org.apache.log4j.Logger;
 import org.ict4h.atomfeed.server.service.EventFeedService;
 import org.ict4h.atomfeed.server.service.helper.EventFeedServiceHelper;
@@ -17,18 +18,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 
 @Controller
-public class RequisitionFeedController extends BaseController {
+public class AtomFeedController extends BaseController {
 
-  private Logger logger = Logger.getLogger(RequisitionFeedController.class);
+  private Logger logger = Logger.getLogger(AtomFeedController.class);
 
   @Autowired
   EventFeedService eventFeedService;
 
   @RequestMapping(method = RequestMethod.GET, value = "/feeds/recent", produces = "application/atom+xml")
   @ResponseBody
-  public String getRecentFeeds(HttpServletRequest request) {
+  public String getRecentFeeds(HttpServletRequest request, Principal principal) {
     return EventFeedServiceHelper.getRecentFeed(eventFeedService, request.getRequestURL().toString(), logger);
   }
 

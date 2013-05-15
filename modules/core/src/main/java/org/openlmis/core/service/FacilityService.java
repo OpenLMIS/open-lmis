@@ -8,21 +8,21 @@ package org.openlmis.core.service;
 
 
 import lombok.NoArgsConstructor;
+import org.ict4h.atomfeed.server.service.Event;
+import org.ict4h.atomfeed.server.service.EventService;
+import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.exception.DataException;
+import org.openlmis.core.dto.FacilityFeedDTO;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
-import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.net.URISyntaxException;
+import java.util.*;
 
 @Service
 @NoArgsConstructor
@@ -36,18 +36,22 @@ public class FacilityService {
   private GeographicZoneRepository geographicZoneRepository;
   private SupervisoryNodeService supervisoryNodeService;
 
+  private EventService eventService;
+
   public static final String SUPPORTED_PROGRAMS_INVALID = "supported.programs.invalid";
 
   @Autowired
   public FacilityService(FacilityRepository facilityRepository, ProgramSupportedRepository programSupportedRepository,
                          ProgramRepository programRepository, SupervisoryNodeService supervisoryNodeService,
-                         RequisitionGroupService requisitionGroupService, GeographicZoneRepository geographicZoneRepository) {
+                         RequisitionGroupService requisitionGroupService, GeographicZoneRepository geographicZoneRepository,
+                         EventService eventService) {
     this.facilityRepository = facilityRepository;
     this.programSupportedRepository = programSupportedRepository;
     this.programRepository = programRepository;
     this.supervisoryNodeService = supervisoryNodeService;
     this.requisitionGroupService = requisitionGroupService;
     this.geographicZoneRepository = geographicZoneRepository;
+    this.eventService = eventService;
   }
 
   @Transactional
@@ -123,6 +127,17 @@ public class FacilityService {
       programSupported.isValid();
     }
     facilityRepository.save(facility);
+
+    notifyFacilityFeed(facility);
+  }
+
+  private void notifyFacilityFeed(Facility facility) {
+    try{
+      FacilityFeedDTO facilityFeedDTO = new FacilityFeedDTO(facility);
+      eventService.notify(new Event(UUID.randomUUID().toString(), "Facility", DateTime.now(), "", facilityFeedDTO.getSerializedContents(), "facility"));
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
   }
 
   public List<Facility> getForUserAndRights(Long userId, Right... rights) {

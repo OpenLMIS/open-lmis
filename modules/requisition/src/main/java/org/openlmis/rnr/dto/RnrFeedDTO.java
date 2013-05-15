@@ -11,6 +11,7 @@ import lombok.Data;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openlmis.core.domain.Vendor;
+import org.openlmis.core.dto.BaseFeedDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
@@ -19,7 +20,7 @@ import java.io.IOException;
 
 @Data
 @AllArgsConstructor
-public class RnrFeedDTO {
+public class RnrFeedDTO extends BaseFeedDTO {
   private Long requisitionId;
   private Long facilityId;
   private Long programId;
@@ -31,15 +32,5 @@ public class RnrFeedDTO {
     return new RnrFeedDTO(rnr.getId(), rnr.getFacility().getId(), rnr.getProgram().getId(), rnr.getPeriod().getId(), rnr.getStatus(), vendor.getName());
   }
 
-  @JsonIgnore
-  public String getSerializedContents() {
-    ObjectMapper mapper = new ObjectMapper();
-    String feed;
-    try {
-      feed = mapper.writeValueAsString(this);
-    } catch (IOException e) {
-      throw new DataException("error.serialization");
-    }
-    return feed;
-  }
+
 }
