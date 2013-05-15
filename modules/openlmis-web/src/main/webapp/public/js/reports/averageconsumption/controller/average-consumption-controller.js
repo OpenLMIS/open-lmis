@@ -411,6 +411,8 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
 
                         AverageConsumptionReport.get(params, function(data) {
                             $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
+                            $scope.MinMos = data.pages.rows[0].minMOS;
+                            $scope.MaxMos=data.pages.rows[0].maxMOS;
                         });
 
         };
