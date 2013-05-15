@@ -30,7 +30,7 @@ public class AtomFeedController extends BaseController {
 
   @RequestMapping(method = RequestMethod.GET, value = "/feeds/recent", produces = "application/atom+xml")
   @ResponseBody
-  public String getRecentFeeds(HttpServletRequest request, Principal principal) {
+  public String getRecentFeeds(HttpServletRequest request) {
     return EventFeedServiceHelper.getRecentFeed(eventFeedService, request.getRequestURL().toString(), logger);
   }
 

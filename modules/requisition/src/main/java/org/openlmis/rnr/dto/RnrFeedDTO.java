@@ -8,6 +8,7 @@ package org.openlmis.rnr.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openlmis.core.domain.Vendor;
@@ -20,6 +21,7 @@ import java.io.IOException;
 
 @Data
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class RnrFeedDTO extends BaseFeedDTO {
   private Long requisitionId;
   private Long facilityId;
