@@ -15,6 +15,7 @@ import org.openlmis.report.model.ReportData;
 public class AdjustmentSummaryReport implements ReportData {
 
     private String productDescription;
+    private String category;
     private String facilityType;
     private String facilityName;
     private String supplyingFacility;
