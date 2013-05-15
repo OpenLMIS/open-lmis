@@ -103,9 +103,9 @@
     <div class="modal-body">
 
       <div class="row-fluid">
-        <div class="span6">
+        <div class="span7">
           <label for="nonFullSupplyProductsCategory" openlmis-message="rnr.label.category"></label>
-          <select ui-select2 class="span12 bottom-spacer" id="nonFullSupplyProductsCategory"
+          <select ui-select2 class="span11 bottom-spacer" id="nonFullSupplyProductsCategory"
                   ng-model="nonFullSupplyProductCategory" name="productName"
                   data-placeholder="-- Select category --"
                   ng-options="nonFullSupplyProductCategory.name for nonFullSupplyProductCategory in nonFullSupplyProductsCategories"
@@ -116,9 +116,9 @@
       </div>
 
       <div class="row-fluid">
-        <div class="span6">
+        <div class="span7">
           <label for="nonFullSupplyProductsCodeAndName" openlmis-message="rnr.label.product.code"></label>
-          <select ui-select2 class="span12 bottom-spacer" id="nonFullSupplyProductsCodeAndName"
+          <select ui-select2 class="span11 bottom-spacer" id="nonFullSupplyProductsCodeAndName"
                   ng-model="facilityApprovedProduct" name="productCode" data-placeholder="-- Select product --"
                   ng-options="facilityApprovedProduct.programProduct.product.code+' | '+facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay">
             <option></option>

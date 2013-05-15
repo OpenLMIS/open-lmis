@@ -101,7 +101,6 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights, $d
     }
   };
 
-
   $scope.showRoleTypeModal = function (selected) {
     window.selected = selected;
     var options = {

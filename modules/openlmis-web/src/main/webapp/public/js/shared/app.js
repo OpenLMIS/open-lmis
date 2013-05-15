@@ -31,6 +31,7 @@ requirejs.config({
     formToolbar: 'directives/form-toolbar',
     openlmisMessage: 'directives/openlmis-message',
     openlmisPagination: 'directives/openlmis-pagination',
+    modalEvents: 'directives/modal-events',
     placeholder: 'directives/placeholder',
     tabScroll: 'directives/tab-scroll',
     uiNav: 'directives/ui-nav',
@@ -62,6 +63,7 @@ requirejs.config({
     'formToolbar': {deps: ['directives']},
     'openlmisMessage': { deps: ['directives']},
     'openlmisPagination': { deps: ['directives']},
+    'modalEvents': { deps: ['directives']},
     'placeholder': { deps: ['directives']},
     'tabScroll': {deps: ['directives']},
     'uiNav': {deps: ['directives']},
@@ -72,7 +74,7 @@ requirejs.config({
 });
 
 define(["messageService", "authorizationService", "loginController", "headerController", "navigationController", "localStorageKeys", "util", "open-lmis-dialog",
-  'commentBox', 'formToolbar', 'openlmisMessage', 'openlmisPagination', 'placeholder', 'tabScroll', 'uiNav', 'ngGrid', 'jQueryForm', 'select2', 'select2Ext'], function () {
+  'commentBox', 'formToolbar', 'openlmisMessage', 'openlmisPagination', 'modalEvents', 'placeholder', 'tabScroll', 'uiNav', 'ngGrid', 'jQueryForm', 'select2', 'select2Ext'], function () {
 
   var loadApp = function () {
 
