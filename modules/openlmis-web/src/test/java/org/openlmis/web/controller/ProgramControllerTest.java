@@ -62,7 +62,7 @@ public class ProgramControllerTest {
 
     Long facilityId = 12345L;
 
-    when(programService.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, USER_ID, VIEW_REQUISITION)).thenReturn(programs);
+    when(programService.getProgramsForUserByFacilityAndRights(facilityId, USER_ID, VIEW_REQUISITION)).thenReturn(programs);
 
     assertEquals(programs, controller.getProgramsToViewRequisitions(facilityId, httpServletRequest));
 
