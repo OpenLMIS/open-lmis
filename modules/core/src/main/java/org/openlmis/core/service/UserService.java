@@ -92,11 +92,11 @@ public class UserService {
 
   private EmailMessage createEmailMessage(User user, String resetPasswordLink) {
     EmailMessage emailMessage = new EmailMessage();
-    emailMessage.setTo(user.getEmail());
+    emailMessage.setReceiver(user.getEmail());
     String passwordResetToken = generateUUID();
     String[] passwordResetLink = new String[]{resetPasswordLink + passwordResetToken};
     String mailBody = messageService.message("passwordreset.email.body", passwordResetLink);
-    emailMessage.setText(mailBody);
+    emailMessage.setContent(mailBody);
 
     userRepository.insertPasswordResetToken(user, passwordResetToken);
 

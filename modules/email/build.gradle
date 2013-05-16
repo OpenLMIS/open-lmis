@@ -10,7 +10,12 @@ dependencies {
 
     compile 'org.springframework:spring-aspects:3.1.1.RELEASE',
             'org.springframework:spring-webmvc:3.1.1.RELEASE',
-            'javax.mail:mail:1.4.5'
+            'javax.mail:mail:1.4.5',
+            'org.springframework.integration:spring-integration-core:2.2.3.RELEASE',
+            'org.springframework.integration:spring-integration-jdbc:2.2.3.RELEASE',
+            'commons-collections:commons-collections:20040616',
+            'commons-lang:commons-lang:2.6',
+            project(':modules:db')
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
             'org.springframework:spring-aspects:3.1.1.RELEASE',
