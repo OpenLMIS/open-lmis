@@ -19,7 +19,7 @@ public class AdjustmentSummaryQueryBuilder {
         AdjustmentSummaryReportFilter filter  = (AdjustmentSummaryReportFilter)params.get("filterCriteria");
         Map<String, String[]> sorter = ( Map<String, String[]>)params.get("SortCriteria");
         BEGIN();
-
+/*
         SELECT("product , MAX(productcategory) category, MAX(ft.name) facilityType, MAX(f.name) facilityName, at.name adjustmentType, MAX(li.totallossesandadjustments) adjustment, MAX(s.name) supplyingFacility");
         FROM("requisition_line_item_losses_adjustments la");
         JOIN("requisition_line_items li on li.id = la.requisitionlineitemid");
@@ -32,7 +32,18 @@ public class AdjustmentSummaryQueryBuilder {
         JOIN("product_categories prc on prc.id = pr.categoryid");
         JOIN("requisition_group_members rgm on rgm.facilityid = f.id");
         JOIN("supply_lines sl on sl.supervisorynodeid = r.supervisorynodeid and r.programid = sl.programid");
-        JOIN("facilities s on s.id = sl.supplyingfacilityid and f.id = s.id");
+        JOIN("facilities s on s.id = sl.supplyingfacilityid and f.id = s.id");*/
+
+
+        SELECT("product productDescription , productcategory category, ft.name facilityType, f.name facilityName, ft.name adjustmentType, li.totallossesandadjustments adjustment, f.name supplyingFacility");
+        FROM("requisition_line_items li");
+        JOIN("requisitions r on r.id = li.rnrid");
+        JOIN("facilities f on r.facilityid = f.id");
+        JOIN("facility_types ft on ft.id = f.typeid");
+        JOIN("processing_periods pp on pp.id = r.periodid");
+        JOIN("products pr on pr.code = li.productcode");
+        JOIN("product_categories prc on prc.id = pr.categoryid");
+        JOIN("requisition_group_members rgm on rgm.facilityid = f.id");
 
         if(filter != null){
             if (filter.getFacilityTypeId() != 0) {
@@ -60,7 +71,7 @@ public class AdjustmentSummaryQueryBuilder {
                 WHERE("r.programid = #{filterCriteria.programId}");
             }
         }
-        GROUP_BY("product , at.name, li.totallossesandadjustments");
+      //  GROUP_BY("product , at.name, li.totallossesandadjustments");
          return SQL();
     }
 
@@ -68,7 +79,7 @@ public class AdjustmentSummaryQueryBuilder {
 
         AdjustmentSummaryReportFilter filter  = (AdjustmentSummaryReportFilter)params.get("filterCriteria");
 
-        BEGIN();
+/*        BEGIN();
         SELECT("COUNT(*) perCounts");
         FROM("requisition_line_item_losses_adjustments la");
         JOIN("requisition_line_items li on li.id = la.requisitionlineitemid");
@@ -81,16 +92,28 @@ public class AdjustmentSummaryQueryBuilder {
         JOIN("product_categories prc on prc.id = pr.categoryid");
         JOIN("requisition_group_members rgm on rgm.facilityid = f.id");
         JOIN("supply_lines sl on sl.supervisorynodeid = r.supervisorynodeid and r.programid = sl.programid");
-        JOIN("facilities s on s.id = sl.supplyingfacilityid and f.id = s.id");
+        JOIN("facilities s on s.id = sl.supplyingfacilityid and f.id = s.id");*/
+
+
+        BEGIN();
+        SELECT("COUNT(*) perCounts");
+        FROM("requisition_line_items li");
+        JOIN("requisitions r on r.id = li.rnrid");
+        JOIN("facilities f on r.facilityid = f.id");
+        JOIN("facility_types ft on ft.id = f.typeid");
+        JOIN("processing_periods pp on pp.id = r.periodid");
+        JOIN("products pr on pr.code = li.productcode");
+        JOIN("product_categories prc on prc.id = pr.categoryid");
+        JOIN("requisition_group_members rgm on rgm.facilityid = f.id");
 
 
         if(filter != null){
             if (filter.getFacilityTypeId() != 0) {
                 WHERE("ft.id = #{filterCriteria.facilityTypeId}");
             }
-            if (filter.getZoneId() != 0) {
-                WHERE("f.geographiczoneid = #{filterCriteria.zoneId}");
-            }
+//            if (filter.getZoneId() != 0) {
+//                WHERE("f.geographiczoneid = #{filterCriteria.zoneId}");
+//            }
             if (filter.getStartDate() != null) {
                 WHERE("pp.startDate >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
             }
@@ -103,12 +126,15 @@ public class AdjustmentSummaryQueryBuilder {
             if(filter.getRgroupId() != 0){
                 WHERE("rgm.id = #{filterCriteria.rgroupId}");
             }
+            if(filter.getProductId() != 0){
+                WHERE("pr.id = #{filterCriteria.productId}");
+            }
             if(filter.getProgramId() != 0){
                 WHERE("r.programid = #{filterCriteria.programId}");
             }
 
         }
-        GROUP_BY("product , at.name, li.totallossesandadjustments");
+       // GROUP_BY("product , at.name, li.totallossesandadjustments");
         String subQuery = SQL().toString();
 
         BEGIN();

@@ -1,6 +1,7 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.report.mapper.AdjustmentTypeReportMapper;
 import org.openlmis.report.mapper.ProductCategoryReportMapper;
 import org.openlmis.report.mapper.ProductReportMapper;
 import org.openlmis.report.mapper.RequisitionGroupReportMapper;
@@ -25,12 +26,14 @@ public class ReportLookupService {
     private ProductReportMapper productMapper;
     private RequisitionGroupReportMapper rgMapper;
     private ProductCategoryReportMapper productCategoryMapper;
+    private AdjustmentTypeReportMapper adjustmentTypeReportMapper;
 
     @Autowired
-    public ReportLookupService(ProductReportMapper productMapper, RequisitionGroupReportMapper rgMapper, ProductCategoryReportMapper productCategoryMapper){
+    public ReportLookupService(ProductReportMapper productMapper, RequisitionGroupReportMapper rgMapper, ProductCategoryReportMapper productCategoryMapper,  AdjustmentTypeReportMapper adjustmentTypeReportMapper){
         this.productMapper = productMapper;
         this.rgMapper = rgMapper;
         this.productCategoryMapper = productCategoryMapper;
+        this.adjustmentTypeReportMapper = adjustmentTypeReportMapper;
     }
 
     public List<Product> getAllProducts(){
@@ -48,6 +51,11 @@ public class ReportLookupService {
 
     public List<ProductCategory> getAllProductCategories(){
         return this.productCategoryMapper.getAll();
+    }
+
+
+    public List<AdjustmentType> getAllAdjustmentTypes(){
+        return adjustmentTypeReportMapper.getAll();
     }
 
 

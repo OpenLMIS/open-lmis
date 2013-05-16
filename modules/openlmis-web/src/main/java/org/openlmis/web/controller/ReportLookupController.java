@@ -1,6 +1,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.report.model.dto.AdjustmentType;
 import org.openlmis.report.model.dto.Product;
 import org.openlmis.report.model.dto.ProductCategory;
 import org.openlmis.report.model.dto.RequisitionGroup;
@@ -54,6 +55,11 @@ public class ReportLookupController extends BaseController {
     @RequestMapping(value="/productCategories", method = GET, headers = ACCEPT_JSON)
     public List<ProductCategory> getProductCategories(){
         return this.reportLookupService.getAllProductCategories();
+    }
+
+    @RequestMapping(value="/adjustmentTypes", method = GET, headers = ACCEPT_JSON)
+    public List<AdjustmentType> getAdjustmentTypes(){
+        return this.reportLookupService.getAllAdjustmentTypes();
     }
 
 

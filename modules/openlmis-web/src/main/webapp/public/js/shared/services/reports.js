@@ -45,3 +45,7 @@ services.factory('RequisitionGroupsByProgramSchedule', function($resource){
 services.factory('AdjustmentSummaryReport', function ($resource) {
     return $resource('/reports/reportdata/adjustmentSummary.json', {}, {});
 });
+
+services.factory('AdjustmentTypes', function($resource){
+    return $resource('/reports/adjustmentTypes.json', {}, {});
+}) ;

@@ -1,4 +1,4 @@
-function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Products , Programs, ProductCategories, RequisitionGroups , FacilityTypes, GeographicZones, LossesAndAdjustmentsReferenceData, $http, $routeParams,$location) {
+function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Products , Programs, ProductCategories, RequisitionGroups , FacilityTypes, GeographicZones, AdjustmentTypes, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -173,10 +173,15 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
         });
 
 
-       LossesAndAdjustmentsReferenceData.get(function(data) {
+       /*LossesAndAdjustmentsReferenceData.get(function(data) {
             $scope.adjustmentTypes = data.lossAdjustmentTypes;
             $scope.adjustmentTypes.push({'name': 'All Adjustment Types'});
         });
+*/
+        AdjustmentTypes.get(function(data){
+        $scope.adjustmentTypes = data.adjustmentTypeList;
+        $scope.adjustmentTypes.push({'name': 'All Adjustment Types'});
+         });
 
         Products.get(function(data){
             $scope.products = data.productList;
@@ -352,12 +357,20 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             }
         });
 
-    $scope.$watch('adjustmentType', function(selection){
+    $scope.$watch('program.value', function(selection){
+        if(selection != undefined || selection == ""){
+            $scope.filterObject.programId =  selection;
+        }else{
+            $scope.filterObject.programId =  0;
+        }
+    });
+
+    $scope.$watch('adjustmentType.value', function(selection){
         if(selection != undefined || selection == ""){
             $scope.filterObject.adjustmentTypeId =  selection;
             $.each( $scope.adjustmentTypes,function( item,idx){
-                if(idx.id == selection){
-                    $scope.filterObject.adjustmentType = idx.name;
+                if(idx.name == selection){
+                    $scope.filterObject.adjustmentType = idx.description;
                 }
             });
         }else{

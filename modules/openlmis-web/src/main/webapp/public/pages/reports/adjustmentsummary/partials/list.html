@@ -137,15 +137,10 @@
                                     <label class="labels">Adjustment Types</label>
 
                                     <div class="form-field">
-                                        <select name="adjustmentType0" ng-change="filterGrid()" ng-model="adjustmentType" ng-options="option.id as option.name for option in adjustmentTypes">
+                                        <select name="adjustmentType" ng-change="filterGrid()" ng-model="adjustmentType.value" ng-options="option.name as option.description for option in adjustmentTypes">
 
                                         </select>
                                     </div>
-                                </div>
-
-
-                                <div class="form-cell button-row horizontalFilter">
-                                    <input type="submit" class="btn btn-primary save-button pull-right" value="Filter"/>
                                 </div>
 
                             </div>
