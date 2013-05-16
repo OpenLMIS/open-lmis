@@ -6,7 +6,9 @@
 package org.openlmis.shipment.file.csv.handler;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CsvBeanReader;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -21,7 +23,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
-
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ShipmentFileReader.class)
 public class ShipmentFileReaderTest {

@@ -1,6 +1,7 @@
 package org.openlmis.rnr.repository.mapper;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
@@ -10,6 +11,7 @@ import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
+import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.RequisitionStatusChange;
 import org.openlmis.rnr.domain.Rnr;
@@ -27,6 +29,7 @@ import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-requisition.xml")
 @TransactionConfiguration(defaultRollback = true)

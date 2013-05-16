@@ -9,11 +9,13 @@ package org.openlmis.core.upload;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.UserService;
+import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -23,7 +25,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.core.upload.UserPersistenceHandler.RESET_PASSWORD_PATH;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
-
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UserPersistenceHandler.class)
 public class UserPersistenceHandlerTest {

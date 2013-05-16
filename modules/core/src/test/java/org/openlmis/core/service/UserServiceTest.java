@@ -10,6 +10,7 @@ import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
@@ -21,6 +22,7 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.repository.UserRepository;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
@@ -40,7 +42,7 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.core.service.UserService.PASSWORD_RESET_TOKEN_INVALID;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
-
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Encoder.class)
 public class UserServiceTest {

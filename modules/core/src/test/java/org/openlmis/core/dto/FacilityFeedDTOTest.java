@@ -1,14 +1,17 @@
 package org.openlmis.core.dto;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.db.categories.UnitTests;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+@Category(UnitTests.class)
 public class FacilityFeedDTOTest {
 
   @Test

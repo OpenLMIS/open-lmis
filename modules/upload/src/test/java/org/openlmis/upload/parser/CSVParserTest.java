@@ -10,7 +10,9 @@ package org.openlmis.upload.parser;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.AuditFields;
@@ -30,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-
+@Category(UnitTests.class)
 public class CSVParserTest {
 
   public static final Long MODIFIED_BY = 1L;

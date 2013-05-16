@@ -8,9 +8,11 @@ package org.openlmis.core.upload;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.Mock;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.service.RequisitionGroupProgramScheduleService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.upload.model.Field;
 import org.openlmis.upload.model.ModelClass;
 
@@ -19,7 +21,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
-
+@Category(UnitTests.class)
 public class RequisitionGroupProgramScheduleHandlerTest {
 
   public static final Integer USER = 1;

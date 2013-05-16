@@ -9,6 +9,7 @@ package org.openlmis.core.service;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -20,6 +21,7 @@ import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.*;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,7 @@ import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 
 @RunWith(MockitoJUnitRunner.class)
+@Category(UnitTests.class)
 public class RequisitionGroupMemberServiceTest {
 
   RequisitionGroupMemberService service;

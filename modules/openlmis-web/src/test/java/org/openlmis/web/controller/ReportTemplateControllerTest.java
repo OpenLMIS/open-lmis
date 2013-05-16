@@ -8,10 +8,12 @@ package org.openlmis.web.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.reporting.model.ReportTemplate;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.reporting.service.ReportTemplateService;
@@ -33,7 +35,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ReportTemplateController.class)
 public class ReportTemplateControllerTest {

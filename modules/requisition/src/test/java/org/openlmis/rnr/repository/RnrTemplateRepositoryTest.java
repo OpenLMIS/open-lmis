@@ -8,11 +8,13 @@ package org.openlmis.rnr.repository;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Program;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.repository.mapper.RnrColumnMapper;
@@ -23,7 +25,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RnrTemplateRepositoryTest {
 

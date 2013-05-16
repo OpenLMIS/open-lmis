@@ -7,8 +7,10 @@
 package org.openlmis.rnr.repository.mapper;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.Program;
+import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.domain.RnRColumnSource;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import static org.junit.Assert.assertThat;
 import static org.openlmis.rnr.domain.RnRColumnSource.CALCULATED;
 import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-requisition.xml")
 @Transactional

@@ -9,6 +9,7 @@ package org.openlmis.core.repository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -21,6 +22,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductPriceMapper;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.Date;
 
@@ -39,6 +41,7 @@ import static org.openlmis.core.builder.ProgramProductBuilder.PROGRAM_CODE;
 import static org.openlmis.core.repository.ProgramProductRepository.PROGRAM_PRODUCT_INVALID;
 import static org.powermock.api.mockito.PowerMockito.when;
 
+@Category(UnitTests.class)
 @RunWith(org.mockito.runners.MockitoJUnitRunner.class)
 public class ProgramProductRepositoryTest {
   @Rule

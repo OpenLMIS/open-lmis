@@ -8,6 +8,7 @@ package org.openlmis.core.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -15,6 +16,7 @@ import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.repository.RoleAssignmentRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +30,8 @@ import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RoleAssignmentServiceTest {
+@Category(UnitTests.class)
+ public class RoleAssignmentServiceTest {
 
   RoleAssignmentService service;
 

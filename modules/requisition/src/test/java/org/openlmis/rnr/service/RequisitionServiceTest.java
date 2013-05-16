@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -22,6 +23,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.factory.RequisitionSearchStrategyFactory;
@@ -58,7 +60,7 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.*;
-
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(RequisitionService.class)
 public class RequisitionServiceTest {

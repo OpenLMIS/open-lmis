@@ -8,8 +8,10 @@ package org.openlmis.rnr.event;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.Vendor;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrFeedDTO;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -23,7 +25,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.powermock.api.mockito.PowerMockito.*;
-
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({DateTime.class, RnrFeedDTO.class})
 public class RequisitionStatusChangeEventTest {

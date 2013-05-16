@@ -7,6 +7,7 @@
 package org.openlmis.rnr.strategy;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -14,6 +15,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.service.ProcessingScheduleService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
@@ -26,7 +28,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class FacilityProgramDateRangeSearchTest {
 

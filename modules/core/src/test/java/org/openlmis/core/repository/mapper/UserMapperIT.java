@@ -8,11 +8,13 @@ package org.openlmis.core.repository.mapper;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.utils.mapper.TestVendorMapper;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -33,6 +35,7 @@ import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.UserBuilder.*;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional

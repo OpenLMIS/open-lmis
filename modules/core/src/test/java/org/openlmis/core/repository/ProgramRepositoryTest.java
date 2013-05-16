@@ -9,10 +9,12 @@ package org.openlmis.core.repository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProgramMapper;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.*;
 
+@Category(UnitTests.class)
 public class ProgramRepositoryTest {
 
   private ProgramMapper programMapper;

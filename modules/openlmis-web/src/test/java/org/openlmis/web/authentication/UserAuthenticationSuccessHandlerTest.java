@@ -8,8 +8,10 @@ package org.openlmis.web.authentication;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
+import org.openlmis.db.categories.UnitTests;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.TestingAuthenticationToken;
@@ -27,7 +29,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
-
+@Category(UnitTests.class)
 public class UserAuthenticationSuccessHandlerTest {
 
     public static final String CONTEXT_PATH = "contextPath";

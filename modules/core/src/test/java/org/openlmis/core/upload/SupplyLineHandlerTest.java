@@ -8,9 +8,11 @@ package org.openlmis.core.upload;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.openlmis.core.builder.SupplyLineBuilder;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.core.service.SupplyLineService;
+import org.openlmis.db.categories.UnitTests;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -19,7 +21,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-
+@Category(UnitTests.class)
 public class SupplyLineHandlerTest {
 
   SupplyLineService supplyLineService;

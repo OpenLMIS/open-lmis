@@ -7,11 +7,13 @@ package org.openlmis.reporting.repository;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.reporting.model.ReportTemplate;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.reporting.repository.mapper.ReportTemplateMapper;
@@ -22,6 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.openlmis.reporting.repository.ReportTemplateRepository.REPORT_WITH_SAME_NAME_ALREADY_EXISTS;
 
 @RunWith(MockitoJUnitRunner.class)
+@Category(UnitTests.class)
 public class ReportTemplateRepositoryTest {
   @Rule
   public ExpectedException expectedException = ExpectedException.none();

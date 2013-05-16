@@ -9,6 +9,7 @@ package org.openlmis.core.repository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -16,6 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductCategoryMapper;
+import org.openlmis.db.categories.UnitTests;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
@@ -24,6 +26,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.repository.ProductCategoryRepository.DUPLICATE_CATEGORY_NAME;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ProductCategoryRepositoryTest {
 

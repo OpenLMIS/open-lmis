@@ -12,6 +12,7 @@ import org.ict4h.atomfeed.server.service.EventService;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.mockito.Matchers;
 import org.mockito.Mock;
@@ -23,6 +24,7 @@ import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
+import org.openlmis.db.categories.UnitTests;
 import org.powermock.api.mockito.PowerMockito;
 
 import java.util.*;
@@ -42,6 +44,7 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.openlmis.core.service.FacilityService.SUPPORTED_PROGRAMS_INVALID;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
+@Category(UnitTests.class)
 public class FacilityServiceTest {
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();

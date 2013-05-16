@@ -8,12 +8,14 @@ package org.openlmis.rnr.repository.mapper;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.*;
+import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
@@ -39,6 +41,7 @@ import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.fullSupply;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
+@Category(IntegrationTests.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-requisition.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional

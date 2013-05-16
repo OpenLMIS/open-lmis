@@ -6,10 +6,12 @@
 package org.openlmis.shipment.file;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.db.service.DbService;
 import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.file.csv.handler.ShipmentFilePostProcessHandler;
@@ -31,7 +33,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.*;
-
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ShipmentFileProcessor.class)
 public class ShipmentFileProcessorTest {

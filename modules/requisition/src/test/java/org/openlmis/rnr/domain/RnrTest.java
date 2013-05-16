@@ -9,10 +9,12 @@ package org.openlmis.rnr.domain;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.builder.RnrColumnBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
@@ -31,7 +33,7 @@ import static org.openlmis.rnr.builder.RnrColumnBuilder.columnName;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.visible;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
-
+@Category(UnitTests.class)
 public class RnrTest {
   @Rule
   public ExpectedException exception = ExpectedException.none();

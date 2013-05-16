@@ -8,11 +8,13 @@ package org.openlmis.restapi.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestService;
@@ -26,7 +28,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.restapi.controller.RestController.RNR;
 import static org.openlmis.restapi.response.RestResponse.ERROR;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RestControllerTest {
 

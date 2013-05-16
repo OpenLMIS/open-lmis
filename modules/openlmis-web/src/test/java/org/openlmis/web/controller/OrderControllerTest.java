@@ -1,10 +1,12 @@
 package org.openlmis.web.controller;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.dto.OrderDTO;
 import org.openlmis.order.service.OrderService;
@@ -30,6 +32,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(OrderDTO.class)
+@Category(UnitTests.class)
 public class OrderControllerTest {
 
   private static final Long USER_ID = 1L;

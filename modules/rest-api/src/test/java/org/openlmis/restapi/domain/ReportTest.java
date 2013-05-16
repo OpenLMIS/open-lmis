@@ -2,8 +2,10 @@ package org.openlmis.restapi.domain;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.Vendor;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.builder.ReportBuilder;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
@@ -15,7 +17,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.restapi.builder.ReportBuilder.vendor;
 import static org.openlmis.restapi.domain.Report.ERROR_MANDATORY_FIELD_MISSING;
-
+@Category(UnitTests.class)
 public class ReportTest {
 
   @Rule

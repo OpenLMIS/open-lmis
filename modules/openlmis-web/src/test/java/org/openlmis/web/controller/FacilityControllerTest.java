@@ -8,10 +8,12 @@ package org.openlmis.web.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.model.FacilityReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.HttpStatus;
@@ -32,7 +34,7 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
-
+@Category(UnitTests.class)
 public class FacilityControllerTest {
 
   public static final Long userId = 1L;

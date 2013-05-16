@@ -7,6 +7,8 @@
 package org.openlmis.core.domain;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.List;
 
@@ -16,6 +18,7 @@ import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.domain.Right.*;
 
+@Category(UnitTests.class)
 public class RightTest {
 
   @Test

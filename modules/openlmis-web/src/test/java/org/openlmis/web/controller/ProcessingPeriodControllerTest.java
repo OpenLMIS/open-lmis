@@ -9,12 +9,14 @@ package org.openlmis.web.controller;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProcessingScheduleService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +32,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-
+@Category(UnitTests.class)
 public class ProcessingPeriodControllerTest {
 
   @Rule

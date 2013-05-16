@@ -7,6 +7,8 @@
 package org.openlmis.rnr.dto;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
 
 import java.util.Arrays;
@@ -17,7 +19,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
-
+@Category(UnitTests.class)
 public class RnrDTOTest {
   @Test
   public void shouldPrepareRequisitionsForApproval() throws Exception {

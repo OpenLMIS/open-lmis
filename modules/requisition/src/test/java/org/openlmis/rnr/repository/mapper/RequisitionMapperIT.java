@@ -9,11 +9,13 @@ package org.openlmis.rnr.repository.mapper;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
+import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
@@ -39,6 +41,7 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-requisition.xml")
 @TransactionConfiguration(defaultRollback = true)

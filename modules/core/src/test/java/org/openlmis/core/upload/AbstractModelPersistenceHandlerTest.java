@@ -9,9 +9,11 @@ package org.openlmis.core.upload;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
 
@@ -20,7 +22,7 @@ import java.util.Date;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-
+@Category(UnitTests.class)
 public class AbstractModelPersistenceHandlerTest {
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();

@@ -8,11 +8,13 @@ package org.openlmis.core.repository;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.repository.mapper.RoleAssignmentMapper;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,7 @@ import static org.mockito.Mockito.when;
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RoleAssignmentRepositoryTest {
   private RoleAssignmentRepository repository;

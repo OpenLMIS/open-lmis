@@ -6,12 +6,14 @@
 package org.openlmis.shipment.repository.mapper;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
+import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.order.repository.mapper.OrderMapper;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
@@ -37,6 +39,7 @@ import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 
+@Category(IntegrationTests.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-shipment.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional

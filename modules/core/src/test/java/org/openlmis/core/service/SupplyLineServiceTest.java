@@ -9,6 +9,7 @@ package org.openlmis.core.service;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -23,6 +24,7 @@ import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.SupplyLineRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -30,7 +32,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class SupplyLineServiceTest {
 

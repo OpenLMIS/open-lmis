@@ -11,9 +11,11 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -38,6 +40,7 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ReportTemplate.class, JasperCompileManager.class})
+@Category(UnitTests.class)
 public class ReportTemplateTest {
 
   @Rule

@@ -10,6 +10,7 @@ package org.openlmis.core.repository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -19,6 +20,7 @@ import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.UserMapper;
+import org.openlmis.db.categories.UnitTests;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ import static org.openlmis.core.builder.UserBuilder.email;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 import static org.openlmis.core.repository.UserRepository.*;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class UserRepositoryTest {
 

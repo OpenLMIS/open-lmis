@@ -29,6 +29,21 @@ dependencies {
 
     classpath 'postgresql:postgresql:9.1-901.jdbc4'
 
+    configurations {
+        testFixtures {
+            extendsFrom testRuntime
+        }
+    }
+
+    task testJar(type: Jar) {
+        from sourceSets.test.output
+        classifier = 'test'
+    }
+
+    artifacts {
+        testFixtures testJar
+    }
+
 }
 
 task setupDB(dependsOn: ["createDB", clean]) << {

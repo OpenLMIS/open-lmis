@@ -9,6 +9,7 @@ package org.openlmis.core.service;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -17,6 +18,7 @@ import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityApprovedProductRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -26,7 +28,7 @@ import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.*;
 
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class FacilityApprovedProductServiceTest {
 

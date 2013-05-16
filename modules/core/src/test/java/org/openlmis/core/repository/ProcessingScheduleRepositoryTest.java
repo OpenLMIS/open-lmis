@@ -9,12 +9,14 @@ package org.openlmis.core.repository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.domain.ProcessingSchedule;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
+import org.openlmis.db.categories.UnitTests;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+@Category(UnitTests.class)
 public class ProcessingScheduleRepositoryTest {
 
   @Rule

@@ -7,10 +7,12 @@
 package org.openlmis.order.repository;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.repository.mapper.OrderMapper;
 
@@ -23,7 +25,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class OrderRepositoryTest {
 

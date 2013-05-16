@@ -8,7 +8,9 @@ package org.openlmis.rnr.domain;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.Map;
 
@@ -18,7 +20,7 @@ import static org.junit.Assert.assertThat;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.RnRColumnSource.CALCULATED;
 import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
-
+@Category(UnitTests.class)
 public class ProgramRnrTemplateTest {
 
 

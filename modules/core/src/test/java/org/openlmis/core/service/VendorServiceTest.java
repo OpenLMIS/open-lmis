@@ -2,12 +2,14 @@ package org.openlmis.core.service;
 
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.repository.VendorRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -17,6 +19,7 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
+@Category(UnitTests.class)
 public class VendorServiceTest {
 
   @Mock

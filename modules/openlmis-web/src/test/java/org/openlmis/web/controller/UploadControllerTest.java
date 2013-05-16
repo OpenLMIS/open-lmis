@@ -9,6 +9,7 @@ package org.openlmis.web.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
@@ -18,6 +19,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.upload.ProductPersistenceHandler;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.db.service.DbService;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.model.AuditFields;
@@ -40,7 +42,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class UploadControllerTest {
 

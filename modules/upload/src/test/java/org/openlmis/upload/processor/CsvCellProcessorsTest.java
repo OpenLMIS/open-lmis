@@ -8,7 +8,9 @@ package org.openlmis.upload.processor;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.DummyImportable;
 import org.openlmis.upload.model.ModelClass;
@@ -28,7 +30,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
-
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({CsvCellProcessors.class})
 public class CsvCellProcessorsTest {

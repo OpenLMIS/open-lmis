@@ -9,6 +9,7 @@ package org.openlmis.rnr.repository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -21,6 +22,7 @@ import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.mapper.*;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -35,7 +37,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 @PrepareForTest(RequisitionStatusChange.class)
 public class RequisitionRepositoryTest {

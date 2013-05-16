@@ -8,11 +8,13 @@ package org.openlmis.shipment.service;
 
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
@@ -28,7 +30,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ShipmentServiceTest {
 

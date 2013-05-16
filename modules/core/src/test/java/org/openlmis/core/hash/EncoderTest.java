@@ -8,6 +8,8 @@ package org.openlmis.core.hash;
 
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.openlmis.db.categories.UnitTests;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -15,6 +17,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.openlmis.core.hash.Encoder.hash;
 
+@Category(UnitTests.class)
 public class EncoderTest {
 
   @Test

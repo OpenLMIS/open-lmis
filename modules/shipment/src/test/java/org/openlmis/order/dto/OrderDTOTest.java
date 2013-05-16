@@ -7,8 +7,10 @@
 package org.openlmis.order.dto;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.Program;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.dto.RnrDTO;
@@ -29,7 +31,7 @@ import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(RnrDTO.class)
 public class OrderDTOTest {

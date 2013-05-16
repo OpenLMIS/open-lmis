@@ -9,6 +9,7 @@ package org.openlmis.core.service;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -18,6 +19,7 @@ import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.GeographicZoneRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.Date;
 
@@ -26,6 +28,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class GeographicZoneServiceTest {
 

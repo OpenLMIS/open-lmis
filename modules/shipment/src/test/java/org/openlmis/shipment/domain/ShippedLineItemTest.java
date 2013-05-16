@@ -7,9 +7,12 @@ package org.openlmis.shipment.domain;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 
+@Category(UnitTests.class)
 public class ShippedLineItemTest {
 
   @Rule

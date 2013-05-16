@@ -9,6 +9,7 @@ package org.openlmis.core.service;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
@@ -20,6 +21,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.UserRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +38,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
-
+@Category(UnitTests.class)
 public class SupervisoryNodeServiceTest {
 
   @Mock

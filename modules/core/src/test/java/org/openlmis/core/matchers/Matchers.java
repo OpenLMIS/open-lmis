@@ -7,11 +7,14 @@
 package org.openlmis.core.matchers;
 
 import org.hamcrest.Matcher;
+import org.junit.experimental.categories.Category;
 import org.mockito.ArgumentMatcher;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
+import org.openlmis.db.categories.UnitTests;
 
+@Category(UnitTests.class)
 public class Matchers {
 
   public static Matcher<Program> programMatcher(final Long id) {

@@ -8,6 +8,7 @@ package org.openlmis.restapi.authentication;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.service.VendorService;
+import org.openlmis.db.categories.UnitTests;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,7 +26,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RestApiAuthenticationProviderTest {
 

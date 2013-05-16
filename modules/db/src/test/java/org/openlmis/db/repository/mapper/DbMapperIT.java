@@ -8,7 +8,9 @@ package org.openlmis.db.repository.mapper;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -18,7 +20,7 @@ import java.util.Date;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
-
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-db.xml")
 public class DbMapperIT {

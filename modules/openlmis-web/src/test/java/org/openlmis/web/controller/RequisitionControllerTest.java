@@ -10,6 +10,7 @@ import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
@@ -20,6 +21,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
@@ -53,7 +55,7 @@ import static org.mockito.Mockito.when;
 import static org.openlmis.web.controller.RequisitionController.*;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.*;
-
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({RnrDTO.class, RequisitionController.class})
 public class RequisitionControllerTest {

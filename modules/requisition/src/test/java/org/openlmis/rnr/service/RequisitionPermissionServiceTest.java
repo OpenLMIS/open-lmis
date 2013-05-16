@@ -8,6 +8,7 @@ package org.openlmis.rnr.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,6 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.service.RoleAssignmentService;
 import org.openlmis.core.service.RoleRightsService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 
@@ -34,7 +36,7 @@ import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.status;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.powermock.api.mockito.PowerMockito.when;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RequisitionPermissionServiceTest {
 

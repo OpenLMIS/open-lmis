@@ -8,10 +8,12 @@ package org.openlmis.web.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.service.ProgramService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -32,7 +34,7 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.web.controller.ProgramController.PROGRAM;
 import static org.openlmis.web.controller.ProgramController.PROGRAMS;
-
+@Category(UnitTests.class)
 public class ProgramControllerTest {
 
   public static final Long USER_ID = 1L;

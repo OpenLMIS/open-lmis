@@ -9,8 +9,10 @@ import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentMatcher;
+import org.openlmis.db.categories.UnitTests;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
@@ -19,7 +21,7 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-
+@Category(UnitTests.class)
 public class ParseIntegerFromDoubleTest {
 
   @Rule

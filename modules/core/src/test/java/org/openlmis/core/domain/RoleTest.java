@@ -9,8 +9,10 @@ package org.openlmis.core.domain;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.HashSet;
 
@@ -18,6 +20,7 @@ import static java.lang.Boolean.*;
 import static java.util.Arrays.asList;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
+@Category(UnitTests.class)
 public class RoleTest {
 
     Role role;

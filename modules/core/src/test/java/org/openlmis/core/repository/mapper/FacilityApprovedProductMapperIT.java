@@ -8,11 +8,13 @@ package org.openlmis.core.repository.mapper;
 
 import org.hamcrest.core.Is;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -36,6 +38,7 @@ import static org.openlmis.core.builder.ProgramBuilder.programCode;
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
+@Category(IntegrationTests.class)
 public class FacilityApprovedProductMapperIT {
 
   public static final Integer MAX_MONTHS_OF_STOCK = 3;

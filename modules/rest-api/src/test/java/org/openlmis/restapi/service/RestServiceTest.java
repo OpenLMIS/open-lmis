@@ -10,6 +10,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -18,6 +19,7 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.UserService;
 import org.openlmis.core.service.VendorService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
@@ -41,7 +43,7 @@ import static org.openlmis.restapi.builder.ReportBuilder.defaultReport;
 import static org.openlmis.restapi.service.RestService.USER_USERNAME_INCORRECT;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
-
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(RestService.class)
 public class RestServiceTest {

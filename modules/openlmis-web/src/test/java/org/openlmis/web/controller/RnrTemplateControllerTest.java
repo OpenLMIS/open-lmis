@@ -9,7 +9,9 @@ package org.openlmis.web.controller;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.ArgumentMatcher;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.web.form.RnrColumnList;
 import org.openlmis.web.form.RnrTemplateForm;
@@ -22,7 +24,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-
+@Category(UnitTests.class)
 public class RnrTemplateControllerTest {
 
     private RnrTemplateService rnrTemplateService;

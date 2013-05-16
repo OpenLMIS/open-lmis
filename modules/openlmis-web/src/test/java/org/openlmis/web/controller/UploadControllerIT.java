@@ -10,11 +10,13 @@ package org.openlmis.web.controller;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.db.service.DbService;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.model.AuditFields;
@@ -40,7 +42,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-
+@Category(UnitTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext.xml")
 public class UploadControllerIT {

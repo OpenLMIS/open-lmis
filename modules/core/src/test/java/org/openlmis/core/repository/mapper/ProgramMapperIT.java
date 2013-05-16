@@ -7,12 +7,14 @@
 package org.openlmis.core.repository.mapper;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.builder.ProgramSupportedBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.service.SpringIntegrationTest;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -32,6 +34,7 @@ import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
 
+@Category(IntegrationTests.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true)

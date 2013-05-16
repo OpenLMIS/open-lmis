@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -18,6 +19,7 @@ import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
+import org.openlmis.db.categories.UnitTests;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.*;
@@ -29,6 +31,7 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.startDate;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ProcessingPeriodRepositoryTest {
   @Rule

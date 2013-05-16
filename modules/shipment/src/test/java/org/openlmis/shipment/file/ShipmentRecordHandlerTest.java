@@ -7,12 +7,14 @@ package org.openlmis.shipment.file;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.service.ShipmentService;
 import org.openlmis.upload.model.AuditFields;
@@ -24,7 +26,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ShipmentRecordHandlerTest {
   @Mock

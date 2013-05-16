@@ -9,6 +9,7 @@ package org.openlmis.core.service;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -17,6 +18,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.RoleAssignmentRepository;
 import org.openlmis.core.repository.RoleRightsRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,6 +33,7 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RoleRightsServiceTest {
 

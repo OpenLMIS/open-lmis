@@ -8,12 +8,14 @@ package org.openlmis.authentication.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.openlmis.authentication.UserToken;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.service.UserService;
+import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -24,6 +26,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Encoder.class)
 public class UserAuthenticationServiceTest {

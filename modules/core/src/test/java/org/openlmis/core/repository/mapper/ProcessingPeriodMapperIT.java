@@ -10,11 +10,13 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProcessingSchedule;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ContextConfiguration;
@@ -36,6 +38,7 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.code;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
 
+@Category(IntegrationTests.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @TransactionConfiguration(defaultRollback = true)

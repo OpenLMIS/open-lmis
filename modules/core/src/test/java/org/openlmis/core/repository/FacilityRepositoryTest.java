@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -18,6 +19,7 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -35,6 +37,7 @@ import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({DateTime.class})
 public class FacilityRepositoryTest {

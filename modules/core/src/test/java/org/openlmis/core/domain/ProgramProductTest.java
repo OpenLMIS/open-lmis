@@ -8,14 +8,17 @@ package org.openlmis.core.domain;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.builder.ProgramProductBuilder;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.openlmis.core.domain.ProgramProduct.PROGRAM_PRODUCT_INVALID_CURRENT_PRICE;
 
+@Category(UnitTests.class)
 public class ProgramProductTest {
   @Rule
   public ExpectedException expectException = ExpectedException.none();

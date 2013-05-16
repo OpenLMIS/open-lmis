@@ -7,7 +7,10 @@
 package org.openlmis.rnr.domain;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.openlmis.db.categories.UnitTests;
 
+@Category(UnitTests.class)
 public class RnrColumnTest {
 
     @Test

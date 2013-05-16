@@ -8,6 +8,7 @@ package org.openlmis.web.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Right;
@@ -16,6 +17,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +37,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.web.controller.UserController.TOKEN_VALID;
-
+@Category(UnitTests.class)
 public class UserControllerTest {
 
   public static final Long userId = 1L;

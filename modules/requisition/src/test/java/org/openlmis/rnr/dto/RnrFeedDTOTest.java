@@ -8,7 +8,9 @@ package org.openlmis.rnr.dto;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.openlmis.core.domain.Vendor;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -16,7 +18,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
-
+@Category(UnitTests.class)
 public class RnrFeedDTOTest {
   @Test
   public void shouldPopulateFeedFromRequisition() throws Exception {

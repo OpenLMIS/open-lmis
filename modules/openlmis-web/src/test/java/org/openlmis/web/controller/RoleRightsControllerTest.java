@@ -9,6 +9,7 @@ package org.openlmis.web.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -18,6 +19,7 @@ import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.Role;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +43,7 @@ import static org.openlmis.core.matchers.Matchers.facilityMatcher;
 import static org.openlmis.core.matchers.Matchers.programMatcher;
 import static org.openlmis.web.controller.RoleRightsController.*;
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RoleRightsControllerTest {
 

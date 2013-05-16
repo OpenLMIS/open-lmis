@@ -8,10 +8,12 @@ package org.openlmis.core.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +28,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
 
+@Category(UnitTests.class)
 public class ProgramServiceTest {
   @Mock
   private ProgramSupportedRepository programSupportedRepository;

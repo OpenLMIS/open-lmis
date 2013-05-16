@@ -9,6 +9,7 @@ package org.openlmis.core.repository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.openlmis.core.builder.FacilityBuilder;
@@ -22,6 +23,7 @@ import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.RequisitionGroupMapper;
 import org.openlmis.core.repository.mapper.RequisitionGroupProgramScheduleMapper;
+import org.openlmis.db.categories.UnitTests;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.Arrays;
@@ -34,6 +36,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+@Category(UnitTests.class)
 public class RequisitionGroupProgramScheduleRepositoryTest {
 
   RequisitionGroupProgramScheduleRepository repository;

@@ -59,8 +59,32 @@ subprojects {
         jvmArgs '-XX:-UseSplitVerifier'
         System.properties.get('environmentName', 'local')
         systemProperties System.properties
+        useJUnit {
+            includeCategories 'org.openlmis.db.categories.UnitTests'
+        }
+        forkEvery = 30
+        maxParallelForks = Runtime.runtime.availableProcessors()
     }
 
+    test.doLast {
+        tasks.IntegrationTests.execute()
+    }
+
+    task IntegrationTests(type: Test) {
+        jvmArgs '-XX:-UseSplitVerifier'
+        System.properties.get('environmentName', 'local')
+        systemProperties System.properties
+        useJUnit {
+            includeCategories 'org.openlmis.db.categories.IntegrationTests'
+        }
+    }
+
+}
+
+configure(subprojects.findAll {it.name != 'db'}) {
+    dependencies {
+        testCompile project(path: ':modules:db', configuration: 'testFixtures')
+    }
 }
 
 

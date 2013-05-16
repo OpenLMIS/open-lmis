@@ -7,12 +7,14 @@ package org.openlmis.shipment.repository;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.repository.mapper.ShipmentMapper;
@@ -26,7 +28,7 @@ import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ShipmentRepositoryTest {
 

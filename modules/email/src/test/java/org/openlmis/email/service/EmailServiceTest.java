@@ -9,11 +9,13 @@ package org.openlmis.email.service;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.email.builder.EmailMessageBuilder;
 import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
@@ -31,7 +33,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
-
+@Category(UnitTests.class)
 public class EmailServiceTest {
 
   @Rule

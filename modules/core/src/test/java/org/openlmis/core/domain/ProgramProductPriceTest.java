@@ -8,14 +8,17 @@ package org.openlmis.core.domain;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.core.domain.ProgramProductPrice.PROGRAM_PRODUCT_PRICE_INVALID_PRICE_PER_DOSAGE;
 
+@Category(UnitTests.class)
 public class ProgramProductPriceTest {
 
   @Rule

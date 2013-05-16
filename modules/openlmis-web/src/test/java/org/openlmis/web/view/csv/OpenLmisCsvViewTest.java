@@ -1,8 +1,10 @@
 package org.openlmis.web.view.csv;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -23,7 +25,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
-
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(OpenLmisCsvView.class)
 public class OpenLmisCsvViewTest {

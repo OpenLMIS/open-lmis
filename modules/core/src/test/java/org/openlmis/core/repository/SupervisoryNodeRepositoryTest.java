@@ -9,6 +9,7 @@ package org.openlmis.core.repository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -19,6 +20,7 @@ import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,7 @@ import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisiti
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class SupervisoryNodeRepositoryTest {
   @Rule

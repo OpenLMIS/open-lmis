@@ -8,12 +8,14 @@ package org.openlmis.rnr.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.ProgramService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
@@ -22,7 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.mockito.Mockito.*;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RnrTemplateServiceTest {
 

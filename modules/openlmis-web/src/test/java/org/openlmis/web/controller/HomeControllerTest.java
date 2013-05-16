@@ -8,7 +8,9 @@ package org.openlmis.web.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.Mock;
+import org.openlmis.db.categories.UnitTests;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,7 +18,7 @@ import javax.servlet.http.HttpSession;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-
+@Category(UnitTests.class)
 public class HomeControllerTest {
 
     @Mock

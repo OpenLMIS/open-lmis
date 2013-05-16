@@ -7,10 +7,12 @@
 package org.openlmis.reporting.controller;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.reporting.model.ReportTemplate;
 import org.openlmis.reporting.repository.mapper.ReportTemplateMapper;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -24,6 +26,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
+@Category(UnitTests.class)
 public class ReportControllerTest {
 
 

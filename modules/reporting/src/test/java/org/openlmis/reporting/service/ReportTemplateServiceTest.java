@@ -7,15 +7,18 @@
 package org.openlmis.reporting.service;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.reporting.repository.ReportTemplateRepository;
 import org.openlmis.reporting.model.ReportTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
+@Category(UnitTests.class)
 public class ReportTemplateServiceTest {
 
   @Mock

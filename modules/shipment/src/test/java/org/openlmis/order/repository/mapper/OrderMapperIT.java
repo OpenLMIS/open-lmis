@@ -9,6 +9,7 @@ package org.openlmis.order.repository.mapper;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.domain.Facility;
@@ -19,6 +20,7 @@ import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
+import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
@@ -48,6 +50,7 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.order.domain.OrderStatus.PACKED;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-shipment.xml")
 @TransactionConfiguration(defaultRollback = true)

@@ -9,6 +9,7 @@ package org.openlmis.core.repository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -18,11 +19,13 @@ import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.db.categories.UnitTests;
 
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class FacilityApprovedProductRepositoryTest {
 

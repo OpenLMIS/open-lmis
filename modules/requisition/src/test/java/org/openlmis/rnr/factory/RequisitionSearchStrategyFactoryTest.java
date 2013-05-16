@@ -7,11 +7,13 @@
 package org.openlmis.rnr.factory;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.ProgramService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.strategy.FacilityDateRangeSearch;
@@ -24,7 +26,7 @@ import java.util.Date;
 
 import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.*;
-
+@Category(UnitTests.class)
 @PrepareForTest({RequisitionSearchStrategyFactory.class})
 @RunWith(PowerMockRunner.class)
 public class RequisitionSearchStrategyFactoryTest {

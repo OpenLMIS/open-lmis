@@ -7,10 +7,12 @@
 package org.openlmis.order.service;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
@@ -27,7 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class OrderServiceTest {
 

@@ -9,6 +9,7 @@ package org.openlmis.core.service;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -18,6 +19,7 @@ import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramProductRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.Date;
 
@@ -31,6 +33,7 @@ import static org.openlmis.core.repository.ProgramProductRepository.PROGRAM_PROD
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
+@Category(UnitTests.class)
 public class ProgramProductServiceTest {
   @Rule
   public ExpectedException expectException = ExpectedException.none();

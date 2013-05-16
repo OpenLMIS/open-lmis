@@ -8,11 +8,13 @@ package org.openlmis.core.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.repository.ProductCategoryRepository;
+import org.openlmis.db.categories.UnitTests;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -20,6 +22,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.isNotNull;
 import static org.mockito.Mockito.*;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ProductCategoryServiceTest {
 

@@ -9,7 +9,9 @@ package org.openlmis.reporting.repository.mapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.reporting.model.ReportTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -25,6 +27,7 @@ import java.util.List;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import static org.hamcrest.CoreMatchers.is;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-reporting.xml")
 @Transactional
