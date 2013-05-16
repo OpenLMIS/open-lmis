@@ -146,6 +146,20 @@ public class E2EViewReport extends TestCaseHelper {
         homePage.goBack();
     }
 
+    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifyAdjustmentSummaryReport(String[] credentials) throws Exception{
+
+        //setupRnRData(credentials);
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+        AdjustmentSummaryReportPage adjustmentSummaryReportPage = homePage.navigateViewAdjustmentSummaryReport();
+        adjustmentSummaryReportPage.enterFilterValues("Monthly", "2013","Jan","2013","May","Root","Antibiotics","Lvl3 Hospital","Requistion Group 2","TDF/FTC/EFV","HIV", "Damaged");
+        adjustmentSummaryReportPage.verifyHTMLReportOutput();
+        adjustmentSummaryReportPage.verifyPdfReportOutput();
+        testWebDriver.sleep(500);
+        homePage.goBack();
+    }
+
     private void setupRnRData(String[] credentials) throws IOException, SQLException {
         List<String> rightsList = new ArrayList<String>();
         rightsList.add("CREATE_REQUISITION");

@@ -161,6 +161,9 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
   private static WebElement errorMsg;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Product Reports')]")
+  private static WebElement ProductReportsMenuItem;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Reports')]")
   private static WebElement ReportsMenuItem;
 
@@ -178,6 +181,9 @@ public class HomePage extends Page {
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Average Consumption Report')]")
   private static WebElement AverageConsumptionReportMenu;
+
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Adjustment Summary')]")
+  private static WebElement AdjustmentSummaryReportMenu;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Facility List')]")
   private static WebElement facilityListingReportPageHeader;
@@ -433,6 +439,16 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(AverageConsumptionReportMenu);
     testWebDriver.keyPress(AverageConsumptionReportMenu);
     return new AverageConsumptionReportPage(testWebDriver);
+  }
+
+  public AdjustmentSummaryReportPage navigateViewAdjustmentSummaryReport() throws IOException{
+
+    SeleneseTestNgHelper.assertTrue(ProductReportsMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(ProductReportsMenuItem);
+    testWebDriver.keyPress(ProductReportsMenuItem);
+    testWebDriver.waitForElementToAppear(AdjustmentSummaryReportMenu);
+    testWebDriver.keyPress(AdjustmentSummaryReportMenu);
+    return new AdjustmentSummaryReportPage(testWebDriver);
   }
 
   public void goBack(){
