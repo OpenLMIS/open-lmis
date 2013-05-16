@@ -180,7 +180,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 */
         AdjustmentTypes.get(function(data){
         $scope.adjustmentTypes = data.adjustmentTypeList;
-        $scope.adjustmentTypes.push({'name': 'All Adjustment Types'});
+        $scope.adjustmentTypes.push({'description': 'All Adjustment Types'});
          });
 
         Products.get(function(data){
@@ -374,7 +374,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
                 }
             });
         }else{
-            $scope.filterObject.adjustmentTypeId =  0;
+            $scope.filterObject.adjustmentTypeId =  "";
             $scope.filterObject.adjustmentType = "";
         }
     });
@@ -434,7 +434,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
                         }
 
                         $.each($scope.filterObject, function(index, value) {
-                            if(value != undefined)
+                             if(value != undefined)
                                 params[index] = value;
                         });
 

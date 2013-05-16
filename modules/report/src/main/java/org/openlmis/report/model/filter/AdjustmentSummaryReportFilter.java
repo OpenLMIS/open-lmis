@@ -35,7 +35,7 @@ public class AdjustmentSummaryReportFilter implements ReportData {
     private int rgroupId;
     private String rgroup;
     private int programId;
-    private int adjustmentTypeId;
+    private String  adjustmentTypeId;
     private String adjustmentType;
 
 
@@ -47,6 +47,7 @@ public class AdjustmentSummaryReportFilter implements ReportData {
         StringBuilder filtersValue = new StringBuilder("");
         filtersValue.append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
                 append("Facility Types : ").append(this.getFacilityType()).append("\n").
+                append("Adjustment Types : ").append(this.getAdjustmentType()).append("\n").
                 append("Reporting Groups : ").append(this.getRgroup());
 
         return filtersValue.toString();
