@@ -69,7 +69,7 @@ requirejs.config({
     'uiNav': {deps: ['directives']},
     'jQueryForm': {deps: ['jQuery']},
     'select2': {deps: ['angularResource']},
-    'select2Ext': {deps: ['angularResource']}
+    'select2Ext': {deps: ['select2','angularResource']}
   }
 });
 
