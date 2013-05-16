@@ -6,7 +6,8 @@
 
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
 <div xmlns="http://www.w3.org/1999/html">
-  <div class="rnr-tabs">
+
+  <div class="rnr-tabs clearfix">
     <ul class="clearfix">
       <li ng-class="{'selected': !showNonFullSupply, 'has-error': fullSupplyTabError}">
         <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab">Full Supply Product(s)</a></li>
@@ -14,6 +15,7 @@
         <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
     </ul>
   </div>
+
   <div ng-hide="programRnrColumnList">Loading...</div>
   <form name="saveRnrForm" action="#" id="rnr-form" novalidate>
     <ng-switch on="showNonFullSupply">
