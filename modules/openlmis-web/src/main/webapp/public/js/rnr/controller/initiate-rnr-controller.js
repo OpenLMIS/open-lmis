@@ -122,6 +122,15 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
     ]
   };
 
+
+  $scope.$watch("error", function(errorMsg, oldErrorMsg) {
+    setTimeout(function() {
+      if(errorMsg) {
+        document.getElementById('saveSuccessMsgDiv').scrollIntoView();
+      }
+    });
+  });
+
   $scope.facilityOptionMessage = function () {
     return optionMessage($scope.facilities, DEFAULT_FACILITY_MESSAGE);
   };
