@@ -398,6 +398,10 @@ span[class^="tpl-"] {
   .table-bordered td:first-child {
     border-left: 1px solid #ddd;
   }
+  td {
+    font-family: Verdana, Arial, sans-serif;
+    border-top-color: #887f7f;
+  }
 }
 
 .header-fixed {
@@ -486,9 +490,16 @@ table td.col-formula {
 }
 
 .rnr-form-error {
-  color: #E93434;
-  font-size: 0.8em;
+  color: #FFFFFF;
+  font-size: 0.7em;
   padding-bottom: 3px;
+  position: absolute;
+  background: rgba(153, 77, 77, .8);
+  border-radius: 10px;
+  padding: 0px 6px;
+  top: -14px;
+  width: 88%;
+  text-align: center;
 }
 
 .col-formula .formula {
@@ -514,20 +525,22 @@ table tr.highlight td {
 table td.cell-input {
   padding: 0;
   background-color: #f9f9f9;
+  vertical-align: middle;
+  position: relative;
 }
 table td.cell-input .cell-text {
   padding: 2px 6px;
   display: inline-block;
   font-size: 0.8em;
-  min-height: 28px;
-  line-height: 15px;
+  min-height: 16px;
+  line-height: 18px;
 }
 .cell-input input[type="text"] {
-  margin: 0;
+  margin: 2px 0;
   padding: 0;
   width: 98%;
   font-size: 0.8em;
-  height: 20px;
+  height: 29px;
   border: 1px solid #BBB;
   border-radius: 0;
 }
@@ -706,21 +719,24 @@ h3 {
   display: block;
   margin: 0 0 5px;
   font-size: 0.9em;
-  padding: 1px 8px 1px 27px;
-  border-radius: 0;
+  padding: 1px 8px 1px 28px;
   background-image: url(../images/warning_triangle.png);
   background-repeat: no-repeat;
-  background-position: 5px center;
+  background-position: 7px center;
+  position: absolute;
+  top: -11px;
+  width: 85%;
+  border-radius: 17px;
+  border-color: rgb(228, 184, 99);
+  color: rgb(179, 137, 7);
 }
 .rnr-adjustment {
   display: block;
   padding: 0 6px;
   text-align: right;
   line-height: 28px;
+  font-size: 0.85em;
   background: url(../images/edit-icon.png) no-repeat 8px center;
-  .add-adjustment {
-    font-size: 0.85em;
-  }
   .adjustment-value {
     font-weight: bold;
   }
