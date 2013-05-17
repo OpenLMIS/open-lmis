@@ -35,7 +35,7 @@ requirejs.config({
     placeholder: 'directives/placeholder',
     tabScroll: 'directives/tab-scroll',
     uiNav: 'directives/ui-nav',
-    ngGrid: '../../lib/angular-ui/ng-grid/ng-grid-2.0.2.min',
+    ngGrid: '../../lib/angular-ui/ng-grid/ng-grid-2.0.5.min',
     jQueryForm: '../../lib/jquery/jquery.form' ,
     select2: '../../lib/select2/select2',
     select2Ext: 'select2-ext'

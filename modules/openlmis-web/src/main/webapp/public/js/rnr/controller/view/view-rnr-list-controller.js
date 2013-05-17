@@ -26,7 +26,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
     showFilter:false,
     rowHeight:44,
     enableSorting:true,
-    sortInfo:{ field:'submittedDate', direction:'DESC'},
+    sortInfo:{ fields: ['submittedDate'], directions: ['asc'] },
     columnDefs:[
       {field:'programName', displayName:'Program' },
       {field:'facilityCode', displayName:'Facility Code'},

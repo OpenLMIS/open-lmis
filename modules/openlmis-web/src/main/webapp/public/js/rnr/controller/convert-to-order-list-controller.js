@@ -17,7 +17,7 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
     showFooter: false,
     showSelectionCheckbox: true,
     showColumnMenu: false,
-    sortInfo: { field: 'submittedDate', direction: 'ASC'},
+    sortInfo:{ fields: ['submittedDate'], directions: ['asc'] },
     showFilter: false,
     columnDefs: [
       {field: 'programName', displayName: 'Program' },
