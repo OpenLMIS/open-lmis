@@ -62,8 +62,8 @@ subprojects {
         useJUnit {
             includeCategories 'org.openlmis.db.categories.UnitTests'
         }
-        forkEvery = 30
-        maxParallelForks = Runtime.runtime.availableProcessors()
+        forkEvery = 5
+        maxParallelForks = 25
     }
 
     test.doLast {
