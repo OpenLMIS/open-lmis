@@ -39,7 +39,7 @@ public class FacilityDateRangeSearch implements RequisitionSearchStrategy {
   @Override
   public List<Rnr> search() {
     Facility facility = new Facility(criteria.getFacilityId());
-    List<Program> programs = programService.getProgramsSupportedByUserHomeFacilityWithRights(criteria.getFacilityId(),
+    List<Program> programs = programService.getProgramsForUserByFacilityAndRights(criteria.getFacilityId(),
       criteria.getUserId(), VIEW_REQUISITION);
     List<Rnr> requisitions = new ArrayList<>();
     for (Program program : programs) {
