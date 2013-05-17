@@ -20,51 +20,13 @@ public class AdjustmentSummaryQueryBuilder {
         Map<String, String[]> sorter = ( Map<String, String[]>)params.get("SortCriteria");
         BEGIN();
 
-        SELECT("product , MAX(productcategory) category, MAX(ft.name) facilityType, MAX(f.name) facilityName, at.name adjustmentType, MAX(li.totallossesandadjustments) adjustment, MAX(s.name) supplyingFacility");
-        FROM("requisition_line_item_losses_adjustments la");
-        JOIN("requisition_line_items li on li.id = la.requisitionlineitemid");
-        JOIN("losses_adjustments_types at on at.name = la.type");
-        JOIN("requisitions r on r.id = li.rnrid");
-        JOIN("facilities f on r.facilityid = f.id");
-        JOIN("facility_types ft on ft.id = f.typeid");
-        JOIN("processing_periods pp on pp.id = r.periodid");
-        JOIN("products pr on pr.code = li.productcode");
-        JOIN("product_categories prc on prc.id = pr.categoryid");
-        JOIN("requisition_group_members rgm on rgm.facilityid = f.id");
-        JOIN("supply_lines sl on sl.supervisorynodeid = r.supervisorynodeid and r.programid = sl.programid");
-        JOIN("facilities s on s.id = sl.supplyingfacilityid and f.id = s.id");
+        SELECT("product productDescription, product_category_name category, facility_type_name facilityType,facility_name facilityName, adjustment_type adjustmentType, SUM(totallossesandadjustments) adjustment,supplying_facility_name supplyingFacility");
+        FROM("vw_requisition_adjustment");
+        writePredicates(filter);
+        GROUP_BY("product, adjustment_type,product_category_name,facility_type_name,facility_name, supplying_facility_name");
+        ORDER_BY("product, adjustment_type,product_category_name,facility_type_name,facility_name, supplying_facility_name");
 
-        if(filter != null){
-            if (filter.getFacilityTypeId() != 0) {
-                WHERE("ft.id = #{filterCriteria.facilityTypeId}");
-            }
-//            if (filter.getZoneId() != 0) {
-//                WHERE("f.geographiczoneid = #{filterCriteria.zoneId}");
-//            }
-            if (filter.getStartDate() != null) {
-                WHERE("pp.startDate >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
-            }
-            if (filter.getEndDate() != null) {
-                WHERE("pp.endDate <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
-            }
-            if(filter.getProductCategoryId() != 0 ){
-                WHERE("prc.id = #{filterCriteria.productCategoryId}");
-            }
-            if(filter.getRgroupId() != 0){
-                WHERE("rgm.id = #{filterCriteria.rgroupId}");
-            }
-            if(filter.getProductId() != 0){
-                WHERE("pr.id = #{filterCriteria.productId}");
-            }
-            if(filter.getProgramId() != 0){
-                WHERE("r.programid = #{filterCriteria.programId}");
-            }
-            if(filter.getAdjustmentTypeId() != 0){
-                WHERE("la.type = #{filterCriteria.adjustmentTypeId}");
-            }
-        }
-        GROUP_BY("product , at.name, li.totallossesandadjustments");
-         return SQL();
+        return SQL();
     }
 
     public static String SelectFilteredSortedPagedRecordsCount(Map params){
@@ -73,53 +35,46 @@ public class AdjustmentSummaryQueryBuilder {
 
         BEGIN();
         SELECT("COUNT(*) perCounts");
-        FROM("requisition_line_item_losses_adjustments la");
-        JOIN("requisition_line_items li on li.id = la.requisitionlineitemid");
-        JOIN("losses_adjustments_types at on at.name = la.type");
-        JOIN("requisitions r on r.id = li.rnrid");
-        JOIN("facilities f on r.facilityid = f.id");
-        JOIN("facility_types ft on ft.id = f.typeid");
-        JOIN("processing_periods pp on pp.id = r.periodid");
-        JOIN("products pr on pr.code = li.productcode");
-        JOIN("product_categories prc on prc.id = pr.categoryid");
-        JOIN("requisition_group_members rgm on rgm.facilityid = f.id");
-        JOIN("supply_lines sl on sl.supervisorynodeid = r.supervisorynodeid and r.programid = sl.programid");
-        JOIN("facilities s on s.id = sl.supplyingfacilityid and f.id = s.id");
+        FROM(" vw_requisition_adjustment");
+        writePredicates(filter);
 
-
-        if(filter != null){
-            if (filter.getFacilityTypeId() != 0) {
-                WHERE("ft.id = #{filterCriteria.facilityTypeId}");
-            }
-            if (filter.getZoneId() != 0) {
-                WHERE("f.geographiczoneid = #{filterCriteria.zoneId}");
-            }
-            if (filter.getStartDate() != null) {
-                WHERE("pp.startDate >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
-            }
-            if (filter.getEndDate() != null) {
-                WHERE("pp.endDate <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
-            }
-            if(filter.getProductCategoryId() != 0 ){
-                WHERE("prc.id = #{filterCriteria.productCategoryId}");
-            }
-            if(filter.getRgroupId() != 0){
-                WHERE("rgm.id = #{filterCriteria.rgroupId}");
-            }
-            if(filter.getProgramId() != 0){
-                WHERE("r.programid = #{filterCriteria.programId}");
-            }
-            if(filter.getAdjustmentTypeId() != 0){
-                WHERE("la.type = #{filterCriteria.adjustmentTypeId}");
-            }
-
-        }
-        GROUP_BY("product , at.name, li.totallossesandadjustments");
+        GROUP_BY("product, adjustment_type,product_category_name,facility_type_name,facility_name, supplying_facility_name");
+        ORDER_BY("product, adjustment_type,product_category_name,facility_type_name,facility_name, supplying_facility_name");
         String subQuery = SQL().toString();
 
         BEGIN();
         SELECT("COUNT(*)");
         FROM("( "+ subQuery +" ) as counts");
         return SQL();
+    }
+
+    private static void writePredicates(AdjustmentSummaryReportFilter filter){
+        if(filter != null){
+            if (filter.getFacilityTypeId() != 0) {
+                WHERE("facility_type_id = #{filterCriteria.facilityTypeId}");
+            }
+
+            if (filter.getStartDate() != null) {
+                WHERE("processing_periods_start_date >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
+            }
+            if (filter.getEndDate() != null) {
+                WHERE("processing_periods_end_date <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
+            }
+            if(filter.getProductCategoryId() != 0 ){
+                WHERE("product_category_id = #{filterCriteria.productCategoryId}");
+            }
+            if(filter.getRgroupId() != 0){
+                WHERE("requisition_group_id = #{filterCriteria.rgroupId}");
+            }
+            if(filter.getProductId() != 0){
+                WHERE("product_id= #{filterCriteria.productId}");
+            }
+            if(filter.getProgramId() != 0){
+                WHERE("program_id = #{filterCriteria.programId}");
+            }
+            if(filter.getAdjustmentTypeId() != null && !filter.getAdjustmentTypeId().isEmpty()){
+                WHERE("adjustment_type = #{filterCriteria.adjustmentTypeId}");
+            }
+        }
     }
 }

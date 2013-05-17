@@ -89,7 +89,7 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
             adjustmentSummaryReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
             adjustmentSummaryReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
             adjustmentSummaryReportFilter.setAdjustmentTypeId( (filterCriteria.get("adjustmentTypeId") == null || filterCriteria.get("adjustmentTypeId")[0].equals("")) ? "" : filterCriteria.get("adjustmentTypeId")[0]);
-            adjustmentSummaryReportFilter.setAdjustmentTypeId( (filterCriteria.get("adjustmentType") == null || filterCriteria.get("adjustmentType")[0].equals("")) ? "All Adjustment Types" : filterCriteria.get("adjustmentType")[0]);
+            adjustmentSummaryReportFilter.setAdjustmentType( (filterCriteria.get("adjustmentType") == null || filterCriteria.get("adjustmentType")[0].equals("")) ? "All Adjustment Types" : filterCriteria.get("adjustmentType")[0]);
 
             //monthly
             adjustmentSummaryReportFilter.setYearFrom(filterCriteria.get("fromYear") == null ? originalStart.getYear() : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0

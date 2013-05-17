@@ -1,3 +1,4 @@
+DROP VIEW vw_requisition_adjustment;
 CREATE VIEW public.vw_requisition_adjustment
 (
   program_id,
@@ -9,15 +10,20 @@ CREATE VIEW public.vw_requisition_adjustment
   processing_schedules_id,
   processing_schedules_name,
   facility_type_name,
+  facility_type_id,
   requisition_group_id,
   requisition_group_name,
   requisition_group_noteid,
   facility_code,
   facility_id,
   facility_name,
+  supplying_facility_name,
   requisition_line_item_id,
   productcode,
   product,
+  product_id,
+  product_category_name,
+  product_category_id,
   beginningbalance,
   quantityreceived,
   quantitydispensed,
@@ -52,15 +58,20 @@ SELECT DISTINCT
   processing_schedules.id AS processing_schedules_id,
   processing_schedules.name AS processing_schedules_name,
   facility_types.name AS facility_type_name,
+  facility_types.id AS facility_type_id,
   requisition_groups.id AS requisition_group_id,
   requisition_groups.name AS requisition_group_name,
   requisition_groups.supervisorynodeid AS requisition_group_noteid,
   facilities.code AS facility_code,
   facilities.id AS facility_id,
   facilities.name AS facility_name,
+  vw_program_facility_supplier.facility_name AS supplying_facility_name,
   requisition_line_items.id AS requisition_line_item_id,
   requisition_line_items.productcode,
   requisition_line_items.product,
+  products.id AS product_id,
+  product_categories.name AS product_category_name,
+  product_categories.id AS product_category_id,
   requisition_line_items.beginningbalance,
   requisition_line_items.quantityreceived,
   requisition_line_items.quantitydispensed,
@@ -83,7 +94,7 @@ SELECT DISTINCT
   losses_adjustments_types.displayorder AS adjustment_display_order,
   losses_adjustments_types.additive AS adjustment_additive,
   requisition_line_items.id
-FROM ((((((((((((((facilities
+FROM ((((((((((((((((facilities
   JOIN facility_types ON
     (
       (facilities.typeid = facility_types.id)
@@ -100,6 +111,12 @@ FROM ((((((((((((((facilities
     (
       (
         (products.code)::text = (requisition_line_items.productcode)::text
+      )
+    ))
+  JOIN product_categories ON
+    (
+      (
+        product_categories.id = products.categoryid
       )
     ))
   JOIN program_products ON
@@ -157,4 +174,8 @@ FROM ((((((((((((((facilities
           (requisition_line_item_losses_adjustments.type)::text = (losses_adjustments_types.name)::text
         )
       )
+    ))
+	LEFT OUTER JOIN vw_program_facility_supplier ON
+    ( 
+      (vw_program_facility_supplier.supervisory_node_id = requisition_groups.supervisorynodeid AND vw_program_facility_supplier.program_id = programs.id  )
     ));

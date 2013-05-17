@@ -172,12 +172,6 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             $scope.facilityTypes.push({'name': 'All Facility Types'});
         });
 
-
-       /*LossesAndAdjustmentsReferenceData.get(function(data) {
-            $scope.adjustmentTypes = data.lossAdjustmentTypes;
-            $scope.adjustmentTypes.push({'name': 'All Adjustment Types'});
-        });
-*/
         AdjustmentTypes.get(function(data){
         $scope.adjustmentTypes = data.adjustmentTypeList;
         $scope.adjustmentTypes.push({'description': 'All Adjustment Types'});
@@ -299,18 +293,6 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
         $scope.$watch('periodType', function(selection){
             if(selection != undefined || selection == ""){
                 $scope.filterObject.periodType =  selection;
-
-               /* if(selection == "quarterly"){
-
-                }
-
-                else if(selection == "semi-anual"){
-
-                }
-
-                else if(selection == "annual"){
-
-                }*/
 
             }else{
                 $scope.filterObject.periodType =  "monthly";
