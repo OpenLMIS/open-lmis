@@ -126,7 +126,7 @@ task JasmineRun(type: Test) {
     useTestNG()
 }
 
-jettyRun.dependsOn compileLess
+compileJava.dependsOn compileLess
 
 task runJsCover(type: Exec) {
     commandLine 'sh', "${projectDir}/src/test/javascript/runJsCover.sh"
