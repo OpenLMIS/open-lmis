@@ -211,30 +211,3 @@ services.factory('FacilityTypes', function($resource){
     return $resource('/facilityTypes.json');
 });
 
-services.factory('MailingLabels', function ($resource) {
-    return $resource('/reports/reportdata/mailingLabels.json', {}, {});
-});
-
-services.factory('ConsumptionReport', function ($resource) {
-    return $resource('/reports/reportdata/consumption.json', {}, {});
-});
-
-services.factory('AverageConsumptionReport', function ($resource) {
-    return $resource('/reports/reportdata/averageConsumption.json', {}, {});
-});
-
-services.factory('Products', function($resource){
-    return $resource('/reports/products.json', {}, {});
-}) ;
-
-services.factory('SummaryReport', function($resource){
-    return $resource('/reports/summary.json', {}, {});
-}) ;
-
-services.factory('NonReportingFacilities', function($resource){
-    return $resource('/reports/non_reporting.json', {}, {});
-});
-
-services.factory('RequisitionGroups', function($resource){
-    return $resource('/reports/rgroups.json', {}, {});
-});

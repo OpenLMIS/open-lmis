@@ -48,4 +48,6 @@ services.factory('AdjustmentSummaryReport', function ($resource) {
 
 services.factory('AdjustmentTypes', function($resource){
     return $resource('/reports/adjustmentTypes.json', {}, {});
-}) ;
+});
+
+
