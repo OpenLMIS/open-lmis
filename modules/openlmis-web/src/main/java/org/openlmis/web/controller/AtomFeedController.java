@@ -6,19 +6,19 @@
 
 package org.openlmis.web.controller;
 
-import com.sun.syndication.feed.atom.Feed;
 import org.apache.log4j.Logger;
+import org.ict4h.atomfeed.server.repository.AllEventRecords;
 import org.ict4h.atomfeed.server.service.EventFeedService;
 import org.ict4h.atomfeed.server.service.helper.EventFeedServiceHelper;
+import org.openlmis.core.atomfeed.OpenLmisEventRecordJdbcImpl;
+import org.openlmis.core.exception.DataException;
+import org.springframework.aop.framework.Advised;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 
 @Controller
 public class AtomFeedController extends BaseController {
@@ -28,15 +28,30 @@ public class AtomFeedController extends BaseController {
   @Autowired
   EventFeedService eventFeedService;
 
-  @RequestMapping(method = RequestMethod.GET, value = "/feeds/recent", produces = "application/atom+xml")
+  @Resource(name="allEventRecords")
+  AllEventRecords allEventRecords;
+
+  @RequestMapping(method = RequestMethod.GET, value = "/feeds/{category}/recent", produces = "application/atom+xml")
   @ResponseBody
-  public String getRecentFeeds(HttpServletRequest request) {
-    return EventFeedServiceHelper.getRecentFeed(eventFeedService, request.getRequestURL().toString(), logger);
+  public String getRecentFeeds(@PathVariable(value = "category") String category, HttpServletRequest request, @RequestParam(value = "vendor") String vendor) {
+    setCategoryInEventRecord(category);
+    return VendorEventFeedServiceHelper.getRecentFeed(eventFeedService, request.getRequestURL().toString(), logger,vendor, category);
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/feeds/{id}", produces = "application/atom+xml")
+  private void setCategoryInEventRecord(String category) {
+    OpenLmisEventRecordJdbcImpl eventRecord = null;
+    try {
+      eventRecord = (OpenLmisEventRecordJdbcImpl) ((Advised)allEventRecords).getTargetSource().getTarget();
+    } catch (Exception e) {
+      throw new DataException(e.getMessage());
+    }
+    eventRecord.setCategory(category);
+  }
+
+  @RequestMapping(method = RequestMethod.GET, value = "/feeds/{category}/{id}", produces = "application/atom+xml")
   @ResponseBody
-  public String getFeed(HttpServletRequest request, @PathVariable Integer id) {
+  public String getFeed(@PathVariable(value = "category") String category, HttpServletRequest request, @PathVariable Integer id) {
+    setCategoryInEventRecord(category);
     return EventFeedServiceHelper.getEventFeed(eventFeedService, request.getRequestURL().toString(), id, logger);
   }
 }
