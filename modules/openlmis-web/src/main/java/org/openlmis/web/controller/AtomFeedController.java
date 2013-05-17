@@ -33,7 +33,7 @@ public class AtomFeedController extends BaseController {
 
   @RequestMapping(method = RequestMethod.GET, value = "/feeds/{category}/recent", produces = "application/atom+xml")
   @ResponseBody
-  public String getRecentFeeds(@PathVariable(value = "category") String category, HttpServletRequest request, @RequestParam(value = "vendor") String vendor) {
+  public String getRecentFeeds(@PathVariable(value = "category") String category, HttpServletRequest request, @RequestParam(value = "vendor", required = false) String vendor) {
     setCategoryInEventRecord(category);
     return VendorEventFeedServiceHelper.getRecentFeed(eventFeedService, request.getRequestURL().toString(), logger,vendor, category);
   }

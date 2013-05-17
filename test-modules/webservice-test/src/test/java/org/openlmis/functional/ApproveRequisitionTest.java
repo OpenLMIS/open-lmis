@@ -70,7 +70,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
         dbWrapper.getAuthToken("commTrack"));
 
     response = responseEntity.getResponse();
-    ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/recent", "GET", "", "");
+    ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition/recent", "GET", "", "");
 
     assertEquals(responseEntity.getStatus(),200);
     assertTrue(response.contains("{\"R&R\":"));

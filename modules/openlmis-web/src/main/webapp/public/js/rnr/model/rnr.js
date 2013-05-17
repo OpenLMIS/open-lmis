@@ -170,8 +170,8 @@ var Rnr = function (rnr, programRnrColumns) {
 
   Rnr.prototype.reduceForApproval = function() {
     var rnr = _.pick(this, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
-    _.map(rnr.fullSupplyLineItems, function(rnrLineItem){ return rnrLineItem.reduceForApproval() });
-    _.map(rnr.nonFullSupplyLineItems, function(rnrLineItem){ return rnrLineItem.reduceForApproval() });
+    rnr.fullSupplyLineItems = _.map(rnr.fullSupplyLineItems, function(rnrLineItem){ return rnrLineItem.reduceForApproval() });
+    rnr.nonFullSupplyLineItems = _.map(rnr.nonFullSupplyLineItems, function(rnrLineItem){ return rnrLineItem.reduceForApproval() });
     return rnr;
   };
 
