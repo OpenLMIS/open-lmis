@@ -6,6 +6,7 @@
 
 package org.openlmis.rnr.repository.mapper;
 
+import liquibase.change.core.UpdateDataChange;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -39,6 +40,7 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_ID;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.fullSupply;
+import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
 @Category(IntegrationTests.class)
@@ -262,5 +264,22 @@ public class RnrLineItemMapperIT {
       rnrLineItemMapper.insert(item);
     }
     assertThat(rnrLineItemMapper.getCategoryCount(rnr, fullSupplyFlag), is(10));
+  }
+
+  @Test
+  public void shouldUpdateApprovedQuantityAndRemarks() throws Exception {
+    requisitionMapper.insert(rnr);
+    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
+    rnrLineItemMapper.insert(lineItem);
+    rnr.setStatus(AUTHORIZED);
+
+    lineItem.setQuantityApproved(23);
+    lineItem.setRemarks("Updated Remarks");
+    rnrLineItemMapper.updateOnApproval(lineItem);
+
+    RnrLineItem returnedRnrLineItem = rnrLineItemMapper.getRnrLineItemsByRnrId(lineItem.getRnrId()).get(0);
+
+    assertThat(returnedRnrLineItem.getQuantityApproved(),is(23));
+    assertThat(returnedRnrLineItem.getRemarks(),is("Updated Remarks"));
   }
 }

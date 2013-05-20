@@ -605,6 +605,16 @@ public class RequisitionServiceTest {
   @Test
   public void shouldValidateRnrForApproval() throws Exception {
     Rnr spyRnr = spy(authorizedRnr);
+    spyRnr.setFacility(FACILITY);
+    spyRnr.setProgram(PROGRAM);
+    spyRnr.setPeriod(PERIOD);
+
+    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
+    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
+    when(facilityService.getById(submittedRnr.getSupplyingFacility().getId())).thenReturn(FACILITY);
+    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
+    when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(spyRnr);
+
     Mockito.doThrow(new DataException("some error")).when(spyRnr).validateForApproval();
 
     expectedException.expect(DataException.class);

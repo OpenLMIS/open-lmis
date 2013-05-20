@@ -117,9 +117,10 @@ describe('Approve Requisition controller', function () {
 
   it('should approve Rnr if ok is clicked on the confirm modal', function () {
     scope.rnr = new Rnr({"id":"rnrId"}, []);
+    scope.approvalForm.$dirty = true;
     spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn('');
-
+    httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success':"success message"});
     httpBackend.expect('PUT', '/requisitions/rnrId/approve.json').respond({'success':"R&R approved successfully!"});
     scope.dialogCloseCallback(true);
     httpBackend.flush();

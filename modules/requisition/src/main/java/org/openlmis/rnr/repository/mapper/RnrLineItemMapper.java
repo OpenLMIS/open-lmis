@@ -89,4 +89,13 @@ public interface RnrLineItemMapper {
   @Select(
     "SELECT COUNT(DISTINCT productCategory) FROM requisition_line_items WHERE rnrId=#{rnr.id} AND fullSupply = #{isFullSupply}")
   public Integer getCategoryCount(@Param(value = "rnr") Rnr rnr, @Param(value = "isFullSupply") Boolean isFullSupply);
+
+  @Update("UPDATE requisition_line_items " +
+    "SET quantityApproved = #{quantityApproved}, " +
+    " remarks = #{remarks}, " +
+    " modifiedBy = #{modifiedBy}, "+
+    " modifiedDate = #{modifiedDate} "+
+    " WHERE id = #{id}"
+  )
+  void updateOnApproval(RnrLineItem lineItem);
 }

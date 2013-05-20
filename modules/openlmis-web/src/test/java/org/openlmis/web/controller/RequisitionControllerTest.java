@@ -259,7 +259,8 @@ public class RequisitionControllerTest {
   @Test
   public void shouldApproveRequisitionAndTagWithModifiedBy() throws Exception {
     when(requisitionService.approve(rnr)).thenReturn(new OpenLmisMessage("some message"));
-    final ResponseEntity<OpenLmisResponse> response = controller.approve(rnr, rnr.getId(), request);
+    whenNew(Rnr.class).withArguments(rnr.getId()).thenReturn(rnr);
+    final ResponseEntity<OpenLmisResponse> response = controller.approve(rnr.getId(), request);
     verify(requisitionService).approve(rnr);
     assertThat(rnr.getModifiedBy(), CoreMatchers.is(USER_ID));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -270,7 +271,7 @@ public class RequisitionControllerTest {
   public void shouldGiveErrorMessageWhenServiceThrowsSomeExceptionWhileApprovingAnRnr() throws Exception {
     doThrow(new DataException("some-error")).when(requisitionService).approve(rnr);
 
-    ResponseEntity<OpenLmisResponse> response = controller.approve(rnr, rnr.getId(), request);
+    ResponseEntity<OpenLmisResponse> response = controller.approve(rnr.getId(), request);
 
     verify(requisitionService).approve(rnr);
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));

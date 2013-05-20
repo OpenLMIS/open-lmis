@@ -6,7 +6,6 @@
 
 package org.openlmis.rnr.repository;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
@@ -70,10 +69,19 @@ public class RequisitionRepository {
 
   private void updateFullSupplyLineItems(Rnr requisition) {
     for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
-      rnrLineItemMapper.update(lineItem);
+      updateFullSupplyLineItem(requisition.getStatus(), lineItem);
       lossesAndAdjustmentsMapper.deleteByLineItemId(lineItem.getId());
       insertLossesAndAdjustmentsForLineItem(lineItem);
     }
+  }
+
+  private void updateFullSupplyLineItem(RnrStatus rnrStatus, RnrLineItem lineItem) {
+    if(rnrStatus== RnrStatus.AUTHORIZED || rnrStatus==RnrStatus.IN_APPROVAL){
+      rnrLineItemMapper.updateOnApproval(lineItem);
+      return;
+    }
+
+    rnrLineItemMapper.update(lineItem);
   }
 
   private void insertLossesAndAdjustmentsForLineItem(RnrLineItem lineItem) {

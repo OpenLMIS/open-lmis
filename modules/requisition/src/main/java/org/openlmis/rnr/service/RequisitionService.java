@@ -163,8 +163,8 @@ public class RequisitionService {
   }
 
   public OpenLmisMessage approve(Rnr requisition) {
-    requisition.validateForApproval();
     Rnr savedRnr = getFullRequisitionById(requisition.getId());
+    savedRnr.validateForApproval();
 
     if (!requisitionPermissionService.hasPermission(requisition.getModifiedBy(), savedRnr, APPROVE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
@@ -172,8 +172,6 @@ public class RequisitionService {
     if (savedRnr.getStatus() != AUTHORIZED && savedRnr.getStatus() != IN_APPROVAL) {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     }
-
-    savedRnr.copyApproverEditableFields(requisition);
 
     savedRnr.calculateForApproval();
     final SupervisoryNode parent = supervisoryNodeService.getParent(savedRnr.getSupervisoryNodeId());
@@ -245,7 +243,7 @@ public class RequisitionService {
     }
   }
 
-  public void fillSupplyingDepot(Rnr requisition) {
+  private void fillSupplyingDepot(Rnr requisition) {
     if (requisition.getSupplyingFacility() != null) {
       Facility facility = facilityService.getById(requisition.getSupplyingFacility().getId());
       requisition.fillBasicInformationForSupplyingFacility(facility);

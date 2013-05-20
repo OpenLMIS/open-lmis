@@ -70,20 +70,18 @@ public class ApproveRequisitionTest extends TestCaseHelper {
         dbWrapper.getAuthToken("commTrack"));
 
     response = responseEntity.getResponse();
-    ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition/recent", "GET", "", "");
 
     assertEquals(responseEntity.getStatus(),200);
     assertTrue(response.contains("{\"R&R\":"));
     assertEquals(dbWrapper.getRequisitionStatus(id), "RELEASED");
 
-    assertEquals(responseEntity.getStatus(),200);
+    ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition/recent", "GET", "", "");
+
     assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10")+ ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"INITIATED\",\"externalSystem\":\"commTrack\"}"));
     assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10")+ ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"SUBMITTED\",\"externalSystem\":\"commTrack\"}"));
     assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10")+ ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"AUTHORIZED\",\"externalSystem\":\"commTrack\"}"));
     assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10")+ ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"APPROVED\",\"externalSystem\":\"commTrack\"}"));
     assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10")+ ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"RELEASED\",\"externalSystem\":\"commTrack\"}"));
-
-
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})

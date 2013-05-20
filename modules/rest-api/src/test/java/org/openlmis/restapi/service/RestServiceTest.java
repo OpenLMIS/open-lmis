@@ -151,6 +151,7 @@ public class RestServiceTest {
 
     assertThat(requisitionFromReport.getModifiedBy(), is(user.getId()));
     verify(spyReport).getRequisition();
+    verify(requisitionService).save(requisitionFromReport);
     verify(requisitionService).approve(requisitionFromReport);
     verify(orderService).convertToOrder(asList(requisitionFromReport), user.getId());
   }

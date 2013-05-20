@@ -22,6 +22,7 @@ import java.util.List;
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 import static org.openlmis.rnr.domain.RnrLineItem.RNR_VALIDATION_ERROR;
+import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
 import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
 
@@ -220,7 +221,7 @@ public class Rnr extends BaseModel{
   }
 
   public void copyEditableFields(Rnr otherRnr, List<RnrColumn> programRnrColumns) {
-    if (status == IN_APPROVAL)
+    if (status == IN_APPROVAL || status == AUTHORIZED)
       copyApproverEditableFields(otherRnr);
     else
       copyUserEditableFields(otherRnr, programRnrColumns);

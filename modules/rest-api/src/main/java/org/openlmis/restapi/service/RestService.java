@@ -81,8 +81,10 @@ public class RestService {
     User user = getValidatedUser(report);
     Rnr requisition = report.getRequisition();
     requisition.setModifiedBy(user.getId());
+    requisitionService.save(requisition);
     requisitionService.approve(requisition);
     orderService.convertToOrder(asList(requisition), user.getId());
     return requisition;
   }
+
 }
