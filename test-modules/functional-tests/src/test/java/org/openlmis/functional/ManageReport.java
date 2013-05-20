@@ -44,7 +44,7 @@ public class ManageReport extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
-    reportPage.verifyNoReportsMessage();
+//    reportPage.verifyNoReportsMessage();
     reportPage.clickAddNewButton();
     reportPage.verifyItemsOnReportUploadScreen();
 
