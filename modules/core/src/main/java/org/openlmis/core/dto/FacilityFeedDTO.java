@@ -113,7 +113,4 @@ public class FacilityFeedDTO extends BaseFeedDTO {
     this.modifiedDate = facility.getModifiedDate();
   }
 
-  public String getVendorSystem() {
-    return null;  //To change body of created methods use File | Settings | File Templates.
-  }
 }

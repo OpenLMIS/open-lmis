@@ -133,7 +133,22 @@ public class Facility extends BaseModel implements Importable {
     this.facilityType = facilityType;
   }
 
+  public Facility(Long id, boolean dataReportable, boolean active, Long modifiedBy) {
+    this.id = id;
+    this.dataReportable = dataReportable;
+    this.active = active;
+    this.modifiedBy = modifiedBy;
+  }
+
   public Facility basicInformation() {
     return new Facility(id, code, name, operatedBy, geographicZone, facilityType);
+  }
+
+  public static Facility createFacilityToBeDeleted(Long facilityId, Long modifiedBy) {
+    return new Facility(facilityId, false, false, modifiedBy);
+  }
+
+  public static Facility createFacilityToBeRestored(Long facilityId, Long modifiedBy, boolean active) {
+    return new Facility(facilityId, true, active, modifiedBy);
   }
 }

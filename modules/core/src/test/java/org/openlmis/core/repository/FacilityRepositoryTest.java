@@ -202,10 +202,14 @@ public class FacilityRepositoryTest {
 
   @Test
   public void shouldUpdateDataReportableActiveFlag() {
-
     Facility facility = make(a(defaultFacility));
-    repository.updateDataReportableAndActiveFor(facility);
+    when(mapper.getById(facility.getId())).thenReturn(facility);
+
+    Facility returnedFacility = repository.updateDataReportableAndActiveFor(facility);
+
+    assertThat(returnedFacility, is(facility));
     verify(mapper).updateDataReportableAndActiveFor(facility);
+    verify(mapper).getById(facility.getId());
   }
 
   @Test

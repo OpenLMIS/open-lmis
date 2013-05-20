@@ -80,8 +80,7 @@ public class FacilityService {
 
     if (programSupported.getId() == null) {
       programSupportedRepository.addSupportedProgram(programSupported);
-    }
-    else{
+    } else {
       programSupportedRepository.updateSupportedProgram(programSupported);
     }
   }
@@ -108,8 +107,10 @@ public class FacilityService {
     return facility;
   }
 
-  public void updateDataReportableAndActiveFor(Facility facility) {
-    facilityRepository.updateDataReportableAndActiveFor(facility);
+  public Facility updateDataReportableAndActiveFor(Facility facility) {
+    Facility updatedFacility = facilityRepository.updateDataReportableAndActiveFor(facility);
+    updatedFacility.setSupportedPrograms(programSupportedRepository.getAllByFacilityId(facility.getId()));
+    return updatedFacility;
   }
 
   public List<Facility> getUserSupervisedFacilities(Long userId, Long programId, Right... rights) {

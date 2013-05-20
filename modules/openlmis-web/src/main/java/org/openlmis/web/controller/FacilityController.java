@@ -9,6 +9,7 @@ package org.openlmis.web.controller;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.web.model.FacilityReferenceData;
@@ -29,6 +30,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static org.openlmis.core.domain.Facility.createFacilityToBeDeleted;
+import static org.openlmis.core.domain.Facility.createFacilityToBeRestored;
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.success;
@@ -80,34 +83,6 @@ public class FacilityController extends BaseController {
     return new ResponseEntity<>(modelMap, HttpStatus.OK);
   }
 
-  @RequestMapping(value = "/facility/update/{operation}", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public ResponseEntity<OpenLmisResponse> updateDataReportableAndActive(@RequestBody Facility facility, @PathVariable(
-    value = "operation") String operation,
-                                                                        HttpServletRequest request) {
-    facility.setModifiedBy(loggedInUserId(request));
-    String message;
-    if ("delete".equalsIgnoreCase(operation)) {
-      facility.setDataReportable(false);
-      facility.setActive(false);
-      message = "deleted";
-    } else {
-      facility.setDataReportable(true);
-      message = "restored";
-    }
-    try {
-      facilityService.updateDataReportableAndActiveFor(facility);
-      facility = facilityService.getById(facility.getId());
-    } catch (DataException exception) {
-      ResponseEntity<OpenLmisResponse> errorResponse = error(exception, HttpStatus.BAD_REQUEST);
-      errorResponse.getBody().addData("facility", facility);
-      return errorResponse;
-    }
-    final ResponseEntity<OpenLmisResponse> successResponse = success(
-      "\"" + facility.getName() + "\" / \"" + facility.getCode() + "\" " + message + " successfully");
-    successResponse.getBody().addData("facility", facility);
-    return successResponse;
-  }
 
   @RequestMapping(value = "/create/requisition/supervised/{programId}/facilities.json", method = GET)
   public ResponseEntity<ModelMap> getUserSupervisedFacilitiesSupportingProgram(@PathVariable(
@@ -154,6 +129,33 @@ public class FacilityController extends BaseController {
   public ResponseEntity<OpenLmisResponse> listForViewing(HttpServletRequest request) {
     return OpenLmisResponse.response("facilities",
       facilityService.getForUserAndRights(loggedInUserId(request), VIEW_REQUISITION));
+  }
+
+  @RequestMapping(value = "/facilities/{facilityId}", method = DELETE, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
+  public ResponseEntity softDelete(HttpServletRequest httpServletRequest, @PathVariable Long facilityId) {
+    ResponseEntity<OpenLmisResponse> response;
+    Facility facilityToBeDeleted = createFacilityToBeDeleted(facilityId, loggedInUserId(httpServletRequest));
+    Facility deletedFacility = facilityService.updateDataReportableAndActiveFor(facilityToBeDeleted);
+
+    response = success(new OpenLmisMessage("delete.facility.success", deletedFacility.getName(),
+      deletedFacility.getCode()));
+    response.getBody().addData("facility", deletedFacility);
+    return response;
+  }
+
+
+  @RequestMapping(value = "/facilities/{id}/restore", method = PUT, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
+  public ResponseEntity<OpenLmisResponse> restore(HttpServletRequest request, @PathVariable("id") long facilityId, @RequestParam boolean active) {
+    ResponseEntity<OpenLmisResponse> response;
+    Facility facilityToBeDeleted = createFacilityToBeRestored(facilityId, loggedInUserId(request), active);
+    Facility restoredFacility = facilityService.updateDataReportableAndActiveFor(facilityToBeDeleted);
+
+    response = success(new OpenLmisMessage("restore.facility.success", restoredFacility.getName(),
+      restoredFacility.getCode()));
+    response.getBody().addData("facility", restoredFacility);
+    return response;
   }
 
   private ResponseEntity<OpenLmisResponse> createErrorResponse(Facility facility, DataException exception) {

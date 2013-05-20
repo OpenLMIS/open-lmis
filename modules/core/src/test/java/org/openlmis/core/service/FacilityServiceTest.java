@@ -14,7 +14,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
@@ -27,14 +26,16 @@ import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.api.mockito.PowerMockito;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -99,8 +100,18 @@ public class FacilityServiceTest {
   @Test
   public void shouldUpdateDataReportableAndActiveFor() {
     Facility facility = make(a(defaultFacility));
-    facilityService.updateDataReportableAndActiveFor(facility);
+    when(facilityRepository.updateDataReportableAndActiveFor(facility)).thenReturn(facility);
+    List<ProgramSupported> programsSupported = new ArrayList<ProgramSupported>() {{
+      add(new ProgramSupported());
+    }};
+    when(programSupportedRepository.getAllByFacilityId(facility.getId())).thenReturn(programsSupported);
+
+    Facility returnedFacility = facilityService.updateDataReportableAndActiveFor(facility);
+
+    assertThat(returnedFacility, is(facility));
+    assertThat(returnedFacility.getSupportedPrograms(), is(programsSupported));
     verify(facilityRepository).updateDataReportableAndActiveFor(facility);
+    verify(programSupportedRepository).getAllByFacilityId(facility.getId());
   }
 
   @Test
@@ -340,8 +351,8 @@ public class FacilityServiceTest {
 
     facilityService.uploadSupportedProgram(programSupported);
 
-    assertThat(programSupported.getFacilityId(),is(1L));
-    assertThat(programSupported.getProgram().getId(),is(2L));
+    assertThat(programSupported.getFacilityId(), is(1L));
+    assertThat(programSupported.getProgram().getId(), is(2L));
     verify(programSupportedRepository).updateSupportedProgram(programSupported);
   }
 

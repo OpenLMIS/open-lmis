@@ -22,12 +22,12 @@ services.factory('ProgramRnRColumnList', function ($resource) {
   return $resource('/rnr/:programId/columns.json', {}, {});
 });
 
-services.factory('Facilities', function ($resource) {
-  return $resource('/facilities.json', {}, {});
-});
-
 services.factory('Facility', function ($resource) {
   return $resource('/facilities/:id.json', {}, {update:{method:'PUT'}});
+});
+
+services.factory('RestoreFacility', function ($resource) {
+  return $resource('/facilities/:id/restore.json', {}, {update:{method:'PUT'}});
 });
 
 services.factory('UserContext', function ($resource) {

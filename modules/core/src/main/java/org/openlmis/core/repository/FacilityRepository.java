@@ -11,7 +11,6 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -59,12 +58,6 @@ public class FacilityRepository {
         throw new DataException("Missing/Invalid Reference data");
       }
       throw new DataException("Incorrect data length");
-    }
-  }
-
-  private void setFacilityId(Facility savedFacility, Facility facility) {
-    if (savedFacility != null) {
-      facility.setId(savedFacility.getId());
     }
   }
 
@@ -127,9 +120,9 @@ public class FacilityRepository {
     return mapper.getById(id);
   }
 
-  public void updateDataReportableAndActiveFor(Facility facility) {
+  public Facility updateDataReportableAndActiveFor(Facility facility) {
     mapper.updateDataReportableAndActiveFor(facility);
-
+    return mapper.getById(facility.getId());
   }
 
   public List<Facility> getFacilitiesBy(Long programId, List<RequisitionGroup> requisitionGroups) {

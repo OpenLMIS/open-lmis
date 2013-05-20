@@ -16,39 +16,39 @@ describe("Facility Controller", function () {
       scope = $rootScope.$new();
       routeParams = $routeParams;
       $httpBackend = _$httpBackend_;
-      var facilityReferenceData = {"facilityTypes":[
-        {"type":"warehouse"}
-      ], "programs":[
-        {"code":"programCode", "id":"programId"}
-      ], "geographicZones":[
-        {"zoneId":"testId"}
-      ], "facilityOperators":[
-        {"operatorCode":"testCode"}
+      var facilityReferenceData = {"facilityTypes": [
+        {"type": "warehouse"}
+      ], "programs": [
+        {"code": "programCode", "id": "programId"}
+      ], "geographicZones": [
+        {"zoneId": "testId"}
+      ], "facilityOperators": [
+        {"operatorCode": "testCode"}
       ]};
       $rootScope.fixToolBar = function () {
       };
-      ctrl = $controller(FacilityController, {$scope:scope, $routeParams:routeParams, facilityReferenceData:facilityReferenceData, facility:undefined});
-      scope.facilityForm = {$error:{ pattern:"" }};
+      ctrl = $controller(FacilityController, {$scope: scope, $routeParams: routeParams, facilityReferenceData: facilityReferenceData, facility: undefined});
+      scope.facilityForm = {$error: { pattern: "" }};
     }));
 
     it('should set facility reference data', function () {
       expect(scope.facilityTypes).toEqual([
-        {"type":"warehouse"}
+        {"type": "warehouse"}
       ]);
       expect(scope.facilityOperators).toEqual([
-        {"operatorCode":"testCode"}
+        {"operatorCode": "testCode"}
       ]);
       expect(scope.geographicZones).toEqual([
-        {"zoneId":"testId"}
+        {"zoneId": "testId"}
       ]);
       expect(scope.programs).toEqual([
-        {"code":"programCode", "id":"programId"}
+        {"code": "programCode", "id": "programId"}
       ]);
     });
 
     it('should give success message if save successful', function () {
-      facility = {"code":"code", supportedPrograms:[]};
-      $httpBackend.expectPOST('/facilities.json').respond(200, {"success":"Saved successfully", "facility":facility});
+      facility = {"code": "code", supportedPrograms: []};
+      $httpBackend.expectPOST('/facilities.json').respond(200, {"success": "Saved successfully", "facility": facility});
       scope.saveFacility();
       $httpBackend.flush();
       expect("Saved successfully").toEqual(scope.$parent.message);
@@ -56,7 +56,7 @@ describe("Facility Controller", function () {
     });
 
     it('should give error if save failed', function () {
-      $httpBackend.expectPOST('/facilities.json').respond(404, {"error":"Save failed"});
+      $httpBackend.expectPOST('/facilities.json').respond(404, {"error": "Save failed"});
       scope.saveFacility();
       $httpBackend.flush();
       expect("Save failed").toEqual(scope.error);
@@ -82,8 +82,8 @@ describe("Facility Controller", function () {
     it('should not add program supported to facility if active program does not contain start date', function () {
       scope.facilityForm.$error.required = "{}";
       scope.facility.supportedPrograms = [
-        {"code":"ARV", "name":"ARV", "description":"ARV", "active":true, "startDate":"1/12/12"},
-        {"code":"HIV", "name":"HIV", "description":"HIV", "active":true}
+        {"code": "ARV", "name": "ARV", "description": "ARV", "active": true, "startDate": "1/12/12"},
+        {"code": "HIV", "name": "HIV", "description": "HIV", "active": true}
       ];
       scope.saveFacility();
       expect("There are some errors in the form. Please resolve them.").toEqual(scope.error);
@@ -93,7 +93,7 @@ describe("Facility Controller", function () {
 
     it('should add program supported to facility', function () {
       scope.facility.supportedPrograms = [];
-      var supportedProgram = {"code":"ARV", "name":"ARV", "description":"ARV", "active":true, "editedStartDate":"1/12/12", "program":{"id":1}};
+      var supportedProgram = {"code": "ARV", "name": "ARV", "description": "ARV", "active": true, "editedStartDate": "1/12/12", "program": {"id": 1}};
 
       scope.addSupportedProgram(supportedProgram);
 
@@ -106,10 +106,10 @@ describe("Facility Controller", function () {
 
     it('should remove program supported to facility', function () {
       scope.facility.supportedPrograms = [];
-      var arvProgram = {"code":"ARV", "name":"ARV", "description":"ARV", "active":true, "startDate":"1/12/12", "program":{"id":1}};
+      var arvProgram = {"code": "ARV", "name": "ARV", "description": "ARV", "active": true, "startDate": "1/12/12", "program": {"id": 1}};
       scope.facility.supportedPrograms = [
         arvProgram,
-        {"code":"HIV", "name":"HIV", "description":"HIV", "active":true, "program":{"id":2}}
+        {"code": "HIV", "name": "HIV", "description": "HIV", "active": true, "program": {"id": 2}}
       ];
 
       scope.removeSupportedProgram(arvProgram);
@@ -121,13 +121,13 @@ describe("Facility Controller", function () {
     });
 
     it('should edit start date', function () {
-      window.program = {'startDate':2, 'editedStartDate':7};
+      window.program = {'startDate': 2, 'editedStartDate': 7};
       scope.dateChangeCallback(true);
       expect(window.program.startDate).toEqual(7);
     });
 
     it('should reset old start date', function () {
-      window.program = {'startDate':2, 'editedStartDate':7};
+      window.program = {'startDate': 2, 'editedStartDate': 7};
       scope.dateChangeCallback(false);
       expect(window.program.editedStartDate).toEqual(2);
     });
@@ -143,42 +143,42 @@ describe("Facility Controller", function () {
       };
       var routeParams = $routeParams;
       routeParams.facilityId = "1";
-      var facilityReferenceData = {"facilityTypes":[
-        {"type":"warehouse"}
-      ], "programs":[
-        {"code":"ARV", "name":"ARV", "description":"ARV", "active":true},
-        {"code":"HIV", "name":"HIV", "description":"HIV", "active":true},
-        {"code":"ABC", "name":"ABC", "description":"ABC", "active":false}
+      var facilityReferenceData = {"facilityTypes": [
+        {"type": "warehouse"}
+      ], "programs": [
+        {"code": "ARV", "name": "ARV", "description": "ARV", "active": true},
+        {"code": "HIV", "name": "HIV", "description": "HIV", "active": true},
+        {"code": "ABC", "name": "ABC", "description": "ABC", "active": false}
       ],
-        "geographicZones":[
-          {"zoneId":"testId"}
-        ], "facilityOperators":[
-          {"operatorCode":"testCode"}
+        "geographicZones": [
+          {"zoneId": "testId"}
+        ], "facilityOperators": [
+          {"operatorCode": "testCode"}
         ]};
-      var facility = {"id":1, "code":"F1756", "name":"Village Dispensary", "description":"IT department", "gln":"G7645", "mainPhone":"9876234981",
-        "fax":"fax", "address1":"A", "address2":"B", "geographicZone":{"id":1}, "facilityType":{"code":"warehouse"}, "catchmentPopulation":333,
-        "latitude":22.1, "longitude":1.2, "altitude":3.3, "operatedBy":{"code":"NGO"}, "coldStorageGrossCapacity":9.9, "coldStorageNetCapacity":6.6,
-        "suppliesOthers":true, "sdp":true, "hasElectricity":true, "online":true, "hasElectronicScc":true, "hasElectronicDar":null, "active":true,
-        "goLiveDate":1352572200000, "goDownDate":-2592106200000, "satellite":true, "satelliteParentId":null, "comment":"fc", "dataReportable":true,
-        "supportedPrograms":[
-          {"code":"ARV", "name":"ARV", "description":"ARV", "active":true, "program":{"id":1}, "startDate":1352572200000},
-          {"code":"HIV", "name":"HIV", "description":"HIV", "active":true, "program":{"id":1}, "startDate":1352572200000}
-        ], "modifiedBy":null, "modifiedDate":null};
-      $controller(FacilityController, {$scope:scope, $routeParams:routeParams, facilityReferenceData:facilityReferenceData, facility:facility});
-      scope.facilityForm = {$error:{ pattern:"" }};
+      var facility = {"id": 1, "code": "F1756", "name": "Village Dispensary", "description": "IT department", "gln": "G7645", "mainPhone": "9876234981",
+        "fax": "fax", "address1": "A", "address2": "B", "geographicZone": {"id": 1}, "facilityType": {"code": "warehouse"}, "catchmentPopulation": 333,
+        "latitude": 22.1, "longitude": 1.2, "altitude": 3.3, "operatedBy": {"code": "NGO"}, "coldStorageGrossCapacity": 9.9, "coldStorageNetCapacity": 6.6,
+        "suppliesOthers": true, "sdp": true, "hasElectricity": true, "online": true, "hasElectronicScc": true, "hasElectronicDar": null, "active": true,
+        "goLiveDate": 1352572200000, "goDownDate": -2592106200000, "satellite": true, "satelliteParentId": null, "comment": "fc", "dataReportable": true,
+        "supportedPrograms": [
+          {"code": "ARV", "name": "ARV", "description": "ARV", "active": true, "program": {"id": 1}, "startDate": 1352572200000},
+          {"code": "HIV", "name": "HIV", "description": "HIV", "active": true, "program": {"id": 1}, "startDate": 1352572200000}
+        ], "modifiedBy": null, "modifiedDate": null};
+      $controller(FacilityController, {$scope: scope, $routeParams: routeParams, facilityReferenceData: facilityReferenceData, facility: facility});
+      scope.facilityForm = {$error: { pattern: "" }};
     }));
 
     it('should get facility if defined', function () {
       expect(scope.facility.goLiveDate).toEqual(new Date(1352572200000));
       expect(scope.facility.goDownDate).toEqual(new Date(-2592106200000));
       expect(scope.facility.supportedPrograms).toEqual([
-        {"code":"ARV", "name":"ARV", "description":"ARV", "active":true, "program":{"id":1}, "startDate":new Date(1352572200000)},
-        {"code":"HIV", "name":"HIV", "description":"HIV", "active":true, "program":{"id":1}, "startDate":new Date(1352572200000)}
+        {"code": "ARV", "name": "ARV", "description": "ARV", "active": true, "program": {"id": 1}, "startDate": new Date(1352572200000)},
+        {"code": "HIV", "name": "HIV", "description": "HIV", "active": true, "program": {"id": 1}, "startDate": new Date(1352572200000)}
       ]);
     });
 
     it('should delete a facility', function () {
-      httpBackend.expectPUT('/facility/update/delete.json', scope.facility).respond(200, {"success":"Deleted successfully", "facility":scope.facility});
+      httpBackend.expect('DELETE', '/facilities/1.json').respond(200, {"success": "Deleted successfully", "facility": scope.facility});
 
       scope.deleteFacilityCallBack(true);
       httpBackend.flush();
@@ -191,7 +191,7 @@ describe("Facility Controller", function () {
     });
 
     it('should not delete a facility if error occurs', function () {
-      httpBackend.expectPUT('/facility/update/delete.json', scope.facility).respond(400, {"error":"something went wrong", "facility":scope.facility});
+      httpBackend.expect('DELETE', '/facilities/1.json').respond(404, {"error": "something went wrong", "facility": scope.facility});
 
       scope.deleteFacilityCallBack(true);
       httpBackend.flush();
@@ -204,7 +204,7 @@ describe("Facility Controller", function () {
     });
 
     it('should restore a facility', function () {
-      httpBackend.expectPUT('/facility/update/restore.json', scope.facility).respond(200, {"success":"Restored Successfully", "facility":scope.facility});
+      httpBackend.expect('PUT', '/facilities/1/restore.json?active=true').respond(200, {"success": "Restored Successfully", "facility": scope.facility});
 
       scope.restoreFacility(true);
       httpBackend.flush();
@@ -217,7 +217,7 @@ describe("Facility Controller", function () {
     });
 
     it('should not restore a facility if error occurs', function () {
-      httpBackend.expectPUT('/facility/update/restore.json', scope.facility).respond(400, {"error":"something went wrong", "facility":scope.facility});
+      httpBackend.expect('PUT', '/facilities/1/restore.json?active=true').respond(400, {"error": "something went wrong", "facility": scope.facility});
 
       scope.restoreFacility(true);
       httpBackend.flush();

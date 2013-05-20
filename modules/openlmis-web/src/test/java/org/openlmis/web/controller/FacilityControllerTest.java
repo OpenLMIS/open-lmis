@@ -9,6 +9,7 @@ package org.openlmis.web.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
@@ -16,13 +17,18 @@ import org.openlmis.core.service.ProgramService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.model.FacilityReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.ui.ModelMap;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -31,10 +37,12 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
-import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
-import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
+import static org.openlmis.core.domain.Right.*;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(Facility.class)
 public class FacilityControllerTest {
 
   public static final Long userId = 1L;
@@ -146,41 +154,6 @@ public class FacilityControllerTest {
   }
 
   @Test
-  public void shouldUpdateDataReportableAndActiveForFacilityDelete() throws Exception {
-    Facility facility = new Facility();
-    facility.setId(123L);
-    facility.setName("Test Facility");
-    facility.setCode("Test Code");
-    when(facilityService.getById(123L)).thenReturn(facility);
-    ResponseEntity responseEntity = facilityController.updateDataReportableAndActive(facility, "delete", httpServletRequest);
-    OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
-
-    assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
-    assertThat(response.getSuccessMsg(), is("\"Test Facility\" / \"Test Code\" deleted successfully"));
-    verify(facilityService).updateDataReportableAndActiveFor(facility);
-    assertThat(facility.getModifiedBy(), is(userId));
-    assertThat(facility.getDataReportable(), is(false));
-    assertThat(facility.getActive(), is(false));
-  }
-
-  @Test
-  public void shouldUpdateDataReportableAndActiveForFacilityRestore() throws Exception {
-    MockHttpServletRequest httpServletRequest = httpRequest();
-    Facility facility = new Facility();
-    facility.setId(123L);
-    facility.setName("Test Facility");
-    facility.setCode("Test Code");
-    when(facilityService.getById(123L)).thenReturn(facility);
-
-    ResponseEntity responseEntity = facilityController.updateDataReportableAndActive(facility, "restore", httpServletRequest);
-    OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
-    assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
-    assertThat(response.getSuccessMsg(), is("\"Test Facility\" / \"Test Code\" restored successfully"));
-    verify(facilityService).updateDataReportableAndActiveFor(facility);
-    assertThat(facility.getDataReportable(), is(true));
-  }
-
-  @Test
   public void shouldReturnUserSupervisedFacilitiesForAProgram() {
     Long programId = 1L;
     List<Facility> facilities = new ArrayList<>();
@@ -211,6 +184,38 @@ public class FacilityControllerTest {
 
     assertThat((List<Facility>) response.getBody().getData().get("facilities"), is(facilities));
     verify(facilityService).getForUserAndRights(userId, VIEW_REQUISITION);
+  }
+
+  @Test
+  public void shouldSoftDeleteFacility() throws Exception {
+    Facility facility = new Facility();
+    facility.setName("Test Facility");
+    facility.setCode("Test Code");
+    mockStatic(Facility.class);
+    when(Facility.createFacilityToBeDeleted(1L, 1L)).thenReturn(facility);
+
+    when(facilityService.updateDataReportableAndActiveFor(facility)).thenReturn(facility);
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.softDelete(httpServletRequest, 1L);
+
+    assertThat(responseEntity.getBody().getSuccessMsg(), is("\"Test Facility\" / \"Test Code\" deleted successfully"));
+    assertThat((Facility) responseEntity.getBody().getData().get("facility"), is(facility));
+    verify(facilityService).updateDataReportableAndActiveFor(facility);
+  }
+
+  @Test
+  public void shouldRestoreFacilityAndSetActiveToTrue() throws Exception {
+    Facility facility = new Facility();
+    facility.setName("Test Facility");
+    facility.setCode("Test Code");
+    mockStatic(Facility.class);
+    when(Facility.createFacilityToBeRestored(1L, 1L, true)).thenReturn(facility);
+
+    when(facilityService.updateDataReportableAndActiveFor(facility)).thenReturn(facility);
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.restore(httpServletRequest, 1L, true);
+
+    assertThat(responseEntity.getBody().getSuccessMsg(), is("\"Test Facility\" / \"Test Code\" restored successfully"));
+    assertThat((Facility) responseEntity.getBody().getData().get("facility"), is(facility));
+    verify(facilityService).updateDataReportableAndActiveFor(facility);
   }
 
   private MockHttpServletRequest httpRequest() {
