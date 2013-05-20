@@ -94,6 +94,16 @@
                     <property name="title" value="Adjustment Summary By Product"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="stocked_out"/>
+                    <property name="template" value="stocked-out-facilities.jasper"/>
+                    <property name="reportDataProvider" ref="stockedOutFacilitiesReportDataProvider"/>
+                    <property name="id" value="RP-Stocked_Out_Facilities"/>
+                    <property name="name" value="Stocked Out Facilities"/>
+                    <property name="title" value="Stocked Out Facilities"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
             </list>
         </constructor-arg>
     </bean>
