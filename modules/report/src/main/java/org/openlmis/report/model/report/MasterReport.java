@@ -11,7 +11,7 @@ import java.util.List;
  * Date: 5/2/13
  * Time: 3:05 PM
  */
-public class NonReportingFacilityReport implements ReportData {
+public class MasterReport implements ReportData {
 
     public List<? extends ReportData> details;
 

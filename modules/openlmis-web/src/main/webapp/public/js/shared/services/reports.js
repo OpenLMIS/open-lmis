@@ -50,4 +50,6 @@ services.factory('AdjustmentTypes', function($resource){
     return $resource('/reports/adjustmentTypes.json', {}, {});
 });
 
-
+services.factory('StockedOutFacilities',function($resource){
+   return $resource('/reports/stockedOut.json',{},{});
+});
