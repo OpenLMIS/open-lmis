@@ -58,7 +58,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="110" y="67" width="252" height="29" forecolor="#000000" backcolor="#333333"/>
+					<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="130" y="67" width="232" height="29" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -170,7 +170,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 					<textFieldExpression><![CDATA[$F{minMOS}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement uuid="4841d9ec-87bd-45f2-9287-e5cc9b856e4f" mode="Transparent" x="45" y="67" width="65" height="29" forecolor="#000000" backcolor="#333333"/>
+					<reportElement uuid="4841d9ec-87bd-45f2-9287-e5cc9b856e4f" mode="Transparent" x="45" y="67" width="85" height="29" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -248,7 +248,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 				<textFieldExpression><![CDATA[$F{average}.toString().toUpperCase()== "NULL"?" " :$F{average}.toString()]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement uuid="1ac27f1d-893c-4baf-9d67-bcc50c886b8d" mode="Transparent" x="110" y="0" width="252" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="1ac27f1d-893c-4baf-9d67-bcc50c886b8d" mode="Transparent" x="130" y="0" width="232" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -264,7 +264,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 				<textFieldExpression><![CDATA[($F{product}=="NULL"?" ":$F{product})]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement uuid="9e0e38a1-655b-45c6-a4f5-0e1f456c568a" mode="Transparent" x="45" y="0" width="65" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="9e0e38a1-655b-45c6-a4f5-0e1f456c568a" mode="Transparent" x="45" y="0" width="85" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
