@@ -173,8 +173,29 @@ public class ReportController  extends BaseController {
 
 
         Report report = reportManager.getReportByKey("non_reporting");
-        List<NonReportingFacilityReport> reportList =
-                (List<NonReportingFacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
+        List<MasterReport> reportList =
+                (List<MasterReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
+
+        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
+
+        return new Pages(page,totalRecCount,max,reportList);
+    }
+
+
+    @RequestMapping(value = "/stockedOut", method = GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_STOCKED_OUT_REPORT')")
+    public Pages getStockedOutReportData( //@PathVariable(value = "reportKey") String reportKey,
+                                                @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
+                                                HttpServletRequest request
+    ) {
+
+
+
+        Report report = reportManager.getReportByKey("stocked_out");
+        List<MasterReport> reportList =
+                (List<MasterReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
 
         int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
 

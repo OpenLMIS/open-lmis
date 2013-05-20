@@ -1,4 +1,4 @@
-function StockedOutController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, NonReportingFacilities, Schedules, FacilityTypes , Periods, Programs, $http, $routeParams,$location) {
+function StockedOutController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, StockedOutFacilities, Schedules, FacilityTypes , Periods, ProductCategories , Programs, $http, $routeParams,$location) {
         //to minimize and maximize the filter section
         var section = 1;
 
@@ -54,8 +54,13 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
 
         FacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.push({'name': 'All Facility Types -'});
+            $scope.facilityTypes.push({'name': 'All facility types'});
         });
+
+        ProductCategories.get(function(data){
+            $scope.productCategories = data.productCategoryList;
+            $scope.productCategories.push({'name':"All product categories"})
+        })
 
         $scope.ChangeSchedule = function(){
             Periods.get({ scheduleId : $scope.schedule },function(data) {
@@ -141,7 +146,7 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
 
         $scope.getPagedDataAsync = function (pageSize, page) {
                         var params = $scope.getParams(pageSize, page);
-                        NonReportingFacilities.get(params, function(data) {
+                         StockedOutFacilities.get(params, function(data) {
                             $scope.setPagingData(data.pages.rows[0].details,page,pageSize,data.pages.total);
                             $scope.summaries    =  data.pages.rows[0].summary;
                         });
