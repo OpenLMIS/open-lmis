@@ -160,6 +160,19 @@ public class E2EViewReport extends TestCaseHelper {
         homePage.goBack();
     }
 
+    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifyStockedOutReport(String[] credentials) throws Exception{
+
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+        StockedOutReportPage stockedOutReportPage = homePage.navigateViewStockedOutReport();
+        stockedOutReportPage.enterFilterValues("HIV","TDF/FTC/EFV","Monthly","Requistion Group 2","Lvl3 Hospital");
+        stockedOutReportPage.verifyHTMLReportOutput();
+        stockedOutReportPage.verifyPdfReportOutput();
+        testWebDriver.sleep(500);
+        homePage.goBack();
+    }
+
     private void setupRnRData(String[] credentials) throws IOException, SQLException {
         List<String> rightsList = new ArrayList<String>();
         rightsList.add("CREATE_REQUISITION");
