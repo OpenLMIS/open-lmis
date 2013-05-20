@@ -76,7 +76,7 @@ public class RequisitionRepository {
   }
 
   private void updateFullSupplyLineItem(RnrStatus rnrStatus, RnrLineItem lineItem) {
-    if(rnrStatus== RnrStatus.AUTHORIZED || rnrStatus==RnrStatus.IN_APPROVAL){
+    if(rnrStatus==RnrStatus.IN_APPROVAL){
       rnrLineItemMapper.updateOnApproval(lineItem);
       return;
     }
