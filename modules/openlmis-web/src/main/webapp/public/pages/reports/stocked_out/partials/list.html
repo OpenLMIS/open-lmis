@@ -65,6 +65,16 @@
                                     </div>
                                 </div>
 
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Product Categories</label>
+
+                                    <div class="form-field">
+                                        <select name="productCategoryElement" ng-change="filterGrid()" ng-model="productCategory" ng-options="option.id as option.name for option in productCategories">
+
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="form-cell horizontalFilters pull-right">
                                      <span ng-repeat="summary in summaries">
                                          <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
