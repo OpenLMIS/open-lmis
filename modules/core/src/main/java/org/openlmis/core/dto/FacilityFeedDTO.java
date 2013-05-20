@@ -94,7 +94,7 @@ public class FacilityFeedDTO extends BaseFeedDTO {
     this.latitude = facility.getLatitude();
     this.longitude = facility.getLongitude();
     this.altitude = facility.getAltitude();
-    this.operatedBy = facility.getOperatedBy().getText();
+    this.operatedBy = (facility.getOperatedBy() != null) ? facility.getOperatedBy().getText() : "";
     this.coldStorageGrossCapacity = facility.getColdStorageGrossCapacity();
     this.coldStorageNetCapacity = facility.getColdStorageNetCapacity();
     this.suppliesOthers = (facility.getSuppliesOthers() != null)?facility.getSuppliesOthers():false;
