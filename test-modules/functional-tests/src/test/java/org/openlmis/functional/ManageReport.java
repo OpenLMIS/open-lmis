@@ -38,7 +38,7 @@ public class ManageReport extends TestCaseHelper {
     reportPage.verifyItemsOnReportUploadScreen();
 
     String reportName="Test-Report"+reportPage.getCurrentDateAndTime();
-    String fileName="activefacility.jrxml";
+    String fileName="invalidActivefacility.jrxml";
 
     reportPage.clickSaveButton();
     reportPage.verifyErrorMessageDivReportName();
@@ -53,10 +53,14 @@ public class ManageReport extends TestCaseHelper {
     reportPage.clickSaveButton();
     reportPage.verifyErrorMessageDivReportName();
 
+    reportPage.enterReportName(reportName);
+    reportPage.uploadFile(fileName);
+    reportPage.clickSaveButton();
+    reportPage.verifyErrorMessageDivFooter();
   }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
-  public void uploadManageReport(String[] credentials) throws Exception {
+  public void uploadManageReportAndVerifyDuplicateReport(String[] credentials) throws Exception {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
@@ -76,7 +80,18 @@ public class ManageReport extends TestCaseHelper {
     reportPage.verifyReportNameInList(reportName,1);
     reportPage.verifyItemsOnReportListScreen();
 
+    reportPage.clickAddNewButton();
+    reportPage.verifyItemsOnReportUploadScreen();
+
+    reportPage.enterReportName(reportName);
+    reportPage.uploadFile(fileName);
+    reportPage.clickSaveButton();
+    reportPage.verifyErrorMessageDivFooter();
+
+    reportPage.clickCancelButton();
+    reportPage.verifyReportNameInList(reportName,1);
   }
+
 
 
   @AfterMethod(groups = {"functional2"})

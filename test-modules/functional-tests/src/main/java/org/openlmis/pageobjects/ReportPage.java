@@ -48,6 +48,12 @@ public class ReportPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']")
   private static WebElement saveSuccessMessage;
 
+  @FindBy(how = ID, using = "error")
+  private static WebElement saveErrorMessage;
+
+  @FindBy(how = XPATH, using = "//span[contains(text(),'Active Facility Report')]")
+  private static WebElement ActiveFacilityHeader;
+
   @FindBy(how = XPATH, using = "//a[contains(text(),'PDF')]")
   private static WebElement PDF;
 
@@ -124,11 +130,24 @@ public class ReportPage extends RequisitionPage {
     saveButton.click();
   }
 
+  public void clickCancelButton()
+  {
+    testWebDriver.waitForElementToAppear(cancelButton);
+    cancelButton.click();
+  }
+
   public void verifySuccessMessageDiv()
   {
     testWebDriver.sleep(500);
     assertTrue("Report created successfully message not displayed",saveSuccessMessage.isDisplayed());
   }
+
+  public void verifyErrorMessageDivFooter()
+  {
+    testWebDriver.sleep(1000);
+    assertTrue("Report with same name already exists message should show up",saveErrorMessage.isDisplayed());
+  }
+
 
   public void verifyErrorMessageDivReportName()
   {
