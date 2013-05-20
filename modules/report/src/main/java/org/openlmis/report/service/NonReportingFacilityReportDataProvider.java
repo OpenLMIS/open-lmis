@@ -2,18 +2,12 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.core.repository.FacilityRepository;
-import org.openlmis.core.repository.ProcessingPeriodRepository;
-import org.openlmis.core.repository.ProgramRepository;
-import org.openlmis.core.repository.RequisitionGroupRepository;
-import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.report.mapper.NonReportingFacilityReportMapper;
 import org.openlmis.report.mapper.RequisitionGroupReportMapper;
-import org.openlmis.report.mapper.SummaryReportMapper;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.report.MasterReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.openlmis.report.model.report.NonReportingFacilityReport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,8 +34,8 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
     protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
         RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET,RowBounds.NO_ROW_LIMIT);
 
-        List<NonReportingFacilityReport> reportList = new ArrayList<NonReportingFacilityReport>();
-        NonReportingFacilityReport report = new NonReportingFacilityReport();
+        List<MasterReport> reportList = new ArrayList<MasterReport>();
+        MasterReport report = new MasterReport();
 
         return reportMapper.getReport(filterCriteria,rowBounds);
         //report.details =  reportMapper.getReport(filterCriteria,rowBounds);
@@ -63,8 +57,8 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
     public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
         RowBounds rowBounds = new RowBounds((page-1) * pageSize,pageSize);
 
-        List<NonReportingFacilityReport> reportList = new ArrayList<NonReportingFacilityReport>();
-        NonReportingFacilityReport report = new NonReportingFacilityReport();
+        List<MasterReport> reportList = new ArrayList<MasterReport>();
+        MasterReport report = new MasterReport();
         report.details =  reportMapper.getReport(filterCriteria,rowBounds);
         report.summary = reportMapper.getReportSummary(filterCriteria);
         reportList.add( report );
