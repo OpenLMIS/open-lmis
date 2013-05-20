@@ -73,7 +73,6 @@ public class ReportPage extends RequisitionPage {
   private static WebElement errorFile;
 
 
-
   public ReportPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
@@ -81,100 +80,80 @@ public class ReportPage extends RequisitionPage {
 
   }
 
-  public void verifyNoReportsMessage()
-  {
+  public void verifyNoReportsMessage() {
     testWebDriver.waitForElementToAppear(noReportsMessage);
     assertTrue("No reports message should be displayed", noReportsMessage.isDisplayed());
   }
 
-  public void clickAddNewButton()
-  {
+  public void clickAddNewButton() {
     testWebDriver.waitForElementToAppear(addNewButton);
     addNewButton.click();
     testWebDriver.waitForElementToAppear(addNewReportTitle);
   }
 
-  public void verifyItemsOnReportUploadScreen()
-  {
-   assertTrue("Report Name field missing",reportNameTextField.isDisplayed());
-   assertTrue("Upload field missing",uploadField.isDisplayed());
-   assertTrue("Save button missing",saveButton.isDisplayed());
-   assertTrue("Cancel button missing",cancelButton.isDisplayed());
+  public void verifyItemsOnReportUploadScreen() {
+    assertTrue("Report Name field missing", reportNameTextField.isDisplayed());
+    assertTrue("Upload field missing", uploadField.isDisplayed());
+    assertTrue("Save button missing", saveButton.isDisplayed());
+    assertTrue("Cancel button missing", cancelButton.isDisplayed());
   }
 
-  public void verifyItemsOnReportListScreen()
-  {
-    assertTrue("PDF link missing",PDF.isDisplayed());
-    assertTrue("XLS link missing",XLS.isDisplayed());
-    assertTrue("CSV link missing",CSV.isDisplayed());
-    assertTrue("HTML link missing",HTML.isDisplayed());
+  public void verifyItemsOnReportListScreen() {
+    assertTrue("PDF link missing", PDF.isDisplayed());
+    assertTrue("XLS link missing", XLS.isDisplayed());
+    assertTrue("CSV link missing", CSV.isDisplayed());
+    assertTrue("HTML link missing", HTML.isDisplayed());
   }
 
-  public void enterReportName(String reportName)
-  {
+  public void enterReportName(String reportName) {
     testWebDriver.waitForElementToAppear(reportNameTextField);
     reportNameTextField.clear();
     reportNameTextField.sendKeys(reportName);
   }
 
   public void uploadFile(String fileName) {
-    String  uploadFilePath;
+    String uploadFilePath;
     uploadFilePath = this.getClass().getClassLoader().getResource(fileName).getFile();
     uploadField.sendKeys(uploadFilePath);
 
   }
 
-  public void clickSaveButton()
-  {
+  public void clickSaveButton() {
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
   }
 
-  public void clickCancelButton()
-  {
+  public void clickCancelButton() {
     testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();
   }
 
-  public void verifySuccessMessageDiv()
-  {
+  public void verifySuccessMessageDiv() {
     testWebDriver.sleep(500);
-    assertTrue("Report created successfully message not displayed",saveSuccessMessage.isDisplayed());
+    assertTrue("Report created successfully message not displayed", saveSuccessMessage.isDisplayed());
   }
 
-  public void verifyErrorMessageDivFooter()
-  {
+  public void verifyErrorMessageDivFooter() {
     testWebDriver.sleep(1000);
-    assertTrue("Report with same name already exists message should show up",saveErrorMessage.isDisplayed());
+    assertTrue("Report with same name already exists message should show up", saveErrorMessage.isDisplayed());
   }
 
 
-  public void verifyErrorMessageDivReportName()
-  {
+  public void verifyErrorMessageDivReportName() {
     testWebDriver.sleep(500);
-    assertTrue("Error message 'Please fill this value' should show up",errorReportName.isDisplayed());
+    assertTrue("Error message 'Please fill this value' should show up", errorReportName.isDisplayed());
   }
 
-  public void verifyErrorMessageDivUploadFile()
-  {
+  public void verifyErrorMessageDivUploadFile() {
     testWebDriver.sleep(500);
-    assertTrue("Error message 'Please fill this value' should show up",errorFile.isDisplayed());
+    assertTrue("Error message 'Please fill this value' should show up", errorFile.isDisplayed());
   }
 
-  public void verifyReportNameInList(String reportName,int reportIndex)
-  {
-    WebElement element=testWebDriver.getElementByXpath("//div[@id='wrap']/div/div/div/table/tbody/tr["+reportIndex+"]/td[1]/div");
+  public void verifyReportNameInList(String reportName, int reportIndex) {
+    WebElement element = testWebDriver.getElementByXpath("//div[@id='wrap']/div/div/div/table/tbody/tr[" + reportIndex + "]/td[1]/div");
     testWebDriver.waitForElementToAppear(element);
-    assertTrue("Report Name '"+reportName+"' should display in list",element.getText().trim().equalsIgnoreCase(reportName));
+    assertTrue("Report Name '" + reportName + "' should display in list", element.getText().trim().equalsIgnoreCase(reportName));
   }
-   public String getCurrentDateAndTime()
-   {
-     Date dObj = new Date();
-     SimpleDateFormat formatter_date_time = new SimpleDateFormat(
-       "yyyyMMdd-hhmmss");
-     return formatter_date_time.format(dObj);
-   }
-
 
 
 }

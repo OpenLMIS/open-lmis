@@ -14,12 +14,23 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
 public class ManageReport extends TestCaseHelper {
+
+  String reportName, fileName;
+
+  public ManageReport() {
+    reportName = "Test-Report" + getCurrentDateAndTime();
+    fileName = "activefacility.jrxml";
+  }
+
 
   @BeforeMethod(groups = {"functional2"})
   public void setUp() throws Exception {
@@ -37,8 +48,7 @@ public class ManageReport extends TestCaseHelper {
     reportPage.clickAddNewButton();
     reportPage.verifyItemsOnReportUploadScreen();
 
-    String reportName="Test-Report"+reportPage.getCurrentDateAndTime();
-    String fileName="invalidActivefacility.jrxml";
+    fileName = "invalidActivefacility.jrxml";
 
     reportPage.clickSaveButton();
     reportPage.verifyErrorMessageDivReportName();
@@ -60,7 +70,7 @@ public class ManageReport extends TestCaseHelper {
   }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
-  public void uploadManageReportAndVerifyDuplicateReport(String[] credentials) throws Exception {
+  public void uploadManageReport(String[] credentials) throws Exception {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
@@ -70,15 +80,23 @@ public class ManageReport extends TestCaseHelper {
     reportPage.clickAddNewButton();
     reportPage.verifyItemsOnReportUploadScreen();
 
-    String reportName="Test-Report"+reportPage.getCurrentDateAndTime();
-    String fileName="activefacility.jrxml";
-
+    fileName = "activefacility.jrxml";
     reportPage.enterReportName(reportName);
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
     reportPage.verifySuccessMessageDiv();
-    reportPage.verifyReportNameInList(reportName,1);
+    reportPage.verifyReportNameInList(reportName, 1);
     reportPage.verifyItemsOnReportListScreen();
+
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive", dependsOnMethods = "uploadManageReport")
+  public void verifyDuplicateReport(String[] credentials) throws Exception {
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    ReportPage reportPage = homePage.navigateReportScreen();
 
     reportPage.clickAddNewButton();
     reportPage.verifyItemsOnReportUploadScreen();
@@ -89,9 +107,15 @@ public class ManageReport extends TestCaseHelper {
     reportPage.verifyErrorMessageDivFooter();
 
     reportPage.clickCancelButton();
-    reportPage.verifyReportNameInList(reportName,1);
+    reportPage.verifyReportNameInList(reportName, 1);
   }
 
+  private String getCurrentDateAndTime() {
+    Date dObj = new Date();
+    SimpleDateFormat formatter_date_time = new SimpleDateFormat(
+      "yyyyMMdd-hhmmss");
+    return formatter_date_time.format(dObj);
+  }
 
 
   @AfterMethod(groups = {"functional2"})
