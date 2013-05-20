@@ -16,15 +16,24 @@ public class StockedOutReportQueryBuilder {
        String facilityType     = ((String[])params.get("ftype"))[0] ;
        String program          = ((String[])params.get("program"))[0];
        String schedule         = ((String[])params.get("schedule"))[0];
-       return getQueryString(params, program , period , reportingGroup, facilityType, schedule);
+       String productCategory   = ((String[])params.get("productCategory"))[0];
+
+       return getQueryString(params, program , period , reportingGroup, facilityType, schedule, productCategory);
 
    }
 
-    private static String getQueryString(Map params, String program , String period, String reportingGroup, String facilityType, String schedule) {
+    private static String getQueryString(Map params, String program , String period, String reportingGroup, String facilityType, String schedule, String productCategory) {
+        // include the product category filter for the inner query
+        String productCateogryQuery = "";
+        if(productCategory != "" && !productCategory.endsWith( "undefined")){
+            productCateogryQuery =  " and pc.id = " + productCategory;
+        }
+
         BEGIN();
         SELECT_DISTINCT("facilities.code, facilities.name");
         SELECT_DISTINCT("gz.name as location");
         SELECT_DISTINCT("ft.name as facilityType");
+
 
         FROM("facilities");
         INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
@@ -32,7 +41,7 @@ public class StockedOutReportQueryBuilder {
         INNER_JOIN("facility_types ft on ft.id = facilities.typeid");
         INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id");
         INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
-        WHERE("facilities.id not in (select r.facilityid from requisitions r where r.periodid = cast (" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
+        WHERE("facilities.id in (select r.facilityid from requisitions r join requisition_line_items li on r.id = li.rnrid join product_categories pc on pc.name = li.productcategory where li.stockinhand = 0 and r.periodid = cast (" + period + " as int4) and r.programid = cast(" + program + " as int4) " + productCateogryQuery + " )");
         writePredicates(program, period, reportingGroup, facilityType, schedule);
         ORDER_BY(QueryHelpers.getSortOrder(params, "name"));
         // cache the string query for debugging purposes
@@ -84,14 +93,20 @@ public class StockedOutReportQueryBuilder {
         String facilityType     = ((String[])params.get("ftype"))[0];
         String program          = ((String[])params.get("program"))[0];
         String schedule         = ((String[])params.get("schedule"))[0];
+        String productCategory  = ((String[])params.get("productCategory"))[0];
 
+        // include the product category filter for the inner query
+        String productCateogryQuery = "";
+        if(productCategory != "" && !productCategory.endsWith( "undefined")){
+            productCateogryQuery =  " and pc.id = " + productCategory;
+        }
         BEGIN();
         SELECT("COUNT (*)");
         FROM("facilities");
         INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id") ;
         INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
         INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
-        WHERE("facilities.id not in (select r.facilityid from requisitions r where r.periodid = cast(" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
+        WHERE("facilities.id in (select r.facilityid from requisitions r join requisition_line_items li on r.id = li.rnrid join product_categories pc on pc.name = li.productcategory where li.stockinhand = 0 and r.periodid = cast (" + period + " as int4) and r.programid = cast(" + program + " as int4) " + productCateogryQuery + " )");
         writePredicates(program, period, reportingGroup, facilityType, schedule);
         return SQL();
     }
@@ -105,15 +120,22 @@ public class StockedOutReportQueryBuilder {
        String facilityType     = ((String[])params.get("ftype"))[0];
        String program          = ((String[])params.get("program"))[0];
        String schedule         = ((String[])params.get("schedule"))[0];
+       String productCategory  = ((String[])params.get("productCategory"))[0];
+
+       // include the product category filter for the inner query
+       String productCateogryQuery = "";
+       if(productCategory != "" && !productCategory.endsWith( "undefined")){
+           productCateogryQuery =  " and pc.id = " + productCategory;
+       }
 
        BEGIN();
-       SELECT("'Non Reporting Facilities' AS name");
+       SELECT("'Stocked Out Facilities' AS name");
        SELECT("COUNT (*)");
        FROM("facilities");
        INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id") ;
        INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id") ;
        INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
-       WHERE("facilities.id not in (select r.facilityid from requisitions r where r.periodid = cast(" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
+       WHERE("facilities.id in (select r.facilityid from requisitions r join requisition_line_items li on r.id = li.rnrid join product_categories pc on pc.name = li.productcategory where li.stockinhand = 0 and r.periodid = cast (" + period + " as int4) and r.programid = cast(" + program + " as int4) " + productCateogryQuery + " )");
        writePredicates(program, period, reportingGroup, facilityType,schedule);
 
        String query = SQL();

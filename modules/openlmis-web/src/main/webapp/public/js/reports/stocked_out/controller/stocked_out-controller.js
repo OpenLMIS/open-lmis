@@ -59,7 +59,7 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
 
         ProductCategories.get(function(data){
             $scope.productCategories = data.productCategoryList;
-            $scope.productCategories.push({'name':"All product categories"})
+            $scope.productCategories.push({'name':"All categories"})
         })
 
         $scope.ChangeSchedule = function(){
@@ -141,6 +141,7 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
             params.ftype    = $scope.facilityType;
             params.program  = $scope.program;
             params.schedule = $scope.schedule;
+            params.productCategory = $scope.productCategory;
             return params;
         }
 
