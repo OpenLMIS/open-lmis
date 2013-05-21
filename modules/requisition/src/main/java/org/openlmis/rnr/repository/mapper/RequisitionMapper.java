@@ -75,11 +75,11 @@ public interface RequisitionMapper {
                                   @Param("period") ProcessingPeriod period);
 
 
-  @Select("SELECT * FROM requisitions " +
+  @Select("SELECT * FROM requisitions R " +
       "WHERE facilityId = #{facilityId} " +
       "AND programId = #{programId} " +
       "AND status NOT IN ('INITIATED', 'SUBMITTED') " +
-      "ORDER BY submittedDate DESC " +
+      "ORDER BY (select startDate from processing_periods where id=R.periodId) DESC " +
       "LIMIT 1")
   @Results(value = {
       @Result(property = "facility.id", column = "facilityId"),

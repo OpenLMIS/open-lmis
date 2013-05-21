@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static org.hamcrest.CoreMatchers.*;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -38,6 +39,7 @@ import static org.openlmis.core.builder.FacilityBuilder.code;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.startDate;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
@@ -240,11 +242,18 @@ public class RequisitionMapperIT {
     DateTime date1 = now();
     DateTime date2 = date1.plusMonths(1);
 
+    ProcessingPeriod processingPeriod4 = make(a(defaultProcessingPeriod,
+      with(scheduleId, processingSchedule.getId()),
+      with(ProcessingPeriodBuilder.name, "Period4")));
+    processingPeriod4.setStartDate(new Date());
+
+    processingPeriodMapper.insert(processingPeriod4);
+
     Rnr rnr1 = insertRequisition(processingPeriod1, AUTHORIZED);
     rnr1.setSubmittedDate(date1.toDate());
     mapper.update(rnr1);
 
-    Rnr rnr2 = insertRequisition(processingPeriod2, APPROVED);
+    Rnr rnr2 = insertRequisition(processingPeriod4, APPROVED);
     rnr2.setSubmittedDate(date2.toDate());
     mapper.update(rnr2);
 
