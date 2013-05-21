@@ -17,6 +17,6 @@ public interface ProductReportMapper {
 
     @Select("SELECT id, genericname as name, code " +
             "   FROM " +
-            "       products")
+            "       products order by name")
     List<Product> getAll();
 }

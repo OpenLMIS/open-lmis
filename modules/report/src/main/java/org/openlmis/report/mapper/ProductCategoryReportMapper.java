@@ -18,7 +18,7 @@ public interface ProductCategoryReportMapper {
 
     @Select("SELECT id, name, code " +
             "   FROM " +
-            "       product_categories")
+            "       product_categories order by name")
 
     List<ProductCategory> getAll();
 }
