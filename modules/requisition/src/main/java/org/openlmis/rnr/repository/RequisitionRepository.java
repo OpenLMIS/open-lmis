@@ -59,6 +59,13 @@ public class RequisitionRepository {
     updateNonFullSupplyLineItems(rnr);
   }
 
+  public void approve(Rnr requisition) {
+    requisitionMapper.update(requisition);
+    for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
+      updateFullSupplyLineItem(requisition.getStatus(), lineItem);
+    }
+  }
+
   private void updateNonFullSupplyLineItems(Rnr rnr) {
     rnrLineItemMapper.deleteAllNonFullSupplyForRequisition(rnr.getId());
     for (RnrLineItem lineItem : rnr.getNonFullSupplyLineItems()) {

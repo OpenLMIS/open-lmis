@@ -118,6 +118,16 @@ public class RequisitionRepositoryTest {
     verify(rnrLineItemMapper).update(rnrLineItem2);
   }
 
+  @Test
+  public void shouldApproveRnrAndItsFullSupplyLineItems() throws Exception {
+    rnr.setStatus(RnrStatus.IN_APPROVAL);
+    requisitionRepository.approve(rnr);
+    verify(requisitionMapper).update(rnr);
+    verify(lossesAndAdjustmentsMapper, never()).deleteByLineItemId(rnrLineItem1.getId());
+    verify(lossesAndAdjustmentsMapper, never()).insert(rnrLineItem1, lossAndAdjustmentForLineItem);
+    verify(rnrLineItemMapper).updateOnApproval(rnrLineItem1);
+    verify(rnrLineItemMapper).updateOnApproval(rnrLineItem2);
+  }
 
   @Test
   public void shouldReturnNullIfRnrNotDefined() {

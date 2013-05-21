@@ -175,11 +175,15 @@ public class RequisitionService {
 
     savedRnr.calculateForApproval();
     final SupervisoryNode parent = supervisoryNodeService.getParent(savedRnr.getSupervisoryNodeId());
+    OpenLmisMessage message = null;
     if (parent == null) {
-      return doFinalApproval(savedRnr);
+      message = doFinalApproval(savedRnr);
     } else {
-      return approveAndAssignToNextSupervisoryNode(savedRnr, parent);
+      message = approveAndAssignToNextSupervisoryNode(savedRnr, parent);
     }
+    requisitionRepository.approve(savedRnr);
+    logStatusChangeAndNotify(savedRnr);
+    return message;
   }
 
   private void validateAndUpdate(Rnr savedRnr) {
@@ -329,7 +333,6 @@ public class RequisitionService {
       requisition.getProgram());
     requisition.setStatus(IN_APPROVAL);
     requisition.setSupervisoryNodeId(parent.getId());
-    update(requisition);
     if (nextApprover == null) {
       return new OpenLmisMessage(RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR);
     }
@@ -346,7 +349,6 @@ public class RequisitionService {
       rnr.setSupplyingFacility(supplyLine.getSupplyingFacility());
     }
     rnr.setSupervisoryNodeId(null);
-    update(rnr);
     return new OpenLmisMessage(RNR_APPROVED_SUCCESSFULLY);
   }
 
@@ -373,14 +375,18 @@ public class RequisitionService {
 
   private void update(Rnr requisition) {
     requisitionRepository.update(requisition);
+    logStatusChangeAndNotify(requisition);
+  }
+
+
+  private void logStatusChangeAndNotify(Rnr requisition) {
     requisitionRepository.logStatusChange(requisition);
     requisitionEventService.notifyForStatusChange(requisition);
   }
 
   private void insert(Rnr requisition) {
     requisitionRepository.insert(requisition);
-    requisitionRepository.logStatusChange(requisition);
-    requisitionEventService.notifyForStatusChange(requisition);
+    logStatusChangeAndNotify(requisition);
   }
 
   public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {

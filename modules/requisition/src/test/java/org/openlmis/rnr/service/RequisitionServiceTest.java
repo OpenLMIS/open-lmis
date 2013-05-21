@@ -595,7 +595,7 @@ public class RequisitionServiceTest {
 
     OpenLmisMessage message = requisitionService.approve(authorizedRnr);
 
-    verify(requisitionRepository).update(savedRnr);
+    verify(requisitionRepository).approve(savedRnr);
     verify(requisitionRepository).logStatusChange(savedRnr);
     assertThat(savedRnr.getStatus(), is(APPROVED));
     assertThat(savedRnr.getSupervisoryNodeId(), is(nullValue()));
@@ -636,7 +636,7 @@ public class RequisitionServiceTest {
 
     OpenLmisMessage message = requisitionService.approve(authorizedRnr);
 
-    verify(requisitionRepository).update(savedRnr);
+    verify(requisitionRepository).approve(savedRnr);
     verify(requisitionRepository).logStatusChange(savedRnr);
     verify(requisitionEventService).notifyForStatusChange(savedRnr);
     assertThat(savedRnr.getStatus(), is(IN_APPROVAL));
@@ -657,7 +657,7 @@ public class RequisitionServiceTest {
     when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parentNode, authorizedRnr.getProgram())).thenReturn(null);
     OpenLmisMessage message = requisitionService.approve(authorizedRnr);
 
-    verify(requisitionRepository).update(savedRnr);
+    verify(requisitionRepository).approve(savedRnr);
     assertThat(savedRnr.getStatus(), is(IN_APPROVAL));
     assertThat(savedRnr.getSupervisoryNodeId(), is(2L));
     assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR));
