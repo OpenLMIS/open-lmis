@@ -21,7 +21,7 @@
                                         <label class="labels">Program</label>
 
                                         <div class="form-fields">
-                                            <select  name="program" ng-change="filterGrid()" ng-model="program" ng-options="option.id as option.name for option in programs">
+                                            <select ui-select2 style="width:200px;" name="program" ng-change="filterGrid()" ng-model="program" ng-options="option.id as option.name for option in programs">
 
                                             </select>
                                         </div>
@@ -33,7 +33,7 @@
                                     <div >
                                         <label class="labels">Period Type</label>
                                             <div class="form-field">
-                                                <select  ng-required="true" ng-change="filterGrid()" name="periodType" ng-model="periodType" ng-options="option.value as option.name for option in periodTypes">
+                                                <select ui-select2 style="width:200px;" ng-required="true" ng-change="filterGrid()" name="periodType" ng-model="periodType" ng-options="option.value as option.name for option in periodTypes">
 
                                                 </select>
                                             </div>
@@ -45,7 +45,7 @@
 
                                     <div class="form-field">
                                         <span style="width:70px;display:inline-block">Year</span>
-                                        <select class="input-small" ng-required="true" ng-change="filterGrid()" name="startYear" ng-model="startYear" ng-options="option.value as option.name for option in startYears">
+                                        <select ui-select2 style="width:100px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="startYear" ng-model="startYear" ng-options="option.value as option.name for option in startYears">
 
                                         </select>
                                         <br />
@@ -57,13 +57,13 @@
                                     <div class="form-field">
                                         <div ng-show="isMonthly()">
                                             <span style="width:70px;display:inline-block">Month</span>
-                                            <select class="input-small" ng-required="true" ng-change="filterGrid()" name="startMonth" ng-model="startMonth" ng-options="option.value as option.name for option in startMonths">
+                                            <select ui-select2 style="width:100px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="startMonth" ng-model="startMonth" ng-options="option.value as option.name for option in startMonths">
 
                                             </select>
                                         </div>
                                         <div ng-show="isQuarterly()">
                                             <span style="width:70px;display:inline-block">Quarter</span>
-                                            <select class="input-small" ng-required="true" ng-change="filterGrid()" name="startQuarter" ng-model="startQuarter" ng-options="option.value as option.name for option in startQuarters">
+                                            <select ui-select2 style="width:100px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="startQuarter" ng-model="startQuarter" ng-options="option.value as option.name for option in startQuarters">
 
                                             </select>
                                         </div>
@@ -76,7 +76,7 @@
 
                                     <div class="form-field">
                                         <span style="width:70px;display:inline-block">Year</span>
-                                        <select class="input-small" ng-required="true" ng-change="filterGrid()" name="endYear" ng-model="endYear" ng-options="option.value as option.name for option in endYears">
+                                        <select ui-select2 style="width:100px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="endYear" ng-model="endYear" ng-options="option.value as option.name for option in endYears">
 
                                         </select>
 
@@ -88,13 +88,13 @@
                                     <div class="form-field">
                                         <div ng-show="isMonthly()">
                                             <span style="width:70px;display:inline-block">Month</span>
-                                            <select class="input-small" ng-required="true" ng-change="filterGrid()" name="endMonth" ng-model="endMonth" ng-options="option.value as option.name for option in endMonths">
+                                            <select ui-select2 style="width:100px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="endMonth" ng-model="endMonth" ng-options="option.value as option.name for option in endMonths">
 
                                             </select>
                                         </div>
                                         <div ng-show="isQuarterly()">
                                             <span style="width:70px;display:inline-block">Quarter</span>
-                                            <select class="input-small" ng-required="true" ng-change="filterGrid()" name="endQuarter" ng-model="endQuarter" ng-options="option.value as option.name for option in endQuarters">
+                                            <select ui-select2 style="width:100px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="endQuarter" ng-model="endQuarter" ng-options="option.value as option.name for option in endQuarters">
 
                                             </select>
                                         </div>
@@ -106,7 +106,7 @@
                                     <label class="labels">Zone</label>
 
                                     <div class="form-field">
-                                        <select ng-required="true" ng-change="filterGrid()" name="zone" ng-model="zone.value" ng-options="option.id as option.name for option in zones">
+                                        <select ui-select2 style="width:200px;" ng-required="true" ng-change="filterGrid()" name="zone" ng-model="zone.value" ng-options="option.id as option.name for option in zones">
 
                                         </select>
                                     </div>
@@ -115,7 +115,7 @@
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select name="facilityType" ng-change="filterGrid()" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
+                                        <select ui-select2 style="width:200px;" name="facilityType" ng-change="filterGrid()" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
 
                                         </select>
                                     </div>
@@ -124,7 +124,7 @@
                                    <label class="labels">Product</label>
 
                                    <div class="form-field">
-                                    <select name="product" ng-change="filterGrid()" ng-model="product" ng-options="option.id as option.name for option in products">
+                                    <select ui-select2 style="width:200px;" name="product" ng-change="filterGrid()" ng-model="product" ng-options="option.id as option.name for option in products">
 
                                     </select>
                                     </div>
@@ -134,7 +134,7 @@
                                     <label class="labels">Product Category</label>
 
                                     <div class="form-field">
-                                        <select name="productCategory" ng-change="filterGrid()" ng-model="productCategory" ng-options="option.id as option.name for option in productCategories">
+                                        <select ui-select2 style="width:200px;" name="productCategory" ng-change="filterGrid()" ng-model="productCategory" ng-options="option.id as option.name for option in productCategories">
 
                                         </select>
                                     </div>
@@ -144,7 +144,7 @@
                                     <label class="labels">Reporting Groups</label>
 
                                     <div class="form-field">
-                                        <select name="requisitionGroup" ng-change="filterGrid()" ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
+                                        <select ui-select2 style="width:200px;" name="requisitionGroup" ng-change="filterGrid()" ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
 
                                         </select>
                                     </div>
