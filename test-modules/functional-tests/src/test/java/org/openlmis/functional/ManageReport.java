@@ -44,7 +44,7 @@ public class ManageReport extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
-//    reportPage.verifyNoReportsMessage();
+    reportPage.verifyNoReportsMessage();
     reportPage.clickAddNewButton();
     reportPage.verifyItemsOnReportUploadScreen();
 
@@ -69,7 +69,7 @@ public class ManageReport extends TestCaseHelper {
     reportPage.verifyErrorMessageDivFooter();
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive", dependsOnMethods = "invalidScenariosReports")
   public void uploadManageReport(String[] credentials) throws Exception {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);

@@ -134,7 +134,7 @@ public class ReportPage extends RequisitionPage {
   }
 
   public void verifyErrorMessageDivFooter() {
-    testWebDriver.sleep(1000);
+    testWebDriver.sleep(2500);
     assertTrue("Report with same name already exists message should show up", saveErrorMessage.isDisplayed());
   }
 
