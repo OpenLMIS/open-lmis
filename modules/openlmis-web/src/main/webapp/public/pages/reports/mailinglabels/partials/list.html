@@ -37,7 +37,7 @@
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select id="facility-type" ng-change="filterGrid()" name="facilityType" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
+                                        <select ui-select2 style="width:200px;" id="facility-type" ng-change="filterGrid()" name="facilityType" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
 
                                         </select>
                                     </div>

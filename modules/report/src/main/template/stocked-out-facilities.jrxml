@@ -189,7 +189,7 @@
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				</reportElement>
 				<textElement/>
-				<text><![CDATA[Non reporting facilities]]></text>
+				<text><![CDATA[Stocked out facilities]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="4f84be12-d811-4f4f-bd4b-0d0ecb2e75d4" x="520" y="51" width="130" height="20">
@@ -203,7 +203,7 @@
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				</reportElement>
 				<textElement/>
-				<text><![CDATA[% not reporting]]></text>
+				<text><![CDATA[% Stocked out]]></text>
 			</staticText>
 			<textField>
 				<reportElement uuid="f25da274-6a65-48c7-a355-b9b15fa28588" x="660" y="31" width="60" height="18">
