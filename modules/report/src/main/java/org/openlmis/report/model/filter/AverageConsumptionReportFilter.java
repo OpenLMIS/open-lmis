@@ -26,11 +26,15 @@ public class AverageConsumptionReportFilter  implements ReportData {
     private int userId;
 
     // period selections
-    //private String periodType;
+    private String periodType;
     private int yearFrom;
     private int yearTo;
     private int monthFrom;
     private int monthTo;
+    private int quarterFrom;
+    private int quarterTo;
+    private int semiAnnualFrom;
+    private int semiAnnualTo;
 
     private int facilityTypeId;
     private String facilityType;

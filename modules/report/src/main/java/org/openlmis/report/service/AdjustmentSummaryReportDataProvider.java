@@ -5,6 +5,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.AdjustmentSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.filter.AdjustmentSummaryReportFilter;
+import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -91,38 +92,47 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
             adjustmentSummaryReportFilter.setAdjustmentTypeId( (filterCriteria.get("adjustmentTypeId") == null || filterCriteria.get("adjustmentTypeId")[0].equals("")) ? "" : filterCriteria.get("adjustmentTypeId")[0]);
             adjustmentSummaryReportFilter.setAdjustmentType( (filterCriteria.get("adjustmentType") == null || filterCriteria.get("adjustmentType")[0].equals("")) ? "All Adjustment Types" : filterCriteria.get("adjustmentType")[0]);
 
-            //monthly
             adjustmentSummaryReportFilter.setYearFrom(filterCriteria.get("fromYear") == null ? originalStart.getYear() : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0
             adjustmentSummaryReportFilter.setYearTo(filterCriteria.get("toYear") == null ? originalEnd.getYear() : Integer.parseInt(filterCriteria.get("toYear")[0])); //defaults to 0
             adjustmentSummaryReportFilter.setMonthFrom(filterCriteria.get("fromMonth") == null ? originalStart.getMonth() : Integer.parseInt(filterCriteria.get("fromMonth")[0])); //defaults to 0
             adjustmentSummaryReportFilter.setMonthTo(filterCriteria.get("toMonth") == null ? originalEnd.getMonth() : Integer.parseInt(filterCriteria.get("toMonth")[0])); //defaults to 0
+            adjustmentSummaryReportFilter.setPeriodType(filterCriteria.get("periodType") == null ? "" : filterCriteria.get("periodType")[0].toString());
+            adjustmentSummaryReportFilter.setQuarterFrom(filterCriteria.get("fromQuarter") == null ? 1 : Integer.parseInt(filterCriteria.get("fromQuarter")[0]));
+            adjustmentSummaryReportFilter.setQuarterTo(filterCriteria.get("toQuarter") == null ? 1 : Integer.parseInt(filterCriteria.get("toQuarter")[0]));
+            adjustmentSummaryReportFilter.setSemiAnnualFrom(filterCriteria.get("fromSemiAnnual") == null ? 1 : Integer.parseInt(filterCriteria.get("fromSemiAnnual")[0]));
+            adjustmentSummaryReportFilter.setSemiAnnualTo(filterCriteria.get("toSemiAnnual") == null ? 1 : Integer.parseInt(filterCriteria.get("toSemiAnnual")[0]));
 
-             //quarterly
+            int monthFrom = 0;
+            int monthTo = 0;
 
+            String periodType = adjustmentSummaryReportFilter.getPeriodType();
 
-            //first day of the selected/default month
-            Calendar calendar1 = Calendar.getInstance();
-            calendar1.setTime(originalStart);
+            if(periodType.equals(Constants.PERIOD_TYPE_QUARTERLY)){
+                monthFrom = 3 *(adjustmentSummaryReportFilter.getQuarterFrom() - 1);
+                monthTo =  3 * adjustmentSummaryReportFilter.getQuarterTo() - 1;
 
-            calendar1.set(Calendar.YEAR, adjustmentSummaryReportFilter.getYearFrom()); //originalStart.setYear(consumptionReportFilter.getYearFrom());
-            calendar1.set(Calendar.MONTH, adjustmentSummaryReportFilter.getMonthFrom());//originalStart.setMonth(consumptionReportFilter.getMonthFrom());
-            calendar1.set(Calendar.DAY_OF_MONTH, 1);//originalStart.setDate(1);
-            originalStart = calendar1.getTime();
-            adjustmentSummaryReportFilter.setStartDate(originalStart);
+            }else if(periodType.equals(Constants.PERIOD_TYPE_MONTHLY)){
+                monthFrom = adjustmentSummaryReportFilter.getMonthFrom();
+                monthTo = adjustmentSummaryReportFilter.getMonthTo();
 
-            //last day of the selected/default month
+            }else if(periodType.equals(Constants.PERIOD_TYPE_SEMI_ANNUAL)){
+                monthFrom = 6 * (adjustmentSummaryReportFilter.getSemiAnnualFrom() - 1);
+                monthTo = 6 *adjustmentSummaryReportFilter.getSemiAnnualTo() - 1;
+            }else if(periodType.equals(Constants.PERIOD_TYPE_ANNUAL)){
+                monthFrom = 0;
+                monthTo = 11;
+            }
+
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(originalEnd);
-
-            calendar.set(Calendar.YEAR, adjustmentSummaryReportFilter.getYearTo());//originalEnd.setYear(consumptionReportFilter.getYearTo());
-            calendar.set(Calendar.MONTH, adjustmentSummaryReportFilter.getMonthTo());//originalEnd.setMonth(consumptionReportFilter.getMonthTo());
-
-            calendar.add(Calendar.MONTH, 1);
+            calendar.set(Calendar.YEAR, adjustmentSummaryReportFilter.getYearFrom());
+            calendar.set(Calendar.MONTH, monthFrom);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
-            calendar.add(Calendar.DATE, -1);
-            originalEnd = calendar.getTime();
+            adjustmentSummaryReportFilter.setStartDate(calendar.getTime());
 
-            adjustmentSummaryReportFilter.setEndDate(originalEnd);
+            calendar.set(Calendar.YEAR, adjustmentSummaryReportFilter.getYearTo());
+            calendar.set(Calendar.MONTH, monthTo);
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+            adjustmentSummaryReportFilter.setEndDate(calendar.getTime());
 
         }
         return adjustmentSummaryReportFilter;

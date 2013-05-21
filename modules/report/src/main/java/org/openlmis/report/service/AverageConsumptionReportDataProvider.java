@@ -6,6 +6,7 @@ import org.openlmis.report.mapper.AverageConsumptionReportMapper;
 import org.openlmis.report.mapper.NonReportingFacilityReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.filter.AverageConsumptionReportFilter;
+import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +14,7 @@ import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.lang.String;
 
 /**
@@ -58,18 +56,6 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
         return (int) reportMapper.getFilteredSortedPagedAverageConsumptionReportCount(getReportFilterData(filterCriteria));
     }
 
-   /* @Override
-    public ReportData getReportFilterData(final Map<String, String[]> params) {
-       return new ReportData() {
-                        @Override
-                        public String toString() {
-                            return "The Period: " + params.get("fromMonth")[0].toString() + ",  " + params.get("fromYear")[0].toString() +" - "+ params.get("toMonth")[0].toString() +" , "+ params.get("toYear")[0].toString() +"\n"
-
-                                    ;
-                        }
-                    };
-     }*/
-
     @Override
     public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
         AverageConsumptionReportFilter averageConsumptionReportFilter = null;
@@ -97,32 +83,43 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
             averageConsumptionReportFilter.setMonthTo(filterCriteria.get("toMonth") == null ? originalEnd.getMonth() : Integer.parseInt(filterCriteria.get("toMonth")[0])); //defaults to 0
 
             averageConsumptionReportFilter.setPdformat(filterCriteria.get("pdformat") == null ? 0 : Integer.parseInt(filterCriteria.get("pdformat")[0]));  //defaults to 0
-            //quarterly
+            averageConsumptionReportFilter.setPeriodType(filterCriteria.get("periodType") == null ? "" : filterCriteria.get("periodType")[0].toString());
+            averageConsumptionReportFilter.setQuarterFrom(filterCriteria.get("fromQuarter") == null ? 1 : Integer.parseInt(filterCriteria.get("fromQuarter")[0]));
+            averageConsumptionReportFilter.setQuarterTo(filterCriteria.get("toQuarter") == null ? 1 : Integer.parseInt(filterCriteria.get("toQuarter")[0]));
+            averageConsumptionReportFilter.setSemiAnnualFrom(filterCriteria.get("fromSemiAnnual") == null ? 1 : Integer.parseInt(filterCriteria.get("fromSemiAnnual")[0]));
+            averageConsumptionReportFilter.setSemiAnnualTo(filterCriteria.get("toSemiAnnual") == null ? 1 : Integer.parseInt(filterCriteria.get("toSemiAnnual")[0]));
 
+            int monthFrom = 0;
+            int monthTo = 0;
 
-            //first day of the selected/default month
-            Calendar calendar1 = Calendar.getInstance();
-            calendar1.setTime(originalStart);
+            String periodType = averageConsumptionReportFilter.getPeriodType();
 
-            calendar1.set(Calendar.YEAR, averageConsumptionReportFilter.getYearFrom()); //originalStart.setYear(consumptionReportFilter.getYearFrom());
-            calendar1.set(Calendar.MONTH, averageConsumptionReportFilter.getMonthFrom());//originalStart.setMonth(consumptionReportFilter.getMonthFrom());
-            calendar1.set(Calendar.DAY_OF_MONTH, 1);//originalStart.setDate(1);
-            originalStart = calendar1.getTime();
-            averageConsumptionReportFilter.setStartDate(originalStart);
+            if(periodType.equals(Constants.PERIOD_TYPE_QUARTERLY)){
+                monthFrom = 3 *(averageConsumptionReportFilter.getQuarterFrom() - 1);
+                monthTo =  3 * averageConsumptionReportFilter.getQuarterTo() - 1;
 
-            //last day of the selected/default month
+            }else if(periodType.equals(Constants.PERIOD_TYPE_MONTHLY)){
+                monthFrom = averageConsumptionReportFilter.getMonthFrom();
+                monthTo = averageConsumptionReportFilter.getMonthTo();
+
+            }else if(periodType.equals(Constants.PERIOD_TYPE_SEMI_ANNUAL)){
+                monthFrom = 6 * (averageConsumptionReportFilter.getSemiAnnualFrom() - 1);
+                monthTo = 6 *averageConsumptionReportFilter.getSemiAnnualTo() - 1;
+            }else if(periodType.equals(Constants.PERIOD_TYPE_ANNUAL)){
+                monthFrom = 0;
+                monthTo = 11;
+            }
+
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(originalEnd);
-
-            calendar.set(Calendar.YEAR, averageConsumptionReportFilter.getYearTo());//originalEnd.setYear(consumptionReportFilter.getYearTo());
-            calendar.set(Calendar.MONTH, averageConsumptionReportFilter.getMonthTo());//originalEnd.setMonth(consumptionReportFilter.getMonthTo());
-
-            calendar.add(Calendar.MONTH, 1);
+            calendar.set(Calendar.YEAR, averageConsumptionReportFilter.getYearFrom());
+            calendar.set(Calendar.MONTH, monthFrom);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
-            calendar.add(Calendar.DATE, -1);
-            originalEnd = calendar.getTime();
+            averageConsumptionReportFilter.setStartDate(calendar.getTime());
 
-            averageConsumptionReportFilter.setEndDate(originalEnd);
+            calendar.set(Calendar.YEAR, averageConsumptionReportFilter.getYearTo());
+            calendar.set(Calendar.MONTH, monthTo);
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+            averageConsumptionReportFilter.setEndDate(calendar.getTime());
 
         }
         return averageConsumptionReportFilter;
