@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:applicationContext-db.xml")
+@ContextConfiguration(locations = "classpath*:test-applicationContext-db.xml")
 public class DbMapperIT {
 
   @Autowired
