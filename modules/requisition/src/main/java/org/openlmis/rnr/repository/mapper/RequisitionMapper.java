@@ -27,7 +27,7 @@ public interface RequisitionMapper {
   @Update({"UPDATE requisitions SET",
       "modifiedBy = #{modifiedBy},",
       "status = #{status},",
-      "modifiedDate = DEFAULT,",
+      "modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP),",
       "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
       "submittedDate = #{submittedDate},",
       "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost},",

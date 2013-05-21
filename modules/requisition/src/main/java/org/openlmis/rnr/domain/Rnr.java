@@ -10,18 +10,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.exception.DataException;
 
+import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
-import static org.openlmis.rnr.domain.RnrLineItem.RNR_VALIDATION_ERROR;
 import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
 import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
@@ -41,6 +41,10 @@ public class Rnr extends BaseModel{
 
   private List<RnrLineItem> fullSupplyLineItems = new ArrayList<>();
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
+
+  @Transient
+  @JsonIgnore
+  private List<RnrLineItem> allLineItems = new ArrayList<>();
 
   private Facility supplyingFacility;
   private Long supervisoryNodeId;
@@ -143,24 +147,35 @@ public class Rnr extends BaseModel{
     }
   }
 
-  public void copyApproverEditableFields(Rnr rnr) {
+  public void copyEditableFields(Rnr rnr, List<RnrColumn> programRnrColumns) {
     this.modifiedBy = rnr.getModifiedBy();
+    ArrayList<RnrLineItem> lineItems = new ArrayList<>();
 
-    for (RnrLineItem thisLineItem : getAllLineItems()) {
-      RnrLineItem otherLineItem = rnr.findCorrespondingLineItem(thisLineItem);
-      if(otherLineItem == null)  {
-        throw new DataException(RNR_VALIDATION_ERROR);
+    for (RnrLineItem lineItem : rnr.getFullSupplyLineItems()) {
+      RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
+      if(savedLineItem != null)  {
+        if (this.status == IN_APPROVAL || this.status == AUTHORIZED) {
+          savedLineItem.copyApproverEditableFields(lineItem);
+        } else {
+          savedLineItem.copyUserEditableFields(lineItem, programRnrColumns);
+        }
+        savedLineItem.setModifiedBy(rnr.getModifiedBy());
+        lineItems.add(savedLineItem);
       }
-      thisLineItem.copyApproverEditableFields(otherLineItem);
+    }
+    this.setFullSupplyLineItems(lineItems);
+    this.nonFullSupplyLineItems = rnr.nonFullSupplyLineItems;
+    for (RnrLineItem thisLineItem : this.nonFullSupplyLineItems) {
       thisLineItem.setModifiedBy(rnr.getModifiedBy());
     }
   }
 
   private List<RnrLineItem> getAllLineItems() {
-    List<RnrLineItem> fullAndNonFullLineItems = new ArrayList<>();
-    fullAndNonFullLineItems.addAll(this.fullSupplyLineItems);
-    fullAndNonFullLineItems.addAll(this.nonFullSupplyLineItems);
-    return fullAndNonFullLineItems;
+    if (this.allLineItems.isEmpty()) {
+      this.allLineItems.addAll(this.getFullSupplyLineItems());
+      this.allLineItems.addAll(this.getNonFullSupplyLineItems());
+    }
+    return allLineItems;
   }
 
   public void fillBasicInformation(Facility facility, Program program, ProcessingPeriod period) {
@@ -191,21 +206,6 @@ public class Rnr extends BaseModel{
     });
   }
 
-  public void copyUserEditableFields(Rnr otherRequisition, List<RnrColumn> programRnrColumns) {
-    this.modifiedBy = otherRequisition.modifiedBy;
-    for (RnrLineItem thisLineItem : fullSupplyLineItems) {
-      RnrLineItem otherLineItem = otherRequisition.findCorrespondingLineItem(thisLineItem);
-      if (otherLineItem == null)
-        throw new DataException(RNR_VALIDATION_ERROR);
-      thisLineItem.copyUserEditableFields(otherLineItem, programRnrColumns);
-      thisLineItem.setModifiedBy(otherRequisition.getModifiedBy());
-    }
-    this.nonFullSupplyLineItems = otherRequisition.nonFullSupplyLineItems;
-    for (RnrLineItem thisLineItem : this.nonFullSupplyLineItems) {
-      thisLineItem.setModifiedBy(otherRequisition.getModifiedBy());
-    }
-  }
-
   public void setFieldsAccordingToTemplate(ProgramRnrTemplate template) {
     for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.setLineItemFieldsAccordingToTemplate(template);
@@ -218,13 +218,6 @@ public class Rnr extends BaseModel{
     }
     this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
-  }
-
-  public void copyEditableFields(Rnr otherRnr, List<RnrColumn> programRnrColumns) {
-    if (status == IN_APPROVAL || status == AUTHORIZED)
-      copyApproverEditableFields(otherRnr);
-    else
-      copyUserEditableFields(otherRnr, programRnrColumns);
   }
 
   public void convertToOrder(Long userId) {

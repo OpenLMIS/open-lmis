@@ -100,12 +100,14 @@ public class RnrTest {
 
   @Test
   public void shouldCopyApproverEditableFields() throws Exception {
+    ArrayList<RnrColumn> programRnrColumns = setupProgramTemplate();
     rnr.setModifiedBy(1L);
     Rnr savedRnr = make(a(defaultRnr));
     RnrLineItem savedLineItem = savedRnr.getFullSupplyLineItems().get(0);
     RnrLineItem savedLineItemSpy = spy(savedLineItem);
     savedRnr.getFullSupplyLineItems().set(0, savedLineItemSpy);
-    savedRnr.copyApproverEditableFields(rnr);
+    savedRnr.setStatus(AUTHORIZED);
+    savedRnr.copyEditableFields(rnr, programRnrColumns);
     verify(savedLineItemSpy).copyApproverEditableFields(rnr.getFullSupplyLineItems().get(0));
     assertThat(savedRnr.getModifiedBy(), is(1L));
   }
@@ -124,23 +126,12 @@ public class RnrTest {
     savedRnr.getFullSupplyLineItems().set(0, savedLineItemSpy);
     ArrayList<RnrColumn> programRnrColumns = setupProgramTemplate();
 
-    savedRnr.copyUserEditableFields(rnr, programRnrColumns);
+    savedRnr.copyEditableFields(rnr, programRnrColumns);
 
     verify(savedLineItemSpy).copyUserEditableFields(rnr.getFullSupplyLineItems().get(0), programRnrColumns);
     assertThat(savedRnr.getModifiedBy(), is(1L));
     assertThat(savedRnr.getNonFullSupplyLineItems(), is(nonFullSupplyLineItems));
     assertThat(savedRnr.getNonFullSupplyLineItems().get(0).getModifiedBy(), is(rnr.getModifiedBy()));
-  }
-
-  @Test
-  public void shouldGiveErrorIfCorrespondingLineItemNotFound() throws Exception {
-    Rnr otherRequisition = new Rnr();
-    List<RnrColumn> programRnrColumns = new ArrayList<>();
-
-    exception.expect(DataException.class);
-    exception.expectMessage("rnr.validation.error");
-
-    rnr.copyUserEditableFields(otherRequisition, programRnrColumns);
   }
 
   @Test
@@ -205,7 +196,7 @@ public class RnrTest {
 
     Rnr requisitionForSaving = make(a(defaultRnr, with(status, SUBMITTED)));
     requisitionForSaving.setFullSupplyLineItems(asList(newLineItem));
-    rnr.copyUserEditableFields(requisitionForSaving, programRnrColumns);
+    rnr.copyEditableFields(requisitionForSaving, programRnrColumns);
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getStockInHand(), is(2));
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(BEGINNING_BALANCE));
@@ -231,15 +222,23 @@ public class RnrTest {
   @Test
   public void shouldCopyUserEditableFieldsIdAccordingToStatus() throws Exception {
     Rnr rnr = spy(new Rnr());
+    RnrLineItem lineItem = spy(make(a(RnrLineItemBuilder.defaultRnrLineItem,
+      with(roundToZero, true),
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10),
+      with(roundToZero, false))));
+    rnr.setFullSupplyLineItems(asList(lineItem));
     rnr.setStatus(INITIATED);
     Rnr otherRnr = new Rnr();
-    List<RnrColumn> programRnrColumns = new ArrayList<>();
+    otherRnr.setFullSupplyLineItems(asList(lineItem));
+    List<RnrColumn> programRnrColumns = setupProgramTemplate();
     rnr.copyEditableFields(otherRnr, programRnrColumns);
-    verify(rnr).copyUserEditableFields(otherRnr, programRnrColumns);
+    verify(lineItem).copyUserEditableFields(lineItem, programRnrColumns);
 
     rnr.setStatus(IN_APPROVAL);
     rnr.copyEditableFields(otherRnr, programRnrColumns);
-    verify(rnr).copyApproverEditableFields(otherRnr);
+    verify(lineItem).copyApproverEditableFields(lineItem);
   }
 
   @Test

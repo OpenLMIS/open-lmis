@@ -417,7 +417,7 @@ public class RequisitionServiceTest {
   @Test
   public void shouldSubmitValidRnrWithSubmittedDateAndSetMessage() {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
-    doNothing().when(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
+    doNothing().when(savedRnr).copyEditableFields(initiatedRnr, rnrColumns);
     doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
     when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(new SupervisoryNode());
     when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
@@ -434,7 +434,7 @@ public class RequisitionServiceTest {
   @Test
   public void shouldAuthorizeAValidRnrAndTagWithSupervisoryNode() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
-    doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
+    doNothing().when(savedRnr).copyEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
     when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
     when(supervisoryNodeService.getApproverFor(FACILITY, PROGRAM)).thenReturn(new User());
@@ -486,7 +486,7 @@ public class RequisitionServiceTest {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
 
     when(rnrTemplateService.fetchAllRnRColumns(initiatedRnr.getProgram().getId())).thenReturn(rnrColumns);
-    doNothing().when(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
+    doNothing().when(savedRnr).copyEditableFields(initiatedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
 
     when(requisitionPermissionService.hasPermissionToSave(USER_ID, savedRnr)).thenReturn(true);
@@ -927,7 +927,7 @@ public class RequisitionServiceTest {
   @Test
   public void shouldNotifyStatusChangeOnAuthorize() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
-    doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
+    doNothing().when(savedRnr).copyEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
     when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
     when(supervisoryNodeService.getApproverFor(FACILITY, PROGRAM)).thenReturn(new User());
@@ -942,7 +942,7 @@ public class RequisitionServiceTest {
   @Test
   public void shouldNotifyStatusChangeOnSubmit() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
-    doNothing().when(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
+    doNothing().when(savedRnr).copyEditableFields(initiatedRnr, rnrColumns);
     doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
     when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
 

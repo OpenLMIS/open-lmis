@@ -251,12 +251,13 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   function removeExtraDataForPostFromRnr() {
     var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": []};
 
-    _.each($scope.rnr.fullSupplyLineItems, function (lineItem) {
-      rnr.fullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
-    });
     _.each($scope.rnr.nonFullSupplyLineItems, function (lineItem) {
       rnr.nonFullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
     });
+    _.each($scope.pageLineItems, function (lineItem) {
+        rnr.fullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
+      });
+
     return rnr;
   }
 }
