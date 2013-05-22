@@ -64,28 +64,11 @@ public class AverageConsumptionQueryBuilder {
             }
         }
         GROUP_BY("li.product, li.productcategory,  f.name, ft.name, li.productcode");
-        ORDER_BY("li.product, li.productcategory,  f.name, ft.name, li.productcode");
-       /* if(filter.getPdformat() != 0){
-            ORDER_BY("f.name,ft.name");//f.name,ft.name,li.productcategory,supplyingFacility");  //ORDER_BY("f.name"); //
-        }*/
-        //ORDER_BY("li.productCategory, li.product");
-        //ORDER_BY( QueryHelpers.getSortOrder(params, "li.productCategory, li.product") );
-        appendSortOrder(sorter);
+        ORDER_BY( QueryHelpers.getSortOrder(params, "ft.name, f.name , li.productcategory, li.product, li.productcode"));
         return SQL();
     }
 
-    private static void appendSortOrder(Map params){
 
-        if(params != null){
-            for (Object entryObject : params.keySet())
-            {
-                String entry = entryObject.toString();
-                if(entry.startsWith("sort-")){
-                        ORDER_BY( entry.substring(5) + " " + ((String[])params.get(entry))[0]);
-                }
-            }
-        }
-    }
 
     public static String SelectFilteredSortedPagedAverageConsumptionCountSql(Map params){
 
