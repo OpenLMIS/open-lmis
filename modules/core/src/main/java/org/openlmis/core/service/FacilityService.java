@@ -128,6 +128,7 @@ public class FacilityService {
       programSupported.isValid();
     }
     facilityRepository.save(facility);
+    facility = facilityRepository.getById(facility.getId());
 
     notifyFacilityFeed(facility);
   }
