@@ -209,11 +209,12 @@ public class FacilityServiceTest {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
 
     whenNew(FacilityFeedDTO.class).withArguments(facility).thenReturn(new FacilityFeedDTO(facility));
-
+    when(facilityRepository.getById(facility.getId())).thenReturn(facility);
     facilityService.insert(facility);
 
     verify(facilityRepository).save(facility);
     verify(programSupportedRepository).addSupportedProgramsFor(facility);
+    verify(facilityRepository).getById(facility.getId());
     verify(eventService).notify(any(Event.class));
   }
 
@@ -260,6 +261,7 @@ public class FacilityServiceTest {
     }};
     when(programSupportedRepository.getAllByFacilityId(facility.getId())).thenReturn(programsForFacility);
     whenNew(FacilityFeedDTO.class).withArguments(facility).thenReturn(new FacilityFeedDTO(facility));
+    when(facilityRepository.getById(facility.getId())).thenReturn(facility);
 
     facilityService.update(facility);
 
