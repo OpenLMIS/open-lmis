@@ -1,7 +1,9 @@
-function AverageConsumptionReportController($scope, AverageConsumptionReport, Products , Programs, ProductCategories, RequisitionGroups , FacilityTypes, GeographicZones, $http, $routeParams,$location) {
+function AverageConsumptionReportController($scope, $window, AverageConsumptionReport, Products , Programs, ProductCategories, RequisitionGroups , FacilityTypes, GeographicZones, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
+
+        $scope.$window = $window;
 
         $scope.section = function (id) {
             section = id;
@@ -15,7 +17,7 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
 
         $scope.pagingOptions = {
             pageSizes: [5, 10, 20, 40, 50, 100],
-            pageSize: 10,
+            pageSize: 20,
             totalServerItems: 0,
             currentPage: 1
         };
@@ -70,6 +72,9 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
         $scope.startQuarters = function(){
             return $scope.quarters;
         };
+
+        // initialize default quarters
+        $scope.fromQuarter = $scope.toQuarter = 1;
 
         $scope.endQuarters  = function(){
             if($scope.startYear == $scope.endYear && $scope.startQuarter != '' ){
@@ -192,12 +197,7 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
         });
 
 
-        $scope.facilities         = [
-            {'name':'One','value':'1'},
-            {'name':'Two','value':'2'},
-            {'name':'Three','value':'3'},
-            {'name':'Four','value':'4'}
-        ];
+
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
@@ -399,8 +399,8 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
 
             $scope.filterObject.pdformat =1;
             var params = jQuery.param($scope.filterObject);
-            var url = '/reports/download/average_consumption/' + type +'?' + params;//type +'?zone=' + $scope.zoneId + '&facilityType=' + $scope.facilityTypeId;
-            window.location.href = url;
+            var url = '/reports/download/average_consumption/' + type +'?' + params;
+            $scope.$window.open(url);
         }
 
         $scope.goToPage = function (page, event) {
@@ -426,7 +426,8 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
         });
 
 
-        $scope.sortInfo = { fields:["code","facilityType"], directions: ["ASC"]};
+
+        $scope.sortInfo = { fields:["facilityName"], directions: ["ASC"]};
 
         $scope.setPagingData = function(data, page, pageSize, total){
             $scope.myData = data;
@@ -440,6 +441,7 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
         };
 
         $scope.getPagedDataAsync = function (pageSize, page) {
+
                         var params  = {};
                         if(pageSize != undefined && page != undefined ){
                                 var params =  {
@@ -452,6 +454,7 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
                             if(value != undefined)
                                 params[index] = value;
                         });
+
 
                         // Add the sorting parameters
                         $.each($scope.sortInfo.fields, function(index, value) {
@@ -478,11 +481,6 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
         }, true);
 
         $scope.$watch('sortInfo', function () {
-
-            $.each($scope.sortInfo.fields, function(index, value) {
-               // if(value != undefined)
-                   // $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-            });
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
         }, true);
 
