@@ -20,12 +20,17 @@ public class AdjustmentSummaryReportFilter implements ReportData {
 
     private int userId;
 
+    private String periodType;
     private int yearFrom;
     private int yearTo;
     private int monthFrom;
     private int monthTo;
     private Date startDate;
     private Date endDate;
+    private int quarterFrom;
+    private int quarterTo;
+    private int semiAnnualFrom;
+    private int semiAnnualTo;
 
     private int facilityTypeId;
     private String facilityType;

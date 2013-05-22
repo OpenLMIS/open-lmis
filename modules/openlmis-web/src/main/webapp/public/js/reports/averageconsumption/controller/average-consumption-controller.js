@@ -103,6 +103,10 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
             {'name':'Three','value':'3'},
             {'name':'Four','value':'4'}
         ];
+        $scope.semiAnnuals= [
+            {'name':'First Half','value':'1'},
+            {'name':'Second Half','value':'2'}
+        ];
 
         $scope.product;
 
@@ -131,6 +135,10 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
             return $scope.periodType == 'quarterly';
         };
 
+      $scope.isSemiAnnualy  = function(){
+          return $scope.periodType == 'semi-anual';
+      };
+
 
         $scope.filterGrid = function (){
             $scope.$apply();
@@ -152,8 +160,12 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
              periodType: $scope.periodType,
              fromYear: $scope.fromYear,
              fromMonth: $scope.fromMonth,
+             fromQuarter: $scope.fromQuarter,
+             fromSemiAnnual:$scope.startHalf,
              toYear: $scope.toYear,
              toMonth: $scope.toMonth,
+             toQuarter: $scope.toQuarter,
+             toSemiAnnual:$scope.endHalf,
              productId: $scope.product,
              productCategoryId : $scope.productCategory,
              rgroupId : $scope.rgroup,
@@ -261,6 +273,43 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
             }
         });*/
 
+     $scope.$watch('startQuarter', function(selection){
+         var date = new Date();
+         if(selection != undefined || selection == ""){
+         $scope.filterObject.fromQuarter =  selection;
+         }else{
+         var date = new Date();
+         $scope.filterObject.fromQuarter =  int(date.getMonth() / 4)+1;
+         }
+     });
+
+    $scope.$watch('endQuarter', function(selection){
+        var date = new Date();
+        if(selection != undefined || selection == ""){
+            $scope.filterObject.toQuarter =  selection;
+        }else{
+            var date = new Date();
+            $scope.filterObject.toQuarter =  int(date.getMonth() / 4)+1;
+        }
+    });
+
+    $scope.$watch('startHalf', function(selection){
+
+        if(selection != undefined || selection == ""){
+            $scope.filterObject.fromSemiAnnual =  selection;
+        }else{
+            $scope.filterObject.fromSemiAnnual =  1;
+        }
+    });
+    $scope.$watch('endHalf', function(selection){
+
+        if(selection != undefined || selection == ""){
+            $scope.filterObject.toSemiAnnual =  selection;
+        }else{
+            var date = new Date();
+            $scope.filterObject.toSemiAnnual =  1;
+        }
+    });
 
         $scope.$watch('startMonth', function(selection){
             var date = new Date();
@@ -271,6 +320,8 @@ function AverageConsumptionReportController($scope, AverageConsumptionReport, Pr
                 $scope.filterObject.fromMonth =  (date.getMonth()+1);
             }
         });
+
+
 
         $scope.$watch('endMonth', function(selection){
             var date = new Date();

@@ -5,8 +5,6 @@ import org.openlmis.report.model.filter.AverageConsumptionReportFilter;
 import java.util.Map;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
-import static org.apache.ibatis.jdbc.SqlBuilder.FROM;
-import static org.apache.ibatis.jdbc.SqlBuilder.SQL;
 
 /**
  * User: Elias
@@ -66,10 +64,10 @@ public class AverageConsumptionQueryBuilder {
             }
         }
         GROUP_BY("li.product, li.productcategory,  f.name, ft.name, li.productcode");
-
-        if(filter.getPdformat() != 0){
+        ORDER_BY("li.product, li.productcategory,  f.name, ft.name, li.productcode");
+       /* if(filter.getPdformat() != 0){
             ORDER_BY("f.name,ft.name");//f.name,ft.name,li.productcategory,supplyingFacility");  //ORDER_BY("f.name"); //
-        }
+        }*/
         //ORDER_BY("li.productCategory, li.product");
         //ORDER_BY( QueryHelpers.getSortOrder(params, "li.productCategory, li.product") );
         appendSortOrder(sorter);
