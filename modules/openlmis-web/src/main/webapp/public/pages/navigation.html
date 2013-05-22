@@ -91,7 +91,7 @@
 
         </li>
         <li>
-            <a href="javascript: void(0);">Generic Reports</a>
+            <a href="javascript: void(0);">Admin Reports</a>
             <div class="submenu">
                 <ul>
                     <li ng-show="hasPermission('VIEW_FACILITY_REPORT')">
@@ -99,12 +99,6 @@
                     </li>
                     <li ng-show="hasPermission('VIEW_MAILING_LABEL_REPORT')">
                         <a href="/public/pages/reports/mailinglabels/index.html">Facility List (V2)</a>
-                    </li>
-                    <li ng-show="hasPermission('VIEW_SUMMARY_REPORT')">
-                        <a href="/public/pages/reports/summary/index.html">Summary Report</a>
-                    </li>
-                   <li ng-show="hasPermission('VIEW_CONSUMPTION_REPORT')">
-                        <a href="/public/pages/reports/consumption/index.html">Consumption Report</a>
                     </li>
 
                 </ul>
@@ -123,6 +117,12 @@
                     <li ng-show="hasPermission('VIEW_STOCKED_OUT_REPORT')">
                         <a href="/public/pages/reports/stocked_out/index.html">Stocked Out</a>
                     </li>
+                    <li ng-show="hasPermission('VIEW_SUMMARY_REPORT')">
+                        <a href="/public/pages/reports/summary/index.html">Summary Report</a>
+                    </li>
+                    <!--<li ng-show="hasPermission('VIEW_CONSUMPTION_REPORT')">-->
+                        <!--<a href="/public/pages/reports/consumption/index.html">Consumption Report</a>-->
+                    <!--</li>-->
                 </ul>
             </div>
         </li>
