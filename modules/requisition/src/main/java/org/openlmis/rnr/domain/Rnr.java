@@ -201,7 +201,7 @@ public class Rnr extends BaseModel{
       @Override
       public boolean evaluate(Object o) {
         RnrLineItem lineItem = (RnrLineItem) o;
-          return item.getProductCode().equalsIgnoreCase(lineItem.getProductCode());
+        return lineItem.getProductCode().equalsIgnoreCase(item.getProductCode());
       }
     });
   }
