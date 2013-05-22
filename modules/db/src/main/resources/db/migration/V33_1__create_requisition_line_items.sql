@@ -42,4 +42,5 @@ createdBy                             INTEGER,
 createdDate                           TIMESTAMP DEFAULT NOW()
 );
 
-CREATE INDEX i_requisition_line_items_rnrId ON requisition_line_items(rnrId);
+CREATE INDEX i_requisition_line_items_rnrId_fullSupply_t ON requisition_line_items(rnrId) WHERE fullSupply = TRUE;
+CREATE INDEX i_requisition_line_items_rnrId_fullSupply_f ON requisition_line_items(rnrId) WHERE fullSupply = FALSE;

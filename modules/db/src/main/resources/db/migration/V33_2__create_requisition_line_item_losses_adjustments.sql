@@ -11,3 +11,5 @@ CREATE TABLE requisition_line_item_losses_adjustments (
   createdDate                   TIMESTAMP DEFAULT NOW(),
   PRIMARY KEY(requisitionLineItemId, type)
 );
+
+CREATE INDEX i_requisition_line_item_losses_adjustments_lineItemId ON requisition_line_item_losses_adjustments(requisitionLineItemId);
