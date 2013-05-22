@@ -181,6 +181,7 @@ public class RequisitionService {
     } else {
       message = approveAndAssignToNextSupervisoryNode(savedRnr, parent);
     }
+    savedRnr.setModifiedBy(requisition.getModifiedBy());
     requisitionRepository.approve(savedRnr);
     logStatusChangeAndNotify(savedRnr);
     return message;

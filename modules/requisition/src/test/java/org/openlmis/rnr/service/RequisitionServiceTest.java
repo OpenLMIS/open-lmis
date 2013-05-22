@@ -600,6 +600,8 @@ public class RequisitionServiceTest {
     assertThat(savedRnr.getStatus(), is(APPROVED));
     assertThat(savedRnr.getSupervisoryNodeId(), is(nullValue()));
     assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY));
+    assertThat(savedRnr.getModifiedBy(),is(USER_ID));
+
   }
 
   @Test
@@ -642,6 +644,8 @@ public class RequisitionServiceTest {
     assertThat(savedRnr.getStatus(), is(IN_APPROVAL));
     assertThat(savedRnr.getSupervisoryNodeId(), is(2L));
     assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY));
+    assertThat(savedRnr.getModifiedBy(),is(USER_ID));
+
   }
 
   @Test
@@ -661,6 +665,7 @@ public class RequisitionServiceTest {
     assertThat(savedRnr.getStatus(), is(IN_APPROVAL));
     assertThat(savedRnr.getSupervisoryNodeId(), is(2L));
     assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR));
+    assertThat(savedRnr.getModifiedBy(),is(USER_ID));
   }
 
   @Test
