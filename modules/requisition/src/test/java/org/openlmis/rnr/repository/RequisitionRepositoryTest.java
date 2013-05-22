@@ -23,6 +23,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.mapper.*;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -30,12 +31,14 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
+import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -177,7 +180,7 @@ public class RequisitionRepositoryTest {
   }
 
   @Test
-  public void shouldUpdateAllNonFullSupplyLineItems() throws Exception {
+  public void shouldInsertAllNonFullSupplyLineItems() throws Exception {
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setBeginningBalance(2);
     RnrLineItem rnrLineItem2 = new RnrLineItem();
@@ -188,10 +191,56 @@ public class RequisitionRepositoryTest {
 
     requisitionRepository.update(rnr);
 
-    verify(rnrLineItemMapper).deleteAllNonFullSupplyForRequisition(rnr.getId());
     verify(rnrLineItemMapper).insertNonFullSupply(rnrLineItem);
     verify(rnrLineItemMapper).insertNonFullSupply(rnrLineItem2);
     verify(rnrLineItemMapper, never()).insertNonFullSupply(fullSupply);
+  }
+
+  @Test
+  public void shouldUpdateOnApprovalExistingNonFullSupplyLineItems() throws Exception {
+    long rnrId = 1L;
+    rnr.setId(rnrId);
+    RnrLineItem rnrLineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem));
+    rnrLineItem.setProductCode("P1");
+    rnrLineItem.setRnrId(rnrId);
+    RnrLineItem rnrLineItem2 = make(a(RnrLineItemBuilder.defaultRnrLineItem));
+    rnrLineItem2.setProductCode("P2");
+    rnrLineItem2.setRnrId(rnrId);
+    rnr.add(rnrLineItem, false);
+    rnr.add(rnrLineItem2, false);
+    when(rnrLineItemMapper.getExistingNonFullSupplyItemByRnrIdAndProductCode(rnrId, "P1")).thenReturn(rnrLineItem);
+    when(rnrLineItemMapper.getExistingNonFullSupplyItemByRnrIdAndProductCode(rnrId, "P2")).thenReturn(rnrLineItem2);
+
+    rnrLineItem.setQuantityApproved(5);
+    rnrLineItem2.setQuantityRequested(3);
+
+    rnr.setStatus(IN_APPROVAL);
+    requisitionRepository.update(rnr);
+
+    verify(rnrLineItemMapper).updateOnApproval(rnr.getFullSupplyLineItems().get(0));
+    verify(rnrLineItemMapper).updateOnApproval(rnr.getFullSupplyLineItems().get(1));
+    verify(rnrLineItemMapper).updateOnApproval(rnr.getNonFullSupplyLineItems().get(0));
+    verify(rnrLineItemMapper).updateOnApproval(rnr.getNonFullSupplyLineItems().get(1));
+  }
+
+  @Test
+  public void shouldUpdateExistingNonFullSupplyLineItems() throws Exception {
+    long rnrId = 1L;
+    rnr.setId(rnrId);
+    RnrLineItem rnrLineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem));
+    rnrLineItem.setProductCode("P1");
+    rnrLineItem.setRnrId(rnrId);
+    rnr.add(rnrLineItem, false);
+    when(rnrLineItemMapper.getExistingNonFullSupplyItemByRnrIdAndProductCode(rnrId, "P1")).thenReturn(rnrLineItem);
+
+    rnrLineItem.setQuantityApproved(5);
+
+    rnr.setStatus(INITIATED);
+    requisitionRepository.update(rnr);
+
+    verify(rnrLineItemMapper).update(rnr.getFullSupplyLineItems().get(0));
+    verify(rnrLineItemMapper).update(rnr.getFullSupplyLineItems().get(1));
+    verify(rnrLineItemMapper).update(rnr.getNonFullSupplyLineItems().get(0));
   }
 
   @Test

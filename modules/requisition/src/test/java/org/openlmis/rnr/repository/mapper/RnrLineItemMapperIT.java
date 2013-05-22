@@ -171,6 +171,22 @@ public class RnrLineItemMapperIT {
   }
 
   @Test
+  public void shouldReturnNonFullSupplyLineItemByRnrIdAndProductCode() throws Exception {
+    requisitionMapper.insert(rnr);
+    RnrLineItem nonFullSupplyLineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
+    nonFullSupplyLineItem.setQuantityRequested(20);
+    nonFullSupplyLineItem.setReasonForRequestedQuantity("More patients");
+    nonFullSupplyLineItem.setFullSupply(false);
+    rnrLineItemMapper.insertNonFullSupply(nonFullSupplyLineItem);
+
+    RnrLineItem fetchedNonSupplyLineItem = rnrLineItemMapper.getExistingNonFullSupplyItemByRnrIdAndProductCode(rnr.getId(), nonFullSupplyLineItem.getProductCode());
+
+    assertThat(fetchedNonSupplyLineItem.getQuantityRequested(), is(20));
+    assertThat(fetchedNonSupplyLineItem.getReasonForRequestedQuantity(), is("More patients"));
+    assertThat(fetchedNonSupplyLineItem.getProductCategory(), is("Category 1"));
+  }
+
+  @Test
   public void shouldUpdateRnrLineItem() {
     requisitionMapper.insert(rnr);
     RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);

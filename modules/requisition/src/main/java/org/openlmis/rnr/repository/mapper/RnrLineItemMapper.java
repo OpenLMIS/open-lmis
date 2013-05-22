@@ -98,4 +98,7 @@ public interface RnrLineItemMapper {
     " WHERE id = #{id}"
   )
   void updateOnApproval(RnrLineItem lineItem);
+
+  @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} AND productCode = #{productCode} AND fullSupply = false")
+  RnrLineItem getExistingNonFullSupplyItemByRnrIdAndProductCode(@Param(value = "rnrId") Long rnrId, @Param(value = "productCode") String productCode);
 }
