@@ -62,8 +62,8 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
   $scope.$on('$routeUpdate', function () {
     $scope.showNonFullSupply = $routeParams.supplyType == "non-full-supply";
-    $scope.fillPagedGridData();
     if ($scope.saveRnrForm.$dirty) $scope.saveRnr();
+    $scope.fillPagedGridData();
   });
 
   $scope.$watch("currentPage", function () {
