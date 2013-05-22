@@ -1,17 +1,17 @@
 <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
 
-    <div class="row-fluid sortable ui-sortable">
-            <div class="box span12">
+    <div class="container-fluid">
+            <div class="box row-fluid" style="padding:0px;">
                 <div class="box-header">
                     <h2><i class="icon-edit"></i><span class="break"></span>Adjustment Summary Report</h2>
                     <div class="box-icon">
-                        <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
-                        <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
+                        <!--<a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>-->
+                        <!--<a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>-->
                         <a id="pdf-button" href="#" ng-click="export('PDF')" class='btn-small btn-info'>PDF</a>
                         <a id="xls-button" href="#" ng-click="export('XLS')" class='btn-small btn-info'>Excel</a>
                     </div>
                 </div>
-            <div class="box-content" ng-show="show(1)">
+            <div class="span3 box-content"  style="margin-left:0px;" ng-show="show(1)">
                 <div class="app-form" style="padding: 5px;">
                         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
                             <div class="clearfix ">
@@ -27,6 +27,13 @@
                                         </div>
                                     </div>
                                 </div>
+
+
+                                <div class="clearfix"></div>
+                                <br />
+
+
+
                                 <div class="form-cell horizontalFilters">
                                     <div >
                                         <label class="labels">Period Type</label>
@@ -42,29 +49,27 @@
                                     <label class="labels">From</label>
 
                                     <div class="form-field">
-                                        <span style="width:70px;display:inline-block">Year</span>
-                                        <select ui-select2 style="width:100px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="startYear" ng-model="startYear" ng-options="option.value as option.name for option in startYears">
+
+                                        <select ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="startYear" ng-model="startYear" ng-options="option.value as option.name for option in startYears">
 
                                         </select>
-                                        <br />
-                                        <div ng-show="isMonthly()">
-                                            <span style="width:70px;display:inline-block">Month</span>
-                                            <select ui-select2 style="width:100px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="startMonth" ng-model="startMonth" ng-options="option.value as option.name for option in startMonths">
+
+                                        <span ng-show="isMonthly()">
+                                            <select ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="startMonth" ng-model="startMonth" ng-options="option.value as option.name for option in startMonths">
 
                                             </select>
-                                        </div>
-                                        <div ng-show="isQuarterly()">
-                                            <span style="width:70px;display:inline-block">Quarter</span>
-                                            <select ui-select2 style="width:100px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="startQuarter" ng-model="startQuarter" ng-options="option.value as option.name for option in startQuarters">
+                                        </span>
+                                        <span ng-show="isQuarterly()">
+
+                                            <select ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="startQuarter" ng-model="startQuarter" ng-options="option.value as option.name for option in startQuarters">
 
                                             </select>
-                                        </div>
-                                        <div ng-show="isSemiAnnualy()">
-                                            <span style="width:70px;display:inline-block">Half</span>
-                                            <select ui-select2 style="width:100px;" ng-required="true" ng-change="filterGrid()" name="startHalf" ng-model="startHalf" ng-options="option.value as option.name for option in semiAnnuals">
+                                        </span>
+                                        <span ng-show="isSemiAnnualy()">
+                                            <select ui-select2 style="width:80px;" ng-required="true" ng-change="filterGrid()" name="startHalf" ng-model="startHalf" ng-options="option.value as option.name for option in semiAnnuals">
 
                                             </select>
-                                        </div>
+                                        </span>
                                     </div>
                                 </div>
 
@@ -72,26 +77,24 @@
                                     <label class="labels">To</label>
 
                                     <div class="form-field">
-                                        <span style="width:70px;display:inline-block">Year</span>
-                                        <select ui-select2 style="width:100px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="endYear" ng-model="endYear" ng-options="option.value as option.name for option in endYears">
+
+                                        <select ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="endYear" ng-model="endYear" ng-options="option.value as option.name for option in endYears">
 
                                         </select>
-                                        <br />
-                                        <div ng-show="isMonthly()">
-                                            <span style="width:70px;display:inline-block">Month</span>
-                                            <select ui-select2 style="width:100px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="endMonth" ng-model="endMonth" ng-options="option.value as option.name for option in endMonths">
+
+                                        <span ng-show="isMonthly()">
+
+                                            <select ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="endMonth" ng-model="endMonth" ng-options="option.value as option.name for option in endMonths">
 
                                             </select>
-                                        </div>
-                                        <div ng-show="isQuarterly()">
-                                            <span style="width:70px;display:inline-block">Quarter</span>
-                                            <select ui-select2 style="width:100px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="endQuarter" ng-model="endQuarter" ng-options="option.value as option.name for option in endQuarters">
+                                        </span>
+                                        <span ng-show="isQuarterly()">
+                                            <select ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="endQuarter" ng-model="endQuarter" ng-options="option.value as option.name for option in endQuarters">
 
                                             </select>
-                                        </div>
+                                        </span>
                                         <div ng-show="isSemiAnnualy()">
-                                            <span style="width:70px;display:inline-block">Half</span>
-                                            <select ui-select2 style="width:100px;" ng-required="true" ng-change="filterGrid()" name="endHalf" ng-model="endHalf" ng-options="option.value as option.name for option in semiAnnuals">
+                                            <select ui-select2 style="width:80px;" ng-required="true" ng-change="filterGrid()" name="endHalf" ng-model="endHalf" ng-options="option.value as option.name for option in semiAnnuals">
 
                                             </select>
                                         </div>
@@ -99,15 +102,10 @@
                                 </div>
 
 
-                             <!--   <div class="form-cell horizontalFilters">
-                                    <label class="labels">Zone</label>
+                                <div class="clearfix"></div>
+                                <br />
 
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" ng-required="true" ng-change="filterGrid()" name="zone" ng-model="zone.value" ng-options="option.id as option.name for option in zones">
 
-                                        </select>
-                                    </div>
-                                </div>-->
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Facility Type</label>
 
@@ -141,7 +139,7 @@
                                     <label class="labels">Reporting Groups</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:300px;" name="requisitionGroup" ng-change="filterGrid()" ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
+                                        <select ui-select2 style="width:250px;" name="requisitionGroup" ng-change="filterGrid()" ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
 
                                         </select>
                                     </div>
@@ -161,7 +159,9 @@
                          </form>
                 </div>
             </div>
-               <div class="gridStyleReport" ng-grid="gridOptions"></div>
+            <div class="span9" style="margin-left:0px;">
+                <div class="gridStyleReport" ng-grid="gridOptions"></div>
+            </div>
    </div>
   </div>
 
