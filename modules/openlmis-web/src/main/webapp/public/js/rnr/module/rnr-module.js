@@ -31,8 +31,7 @@ require(['../../shared/app', '../controller/initiate-rnr-controller','../control
             var validationFunction = rnrModule[attrs.rnrValidator];
 
             element.bind('blur', function () {
-              var viewValue = ctrl.$viewValue;
-              validationFunction(viewValue, element.attr('name'));
+              validationFunction(ctrl.$modelValue, element.attr('name'));
             });
             ctrl.$parsers.unshift(function (viewValue) {
               if (validationFunction(viewValue, element.attr('name'))) {
