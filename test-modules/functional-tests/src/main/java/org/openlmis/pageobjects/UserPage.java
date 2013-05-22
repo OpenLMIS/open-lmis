@@ -153,7 +153,7 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(searchFacility);
     if (!adminRole) {
       searchFacility.clear();
-      testWebDriver.handleScrollByPixels(0, 4000);
+      testWebDriver.handleScrollByPixels(0, 5000);
       searchFacility.sendKeys(facilityCode);
       for (int i = 0; i < facilityCode.length(); i++) {
         searchFacility.sendKeys(Keys.ARROW_LEFT);
