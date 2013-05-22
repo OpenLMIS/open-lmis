@@ -57,7 +57,7 @@ public interface RnrLineItemMapper {
     " packsToShip = #{packsToShip}, " +
     " remarks = #{remarks}, " +
     " modifiedBy = #{modifiedBy}, " +
-    " modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP) " +
+    " modifiedDate = CURRENT_TIMESTAMP " +
     "WHERE id = #{id}"
   )
   int update(RnrLineItem rnrLineItem);
@@ -94,7 +94,7 @@ public interface RnrLineItemMapper {
     "SET quantityApproved = #{quantityApproved}, " +
     " remarks = #{remarks}, " +
     " modifiedBy = #{modifiedBy}, "+
-    " modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP) "+
+    " modifiedDate = CURRENT_TIMESTAMP "+
     " WHERE id = #{id}"
   )
   void updateOnApproval(RnrLineItem lineItem);
