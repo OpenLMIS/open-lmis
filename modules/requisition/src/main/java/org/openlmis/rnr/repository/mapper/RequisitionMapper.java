@@ -75,16 +75,16 @@ public interface RequisitionMapper {
                                   @Param("period") ProcessingPeriod period);
 
 
-  @Select("SELECT * FROM requisitions R " +
-      "WHERE facilityId = #{facilityId} " +
-      "AND programId = #{programId} " +
-      "AND status NOT IN ('INITIATED', 'SUBMITTED') " +
-      "ORDER BY (select startDate from processing_periods where id=R.periodId) DESC " +
-      "LIMIT 1")
+  @Select({"SELECT * FROM requisitions R",
+      "WHERE facilityId = #{facilityId}",
+      "AND programId = #{programId} ",
+      "AND status NOT IN ('INITIATED', 'SUBMITTED')",
+      "ORDER BY (select startDate from processing_periods where id=R.periodId) DESC",
+      "LIMIT 1"})
   @Results(value = {
       @Result(property = "facility.id", column = "facilityId"),
       @Result(property = "program.id", column = "programId"),
-      @Result(property = "period.id", column = "periodId"),
+      @Result(property = "period.id", column = "periodId")
   })
   Rnr getLastRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Long facilityId,
                                                  @Param(value = "programId") Long programId);
@@ -99,8 +99,11 @@ public interface RequisitionMapper {
   })
   List<Rnr> getApprovedRequisitions();
 
-  @Select({"SELECT * FROM requisitions ",
-      "WHERE facilityId = #{facility.id} AND programId = #{program.id} AND periodId = ANY (#{periods}::INTEGER[]) AND status NOT IN ('INITIATED', 'SUBMITTED')"})
+  @Select({"SELECT * FROM requisitions WHERE",
+      "facilityId = #{facility.id} AND",
+      "programId = #{program.id} AND ",
+      "periodId = ANY (#{periods}::INTEGER[]) AND ",
+      "status NOT IN ('INITIATED', 'SUBMITTED')"})
   @Results(value = {
       @Result(property = "id", column = "id"),
       @Result(property = "facility.id", column = "facilityId"),
