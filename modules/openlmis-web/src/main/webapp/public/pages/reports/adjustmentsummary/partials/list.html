@@ -105,6 +105,19 @@
                                 <div class="clearfix"></div>
                                 <br />
 
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Adjustment Types</label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" name="adjustmentType" ng-change="filterGrid()" ng-model="adjustmentType.value" ng-options="option.name as option.description for option in adjustmentTypes">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+                                <br />
+
 
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Facility Type</label>
@@ -145,15 +158,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Adjustment Types</label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="adjustmentType" ng-change="filterGrid()" ng-model="adjustmentType.value" ng-options="option.name as option.description for option in adjustmentTypes">
-
-                                        </select>
-                                    </div>
-                                </div>
 
                             </div>
                          </form>
