@@ -4,9 +4,11 @@
 CREATE TABLE comments (
   id  SERIAL PRIMARY KEY,
   rnrId INTEGER NOT NULL REFERENCES requisitions(id),
-  authorId INTEGER NOT NULL REFERENCES users(id),
-  createdDate TIMESTAMP DEFAULT NOW(),
-  commentText VARCHAR(250) NOT NULL
+  commentText VARCHAR(250) NOT NULL,
+  createdBy INTEGER NOT NULL REFERENCES users(id),
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy INTEGER NOT NULL REFERENCES users(id),
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX i_comments_rnrId ON comments(rnrId);

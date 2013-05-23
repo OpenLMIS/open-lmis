@@ -21,12 +21,12 @@ public class RequisitionStatusChange{
 
   private Long rnrId;
   private RnrStatus status;
-  private Long statusChangedBy;
-  private Date statusChangeDate;
+  private Long createdBy;
+  private Date createdDate;
 
   public RequisitionStatusChange(Rnr requisition) {
     this.rnrId = requisition.getId();
     this.status = requisition.getStatus();
-    this.statusChangedBy = requisition.getModifiedBy();
+    this.createdBy = requisition.getModifiedBy();
   }
 }

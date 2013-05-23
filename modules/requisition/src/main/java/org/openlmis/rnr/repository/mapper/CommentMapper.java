@@ -12,14 +12,14 @@ import java.util.List;
 @Repository
 public interface CommentMapper {
 
-  @Insert("INSERT INTO comments(rnrId, authorId, commentText) " +
-    "VALUES (#{rnrId}, #{author.id}, #{commentText})")
+  @Insert("INSERT INTO comments(rnrId, commentText, createdBy, modifiedBy) " +
+    "VALUES (#{rnrId}, #{commentText}, #{author.id}, #{author.id})")
   int insert(Comment comment);
 
   @Select("SELECT * FROM comments WHERE rnrId = #{rnrId} ORDER BY createdDate")
   @Results(value = {
     @Result(property = "id", column = "id"),
-    @Result(property = "author.id", column = "authorId")
+    @Result(property = "author.id", column = "createdBy")
   })
   List<Comment> getByRnrId(Long rnrId);
 }

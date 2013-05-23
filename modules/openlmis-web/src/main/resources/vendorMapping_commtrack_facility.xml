@@ -30,6 +30,6 @@
     <field openlmis-name="satelliteParentID" vendor-name="SatelliteParentID" />
     <field openlmis-name="comments" vendor-name="facilityComments" />
     <field openlmis-name="doNotDisplay" vendor-name="DoNotDisplay" />
-    <field openlmis-name="modifiedDate" vendor-name="LastModifiedDate" />
-    <field openlmis-name="LastModifiedBy" vendor-name="LastModifiedBy" />
+    <field openlmis-name="modifiedDate" vendor-name="modifiedDate" />
+    <field openlmis-name="modifiedBy" vendor-name="modifiedBy" />
 </mapping>

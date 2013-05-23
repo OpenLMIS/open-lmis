@@ -12,7 +12,6 @@ CREATE TABLE requisitions (
   nonFullSupplyItemsSubmittedCost NUMERIC(15, 4),
   supervisoryNodeId               INTEGER     REFERENCES supervisory_nodes (id),
   supplyingFacilityId             INTEGER REFERENCES facilities(id),
-  orderBatchId                    INTEGER REFERENCES order_batches(id),
   submittedDate                   TIMESTAMP,
   modifiedBy                      INTEGER,
   modifiedDate                    TIMESTAMP DEFAULT NOW(),

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RequisitionStatusChangeMapper {
 
-  @Insert({"INSERT INTO requisition_status_changes(rnrId, status, statusChangedBy) VALUES (#{rnrId}, #{status},",
-    "#{statusChangedBy})"})
+  @Insert({"INSERT INTO requisition_status_changes(rnrId, status, createdBy, modifiedBy) VALUES (#{rnrId}, #{status},",
+    "#{createdBy}, #{createdBy})"})
   @Options(useGeneratedKeys = true)
   void insert(RequisitionStatusChange statusChange);
 

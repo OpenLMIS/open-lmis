@@ -82,8 +82,8 @@ public class RequisitionStatusChangeMapperIT {
     mapper.insert(statusChange);
 
     RequisitionStatusChange change = mapper.getById(statusChange.getId());
-    assertThat(change.getStatusChangeDate(), is(notNullValue()));
-    change.setStatusChangeDate(null);
+    assertThat(change.getCreatedDate(), is(notNullValue()));
+    change.setCreatedDate(null);
 
     assertThat(change, is(statusChange));
   }
