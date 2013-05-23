@@ -28,6 +28,7 @@ public class RnrColumn extends BaseModel{
     private boolean mandatory;
     private String description;
     private boolean formulaValidationRequired = true;
+    private Long createdBy;
 
     @SuppressWarnings(value = "unused")
     public void setSourceString(String sourceString) {

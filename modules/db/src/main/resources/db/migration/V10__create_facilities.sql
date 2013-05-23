@@ -34,9 +34,9 @@ CREATE TABLE facilities (
     comment  TEXT,
     dataReportable BOOLEAN,
     modifiedBy INTEGER,
-    modifiedDate TIMESTAMP DEFAULT NOW(),
+    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     createdBy INTEGER,
-    createdDate TIMESTAMP DEFAULT NOW()
+    createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX i_facility_name ON facilities(name);

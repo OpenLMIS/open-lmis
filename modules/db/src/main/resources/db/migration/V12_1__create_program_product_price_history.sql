@@ -8,12 +8,12 @@ CREATE TABLE program_product_price_history (
     price NUMERIC(20,2) DEFAULT 0,
     pricePerDosage NUMERIC(20,2) DEFAULT 0,
     source VARCHAR(50),
-    startDate TIMESTAMP DEFAULT NOW(),
-    endDate TIMESTAMP DEFAULT NOW(),
-    modifiedBy INTEGER,
-    modifiedDate TIMESTAMP DEFAULT NOW(),
-    createdBy INTEGER,
-    createdDate TIMESTAMP DEFAULT NOW()
+    startDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    endDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdBy                       INTEGER,
+    createdDate                     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modifiedBy                      INTEGER,
+    modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX i_program_product_price_history_programProductId ON program_product_price_history(programProductId);

@@ -14,14 +14,16 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RnrColumnMapper {
+public interface ProgramRnrColumnMapper {
 
   @Insert({"INSERT INTO program_rnr_columns",
       "(programId, masterColumnId, visible, label,",
-      "position, source, formulaValidationRequired)",
+      "position, source, formulaValidationRequired," +
+      "createdBy, modifiedBy)",
       "VALUES",
       "(#{programId}, #{rnrColumn.id},  #{rnrColumn.visible}, #{rnrColumn.label},",
-      "#{rnrColumn.position}, #{rnrColumn.source.code}, #{rnrColumn.formulaValidationRequired})"})
+      "#{rnrColumn.position}, #{rnrColumn.source.code}, #{rnrColumn.formulaValidationRequired}," +
+      "#{rnrColumn.createdBy}, #{rnrColumn.modifiedBy})"})
   int insert(@Param("programId") Long programId, @Param("rnrColumn") RnrColumn rnrColumn);
 
   @Select("select 0<(select count(id) as count from program_rnr_columns where programId = #{programId})")
@@ -40,7 +42,9 @@ public interface RnrColumnMapper {
       "label = #{rnrColumn.label}, " +
       "position = #{rnrColumn.position}, " +
       "source = #{rnrColumn.source.code}, " +
-      "formulaValidationRequired = #{rnrColumn.formulaValidationRequired} " +
+      "formulaValidationRequired = #{rnrColumn.formulaValidationRequired}," +
+      "modifiedBy = #{rnrColumn.modifiedBy}," +
+      "modifiedDate = NOW() " +
       "WHERE programId = #{programId} AND masterColumnId = #{rnrColumn.id}")
   void update(@Param("programId") Long programId, @Param("rnrColumn") RnrColumn rnrColumn);
 

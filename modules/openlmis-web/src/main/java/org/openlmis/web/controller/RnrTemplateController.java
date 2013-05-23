@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,8 +59,10 @@ public class RnrTemplateController extends BaseController{
   @RequestMapping(value = "/program/{programId}/rnr-template", method = RequestMethod.POST, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_RNR')")
   public ResponseEntity saveRnRTemplateForProgram(@PathVariable("programId") Long programId,
-                                                  @RequestBody RnrColumnList rnrColumnList) {
+                                                  @RequestBody RnrColumnList rnrColumnList,
+                                                  HttpServletRequest request) {
       ProgramRnrTemplate programRnrTemplate = new ProgramRnrTemplate(programId, rnrColumnList);
+      programRnrTemplate.setModifiedBy(loggedInUserId(request));
       Map<String, OpenLmisMessage> validationErrors = rnrTemplateService.saveRnRTemplateForProgram(programRnrTemplate);
       ResponseEntity responseEntity;
       if (validationErrors != null && validationErrors.size() > 0) {

@@ -6,11 +6,10 @@
 
 package org.openlmis.rnr.repository;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Program;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.RnrColumn;
-import org.openlmis.rnr.repository.mapper.RnrColumnMapper;
+import org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -20,10 +19,10 @@ import java.util.List;
 public class RnrTemplateRepository {
 
   @Autowired
-  private RnrColumnMapper rnrColumnMapper;
+  private ProgramRnrColumnMapper programRnrColumnMapper;
 
   public void saveProgramRnrTemplate(ProgramRnrTemplate programTemplate) {
-    if (rnrColumnMapper.isRnrTemplateDefined(programTemplate.getProgramId())) {
+    if (programRnrColumnMapper.isRnrTemplateDefined(programTemplate.getProgramId())) {
       updateAllProgramRnRColumns(programTemplate);
     } else {
       insertAllProgramRnRColumns(programTemplate);
@@ -32,29 +31,32 @@ public class RnrTemplateRepository {
 
   private void insertAllProgramRnRColumns(ProgramRnrTemplate programRnrTemplate) {
     for (RnrColumn rnrColumn : programRnrTemplate.getRnrColumns()) {
-      rnrColumnMapper.insert(programRnrTemplate.getProgramId(), rnrColumn);
+      rnrColumn.setCreatedBy(programRnrTemplate.getModifiedBy());
+      rnrColumn.setModifiedBy(programRnrTemplate.getModifiedBy());
+      programRnrColumnMapper.insert(programRnrTemplate.getProgramId(), rnrColumn);
     }
   }
 
   private void updateAllProgramRnRColumns(ProgramRnrTemplate programRnrTemplate) {
     for (RnrColumn rnrColumn : programRnrTemplate.getRnrColumns()) {
-      rnrColumnMapper.update(programRnrTemplate.getProgramId(), rnrColumn);
+      rnrColumn.setModifiedBy(programRnrTemplate.getModifiedBy());
+      programRnrColumnMapper.update(programRnrTemplate.getProgramId(), rnrColumn);
     }
   }
 
   public List<RnrColumn> fetchColumnsForRequisition(Long programId) {
-    return rnrColumnMapper.fetchDefinedRnrColumnsForProgram(programId);
+    return programRnrColumnMapper.fetchDefinedRnrColumnsForProgram(programId);
   }
 
   public List<RnrColumn> fetchRnrTemplateColumnsOrMasterColumns(Long programId) {
-    if (rnrColumnMapper.isRnrTemplateDefined(programId)) {
-      return rnrColumnMapper.fetchDefinedRnrColumnsForProgram(programId);
+    if (programRnrColumnMapper.isRnrTemplateDefined(programId)) {
+      return programRnrColumnMapper.fetchDefinedRnrColumnsForProgram(programId);
     } else {
-      return rnrColumnMapper.fetchAllMasterRnRColumns();
+      return programRnrColumnMapper.fetchAllMasterRnRColumns();
     }
   }
 
   public boolean isFormulaValidationRequired(Program program) {
-    return rnrColumnMapper.isFormulaValidationRequired(program);
+    return programRnrColumnMapper.isFormulaValidationRequired(program);
   }
 }

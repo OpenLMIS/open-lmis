@@ -7,6 +7,7 @@
 package org.openlmis.rnr.domain;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.openlmis.core.message.OpenLmisMessage;
 
 import java.util.ArrayList;
@@ -43,6 +44,10 @@ public class ProgramRnrTemplate {
   private Long programId;
   @Getter
   private List<RnrColumn> rnrColumns;
+
+  @Getter
+  @Setter
+  private Long modifiedBy;
 
   public ProgramRnrTemplate(Long programId, List<RnrColumn> rnrColumns) {
     this.programId = programId;

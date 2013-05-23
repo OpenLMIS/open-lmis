@@ -14,5 +14,9 @@ CREATE TABLE master_rnr_columns (
     used boolean NOT NULL,
     visible boolean NOT NULL,
     mandatory boolean NOT NULL,
-    description varchar(250)
+    description varchar(250),
+    createdBy                       INTEGER,
+    createdDate                     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modifiedBy                      INTEGER,
+    modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

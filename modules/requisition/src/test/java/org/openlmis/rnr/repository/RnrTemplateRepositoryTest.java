@@ -17,7 +17,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.RnrColumn;
-import org.openlmis.rnr.repository.mapper.RnrColumnMapper;
+import org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class RnrTemplateRepositoryTest {
   ProgramRnrTemplate template;
 
   @Mock
-  RnrColumnMapper rnrColumnMapper;
+  ProgramRnrColumnMapper programRnrColumnMapper;
   @InjectMocks
   RnrTemplateRepository rnrRepository;
 
@@ -47,22 +47,22 @@ public class RnrTemplateRepositoryTest {
 
   @Test
   public void shouldRetrieveAllColumnsFromMasterTable() throws Exception {
-    when(rnrColumnMapper.isRnrTemplateDefined(EXISTING_PROGRAM_ID)).thenReturn(false);
-    when(rnrColumnMapper.fetchAllMasterRnRColumns()).thenReturn(rnrColumns);
+    when(programRnrColumnMapper.isRnrTemplateDefined(EXISTING_PROGRAM_ID)).thenReturn(false);
+    when(programRnrColumnMapper.fetchAllMasterRnRColumns()).thenReturn(rnrColumns);
     List<RnrColumn> result = rnrRepository.fetchRnrTemplateColumnsOrMasterColumns(EXISTING_PROGRAM_ID);
 
     assertThat(result, is(rnrColumns));
-    verify(rnrColumnMapper).fetchAllMasterRnRColumns();
+    verify(programRnrColumnMapper).fetchAllMasterRnRColumns();
   }
 
   @Test
   public void shouldRetrieveAlreadyDefinedRnrColumnsForAProgram() throws Exception {
-    when(rnrColumnMapper.isRnrTemplateDefined(EXISTING_PROGRAM_ID)).thenReturn(true);
-    when(rnrColumnMapper.fetchDefinedRnrColumnsForProgram(EXISTING_PROGRAM_ID)).thenReturn(rnrColumns);
+    when(programRnrColumnMapper.isRnrTemplateDefined(EXISTING_PROGRAM_ID)).thenReturn(true);
+    when(programRnrColumnMapper.fetchDefinedRnrColumnsForProgram(EXISTING_PROGRAM_ID)).thenReturn(rnrColumns);
     List<RnrColumn> result = rnrRepository.fetchRnrTemplateColumnsOrMasterColumns(EXISTING_PROGRAM_ID);
     assertThat(result, is(rnrColumns));
-    verify(rnrColumnMapper, never()).fetchAllMasterRnRColumns();
-    verify(rnrColumnMapper).fetchDefinedRnrColumnsForProgram(EXISTING_PROGRAM_ID);
+    verify(programRnrColumnMapper, never()).fetchAllMasterRnRColumns();
+    verify(programRnrColumnMapper).fetchDefinedRnrColumnsForProgram(EXISTING_PROGRAM_ID);
 
   }
 
@@ -71,16 +71,16 @@ public class RnrTemplateRepositoryTest {
     rnrColumns.add(new RnrColumn());
     rnrColumns.add(new RnrColumn());
     rnrRepository.saveProgramRnrTemplate(template);
-    verify(rnrColumnMapper, times(2)).insert(eq(EXISTING_PROGRAM_ID), any(RnrColumn.class));
+    verify(programRnrColumnMapper, times(2)).insert(eq(EXISTING_PROGRAM_ID), any(RnrColumn.class));
   }
 
   @Test
   public void shouldUpdateRnRColumnsForAProgramIfRnrTemplateAlreadyDefined() throws Exception {
-    when(rnrColumnMapper.isRnrTemplateDefined(EXISTING_PROGRAM_ID)).thenReturn(true);
+    when(programRnrColumnMapper.isRnrTemplateDefined(EXISTING_PROGRAM_ID)).thenReturn(true);
     rnrColumns.add(new RnrColumn());
     rnrColumns.add(new RnrColumn());
     rnrRepository.saveProgramRnrTemplate(template);
-    verify(rnrColumnMapper, times(2)).update(eq(EXISTING_PROGRAM_ID), any(RnrColumn.class));
+    verify(programRnrColumnMapper, times(2)).update(eq(EXISTING_PROGRAM_ID), any(RnrColumn.class));
   }
 
   @Test
@@ -88,7 +88,7 @@ public class RnrTemplateRepositoryTest {
     boolean expectedFormulaValidated = true;
     Long programId = 1L;
     Program program = new Program(programId);
-    when(rnrColumnMapper.isFormulaValidationRequired(program)).thenReturn(expectedFormulaValidated);
+    when(programRnrColumnMapper.isFormulaValidationRequired(program)).thenReturn(expectedFormulaValidated);
 
     boolean formulaValidatedResult = rnrRepository.isFormulaValidationRequired(program);
 

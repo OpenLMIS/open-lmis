@@ -11,6 +11,10 @@ CREATE TABLE program_rnr_columns(
     position int NOT NULL,
     source VARCHAR(1),
     formulaValidationRequired BOOLEAN,
+    createdBy                       INTEGER,
+    createdDate                     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modifiedBy                      INTEGER,
+    modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (programId, masterColumnId)
 );
 
