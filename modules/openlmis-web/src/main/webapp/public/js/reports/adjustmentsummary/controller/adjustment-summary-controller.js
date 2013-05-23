@@ -15,7 +15,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 
         $scope.pagingOptions = {
             pageSizes: [5, 10, 20, 40, 50, 100],
-            pageSize: 10,
+            pageSize: 20,
             totalServerItems: 0,
             currentPage: 1
         };
@@ -125,6 +125,10 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             $scope.startQuarters  = $scope.quarters;
             $scope.endQuarters  = $scope.quarters;
             $scope.endYears     = $scope.startYears;
+            $scope.toQuarter = 1;
+            $scope.fromQuarter = 1;
+            $scope.startHalf = 1;
+            $scope.endHalf = 1;
         });
 
 

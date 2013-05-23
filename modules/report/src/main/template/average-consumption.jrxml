@@ -51,8 +51,10 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 		<groupHeader>
 			<band height="96">
 				<staticText>
-					<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="67" width="802" height="29" forecolor="#FFFFFF" backcolor="#3D9297">
+					<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="67" width="660" height="29" forecolor="#FFFFFF" backcolor="#3D9297">
 						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement/>
 					<text><![CDATA[]]></text>
@@ -74,7 +76,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 					<text><![CDATA[Line#]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="f5478500-0fc0-4759-85c4-ab472097bdd7" mode="Transparent" x="652" y="67" width="149" height="29" forecolor="#000000" backcolor="#333333"/>
+					<reportElement uuid="f5478500-0fc0-4759-85c4-ab472097bdd7" mode="Transparent" x="540" y="67" width="120" height="29" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
@@ -82,7 +84,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 					<text><![CDATA[Average Monthly Consumption]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="729f7fff-095d-4688-b327-6b0da6522653" mode="Transparent" x="270" y="67" width="382" height="29" forecolor="#000000" backcolor="#333333"/>
+					<reportElement uuid="729f7fff-095d-4688-b327-6b0da6522653" mode="Transparent" x="270" y="67" width="270" height="29" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -132,7 +134,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 					<text><![CDATA[Supplying Facility]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="0d752afd-8f4b-4ea5-b97b-a66b06176e83" mode="Transparent" x="515" y="5" width="169" height="20" forecolor="#000000" backcolor="#333333">
+					<reportElement uuid="0d752afd-8f4b-4ea5-b97b-a66b06176e83" mode="Transparent" x="420" y="5" width="169" height="20" forecolor="#000000" backcolor="#333333">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
@@ -142,7 +144,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 					<text><![CDATA[Minimum Months of Stock]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="2b5a84f5-2cf1-485b-9274-b068cf1c1c86" mode="Transparent" x="515" y="25" width="169" height="20" forecolor="#000000" backcolor="#333333">
+					<reportElement uuid="2b5a84f5-2cf1-485b-9274-b068cf1c1c86" mode="Transparent" x="420" y="25" width="169" height="20" forecolor="#000000" backcolor="#333333">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
@@ -162,7 +164,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 					<textFieldExpression><![CDATA[$F{supplyingFacility} == null?"-":$F{supplyingFacility}]]></textFieldExpression>
 				</textField>
 				<textField pattern="" isBlankWhenNull="false">
-					<reportElement uuid="b0080e04-9a4b-4bc3-b229-92ce1614d8fd" mode="Transparent" x="684" y="5" width="118" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement uuid="b0080e04-9a4b-4bc3-b229-92ce1614d8fd" mode="Transparent" x="589" y="5" width="118" height="20" forecolor="#000000" backcolor="#FFFFFF">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
@@ -172,7 +174,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 					<textFieldExpression><![CDATA[$F{maxMOS}]]></textFieldExpression>
 				</textField>
 				<textField pattern="" isBlankWhenNull="false">
-					<reportElement uuid="f3d6687b-e85e-4b5f-bdb4-10a4cb4a9f8a" mode="Transparent" x="684" y="25" width="118" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement uuid="f3d6687b-e85e-4b5f-bdb4-10a4cb4a9f8a" mode="Transparent" x="589" y="25" width="118" height="20" forecolor="#000000" backcolor="#FFFFFF">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
@@ -232,7 +234,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F4F4F4">
+				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="0" y="0" width="660" height="20" backcolor="#F4F4F4">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
@@ -248,13 +250,16 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7" x="0" y="19" width="801" height="1" forecolor="#3D9297"/>
+				<reportElement uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7" x="0" y="19" width="660" height="1" forecolor="#3D9297">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement uuid="a720b2eb-4c11-4820-9617-aefbdc467bac" mode="Transparent" x="652" y="0" width="150" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="a720b2eb-4c11-4820-9617-aefbdc467bac" mode="Transparent" x="540" y="0" width="120" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -270,7 +275,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 				<textFieldExpression><![CDATA[($F{category}.toUpperCase()=="NULL"?" ":$F{category})]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement uuid="ab6907da-4c02-445c-9699-b776060d5a36" mode="Transparent" x="270" y="0" width="382" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="ab6907da-4c02-445c-9699-b776060d5a36" mode="Transparent" x="270" y="0" width="270" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
