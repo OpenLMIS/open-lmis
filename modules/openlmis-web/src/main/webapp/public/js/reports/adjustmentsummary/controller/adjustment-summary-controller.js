@@ -32,7 +32,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 
        // TODO: clear out this hardcoded seciton and make sure that it is dynamic
         $scope.startYears   = [
-            {'name':'2010','value':'2010'},
+            {'name': '2010','value':'2010'},
             {'name':'2011','value':'2011'},
             {'name':'2012','value':'2012'},
             {'name':'2013','value':'2013'},

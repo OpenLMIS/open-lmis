@@ -1,4 +1,4 @@
-function AverageConsumptionReportController($scope, $window, AverageConsumptionReport, Products , Programs, ProductCategories, RequisitionGroups , FacilityTypes, GeographicZones, $http, $routeParams,$location) {
+function AverageConsumptionReportController($scope, $window, AverageConsumptionReport, Products , Programs, ProductCategories, RequisitionGroups , FacilityTypes, GeographicZones,OperationYears,Months, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -22,6 +22,11 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             currentPage: 1
         };
 
+    $scope.startYears = [];
+    OperationYears.get(function(data){
+        $scope.startYears  = data.years;
+    });
+
         // default to the monthly period type
         $scope.periodType = 'monthly';
 
@@ -32,42 +37,6 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             {'name':'Annual', 'value':'annual'}
        ];
 
-       // TODO: clear out this hardcoded seciton and make sure that it is dynamic
-        $scope.startYears   = [
-            {'name':'2010','value':'2010'},
-            {'name':'2011','value':'2011'},
-            {'name':'2012','value':'2012'},
-            {'name':'2013','value':'2013'},
-            {'name':'2014','value':'2014'}
-        ] ;
-
-        $scope.endYears ;
-
-       // $scope.startMonth = 1;
-
-        // TODO: clear this hardcoded start year.
-       // $scope.startYear = 2012
-
-        $scope.startMonths  = [];
-
-        // TODO: clear this hardcoded end year
-       // $scope.endYear = 2013;
-
-      //  $scope.endMonth = 4;
-
-        $scope.endMonths;
-
-        $scope.onStartMonthChanged = function(){
-            $scope.endMonths.clear();
-            if($scope.startYear == $scope.endYear && $scope.startMonth != '' ){
-
-                for(var i=$scope.startMonth - 1; i < $scope.months.length;i++){
-                    $scope.endMonths.push($scope.months[i]);
-                }
-
-            }
-            $scope.endMonths = $scope.months;
-        };;
 
         $scope.startQuarters = function(){
             return $scope.quarters;
@@ -86,23 +55,21 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             }
             return $scope.quarters;
         };
+    Months.get(function(data){
+       var months = data.months;
 
-        $scope.months       = [
-            {'name':'Jan', 'value':'1'},
-            {'name':'Feb', 'value':'2'},
-            {'name':'Mar', 'value':'3'},
-            {'name':'Apr', 'value':'4'},
-            {'name':'May', 'value':'5'},
-            {'name':'Jun', 'value':'6'},
-            {'name':'Jul', 'value':'7'},
-            {'name':'Aug', 'value':'8'},
-            {'name':'Sep', 'value':'9'},
-            {'name':'Oct', 'value':'10'},
-            {'name':'Nov', 'value':'11'},
-            {'name':'Dec', 'value':'12'}
-        ];
+       if(months != null){
+           $scope.startMonths = [];
+           $scope.endMonths = [];
+           $.each(months,function(idx,obj){
+               $scope.startMonths.push({'name':obj.toString(), 'value': idx+1});
+               $scope.endMonths.push({'name':obj.toString(), 'value': idx+1});
+           });
+        }
 
-        $scope.quarters         = [
+    });
+
+      $scope.quarters         = [
             {'name':'One','value':'1'},
             {'name':'Two','value':'2'},
             {'name':'Three','value':'3'},
@@ -120,15 +87,13 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             $scope.requisitionGroups.push({'name':'All Reporting Groups'});
         });
 
-
-        // copy over the start month and end months
+    // copy over the start month and end months
         // this is just for initial loading.
         $(function (){
-            $scope.startMonths  = $scope.months;
-            $scope.endMonths    = $scope.months;
+             $scope.endYears = $scope.startYears;
             $scope.startQuarters  = $scope.quarters;
             $scope.endQuarters  = $scope.quarters;
-            $scope.endYears     = $scope.startYears;
+
         });
 
 
@@ -245,38 +210,40 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
         });
 
         $scope.$watch('startYear', function(selection){
-            var date = new Date();
+        var date = new Date();
         if(selection != undefined || selection == ""){
             $scope.filterObject.fromYear =  selection;
+           adjustEndYears();
+           adjustEndMonths();
+           adjustEndQuarters();
         }else{
             $scope.startYear  = date.getFullYear().toString();
             $scope.filterObject.fromYear =  date.getFullYear();
+
         }
         });
 
         $scope.$watch('endYear', function(selection){
+
             var date = new Date();
-            if(selection != undefined || selection == ""){
+            if(selection != undefined || selection == "" ){
                 $scope.filterObject.toYear =  selection;
+                adjustEndMonths();
+                adjustEndQuarters();
             }else{
+
                 $scope.endYear  = date.getFullYear().toString();
                 $scope.filterObject.toYear =  date.getFullYear();
-            }
-        });
 
-      /*  $scope.$watch('startQuarters', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.fromMonth =  selection;
-            }else{
-                var date = new Date();
-                $scope.filterObject.fromMonth =  int(date.getMonth() / 4)+1;
             }
-        });*/
+
+        });
 
      $scope.$watch('startQuarter', function(selection){
          var date = new Date();
          if(selection != undefined || selection == ""){
          $scope.filterObject.fromQuarter =  selection;
+         adjustEndQuarters();
          }else{
          var date = new Date();
          $scope.filterObject.fromQuarter =  int(date.getMonth() / 4)+1;
@@ -312,15 +279,16 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
     });
 
         $scope.$watch('startMonth', function(selection){
+
             var date = new Date();
             if(selection != undefined || selection == ""){
                 $scope.filterObject.fromMonth =  selection-1;
+                adjustEndMonths();
             }else{
-                $scope.startMonth = (date.getMonth()+1 ).toString();
+                $scope.startMonth = (date.getMonth()+1 );
                 $scope.filterObject.fromMonth =  (date.getMonth()+1);
             }
         });
-
 
 
         $scope.$watch('endMonth', function(selection){
@@ -328,10 +296,55 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             if(selection != undefined || selection == ""){
                 $scope.filterObject.toMonth =  selection-1;
             }else{
-                $scope.endMonth = (date.getMonth() +1 ).toString();
+                $scope.endMonth = (date.getMonth() +1 );
                 $scope.filterObject.toMonth =  (date.getMonth()+1);
             }
+
         });
+
+        var adjustEndMonths = function(){
+            if($scope.startYear == $scope.endYear){
+                $scope.endMonths = [];
+                $.each($scope.startMonths,function(idx,obj){
+                    if(obj.value >= $scope.startMonth){
+                        $scope.endMonths.push({'name':obj.name, 'value': obj.value});
+                    }
+                });
+                if($scope.endMonth < $scope.startMonth){
+                    $scope.endMonth = $scope.startMonth;
+                }
+            }else{
+                $scope.endMonths = $scope.startMonths;
+            }
+        }
+
+        var adjustEndQuarters = function(){
+            if($scope.startYear == $scope.endYear){
+                $scope.endQuarters = [];
+                $.each($scope.startQuarters, function(idx,obj){
+                    if(obj.value >= $scope.startQuarter){
+                        $scope.endQuarters.push({'name':obj.name, 'value': obj.value});
+                    }
+                });
+                if($scope.endQuarter < $scope.startQuarter){
+                    $scope.endQuarter =  $scope.startQuarter;
+                }
+            }else{
+                $scope.endQuarters = $scope.startQuarters;
+            }
+        }
+
+        var adjustEndYears = function(){
+            $scope.endYears = [];
+            $.each( $scope.startYears,function( idx,obj){
+                if(obj >= $scope.startYear){
+                    $scope.endYears.push(obj);
+                }
+            });
+            if($scope.endYear < $scope.startYear){
+                $scope.endYear  = new Date().getFullYear();
+            }
+        }
 
         $scope.$watch('periodType', function(selection){
             if(selection != undefined || selection == ""){

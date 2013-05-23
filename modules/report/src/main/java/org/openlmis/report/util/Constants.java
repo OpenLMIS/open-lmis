@@ -30,15 +30,16 @@ public class Constants {
      */
     public static String LOGO_FILE_NAME_KEY = "logo_file_name";
     public static String OPERATOR_LOGO_FILE_NAME_KEY = "operator_logo_file_name";
+    public static String START_YEAR = "start_year";
+    public static String MONTHS = "months";
 
     /**
-     *
+     *  Miscellaneous
      */
     public static String PERIOD_TYPE_MONTHLY = "monthly";
     public static String PERIOD_TYPE_QUARTERLY = "quarterly";
     public static String PERIOD_TYPE_SEMI_ANNUAL = "semi-anual";
     public static String PERIOD_TYPE_ANNUAL = "annual";
-
 
 
 }

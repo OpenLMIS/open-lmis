@@ -35,4 +35,29 @@ public class ConfigurationService {
       return configurationRepository.getByKey(key);
   }
 
+  public int getConfigurationIntValue(String key){
+
+      Configuration configuration = getByKey(key);
+
+      if(configuration == null || configuration.getValue() == null || configuration.getValue().isEmpty())
+          return 0;
+
+      return Integer.parseInt(configuration.getValue());
+  }
+
+  public List<Object> getConfigurationListValue(String key, String delimiter){
+      Configuration configuration = getByKey(key);
+
+      if(configuration == null || configuration.getValue() == null || configuration.getValue().isEmpty())
+        return null;
+      List<Object> values = new ArrayList<>();
+      if(configuration.getValue().contains(delimiter)){
+          for(String value : configuration.getValue().split(delimiter)){
+              values.add(value);
+          }
+      }
+      return values;
+  }
+
+
 }

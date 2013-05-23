@@ -54,3 +54,10 @@ services.factory('StockedOutFacilities',function($resource){
    return $resource('/reports/stockedOut.json',{},{});
 });
 
+services.factory('OperationYears',function($resource){
+    return $resource('/reports/operationYears.json',{},{});
+});
+services.factory('Months',function($resource){
+    return $resource('/reports/months.json',{},{});
+});
+
