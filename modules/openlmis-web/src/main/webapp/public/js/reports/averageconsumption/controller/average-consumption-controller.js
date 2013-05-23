@@ -93,6 +93,9 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
              $scope.endYears = $scope.startYears;
             $scope.startQuarters  = $scope.quarters;
             $scope.endQuarters  = $scope.quarters;
+            $scope.startSemiAnnuals = $scope.semiAnnuals;
+            $scope.endSemiAnnuals = $scope.semiAnnuals;
+
 
         });
 
@@ -216,6 +219,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
            adjustEndYears();
            adjustEndMonths();
            adjustEndQuarters();
+           adjustEndSemiAnnuals();
         }else{
             $scope.startYear  = date.getFullYear().toString();
             $scope.filterObject.fromYear =  date.getFullYear();
@@ -230,6 +234,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
                 $scope.filterObject.toYear =  selection;
                 adjustEndMonths();
                 adjustEndQuarters();
+                adjustEndSemiAnnuals();
             }else{
 
                 $scope.endYear  = date.getFullYear().toString();
@@ -264,6 +269,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
 
         if(selection != undefined || selection == ""){
             $scope.filterObject.fromSemiAnnual =  selection;
+            adjustEndSemiAnnuals();
         }else{
             $scope.filterObject.fromSemiAnnual =  1;
         }
@@ -317,8 +323,24 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
                 $scope.endMonths = $scope.startMonths;
             }
         }
+        var adjustEndSemiAnnuals = function(){
 
-        var adjustEndQuarters = function(){
+            if($scope.startYear == $scope.endYear){
+                $scope.endSemiAnnuals = [];
+                $.each($scope.startSemiAnnuals, function(idx,obj){
+                    if(obj.value >= $scope.startHalf){
+                        $scope.endSemiAnnuals.push({'name':obj.name, 'value': obj.value});
+                    }
+                });
+                if($scope.endHalf < $scope.startHalf){
+                    $scope.endHalf =  $scope.startHalf;
+                }
+            }else{
+                $scope.endSemiAnnuals = $scope.startSemiAnnuals;
+            }
+        }
+
+    var adjustEndQuarters = function(){
             if($scope.startYear == $scope.endYear){
                 $scope.endQuarters = [];
                 $.each($scope.startQuarters, function(idx,obj){
