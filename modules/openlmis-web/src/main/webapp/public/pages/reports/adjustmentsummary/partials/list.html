@@ -66,7 +66,7 @@
                                             </select>
                                         </span>
                                         <span ng-show="isSemiAnnualy()">
-                                            <select ui-select2 style="width:80px;" ng-required="true" ng-change="filterGrid()" name="startHalf" ng-model="startHalf" ng-options="option.value as option.name for option in semiAnnuals">
+                                            <select ui-select2 style="width:80px;" ng-required="true" ng-change="filterGrid()" name="startHalf" ng-model="startHalf" ng-options="option.value as option.name for option in startSemiAnnuals">
 
                                             </select>
                                         </span>
@@ -93,11 +93,11 @@
 
                                             </select>
                                         </span>
-                                        <div ng-show="isSemiAnnualy()">
-                                            <select ui-select2 style="width:80px;" ng-required="true" ng-change="filterGrid()" name="endHalf" ng-model="endHalf" ng-options="option.value as option.name for option in semiAnnuals">
+                                        <span ng-show="isSemiAnnualy()">
+                                            <select ui-select2 style="width:80px;" ng-required="true" ng-change="filterGrid()" name="endHalf" ng-model="endHalf" ng-options="option.value as option.name for option in endSemiAnnuals">
 
                                             </select>
-                                        </div>
+                                        </span>
                                     </div>
                                 </div>
 

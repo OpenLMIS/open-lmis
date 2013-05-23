@@ -89,6 +89,8 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             $scope.startQuarters  = $scope.quarters;
             $scope.endQuarters  = $scope.quarters;
             $scope.endYears     = $scope.startYears;
+            $scope.startSemiAnnuals = $scope.semiAnnuals;
+            $scope.endSemiAnnuals = $scope.semiAnnuals;
             $scope.toQuarter = 1;
             $scope.fromQuarter = 1;
             $scope.startHalf = 1;
@@ -226,6 +228,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             adjustEndYears();
             adjustEndMonths();
             adjustEndQuarters();
+            adjustEndSemiAnnuals();
         }else{
             $scope.startYear  = date.getFullYear().toString();
             $scope.filterObject.fromYear =  date.getFullYear();
@@ -238,20 +241,12 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
                 $scope.filterObject.toYear =  selection;
                 adjustEndMonths();
                 adjustEndQuarters();
+                adjustEndSemiAnnuals();
             }else{
                 $scope.endYear  = date.getFullYear().toString();
                 $scope.filterObject.toYear =  date.getFullYear();
             }
         });
-
-      /*  $scope.$watch('startQuarters', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.fromMonth =  selection;
-            }else{
-                var date = new Date();
-                $scope.filterObject.fromMonth =  int(date.getMonth() / 4)+1;
-            }
-        });*/
 
     $scope.$watch('startQuarter', function(selection){
         var date = new Date();
@@ -278,6 +273,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 
         if(selection != undefined || selection == ""){
             $scope.filterObject.fromSemiAnnual =  selection;
+            adjustEndSemiAnnuals();
         }else{
             $scope.filterObject.fromSemiAnnual =  1;
         }
@@ -295,6 +291,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             var date = new Date();
             if(selection != undefined || selection == ""){
                 $scope.filterObject.fromMonth =  selection-1;
+                adjustEndMonths();
             }else{
                 $scope.startMonth = (date.getMonth()+1 ).toString();
                 $scope.filterObject.fromMonth =  (date.getMonth()+1);
@@ -340,6 +337,23 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             }
         }else{
             $scope.endQuarters = $scope.startQuarters;
+        }
+    }
+
+    var adjustEndSemiAnnuals = function(){
+
+        if($scope.startYear == $scope.endYear){
+            $scope.endSemiAnnuals = [];
+            $.each($scope.startSemiAnnuals, function(idx,obj){
+                if(obj.value >= $scope.startHalf){
+                    $scope.endSemiAnnuals.push({'name':obj.name, 'value': obj.value});
+                }
+            });
+            if($scope.endHalf < $scope.startHalf){
+                $scope.endHalf =  $scope.startHalf;
+            }
+        }else{
+            $scope.endSemiAnnuals = $scope.startSemiAnnuals;
         }
     }
 
