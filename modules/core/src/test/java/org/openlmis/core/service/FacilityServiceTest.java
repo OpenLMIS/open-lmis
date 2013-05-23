@@ -105,6 +105,7 @@ public class FacilityServiceTest {
       add(new ProgramSupported());
     }};
     when(programSupportedRepository.getAllByFacilityId(facility.getId())).thenReturn(programsSupported);
+    when(facilityRepository.getById(facility.getId())).thenReturn(facility);
 
     Facility returnedFacility = facilityService.updateDataReportableAndActiveFor(facility);
 
@@ -112,6 +113,7 @@ public class FacilityServiceTest {
     assertThat(returnedFacility.getSupportedPrograms(), is(programsSupported));
     verify(facilityRepository).updateDataReportableAndActiveFor(facility);
     verify(programSupportedRepository).getAllByFacilityId(facility.getId());
+    verify(facilityRepository).getById(facility.getId());
   }
 
   @Test

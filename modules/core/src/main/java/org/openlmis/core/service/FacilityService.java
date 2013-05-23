@@ -110,7 +110,16 @@ public class FacilityService {
   public Facility updateDataReportableAndActiveFor(Facility facility) {
     Facility updatedFacility = facilityRepository.updateDataReportableAndActiveFor(facility);
     updatedFacility.setSupportedPrograms(programSupportedRepository.getAllByFacilityId(facility.getId()));
+
+    getFacilityAndNotify(facility);
+
     return updatedFacility;
+  }
+
+  private void getFacilityAndNotify(Facility facility) {
+    facility = facilityRepository.getById(facility.getId());
+
+    notifyFacilityFeed(facility);
   }
 
   public List<Facility> getUserSupervisedFacilities(Long userId, Long programId, Right... rights) {
@@ -128,9 +137,7 @@ public class FacilityService {
       programSupported.isValid();
     }
     facilityRepository.save(facility);
-    facility = facilityRepository.getById(facility.getId());
-
-    notifyFacilityFeed(facility);
+    getFacilityAndNotify(facility);
   }
 
   private void notifyFacilityFeed(Facility facility) {

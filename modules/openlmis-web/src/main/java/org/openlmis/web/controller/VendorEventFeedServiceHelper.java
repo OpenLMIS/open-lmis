@@ -64,7 +64,7 @@ public class VendorEventFeedServiceHelper{
 
   private static JsonNode convertToTemplate(Map<String, String> map, String value) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
-    JsonNode rootNode = objectMapper.readTree("{\"id\":1,\"code\":\"F10\",\"name\":\"Village Dispensary1\",\"typeId\":1,\"description\":\"IT department\",\"mainPhone\":\"9876234981\",\"fax\":\"fax\",\"address1\":\"A\",\"address2\":\"B\",\"geographicZoneID\":4,\"catchmentPopulation\":333,\"latitude\":22.1,\"longitude\":1.2,\"altitude\":3.3,\"operatedBy\":\"NGO\",\"coldStorageGrossCapacity\":9.9,\"coldStorageNetCapacity\":6.6,\"suppliesOthers\":true,\"hasElectricity\":true,\"hasElectronicSCC\":true,\"hasElectronicDAR\":true,\"active\":true,\"goLiveDate\":1352572200000,\"goDownDate\":1352572200000,\"satelliteFacility\":true,\"satelliteParentID\":null,\"comments\":\"fc\",\"doNotDisplay\":false,\"modifiedDate\":null,\"online\":true,\"vendorSystem\":null,\"gln\":\"G7645\",\"sdp\":true}");
+    JsonNode rootNode = objectMapper.readTree(value);
     Iterator<Map.Entry<String,JsonNode>> iterator =  rootNode.getFields();
     ObjectNode returnedNode = new ObjectNode(JsonNodeFactory.instance);
     while(iterator.hasNext()){
