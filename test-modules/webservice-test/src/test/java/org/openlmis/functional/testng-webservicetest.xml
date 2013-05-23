@@ -18,6 +18,8 @@
       </class>
         <class name="org.openlmis.functional.CommTrackTemplateTest">
         </class>
+        <class name="org.openlmis.functional.FacilityFeed">
+        </class>
     </classes>
   </test>
 </suite>
