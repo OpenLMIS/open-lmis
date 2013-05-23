@@ -50,7 +50,7 @@
 
                                     <div class="form-field">
 
-                                        <select ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="startYear" ng-model="startYear" ng-options="option.value as option.name for option in startYears">
+                                        <select ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="startYear" ng-model="startYear" ng-options="year for year in startYears">
 
                                         </select>
 
@@ -78,7 +78,7 @@
 
                                     <div class="form-field">
 
-                                        <select ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="endYear" ng-model="endYear" ng-options="option.value as option.name for option in endYears">
+                                        <select ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="endYear" ng-model="endYear" ng-options="year for year in endYears">
 
                                         </select>
 
