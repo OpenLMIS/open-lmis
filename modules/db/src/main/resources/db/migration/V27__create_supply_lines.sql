@@ -7,10 +7,10 @@ CREATE TABLE supply_lines (
   supervisoryNodeId     INTEGER REFERENCES supervisory_nodes(id) NOT NULL,
   programId             INTEGER REFERENCES programs(id) NOT NULL,
   supplyingFacilityId   INTEGER REFERENCES facilities(id) NOT NULL,
-  modifiedBy            INTEGER,
-  modifiedDate          TIMESTAMP DEFAULT NOW(),
   createdBy             INTEGER,
-  createdDate           TIMESTAMP DEFAULT NOW(),
+  createdDate           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy            INTEGER,
+  modifiedDate          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
   CONSTRAINT unique_supply_line UNIQUE ( supervisoryNodeId , programId , supplyingFacilityId)
 );

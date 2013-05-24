@@ -7,8 +7,8 @@ CREATE TABLE geographic_zones (
   name VARCHAR(250) NOT NULL,
   levelId INTEGER NOT NULL REFERENCES geographic_levels(id),
   parent INTEGER REFERENCES geographic_zones(id),
-  modifiedBy INTEGER,
-  modifiedDate TIMESTAMP DEFAULT NOW(),
   createdBy INTEGER,
-  createdDate TIMESTAMP DEFAULT NOW()
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy INTEGER,
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -130,14 +130,14 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
     Role createRnrRole = new Role("R1", FALSE, "Create Requisition");
     roleRightsMapper.insertRole(createRnrRole);
-    roleRightsMapper.createRoleRight(createRnrRole.getId(), Right.CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(createRnrRole, Right.CREATE_REQUISITION);
     insertRoleAssignments(activeProgramWithCreateRight, user, createRnrRole, supervisoryNode);
     insertRoleAssignments(inactiveProgram, user, createRnrRole, supervisoryNode);
     insertRoleAssignments(activeProgramForHomeFacility, user, createRnrRole, null);
 
     Role configureRnrRole = new Role("R2", FALSE, "View Rnr Role");
     roleRightsMapper.insertRole(configureRnrRole);
-    roleRightsMapper.createRoleRight(configureRnrRole.getId(), Right.CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(configureRnrRole, Right.CONFIGURE_RNR);
     insertRoleAssignments(activeProgramWithConfigureRight, user, configureRnrRole, supervisoryNode);
 
     List<Program> programs = programMapper.getUserSupervisedActivePrograms(user.getId(), "{CREATE_REQUISITION, CONFIGURE_RNR}");
@@ -158,11 +158,11 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
     Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
-    roleRightsMapper.createRoleRight(r1.getId(), Right.CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(r1, Right.CREATE_REQUISITION);
 
     Role r2 = new Role("r2", FALSE, "authorize role");
     roleRightsMapper.insertRole(r2);
-    roleRightsMapper.createRoleRight(r2.getId(), Right.AUTHORIZE_REQUISITION);
+    roleRightsMapper.createRoleRight(r2, Right.AUTHORIZE_REQUISITION);
 
     insertRoleAssignments(activeProgram, user, r1, null);
     insertRoleAssignments(anotherActiveProgram, user, r2, null);
@@ -192,7 +192,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
     Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
-    roleRightsMapper.createRoleRight(r1.getId(), Right.APPROVE_REQUISITION);
+    roleRightsMapper.createRoleRight(r1, Right.APPROVE_REQUISITION);
 
     insertRoleAssignments(activeProgram, user, r1, null);
     insertRoleAssignments(inactiveProgram, user, r1, null);
@@ -225,7 +225,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
     Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
-    roleRightsMapper.createRoleRight(r1.getId(), Right.VIEW_REQUISITION);
+    roleRightsMapper.createRoleRight(r1, Right.VIEW_REQUISITION);
 
     insertRoleAssignments(activeProgram, user, r1, null);
     insertRoleAssignments(inactiveProgram, user, r1, null);

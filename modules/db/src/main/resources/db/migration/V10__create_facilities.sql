@@ -33,10 +33,10 @@ CREATE TABLE facilities (
     goDownDate DATE,
     comment  TEXT,
     dataReportable BOOLEAN,
-    modifiedBy INTEGER,
-    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     createdBy INTEGER,
-    createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modifiedBy INTEGER,
+    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX i_facility_name ON facilities(name);

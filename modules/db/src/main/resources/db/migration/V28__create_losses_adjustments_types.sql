@@ -6,6 +6,7 @@ CREATE TABLE losses_adjustments_types (
   description         VARCHAR(100) NOT NULL,
   additive            BOOLEAN,
   displayOrder        INTEGER,
+  createdDate         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE (name),
   UNIQUE (description)
 );

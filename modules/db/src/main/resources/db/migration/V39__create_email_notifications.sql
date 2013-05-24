@@ -7,5 +7,5 @@ CREATE TABLE email_notifications (
   subject     TEXT,
   content     TEXT,
   sent        BOOLEAN      NOT NULL DEFAULT FALSE,
-  createdDate DATE DEFAULT CURRENT_TIMESTAMP
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )

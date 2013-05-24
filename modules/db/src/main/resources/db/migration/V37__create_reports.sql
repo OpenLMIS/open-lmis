@@ -6,8 +6,8 @@ CREATE TABLE report_templates (
   name          VARCHAR     NOT NULL,
   data          BYTEA       NOT NULL,
   parameters    VARCHAR,
-  createdBy    INTEGER,
-  createdDate  TIMESTAMP DEFAULT NOW()
+  createdBy     INTEGER,
+  createdDate   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE UNIQUE INDEX uc_report_templates_name ON report_templates(LOWER(name));

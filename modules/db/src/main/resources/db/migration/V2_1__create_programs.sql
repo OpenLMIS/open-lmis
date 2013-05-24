@@ -8,10 +8,11 @@ CREATE TABLE programs (
     description VARCHAR(50),
     active BOOLEAN,
     templateConfigured BOOLEAN,
-    modifiedBy INTEGER,
-    modifiedDate TIMESTAMP DEFAULT NOW(),
-    createdBy INTEGER,
-    createdDate TIMESTAMP DEFAULT NOW(),
     budgetingApplies BOOLEAN,
-    usesDar BOOLEAN
+    usesDar BOOLEAN,
+    createdBy INTEGER,
+    createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modifiedBy INTEGER,
+    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
 );

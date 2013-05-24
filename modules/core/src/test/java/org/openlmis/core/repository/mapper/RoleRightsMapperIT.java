@@ -82,8 +82,8 @@ public class RoleRightsMapperIT {
 
     insertRoleAssignments(program, user, role);
 
-    roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
-    roleRightsMapper.createRoleRight(role.getId(), CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(role, CONFIGURE_RNR);
 
     allRightsForUser = roleRightsMapper.getAllRightsForUserByUserName(user.getUserName());
     assertThat(allRightsForUser.size(), is(2));
@@ -102,8 +102,8 @@ public class RoleRightsMapperIT {
 
     insertRoleAssignments(program, user, role);
 
-    roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
-    roleRightsMapper.createRoleRight(role.getId(), CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(role, CONFIGURE_RNR);
 
     allRightsForUser = roleRightsMapper.getAllRightsForUserById(user.getId());
     assertThat(allRightsForUser.size(), is(2));
@@ -114,8 +114,8 @@ public class RoleRightsMapperIT {
     Role role = new Role(111L, "role name", Boolean.FALSE, "description", null);
     roleRightsMapper.insertRole(role);
 
-    roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
-    roleRightsMapper.createRoleRight(role.getId(), MANAGE_FACILITY);
+    roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(role, MANAGE_FACILITY);
 
     Role resultRole = roleRightsMapper.getRole(role.getId());
 
@@ -141,8 +141,8 @@ public class RoleRightsMapperIT {
   public void shouldReturnAllRolesInSystem() throws Exception {
     Role role = new Role("role name", FALSE, "");
     roleRightsMapper.insertRole(role);
-    roleRightsMapper.createRoleRight(role.getId(), CONFIGURE_RNR);
-    roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(role, CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
 
     List<Role> roles = new ArrayList();
     roles.addAll(roleRightsMapper.getAllRoles());
@@ -178,8 +178,8 @@ public class RoleRightsMapperIT {
   public void shouldDeleteRights() throws Exception {
     Role role = new Role(11L, "Right Name", Boolean.FALSE, "Right Desc", null);
     roleRightsMapper.insertRole(role);
-    roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
-    roleRightsMapper.createRoleRight(role.getId(), UPLOADS);
+    roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(role, UPLOADS);
 
     assertThat(roleRightsMapper.deleteAllRightsForRole(role.getId()), is(2));
   }
@@ -199,10 +199,10 @@ public class RoleRightsMapperIT {
 
 
     Role role1 = insertRole("r1", "random description");
-    roleRightsMapper.createRoleRight(role1.getId(), CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(role1, CREATE_REQUISITION);
     Role role2 = insertRole("r2", "random description");
-    roleRightsMapper.createRoleRight(role2.getId(), CREATE_REQUISITION);
-    roleRightsMapper.createRoleRight(role2.getId(), AUTHORIZE_REQUISITION);
+    roleRightsMapper.createRoleRight(role2, CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(role2, AUTHORIZE_REQUISITION);
 
     roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), supervisoryNode1.getId(), role1.getId());
     roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), supervisoryNode2.getId(), role2.getId());
@@ -220,10 +220,10 @@ public class RoleRightsMapperIT {
     Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
 
     Role role1 = insertRole("r1", "random description");
-    roleRightsMapper.createRoleRight(role1.getId(), CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(role1, CREATE_REQUISITION);
     Role role2 = insertRole("r2", "random description");
-    roleRightsMapper.createRoleRight(role2.getId(), CREATE_REQUISITION);
-    roleRightsMapper.createRoleRight(role2.getId(), AUTHORIZE_REQUISITION);
+    roleRightsMapper.createRoleRight(role2, CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(role2, AUTHORIZE_REQUISITION);
 
     roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), null, role1.getId());
     roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), null, role2.getId());

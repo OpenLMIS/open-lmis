@@ -63,8 +63,8 @@ public class RoleRightsRepositoryTest {
     roleRightsRepository.createRole(role);
 
     verify(roleRightsMapper).insertRole(role);
-    verify(roleRightsMapper).createRoleRight(1L, CONFIGURE_RNR);
-    verify(roleRightsMapper).createRoleRight(1L, CREATE_REQUISITION);
+    verify(roleRightsMapper).createRoleRight(role, CONFIGURE_RNR);
+    verify(roleRightsMapper).createRoleRight(role, CREATE_REQUISITION);
   }
 
   @Test
@@ -74,9 +74,9 @@ public class RoleRightsRepositoryTest {
     roleRightsRepository.createRole(role);
 
     verify(roleRightsMapper).insertRole(role);
-    verify(roleRightsMapper).createRoleRight(1L, CONFIGURE_RNR);
-    verify(roleRightsMapper).createRoleRight(1L, CREATE_REQUISITION);
-    verify(roleRightsMapper, times(1)).createRoleRight(1L, VIEW_REQUISITION);
+    verify(roleRightsMapper).createRoleRight(role, CONFIGURE_RNR);
+    verify(roleRightsMapper).createRoleRight(role, CREATE_REQUISITION);
+    verify(roleRightsMapper, times(1)).createRoleRight(role, VIEW_REQUISITION);
   }
 
   @Test
@@ -129,7 +129,7 @@ public class RoleRightsRepositoryTest {
     roleRightsRepository.updateRole(role);
     verify(roleRightsMapper).updateRole(role);
     verify(roleRightsMapper).deleteAllRightsForRole(100L);
-    verify(roleRightsMapper).createRoleRight(100L, CONFIGURE_RNR);
+    verify(roleRightsMapper).createRoleRight(role, CONFIGURE_RNR);
   }
 
   @Test
@@ -141,8 +141,8 @@ public class RoleRightsRepositoryTest {
 
     verify(roleRightsMapper).updateRole(role);
     verify(roleRightsMapper).deleteAllRightsForRole(100L);
-    verify(roleRightsMapper).createRoleRight(100L, CREATE_REQUISITION);
-    verify(roleRightsMapper).createRoleRight(100L, VIEW_REQUISITION);
+    verify(roleRightsMapper).createRoleRight(role, CREATE_REQUISITION);
+    verify(roleRightsMapper).createRoleRight(role, VIEW_REQUISITION);
   }
 
   @Test

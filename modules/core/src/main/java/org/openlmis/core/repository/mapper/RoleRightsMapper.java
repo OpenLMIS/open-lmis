@@ -18,9 +18,9 @@ import java.util.Set;
 @Repository
 public interface RoleRightsMapper {
 
-  @Insert("INSERT INTO role_rights(roleId, rightName) VALUES " +
-      "(#{roleId}, #{right})")
-  int createRoleRight(@Param(value = "roleId") Long roleId, @Param(value = "right") Right right);
+  @Insert("INSERT INTO role_rights(roleId, rightName, createdBy) VALUES " +
+      "(#{role.id}, #{right}, #{role.modifiedBy})")
+  int createRoleRight(@Param(value = "role") Role role, @Param(value = "right") Right right);
 
   @Select({"SELECT RR.rightName",
       "FROM users U, role_assignments RA, role_rights RR WHERE",

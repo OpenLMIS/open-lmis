@@ -52,8 +52,8 @@ CREATE TABLE products (
   roundToZero BOOLEAN NOT NULL,
   archived BOOLEAN,
   packRoundingThreshold SMALLINT NOT NULL,
-  modifiedBy INTEGER,
-  modifiedDate TIMESTAMP DEFAULT NOW(),
   createdBy INTEGER,
-  createdDate TIMESTAMP DEFAULT NOW()
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy INTEGER,
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

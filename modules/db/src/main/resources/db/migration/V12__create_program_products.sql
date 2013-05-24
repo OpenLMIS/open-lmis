@@ -9,10 +9,10 @@ CREATE TABLE program_products (
     dosesPerMonth INTEGER NOT NULL,
     active BOOLEAN NOT NULL,
     currentPrice NUMERIC(20,2) DEFAULT 0,
-    modifiedBy INTEGER,
-    modifiedDate TIMESTAMP,
     createdBy INTEGER,
-    createdDate TIMESTAMP DEFAULT NOW(),
+    createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modifiedBy INTEGER,
+    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (productId, programId)
 );
 

@@ -13,10 +13,10 @@ CREATE TABLE requisitions (
   supervisoryNodeId               INTEGER     REFERENCES supervisory_nodes (id),
   supplyingFacilityId             INTEGER REFERENCES facilities(id),
   submittedDate                   TIMESTAMP,
-  modifiedBy                      INTEGER,
-  modifiedDate                    TIMESTAMP DEFAULT NOW(),
   createdBy                       INTEGER,
-  createdDate                     TIMESTAMP DEFAULT NOW(),
+  createdDate                     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy                      INTEGER,
+  modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE (facilityId, programId, periodId)
 );
 

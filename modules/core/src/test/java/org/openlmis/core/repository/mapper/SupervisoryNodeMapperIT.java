@@ -138,8 +138,8 @@ public class SupervisoryNodeMapperIT {
     Role configureRnrRole = new Role("configure rnr", FALSE, "random description");
     roleRightsMapper.insertRole(configureRnrRole);
 
-    roleRightsMapper.createRoleRight(createRole.getId(), CREATE_REQUISITION);
-    roleRightsMapper.createRoleRight(configureRnrRole.getId(), CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(createRole, CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(configureRnrRole, CONFIGURE_RNR);
 
     supervisoryNodeMapper.insert(supervisoryNode);
 
@@ -177,8 +177,8 @@ public class SupervisoryNodeMapperIT {
     Role configureRnrRole = new Role("configure rnr", FALSE, "random description");
     roleRightsMapper.insertRole(configureRnrRole);
 
-    roleRightsMapper.createRoleRight(createRole.getId(), CREATE_REQUISITION);
-    roleRightsMapper.createRoleRight(configureRnrRole.getId(), CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(createRole, CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(configureRnrRole, CONFIGURE_RNR);
 
     supervisoryNodeMapper.insert(supervisoryNode);
 

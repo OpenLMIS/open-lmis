@@ -336,8 +336,8 @@ public class FacilityMapperIT {
     Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
 
-    roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);
-    roleRightsMapper.createRoleRight(r1.getId(), CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(r1, CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(r1, CONFIGURE_RNR);
 
     User user = make(a(defaultUser, with(facilityId, homeFacility.getId())));
 

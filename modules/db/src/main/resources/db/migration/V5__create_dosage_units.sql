@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS dosage_units;
 CREATE TABLE dosage_units (
     id SERIAL PRIMARY KEY,
     code varchar(20),
-    displayOrder INTEGER
+    displayOrder INTEGER,
+    createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

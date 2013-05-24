@@ -6,8 +6,8 @@ CREATE TABLE roles (
   adminRole BOOLEAN NOT NULL,
   name VARCHAR(50) NOT NULL UNIQUE,
   description VARCHAR(250),
-  modifiedBy INTEGER,
-  modifiedDate TIMESTAMP DEFAULT NOW(),
   createdBy INTEGER,
-  createdDate TIMESTAMP DEFAULT NOW()
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy INTEGER,
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

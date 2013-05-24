@@ -131,7 +131,7 @@ public class UserMapperIT {
     Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
 
     Role role = insertRole();
-    roleRightsMapper.createRoleRight(role.getId(), APPROVE_REQUISITION);
+    roleRightsMapper.createRoleRight(role, APPROVE_REQUISITION);
 
     roleAssignmentMapper.insertRoleAssignment(someUser.getId(), program.getId(), supervisoryNode.getId(), role.getId());
 

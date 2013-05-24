@@ -61,7 +61,7 @@ public class RoleRightsRepository {
 
   private void createRoleRights(Role role) {
     for (Right right : getRightsWithItsDependents(role.getRights())) {
-      roleRightsMapper.createRoleRight(role.getId(), right);
+      roleRightsMapper.createRoleRight(role, right);
     }
   }
 

@@ -8,10 +8,10 @@ CREATE TABLE supervisory_nodes (
   name VARCHAR(50) NOT NULL,
   code VARCHAR(50) UNIQUE NOT NULL,
   description VARCHAR(250),
-  modifiedBy INTEGER,
-  modifiedDate TIMESTAMP DEFAULT NOW(),
   createdBy INTEGER,
-  createdDate TIMESTAMP DEFAULT NOW()
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy INTEGER,
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX i_supervisory_node_parentId ON supervisory_nodes(parentId);

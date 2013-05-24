@@ -36,10 +36,10 @@ roundToZero                           BOOLEAN,
 packRoundingThreshold                 INTEGER,
 fullSupply                            BOOLEAN NOT NULL,
 previousStockInHandAvailable          BOOLEAN NOT NULL DEFAULT FALSE,
-modifiedBy                            INTEGER,
-modifiedDate                          TIMESTAMP  DEFAULT  NOW(),
 createdBy                             INTEGER,
-createdDate                           TIMESTAMP DEFAULT NOW()
+createdDate                           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+modifiedBy                            INTEGER,
+modifiedDate                          TIMESTAMP  DEFAULT  CURRENT_TIMESTAMP
 );
 
 CREATE INDEX i_requisition_line_items_rnrId_fullSupply_t ON requisition_line_items(rnrId) WHERE fullSupply = TRUE;

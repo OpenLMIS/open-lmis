@@ -80,9 +80,9 @@ public class RoleAssignmentMapperIT {
     Role r2 = new Role("r2", FALSE, "random description");
     roleRightsMapper.insertRole(r2);
 
-    roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);
-    roleRightsMapper.createRoleRight(r1.getId(), CONFIGURE_RNR);
-    roleRightsMapper.createRoleRight(r2.getId(), CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(r1, CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(r1, CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(r2, CONFIGURE_RNR);
 
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     supervisoryNode.setFacility(facility);
@@ -154,7 +154,7 @@ public class RoleAssignmentMapperIT {
     roleRightsMapper.insertRole(r1);
     Role r2 = new Role("r2", FALSE, "random description");
     roleRightsMapper.insertRole(r2);
-    roleRightsMapper.createRoleRight(r2.getId(), Right.CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(r2, Right.CREATE_REQUISITION);
 
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     supervisoryNode.setFacility(facility);

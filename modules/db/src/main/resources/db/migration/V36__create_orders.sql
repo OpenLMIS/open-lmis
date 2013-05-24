@@ -6,8 +6,8 @@ CREATE TABLE orders (
   rnrId       INTEGER NOT NULL REFERENCES requisitions (id),
   shipmentId  INTEGER REFERENCES shipment_file_info(id),
   status      VARCHAR(20) NOT NULL,
-  createdBy                       INTEGER NOT NULL REFERENCES users(id),
-  createdDate                     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy                      INTEGER NOT NULL REFERENCES users(id),
-  modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  createdBy   INTEGER NOT NULL REFERENCES users(id),
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy  INTEGER NOT NULL REFERENCES users(id),
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

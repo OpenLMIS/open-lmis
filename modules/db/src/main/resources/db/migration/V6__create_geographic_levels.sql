@@ -5,5 +5,6 @@ CREATE TABLE geographic_levels (
     id            SERIAL PRIMARY KEY,
     code          VARCHAR(50) NOT NULL UNIQUE,
     name          VARCHAR(250) NOT NULL,
-    levelNumber         INTEGER NOT NULL
+    levelNumber   INTEGER NOT NULL,
+    createdDate   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
