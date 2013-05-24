@@ -61,13 +61,8 @@ subprojects {
         systemProperties System.properties
         useJUnit {
             includeCategories 'org.openlmis.db.categories.UnitTests'
+            includeCategories 'org.openlmis.db.categories.IntegrationTests'
         }
-        forkEvery = 5
-        maxParallelForks = 25
-    }
-
-    test.doLast {
-        tasks.IntegrationTests.execute()
     }
 
     task IntegrationTests(type: Test) {
