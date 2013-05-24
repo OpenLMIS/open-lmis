@@ -147,7 +147,8 @@ public class ReportController  extends BaseController {
     public Pages getSummaryData( //@PathVariable(value = "reportKey") String reportKey,
                                      @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                      @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                     @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
+                                  //   @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
+                                  //   @RequestParam(value = "program", required = false, defaultValue = "0") int program ,
                                     HttpServletRequest request
     ) {
 
@@ -166,7 +167,7 @@ public class ReportController  extends BaseController {
     public Pages getNonReportingFacilitiesData( //@PathVariable(value = "reportKey") String reportKey,
                                  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                  @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                 @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
+                                // @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
                                  HttpServletRequest request
     ) {
 
@@ -187,7 +188,7 @@ public class ReportController  extends BaseController {
     public Pages getStockedOutReportData( //@PathVariable(value = "reportKey") String reportKey,
                                                 @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                                 @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                                @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
+                                               // @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
                                                 HttpServletRequest request
     ) {
 

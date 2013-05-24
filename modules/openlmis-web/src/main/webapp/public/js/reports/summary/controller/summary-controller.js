@@ -36,8 +36,7 @@ function SummaryReportController($scope, SummaryReport, Schedules, Programs , Pe
 
         //filter form data section
         $scope.filterObject =  {
-             facilityType : $scope.period,
-
+             facilityType : $scope.period
         };
 
         Programs.get(function(data){

@@ -11,8 +11,6 @@ public class SummaryQueryBuilder {
 
     public static String getQuery(Map params){
 
-        String period =    ((String[])params.get("period"))[0];
-        String program =   ((String[])params.get("program"))[0];
         String query = "select " +
                     " li.productcode as code" +
                     ", li.product" +
@@ -27,10 +25,25 @@ public class SummaryQueryBuilder {
                     ", sum(0) as stockOutRate " +
                     ", sum(1.0) / (select count(*) from facilities) as productReportingRate " +
                 " from requisition_line_items li join requisitions r on r.id =li.rnrid" +
-                " where r.periodid = " + period + " and r.programid = " + program +
+                writePredicates(params)+
+
                 " group by li.productcode, li.productcategory, li.product, li.dispensingunit" +
                 " order by " + QueryHelpers.getSortOrder(params, "productcategory asc, product asc");
             return query;
+    }
+    private static String writePredicates(Map params){
+        String predicate = "";
+        String period =    ((String[])params.get("period"))[0];
+        String program =   ((String[])params.get("program"))[0];
+
+        if (period != null &&  !period.equals("undefined") && !period.isEmpty()){
+            predicate = predicate.isEmpty() ? "where r.periodid = "+ period : " and r.periodid = "+ period;
+        }
+        if (program != null &&  !program.equals("undefined") && !program.isEmpty()) {
+            predicate = predicate.isEmpty() ? "where r.programid = "+ program : " and r.programid = "+ program;
+        }
+
+        return predicate;
     }
 
 
