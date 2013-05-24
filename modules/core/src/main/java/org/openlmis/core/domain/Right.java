@@ -38,6 +38,7 @@ public enum Right {
   VIEW_REPORTING_RATE_REPORT("Report - Reporting Rate Report", TRUE, "Permission to view reporting rate report"),
   VIEW_NON_REPORTING_FACILITIES("Report - Non Reporting Facility Report", TRUE, "Permission to view Non reporting facilities report"),
   VIEW_ADJUSTMENT_SUMMARY_REPORT("Report - Adjustment Summary Report", TRUE, "Permission to view adjustment summary Report"),
+  VIEW_SUPPLY_STATUS_REPORT("Report - Supply Status by Facility",TRUE, "Permission to view Supply Status by Facility Report"),
   VIEW_STOCKED_OUT_REPORT("Report - Stocked Out Report", TRUE, "Permission to view stocked out product report");
 
     @Getter
