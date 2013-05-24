@@ -32,8 +32,8 @@
         <property name="jdbcUrl" value="${openlmis.jdbc.url}"/>
         <property name="user" value="${openlmis.jdbc.username}"/>
         <property name="password" value="${openlmis.jdbc.password}"/>
-        <property name="maxPoolSize" value="${conn.pool.maxPoolSize}"/>
-        <property name="initialPoolSize" value="${conn.pool.initialPoolSize}"/>
+        <property name="maxPoolSize" value="${openlmis.conn.pool.maxPoolSize}"/>
+        <property name="initialPoolSize" value="${openlmis.conn.pool.initialPoolSize}"/>
     </bean>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">

@@ -30,12 +30,12 @@
 
 
     <bean id="replicationDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-        <property name="driverClass" value="${jdbc.replication.driverClassName}"/>
-        <property name="jdbcUrl" value="${jdbc.replication.url}"/>
-        <property name="user" value="${jdbc.replication.username}"/>
-        <property name="password" value="${jdbc.replication.password}"/>
-        <property name="maxPoolSize" value="${conn.replication.pool.maxPoolSize}"/>
-        <property name="initialPoolSize" value="${conn.replication.pool.initialPoolSize}"/>
+        <property name="driverClass" value="${openlmis.replication.jdbc.driverClassName}"/>
+        <property name="jdbcUrl" value="${openlmis.replication.jdbc.url}"/>
+        <property name="user" value="${openlmis.replication.jdbc.username}"/>
+        <property name="password" value="${openlmis.replication.jdbc.password}"/>
+        <property name="maxPoolSize" value="${openlmis.replication.conn.pool.maxPoolSize}"/>
+        <property name="initialPoolSize" value="${openlmis.replication.conn.pool.initialPoolSize}"/>
     </bean>
 
 
