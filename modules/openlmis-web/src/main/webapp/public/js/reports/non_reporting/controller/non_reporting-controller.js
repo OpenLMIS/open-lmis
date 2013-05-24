@@ -21,7 +21,9 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
 
 
         $scope.filterGrid = function (){
-            $scope.$apply();
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 

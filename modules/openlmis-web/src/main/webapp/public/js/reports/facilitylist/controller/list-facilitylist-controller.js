@@ -12,7 +12,9 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
         };
 
         $scope.filterGrid = function (){
-            $scope.$apply();
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
             //forget the current page and go to the first page while filtering
             $scope.pagingOptions.currentPage = 1;
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, 1);//
