@@ -110,7 +110,9 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             return $scope.periodType == 'semi-anual';
         };
         $scope.filterGrid = function (){
-            $scope.$apply();
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
@@ -255,7 +257,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             adjustEndQuarters();
         }else{
             var date = new Date();
-            $scope.filterObject.fromQuarter =  int(date.getMonth() / 4)+1;
+            $scope.filterObject.fromQuarter =  (date.getMonth() / 4)+1;
         }
     });
 
@@ -265,7 +267,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             $scope.filterObject.toQuarter =  selection;
         }else{
             var date = new Date();
-            $scope.filterObject.toQuarter =  int(date.getMonth() / 4)+1;
+            $scope.filterObject.toQuarter =  (date.getMonth() / 4)+1;
         }
     });
 
@@ -309,7 +311,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
         });
 
     var adjustEndMonths = function(){
-        if($scope.startYear == $scope.endYear){
+        if($scope.startMonth != undefined && $scope.startMonths != undefined && $scope.startYear == $scope.endYear ){
             $scope.endMonths = [];
             $.each($scope.startMonths,function(idx,obj){
                 if(obj.value >= $scope.startMonth){

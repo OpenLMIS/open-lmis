@@ -127,7 +127,9 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Facil
 
 
         $scope.filterGrid = function (){
-            $scope.$apply();
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 

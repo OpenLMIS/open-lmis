@@ -21,7 +21,9 @@ function SummaryReportController($scope, SummaryReport, Schedules, Programs , Pe
 
 
         $scope.filterGrid = function (){
-            $scope.$apply();
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
@@ -36,8 +38,7 @@ function SummaryReportController($scope, SummaryReport, Schedules, Programs , Pe
 
         //filter form data section
         $scope.filterObject =  {
-             facilityType : $scope.period,
-
+             facilityType : $scope.period
         };
 
         Programs.get(function(data){
