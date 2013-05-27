@@ -203,7 +203,7 @@ public class ReportController  extends BaseController {
         return new Pages(page,totalRecCount,max,reportList);
     }
 
-    @RequestMapping(value = "/reportdata/adjustmentSummary", method = GET, headers = ACCEPT_JSON)
+     @RequestMapping(value = "/reportdata/adjustmentSummary", method = GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ADJUSTMENT_SUMMARY_REPORT')")
     public Pages getAdjustmentSummaryData(  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                             @RequestParam(value = "max", required = false, defaultValue = "10") int max,
@@ -218,5 +218,22 @@ public class ReportController  extends BaseController {
 
         return new Pages(page,totalRecCount,max,adjustmentSummaryReportList);
     }
+
+    @RequestMapping(value = "/reportdata/districtConsumption", method = GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
+    public Pages getDistrictConsumptionData(  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                            HttpServletRequest request
+
+    ) {
+
+        Report report = reportManager.getReportByKey("district_consumption");
+        List<DistrictConsumptionReport> districtConsumptionReportList =
+                (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
+        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());;
+
+        return new Pages(page,totalRecCount,max,districtConsumptionReportList);
+    }
+
 
 }
