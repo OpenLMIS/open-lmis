@@ -71,7 +71,7 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'View Orders')]")
   private static WebElement viewOrdersHeader;
 
-  @FindBy(how = How.LINK_TEXT, using = "Add new")
+  @FindBy(how = How.ID, using = "add-new-facility")
   private static WebElement createFacility;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ng-scope']/div[@ng-hide='facility.id']/h2")

@@ -53,13 +53,13 @@ function FacilitySearchController($scope, AllFacilities, $location) {
           $scope.resultCount = $scope.facilityList.length;
       }
     }
-  }
+  };
 
   var compareQuery = function() {
     if ($scope.previousQuery.substring(0, 3) != $scope.query.substring(0, 3)) {
       return true;
     }
-  }
+  };
 
   var filterFacilities = function() {
     $scope.facilityList = [];
