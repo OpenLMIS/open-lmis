@@ -3,7 +3,7 @@ package org.openlmis.report.service;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.NonReportingFacilityReportMapper;
-import org.openlmis.report.mapper.RequisitionGroupReportMapper;
+import org.openlmis.report.mapper.lookup.RequisitionGroupReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.report.MasterReport;
 import org.springframework.beans.factory.annotation.Autowired;
