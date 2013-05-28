@@ -1,4 +1,4 @@
-function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Products , Programs, ProductCategories, RequisitionGroups , FacilityTypes, GeographicZones, AdjustmentTypes,OperationYears,Months, $http, $routeParams,$location) {
+function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , FacilityTypes, GeographicZones, AdjustmentTypes,OperationYears,Months, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -183,7 +183,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             $scope.zones.push({'name': 'All Geographic Zones'});
         });
 
-        Programs.get(function(data){
+        ReportPrograms.get(function(data){
             $scope.programs = data.programs;
             $scope.programs.push({'name':'All Programs'});
         });

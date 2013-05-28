@@ -1,4 +1,4 @@
-function SupplyStatusController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, StockedOutFacilities, Schedules, FacilityTypes , Periods, ProductCategories , Programs, $http, $routeParams,$location) {
+function SupplyStatusController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, StockedOutFacilities, ReportSchedules, FacilityTypes , Periods, ProductCategories , ReportPrograms, $http, $routeParams,$location) {
         //to minimize and maximize the filter section
         var section = 1;
 

@@ -1,4 +1,4 @@
-function SummaryReportController($scope, SummaryReport, Schedules, Programs , Periods , $http, $routeParams,$location) {
+function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportPrograms , Periods , $http, $routeParams,$location) {
         //to minimize and maximize the filter section
         var section = 1;
 
@@ -41,12 +41,12 @@ function SummaryReportController($scope, SummaryReport, Schedules, Programs , Pe
              facilityType : $scope.period
         };
 
-        Programs.get(function(data){
+        ReportPrograms.get(function(data){
             $scope.programs = data.programs;
             $scope.programs.push({'name':'Select a Program'});
         })
 
-        Schedules.get(function(data){
+        ReportSchedules.get(function(data){
             $scope.schedules = data.schedules;
             $scope.schedules.push({'name':'Select a Schedule'});
         })

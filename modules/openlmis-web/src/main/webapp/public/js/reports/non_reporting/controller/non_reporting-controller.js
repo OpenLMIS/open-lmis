@@ -1,4 +1,4 @@
-function NonReportingController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, NonReportingFacilities, Schedules, FacilityTypes , Periods, Programs, $http, $routeParams,$location) {
+function NonReportingController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, NonReportingFacilities, ReportSchedules, FacilityTypes , Periods, ReportPrograms, $http, $routeParams,$location) {
         //to minimize and maximize the filter section
         var section = 1;
 
@@ -44,12 +44,12 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
 
         };
 
-        Programs.get(function(data){
+        ReportPrograms.get(function(data){
             $scope.programs = data.programs;
             $scope.programs.push({'name':'Select a Program'});
         })
 
-        Schedules.get(function(data){
+        ReportSchedules.get(function(data){
             $scope.schedules = data.schedules;
             $scope.schedules.push({'name':'Select a Schedule'});
         })
