@@ -33,7 +33,24 @@
         <property name="user" value="${openlmis.jdbc.username}"/>
         <property name="password" value="${openlmis.jdbc.password}"/>
         <property name="maxPoolSize" value="${openlmis.conn.pool.maxPoolSize}"/>
+        <property name="acquireIncrement" value="${openlmis.conn.pool.acquireIncrement}"/>
+        <property name="acquireRetryAttempts" value="${openlmis.conn.pool.acquireRetryAttempts}"/>
+        <property name="acquireRetryDelay" value="${openlmis.conn.pool.acquireRetryDelay}"/>
+        <property name="debugUnreturnedConnectionStackTraces"
+                  value="${openlmis.conn.pool.debugUnreturnedConnectionStackTraces}"/>
+        <property name="idleConnectionTestPeriod" value="${openlmis.conn.pool.idleConnectionTestPeriod}"/>
         <property name="initialPoolSize" value="${openlmis.conn.pool.initialPoolSize}"/>
+        <property name="maxConnectionAge" value="${openlmis.conn.pool.maxConnectionAge}"/>
+        <property name="maxIdleTime" value="${openlmis.conn.pool.maxIdleTime}"/>
+        <property name="maxIdleTimeExcessConnections" value="${openlmis.conn.pool.maxIdleTimeExcessConnections}"/>
+        <property name="maxStatements" value="${openlmis.conn.pool.maxStatements}"/>
+        <property name="maxStatementsPerConnection" value="${openlmis.conn.pool.maxStatementsPerConnection}"/>
+        <property name="minPoolSize" value="${openlmis.conn.pool.minPoolSize}"/>
+        <property name="numHelperThreads" value="${openlmis.conn.pool.numHelperThreads}"/>
+        <property name="statementCacheNumDeferredCloseThreads"
+                  value="${openlmis.conn.pool.statementCacheNumDeferredCloseThreads}"/>
+        <property name="testConnectionOnCheckin" value="${openlmis.conn.pool.testConnectionOnCheckin}"/>
+        <property name="unreturnedConnectionTimeout" value="${openlmis.conn.pool.unreturnedConnectionTimeout}"/>
     </bean>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
