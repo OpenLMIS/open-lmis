@@ -2,7 +2,7 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.service.ConfigurationService;
-import org.openlmis.report.mapper.AdjustmentTypeReportMapper;
+import org.openlmis.report.mapper.lookup.AdjustmentTypeReportMapper;
 import org.openlmis.report.mapper.lookup.*;
 import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,7 @@ public class ReportLookupService {
     private ConfigurationService configurationService;
     private ScheduleReportMapper scheduleMapper;
     private ProgramReportMapper programMapper;
+    private FacilityTypeReportMapper facilityTypeMapper;
 
     @Autowired
     public ReportLookupService(
@@ -38,6 +39,7 @@ public class ReportLookupService {
                                 , ConfigurationService configurationService
                                 , ScheduleReportMapper scheduleMapper
                                 , ProgramReportMapper programMapper
+                                , FacilityTypeReportMapper facilityTypeMapper
                              ){
         this.productMapper = productMapper;
         this.rgMapper = rgMapper;
@@ -46,10 +48,15 @@ public class ReportLookupService {
         this.configurationService = configurationService;
         this.programMapper = programMapper;
         this.scheduleMapper = scheduleMapper;
+        this.facilityTypeMapper = facilityTypeMapper;
     }
 
     public List<Product> getAllProducts(){
         return productMapper.getAll();
+    }
+
+    public List<FacilityType> getFacilityTypes(){
+        return facilityTypeMapper.getAll();
     }
 
     public List<RequisitionGroup> getAllRequisitionGroups(){

@@ -1,4 +1,4 @@
-package org.openlmis.report.mapper;
+package org.openlmis.report.mapper.lookup;
 
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.dto.AdjustmentType;
@@ -16,6 +16,6 @@ import java.util.List;
 public interface AdjustmentTypeReportMapper {
     @Select("SELECT name, description " +
             "   FROM " +
-            "       losses_adjustments_types")
+            "       losses_adjustments_types order by name")
     List<AdjustmentType> getAll();
 }
