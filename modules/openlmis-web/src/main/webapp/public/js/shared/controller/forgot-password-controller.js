@@ -25,4 +25,7 @@ function ForgotPasswordController($scope, ForgotPassword) {
       }
     }
 
+  $scope.goToLogin = function() {
+    window.location = "login.html";
+  }
 }
