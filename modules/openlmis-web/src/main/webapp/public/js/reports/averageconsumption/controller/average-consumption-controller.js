@@ -533,7 +533,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
                 { field: 'category', displayName: 'Product', width: "*" },
                 { field: 'product', displayName: 'Product Description', width: "**" },
                 { field: 'productCode', displayName: 'Product Code', width: "*" },
-                { field: 'average', displayName: 'Average Monthly Consumption', width : "*"}
+                { field: 'average', displayName: 'AMC', width : "*"}
             ],
         enablePaging: true,
         enableSorting :true,
