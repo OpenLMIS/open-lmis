@@ -61,3 +61,10 @@ services.factory('Months',function($resource){
     return $resource('/reports/months.json',{},{});
 });
 
+services.factory('ReportPrograms', function ($resource) {
+    return $resource('/reports/programs.json', {}, {});
+});
+
+services.factory('ReportSchedules', function ($resource) {
+    return $resource('/reports/schedules.json', {}, {});
+});
