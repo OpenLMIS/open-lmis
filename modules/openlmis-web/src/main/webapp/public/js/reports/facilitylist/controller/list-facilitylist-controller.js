@@ -1,4 +1,4 @@
-function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, GeographicZones, $http, $routeParams,$location) {
+function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, GeographicZones, $http, $routeParams, $location) {
 
         //to minimize and maximize the filter section
         var section = 1;
