@@ -58,7 +58,6 @@ services.factory('DistrictConsumptionReport', function ($resource) {
     return $resource('/reports/reportdata/districtConsumption.json', {}, {});
 });
 
-
 services.factory('OperationYears',function($resource){
     return $resource('/reports/operationYears.json',{},{});
 });

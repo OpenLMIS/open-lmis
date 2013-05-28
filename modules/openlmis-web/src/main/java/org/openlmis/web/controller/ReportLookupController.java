@@ -3,6 +3,8 @@ package org.openlmis.web.controller;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.dto.AdjustmentType;
 import org.openlmis.report.model.dto.Product;
+import org.openlmis.report.model.dto.Schedule;
+import org.openlmis.report.model.dto.Program;
 import org.openlmis.report.model.dto.ProductCategory;
 import org.openlmis.report.model.dto.RequisitionGroup;
 import org.openlmis.report.service.ReportLookupService;
@@ -40,6 +42,16 @@ public class ReportLookupController extends BaseController {
     @Autowired
     public ReportLookupController(ReportLookupService productReportService) {
         this.reportLookupService = productReportService;
+    }
+
+    @RequestMapping(value="/programs", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getPrograms(){
+        return OpenLmisResponse.response( "programs", this.reportLookupService.getAllPrograms() );
+    }
+
+    @RequestMapping(value="/schedules", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getSchedules(){
+        return OpenLmisResponse.response( "schedules", this.reportLookupService.getAllSchedules() ) ;
     }
 
 
