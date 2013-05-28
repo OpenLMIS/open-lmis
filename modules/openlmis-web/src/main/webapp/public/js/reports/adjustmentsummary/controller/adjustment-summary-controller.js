@@ -1,4 +1,4 @@
-function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , FacilityTypes, GeographicZones, AdjustmentTypes,OperationYears,Months, $http, $routeParams,$location) {
+function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones, AdjustmentTypes,OperationYears,Months, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -150,7 +150,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
              pdformat : 0
         };
 
-        FacilityTypes.get(function(data) {
+        ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
             $scope.facilityTypes.push({'name': 'All Facility Types'});
         });

@@ -1,4 +1,4 @@
-function SupplyStatusController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, StockedOutFacilities, ReportSchedules, FacilityTypes , Periods, ProductCategories , ReportPrograms, $http, $routeParams,$location) {
+function SupplyStatusController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, StockedOutFacilities, ReportSchedules, ReportFacilityTypes , Periods, ProductCategories , ReportPrograms, $http, $routeParams,$location) {
         //to minimize and maximize the filter section
         var section = 1;
 
@@ -42,17 +42,17 @@ function SupplyStatusController($scope, RequisitionGroupsByProgramSchedule , Req
 
         };
 
-        Programs.get(function(data){
+        ReportPrograms.get(function(data){
             $scope.programs = data.programs;
             $scope.programs.push({'name':'Select a Program'});
         })
 
-        Schedules.get(function(data){
+        ReportSchedules.get(function(data){
             $scope.schedules = data.schedules;
             $scope.schedules.push({'name':'Select a Schedule'});
         })
 
-        FacilityTypes.get(function(data) {
+        ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
             $scope.facilityTypes.push({'name': 'All facility types'});
         });

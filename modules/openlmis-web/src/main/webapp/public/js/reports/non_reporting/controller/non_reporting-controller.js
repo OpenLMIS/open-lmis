@@ -1,4 +1,4 @@
-function NonReportingController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, NonReportingFacilities, ReportSchedules, FacilityTypes , Periods, ReportPrograms, $http, $routeParams,$location) {
+function NonReportingController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, NonReportingFacilities, ReportSchedules, ReportFacilityTypes , Periods, ReportPrograms, $http, $routeParams,$location) {
         //to minimize and maximize the filter section
         var section = 1;
 
@@ -54,7 +54,7 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
             $scope.schedules.push({'name':'Select a Schedule'});
         })
 
-        FacilityTypes.get(function(data) {
+        ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
             $scope.facilityTypes.push({'name': 'All Facility Types -'});
         });

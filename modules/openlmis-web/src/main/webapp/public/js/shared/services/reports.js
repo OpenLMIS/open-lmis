@@ -72,3 +72,7 @@ services.factory('ReportPrograms', function ($resource) {
 services.factory('ReportSchedules', function ($resource) {
     return $resource('/reports/schedules.json', {}, {});
 });
+
+services.factory('ReportFacilityTypes', function ($resource) {
+    return $resource('/reports/facilityTypes.json', {}, {});
+});

@@ -1,4 +1,4 @@
-function ConsumptionReportController($scope, ConsumptionReport, Products , FacilityTypes, GeographicZones, $http, $routeParams,$location) {
+function ConsumptionReportController($scope, ConsumptionReport, Products , ReportFacilityTypes, GeographicZones, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -155,7 +155,7 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Facil
 
         };
 
-        FacilityTypes.get(function(data) {
+        ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
             $scope.facilityTypes.push({'name': '- Please Selct One -'});
         });

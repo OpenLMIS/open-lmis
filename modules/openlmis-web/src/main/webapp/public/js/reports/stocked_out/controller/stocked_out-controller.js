@@ -1,4 +1,4 @@
-function StockedOutController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, StockedOutFacilities, ReportSchedules, FacilityTypes , Periods, ProductCategories , ReportPrograms, $http, $routeParams,$location) {
+function StockedOutController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, StockedOutFacilities, ReportSchedules, ReportFacilityTypes , Periods, ProductCategories , ReportPrograms, $http, $routeParams,$location) {
         //to minimize and maximize the filter section
         var section = 1;
 
@@ -54,7 +54,7 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
             $scope.schedules.push({'name':'Select a Schedule'});
         })
 
-        FacilityTypes.get(function(data) {
+        ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
             $scope.facilityTypes.push({'name': 'All facility types'});
         });

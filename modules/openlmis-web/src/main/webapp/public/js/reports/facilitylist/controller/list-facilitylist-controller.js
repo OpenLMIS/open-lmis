@@ -1,4 +1,4 @@
-function ListFacilitiesController($scope, FacilityList, FacilityTypes, GeographicZones, $http, $routeParams,$location) {
+function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, GeographicZones, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -40,7 +40,7 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
              status : $scope.status
         };
 
-        FacilityTypes.get(function(data) {
+        ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
             $scope.facilityTypes.push({'name': '- All Facility Types -'});
         });

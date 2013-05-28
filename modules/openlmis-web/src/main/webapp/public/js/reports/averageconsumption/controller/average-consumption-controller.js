@@ -1,4 +1,4 @@
-function AverageConsumptionReportController($scope, $window, AverageConsumptionReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , FacilityTypes, GeographicZones,OperationYears,Months, $http, $routeParams,$location) {
+function AverageConsumptionReportController($scope, $window, AverageConsumptionReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones,OperationYears,Months, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -151,7 +151,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
              pdformat : 0
         };
 
-        FacilityTypes.get(function(data) {
+        ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
             $scope.facilityTypes.push({'name': 'All Facility Types'});
         });

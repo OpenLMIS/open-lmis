@@ -1,4 +1,4 @@
-function ListMailinglabelsController($scope, MailingLabels, FacilityTypes, $http, $routeParams,$location) {
+function ListMailinglabelsController($scope, MailingLabels, ReportFacilityTypes, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -38,7 +38,7 @@ function ListMailinglabelsController($scope, MailingLabels, FacilityTypes, $http
              facilityCodeFilter : $scope.facilityCodeFilter
         };
 
-        FacilityTypes.get(function(data) {
+        ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
             $scope.facilityTypes.push({'name': '- Please Select One -'});
         });
