@@ -23,25 +23,44 @@ public interface FacilityApprovedProductMapper {
   Integer insert(FacilityApprovedProduct facilityApprovedProduct);
 
   @Select({"SELECT fap.*",
-      "FROM facility_approved_products fap ",
-      "INNER JOIN facilities f ON f.typeId = fap.facilityTypeId",
-      "INNER JOIN program_products pp ON pp.id = fap.programProductId",
-      "INNER JOIN products p ON p.id = pp.productId ",
-      "INNER JOIN product_categories pc ON pc.id = p.categoryId ",
-      "WHERE",
-      "pp.programId = #{programId}",
-      "AND f.id = #{facilityId}",
-      "AND p.fullSupply = #{fullSupply}",
-      "AND p.active = TRUE",
-      "AND pp.active = TRUE",
-      "ORDER BY pc.displayOrder, pc.name, p.displayOrder NULLS LAST, p.code"})
+    "FROM facility_approved_products fap ",
+    "INNER JOIN facilities f ON f.typeId = fap.facilityTypeId",
+    "INNER JOIN program_products pp ON pp.id = fap.programProductId",
+    "INNER JOIN products p ON p.id = pp.productId ",
+    "INNER JOIN product_categories pc ON pc.id = p.categoryId ",
+    "WHERE",
+    "pp.programId = #{programId}",
+    "AND f.id = #{facilityId}",
+    "AND p.fullSupply = TRUE",
+    "AND p.active = TRUE",
+    "AND pp.active = TRUE",
+    "ORDER BY pc.displayOrder, pc.name, p.displayOrder NULLS LAST, p.code"})
   @Results(value = {
-      @Result(property = "programProduct", column = "programProductID", javaType = ProgramProduct.class,
-          one = @One(select = "org.openlmis.core.repository.mapper.ProgramProductMapper.getById")),
-      @Result(property = "facilityType.id", column = "facilityTypeId")})
-  List<FacilityApprovedProduct> getProductsByFacilityProgramAndFullSupply(@Param("facilityId") Long facilityId,
-                                                                          @Param("programId") Long programId,
-                                                                          @Param("fullSupply") Boolean fullSupply);
+    @Result(property = "programProduct", column = "programProductID", javaType = ProgramProduct.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramProductMapper.getFullSupplyById")),
+    @Result(property = "facilityType.id", column = "facilityTypeId")})
+  List<FacilityApprovedProduct> getFullSupplyProductsByFacilityAndProgram(@Param("facilityId") Long facilityId,
+                                                                          @Param("programId") Long programId);
+
+@Select({"SELECT fap.*",
+    "FROM facility_approved_products fap ",
+    "INNER JOIN facilities f ON f.typeId = fap.facilityTypeId",
+    "INNER JOIN program_products pp ON pp.id = fap.programProductId",
+    "INNER JOIN products p ON p.id = pp.productId ",
+    "INNER JOIN product_categories pc ON pc.id = p.categoryId ",
+    "WHERE",
+    "pp.programId = #{programId}",
+    "AND f.id = #{facilityId}",
+    "AND p.fullSupply = FALSE",
+    "AND p.active = TRUE",
+    "AND pp.active = TRUE",
+    "ORDER BY pc.displayOrder, pc.name, p.displayOrder NULLS LAST, p.code"})
+  @Results(value = {
+    @Result(property = "programProduct", column = "programProductID", javaType = ProgramProduct.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramProductMapper.getNonFullSupplyById")),
+    @Result(property = "facilityType.id", column = "facilityTypeId")})
+  List<FacilityApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(@Param("facilityId") Long facilityId,
+                                                                          @Param("programId") Long programId);
 
   @Select({"SELECT fap.id, fap.facilityTypeId, fap.programProductId, fap.maxMonthsOfStock, fap.modifiedDate, fap.modifiedBy",
       "FROM facility_approved_products fap, facility_types ft",

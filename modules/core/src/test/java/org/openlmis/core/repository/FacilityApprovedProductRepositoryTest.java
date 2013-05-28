@@ -64,13 +64,13 @@ public class FacilityApprovedProductRepositoryTest {
   @Test
   public void shouldGetFullSupplyFacilityApprovedProducts() {
     facilityApprovedProductRepository.getFullSupplyProductsByFacilityAndProgram(5L, 8L);
-    verify(facilityApprovedProductMapper).getProductsByFacilityProgramAndFullSupply(5L, 8L, true);
+    verify(facilityApprovedProductMapper).getFullSupplyProductsByFacilityAndProgram(5L, 8L);
   }
 
   @Test
   public void shouldGetNonFullSupplyFacilityApprovedProducts() {
     facilityApprovedProductRepository.getNonFullSupplyProductsByFacilityAndProgram(5L, 8L);
-    verify(facilityApprovedProductMapper).getProductsByFacilityProgramAndFullSupply(5L, 8L, false);
+    verify(facilityApprovedProductMapper).getNonFullSupplyProductsByFacilityAndProgram(5L, 8L);
   }
 
   @Test

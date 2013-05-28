@@ -99,12 +99,12 @@ function CreateNonFullSupplyController($scope, $rootScope) {
           && $.inArray(facilityApprovedProduct.programProduct.product.category.name, [$scope.nonFullSupplyProductCategory.name]) == 0;
       });
     }
-  }
+  };
 
   $scope.deleteCurrentNonFullSupplyLineItem = function (index) {
     $scope.addedNonFullSupplyProducts.splice(index, 1);
     $scope.updateNonFullSupplyProductsToDisplay();
-  }
+  };
 
   function displayProductsAddedMessage() {
     if ($scope.addedNonFullSupplyProducts.length > 0) {

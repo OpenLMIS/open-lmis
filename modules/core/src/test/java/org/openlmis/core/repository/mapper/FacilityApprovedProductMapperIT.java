@@ -26,8 +26,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_TYPE_ID;
 import static org.openlmis.core.builder.ProductBuilder.*;
@@ -118,8 +117,8 @@ public class FacilityApprovedProductMapperIT {
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct7);
 
     // Get full supply products
-    List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductMapper.getProductsByFacilityProgramAndFullSupply(
-      facility.getId(), yellowFeverProgram.getId(), Boolean.TRUE);
+    List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(
+      facility.getId(), yellowFeverProgram.getId());
     assertEquals(3, facilityApprovedProducts.size());
 
     FacilityApprovedProduct facilityApprovedProduct = facilityApprovedProducts.get(0);
@@ -144,11 +143,13 @@ public class FacilityApprovedProductMapperIT {
     assertEquals("PRO01", facilityApprovedProducts.get(2).getProgramProduct().getProduct().getCode());
 
     // Non-full supply products
-    List<FacilityApprovedProduct> nonFullSupplyfacilityApprovedProducts = facilityApprovedProductMapper.getProductsByFacilityProgramAndFullSupply(
-      facility.getId(), yellowFeverProgram.getId(), Boolean.FALSE);
+    List<FacilityApprovedProduct> nonFullSupplyfacilityApprovedProducts = facilityApprovedProductMapper.getNonFullSupplyProductsByFacilityAndProgram(
+      facility.getId(), yellowFeverProgram.getId());
 
     assertThat(nonFullSupplyfacilityApprovedProducts.size(), is(1));
     assertThat(nonFullSupplyfacilityApprovedProducts.get(0).getProgramProduct().getProduct().getCode(), is("PRO03"));
+    assertThat(nonFullSupplyfacilityApprovedProducts.get(0).getProgramProduct().getProduct().getManufacturer(), is(nullValue()));
+    assertThat(nonFullSupplyfacilityApprovedProducts.get(0).getProgramProduct().getProduct().getFlammable(), is(nullValue()));
   }
 
   private ProductCategory category(String categoryCode, String categoryName, int categoryDisplayOrder) {

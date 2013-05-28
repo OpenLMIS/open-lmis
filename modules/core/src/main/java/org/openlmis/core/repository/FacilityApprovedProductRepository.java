@@ -8,17 +8,13 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityApprovedProduct;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
-import static java.lang.Boolean.*;
 
 @Component
 @NoArgsConstructor
@@ -40,11 +36,11 @@ public class FacilityApprovedProductRepository {
   }
 
   public List<FacilityApprovedProduct> getFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
-    return facilityApprovedProductMapper.getProductsByFacilityProgramAndFullSupply(facilityId, programId, TRUE);
+    return facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
 
   public List<FacilityApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
-    return facilityApprovedProductMapper.getProductsByFacilityProgramAndFullSupply(facilityId, programId, FALSE);
+    return facilityApprovedProductMapper.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
 
   public void insert(FacilityApprovedProduct facilityApprovedProduct) {

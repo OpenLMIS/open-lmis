@@ -75,6 +75,32 @@ public class ProgramProductMapperIT {
   }
 
   @Test
+  public void shouldGetFullSupplyProgramProductById() throws Exception {
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProductMapper.insert(programProduct);
+
+    ProgramProduct fetchedProgramProduct = programProductMapper.getFullSupplyById(programProduct.getId());
+
+    assertThat(fetchedProgramProduct.getDosesPerMonth(), is(programProduct.getDosesPerMonth()));
+    assertThat(fetchedProgramProduct.getProduct().getCode(), is(programProduct.getProduct().getCode()));
+    assertThat(fetchedProgramProduct.getProduct().getFullSupply(), is(true));
+  }
+
+  @Test
+  public void shouldGetNonFullSupplyProgramProductById() throws Exception {
+    product.setFullSupply(false);
+    productMapper.update(product);
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProductMapper.insert(programProduct);
+
+    ProgramProduct fetchedProgramProduct = programProductMapper.getNonFullSupplyById(programProduct.getId());
+
+    assertThat(fetchedProgramProduct.getDosesPerMonth(), is(programProduct.getDosesPerMonth()));
+    assertThat(fetchedProgramProduct.getProduct().getCode(), is(programProduct.getProduct().getCode()));
+    assertThat(fetchedProgramProduct.getProduct().getFullSupply(), is(false));
+  }
+
+  @Test
   public void shouldGetProgramProductByProgramIdAndProductId() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProductMapper.insert(programProduct);
@@ -95,7 +121,7 @@ public class ProgramProductMapperIT {
 
     programProductMapper.updateCurrentPrice(programProduct);
 
-    ProgramProduct returnedProgramProduct = programProductMapper.getById(programProduct.getId());
+    ProgramProduct returnedProgramProduct = programProductMapper.getFullSupplyById(programProduct.getId());
     assertThat(returnedProgramProduct.getCurrentPrice(), is(price));
     assertThat(returnedProgramProduct.getModifiedBy(), is(1L));
     assertThat(returnedProgramProduct.getModifiedDate(), is(notNullValue()));
