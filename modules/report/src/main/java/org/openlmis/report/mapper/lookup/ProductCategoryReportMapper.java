@@ -1,4 +1,4 @@
-package org.openlmis.report.mapper;
+package org.openlmis.report.mapper.lookup;
 
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.dto.ProductCategory;
