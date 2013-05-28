@@ -31,6 +31,26 @@
         <appender-ref ref="consoleAppender"/>
     </logger>
 
+    <logger name="org.openlmis.rnr.repository.mapper" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
+    <logger name="org.openlmis.db.repository.mapper" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
+    <logger name="org.openlmis.core.repository.mapper" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
+    <logger name="org.openlmis.shipment.repository.mapper" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
     <logger name="org.openlmis.web">
         <level value="INFO"/>
         <appender-ref ref="logFileAppender"/>
