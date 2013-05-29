@@ -69,23 +69,6 @@ public interface ProductMapper {
   @Select("SELECT id FROM product_forms WHERE LOWER(code) = LOWER(#{code})")
   Long getProductFormIdForCode(String code);
 
-  @Select("SELECT * FROM products WHERE id = #{id}")
-  @Results(value = {
-    @Result(property = "form", column = "formId", javaType = ProductForm.class, one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById")),
-    @Result(property = "category", column = "categoryId", javaType = ProductCategory.class, one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getProductCategoryById")),
-    @Result(property = "dosageUnit", column = "dosageUnitId", javaType = ProductForm.class, one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById"))
-  })
-  Product getFullSupplyById(Long id);
-
-  @Select("SELECT id, code, primaryName, strength, dosesPerDispensingUnit, packSize, roundToZero," +
-    " packRoundingThreshold, dispensingUnit, fullSupply, displayOrder, formId, categoryId, dosageUnitId FROM products WHERE id = #{id}")
-  @Results(value = {
-    @Result(property = "form", column = "formId", javaType = ProductForm.class, one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById")),
-    @Result(property = "category", column = "categoryId", javaType = ProductCategory.class, one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getProductCategoryById")),
-    @Result(property = "dosageUnit", column = "dosageUnitId", javaType = ProductForm.class, one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById"))
-  })
-  Product getNonFullSupplyById(Long id);
-
   @Select("SELECT id FROM products WHERE LOWER(code) = LOWER(#{code})")
   Long getIdByCode(String code);
 

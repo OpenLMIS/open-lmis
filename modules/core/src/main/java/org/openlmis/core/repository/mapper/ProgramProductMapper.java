@@ -20,20 +20,6 @@ public interface ProgramProductMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(ProgramProduct programProduct);
 
-  @Select("SELECT * FROM program_products WHERE id = #{id}")
-  @Results(value = {
-    @Result(property = "product", column = "productId", javaType = Product.class, one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getFullSupplyById")),
-    @Result(property = "program", column = "programId", javaType = Product.class, one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
-  })
-  ProgramProduct getFullSupplyById(Long id);
-
-  @Select("SELECT * FROM program_products WHERE id = #{id}")
-  @Results(value = {
-    @Result(property = "product", column = "productId", javaType = Product.class, one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getNonFullSupplyById")),
-    @Result(property = "program", column = "programId", javaType = Product.class, one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
-  })
-  ProgramProduct getNonFullSupplyById(Long id);
-
   @Select(("SELECT id FROM program_products where programId = #{programId} and productId = #{productId}"))
   Long getIdByProgramAndProductId(@Param("programId") Long programId, @Param("productId") Long productId);
 

@@ -109,8 +109,8 @@ public class Rnr extends BaseModel{
   }
 
   public void fillLineItems(List<FacilityApprovedProduct> facilityApprovedProducts) {
-    for (FacilityApprovedProduct programProduct : facilityApprovedProducts) {
-      RnrLineItem requisitionLineItem = new RnrLineItem(null, programProduct, modifiedBy);
+    for (FacilityApprovedProduct facilityApprovedProduct : facilityApprovedProducts) {
+      RnrLineItem requisitionLineItem = new RnrLineItem(null, facilityApprovedProduct, modifiedBy);
       add(requisitionLineItem, true);
     }
   }

@@ -106,27 +106,6 @@ public class ProductMapperIT {
   }
 
   @Test
-   public void shouldReturnFullSupplyProductById() {
-    Product product = make(a(ProductBuilder.defaultProduct));
-    productMapper.insert(product);
-    Product expectedProduct = productMapper.getFullSupplyById(product.getId());
-    assertThat(expectedProduct.getCode(), is(product.getCode()));
-    assertThat(expectedProduct.getPrimaryName(), is(product.getPrimaryName()));
-    assertThat(expectedProduct.getFullSupply(), is(true));
-  }
-
-  @Test
-  public void shouldReturnNonFullSupplyProductById() {
-    Product product = make(a(ProductBuilder.defaultProduct));
-    product.setFullSupply(false);
-    productMapper.insert(product);
-    Product expectedProduct = productMapper.getNonFullSupplyById(product.getId());
-    assertThat(expectedProduct.getCode(), is(product.getCode()));
-    assertThat(expectedProduct.getPrimaryName(), is(product.getPrimaryName()));
-    assertThat(expectedProduct.getFullSupply(), is(false));
-  }
-
-  @Test
   public void shouldUpdateProduct() {
     Product product = make(a(ProductBuilder.defaultProduct));
     productMapper.insert(product);
@@ -136,7 +115,7 @@ public class ProductMapperIT {
 
     productMapper.update(product);
 
-    Product returnedProduct = productMapper.getFullSupplyById(product.getId());
+    Product returnedProduct = productMapper.getByCode(product.getCode());
 
     assertThat(returnedProduct.getPrimaryName(), is("Updated Name"));
     assertThat(returnedProduct.getAlternateItemCode(), is("Alternate Code"));
