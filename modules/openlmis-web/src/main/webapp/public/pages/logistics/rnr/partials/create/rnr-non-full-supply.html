@@ -30,7 +30,7 @@
 </div>
 
 <div class="rnr-table" tab-scroll bottom-offset="180">
-  <table id="nonFullSupplyTable" class="table table-bordered" ng-show="pageLineItems.length > 0">
+  <table id="nonFullSupplyTable" fixed-table-header class="table table-bordered" ng-show="pageLineItems.length > 0">
     <thead>
     <tr>
       <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleNonFullSupplyColumns"
@@ -95,7 +95,7 @@
     </tr>
     </tbody>
   </table>
-</div>
+</div >
 <form name="nonFullSupplyForm">
   <div id="nonFullSupplyProductsModal" modal="nonFullSupplyProductsModal"
        options="{ backdrop: 'static', escape: false}">

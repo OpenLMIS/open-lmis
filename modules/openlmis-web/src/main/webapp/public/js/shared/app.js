@@ -34,6 +34,7 @@ requirejs.config({
     modalEvents: 'directives/modal-events',
     placeholder: 'directives/placeholder',
     tabScroll: 'directives/tab-scroll',
+    fixedTableHeader: 'directives/fixed-table-header',
     uiNav: 'directives/ui-nav',
     ngGrid: '../../lib/angular-ui/ng-grid/ng-grid-2.0.5.min',
     jQueryForm: '../../lib/jquery/jquery.form' ,
@@ -66,6 +67,7 @@ requirejs.config({
     'modalEvents': { deps: ['directives']},
     'placeholder': { deps: ['directives']},
     'tabScroll': {deps: ['directives']},
+    'fixedTableHeader': {deps: ['directives']},
     'uiNav': {deps: ['directives']},
     'jQueryForm': {deps: ['jQuery']},
     'select2': {deps: ['angularResource']},
@@ -74,7 +76,7 @@ requirejs.config({
 });
 
 define(["messageService", "authorizationService", "loginController", "headerController", "navigationController", "localStorageKeys", "util", "open-lmis-dialog",
-  'commentBox', 'formToolbar', 'openlmisMessage', 'openlmisPagination', 'modalEvents', 'placeholder', 'tabScroll', 'uiNav', 'ngGrid', 'jQueryForm', 'select2', 'select2Ext'], function () {
+  'commentBox', 'formToolbar', 'openlmisMessage', 'openlmisPagination', 'modalEvents', 'placeholder', 'tabScroll', 'fixedTableHeader', 'uiNav', 'ngGrid', 'jQueryForm', 'select2', 'select2Ext'], function () {
 
   var loadApp = function () {
 
