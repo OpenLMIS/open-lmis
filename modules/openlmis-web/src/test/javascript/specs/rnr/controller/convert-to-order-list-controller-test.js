@@ -103,10 +103,10 @@ describe('ConvertToOrderListController', function () {
 
   it('should display confirm modal if convert to order button is clicked with some Rnrs selected', function () {
     scope.gridOptions.selectedItems = [requisitionList[0]];
-    spyOn(OpenLmisDialog, 'new');
+    spyOn(OpenLmisDialog, 'newDialog');
     scope.convertToOrder();
     httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
-    expect(OpenLmisDialog.new).toHaveBeenCalled();
+    expect(OpenLmisDialog.newDialog).toHaveBeenCalled();
   });
 
   it('should convert to order if ok is clicked on the confirm modal', function () {

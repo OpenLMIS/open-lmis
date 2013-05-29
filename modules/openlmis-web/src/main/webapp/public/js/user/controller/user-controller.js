@@ -160,7 +160,7 @@ function UserController($scope, $routeParams, $location, $dialog, Users, User, A
       header:"Delete facility",
       body:"All programs and roles association for this facility will be deleted."
     };
-    OpenLmisDialog.new(dialogOpts, $scope.clearSelectedFacility, $dialog);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.clearSelectedFacility, $dialog);
   };
 
   var loadUserFacility = function () {

@@ -108,7 +108,7 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights, $d
       header:"Change role type",
       body:"If you change the type, all selections in current type will be removed?"
     };
-    OpenLmisDialog.new(options, $scope.dialogCloseCallback, $dialog);
+    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog);
   };
 
   var validRole = function () {

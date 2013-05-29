@@ -55,7 +55,7 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
       header: "Confirm Action",
       body: "Are you sure? Please confirm."
     };
-    OpenLmisDialog.new(options, $scope.dialogCloseCallback, $dialog);
+    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog);
   };
 
   $scope.convertToOrder = function () {

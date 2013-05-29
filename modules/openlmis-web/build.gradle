@@ -6,6 +6,7 @@
 
 apply plugin: 'jetty'
 apply plugin: 'war'
+apply plugin: 'js'
 
 buildscript {
     repositories {
@@ -19,8 +20,37 @@ buildscript {
     dependencies {
         classpath "org.lesscss:lesscss:1.3.1"
         classpath 'bmuschko:gradle-cargo-plugin:0.5.6'
+        classpath 'com.eriwen:gradle-js-plugin:1.5.0'
     }
 }
+
+javascript.source {
+    dev {
+        js {
+            srcDir "src/main/webapp/public/js"
+            include "**/*.js"
+            exclude "**/*min.js", "**/select2-ext.js"
+        }
+    }
+}
+
+javascript.source.dev.js.files.eachWithIndex { File jsFile, i ->
+    tasks.add(name: "minifyJs${i}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+        source = jsFile
+        dest = file('src/main/webapp/public/minjs/'+jsFile.name)
+        closure {
+            compilationLevel = 'WHITESPACE_ONLY'
+            warningLevel = 'QUIET'
+        }
+    }
+}
+
+task allMinifyJs(dependsOn: tasks.matching { Task task ->
+    String environment = System.properties.get('environmentName');
+    if (environment != 'local') {
+        task.name.startsWith("minifyJs")
+    }
+})
 
 dependencies {
     compile 'org.springframework:spring-webmvc:3.1.1.RELEASE',
@@ -114,7 +144,7 @@ task compileLess << {
     println "Running lessCompile task..."
     def lessCompiler = new org.lesscss.LessCompiler()
     def tree = fileTree('src/main/webapp/public/less').include('**/*.less')
-    tree.each {File file ->
+    tree.each { File file ->
         def outputCss = new File("${projectDir}/src/main/webapp/public/css/" + file.name.replace(".less", ".css"))
         println "LESS: Compiling ${file} to ${outputCss}..."
         lessCompiler.compile(file, outputCss)

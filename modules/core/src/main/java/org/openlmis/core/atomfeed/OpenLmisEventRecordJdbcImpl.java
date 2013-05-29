@@ -6,6 +6,7 @@
 package org.openlmis.core.atomfeed;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.ict4h.atomfeed.server.domain.EventRecord;
 import org.ict4h.atomfeed.server.repository.jdbc.AllEventRecordsJdbcImpl;
 import org.ict4h.atomfeed.server.repository.jdbc.JdbcConnectionProvider;
@@ -19,6 +20,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class OpenLmisEventRecordJdbcImpl extends AllEventRecordsJdbcImpl {
 
   private JdbcConnectionProvider provider;

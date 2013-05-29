@@ -140,7 +140,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
       header: "Confirm Action",
       body: "Are you sure? Please confirm."
     };
-    OpenLmisDialog.new(options, $scope.dialogCloseCallback, $dialog);
+    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog);
   };
 
   $scope.approveRnr = function () {

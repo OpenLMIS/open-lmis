@@ -5,7 +5,7 @@
  */
 
 var OpenLmisDialog = {
-  new:function (overrideOpts, callback, $dialog) {
+  newDialog:function (overrideOpts, callback, $dialog) {
     var defaults = {
       id:"",
       header:"Header",

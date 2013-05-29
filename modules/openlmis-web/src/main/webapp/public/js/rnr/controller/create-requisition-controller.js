@@ -143,7 +143,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
       header: "Confirm Action",
       body: "Are you sure? Please confirm."
     };
-    OpenLmisDialog.new(options, $scope.dialogCloseCallback, $dialog);
+    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog);
   };
 
   $scope.authorizeRnr = function () {

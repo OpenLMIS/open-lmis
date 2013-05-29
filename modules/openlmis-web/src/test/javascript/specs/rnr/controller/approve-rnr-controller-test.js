@@ -109,10 +109,10 @@ describe('Approve Requisition controller', function () {
     scope.rnr = new Rnr({"id":"rnrId"}, []);
     spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn('');
-    spyOn(OpenLmisDialog, 'new');
+    spyOn(OpenLmisDialog, 'newDialog');
     scope.approveRnr();
     httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
-    expect(OpenLmisDialog.new).toHaveBeenCalled();
+    expect(OpenLmisDialog.newDialog).toHaveBeenCalled();
   });
 
   it('should approve Rnr if ok is clicked on the confirm modal', function () {

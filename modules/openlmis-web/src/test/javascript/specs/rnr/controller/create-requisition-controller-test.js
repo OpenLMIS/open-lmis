@@ -208,10 +208,10 @@ describe('CreateRequisitionController', function () {
   it('should display confirm modal if submit button is clicked and rnr valid', function () {
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
-    spyOn(OpenLmisDialog, 'new');
+    spyOn(OpenLmisDialog, 'newDialog');
     scope.submitRnr();
     httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
-    expect(OpenLmisDialog.new).toHaveBeenCalled();
+    expect(OpenLmisDialog.newDialog).toHaveBeenCalled();
   });
 
   it('should submit Rnr if ok is clicked on the confirm modal', function () {
@@ -441,10 +441,10 @@ describe('CreateRequisitionController', function () {
   it('should display confirm modal if authorize button is clicked and rnr valid', function () {
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
-    spyOn(OpenLmisDialog, 'new');
+    spyOn(OpenLmisDialog, 'newDialog');
     scope.authorizeRnr();
     httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
-    expect(OpenLmisDialog.new).toHaveBeenCalled();
+    expect(OpenLmisDialog.newDialog).toHaveBeenCalled();
   });
 
   it('should authorized Rnr if ok is clicked on the confirm modal', function () {

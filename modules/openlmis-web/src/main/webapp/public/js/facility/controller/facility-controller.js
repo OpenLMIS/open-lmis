@@ -96,7 +96,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       header: "Set Program Start Date",
       body: "Facility Staff will submit back-due R&Rs for this program, starting from this date."
     };
-    OpenLmisDialog.new(dialogOpts, $scope.dateChangeCallback, $dialog);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.dateChangeCallback, $dialog);
   };
 
   $scope.dateChangeCallback = function (result) {
@@ -141,7 +141,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 
   $scope.deleteFacilityCallBack = function (result) {
     if (!result) return;
-    Facility.delete({id: $scope.facility.id}, {}, successFunc, errorFunc);
+    Facility.remove({id: $scope.facility.id}, {}, successFunc, errorFunc);
   };
 
   $scope.showConfirmFacilityDeleteWindow = function () {
@@ -150,7 +150,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       header: "Delete facility",
       body: "'{0}' / '{1}' will be deleted from the system.".format($scope.originalFacilityName, $scope.originalFacilityCode)
     };
-    OpenLmisDialog.new(dialogOpts, $scope.deleteFacilityCallBack, $dialog);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.deleteFacilityCallBack, $dialog);
   };
 
   $scope.showConfirmFacilityRestore = function () {
@@ -159,7 +159,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       header: messageService.get("create.facility.restoreFacility"),
       body: "'{0}' / '{1}' will be restored to the system.".format($scope.originalFacilityName, $scope.originalFacilityCode)
     };
-    OpenLmisDialog.new(dialogOpts, $scope.restoreFacilityCallBack, $dialog);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.restoreFacilityCallBack, $dialog);
   };
 
   $scope.restoreFacilityCallBack = function (result) {
@@ -173,7 +173,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       header: messageService.get("create.facility.activateFacility"),
       body: messageService.get("create.facility.setFacilityActive")
     };
-    OpenLmisDialog.new(dialogOpts, $scope.activateFacilityCallBack, $dialog);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.activateFacilityCallBack, $dialog);
   };
 
   $scope.activateFacilityCallBack = function (result) {
