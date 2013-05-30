@@ -80,6 +80,7 @@
 
     <mvc:resources mapping="/public/**" location="/public/"/>
     <mvc:resources mapping="/error/**" location="/public/"/>
+    <mvc:resources mapping="/favicon.ico" location="/"/>
 
     <mvc:interceptors>
         <bean id="noCacheInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
