@@ -9,7 +9,7 @@ directives.directive('fixedTableHeader', function() {
     restrict: 'EA',
     link: function (scope, element, attr, ctrl) {
       var fixedHeader = $("<div class='header-fixed'></div>");
-
+      fixedHeader.hide();
       setTimeout(function() {
         var table = $("<table class='table table-bordered'></table>");
         table.append(element.find('thead').clone());
@@ -20,12 +20,10 @@ directives.directive('fixedTableHeader', function() {
 
       scope.$watch($(window).scrollTop(), function() {
         angular.element(window).scroll(function() {
+          fixedHeader.hide();
           fixedHeader.scrollLeft(element.parent().scrollLeft());
-          if (angular.element(this).scrollTop() >= element.offset().top && fixedHeader.is(':hidden')) {
+          if (angular.element(this).scrollTop() >= element.offset().top && !element.is(':hidden') && fixedHeader.is(':hidden')) {
            fixedHeader.show();
-          }
-          else if (angular.element(this).scrollTop() < element.offset().top) {
-            fixedHeader.hide();
           }
         });
 
