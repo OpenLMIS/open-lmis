@@ -59,8 +59,11 @@ public class RequisitionRepository {
     updateNonFullSupplyLineItems(rnr);
   }
 
-  public void approve(Rnr requisition) {
-    requisitionMapper.update(requisition);
+  public void approve(Rnr rnr) {
+    requisitionMapper.update(rnr);
+    for (RnrLineItem lineItem : rnr.getFullSupplyLineItems()) {
+      updateLineItem(rnr, lineItem);
+    }
   }
 
   private void updateNonFullSupplyLineItems(Rnr rnr) {
@@ -71,7 +74,6 @@ public class RequisitionRepository {
         updateLineItem(rnr, lineItem);
         continue;
       }
-
       rnrLineItemMapper.insertNonFullSupply(lineItem);
     }
   }
@@ -85,14 +87,11 @@ public class RequisitionRepository {
   }
 
   private void updateLineItem(Rnr requisition, RnrLineItem lineItem) {
-
     lineItem.setModifiedBy(requisition.getModifiedBy());
-
     if (requisition.getStatus() == RnrStatus.IN_APPROVAL) {
       rnrLineItemMapper.updateOnApproval(lineItem);
       return;
     }
-
     rnrLineItemMapper.update(lineItem);
   }
 

@@ -410,7 +410,6 @@ public class RequisitionServiceTest {
 
     verify(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
     verify(requisitionRepository).update(savedRnr);
-    verify(requisitionRepository).update(savedRnr);
     assertThat(message.getCode(), is("rnr.submitted.without.supervisor"));
   }
 

@@ -128,8 +128,8 @@ public class RequisitionRepositoryTest {
     verify(requisitionMapper).update(rnr);
     verify(lossesAndAdjustmentsMapper, never()).deleteByLineItemId(rnrLineItem1.getId());
     verify(lossesAndAdjustmentsMapper, never()).insert(rnrLineItem1, lossAndAdjustmentForLineItem);
-    verify(rnrLineItemMapper, never()).updateOnApproval(rnrLineItem1);
-    verify(rnrLineItemMapper, never()).updateOnApproval(rnrLineItem2);
+    verify(rnrLineItemMapper).updateOnApproval(rnrLineItem1);
+    verify(rnrLineItemMapper).updateOnApproval(rnrLineItem2);
   }
 
   @Test
