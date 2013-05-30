@@ -7,7 +7,7 @@
   -->
 
   <h4>
-    Comments
+    <span openlmis-message = "comments.header">Comments</span>
     <a ng-click="show=false; comment=''" class="link-minimize">
       <i id="commentClose" class="icon-remove"></i>
     </a>
@@ -19,7 +19,7 @@
     <li class="comment" ng-repeat="comment in rnrComments">
       <span ng-bind="comment.commentText"></span>
 
-      <div class="comment-info"> By: <span ng-bind="comment.author.userName"></span> | <span class="comment-date"
+      <div class="comment-info" openlmis-message="label.by" > By: <span ng-bind="comment.author.userName"></span> | <span class="comment-date"
                                                                                              ng-bind="comment.createdDate | date:'HH:mm:ss  dd/MM/yyyy'"></span>
       </div>
     </li>

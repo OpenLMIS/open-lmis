@@ -6,7 +6,7 @@
 
 <div ng-controller="SchedulePeriodController" ng-show="schedule">
   <h2>
-    Schedule: {{schedule.name}}
+    <span openlmis-message="period.schedule.header"></span>: {{schedule.name}}
     <a href="#/list" class="pull-right btn btn-primary">Back to Schedules</a>
   </h2>
 
@@ -17,7 +17,9 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label>Name <span class="label-required">*</span>
+            <label >
+              <span openlmis-message="period.header.name"></span>
+              <span class="label-required">*</span>
             </label>
             <div class="form-field">
               <input name="name" id="name" type="text" ng-model="newPeriod.name" maxlength="50" ng-required="true"/>
@@ -25,7 +27,8 @@
             </div>
           </div>
           <div class="form-cell">
-            <label>Description
+            <label >
+              <span openlmis-message="period.header.description"/>
             </label>
             <div class="form-field">
               <input name="description" id="description" type="text" ng-model="newPeriod.description"
@@ -35,7 +38,10 @@
         </div>
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label>Start Date(dd/mm/yyyy) <span class="label-required">*</span>
+            <label>
+
+            <span openlmis-message="period.start.date"></span>
+            <span class="label-required">*</span>
             </label>
             <div class="form-field">
               <input name="startDate" id="startDate" type="text" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}" readonly ng-model="newPeriod.startDate"
@@ -45,7 +51,9 @@
             </div>
           </div>
           <div class="form-cell">
-            <label>End Date(dd/mm/yyyy) <span class="label-required">*</span>
+            <label>
+            <span openlmis-message="period.end.date"></span>
+            <span class="label-required">*</span>
             </label>
             <div class="form-field">
               <input name="endDate" id="endDate" type="text" ui-date="{minDate:endDateOffset, dateFormat: 'dd/mm/yy', changeYear: true}" readonly ng-model="newPeriod.endDate"
@@ -56,10 +64,10 @@
           </div>
         </div>
         <div class="form-row clearfix">
-          <div class="form-cell">Total Days:
+          <div class="form-cell"><span openlmis-message="period.total.days">:</span>
             <span class="cell-text" ng-show="calculateDays(newPeriod.startDate, newPeriod.endDate)+1">{{calculateDays(newPeriod.startDate, newPeriod.endDate)}}</span>
           </div>
-          <div class="form-cell">Number Of Months:
+          <div class="form-cell" openlmis-message="period.number.of.months">
             <span class="cell-text" ng-show="calculateMonths()" ng-model="newPeriod.numberOfMonths">{{calculateMonths()}}</span>
           </div>
         </div>
@@ -76,15 +84,15 @@
   </span>
 
   <div>
-    <h2>Periods</h2>
+    <h2 openlmis-message="periods.header"></h2>
     <div class="row-fluid schedule-header">
       <div class="span1">&nbsp;</div>
-      <div class="span1">Name</div>
-      <div class="span2">Description</div>
-      <div class="span2">Start date</div>
-      <div class="span2">End date</div>
-      <div class="span1">Total days</div>
-      <div class="span2">Number of months</div>
+      <div class="span1"><span openlmis-message="header.name"></span></div>
+      <div class="span2"><span openlmis-message="header.description"></span></div>
+      <div class="span2"><span openlmis-message="period.header.startDate"></span></div>
+      <div class="span2"><span openlmis-message="period.header.endDate"></span></div>
+      <div class="span1"><span openlmis-message="period.header.totalDays"></span></div>
+      <div class="span2"><span openlmis-message="period.header.numOfMonths"></span></div>
       <div class="span1">&nbsp;</div>
     </div>
     <div ng-repeat="period in periodList" class="row-fluid schedule-row">

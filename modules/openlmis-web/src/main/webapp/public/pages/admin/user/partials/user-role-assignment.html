@@ -11,7 +11,7 @@
     <div class="fluid-grid" ng-show="showHomeFacilityRoleAssignmentOptions()">
       <div class="row-fluid fluid-grid-header">
         <div class="span3">
-          <div class="fluid-grid-cell" openlmis-message="create.user.program"></div>
+          <div class="fluid-grid-cell" openlmis-message="program.header"></div>
         </div>
         <div class="span6">
           <div class="fluid-grid-cell" openlmis-message="create.user.role"></div>
@@ -38,7 +38,7 @@
           </div>
         </div>
         <div class="span2">
-          <a class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index, false)">Remove</a>
+          <a class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index, false)" openlmis-message="button.remove"></a>
         </div>
       </div>
     </div>
@@ -49,11 +49,12 @@
         <div class="span3">
           <div class="fluid-grid-cell">
             <select
-              ng-options="programSupported.program.id as programSupported.program.name group by programSupported.program.status for programSupported in availableSupportedProgramsWithStatus()"
-              ng-model="programSelected">
+                ng-options="programSupported.program.id as programSupported.program.name group by programSupported.program.status for programSupported in availableSupportedProgramsWithStatus()"
+                ng-model="programSelected">
               <option value="" ng-bind="selectedProgramMessage"></option>
             </select>
-            <span ng-show='hasMappingError(showHomeFacilityRoleMappingError, programSelected)' class="field-error" openlmis-message="create.user.selectProgram">
+            <span ng-show='hasMappingError(showHomeFacilityRoleMappingError, programSelected)' class="field-error"
+                  openlmis-message="create.user.selectProgram">
             </span>
           </div>
         </div>
@@ -64,7 +65,8 @@
                     style="width:400px">
               <option ng-repeat="role in nonAdminRoles" value="{{role.id}}">{{role.name}}</option>
             </select>
-            <span ng-show='hasMappingError(showHomeFacilityRoleMappingError,selectedRoleIds)' class="field-error" openlmis-message="create.user.selectRoles">
+            <span ng-show='hasMappingError(showHomeFacilityRoleMappingError,selectedRoleIds)' class="field-error"
+                  openlmis-message="create.user.selectRoles">
             </span>
           </div>
         </div>

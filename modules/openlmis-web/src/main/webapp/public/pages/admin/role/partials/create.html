@@ -75,7 +75,7 @@
         </div >
 
         <div class = "assigned-rights" ng-class = "{'is-disabled': role.adminRole == 'true'}" >
-          <h4 openlmis-message="">Program and facility-based rights</h4>
+          <h4 openlmis-message="program.facility.rights"></h4>
 
           <div id = "nonAdminRights-{{nonAdminRight.right}}" class = "checkbox-list clearfix"
                ng-repeat = "nonAdminRight in nonAdminRights" tab-scroll>

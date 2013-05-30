@@ -6,25 +6,25 @@
 
 <div class="navigation" ng-controller="NavigationController" ui-nav>
   <ul class="clearfix" style="display:none">
-    <li><a href="/">Home</a></li>
+    <li><a href="/" openlmis-message="link.home">Home</a></li>
 
     <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION') || hasPermission('APPROVE_REQUISITION') ||
        hasPermission('CONVERT_TO_ORDER') || hasPermission('VIEW_REQUISITION')  ">
-      <a href="javascript: void(0)">Requisitions</a>
+      <a href="javascript: void(0)" openlmis-message="link.requisitions">Requisitions</a>
 
       <div class="submenu">
         <ul>
           <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION')">
-            <a href="/public/pages/logistics/rnr/index.html#/">Create / Authorize</a>
+            <a href="/public/pages/logistics/rnr/index.html#/" openlmis-message="link.requisitions.create.authorize">Create / Authorize</a>
           </li>
           <li ng-show="hasPermission('APPROVE_REQUISITION')">
-            <a href="/public/pages/logistics/rnr/index.html#/rnr-for-approval">Approve</a>
+            <a href="/public/pages/logistics/rnr/index.html#/rnr-for-approval" openlmis-message="link.requisition.approve">Approve</a>
           </li>
           <li ng-show="hasPermission('CONVERT_TO_ORDER')">
-            <a href="/public/pages/logistics/rnr/index.html#/requisitions-for-convert-to-order">Convert to Order</a>
+            <a href="/public/pages/logistics/rnr/index.html#/requisitions-for-convert-to-order" openlmis-message="link.requisitions.convertToOrder">Convert to Order</a>
           </li>
           <li ng-show="hasPermission('VIEW_REQUISITION')">
-            <a href="/public/pages/logistics/rnr/index.html#/view-requisitions">View</a>
+            <a href="/public/pages/logistics/rnr/index.html#/view-requisitions" openlmis-message="link.requisition.view">View</a>
           </li>
           <li class="beak"></li>
         </ul>
@@ -33,12 +33,12 @@
     </li>
 
     <li ng-show="hasPermission('VIEW_ORDER')">
-      <a href="javascript: void(0)">Orders</a>
+      <a href="javascript: void(0)" openlmis-message="link.orders">Orders</a>
 
       <div class="submenu">
         <ul>
           <li ng-show="hasPermission('VIEW_ORDER')">
-            <a href="/public/pages/logistics/order/index.html#/">View Orders</a>
+            <a href="/public/pages/logistics/order/index.html#/" openlmis-message="link.orders.view">View Orders</a>
           </li>
           <li class="beak"></li>
         </ul>
@@ -47,25 +47,25 @@
     </li>
 
     <li ng-show="hasPermission('VIEW_REPORTS')">
-      <a href="/public/pages/report/index.html">Reports</a>
+      <a href="/public/pages/report/index.html" openlmis-message="link.reports">Reports</a>
     </li>
 
     <li>
-      <a href="javascript: void(0)">Administration</a>
+      <a href="javascript: void(0)" openlmis-message="link.administration">Administration</a>
 
       <div class="submenu">
         <ul>
           <li ng-show="hasPermission('UPLOADS')">
-            <a href="/public/pages/admin/upload/index.html">Upload</a>
+            <a href="/public/pages/admin/upload/index.html" openlmis-message="link.admin.upload">Upload</a>
           </li>
 
           <li class="has-children">
-            <a href="javascript: void(0);">Configure</a>
+            <a href="javascript: void(0);" openlmis-message="link.admin.configure">Configure</a>
 
             <div class="submenu">
               <ul>
                 <li ng-show="hasPermission('CONFIGURE_RNR')">
-                  <a href="/public/pages/admin/rnr-template/index.html">R &amp; R Template</a>
+                  <a href="/public/pages/admin/rnr-template/index.html" openlmis-message="link.admin.configure.requisitionTemplate">R &amp; R Template</a>
                 </li>
                 <li class="beak"></li>
               </ul>
@@ -73,21 +73,21 @@
           </li>
 
           <li class="has-children">
-            <a href="/public/pages/admin/facility/index.html#/search">Manage</a>
+            <a href="/public/pages/admin/facility/index.html#/search" openlmis-message="link.admin.manage">Manage</a>
 
             <div class="submenu">
               <ul>
                 <li ng-show="hasPermission('MANAGE_FACILITY')">
-                  <a href="/public/pages/admin/facility/index.html#/search">Facilities</a>
+                  <a href="/public/pages/admin/facility/index.html#/search" openlmis-message="link.admin.manage.facilities">Facilities</a>
                 </li>
                 <li ng-show="hasPermission('MANAGE_ROLE')">
-                  <a href="/public/pages/admin/role/index.html">Roles</a>
+                  <a href="/public/pages/admin/role/index.html" openlmis-message="link.admin.manage.roles">Roles</a>
                 </li>
                 <li ng-show="hasPermission('MANAGE_SCHEDULE')">
-                  <a href="/public/pages/admin/schedule/index.html">Schedules</a>
+                  <a href="/public/pages/admin/schedule/index.html" openlmis-message="link.admin.manage.schedules">Schedules</a>
                 </li>
                 <li ng-show="hasPermission('MANAGE_USERS')">
-                  <a href="/public/pages/admin/user/index.html#/search">Users</a>
+                  <a href="/public/pages/admin/user/index.html#/search" openlmis-message="link.admin.manage.users">Users</a>
                 </li>
                 <li class="beak"></li>
               </ul>
