@@ -7,7 +7,7 @@
 describe('Approve Requisition controller', function () {
 
   var scope, ctrl, httpBackend, location, routeParams, controller, requisition,
-    programRnrColumnList, nonFullSupplyLineItems, lineItems, dialog;
+    programRnrColumnList, nonFullSupplyLineItems, lineItems, dialog, rnrLineItem;
   beforeEach(module('openlmis.services'));
   beforeEach(module('ui.bootstrap.dialog'));
 
@@ -28,6 +28,7 @@ describe('Approve Requisition controller', function () {
       {'name':'quantityApproved', 'label':'quantity approved', 'visible':true},
       {'name':'remarks', 'label':'remarks', 'visible':true}
     ];
+    rnrLineItem = new RnrLineItem({"fullSupply":true});
     ctrl = controller(ApproveRnrController, {$scope:scope, requisition:requisition, rnrColumns:programRnrColumnList,
       currency:'$', $location:location, $routeParams:routeParams});
   }));
@@ -45,6 +46,7 @@ describe('Approve Requisition controller', function () {
 
   it('should save work in progress for rnr', function () {
     scope.rnr = new Rnr({"id":"rnrId"});
+    scope.pageLineItems = [rnrLineItem];
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success':"R&R saved successfully!"});
     scope.saveRnr();
     httpBackend.flush();
@@ -53,6 +55,7 @@ describe('Approve Requisition controller', function () {
 
   it('should not approve and set error class if any full supply line item has empty approved quantity but should save', function () {
     scope.rnr = new Rnr({"id":"rnrId"});
+    scope.pageLineItems = [rnrLineItem];
     spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('some error');
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200);
     scope.approveRnr();
@@ -62,6 +65,7 @@ describe('Approve Requisition controller', function () {
 
   it('should not approve if any non full supply line item has empty approved quantity but should save', function () {
     scope.rnr = new Rnr({"id":"rnrId"});
+    scope.pageLineItems = [rnrLineItem];
     spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn('some error');
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200);
@@ -87,6 +91,7 @@ describe('Approve Requisition controller', function () {
     scope.rnr.id = "rnrId";
     routeParams.page = 1;
     routeParams.supplyType = 'non-full-supply';
+    scope.pageLineItems = [rnrLineItem];
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {"success":"saved successfully"});
     scope.$broadcast("$routeUpdate");
     httpBackend.flush();
@@ -99,6 +104,7 @@ describe('Approve Requisition controller', function () {
     scope.rnr.id = "rnrId";
     routeParams.page = 1;
     routeParams.supplyType = 'non-full-supply';
+    scope.pageLineItems = [rnrLineItem];
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {"success":"saved successfully"});
     scope.$broadcast("$routeUpdate");
     httpBackend.flush();
@@ -117,6 +123,7 @@ describe('Approve Requisition controller', function () {
 
   it('should approve Rnr if ok is clicked on the confirm modal', function () {
     scope.rnr = new Rnr({"id":"rnrId"}, []);
+    scope.pageLineItems = [rnrLineItem];
     scope.approvalForm.$dirty = true;
     spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn('');
@@ -197,6 +204,7 @@ describe('Approve Requisition controller', function () {
     scope.approvalForm.$dirty = true;
     routeParams.page = 2;
     scope.rnr.id = "rnrId";
+    scope.pageLineItems = [rnrLineItem];
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success':"success message"});
     scope.$broadcast('$routeUpdate');
     httpBackend.flush();
@@ -205,6 +213,7 @@ describe('Approve Requisition controller', function () {
 
   it('should set message while saving if set message flag true', function () {
     scope.rnr = new Rnr({"id":"rnrId"});
+    scope.pageLineItems = [rnrLineItem];
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success':"success message"});
     scope.saveRnr(false);
     httpBackend.flush();
@@ -213,6 +222,7 @@ describe('Approve Requisition controller', function () {
 
   it('should not set message while saving if set message flag false', function () {
     scope.rnr = new Rnr({"id":"rnrId"});
+    scope.pageLineItems = [rnrLineItem];
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success':"success message"});
     scope.saveRnr(true);
     httpBackend.flush();
@@ -225,6 +235,7 @@ describe('Approve Requisition controller', function () {
       {id:2},
       {id:3}
     ], period:{numberOfMonths:7}}, null);
+    scope.pageLineItems = [rnrLineItem];
 
     scope.pageSize = 5;
     spyOn(scope.rnr, 'getErrorPages').andReturn({nonFullSupply:[1, 2], fullSupply:[2, 4]});

@@ -54,6 +54,7 @@ function CreateNonFullSupplyController($scope, $rootScope) {
 
     $scope.fillPagedGridData();
     displayProductsAddedMessage();
+    $scope.saveRnrForm.$dirty = (validNonFullSupplyLineItems.length > 0);
     $scope.nonFullSupplyProductsModal = false;
   };
 

@@ -8,7 +8,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
   $scope.currency = currency;
-  $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
+  $scope.visibleColumns = _.where(rnrColumns, {'visible':true});
   $scope.error = "";
   $scope.message = "";
 
@@ -77,9 +77,19 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     return prefix + "_" + parent.$parent.$index;
   };
 
-
   function removeExtraDataForPostFromRnr() {
-    return $scope.rnr.reduceForApproval();
+    var rnr = _.pick(this, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
+    if (!$scope.pageLineItems[0].fullSupply) {
+      rnr.nonFullSupplyLineItems = _.map($scope.pageLineItems, function (rnrLineItem) {
+        return rnrLineItem.reduceForApproval()
+      });
+    } else {
+      rnr.fullSupplyLineItems = _.map($scope.pageLineItems, function (rnrLineItem) {
+        return rnrLineItem.reduceForApproval()
+      });
+    }
+
+    return rnr;
   }
 
   var fadeSaveMessage = function () {
@@ -92,7 +102,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
 
   $scope.saveRnr = function (preventMessage) {
     var rnr = removeExtraDataForPostFromRnr();
-    Requisitions.update({id: $scope.rnr.id, operation: "save"},
+    Requisitions.update({id:$scope.rnr.id, operation:"save"},
       rnr, function (data) {
         if (preventMessage == true) return;
         $scope.message = data.success;
@@ -120,7 +130,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   }
 
   function resetErrorPages() {
-    $scope.errorPages = {fullSupply: [], nonFullSupply: []};
+    $scope.errorPages = {fullSupply:[], nonFullSupply:[]};
     updateShownErrorPages();
   }
 
@@ -129,16 +139,16 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   };
 
   $scope.dialogCloseCallback = function (result) {
-    if(result) {
+    if (result) {
       approveValidatedRnr();
     }
   };
 
   showConfirmModal = function () {
     var options = {
-      id: "confirmDialog",
-      header: "Confirm Action",
-      body: "Are you sure? Please confirm."
+      id:"confirmDialog",
+      header:"Confirm Action",
+      body:"Are you sure? Please confirm."
     };
     OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog);
   };
@@ -163,44 +173,44 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     $scope.message = "";
   }
 
-   var approveValidatedRnr = function () {
+  var approveValidatedRnr = function () {
     if ($scope.approvalForm.$dirty) $scope.saveRnr();
     var rnr = removeExtraDataForPostFromRnr();
-    Requisitions.update({id: $scope.rnr.id, operation: "approve"},{}, function (data) {
-        $scope.$parent.message = data.success;
-        $scope.error = "";
-        $location.path("rnr-for-approval");
-      }, function (data) {
-        $scope.error = data.error;
-        $scope.message = "";
-      });
+    Requisitions.update({id:$scope.rnr.id, operation:"approve"}, {}, function (data) {
+      $scope.$parent.message = data.success;
+      $scope.error = "";
+      $location.path("rnr-for-approval");
+    }, function (data) {
+      $scope.error = data.error;
+      $scope.message = "";
+    });
   };
 
 }
 
 ApproveRnrController.resolve = {
 
-  requisition: function ($q, $timeout, RequisitionForApprovalById, $route) {
+  requisition:function ($q, $timeout, RequisitionForApprovalById, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      RequisitionForApprovalById.get({id: $route.current.params.rnr}, function (data) {
+      RequisitionForApprovalById.get({id:$route.current.params.rnr}, function (data) {
         deferred.resolve(data.rnr);
       }, {});
     }, 100);
     return deferred.promise;
   },
 
-  rnrColumns: function ($q, $timeout, ProgramRnRColumnList, $route) {
+  rnrColumns:function ($q, $timeout, ProgramRnRColumnList, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      ProgramRnRColumnList.get({programId: $route.current.params.program}, function (data) {
+      ProgramRnRColumnList.get({programId:$route.current.params.program}, function (data) {
         deferred.resolve(data.rnrColumnList);
       }, {});
     }, 100);
     return deferred.promise;
   },
 
-  currency: function ($q, $timeout, ReferenceData) {
+  currency:function ($q, $timeout, ReferenceData) {
     var deferred = $q.defer();
     $timeout(function () {
       ReferenceData.get({}, function (data) {
