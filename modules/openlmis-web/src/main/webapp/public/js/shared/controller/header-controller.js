@@ -4,11 +4,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function HeaderController($scope, UserContext, $rootScope, localStorageService, messageService) {
+function HeaderController($scope, localStorageService) {
 
  $scope.user = localStorageService.get(localStorageKeys.USERNAME);
-
-  messageService.populate();
 
   $scope.logout = function () {
     localStorageService.clearAll();

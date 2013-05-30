@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-services.factory('messageService', function (Messages, localStorageService) {
+services.factory('messageService', function (Messages, localStorageService, $rootScope) {
 
   var populate = function () {
     var messagesInStorage = localStorageService.get("messagesAvailable");
@@ -14,6 +14,7 @@ services.factory('messageService', function (Messages, localStorageService) {
         for (var attr in data.messages) {
           localStorageService.add('message.' + attr, data.messages[attr]);
         }
+        $rootScope.$broadcast('messagesPopulated');
       }, {});
     }
   };

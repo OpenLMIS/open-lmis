@@ -37,12 +37,12 @@ requirejs.config({
     fixedTableHeader: 'directives/fixed-table-header',
     uiNav: 'directives/ui-nav',
     ngGrid: '../../lib/angular-ui/ng-grid/ng-grid-2.0.5.min',
-    jQueryForm: '../../lib/jquery/jquery.form' ,
+    jQueryForm: '../../lib/jquery/jquery.form',
     select2: '../../lib/select2/select2',
     select2Ext: 'select2-ext'
   },
   shim: {
-    'angular':{deps:['jQuery']},
+    'angular': {deps: ['jQuery']},
     'messageService': {deps: loadNext},
     'authorizationService': {deps: loadNext},
     'loginController': {deps: loadNext},
@@ -71,7 +71,7 @@ requirejs.config({
     'uiNav': {deps: ['directives']},
     'jQueryForm': {deps: ['jQuery']},
     'select2': {deps: ['angularResource']},
-    'select2Ext': {deps: ['select2','angularResource']}
+    'select2Ext': {deps: ['select2', 'angularResource']}
   }
 });
 
@@ -122,7 +122,9 @@ define(["messageService", "authorizationService", "loginController", "headerCont
       $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
     });
 
-    app.run(function ($rootScope) {
+    app.run(function ($rootScope, messageService) {
+      if (!messageService.get('messagesAvailable'))
+        messageService.populate();
       $rootScope.$on('$routeChangeStart', function () {
         angular.element('#ui-datepicker-div').hide();
         //TODO delete modal window
