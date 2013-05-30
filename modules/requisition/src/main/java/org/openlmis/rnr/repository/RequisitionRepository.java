@@ -61,9 +61,6 @@ public class RequisitionRepository {
 
   public void approve(Rnr requisition) {
     requisitionMapper.update(requisition);
-    for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
-      updateLineItem(requisition.getStatus(), lineItem);
-    }
   }
 
   private void updateNonFullSupplyLineItems(Rnr rnr) {
@@ -71,7 +68,7 @@ public class RequisitionRepository {
       RnrLineItem savedLineItem = rnrLineItemMapper.getExistingNonFullSupplyItemByRnrIdAndProductCode(rnr.getId(), lineItem.getProductCode());
       if (savedLineItem != null) {
         lineItem.setId(savedLineItem.getId());
-        updateLineItem(rnr.getStatus(), lineItem);
+        updateLineItem(rnr, lineItem);
         continue;
       }
 
@@ -81,14 +78,17 @@ public class RequisitionRepository {
 
   private void updateFullSupplyLineItems(Rnr requisition) {
     for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
-      updateLineItem(requisition.getStatus(), lineItem);
+      updateLineItem(requisition, lineItem);
       lossesAndAdjustmentsMapper.deleteByLineItemId(lineItem.getId());
       insertLossesAndAdjustmentsForLineItem(lineItem);
     }
   }
 
-  private void updateLineItem(RnrStatus rnrStatus, RnrLineItem lineItem) {
-    if(rnrStatus==RnrStatus.IN_APPROVAL){
+  private void updateLineItem(Rnr requisition, RnrLineItem lineItem) {
+
+    lineItem.setModifiedBy(requisition.getModifiedBy());
+
+    if (requisition.getStatus() == RnrStatus.IN_APPROVAL) {
       rnrLineItemMapper.updateOnApproval(lineItem);
       return;
     }

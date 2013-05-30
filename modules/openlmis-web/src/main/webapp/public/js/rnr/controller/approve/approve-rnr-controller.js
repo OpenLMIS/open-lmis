@@ -175,7 +175,6 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
 
   var approveValidatedRnr = function () {
     if ($scope.approvalForm.$dirty) $scope.saveRnr();
-    var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"approve"}, {}, function (data) {
       $scope.$parent.message = data.success;
       $scope.error = "";
