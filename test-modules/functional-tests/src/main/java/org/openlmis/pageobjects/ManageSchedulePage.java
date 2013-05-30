@@ -20,7 +20,7 @@ import java.io.IOException;
 
 public class ManageSchedulePage extends Page {
 
-  @FindBy(how = How.LINK_TEXT, using = "Add new")
+  @FindBy(how = How.ID, using = "schedule-add-new")
   private static WebElement addScheduleButton;
 
   @FindBy(how = How.ID, using = "code")

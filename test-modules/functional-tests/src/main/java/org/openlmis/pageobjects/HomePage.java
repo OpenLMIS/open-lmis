@@ -141,20 +141,20 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@ng-click='initRnr()']")
   private static WebElement proceedButton;
 
-  @FindBy(how = How.XPATH, using = "//ul[@class='clearfix']/li/a[contains(text(),'Facilities')]")
+  @FindBy(how = How.ID, using = "facility-tab")
   private static WebElement facilitiesTab;
 
-  @FindBy(how = How.XPATH, using = "//ul[@class='clearfix']/li/a[contains(text(),'Roles')]")
+  @FindBy(how = How.ID, using = "role-tab")
   private static WebElement rolesTab;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Roles')]")
   private static WebElement rolesLink;
 
-  @FindBy(how = How.XPATH, using = "//ul[@class='clearfix']/li/a[contains(text(),'Schedules')]")
+  @FindBy(how = How.ID, using = "schedule-tab")
   private static WebElement schedulesTab;
 
 
-  @FindBy(how = How.XPATH, using = "//ul[@class='clearfix']/li/a[contains(text(),'Users')]")
+  @FindBy(how = How.ID, using = "user-tab")
   private static WebElement usersTab;
 
 

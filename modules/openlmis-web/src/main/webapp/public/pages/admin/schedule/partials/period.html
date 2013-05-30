@@ -13,7 +13,7 @@
   <form id="createPeriodForm" name="createPeriodForm" ng-submit="createPeriod()" novalidate>
     <div class="app-form">
       <div class="form-group">
-        <h3>New Period</h3>
+        <h3 openlmis-message="label.newPeriod"></h3>
 
         <div class="form-row clearfix">
           <div class="form-cell">
@@ -28,7 +28,7 @@
           </div>
           <div class="form-cell">
             <label >
-              <span openlmis-message="period.header.description"/>
+              <span openlmis-message="period.header.description"></span>
             </label>
             <div class="form-field">
               <input name="description" id="description" type="text" ng-model="newPeriod.description"
@@ -67,7 +67,8 @@
           <div class="form-cell"><span openlmis-message="period.total.days">:</span>
             <span class="cell-text" ng-show="calculateDays(newPeriod.startDate, newPeriod.endDate)+1">{{calculateDays(newPeriod.startDate, newPeriod.endDate)}}</span>
           </div>
-          <div class="form-cell" openlmis-message="period.number.of.months">
+          <div class="form-cell" >
+            <span openlmis-message="period.number.of.months"></span>
             <span class="cell-text" ng-show="calculateMonths()" ng-model="newPeriod.numberOfMonths">{{calculateMonths()}}</span>
           </div>
         </div>

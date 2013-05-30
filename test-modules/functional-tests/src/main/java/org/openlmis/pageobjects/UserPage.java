@@ -50,7 +50,7 @@ public class UserPage extends Page {
   private static WebElement cancelButton;
 
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Add new')]")
+  @FindBy(how = How.ID, using = "user-add-new")
   private static WebElement addNewButton;
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']/span")

@@ -4,11 +4,18 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<div class="manage-nav" >
+<div class="manage-nav">
   <ul class="clearfix">
-    <li ng-show="hasPermission('MANAGE_FACILITY')" ng-class="facilitySelected"><a href="/public/pages/admin/facility/index.html#/search"><span openlmis-message="menu.header.facilities">Facilities</span></a></li>
-    <li ng-show="hasPermission('MANAGE_ROLE')" ng-class="roleSelected"><a href="/public/pages/admin/role/index.html" ><span openlmis-message="menu.header.roles"></span></a></li>
-    <li ng-show="hasPermission('MANAGE_SCHEDULE')" ng-class="schedulesSelected"><a href="/public/pages/admin/schedule/index.html"><span openlmis-message="menu.header.schedules"></span></a></li>
-    <li ng-show="hasPermission('MANAGE_USERS')" ng-class="userSelected"><a href="/public/pages/admin/user/index.html#/search"><span openlmis-message="menu.headers.users"></span></a></li>
+    <li ng-show="hasPermission('MANAGE_FACILITY')" ng-class="facilitySelected">
+      <a href="/public/pages/admin/facility/index.html#/search">
+        <span id="facility-tab" openlmis-message="menu.header.facilities">Facilities</span>
+      </a>
+    </li>
+    <li ng-show="hasPermission('MANAGE_ROLE')" ng-class="roleSelected"><a
+      href="/public/pages/admin/role/index.html"><span id="role-tab" openlmis-message="menu.header.roles"></span></a></li>
+    <li ng-show="hasPermission('MANAGE_SCHEDULE')" ng-class="schedulesSelected"><a
+      href="/public/pages/admin/schedule/index.html"><span id="schedule-tab" openlmis-message="menu.header.schedules"></span></a></li>
+    <li ng-show="hasPermission('MANAGE_USERS')" ng-class="userSelected"><a
+      href="/public/pages/admin/user/index.html#/search"><span id="user-tab" openlmis-message="menu.headers.users"></span></a></li>
   </ul>
 </div>

@@ -27,7 +27,7 @@ public class RolesPage extends Page {
 
   Map<String, WebElement> webElementMap = new HashMap();
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Add new')]")
+  @FindBy(how = How.ID, using = "role-add-new")
   private static WebElement createNewRoleButton;
 
   @FindBy(how = How.ID, using = "name")
