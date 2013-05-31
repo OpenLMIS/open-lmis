@@ -110,9 +110,9 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             return $scope.periodType == 'semi-anual';
         };
         $scope.filterGrid = function (){
-            if (!$scope.$$phase) {
+            //if (!$scope.$$phase) {
                 $scope.$apply();
-            }
+            //}
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
@@ -509,7 +509,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
                             }
                         });
 
-                        AdjustmentSummaryReport.get(params, function(data) {
+                        DistrictConsumptionReport.get(params, function(data) {
                             $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
                         });
 
@@ -538,12 +538,11 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
         columnDefs:
             [
 
-                { field: 'facilityType', displayName: 'Facility Type', width : "*"},
-                { field: 'facilityName', displayName: 'Facility', width : "*"},
-                { field: 'supplyingFacility', displayName: 'Supplying Facility', width: "*" },
-                { field: 'productDescription', displayName: 'Product Description', width: "**" },
-                { field: 'adjustmentType', displayName: 'Adjustment Type', width : "*"},
-                { field: 'adjustment', displayName: 'Adjustment', width : "*"}
+                { field: 'facilityType', displayName: 'Product', width : "*"},
+                { field: 'facilityName', displayName: 'Level', width : "*"},
+                { field: 'supplyingFacility', displayName: 'Zone', width: "*" },
+                { field: 'productDescription', displayName: 'Consumption', width: "**" },
+                { field: 'adjustmentType', displayName: '% of Total', width : "*"}
 
             ],
         enablePaging: true,

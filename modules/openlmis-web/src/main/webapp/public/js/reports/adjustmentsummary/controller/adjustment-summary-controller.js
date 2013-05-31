@@ -110,9 +110,9 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             return $scope.periodType == 'semi-anual';
         };
         $scope.filterGrid = function (){
-            if (!$scope.$$phase) {
+           // if (!$scope.$$phase) {
                 $scope.$apply();
-            }
+           // }
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 

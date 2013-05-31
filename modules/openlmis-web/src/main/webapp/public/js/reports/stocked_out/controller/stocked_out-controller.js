@@ -21,9 +21,9 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
 
 
         $scope.filterGrid = function (){
-            if (!$scope.$$phase) {
+            //if (!$scope.$$phase) {
                 $scope.$apply();
-            }
+           // }
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
