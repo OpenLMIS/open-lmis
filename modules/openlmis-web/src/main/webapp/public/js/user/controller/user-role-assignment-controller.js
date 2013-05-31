@@ -64,10 +64,10 @@ function UserRoleAssignmentController($scope, $dialog, messageService) {
     });
 
     $.each(programsToDisplay, function (index, program) {
-      program.program.status = program.program.active ? 'Active' : 'Inactive';
+      program.program.status = program.program.active ? messageService.get('label.active') : messageService.get('label.inactive');
     });
 
-    $scope.selectedProgramMessage = (programsToDisplay.length) ? '--Select Program--' : '--No Program Left--';
+    $scope.selectedProgramMessage = (programsToDisplay.length) ? messageService.get('label.selectProgram') : messageService.get('label.noProgramLeft') ;
 
     return programsToDisplay;
   };
@@ -103,7 +103,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService) {
     if (isPresent($scope.selectedProgramIdToSupervise) && isPresent($scope.selectedSupervisoryNodeIdToSupervise) && isPresent($scope.selectedRoleIdsToSupervise)) {
       var newRoleAssignment = {programId:$scope.selectedProgramIdToSupervise, supervisoryNode:{id:$scope.selectedSupervisoryNodeIdToSupervise}, roleIds:$scope.selectedRoleIdsToSupervise};
       if (isDuplicateSupervisoryRole(newRoleAssignment)) {
-        $scope.duplicateSupervisorRoleError = "Program and node combination is already selected";
+        $scope.duplicateSupervisorRoleError = messageService.get('error.duplicate.programNode.combination');
         return;
       }
       addSupervisoryRole(newRoleAssignment);

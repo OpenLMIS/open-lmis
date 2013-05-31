@@ -12,9 +12,16 @@ describe("User", function () {
 
   describe("User Role Assignment Controller", function () {
 
-    var scope, $httpBackend, ctrl;
+    var scope, $httpBackend, ctrl,messageService;
 
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller) {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller,_messageService_) {
+
+      messageService = _messageService_;
+
+      spyOn(messageService, 'get').andCallFake(function (value) {
+        if (value == 'label.active') return "Active"
+        if (value == 'label.inactive') return "Inactive"
+      })
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
       ctrl = $controller(UserRoleAssignmentController, {$scope:scope});

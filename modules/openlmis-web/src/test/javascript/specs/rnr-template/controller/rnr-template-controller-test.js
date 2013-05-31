@@ -8,16 +8,17 @@ describe('Rnr Template controllers', function () {
 
   describe('SaveRnrTemplateController', function () {
 
-    var scope, ctrl, $httpBackend, location, rnrColumnList, sources, rnrTemplateForm, program, routeParams;
+    var scope, ctrl, $httpBackend, location, rnrColumnList, sources, rnrTemplateForm, program, routeParams, messageService;
 
     beforeEach(module('openlmis.services'));
     beforeEach(module('openlmis.localStorage'));
 
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, $routeParams) {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, $routeParams,_messageService_) {
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
       location = $location;
       routeParams = $routeParams;
+      messageService = _messageService_;
 
       rnrColumnList = [
         {"id":1, "name":"product_code", "sourceConfigurable":true, "source":{'code':"U"}, "formulaValidationRequired":true, "visible":true},
@@ -48,12 +49,13 @@ describe('Rnr Template controllers', function () {
 
     it('should save R&R template and redirect to select program page', function() {
       spyOn(location, 'path').andCallThrough();
+      spyOn(messageService, 'get');
       routeParams.programId = 1;
       $httpBackend.expect('POST', '/program/1/rnr-template.json').respond(200);
       scope.save();
       $httpBackend.flush();
       expect(location.path).toHaveBeenCalledWith('select-program');
-      expect('Template saved successfully!').toEqual(scope.$parent.message);
+      expect(messageService.get).toHaveBeenCalledWith('template.save.success');
     })
 
     it('should get list of rnr columns for configuring', function () {

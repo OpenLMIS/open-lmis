@@ -23,7 +23,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     updatePosition();
     setRnRTemplateValidateFlag();
     RnRColumnList.post({programId: $routeParams.programId}, $scope.rnrColumns, function () {
-      $scope.$parent.message = "Template saved successfully!";
+      $scope.$parent.message = messageService.get("template.save.success");
       $scope.error = "";
       $scope.errorMap = undefined;
       $location.path('select-program');

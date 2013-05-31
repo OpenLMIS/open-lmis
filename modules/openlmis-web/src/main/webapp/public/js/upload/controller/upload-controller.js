@@ -33,7 +33,7 @@ function UploadController($scope, SupportedUploads, messageService) {
     }
   }
 
-  function processResponse(responseText, statusText, xhr, $form) {
+  function processResponse(responseText) {
     var response = JSON.parse(responseText);
     $scope.$apply(function () {
       if (response.success) {

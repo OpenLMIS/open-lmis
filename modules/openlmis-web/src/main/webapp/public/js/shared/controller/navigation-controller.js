@@ -24,12 +24,4 @@ function NavigationController( $scope, UserContext, localStorageService, $rootSc
       return (($rootScope.rights != undefined) &&  ($rootScope.rights.indexOf(permission) > -1));
     };
 
-  function getRights(rightList) {
-    var rights = [];
-    $.each(rightList, function (index, right) {
-      rights.push(right.right);
-    });
-    return rights;
-  }
-
 }

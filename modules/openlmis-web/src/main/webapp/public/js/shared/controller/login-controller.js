@@ -4,23 +4,22 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function LoginController($scope, $http, localStorageService) {
+function LoginController($scope, $http, localStorageService, messageService) {
   $scope.disableSignInButton = false;
 
   var validateLoginForm = function () {
     if($scope.username == undefined || $scope.username.trim()==''){
-      $scope.loginError = "Please enter your username";
+      $scope.loginError = messageService.get("error.login.username");
       return false;
     }
     if($scope.password == undefined) {
-      $scope.loginError = "Please enter your password";
+      $scope.loginError = messageService.get("error.login.password");
       return false;
     }
     return true;
   };
 
   $scope.doLogin = function () {
-    localStorageService.clearAll();
     if(!validateLoginForm()){
       return;
     }
