@@ -12,24 +12,33 @@ function UploadController($scope, SupportedUploads, messageService) {
 
   $scope.$on('$viewContentLoaded', function () {
     var options = {
-      beforeSubmit: this.validate,
+      beforeSubmit: $scope.validate,
       success:processResponse
     };
     $('#uploadForm').ajaxForm(options);
   });
 
-  UploadController.prototype.validate = function(formData, jqForm, options) {
-    $scope.$apply(function () {
-      setErrorMessageIfEmpty(formData[0].value, 'model', 'upload.select.type');
-      setErrorMessageIfEmpty(formData[1].value, 'csvFile', 'upload.select.file');
+  $scope.validate = function(formData, jqForm, options) {
+    $scope.$apply(function() {
+      $scope.inProgress = true;
+      $scope.successMsg = $scope.errorMsg = "";
+      if (setErrorMessageIfEmpty(formData[0].value, 'model', 'upload.select.type')) {
+        $scope.inProgress = false;
+      }
+      if (setErrorMessageIfEmpty(formData[1].value, 'csvFile', 'upload.select.file')) {
+        $scope.inProgress = false;
+      }
     });
+    return $scope.inProgress;
   };
 
   function setErrorMessageIfEmpty(value, fieldName, messageKey) {
     if (utils.isEmpty(value)) {
       $scope.uploadForm[fieldName].errorMessage = messageService.get(messageKey);
+      return true;
     } else {
       $scope.uploadForm[fieldName].errorMessage = "";
+      return false;
     }
   }
 
@@ -46,6 +55,7 @@ function UploadController($scope, SupportedUploads, messageService) {
       }
 
       $scope.model = response.model;
+      $scope.inProgress = false;
     });
   }
   var successHandler = function (data) {

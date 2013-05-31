@@ -33,17 +33,52 @@ describe('Upload Controller Test', function () {
     expect(scope.supportedUploads).toEqual({'product':{'displayName':'Product'}});
   });
 
-  it('should show error message if form is invalid', function () {
-    var formData = ['value:', 'value:'];
+  describe('Upload form', function () {
 
-    scope.uploadForm = [];
-    scope.uploadForm['model'] = {'errorMessage':''};
-    scope.uploadForm['csvFile'] =  {'errorMessage':''};
+    beforeEach(function () {
+      scope.uploadForm = [];
+      scope.uploadForm['model'] = {'errorMessage':''};
+      scope.uploadForm['csvFile'] =  {'errorMessage':''};
+    });
 
-    ctrl.validate(formData);
+    it('should show error message if first field is blank', function () {
+      var formData = [{value: ''}, {value: 'file'}];
+      scope.validate(formData);
+      expect(scope.uploadForm['model'].errorMessage).toEqual('select upload type');
+      expect(scope.uploadForm['csvFile'].errorMessage).toEqual('');
+      expect(scope.inProgress).toEqual(false);
+      expect(scope.errorMsg).toEqual('');
+      expect(scope.successMsg).toEqual('');
+    });
 
-    expect(scope.uploadForm['model'].errorMessage).toEqual('select upload type');
-    expect(scope.uploadForm['csvFile'].errorMessage).toEqual('select file');
+    it('should show error message if second field is blank', function () {
+      var formData = [{value: 'facility'}, {value: ''}];
+      scope.validate(formData);
+      expect(scope.uploadForm['model'].errorMessage).toEqual('');
+      expect(scope.uploadForm['csvFile'].errorMessage).toEqual('select file');
+      expect(scope.inProgress).toEqual(false);
+      expect(scope.errorMsg).toEqual('');
+      expect(scope.successMsg).toEqual('');
+    });
+
+    it('should show error message if all fields are blank', function () {
+      var formData = [{value: ''}, {value: ''}];
+      scope.validate(formData);
+      expect(scope.uploadForm['model'].errorMessage).toEqual('select upload type');
+      expect(scope.uploadForm['csvFile'].errorMessage).toEqual('select file');
+      expect(scope.inProgress).toEqual(false);
+      expect(scope.errorMsg).toEqual('');
+      expect(scope.successMsg).toEqual('');
+    });
+
+    it('should submit form if all fields are correctly filled', function () {
+      var formData = [{value: 'facility'}, {value: 'file'}];
+      scope.validate(formData);
+      expect(scope.inProgress).toEqual(true);
+      expect(scope.errorMsg).toEqual('');
+      expect(scope.successMsg).toEqual('');
+    });
   });
+
 
 });
