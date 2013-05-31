@@ -10,9 +10,10 @@ describe("Facility Controller", function () {
   beforeEach(module('openlmis.localStorage'));
 
   describe("Create Facility", function () {
-    var scope, $httpBackend, ctrl, routeParams, facility;
+    var scope, $httpBackend, ctrl, routeParams, facility, messageService ;
 
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams) {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams, _messageService_) {
+      messageService = _messageService_;
       scope = $rootScope.$new();
       routeParams = $routeParams;
       $httpBackend = _$httpBackend_;
@@ -27,7 +28,8 @@ describe("Facility Controller", function () {
       ]};
       $rootScope.fixToolBar = function () {
       };
-      ctrl = $controller(FacilityController, {$scope: scope, $routeParams: routeParams, facilityReferenceData: facilityReferenceData, facility: undefined});
+      ctrl = $controller(FacilityController, {$scope: scope, $routeParams: routeParams, facilityReferenceData: facilityReferenceData, facility: undefined,
+        messageService: messageService});
       scope.facilityForm = {$error: { pattern: "" }};
     }));
 
@@ -64,29 +66,32 @@ describe("Facility Controller", function () {
     });
 
     it('should give field validation error message if form has pattern errors', function () {
+      spyOn(messageService, 'get');
       scope.facilityForm.$error.pattern = "{}";
       scope.saveFacility();
-      expect("There are some errors in the form. Please resolve them.").toEqual(scope.error);
-      expect("").toEqual(scope.message);
+      expect(messageService.get).toHaveBeenCalledWith("form.error");
       expect("true").toEqual(scope.showError);
     });
 
     it('should give field validation error message if form has required errors', function () {
+      spyOn(messageService, 'get');
       scope.facilityForm.$error.required = "{}";
       scope.saveFacility();
-      expect("There are some errors in the form. Please resolve them.").toEqual(scope.error);
+      expect(messageService.get).toHaveBeenCalledWith("form.error");
       expect("").toEqual(scope.message);
       expect("true").toEqual(scope.showError);
     });
 
     it('should not add program supported to facility if active program does not contain start date', function () {
+      spyOn(messageService, 'get');
       scope.facilityForm.$error.required = "{}";
       scope.facility.supportedPrograms = [
         {"code": "ARV", "name": "ARV", "description": "ARV", "active": true, "startDate": "1/12/12"},
         {"code": "HIV", "name": "HIV", "description": "HIV", "active": true}
       ];
       scope.saveFacility();
-      expect("There are some errors in the form. Please resolve them.").toEqual(scope.error);
+      expect(messageService.get).toHaveBeenCalledWith("form.error");
+
       expect("").toEqual(scope.message);
       expect("true").toEqual(scope.showError);
     });

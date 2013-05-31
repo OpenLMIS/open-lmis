@@ -19,8 +19,8 @@ services.factory('messageService', function (Messages, localStorageService, $roo
     }
   };
 
-  var get = function (key) {
-    var keyWithArgs = key.split("|");
+  var get = function () {
+    var keyWithArgs = Array.prototype.slice.call(arguments);
     var displayMessage =  localStorageService.get('message.' + keyWithArgs[0]);
     if(keyWithArgs.length > 1) {
       $.each(keyWithArgs, function (index, arg) {

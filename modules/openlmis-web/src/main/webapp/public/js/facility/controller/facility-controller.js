@@ -46,7 +46,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   $scope.saveFacility = function () {
     if ($scope.facilityForm.$error.pattern || $scope.facilityForm.$error.required) {
       $scope.showError = "true";
-      $scope.error = "There are some errors in the form. Please resolve them.";
+      $scope.error = messageService.get('form.error');
       $scope.message = "";
       return;
     }
@@ -93,8 +93,8 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     window.program = program;
     var dialogOpts = {
       id: "dateChangeConfirmModal",
-      header: "Set Program Start Date",
-      body: "Facility Staff will submit back-due R&Rs for this program, starting from this date."
+      header: messageService.get('message.setProgramStartDate'),
+      body: messageService.get('message.dateChangeConfirmMessage')
     };
     OpenLmisDialog.newDialog(dialogOpts, $scope.dateChangeCallback, $dialog);
   };
@@ -147,8 +147,8 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   $scope.showConfirmFacilityDeleteWindow = function () {
     var dialogOpts = {
       id: "deleteFacilityDialog",
-      header: "Delete facility",
-      body: "'{0}' / '{1}' will be deleted from the system.".format($scope.originalFacilityName, $scope.originalFacilityCode)
+      header: messageService.get('delete.facility.header'),
+      body: messageService.get('delete.facility.confirm', $scope.originalFacilityName, $scope.originalFacilityCode)
     };
     OpenLmisDialog.newDialog(dialogOpts, $scope.deleteFacilityCallBack, $dialog);
   };
