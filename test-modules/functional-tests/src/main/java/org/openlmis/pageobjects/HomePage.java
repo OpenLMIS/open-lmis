@@ -32,7 +32,7 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Reports')]")
   private static WebElement reportMenuItem;
 
-  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Reports')]")
+  @FindBy(how = How.XPATH, using = "//h2/span[contains(text(),'Reports')]")
   private static WebElement reportsTitle;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Orders')]")

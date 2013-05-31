@@ -27,7 +27,7 @@ public class ReportPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[contains(text(),'No Reports')]")
   private static WebElement noReportsMessage;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Add new')]")
+  @FindBy(how = XPATH, using = "//a[contains(text(),'Add New')]")
   private static WebElement addNewButton;
 
   @FindBy(how = XPATH, using = "//h2[contains(text(),'Add new report')]")
