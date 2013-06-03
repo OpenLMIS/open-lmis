@@ -11,10 +11,10 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.domain.*;
-import org.openlmis.rnr.factory.RequisitionSearchStrategyFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
-import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
-import org.openlmis.rnr.strategy.RequisitionSearchStrategy;
+import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
+import org.openlmis.rnr.search.factory.RequisitionSearchStrategyFactory;
+import org.openlmis.rnr.search.strategy.RequisitionSearchStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,11 +78,11 @@ public class RequisitionService {
   @Transactional
   public Rnr initiate(Long facilityId, Long programId, Long periodId, Long modifiedBy) {
     if (!requisitionPermissionService.hasPermission(modifiedBy, new Facility(facilityId), new Program(programId),
-      CREATE_REQUISITION))
+        CREATE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
     ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(programId,
-      rnrTemplateService.fetchColumnsForRequisition(programId));
+        rnrTemplateService.fetchColumnsForRequisition(programId));
 
     if (rnrTemplate.getRnrColumns().size() == 0)
       throw new DataException(RNR_TEMPLATE_NOT_INITIATED_ERROR);
@@ -91,7 +91,7 @@ public class RequisitionService {
 
     List<FacilityApprovedProduct> facilityApprovedProducts;
     facilityApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
-      facilityId, programId);
+        facilityId, programId);
 
     Rnr requisition = new Rnr(facilityId, programId, periodId, facilityApprovedProducts, modifiedBy);
 
@@ -258,12 +258,12 @@ public class RequisitionService {
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Long facilityId, Long programId) {
     Date programStartDate = programService.getProgramStartDate(facilityId, programId);
     Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(
-      facilityId, programId);
+        facilityId, programId);
 
     Long periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ?
-      null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
+        null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
     return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate,
-      periodIdOfLastRequisitionToEnterPostSubmitFlow);
+        periodIdOfLastRequisitionToEnterPostSubmitFlow);
   }
 
   public Rnr getRnrForApprovalById(Long id, Long userId) {
@@ -281,11 +281,11 @@ public class RequisitionService {
 
   private Rnr getPreviousRequisition(Rnr requisition) {
     ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(
-      requisition.getPeriod());
+        requisition.getPeriod());
     Rnr previousRequisition = null;
     if (immediatePreviousPeriod != null)
       previousRequisition = requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(),
-        requisition.getProgram(), immediatePreviousPeriod);
+          requisition.getProgram(), immediatePreviousPeriod);
     return previousRequisition;
   }
 
@@ -326,12 +326,12 @@ public class RequisitionService {
     if (lastPeriod == null) return null;
 
     return requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(), requisition.getProgram(),
-      lastPeriod);
+        lastPeriod);
   }
 
   private OpenLmisMessage approveAndAssignToNextSupervisoryNode(Rnr requisition, SupervisoryNode parent) {
     final User nextApprover = supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parent,
-      requisition.getProgram());
+        requisition.getProgram());
     requisition.setStatus(IN_APPROVAL);
     requisition.setSupervisoryNodeId(parent.getId());
     if (nextApprover == null) {

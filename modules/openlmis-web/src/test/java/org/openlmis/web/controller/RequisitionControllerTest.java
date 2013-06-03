@@ -27,7 +27,7 @@ import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.dto.RnrDTO;
-import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
+import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.configurationReader.StaticReferenceDataReader;
@@ -55,6 +55,7 @@ import static org.mockito.Mockito.when;
 import static org.openlmis.web.controller.RequisitionController.*;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.*;
+
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({RnrDTO.class, RequisitionController.class})
@@ -368,7 +369,6 @@ public class RequisitionControllerTest {
   }
 
 
-
   @Test
   public void shouldInsertComment() throws Exception {
     Comment comment = new Comment();
@@ -417,7 +417,7 @@ public class RequisitionControllerTest {
       public boolean matches(Object argument) {
         RequisitionSearchCriteria searchCriteria = (RequisitionSearchCriteria) argument;
         return searchCriteria.getFacilityId().equals(facilityId) && searchCriteria.getProgramId().equals(programId) && searchCriteria.getPeriodId().equals(
-          periodId);
+            periodId);
       }
     };
   }

@@ -4,17 +4,17 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.rnr.factory;
+package org.openlmis.rnr.search.factory;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.rnr.repository.RequisitionRepository;
-import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
-import org.openlmis.rnr.strategy.FacilityDateRangeSearch;
-import org.openlmis.rnr.strategy.FacilityProgramDateRangeSearch;
-import org.openlmis.rnr.strategy.FacilityProgramPeriodSearch;
-import org.openlmis.rnr.strategy.RequisitionSearchStrategy;
+import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
+import org.openlmis.rnr.search.strategy.FacilityDateRangeSearch;
+import org.openlmis.rnr.search.strategy.FacilityProgramDateRangeSearch;
+import org.openlmis.rnr.search.strategy.FacilityProgramPeriodSearch;
+import org.openlmis.rnr.search.strategy.RequisitionSearchStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
