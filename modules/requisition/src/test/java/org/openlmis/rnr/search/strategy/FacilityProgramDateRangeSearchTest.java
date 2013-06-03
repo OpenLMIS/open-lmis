@@ -51,7 +51,7 @@ public class FacilityProgramDateRangeSearchTest {
     Program program = new Program(1L);
     List<Rnr> requisitions = new ArrayList<>();
     when(processingScheduleService.getAllPeriodsForDateRange(facility, program, dateRangeStart, dateRangeEnd)).thenReturn(periods);
-    when(requisitionRepository.get(facility, program, periods)).thenReturn(requisitions);
+    when(requisitionRepository.getPostSubmitRequisitions(facility, program, periods)).thenReturn(requisitions);
 
 
     //Act
@@ -60,7 +60,7 @@ public class FacilityProgramDateRangeSearchTest {
     //Assert
     assertThat(actualRequisitions, is(requisitions));
     verify(processingScheduleService).getAllPeriodsForDateRange(facility, program, dateRangeStart, dateRangeEnd);
-    verify(requisitionRepository).get(facility, program, periods);
+    verify(requisitionRepository).getPostSubmitRequisitions(facility, program, periods);
 
   }
 }

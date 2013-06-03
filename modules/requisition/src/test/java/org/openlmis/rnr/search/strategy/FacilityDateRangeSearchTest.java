@@ -69,8 +69,8 @@ public class FacilityDateRangeSearchTest {
     when(programService.getProgramsForUserByFacilityAndRights(1L, 1L, VIEW_REQUISITION)).thenReturn(programs);
     when(processingScheduleService.getAllPeriodsForDateRange(facility, program1, dateRangeStart, dateRangeEnd)).thenReturn(periodsForProgram1);
     when(processingScheduleService.getAllPeriodsForDateRange(facility, program2, dateRangeStart, dateRangeEnd)).thenReturn(periodsForProgram2);
-    when(requisitionRepository.get(facility, program1, periodsForProgram1)).thenReturn(requisitions);
-    when(requisitionRepository.get(facility, program2, periodsForProgram2)).thenReturn(requisitionsForProgram2);
+    when(requisitionRepository.getPostSubmitRequisitions(facility, program1, periodsForProgram1)).thenReturn(requisitions);
+    when(requisitionRepository.getPostSubmitRequisitions(facility, program2, periodsForProgram2)).thenReturn(requisitionsForProgram2);
 
     //Act
     List<Rnr> actualRequisitions = strategy.search();
@@ -81,7 +81,7 @@ public class FacilityDateRangeSearchTest {
     verify(programService).getProgramsForUserByFacilityAndRights(1L, 1L, VIEW_REQUISITION);
     verify(processingScheduleService).getAllPeriodsForDateRange(facility, program1, dateRangeStart, dateRangeEnd);
     verify(processingScheduleService).getAllPeriodsForDateRange(facility, program2, dateRangeStart, dateRangeEnd);
-    verify(requisitionRepository).get(facility, program1, periodsForProgram1);
-    verify(requisitionRepository).get(facility, program2, periodsForProgram2);
+    verify(requisitionRepository).getPostSubmitRequisitions(facility, program1, periodsForProgram1);
+    verify(requisitionRepository).getPostSubmitRequisitions(facility, program2, periodsForProgram2);
   }
 }

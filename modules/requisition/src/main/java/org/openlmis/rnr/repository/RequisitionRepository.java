@@ -128,8 +128,8 @@ public class RequisitionRepository {
     return requisitionMapper.getApprovedRequisitions();
   }
 
-  public List<Rnr> get(Facility facility, Program program, List<ProcessingPeriod> periods) {
-    return requisitionMapper.get(facility, program, commaSeparator.commaSeparateIds(periods));
+  public List<Rnr> getPostSubmitRequisitions(Facility facility, Program program, List<ProcessingPeriod> periods) {
+    return requisitionMapper.getPostSubmitRequisitions(facility, program, commaSeparator.commaSeparateIds(periods));
   }
 
   public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {

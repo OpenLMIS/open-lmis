@@ -13,7 +13,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
@@ -31,7 +30,6 @@ import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static org.hamcrest.CoreMatchers.*;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -39,7 +37,6 @@ import static org.openlmis.core.builder.FacilityBuilder.code;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
-import static org.openlmis.core.builder.ProcessingPeriodBuilder.startDate;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
@@ -243,8 +240,8 @@ public class RequisitionMapperIT {
     DateTime date2 = date1.plusMonths(1);
 
     ProcessingPeriod processingPeriod4 = make(a(defaultProcessingPeriod,
-      with(scheduleId, processingSchedule.getId()),
-      with(ProcessingPeriodBuilder.name, "Period4")));
+        with(scheduleId, processingSchedule.getId()),
+        with(ProcessingPeriodBuilder.name, "Period4")));
     processingPeriod4.setStartDate(new Date());
 
     processingPeriodMapper.insert(processingPeriod4);
@@ -294,7 +291,7 @@ public class RequisitionMapperIT {
     insertRequisition(processingPeriod1, AUTHORIZED);
     insertRequisition(processingPeriod2, APPROVED);
     insertRequisition(processingPeriod3, SUBMITTED);
-    List<Rnr> result = mapper.get(facility, program, commaSeparatedPeriodIds);
+    List<Rnr> result = mapper.getPostSubmitRequisitions(facility, program, commaSeparatedPeriodIds);
     assertThat(result.size(), is(2));
   }
 
@@ -340,8 +337,8 @@ public class RequisitionMapperIT {
 
   private ProcessingPeriod insertPeriod(String name) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-      with(scheduleId, processingSchedule.getId()),
-      with(ProcessingPeriodBuilder.name, name)));
+        with(scheduleId, processingSchedule.getId()),
+        with(ProcessingPeriodBuilder.name, name)));
 
     processingPeriodMapper.insert(processingPeriod);
 

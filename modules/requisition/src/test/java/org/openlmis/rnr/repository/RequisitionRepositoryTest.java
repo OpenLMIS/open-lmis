@@ -31,7 +31,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -40,6 +41,7 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
+
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 @PrepareForTest(RequisitionStatusChange.class)
@@ -250,12 +252,12 @@ public class RequisitionRepositoryTest {
     List<ProcessingPeriod> periods = asList(new ProcessingPeriod(1L), new ProcessingPeriod(2L));
     when(separator.commaSeparateIds(periods)).thenReturn("{1, 2}");
     List<Rnr> expected = new ArrayList<>();
-    when(requisitionMapper.get(facility, program, "{1, 2}")).thenReturn(expected);
+    when(requisitionMapper.getPostSubmitRequisitions(facility, program, "{1, 2}")).thenReturn(expected);
 
-    List<Rnr> actual = requisitionRepository.get(facility, program, periods);
+    List<Rnr> actual = requisitionRepository.getPostSubmitRequisitions(facility, program, periods);
 
     assertThat(actual, is(expected));
-    verify(requisitionMapper).get(facility, program, "{1, 2}");
+    verify(requisitionMapper).getPostSubmitRequisitions(facility, program, "{1, 2}");
   }
 
 

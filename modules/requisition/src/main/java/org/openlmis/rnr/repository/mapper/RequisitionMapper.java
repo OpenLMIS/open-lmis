@@ -110,6 +110,6 @@ public interface RequisitionMapper {
       @Result(property = "program.id", column = "programId"),
       @Result(property = "period.id", column = "periodId")
   })
-  List<Rnr> get(@Param("facility") Facility facility, @Param("program") Program program, @Param("periods") String periodIds);
+  List<Rnr> getPostSubmitRequisitions(@Param("facility") Facility facility, @Param("program") Program program, @Param("periods") String periodIds);
 
 }
