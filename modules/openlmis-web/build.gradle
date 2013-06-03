@@ -37,7 +37,7 @@ javascript.source {
 javascript.source.dev.js.files.eachWithIndex { File jsFile, i ->
     tasks.add(name: "minifyJs${i}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
         source = jsFile
-        dest = file('src/main/webapp/public/minjs/'+jsFile.name)
+        dest = file(jsFile.absolutePath.replace('/js/', '/minJs/'))
         closure {
             compilationLevel = 'WHITESPACE_ONLY'
             warningLevel = 'QUIET'
@@ -45,12 +45,27 @@ javascript.source.dev.js.files.eachWithIndex { File jsFile, i ->
     }
 }
 
-task allMinifyJs(dependsOn: tasks.matching { Task task ->
-    String environment = System.properties.get('environmentName');
-    if (environment != 'local') {
-        task.name.startsWith("minifyJs")
-    }
+task cleanMinJs(type: Delete) {
+    delete 'src/main/webapp/public/minJs'
+}
+
+task minify(dependsOn: tasks.matching { Task task ->
+    task.name.startsWith("minifyJs")
 })
+
+war {
+    from("src/main/webapp/public/minJs/") {
+        into "public/js/"
+    }
+    exclude "public/minJs/"
+    exclude "public/less/"
+}
+
+war.dependsOn minify
+
+war.doLast {
+    tasks.cleanMinJs.execute()
+}
 
 dependencies {
     compile 'org.springframework:spring-webmvc:3.1.1.RELEASE',
@@ -99,16 +114,6 @@ jettyRunWarDaemon.doFirst {
     jettyRunWar.httpPort = 9091
     jettyRunWar.contextPath = ''
     jettyRunWar.execute()
-}
-
-
-task jettyRunWarLocal(dependsOn: war)
-
-jettyRunWarLocal.doFirst {
-    jettyRunWar.daemon = false
-    jettyRunWar.httpPort = 9091
-    jettyRunWar.execute()
-    jettyRunWar.contextPath = ''
 }
 
 jettyRun {
