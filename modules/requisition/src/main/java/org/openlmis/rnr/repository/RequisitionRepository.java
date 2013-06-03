@@ -105,6 +105,10 @@ public class RequisitionRepository {
     return requisitionMapper.getRequisitionWithLineItems(facility, program, period);
   }
 
+  public Rnr getRequisitionWithoutLineItems(Long facilityId, Long programId, Long periodId) {
+    return requisitionMapper.getRequisitionWithoutLineItems(facilityId, programId, periodId);
+  }
+
 
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
     return lossesAndAdjustmentsMapper.getLossesAndAdjustmentsTypes();

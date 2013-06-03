@@ -289,7 +289,9 @@ public class RequisitionControllerTest {
     whenNew(Facility.class).withArguments(1L).thenReturn(facility);
     Program program = new Program(2L);
     whenNew(Program.class).withArguments(2L).thenReturn(program);
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facility.getId(), program.getId(), processingPeriod.getId());
+    boolean withoutLineItems = true;
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facility.getId(), program.getId(),
+        processingPeriod.getId(), withoutLineItems);
     when(requisitionService.get(criteria)).thenReturn(asList(rnr));
 
     when(requisitionService.getAllPeriodsForInitiatingRequisition(1L, 2L)).thenReturn(periodList);

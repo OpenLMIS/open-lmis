@@ -46,7 +46,7 @@ public interface RequisitionMapper {
       @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
       @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId")),
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId"))
   })
   Rnr getById(Long rnrId);
 
@@ -91,7 +91,6 @@ public interface RequisitionMapper {
 
   @Select("SELECT id, programId, facilityId, periodId, supplyingFacilityId, submittedDate, modifiedDate FROM requisitions WHERE STATUS='APPROVED' ORDER BY submittedDate")
   @Results(value = {
-      @Result(property = "id", column = "id"),
       @Result(property = "facility.id", column = "facilityId"),
       @Result(property = "program.id", column = "programId"),
       @Result(property = "period.id", column = "periodId"),
@@ -105,11 +104,23 @@ public interface RequisitionMapper {
       "periodId = ANY (#{periods}::INTEGER[]) AND ",
       "status NOT IN ('INITIATED', 'SUBMITTED')"})
   @Results(value = {
-      @Result(property = "id", column = "id"),
       @Result(property = "facility.id", column = "facilityId"),
       @Result(property = "program.id", column = "programId"),
       @Result(property = "period.id", column = "periodId")
   })
   List<Rnr> getPostSubmitRequisitions(@Param("facility") Facility facility, @Param("program") Program program, @Param("periods") String periodIds);
 
+  @Select({"SELECT * FROM requisitions WHERE",
+      "facilityId = #{facilityId} AND",
+      "programId = #{programId} AND ",
+      "periodId = #{periodId}"
+  })
+  @Results(value = {
+      @Result(property = "facility.id", column = "facilityId"),
+      @Result(property = "program.id", column = "programId"),
+      @Result(property = "period.id", column = "periodId")
+  })
+  Rnr getRequisitionWithoutLineItems(@Param("facilityId") Long facilityId,
+                                     @Param("programId") Long programId,
+                                     @Param("periodId") Long periodId);
 }

@@ -300,4 +300,17 @@ public class RequisitionRepositoryTest {
     verify(requisitionStatusChangeMapper).insert(requisitionStatusChange);
   }
 
+  @Test
+  public void itShouldUseMapperToReturnRequisitionWithoutLineItems() throws Exception {
+
+    long periodId = 8L;
+    long programId = 5L;
+    long facilityId = 3L;
+
+    Rnr requisition = new Rnr();
+
+    when(requisitionMapper.getRequisitionWithoutLineItems(facilityId,programId, periodId)).thenReturn(requisition);
+    Rnr receivedRnr = requisitionRepository.getRequisitionWithoutLineItems(facilityId, programId, periodId);
+    assertThat(receivedRnr, is(requisition));
+  }
 }

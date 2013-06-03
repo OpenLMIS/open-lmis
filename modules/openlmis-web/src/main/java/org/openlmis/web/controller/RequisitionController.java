@@ -191,7 +191,9 @@ public class RequisitionController extends BaseController {
 
   private Rnr getRequisitionForCurrentPeriod(Long facilityId, Long programId, List<ProcessingPeriod> periodList) {
     if (periodList == null || periodList.isEmpty()) return null;
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodList.get(0).getId());
+    boolean withoutLineItems = true;
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId,
+        periodList.get(0).getId(), withoutLineItems);
     List<Rnr> rnrList = requisitionService.get(criteria);
     return (rnrList == null || rnrList.isEmpty()) ? null : rnrList.get(0);
   }

@@ -18,6 +18,7 @@ import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.search.strategy.FacilityDateRangeSearch;
 import org.openlmis.rnr.search.strategy.FacilityProgramDateRangeSearch;
+import org.openlmis.rnr.search.strategy.RequisitionOnlySearch;
 import org.openlmis.rnr.search.strategy.RequisitionSearchStrategy;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -67,5 +68,17 @@ public class RequisitionSearchStrategyFactoryTest {
 
     assertTrue(facilityDateRangeStrategy instanceof FacilityDateRangeSearch);
     verifyNew(FacilityDateRangeSearch.class).withArguments(criteria, processingScheduleService, requisitionRepository, programService);
+  }
+
+  @Test
+  public void shouldUseRequisitionOnlyStrategyIfLineItemsAreNotRequired() throws Exception {
+    Long facilityId = 1L, programId = null, periodId = 4L;
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodId, true);
+    whenNew(RequisitionOnlySearch.class).withArguments(criteria, requisitionRepository).thenReturn(mock(RequisitionOnlySearch.class));
+
+    RequisitionSearchStrategy facilityDateRangeStrategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
+
+    assertTrue(facilityDateRangeStrategy instanceof RequisitionOnlySearch);
+    verifyNew(RequisitionOnlySearch.class).withArguments(criteria, requisitionRepository);
   }
 }

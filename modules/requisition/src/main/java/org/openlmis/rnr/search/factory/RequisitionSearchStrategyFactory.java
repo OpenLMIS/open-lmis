@@ -11,10 +11,7 @@ import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
-import org.openlmis.rnr.search.strategy.FacilityDateRangeSearch;
-import org.openlmis.rnr.search.strategy.FacilityProgramDateRangeSearch;
-import org.openlmis.rnr.search.strategy.FacilityProgramPeriodSearch;
-import org.openlmis.rnr.search.strategy.RequisitionSearchStrategy;
+import org.openlmis.rnr.search.strategy.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +28,9 @@ public class RequisitionSearchStrategyFactory {
 
 
   public RequisitionSearchStrategy getSearchStrategy(RequisitionSearchCriteria criteria) {
-    if (criteria.getPeriodId() != null) {
+    if (criteria.isWithoutLineItems()) {
+      return new RequisitionOnlySearch(criteria, requisitionRepository);
+    } else if (criteria.getPeriodId() != null) {
       return new FacilityProgramPeriodSearch(criteria, requisitionRepository);
     } else if (criteria.getProgramId() == null) {
       return new FacilityDateRangeSearch(criteria, processingScheduleService, requisitionRepository, programService);

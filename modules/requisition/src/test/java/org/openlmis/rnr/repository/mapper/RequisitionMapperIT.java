@@ -31,6 +31,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.empty;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.code;
@@ -293,6 +294,19 @@ public class RequisitionMapperIT {
     insertRequisition(processingPeriod3, SUBMITTED);
     List<Rnr> result = mapper.getPostSubmitRequisitions(facility, program, commaSeparatedPeriodIds);
     assertThat(result.size(), is(2));
+  }
+
+  @Test
+  public void itShouldOnlyLoadRequisitionDataForGivenQuery() throws Exception {
+    Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
+
+    Rnr fetchedRnr = mapper.getRequisitionWithoutLineItems(facility.getId(), PROGRAM_ID, processingPeriod1.getId());
+
+    assertThat(fetchedRnr.getId(), is(requisition.getId()));
+    assertThat(fetchedRnr.getPeriod().getId(), is(processingPeriod1.getId()));
+    assertThat(fetchedRnr.getStatus(), is(INITIATED));
+    assertThat(fetchedRnr.getFullSupplyLineItems(), is(empty()));
+    assertThat(fetchedRnr.getNonFullSupplyLineItems(), is(empty()));
   }
 
   private Rnr insertRequisition(ProcessingPeriod period, RnrStatus status) {

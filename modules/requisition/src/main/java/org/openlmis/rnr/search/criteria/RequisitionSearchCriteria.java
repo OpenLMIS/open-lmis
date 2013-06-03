@@ -21,6 +21,7 @@ public class RequisitionSearchCriteria {
   Long facilityId;
   Long programId;
   Long periodId;
+  boolean withoutLineItems;
   Date dateRangeStart;
   Date dateRangeEnd;
 
@@ -43,5 +44,12 @@ public class RequisitionSearchCriteria {
     this.facilityId = facilityId;
     this.programId = programId;
     this.periodId = periodId;
+  }
+
+  public RequisitionSearchCriteria(Long facilityId, Long programId, Long periodId, boolean withoutLineItems) {
+    this.facilityId = facilityId;
+    this.programId = programId;
+    this.periodId = periodId;
+    this.withoutLineItems = withoutLineItems;
   }
 }
