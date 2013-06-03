@@ -12,9 +12,6 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
         };
 
         $scope.filterGrid = function (){
-            //if (!$scope.$$phase) {
-                $scope.$apply();
-            //}
             //forget the current page and go to the first page while filtering
             $scope.pagingOptions.currentPage = 1;
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, 1);//
@@ -70,6 +67,7 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
             }else{
                 $scope.filterObject.zoneId = 0;
             }
+            $scope.filterGrid();
         });
         $scope.$watch('status.value', function(selection){
             if(selection != undefined || selection == ""){
@@ -77,6 +75,7 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
             }else{
                 $scope.filterObject.statusId ='';
             }
+            $scope.filterGrid();
         });
         $scope.$watch('facilityType.value', function(selection){
             if(selection != undefined || selection == ""){
@@ -84,6 +83,7 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
             }else{
                 $scope.filterObject.facilityTypeId =  0;
             }
+            $scope.filterGrid();
         });
 
         $scope.export   = function (type){
@@ -120,9 +120,6 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
             $scope.pagingOptions.totalServerItems = total;
             $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
 
-            if (!$scope.$$phase) {
-                $scope.$apply();
-            }
           
         };
 

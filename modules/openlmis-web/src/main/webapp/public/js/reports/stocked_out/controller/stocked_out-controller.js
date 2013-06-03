@@ -21,10 +21,7 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
 
 
         $scope.filterGrid = function (){
-            //if (!$scope.$$phase) {
-                $scope.$apply();
-           // }
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+           $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
         //filter form data section
@@ -115,10 +112,6 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
             $scope.myData = data;
             $scope.pagingOptions.totalServerItems = total;
             $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
-
-            if (!$scope.$$phase) {
-                $scope.$apply();
-            }
 
         };
 

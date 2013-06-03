@@ -16,7 +16,7 @@
                             <label class="labels">Zone</label>
 
                             <div class="form-field">
-                                <select ui-select2 style="width:200px;" ng-required="true" ng-change="filterGrid()" name="zone" ng-model="zone.value" ng-options="option.id as option.name for option in zones">
+                                <select ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone.value" ng-options="option.id as option.name for option in zones">
 
                                 </select>
                             </div>
@@ -25,7 +25,7 @@
                             <label class="labels">Facility Type</label>
 
                             <div class="form-field">
-                                <select ui-select2 style="width:200px;" name="facilityType" ng-change="filterGrid()" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
+                                <select ui-select2 style="width:200px;" name="facilityType"  ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
 
                                 </select>
                             </div>
@@ -34,7 +34,7 @@
                             <label class="labels">Status</label>
 
                             <div class="form-field">
-                                <select ui-select2 style="width:200px;" name="status" ng-model="status.value" ng-change="filterGrid()" ng-options="option.value as option.name for option in statuses">
+                                <select ui-select2 style="width:200px;" name="status" ng-model="status.value"  ng-options="option.value as option.name for option in statuses">
 
                                 </select>
                             </div>

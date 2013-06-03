@@ -127,9 +127,7 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Repor
 
 
         $scope.filterGrid = function (){
-            //if (!$scope.$$phase) {
-                $scope.$apply();
-            //}
+
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
@@ -185,6 +183,7 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Repor
             }else{
                 $scope.filterObject.zoneId = 0;
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('status.value', function(selection){
@@ -194,6 +193,7 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Repor
             }else{
                 $scope.filterObject.statusId ='';
             }
+            $scope.filterGrid();
         });
         $scope.$watch('facilityType.value', function(selection){
             if(selection != undefined || selection == ""){
@@ -202,6 +202,7 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Repor
             }else{
                 $scope.filterObject.facilityTypeId =  0;
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('startYear', function(selection){
@@ -211,6 +212,7 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Repor
             var date = new Date();
             $scope.filterObject.fromYear =  date.getYear();
         }
+            $scope.filterGrid();
         });
 
         $scope.$watch('endYear', function(selection){
@@ -220,6 +222,7 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Repor
                 var date = new Date();
                 $scope.filterObject.toYear =  date.getYear();
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('startMonth', function(selection){
@@ -229,6 +232,7 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Repor
                 var date = new Date();
                 $scope.filterObject.fromMonth =  date.getMonth();
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('endMonth', function(selection){
@@ -238,6 +242,7 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Repor
                 var date = new Date();
                 $scope.filterObject.toMonth =  date.getMonth();;
             }
+            $scope.filterGrid();
         });
 
 
@@ -248,6 +253,7 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Repor
             }else{
                 $scope.filterObject.periodType =  "monthly";
             }
+            $scope.filterGrid();
         });
 
 
@@ -287,9 +293,6 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Repor
             $scope.pagingOptions.totalServerItems = total;
             $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
 
-            if (!$scope.$$phase) {
-                $scope.$apply();
-            }
 
         };
 
