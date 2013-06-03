@@ -36,8 +36,8 @@ public class ProgramRepository {
     return mapper.getByFacilityId(facilityId);
   }
 
-  public List<Program> getAll() {
-    return mapper.getAll();
+  public List<Program> getAllPullPrograms() {
+    return mapper.getAllPullPrograms();
   }
 
   public List<Program> getUserSupervisedActiveProgramsWithRights(Long userId, Right... rights) {
@@ -72,5 +72,9 @@ public class ProgramRepository {
 
   public List<Program> getProgramsForUserByFacilityAndRights(Long facilityId, Long userId, Right... rights) {
     return mapper.getProgramsForUserByFacilityAndRights(facilityId, userId, commaSeparateRightNames(rights));
+  }
+
+  public List<Program> getAll() {
+    return mapper.getAll();
   }
 }

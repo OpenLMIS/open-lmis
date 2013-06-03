@@ -21,6 +21,7 @@ public class ProgramBuilder {
   public static final Property<Program, String> programCode = newProperty();
   public static final Property<Program, Boolean> programStatus = newProperty();
   public static final Property<Program, Boolean> templateStatus = newProperty();
+  public static final Property<Program, Boolean> push = newProperty();
   public static Property<Program, Long> programId = newProperty();
 
   public static final Instantiator<Program> defaultProgram = new Instantiator<Program>() {
@@ -33,6 +34,7 @@ public class ProgramBuilder {
       program.setDescription("Yellow Fever program");
       program.setActive(lookup.valueOf(programStatus, true));
       program.setTemplateConfigured(lookup.valueOf(templateStatus, false));
+      program.setPush(lookup.valueOf(push, false));
       return program;
     }
   };

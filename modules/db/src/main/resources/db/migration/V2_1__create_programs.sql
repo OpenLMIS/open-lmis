@@ -10,9 +10,9 @@ CREATE TABLE programs (
     templateConfigured BOOLEAN,
     budgetingApplies BOOLEAN,
     usesDar BOOLEAN,
+    push BOOLEAN,
     createdBy INTEGER,
     createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modifiedBy INTEGER,
     modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-
 );

@@ -22,6 +22,7 @@ public class Program extends BaseModel {
   private String description;
   private Boolean active;
   private boolean templateConfigured;
+  private boolean push;
 
   public Program(Long id) {
     this.id = id;

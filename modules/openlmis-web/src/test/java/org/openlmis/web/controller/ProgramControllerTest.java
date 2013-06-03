@@ -87,11 +87,11 @@ public class ProgramControllerTest {
   public void shouldGetListOfAllPrograms() throws Exception {
     List<Program> expectedPrograms = new ArrayList<>();
 
-    when(programService.getAll()).thenReturn(expectedPrograms);
+    when(programService.getAllPullPrograms()).thenReturn(expectedPrograms);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getAllPrograms();
+    ResponseEntity<OpenLmisResponse> response = controller.getAllPullPrograms();
 
-    verify(programService).getAll();
+    verify(programService).getAllPullPrograms();
     List<Program> actual = (List<Program>) response.getBody().getData().get(PROGRAMS);
     assertThat(actual, is(equalTo(expectedPrograms)));
   }

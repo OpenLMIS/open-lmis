@@ -105,6 +105,7 @@ public class ProductMapperIT {
     assertThat(expectedProduct.getPrimaryName(), is(product.getPrimaryName()));
   }
 
+
   @Test
   public void shouldUpdateProduct() {
     Product product = make(a(ProductBuilder.defaultProduct));

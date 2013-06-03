@@ -64,8 +64,8 @@ public class ProgramController extends BaseController {
 
   @RequestMapping(value = "/programs", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USERS, CONFIGURE_RNR')")
-  public ResponseEntity<OpenLmisResponse> getAllPrograms() {
-    return OpenLmisResponse.response(PROGRAMS, programService.getAll());
+  public ResponseEntity<OpenLmisResponse> getAllPullPrograms() {
+    return OpenLmisResponse.response(PROGRAMS, programService.getAllPullPrograms());
   }
 
   @RequestMapping(value = "programs/{id}", method = GET, headers = ACCEPT_JSON)

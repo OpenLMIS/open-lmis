@@ -72,7 +72,7 @@ public class FacilityControllerTest {
     List<GeographicZone> allZones = new ArrayList<>();
     when(facilityService.getAllZones()).thenReturn(allZones);
     List<Program> allPrograms = new ArrayList<>();
-    when(programService.getAll()).thenReturn(allPrograms);
+    when(programService.getAllPullPrograms()).thenReturn(allPrograms);
 
 
     Map referenceData = facilityController.getReferenceData();
@@ -83,7 +83,7 @@ public class FacilityControllerTest {
     assertThat((List<FacilityType>) referenceData.get(FacilityReferenceData.FACILITY_TYPES), is(equalTo(facilityTypes)));
     verify(facilityService).getAllZones();
     assertThat((List<GeographicZone>) referenceData.get(FacilityReferenceData.GEOGRAPHIC_ZONES), is(equalTo(allZones)));
-    verify(programService).getAll();
+    verify(programService).getAllPullPrograms();
     assertThat((List<Program>) referenceData.get(FacilityReferenceData.PROGRAMS), is(equalTo(allPrograms)));
   }
 

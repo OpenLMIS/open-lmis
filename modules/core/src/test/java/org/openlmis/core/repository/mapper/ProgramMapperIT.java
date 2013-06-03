@@ -26,6 +26,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.lang.Boolean.FALSE;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
@@ -80,9 +81,16 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   }
 
   @Test
+  public void shouldGetAllPullPrograms() throws Exception {
+    List<Program> programs = programMapper.getAllPullPrograms();
+    assertEquals(4, programs.size());
+    assertThat(programs.get(0).getCode(), is("ESS_MEDS"));
+  }
+
+  @Test
   public void shouldGetAllPrograms() throws Exception {
     List<Program> programs = programMapper.getAll();
-    assertEquals(4, programs.size());
+    assertEquals(5, programs.size());
     assertThat(programs.get(0).getCode(), is("ESS_MEDS"));
   }
 
@@ -114,7 +122,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   }
 
   @Test
-  public void shouldGetAllProgramsForUserSupervisedFacilitiesForWhichHeHasCreateRnrRight() {
+  public void shouldGetAllPullProgramsForUserSupervisedFacilitiesForWhichHeHasCreateRnrRight() {
     Facility facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
     SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
@@ -125,6 +133,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "P2"), with(programStatus, false))));
     Program activeProgramWithConfigureRight = insertProgram(make(a(defaultProgram, with(programCode, "P3"))));
     Program activeProgramForHomeFacility = insertProgram(make(a(defaultProgram, with(programCode, "P4"))));
+    Program activePushProgramWithCreateRight = insertProgram(make(a(defaultProgram, with(programCode, "P5"), with(push, true))));
 
     User user = insertUser(facility);
 
@@ -134,6 +143,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     insertRoleAssignments(activeProgramWithCreateRight, user, createRnrRole, supervisoryNode);
     insertRoleAssignments(inactiveProgram, user, createRnrRole, supervisoryNode);
     insertRoleAssignments(activeProgramForHomeFacility, user, createRnrRole, null);
+    insertRoleAssignments(activePushProgramWithCreateRight, user, createRnrRole, supervisoryNode);
 
     Role configureRnrRole = new Role("R2", FALSE, "View Rnr Role");
     roleRightsMapper.insertRole(configureRnrRole);
@@ -145,6 +155,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     assertThat(programs.size(), is(2));
     assertThat(programs.contains(activeProgramWithCreateRight), is(true));
     assertThat(programs.contains(activeProgramWithConfigureRight), is(true));
+    assertThat(programs.contains(activePushProgramWithCreateRight), is(false));
   }
 
   @Test
@@ -152,6 +163,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     Program activeProgram = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
     Program anotherActiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
     Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p3"), with(programStatus, false))));
+    Program activePushProgram = insertProgram(make(a(defaultProgram, with(programCode, "p4"), with(push, true))));
 
     Facility facility = insertFacility(make(a(defaultFacility)));
     User user = insertUser(facility);
@@ -167,11 +179,13 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     insertRoleAssignments(activeProgram, user, r1, null);
     insertRoleAssignments(anotherActiveProgram, user, r2, null);
     insertRoleAssignments(inactiveProgram, user, r1, null);
+    insertRoleAssignments(activePushProgram, user, r1, null);
 
 
     insertProgramSupportedForFacility(activeProgram, facility, true);
     insertProgramSupportedForFacility(anotherActiveProgram, facility, true);
     insertProgramSupportedForFacility(inactiveProgram, facility, true);
+    insertProgramSupportedForFacility(activePushProgram, facility, true);
 
     final String rights = "{CREATE_REQUISITION, AUTHORIZE_REQUISITION}";
 
@@ -179,6 +193,8 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     assertThat(programs.size(), is(2));
     assertTrue(programs.contains(activeProgram));
     assertTrue(programs.contains(anotherActiveProgram));
+    assertFalse(programs.contains(activePushProgram));
+
   }
 
 
