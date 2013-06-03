@@ -15,6 +15,11 @@
   <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/ng-grid.css">
 
   <script data-main="/public/js/user/module/user-module" src="/public/lib/requirejs/require.js"></script>
+  <script type="text/javascript">
+    requirejs.config({
+      urlArgs: 'v=@version@'
+    });
+  </script>
   <!--[if IE 9]>
   <link rel="stylesheet" href="/public/css/ie9.css" />
   <![endif]-->

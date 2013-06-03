@@ -11,6 +11,11 @@
   <title>Open-LMIS</title>
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   <script data-main="/public/js/shared/bootstrap" src="/public/lib/requirejs/require.js"></script>
+  <script type="text/javascript">
+    requirejs.config({
+      urlArgs: 'v=@version@'
+    });
+  </script>
 
   <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">

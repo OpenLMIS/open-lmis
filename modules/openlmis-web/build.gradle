@@ -4,9 +4,14 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+import org.apache.tools.ant.filters.ReplaceTokens
+
+import com.eriwen.gradle.js.JsMinifier
+
 apply plugin: 'jetty'
 apply plugin: 'war'
 apply plugin: 'js'
+
 
 buildscript {
     repositories {
@@ -34,34 +39,51 @@ javascript.source {
     }
 }
 
-javascript.source.dev.js.files.eachWithIndex { File jsFile, i ->
-    tasks.add(name: "minifyJs${i}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
-        source = jsFile
-        dest = file(jsFile.absolutePath.replace('/js/', '/minJs/'))
-        closure {
-            compilationLevel = 'WHITESPACE_ONLY'
-            warningLevel = 'QUIET'
+war {
+    from("src/main/webapp/public/minJs/") {
+        into "public/js/"
+    }
+
+    exclude "public/minJs/"
+    exclude "public/less/"
+}
+
+tasks.withType(War) {
+    eachFile { FileCopyDetails fileCopy ->
+        if (fileCopy.path.contains('public/pages/') && fileCopy.name.endsWith('.html')) {
+            def now = new Date()
+            String currentTime = now.getTime()+"";
+            fileCopy.filter(ReplaceTokens, tokens: [version: currentTime])
+            fileCopy.filter {String line -> line.replace('.css"', '.css?v=' + currentTime + '"')}
         }
     }
+}
+
+task minifyJSFiles() {
+    println "Minifying Javascript files..."
+    int i=0;
+    javascript.source.dev.js.files.each { File file ->
+        def dest = new File(file.absolutePath.replace('/js/', '/minJs/'))
+        dest.getParentFile().mkdirs()
+        dest.createNewFile()
+        new JsMinifier().minifyJsFile(
+                [file] as Set<File>,
+                [] as Set<File>,
+                dest,
+                project.closure.compilerOptions,
+                'QUIET', //project.closure.warningLevel,
+                'WHITESPACE_ONLY', //project.closure.compilationLevel
+        )
+        i++
+    }
+    println "Minified " + i + " javascript files."
 }
 
 task cleanMinJs(type: Delete) {
     delete 'src/main/webapp/public/minJs'
 }
 
-task minify(dependsOn: tasks.matching { Task task ->
-    task.name.startsWith("minifyJs")
-})
-
-war {
-    from("src/main/webapp/public/minJs/") {
-        into "public/js/"
-    }
-    exclude "public/minJs/"
-    exclude "public/less/"
-}
-
-war.dependsOn minify
+war.dependsOn minifyJSFiles
 
 war.doLast {
     tasks.cleanMinJs.execute()
