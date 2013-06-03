@@ -52,7 +52,7 @@ public class GeographicZoneRepositoryTest {
     geographicZone.setCode("some code");
     geographicZone.setModifiedDate(new Date());
     geographicZone.setLevel(new GeographicLevel("abc", null, null));
-    geographicZone.setParent(new GeographicZone("xyz", null, null, null));
+    geographicZone.setParent(new GeographicZone(1L, "xyz", null, null, null));
   }
 
   @Test

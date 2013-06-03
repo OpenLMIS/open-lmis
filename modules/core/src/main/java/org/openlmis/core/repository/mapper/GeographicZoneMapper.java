@@ -16,15 +16,15 @@ import java.util.List;
 @Repository
 public interface GeographicZoneMapper {
 
-  @Insert("INSERT INTO geographic_zones (code, name, levelId, parent, modifiedBy, modifiedDate) " +
-    "VALUES (#{code}, #{name}, #{level.id}, #{parent.id}, #{modifiedBy}, #{modifiedDate})")
+  @Insert("INSERT INTO geographic_zones (code, name, levelId, parent, catchmentPopulation, longitude, latitude, modifiedBy, modifiedDate) " +
+    "VALUES (#{code}, #{name}, #{level.id}, #{parent.id}, #{catchmentPopulation}, #{longitude}, #{latitude}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
   Integer insert(GeographicZone geographicZone);
 
   @Select("SELECT * FROM geographic_levels WHERE LOWER(code) = LOWER(#{code})")
   GeographicLevel getGeographicLevelByCode(String code);
 
-  @Select({"SELECT GZ.id, GZ.code, GZ.name, GZ.modifiedDate, GL.id as levelId, GL.code as levelCode, GL.name as levelName,",
+  @Select({"SELECT GZ.id, GZ.code, GZ.name, GZ.catchmentPopulation, GZ.longitude, GZ.latitude, GZ.modifiedDate, GL.id as levelId, GL.code as levelCode, GL.name as levelName,",
     "GL.levelNumber as levelNumber FROM",
     "geographic_zones GZ, geographic_levels GL WHERE LOWER(GZ.code) = LOWER(#{code}) AND GZ.levelId = GL.id"})
   @Results({
@@ -48,7 +48,7 @@ public interface GeographicZoneMapper {
   List<GeographicZone> getAllGeographicZones();
 
 
-  @Select({"SELECT GZ.id AS id, GZ.code AS code, GZ.name AS name, GL.code AS levelCode, GL.name AS level, GZP.code AS parentCode, GZP.name AS parentZone, GLP.code AS parentLevelCode, GLP.name AS parentLevel",
+  @Select({"SELECT GZ.id AS id, GZ.code AS code, GZ.name AS name, GZ.catchmentPopulation, GZ.longitude, GZ.latitude, GL.code AS levelCode, GL.name AS level, GZP.code AS parentCode, GZP.name AS parentZone, GLP.code AS parentLevelCode, GLP.name AS parentLevel",
     "FROM geographic_zones GZ INNER JOIN geographic_zones GZP ON GZ.parent = GZP.id",
     "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
     "INNER JOIN geographic_levels GLP ON GZP.levelId = GLP.id",
@@ -63,7 +63,9 @@ public interface GeographicZoneMapper {
   })
   GeographicZone getGeographicZoneById(Integer geographicZoneId);
 
-  @Update({"UPDATE geographic_zones set code = #{code}, name = #{name}, levelId = #{level.id}, parent = #{parent.id}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate}",
+  @Update({"UPDATE geographic_zones set code = #{code}, name = #{name}, levelId = #{level.id}, parent = #{parent.id}, " +
+    "catchmentPopulation = #{catchmentPopulation}, longitude = #{longitude}, latitude = #{latitude}, " +
+    "modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate}",
     "WHERE id = #{id}"})
   void update(GeographicZone geographicZone);
 }

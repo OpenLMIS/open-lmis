@@ -38,6 +38,9 @@ public class GeographicZoneMapperIT {
   @Test
   public void shouldSaveGeographicZone() throws Exception {
     GeographicZone geographicZone = new GeographicZone(null, "code", "name", new GeographicLevel(2L,"state", "State", 2), null);
+    geographicZone.setCatchmentPopulation(10000L);
+    geographicZone.setLongitude(333.9874);
+    geographicZone.setLatitude(-256.7249);
     Date date = new Date();
     geographicZone.setModifiedDate(date);
 
@@ -88,11 +91,13 @@ public class GeographicZoneMapperIT {
   @Test
   public void shouldUpdateGeographicZone() throws Exception {
     GeographicZone geographicZone = new GeographicZone(null, "code", "name", new GeographicLevel(2L,"state", "State", 2), null);
+    geographicZone.setLongitude(123.9878);
 
     mapper.insert(geographicZone);
 
     geographicZone.setName("new name");
     geographicZone.setLevel(new GeographicLevel(1L,"country", "Country", 1));
+    geographicZone.setLongitude(-111.9877);
 
     mapper.update(geographicZone);
 

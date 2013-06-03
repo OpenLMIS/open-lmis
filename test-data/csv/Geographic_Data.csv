@@ -1,2 +1,1 @@
-Geographic Zone Code,Geographic Zone Name,Geographic level Code,Geographic Zone Parent CodeIND, India,state,KL,Kerala,State,INDTN,Tamil Nadu,State,INDEkm,Ernakulam,District,KLChnnai,Chennai,District,TNtest4,India,City,TN
-test2,India,City,TN
+Geographic Zone Code,Geographic Zone Name,Geographic level Code,Geographic Zone Parent Code, Catchment PopulationIND, India,state,,1000KL,Kerala,State,IND,1000TN,Tamil Nadu,State,IND,1000Ekm,Ernakulam,District,KL,1000Chnnai,Chennai,District,TN,test4,India,City,TN,test2,India,City,TN,
