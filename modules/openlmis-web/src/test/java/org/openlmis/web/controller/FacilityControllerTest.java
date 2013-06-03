@@ -15,7 +15,6 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.web.model.FacilityReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -38,6 +37,7 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.web.model.FacilityReferenceData.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @Category(UnitTests.class)
@@ -78,13 +78,13 @@ public class FacilityControllerTest {
     Map referenceData = facilityController.getReferenceData();
 
     verify(facilityService).getAllOperators();
-    assertThat((List<FacilityOperator>) referenceData.get(FacilityReferenceData.FACILITY_OPERATORS), is(equalTo(facilityOperators)));
+    assertThat((List<FacilityOperator>) referenceData.get(FACILITY_OPERATORS), is(equalTo(facilityOperators)));
     verify(facilityService).getAllTypes();
-    assertThat((List<FacilityType>) referenceData.get(FacilityReferenceData.FACILITY_TYPES), is(equalTo(facilityTypes)));
+    assertThat((List<FacilityType>) referenceData.get(FACILITY_TYPES), is(equalTo(facilityTypes)));
     verify(facilityService).getAllZones();
-    assertThat((List<GeographicZone>) referenceData.get(FacilityReferenceData.GEOGRAPHIC_ZONES), is(equalTo(allZones)));
+    assertThat((List<GeographicZone>) referenceData.get(GEOGRAPHIC_ZONES), is(equalTo(allZones)));
     verify(programService).getAllPullPrograms();
-    assertThat((List<Program>) referenceData.get(FacilityReferenceData.PROGRAMS), is(equalTo(allPrograms)));
+    assertThat((List<Program>) referenceData.get(PROGRAMS), is(equalTo(allPrograms)));
   }
 
   @Test

@@ -72,7 +72,7 @@ public class FacilityController extends BaseController {
     return facilityReferenceData.addFacilityTypes(facilityService.getAllTypes()).
       addFacilityOperators(facilityService.getAllOperators()).
       addGeographicZones(facilityService.getAllZones()).
-      addPrograms(programService.getAll()).get();
+      addPrograms(programService.getAllPullPrograms()).get();
   }
 
   @RequestMapping(value = "/facilities/{id}", method = GET, headers = ACCEPT_JSON)
