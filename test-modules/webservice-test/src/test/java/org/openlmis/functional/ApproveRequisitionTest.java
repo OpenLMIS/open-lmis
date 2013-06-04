@@ -127,9 +127,8 @@ public class ApproveRequisitionTest extends TestCaseHelper {
         dbWrapper.getAuthToken("commTrack"));
 
     response = responseEntity.getResponse();
-    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
     assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(response, "{\"error\":\"Invalid data.\"}");
+    assertEquals(response, "{\"error\":\"Invalid product code\"}");
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
