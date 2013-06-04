@@ -271,6 +271,7 @@ public class RnrTest {
     ArrayList<RnrColumn> programRnrColumns = new ArrayList<>();
     programRnrColumns.add(make(a(RnrColumnBuilder.defaultRnrColumn, with(columnName, "stockInHand"), with(visible, true))));
     programRnrColumns.add(make(a(RnrColumnBuilder.defaultRnrColumn, with(columnName, "beginningBalance"), with(visible, false))));
+    programRnrColumns.add(make(a(RnrColumnBuilder.defaultRnrColumn, with(columnName, "lossesAndAdjustments"), with(visible, false))));
     return programRnrColumns;
   }
 }

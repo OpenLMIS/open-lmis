@@ -465,7 +465,7 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_RECEIVED), with(visible, false))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED), with(visible, false),
         with(source, CALCULATED))));
-      add(make(a(defaultRnrColumn, with(columnName, LOSSES_AND_ADJUSTMENTS), with(visible, false))));
+      add(make(a(defaultRnrColumn, with(columnName, LOSSES_AND_ADJUSTMENTS), with(visible, true))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.NEW_PATIENT_COUNT), with(visible, false))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_OUT_DAYS), with(visible, false))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_IN_HAND), with(visible, false),
@@ -617,4 +617,15 @@ public class RnrLineItemTest {
     lineItem.validateForApproval();
 
   }
+
+  @Test
+  public void shouldCopyTotalLossesAndAdjustments() throws Exception {
+    RnrLineItem editedLineItem = make(a(defaultRnrLineItem));
+    editedLineItem.setTotalLossesAndAdjustments(10);
+
+    lineItem.copyUserEditableFields(editedLineItem, getRnrColumns());
+
+    assertThat(lineItem.getTotalLossesAndAdjustments(), is(10));
+  }
+
 }

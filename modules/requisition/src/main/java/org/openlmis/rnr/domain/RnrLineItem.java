@@ -304,6 +304,8 @@ public class RnrLineItem extends BaseModel{
 
     copyBeginningBalance(item, template);
 
+    copyTotalLossesAndAdjustments(item, template);
+
     for (RnrColumn column : template.getRnrColumns()) {
       if (!column.isVisible() || column.getSource() != USER_INPUT || column.getName().equals(QUANTITY_APPROVED)) {
         continue;
@@ -316,6 +318,11 @@ public class RnrLineItem extends BaseModel{
         logger.error("Error in reading RnrLineItem's field", e);
       }
     }
+  }
+
+  private void copyTotalLossesAndAdjustments(RnrLineItem item, ProgramRnrTemplate template) {
+    if (template.columnsVisible(LOSSES_AND_ADJUSTMENTS))
+      this.totalLossesAndAdjustments = item.totalLossesAndAdjustments;
   }
 
   private void copyBeginningBalance(RnrLineItem item, ProgramRnrTemplate template) {

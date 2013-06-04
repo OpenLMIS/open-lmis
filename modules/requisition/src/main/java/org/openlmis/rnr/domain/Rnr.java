@@ -14,6 +14,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.exception.DataException;
 
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -32,6 +33,9 @@ import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
 @JsonSerialize(include = NON_NULL)
 @EqualsAndHashCode(callSuper = false)
 public class Rnr extends BaseModel{
+
+  public static final String PRODUCT_CODE_INVALID = "product.code.invalid";
+
   private Facility facility;
   private Program program;
   private ProcessingPeriod period;
@@ -153,15 +157,16 @@ public class Rnr extends BaseModel{
 
     for (RnrLineItem lineItem : rnr.getFullSupplyLineItems()) {
       RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
-      if(savedLineItem != null)  {
-        if (this.status == IN_APPROVAL || this.status == AUTHORIZED) {
-          savedLineItem.copyApproverEditableFields(lineItem);
-        } else {
-          savedLineItem.copyUserEditableFields(lineItem, programRnrColumns);
-        }
-        savedLineItem.setModifiedBy(rnr.getModifiedBy());
-        lineItems.add(savedLineItem);
+      if (savedLineItem == null) {
+        throw new DataException(PRODUCT_CODE_INVALID);
       }
+      if (this.status == IN_APPROVAL || this.status == AUTHORIZED) {
+        savedLineItem.copyApproverEditableFields(lineItem);
+      } else {
+        savedLineItem.copyUserEditableFields(lineItem, programRnrColumns);
+      }
+      savedLineItem.setModifiedBy(rnr.getModifiedBy());
+      lineItems.add(savedLineItem);
     }
     this.setFullSupplyLineItems(lineItems);
     this.nonFullSupplyLineItems = rnr.nonFullSupplyLineItems;
