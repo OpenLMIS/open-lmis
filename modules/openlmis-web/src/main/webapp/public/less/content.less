@@ -392,7 +392,10 @@ span[class^="tpl-"] {
   }
   .table-bordered th,
   .table-bordered td {
+    .ng-scope {
     border-left: none;
+    position: relative;
+    }
   }
   .table-bordered th:first-child,
   .table-bordered td:first-child {
@@ -496,9 +499,9 @@ table td.col-formula {
   position: absolute;
   background: rgba(153, 77, 77, .8);
   border-radius: 10px;
-  padding: 0px 6px;
-  top: -14px;
-  width: 88%;
+  padding: 0px 5px;
+  top: -9px;
+  width: 87%;
   text-align: center;
 }
 
@@ -1368,6 +1371,20 @@ input[placeholder].placeholder{
   }
   .modal-body {
     font-size: 0.9em;
+    .span2 {
+      position: relative;
+      .rnr-form-error {
+        top: 14px;
+        width: 90%;
+      }
+    }
+    .span6 {
+      position: relative;
+      .reason-request {
+        top: 14px;
+        width: 92%;
+      }
+    }
   }
   hr {
     margin: 3px 0 10px;
