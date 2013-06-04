@@ -446,6 +446,38 @@ describe('RnrLineItem', function () {
     });
   });
 
+  describe('Calculate Total', function () {
+    it('should set total when beginningBalance and quantityReceived are available', function () {
+      var lineItem = {"beginningBalance":11, "quantityReceived":200};
+      var rnrLineItem = new RnrLineItem({}, null, null);
+      jQuery.extend(rnrLineItem, lineItem);
+
+      rnrLineItem.calculateTotal();
+
+      expect(rnrLineItem.total).toEqual(211);
+    });
+
+    it('should not calculate total when beginningBalance is not available', function () {
+      var lineItem = {"quantityReceived":200};
+      var rnrLineItem = new RnrLineItem({}, null, null);
+      jQuery.extend(rnrLineItem, lineItem);
+
+      rnrLineItem.calculateTotal();
+
+      expect(rnrLineItem.total).toEqual(null);
+    });
+
+    it('should not calculate total when quantityReceived is not available', function () {
+      var lineItem = {"beginningBalance":200};
+      var rnrLineItem = new RnrLineItem({}, null, null);
+      jQuery.extend(rnrLineItem, lineItem);
+
+      rnrLineItem.calculateTotal();
+
+      expect(rnrLineItem.total).toEqual(null);
+    });
+  });
+
   describe('Losses and adjustment for line item', function () {
     it('should create losses and adjustment object out of losses and adjustment json data when RnrLineItem Is Created', function () {
       var lossAndAdjustment1 = {"type":{"name":"Loss1", "additive":true}, "quantity":45};

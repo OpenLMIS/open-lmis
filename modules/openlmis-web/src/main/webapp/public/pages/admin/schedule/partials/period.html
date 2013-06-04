@@ -63,7 +63,7 @@
             </div>
           </div>
         </div>
-        <div class="form-row clearfix">
+        <div class="form-row clearfix" ng-show="newPeriod.endDate">
           <div class="form-cell"><span openlmis-message="period.total.days">:</span>
             <span class="cell-text" ng-show="calculateDays(newPeriod.startDate, newPeriod.endDate)+1">{{calculateDays(newPeriod.startDate, newPeriod.endDate)}}</span>
           </div>

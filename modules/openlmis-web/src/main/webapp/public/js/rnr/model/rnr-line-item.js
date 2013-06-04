@@ -44,6 +44,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.calculateConsumption();
     this.calculateStockInHand();
     this.fillNormalizedConsumption();
+    this.calculateTotal();
   };
 
   function statusBeforeApproval() {
@@ -146,6 +147,15 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
 
   RnrLineItem.prototype.calculateCost = function () {
     this.cost = !utils.isNumber(this.packsToShip) ? 0 : parseFloat(this.packsToShip * this.price).toFixed(2);
+  };
+
+  RnrLineItem.prototype.calculateTotal = function () {
+    if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived)) {
+      this.total = this.beginningBalance + this.quantityReceived
+    }
+    else {
+      this.total = null;
+    }
   };
 
   RnrLineItem.prototype.calculateConsumption = function () {

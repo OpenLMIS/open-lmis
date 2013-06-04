@@ -10,7 +10,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
   $scope.validateFormula = $scope.rnrColumns[0].formulaValidationRequired;
   $scope.program = program;
   $scope.$parent.message = "";
-  $scope.selectProgramUrl = "/public/pages/admin/rnr-template/create.html#/select-program";
+  $scope.selectProgramUrl = "/public/pages/admin/rnr-template/index.html#/select-program";
   $scope.arithmeticValidationLabel = false;
 
   var setRnRTemplateValidateFlag = function () {
