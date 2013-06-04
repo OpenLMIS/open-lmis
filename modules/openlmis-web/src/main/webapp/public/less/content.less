@@ -392,8 +392,8 @@ span[class^="tpl-"] {
   }
   .table-bordered th,
   .table-bordered td {
-    .ng-scope {
     border-left: none;
+    .ng-scope {
     position: relative;
     }
   }
@@ -404,6 +404,32 @@ span[class^="tpl-"] {
   td {
     font-family: Verdana, Arial, sans-serif;
     border-top-color: #887f7f;
+    .rnr-form-error {
+      color: #FFFFFF;
+      font-size: 0.7em;
+      position: absolute;
+      background: rgba(153, 77, 77, .8);
+      border-radius: 10px;
+      padding: 0px 6px;
+      top: -17px;
+      width: 85%;
+      text-align: center;
+    }
+    .reason-request {
+      display: block;
+      margin: 0 0 5px;
+      font-size: 0.9em;
+      padding: 1px 8px 1px 28px;
+      background-image: url(../images/warning_triangle.png);
+      background-repeat: no-repeat;
+      background-position: 7px center;
+      position: absolute;
+      top: -18px;
+      width: 86%;
+      border-radius: 17px;
+      border-color: rgb(228, 184, 99);
+      color: rgb(179, 137, 7);
+    }
   }
 }
 
@@ -493,16 +519,9 @@ table td.col-formula {
 }
 
 .rnr-form-error {
-  color: #FFFFFF;
-  font-size: 0.7em;
-  padding-bottom: 3px;
-  position: absolute;
-  background: rgba(153, 77, 77, .8);
-  border-radius: 10px;
-  padding: 0px 5px;
-  top: -9px;
-  width: 87%;
-  text-align: center;
+ color: #E93434;
+ font-size: 0.8em;
+ padding-bottom: 3px;
 }
 
 .col-formula .formula {
@@ -718,20 +737,16 @@ h3 {
   font-size: 1.1em;
   font-weight: bold;
 }
+
 .reason-request {
   display: block;
   margin: 0 0 5px;
   font-size: 0.9em;
-  padding: 1px 8px 1px 28px;
+  padding: 1px 8px 1px 27px;
+  border-radius: 0;
   background-image: url(../images/warning_triangle.png);
   background-repeat: no-repeat;
-  background-position: 7px center;
-  position: absolute;
-  top: -11px;
-  width: 85%;
-  border-radius: 17px;
-  border-color: rgb(228, 184, 99);
-  color: rgb(179, 137, 7);
+  background-position: 5px center;
 }
 .rnr-adjustment {
   display: block;
@@ -1371,20 +1386,6 @@ input[placeholder].placeholder{
   }
   .modal-body {
     font-size: 0.9em;
-    .span2 {
-      position: relative;
-      .rnr-form-error {
-        top: 14px;
-        width: 90%;
-      }
-    }
-    .span6 {
-      position: relative;
-      .reason-request {
-        top: 14px;
-        width: 92%;
-      }
-    }
   }
   hr {
     margin: 3px 0 10px;
