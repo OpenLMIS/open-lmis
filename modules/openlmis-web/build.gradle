@@ -60,23 +60,25 @@ tasks.withType(War) {
 }
 
 task minifyJSFiles() {
-    println "Minifying Javascript files..."
-    int i=0;
-    javascript.source.dev.js.files.each { File file ->
-        def dest = new File(file.absolutePath.replace('/js/', '/minJs/'))
-        dest.getParentFile().mkdirs()
-        dest.createNewFile()
-        new JsMinifier().minifyJsFile(
-                [file] as Set<File>,
-                [] as Set<File>,
-                dest,
-                project.closure.compilerOptions,
-                'QUIET', //project.closure.warningLevel,
-                'WHITESPACE_ONLY', //project.closure.compilationLevel
-        )
-        i++
+    doLast {
+        println "Minifying Javascript files..."
+        int i=0;
+        javascript.source.dev.js.files.each { File file ->
+            def dest = new File(file.absolutePath.replace('/js/', '/minJs/'))
+            dest.getParentFile().mkdirs()
+            dest.createNewFile()
+            new JsMinifier().minifyJsFile(
+                    [file] as Set<File>,
+                    [] as Set<File>,
+                    dest,
+                    project.closure.compilerOptions,
+                    'QUIET', //project.closure.warningLevel,
+                    'WHITESPACE_ONLY', //project.closure.compilationLevel
+            )
+            i++
+        }
+        println "Minified " + i + " javascript files."
     }
-    println "Minified " + i + " javascript files."
 }
 
 task cleanMinJs(type: Delete) {
