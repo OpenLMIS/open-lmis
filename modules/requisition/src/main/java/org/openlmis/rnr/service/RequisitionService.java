@@ -272,10 +272,6 @@ public class RequisitionService {
     if (!requisitionPermissionService.hasPermissionToApprove(userId, savedRnr))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    if (savedRnr.getStatus() == AUTHORIZED) {
-      savedRnr.prepareForApproval();
-      requisitionRepository.update(savedRnr);
-    }
     return savedRnr;
   }
 

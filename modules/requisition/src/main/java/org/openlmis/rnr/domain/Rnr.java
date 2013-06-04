@@ -22,16 +22,14 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
-import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
-import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
-import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
+import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_NULL)
 @EqualsAndHashCode(callSuper = false)
-public class Rnr extends BaseModel{
+public class Rnr extends BaseModel {
   private Facility facility;
   private Program program;
   private ProcessingPeriod period;
@@ -137,23 +135,13 @@ public class Rnr extends BaseModel{
     addPreviousNormalizedConsumptionFrom(secondLastPeriodsRnr);
   }
 
-  public void prepareForApproval() {
-    status = IN_APPROVAL;
-    for (RnrLineItem item : fullSupplyLineItems) {
-      item.setDefaultApprovedQuantity();
-    }
-    for (RnrLineItem item : nonFullSupplyLineItems) {
-      item.setDefaultApprovedQuantity();
-    }
-  }
-
   public void copyEditableFields(Rnr rnr, List<RnrColumn> programRnrColumns) {
     this.modifiedBy = rnr.getModifiedBy();
     ArrayList<RnrLineItem> lineItems = new ArrayList<>();
 
     for (RnrLineItem lineItem : rnr.getFullSupplyLineItems()) {
       RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
-      if(savedLineItem != null)  {
+      if (savedLineItem != null) {
         if (this.status == IN_APPROVAL || this.status == AUTHORIZED) {
           savedLineItem.copyApproverEditableFields(lineItem);
         } else {
