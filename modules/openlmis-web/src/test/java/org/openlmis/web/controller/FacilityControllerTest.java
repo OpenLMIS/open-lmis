@@ -83,7 +83,7 @@ public class FacilityControllerTest {
     assertThat((List<FacilityType>) referenceData.get(FACILITY_TYPES), is(equalTo(facilityTypes)));
     verify(facilityService).getAllZones();
     assertThat((List<GeographicZone>) referenceData.get(GEOGRAPHIC_ZONES), is(equalTo(allZones)));
-    verify(programService).getAllPullPrograms();
+    verify(programService).getAll();
     assertThat((List<Program>) referenceData.get(PROGRAMS), is(equalTo(allPrograms)));
   }
 

@@ -167,7 +167,10 @@ function UserController($scope, $routeParams, $location, $dialog, Users, User, A
     if (!utils.isNullOrUndefined($scope.user.facilityId)) {
       if (utils.isNullOrUndefined($scope.allSupportedPrograms)) {
         Facility.get({id: $scope.user.facilityId}, function (data) {
-          $scope.allSupportedPrograms = data.facility.supportedPrograms;
+          $scope.allSupportedPrograms = _.filter(data.facility.supportedPrograms, function (supportedProgram) {
+            return !supportedProgram.program.push;
+          });
+
           $scope.facilitySelected = data.facility;
         }, {});
       }

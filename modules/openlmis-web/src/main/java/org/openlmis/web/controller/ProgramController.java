@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.openlmis.core.domain.Right.*;
@@ -48,7 +49,13 @@ public class ProgramController extends BaseController {
   @RequestMapping(value = "/facility/{facilityId}/view/requisition/programs", method = GET, headers = ACCEPT_JSON)
   public List<Program> getProgramsToViewRequisitions(@PathVariable(value = "facilityId") Long facilityId,
                                                      HttpServletRequest request) {
-    return programService.getProgramsForUserByFacilityAndRights(facilityId, loggedInUserId(request), VIEW_REQUISITION);
+    List<Program> programs =  programService.getProgramsForUserByFacilityAndRights(facilityId, loggedInUserId(request), VIEW_REQUISITION);
+    List<Program> pullPrograms = new ArrayList<>();
+    for(Program program : programs) {
+      if(!program.isPush())
+        pullPrograms.add(program);
+    }
+    return pullPrograms;
   }
 
   @RequestMapping(value = "/create/requisition/programs")

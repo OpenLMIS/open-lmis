@@ -100,12 +100,19 @@ public class ProgramControllerTest {
   public void shouldGetProgramsForViewRightAndFacilityForUser() throws Exception {
 
     List<Program> expectedPrograms = new ArrayList<>();
-
+    Program pushProgram = new Program();
+    pushProgram.setPush(true);
+    Program pullProgram = new Program();
+    pullProgram.setPush(false);
+    expectedPrograms.add(pullProgram);
+    expectedPrograms.add(pushProgram);
     when(programService.getProgramsForUserByFacilityAndRights(1L, USER_ID, VIEW_REQUISITION)).thenReturn(expectedPrograms);
 
     List<Program> result = controller.getProgramsToViewRequisitions(1L, httpServletRequest);
 
+
     verify(programService).getProgramsForUserByFacilityAndRights(1L, USER_ID, VIEW_REQUISITION);
+    expectedPrograms.remove(pushProgram);
     assertThat(result, is(equalTo(expectedPrograms)));
   }
 
