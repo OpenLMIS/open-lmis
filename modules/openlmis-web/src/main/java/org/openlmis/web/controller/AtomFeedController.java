@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import org.ict4h.atomfeed.server.repository.AllEventRecords;
 import org.ict4h.atomfeed.server.service.EventFeedService;
 import org.ict4h.atomfeed.server.service.helper.EventFeedServiceHelper;
-import org.openlmis.core.atomfeed.OpenLmisEventRecordJdbcImpl;
 import org.openlmis.core.exception.DataException;
 import org.springframework.aop.framework.Advised;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
 
 @Controller
 public class AtomFeedController extends BaseController {
@@ -28,30 +28,18 @@ public class AtomFeedController extends BaseController {
   @Autowired
   EventFeedService eventFeedService;
 
-  @Resource(name="allEventRecords")
+  @Autowired
   AllEventRecords allEventRecords;
 
   @RequestMapping(method = RequestMethod.GET, value = "/feeds/{category}/recent", produces = "application/atom+xml")
   @ResponseBody
   public String getRecentFeeds(@PathVariable(value = "category") String category, HttpServletRequest request, @RequestParam(value = "vendor", required = false) String vendor) {
-    setCategoryInEventRecord(category);
     return VendorEventFeedServiceHelper.getRecentFeed(eventFeedService, request.getRequestURL().toString(), logger,vendor, category);
-  }
-
-  private void setCategoryInEventRecord(String category) {
-    OpenLmisEventRecordJdbcImpl eventRecord = null;
-    try {
-      eventRecord = (OpenLmisEventRecordJdbcImpl) ((Advised)allEventRecords).getTargetSource().getTarget();
-    } catch (Exception e) {
-      throw new DataException(e.getMessage());
-    }
-    eventRecord.setCategory(category);
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/feeds/{category}/{id}", produces = "application/atom+xml")
   @ResponseBody
-  public String getFeed(@PathVariable(value = "category") String category, HttpServletRequest request, @PathVariable Integer id) {
-    setCategoryInEventRecord(category);
-    return EventFeedServiceHelper.getEventFeed(eventFeedService, request.getRequestURL().toString(), id, logger);
+  public String getFeed(@PathVariable(value = "category") String category, HttpServletRequest request, @PathVariable Integer id,@RequestParam(value = "vendor", required = false) String vendor) {
+    return VendorEventFeedServiceHelper.getEventFeed(eventFeedService,request.getRequestURL().toString() ,id, logger,vendor,category);
   }
 }

@@ -30,7 +30,7 @@ public class VendorEventFeedServiceHelper{
 
   public static String getRecentFeed(EventFeedService eventFeedService, String requestURL, Logger logger, String vendor, String category){
     try {
-      Feed feed = eventFeedService.getRecentFeed(new URI(requestURL));
+      Feed feed = eventFeedService.getRecentFeed(new URI(requestURL), category);
       mapFeedBasedOnVendorAndCategory(feed, vendor, category);
       return new WireFeedOutput().outputString(feed);
     } catch (URISyntaxException e) {
@@ -102,11 +102,11 @@ public class VendorEventFeedServiceHelper{
     return map;  //To change body of created methods use File | Settings | File Templates.
   }
 
-  public static String getEventFeed(EventFeedService eventFeedService, String requestURL, int feedNumber, Logger logger, String principalName){
+  public static String getEventFeed(EventFeedService eventFeedService, String requestURL, int feedNumber, Logger logger, String vendor, String category){
     try {
-      Feed feed = eventFeedService.getEventFeed(new URI(requestURL), feedNumber);
+      Feed feed = eventFeedService.getEventFeed(new URI(requestURL), category, feedNumber);
       try {
-        mapFeedBasedOnVendorAndCategory(feed, principalName, null);
+        mapFeedBasedOnVendorAndCategory(feed, vendor, category);
       } catch (IOException e) {
         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
       }

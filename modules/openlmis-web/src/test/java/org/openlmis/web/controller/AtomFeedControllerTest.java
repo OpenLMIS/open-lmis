@@ -41,7 +41,7 @@ public class AtomFeedControllerTest {
   public void shouldGetRecentFeeds() throws Exception {
     mockStatic(EventFeedServiceHelper.class);
     request = new MockHttpServletRequest();
-    when(EventFeedServiceHelper.getRecentFeed(eq(eventFeedService), anyString(), any(Logger.class))).thenReturn("feed");
+    when(EventFeedServiceHelper.getRecentFeed(eq(eventFeedService), anyString(), anyString(), any(Logger.class))).thenReturn("feed");
 
     //String recentFeeds = controller.getRecentFeeds(request);
 
@@ -52,7 +52,7 @@ public class AtomFeedControllerTest {
   public void shouldFeedById() throws Exception {
     mockStatic(EventFeedServiceHelper.class);
     request = new MockHttpServletRequest();
-    when(EventFeedServiceHelper.getEventFeed(eq(eventFeedService), anyString(), eq(1), any(Logger.class))).thenReturn("feed");
+    when(EventFeedServiceHelper.getEventFeed(eq(eventFeedService), anyString(), anyString(), eq(1), any(Logger.class))).thenReturn("feed");
 
     //String feed = controller.getFeed(request, 1);
 
