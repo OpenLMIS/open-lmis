@@ -10,13 +10,13 @@
   <div class="rnr-tabs clearfix">
     <ul class="clearfix">
       <li ng-class="{'selected': !showNonFullSupply, 'has-error': fullSupplyTabError}">
-        <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab">Full Supply Product(s)</a></li>
+        <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab" openlmis-message="label.full.supply.products"></a></li>
       <li ng-class="{'selected': showNonFullSupply, 'has-error': nonFullSupplyTabError}">
-        <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
+        <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab" openlmis-message="label.nonFull.supply.products"></a></li>
     </ul>
   </div>
 
-  <div ng-hide="programRnrColumnList">Loading...</div>
+  <div ng-hide="programRnrColumnList" openlmis-message="message.loading"></div>
   <form name="saveRnrForm" action="#" id="rnr-form" novalidate>
     <ng-switch on="showNonFullSupply">
       <span ng-switch-when="true">

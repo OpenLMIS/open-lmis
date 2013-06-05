@@ -232,10 +232,10 @@
 
   <div id = "lossesAndAdjustments" modal = "lossesAndAdjustmentsModal"
        options = "{'backdrop':'static', 'escape':false}" >
-    <div class = "modal-header" ><h3 >Losses And Adjustments </h3 ></div >
+    <div class = "modal-header" ><h3 openlmis-message="label.losses.adjustments"> </h3 ></div >
     <div class = "modal-body" >
       <div class = "adjustment-field" >
-        <h5 >Add new Loss/Adjustment</h5 >
+        <h5 openlmis-message="label.add.losses.adjustments"></h5 >
 
         <div class = "row-fluid" >
           <div class = "span5" >
@@ -303,7 +303,7 @@
 
       <div class = "adjustment-total clearfix alert alert-warning"
            ng-show = "currentRnrLineItem.lossesAndAdjustments.length > 0" >
-        <span class = "pull-left" >Total</span ><span
+        <span class = "pull-left" openlmis-message="label.losses.total"></span ><span
         ng-bind = "currentRnrLineItem.totalLossesAndAdjustments" ></span >
       </div >
       <div class = "alert alert-danger" id = "modalErrorMessage"

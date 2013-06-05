@@ -4,7 +4,7 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<h2>Convert Requisitions to Order</h2>
+<h2 openlmis-message="label.requisition.convertOrder"></h2>
 
 <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="message" ng-bind="message"></div>
 <div class="alert alert-info" id="noRequisitionSelectedMsgDiv" ng-show="noRequisitionSelectedMessage"
@@ -12,10 +12,10 @@
 
 <div class="app-form">
     <div class="form-group">
-        <h3>Requisition List</h3>
+        <h3 openlmis-message="label.requisition.list"></h3>
 
         <div class="alert alert-info" id="NoRequisitionsPendingMessage" ng-hide="requisitions.length">
-            No R&Rs are pending to be Converted as Orders
+            <span openlmis-message="message.noRnr.pending"></span>
         </div>
         <div ng-show="requisitions.length">
             <div class="row-fluid">
@@ -24,11 +24,11 @@
                            ng-model="query" placeholder="Search..."/>
                     in
                     <select ng-model="searchField" ng-change="filterRequisitions()">
-                        <option value="">All</option>
-                        <option value="programName">Program</option>
-                        <option value="facilityCode">Facility Code</option>
-                        <option value="facilityName">Facility Name</option>
-                        <option value="supplyingDepot">Supplying Depot</option>
+                        <option value="" openlmis-message="option.value.all"></option>
+                        <option value="programName" openlmis-message="option.value.program"></option>
+                        <option value="facilityCode" openlmis-message="option.value.facilityCode"></option>
+                        <option value="facilityName" openlmis-message="option.value.facilityName"></option>
+                        <option value="supplyingDepot" openlmis-message="option.value.supplyingDepot"></option>
                     </select>
                 </div>
             </div>
