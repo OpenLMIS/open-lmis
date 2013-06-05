@@ -267,7 +267,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     var visibleColumns = _.where(programRnrColumnList, {"visible":true});
 
     $(visibleColumns).each(function (i, column) {
-        var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved"];
+        var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved", "expirationDate"];
         if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name)) return;
         if (column.name == 'quantityRequested') {
           valid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);

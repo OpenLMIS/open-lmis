@@ -87,11 +87,10 @@
                   </span >
 
                   <span ng-switch-when = "expirationDate" >
-                    <input ng-required = "false" ng-disabled = "formDisabled"
+                    <input ng-disabled = "formDisabled"
                            id = "{{getId(column.name, $parent)}}" type = "text"
                            name = "expirationDate{{rnrLineItem['id']}}"
-                           ng-model = "rnrLineItem[column.name]"
-                           ng-class = "highlightRequired(rnrLineItem[column.name])" />
+                           ng-model = "rnrLineItem[column.name]"/>
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
                       <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
                       <span class = "beak-down" ></span >
