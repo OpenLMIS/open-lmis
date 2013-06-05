@@ -12,10 +12,7 @@ function ListMailinglabelsController($scope, MailingLabels, ReportFacilityTypes,
         };
 
         $scope.filterGrid = function (){
-           // if (!$scope.$$phase) {
-                $scope.$apply();
-            //}
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+           $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
         //filter form data section    facilityName
@@ -52,6 +49,7 @@ function ListMailinglabelsController($scope, MailingLabels, ReportFacilityTypes,
             }else{
                 $scope.filterObject.facilityNameFilter = "";
             }
+            $scope.filterGrid();
         });
         $scope.$watch('facilityCodeFilter', function(selection){
             if(selection != undefined || selection == ""){
@@ -60,6 +58,7 @@ function ListMailinglabelsController($scope, MailingLabels, ReportFacilityTypes,
             }else{
                 $scope.filterObject.facilityCodeFilter = "";
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('facilityType.value', function(selection){
@@ -69,6 +68,7 @@ function ListMailinglabelsController($scope, MailingLabels, ReportFacilityTypes,
             }else{
                 $scope.filterObject.facilityTypeId =  0;
             }
+            $scope.filterGrid();
         });
 
     $scope.export   = function (type){
@@ -107,10 +107,6 @@ function ListMailinglabelsController($scope, MailingLabels, ReportFacilityTypes,
             $scope.myData = data; //pagedData;//
             $scope.pagingOptions.totalServerItems = total;//data.length;
             $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
-
-            if (!$scope.$$phase) {
-                $scope.$apply();
-            }
 
         };
 

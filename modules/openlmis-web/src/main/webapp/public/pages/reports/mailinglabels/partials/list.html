@@ -21,7 +21,7 @@
                                     <label class="labels">Facility Name</label>
 
                                     <div class="form-field">
-                                        <input id="name" type="text" ng-change="filterGrid()" ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
+                                        <input id="name" type="text"  ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
                                     </div>
                                 </div>
 
@@ -30,14 +30,14 @@
                                     <label class="labels">Facility Code</label>
 
                                     <div class="form-field">
-                                        <input id="code" ng-change="filterGrid()" type="text" ng-model="facilityCodeFilter" placeholder="facility code" class="input_text" />
+                                        <input id="code"  type="text" ng-model="facilityCodeFilter" placeholder="facility code" class="input_text" />
                                     </div>
                                 </div>
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" id="facility-type" ng-change="filterGrid()" name="facilityType" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
+                                        <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
 
                                         </select>
                                     </div>

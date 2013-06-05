@@ -114,9 +114,6 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
 
 
         $scope.filterGrid = function (){
-            //if (!$scope.$$phase) {
-                $scope.$apply();
-            //}
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
@@ -188,6 +185,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             }else{
                 $scope.filterObject.zoneId = 0;
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('status.value', function(selection){
@@ -197,6 +195,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             }else{
                 $scope.filterObject.statusId ='';
             }
+            $scope.filterGrid();
         });
         $scope.$watch('facilityType.value', function(selection){
             if(selection != undefined || selection == ""){
@@ -212,6 +211,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
                 $scope.filterObject.facilityTypeId =  0;
                 $scope.filterObject.facilityType = "";
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('startYear', function(selection){
@@ -227,6 +227,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             $scope.filterObject.fromYear =  date.getFullYear();
 
         }
+            $scope.filterGrid();
         });
 
         $scope.$watch('endYear', function(selection){
@@ -244,6 +245,8 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
 
             }
 
+            $scope.filterGrid();
+
         });
 
      $scope.$watch('startQuarter', function(selection){
@@ -252,8 +255,9 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
          adjustEndQuarters();
          }else{
          var date = new Date();
-         $scope.filterObject.fromQuarter =  (date.getMonth() / 4)+1;
+         $scope.filterObject.fromQuarter =  1;
          }
+         $scope.filterGrid();
      });
 
     $scope.$watch('endQuarter', function(selection){
@@ -261,8 +265,9 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             $scope.filterObject.toQuarter =  selection;
         }else{
             var date = new Date();
-            $scope.filterObject.toQuarter =  (date.getMonth() / 4)+1;
+            $scope.filterObject.toQuarter =  $scope.filterObject.fromQuarter;
         }
+        $scope.filterGrid();
     });
 
     $scope.$watch('startHalf', function(selection){
@@ -273,6 +278,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
         }else{
             $scope.filterObject.fromSemiAnnual =  1;
         }
+        $scope.filterGrid();
     });
     $scope.$watch('endHalf', function(selection){
 
@@ -282,6 +288,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             var date = new Date();
             $scope.filterObject.toSemiAnnual =  1;
         }
+        $scope.filterGrid();
     });
 
         $scope.$watch('startMonth', function(selection){
@@ -294,6 +301,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
                 $scope.startMonth = (date.getMonth()+1 );
                 $scope.filterObject.fromMonth =  (date.getMonth()+1);
             }
+            $scope.filterGrid();
         });
 
 
@@ -305,6 +313,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
                 $scope.endMonth = (date.getMonth() +1 );
                 $scope.filterObject.toMonth =  (date.getMonth()+1);
             }
+            $scope.filterGrid();
 
         });
 
@@ -387,6 +396,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             }else{
                 $scope.filterObject.periodType =  "monthly";
             }
+            $scope.filterGrid();
 
         });
 
@@ -396,6 +406,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             }else{
                 $scope.filterObject.productCategoryId =  0;
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('product', function(selection){
@@ -404,6 +415,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             }else{
                 $scope.filterObject.productId =  0;
             }
+            $scope.filterGrid();
         });
 
 
@@ -419,6 +431,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
                 $scope.filterObject.rgroupId =  0;
                 $scope.filterObject.rgroup = "";
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('program', function(selection){
@@ -427,6 +440,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             }else{
                 $scope.filterObject.programId =  0;
             }
+            $scope.filterGrid();
         });
 
 
@@ -469,10 +483,6 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             $scope.pagingOptions.totalServerItems = total;
             $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
 
-            if (!$scope.$$phase) {
-                $scope.$apply();
-            }
-
         };
 
         $scope.getPagedDataAsync = function (pageSize, page) {
@@ -499,7 +509,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
                         });
 
                         AverageConsumptionReport.get(params, function(data) {
-                            $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
+                           $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total) ;
                             if(data.pages.rows != undefined ){
                                 $scope.MinMos = data.pages.rows[0].minMOS;
                                 $scope.MaxMos=data.pages.rows[0].maxMOS;

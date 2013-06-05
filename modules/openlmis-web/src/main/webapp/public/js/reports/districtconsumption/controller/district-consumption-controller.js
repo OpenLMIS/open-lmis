@@ -110,10 +110,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             return $scope.periodType == 'semi-anual';
         };
         $scope.filterGrid = function (){
-            //if (!$scope.$$phase) {
-                $scope.$apply();
-            //}
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+          $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
         //filter form data section
@@ -197,6 +194,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             }else{
                 $scope.filterObject.zoneId = 0;
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('status.value', function(selection){
@@ -206,6 +204,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             }else{
                 $scope.filterObject.statusId ='';
             }
+            $scope.filterGrid();
         });
         $scope.$watch('facilityType.value', function(selection){
             if(selection != undefined || selection == ""){
@@ -221,20 +220,22 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
                 $scope.filterObject.facilityTypeId =  0;
                 $scope.filterObject.facilityType = "";
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('startYear', function(selection){
             var date = new Date();
-        if(selection != undefined || selection == ""){
-            $scope.filterObject.fromYear =  selection;
-            adjustEndYears();
-            adjustEndMonths();
-            adjustEndQuarters();
-            adjustEndSemiAnnuals();
-        }else{
-            $scope.startYear  = date.getFullYear().toString();
-            $scope.filterObject.fromYear =  date.getFullYear();
-        }
+            if(selection != undefined || selection == ""){
+                $scope.filterObject.fromYear =  selection;
+                adjustEndYears();
+                adjustEndMonths();
+                adjustEndQuarters();
+                adjustEndSemiAnnuals();
+            }else{
+                $scope.startYear  = date.getFullYear().toString();
+                $scope.filterObject.fromYear =  date.getFullYear();
+            }
+            $scope.filterGrid();
         });
 
         $scope.$watch('endYear', function(selection){
@@ -248,6 +249,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
                 $scope.endYear  = date.getFullYear().toString();
                 $scope.filterObject.toYear =  date.getFullYear();
             }
+            $scope.filterGrid();
         });
 
     $scope.$watch('startQuarter', function(selection){
@@ -259,6 +261,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             var date = new Date();
             $scope.filterObject.fromQuarter =  (date.getMonth() / 4)+1;
         }
+        $scope.filterGrid();
     });
 
     $scope.$watch('endQuarter', function(selection){
@@ -269,6 +272,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             var date = new Date();
             $scope.filterObject.toQuarter =  (date.getMonth() / 4)+1;
         }
+        $scope.filterGrid();
     });
 
     $scope.$watch('startHalf', function(selection){
@@ -279,6 +283,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
         }else{
             $scope.filterObject.fromSemiAnnual =  1;
         }
+        $scope.filterGrid();
     });
     $scope.$watch('endHalf', function(selection){
 
@@ -288,6 +293,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             var date = new Date();
             $scope.filterObject.toSemiAnnual =  1;
         }
+        $scope.filterGrid();
     });
         $scope.$watch('startMonth', function(selection){
             var date = new Date();
@@ -298,6 +304,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
                 $scope.startMonth = (date.getMonth()+1 ).toString();
                 $scope.filterObject.fromMonth =  (date.getMonth()+1);
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('endMonth', function(selection){
@@ -308,6 +315,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
                 $scope.endMonth = (date.getMonth() +1 ).toString();
                 $scope.filterObject.toMonth =  (date.getMonth()+1);
             }
+            $scope.filterGrid();
         });
 
     var adjustEndMonths = function(){
@@ -482,9 +490,6 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             $scope.pagingOptions.totalServerItems = total;
             $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
 
-            if (!$scope.$$phase) {
-                $scope.$apply();
-            }
 
         };
 

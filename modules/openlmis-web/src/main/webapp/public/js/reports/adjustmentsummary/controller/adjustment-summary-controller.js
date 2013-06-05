@@ -110,9 +110,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             return $scope.periodType == 'semi-anual';
         };
         $scope.filterGrid = function (){
-           // if (!$scope.$$phase) {
-                $scope.$apply();
-           // }
+
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
@@ -197,6 +195,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             }else{
                 $scope.filterObject.zoneId = 0;
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('status.value', function(selection){
@@ -206,6 +205,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             }else{
                 $scope.filterObject.statusId ='';
             }
+            $scope.filterGrid();
         });
         $scope.$watch('facilityType.value', function(selection){
             if(selection != undefined || selection == ""){
@@ -221,6 +221,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
                 $scope.filterObject.facilityTypeId =  0;
                 $scope.filterObject.facilityType = "";
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('startYear', function(selection){
@@ -235,6 +236,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             $scope.startYear  = date.getFullYear().toString();
             $scope.filterObject.fromYear =  date.getFullYear();
         }
+            $scope.filterGrid();
         });
 
         $scope.$watch('endYear', function(selection){
@@ -248,6 +250,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
                 $scope.endYear  = date.getFullYear().toString();
                 $scope.filterObject.toYear =  date.getFullYear();
             }
+            $scope.filterGrid();
         });
 
     $scope.$watch('startQuarter', function(selection){
@@ -257,8 +260,9 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             adjustEndQuarters();
         }else{
             var date = new Date();
-            $scope.filterObject.fromQuarter =  (date.getMonth() / 4)+1;
+            $scope.filterObject.fromQuarter =  1;
         }
+        $scope.filterGrid();
     });
 
     $scope.$watch('endQuarter', function(selection){
@@ -267,8 +271,9 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             $scope.filterObject.toQuarter =  selection;
         }else{
             var date = new Date();
-            $scope.filterObject.toQuarter =  (date.getMonth() / 4)+1;
+            $scope.filterObject.toQuarter =  $scope.filterObject.fromQuarter;
         }
+        $scope.filterGrid();
     });
 
     $scope.$watch('startHalf', function(selection){
@@ -279,6 +284,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
         }else{
             $scope.filterObject.fromSemiAnnual =  1;
         }
+        $scope.filterGrid();
     });
     $scope.$watch('endHalf', function(selection){
 
@@ -288,6 +294,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             var date = new Date();
             $scope.filterObject.toSemiAnnual =  1;
         }
+        $scope.filterGrid();
     });
         $scope.$watch('startMonth', function(selection){
             var date = new Date();
@@ -298,6 +305,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
                 $scope.startMonth = (date.getMonth()+1 ).toString();
                 $scope.filterObject.fromMonth =  (date.getMonth()+1);
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('endMonth', function(selection){
@@ -308,6 +316,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
                 $scope.endMonth = (date.getMonth() +1 ).toString();
                 $scope.filterObject.toMonth =  (date.getMonth()+1);
             }
+            $scope.filterGrid();
         });
 
     var adjustEndMonths = function(){
@@ -379,7 +388,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             }else{
                 $scope.filterObject.periodType =  "monthly";
             }
-
+        $scope.filterGrid();
         });
 
         $scope.$watch('productCategory', function(selection){
@@ -388,6 +397,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             }else{
                 $scope.filterObject.productCategoryId =  0;
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('product', function(selection){
@@ -396,6 +406,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             }else{
                 $scope.filterObject.productId =  0;
             }
+            $scope.filterGrid();
         });
 
 
@@ -411,6 +422,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
                 $scope.filterObject.rgroupId =  0;
                 $scope.filterObject.rgroup = "";
             }
+            $scope.filterGrid();
         });
 
         $scope.$watch('program', function(selection){
@@ -419,6 +431,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             }else{
                 $scope.filterObject.programId =  0;
             }
+            $scope.filterGrid();
         });
 
     $scope.$watch('program.value', function(selection){
@@ -427,6 +440,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
         }else{
             $scope.filterObject.programId =  0;
         }
+        $scope.filterGrid();
     });
 
     $scope.$watch('adjustmentType.value', function(selection){
@@ -441,6 +455,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             $scope.filterObject.adjustmentTypeId =  "";
             $scope.filterObject.adjustmentType = "";
         }
+        $scope.filterGrid();
     });
 
 
@@ -481,10 +496,6 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             $scope.myData = data;
             $scope.pagingOptions.totalServerItems = total;
             $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
-
-            if (!$scope.$$phase) {
-                $scope.$apply();
-            }
 
         };
 

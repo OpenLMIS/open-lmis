@@ -21,7 +21,6 @@ function SupplyStatusController($scope, RequisitionGroupsByProgramSchedule , Req
 
 
         $scope.filterGrid = function (){
-            $scope.$apply();
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
@@ -113,10 +112,6 @@ function SupplyStatusController($scope, RequisitionGroupsByProgramSchedule , Req
             $scope.myData = data;
             $scope.pagingOptions.totalServerItems = total;
             $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
-
-            if (!$scope.$$phase) {
-                $scope.$apply();
-            }
 
         };
 
