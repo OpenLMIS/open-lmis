@@ -35,7 +35,7 @@
 	<field name="product" class="java.lang.String"/>
 	<field name="district" class="java.lang.String"/>
 	<field name="consumption" class="java.lang.Long"/>
-	<field name="totalpercentage" class="java.math.BigDecimal"/>
+	<field name="totalPercentage" class="java.math.BigDecimal"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
@@ -199,7 +199,7 @@
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{totalpercentage} == null ? 0 : ($F{totalpercentage} > 0 ? $F{totalpercentage}+'%' : 0 )]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{totalPercentage} == null ? 0 : ($F{totalPercentage} > 0 ? $F{totalPercentage}.setScale(2, java.math.RoundingMode.HALF_UP) +'%' : 0 )]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
