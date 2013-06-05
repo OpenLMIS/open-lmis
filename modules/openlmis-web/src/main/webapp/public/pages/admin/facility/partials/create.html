@@ -6,7 +6,11 @@
 
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
 <div ng-hide="facility.id"><h2 openlmis-message="create.facility.addNew"></h2></div>
-<div ng-show="facility.id"><h2 openlmis-message="edit.facility.edit"></h2></div>
+<div ng-show="facility.id">
+  <h2><span openlmis-message="edit.facility.edit"></span>
+    <a href="#/search" class="pull-right btn btn-primary" openlmis-message="button.backToFacilities"></a>
+  </h2>
+</div>
 
 <form ng-submit="saveFacility()" id="create-facility" name="facilityForm" novalidate
       ng-disabled="facility.dataReportable == 'false'">

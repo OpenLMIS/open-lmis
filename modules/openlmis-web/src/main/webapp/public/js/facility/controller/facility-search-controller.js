@@ -4,11 +4,17 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function FacilitySearchController($scope, AllFacilities, $location) {
+function FacilitySearchController($scope, AllFacilities, $location, proceedBackService) {
 
+  $scope.$on('$viewContentLoaded', function() {
+    $scope.query = proceedBackService.query;
+    $scope.updateFilteredQueryList();
+  });
   $scope.previousQuery = '';
 
   $scope.editFacility = function (id) {
+    var data = {query: $scope.query};
+    proceedBackService.setData(data);
     $location.path('edit/' + id);
   };
 

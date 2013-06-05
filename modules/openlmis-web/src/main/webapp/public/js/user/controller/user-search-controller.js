@@ -4,7 +4,11 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function UserSearchController($scope, $location, Users) {
+function UserSearchController($scope, $location, Users, proceedBackService) {
+  $scope.$on('$viewContentLoaded', function() {
+    $scope.$apply($scope.query = proceedBackService.query);
+    $scope.showUserSearchResults('searchUser');
+  });
   $scope.previousQuery = '';
 
   $scope.showUserSearchResults = function (id) {
@@ -32,6 +36,8 @@ function UserSearchController($scope, $location, Users) {
   };
 
   $scope.editUser = function (id) {
+    var data = {query: $scope.query};
+    proceedBackService.setData(data);
     $location.path('edit/' + id);
   };
 
