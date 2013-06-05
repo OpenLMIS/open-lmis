@@ -110,6 +110,7 @@ public class DBWrapper {
     update("DELETE FROM requisition_line_item_losses_adjustments;");
     update("DELETE FROM requisition_line_items;");
     update("delete from products;");
+    update("delete from product_categories;");
     update("delete from user_password_reset_tokens ;");
     update("delete from comments;");
     update("delete from users where userName not like('Admin%');");
@@ -657,6 +658,17 @@ public class DBWrapper {
     update("INSERT INTO requisition_line_items \n" +
       "  (rnrid, productcode, beginningbalance, quantityreceived, quantitydispensed, stockinhand, normalizedconsumption, dispensingunit, maxmonthsofstock, dosespermonth, dosesperdispensingunit,packsize,fullsupply) VALUES\n" +
       "  ((SELECT id FROM requisitions), '" + product + "', '0', '11' , '1', '10', '1' ,'Strip','0', '0', '0', '10','t');");
+
+  }
+
+  public String getRowsCountFromDB(String tableName) throws IOException, SQLException{
+    String rowCount = null;
+    ResultSet rs = query("SELECT count(*) as count from "+tableName+"");
+
+    if (rs.next()) {
+      rowCount = rs.getString("count");
+    }
+    return rowCount;
 
   }
 }

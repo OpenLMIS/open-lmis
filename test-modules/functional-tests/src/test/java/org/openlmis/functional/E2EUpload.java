@@ -27,6 +27,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 
@@ -297,50 +299,70 @@ public class E2EUpload extends TestCaseHelper {
   }
 
 
-  private void verifyValidUserUpload(UploadPage uploadPage) throws FileNotFoundException {
+  private void verifyValidUserUpload(UploadPage uploadPage) throws IOException, SQLException {
+    String tableName = "users";
     uploadPage.uploadUsers("QA_Users.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
   }
 
-  private void verifyInValidUserUpload(UploadPage uploadPage) throws FileNotFoundException {
+  private void verifyInValidUserUpload(UploadPage uploadPage) throws IOException, SQLException {
+    String tableName = "users";
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_Email.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_EmployeeId.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_UserName.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Invalid_Supervisor.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Subsequent_Duplicate_Username.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Subsequent_InvalidCombination.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
   }
 
-  private void verifyValidProductCategoryUpload(UploadPage uploadPage) throws FileNotFoundException {
+  private void verifyValidProductCategoryUpload(UploadPage uploadPage) throws IOException, SQLException {
+    String tableName="product_categories";
     uploadPage.uploadProductCategory("QA_Productcategoryupload.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "18");
     uploadPage.uploadProductCategory("QA_Productcategoryupload_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "20");
   }
 
-  private void verifyInvalidProductCategoryUpload(UploadPage uploadPage) throws FileNotFoundException {
+  private void verifyInvalidProductCategoryUpload(UploadPage uploadPage) throws IOException, SQLException {
+    String tableName="product_categories";
     uploadPage.uploadProductCategory("QA_ProductCategoryUpload_DuplicateCategoryCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "20");
     uploadPage.uploadProductCategory("QA_Productcategoryupload_Subsequent_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "20");
   }
 
-  private void verifyInValidProductUpload(UploadPage uploadPage) throws FileNotFoundException {
+  private void verifyInValidProductUpload(UploadPage uploadPage) throws IOException, SQLException {
+    String tableName="products";
     uploadPage.uploadProductsInvalidScenarios("QA_products_Duplicate_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
   }
 
-  private void verifyValidProductUpload(UploadPage uploadPage) throws FileNotFoundException {
+  private void verifyValidProductUpload(UploadPage uploadPage) throws IOException, SQLException {
+    String tableName="products";
     uploadPage.uploadProducts("QA_products.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "1");
     uploadPage.uploadProducts("QA_products_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
   }
 
   @AfterMethod(groups = {"functional"})
