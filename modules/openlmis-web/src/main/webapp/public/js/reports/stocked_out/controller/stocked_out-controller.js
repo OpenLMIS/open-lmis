@@ -77,9 +77,6 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
         };
 
         $scope.filterGrid = function (){
-            if (!$scope.$$phase) {
-                $scope.$apply();
-            }
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
@@ -121,7 +118,7 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
         })
 
         $scope.ChangeSchedule = function(){
-            if($scope.schedule != undefined &&  $scope.isPreDefined){
+          //  if($scope.schedule != undefined &&  $scope.isPreDefined){
                     Periods.get({ scheduleId : $scope.schedule },function(data) {
                         $scope.periods = data.periods;
                         $scope.periods.push({'name': 'Select Period'});
@@ -131,7 +128,7 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
                         $scope.requisitionGroups = data.requisitionGroupList;
                         $scope.requisitionGroups.push({'name':'All requsition groups'});
                     });
-            }
+          //  }
 
         }
 
@@ -342,10 +339,6 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
             $scope.myData = data;
             $scope.pagingOptions.totalServerItems = total;
             $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
-
-            if (!$scope.$$phase) {
-                $scope.$apply();
-            }
 
         };
 
