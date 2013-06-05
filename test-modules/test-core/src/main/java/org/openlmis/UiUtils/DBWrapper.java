@@ -317,22 +317,24 @@ public class DBWrapper {
       "(3, (select id from programs where code = '" + program + "'),  true, 'R', 3,  'Unit/Unit of Issue'),\n" +
       "(4, (select id from programs where code = '" + program + "'),  true, 'U', 4,  'Beginning Balance'),\n" +
       "(5, (select id from programs where code = '" + program + "'),  true, 'U', 5,  'Total Received Quantity'),\n" +
-      "(6, (select id from programs where code = '" + program + "'),  true, 'U', 6,  'Total Consumed Quantity'),\n" +
-      "(7, (select id from programs where code = '" + program + "'),  true, 'U', 7,  'Total Losses / Adjustments'),\n" +
-      "(8, (select id from programs where code = '" + program + "'),  true, 'C', 8,  'Stock on Hand'),\n" +
-      "(9, (select id from programs where code = '" + program + "'),  true, 'U', 9, 'New Patients'),\n" +
-      "(10, (select id from programs where code = '" + program + "'), true, 'U', 10, 'Total Stockout days'),\n" +
-      "(11, (select id from programs where code = '" + program + "'), true, 'C', 11, 'Adjusted Total Consumption'),\n" +
-      "(12, (select id from programs where code = '" + program + "'), true, 'C', 12, 'Average Monthly Consumption(AMC)'),\n" +
-      "(13, (select id from programs where code = '" + program + "'), true, 'C', 13, 'Maximum Stock Quantity'),\n" +
-      "(14, (select id from programs where code = '" + program + "'), true, 'C', 14, 'Calculated Order Quantity'),\n" +
-      "(15, (select id from programs where code = '" + program + "'), true, 'U', 15, 'Requested quantity'),\n" +
-      "(16, (select id from programs where code = '" + program + "'), true, 'U', 16, 'Requested quantity explanation'),\n" +
-      "(17, (select id from programs where code = '" + program + "'), true, 'U', 17, 'Approved Quantity'),\n" +
-      "(18, (select id from programs where code = '" + program + "'), true, 'C', 18, 'Packs to Ship'),\n" +
-      "(19, (select id from programs where code = '" + program + "'), true, 'R', 19, 'Price per pack'),\n" +
-      "(20, (select id from programs where code = '" + program + "'), true, 'C', 20, 'Total cost'),\n" +
-      "(21, (select id from programs where code = '" + program + "'), true, 'U', 21, 'Remarks');");
+      "(6, (select id from programs where code = '" + program + "'),  true, 'C', 6,  'Total'),\n" +
+      "(7, (select id from programs where code = '" + program + "'),  true, 'U', 7,  'Total Consumed Quantity'),\n" +
+      "(8, (select id from programs where code = '" + program + "'),  true, 'U', 8,  'Total Losses / Adjustments'),\n" +
+      "(9, (select id from programs where code = '" + program + "'),  true, 'C', 9,  'Stock on Hand'),\n" +
+      "(10, (select id from programs where code = '" + program + "'),  true, 'U', 10, 'New Patients'),\n" +
+      "(11, (select id from programs where code = '" + program + "'), true, 'U', 11, 'Total Stockout days'),\n" +
+      "(12, (select id from programs where code = '" + program + "'), true, 'C', 12, 'Adjusted Total Consumption'),\n" +
+      "(13, (select id from programs where code = '" + program + "'), true, 'C', 13, 'Average Monthly Consumption(AMC)'),\n" +
+      "(14, (select id from programs where code = '" + program + "'), true, 'C', 14, 'Maximum Stock Quantity'),\n" +
+      "(15, (select id from programs where code = '" + program + "'), true, 'C', 15, 'Calculated Order Quantity'),\n" +
+      "(16, (select id from programs where code = '" + program + "'), true, 'U', 16, 'Requested quantity'),\n" +
+      "(17, (select id from programs where code = '" + program + "'), true, 'U', 17, 'Requested quantity explanation'),\n" +
+      "(18, (select id from programs where code = '" + program + "'), true, 'U', 18, 'Approved Quantity'),\n" +
+      "(19, (select id from programs where code = '" + program + "'), true, 'C', 19, 'Packs to Ship'),\n" +
+      "(20, (select id from programs where code = '" + program + "'), true, 'R', 20, 'Price per pack'),\n" +
+      "(21, (select id from programs where code = '" + program + "'), true, 'C', 21, 'Total cost'),\n" +
+      "(22, (select id from programs where code = '" + program + "'), true, 'U', 22, 'Expiration Date'),\n" +
+      "(23, (select id from programs where code = '" + program + "'), true, 'U', 23, 'Remarks');");
   }
 
   public void configureTemplateForCommTrack(String program) throws SQLException, IOException {
@@ -343,22 +345,24 @@ public class DBWrapper {
       "(3, (select id from programs where code = '" + program + "'),  true, 'R', 3,  'Unit/Unit of Issue'),\n" +
       "(4, (select id from programs where code = '" + program + "'),  false, 'C', 4,  'Beginning Balance'),\n" +
       "(5, (select id from programs where code = '" + program + "'),  false, 'C', 5,  'Total Received Quantity'),\n" +
-      "(6, (select id from programs where code = '" + program + "'),  false, 'C', 6,  'Total Consumed Quantity'),\n" +
-      "(7, (select id from programs where code = '" + program + "'),  true, 'U', 7,  'Total Losses / Adjustments'),\n" +
-      "(8, (select id from programs where code = '" + program + "'),  true, 'U', 8,  'Stock on Hand'),\n" +
-      "(9, (select id from programs where code = '" + program + "'),  true, 'U', 9, 'New Patients'),\n" +
-      "(10, (select id from programs where code = '" + program + "'), true, 'U', 10, 'Total Stockout days'),\n" +
-      "(11, (select id from programs where code = '" + program + "'), true, 'C', 11, 'Adjusted Total Consumption'),\n" +
-      "(12, (select id from programs where code = '" + program + "'), true, 'C', 12, 'Average Monthly Consumption(AMC)'),\n" +
-      "(13, (select id from programs where code = '" + program + "'), true, 'C', 13, 'Maximum Stock Quantity'),\n" +
-      "(14, (select id from programs where code = '" + program + "'), true, 'C', 14, 'Calculated Order Quantity'),\n" +
-      "(15, (select id from programs where code = '" + program + "'), true, 'U', 15, 'Requested quantity'),\n" +
-      "(16, (select id from programs where code = '" + program + "'), true, 'U', 16, 'Requested quantity explanation'),\n" +
-      "(17, (select id from programs where code = '" + program + "'), true, 'U', 17, 'Approved Quantity'),\n" +
-      "(18, (select id from programs where code = '" + program + "'), true, 'C', 18, 'Packs to Ship'),\n" +
-      "(19, (select id from programs where code = '" + program + "'), true, 'R', 19, 'Price per pack'),\n" +
-      "(20, (select id from programs where code = '" + program + "'), true, 'C', 20, 'Total cost'),\n" +
-      "(21, (select id from programs where code = '" + program + "'), true, 'U', 21, 'Remarks');");
+      "(6, (select id from programs where code = '" + program + "'),  true, 'C', 6,  'Total'),\n" +
+      "(7, (select id from programs where code = '" + program + "'),  false, 'C', 7,  'Total Consumed Quantity'),\n" +
+      "(8, (select id from programs where code = '" + program + "'),  true, 'U', 8,  'Total Losses / Adjustments'),\n" +
+      "(9, (select id from programs where code = '" + program + "'),  true, 'U', 9,  'Stock on Hand'),\n" +
+      "(10, (select id from programs where code = '" + program + "'),  true, 'U', 10, 'New Patients'),\n" +
+      "(11, (select id from programs where code = '" + program + "'), true, 'U', 11, 'Total Stockout days'),\n" +
+      "(12, (select id from programs where code = '" + program + "'), true, 'C', 12, 'Adjusted Total Consumption'),\n" +
+      "(13, (select id from programs where code = '" + program + "'), true, 'C', 13, 'Average Monthly Consumption(AMC)'),\n" +
+      "(14, (select id from programs where code = '" + program + "'), true, 'C', 14, 'Maximum Stock Quantity'),\n" +
+      "(15, (select id from programs where code = '" + program + "'), true, 'C', 15, 'Calculated Order Quantity'),\n" +
+      "(16, (select id from programs where code = '" + program + "'), true, 'U', 16, 'Requested quantity'),\n" +
+      "(17, (select id from programs where code = '" + program + "'), true, 'U', 17, 'Requested quantity explanation'),\n" +
+      "(18, (select id from programs where code = '" + program + "'), true, 'U', 18, 'Approved Quantity'),\n" +
+      "(19, (select id from programs where code = '" + program + "'), true, 'C', 19, 'Packs to Ship'),\n" +
+      "(20, (select id from programs where code = '" + program + "'), true, 'R', 20, 'Price per pack'),\n" +
+      "(21, (select id from programs where code = '" + program + "'), true, 'C', 21, 'Total cost'),\n" +
+      "(22, (select id from programs where code = '" + program + "'), true, 'U', 22, 'Expiration Date'),\n" +
+      "(23, (select id from programs where code = '" + program + "'), true, 'U', 23, 'Remarks');");
   }
 
   public String getFacilityIDDB() throws IOException, SQLException {

@@ -46,15 +46,15 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.fillNormalizedConsumption();
   };
 
-  function statusBeforeAuthorize() {
-    return rnrStatus == 'INITIATED' || rnrStatus == 'SUBMITTED';
+  function statusBeforeApproval() {
+    return rnrStatus == 'INITIATED' || rnrStatus == 'SUBMITTED' || rnrStatus == 'AUTHORIZED';
   }
 
   RnrLineItem.prototype.fillPacksToShip = function () {
     this.quantityApproved = utils.getValueFor(this.quantityApproved);
     var orderQuantity;
 
-    if (statusBeforeAuthorize()) orderQuantity = isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
+    if (statusBeforeApproval()) orderQuantity = isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
     else orderQuantity = this.quantityApproved;
 
     this.calculatePacksToShip(orderQuantity);
