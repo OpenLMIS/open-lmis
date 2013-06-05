@@ -25,7 +25,52 @@
                                     </div>
                                 </div>
 
-                                <div class="form-cell horizontalFilters" >
+                                <div class="form-cell horizontalFilters">
+                                    <div >
+                                        <label class="labels">Period Type</label>
+                                        <div class="form-field">
+                                            <select ui-select2 style="width:200px;" ng-required="true" ng-change="filterGrid()" name="periodType" ng-model="periodType" ng-options="option.value as option.name for option in periodTypes">
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters" style="width:180px" ng-show="isCustom()">
+                                    <label class="labels">From</label>
+
+                                    <div class="form-field">
+
+                                        <select ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="startYear" ng-model="startYear" ng-options="year for year in startYears">
+
+                                        </select>
+                                            <span>
+                                                <select  ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="startMonth" ng-model="startMonth" ng-options="option.value as option.name for option in startMonths">
+
+                                                </select>
+                                            </span>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters" style="width:180px" ng-show="isCustom()">
+                                    <label class="labels">To</label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="endYear" ng-model="endYear" ng-options="year for year in endYears">
+
+                                        </select>
+                                            <span>
+                                                <select ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="endMonth" ng-model="endMonth" ng-options="option.value as option.name for option in endMonths">
+
+                                                </select>
+                                            </span>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="form-cell horizontalFilters" ng-show="isPreDefined()">
                                     <label class="labels">Schedule</label>
 
                                     <div class="form-fields">
@@ -35,11 +80,11 @@
                                     </div>
                                 </div>
 
-                                <div class="form-cell horizontalFilters">
+                                <div class="form-cell horizontalFilters" ng-show="isPreDefined()">
                                     <label class="labels">Period</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="period" ng-options="option.id as option.name for option in periods">
+                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  ng-change="filterGrid()" name="period" ng-model="period" ng-options="option.id as option.name for option in periods">
 
                                         </select>
                                     </div>
@@ -49,7 +94,7 @@
                                     <label class="labels">Requisition Groups</label>
 
                                     <div class="form-fields">
-                                        <select ui-select2 style="width:300px;" class="extra-large-input" name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
+                                        <select ui-select2 style="width:300px;" class="extra-large-input" ng-change="filterGrid()" name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
 
                                         </select>
                                     </div>
@@ -59,7 +104,7 @@
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="facilityTypeElement"  ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
+                                        <select ui-select2 style="width:200px;" name="facilityTypeElement"  ng-change="filterGrid()" ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
 
                                         </select>
                                     </div>
@@ -69,7 +114,7 @@
                                     <label class="labels">Product Categories</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="productCategoryElement"  ng-model="productCategory" ng-options="option.id as option.name for option in productCategories">
+                                        <select ui-select2 style="width:200px;" name="productCategoryElement"  ng-change="filterGrid()" ng-model="productCategory" ng-options="option.id as option.name for option in productCategories">
 
                                         </select>
                                     </div>
