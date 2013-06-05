@@ -106,7 +106,7 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//li[@id='R']/span/input")
   private static WebElement productNameCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='L']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='Q']/span[@class='tpl-visible']/input")
   private static WebElement remarksCheckBox;
 
   @FindBy(how = How.XPATH, using = "//li[@id='D']/span[@class='tpl-label']/input")
@@ -530,7 +530,7 @@ public class TemplateConfigPage extends Page {
   }
 
   public void verifyMandatoryColumns() {
-    verifyMandatoryColumnsEditable(productCodeCheckBox);
+    //verifyMandatoryColumnsEditable(productCodeCheckBox);
     verifyMandatoryColumnsEditable(productNameCheckBox);
   }
 
@@ -554,6 +554,7 @@ public class TemplateConfigPage extends Page {
     testWebDriver.waitForElementToAppear(SaveButton);
     beginningBalance.clear();
     beginningBalance.sendKeys(columnHeadingToBeAltered);
+    testWebDriver.waitForElementToAppear(remarksCheckBox);
     remarksCheckBox.click();
     clickSaveButton();
     verifySuccessDiv();

@@ -31,6 +31,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
 
     this.reEvaluateTotalLossesAndAdjustments();
     this.fillConsumptionOrStockInHand();
+    this.calculateCost();
   };
 
   RnrLineItem.prototype.fillConsumptionOrStockInHand = function () {
