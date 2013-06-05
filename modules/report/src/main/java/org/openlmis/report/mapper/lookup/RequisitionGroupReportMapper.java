@@ -35,4 +35,13 @@ public interface RequisitionGroupReportMapper {
             " order by g.name")
     List<RequisitionGroup> getByProgramAndSchedule(int program, int schedule);
 
+    @Select("SELECT g.id, g.name, g.code " +
+            "   FROM " +
+            "       requisition_groups g" +
+            "       join requisition_group_program_schedules ps on ps.requisitiongroupid = g.id " +
+            " where " +
+            " ps.programid = cast( #{param1} as int4) " +
+            " and  g.id in (select rgm.requisitiongroupid from requisition_group_members rgm join programs_supported ps on rgm.facilityid = ps.facilityid where ps.programid = cast(#{param1} as int4) ) " +
+            " order by g.name")
+    List<RequisitionGroup> getByProgram(int program);
 }

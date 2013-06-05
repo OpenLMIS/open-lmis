@@ -25,7 +25,52 @@
                                     </div>
                                 </div>
 
-                                <div class="form-cell horizontalFilters" >
+                                <div class="form-cell horizontalFilters">
+                                    <div >
+                                        <label class="labels">Period Type</label>
+                                        <div class="form-field">
+                                            <select ui-select2 style="width:200px;" ng-required="true" ng-change="filterGrid()" name="periodType" ng-model="periodType" ng-options="option.value as option.name for option in periodTypes">
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters" style="width:180px" ng-show="isCustom()">
+                                    <label class="labels">From</label>
+
+                                    <div class="form-field">
+
+                                        <select ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="startYear" ng-model="startYear" ng-options="year for year in startYears">
+
+                                        </select>
+                                            <span>
+                                                <select  ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="startMonth" ng-model="startMonth" ng-options="option.value as option.name for option in startMonths">
+
+                                                </select>
+                                            </span>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters" style="width:180px" ng-show="isCustom()">
+                                    <label class="labels">To</label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="endYear" ng-model="endYear" ng-options="year for year in endYears">
+
+                                        </select>
+                                            <span>
+                                                <select ui-select2 style="width:80px;" class="input-small" ng-required="true" ng-change="filterGrid()" name="endMonth" ng-model="endMonth" ng-options="option.value as option.name for option in endMonths">
+
+                                                </select>
+                                            </span>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="form-cell horizontalFilters" ng-show="isPreDefined()">
                                     <label class="labels">Schedule</label>
 
                                     <div class="form-fields">
@@ -35,7 +80,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-cell horizontalFilters">
+                                <div class="form-cell horizontalFilters" ng-show="isPreDefined()">
                                     <label class="labels">Period</label>
 
                                     <div class="form-field">
