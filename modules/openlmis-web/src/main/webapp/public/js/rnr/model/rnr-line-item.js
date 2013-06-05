@@ -278,10 +278,12 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     var visibleColumns = _.where(programRnrColumnList, {"visible":true});
 
     $(visibleColumns).each(function (i, column) {
-        var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved", "expirationDate"];
+        var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved"];
         if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name)) return;
         if (column.name == 'quantityRequested') {
           valid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);
+        } else if (column.name == 'expirationDate') {
+          valid = !rnrLineItem.expirationDateInvalid();
         } else {
           valid = !isUndefined(rnrLineItem[column.name]);
         }
@@ -299,6 +301,11 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
 
     return "";
   };
+
+  RnrLineItem.prototype.expirationDateInvalid = function () {
+    var regExp = /^(0[1-9]|1[012])[/]((2)\d\d\d)$/;
+    return !isUndefined(this.expirationDate) && !regExp.test(this.expirationDate);
+  }
 
   RnrLineItem.prototype.validateForApproval = function () {
     return isUndefined(this.quantityApproved) ? false : true;

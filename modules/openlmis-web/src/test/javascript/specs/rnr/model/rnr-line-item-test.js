@@ -928,6 +928,48 @@ describe('RnrLineItem', function () {
       expect(isValid).toBeTruthy();
     });
 
+    it('should return true if expiration date is valid', function () {
+      programRnrColumnList = [
+        {"source":{"name":"USER_INPUT"}, "name":"beginningBalance", "visible":true},
+        {"source":{"name":"USER_INPUT"}, "name":"quantityReceived", "visible":true},
+        {"source":{"name":"USER_INPUT"}, "name":"quantityDispensed", "visible":true},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"newPatientCount"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"stockOutDays"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityRequested"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"reasonForRequestedQuantity"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"remarks"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"lossesAndAdjustments"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"expirationDate"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityApproved"}
+      ];
+      var rnrLineItem = {'beginningBalance':'45', 'stockOutDays':'23', 'quantityDispensed':'23', 'quantityReceived':'89', 'newPatientCount':45,
+        'quantityRequested':'7', 'reasonForRequestedQuantity':'reason', remarks:'', lossesAndAdjustments:'', expirationDate:'11/2012', quantityApproved:''};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+      var isValid = rnrLineItem.validateRequiredFieldsForFullSupply();
+      expect(isValid).toBeTruthy();
+    });
+
+    it('should return false if expiration date is invalid', function () {
+      programRnrColumnList = [
+        {"source":{"name":"USER_INPUT"}, "name":"beginningBalance", "visible":true},
+        {"source":{"name":"USER_INPUT"}, "name":"quantityReceived", "visible":true},
+        {"source":{"name":"USER_INPUT"}, "name":"quantityDispensed", "visible":true},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"newPatientCount"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"stockOutDays"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityRequested"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"reasonForRequestedQuantity"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"remarks"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"lossesAndAdjustments"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"expirationDate"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityApproved"}
+      ];
+      var rnrLineItem = {'beginningBalance':'45', 'stockOutDays':'23', 'quantityDispensed':'23', 'quantityReceived':'89', 'newPatientCount':45,
+        'quantityRequested':'7', 'reasonForRequestedQuantity':'reason', remarks:'', lossesAndAdjustments:'', expirationDate:'11/212', quantityApproved:''};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+      var isValid = rnrLineItem.validateRequiredFieldsForFullSupply();
+      expect(isValid).toBeFalsy();
+    });
+
     it('should return true if required fields for non full supply are not filled', function () {
       programRnrColumnList = [
         {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityRequested"},

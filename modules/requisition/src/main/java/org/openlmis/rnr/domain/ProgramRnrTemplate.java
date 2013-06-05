@@ -30,6 +30,7 @@ public class ProgramRnrTemplate {
   public static final String NEW_PATIENT_COUNT = "newPatientCount";
   public static final String COST = "cost";
   public static final String PRICE = "price";
+  public static final String TOTAL = "total";
   public static final String PRODUCT = "product";
   public static final String USER_NEEDS_TO_ENTER_DEPENDENT_FIELD = "user.needs.to.enter.dependent.field";
   public static final String INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED = "interdependent.fields.can.not.be.calculated";

@@ -120,6 +120,15 @@ public class RequisitionCellFactoryTest {
   }
 
   @Test
+  public void shouldGetTotalCell() throws Exception {
+    List<RnrColumn> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, TOTAL))));
+    RnrLineItem lineItem = make(a(defaultRnrLineItem));
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
+    assertThat(cells.get(0).getPhrase().getContent(), is("13"));
+    assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_RIGHT));
+  }
+
+  @Test
   public void shouldGetProductCell() throws Exception {
     List<RnrColumn> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, PRODUCT))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));

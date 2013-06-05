@@ -88,6 +88,8 @@ public class RnrLineItem extends BaseModel{
 
   private Money price;
 
+  private Integer total;
+
   private static Logger logger = LoggerFactory.getLogger(RnrLineItem.class);
 
   public RnrLineItem(Long rnrId, FacilityApprovedProduct facilityApprovedProduct, Long modifiedBy) {
