@@ -1,4 +1,4 @@
-function DistrictConsumptionReportController($scope, DistrictConsumptionReport, Products , Programs, ProductCategories, RequisitionGroups , FacilityTypes, GeographicZones, AdjustmentTypes,OperationYears,Months, $http, $routeParams,$location) {
+function DistrictConsumptionReportController($scope, DistrictConsumptionReport, Products , Programs, ProductCategories, RequisitionGroups , FacilityTypes, GeographicZones, OperationYears,Months, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -141,9 +141,6 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
              facility : $scope.facilityId,
              facilityType : "",
              rgroup : "",
-             pdformat : 0,
-             adjustmentTypeId : $scope.adjustmentType,
-             adjustmentType : "",
              pdformat : 0
         };
 
@@ -151,11 +148,6 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             $scope.facilityTypes = data.facilityTypes;
             $scope.facilityTypes.push({'name': 'All Facility Types'});
         });
-
-        AdjustmentTypes.get(function(data){
-        $scope.adjustmentTypes = data.adjustmentTypeList;
-        $scope.adjustmentTypes.push({'description': 'All Adjustment Types'});
-         });
 
         Products.get(function(data){
             $scope.products = data.productList;
@@ -259,7 +251,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             adjustEndQuarters();
         }else{
             var date = new Date();
-            $scope.filterObject.fromQuarter =  (date.getMonth() / 4)+1;
+            $scope.filterObject.fromQuarter =  1;
         }
         $scope.filterGrid();
     });
@@ -270,7 +262,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             $scope.filterObject.toQuarter =  selection;
         }else{
             var date = new Date();
-            $scope.filterObject.toQuarter =  (date.getMonth() / 4)+1;
+            $scope.filterObject.toQuarter =  $scope.filterObject.fromQuarter;
         }
         $scope.filterGrid();
     });
@@ -388,6 +380,8 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
                 $scope.filterObject.periodType =  "monthly";
             }
 
+        $scope.filterGrid();
+
         });
 
         $scope.$watch('productCategory', function(selection){
@@ -396,6 +390,8 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             }else{
                 $scope.filterObject.productCategoryId =  0;
             }
+
+            $scope.filterGrid();
         });
 
         $scope.$watch('product', function(selection){
@@ -404,6 +400,8 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             }else{
                 $scope.filterObject.productId =  0;
             }
+
+            $scope.filterGrid();
         });
 
 
@@ -419,6 +417,8 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
                 $scope.filterObject.rgroupId =  0;
                 $scope.filterObject.rgroup = "";
             }
+
+            $scope.filterGrid();
         });
 
         $scope.$watch('program', function(selection){
@@ -427,36 +427,15 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             }else{
                 $scope.filterObject.programId =  0;
             }
+
+            $scope.filterGrid();
         });
 
-    $scope.$watch('program.value', function(selection){
-        if(selection != undefined || selection == ""){
-            $scope.filterObject.programId =  selection;
-        }else{
-            $scope.filterObject.programId =  0;
-        }
-    });
-
-    $scope.$watch('adjustmentType.value', function(selection){
-        if(selection != undefined || selection == ""){
-            $scope.filterObject.adjustmentTypeId =  selection;
-            $.each( $scope.adjustmentTypes,function( item,idx){
-                if(idx.name == selection){
-                    $scope.filterObject.adjustmentType = idx.description;
-                }
-            });
-        }else{
-            $scope.filterObject.adjustmentTypeId =  "";
-            $scope.filterObject.adjustmentType = "";
-        }
-    });
-
-
-        $scope.export   = function (type){
+       $scope.export   = function (type){
 
             $scope.filterObject.pdformat =1;
             var params = jQuery.param($scope.filterObject);
-            var url = '/reports/download/adjustment_summary/' + type +'?' + params;
+            var url = '/reports/download/district_consumption/' + type +'?' + params;
             window.location.href = url;
         }
 
@@ -543,11 +522,11 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
         columnDefs:
             [
 
-                { field: 'facilityType', displayName: 'Product', width : "*"},
-                { field: 'facilityName', displayName: 'Level', width : "*"},
-                { field: 'supplyingFacility', displayName: 'Zone', width: "*" },
-                { field: 'productDescription', displayName: 'Consumption', width: "**" },
-                { field: 'adjustmentType', displayName: '% of Total', width : "*"}
+                { field: 'product', displayName: 'Product', width : "*"},
+                { field: 'district', displayName: 'Level', width : "*"},
+                { field: 'district', displayName: 'District', width: "*" },
+                { field: 'consumption', displayName: 'Consumption', width: "*" },
+                { field: 'totalPercentage', displayName: '% of Total', width : "*"}
 
             ],
         enablePaging: true,

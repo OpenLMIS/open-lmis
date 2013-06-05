@@ -1,5 +1,4 @@
-DROP VIEW vw_requisition_adjustment;
-CREATE VIEW public.vw_requisition_adjustment
+CREATE VIEW public.vw_district_consumption_summary
 (
   program_id,
   program_name,
@@ -17,34 +16,14 @@ CREATE VIEW public.vw_requisition_adjustment
   facility_code,
   facility_id,
   facility_name,
-  supplying_facility_name,
+  zone_name,
   requisition_line_item_id,
   productcode,
   product,
   product_id,
   product_category_name,
   product_category_id,
-  beginningbalance,
-  quantityreceived,
-  quantitydispensed,
-  stockinhand,
-  quantityrequested,
-  calculatedorderquantity,
-  quantityapproved,
-  totallossesandadjustments,
-  newpatientcount,
-  stockoutdays,
   normalizedconsumption,
-  amc,
-  maxmonthsofstock,
-  maxstockquantity,
-  packstoship,
-  packsize,
-  fullsupply,
-  adjustment_type,
-  adjutment_qty,
-  adjustment_display_order,
-  adjustment_additive,
   id
 )
 AS
@@ -65,40 +44,23 @@ SELECT DISTINCT
   facilities.code AS facility_code,
   facilities.id AS facility_id,
   facilities.name AS facility_name,
-  vw_program_facility_supplier.facility_name AS supplying_facility_name,
+  geographic_zones.name AS zone_name,
   requisition_line_items.id AS requisition_line_item_id,
   requisition_line_items.productcode,
   requisition_line_items.product,
   products.id AS product_id,
   product_categories.name AS product_category_name,
   product_categories.id AS product_category_id,
-  requisition_line_items.beginningbalance,
-  requisition_line_items.quantityreceived,
-  requisition_line_items.quantitydispensed,
-  requisition_line_items.stockinhand,
-  requisition_line_items.quantityrequested,
-  requisition_line_items.calculatedorderquantity,
-  requisition_line_items.quantityapproved,
-  requisition_line_items.totallossesandadjustments,
-  requisition_line_items.newpatientcount,
-  requisition_line_items.stockoutdays,
   requisition_line_items.normalizedconsumption,
-  requisition_line_items.amc,
-  requisition_line_items.maxmonthsofstock,
-  requisition_line_items.maxstockquantity,
-  requisition_line_items.packstoship,
-  requisition_line_items.packsize,
-  requisition_line_items.fullsupply,
-  requisition_line_item_losses_adjustments.type AS adjustment_type,
-  requisition_line_item_losses_adjustments.quantity AS adjutment_qty,
-  losses_adjustments_types.displayorder AS adjustment_display_order,
-  losses_adjustments_types.additive AS adjustment_additive,
   requisition_line_items.id
-FROM ((((((((((((((((facilities
+FROM ((((((((((((((facilities
   JOIN facility_types ON
     (
       (facilities.typeid = facility_types.id)
     ))
+	JOIN geographic_zones on
+	( (geographic_zones.id = facilities.geographiczoneid)
+	))
   JOIN requisitions ON
     (
       (requisitions.facilityid = facilities.id)
@@ -160,22 +122,5 @@ FROM ((((((((((((((((facilities
     (
       (processing_periods.scheduleid = processing_schedules.id)
     ))
-  JOIN requisition_line_item_losses_adjustments ON
-    (
-      (requisition_line_item_losses_adjustments.requisitionlineitemid = requisition_line_items.id)
-    ))
-  JOIN losses_adjustments_types ON
-    (
-      (
-        (
-          (requisition_line_item_losses_adjustments.type)::text = (losses_adjustments_types.name)::text
-        ) AND
-        (
-          (requisition_line_item_losses_adjustments.type)::text = (losses_adjustments_types.name)::text
-        )
-      )
-    ))
-	LEFT OUTER JOIN vw_program_facility_supplier ON
-    ( (vw_program_facility_supplier.supervisory_node_id = requisition_groups.supervisorynodeid
-      AND vw_program_facility_supplier.program_id = programs.id  )
-    ));
+
+  WHERE requisitions.status = 'APPROVED'

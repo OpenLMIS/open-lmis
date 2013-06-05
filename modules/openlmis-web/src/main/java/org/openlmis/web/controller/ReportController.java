@@ -230,7 +230,7 @@ public class ReportController  extends BaseController {
         Report report = reportManager.getReportByKey("district_consumption");
         List<DistrictConsumptionReport> districtConsumptionReportList =
                 (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());;
+        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
 
         return new Pages(page,totalRecCount,max,districtConsumptionReportList);
     }

@@ -114,6 +114,11 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
 
 
         $scope.filterGrid = function (){
+            /*if ($scope.filterForm.$invalid) {
+                alert('form is invalid')
+                $scope.errorShown = true;
+                return;
+            }*/
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
