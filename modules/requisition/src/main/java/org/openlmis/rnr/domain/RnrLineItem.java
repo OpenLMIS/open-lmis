@@ -79,6 +79,7 @@ public class RnrLineItem extends BaseModel{
   private Integer quantityApproved;
 
   private Integer packsToShip;
+  private String expirationDate;
   private String remarks;
 
   private List<Integer> previousNormalizedConsumptions = new ArrayList<>();
@@ -194,6 +195,7 @@ public class RnrLineItem extends BaseModel{
   public void validateNonFullSupply() {
     if (!(quantityRequested != null && quantityRequested >= 0 && isPresent(reasonForRequestedQuantity)))
       throw new DataException(RNR_VALIDATION_ERROR);
+    quantityApproved = quantityRequested;
   }
 
   public void validateCalculatedFields(List<RnrColumn> rnrColumns) {

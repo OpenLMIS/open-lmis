@@ -56,6 +56,7 @@ public interface RnrLineItemMapper {
     " maxStockQuantity = #{maxStockQuantity}, " +
     " packsToShip = #{packsToShip}, " +
     " remarks = #{remarks}, " +
+    " expirationDate = #{expirationDate}, " +
     " modifiedBy = #{modifiedBy}, " +
     " modifiedDate = CURRENT_TIMESTAMP " +
     "WHERE id = #{id}"

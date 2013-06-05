@@ -26,7 +26,7 @@ values
 (19, (select id from programs where code = 'TB'), true, 'C', 19, 'Packs to Ship'),
 (20, (select id from programs where code = 'TB'), true, 'R', 20, 'Price per Pack'),
 (21, (select id from programs where code = 'TB'), true, 'C', 21, 'Total Cost'),
-(22, (select id from programs where code = 'TB'), true, 'U', 22, 'Expiration Date'),
+(22, (select id from programs where code = 'TB'), true, 'U', 22, 'Expiration Date(mm/yyyy)'),
 (23, (select id from programs where code = 'TB'), true, 'U', 23, 'Remarks'),
 (1, (select id from programs where code = 'ESS_MEDS'),  true, 'R', 1,  'Product Code'),
 (2, (select id from programs where code = 'ESS_MEDS'),  true, 'R', 2,  'Product'),
@@ -49,7 +49,7 @@ values
 (19, (select id from programs where code = 'ESS_MEDS'), true, 'C', 19, 'Packs to Ship'),
 (20, (select id from programs where code = 'ESS_MEDS'), true, 'R', 20, 'Price per Pack'),
 (21, (select id from programs where code = 'ESS_MEDS'), true, 'C', 21, 'Total Cost'),
-(22, (select id from programs where code = 'ESS_MEDS'), true, 'U', 22, 'Expiration Date'),
+(22, (select id from programs where code = 'ESS_MEDS'), true, 'U', 22, 'Expiration Date(mm/yyyy)'),
 (23, (select id from programs where code = 'ESS_MEDS'), true, 'U', 23, 'Remarks');
 
 
