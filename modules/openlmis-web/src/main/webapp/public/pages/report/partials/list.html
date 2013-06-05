@@ -4,9 +4,9 @@
   -->
 
 <div>
-  <h2><span openlmis-message="reports.header">Reports</span>
+  <h2><span openlmis-message="reports.header"></span>
     <a ng-href="#/create" class="pull-right btn btn-primary" ng-show="hasPermission('MANAGE_REPORTS')"
-       openlmis-message="button.addNew">Add new</a>
+       openlmis-message="button.addNew"></a>
   </h2>
 
   <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="successMessage" ng-show="successMessage"/>
@@ -18,10 +18,8 @@
     <thead>
     <tr class="gradient-header">
       <th class="col-desc" openlmis-message="report.name.label">
-        Report name
       </th>
       <th class="col-right" openlmis-message="view.label">
-        View
       </th>
     </tr>
     </thead>
@@ -32,10 +30,10 @@
       </td>
       <td>
         <div>
-          <a href="/reports/{{reportTemplate.id}}/pdf" target="_blank" openlmis-message="report.type.pdf">PDF</a>
-          <a href="/reports/{{reportTemplate.id}}/xls" target="_blank" openlmis-message="report.type.xls">XLS</a>
-          <a href="/reports/{{reportTemplate.id}}/csv" target="_blank" openlmis-message="report.type.csv">CSV</a>
-          <a href="/reports/{{reportTemplate.id}}/html" target="_blank" openlmis-message="report.type.html">HTML</a>
+          <a href="/reports/{{reportTemplate.id}}/pdf" target="_blank" openlmis-message="report.type.pdf"></a>
+          <a href="/reports/{{reportTemplate.id}}/xls" target="_blank" openlmis-message="report.type.xls"></a>
+          <a href="/reports/{{reportTemplate.id}}/csv" target="_blank" openlmis-message="report.type.csv"></a>
+          <a href="/reports/{{reportTemplate.id}}/html" target="_blank" openlmis-message="report.type.html"></a>
         </div>
       </td>
     </tr>

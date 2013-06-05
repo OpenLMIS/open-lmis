@@ -5,7 +5,7 @@
   -->
 
 <div>
-  <h2>Upload</h2>
+  <h2 openlmis-message="link.admin.upload"></h2>
   <form id="uploadForm" name="uploadForm" action="/upload" method="POST" enctype="multipart/form-data" novalidate>
     <div>
       <fieldset>
@@ -31,7 +31,7 @@
           {{successMsg}}
         </div>
         <br>
-        <input type="submit" value="Upload" class="btn btn-primary" ng-disabled="inProgress">
+        <input type="submit" openlmis-message="link.admin.upload" class="btn btn-primary" ng-disabled="inProgress">
       </fieldset>
 
     </div>
