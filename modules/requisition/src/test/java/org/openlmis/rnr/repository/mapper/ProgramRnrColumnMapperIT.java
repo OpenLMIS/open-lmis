@@ -30,7 +30,7 @@ import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-requisition.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class ProgramRnrColumnMapperIT {
 
   public static final Long PROGRAM_ID = 1L;

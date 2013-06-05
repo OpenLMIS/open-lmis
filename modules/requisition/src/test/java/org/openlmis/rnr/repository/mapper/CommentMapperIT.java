@@ -35,7 +35,7 @@ import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-requisition.xml")
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 @Transactional
 public class CommentMapperIT {
 

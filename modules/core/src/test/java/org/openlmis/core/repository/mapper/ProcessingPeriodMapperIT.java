@@ -41,7 +41,7 @@ import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcess
 @Category(IntegrationTests.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 @Transactional
 public class ProcessingPeriodMapperIT {
   @Rule

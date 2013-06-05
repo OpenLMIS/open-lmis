@@ -31,7 +31,7 @@ import static org.hamcrest.CoreMatchers.is;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-reporting.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class ReportTemplateMapperIT {
 
   @Autowired

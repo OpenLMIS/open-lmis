@@ -43,7 +43,7 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class FacilityMapperIT {
 
   public static final String OPERATED_BY_MOH = "MoH";

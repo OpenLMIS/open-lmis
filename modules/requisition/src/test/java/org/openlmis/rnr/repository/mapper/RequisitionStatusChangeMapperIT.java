@@ -32,7 +32,7 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-requisition.xml")
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 @Transactional
 public class RequisitionStatusChangeMapperIT {
 

@@ -43,7 +43,7 @@ import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 @ContextConfiguration(locations = "classpath:test-applicationContext-shipment.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class ShipmentMapperIT {
 
   @Autowired

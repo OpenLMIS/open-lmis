@@ -38,7 +38,7 @@ import static org.openlmis.core.builder.UserBuilder.facilityId;
 @Category(IntegrationTests.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class ProgramMapperIT extends SpringIntegrationTest {
 
   public static final String PROGRAM_CODE = "HIV";

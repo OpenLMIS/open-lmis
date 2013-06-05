@@ -44,7 +44,7 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-requisition.xml")
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 @Transactional
 public class RequisitionMapperIT {
   public static final Long MODIFIED_BY = 1L;

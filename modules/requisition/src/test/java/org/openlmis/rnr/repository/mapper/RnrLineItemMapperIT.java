@@ -47,7 +47,7 @@ import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 @ContextConfiguration(locations = "classpath:test-applicationContext-requisition.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class RnrLineItemMapperIT {
   public static final Long MODIFIED_BY = 1L;
 

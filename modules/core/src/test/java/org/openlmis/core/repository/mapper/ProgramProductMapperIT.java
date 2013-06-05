@@ -38,7 +38,7 @@ import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class ProgramProductMapperIT {
   @Autowired
   ProgramMapper programMapper;

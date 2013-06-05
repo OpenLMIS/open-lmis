@@ -53,7 +53,7 @@ import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-shipment.xml")
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 @Transactional
 public class OrderMapperIT {
 

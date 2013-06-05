@@ -68,7 +68,7 @@ public class ProgramRnrTemplate {
   public boolean columnsVisible(String... rnrColumnNames) {
     boolean visible = true;
     for (String rnrColumnName : rnrColumnNames) {
-      visible = visible && rnrColumnsMap.get(rnrColumnName).isVisible();
+      visible = (rnrColumnsMap.get(rnrColumnName) != null) && visible && rnrColumnsMap.get(rnrColumnName).isVisible();
     }
     return visible;
   }

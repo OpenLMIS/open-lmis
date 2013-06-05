@@ -37,7 +37,7 @@ import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisiti
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class RequisitionGroupProgramScheduleMapperIT {
 
   @Autowired

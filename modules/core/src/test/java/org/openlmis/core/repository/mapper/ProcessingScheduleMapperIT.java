@@ -33,7 +33,7 @@ import static org.openlmis.core.builder.ProcessingScheduleBuilder.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class ProcessingScheduleMapperIT {
   @Rule
   public ExpectedException expectedEx = org.junit.rules.ExpectedException.none();

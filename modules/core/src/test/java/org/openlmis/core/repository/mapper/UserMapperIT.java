@@ -43,7 +43,7 @@ import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class UserMapperIT {
 
   @Autowired
