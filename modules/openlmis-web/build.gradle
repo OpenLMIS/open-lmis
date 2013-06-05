@@ -82,12 +82,16 @@ task minifyJSFiles() {
 }
 
 task cleanMinJs(type: Delete) {
-    delete 'src/main/webapp/public/minJs'
+    delete 'src/main/webapp/public/minJs/'
 }
 
 war.dependsOn minifyJSFiles
 
 war.doLast {
+    tasks.cleanMinJs.execute()
+}
+
+build.doLast {
     tasks.cleanMinJs.execute()
 }
 
