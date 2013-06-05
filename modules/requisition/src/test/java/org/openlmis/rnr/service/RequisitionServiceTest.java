@@ -68,7 +68,7 @@ public class RequisitionServiceTest {
 
   private static final Long HIV = 1L;
   private static final Facility FACILITY = new Facility(1L);
-  private static final Program PROGRAM = new Program(2L);
+  private static final Program PROGRAM = new Program(3L);
   private static final ProcessingPeriod PERIOD = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, 10L), with(numberOfMonths, 1)));
   private static final Long USER_ID = 1L;
 
@@ -113,6 +113,7 @@ public class RequisitionServiceTest {
   private Rnr submittedRnr;
   private Rnr initiatedRnr;
   private Rnr authorizedRnr;
+  private Rnr inApprovalRnr;
   private ArrayList<RnrColumn> rnrColumns;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
 
@@ -122,6 +123,7 @@ public class RequisitionServiceTest {
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED), with(modifiedBy, USER_ID)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED), with(modifiedBy, USER_ID)));
     authorizedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED), with(modifiedBy, USER_ID)));
+    inApprovalRnr = make(a(defaultRnr, with(status, IN_APPROVAL), with(modifiedBy, USER_ID)));
     rnrColumns = new ArrayList<RnrColumn>() {{
       add(new RnrColumn());
     }};
@@ -292,7 +294,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(rnr2);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), processingPeriod2.getId())).
-        thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
+      thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -312,7 +314,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(null);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), null)).
-        thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
+      thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -323,13 +325,13 @@ public class RequisitionServiceTest {
 
   private Rnr createRequisition(Long periodId, RnrStatus status) {
     return make(a(RequisitionBuilder.defaultRnr,
-        with(RequisitionBuilder.periodId, periodId),
-        with(RequisitionBuilder.status, status)));
+      with(RequisitionBuilder.periodId, periodId),
+      with(RequisitionBuilder.status, status)));
   }
 
   private ProcessingPeriod createProcessingPeriod(Long id, DateTime startDate) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-        with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
+      with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
     processingPeriod.setId(id);
     return processingPeriod;
   }
@@ -371,7 +373,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
-        thenReturn(Arrays.asList(validPeriod));
+      thenReturn(Arrays.asList(validPeriod));
   }
 
   private void setupForInitRnr(Rnr requisition) {
@@ -381,7 +383,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
-        thenReturn(asList(PERIOD));
+      thenReturn(asList(PERIOD));
   }
 
   @Test
@@ -417,7 +419,6 @@ public class RequisitionServiceTest {
   @Test
   public void shouldSubmitValidRnrWithSubmittedDateAndSetMessage() {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
-    doNothing().when(savedRnr).copyEditableFields(initiatedRnr, rnrColumns);
     doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
     when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(new SupervisoryNode());
     when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
@@ -434,7 +435,6 @@ public class RequisitionServiceTest {
   @Test
   public void shouldAuthorizeAValidRnrAndTagWithSupervisoryNode() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
-    doNothing().when(savedRnr).copyEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
     when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
     when(supervisoryNodeService.getApproverFor(FACILITY, PROGRAM)).thenReturn(new User());
@@ -485,8 +485,9 @@ public class RequisitionServiceTest {
   public void shouldSaveRnrIfUserHasAppropriatePermission() {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
 
-    when(rnrTemplateService.fetchAllRnRColumns(initiatedRnr.getProgram().getId())).thenReturn(rnrColumns);
-    doNothing().when(savedRnr).copyEditableFields(initiatedRnr, rnrColumns);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+    when(rnrTemplateService.fetchProgramTemplate(initiatedRnr.getProgram().getId())).thenReturn(template);
+    doNothing().when(savedRnr).copyCreatorEditableFields(initiatedRnr, template);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
 
     when(requisitionPermissionService.hasPermissionToSave(USER_ID, savedRnr)).thenReturn(true);
@@ -494,7 +495,6 @@ public class RequisitionServiceTest {
     initiatedRnr.setModifiedBy(USER_ID);
     requisitionService.save(initiatedRnr);
 
-    verify(savedRnr).copyEditableFields(initiatedRnr, rnrColumns);
     verify(requisitionRepository).update(savedRnr);
   }
 
@@ -932,7 +932,6 @@ public class RequisitionServiceTest {
   @Test
   public void shouldNotifyStatusChangeOnAuthorize() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
-    doNothing().when(savedRnr).copyEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
     when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
     when(supervisoryNodeService.getApproverFor(FACILITY, PROGRAM)).thenReturn(new User());
@@ -947,7 +946,6 @@ public class RequisitionServiceTest {
   @Test
   public void shouldNotifyStatusChangeOnSubmit() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
-    doNothing().when(savedRnr).copyEditableFields(initiatedRnr, rnrColumns);
     doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
     when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
 
@@ -1011,8 +1009,51 @@ public class RequisitionServiceTest {
     verify(requisitionEventService).notifyForStatusChange(rnr);
   }
 
+
+  @Test
+  public void shouldSaveRnrWithOnlyThoseFieldsWhichAreCreatorEditableBasedOnRnrStatus() throws Exception {
+    Rnr savedRequisition = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
+
+    doNothing().when(savedRequisition).copyCreatorEditableFields(initiatedRnr, template);
+    when(rnrTemplateService.fetchProgramTemplate(savedRequisition.getProgram().getId())).thenReturn(template);
+
+    requisitionService.save(initiatedRnr);
+
+    verify(savedRequisition).copyCreatorEditableFields(initiatedRnr, template);
+    verify(requisitionRepository).update(savedRequisition);
+  }
+
+  @Test
+  public void shouldSaveRnrWithOnlyThoseFieldsWhichAreApproverEditableBasedOnRnrStatus() throws Exception {
+    Rnr savedRequisition = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
+
+    when(rnrTemplateService.fetchProgramTemplate(savedRequisition.getProgram().getId())).thenReturn(template);
+    doNothing().when(savedRequisition).copyApproverEditableFields(authorizedRnr, template);
+
+    requisitionService.save(authorizedRnr);
+
+    verify(savedRequisition).copyApproverEditableFields(authorizedRnr, template);
+    verify(requisitionRepository).update(savedRequisition);
+  }
+
+  @Test
+  public void shouldSaveRnrWithOnlyThoseFieldsWhichAreApproverEditableBasedInApprovalStatus() throws Exception {
+    Rnr savedRequisition = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(inApprovalRnr, APPROVE_REQUISITION);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
+
+    when(rnrTemplateService.fetchProgramTemplate(savedRequisition.getProgram().getId())).thenReturn(template);
+    doNothing().when(savedRequisition).copyApproverEditableFields(inApprovalRnr, template);
+    requisitionService.save(inApprovalRnr);
+
+    verify(savedRequisition).copyApproverEditableFields(inApprovalRnr, template);
+    verify(requisitionRepository).update(savedRequisition);
+  }
+
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {
     Rnr savedRnr = spy(rnr);
+    when(requisitionPermissionService.hasPermissionToSave(USER_ID, savedRnr)).thenReturn(true);
     when(requisitionPermissionService.hasPermission(USER_ID, savedRnr, right)).thenReturn(true);
     when(programService.getById(savedRnr.getProgram().getId())).thenReturn(PROGRAM);
     when(facilityService.getById(savedRnr.getFacility().getId())).thenReturn(FACILITY);
@@ -1022,3 +1063,4 @@ public class RequisitionServiceTest {
     return savedRnr;
   }
 }
+

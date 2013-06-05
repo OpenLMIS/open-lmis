@@ -6,7 +6,6 @@
 
 package org.openlmis.rnr.service;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -22,7 +21,10 @@ import org.openlmis.rnr.repository.RnrTemplateRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -67,5 +69,16 @@ public class RnrTemplateServiceTest {
     when(programRnrTemplate.validateToSave()).thenReturn(errors);
     service.saveRnRTemplateForProgram(programRnrTemplate);
     verify(repository, never()).saveProgramRnrTemplate(programRnrTemplate);
+  }
+
+  @Test
+  public void shouldFetchProgramTemplate() throws Exception {
+    List<RnrColumn> columns = new ArrayList<>();
+    when(repository.fetchRnrTemplateColumnsOrMasterColumns(1l)).thenReturn(columns);
+
+    ProgramRnrTemplate template = service.fetchProgramTemplate(1L);
+
+    verify(repository).fetchRnrTemplateColumnsOrMasterColumns(1l);
+    assertThat(template.getRnrColumns(), is(columns));
   }
 }

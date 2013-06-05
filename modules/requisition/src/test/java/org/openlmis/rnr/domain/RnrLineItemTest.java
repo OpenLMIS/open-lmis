@@ -42,6 +42,7 @@ import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
+
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(RnrLineItem.class)
@@ -450,14 +451,12 @@ public class RnrLineItemTest {
     editedLineItem.setQuantityApproved(1872);
     editedLineItem.setRemarks("Approved");
     editedLineItem.setStockInHand(1946);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(getRnrColumns());
+    lineItem.copyApproverEditableFields(editedLineItem, template);
 
-    lineItem.copyApproverEditableFields(editedLineItem);
-
-    assertThat(lineItem.getPacksToShip(), is(312));
     assertThat(lineItem.getQuantityApproved(), is(1872));
     assertThat(lineItem.getRemarks(), is("Approved"));
     assertThat(lineItem.getStockInHand(), is(RnrLineItemBuilder.STOCK_IN_HAND));
-
   }
 
   private ArrayList<RnrColumn> getRnrColumns() {
@@ -471,10 +470,21 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_IN_HAND), with(visible, false),
         with(source, CALCULATED))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.BEGINNING_BALANCE), with(visible, false))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.REMARKS), with(visible, true), with(source, USER_INPUT))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_APPROVED), with(visible, true),
         with(source, USER_INPUT))));
     }};
   }
+
+  private ArrayList<RnrColumn> getRnrColumnsForNonFullSupply() {
+    return new ArrayList<RnrColumn>() {{
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_REQUESTED), with(visible, true), with(source, USER_INPUT))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.REMARKS), with(visible, true), with(source, USER_INPUT))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.REASON_FOR_REQUESTED_QUANTITY), with(visible, true),
+        with(source, USER_INPUT))));
+    }};
+  }
+
 
   @Test
   public void shouldCopyUserEditableFieldsOnlyIfVisible() throws Exception {
@@ -491,7 +501,7 @@ public class RnrLineItemTest {
     List<LossesAndAdjustments> lossesAndAdjustments = new ArrayList<>();
     editedLineItem.setLossesAndAdjustments(lossesAndAdjustments);
 
-    lineItem.copyUserEditableFields(editedLineItem, getRnrColumns());
+    lineItem.copyCreatorEditableFieldsForFullSupply(editedLineItem, new ProgramRnrTemplate(getRnrColumns()));
 
     assertThat(lineItem.getBeginningBalance(), is(RnrLineItemBuilder.BEGINNING_BALANCE));
     assertThat(lineItem.getStockOutDays(), is(RnrLineItemBuilder.STOCK_OUT_DAYS));
@@ -553,7 +563,7 @@ public class RnrLineItemTest {
     editedLineItem.setBeginningBalance(44);
     lineItem.setPreviousStockInHandAvailable(true);
 
-    lineItem.copyUserEditableFields(editedLineItem, new ArrayList<RnrColumn>());
+    lineItem.copyCreatorEditableFieldsForFullSupply(editedLineItem, new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
 
     assertThat(lineItem.getBeginningBalance(), is(RnrLineItemBuilder.BEGINNING_BALANCE));
   }
@@ -561,7 +571,7 @@ public class RnrLineItemTest {
   @Test
   public void shouldNotCopyQuantityApprovedWhileCopyingNonApproverEditableFields() throws Exception {
     RnrLineItem editedLineItem = make(a(defaultRnrLineItem, with(quantityApproved, 89)));
-    lineItem.copyUserEditableFields(editedLineItem, getRnrColumns());
+    lineItem.copyCreatorEditableFieldsForFullSupply(editedLineItem, new ProgramRnrTemplate(getRnrColumns()));
 
     assertThat(lineItem.getQuantityApproved(), is(RnrLineItemBuilder.QUANTITY_APPROVED));
   }
@@ -619,11 +629,22 @@ public class RnrLineItemTest {
   }
 
   @Test
+  public void shouldCopyEditableFieldsForNonFullSupplyBasedOnTemplate() throws Exception {
+    lineItem.copyCreatorEditableFieldsForNonFullSupply(make(a(defaultRnrLineItem,with(quantityRequested,9),
+      with(reasonForRequestedQuantity,"no reason"),with(remarks,"no remarks"))), new ProgramRnrTemplate(getRnrColumnsForNonFullSupply()));
+
+    assertThat(lineItem.getReasonForRequestedQuantity(),is("no reason"));
+    assertThat(lineItem.getRemarks(),is("no remarks"));
+    assertThat(lineItem.getQuantityRequested(),is(9));
+
+  }
+
+  @Test
   public void shouldCopyTotalLossesAndAdjustments() throws Exception {
     RnrLineItem editedLineItem = make(a(defaultRnrLineItem));
     editedLineItem.setTotalLossesAndAdjustments(10);
 
-    lineItem.copyUserEditableFields(editedLineItem, getRnrColumns());
+    lineItem.copyCreatorEditableFieldsForFullSupply(editedLineItem, new ProgramRnrTemplate(getRnrColumns()));
 
     assertThat(lineItem.getTotalLossesAndAdjustments(), is(10));
   }

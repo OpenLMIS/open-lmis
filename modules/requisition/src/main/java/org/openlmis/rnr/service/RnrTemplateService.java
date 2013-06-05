@@ -6,7 +6,6 @@
 
 package org.openlmis.rnr.service;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
@@ -48,5 +47,9 @@ public class RnrTemplateService {
 
   public List<RnrColumn> fetchColumnsForRequisition(Long programId) {
     return rnrRepository.fetchColumnsForRequisition(programId);
+  }
+
+  public ProgramRnrTemplate fetchProgramTemplate(Long programId) {
+    return new ProgramRnrTemplate(programId, fetchAllRnRColumns(programId));
   }
 }

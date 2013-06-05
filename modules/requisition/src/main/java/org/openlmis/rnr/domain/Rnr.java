@@ -14,7 +14,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.exception.DataException;
 
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -23,7 +22,6 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
-import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
 import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
 
@@ -151,30 +149,6 @@ public class Rnr extends BaseModel{
     }
   }
 
-  public void copyEditableFields(Rnr rnr, List<RnrColumn> programRnrColumns) {
-    this.modifiedBy = rnr.getModifiedBy();
-    ArrayList<RnrLineItem> lineItems = new ArrayList<>();
-
-    for (RnrLineItem lineItem : rnr.getFullSupplyLineItems()) {
-      RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
-      if (savedLineItem == null) {
-        throw new DataException(PRODUCT_CODE_INVALID);
-      }
-      if (this.status == IN_APPROVAL || this.status == AUTHORIZED) {
-        savedLineItem.copyApproverEditableFields(lineItem);
-      } else {
-        savedLineItem.copyUserEditableFields(lineItem, programRnrColumns);
-      }
-      savedLineItem.setModifiedBy(rnr.getModifiedBy());
-      lineItems.add(savedLineItem);
-    }
-    this.setFullSupplyLineItems(lineItems);
-    this.nonFullSupplyLineItems = rnr.nonFullSupplyLineItems;
-    for (RnrLineItem thisLineItem : this.nonFullSupplyLineItems) {
-      thisLineItem.setModifiedBy(rnr.getModifiedBy());
-    }
-  }
-
   private List<RnrLineItem> getAllLineItems() {
     if (this.allLineItems.isEmpty()) {
       this.allLineItems.addAll(this.getFullSupplyLineItems());
@@ -246,6 +220,49 @@ public class Rnr extends BaseModel{
   private void validateLineItemsForApproval(List<RnrLineItem> lineItems) {
     for (RnrLineItem lineItem : lineItems) {
       lineItem.validateForApproval();
+    }
+  }
+
+  public void copyCreatorEditableFields(Rnr rnr, ProgramRnrTemplate template) {
+    this.modifiedBy = rnr.getModifiedBy();
+    copyCreatorEditableFieldsForFullSupply(rnr, template);
+    copyCreatorEditableFieldsForNonFullSupply(rnr, template);
+  }
+
+  private void copyCreatorEditableFieldsForNonFullSupply(Rnr rnr, ProgramRnrTemplate template) {
+    for (RnrLineItem lineItem : rnr.nonFullSupplyLineItems) {
+      RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
+      if (savedLineItem == null) {
+        lineItem.setModifiedBy(rnr.getModifiedBy());
+        this.nonFullSupplyLineItems.add(lineItem);
+      } else {
+        savedLineItem.setModifiedBy(rnr.getModifiedBy());
+        savedLineItem.copyCreatorEditableFieldsForNonFullSupply(lineItem, template);
+      }
+    }
+  }
+
+  private void copyCreatorEditableFieldsForFullSupply(Rnr rnr, ProgramRnrTemplate template) {
+    for (RnrLineItem lineItem : rnr.fullSupplyLineItems) {
+      RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
+      if (savedLineItem == null) continue;
+      savedLineItem.copyCreatorEditableFieldsForFullSupply(lineItem, template);
+      savedLineItem.setModifiedBy(rnr.getModifiedBy());
+    }
+  }
+
+  public void copyApproverEditableFields(Rnr rnr, ProgramRnrTemplate template) {
+    this.modifiedBy = rnr.modifiedBy;
+    copyApproverEditableFieldsToLineItems(rnr, template, rnr.fullSupplyLineItems);
+    copyApproverEditableFieldsToLineItems(rnr, template, rnr.nonFullSupplyLineItems);
+  }
+
+  private void copyApproverEditableFieldsToLineItems(Rnr rnr, ProgramRnrTemplate template, List<RnrLineItem> lineItems) {
+    for (RnrLineItem lineItem : lineItems) {
+      RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
+      if (savedLineItem == null) continue;
+      savedLineItem.setModifiedBy(rnr.modifiedBy);
+      savedLineItem.copyApproverEditableFields(lineItem, template);
     }
   }
 }

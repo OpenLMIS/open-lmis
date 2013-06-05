@@ -34,6 +34,7 @@ public class RnrLineItemBuilder {
   public static final Property<RnrLineItem, Integer> packRoundingThreshold = newProperty();
   public static final Property<RnrLineItem, Integer> packSize = newProperty();
   public static final Property<RnrLineItem, Integer> quantityApproved = newProperty();
+  public static final Property<RnrLineItem, String> remarks = newProperty();
   public static final Property<RnrLineItem, String> reasonForRequestedQuantity = newProperty();
   public static final Property<RnrLineItem, Integer> packsToShip = newProperty();
   public static final Property<RnrLineItem, Integer> productCategoryDisplayOrder = newProperty();
@@ -107,7 +108,7 @@ public class RnrLineItemBuilder {
       rnrLineItem.setQuantityRequested(lookup.valueOf(quantityRequested, QUANTITY_REQUESTED));
       rnrLineItem.setReasonForRequestedQuantity(lookup.valueOf(reasonForRequestedQuantity, REASON_FOR_REQUESTED_QUANTITY));
       rnrLineItem.setPacksToShip(lookup.valueOf(packsToShip, PACKS_TO_SHIP));
-      rnrLineItem.setRemarks(REMARKS);
+      rnrLineItem.setRemarks(lookup.valueOf(remarks, REMARKS));
       rnrLineItem.setProductCategoryDisplayOrder(lookup.valueOf(productCategoryDisplayOrder, PRODUCT_CATEGORY_DISPLAY_ORDER));
       rnrLineItem.setProductDisplayOrder(lookup.valueOf(productDisplayOrder, PRODUCT_DISPLAY_ORDER));
       return rnrLineItem;

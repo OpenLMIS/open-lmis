@@ -27,7 +27,6 @@ import static java.lang.Boolean.TRUE;
 import static java.lang.Math.floor;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
-import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
 import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 
 @Data
@@ -35,7 +34,7 @@ import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode(callSuper = false)
-public class RnrLineItem extends BaseModel{
+public class RnrLineItem extends BaseModel {
 
   public static final String RNR_VALIDATION_ERROR = "rnr.validation.error";
 
@@ -296,31 +295,10 @@ public class RnrLineItem extends BaseModel{
   }
 
 
-  public void copyApproverEditableFields(RnrLineItem item) {
-    if (item == null) return;
-    this.quantityApproved = item.quantityApproved;
-    calculatePacksToShip();
-    this.remarks = item.remarks;
-  }
-
-  public void copyUserEditableFields(RnrLineItem item, List<RnrColumn> programRnrColumns) {
-    ProgramRnrTemplate template = new ProgramRnrTemplate(programRnrColumns);
-
-    copyBeginningBalance(item, template);
-
-    copyTotalLossesAndAdjustments(item, template);
-
-    for (RnrColumn column : template.getRnrColumns()) {
-      if (!column.isVisible() || column.getSource() != USER_INPUT || column.getName().equals(QUANTITY_APPROVED)) {
-        continue;
-      }
-
-      try {
-        Field field = this.getClass().getDeclaredField(column.getName());
-        field.set(this, field.get(item));
-      } catch (Exception e) {
-        logger.error("Error in reading RnrLineItem's field", e);
-      }
+  public void copyApproverEditableFields(RnrLineItem lineItem, ProgramRnrTemplate template) {
+    String[] approverEditableFields = {QUANTITY_APPROVED, REMARKS};
+    for(String fieldName: approverEditableFields) {
+      copyFields(lineItem, template, fieldName);
     }
   }
 
@@ -380,6 +358,37 @@ public class RnrLineItem extends BaseModel{
 
   public void validateForApproval() {
     if (quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
+  }
+
+  public void copyCreatorEditableFieldsForFullSupply(RnrLineItem lineItem, ProgramRnrTemplate template) {
+    copyBeginningBalance(lineItem, template);
+    copyTotalLossesAndAdjustments(lineItem, template);
+    for (RnrColumn column : template.getRnrColumns()) {
+      String fieldName = column.getName();
+      if(fieldName.equals(QUANTITY_APPROVED)) continue;
+      copyFields(lineItem, template, fieldName);
+    }
+  }
+
+  private void copyFields(RnrLineItem lineItem, ProgramRnrTemplate template, String fieldName) {
+    if (!template.columnsVisible(fieldName) || !template.columnsUserInput(fieldName)) {
+      return;
+    }
+
+    try {
+      Field field = this.getClass().getDeclaredField(fieldName);
+      field.set(this, field.get(lineItem));
+    } catch (Exception e) {
+      logger.error("Error in reading RnrLineItem's field", e);
+    }
+  }
+
+  public void copyCreatorEditableFieldsForNonFullSupply(RnrLineItem lineItem, ProgramRnrTemplate template) {
+    String[] editableFields = {QUANTITY_REQUESTED, REMARKS, REASON_FOR_REQUESTED_QUANTITY};
+
+    for (String fieldName : editableFields) {
+      copyFields(lineItem, template, fieldName);
+    }
   }
 
 }

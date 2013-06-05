@@ -18,6 +18,7 @@ import java.util.Map;
 public class ProgramRnrTemplate {
 
   public static final String STOCK_IN_HAND = "stockInHand";
+  public static final String REMARKS = "remarks";
   public static final String QUANTITY_DISPENSED = "quantityDispensed";
   public static final String BEGINNING_BALANCE = "beginningBalance";
   public static final String QUANTITY_RECEIVED = "quantityReceived";
@@ -80,6 +81,14 @@ public class ProgramRnrTemplate {
       calculated = calculated || (rnrColumnsMap.get(rnrColumnName).getSource() == RnRColumnSource.CALCULATED);
     }
     return calculated;
+  }
+
+  public boolean columnsUserInput(String... rnrColumnNames) {
+    boolean userInput = false;
+    for (String rnrColumnName : rnrColumnNames) {
+      userInput = userInput || (rnrColumnsMap.get(rnrColumnName).getSource() == RnRColumnSource.USER_INPUT);
+    }
+    return userInput;
   }
 
   public String getRnrColumnLabelFor(String columnName) {

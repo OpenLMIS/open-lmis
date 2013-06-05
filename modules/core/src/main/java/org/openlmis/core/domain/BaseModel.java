@@ -6,7 +6,6 @@
 
 package org.openlmis.core.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -47,4 +46,6 @@ public abstract class BaseModel {
   public void setModifiedBy(Long modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
+
+
 }
