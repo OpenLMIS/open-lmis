@@ -35,7 +35,7 @@ import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode(callSuper = false)
-public class RnrLineItem extends BaseModel {
+public class RnrLineItem extends BaseModel{
 
   public static final String RNR_VALIDATION_ERROR = "rnr.validation.error";
 
@@ -117,9 +117,9 @@ public class RnrLineItem extends BaseModel {
 
   private String productName(Product product) {
     return (product.getPrimaryName() == null ? "" : (product.getPrimaryName() + " ")) +
-        (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
-        (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
-        (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
+      (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
+      (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
+      (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
 
   }
 
@@ -174,8 +174,8 @@ public class RnrLineItem extends BaseModel {
 
   private void requestedQuantityConditionalValidation(ProgramRnrTemplate template) {
     if (template.columnsVisible(QUANTITY_REQUESTED)
-        && quantityRequested != null
-        && reasonForRequestedQuantity == null) {
+      && quantityRequested != null
+      && reasonForRequestedQuantity == null) {
       throw new DataException(RNR_VALIDATION_ERROR);
     }
   }
@@ -194,7 +194,6 @@ public class RnrLineItem extends BaseModel {
   public void validateNonFullSupply() {
     if (!(quantityRequested != null && quantityRequested >= 0 && isPresent(reasonForRequestedQuantity)))
       throw new DataException(RNR_VALIDATION_ERROR);
-    quantityApproved = quantityRequested;
   }
 
   public void validateCalculatedFields(List<RnrColumn> rnrColumns) {
@@ -243,7 +242,6 @@ public class RnrLineItem extends BaseModel {
     } else {
       calculatedOrderQuantity = (maxStockQuantity - stockInHand < 0) ? 0 : maxStockQuantity - stockInHand;
     }
-    quantityApproved = calculatedOrderQuantity;
   }
 
   public void calculateMaxStockQuantity() {
@@ -252,9 +250,9 @@ public class RnrLineItem extends BaseModel {
 
   public void calculateNormalizedConsumption() {
     Float consumptionAdjustedWithStockOutDays = ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays) == 0 ? quantityDispensed :
-        (quantityDispensed * ((MULTIPLIER * NUMBER_OF_DAYS) / ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays)));
+      (quantityDispensed * ((MULTIPLIER * NUMBER_OF_DAYS) / ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays)));
     Float adjustmentForNewPatients = (newPatientCount * ((Double) Math.ceil(
-        dosesPerMonth.doubleValue() / dosesPerDispensingUnit)).floatValue()) * MULTIPLIER;
+      dosesPerMonth.doubleValue() / dosesPerDispensingUnit)).floatValue()) * MULTIPLIER;
 
     normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
   }
@@ -279,7 +277,7 @@ public class RnrLineItem extends BaseModel {
     };
 
     LossesAndAdjustmentsType lossAndAdjustmentTypeFromList = (LossesAndAdjustmentsType) CollectionUtils.find(
-        lossesAndAdjustmentsTypes, predicate);
+      lossesAndAdjustmentsTypes, predicate);
 
     return lossAndAdjustmentTypeFromList.getAdditive();
   }
@@ -287,6 +285,10 @@ public class RnrLineItem extends BaseModel {
   public void addPreviousNormalizedConsumptionFrom(RnrLineItem rnrLineItem) {
     if (rnrLineItem != null)
       this.previousNormalizedConsumptions.add(rnrLineItem.normalizedConsumption);
+  }
+
+  public void setDefaultApprovedQuantity() {
+    quantityApproved = fullSupply ? calculatedOrderQuantity : quantityRequested;
   }
 
 

@@ -27,7 +27,6 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.core.builder.ProductBuilder.*;
@@ -43,7 +42,6 @@ import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
-
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(RnrLineItem.class)
@@ -70,7 +68,7 @@ public class RnrLineItemTest {
     LossesAndAdjustmentsType subtractive1 = new LossesAndAdjustmentsType("subtractive1", "Subtractive 1", false, 3);
     LossesAndAdjustmentsType subtractive2 = new LossesAndAdjustmentsType("subtractive2", "Subtractive 2", false, 4);
     lossesAndAdjustmentsList = asList(
-        new LossesAndAdjustmentsType[]{additive1, additive2, subtractive1, subtractive2});
+      new LossesAndAdjustmentsType[]{additive1, additive2, subtractive1, subtractive2});
   }
 
   private void addVisibleColumns(List<RnrColumn> templateColumns) {
@@ -116,7 +114,7 @@ public class RnrLineItemTest {
 
     Program program = make(a(defaultProgram));
     Product product = make(
-        a(defaultProduct, with(code, "ASPIRIN"), with(productCategoryDisplayOrder, 3), with(displayOrder, 9)));
+      a(defaultProduct, with(code, "ASPIRIN"), with(productCategoryDisplayOrder, 3), with(displayOrder, 9)));
     product.setDispensingUnit("Strip");
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true);
@@ -428,6 +426,25 @@ public class RnrLineItemTest {
   }
 
   @Test
+  public void shouldSetCalculatedOrderQuantityAsDefaultApprovedQuantityForFullSupplyItems() throws Exception {
+    final int expected = 1;
+    lineItem.setCalculatedOrderQuantity(expected);
+    lineItem.setDefaultApprovedQuantity();
+    final Integer actual = lineItem.getQuantityApproved();
+    assertThat(actual, is(expected));
+  }
+
+  @Test
+  public void shouldSetRequestedQuantityAsApprovedQuantityForNonFullSupplyItems() throws Exception {
+    lineItem.setFullSupply(false);
+    final int expected = 1;
+    lineItem.setQuantityRequested(expected);
+    lineItem.setDefaultApprovedQuantity();
+    final Integer actual = lineItem.getQuantityApproved();
+    assertThat(actual, is(expected));
+  }
+
+  @Test
   public void shouldCopyApproverEditableFields() throws Exception {
     RnrLineItem editedLineItem = make(a(defaultRnrLineItem));
     editedLineItem.setQuantityApproved(1872);
@@ -447,15 +464,15 @@ public class RnrLineItemTest {
     return new ArrayList<RnrColumn>() {{
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_RECEIVED), with(visible, false))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED), with(visible, false),
-          with(source, CALCULATED))));
+        with(source, CALCULATED))));
       add(make(a(defaultRnrColumn, with(columnName, LOSSES_AND_ADJUSTMENTS), with(visible, false))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.NEW_PATIENT_COUNT), with(visible, false))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_OUT_DAYS), with(visible, false))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_IN_HAND), with(visible, false),
-          with(source, CALCULATED))));
+        with(source, CALCULATED))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.BEGINNING_BALANCE), with(visible, false))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_APPROVED), with(visible, true),
-          with(source, USER_INPUT))));
+        with(source, USER_INPUT))));
     }};
   }
 
@@ -570,7 +587,7 @@ public class RnrLineItemTest {
   public void shouldThrowExceptionIfNonFullSupplyLineItemHasReasonForRequestedQuantityNull() {
     String nullString = null;
     RnrLineItem rnrLineItem = make(
-        a(defaultRnrLineItem, with(RnrLineItemBuilder.reasonForRequestedQuantity, nullString)));
+      a(defaultRnrLineItem, with(RnrLineItemBuilder.reasonForRequestedQuantity, nullString)));
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
     rnrLineItem.validateNonFullSupply();
@@ -600,67 +617,4 @@ public class RnrLineItemTest {
     lineItem.validateForApproval();
 
   }
-
-  @Test
-  public void shouldSetCalculatedOrderQuantityAsNullIfMaxStockQuantityIsNull() throws Exception {
-    lineItem.setMaxStockQuantity(null);
-    lineItem.setStockInHand(33);
-
-    lineItem.calculateOrderQuantity();
-
-    assertNull(lineItem.getCalculatedOrderQuantity());
-  }
-
-  @Test
-  public void shouldSetCalculatedOrderQuantityAsNullIfStockInHandIsNull() throws Exception {
-    lineItem.setMaxStockQuantity(33);
-    lineItem.setStockInHand(null);
-
-    lineItem.calculateOrderQuantity();
-
-    assertNull(lineItem.getCalculatedOrderQuantity());
-  }
-
-  @Test
-  public void shouldSetCalculatedOrderQuantityBasedOnMaxStockQuantityAndStockInHand() throws Exception {
-    lineItem.setMaxStockQuantity(33);
-    lineItem.setStockInHand(32);
-
-    lineItem.calculateOrderQuantity();
-
-    assertThat(lineItem.getCalculatedOrderQuantity(), is(1));
-  }
-
-  @Test
-  public void shouldSetCalculatedOrderQuantityAsZeroIfComesNegative() throws Exception {
-    lineItem.setMaxStockQuantity(33);
-    lineItem.setStockInHand(34);
-
-    lineItem.calculateOrderQuantity();
-
-    assertThat(lineItem.getCalculatedOrderQuantity(), is(0));
-  }
-
-  @Test
-  public void shouldCopyCalculatedOrderQuantityIntoApprovedQuantityForFullSupplyProduct() throws Exception {
-    lineItem.setFullSupply(true);
-    lineItem.setMaxStockQuantity(33);
-    lineItem.setStockInHand(20);
-
-    lineItem.calculateOrderQuantity();
-
-    assertThat(lineItem.getCalculatedOrderQuantity(), is(13));
-    assertThat(lineItem.getQuantityApproved(), is(13));
-  }
-
-  @Test
-  public void shouldSetApprovedQuantitySameAsRequestedQuantityForNonFullSupplyProducts() throws Exception {
-    lineItem.setFullSupply(false);
-    lineItem.setQuantityRequested(2343);
-
-    lineItem.validateNonFullSupply();
-
-    assertThat(lineItem.getQuantityApproved(), is(2343));
-  }
 }
-
