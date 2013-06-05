@@ -106,7 +106,7 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//li[@id='R']/span/input")
   private static WebElement productNameCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='Q']/span[@class='tpl-visible']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='L']/span[@class='tpl-visible']/input")
   private static WebElement remarksCheckBox;
 
   @FindBy(how = How.XPATH, using = "//li[@id='D']/span[@class='tpl-label']/input")
