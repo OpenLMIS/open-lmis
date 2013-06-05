@@ -21,9 +21,9 @@ directives.directive('fixedTableHeader', function() {
       scope.$watch($(window).scrollTop(), function() {
         angular.element(window).scroll(function() {
           fixedHeader.hide();
-          fixedHeader.scrollLeft(element.parent().scrollLeft());
           if (angular.element(this).scrollTop() >= element.offset().top && !element.is(':hidden') && fixedHeader.is(':hidden')) {
            fixedHeader.show();
+           fixedHeader.scrollLeft(element.parent().scrollLeft());
           }
         });
 
