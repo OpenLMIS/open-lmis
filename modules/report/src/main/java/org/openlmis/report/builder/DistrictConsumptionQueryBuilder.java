@@ -37,10 +37,14 @@ public class DistrictConsumptionQueryBuilder {
     private static String writePredicates(DistrictConsumptionReportFilter filter){
         String predicate = "";
         if(filter != null){
+            if (filter.getZoneId() != 0) {
+                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
+                predicate = predicate + " zone_id = #{filterCriteria.zoneId}";
+            }
             if (filter.getStartDate() != null) {
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " processing_periods_start_date >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}";
-                            }
+             }
             if (filter.getEndDate() != null) {
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " processing_periods_end_date <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}";
