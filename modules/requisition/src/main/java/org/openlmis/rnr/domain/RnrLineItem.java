@@ -125,10 +125,62 @@ public class RnrLineItem extends BaseModel {
 
   }
 
-  public void addLossesAndAdjustments(LossesAndAdjustments lossesAndAdjustments) {
-    this.lossesAndAdjustments.add(lossesAndAdjustments);
+  public void setDefaultApprovedQuantity() {
+    quantityApproved = fullSupply ? calculatedOrderQuantity : quantityRequested;
   }
 
+  public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem lineItem) {
+    if (lineItem == null) {
+      this.beginningBalance = 0;
+      return;
+    }
+    this.beginningBalance = lineItem.getStockInHand();
+    this.setPreviousStockInHandAvailable(TRUE);
+  }
+
+  void setLineItemFieldsAccordingToTemplate(ProgramRnrTemplate template) {
+    if (!template.columnsVisible(QUANTITY_RECEIVED)) quantityReceived = 0;
+    if (!template.columnsVisible(QUANTITY_DISPENSED)) quantityDispensed = 0;
+    if (!template.columnsVisible(LOSSES_AND_ADJUSTMENTS))
+      totalLossesAndAdjustments = 0;
+    newPatientCount = 0;
+    stockOutDays = 0;
+  }
+
+
+  public void validateForApproval() {
+    if (quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
+  }
+
+  public void validateMandatoryFields(List<RnrColumn> templateColumns) {
+    ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
+
+    String[] nonNullableFields = {BEGINNING_BALANCE, QUANTITY_RECEIVED, QUANTITY_DISPENSED, NEW_PATIENT_COUNT, STOCK_OUT_DAYS};
+    for (String fieldName : nonNullableFields) {
+      if (template.columnsVisible(fieldName) && !template.columnsCalculated(fieldName)) {
+        if (getValueFor(fieldName) == null) {
+          throw new DataException(RNR_VALIDATION_ERROR);
+        }
+      }
+    }
+
+    requestedQuantityConditionalValidation(template);
+  }
+
+  public void validateNonFullSupply() {
+    if (!(quantityRequested != null && quantityRequested >= 0 && isPresent(reasonForRequestedQuantity)))
+      throw new DataException(RNR_VALIDATION_ERROR);
+    quantityApproved = quantityRequested;
+  }
+
+  public void validateCalculatedFields(List<RnrColumn> rnrColumns) {
+    boolean validQuantityDispensed = true;
+    if (rnrColumns.get(0).isFormulaValidationRequired()) {
+      validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
+    }
+    boolean valid = quantityDispensed >= 0 && stockInHand >= 0 && validQuantityDispensed;
+    if (!valid) throw new DataException(RNR_VALIDATION_ERROR);
+  }
 
   public void calculate(ProcessingPeriod period, List<RnrColumn> rnrColumns, RnrStatus rnrStatus, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
@@ -151,67 +203,6 @@ public class RnrLineItem extends BaseModel {
     amc = Math.round(((float) normalizedConsumption + sumOfPreviousNormalizedConsumptions()) / denominator);
   }
 
-  private Integer sumOfPreviousNormalizedConsumptions() {
-    Integer total = 0;
-    for (Integer consumption : previousNormalizedConsumptions) {
-      total += consumption;
-    }
-    return total;
-  }
-
-  public void validateMandatoryFields(List<RnrColumn> templateColumns) {
-    ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
-
-    String[] nonNullableFields = {BEGINNING_BALANCE, QUANTITY_RECEIVED, QUANTITY_DISPENSED, NEW_PATIENT_COUNT, STOCK_OUT_DAYS};
-    for (String fieldName : nonNullableFields) {
-      if (template.columnsVisible(fieldName) && !template.columnsCalculated(fieldName)) {
-        if (getValueFor(fieldName) == null) {
-          throw new DataException(RNR_VALIDATION_ERROR);
-        }
-      }
-    }
-
-    requestedQuantityConditionalValidation(template);
-  }
-
-  private void requestedQuantityConditionalValidation(ProgramRnrTemplate template) {
-    if (template.columnsVisible(QUANTITY_REQUESTED)
-      && quantityRequested != null
-      && reasonForRequestedQuantity == null) {
-      throw new DataException(RNR_VALIDATION_ERROR);
-    }
-  }
-
-  private Object getValueFor(String fieldName) {
-    Object value = null;
-    try {
-      Field field = this.getClass().getDeclaredField(fieldName);
-      value = field.get(this);
-    } catch (Exception e) {
-      logger.error("Error in reading RnrLineItem's field", e);
-    }
-    return value;
-  }
-
-  public void validateNonFullSupply() {
-    if (!(quantityRequested != null && quantityRequested >= 0 && isPresent(reasonForRequestedQuantity)))
-      throw new DataException(RNR_VALIDATION_ERROR);
-    quantityApproved = quantityRequested;
-  }
-
-  public void validateCalculatedFields(List<RnrColumn> rnrColumns) {
-    boolean validQuantityDispensed = true;
-    if (rnrColumns.get(0).isFormulaValidationRequired()) {
-      validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
-    }
-    boolean valid = quantityDispensed >= 0 && stockInHand >= 0 && validQuantityDispensed;
-    if (!valid) throw new DataException(RNR_VALIDATION_ERROR);
-  }
-
-  private boolean isPresent(Object value) {
-    return value != null;
-  }
-
   public void calculatePacksToShip() {
     Integer orderQuantity = getOrderQuantity();
     if (orderQuantity == null || packSize == null) {
@@ -221,22 +212,8 @@ public class RnrLineItem extends BaseModel {
     }
   }
 
-  private Integer getOrderQuantity() {
-    if (quantityApproved != null) return quantityApproved;
-    if (quantityRequested != null) return quantityRequested;
-    else return calculatedOrderQuantity;
-  }
-
-  private Integer round(Double packsToShip, Integer orderQuantity) {
-    Integer remainderQuantity = orderQuantity % packSize;
-    if (remainderQuantity >= packRoundingThreshold && packsToShip != 0) {
-      packsToShip += 1;
-    }
-
-    if (packsToShip == 0 && !roundToZero) {
-      packsToShip = 1d;
-    }
-    return packsToShip.intValue();
+  public void calculateMaxStockQuantity() {
+    maxStockQuantity = maxMonthsOfStock * amc;
   }
 
   public void calculateOrderQuantity() {
@@ -245,10 +222,6 @@ public class RnrLineItem extends BaseModel {
     } else {
       calculatedOrderQuantity = (maxStockQuantity - stockInHand < 0) ? 0 : maxStockQuantity - stockInHand;
     }
-  }
-
-  public void calculateMaxStockQuantity() {
-    maxStockQuantity = maxMonthsOfStock * amc;
   }
 
   public void calculateNormalizedConsumption() {
@@ -271,6 +244,127 @@ public class RnrLineItem extends BaseModel {
     }
   }
 
+  public void calculateQuantityDispensed() {
+    if (isAnyNull(beginningBalance, quantityReceived, totalLossesAndAdjustments, stockInHand)) {
+      quantityDispensed = null;
+    } else {
+      this.quantityDispensed = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.stockInHand;
+    }
+  }
+
+  public void calculateStockInHand() {
+    this.stockInHand = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.quantityDispensed;
+  }
+
+  public Money calculateCost() {
+    if (packsToShip != null) {
+      return price.multiply(BigDecimal.valueOf(packsToShip));
+    }
+    return new Money("0");
+  }
+
+  private void copyField(String fieldName, RnrLineItem lineItem, ProgramRnrTemplate template) {
+    if (!template.columnsVisible(fieldName) || !template.columnsUserInput(fieldName)) {
+      return;
+    }
+
+    try {
+      Field field = this.getClass().getDeclaredField(fieldName);
+      field.set(this, field.get(lineItem));
+    } catch (Exception e) {
+      logger.error("Error in reading RnrLineItem's field", e);
+    }
+  }
+
+  private void copyTotalLossesAndAdjustments(RnrLineItem item, ProgramRnrTemplate template) {
+    if (template.columnsVisible(LOSSES_AND_ADJUSTMENTS))
+      this.totalLossesAndAdjustments = item.totalLossesAndAdjustments;
+  }
+
+  private void copyBeginningBalance(RnrLineItem item, ProgramRnrTemplate template) {
+    if (!this.previousStockInHandAvailable && template.columnsVisible(BEGINNING_BALANCE))
+      this.beginningBalance = item.beginningBalance;
+  }
+
+  public void copyCreatorEditableFieldsForFullSupply(RnrLineItem lineItem, ProgramRnrTemplate template) {
+    copyBeginningBalance(lineItem, template);
+    copyTotalLossesAndAdjustments(lineItem, template);
+    for (RnrColumn column : template.getRnrColumns()) {
+      String fieldName = column.getName();
+      if(fieldName.equals(QUANTITY_APPROVED)) continue;
+      copyField(fieldName, lineItem, template);
+    }
+  }
+
+  public void copyCreatorEditableFieldsForNonFullSupply(RnrLineItem lineItem, ProgramRnrTemplate template) {
+    String[] editableFields = {QUANTITY_REQUESTED, REMARKS, REASON_FOR_REQUESTED_QUANTITY};
+
+    for (String fieldName : editableFields) {
+      copyField(fieldName, lineItem, template);
+    }
+  }
+
+  public void copyApproverEditableFields(RnrLineItem lineItem, ProgramRnrTemplate template) {
+    String[] approverEditableFields = {QUANTITY_APPROVED, REMARKS};
+    for(String fieldName: approverEditableFields) {
+      copyField(fieldName, lineItem, template);
+    }
+  }
+
+  public void addLossesAndAdjustments(LossesAndAdjustments lossesAndAdjustments) {
+    this.lossesAndAdjustments.add(lossesAndAdjustments);
+  }
+
+  private Integer sumOfPreviousNormalizedConsumptions() {
+    Integer total = 0;
+    for (Integer consumption : previousNormalizedConsumptions) {
+      total += consumption;
+    }
+    return total;
+  }
+
+  private void requestedQuantityConditionalValidation(ProgramRnrTemplate template) {
+    if (template.columnsVisible(QUANTITY_REQUESTED)
+      && quantityRequested != null
+      && reasonForRequestedQuantity == null) {
+      throw new DataException(RNR_VALIDATION_ERROR);
+    }
+  }
+
+  private Object getValueFor(String fieldName) {
+    Object value = null;
+    try {
+      Field field = this.getClass().getDeclaredField(fieldName);
+      value = field.get(this);
+    } catch (Exception e) {
+      logger.error("Error in reading RnrLineItem's field", e);
+    }
+    return value;
+  }
+
+
+  private boolean isPresent(Object value) {
+    return value != null;
+  }
+
+  private Integer getOrderQuantity() {
+    if (quantityApproved != null) return quantityApproved;
+    if (quantityRequested != null) return quantityRequested;
+    else return calculatedOrderQuantity;
+  }
+
+  private Integer round(Double packsToShip, Integer orderQuantity) {
+    Integer remainderQuantity = orderQuantity % packSize;
+    if (remainderQuantity >= packRoundingThreshold && packsToShip != 0) {
+      packsToShip += 1;
+    }
+
+    if (packsToShip == 0 && !roundToZero) {
+      packsToShip = 1d;
+    }
+    return packsToShip.intValue();
+  }
+
   private boolean getAdditive(final LossesAndAdjustments lossAndAdjustment, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     Predicate predicate = new Predicate() {
       @Override
@@ -290,105 +384,11 @@ public class RnrLineItem extends BaseModel {
       this.previousNormalizedConsumptions.add(rnrLineItem.normalizedConsumption);
   }
 
-  public void setDefaultApprovedQuantity() {
-    quantityApproved = fullSupply ? calculatedOrderQuantity : quantityRequested;
-  }
-
-
-  public void copyApproverEditableFields(RnrLineItem lineItem, ProgramRnrTemplate template) {
-    String[] approverEditableFields = {QUANTITY_APPROVED, REMARKS};
-    for(String fieldName: approverEditableFields) {
-      copyFields(lineItem, template, fieldName);
-    }
-  }
-
-  private void copyTotalLossesAndAdjustments(RnrLineItem item, ProgramRnrTemplate template) {
-    if (template.columnsVisible(LOSSES_AND_ADJUSTMENTS))
-      this.totalLossesAndAdjustments = item.totalLossesAndAdjustments;
-  }
-
-  private void copyBeginningBalance(RnrLineItem item, ProgramRnrTemplate template) {
-    if (!this.previousStockInHandAvailable && template.columnsVisible(BEGINNING_BALANCE))
-      this.beginningBalance = item.beginningBalance;
-  }
-
-  public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem lineItem) {
-    if (lineItem == null) {
-      this.beginningBalance = 0;
-      return;
-    }
-    this.beginningBalance = lineItem.getStockInHand();
-    this.setPreviousStockInHandAvailable(TRUE);
-  }
-
-  void setLineItemFieldsAccordingToTemplate(ProgramRnrTemplate template) {
-    if (!template.columnsVisible(QUANTITY_RECEIVED)) quantityReceived = 0;
-    if (!template.columnsVisible(QUANTITY_DISPENSED)) quantityDispensed = 0;
-    if (!template.columnsVisible(LOSSES_AND_ADJUSTMENTS))
-      totalLossesAndAdjustments = 0;
-    newPatientCount = 0;
-    stockOutDays = 0;
-  }
-
-  public void calculateStockInHand() {
-    this.stockInHand = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.quantityDispensed;
-  }
-
-  public void calculateQuantityDispensed() {
-    if (isAnyNull(beginningBalance, quantityReceived, totalLossesAndAdjustments, stockInHand)) {
-      quantityDispensed = null;
-    } else {
-      this.quantityDispensed = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.stockInHand;
-    }
-  }
-
-  public Money calculateCost() {
-    if (packsToShip != null) {
-      return price.multiply(BigDecimal.valueOf(packsToShip));
-    }
-    return new Money("0");
-  }
-
   private boolean isAnyNull(Integer... fields) {
     for (Integer field : fields) {
       if (field == null) return true;
     }
     return false;
-  }
-
-  public void validateForApproval() {
-    if (quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
-  }
-
-  public void copyCreatorEditableFieldsForFullSupply(RnrLineItem lineItem, ProgramRnrTemplate template) {
-    copyBeginningBalance(lineItem, template);
-    copyTotalLossesAndAdjustments(lineItem, template);
-    for (RnrColumn column : template.getRnrColumns()) {
-      String fieldName = column.getName();
-      if(fieldName.equals(QUANTITY_APPROVED)) continue;
-      copyFields(lineItem, template, fieldName);
-    }
-  }
-
-  private void copyFields(RnrLineItem lineItem, ProgramRnrTemplate template, String fieldName) {
-    if (!template.columnsVisible(fieldName) || !template.columnsUserInput(fieldName)) {
-      return;
-    }
-
-    try {
-      Field field = this.getClass().getDeclaredField(fieldName);
-      field.set(this, field.get(lineItem));
-    } catch (Exception e) {
-      logger.error("Error in reading RnrLineItem's field", e);
-    }
-  }
-
-  public void copyCreatorEditableFieldsForNonFullSupply(RnrLineItem lineItem, ProgramRnrTemplate template) {
-    String[] editableFields = {QUANTITY_REQUESTED, REMARKS, REASON_FOR_REQUESTED_QUANTITY};
-
-    for (String fieldName : editableFields) {
-      copyFields(lineItem, template, fieldName);
-    }
   }
 
 }
