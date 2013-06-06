@@ -41,14 +41,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @NoArgsConstructor
 public class FacilityController extends BaseController {
 
-  private FacilityService facilityService;
-  private ProgramService programService;
-
   @Autowired
-  public FacilityController(FacilityService facilityService, ProgramService programService) {
-    this.facilityService = facilityService;
-    this.programService = programService;
-  }
+  private FacilityService facilityService;
+  @Autowired
+  private ProgramService programService;
 
   @RequestMapping(value = "/facilities", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
@@ -105,7 +101,7 @@ public class FacilityController extends BaseController {
     } catch (DataException exception) {
       return createErrorResponse(facility, exception);
     }
-    response = success("Facility '" + facility.getName() + "' created successfully");
+    response = success(new OpenLmisMessage("message.facility.created.success", facility.getName()));
     response.getBody().addData("facility", facility);
     return response;
   }
@@ -120,7 +116,7 @@ public class FacilityController extends BaseController {
     } catch (DataException exception) {
       return createErrorResponse(facility, exception);
     }
-    response = success("Facility '" + facility.getName() + "' updated successfully");
+    response = success(new OpenLmisMessage("message.facility.updated.success", facility.getName()));
     response.getBody().addData("facility", facility);
     return response;
   }

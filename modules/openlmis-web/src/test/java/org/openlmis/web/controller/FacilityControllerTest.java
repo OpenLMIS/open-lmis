@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
@@ -46,16 +48,16 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 public class FacilityControllerTest {
 
   public static final Long userId = 1L;
+  @Mock
   private ProgramService programService;
+  @Mock
   private FacilityService facilityService;
+  @InjectMocks
   private FacilityController facilityController;
   private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
 
   @Before
   public void setUp() throws Exception {
-    programService = mock(ProgramService.class);
-    facilityService = mock(FacilityService.class);
-    facilityController = new FacilityController(facilityService, programService);
     MockHttpSession mockHttpSession = new MockHttpSession();
     httpServletRequest.setSession(mockHttpSession);
     mockHttpSession.setAttribute(USER, USER);
