@@ -122,9 +122,9 @@ public class Rnr extends BaseModel {
 
   private void calculateForFullSupply(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     for (RnrLineItem lineItem : fullSupplyLineItems) {
-      lineItem.validateMandatoryFields(new ArrayList<RnrColumn>(), template);
-      lineItem.calculateForFullSupply(period, new ArrayList<RnrColumn>(), this.getStatus(), lossesAndAdjustmentsTypes, template);
-      lineItem.validateCalculatedFields(new ArrayList<RnrColumn>(), template);
+      lineItem.validateMandatoryFields(template);
+      lineItem.calculateForFullSupply(period, template, this.getStatus(), lossesAndAdjustmentsTypes);
+      lineItem.validateCalculatedFields(template);
       this.fullSupplyItemsSubmittedCost = this.fullSupplyItemsSubmittedCost.add(lineItem.calculateCost());
     }
   }

@@ -138,7 +138,7 @@ public class RequisitionService {
   }
 
 
-  public OpenLmisMessage submit(Rnr rnr) {
+  public Rnr submit(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
     if (savedRnr.getStatus() != INITIATED) throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
@@ -151,37 +151,37 @@ public class RequisitionService {
     savedRnr.calculate(rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId()),
       requisitionRepository.getLossesAndAdjustmentsTypes());
 
-    update(savedRnr);
-
-    return getSubmitMessageBasedOnSupervisoryNode(savedRnr);
+    return update(savedRnr);
   }
 
-  private OpenLmisMessage getSubmitMessageBasedOnSupervisoryNode(Rnr savedRnr) {
-    SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram());
-    String msg = (supervisoryNode == null) ? NO_SUPERVISORY_NODE_CONTACT_ADMIN : RNR_SUBMITTED_SUCCESSFULLY;
-
-    return new OpenLmisMessage(msg);
-  }
-
-  private OpenLmisMessage getAuthorizeMessageBasedOnSupervisoryNode(Rnr savedRnr) {
-    User approver = supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram());
-    String msg = (approver == null) ? RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR : RNR_AUTHORIZED_SUCCESSFULLY;
-    return new OpenLmisMessage(msg);
-  }
-
-  public OpenLmisMessage authorize(Rnr rnr) {
+  public Rnr authorize(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
-    validateIfRequisitionCanBeOperatedAs(savedRnr, rnr.getModifiedBy(), AUTHORIZE_REQUISITION);
+    if (savedRnr.getStatus() != SUBMITTED) throw new DataException(new OpenLmisMessage(RNR_AUTHORIZATION_ERROR));
+
+    if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, AUTHORIZE_REQUISITION))
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+
     savedRnr.setAuditFieldsForRequisition(rnr.getModifiedBy(), AUTHORIZED);
     savedRnr.setSupervisoryNodeId(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram()).getId());
 
     savedRnr.calculate(rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId()),
       requisitionRepository.getLossesAndAdjustmentsTypes());
 
-    update(savedRnr);
+    return update(savedRnr);
+  }
 
-    return getAuthorizeMessageBasedOnSupervisoryNode(savedRnr);
+  public OpenLmisMessage getSubmitMessageBasedOnSupervisoryNode(Facility facility, Program program) {
+    SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(facility, program);
+    String msg = (supervisoryNode == null) ? NO_SUPERVISORY_NODE_CONTACT_ADMIN : RNR_SUBMITTED_SUCCESSFULLY;
+
+    return new OpenLmisMessage(msg);
+  }
+
+  public OpenLmisMessage getAuthorizeMessageBasedOnSupervisoryNode(Facility facility, Program program) {
+    User approver = supervisoryNodeService.getApproverFor(facility, program);
+    String msg = (approver == null) ? RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR : RNR_AUTHORIZED_SUCCESSFULLY;
+    return new OpenLmisMessage(msg);
   }
 
   public OpenLmisMessage approve(Rnr requisition) {
@@ -207,17 +207,6 @@ public class RequisitionService {
     requisitionRepository.approve(savedRnr);
     logStatusChangeAndNotify(savedRnr);
     return message;
-  }
-
-  private void validateIfRequisitionCanBeOperatedAs(Rnr savedRnr, Long submittedBy, Right right) {
-    RnrStatus statusToBeVerified = right.equals(CREATE_REQUISITION) ? INITIATED : SUBMITTED;
-    String error = right.equals(CREATE_REQUISITION) ? RNR_SUBMISSION_ERROR : RNR_AUTHORIZATION_ERROR;
-
-    if (savedRnr.getStatus() != statusToBeVerified)
-      throw new DataException(new OpenLmisMessage(error));
-
-    if (!requisitionPermissionService.hasPermission(submittedBy, savedRnr, right))
-      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
   }
 
   public Rnr getFullRequisitionById(Long id) {
@@ -380,9 +369,10 @@ public class RequisitionService {
     }
   }
 
-  private void update(Rnr requisition) {
+  private Rnr update(Rnr requisition) {
     requisitionRepository.update(requisition);
     logStatusChangeAndNotify(requisition);
+    return requisition;
   }
 
 

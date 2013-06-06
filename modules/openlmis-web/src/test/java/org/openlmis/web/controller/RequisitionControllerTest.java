@@ -44,6 +44,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -52,6 +54,7 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.openlmis.web.controller.RequisitionController.*;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -177,11 +180,14 @@ public class RequisitionControllerTest {
   public void shouldAllowSubmittingOfRnrAndTagWithModifiedBy() throws Exception {
     Rnr rnr = new Rnr(1L);
     whenNew(Rnr.class).withArguments(1L).thenReturn(rnr);
-    when(requisitionService.submit(rnr)).thenReturn(new OpenLmisMessage("test.msg.key"));
+    Rnr submittedRnr = make(a(defaultRnr));
+    when(requisitionService.submit(rnr)).thenReturn(submittedRnr);
+    when(requisitionService.getSubmitMessageBasedOnSupervisoryNode(submittedRnr.getFacility(), submittedRnr.getProgram())).thenReturn(new OpenLmisMessage("test.msg.key"));
 
     ResponseEntity<OpenLmisResponse> response = controller.submit(rnr.getId(), request);
     assertThat(response.getBody().getSuccessMsg(), is("test.msg.key"));
     verify(requisitionService).submit(rnr);
+    verify(requisitionService).getSubmitMessageBasedOnSupervisoryNode(submittedRnr.getFacility(), submittedRnr.getProgram());
     assertThat(rnr.getModifiedBy(), is(USER_ID));
   }
 
@@ -203,11 +209,15 @@ public class RequisitionControllerTest {
 
     Rnr rnr = new Rnr(1L);
     whenNew(Rnr.class).withArguments(1L).thenReturn(rnr);
-    when(requisitionService.authorize(rnr)).thenReturn(new OpenLmisMessage(code));
+    Rnr authorizedRnr = make(a(defaultRnr));
+    when(requisitionService.authorize(rnr)).thenReturn(authorizedRnr);
+    when(requisitionService.getAuthorizeMessageBasedOnSupervisoryNode(authorizedRnr.getFacility(),
+      authorizedRnr.getProgram())).thenReturn(new OpenLmisMessage(code));
 
     ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr.getId(), request);
 
     verify(requisitionService).authorize(rnr);
+    verify(requisitionService).getAuthorizeMessageBasedOnSupervisoryNode(authorizedRnr.getFacility(), authorizedRnr.getProgram());
     assertThat(response.getBody().getSuccessMsg(), is(message));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
   }

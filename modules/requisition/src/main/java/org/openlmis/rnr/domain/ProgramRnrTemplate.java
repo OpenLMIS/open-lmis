@@ -44,6 +44,7 @@ public class ProgramRnrTemplate {
 
   @Getter
   private Long programId;
+
   @Getter
   private List<RnrColumn> rnrColumns;
 
@@ -173,4 +174,6 @@ public class ProgramRnrTemplate {
     }
     return visibleRnrColumns;
   }
+
+
 }

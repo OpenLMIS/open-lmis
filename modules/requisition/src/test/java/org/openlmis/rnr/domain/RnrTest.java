@@ -63,8 +63,8 @@ public class RnrTest {
     ProgramRnrTemplate template = new ProgramRnrTemplate(programRnrColumns);
     rnr.calculate(template, lossesAndAdjustmentsTypes);
 
-    verify(rnrLineItem1).validateMandatoryFields(programRnrColumns, template);
-    verify(rnrLineItem1).validateCalculatedFields(programRnrColumns, template);
+    verify(rnrLineItem1).validateMandatoryFields(template);
+    verify(rnrLineItem1).validateCalculatedFields(template);
 
     verify(rnrLineItem2).validateNonFullSupply();
   }
@@ -141,7 +141,7 @@ public class RnrTest {
 
     rnr.calculate(template, lossesAndAdjustmentsTypes);
 
-    verify(firstLineItem).calculateForFullSupply(period, programRequisitionColumns, SUBMITTED, lossesAndAdjustmentsTypes, template);
+    verify(firstLineItem).calculateForFullSupply(period, template, SUBMITTED, lossesAndAdjustmentsTypes);
     verify(firstLineItem).calculateCost();
     verify(secondLineItem).calculateCost();
     verify(secondLineItem).calculatePacksToShip();

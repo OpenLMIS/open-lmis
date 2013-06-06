@@ -152,8 +152,7 @@ public class RnrLineItem extends BaseModel {
     if (quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
   }
 
-  public void validateMandatoryFields(List<RnrColumn> templateColumns, ProgramRnrTemplate programTemplate) {
-    ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
+  public void validateMandatoryFields(ProgramRnrTemplate template) {
 
     String[] nonNullableFields = {BEGINNING_BALANCE, QUANTITY_RECEIVED, QUANTITY_DISPENSED, NEW_PATIENT_COUNT, STOCK_OUT_DAYS};
     for (String fieldName : nonNullableFields) {
@@ -172,17 +171,16 @@ public class RnrLineItem extends BaseModel {
       throw new DataException(RNR_VALIDATION_ERROR);
   }
 
-  public void validateCalculatedFields(List<RnrColumn> rnrColumns, ProgramRnrTemplate programTemplate) {
+  public void validateCalculatedFields(ProgramRnrTemplate template) {
     boolean validQuantityDispensed = true;
-    if (rnrColumns.get(0).isFormulaValidationRequired()) {
+    if (template.getRnrColumns().get(0).isFormulaValidationRequired()) {
       validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
     }
     boolean valid = quantityDispensed >= 0 && stockInHand >= 0 && validQuantityDispensed;
     if (!valid) throw new DataException(RNR_VALIDATION_ERROR);
   }
 
-  public void calculateForFullSupply(ProcessingPeriod period, List<RnrColumn> rnrColumns, RnrStatus rnrStatus, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes, ProgramRnrTemplate programTemplate) {
-    ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+  public void calculateForFullSupply(ProcessingPeriod period, ProgramRnrTemplate template, RnrStatus rnrStatus, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     calculateTotalLossesAndAdjustments(lossesAndAdjustmentsTypes);
     if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
     if (template.columnsCalculated(QUANTITY_DISPENSED)) calculateQuantityDispensed();

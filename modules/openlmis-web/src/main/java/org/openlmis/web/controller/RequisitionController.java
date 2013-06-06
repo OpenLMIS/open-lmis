@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -120,7 +119,10 @@ public class RequisitionController extends BaseController {
     try {
       Rnr rnr = new Rnr(id);
       rnr.setModifiedBy(loggedInUserId(request));
-      return success(requisitionService.submit(rnr));
+      Rnr submittedRnr = requisitionService.submit(rnr);
+
+      return success(requisitionService.getSubmitMessageBasedOnSupervisoryNode(submittedRnr.getFacility(),
+        submittedRnr.getProgram()));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
@@ -139,8 +141,8 @@ public class RequisitionController extends BaseController {
     try {
       Rnr rnr = new Rnr(id);
       rnr.setModifiedBy(loggedInUserId(request));
-      OpenLmisMessage openLmisMessage = requisitionService.authorize(rnr);
-      return success(openLmisMessage);
+      Rnr authorizedRnr = requisitionService.authorize(rnr);
+      return success(requisitionService.getAuthorizeMessageBasedOnSupervisoryNode(authorizedRnr.getFacility(),authorizedRnr.getProgram()));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }

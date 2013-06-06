@@ -64,7 +64,7 @@ public class RnrLineItemTest {
     templateColumns = new ArrayList<>();
     addVisibleColumns(templateColumns);
     lineItem = make(a(defaultRnrLineItem));
-    template = new ProgramRnrTemplate(templateColumns);
+    template = new ProgramRnrTemplate(getRnrColumns());
     LossesAndAdjustmentsType additive1 = new LossesAndAdjustmentsType("TRANSFER_IN", "TRANSFER IN", true, 1);
     LossesAndAdjustmentsType additive2 = new LossesAndAdjustmentsType("additive2", "Additive 2", true, 2);
     LossesAndAdjustmentsType subtractive1 = new LossesAndAdjustmentsType("subtractive1", "Subtractive 1", false, 3);
@@ -139,7 +139,8 @@ public class RnrLineItemTest {
     lineItem.setBeginningBalance(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
-    lineItem.validateMandatoryFields(templateColumns, template);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
+    lineItem.validateMandatoryFields(template);
   }
 
   @Test
@@ -147,7 +148,8 @@ public class RnrLineItemTest {
     lineItem.setQuantityReceived(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
-    lineItem.validateMandatoryFields(templateColumns, template);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
+    lineItem.validateMandatoryFields(template);
   }
 
   @Test
@@ -155,7 +157,8 @@ public class RnrLineItemTest {
     lineItem.setQuantityDispensed(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
-    lineItem.validateMandatoryFields(templateColumns, template);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
+    lineItem.validateMandatoryFields(template);
   }
 
   @Test
@@ -163,7 +166,8 @@ public class RnrLineItemTest {
     lineItem.setNewPatientCount(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
-    lineItem.validateMandatoryFields(templateColumns, template);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
+    lineItem.validateMandatoryFields(template);
   }
 
   @Test
@@ -171,7 +175,8 @@ public class RnrLineItemTest {
     lineItem.setStockOutDays(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
-    lineItem.validateMandatoryFields(templateColumns, template);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
+    lineItem.validateMandatoryFields(template);
   }
 
   @Test
@@ -179,7 +184,7 @@ public class RnrLineItemTest {
     lineItem.setQuantityRequested(null);
     lineItem.setReasonForRequestedQuantity(null);
 
-    lineItem.validateMandatoryFields(templateColumns, template);
+    lineItem.validateMandatoryFields(template);
   }
 
 
@@ -188,7 +193,7 @@ public class RnrLineItemTest {
     lineItem.setQuantityRequested(123);
     lineItem.setReasonForRequestedQuantity("something");
 
-    lineItem.validateMandatoryFields(templateColumns, template);
+    lineItem.validateMandatoryFields(template);
   }
 
   @Test
@@ -198,8 +203,9 @@ public class RnrLineItemTest {
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
 
-    lineItem.validateMandatoryFields(templateColumns, template);
+    lineItem.validateMandatoryFields(template);
   }
 
   @Test
@@ -207,7 +213,7 @@ public class RnrLineItemTest {
     lineItem.setQuantityRequested(null);
     lineItem.setReasonForRequestedQuantity("something");
 
-    lineItem.validateMandatoryFields(templateColumns, template);
+    lineItem.validateMandatoryFields(template);
   }
 
   @Test
@@ -222,7 +228,7 @@ public class RnrLineItemTest {
     lineItem.setQuantityDispensed(9);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
-    lineItem.validateCalculatedFields(templateColumns, template);
+    lineItem.validateCalculatedFields(template);
   }
 
   private LossesAndAdjustments createLossAndAdjustment(String typeName, boolean additive, int quantity) {
@@ -242,7 +248,7 @@ public class RnrLineItemTest {
     lineItem.setLossesAndAdjustments(asList(createLossAndAdjustment("", true, 1)));
     lineItem.setStockInHand(4);
     lineItem.setQuantityDispensed(10);
-    lineItem.validateMandatoryFields(templateColumns, template);
+    lineItem.validateMandatoryFields(template);
   }
 
   @Test
@@ -254,7 +260,7 @@ public class RnrLineItemTest {
     lineItem.setQuantityDispensed(9);
     templateColumns.get(0).setFormulaValidationRequired(false);
 
-    lineItem.validateMandatoryFields(templateColumns, template);
+    lineItem.validateMandatoryFields(template);
   }
 
 
@@ -265,7 +271,7 @@ public class RnrLineItemTest {
     lineItem.setTotalLossesAndAdjustments(1);
     lineItem.setStockInHand(4);
     lineItem.setQuantityDispensed(10);
-    lineItem.validateMandatoryFields(templateColumns, template);
+    lineItem.validateMandatoryFields(template);
   }
 
   @Test
@@ -284,7 +290,7 @@ public class RnrLineItemTest {
     lineItem.setQuantityDispensed(29);
 
 
-    lineItem.calculateForFullSupply(period, getRnrColumns(), SUBMITTED, lossesAndAdjustmentsList, template);
+    lineItem.calculateForFullSupply(period, template, SUBMITTED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getTotalLossesAndAdjustments(), is(25));
   }
@@ -297,7 +303,7 @@ public class RnrLineItemTest {
     lineItem.setDosesPerDispensingUnit(10);
     lineItem.setNormalizedConsumption(37345);
 
-    lineItem.calculateForFullSupply(period, getRnrColumns(), SUBMITTED, lossesAndAdjustmentsList, template);
+    lineItem.calculateForFullSupply(period, template, SUBMITTED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getNormalizedConsumption(), is(37));
   }
@@ -310,7 +316,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(3);
 
-    spyLineItem.calculateForFullSupply(period, getRnrColumns(), AUTHORIZED, lossesAndAdjustmentsList, template);
+    spyLineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     assertThat(spyLineItem.getAmc(), is(15));
   }
@@ -320,7 +326,7 @@ public class RnrLineItemTest {
     RnrLineItem spyLineItem = spy(lineItem);
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
 
-    spyLineItem.calculateForFullSupply(period, getRnrColumns(), AUTHORIZED, lossesAndAdjustmentsList, template);
+    spyLineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     verify(spyLineItem).calculateAmc(period);
     verify(spyLineItem).calculateMaxStockQuantity();
@@ -335,7 +341,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(2);
 
-    spyLineItem.calculateForFullSupply(period, getRnrColumns(), AUTHORIZED, lossesAndAdjustmentsList, template);
+    spyLineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     assertThat(spyLineItem.getAmc(), is(14));
   }
@@ -348,7 +354,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculateForFullSupply(period, getRnrColumns(), AUTHORIZED, lossesAndAdjustmentsList, template);
+    spyLineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     assertThat(spyLineItem.getAmc(), is(23));
   }
@@ -361,7 +367,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculateForFullSupply(period, getRnrColumns(), AUTHORIZED, lossesAndAdjustmentsList, template);
+    spyLineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     assertThat(spyLineItem.getAmc(), is(29));
   }
@@ -373,7 +379,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculateForFullSupply(period, getRnrColumns(), AUTHORIZED, lossesAndAdjustmentsList, template);
+    spyLineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     assertThat(spyLineItem.getAmc(), is(45));
   }
@@ -386,7 +392,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(2);
 
-    spyLineItem.calculateForFullSupply(period, getRnrColumns(), AUTHORIZED, lossesAndAdjustmentsList, template);
+    spyLineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     assertThat(spyLineItem.getAmc(), is(23));
   }
@@ -400,7 +406,7 @@ public class RnrLineItemTest {
     lineItem.setNormalizedConsumption(37345);
     lineItem.setMaxMonthsOfStock(10);
 
-    lineItem.calculateForFullSupply(period, getRnrColumns(), AUTHORIZED, lossesAndAdjustmentsList, template);
+    lineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getMaxStockQuantity(), is(370));
   }
@@ -416,7 +422,7 @@ public class RnrLineItemTest {
     lineItem.setMaxStockQuantity(370);
     lineItem.setStockInHand(300);
 
-    lineItem.calculateForFullSupply(period, getRnrColumns(), AUTHORIZED, lossesAndAdjustmentsList, template);
+    lineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getCalculatedOrderQuantity(), is(366));
   }
@@ -424,7 +430,7 @@ public class RnrLineItemTest {
 
   @Test
   public void shouldNotThrowErrorIfAllMandatoryFieldsPresent() throws Exception {
-    lineItem.validateMandatoryFields(templateColumns, template);
+    lineItem.validateMandatoryFields(template);
   }
 
   @Test
@@ -515,7 +521,7 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED))));
     }};
     lineItem.setStockInHand(99);
-    lineItem.calculateForFullSupply(period, columns, SUBMITTED, lossesAndAdjustmentsList, template);
+    lineItem.calculateForFullSupply(period, template, SUBMITTED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getStockInHand(), is(4));
   }
@@ -526,8 +532,9 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, ProgramRnrTemplate.STOCK_IN_HAND))));
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED))));
     }};
+    ProgramRnrTemplate template = new ProgramRnrTemplate(columns);
     lineItem.setStockInHand(66);
-    lineItem.calculateForFullSupply(period, columns, SUBMITTED, lossesAndAdjustmentsList, template);
+    lineItem.calculateForFullSupply(period, template, SUBMITTED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getStockInHand(), is(66));
   }
@@ -538,9 +545,9 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, ProgramRnrTemplate.STOCK_IN_HAND))));
       add(make(a(defaultRnrColumn, with(source, CALCULATED), with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED))));
     }};
-
+    ProgramRnrTemplate template = new ProgramRnrTemplate(columns);
     lineItem.setQuantityDispensed(4);
-    lineItem.calculateForFullSupply(period, columns, SUBMITTED, lossesAndAdjustmentsList, template);
+    lineItem.calculateForFullSupply(period, template, SUBMITTED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getQuantityDispensed(), is(10));
   }
@@ -553,7 +560,7 @@ public class RnrLineItemTest {
     }};
 
     lineItem.setQuantityDispensed(0);
-    lineItem.calculateForFullSupply(period, columns, SUBMITTED, lossesAndAdjustmentsList, template);
+    lineItem.calculateForFullSupply(period, template, SUBMITTED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getQuantityDispensed(), is(0));
   }
