@@ -255,6 +255,14 @@ public class UserPage extends Page {
     SeleneseTestNgHelper.assertTrue(roleName + " should be displayed", roleElement.isDisplayed());
   }
 
+    public String getAllProgramsToSupervise() {
+        return programsToSupervise.getText();
+    }
+
+    public String getAllProgramsHomeFacility() {
+        return programsMyFacility.getText();
+    }
+
   public void clickViewHere() {
     testWebDriver.waitForElementToAppear(viewHereLink);
     viewHereLink.click();

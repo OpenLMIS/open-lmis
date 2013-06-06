@@ -23,6 +23,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -97,6 +101,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.clickViewHere();
     userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
     userPage.verifyRemoveNotPresent();
+    verifyPUSHProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles(userPage);
 
 //    createUserAndAssignRoles(homePage, passwordUsers, "Jake_Doe@openlmis.com", "Jake", "Doe", LMU, facility_code, program, "Node 1", LMU, true);
 //    userPage.clickViewHere();
@@ -119,6 +124,11 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     rolesPage.createRole(roleName, roleDescription, userRoleList, programDependent);
   }
+
+    private void verifyPUSHProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles(UserPage userPage) throws IOException, SQLException {
+        assertFalse(userPage.getAllProgramsHomeFacility().contains("VACCINES"));
+        assertFalse(userPage.getAllProgramsToSupervise().contains("VACCINES"));
+    }
 
   @AfterMethod(groups = {"functional2"})
   public void tearDown() throws Exception {

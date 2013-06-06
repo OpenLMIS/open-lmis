@@ -170,6 +170,8 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_Subsequent_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_PUSH_Program.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
 
   }
 
@@ -256,6 +258,8 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data_Population_Lat_Long.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInvalidGeographicZoneUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -265,6 +269,11 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Lat.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Long.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+
   }
 
   private void verifyValidProductPriceUpload(UploadPage uploadPage) throws FileNotFoundException {
