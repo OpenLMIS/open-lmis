@@ -71,15 +71,13 @@ public class FacilityFeed extends TestCaseHelper {
       deleteFacilityPage.clickFacilityList();
       deleteFacilityPage.deleteFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
       deleteFacilityPage.verifyDeletedFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-      //testWebDriver.sleep(2500);
-      responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
-
       deleteFacilityPage.restoreFacility();
+      responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
 
       List<String> feedJSONList=XmlUtils.getNodeValues(responseEntity.getResponse(),"content");
       assertTrue(feedJSONList.get(0).contains("\"active\":true"));
       assertTrue(feedJSONList.get(1).contains("\"active\":false"));
-     // assertTrue(feedJSONList.get(2).contains("\"active\":true"));
+      //assertTrue(feedJSONList.get(2).contains("\"active\":true"));
   }
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
