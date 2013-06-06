@@ -10,12 +10,12 @@ System Requirement
 ---------------------------
 
 - JDK 7
-- Gradle 1.4
+- Gradle 1.6
 
   ### For Linux users
    Download the source binary directly from the gradle website.
    Copy the downloaded folder to /usr/bin. Add the path to gradle bin folder to your /etc/profile file
-   export PATH="$PATH:/usr/bin/gradle-1.1/bin"
+   export PATH="$PATH:/usr/bin/gradle-1.6/bin"
 
   ### For Mac users
    * Install HomeBrew
