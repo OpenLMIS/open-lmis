@@ -63,6 +63,9 @@ public class E2EUpload extends TestCaseHelper {
     dbWrapper.alterUserID(userName, userId);
     dbWrapper.insertRoleAssignment(userId, "User");
 
+    verifyInValidProductGroupUpload(uploadPage);
+    verifyValidProductGroupUpload(uploadPage);
+
     verifyValidProductCategoryUpload(uploadPage);
     verifyInvalidProductCategoryUpload(uploadPage);
 
@@ -362,6 +365,9 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadProductsInvalidScenarios("QA_products_Duplicate_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
+    uploadPage.uploadProductsInvalidScenarios("QA_Products_Invalid_ProductGroupCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
   }
 
   private void verifyValidProductUpload(UploadPage uploadPage) throws IOException, SQLException {
@@ -373,6 +379,18 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
   }
+
+    private void verifyInValidProductGroupUpload(UploadPage uploadPage) throws IOException, SQLException {
+        uploadPage.uploadProductGroupsScenarios("QA_Product_Group_Duplicate.csv");
+        uploadPage.verifyErrorMessageOnUploadScreen();
+    }
+
+    private void verifyValidProductGroupUpload(UploadPage uploadPage) throws IOException, SQLException {
+        uploadPage.uploadProductGroupsScenarios("QA_product_group.csv");
+        uploadPage.verifySuccessMessageOnUploadScreen();
+        uploadPage.uploadProductGroupsScenarios("QA_Product_Group_Subsequent.csv");
+        uploadPage.verifySuccessMessageOnUploadScreen();
+    }
 
   @AfterMethod(groups = {"functional"})
   public void tearDown() throws Exception {

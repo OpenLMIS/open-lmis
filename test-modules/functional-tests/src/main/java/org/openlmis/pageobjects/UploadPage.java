@@ -120,6 +120,12 @@ public class UploadPage extends Page {
     testWebDriver.sleep(250);
   }
 
+  public void uploadProductGroupsScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Product Groups");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
+  }
+
   public void uploadProductCategory(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Product Category");
     uploadFile(uploadFileNameWithExtension);
