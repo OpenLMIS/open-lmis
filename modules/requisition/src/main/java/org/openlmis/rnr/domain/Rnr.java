@@ -22,17 +22,14 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
-import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
-import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
+import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_NULL)
 @EqualsAndHashCode(callSuper = false)
-public class Rnr extends BaseModel{
-
-  public static final String PRODUCT_CODE_INVALID = "product.code.invalid";
+public class Rnr extends BaseModel {
 
   private Facility facility;
   private Program program;
@@ -88,17 +85,48 @@ public class Rnr extends BaseModel{
 
   public void calculateAndValidate(List<RnrColumn> programRnrColumns, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     for (RnrLineItem lineItem : fullSupplyLineItems) {
-      lineItem.validateMandatoryFields(programRnrColumns);
-      lineItem.calculate(period, programRnrColumns, this.getStatus(), lossesAndAdjustmentsTypes);
-      lineItem.validateCalculatedFields(programRnrColumns);
+//      lineItem.validateMandatoryFields(programRnrColumns, template);
+//      lineItem.calculate(period, programRnrColumns, this.getStatus(), lossesAndAdjustmentsTypes, template);
+//      lineItem.validateCalculatedFields(programRnrColumns, template);
     }
 
     for (RnrLineItem lineItem : nonFullSupplyLineItems) {
-      lineItem.validateNonFullSupply();
+//      lineItem.validateNonFullSupply(template);
     }
 
+//    this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
+//    this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
+  }
+
+  public void calculateForApproval() {
+    for (RnrLineItem lineItem : fullSupplyLineItems) {
+      lineItem.calculatePacksToShip();
+    }
     this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
+  }
+
+  public void calculate(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+    this.fullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost = new Money("0");
+    calculateForFullSupply(template, lossesAndAdjustmentsTypes);
+    calculateForNonFullSupply();
+  }
+
+  private void calculateForNonFullSupply() {
+    for (RnrLineItem lineItem : nonFullSupplyLineItems) {
+      lineItem.validateNonFullSupply();
+      lineItem.calculatePacksToShip();
+      this.nonFullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost.add(lineItem.calculateCost());
+    }
+  }
+
+  private void calculateForFullSupply(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+    for (RnrLineItem lineItem : fullSupplyLineItems) {
+      lineItem.validateMandatoryFields(new ArrayList<RnrColumn>(), template);
+      lineItem.calculateForFullSupply(period, new ArrayList<RnrColumn>(), this.getStatus(), lossesAndAdjustmentsTypes, template);
+      lineItem.validateCalculatedFields(new ArrayList<RnrColumn>(), template);
+      this.fullSupplyItemsSubmittedCost = this.fullSupplyItemsSubmittedCost.add(lineItem.calculateCost());
+    }
   }
 
   private Money calculateCost(List<RnrLineItem> lineItems) {
@@ -191,14 +219,6 @@ public class Rnr extends BaseModel{
     }
   }
 
-  public void calculateForApproval() {
-    for (RnrLineItem lineItem : fullSupplyLineItems) {
-      lineItem.calculatePacksToShip();
-    }
-    this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
-    this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
-  }
-
   public void convertToOrder(Long userId) {
     this.status = RELEASED;
     this.modifiedBy = userId;
@@ -264,6 +284,15 @@ public class Rnr extends BaseModel{
       savedLineItem.setModifiedBy(rnr.modifiedBy);
       savedLineItem.copyApproverEditableFields(lineItem, template);
     }
+  }
+
+  public void setAuditFieldsForRequisition(Long modifiedBy, RnrStatus status) {
+    this.status = status;
+    Date operationDate = new Date();
+
+    if (status.equals(SUBMITTED)) setSubmittedDate(operationDate);
+
+    this.modifiedBy = modifiedBy;
   }
 }
 

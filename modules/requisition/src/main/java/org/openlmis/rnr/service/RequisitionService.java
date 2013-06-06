@@ -141,14 +141,31 @@ public class RequisitionService {
   public OpenLmisMessage submit(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
-    validateIfRequisitionCanBeOperatedAs(savedRnr, rnr.getModifiedBy(), CREATE_REQUISITION);
-    setAuditFieldsForRequisition(savedRnr, rnr.getModifiedBy(), SUBMITTED);
+    if (savedRnr.getStatus() != INITIATED) throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
 
-    validateAndUpdate(savedRnr);
+    if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, CREATE_REQUISITION))
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
+    savedRnr.setAuditFieldsForRequisition(rnr.getModifiedBy(), SUBMITTED);
+
+    savedRnr.calculate(rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId()),
+      requisitionRepository.getLossesAndAdjustmentsTypes());
+
+    update(savedRnr);
+
+    return getSubmitMessageBasedOnSupervisoryNode(savedRnr);
+  }
+
+  private OpenLmisMessage getSubmitMessageBasedOnSupervisoryNode(Rnr savedRnr) {
     SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram());
     String msg = (supervisoryNode == null) ? NO_SUPERVISORY_NODE_CONTACT_ADMIN : RNR_SUBMITTED_SUCCESSFULLY;
 
+    return new OpenLmisMessage(msg);
+  }
+
+  private OpenLmisMessage getAuthorizeMessageBasedOnSupervisoryNode(Rnr savedRnr) {
+    User approver = supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram());
+    String msg = (approver == null) ? RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR : RNR_AUTHORIZED_SUCCESSFULLY;
     return new OpenLmisMessage(msg);
   }
 
@@ -156,14 +173,15 @@ public class RequisitionService {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
     validateIfRequisitionCanBeOperatedAs(savedRnr, rnr.getModifiedBy(), AUTHORIZE_REQUISITION);
-    setAuditFieldsForRequisition(savedRnr, rnr.getModifiedBy(), AUTHORIZED);
+    savedRnr.setAuditFieldsForRequisition(rnr.getModifiedBy(), AUTHORIZED);
     savedRnr.setSupervisoryNodeId(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram()).getId());
 
-    validateAndUpdate(savedRnr);
+    savedRnr.calculate(rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId()),
+      requisitionRepository.getLossesAndAdjustmentsTypes());
 
-    User approver = supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram());
-    String msg = (approver == null) ? RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR : RNR_AUTHORIZED_SUCCESSFULLY;
-    return new OpenLmisMessage(msg);
+    update(savedRnr);
+
+    return getAuthorizeMessageBasedOnSupervisoryNode(savedRnr);
   }
 
   public OpenLmisMessage approve(Rnr requisition) {
@@ -189,22 +207,6 @@ public class RequisitionService {
     requisitionRepository.approve(savedRnr);
     logStatusChangeAndNotify(savedRnr);
     return message;
-  }
-
-  private void validateAndUpdate(Rnr savedRnr) {
-    List<RnrColumn> rnrColumns = rnrTemplateService.fetchAllRnRColumns(savedRnr.getProgram().getId());
-    savedRnr.calculateAndValidate(rnrColumns, getLossesAndAdjustmentsTypes());
-    update(savedRnr);
-  }
-
-  private void setAuditFieldsForRequisition(Rnr savedRnr, Long operatedBy, RnrStatus status) {
-    savedRnr.setStatus(status);
-    Date operationDate = new Date();
-
-    if (status.equals(SUBMITTED)) savedRnr.setSubmittedDate(operationDate);
-
-    savedRnr.setModifiedDate(operationDate);
-    savedRnr.setModifiedBy(operatedBy);
   }
 
   private void validateIfRequisitionCanBeOperatedAs(Rnr savedRnr, Long submittedBy, Right right) {

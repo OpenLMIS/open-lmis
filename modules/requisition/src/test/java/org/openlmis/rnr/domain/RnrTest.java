@@ -26,11 +26,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.openlmis.rnr.builder.RequisitionBuilder.modifiedBy;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
 public class RnrTest {
@@ -41,6 +43,7 @@ public class RnrTest {
 
   @Before
   public void setUp() throws Exception {
+    initMocks(this);
     rnr = make(a(defaultRnr));
     lossesAndAdjustmentsTypes = mock(ArrayList.class);
   }
@@ -57,10 +60,11 @@ public class RnrTest {
     rnr.setNonFullSupplyLineItems(asList(rnrLineItem2));
 
     List<RnrColumn> programRnrColumns = new ArrayList<>();
-    rnr.calculateAndValidate(programRnrColumns, lossesAndAdjustmentsTypes);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(programRnrColumns);
+    rnr.calculate(template, lossesAndAdjustmentsTypes);
 
-    verify(rnrLineItem1).validateMandatoryFields(programRnrColumns);
-    verify(rnrLineItem1).validateCalculatedFields(programRnrColumns);
+    verify(rnrLineItem1).validateMandatoryFields(programRnrColumns, template);
+    verify(rnrLineItem1).validateCalculatedFields(programRnrColumns, template);
 
     verify(rnrLineItem2).validateNonFullSupply();
   }
@@ -123,27 +127,26 @@ public class RnrTest {
   public void shouldCalculateCalculatedFieldsAccordingToProgramTemplate() throws Exception {
     ArrayList<RnrColumn> programRequisitionColumns = new ArrayList<>();
     ProcessingPeriod period = new ProcessingPeriod();
-    ArrayList<RnrLineItem> lineItems = new ArrayList<>();
-    ArrayList<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
     RnrLineItem firstLineItem = mock(RnrLineItem.class);
     RnrLineItem secondLineItem = mock(RnrLineItem.class);
-    lineItems.add(firstLineItem);
-    nonFullSupplyLineItems.add(secondLineItem);
 
-
-    rnr.setFullSupplyLineItems(lineItems);
-    rnr.setNonFullSupplyLineItems(nonFullSupplyLineItems);
+    rnr.setFullSupplyLineItems(asList(firstLineItem));
+    rnr.setNonFullSupplyLineItems(asList(secondLineItem));
     rnr.setPeriod(period);
     rnr.setStatus(SUBMITTED);
-    Money fullSupplyItemSubmittedCost = new Money("10");
-    Money nonFullSupplyItemSubmittedCost = new Money("20");
-    when(firstLineItem.calculateCost()).thenReturn(fullSupplyItemSubmittedCost);
-    when(secondLineItem.calculateCost()).thenReturn(nonFullSupplyItemSubmittedCost);
-    rnr.calculateAndValidate(programRequisitionColumns, lossesAndAdjustmentsTypes);
 
-    verify(firstLineItem).calculate(period, programRequisitionColumns, SUBMITTED, lossesAndAdjustmentsTypes);
-    assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(fullSupplyItemSubmittedCost));
-    assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(nonFullSupplyItemSubmittedCost));
+    when(firstLineItem.calculateCost()).thenReturn(new Money("10"));
+    when(secondLineItem.calculateCost()).thenReturn(new Money("20"));
+    ProgramRnrTemplate template = new ProgramRnrTemplate(programRequisitionColumns);
+
+    rnr.calculate(template, lossesAndAdjustmentsTypes);
+
+    verify(firstLineItem).calculateForFullSupply(period, programRequisitionColumns, SUBMITTED, lossesAndAdjustmentsTypes, template);
+    verify(firstLineItem).calculateCost();
+    verify(secondLineItem).calculateCost();
+    verify(secondLineItem).calculatePacksToShip();
+    assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(new Money("10")));
+    assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("20")));
   }
 
   @Test
@@ -169,28 +172,6 @@ public class RnrTest {
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(new Money("28")));
     assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("0")));
   }
-
-//  @Test
-//  public void shouldCopyUserEditableFieldsIdAccordingToStatus() throws Exception {
-//    Rnr rnr = spy(new Rnr());
-//    RnrLineItem lineItem = spy(make(a(RnrLineItemBuilder.defaultRnrLineItem,
-//      with(roundToZero, true),
-//      with(packRoundingThreshold, 6),
-//      with(quantityApproved, 66),
-//      with(packSize, 10),
-//      with(roundToZero, false))));
-//    rnr.setFullSupplyLineItems(asList(lineItem));
-//    rnr.setStatus(INITIATED);
-//    Rnr otherRnr = new Rnr();
-//    otherRnr.setFullSupplyLineItems(asList(lineItem));
-//    List<RnrColumn> programRnrColumns = setupProgramTemplate();
-//    rnr.copyEditableFields(otherRnr, programRnrColumns);
-//    verify(lineItem).copyUserEditableFields(lineItem, programRnrColumns);
-//
-//    rnr.setStatus(IN_APPROVAL);
-//    rnr.copyEditableFields(otherRnr, programRnrColumns);
-//    verify(lineItem).copyApproverEditableFields(lineItem, template);
-//  }
 
   @Test
   public void shouldReleaseARequisitionAsAnOrder() throws Exception {
@@ -356,4 +337,11 @@ public class RnrTest {
     assertModifiedBy(userId);
   }
 
+  @Test
+  public void shouldSetModifiedByAndStatus() throws Exception {
+    rnr.setAuditFieldsForRequisition(1l, SUBMITTED);
+
+    assertThat(rnr.getModifiedBy(), is(1l));
+    assertThat(rnr.getStatus(), is(SUBMITTED));
+  }
 }

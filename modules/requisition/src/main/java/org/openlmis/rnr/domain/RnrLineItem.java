@@ -152,7 +152,7 @@ public class RnrLineItem extends BaseModel {
     if (quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
   }
 
-  public void validateMandatoryFields(List<RnrColumn> templateColumns) {
+  public void validateMandatoryFields(List<RnrColumn> templateColumns, ProgramRnrTemplate programTemplate) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
 
     String[] nonNullableFields = {BEGINNING_BALANCE, QUANTITY_RECEIVED, QUANTITY_DISPENSED, NEW_PATIENT_COUNT, STOCK_OUT_DAYS};
@@ -170,10 +170,9 @@ public class RnrLineItem extends BaseModel {
   public void validateNonFullSupply() {
     if (!(quantityRequested != null && quantityRequested >= 0 && isPresent(reasonForRequestedQuantity)))
       throw new DataException(RNR_VALIDATION_ERROR);
-    quantityApproved = quantityRequested;
   }
 
-  public void validateCalculatedFields(List<RnrColumn> rnrColumns) {
+  public void validateCalculatedFields(List<RnrColumn> rnrColumns, ProgramRnrTemplate programTemplate) {
     boolean validQuantityDispensed = true;
     if (rnrColumns.get(0).isFormulaValidationRequired()) {
       validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
@@ -182,12 +181,11 @@ public class RnrLineItem extends BaseModel {
     if (!valid) throw new DataException(RNR_VALIDATION_ERROR);
   }
 
-  public void calculate(ProcessingPeriod period, List<RnrColumn> rnrColumns, RnrStatus rnrStatus, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+  public void calculateForFullSupply(ProcessingPeriod period, List<RnrColumn> rnrColumns, RnrStatus rnrStatus, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes, ProgramRnrTemplate programTemplate) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
     calculateTotalLossesAndAdjustments(lossesAndAdjustmentsTypes);
     if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
-    if (template.columnsCalculated(QUANTITY_DISPENSED))
-      calculateQuantityDispensed();
+    if (template.columnsCalculated(QUANTITY_DISPENSED)) calculateQuantityDispensed();
     calculateNormalizedConsumption();
     if (rnrStatus == AUTHORIZED) {
       calculateAmc(period);

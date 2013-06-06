@@ -387,31 +387,14 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldNotUseAnyDataExceptAuditFieldsFromUserSubmittedRnr() throws Exception {
-    List<RnrColumn> rnrColumns = new ArrayList<RnrColumn>() {{
-      add(make(a(defaultRnrColumn, with(columnName, "beginningBalance"), with(visible, true))));
-      add(make(a(defaultRnrColumn, with(columnName, "stockInHand"), with(visible, false))));
-    }};
-
-    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
-    when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
-    doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
-
-    requisitionService.submit(initiatedRnr);
-
-    verify(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
-    verify(requisitionRepository).update(savedRnr);
-  }
-
-  @Test
   public void shouldReturnMessageWhileSubmittingRnrIfSupervisingNodeNotPresent() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
-    when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
-    doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+    when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
+    doNothing().when(savedRnr).calculate(template, lossesAndAdjustmentsTypes);
 
     OpenLmisMessage message = requisitionService.submit(initiatedRnr);
 
-    verify(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
     verify(requisitionRepository).update(savedRnr);
     assertThat(message.getCode(), is("rnr.submitted.without.supervisor"));
   }
@@ -419,9 +402,10 @@ public class RequisitionServiceTest {
   @Test
   public void shouldSubmitValidRnrWithSubmittedDateAndSetMessage() {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
-    doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+    when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
+    doNothing().when(savedRnr).calculate(template, lossesAndAdjustmentsTypes);
     when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(new SupervisoryNode());
-    when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
 
     OpenLmisMessage message = requisitionService.submit(initiatedRnr);
 
@@ -435,15 +419,16 @@ public class RequisitionServiceTest {
   @Test
   public void shouldAuthorizeAValidRnrAndTagWithSupervisoryNode() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
-    doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
-    when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+    when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
+    doNothing().when(savedRnr).calculate(template, lossesAndAdjustmentsTypes);
     when(supervisoryNodeService.getApproverFor(FACILITY, PROGRAM)).thenReturn(new User());
     SupervisoryNode approverNode = new SupervisoryNode();
     when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(approverNode);
 
     OpenLmisMessage authorize = requisitionService.authorize(submittedRnr);
 
-    verify(rnrTemplateService).fetchAllRnRColumns(PROGRAM.getId());
+    verify(rnrTemplateService).fetchProgramTemplate(PROGRAM.getId());
     verify(requisitionRepository).update(savedRnr);
     verify(requisitionRepository).logStatusChange(savedRnr);
     assertThat(savedRnr.getStatus(), is(AUTHORIZED));
@@ -455,16 +440,17 @@ public class RequisitionServiceTest {
   public void shouldAuthorizeAValidRnrAndAdviseUserIfRnrDoesNotHaveApprover() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
 
-    when(rnrTemplateService.fetchAllRnRColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+    when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
+    doNothing().when(savedRnr).calculate(template, lossesAndAdjustmentsTypes);
     when(supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(null);
     SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(node);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
-    doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
 
     OpenLmisMessage openLmisMessage = requisitionService.authorize(submittedRnr);
 
-    verify(rnrTemplateService).fetchAllRnRColumns(savedRnr.getProgram().getId());
+    verify(rnrTemplateService).fetchProgramTemplate(savedRnr.getProgram().getId());
     verify(requisitionRepository).update(savedRnr);
     assertThat(savedRnr.getStatus(), is(AUTHORIZED));
     assertThat(openLmisMessage.getCode(), is(RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR));
@@ -932,8 +918,9 @@ public class RequisitionServiceTest {
   @Test
   public void shouldNotifyStatusChangeOnAuthorize() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
-    doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
-    when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+    when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
+    doNothing().when(savedRnr).calculate(template, lossesAndAdjustmentsTypes);
     when(supervisoryNodeService.getApproverFor(FACILITY, PROGRAM)).thenReturn(new User());
     SupervisoryNode approverNode = new SupervisoryNode();
     when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(approverNode);
@@ -946,7 +933,9 @@ public class RequisitionServiceTest {
   @Test
   public void shouldNotifyStatusChangeOnSubmit() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
-    doNothing().when(savedRnr).calculateAndValidate(rnrColumns, lossesAndAdjustmentsTypes);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+    when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
+    doNothing().when(savedRnr).calculate(template, lossesAndAdjustmentsTypes);
     when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
 
     requisitionService.submit(initiatedRnr);
