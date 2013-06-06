@@ -200,17 +200,6 @@ public class RequisitionController extends BaseController {
     return (rnrList == null || rnrList.isEmpty()) ? null : rnrList.get(0);
   }
 
-  @RequestMapping(value = "/requisitions-for-approval/{id}", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'APPROVE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getRnrForApprovalById(@PathVariable Long id, HttpServletRequest request) {
-    try {
-      return response(RNR, requisitionService.getRnrForApprovalById(id, loggedInUserId(request)));
-    } catch (DataException dataException) {
-      return error(dataException, HttpStatus.NOT_FOUND);
-    }
-  }
-
-
   @RequestMapping(value = "/requisitions/{id}", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id) {

@@ -129,22 +129,6 @@ public class RequisitionControllerTest {
   }
 
   @Test
-  public void shouldGetRnrByIdIfExists() throws Exception {
-    ResponseEntity<OpenLmisResponse> response = controller.getRnrForApprovalById(1L, request);
-
-    verify(requisitionService).getRnrForApprovalById(1L, USER_ID);
-    assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
-  }
-
-  @Test
-  public void shouldReturnErrorResponseIfServiceThrowsException() throws Exception {
-    String errorMessage = "error-message";
-    doThrow(new DataException(errorMessage)).when(requisitionService).getRnrForApprovalById(1L, USER_ID);
-    ResponseEntity<OpenLmisResponse> response = controller.getRnrForApprovalById(1L, request);
-    assertThat(response.getBody().getErrorMsg(), is(equalTo(errorMessage)));
-  }
-
-  @Test
   public void shouldSaveWIPRnr() throws Exception {
     controller.saveRnr(rnr, rnr.getId(), request);
 

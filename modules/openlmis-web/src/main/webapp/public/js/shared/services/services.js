@@ -123,11 +123,6 @@ services.factory('RequisitionForConvertToOrder', function ($resource) {
   return $resource('/requisitions-for-convert-to-order.json', {}, {});
 });
 
-services.factory('RequisitionForApprovalById', function ($resource) {
-  return $resource('/requisitions-for-approval/:id.json', {}, {});
-});
-
-
 services.factory('LossesAndAdjustmentsReferenceData', function ($resource) {
   return $resource('/requisitions/lossAndAdjustments/reference-data.json', {}, {})
 });

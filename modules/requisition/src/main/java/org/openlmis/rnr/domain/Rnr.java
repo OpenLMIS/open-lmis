@@ -86,21 +86,6 @@ public class Rnr extends BaseModel {
     }
   }
 
-  public void calculateAndValidate(List<RnrColumn> programRnrColumns, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
-    for (RnrLineItem lineItem : fullSupplyLineItems) {
-//      lineItem.validateMandatoryFields(programRnrColumns, template);
-//      lineItem.calculate(period, programRnrColumns, this.getStatus(), lossesAndAdjustmentsTypes, template);
-//      lineItem.validateCalculatedFields(programRnrColumns, template);
-    }
-
-    for (RnrLineItem lineItem : nonFullSupplyLineItems) {
-//      lineItem.validateNonFullSupply(template);
-    }
-
-//    this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
-//    this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
-  }
-
   public void calculateForApproval() {
     for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.calculatePacksToShip();
@@ -170,8 +155,7 @@ public class Rnr extends BaseModel {
     addPreviousNormalizedConsumptionFrom(secondLastPeriodsRnr);
   }
 
-  public void prepareForApproval() {
-    status = IN_APPROVAL;
+  public void setDefaultApprovedQuantity() {
     for (RnrLineItem item : fullSupplyLineItems) {
       item.setDefaultApprovedQuantity();
     }

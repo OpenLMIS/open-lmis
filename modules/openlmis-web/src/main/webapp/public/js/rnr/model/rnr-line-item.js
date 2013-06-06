@@ -47,15 +47,15 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.calculateTotal();
   };
 
-  function statusBeforeApproval() {
-    return rnrStatus == 'INITIATED' || rnrStatus == 'SUBMITTED' || rnrStatus == 'AUTHORIZED';
+  function statusBeforeAuthorized() {
+    return rnrStatus == 'INITIATED' || rnrStatus == 'SUBMITTED';
   }
 
   RnrLineItem.prototype.fillPacksToShip = function () {
     this.quantityApproved = utils.getValueFor(this.quantityApproved);
     var orderQuantity;
 
-    if (statusBeforeApproval()) orderQuantity = isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
+    if (statusBeforeAuthorized()) orderQuantity = isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
     else orderQuantity = this.quantityApproved;
 
     this.calculatePacksToShip(orderQuantity);
@@ -312,7 +312,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   };
 
   RnrLineItem.prototype.valid = function () {
-    if (rnrStatus == 'IN_APPROVAL') return this.validateForApproval();
+    if (rnrStatus == 'IN_APPROVAL' || rnrStatus == 'AUTHORIZED') return this.validateForApproval();
     if (this.fullSupply) return this.validateRequiredFieldsForFullSupply() && this.formulaValid();
     return this.validateRequiredFieldsForNonFullSupply();
   };

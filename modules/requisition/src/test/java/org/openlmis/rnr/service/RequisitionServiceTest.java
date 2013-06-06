@@ -941,6 +941,22 @@ public class RequisitionServiceTest {
   }
 
   @Test
+  public void shouldSetDefaultApprovedQuantityOnAuthorization() throws Exception {
+    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+    when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
+    doNothing().when(savedRnr).calculate(template, lossesAndAdjustmentsTypes);
+    when(supervisoryNodeService.getApproverFor(FACILITY, PROGRAM)).thenReturn(new User());
+    SupervisoryNode approverNode = new SupervisoryNode();
+    when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(approverNode);
+    doNothing().when(savedRnr).setDefaultApprovedQuantity();
+
+    requisitionService.authorize(submittedRnr);
+
+    verify(savedRnr).setDefaultApprovedQuantity();
+  }
+
+  @Test
   public void shouldNotifyStatusChangeOnSubmit() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);

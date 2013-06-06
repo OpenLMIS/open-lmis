@@ -189,10 +189,10 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
 
 ApproveRnrController.resolve = {
 
-  requisition:function ($q, $timeout, RequisitionForApprovalById, $route) {
+  requisition:function ($q, $timeout, RequisitionById, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      RequisitionForApprovalById.get({id:$route.current.params.rnr}, function (data) {
+      RequisitionById.get({id:$route.current.params.rnr}, function (data) {
         deferred.resolve(data.rnr);
       }, {});
     }, 100);

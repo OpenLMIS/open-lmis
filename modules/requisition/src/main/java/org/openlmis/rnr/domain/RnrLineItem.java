@@ -287,7 +287,7 @@ public class RnrLineItem extends BaseModel {
     copyTotalLossesAndAdjustments(lineItem, template);
     for (RnrColumn column : template.getRnrColumns()) {
       String fieldName = column.getName();
-      if(fieldName.equals(QUANTITY_APPROVED)) continue;
+      if (fieldName.equals(QUANTITY_APPROVED)) continue;
       copyField(fieldName, lineItem, template);
     }
   }
@@ -302,7 +302,7 @@ public class RnrLineItem extends BaseModel {
 
   public void copyApproverEditableFields(RnrLineItem lineItem, ProgramRnrTemplate template) {
     String[] approverEditableFields = {QUANTITY_APPROVED, REMARKS};
-    for(String fieldName: approverEditableFields) {
+    for (String fieldName : approverEditableFields) {
       copyField(fieldName, lineItem, template);
     }
   }
