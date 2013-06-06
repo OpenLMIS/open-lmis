@@ -7,4 +7,5 @@
 \i src/main/resources/seed/geographic_levels.sql
 \i src/main/resources/seed/geographic_zones.sql
 \i src/main/resources/seed/product_forms.sql
+\i src/main/resources/seed/product_groups.sql
 \i src/main/resources/seed/programs.sql

@@ -20,9 +20,6 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.db.categories.UnitTests;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.service.ProductService.INVALID_PRODUCT_CATEGORY_CODE;
@@ -45,7 +42,7 @@ public class ProductServiceTest {
 
   @Before
   public void setUp() throws Exception {
-    productService = new ProductService(productRepository, categoryService);
+    productService = new ProductService(productRepository, categoryService, null);
   }
 
   @Test

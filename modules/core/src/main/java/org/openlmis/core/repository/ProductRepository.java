@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductForm;
+import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.mapper.ProductGroupMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,15 +25,19 @@ public class ProductRepository {
 
   ProductMapper mapper;
 
+  ProductGroupMapper productGroupMapper;
+
   @Autowired
-  public ProductRepository(ProductMapper mapper) {
+  public ProductRepository(ProductMapper mapper, ProductGroupMapper productGroupMapper) {
     this.mapper = mapper;
+    this.productGroupMapper = productGroupMapper;
   }
 
   public void insert(Product product) {
     try {
       validateAndSetDosageUnit(product);
       validateAndSetProductForm(product);
+      validateAndSetProductGroup(product);
       mapper.insert(product);
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("Duplicate Product Code found");
@@ -43,6 +49,19 @@ public class ProductRepository {
         throw new DataException("Incorrect data length");
       }
     }
+  }
+
+  private void validateAndSetProductGroup(Product product) {
+    ProductGroup group = product.getProductGroup();
+    if (group == null) return;
+
+    String productGroupCode = group.getCode();
+    if (productGroupCode == null || productGroupCode.isEmpty()) return;
+
+    ProductGroup productGroup = productGroupMapper.getByCode(productGroupCode);
+    if (productGroup == null) throw new DataException("Invalid reference data 'Product Group'");
+
+    group.setId(productGroup.getId());
   }
 
   public Long getIdByCode(String code) {
@@ -88,10 +107,12 @@ public class ProductRepository {
   public void update(Product product) {
     mapper.update(product);
   }
-  public Long getDosageUnitIdForCode(String code){
+
+  public Long getDosageUnitIdForCode(String code) {
     return mapper.getDosageUnitIdForCode(code);
   }
-  public Long getProductFormIdForCode(String code){
+
+  public Long getProductFormIdForCode(String code) {
     return mapper.getProductFormIdForCode(code);
   }
 

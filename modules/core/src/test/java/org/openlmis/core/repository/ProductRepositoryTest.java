@@ -13,10 +13,13 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.mapper.ProductGroupMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.db.categories.UnitTests;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -40,11 +43,17 @@ public class ProductRepositoryTest {
   @Mock
   ProductMapper mockedMapper;
 
+  @Mock
+  ProductGroupMapper mockedProductGroupMapper;
+
   ProductRepository repository;
+  Product product;
 
   @Before
   public void setUp() {
-    repository = new ProductRepository(mockedMapper);
+    repository = new ProductRepository(mockedMapper, mockedProductGroupMapper);
+    product = make(a(ProductBuilder.defaultProduct));
+    Mockito.when(mockedProductGroupMapper.getByCode(product.getProductGroup().getCode())).thenReturn(product.getProductGroup());
   }
 
   @Test
@@ -56,7 +65,7 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldRaiseDuplicateProductCodeError() throws Exception {
-    Product product = make(a(ProductBuilder.defaultProduct));
+
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Duplicate Product Code found");
     doThrow(new DuplicateKeyException("")).when(mockedMapper).insert(product);
@@ -65,7 +74,6 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldRaiseIncorrectReferenceDataError() throws Exception {
-    Product product = make(a(ProductBuilder.defaultProduct));
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Missing/Invalid Reference data");
     doThrow(new DataIntegrityViolationException("foreign key")).when(mockedMapper).insert(product);
@@ -74,7 +82,6 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldRaiseMissingReferenceDataError() throws Exception {
-    Product product = make(a(ProductBuilder.defaultProduct));
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Missing/Invalid Reference data");
     doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mockedMapper).insert(product);
@@ -83,7 +90,6 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldRaiseIncorrectDataValueError() throws Exception {
-    Product product = make(a(ProductBuilder.defaultProduct));
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Incorrect data length");
     doThrow(new DataIntegrityViolationException("value too long")).when(mockedMapper).insert(product);
@@ -92,7 +98,6 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldRaiseInvalidReferenceDataDosageUnitError() throws Exception {
-    Product product = make(a(ProductBuilder.defaultProduct));
     product.getDosageUnit().setCode("invalid code");
     when(mockedMapper.getDosageUnitIdForCode("invalid code")).thenReturn(null);
 
@@ -103,7 +108,6 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldSetDataDosageUnitIdForCode() throws Exception {
-    Product product = make(a(ProductBuilder.defaultProduct));
     product.getDosageUnit().setCode("valid code");
     when(mockedMapper.getDosageUnitIdForCode("valid code")).thenReturn(1L);
 
@@ -113,7 +117,6 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldRaiseInvalidReferenceDataProductFormError() throws Exception {
-    Product product = make(a(ProductBuilder.defaultProduct));
     product.getForm().setCode("invalid code");
     when(mockedMapper.getProductFormIdForCode("invalid code")).thenReturn(null);
 
@@ -124,7 +127,6 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldSetProductFormIdForCode() throws Exception {
-    Product product = make(a(ProductBuilder.defaultProduct));
     product.getForm().setCode("valid code");
     when(mockedMapper.getProductFormIdForCode("valid code")).thenReturn(1L);
 
@@ -149,6 +151,27 @@ public class ProductRepositoryTest {
   }
 
   @Test
+  public void shouldRaiseInvalidReferenceDataProductGroupError() throws Exception {
+    product.getProductGroup().setCode("invalid product group code");
+    when(mockedProductGroupMapper.getByCode("invalid product group code")).thenReturn(null);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Invalid reference data 'Product Group'");
+    repository.insert(product);
+  }
+
+  @Test
+  public void shouldSetProductGroupIdForCode() throws Exception {
+    product.getProductGroup().setCode("valid code");
+    ProductGroup productGroup = new ProductGroup();
+    productGroup.setId(1L);
+    when(mockedProductGroupMapper.getByCode("valid code")).thenReturn(productGroup);
+
+    repository.insert(product);
+    assertThat(product.getProductGroup().getId(), is(productGroup.getId()));
+  }
+
+  @Test
   public void shouldReturnProductByCode() {
     Product product = new Product();
     String productCode = "P1";
@@ -156,7 +179,6 @@ public class ProductRepositoryTest {
     Product returnedProduct = repository.getByCode(productCode);
     assertThat(returnedProduct, is(product));
   }
-
 
   @Test
   public void shouldUpdateProduct() {

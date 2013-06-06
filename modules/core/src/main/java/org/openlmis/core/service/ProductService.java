@@ -9,9 +9,10 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.ProductGroupRepository;
 import org.openlmis.core.repository.ProductRepository;
-import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +22,16 @@ import org.springframework.stereotype.Service;
 public class ProductService {
 
   private ProductRepository repository;
+  private ProductGroupRepository productGroupRepository;
   private ProductCategoryService categoryService;
   public static final String INVALID_PRODUCT_CATEGORY_CODE = "product.reference.category.invalid";
+  private static final String INVALID_PRODUCT_GROUP_CODE = "product.reference.group.invalid";
 
   @Autowired
-  public ProductService(ProductRepository repository, ProductCategoryService categoryService) {
+  public ProductService(ProductRepository repository, ProductCategoryService categoryService, ProductGroupRepository productGroupRepository) {
     this.repository = repository;
     this.categoryService = categoryService;
+    this.productGroupRepository = productGroupRepository;
   }
 
   public void save(Product product) {
@@ -38,17 +42,23 @@ public class ProductService {
       return;
     }
 
-    setProductFormIdAndDosageUnitId(product);
+    setReferenceDataForProduct(product);
 
     repository.update(product);
   }
 
-  private void setProductFormIdAndDosageUnitId(Product product) {
-    if(product.getForm()!=null )  {
+  private void setReferenceDataForProduct(Product product) {
+    if (product.getForm() != null) {
       product.getForm().setId(repository.getProductFormIdForCode(product.getForm().getCode()));
     }
-    if(product.getDosageUnit()!=null) {
+    if (product.getDosageUnit() != null) {
       product.getDosageUnit().setId(repository.getDosageUnitIdForCode(product.getDosageUnit().getCode()));
+    }
+    if (product.getProductGroup() != null) {
+      ProductGroup productGroup = productGroupRepository.getByCode(product.getProductGroup().getCode());
+      if (productGroup == null) throw new DataException(INVALID_PRODUCT_GROUP_CODE);
+      product.getProductGroup().setId(productGroup.getId());
+
     }
   }
 

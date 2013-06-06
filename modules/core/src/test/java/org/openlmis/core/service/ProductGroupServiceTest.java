@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.repository.ProductGroupRepository;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.mockito.Mockito.verify;
 
@@ -29,6 +28,17 @@ public class ProductGroupServiceTest {
 
     service.save(productGroup);
 
-    verify(productGroupRepository).save(productGroup);
+    verify(productGroupRepository).insert(productGroup);
+  }
+
+  @Test
+  public void shouldUpdateProductGroup() throws Exception {
+    ProductGroupService service = new ProductGroupService(productGroupRepository);
+    ProductGroup productGroup = new ProductGroup();
+    productGroup.setId(1L);
+
+    service.save(productGroup);
+
+    verify(productGroupRepository).update(productGroup);
   }
 }

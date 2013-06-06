@@ -27,7 +27,7 @@ public class ProductGroupRepository {
     this.mapper = mapper;
   }
 
-  public void save(ProductGroup productGroup) {
+  public void insert(ProductGroup productGroup) {
     try {
       mapper.insert(productGroup);
     } catch (DuplicateKeyException duplicateKeyException) {
@@ -44,5 +44,9 @@ public class ProductGroupRepository {
 
   public ProductGroup getByCode(String code) {
     return mapper.getByCode(code);
+  }
+
+  public void update(ProductGroup productGroup) {
+    mapper.update(productGroup);
   }
 }

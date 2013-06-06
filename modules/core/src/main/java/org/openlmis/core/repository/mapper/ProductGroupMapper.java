@@ -7,16 +7,22 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.ProductGroup;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductGroupMapper {
 
-  @Insert("INSERT INTO product_groups(code, name) VALUES (#{code}, #{name})")
+  @Insert("INSERT INTO product_groups(code, name, modifiedDate, modifiedBy) VALUES (#{code}, #{name}, #{modifiedDate}, #{modifiedBy})")
+  @Options(useGeneratedKeys = true)
   public void insert(ProductGroup productGroup);
 
-  @Select("Select * from product_groups where code=#{code}")
+  @Select("SELECT * FROM product_groups WHERE code=#{code}")
   ProductGroup getByCode(String code);
+
+  @Update("UPDATE product_groups SET code = #{code}, name = #{name}, modifiedDate = #{modifiedDate}, modifiedBy = #{modifiedBy} WHERE id = #{id}")
+  void update(ProductGroup productGroup);
 }

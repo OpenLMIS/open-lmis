@@ -24,10 +24,14 @@ public class ProductGroupService {
   }
 
   public void save(ProductGroup productGroup) {
-    productGroupRepository.save(productGroup);
+    if(productGroup.getId() == null) {
+      productGroupRepository.insert(productGroup);
+    }
+    productGroupRepository.update(productGroup);
   }
 
   public ProductGroup getByCode(String code) {
     return productGroupRepository.getByCode(code);
   }
+
 }

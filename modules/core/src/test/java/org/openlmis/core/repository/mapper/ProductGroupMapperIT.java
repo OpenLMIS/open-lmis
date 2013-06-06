@@ -34,9 +34,6 @@ import static org.junit.Assert.assertThat;
 public class ProductGroupMapperIT {
 
   @Autowired
-  QueryExecutor queryExecutor;
-
-  @Autowired
   ProductGroupMapper mapper;
 
   ProductGroup productGroup;
@@ -53,14 +50,21 @@ public class ProductGroupMapperIT {
   public void shouldInsertProductGroup() throws Exception {
     mapper.insert(productGroup);
 
-    ResultSet productGroupResultSet = queryExecutor.execute("Select * from product_groups where code=?", Arrays.asList(productGroup.getCode()));
+    ProductGroup returnedProductGroup = mapper.getByCode(productGroup.getCode());
 
-    productGroupResultSet.next();
-
-    assertThat(productGroupResultSet.getString("name"), is("Vaccines"));
+    assertThat(returnedProductGroup.getName(), is("Vaccines"));
   }
 
+  @Test
+  public void shouldUpdateProductGroup() throws Exception {
+    mapper.insert(productGroup);
 
+    productGroup.setName("Medicines");
+    mapper.update(productGroup);
+    ProductGroup returnedProductGroup = mapper.getByCode(productGroup.getCode());
+
+    assertThat(returnedProductGroup.getName(), is("Medicines"));
+  }
 
   @Test
   public void shouldGetProductGroupByCode() throws Exception {
@@ -68,7 +72,6 @@ public class ProductGroupMapperIT {
 
     ProductGroup returnedProductGroup = mapper.getByCode(productGroup.getCode());
 
-
-
+    assertThat(returnedProductGroup.getName(), is("Vaccines"));
   }
 }

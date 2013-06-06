@@ -42,8 +42,17 @@ public class ProductGroupRepositoryTest {
     ProductGroup productGroup = new ProductGroup();
     repository = new ProductGroupRepository(mapper);
 
-    repository.save(productGroup);
+    repository.insert(productGroup);
     verify(mapper).insert(productGroup);
+  }
+
+  @Test
+  public void shouldUpdateProductGroup() throws Exception {
+    ProductGroup productGroup = new ProductGroup();
+    repository = new ProductGroupRepository(mapper);
+
+    repository.update(productGroup);
+    verify(mapper).update(productGroup);
   }
 
   @Test
@@ -53,7 +62,7 @@ public class ProductGroupRepositoryTest {
     repository = new ProductGroupRepository(mapper);
     ProductGroup productGroup = new ProductGroup();
     doThrow(new DuplicateKeyException("")).when(mapper).insert(productGroup);
-    repository.save(productGroup);
+    repository.insert(productGroup);
   }
 
   @Test
@@ -63,7 +72,7 @@ public class ProductGroupRepositoryTest {
     repository = new ProductGroupRepository(mapper);
     ProductGroup productGroup = new ProductGroup();
     doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mapper).insert(productGroup);
-    repository.save(productGroup);
+    repository.insert(productGroup);
   }
 
   @Test
@@ -73,6 +82,6 @@ public class ProductGroupRepositoryTest {
     repository = new ProductGroupRepository(mapper);
     ProductGroup productGroup = new ProductGroup();
     doThrow(new DataIntegrityViolationException("")).when(mapper).insert(productGroup);
-    repository.save(productGroup);
+    repository.insert(productGroup);
   }
 }

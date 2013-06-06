@@ -35,7 +35,7 @@ public interface ProductMapper {
     "expectedShelfLife," +
     "specialStorageInstructions," + "specialTransportInstructions," +
     "active," + "fullSupply," + "tracer," + "roundToZero," + "archived," +
-    "packRoundingThreshold, categoryId," +
+    "packRoundingThreshold, categoryId, productGroupId," +
     "modifiedBy, modifiedDate)" +
     "VALUES(" +
     "#{code}," +
@@ -58,7 +58,7 @@ public interface ProductMapper {
     "#{expectedShelfLife}," +
     "#{specialStorageInstructions}," + "#{specialTransportInstructions}," +
     "#{active}," + "#{fullSupply}," + "#{tracer}," + "#{roundToZero}," + "#{archived}," +
-    "#{packRoundingThreshold}, #{category.id},  " +
+    "#{packRoundingThreshold}, #{category.id},  #{productGroup.id}," +
     "#{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
   Integer insert(Product product);
@@ -91,7 +91,7 @@ public interface ProductMapper {
     "expectedShelfLife=#{expectedShelfLife},",
     "specialStorageInstructions=#{specialStorageInstructions},specialTransportInstructions=#{specialTransportInstructions},",
     "active=#{active},fullSupply=#{fullSupply},tracer=#{tracer},roundToZero=#{roundToZero},archived=#{archived},",
-    "packRoundingThreshold=#{packRoundingThreshold}, categoryId=#{category.id},",
+    "packRoundingThreshold=#{packRoundingThreshold}, categoryId=#{category.id}, productGroupId = #{productGroup.id},",
     "modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE id=#{id}"})
   void update(Product product);
 }
