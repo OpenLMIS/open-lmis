@@ -18,6 +18,12 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.requisitionRights = requisitionRights;
   $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name':'quantityRequested'});
   $scope.errorPages = {fullSupply:[], nonFullSupply:[]};
+  $rootScope.fullScreen = false;
+
+  $scope.getFullScreen = function() {
+    $rootScope.fullScreen = !$rootScope.fullScreen;
+    angular.element(window).scrollTop(0);
+  }
 
   $scope.fillPagedGridData = function () {
     var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;

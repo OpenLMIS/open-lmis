@@ -6,6 +6,7 @@
 
 function InitiateRnrController($scope, $location, $rootScope, Requisition, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights, navigateBackService) {
 
+  $rootScope.fullScreen = false;
   var DEFAULT_FACILITY_MESSAGE = '--choose facility--';
   var DEFAULT_PROGRAM_MESSAGE = '--choose program--';
   var PREVIOUS_RNR_PENDING_STATUS = "Previous R&R pending";
