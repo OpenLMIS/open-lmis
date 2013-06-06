@@ -16,11 +16,11 @@
 
   <div class="row-fluid">
     <div class="span2 form-inline">
-      <input id="myFacilityRnr" type="radio" ng-model="selectedType" value="0" ng-change="loadFacilityData(selectedType);" />
+      <input id="myFacilityRnr" type="radio" ng-model="selectedType" value="0" ng-checked="selectedType==0" ng-change="loadFacilityData(selectedType);" />
       &nbsp;<label for="myFacilityRnr"><strong openlmis-message="label.myFacility"></strong></label>
     </div>
     <div class="span4 form-inline">
-      <input id="supervisedFacilityRnr" type="radio" ng-model="selectedType" value="1" ng-change="loadFacilityData(selectedType);" />
+      <input id="supervisedFacilityRnr" type="radio" ng-model="selectedType" value="1" ng-checked="selectedType==1" ng-change="loadFacilityData(selectedType);" />
       &nbsp;<label for="supervisedFacilityRnr"><strong openlmis-message="label.supervised.Facility"></strong></label>
     </div>
   </div>

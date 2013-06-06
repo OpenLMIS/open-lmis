@@ -4,12 +4,12 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-services.factory('proceedBackService', function() {
-   var proceedBack = {};
+services.factory('navigateBackService', function() {
+   var navigateBack = {};
 
-   proceedBack.setData = function(data) {
-    $.extend(proceedBack,  data)
+   navigateBack.setData = function(data) {
+    $.extend(navigateBack,  data)
    }
 
-   return proceedBack;
+   return navigateBack;
 });

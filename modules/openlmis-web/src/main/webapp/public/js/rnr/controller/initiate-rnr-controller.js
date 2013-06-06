@@ -4,12 +4,13 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function InitiateRnrController($scope, $location, $rootScope, Requisition, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights) {
+function InitiateRnrController($scope, $location, $rootScope, Requisition, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights, navigateBackService) {
 
   var DEFAULT_FACILITY_MESSAGE = '--choose facility--';
   var DEFAULT_PROGRAM_MESSAGE = '--choose program--';
   var PREVIOUS_RNR_PENDING_STATUS = "Previous R&R pending";
   var RNR_NOT_YET_STARTED_STATUS = "Not yet started";
+  var isNavigatedBack;
 
   var resetRnrData = function () {
     $scope.periodGridData = [];
@@ -22,8 +23,31 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
     $scope.error = null;
   };
 
+    $scope.$on('$viewContentLoaded', function() {
+      $scope.selectedType = navigateBackService.selectedType || 0;
+      $scope.selectedProgram = navigateBackService.selectedProgram;
+      $scope.selectedFacilityId = navigateBackService.selectedFacilityId;
+      isNavigatedBack = navigateBackService.isNavigatedBack;
+      $scope.$watch('programs', function(){
+        if($scope.programs && $scope.selectedProgram) {
+          $scope.selectedProgram = _.where($scope.programs,{id: $scope.selectedProgram.id})[0];
+          $scope.loadPeriods();
+        }
+      });
+      $scope.loadFacilityData($scope.selectedType);
+      if(isNavigatedBack) {
+        $scope.loadFacilitiesForProgram();
+      }
+      $scope.$watch('facilities', function() {
+        if($scope.facilities && isNavigatedBack) {
+          $scope.selectedFacilityId = navigateBackService.selectedFacilityId;
+          isNavigatedBack = false;
+        }
+      });
+    });
+
   $scope.loadFacilityData = function (selectedType) {
-    resetRnrData();
+    isNavigatedBack = isNavigatedBack ? (selectedType == "0" ? false : true):resetRnrData();
 
     if (selectedType == 0) { //My facility
       UserFacilityList.get({}, function (data) {
@@ -157,6 +181,8 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
   };
 
   $scope.initRnr = function () {
+    var data = {selectedType: $scope.selectedType, selectedProgram: $scope.selectedProgram, selectedFacilityId: $scope.selectedFacilityId, isNavigatedBack: true};
+    navigateBackService.setData(data);
     if (!($scope.selectedProgram && $scope.selectedPeriod)) {
       $scope.error = "Please select Facility, Program and Period to proceed";
       return;

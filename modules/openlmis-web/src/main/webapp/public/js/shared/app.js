@@ -22,7 +22,7 @@ requirejs.config({
     localStorage: '../../lib/localstorage/localStorage',
     services: 'services/services',
     messageService: 'services/message-service',
-    proceedBackService: 'services/proceedBack-service',
+    navigateBackService: 'services/navigate-back-service',
     authorizationService: 'services/authorization-service',
     headerController: 'controller/header-controller',
     loginController: 'controller/login-controller',
@@ -46,7 +46,7 @@ requirejs.config({
     'angular': {deps: ['jQuery']},
     'messageService': {deps: loadNext},
     'authorizationService': {deps: loadNext},
-    'proceedBackService': {deps: loadNext},
+    'navigateBackService': {deps: loadNext},
     'loginController': {deps: loadNext},
     'headerController': {deps: loadNext},
     'navigationController': {deps: loadNext},
@@ -77,7 +77,7 @@ requirejs.config({
   }
 });
 
-define(["messageService", "authorizationService", "proceedBackService", "loginController", "headerController", "navigationController", "localStorageKeys", "util", "open-lmis-dialog",
+define(["messageService", "authorizationService", "navigateBackService", "loginController", "headerController", "navigationController", "localStorageKeys", "util", "open-lmis-dialog",
   'commentBox', 'formToolbar', 'openlmisMessage', 'openlmisPagination', 'modalEvents', 'placeholder', 'tabScroll', 'fixedTableHeader', 'uiNav', 'ngGrid', 'jQueryForm', 'select2', 'select2Ext'], function () {
 
   var loadApp = function () {
