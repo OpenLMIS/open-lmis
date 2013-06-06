@@ -92,7 +92,7 @@ public class DeleteFacilityPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@value='Save']")
   private static WebElement SaveButton;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ng-scope']/div[@ng-show='facility.id']/h2")
+  @FindBy(how = How.ID, using = "edit-facility-header")
   private static WebElement facilityHeader;
 
   @FindBy(how = How.ID, using = "programs-supported")

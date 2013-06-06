@@ -20,8 +20,6 @@ import org.testng.annotations.Test;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
 import static java.lang.System.getProperty;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.openlmis.UiUtils.HttpClient.GET;
 import static org.openlmis.UiUtils.HttpClient.POST;
 import static org.openlmis.functional.JsonUtility.getJsonStringFor;
@@ -144,7 +142,7 @@ public class SubmitReportTest extends TestCaseHelper {
     String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
       assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(response, "{\"error\":\"Invalid data.\"}");
+    assertEquals(response, "{\"error\":\"Invalid product code\"}");
   }
 
   @Test(groups = {"webservice"})
@@ -169,7 +167,7 @@ public class SubmitReportTest extends TestCaseHelper {
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
     assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(response, "{\"error\":\"Invalid data.\"}");
+    assertEquals(response, "{\"error\":\"Invalid product code\"}");
   }
 
   @Test(groups = {"webservice"})

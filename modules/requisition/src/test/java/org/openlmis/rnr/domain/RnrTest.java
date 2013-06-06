@@ -13,6 +13,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
@@ -30,6 +31,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.openlmis.rnr.builder.RequisitionBuilder.modifiedBy;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
+import static org.openlmis.rnr.domain.Rnr.PRODUCT_CODE_INVALID;
 import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -242,7 +244,7 @@ public class RnrTest {
   }
 
   @Test
-  public void shouldNotCopyFieldsForExtraFullSupplyLineItems() throws Exception {
+  public void shouldNotCopyFieldsForExtraFullSupplyLineItemsAndThrowError() throws Exception {
     long userId = 5L;
     Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
@@ -251,15 +253,14 @@ public class RnrTest {
     RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(beginningBalance, 25), with(productCode, "P2")));
 
     RnrLineItem spyLineItem1 = spy(lineItem1);
-    RnrLineItem spyLineItem2 = spy(lineItem2);
 
     newRnr.setFullSupplyLineItems(asList(lineItem1, lineItem2));
-
     rnr.setFullSupplyLineItems(asList(spyLineItem1));
 
-    rnr.copyCreatorEditableFields(newRnr, template);
+    exception.expect(DataException.class);
+    exception.expectMessage(PRODUCT_CODE_INVALID);
 
-    verify(spyLineItem2, never()).copyCreatorEditableFieldsForFullSupply(lineItem2, template);
+    rnr.copyCreatorEditableFields(newRnr, template);
   }
 
   @Test
@@ -272,15 +273,15 @@ public class RnrTest {
     RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(beginningBalance, 25), with(productCode, "P2")));
 
     RnrLineItem spyLineItem1 = spy(lineItem1);
-    RnrLineItem spyLineItem2 = spy(lineItem2);
 
     newRnr.setFullSupplyLineItems(asList(lineItem1, lineItem2));
 
     rnr.setFullSupplyLineItems(asList(spyLineItem1));
 
-    rnr.copyApproverEditableFields(newRnr, template);
+    exception.expect(DataException.class);
+    exception.expectMessage(PRODUCT_CODE_INVALID);
 
-    verify(spyLineItem2, never()).copyCreatorEditableFieldsForFullSupply(lineItem2, template);
+    rnr.copyApproverEditableFields(newRnr, template);
   }
 
   @Test
@@ -294,6 +295,7 @@ public class RnrTest {
 
     RnrLineItem spyLineItem1 = spy(lineItem1);
 
+    newRnr.setFullSupplyLineItems(new ArrayList<RnrLineItem>());
     newRnr.setNonFullSupplyLineItems(asList(lineItem1, lineItem2));
 
     rnr.setFullSupplyLineItems(new ArrayList<RnrLineItem>());

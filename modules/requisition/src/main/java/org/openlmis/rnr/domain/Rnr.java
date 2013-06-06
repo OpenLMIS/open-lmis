@@ -14,6 +14,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.exception.DataException;
 
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 @JsonSerialize(include = NON_NULL)
 @EqualsAndHashCode(callSuper = false)
 public class Rnr extends BaseModel {
+
+  public static final String PRODUCT_CODE_INVALID = "product.code.invalid";
 
   private Facility facility;
   private Program program;
@@ -265,7 +268,7 @@ public class Rnr extends BaseModel {
   private void copyCreatorEditableFieldsForFullSupply(Rnr rnr, ProgramRnrTemplate template) {
     for (RnrLineItem lineItem : rnr.fullSupplyLineItems) {
       RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
-      if (savedLineItem == null) continue;
+      if (savedLineItem == null) throw new DataException(PRODUCT_CODE_INVALID);
       savedLineItem.copyCreatorEditableFieldsForFullSupply(lineItem, template);
       savedLineItem.setModifiedBy(rnr.getModifiedBy());
     }
@@ -280,7 +283,7 @@ public class Rnr extends BaseModel {
   private void copyApproverEditableFieldsToLineItems(Rnr rnr, ProgramRnrTemplate template, List<RnrLineItem> lineItems) {
     for (RnrLineItem lineItem : lineItems) {
       RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
-      if (savedLineItem == null) continue;
+      if (savedLineItem == null) throw new DataException(PRODUCT_CODE_INVALID);
       savedLineItem.setModifiedBy(rnr.modifiedBy);
       savedLineItem.copyApproverEditableFields(lineItem, template);
     }
