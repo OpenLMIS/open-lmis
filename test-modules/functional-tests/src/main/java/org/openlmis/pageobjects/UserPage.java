@@ -107,7 +107,7 @@ public class UserPage extends Page {
   private static WebElement addButtonMyFacility;
 
 
-  @FindBy(how = How.XPATH, using = "//h2/span[contains(text(),'Edit User')]")
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Edit User')]")
   private static WebElement editUserHeader;
 
 
