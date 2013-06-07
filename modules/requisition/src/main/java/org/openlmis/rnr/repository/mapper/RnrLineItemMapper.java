@@ -65,14 +65,14 @@ public interface RnrLineItemMapper {
 
   @Insert({"INSERT INTO requisition_line_items",
     "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, dispensingUnit,",
-    "dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock, packsToShip, packSize, price, roundToZero,",
+    "dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock, packSize, price, roundToZero,",
     "packRoundingThreshold, fullSupply, modifiedBy, quantityReceived, quantityDispensed, beginningBalance,",
     "stockInHand, totalLossesAndAdjustments, calculatedOrderQuantity, quantityApproved,",
     "newPatientCount, stockOutDays, normalizedConsumption, amc, maxStockQuantity,",
     "remarks, quantityRequested, reasonForRequestedQuantity)",
     "VALUES ( ",
     "#{rnrId}, #{productCode}, #{product}, #{productDisplayOrder}, #{productCategory}, #{productCategoryDisplayOrder}, #{dispensingUnit},",
-    "#{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock}, #{packsToShip},#{packSize}, #{price}, #{roundToZero},",
+    "#{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock},#{packSize}, #{price}, #{roundToZero},",
     "#{packRoundingThreshold}, #{fullSupply}, #{modifiedBy}, 0, 0, 0,",
     "0, 0, 0, #{quantityApproved},",
     "0, 0, 0, 0, 0,",
@@ -93,6 +93,7 @@ public interface RnrLineItemMapper {
 
   @Update("UPDATE requisition_line_items " +
     "SET quantityApproved = #{quantityApproved}, " +
+    " packsToShip = #{packsToShip}, " +
     " remarks = #{remarks}, " +
     " modifiedBy = #{modifiedBy}, "+
     " modifiedDate = CURRENT_TIMESTAMP "+

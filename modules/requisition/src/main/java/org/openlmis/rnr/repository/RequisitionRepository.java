@@ -64,6 +64,9 @@ public class RequisitionRepository {
     for (RnrLineItem lineItem : rnr.getFullSupplyLineItems()) {
       updateLineItem(rnr, lineItem);
     }
+    for (RnrLineItem lineItem : rnr.getNonFullSupplyLineItems()) {
+      updateLineItem(rnr, lineItem);
+    }
   }
 
   private void updateNonFullSupplyLineItems(Rnr rnr) {

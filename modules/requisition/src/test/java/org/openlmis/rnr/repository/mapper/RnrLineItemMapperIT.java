@@ -293,11 +293,13 @@ public class RnrLineItemMapperIT {
 
     lineItem.setQuantityApproved(23);
     lineItem.setRemarks("Updated Remarks");
+    lineItem.setPacksToShip(2);
     rnrLineItemMapper.updateOnApproval(lineItem);
 
     RnrLineItem returnedRnrLineItem = rnrLineItemMapper.getRnrLineItemsByRnrId(lineItem.getRnrId()).get(0);
 
     assertThat(returnedRnrLineItem.getQuantityApproved(),is(23));
+    assertThat(returnedRnrLineItem.getPacksToShip(),is(2));
     assertThat(returnedRnrLineItem.getRemarks(),is("Updated Remarks"));
   }
 }

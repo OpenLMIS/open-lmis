@@ -124,14 +124,19 @@ public class RequisitionRepositoryTest {
   }
 
   @Test
-  public void shouldApproveRnrAndItsFullSupplyLineItems() throws Exception {
+  public void shouldApproveRnrAndItsLineItems() throws Exception {
     rnr.setStatus(RnrStatus.IN_APPROVAL);
+    ArrayList<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
+    RnrLineItem nonFullSupplyLineItem = new RnrLineItem();
+    nonFullSupplyLineItems.add(nonFullSupplyLineItem);
+    rnr.setNonFullSupplyLineItems(nonFullSupplyLineItems);
     requisitionRepository.approve(rnr);
     verify(requisitionMapper).update(rnr);
     verify(lossesAndAdjustmentsMapper, never()).deleteByLineItemId(rnrLineItem1.getId());
     verify(lossesAndAdjustmentsMapper, never()).insert(rnrLineItem1, lossAndAdjustmentForLineItem);
     verify(rnrLineItemMapper).updateOnApproval(rnrLineItem1);
     verify(rnrLineItemMapper).updateOnApproval(rnrLineItem2);
+    verify(rnrLineItemMapper).updateOnApproval(nonFullSupplyLineItem);
   }
 
   @Test

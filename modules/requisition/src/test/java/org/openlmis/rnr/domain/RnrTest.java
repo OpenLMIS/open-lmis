@@ -167,12 +167,14 @@ public class RnrTest {
       with(packSize, 10),
       with(roundToZero, false)));
     rnr.setFullSupplyLineItems(asList(lineItem));
+    rnr.setNonFullSupplyLineItems(asList(lineItem));
 
     rnr.calculateForApproval();
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getPacksToShip(), is(7));
+    assertThat(rnr.getNonFullSupplyLineItems().get(0).getPacksToShip(), is(7));
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(new Money("28")));
-    assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("0")));
+    assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("28")));
   }
 
   @Test

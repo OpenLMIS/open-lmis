@@ -90,6 +90,9 @@ public class Rnr extends BaseModel {
     for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.calculatePacksToShip();
     }
+    for (RnrLineItem lineItem : nonFullSupplyLineItems) {
+      lineItem.calculatePacksToShip();
+    }
     this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
   }
