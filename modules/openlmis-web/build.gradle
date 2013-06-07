@@ -118,7 +118,8 @@ dependencies {
             project(':modules:core'),
             project(':modules:shipment'),
             project(':modules:rest-api'),
-            project(':modules:reporting')
+            project(':modules:reporting'),
+            project(':modules:allocation')
 
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
