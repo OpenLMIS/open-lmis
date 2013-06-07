@@ -62,7 +62,12 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     String newColumnHeading = "Altered";
-    templateConfigPage.alterTemplateLabelAndVisibility(newColumnHeading, program);
+      templateConfigPage.unClickExpirationDate();
+      templateConfigPage.unClickTotal();
+    templateConfigPage.alterTemplateLabelAndVisibility(newColumnHeading);
+
+
+
     homePage.logout(baseUrlGlobal);
     LoginPage loginPageSic = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePageSic = loginPageSic.loginAs(userSIC, password);
@@ -74,7 +79,8 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     String columnHeadingNotPresent = "Remarks";
     columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
     initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, columnHeadingNotPresent, columns);
-
+      initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, "Expiration Date", columns);
+      initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, "Total", columns);
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Column-Label-Source")

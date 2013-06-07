@@ -18,6 +18,9 @@ import org.openqa.selenium.support.ui.Select;
 
 import java.io.IOException;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+
 
 public class TemplateConfigPage extends Page {
 
@@ -97,8 +100,26 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//li[@id='W']/span/input")
   private static WebElement requestedQuantityCheckBox;
 
+  @FindBy(how = How.XPATH, using = "//li[@id='G']/span/input")
+  private static WebElement expirationDateCheckBox;
+
+  @FindBy(how = How.XPATH, using = "//li[@id='G']/span[@class='tpl-label']/input")
+  private static WebElement expirationDateTextBox;
+
+  @FindBy(how = How.XPATH, using = "//li[@id='G']/span[@class='tpl-source']/span[2]")
+  private static WebElement expirationDateSource;
+
   @FindBy(how = How.XPATH, using = "//li[@id='J']/span/input")
   private static WebElement requestedQuantityExplanationCheckBox;
+
+  @FindBy(how = How.XPATH, using = "//li[@id='M']/span/input")
+  private static WebElement totalCheckBox;
+
+  @FindBy(how = How.XPATH, using = "//li[@id='M']/span[@class='tpl-label']/input")
+  private static WebElement totalTextBox;
+
+  @FindBy(how = How.XPATH, using = "//li[@id='M']/span[@class='tpl-source']/span[2]")
+  private static WebElement totalSource;
 
   @FindBy(how = How.XPATH, using = "//li[@id='O']/span/input")
   private static WebElement productCodeCheckBox;
@@ -226,69 +247,61 @@ public class TemplateConfigPage extends Page {
 
   public void verifySourceForTotalConsumedQuantity(String optionToBeVerified) {
     Select select = new Select(dropDownTotalConsumedQuantity);
-    SeleneseTestNgHelper.assertEquals(select.getFirstSelectedOption().getText(), optionToBeVerified);
+    assertEquals(select.getFirstSelectedOption().getText(), optionToBeVerified);
   }
 
   public void verifySourceForStockOnHand(String optionToBeVerified) {
     Select select = new Select(stockInHandDropDown);
-    SeleneseTestNgHelper.assertEquals(select.getFirstSelectedOption().getText(), optionToBeVerified);
+    assertEquals(select.getFirstSelectedOption().getText(), optionToBeVerified);
   }
 
   public void clickTotalConsumedQuantity() {
-    testWebDriver.waitForElementToAppear(totalConsumedQuantityCheckBox);
-    if (!totalConsumedQuantityCheckBox.isSelected())
-      totalConsumedQuantityCheckBox.click();
-    testWebDriver.sleep(100);
+      clickCheckBox(totalConsumedQuantityCheckBox);
   }
 
   public void unClickTotalConsumedQuantity() {
-    testWebDriver.waitForElementToAppear(totalConsumedQuantityCheckBox);
-    if (totalConsumedQuantityCheckBox.isSelected())
-      totalConsumedQuantityCheckBox.click();
-    testWebDriver.sleep(100);
+      unClickCheckBox(totalConsumedQuantityCheckBox) ;
   }
 
   public void clickRequestedQuantity() {
-    testWebDriver.waitForElementToAppear(requestedQuantityCheckBox);
-    if (!requestedQuantityCheckBox.isSelected())
-      requestedQuantityCheckBox.click();
-    testWebDriver.sleep(100);
+      clickCheckBox(requestedQuantityCheckBox);
   }
 
   public void unClickRequestedQuantity() {
-    testWebDriver.waitForElementToAppear(requestedQuantityCheckBox);
-    if (requestedQuantityCheckBox.isSelected())
-      requestedQuantityCheckBox.click();
-    testWebDriver.sleep(100);
+      unClickCheckBox(requestedQuantityCheckBox) ;
   }
 
   public void clickRequestedQuantityExplanation() {
-    testWebDriver.waitForElementToAppear(requestedQuantityExplanationCheckBox);
-    if (!requestedQuantityExplanationCheckBox.isSelected())
-      requestedQuantityExplanationCheckBox.click();
-    testWebDriver.sleep(100);
+      clickCheckBox(requestedQuantityExplanationCheckBox);
   }
 
   public void unClickRequestedQuantityExplanation() {
-    testWebDriver.waitForElementToAppear(requestedQuantityExplanationCheckBox);
-    if (requestedQuantityExplanationCheckBox.isSelected())
-      requestedQuantityExplanationCheckBox.click();
-    testWebDriver.sleep(100);
+      unClickCheckBox(requestedQuantityExplanationCheckBox) ;
   }
 
-  public void clickStockOnHand() {
-    testWebDriver.waitForElementToAppear(stockOnHandCheckBox);
-    if (!stockOnHandCheckBox.isSelected())
-      stockOnHandCheckBox.click();
-    testWebDriver.sleep(100);
+  public void clickExpirationDate() {
+      clickCheckBox(expirationDateCheckBox);
   }
 
-  public void unClickStockOnHand() {
-    testWebDriver.waitForElementToAppear(stockOnHandCheckBox);
-    if (stockOnHandCheckBox.isSelected())
-      stockOnHandCheckBox.click();
-    testWebDriver.sleep(100);
+  public void unClickExpirationDate() {
+      unClickCheckBox(expirationDateCheckBox) ;
   }
+
+    public void clickTotal() {
+        clickCheckBox(totalCheckBox);
+    }
+
+    public void unClickTotal() {
+        unClickCheckBox(totalCheckBox) ;
+    }
+
+    public void clickStockOnHand() {
+        clickCheckBox(stockOnHandCheckBox);
+    }
+
+    public void unClickStockOnHand() {
+        unClickCheckBox(stockOnHandCheckBox) ;
+    }
 
   public void selectFromTotalConsumedQuantityDropDown(String optionToBeSelected) {
     testWebDriver.waitForElementToAppear(dropDownTotalConsumedQuantity);
@@ -311,32 +324,32 @@ public class TemplateConfigPage extends Page {
 
   public void verifyErrorMessageDivTotalConsumedQuantity() {
     testWebDriver.waitForElementToAppear(totalConsumedQtyErrorMessage);
-    SeleneseTestNgHelper.assertTrue("Error message not displaying", totalConsumedQtyErrorMessage.isDisplayed());
+    assertTrue("Error message not displaying", totalConsumedQtyErrorMessage.isDisplayed());
   }
 
   public void verifyErrorMessageDivStockOnHand() {
     testWebDriver.waitForElementToAppear(stockOnHandQtyErrorMessage);
-    SeleneseTestNgHelper.assertTrue("Error message not displaying", stockOnHandQtyErrorMessage.isDisplayed());
+    assertTrue("Error message not displaying", stockOnHandQtyErrorMessage.isDisplayed());
   }
 
   public void verifyErrorMessageDivRequestedQuantity() {
     testWebDriver.waitForElementToAppear(requestedQtyErrorMessage);
-    SeleneseTestNgHelper.assertTrue("Error message not displaying", requestedQtyErrorMessage.isDisplayed());
+    assertTrue("Error message not displaying", requestedQtyErrorMessage.isDisplayed());
   }
 
   public void verifyErrorMessageRequestedQuantityExplanation() {
     testWebDriver.waitForElementToAppear(requestedQtyExplanationErrorMessage);
-    SeleneseTestNgHelper.assertTrue("Error message not displaying", requestedQtyExplanationErrorMessage.isDisplayed());
+    assertTrue("Error message not displaying", requestedQtyExplanationErrorMessage.isDisplayed());
   }
 
   public void verifyErrorMessageDivFooter() {
     testWebDriver.waitForElementToAppear(errorMessageDiv);
-    SeleneseTestNgHelper.assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
+    assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
   }
 
   public void verifyTurnOffOnButtonAvailable(String messageToShow) {
     testWebDriver.waitForElementToAppear(turnOffButton);
-    SeleneseTestNgHelper.assertTrue(messageToShow, turnOffButton.isDisplayed());
+    assertTrue(messageToShow, turnOffButton.isDisplayed());
 
   }
 
@@ -354,19 +367,17 @@ public class TemplateConfigPage extends Page {
 
   public void verifyTextOffOnButton(WebElement button, String textToVerify, String messageToShow) {
     testWebDriver.waitForElementToAppear(button);
-    SeleneseTestNgHelper.assertTrue(messageToShow, button.getText().equalsIgnoreCase(textToVerify));
+    assertTrue(messageToShow, button.getText().equalsIgnoreCase(textToVerify));
   }
 
   public void verifyONOffIndicatorOnScreen(WebElement indicator, String textToVerify) {
     testWebDriver.waitForElementToAppear(indicator);
-    SeleneseTestNgHelper.assertEquals(textToVerify, indicator.getText().trim());
-
-
+    assertEquals(textToVerify, indicator.getText().trim());
   }
 
   public void verifySaveSuccessDiv() {
     testWebDriver.waitForElementToAppear(saveSuccessMsg);
-    SeleneseTestNgHelper.assertTrue("Success message should display", saveSuccessMsg.isDisplayed());
+    assertTrue("Success message should display", saveSuccessMsg.isDisplayed());
   }
 
   private void verifyCAndEUserInputsAndShouldBeDisplayed(String program) throws IOException {
@@ -478,55 +489,61 @@ public class TemplateConfigPage extends Page {
 
   public void verifyColumnLabels() {
     testWebDriver.waitForElementToAppear(SaveButton);
-    SeleneseTestNgHelper.assertTrue("product code is not showing up", productCode.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("product name is not showing up", productName.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("unit of issue is not showing up", unitOfIssue.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("beginning balance is not showing up", beginningBalance.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("totalReceivedQuantity is not showing up", totalReceivedQuantity.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("totalConsumedQuantity is not showing up", totalConsumedQuantity.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("lossesAndAdj is not showing up", lossesAndAdj.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("stockOnHand is not showing up", stockOnHand.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("newPatients is not showing up", newPatients.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("stockOutDays is not showing up", stockOutDays.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("adjustedTotalConsumption is not showing up", adjustedTotalConsumption.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("maxStockQuantity is not showing up", maxStockQuantity.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("calculatedOrderQuantity is not showing up", calculatedOrderQuantity.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("requestedQuantity is not showing up", requestedQuantity.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("requestedQuantityExplanation is not showing up", requestedQuantityExplanation.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("packsToShip is not showing up", packsToShip.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("pricePerPack is not showing up", pricePerPack.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("totalCost is not showing up", totalCost.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("remarks is not showing up", remarks.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("approvedQuantity is not showing up", approvedQuantity.isDisplayed());
+    assertTrue("product code is not showing up", productCode.isDisplayed());
+    assertTrue("product name is not showing up", productName.isDisplayed());
+    assertTrue("unit of issue is not showing up", unitOfIssue.isDisplayed());
+    assertTrue("beginning balance is not showing up", beginningBalance.isDisplayed());
+    assertTrue("totalReceivedQuantity is not showing up", totalReceivedQuantity.isDisplayed());
+    assertTrue("totalConsumedQuantity is not showing up", totalConsumedQuantity.isDisplayed());
+    assertTrue("lossesAndAdj is not showing up", lossesAndAdj.isDisplayed());
+    assertTrue("stockOnHand is not showing up", stockOnHand.isDisplayed());
+    assertTrue("newPatients is not showing up", newPatients.isDisplayed());
+    assertTrue("stockOutDays is not showing up", stockOutDays.isDisplayed());
+    assertTrue("adjustedTotalConsumption is not showing up", adjustedTotalConsumption.isDisplayed());
+    assertTrue("maxStockQuantity is not showing up", maxStockQuantity.isDisplayed());
+    assertTrue("calculatedOrderQuantity is not showing up", calculatedOrderQuantity.isDisplayed());
+    assertTrue("requestedQuantity is not showing up", requestedQuantity.isDisplayed());
+    assertTrue("requestedQuantityExplanation is not showing up", requestedQuantityExplanation.isDisplayed());
+    assertTrue("packsToShip is not showing up", packsToShip.isDisplayed());
+    assertTrue("pricePerPack is not showing up", pricePerPack.isDisplayed());
+    assertTrue("totalCost is not showing up", totalCost.isDisplayed());
+    assertTrue("remarks is not showing up", remarks.isDisplayed());
+    assertTrue("approvedQuantity is not showing up", approvedQuantity.isDisplayed());
+    assertTrue("Expiration Date is not showing up", expirationDateTextBox.isDisplayed());
+    assertTrue("Total is not showing up", totalTextBox.isDisplayed());
+
   }
 
   public void verifyColumnSource() {
     testWebDriver.waitForElementToAppear(SaveButton);
-    SeleneseTestNgHelper.assertEquals(productCodeSource.getText().trim(), "Reference Data");
-    SeleneseTestNgHelper.assertEquals(productNameSource.getText().trim(), "Reference Data");
-    SeleneseTestNgHelper.assertEquals(unitOfIssueSource.getText().trim(), "Reference Data");
-    SeleneseTestNgHelper.assertEquals(beginningBalanceSource.getText().trim(), "User Input");
-    SeleneseTestNgHelper.assertEquals(totalReceivedQuantitySource.getText().trim(), "User Input");
-    SeleneseTestNgHelper.assertEquals(totalConsumedQuantitySource.getText().trim(), "User Input");
-    SeleneseTestNgHelper.assertEquals(lossesAndAdjSource.getText().trim(), "User Input");
-    SeleneseTestNgHelper.assertEquals(stockOnHandSource.getText().trim(), "User Input");
-    SeleneseTestNgHelper.assertEquals(newPatientsSource.getText().trim(), "User Input");
-    SeleneseTestNgHelper.assertEquals(stockOutDaysSource.getText().trim(), "User Input");
-    SeleneseTestNgHelper.assertEquals(adjustedTotalConsumptionSource.getText().trim(), "Calculated");
-    SeleneseTestNgHelper.assertEquals(maxStockQuantitySource.getText().trim(), "Calculated");
-    SeleneseTestNgHelper.assertEquals(calculatedOrderQuantitySource.getText().trim(), "Calculated");
-    SeleneseTestNgHelper.assertEquals(requestedQuantitySource.getText().trim(), "User Input");
-    SeleneseTestNgHelper.assertEquals(requestedQuantityExplanationSource.getText().trim(), "User Input");
-    SeleneseTestNgHelper.assertEquals(packsToShipSource.getText().trim(), "Calculated");
-    SeleneseTestNgHelper.assertEquals(pricePerPackSource.getText().trim(), "Reference Data");
-    SeleneseTestNgHelper.assertEquals(totalCostSource.getText().trim(), "Calculated");
-    SeleneseTestNgHelper.assertEquals(remarksSource.getText().trim(), "User Input");
-    SeleneseTestNgHelper.assertEquals(approvedQuantitySource.getText().trim(), "User Input");
+    assertEquals(productCodeSource.getText().trim(), "Reference Data");
+    assertEquals(productNameSource.getText().trim(), "Reference Data");
+    assertEquals(unitOfIssueSource.getText().trim(), "Reference Data");
+    assertEquals(beginningBalanceSource.getText().trim(), "User Input");
+    assertEquals(totalReceivedQuantitySource.getText().trim(), "User Input");
+    assertEquals(totalConsumedQuantitySource.getText().trim(), "User Input");
+    assertEquals(lossesAndAdjSource.getText().trim(), "User Input");
+    assertEquals(stockOnHandSource.getText().trim(), "User Input");
+    assertEquals(newPatientsSource.getText().trim(), "User Input");
+    assertEquals(stockOutDaysSource.getText().trim(), "User Input");
+    assertEquals(adjustedTotalConsumptionSource.getText().trim(), "Calculated");
+    assertEquals(maxStockQuantitySource.getText().trim(), "Calculated");
+    assertEquals(calculatedOrderQuantitySource.getText().trim(), "Calculated");
+    assertEquals(requestedQuantitySource.getText().trim(), "User Input");
+    assertEquals(requestedQuantityExplanationSource.getText().trim(), "User Input");
+    assertEquals(packsToShipSource.getText().trim(), "Calculated");
+    assertEquals(pricePerPackSource.getText().trim(), "Reference Data");
+    assertEquals(totalCostSource.getText().trim(), "Calculated");
+    assertEquals(remarksSource.getText().trim(), "User Input");
+    assertEquals(approvedQuantitySource.getText().trim(), "User Input");
+    assertEquals(expirationDateSource.getText().trim(), "User Input");
+    assertEquals(totalSource.getText().trim(), "Calculated");
+
   }
 
   private void verifyMandatoryColumnsEditable(WebElement mandatoryElement) {
     testWebDriver.waitForElementToAppear(mandatoryElement);
-    SeleneseTestNgHelper.assertTrue("Mandatory columns should be non-editable", mandatoryElement.getAttribute("disabled").trim().equalsIgnoreCase("true"));
+    assertTrue("Mandatory columns should be non-editable", mandatoryElement.getAttribute("disabled").trim().equalsIgnoreCase("true"));
   }
 
   public void verifyMandatoryColumns() {
@@ -550,7 +567,7 @@ public class TemplateConfigPage extends Page {
 
   }
 
-  public void alterTemplateLabelAndVisibility(String columnHeadingToBeAltered, String program) throws IOException {
+  public void alterTemplateLabelAndVisibility(String columnHeadingToBeAltered) throws IOException {
     testWebDriver.waitForElementToAppear(SaveButton);
     beginningBalance.clear();
     beginningBalance.sendKeys(columnHeadingToBeAltered);
@@ -561,8 +578,22 @@ public class TemplateConfigPage extends Page {
   }
 
 
+
   private void verifySuccessDiv() {
-    SeleneseTestNgHelper.assertTrue("Save success message not showing up", saveSuccessMsg.isDisplayed());
+    assertTrue("Save success message not showing up", saveSuccessMsg.isDisplayed());
   }
 
+    public void clickCheckBox(WebElement chkBox) {
+        testWebDriver.waitForElementToAppear(chkBox);
+        if (!chkBox.isSelected())
+            chkBox.click();
+        testWebDriver.sleep(100);
+    }
+
+    public void unClickCheckBox(WebElement chkBox) {
+        testWebDriver.waitForElementToAppear(chkBox);
+        if (chkBox.isSelected())
+            chkBox.click();
+        testWebDriver.sleep(100);
+    }
 }
