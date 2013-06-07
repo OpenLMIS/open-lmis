@@ -432,8 +432,8 @@ public class DBWrapper {
 
   }
 
-  public void insertApprovedQuantity() throws IOException, SQLException {
-    update("update requisition_line_items set quantityapproved='20';");
+  public void insertApprovedQuantity(Integer quantity) throws IOException, SQLException {
+    update("update requisition_line_items set quantityapproved=" + quantity);
 
   }
 

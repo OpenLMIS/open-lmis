@@ -66,6 +66,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.verifyNoRequisitionFound();
+    dbWrapper.insertApprovedQuantity(10);
     dbWrapper.updateRequisitionStatus(AUTHORIZED);
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.clickRnRList();
