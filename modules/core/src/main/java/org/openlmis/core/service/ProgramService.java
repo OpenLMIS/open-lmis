@@ -37,6 +37,10 @@ public class ProgramService {
     return programRepository.getAllPullPrograms();
   }
 
+  public List<Program> getAllPushPrograms() {
+    return programRepository.getAllPushPrograms();
+  }
+
   public List<Program> getProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, Right... rights) {
     return programRepository.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, rights);
   }

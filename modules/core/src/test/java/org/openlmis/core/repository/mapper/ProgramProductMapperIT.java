@@ -24,6 +24,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
@@ -90,7 +91,7 @@ public class ProgramProductMapperIT {
     programProduct.setModifiedBy(1L);
     programProduct.setModifiedDate(new Date());
     programProductMapper.insert(programProduct);
-     Money price = new Money("200.01");
+    Money price = new Money("200.01");
     programProduct.setCurrentPrice(price);
 
     programProductMapper.updateCurrentPrice(programProduct);
@@ -111,9 +112,21 @@ public class ProgramProductMapperIT {
 
     programProductMapper.update(programProduct);
 
-    ProgramProduct dbProgramProduct = programProductMapper.getByProgramAndProductId(program.getId(),product.getId());
+    ProgramProduct dbProgramProduct = programProductMapper.getByProgramAndProductId(program.getId(), product.getId());
 
-    assertThat(dbProgramProduct.getDosesPerMonth(),is(10));
-    assertThat(dbProgramProduct.isActive(),is(false));
+    assertThat(dbProgramProduct.getDosesPerMonth(), is(10));
+    assertThat(dbProgramProduct.isActive(), is(false));
+  }
+
+  @Test
+  public void shouldGetProgramProductsByProgram() {
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+
+    programProductMapper.insert(programProduct);
+
+    List<ProgramProduct> programProducts = programProductMapper.getByProgram(program);
+
+    assertThat(programProducts.size(), is(1));
+    assertThat(programProducts.get(0).getId(), is(programProduct.getId()));
   }
 }

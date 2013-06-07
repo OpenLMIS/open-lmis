@@ -94,4 +94,7 @@ public interface ProductMapper {
     "packRoundingThreshold=#{packRoundingThreshold}, categoryId=#{category.id}, productGroupId = #{productGroup.id},",
     "modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE id=#{id}"})
   void update(Product product);
+
+  @Select("SELECT * FROM products WHERE id=#{id}")
+  Product getById(Long id);
 }

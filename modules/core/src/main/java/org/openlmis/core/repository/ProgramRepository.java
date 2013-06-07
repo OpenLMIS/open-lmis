@@ -40,6 +40,11 @@ public class ProgramRepository {
     return mapper.getAllPullPrograms();
   }
 
+  public List<Program> getAllPushPrograms() {
+    return mapper.getAllPushPrograms();
+  }
+
+
   public List<Program> getUserSupervisedActiveProgramsWithRights(Long userId, Right... rights) {
     return mapper.getUserSupervisedActivePrograms(userId, commaSeparateRightNames(rights));
   }

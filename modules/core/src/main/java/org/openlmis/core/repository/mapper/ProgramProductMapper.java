@@ -8,8 +8,11 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface ProgramProductMapper {
@@ -31,4 +34,13 @@ public interface ProgramProductMapper {
 
   @Update("UPDATE program_products SET  dosesPerMonth=#{dosesPerMonth}, active=#{active}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE programId=#{program.id} AND productId=#{product.id}")
   void update(ProgramProduct programProduct);
+
+  @Select("SELECT * from program_products where programId = #{id}")
+  @Results(value = {
+    @Result(property = "program", column = "programId", javaType = Program.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
+    @Result(property = "product", column = "productId", javaType = Product.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
+  })
+  List<ProgramProduct> getByProgram(Program program);
 }

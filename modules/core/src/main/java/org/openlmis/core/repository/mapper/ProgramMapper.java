@@ -31,6 +31,9 @@ public interface ProgramMapper {
   @Select("SELECT * FROM programs WHERE push = FALSE ORDER BY templateConfigured DESC, name ")
   List<Program> getAllPullPrograms();
 
+  @Select("SELECT * FROM programs WHERE push = TRUE ORDER BY templateConfigured DESC, name ")
+  List<Program> getAllPushPrograms();
+
   @Select({"SELECT",
     "p.id AS id,",
     "p.code AS code,",

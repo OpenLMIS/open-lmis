@@ -24,7 +24,9 @@ import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductPriceMapper;
 import org.openlmis.db.categories.UnitTests;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -188,4 +190,18 @@ public class ProgramProductRepositoryTest {
 
     verify(programProductMapper).update(programProduct);
   }
+  
+  @Test
+  public void shouldGetProgramProductsByProgram(){
+    Program program = new Program();
+    List<ProgramProduct> expectedProgramProducts = new ArrayList<>();
+    when(programProductMapper.getByProgram(program)).thenReturn(expectedProgramProducts);
+
+    List<ProgramProduct> programProducts = programProductRepository.getByProgram(program);
+
+    verify(programProductMapper).getByProgram(program);
+    assertThat(programProducts, is(expectedProgramProducts));
+  }
+
+
 }

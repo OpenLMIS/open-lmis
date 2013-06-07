@@ -88,6 +88,13 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   }
 
   @Test
+  public void shouldGetAllPushPrograms() throws Exception {
+    List<Program> programs = programMapper.getAllPushPrograms();
+    assertEquals(1, programs.size());
+    assertThat(programs.get(0).getCode(), is("VACCINES"));
+  }
+
+  @Test
   public void shouldGetAllPrograms() throws Exception {
     List<Program> programs = programMapper.getAll();
     assertEquals(5, programs.size());

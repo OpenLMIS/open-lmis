@@ -15,13 +15,16 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Money;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramProductRepository;
 import org.openlmis.db.categories.UnitTests;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -113,5 +116,17 @@ public class ProgramProductServiceTest {
     doThrow(new DataException("Duplicate Program Product found")).when(programProductRepository).save(programProduct);
 
     programProductService.save(programProduct);
+  }
+
+  @Test
+  public void shouldGetAllProductsByProgram(){
+    Program program = new Program();
+    List<ProgramProduct> expectedProgramProducts = new ArrayList<>();
+    when(programProductRepository.getByProgram(program)).thenReturn(expectedProgramProducts);
+
+    List<ProgramProduct> programProducts = programProductService.getByProgram(program);
+
+    assertThat(programProducts, is(expectedProgramProducts));
+    verify(programProductRepository).getByProgram(program);
   }
 }

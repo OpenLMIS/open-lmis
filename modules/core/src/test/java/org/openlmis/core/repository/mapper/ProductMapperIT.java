@@ -122,4 +122,14 @@ public class ProductMapperIT {
     assertThat(returnedProduct.getAlternateItemCode(), is("Alternate Code"));
 
   }
+
+  @Test
+  public void shouldGetAProductById(){
+    Product product = make(a(ProductBuilder.defaultProduct));
+    productMapper.insert(product);
+    Product expectedProduct = productMapper.getById(product.getId());
+    assertThat(expectedProduct.getId(), is(product.getId()));
+    assertThat(expectedProduct.getCode(), is(product.getCode()));
+    assertThat(expectedProduct.getPrimaryName(), is(product.getPrimaryName()));
+  }
 }

@@ -7,6 +7,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
@@ -15,6 +16,8 @@ import org.openlmis.core.repository.mapper.ProgramProductPriceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @NoArgsConstructor
@@ -96,5 +99,9 @@ public class ProgramProductRepository {
 
   public ProgramProductPrice getProgramProductPrice(ProgramProduct programProduct) {
     return programProductPriceMapper.get(programProduct);
+  }
+
+  public List<ProgramProduct> getByProgram(Program program) {
+    return mapper.getByProgram(program);
   }
 }

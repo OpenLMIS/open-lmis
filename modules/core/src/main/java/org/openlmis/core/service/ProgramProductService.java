@@ -15,6 +15,8 @@ import org.openlmis.core.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @NoArgsConstructor
 public class ProgramProductService {
@@ -70,4 +72,7 @@ public class ProgramProductService {
     programProduct.setId(programProductRepository.getIdByProgramIdAndProductId(programId, productId));
   }
 
+  public List<ProgramProduct> getByProgram(Program program) {
+    return programProductRepository.getByProgram(program);
+  }
 }
