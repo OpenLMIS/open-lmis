@@ -7,9 +7,7 @@
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
   <div ng-hide="user.id"><h2 openlmis-message="create.user.label"></h2></div>
   <div ng-show="user.id">
-    <h2><span openlmis-message="edit.user.label"></span>
-      <a href="#/search" class="pull-right btn btn-primary" openlmis-message="button.backToUsers"></a>
-    </h2>
+    <h2 openlmis-message="edit.user.label"></h2>
   </div>
 
   <form ng-submit="saveUser()" id="create-user" name="userForm" novalidate select2-blur>

@@ -15,7 +15,7 @@
       <div class="submenu">
         <ul>
           <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION')">
-            <a href="/public/pages/logistics/rnr/index.html#/" openlmis-message="link.requisitions.create.authorize"></a>
+            <a href="/public/pages/logistics/rnr/index.html" openlmis-message="link.requisitions.create.authorize"></a>
           </li>
           <li ng-show="hasPermission('APPROVE_REQUISITION')">
             <a href="/public/pages/logistics/rnr/index.html#/rnr-for-approval" openlmis-message="link.requisition.approve"></a>
@@ -73,12 +73,12 @@
           </li>
 
           <li class="has-children">
-            <a href="/public/pages/admin/facility/index.html#/search" openlmis-message="link.admin.manage"></a>
+            <a href="/public/pages/admin/facility/index.html" openlmis-message="link.admin.manage"></a>
 
             <div class="submenu">
               <ul>
                 <li ng-show="hasPermission('MANAGE_FACILITY')">
-                  <a href="/public/pages/admin/facility/index.html#/search" openlmis-message="link.admin.manage.facilities"></a>
+                  <a href="/public/pages/admin/facility/index.html" openlmis-message="link.admin.manage.facilities"></a>
                 </li>
                 <li ng-show="hasPermission('MANAGE_ROLE')">
                   <a href="/public/pages/admin/role/index.html" openlmis-message="link.admin.manage.roles"></a>
@@ -87,7 +87,7 @@
                   <a href="/public/pages/admin/schedule/index.html" openlmis-message="link.admin.manage.schedules"></a>
                 </li>
                 <li ng-show="hasPermission('MANAGE_USERS')">
-                  <a href="/public/pages/admin/user/index.html#/search" openlmis-message="link.admin.manage.users"></a>
+                  <a href="/public/pages/admin/user/index.html" openlmis-message="link.admin.manage.users"></a>
                 </li>
                 <li class="beak"></li>
               </ul>
