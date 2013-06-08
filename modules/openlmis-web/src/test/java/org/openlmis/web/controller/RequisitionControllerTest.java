@@ -253,8 +253,10 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldApproveRequisitionAndTagWithModifiedBy() throws Exception {
-    when(requisitionService.approve(rnr)).thenReturn(new OpenLmisMessage("some message"));
+    Rnr approvedrnr = new Rnr();
+    when(requisitionService.approve(rnr)).thenReturn(approvedrnr);
     whenNew(Rnr.class).withArguments(rnr.getId()).thenReturn(rnr);
+    when(requisitionService.getApproveMessageBasedOnParentNode(approvedrnr)).thenReturn(new OpenLmisMessage("some message"));
     final ResponseEntity<OpenLmisResponse> response = controller.approve(rnr.getId(), request);
     verify(requisitionService).approve(rnr);
     assertThat(rnr.getModifiedBy(), CoreMatchers.is(USER_ID));

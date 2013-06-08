@@ -153,7 +153,8 @@ public class RequisitionController extends BaseController {
     Rnr rnr = new Rnr(id);
     rnr.setModifiedBy(loggedInUserId(request));
     try {
-      return success(requisitionService.approve(rnr));
+      Rnr approvedRnr = requisitionService.approve(rnr);
+      return success(requisitionService.getApproveMessageBasedOnParentNode(approvedRnr));
     } catch (DataException dataException) {
       logger.warn("Error in approving requisition #{}", id, dataException);
       return error(dataException, BAD_REQUEST);

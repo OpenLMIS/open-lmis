@@ -476,6 +476,40 @@ public class RequisitionServiceTest {
     assertThat(message.getCode(), is(RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR));
   }
 
+  @Test
+  public void shouldGiveApprovedSuccessIfParentDoesNotExist() throws Exception {
+
+    Rnr rnr = make(a(defaultRnr));
+    when(supervisoryNodeService.getParent(rnr.getSupervisoryNodeId())).thenReturn(null);
+    OpenLmisMessage message = requisitionService.getApproveMessageBasedOnParentNode(rnr);
+
+    assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY));
+  }
+
+  @Test
+  public void shouldGiveApprovedSuccessIfParentExistWtihSupervisor() throws Exception {
+
+    Rnr rnr = make(a(defaultRnr));
+    SupervisoryNode parent = new SupervisoryNode();
+    when(supervisoryNodeService.getParent(rnr.getSupervisoryNodeId())).thenReturn(parent);
+    when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parent, rnr.getProgram())).thenReturn(new User());
+    OpenLmisMessage message = requisitionService.getApproveMessageBasedOnParentNode(rnr);
+
+    assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY));
+  }
+
+
+  @Test
+  public void shouldGiveApprovedSuccessWithoutSupervisorIfApproverDoesNotExitAtParentNode() throws Exception {
+    Rnr rnr = make(a(defaultRnr));
+    SupervisoryNode parent = new SupervisoryNode();
+    when(supervisoryNodeService.getParent(rnr.getSupervisoryNodeId())).thenReturn(parent);
+    when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parent, rnr.getProgram())).thenReturn(null);
+    OpenLmisMessage message = requisitionService.getApproveMessageBasedOnParentNode(rnr);
+
+    assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR));
+
+  }
 
   @Test
   public void shouldSaveRnrIfUserHasAppropriatePermission() {
@@ -589,13 +623,12 @@ public class RequisitionServiceTest {
 
     when(supplyLineService.getSupplyLineBy(supervisoryNode, savedRnr.getProgram())).thenReturn(supplyLine);
 
-    OpenLmisMessage message = requisitionService.approve(authorizedRnr);
+    Rnr rnr = requisitionService.approve(authorizedRnr);
 
     verify(requisitionRepository).approve(savedRnr);
     verify(requisitionRepository).logStatusChange(savedRnr);
     assertThat(savedRnr.getStatus(), is(APPROVED));
     assertThat(savedRnr.getSupervisoryNodeId(), is(nullValue()));
-    assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY));
     assertThat(savedRnr.getModifiedBy(), is(USER_ID));
 
   }
@@ -632,14 +665,13 @@ public class RequisitionServiceTest {
     when(supervisoryNodeService.getParent(1L)).thenReturn(parentNode);
     when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parentNode, PROGRAM)).thenReturn(new User());
 
-    OpenLmisMessage message = requisitionService.approve(authorizedRnr);
+    Rnr rnr = requisitionService.approve(authorizedRnr);
 
     verify(requisitionRepository).approve(savedRnr);
     verify(requisitionRepository).logStatusChange(savedRnr);
     verify(requisitionEventService).notifyForStatusChange(savedRnr);
     assertThat(savedRnr.getStatus(), is(IN_APPROVAL));
     assertThat(savedRnr.getSupervisoryNodeId(), is(2L));
-    assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY));
     assertThat(savedRnr.getModifiedBy(), is(USER_ID));
 
   }
@@ -655,12 +687,11 @@ public class RequisitionServiceTest {
     when(supervisoryNodeService.getParent(1L)).thenReturn(parentNode);
 
     when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parentNode, authorizedRnr.getProgram())).thenReturn(null);
-    OpenLmisMessage message = requisitionService.approve(authorizedRnr);
+    Rnr rnr = requisitionService.approve(authorizedRnr);
 
     verify(requisitionRepository).approve(savedRnr);
     assertThat(savedRnr.getStatus(), is(IN_APPROVAL));
     assertThat(savedRnr.getSupervisoryNodeId(), is(2L));
-    assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR));
     assertThat(savedRnr.getModifiedBy(), is(USER_ID));
   }
 
