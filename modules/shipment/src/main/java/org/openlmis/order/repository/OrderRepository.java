@@ -11,6 +11,8 @@ import org.openlmis.order.repository.mapper.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class OrderRepository {
 
@@ -19,5 +21,19 @@ public class OrderRepository {
 
   public void save(Order order) {
     orderMapper.insert(order);
+  }
+
+  public List<Order> getOrders() {
+    return orderMapper.getAll();
+  }
+
+  public Order getById(Long id) {
+    return orderMapper.getById(id);
+  }
+
+  public void updateStatusAndShipmentIdForOrder(List<Order> orders) {
+    for (Order order : orders) {
+      orderMapper.updateShipmentInfo(order);
+    }
   }
 }

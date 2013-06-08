@@ -20,7 +20,7 @@ public interface FacilityMapper {
   @Insert("Insert into facilities(code, name, description, gln, mainPhone, fax, address1, address2, " +
     "geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById," +
     "coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, online," +
-    "satellite, satelliteParentCode, hasElectricity, hasElectronicScc, hasElectronicDar, active," +
+    "satellite, satelliteParentId, hasElectricity, hasElectronicScc, hasElectronicDar, active," +
     "goLiveDate, goDownDate, comment, dataReportable, modifiedBy, modifiedDate) " +
     "values(#{code}, #{name}, #{description}, #{gln}, #{mainPhone}, #{fax}, #{address1}, #{address2}," +
     "#{geographicZone.id}," +
@@ -28,7 +28,7 @@ public interface FacilityMapper {
     "#{catchmentPopulation}, #{latitude}, #{longitude}, #{altitude}," +
     "#{operatedBy.id}," +
     "#{coldStorageGrossCapacity}, #{coldStorageNetCapacity}, #{suppliesOthers}, #{sdp},#{online}," +
-    "#{satellite}, #{satelliteParentCode}, #{hasElectricity}, #{hasElectronicScc}, #{hasElectronicDar}, #{active}," +
+    "#{satellite}, #{satelliteParentId}, #{hasElectricity}, #{hasElectronicScc}, #{hasElectronicDar}, #{active}," +
     "#{goLiveDate}, #{goDownDate}, #{comment}, #{dataReportable}, #{modifiedBy}, " +
     "COALESCE(#{modifiedDate}, NOW()))")
   @Options(useGeneratedKeys = true)
@@ -65,36 +65,36 @@ public interface FacilityMapper {
   @Select("SELECT * FROM users U, facilities F " +
     "WHERE U.facilityId = F.id AND U.id = #{userId} AND f.active = true")
   @Results(value = {@Result(property = "id", column = "facilityId")})
-  Facility getHomeFacility(Integer userId);
+  Facility getHomeFacility(Long userId);
 
   @Select("SELECT * FROM facility_types ORDER BY displayOrder")
   List<FacilityType> getAllTypes();
 
   @Select("SELECT * FROM facility_types where id = #{id}")
-  public FacilityType getFacilityTypeById(Integer id);
+  public FacilityType getFacilityTypeById(Long id);
 
   @Select("SELECT * FROM facility_operators ORDER BY displayOrder")
   List<FacilityOperator> getAllOperators();
 
   @Select("SELECT * FROM facility_operators WHERE id = #{id}")
-  public FacilityOperator getFacilityOperatorById(Integer id);
+  public FacilityOperator getFacilityOperatorById(Long id);
 
   @Select("SELECT code FROM facility_operators where id = #{id}")
   @SuppressWarnings("unused")
-  public String getFacilityOperatorCodeFor(Integer id);
+  public String getFacilityOperatorCodeFor(Long id);
 
   @Select("SELECT id FROM facility_operators where LOWER(code) = LOWER(#{code})")
-  Integer getOperatedByIdForCode(String code);
+  Long getOperatedByIdForCode(String code);
 
 
   @Select("SELECT * FROM facilities WHERE id = #{id}")
   @Results(value = {
-    @Result(property = "geographicZone", column = "geographicZoneId", javaType = Integer.class,
+    @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
       one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getGeographicZoneById")),
-    @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),
-    @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById"))
+    @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
+    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById"))
   })
-  Facility getById(Integer id);
+  Facility getById(Long id);
 
   @Update("UPDATE facilities SET code = #{code}, name = #{name}, description = #{description}, gln = #{gln}," +
     "mainPhone = #{mainPhone}, fax = #{fax}, address1 = #{address1}," +
@@ -103,7 +103,7 @@ public interface FacilityMapper {
     "longitude = #{longitude}, altitude = #{altitude}," +
     "operatedById = #{operatedBy.id}," +
     "coldStorageGrossCapacity = #{coldStorageGrossCapacity}, coldStorageNetCapacity = #{coldStorageNetCapacity}," +
-    "suppliesOthers = #{suppliesOthers}, sdp = #{sdp}, online = #{online}, satellite = #{satellite}, satelliteParentCode = #{satelliteParentCode}," +
+    "suppliesOthers = #{suppliesOthers}, sdp = #{sdp}, online = #{online}, satellite = #{satellite}, satelliteParentId = #{satelliteParentId}," +
     "hasElectricity = #{hasElectricity}, hasElectronicScc = #{hasElectronicScc}, hasElectronicDar = #{hasElectronicDar}, active = #{active}," +
     "goLiveDate = #{goLiveDate}, goDownDate = #{goDownDate}," +
     "comment = #{comment}, dataReportable = #{dataReportable}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
@@ -117,7 +117,7 @@ public interface FacilityMapper {
   void updateDataReportableAndActiveFor(Facility facility);
 
   @Select("SELECT id FROM facilities WHERE LOWER(code) = LOWER(#{code})")
-  Integer getIdForCode(String code);
+  Long getIdForCode(String code);
 
   @Select("SELECT DISTINCT f.* FROM facilities f " +
     "INNER JOIN programs_supported ps ON f.id=ps.facilityId " +
@@ -128,10 +128,10 @@ public interface FacilityMapper {
     "AND ps.active = true ")
   @Results(value = {
     @Result(property = "geographicZone.id", column = "geographicZoneId"),
-    @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),
-    @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById"))
+    @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
+    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById"))
   })
-  List<Facility> getFacilitiesBy(@Param(value = "programId") Integer programId, @Param(value = "requisitionGroupIds") String requisitionGroupIds);
+  List<Facility> getFacilitiesBy(@Param(value = "programId") Long programId, @Param(value = "requisitionGroupIds") String requisitionGroupIds);
 
   @Select("SELECT id, code, name FROM facilities WHERE " +
     "LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%' " +
@@ -144,10 +144,10 @@ public interface FacilityMapper {
     "WHERE U.id = #{userId} AND RR.rightName = ANY(#{commaSeparatedRights}::VARCHAR[]) AND RA.supervisoryNodeId IS NULL"})
   @Results(value = {
     @Result(property = "geographicZone.id", column = "geographicZoneId"),
-    @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),
-    @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById"))
+    @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
+    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById"))
   })
-  Facility getHomeFacilityWithRights(@Param("userId") Integer userId, @Param("commaSeparatedRights") String commaSeparatedRights);
+  Facility getHomeFacilityWithRights(@Param("userId") Long userId, @Param("commaSeparatedRights") String commaSeparatedRights);
 
   @Select({"SELECT DISTINCT f.* FROM facilities f",
     "INNER JOIN requisition_group_members rgm ON f.id= rgm.facilityId",
@@ -155,8 +155,8 @@ public interface FacilityMapper {
     "AND f.active = true"})
   @Results(value = {
     @Result(property = "geographicZone.id", column = "geographicZoneId"),
-    @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),
-    @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById"))
+    @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
+    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById"))
   })
   List<Facility> getAllInRequisitionGroups(@Param("requisitionGroupIds") String requisitionGroupIds);
 

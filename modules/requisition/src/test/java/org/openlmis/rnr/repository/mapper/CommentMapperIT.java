@@ -2,6 +2,7 @@ package org.openlmis.rnr.repository.mapper;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
@@ -9,6 +10,7 @@ import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.*;
+import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +32,15 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessin
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-requisition.xml")
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 @Transactional
 public class CommentMapperIT {
 
-  public static final int MODIFIED_BY = 1;
-  public static final Integer HIV = 1;
+  public static final Long MODIFIED_BY = 1L;
+  public static final Long HIV = 1L;
   private Rnr requisition;
 
   @Autowired
@@ -96,7 +99,7 @@ public class CommentMapperIT {
 
   @Test
   public void shouldInsertAComment() throws Exception {
-    Comment comment = new Comment(null, requisition.getId(), user, "A new Comment", null);
+    Comment comment = new Comment(requisition.getId(), user, "A new Comment", null);
     int numberOfRows = mapper.insert(comment);
 
     assertThat(numberOfRows, is(notNullValue()));
@@ -104,7 +107,7 @@ public class CommentMapperIT {
 
   @Test
   public void shouldGetAllCommentsForARnR() throws Exception {
-    mapper.insert(new Comment(null, requisition.getId(), user, "A new Comment1",null));
+    mapper.insert(new Comment(requisition.getId(), user, "A new Comment1",null));
 
     List<Comment> listOfComments = mapper.getByRnrId(requisition.getId());
 

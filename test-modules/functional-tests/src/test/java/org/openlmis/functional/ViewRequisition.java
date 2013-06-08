@@ -12,7 +12,11 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.*;
+import org.testng.annotations.Test;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.DataProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +66,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.verifyNoRequisitionFound();
+    dbWrapper.insertApprovedQuantity(10);
     dbWrapper.updateRequisitionStatus(AUTHORIZED);
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.clickRnRList();
@@ -97,7 +102,7 @@ public class ViewRequisition extends TestCaseHelper {
 
     HomePage homePageApproved = viewRequisitionPageApproved.verifyFieldsPostApproval("25.00", "1");
 
-    dbWrapper.updateRequisition("F10");
+    dbWrapper.updateSupplyingFacilityForRequisition("F10");
     ConvertOrderPage convertOrderPage = homePageApproved.navigateConvertToOrder();
     convertOrderPage.convertToOrder();
     ViewRequisitionPage viewRequisitionPageOrdered = homePageApproved.navigateViewRequisition();

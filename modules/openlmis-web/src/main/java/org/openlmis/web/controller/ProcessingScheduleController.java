@@ -53,7 +53,7 @@ public class ProcessingScheduleController extends BaseController {
 
   @RequestMapping(value = "/schedules/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
-  public ResponseEntity<OpenLmisResponse> update(@RequestBody ProcessingSchedule processingSchedule, @PathVariable("id") Integer id, HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> update(@RequestBody ProcessingSchedule processingSchedule, @PathVariable("id") Long id, HttpServletRequest request) {
     processingSchedule.setId(id);
     processingSchedule.setModifiedBy(loggedInUserId(request));
     return saveSchedule(processingSchedule, false);
@@ -61,7 +61,7 @@ public class ProcessingScheduleController extends BaseController {
 
   @RequestMapping(value = "/schedules/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
-  public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Integer id) {
+  public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Long id) {
     try{
       ProcessingSchedule processingSchedule = processingScheduleService.get(id);
       return OpenLmisResponse.response(SCHEDULE, processingSchedule);

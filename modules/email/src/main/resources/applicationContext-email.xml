@@ -9,30 +9,47 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:int-jdbc="http://www.springframework.org/schema/integration/jdbc"
+       xmlns:int="http://www.springframework.org/schema/integration"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
-                           ">
+                           http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+                           http://www.springframework.org/schema/integration/jdbc http://www.springframework.org/schema/integration/jdbc/spring-integration-jdbc.xsd">
 
-    <context:annotation-config/>
-    <context:spring-configured/>
+  <context:annotation-config/>
+  <context:spring-configured/>
+  <int:annotation-config/>
 
+  <context:component-scan base-package="org.openlmis.email"/>
+  <import resource="classpath*:applicationContext-db.xml"/>
 
-    <context:component-scan base-package="org.openlmis.email"/>
+  <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <property name="host" value="${mail.sender.host}"/>
+    <property name="port" value="${mail.sender.port}"/>
+    <property name="username" value="${mail.sender.username}"/>
+    <property name="password" value="${mail.sender.password}"/>
+    <property name="protocol" value="${mail.sender.protocol}"/>
+    <property name="javaMailProperties" ref="mailProperties"/>
+  </bean>
 
-    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="host" value="${mail.sender.host}"/>
-        <property name="port" value="${mail.sender.port}"/>
-        <property name="username" value="${mail.sender.username}"/>
-        <property name="password" value="${mail.sender.password}"/>
-        <property name="protocol" value="${mail.sender.protocol}"/>
-        <property name="javaMailProperties" ref="mailProperties"/>
-    </bean>
+  <int:channel id="inputChannel"/>
 
-    <util:properties id="mailProperties">
-        <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
-        <prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
-        <prop key="mail.smtp.quitwait">${mail.smtp.quitwait}</prop>
-    </util:properties>
+  <int-jdbc:inbound-channel-adapter channel="inputChannel"
+                                    data-source="dataSource"
+                                    query="SELECT * FROM email_notifications WHERE sent = false"
+                                    row-mapper="emailMessageRowMapper"
+                                    max-rows-per-poll="${email.notification.rows.per.poll}"
+                                    update="UPDATE email_notifications SET sent = true WHERE id IN (:id)">
+    <int:poller fixed-rate="${email.notification.polling.rate}">
+      <int:transactional/>
+    </int:poller>
+  </int-jdbc:inbound-channel-adapter>
+
+  <util:properties id="mailProperties">
+    <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+    <prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
+    <prop key="mail.smtp.quitwait">${mail.smtp.quitwait}</prop>
+  </util:properties>
 
 </beans>

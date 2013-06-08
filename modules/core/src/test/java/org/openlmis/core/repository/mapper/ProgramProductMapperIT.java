@@ -9,12 +9,14 @@ package org.openlmis.core.repository.mapper;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -22,6 +24,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
@@ -32,10 +35,11 @@ import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProductBuilder.displayOrder;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class ProgramProductMapperIT {
   @Autowired
   ProgramMapper programMapper;
@@ -66,7 +70,7 @@ public class ProgramProductMapperIT {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProductMapper.insert(programProduct);
 
-    Integer id = programProductMapper.getIdByProgramAndProductId(program.getId(), product.getId());
+    Long id = programProductMapper.getIdByProgramAndProductId(program.getId(), product.getId());
 
     assertThat(id, is(programProduct.getId()));
   }
@@ -84,17 +88,17 @@ public class ProgramProductMapperIT {
   @Test
   public void shouldUpdateCurrentPriceForProgramProduct() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true, new Money("100.0"));
-    programProduct.setModifiedBy(1);
+    programProduct.setModifiedBy(1L);
     programProduct.setModifiedDate(new Date());
     programProductMapper.insert(programProduct);
-     Money price = new Money("200.01");
+    Money price = new Money("200.01");
     programProduct.setCurrentPrice(price);
 
     programProductMapper.updateCurrentPrice(programProduct);
 
-    ProgramProduct returnedProgramProduct = programProductMapper.getById(programProduct.getId());
+    ProgramProduct returnedProgramProduct = programProductMapper.getByProgramAndProductId(program.getId(), product.getId());
     assertThat(returnedProgramProduct.getCurrentPrice(), is(price));
-    assertThat(returnedProgramProduct.getModifiedBy(), is(1));
+    assertThat(returnedProgramProduct.getModifiedBy(), is(1L));
     assertThat(returnedProgramProduct.getModifiedDate(), is(notNullValue()));
   }
 
@@ -108,9 +112,21 @@ public class ProgramProductMapperIT {
 
     programProductMapper.update(programProduct);
 
-    ProgramProduct dbProgramProduct = programProductMapper.getByProgramAndProductId(program.getId(),product.getId());
+    ProgramProduct dbProgramProduct = programProductMapper.getByProgramAndProductId(program.getId(), product.getId());
 
-    assertThat(dbProgramProduct.getDosesPerMonth(),is(10));
-    assertThat(dbProgramProduct.isActive(),is(false));
+    assertThat(dbProgramProduct.getDosesPerMonth(), is(10));
+    assertThat(dbProgramProduct.isActive(), is(false));
+  }
+
+  @Test
+  public void shouldGetProgramProductsByProgram() {
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+
+    programProductMapper.insert(programProduct);
+
+    List<ProgramProduct> programProducts = programProductMapper.getByProgram(program);
+
+    assertThat(programProducts.size(), is(1));
+    assertThat(programProducts.get(0).getId(), is(programProduct.getId()));
   }
 }

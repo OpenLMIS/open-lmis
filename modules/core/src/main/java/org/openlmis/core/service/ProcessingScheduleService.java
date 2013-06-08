@@ -51,11 +51,11 @@ public class ProcessingScheduleService {
     return repository.get(processingSchedule.getId());
   }
 
-  public List<ProcessingPeriod> getAllPeriods(int scheduleId) {
+  public List<ProcessingPeriod> getAllPeriods(Long scheduleId) {
     return periodRepository.getAll(scheduleId);
   }
 
-  public ProcessingSchedule get(Integer id) {
+  public ProcessingSchedule get(Long id) {
     ProcessingSchedule processingSchedule = repository.get(id);
     if (processingSchedule == null) throw new DataException("Schedule not found");
     return processingSchedule;
@@ -65,11 +65,11 @@ public class ProcessingScheduleService {
     periodRepository.insert(processingPeriod);
   }
 
-  public void deletePeriod(Integer processingPeriodId) {
+  public void deletePeriod(Long processingPeriodId) {
     periodRepository.delete(processingPeriodId);
   }
 
-  public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Integer facilityId, Integer programId, Date programStartDate, Integer startingPeriod) {
+  public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Long facilityId, Long programId, Date programStartDate, Long startingPeriod) {
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(new Facility(facilityId), new Program(programId));
     return periodRepository.getAllPeriodsAfterDateAndPeriod(requisitionGroupProgramSchedule.getProcessingSchedule().getId(),
       startingPeriod, programStartDate, new Date());
@@ -83,7 +83,7 @@ public class ProcessingScheduleService {
     return requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(requisitionGroup.getId(), program.getId());
   }
 
-  public ProcessingPeriod getPeriodById(Integer periodId) {
+  public ProcessingPeriod getPeriodById(Long periodId) {
     return periodRepository.getById(periodId);
   }
 

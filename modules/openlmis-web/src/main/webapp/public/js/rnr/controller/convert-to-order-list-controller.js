@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ConvertToOrderListController($scope, requisitionList, RequisitionOrder, RequisitionForConvertToOrder, $dialog) {
+function ConvertToOrderListController($scope, requisitionList, Orders, RequisitionForConvertToOrder, $dialog) {
   $scope.requisitions = requisitionList;
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];
@@ -17,7 +17,7 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
     showFooter: false,
     showSelectionCheckbox: true,
     showColumnMenu: false,
-    sortInfo: { field: 'submittedDate', direction: 'ASC'},
+    sortInfo:{ fields: ['submittedDate'], directions: ['asc'] },
     showFilter: false,
     columnDefs: [
       {field: 'programName', displayName: 'Program' },
@@ -55,7 +55,7 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
       header: "Confirm Action",
       body: "Are you sure? Please confirm."
     };
-    OpenLmisDialog.new(options, $scope.dialogCloseCallback, $dialog);
+    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog);
   };
 
   $scope.convertToOrder = function () {
@@ -84,8 +84,7 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
       $scope.error = "Error Occurred";
     };
 
-    var rnrList = {"rnrList": $scope.gridOptions.selectedItems};
-    RequisitionOrder.save({}, rnrList, successHandler, errorHandler);
+    Orders.post({}, $scope.gridOptions.selectedItems, successHandler, errorHandler);
   }
 
   function contains(string, query) {

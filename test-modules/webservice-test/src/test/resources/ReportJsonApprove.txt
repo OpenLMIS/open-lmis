@@ -1,0 +1,11 @@
+{
+    "requisitionId": "",
+    "userId": "",
+    "products": [
+        {
+            "productCode": "",
+            "quantityApproved": "",
+            "remarks": "1"
+        }
+    ]
+}

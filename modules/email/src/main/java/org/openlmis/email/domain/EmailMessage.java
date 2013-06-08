@@ -9,13 +9,34 @@ package org.openlmis.email.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.email.exception.EmailException;
+import org.springframework.mail.SimpleMailMessage;
+
+import static org.apache.commons.lang.StringUtils.isEmpty;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmailMessage {
-
-  private String to;
+  private Long id;
+  private String receiver;
   private String subject;
-  private String text;
+  private String content;
+
+  public EmailMessage(String receiver, String subject, String content) {
+    this.receiver = receiver;
+    this.subject = subject;
+    this.content = content;
+  }
+
+  public SimpleMailMessage createSimpleMailMessage() {
+    if (isEmpty(this.receiver)) throw new EmailException("Message 'To' not set");
+
+    SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+    simpleMailMessage.setSubject(this.subject);
+    simpleMailMessage.setText(this.content);
+    simpleMailMessage.setTo(this.receiver);
+
+    return simpleMailMessage;
+  }
 }

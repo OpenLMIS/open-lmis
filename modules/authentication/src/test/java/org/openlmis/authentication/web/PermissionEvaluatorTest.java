@@ -8,19 +8,23 @@ package org.openlmis.authentication.web;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.RoleRightsService;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class PermissionEvaluatorTest {
 
@@ -41,7 +45,7 @@ public class PermissionEvaluatorTest {
       add(Right.CONFIGURE_RNR);
       add(Right.AUTHORIZE_REQUISITION);
     }};
-    Integer userId = 1;
+    Long userId = 1L;
     when(roleRightsService.getRights(userId)).thenReturn(rights);
 
     assertThat(evaluator.hasPermission(userId, "AUTHORIZE_REQUISITION, CONFIGURE_RNR"), is(true));

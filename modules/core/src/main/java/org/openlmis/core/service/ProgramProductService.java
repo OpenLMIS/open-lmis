@@ -15,6 +15,8 @@ import org.openlmis.core.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @NoArgsConstructor
 public class ProgramProductService {
@@ -31,7 +33,7 @@ public class ProgramProductService {
     this.productRepository = productRepository;
   }
 
-  public Integer getIdByProgramIdAndProductId(Integer programId, Integer productId) {
+  public Long getIdByProgramIdAndProductId(Long programId, Long productId) {
     return programProductRepository.getIdByProgramIdAndProductId(programId, productId);
   }
 
@@ -65,9 +67,12 @@ public class ProgramProductService {
   }
 
   private void populateProgramProductIds(ProgramProduct programProduct) {
-    Integer programId = programRepository.getIdByCode(programProduct.getProgram().getCode());
-    Integer productId = productRepository.getIdByCode(programProduct.getProduct().getCode());
+    Long programId = programRepository.getIdByCode(programProduct.getProgram().getCode());
+    Long productId = productRepository.getIdByCode(programProduct.getProduct().getCode());
     programProduct.setId(programProductRepository.getIdByProgramIdAndProductId(programId, productId));
   }
 
+  public List<ProgramProduct> getByProgram(Program program) {
+    return programProductRepository.getByProgram(program);
+  }
 }

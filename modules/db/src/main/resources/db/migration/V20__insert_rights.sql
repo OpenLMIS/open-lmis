@@ -3,6 +3,7 @@
 
 INSERT INTO rights (name, adminRight, description) VALUES
  ('UPLOADS',TRUE,'Permission to upload'),
+ ('UPLOAD_REPORT',TRUE,'Permission to upload reports'),
  ('MANAGE_FACILITY',TRUE,'Permission to manage facilities(crud)'),
  ('MANAGE_ROLE',TRUE,'Permission to create and edit roles in the system'),
  ('MANAGE_SCHEDULE',TRUE,'Permission to create and edit schedules in the system'),
@@ -13,4 +14,6 @@ INSERT INTO rights (name, adminRight, description) VALUES
  ('MANAGE_USERS',TRUE,'Permission to create and view users'),
  ('CONVERT_TO_ORDER',TRUE,'Permission to convert requisitions to order'),
  ('VIEW_ORDER',TRUE,'Permission to view orders'),
- ('VIEW_REQUISITION',FALSE,'Permission to view requisition');
+ ('VIEW_REQUISITION',FALSE,'Permission to view requisition'),
+ ('VIEW_REPORTS',TRUE,'Permission to view reports'),
+ ('MANAGE_REPORTS',TRUE,'Permission to manage reports');

@@ -7,8 +7,10 @@
 package org.openlmis.core.repository.mapper;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -18,10 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class ProductCategoryMapperIT {
 
   @Autowired
@@ -63,12 +66,12 @@ public class ProductCategoryMapperIT {
     ProductCategory productCategory = new ProductCategory();
     productCategory.setCode("category code");
     productCategory.setName("category name");
-    productCategory.setModifiedBy(1);
+    productCategory.setModifiedBy(1L);
     productCategory.setDisplayOrder(1);
     productCategoryMapper.insert(productCategory);
 
     productCategory.setName("updated category name");
-    productCategory.setModifiedBy(2);
+    productCategory.setModifiedBy(2L);
     productCategory.setDisplayOrder(2);
     productCategoryMapper.update(productCategory);
 
@@ -87,7 +90,7 @@ public class ProductCategoryMapperIT {
     productCategory.setDisplayOrder(1);
     productCategoryMapper.insert(productCategory);
 
-    Integer categoryId = productCategoryMapper.getProductCategoryIdByCode(productCategory.getCode());
+    Long categoryId = productCategoryMapper.getProductCategoryIdByCode(productCategory.getCode());
 
     assertThat(categoryId, is(productCategory.getId()));
   }

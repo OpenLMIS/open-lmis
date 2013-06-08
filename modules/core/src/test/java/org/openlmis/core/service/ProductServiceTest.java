@@ -9,6 +9,7 @@ package org.openlmis.core.service;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -17,14 +18,13 @@ import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductRepository;
-
-import java.util.Calendar;
-import java.util.Date;
+import org.openlmis.db.categories.UnitTests;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.service.ProductService.INVALID_PRODUCT_CATEGORY_CODE;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ProductServiceTest {
 
@@ -42,7 +42,7 @@ public class ProductServiceTest {
 
   @Before
   public void setUp() throws Exception {
-    productService = new ProductService(productRepository, categoryService);
+    productService = new ProductService(productRepository, categoryService, null);
   }
 
   @Test
@@ -84,7 +84,7 @@ public class ProductServiceTest {
   @Test
   public void shouldUpdateProductIfPresent() {
     Product product = new Product();
-    product.setId(2);
+    product.setId(2L);
 
     productService.save(product);
 

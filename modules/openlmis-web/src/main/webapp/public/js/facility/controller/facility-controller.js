@@ -4,8 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function FacilityController($scope, facilityReferenceData, $routeParams, $http, facility, Facility, $location, $dialog) {
-
+function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, RestoreFacility, $location, $dialog, messageService) {
   $scope.message = "";
   initialize();
 
@@ -47,7 +46,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
   $scope.saveFacility = function () {
     if ($scope.facilityForm.$error.pattern || $scope.facilityForm.$error.required) {
       $scope.showError = "true";
-      $scope.error = "There are some errors in the form. Please resolve them.";
+      $scope.error = messageService.get('form.error');
       $scope.message = "";
       return;
     }
@@ -71,36 +70,8 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     if (!$scope.isEdit) {
       Facility.save({}, $scope.facility, successFn, errorFn);
     } else {
-      Facility.update({id:$scope.facility.id}, $scope.facility, successFn, errorFn);
+      Facility.update({id: $scope.facility.id}, $scope.facility, successFn, errorFn);
     }
-  };
-
-
-  var putFacilityRequest = function (requestUrl) {
-    $http.put(requestUrl, $scope.facility)
-      .success(function (data) {
-        $scope.showError = "true";
-        $scope.error = "";
-        $scope.message = data.success;
-        $scope.facility = getFacilityWithDateObjects(data.facility);
-        $scope.originalFacilityCode = data.facility.code;
-        $scope.originalFacilityName = data.facility.name;
-        populateFlags($scope);
-      }).error(function (data) {
-        $scope.showError = "true";
-        $scope.message = "";
-        $scope.error = data.error;
-        $scope.facility = facility;
-        $scope.originalFacilityCode = data.facility.code;
-        $scope.originalFacilityName = data.facility.name;
-        populateFlags($scope);
-      });
-  };
-
-  $scope.restoreFacility = function (active) {
-    $scope.activeConfirmModal = false;
-    $scope.facility.active = active;
-    putFacilityRequest('/facility/update/restore.json');
   };
 
   $scope.blurDateFields = function () {
@@ -121,11 +92,11 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
   $scope.showConfirmDateChangeWindow = function (program) {
     window.program = program;
     var dialogOpts = {
-      id:"dateChangeConfirmModal",
-      header:"Set Program Start Date",
-      body:"Facility Staff will submit back-due R&Rs for this program, starting from this date."
+      id: "dateChangeConfirmModal",
+      header: messageService.get('message.setProgramStartDate'),
+      body: messageService.get('message.dateChangeConfirmMessage')
     };
-    OpenLmisDialog.new(dialogOpts, $scope.dateChangeCallback, $dialog);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.dateChangeCallback, $dialog);
   };
 
   $scope.dateChangeCallback = function (result) {
@@ -143,21 +114,70 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
   };
 
   $scope.getProgramNameById = function (programId) {
-    return (_.findWhere($scope.programs, {'id':programId})).name;
+    return (_.findWhere($scope.programs, {'id': programId})).name;
+  };
+
+  var successFunc = function (data) {
+    $scope.showError = "true";
+    $scope.error = "";
+    $scope.message = data.success;
+    $scope.facility = getFacilityWithDateObjects(data.facility);
+    $scope.originalFacilityCode = data.facility.code;
+    $scope.originalFacilityName = data.facility.name;
+    populateFlags($scope);
+  };
+
+  var errorFunc = function (data) {
+    $scope.showError = "true";
+    $scope.message = "";
+    $scope.error = data.data.error;
+  };
+
+  $scope.restoreFacility = function (active) {
+    $scope.activeConfirmModal = false;
+    $scope.facility.active = active;
+    RestoreFacility.update({id: $scope.facility.id, active: active}, {}, successFunc, errorFunc);
   };
 
   $scope.deleteFacilityCallBack = function (result) {
     if (!result) return;
-    putFacilityRequest('/facility/update/delete.json');
+    Facility.remove({id: $scope.facility.id}, {}, successFunc, errorFunc);
   };
 
   $scope.showConfirmFacilityDeleteWindow = function () {
     var dialogOpts = {
-      id:"deleteFacilityDialog",
-      header:"Delete facility",
-      body:"'{0}' / '{1}' will be deleted from the system.".format($scope.originalFacilityName, $scope.originalFacilityCode)
+      id: "deleteFacilityDialog",
+      header: messageService.get('delete.facility.header'),
+      body: messageService.get('delete.facility.confirm', $scope.originalFacilityName, $scope.originalFacilityCode)
     };
-    OpenLmisDialog.new(dialogOpts, $scope.deleteFacilityCallBack, $dialog);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.deleteFacilityCallBack, $dialog);
+  };
+
+  $scope.showConfirmFacilityRestore = function () {
+    var dialogOpts = {
+      id: "restoreConfirmModal",
+      header: messageService.get("create.facility.restoreFacility"),
+      body: "'{0}' / '{1}' will be restored to the system.".format($scope.originalFacilityName, $scope.originalFacilityCode)
+    };
+    OpenLmisDialog.newDialog(dialogOpts, $scope.restoreFacilityCallBack, $dialog);
+  };
+
+  $scope.restoreFacilityCallBack = function (result) {
+    if (!result) return;
+    $scope.showConfirmFacilityActivate();
+  };
+
+  $scope.showConfirmFacilityActivate = function () {
+    var dialogOpts = {
+      id: "activeConfirmModel",
+      header: messageService.get("create.facility.activateFacility"),
+      body: messageService.get("create.facility.setFacilityActive")
+    };
+    OpenLmisDialog.newDialog(dialogOpts, $scope.activateFacilityCallBack, $dialog);
+  };
+
+  $scope.activateFacilityCallBack = function (result) {
+    $scope.restoreFacility(result);
   };
 
   function updateProgramsToDisplay() {
@@ -180,7 +200,7 @@ var populateFlags = function ($scope) {
 
 FacilityController.resolve = {
 
-  facilityReferenceData:function ($q, $timeout, FacilityReferenceData) {
+  facilityReferenceData: function ($q, $timeout, FacilityReferenceData) {
     var deferred = $q.defer();
     $timeout(function () {
       FacilityReferenceData.get({}, function (data) {
@@ -190,14 +210,14 @@ FacilityController.resolve = {
     return deferred.promise;
   },
 
-  facility:function ($q, $timeout, Facility, $route) {
+  facility: function ($q, $timeout, Facility, $route) {
     if ($route.current.params.facilityId == undefined) return undefined;
 
     var deferred = $q.defer();
     var facilityId = $route.current.params.facilityId;
 
     $timeout(function () {
-      Facility.get({id:facilityId}, function (data) {
+      Facility.get({id: facilityId}, function (data) {
         deferred.resolve(data.facility);
       }, {});
     }, 100);

@@ -9,12 +9,13 @@ package org.openlmis.rnr.domain;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RequisitionBuilder;
-import org.openlmis.rnr.builder.RnrColumnBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 
 import java.util.ArrayList;
@@ -24,22 +25,29 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
-import static org.openlmis.rnr.builder.RequisitionBuilder.status;
-import static org.openlmis.rnr.builder.RnrColumnBuilder.columnName;
-import static org.openlmis.rnr.builder.RnrColumnBuilder.visible;
+import static org.openlmis.rnr.builder.RequisitionBuilder.modifiedBy;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
-import static org.openlmis.rnr.domain.RnrStatus.*;
+import static org.openlmis.rnr.domain.Rnr.PRODUCT_CODE_INVALID;
+import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
+import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
+import static org.powermock.api.mockito.PowerMockito.when;
 
+@Category(UnitTests.class)
 public class RnrTest {
   @Rule
   public ExpectedException exception = ExpectedException.none();
   private Rnr rnr;
+  List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
 
   @Before
   public void setUp() throws Exception {
+    initMocks(this);
     rnr = make(a(defaultRnr));
+    lossesAndAdjustmentsTypes = mock(ArrayList.class);
   }
 
   @Test
@@ -54,10 +62,11 @@ public class RnrTest {
     rnr.setNonFullSupplyLineItems(asList(rnrLineItem2));
 
     List<RnrColumn> programRnrColumns = new ArrayList<>();
-    rnr.calculate(programRnrColumns);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(programRnrColumns);
+    rnr.calculate(template, lossesAndAdjustmentsTypes);
 
-    verify(rnrLineItem1).validateMandatoryFields(programRnrColumns);
-    verify(rnrLineItem1).validateCalculatedFields(programRnrColumns);
+    verify(rnrLineItem1).validateMandatoryFields(template);
+    verify(rnrLineItem1).validateCalculatedFields(template);
 
     verify(rnrLineItem2).validateNonFullSupply();
   }
@@ -94,50 +103,6 @@ public class RnrTest {
     assertThat(previousNormalizedConsumptions.get(0), is(2));
   }
 
-  @Test
-  public void shouldCopyApproverEditableFields() throws Exception {
-    rnr.setModifiedBy(1);
-    Rnr savedRnr = make(a(defaultRnr));
-    RnrLineItem savedLineItem = savedRnr.getFullSupplyLineItems().get(0);
-    RnrLineItem savedLineItemSpy = spy(savedLineItem);
-    savedRnr.getFullSupplyLineItems().set(0, savedLineItemSpy);
-    savedRnr.copyApproverEditableFields(rnr);
-    verify(savedLineItemSpy).copyApproverEditableFields(rnr.getFullSupplyLineItems().get(0));
-    assertThat(savedRnr.getModifiedBy(), is(1));
-  }
-
-  @Test
-  public void shouldCopyUserEditableFields() throws Exception {
-    List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
-    nonFullSupplyLineItems.add(new RnrLineItem());
-
-    rnr.setNonFullSupplyLineItems(nonFullSupplyLineItems);
-    rnr.setModifiedBy(1);
-    Rnr savedRnr = make(a(defaultRnr));
-    savedRnr.setModifiedBy(1);
-    RnrLineItem savedLineItem = savedRnr.getFullSupplyLineItems().get(0);
-    RnrLineItem savedLineItemSpy = spy(savedLineItem);
-    savedRnr.getFullSupplyLineItems().set(0, savedLineItemSpy);
-    ArrayList<RnrColumn> programRnrColumns = setupProgramTemplate();
-
-    savedRnr.copyUserEditableFields(rnr, programRnrColumns);
-
-    verify(savedLineItemSpy).copyUserEditableFields(rnr.getFullSupplyLineItems().get(0), programRnrColumns);
-    assertThat(savedRnr.getModifiedBy(), is(1));
-    assertThat(savedRnr.getNonFullSupplyLineItems(), is(nonFullSupplyLineItems));
-    assertThat(savedRnr.getNonFullSupplyLineItems().get(0).getModifiedBy(), is(rnr.getModifiedBy()));
-  }
-
-  @Test
-  public void shouldGiveErrorIfCorrespondingLineItemNotFound() throws Exception {
-    Rnr otherRequisition = new Rnr();
-    List<RnrColumn> programRnrColumns = new ArrayList<>();
-
-    exception.expect(DataException.class);
-    exception.expectMessage("rnr.validation.error");
-
-    rnr.copyUserEditableFields(otherRequisition, programRnrColumns);
-  }
 
   @Test
   public void shouldFindLineItemInPreviousRequisitionAndSetBeginningBalance() throws Exception {
@@ -164,27 +129,26 @@ public class RnrTest {
   public void shouldCalculateCalculatedFieldsAccordingToProgramTemplate() throws Exception {
     ArrayList<RnrColumn> programRequisitionColumns = new ArrayList<>();
     ProcessingPeriod period = new ProcessingPeriod();
-    ArrayList<RnrLineItem> lineItems = new ArrayList<>();
-    ArrayList<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
     RnrLineItem firstLineItem = mock(RnrLineItem.class);
     RnrLineItem secondLineItem = mock(RnrLineItem.class);
-    lineItems.add(firstLineItem);
-    nonFullSupplyLineItems.add(secondLineItem);
 
-
-    rnr.setFullSupplyLineItems(lineItems);
-    rnr.setNonFullSupplyLineItems(nonFullSupplyLineItems);
+    rnr.setFullSupplyLineItems(asList(firstLineItem));
+    rnr.setNonFullSupplyLineItems(asList(secondLineItem));
     rnr.setPeriod(period);
     rnr.setStatus(SUBMITTED);
-    Money fullSupplyItemSubmittedCost = new Money("10");
-    Money nonFullSupplyItemSubmittedCost = new Money("20");
-    when(firstLineItem.calculateCost()).thenReturn(fullSupplyItemSubmittedCost);
-    when(secondLineItem.calculateCost()).thenReturn(nonFullSupplyItemSubmittedCost);
-    rnr.calculate(programRequisitionColumns);
 
-    verify(firstLineItem).calculate(period, programRequisitionColumns, SUBMITTED);
-    assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(fullSupplyItemSubmittedCost));
-    assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(nonFullSupplyItemSubmittedCost));
+    when(firstLineItem.calculateCost()).thenReturn(new Money("10"));
+    when(secondLineItem.calculateCost()).thenReturn(new Money("20"));
+    ProgramRnrTemplate template = new ProgramRnrTemplate(programRequisitionColumns);
+
+    rnr.calculate(template, lossesAndAdjustmentsTypes);
+
+    verify(firstLineItem).calculateForFullSupply(period, template, SUBMITTED, lossesAndAdjustmentsTypes);
+    verify(firstLineItem).calculateCost();
+    verify(secondLineItem).calculateCost();
+    verify(secondLineItem).calculatePacksToShip();
+    assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(new Money("10")));
+    assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("20")));
   }
 
   @Test
@@ -193,19 +157,6 @@ public class RnrTest {
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
 
-  @Test
-  public void shouldNotCopyInvisibleTemplateFieldsFromRequisition() throws Exception {
-    ArrayList<RnrColumn> programRnrColumns = setupProgramTemplate();
-
-    RnrLineItem newLineItem = make(a(defaultRnrLineItem, with(stockInHand, 2), with(beginningBalance, 7)));
-
-    Rnr requisitionForSaving = make(a(defaultRnr, with(status, SUBMITTED)));
-    requisitionForSaving.setFullSupplyLineItems(asList(newLineItem));
-    rnr.copyUserEditableFields(requisitionForSaving, programRnrColumns);
-
-    assertThat(rnr.getFullSupplyLineItems().get(0).getStockInHand(), is(2));
-    assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(BEGINNING_BALANCE));
-  }
 
   @Test
   public void testCalculatePacksToShip() throws Exception {
@@ -216,42 +167,185 @@ public class RnrTest {
       with(packSize, 10),
       with(roundToZero, false)));
     rnr.setFullSupplyLineItems(asList(lineItem));
+    rnr.setNonFullSupplyLineItems(asList(lineItem));
 
     rnr.calculateForApproval();
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getPacksToShip(), is(7));
+    assertThat(rnr.getNonFullSupplyLineItems().get(0).getPacksToShip(), is(7));
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(new Money("28")));
-    assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("0")));
-  }
-
-  @Test
-  public void shouldCopyUserEditableFieldsIdAccordingToStatus() throws Exception {
-    Rnr rnr = spy(new Rnr());
-    rnr.setStatus(INITIATED);
-    Rnr otherRnr = new Rnr();
-    List<RnrColumn> programRnrColumns = new ArrayList<>();
-    rnr.copyEditableFields(otherRnr, programRnrColumns);
-    verify(rnr).copyUserEditableFields(otherRnr, programRnrColumns);
-
-    rnr.setStatus(IN_APPROVAL);
-    rnr.copyEditableFields(otherRnr, programRnrColumns);
-    verify(rnr).copyApproverEditableFields(otherRnr);
+    assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("28")));
   }
 
   @Test
   public void shouldReleaseARequisitionAsAnOrder() throws Exception {
-    OrderBatch orderBatch = new OrderBatch();
-    Integer userId = 1;
-    rnr.convertToOrder(orderBatch, userId);
+    Long userId = 1L;
+    rnr.convertToOrder(userId);
     assertThat(rnr.getStatus(), is(RELEASED));
-    assertThat(rnr.getOrderBatch(), is(orderBatch));
     assertThat(rnr.getModifiedBy(), is(userId));
   }
 
-  private ArrayList<RnrColumn> setupProgramTemplate() {
-    ArrayList<RnrColumn> programRnrColumns = new ArrayList<>();
-    programRnrColumns.add(make(a(RnrColumnBuilder.defaultRnrColumn, with(columnName, "stockInHand"), with(visible, true))));
-    programRnrColumns.add(make(a(RnrColumnBuilder.defaultRnrColumn, with(columnName, "beginningBalance"), with(visible, false))));
-    return programRnrColumns;
+  @Test
+  public void shouldValidateRnrForApproval() throws Exception {
+    final RnrLineItem rnrLineItem1 = mock(RnrLineItem.class);
+    final RnrLineItem rnrLineItem2 = mock(RnrLineItem.class);
+    final RnrLineItem rnrLineItem3 = mock(RnrLineItem.class);
+    final RnrLineItem rnrLineItem4 = mock(RnrLineItem.class);
+
+    rnr.setFullSupplyLineItems(asList(rnrLineItem1, rnrLineItem2));
+    rnr.setNonFullSupplyLineItems(asList(rnrLineItem3, rnrLineItem4));
+
+    rnr.validateForApproval();
+
+    verify(rnrLineItem1).validateForApproval();
+    verify(rnrLineItem2).validateForApproval();
+    verify(rnrLineItem3).validateForApproval();
+    verify(rnrLineItem4).validateForApproval();
+  }
+
+  @Test
+  public void shouldCopyCreatorEditableFields() throws Exception {
+    long userId = 5L;
+    Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
+    ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
+
+    RnrLineItem lineItem1 = make(a(defaultRnrLineItem, with(beginningBalance, 24), with(productCode, "P1")));
+    RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(beginningBalance, 25), with(productCode, "P2")));
+    RnrLineItem lineItem3 = make(a(defaultRnrLineItem, with(beginningBalance, 27), with(productCode, "P3")));
+    RnrLineItem lineItem4 = make(a(defaultRnrLineItem, with(productCode, "P4")));
+
+    RnrLineItem spyLineItem1 = spy(lineItem1);
+    RnrLineItem spyLineItem2 = spy(lineItem2);
+    RnrLineItem spyLineItem3 = spy(lineItem3);
+    RnrLineItem spyLineItem4 = spy(lineItem4);
+
+    newRnr.setFullSupplyLineItems(asList(lineItem1, lineItem2));
+    newRnr.setNonFullSupplyLineItems(asList(lineItem3, lineItem4));
+
+    rnr.setFullSupplyLineItems(asList(spyLineItem1, spyLineItem2));
+    rnr.setNonFullSupplyLineItems(asList(spyLineItem3, spyLineItem4));
+
+    rnr.copyCreatorEditableFields(newRnr, template);
+
+    verify(spyLineItem1).copyCreatorEditableFieldsForFullSupply(lineItem1, template);
+    verify(spyLineItem2).copyCreatorEditableFieldsForFullSupply(lineItem2, template);
+    verify(spyLineItem3).copyCreatorEditableFieldsForNonFullSupply(lineItem3, template);
+    verify(spyLineItem4).copyCreatorEditableFieldsForNonFullSupply(lineItem4, template);
+    assertThat(rnr.getModifiedBy(), is(newRnr.getModifiedBy()));
+    assertModifiedBy(userId);
+  }
+
+  private void assertModifiedBy(long userId) {
+    List<RnrLineItem> finalLineItems = new ArrayList<RnrLineItem>() {{
+      addAll(rnr.getFullSupplyLineItems());
+      addAll(rnr.getNonFullSupplyLineItems());
+    }};
+    for (RnrLineItem lineItem : finalLineItems) {
+      assertThat(lineItem.getModifiedBy(), is(userId));
+    }
+  }
+
+  @Test
+  public void shouldNotCopyFieldsForExtraFullSupplyLineItemsAndThrowError() throws Exception {
+    long userId = 5L;
+    Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
+    ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
+
+    RnrLineItem lineItem1 = make(a(defaultRnrLineItem, with(beginningBalance, 24), with(productCode, "P1")));
+    RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(beginningBalance, 25), with(productCode, "P2")));
+
+    RnrLineItem spyLineItem1 = spy(lineItem1);
+
+    newRnr.setFullSupplyLineItems(asList(lineItem1, lineItem2));
+    rnr.setFullSupplyLineItems(asList(spyLineItem1));
+
+    exception.expect(DataException.class);
+    exception.expectMessage(PRODUCT_CODE_INVALID);
+
+    rnr.copyCreatorEditableFields(newRnr, template);
+  }
+
+  @Test
+  public void shouldNotCopyExtraLineItemForApprovalRnr() throws Exception {
+    long userId = 5L;
+    Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
+    ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
+
+    RnrLineItem lineItem1 = make(a(defaultRnrLineItem, with(beginningBalance, 24), with(productCode, "P1")));
+    RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(beginningBalance, 25), with(productCode, "P2")));
+
+    RnrLineItem spyLineItem1 = spy(lineItem1);
+
+    newRnr.setFullSupplyLineItems(asList(lineItem1, lineItem2));
+
+    rnr.setFullSupplyLineItems(asList(spyLineItem1));
+
+    exception.expect(DataException.class);
+    exception.expectMessage(PRODUCT_CODE_INVALID);
+
+    rnr.copyApproverEditableFields(newRnr, template);
+  }
+
+  @Test
+  public void shouldAddNewNonFullSupplyLineItems() throws Exception {
+    long userId = 5L;
+    Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
+    ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
+
+    RnrLineItem lineItem1 = make(a(defaultRnrLineItem, with(beginningBalance, 24), with(productCode, "P1")));
+    RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(beginningBalance, 25), with(productCode, "P2")));
+
+    RnrLineItem spyLineItem1 = spy(lineItem1);
+
+    newRnr.setFullSupplyLineItems(new ArrayList<RnrLineItem>());
+    newRnr.setNonFullSupplyLineItems(asList(lineItem1, lineItem2));
+
+    rnr.setFullSupplyLineItems(new ArrayList<RnrLineItem>());
+    rnr.setNonFullSupplyLineItems(new ArrayList<RnrLineItem>());
+    rnr.getNonFullSupplyLineItems().add(spyLineItem1);
+
+    rnr.copyCreatorEditableFields(newRnr, template);
+
+    assertThat(rnr.getNonFullSupplyLineItems(), hasItem(lineItem2));
+  }
+
+  @Test
+  public void shouldCopyApproverEditableFields() throws Exception {
+    long userId = 5L;
+    Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
+    ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
+
+    RnrLineItem lineItem1 = make(a(defaultRnrLineItem, with(beginningBalance, 24), with(productCode, "P1")));
+    RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(beginningBalance, 25), with(productCode, "P2")));
+    RnrLineItem lineItem3 = make(a(defaultRnrLineItem, with(beginningBalance, 27), with(productCode, "P3")));
+    RnrLineItem lineItem4 = make(a(defaultRnrLineItem, with(productCode, "P4")));
+
+    RnrLineItem spyLineItem1 = spy(lineItem1);
+    RnrLineItem spyLineItem2 = spy(lineItem2);
+    RnrLineItem spyLineItem3 = spy(lineItem3);
+    RnrLineItem spyLineItem4 = spy(lineItem4);
+
+    newRnr.setFullSupplyLineItems(asList(lineItem1, lineItem2));
+    newRnr.setNonFullSupplyLineItems(asList(lineItem3, lineItem4));
+
+    rnr.setFullSupplyLineItems(asList(spyLineItem1, spyLineItem2));
+    rnr.setNonFullSupplyLineItems(asList(spyLineItem3, spyLineItem4));
+
+    rnr.copyApproverEditableFields(newRnr, template);
+
+    verify(spyLineItem1).copyApproverEditableFields(lineItem1, template);
+    verify(spyLineItem2).copyApproverEditableFields(lineItem2, template);
+    verify(spyLineItem3).copyApproverEditableFields(lineItem3, template);
+    verify(spyLineItem4).copyApproverEditableFields(lineItem4, template);
+    assertThat(rnr.getModifiedBy(), is(newRnr.getModifiedBy()));
+    assertModifiedBy(userId);
+  }
+
+  @Test
+  public void shouldSetModifiedByAndStatus() throws Exception {
+    rnr.setAuditFieldsForRequisition(1l, SUBMITTED);
+
+    assertThat(rnr.getModifiedBy(), is(1l));
+    assertThat(rnr.getStatus(), is(SUBMITTED));
   }
 }

@@ -5,6 +5,9 @@ dependencies {
             'commons-lang:commons-lang:2.6',
             'commons-collections:commons-collections:20040616',
             'org.codehaus.jackson:jackson-mapper-asl:1.9.11',
+            'org.ict4h:atomfeed-commons:0.9.2-SNAPSHOT',
+            'org.ict4h:atomfeed-server:0.9.2-SNAPSHOT',
+            'org.ict4h:atomfeed-spring-server:0.9.2-SNAPSHOT',
             project(':modules:db'),
             project(':modules:core')
 

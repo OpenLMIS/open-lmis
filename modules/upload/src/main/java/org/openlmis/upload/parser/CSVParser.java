@@ -44,21 +44,25 @@ public class CSVParser {
       while ((importedModel = csvBeanReader.readWithCellProcessors()) != null) {
         recordHandler.execute(importedModel, csvBeanReader.getRowNumber(), auditFields);
       }
+      recordHandler.postProcess();
     } catch (SuperCsvConstraintViolationException constraintException) {
-      if (constraintException.getMessage().contains("^\\d{1,2}/\\d{1,2}/\\d{4}$"))
+      if (constraintException.getMessage().contains("^\\d{1,2}/\\d{1,2}/\\d{4}$")) {
         createHeaderException("Incorrect date format in field :", headers, constraintException);
+      }
 
       createHeaderException("Missing Mandatory data in field :", headers, constraintException);
     } catch (SuperCsvCellProcessorException processorException) {
       createHeaderException("Incorrect Data type in field :", headers, processorException);
     } catch (SuperCsvException superCsvException) {
-      if (csvBeanReader.length() > headers.length)
+      if (csvBeanReader.length() > headers.length) {
         throw new UploadException("Incorrect file format, Column name missing");
+      }
 
       createDataException("Columns does not match the headers:", headers, superCsvException);
     } catch (IOException e) {
       throw new UploadException(e.getStackTrace().toString());
     }
+
     return csvBeanReader.getRowNumber() - 1;
   }
 
@@ -77,4 +81,5 @@ public class CSVParser {
   public void process(InputStream inputStream, ModelClass modelClass, RecordHandler handler) throws IOException {
     process(inputStream, modelClass, handler, null);
   }
+
 }

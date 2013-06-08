@@ -7,11 +7,14 @@
 package org.openlmis.web.controller;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.service.FacilityApprovedProductService;
+import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 
@@ -21,7 +24,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class FacilityApprovedProductControllerTest {
 
@@ -32,8 +35,8 @@ public class FacilityApprovedProductControllerTest {
   FacilityApprovedProductController facilityApprovedProductController;
   @Test
   public void shouldGetAllNonFullSupplyProductsByFacilityAndProgram() throws Exception {
-    Integer facilityId = 1;
-    Integer programId = 1;
+    Long facilityId = 1L;
+    Long programId = 1L;
     facilityApprovedProductController = new FacilityApprovedProductController(facilityApprovedProductService);
     ArrayList<FacilityApprovedProduct> nonFullSupplyProducts = new ArrayList<>();
     when(facilityApprovedProductService.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId)).thenReturn(nonFullSupplyProducts);

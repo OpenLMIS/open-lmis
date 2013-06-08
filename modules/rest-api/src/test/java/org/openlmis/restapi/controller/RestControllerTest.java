@@ -8,11 +8,13 @@ package org.openlmis.restapi.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestService;
@@ -24,8 +26,9 @@ import java.security.Principal;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.restapi.controller.RestController.RNR;
 import static org.openlmis.restapi.response.RestResponse.ERROR;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RestControllerTest {
 
@@ -48,12 +51,12 @@ public class RestControllerTest {
     Report report = new Report();
 
     Rnr requisition = new Rnr();
-    requisition.setId(1);
+    requisition.setId(1L);
     when(service.submitReport(report)).thenReturn(requisition);
 
     ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
 
-    assertThat((Integer) response.getBody().getData().get("R&R"), is(1));
+    assertThat((Long) response.getBody().getData().get(RNR), is(1L));
   }
 
   @Test
@@ -62,7 +65,7 @@ public class RestControllerTest {
     Report report = new Report();
 
     Rnr requisition = new Rnr();
-    requisition.setId(1);
+    requisition.setId(1L);
     doThrow(new DataException(errorMessage)).when(service).submitReport(report);
 
     ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
@@ -76,12 +79,40 @@ public class RestControllerTest {
     Report report = new Report();
 
     Rnr requisition = new Rnr();
-    requisition.setId(1);
+    requisition.setId(1L);
     doThrow(new DataException(errorMessage)).when(service).submitReport(report);
 
     controller.submitRequisition(report, principal);
 
     assertThat(report.getVendor().getName(), is("vendor name"));
+  }
+
+  @Test
+  public void shouldApproveReport() throws Exception {
+    Report report = new Report();
+    Long id = 1L;
+    Rnr expectedRnr = new Rnr();
+    when(service.approve(report)).thenReturn(expectedRnr);
+
+    ResponseEntity<RestResponse> response = controller.approve(id, report, principal);
+
+    assertThat((Long) response.getBody().getData().get(RNR), is(expectedRnr.getId()));
+    assertThat(report.getVendor().getName(), is("vendor name"));
+    assertThat(report.getRequisitionId(), is(1L));
+    verify(service).approve(report);
+  }
+
+  @Test
+  public void shouldGiveErrorMessageIfSomeErrorOccursWhileApproving() throws Exception {
+    String errorMessage = "some error";
+    Long requisitionId = 1L;
+    Report report = new Report();
+
+    doThrow(new DataException(errorMessage)).when(service).approve(report);
+
+    ResponseEntity<RestResponse> response = controller.approve(requisitionId, report, principal);
+
+    assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
   }
 
   @Test

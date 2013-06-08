@@ -7,6 +7,8 @@
 package org.openlmis.web.controller;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 
@@ -15,7 +17,7 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.web.controller.MessagesController.MESSAGES;
-
+@Category(UnitTests.class)
 public class MessagesControllerTest {
 
   @Test

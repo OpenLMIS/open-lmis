@@ -8,7 +8,7 @@
   <div class="fluid-grid">
     <div class="row-fluid fluid-grid-header">
       <div class="span3">
-        <div class="fluid-grid-cell" openlmis-message="create.user.program"></div>
+        <div class="fluid-grid-cell" openlmis-message="program.header"></div>
       </div>
       <div class="span3">
         <div class="fluid-grid-cell" openlmis-message="create.user.supervisoryNode"></div>
@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div class="row-fluid" ng-repeat="roleAssignment in user.supervisorRoles">
+    <div class="row-fluid" ng-repeat="roleAssignment in user.supervisorRoles" tab-scroll>
       <div class="span3">
         <div class="fluid-grid-cell">
           <label ng-bind="getProgramName(roleAssignment.programId)"></label>
@@ -43,12 +43,13 @@
         </div>
       </div>
       <div class="span2">
-        <a class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index)" openlmis-message="button.remove"></a>
+        <a class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index, true)"
+           openlmis-message="button.remove"></a>
       </div>
     </div>
   </div>
 
-  <div class="add-role-row supervisory-roles">
+  <div class="add-role-row supervisory-roles" tab-scroll>
     <div class="row-fluid">
       <div class="span3">
         <div class="fluid-grid-cell">
@@ -57,10 +58,12 @@
               ng-model="selectedProgramIdToSupervise">
             <option value="" ng-bind="selectSuperviseProgramMessage"></option>
           </select>
-          <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedProgramIdToSupervise)' class="field-error"
+          <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedProgramIdToSupervise)'
+                class="field-error"
                 openlmis-message="create.user.selectProgram">
           </span>
-          <span ng-show='duplicateSupervisorRoleError' ng-bind="duplicateSupervisorRoleError" class="field-error"></span>
+          <span ng-show='duplicateSupervisorRoleError' ng-bind="duplicateSupervisorRoleError"
+                class="field-error"></span>
         </div>
       </div>
       <div class="span3">
@@ -70,7 +73,8 @@
               ng-model="selectedSupervisoryNodeIdToSupervise">
             <option value="" ng-bind="selectSupervisoryNodeMessage"></option>
           </select>
-          <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedSupervisoryNodeIdToSupervise)' class="field-error"
+          <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedSupervisoryNodeIdToSupervise)'
+                class="field-error"
                 openlmis-message="create.user.selectSupervisoryNode">
           </span>
         </div>
@@ -78,7 +82,8 @@
 
       <div class="span4 select2-roles">
         <div id="supervisoryRole" class="fluid-grid-cell">
-          <select ui-select2  ng-model="selectedRoleIdsToSupervise" placeholder="+ Add Role" multiple="multiple" style="width:400px">
+          <select ui-select2 ng-model="selectedRoleIdsToSupervise" placeholder="+ Add Role" multiple="multiple"
+                  style="width:400px">
             <option ng-repeat="role in nonAdminRoles" value="{{role.id}}">{{role.name}}</option>
           </select>
           <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedRoleIdsToSupervise)' class="field-error"
@@ -89,7 +94,7 @@
 
       <div class="span2">
         <div class="fluid-grid-cell">
-          <a ng-click="addSupervisoryRole()" class="btn btn-primary" openlmis-message= "button.add"></a>
+          <a ng-click="addSupervisoryRole()" class="btn btn-primary" openlmis-message="button.add"></a>
         </div>
       </div>
 

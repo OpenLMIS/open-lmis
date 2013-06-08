@@ -29,6 +29,12 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Requisitions')]")
   private static WebElement requisitionMenuItem;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Reports')]")
+  private static WebElement reportMenuItem;
+
+  @FindBy(how = How.XPATH, using = "//h2/span[contains(text(),'Reports')]")
+  private static WebElement reportsTitle;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Orders')]")
   private static WebElement ordersMenuItem;
 
@@ -65,7 +71,7 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'View Orders')]")
   private static WebElement viewOrdersHeader;
 
-  @FindBy(how = How.LINK_TEXT, using = "Add new")
+  @FindBy(how = How.ID, using = "add-new-facility")
   private static WebElement createFacility;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ng-scope']/div[@ng-hide='facility.id']/h2")
@@ -135,20 +141,20 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@ng-click='initRnr()']")
   private static WebElement proceedButton;
 
-  @FindBy(how = How.XPATH, using = "//ul[@class='clearfix']/li/a[contains(text(),'Facilities')]")
+  @FindBy(how = How.ID, using = "facility-tab")
   private static WebElement facilitiesTab;
 
-  @FindBy(how = How.XPATH, using = "//ul[@class='clearfix']/li/a[contains(text(),'Roles')]")
+  @FindBy(how = How.ID, using = "role-tab")
   private static WebElement rolesTab;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Roles')]")
   private static WebElement rolesLink;
 
-  @FindBy(how = How.XPATH, using = "//ul[@class='clearfix']/li/a[contains(text(),'Schedules')]")
+  @FindBy(how = How.ID, using = "schedule-tab")
   private static WebElement schedulesTab;
 
 
-  @FindBy(how = How.XPATH, using = "//ul[@class='clearfix']/li/a[contains(text(),'Users')]")
+  @FindBy(how = How.ID, using = "user-tab")
   private static WebElement usersTab;
 
 
@@ -227,7 +233,7 @@ public class HomePage extends Page {
   private void clickCreateFacilityButton() {
     testWebDriver.waitForElementToAppear(createFacility);
     testWebDriver.sleep(1000);
-    testWebDriver.keyPress(createFacility) ;
+    testWebDriver.keyPress(createFacility);
   }
 
   private void verifyHeader(String headingToVerify) {
@@ -307,6 +313,14 @@ public class HomePage extends Page {
     return new ViewRequisitionPage(testWebDriver);
   }
 
+  public ReportPage navigateReportScreen() throws IOException {
+    SeleneseTestNgHelper.assertTrue(reportMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(reportMenuItem);
+    testWebDriver.keyPress(reportMenuItem);
+    testWebDriver.waitForElementToAppear(reportsTitle);
+    return new ReportPage(testWebDriver);
+  }
+
   public DeleteFacilityPage navigateSearchFacility() throws IOException {
     SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
@@ -382,15 +396,15 @@ public class HomePage extends Page {
     return new ConvertOrderPage(testWebDriver);
   }
 
-    public ViewOrdersPage navigateViewOrders() throws IOException {
-        SeleneseTestNgHelper.assertTrue(ordersMenuItem.isDisplayed());
-        testWebDriver.waitForElementToAppear(ordersMenuItem);
-        testWebDriver.keyPress(ordersMenuItem);
-        testWebDriver.waitForElementToAppear(viewOrdersMenuItem);
-        testWebDriver.keyPress(viewOrdersMenuItem);
-        testWebDriver.waitForElementToAppear(viewOrdersHeader);
-        return new ViewOrdersPage(testWebDriver);
-    }
+  public ViewOrdersPage navigateViewOrders() throws IOException {
+    SeleneseTestNgHelper.assertTrue(ordersMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(ordersMenuItem);
+    testWebDriver.keyPress(ordersMenuItem);
+    testWebDriver.waitForElementToAppear(viewOrdersMenuItem);
+    testWebDriver.keyPress(viewOrdersMenuItem);
+    testWebDriver.waitForElementToAppear(viewOrdersHeader);
+    return new ViewOrdersPage(testWebDriver);
+  }
 
   public void verifyErrorMessage() {
     testWebDriver.waitForElementToAppear(errorMsg);

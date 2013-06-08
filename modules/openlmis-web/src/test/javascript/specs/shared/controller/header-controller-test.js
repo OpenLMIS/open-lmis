@@ -21,8 +21,4 @@ describe("HeaderController", function () {
     ctrl = $controller(HeaderController, {$scope:scope, messageService:messageService});
   }));
 
-  it('should populate all messages', function () {
-    expect(messageService.populate).toHaveBeenCalled();
-  });
-
 });

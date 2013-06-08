@@ -5,15 +5,19 @@
  */
 
 'use strict';
-angular.module('facility', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
-  config(['$routeProvider', function ($routeProvider) {
-  $routeProvider.
-    when('/search', {controller:FacilitySearchController, templateUrl:'partials/search.html'}).
-    when('/create-facility', {controller:FacilityController, templateUrl:'partials/create.html', resolve:FacilityController.resolve}).
-    when('/edit/:facilityId', {controller:FacilityController, templateUrl:'partials/create.html', resolve:FacilityController.resolve}).
-    otherwise({redirectTo:'/search'});
-}]).run(function ($rootScope, AuthorizationService) {
-    $rootScope.facilitySelected = "selected";
-    AuthorizationService.preAuthorize('MANAGE_FACILITY');
+require(['../../shared/app', '../controller/facility-controller', '../controller/facility-search-controller'],
+  function (app) {
+    app.loadApp();
+    angular.module('facility', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
+      config(['$routeProvider', function ($routeProvider) {
+        $routeProvider.
+          when('/search', {controller: FacilitySearchController, templateUrl: 'partials/search.html'}).
+          when('/create-facility', {controller: FacilityController, templateUrl: 'partials/create.html', resolve: FacilityController.resolve}).
+          when('/edit/:facilityId', {controller: FacilityController, templateUrl: 'partials/create.html', resolve: FacilityController.resolve}).
+          otherwise({redirectTo: '/search'});
+      }]).run(function ($rootScope, AuthorizationService) {
+        $rootScope.facilitySelected = "selected";
+        AuthorizationService.preAuthorize('MANAGE_FACILITY');
+      });
+    angular.bootstrap(document, ['facility']);
   });
-

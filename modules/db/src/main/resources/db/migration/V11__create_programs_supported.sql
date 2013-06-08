@@ -7,10 +7,10 @@ CREATE TABLE programs_supported (
   programId    INTEGER REFERENCES programs (id),
   startDate    TIMESTAMP,
   active       BOOLEAN NOT NULL,
-  modifiedBy   INTEGER,
-  modifiedDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
   createdBy INTEGER,
-  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy INTEGER,
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE (facilityId, programId)
 );
 

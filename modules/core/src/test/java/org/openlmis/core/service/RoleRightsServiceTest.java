@@ -9,6 +9,7 @@ package org.openlmis.core.service;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -17,6 +18,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.RoleAssignmentRepository;
 import org.openlmis.core.repository.RoleRightsRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,6 +33,7 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RoleRightsServiceTest {
 
@@ -66,17 +69,14 @@ public class RoleRightsServiceTest {
     assertThat(allRights.get(3), is(Right.MANAGE_SCHEDULE));
     assertThat(allRights.get(4), is(Right.MANAGE_USERS));
     assertThat(allRights.get(5), is(Right.UPLOADS));
-    assertThat(allRights.get(6), is(Right.VIEW_CONSUMPTION_REPORT));
-    assertThat(allRights.get(7), is(Right.VIEW_FACILITY_REPORT));
-    assertThat(allRights.get(8), is(Right.VIEW_MAILING_LABEL_REPORT));
-    assertThat(allRights.get(9), is(Right.VIEW_REPORTING_RATE_REPORT));
-    assertThat(allRights.get(10), is(Right.VIEW_SUMMARY_REPORT));
-    assertThat(allRights.get(11), is(Right.APPROVE_REQUISITION));
-    assertThat(allRights.get(12), is(Right.AUTHORIZE_REQUISITION));
-    assertThat(allRights.get(13), is(Right.CONVERT_TO_ORDER));
-    assertThat(allRights.get(14), is(Right.CREATE_REQUISITION));
-    assertThat(allRights.get(15), is(Right.VIEW_REQUISITION));
-    assertThat(allRights.get(16), is(Right.VIEW_ORDER));
+    assertThat(allRights.get(6), is(Right.MANAGE_REPORTS));
+    assertThat(allRights.get(7), is(Right.VIEW_REPORTS));
+    assertThat(allRights.get(8), is(Right.APPROVE_REQUISITION));
+    assertThat(allRights.get(9), is(Right.AUTHORIZE_REQUISITION));
+    assertThat(allRights.get(10), is(Right.CONVERT_TO_ORDER));
+    assertThat(allRights.get(11), is(Right.CREATE_REQUISITION));
+    assertThat(allRights.get(12), is(Right.VIEW_REQUISITION));
+    assertThat(allRights.get(13), is(Right.VIEW_ORDER));
     assertThat(allRights.get(0).getAdminRight(), is(true));
   }
 
@@ -111,7 +111,7 @@ public class RoleRightsServiceTest {
   @Test
   public void shouldGetRoleById() throws Exception {
     Role role = new Role();
-    int roleId = 1;
+    Long roleId = 1L;
     when(roleRightsRepository.getRole(roleId)).thenReturn(role);
 
     assertThat(roleRightsService.getRole(roleId), is(role));
@@ -128,11 +128,11 @@ public class RoleRightsServiceTest {
 
   @Test
   public void shouldGetRightsForAUserOnSupervisedFacilityAndProgram() throws Exception {
-    Integer userId = 1;
-    Facility facility = new Facility(2);
-    Program program = new Program(3);
+    Long userId = 1L;
+    Facility facility = new Facility(2L);
+    Program program = new Program(3L);
     List<Right> expected = asList(CREATE_REQUISITION);
-    SupervisoryNode supervisoryNode = new SupervisoryNode(4);
+    SupervisoryNode supervisoryNode = new SupervisoryNode(4L);
     List<SupervisoryNode> supervisoryNodes = asList(supervisoryNode);
 
     when(supervisoryNodeService.getFor(facility, program)).thenReturn(supervisoryNode);
@@ -149,9 +149,9 @@ public class RoleRightsServiceTest {
 
   @Test
   public void shouldGetRightsForAUserOnHomeFacilityAndProgram() throws Exception {
-    Integer userId = 1;
-    Facility facility = new Facility(2);
-    Program program = new Program(3);
+    Long userId = 1L;
+    Facility facility = new Facility(2L);
+    Program program = new Program(3L);
     List<Right> expected = asList(CREATE_REQUISITION);
 
     when(facilityService.getHomeFacility(userId)).thenReturn(facility);

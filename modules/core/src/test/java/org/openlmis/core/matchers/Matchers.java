@@ -7,14 +7,17 @@
 package org.openlmis.core.matchers;
 
 import org.hamcrest.Matcher;
+import org.junit.experimental.categories.Category;
 import org.mockito.ArgumentMatcher;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
+import org.openlmis.db.categories.UnitTests;
 
+@Category(UnitTests.class)
 public class Matchers {
 
-  public static Matcher<Program> programMatcher(final int id) {
+  public static Matcher<Program> programMatcher(final Long id) {
     return new ArgumentMatcher<Program>() {
       @Override
       public boolean matches(Object argument) {
@@ -24,7 +27,7 @@ public class Matchers {
     };
   }
 
-  public static Matcher<ProcessingPeriod> periodMatcher(final int id) {
+  public static Matcher<ProcessingPeriod> periodMatcher(final Long id) {
     return new ArgumentMatcher<ProcessingPeriod>() {
       @Override
       public boolean matches(Object argument) {
@@ -34,7 +37,7 @@ public class Matchers {
     };
   }
 
-  public static Matcher<Facility> facilityMatcher(final int id) {
+  public static Matcher<Facility> facilityMatcher(final Long id) {
     return new ArgumentMatcher<Facility>() {
       @Override
       public boolean matches(Object argument) {

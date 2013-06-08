@@ -9,6 +9,7 @@ package org.openlmis.core.repository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -21,6 +22,7 @@ import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.RequisitionGroupMapper;
 import org.openlmis.core.repository.mapper.RequisitionGroupMemberMapper;
 import org.openlmis.core.repository.mapper.RequisitionGroupProgramScheduleMapper;
+import org.openlmis.db.categories.UnitTests;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RequisitionGroupMemberRepositoryTest {
 
@@ -80,7 +83,9 @@ public class RequisitionGroupMemberRepositoryTest {
     programIdList.add(1);
 
     initMocks(this);
-    repository = new RequisitionGroupMemberRepository(requisitionGroupMemberMapper, requisitionGroupProgramScheduleMapper, requisitionGroupMapper, facilityRepository, programMapper, requisitionGroupRepository);
+    repository = new RequisitionGroupMemberRepository(requisitionGroupMemberMapper,
+      requisitionGroupProgramScheduleMapper, requisitionGroupMapper, facilityRepository, programMapper,
+      requisitionGroupRepository);
   }
 
   @Test
@@ -104,8 +109,8 @@ public class RequisitionGroupMemberRepositoryTest {
 
   @Test
   public void shouldGetMappingForRequisitionGroupIdAndFacilityId() throws Exception {
-    requisitionGroup.setId(5);
-    facility.setId(4);
+    requisitionGroup.setId(5L);
+    facility.setId(4L);
     when(requisitionGroupMemberMapper.
       getMappingByRequisitionGroupIdAndFacilityId(requisitionGroup, facility)).
       thenReturn(requisitionGroupMember);

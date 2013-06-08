@@ -16,13 +16,13 @@ import static com.natpryce.makeiteasy.Property.newProperty;
 public class FacilityApprovedProductBuilder {
 
   public static final Property<FacilityApprovedProduct, String> facilityTypeCode = newProperty();
-  public static final Property<FacilityApprovedProduct, Integer> facilityTypeId = newProperty();
+  public static final Property<FacilityApprovedProduct, Long> facilityTypeId = newProperty();
   public static final Property<FacilityApprovedProduct, String> programCode = newProperty();
   public static final Property<FacilityApprovedProduct, String> productCode = newProperty();
   public static final Property<FacilityApprovedProduct, Integer> maxMonthsOfStock = newProperty();
 
   public static final String defaultFacilityTypeCode = "code";
-  public static final Integer defaultFacilityTypeId = 1;
+  public static final Long defaultFacilityTypeId = 1L;
   public static final String defaultProgramCode = "YELL_FVR";
   public static final String defaultProductCode = "P999";
   public static final Integer defaultMaxMonthsOfStock = 3;

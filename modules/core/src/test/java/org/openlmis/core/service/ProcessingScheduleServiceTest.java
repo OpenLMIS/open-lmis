@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.openlmis.core.builder.RequisitionGroupBuilder;
@@ -19,6 +20,7 @@ import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.repository.ProcessingScheduleRepository;
 import org.openlmis.core.repository.RequisitionGroupProgramScheduleRepository;
 import org.openlmis.core.repository.RequisitionGroupRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +36,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.RequisitionGroupProgramScheduleBuilder.defaultRequisitionGroupProgramSchedule;
 
+@Category(UnitTests.class)
 public class ProcessingScheduleServiceTest {
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -48,7 +51,7 @@ public class ProcessingScheduleServiceTest {
   private RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository;
 
   private ProcessingScheduleService service;
-  private final int PROCESSING_PERIOD_ID = 1;
+  private final Long PROCESSING_PERIOD_ID = 1L;
 
   @Before
   public void setUp() throws Exception {
@@ -70,19 +73,19 @@ public class ProcessingScheduleServiceTest {
   @Test
   public void shouldGetASchedule() throws Exception {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
-    when(processingScheduleRepository.get(1)).thenReturn(processingSchedule);
+    when(processingScheduleRepository.get(1L)).thenReturn(processingSchedule);
 
-    ProcessingSchedule expectedProcessingSchedule = service.get(1);
+    ProcessingSchedule expectedProcessingSchedule = service.get(1L);
 
     assertThat(processingSchedule, is(expectedProcessingSchedule));
   }
 
   @Test
   public void shouldThrowExceptionIfScheduleNotFound() throws Exception {
-    doThrow(new DataException("Schedule not found")).when(processingScheduleRepository).get(1);
+    doThrow(new DataException("Schedule not found")).when(processingScheduleRepository).get(1L);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Schedule not found");
-    service.get(1);
+    service.get(1L);
   }
 
   @Test
@@ -100,7 +103,7 @@ public class ProcessingScheduleServiceTest {
   @Test
   public void shouldUpdateAndReturnUpdatedSchedule() throws Exception {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
-    processingSchedule.setId(1);
+    processingSchedule.setId(1L);
     ProcessingSchedule mockedSchedule = mock(ProcessingSchedule.class);
     when(processingScheduleRepository.get(processingSchedule.getId())).thenReturn(mockedSchedule);
 
@@ -138,10 +141,10 @@ public class ProcessingScheduleServiceTest {
   @Test
   public void shouldGetAllPeriodsForGivenSchedule() throws Exception {
     List<ProcessingPeriod> periodList = new ArrayList<>();
-    when(periodRepository.getAll(123)).thenReturn(periodList);
+    when(periodRepository.getAll(123L)).thenReturn(periodList);
 
-    assertThat(service.getAllPeriods(123), is(periodList));
-    verify(periodRepository).getAll(123);
+    assertThat(service.getAllPeriods(123L), is(periodList));
+    verify(periodRepository).getAll(123L);
   }
 
   @Test
@@ -174,11 +177,11 @@ public class ProcessingScheduleServiceTest {
 
   @Test
   public void shouldGetAllRelevantPeriodsAfterAGivenDateAndPeriod() throws Exception {
-    Integer requisitionGroupId = 1;
-    Integer programId = 2;
-    Integer facilityId = 3;
-    Integer scheduleId = 4;
-    Integer startingPeriodId = 5;
+    Long requisitionGroupId = 1L;
+    Long programId = 2L;
+    Long facilityId = 3L;
+    Long scheduleId = 4L;
+    Long startingPeriodId = 5L;
     Date programStartDate = new DateTime().toDate();
     List<ProcessingPeriod> periodList = Arrays.asList(make(a(defaultProcessingPeriod)));
 
@@ -191,7 +194,7 @@ public class ProcessingScheduleServiceTest {
     processingSchedule.setId(scheduleId);
     requisitionGroupProgramSchedule.setProcessingSchedule(processingSchedule);
     when(requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(requisitionGroupId, programId)).thenReturn(requisitionGroupProgramSchedule);
-    when(periodRepository.getAllPeriodsAfterDateAndPeriod(any(Integer.class), any(Integer.class), any(Date.class), any(Date.class))).thenReturn(periodList);
+    when(periodRepository.getAllPeriodsAfterDateAndPeriod(any(Long.class), any(Long.class), any(Date.class), any(Date.class))).thenReturn(periodList);
 
     List<ProcessingPeriod> periods = service.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, startingPeriodId);
 
@@ -200,28 +203,28 @@ public class ProcessingScheduleServiceTest {
 
   @Test
   public void shouldThrowExceptionWhenNoRequisitionGroupExistsForAFacilityAndProgram() throws Exception {
-    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(new Program(1), new Facility(2))).thenReturn(null);
+    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(new Program(1L), new Facility(2L))).thenReturn(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(ProcessingScheduleService.NO_REQUISITION_GROUP_ERROR);
 
-    service.getAllPeriodsAfterDateAndPeriod(1, 2, null, null);
+    service.getAllPeriodsAfterDateAndPeriod(1L, 2L, null, null);
   }
 
   @Test
   public void shouldGetPeriodById() throws Exception {
     final ProcessingPeriod expectedPeriod = new ProcessingPeriod();
-    when(periodRepository.getById(1)).thenReturn(expectedPeriod);
+    when(periodRepository.getById(1L)).thenReturn(expectedPeriod);
 
-    final ProcessingPeriod actual = service.getPeriodById(1);
+    final ProcessingPeriod actual = service.getPeriodById(1L);
 
-    verify(periodRepository).getById(1);
+    verify(periodRepository).getById(1L);
     assertThat(actual, is(expectedPeriod));
   }
 
   @Test
   public void shouldGetImmediatePreviousPeriod() throws Exception {
     ProcessingPeriod expected = new ProcessingPeriod();
-    ProcessingPeriod period = new ProcessingPeriod(1);
+    ProcessingPeriod period = new ProcessingPeriod(1L);
     when(periodRepository.getImmediatePreviousPeriod(period)).thenReturn(expected);
 
     ProcessingPeriod immediatePreviousPeriod = service.getImmediatePreviousPeriod(period);
@@ -232,16 +235,16 @@ public class ProcessingScheduleServiceTest {
 
   @Test
   public void shouldGetAllPeriodsInDateRange() throws Exception {
-    Integer scheduleId = 1;
+    Long scheduleId = 1L;
     Date startDate = DateTime.now().toDate();
     Date endDate = DateTime.now().toDate();
     List<ProcessingPeriod> expected = new ArrayList<>();
 
-    Facility facility = new Facility(1);
-    Program program = new Program(2);
+    Facility facility = new Facility(1L);
+    Program program = new Program(2L);
 
     RequisitionGroup requisitionGroup = new RequisitionGroup();
-    requisitionGroup.setId(1);
+    requisitionGroup.setId(1L);
 
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
     processingSchedule.setId(scheduleId);

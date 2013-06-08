@@ -6,7 +6,6 @@
 
 package org.openlmis.rnr.repository;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
@@ -23,28 +22,21 @@ import java.util.List;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
 @Repository
-@NoArgsConstructor
 public class RequisitionRepository {
 
+  @Autowired
   private RequisitionMapper requisitionMapper;
+  @Autowired
   private RnrLineItemMapper rnrLineItemMapper;
+  @Autowired
   private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
+  @Autowired
   private CommentMapper commentMapper;
+  @Autowired
   private CommaSeparator commaSeparator;
+  @Autowired
   private RequisitionStatusChangeMapper requisitionStatusChangeMapper;
 
-
-  @Autowired
-  public RequisitionRepository(RequisitionMapper requisitionMapper, RnrLineItemMapper rnrLineItemMapper,
-                               LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper, CommaSeparator separator,
-                               CommentMapper commentMapper, RequisitionStatusChangeMapper requisitionStatusChangeMapper) {
-    this.requisitionMapper = requisitionMapper;
-    this.rnrLineItemMapper = rnrLineItemMapper;
-    this.lossesAndAdjustmentsMapper = lossesAndAdjustmentsMapper;
-    this.commentMapper = commentMapper;
-    commaSeparator = separator;
-    this.requisitionStatusChangeMapper = requisitionStatusChangeMapper;
-  }
 
   public void insert(Rnr requisition) {
     requisition.setStatus(INITIATED);
@@ -67,20 +59,43 @@ public class RequisitionRepository {
     updateNonFullSupplyLineItems(rnr);
   }
 
-  private void updateNonFullSupplyLineItems(Rnr rnr) {
-    rnrLineItemMapper.deleteAllNonFullSupplyForRequisition(rnr.getId());
+  public void approve(Rnr rnr) {
+    requisitionMapper.update(rnr);
+    for (RnrLineItem lineItem : rnr.getFullSupplyLineItems()) {
+      updateLineItem(rnr, lineItem);
+    }
     for (RnrLineItem lineItem : rnr.getNonFullSupplyLineItems()) {
+      updateLineItem(rnr, lineItem);
+    }
+  }
+
+  private void updateNonFullSupplyLineItems(Rnr rnr) {
+    for (RnrLineItem lineItem : rnr.getNonFullSupplyLineItems()) {
+      RnrLineItem savedLineItem = rnrLineItemMapper.getExistingNonFullSupplyItemByRnrIdAndProductCode(rnr.getId(), lineItem.getProductCode());
+      if (savedLineItem != null) {
+        lineItem.setId(savedLineItem.getId());
+        updateLineItem(rnr, lineItem);
+        continue;
+      }
       rnrLineItemMapper.insertNonFullSupply(lineItem);
     }
   }
 
-
   private void updateFullSupplyLineItems(Rnr requisition) {
     for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
-      rnrLineItemMapper.update(lineItem);
+      updateLineItem(requisition, lineItem);
       lossesAndAdjustmentsMapper.deleteByLineItemId(lineItem.getId());
       insertLossesAndAdjustmentsForLineItem(lineItem);
     }
+  }
+
+  private void updateLineItem(Rnr requisition, RnrLineItem lineItem) {
+    lineItem.setModifiedBy(requisition.getModifiedBy());
+    if (requisition.getStatus() == RnrStatus.IN_APPROVAL) {
+      rnrLineItemMapper.updateOnApproval(lineItem);
+      return;
+    }
+    rnrLineItemMapper.update(lineItem);
   }
 
   private void insertLossesAndAdjustmentsForLineItem(RnrLineItem lineItem) {
@@ -93,12 +108,16 @@ public class RequisitionRepository {
     return requisitionMapper.getRequisitionWithLineItems(facility, program, period);
   }
 
+  public Rnr getRequisitionWithoutLineItems(Long facilityId, Long programId, Long periodId) {
+    return requisitionMapper.getRequisitionWithoutLineItems(facilityId, programId, periodId);
+  }
+
 
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
     return lossesAndAdjustmentsMapper.getLossesAndAdjustmentsTypes();
   }
 
-  public Rnr getById(Integer rnrId) {
+  public Rnr getById(Long rnrId) {
     Rnr requisition = requisitionMapper.getById(rnrId);
     if (requisition == null) throw new DataException("Requisition Not Found");
     return requisition;
@@ -108,7 +127,7 @@ public class RequisitionRepository {
     return requisitionMapper.getAuthorizedRequisitions(roleAssignment);
   }
 
-  public Rnr getLastRequisitionToEnterThePostSubmitFlow(Integer facilityId, Integer programId) {
+  public Rnr getLastRequisitionToEnterThePostSubmitFlow(Long facilityId, Long programId) {
     return requisitionMapper.getLastRequisitionToEnterThePostSubmitFlow(facilityId, programId);
   }
 
@@ -116,27 +135,15 @@ public class RequisitionRepository {
     return requisitionMapper.getApprovedRequisitions();
   }
 
-  public List<Rnr> get(Facility facility, Program program, List<ProcessingPeriod> periods) {
-    return requisitionMapper.get(facility, program, commaSeparator.commaSeparateIds(periods));
-  }
-
-  public void createOrderBatch(OrderBatch orderBatch) {
-    requisitionMapper.createOrderBatch(orderBatch);
-  }
-
-  public OrderBatch getOrderBatchById(Integer id) {
-    return requisitionMapper.getOrderBatchById(id);
-  }
-
-  public List<Rnr> getByStatus(RnrStatus status) {
-    return requisitionMapper.getByStatus(status);
+  public List<Rnr> getPostSubmitRequisitions(Facility facility, Program program, List<ProcessingPeriod> periods) {
+    return requisitionMapper.getPostSubmitRequisitions(facility, program, commaSeparator.commaSeparateIds(periods));
   }
 
   public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {
     return rnrLineItemMapper.getCategoryCount(requisition, fullSupply);
   }
 
-  public List<Comment> getCommentsByRnrID(Integer rnrId) {
+  public List<Comment> getCommentsByRnrID(Long rnrId) {
     return commentMapper.getByRnrId(rnrId);
   }
 

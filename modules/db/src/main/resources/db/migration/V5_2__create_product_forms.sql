@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS product_forms;
 CREATE TABLE product_forms (
     id SERIAL PRIMARY KEY,
     code varchar(20),
-    displayOrder INTEGER
+    displayOrder INTEGER,
+    createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

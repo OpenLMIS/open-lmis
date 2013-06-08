@@ -7,6 +7,7 @@
 package org.openlmis.rnr.domain;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.openlmis.core.message.OpenLmisMessage;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.Map;
 public class ProgramRnrTemplate {
 
   public static final String STOCK_IN_HAND = "stockInHand";
+  public static final String REMARKS = "remarks";
   public static final String QUANTITY_DISPENSED = "quantityDispensed";
   public static final String BEGINNING_BALANCE = "beginningBalance";
   public static final String QUANTITY_RECEIVED = "quantityReceived";
@@ -29,22 +31,28 @@ public class ProgramRnrTemplate {
   public static final String NEW_PATIENT_COUNT = "newPatientCount";
   public static final String COST = "cost";
   public static final String PRICE = "price";
+  public static final String TOTAL = "total";
   public static final String PRODUCT = "product";
+  public static final String USER_NEEDS_TO_ENTER_DEPENDENT_FIELD = "user.needs.to.enter.dependent.field";
+  public static final String INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED = "interdependent.fields.can.not.be.calculated";
+  public static final String COLUMN_SHOULD_BE_VISIBLE_IF_USER_INPUT = "column.should.be.visible.if.user.input";
+  public static final String USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON = "user.needs.to.enter.requested.quantity.reason";
 
   @Getter
   private Map<String, RnrColumn> rnrColumnsMap = new HashMap<>();
   private Map<String, OpenLmisMessage> errorMap = new HashMap<>();
 
   @Getter
-  private Integer programId;
+  private Long programId;
+
   @Getter
   private List<RnrColumn> rnrColumns;
-  private static final String USER_NEEDS_TO_ENTER_DEPENDENT_FIELD = "user.needs.to.enter.dependent.field";
-  private static final String INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED = "interdependent.fields.can.not.be.calculated";
-  public static final String COLUMN_SHOULD_BE_VISIBLE_IF_USER_INPUT = "column.should.be.visible.if.user.input";
-  private static final String USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON = "user.needs.to.enter.requested.quantity.reason";
 
-  public ProgramRnrTemplate(Integer programId, List<RnrColumn> rnrColumns) {
+  @Getter
+  @Setter
+  private Long modifiedBy;
+
+  public ProgramRnrTemplate(Long programId, List<RnrColumn> rnrColumns) {
     this.programId = programId;
     this.rnrColumns = rnrColumns;
 
@@ -63,7 +71,7 @@ public class ProgramRnrTemplate {
   public boolean columnsVisible(String... rnrColumnNames) {
     boolean visible = true;
     for (String rnrColumnName : rnrColumnNames) {
-      visible = visible && rnrColumnsMap.get(rnrColumnName).isVisible();
+      visible = (rnrColumnsMap.get(rnrColumnName) != null) && visible && rnrColumnsMap.get(rnrColumnName).isVisible();
     }
     return visible;
   }
@@ -74,6 +82,14 @@ public class ProgramRnrTemplate {
       calculated = calculated || (rnrColumnsMap.get(rnrColumnName).getSource() == RnRColumnSource.CALCULATED);
     }
     return calculated;
+  }
+
+  public boolean columnsUserInput(String... rnrColumnNames) {
+    boolean userInput = false;
+    for (String rnrColumnName : rnrColumnNames) {
+      userInput = userInput || (rnrColumnsMap.get(rnrColumnName).getSource() == RnRColumnSource.USER_INPUT);
+    }
+    return userInput;
   }
 
   public String getRnrColumnLabelFor(String columnName) {
@@ -147,9 +163,9 @@ public class ProgramRnrTemplate {
     } else {
       for (RnrColumn rnrColumn : rnrColumns) {
         if (rnrColumn.getName().equals("product") || rnrColumn.getName().equals("productCode") ||
-          rnrColumn.getName().equals("dispensingUnit") || rnrColumn.getName().equals("quantityRequested") ||
-          rnrColumn.getName().equals("packsToShip") || rnrColumn.getName().equals("price") ||
-          rnrColumn.getName().equals("cost") || rnrColumn.getName().equals("quantityApproved")){
+            rnrColumn.getName().equals("dispensingUnit") || rnrColumn.getName().equals("quantityRequested") ||
+            rnrColumn.getName().equals("packsToShip") || rnrColumn.getName().equals("price") ||
+            rnrColumn.getName().equals("cost") || rnrColumn.getName().equals("quantityApproved")) {
           if (rnrColumn.isVisible()) {
             visibleRnrColumns.add(rnrColumn);
           }
@@ -158,4 +174,6 @@ public class ProgramRnrTemplate {
     }
     return visibleRnrColumns;
   }
+
+
 }

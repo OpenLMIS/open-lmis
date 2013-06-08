@@ -29,8 +29,8 @@
          ng-disabled="formDisabled || !(addNonFullSupplyLineItemButtonShown.visible)" value="Add"/>
 </div>
 
-<div class="rnr-table">
-  <table id="nonFullSupplyTable" class="table table-bordered" ng-show="pageLineItems.length > 0">
+<div class="rnr-table" tab-scroll bottom-offset="180">
+  <table id="nonFullSupplyTable" fixed-table-header class="table table-bordered" ng-show="pageLineItems.length > 0">
     <thead>
     <tr>
       <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleNonFullSupplyColumns"
@@ -95,7 +95,7 @@
     </tr>
     </tbody>
   </table>
-</div>
+</div >
 <form name="nonFullSupplyForm">
   <div id="nonFullSupplyProductsModal" modal="nonFullSupplyProductsModal"
        options="{ backdrop: 'static', escape: false}">
@@ -103,9 +103,9 @@
     <div class="modal-body">
 
       <div class="row-fluid">
-        <div class="span6">
+        <div class="span7">
           <label for="nonFullSupplyProductsCategory" openlmis-message="rnr.label.category"></label>
-          <select ui-select2 class="span12 bottom-spacer" id="nonFullSupplyProductsCategory"
+          <select ui-select2 class="span11 bottom-spacer" id="nonFullSupplyProductsCategory"
                   ng-model="nonFullSupplyProductCategory" name="productName"
                   data-placeholder="-- Select category --"
                   ng-options="nonFullSupplyProductCategory.name for nonFullSupplyProductCategory in nonFullSupplyProductsCategories"
@@ -116,9 +116,9 @@
       </div>
 
       <div class="row-fluid">
-        <div class="span6">
+        <div class="span7">
           <label for="nonFullSupplyProductsCodeAndName" openlmis-message="rnr.label.product.code"></label>
-          <select ui-select2 class="span12 bottom-spacer" id="nonFullSupplyProductsCodeAndName"
+          <select ui-select2 class="span11 bottom-spacer" id="nonFullSupplyProductsCodeAndName"
                   ng-model="facilityApprovedProduct" name="productCode" data-placeholder="-- Select product --"
                   ng-options="facilityApprovedProduct.programProduct.product.code+' | '+facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay">
             <option></option>
@@ -189,8 +189,8 @@
           </div>
 
           <div class="span1">
-            <div class="fluid-grid-cell">
-              <a class="delete-role" value="delete"
+            <div class="fluid-grid-cell delete-role">
+              <a class="close" value="delete"
                  ng-click="deleteCurrentNonFullSupplyLineItem($index)">&times;</a>
             </div>
           </div>

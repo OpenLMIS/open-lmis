@@ -4,11 +4,17 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function FacilitySearchController($scope, AllFacilities, $location) {
+function FacilitySearchController($scope, AllFacilities, $location, navigateBackService) {
 
+  $scope.$on('$viewContentLoaded', function() {
+    $scope.query = navigateBackService.query;
+    $scope.updateFilteredQueryList();
+  });
   $scope.previousQuery = '';
 
   $scope.editFacility = function (id) {
+    var data = {query: $scope.query};
+    navigateBackService.setData(data);
     $location.path('edit/' + id);
   };
 
@@ -53,13 +59,13 @@ function FacilitySearchController($scope, AllFacilities, $location) {
           $scope.resultCount = $scope.facilityList.length;
       }
     }
-  }
+  };
 
   var compareQuery = function() {
     if ($scope.previousQuery.substring(0, 3) != $scope.query.substring(0, 3)) {
       return true;
     }
-  }
+  };
 
   var filterFacilities = function() {
     $scope.facilityList = [];

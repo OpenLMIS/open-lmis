@@ -8,8 +8,11 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface ProgramProductMapper {
@@ -20,25 +23,24 @@ public interface ProgramProductMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(ProgramProduct programProduct);
 
-  // Used by FacilityApprovedProductMapper
-  @SuppressWarnings("unused")
-  @Select("SELECT * FROM program_products WHERE id = #{id}")
-  @Results(value = {
-    @Result(property = "product", column = "productId", javaType = Product.class, one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
-    @Result(property = "program", column = "programId", javaType = Product.class, one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
-  })
-  ProgramProduct getById(Integer id);
-
-
   @Select(("SELECT id FROM program_products where programId = #{programId} and productId = #{productId}"))
-  Integer getIdByProgramAndProductId(@Param("programId") Integer programId, @Param("productId") Integer productId);
+  Long getIdByProgramAndProductId(@Param("programId") Long programId, @Param("productId") Long productId);
 
   @Update("update program_products set currentPrice = #{currentPrice}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} where id = #{id}")
   void updateCurrentPrice(ProgramProduct programProduct);
 
   @Select(("SELECT * FROM program_products where programId = #{programId} and productId = #{productId}"))
-  ProgramProduct getByProgramAndProductId(@Param("programId") Integer programId, @Param("productId") Integer productId);
+  ProgramProduct getByProgramAndProductId(@Param("programId") Long programId, @Param("productId") Long productId);
 
   @Update("UPDATE program_products SET  dosesPerMonth=#{dosesPerMonth}, active=#{active}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE programId=#{program.id} AND productId=#{product.id}")
   void update(ProgramProduct programProduct);
+
+  @Select("SELECT * from program_products where programId = #{id}")
+  @Results(value = {
+    @Result(property = "program", column = "programId", javaType = Program.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
+    @Result(property = "product", column = "productId", javaType = Product.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
+  })
+  List<ProgramProduct> getByProgram(Program program);
 }

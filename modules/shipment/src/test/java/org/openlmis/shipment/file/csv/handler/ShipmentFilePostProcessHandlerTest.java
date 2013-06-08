@@ -6,9 +6,11 @@
 package org.openlmis.shipment.file.csv.handler;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.service.ShipmentService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -17,12 +19,13 @@ import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
-
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ShipmentFilePostProcessHandler.class)
 public class ShipmentFilePostProcessHandlerTest {
@@ -38,7 +41,7 @@ public class ShipmentFilePostProcessHandlerTest {
 
   @Test
   public void shouldAddShipmentFileInfo() throws Exception {
-    Set<Integer> orderIds = new HashSet<>();
+    Set<Long> orderIds = new HashSet<>();
     boolean processingError = false;
     File shipmentFile = mock(File.class);
     String fileName = "FileName";
@@ -52,13 +55,13 @@ public class ShipmentFilePostProcessHandlerTest {
     shipmentFilePostProcessHandler.process(shipmentFile, processingError);
 
     verify(shipmentService).insertShipmentFileInfo(shipmentFileInfo);
-    verify(shipmentService).updateOrders(orderIds, shipmentFileInfo);
+    verify(shipmentService).updateStatusAndShipmentIdForOrders(new ArrayList(orderIds), shipmentFileInfo);
     verify(ftpOutputChannel, never()).send(any(Message.class));
   }
 
   @Test
   public void shouldAddShipmentFileInfoAndSendFileToFtpOutputChannelWhenFileHasError() throws Exception {
-    Set<Integer> orderIds = new HashSet<>();
+    Set<Long> orderIds = new HashSet<>();
     boolean processingError = true;
     File shipmentFile = mock(File.class);
     String fileName = "FileName";
@@ -71,7 +74,7 @@ public class ShipmentFilePostProcessHandlerTest {
     shipmentFilePostProcessHandler.process(shipmentFile, processingError);
 
     verify(shipmentService).insertShipmentFileInfo(shipmentFileInfo);
-    verify(shipmentService).updateOrders(orderIds, shipmentFileInfo);
+    verify(shipmentService).updateStatusAndShipmentIdForOrders(new ArrayList(orderIds), shipmentFileInfo);
     verify(ftpOutputChannel).send(any(Message.class));
   }
 }

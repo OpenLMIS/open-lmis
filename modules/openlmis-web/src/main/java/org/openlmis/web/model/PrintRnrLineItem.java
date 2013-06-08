@@ -8,6 +8,7 @@ package org.openlmis.web.model;
 
 import lombok.Data;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -27,14 +28,14 @@ public class PrintRnrLineItem {
   }
 
 
-  public void calculate(ProcessingPeriod period, List<RnrColumn> rnrColumns) {
+  public void calculate(ProcessingPeriod period, List<RnrColumn> rnrColumns, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
     if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
     if (template.columnsCalculated(QUANTITY_DISPENSED)) rnrLineItem.calculateQuantityDispensed();
     calculateNormalizedConsumption();
     calculateAmc(period);
     calculateMaxStockQuantity();
-    calculateLossesAndAdjustments();
+    calculateLossesAndAdjustments(lossesAndAdjustmentsTypes);
     rnrLineItem.calculateOrderQuantity();
 
     rnrLineItem.calculatePacksToShip();
@@ -72,9 +73,9 @@ public class PrintRnrLineItem {
     }
   }
 
-  private void calculateLossesAndAdjustments() {
+  private void calculateLossesAndAdjustments(List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     try {
-      rnrLineItem.calculateTotalLossesAndAdjustments();
+      rnrLineItem.calculateTotalLossesAndAdjustments(lossesAndAdjustmentsTypes);
     } catch (NullPointerException e) {
       rnrLineItem.setTotalLossesAndAdjustments(null);
     }

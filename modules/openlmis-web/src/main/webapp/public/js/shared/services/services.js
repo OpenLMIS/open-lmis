@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 var services = angular.module('openlmis.services', ['ngResource']);
 
 services.factory('ActivePrograms', function ($resource) {
@@ -8,10 +14,6 @@ services.factory('Programs', function ($resource) {
   return $resource('/programs.json', {}, {});
 });
 
-services.factory('FacilityList', function ($resource) {
-    return $resource('/reports/reportdata/facilitylist.json', {}, {});
-});
-
 services.factory('RnRColumnList', function ($resource) {
   return $resource('/program/:programId/rnr-template.json', {}, {post:{isArray:true, method:'POST'}});
 });
@@ -20,12 +22,12 @@ services.factory('ProgramRnRColumnList', function ($resource) {
   return $resource('/rnr/:programId/columns.json', {}, {});
 });
 
-services.factory('Facilities', function ($resource) {
-  return $resource('/facilities.json', {}, {});
-});
-
 services.factory('Facility', function ($resource) {
   return $resource('/facilities/:id.json', {}, {update:{method:'PUT'}});
+});
+
+services.factory('RestoreFacility', function ($resource) {
+  return $resource('/facilities/:id/restore.json', {}, {update:{method:'PUT'}});
 });
 
 services.factory('UserContext', function ($resource) {
@@ -53,9 +55,8 @@ services.factory('UserFacilityWithViewRequisition', function ($resource) {
   return $resource('/user/facilities/view.json', {}, {});
 });
 
-//todo add right/operation code as param
-services.factory('UserSupportedProgramInFacilityForAnOperation', function ($resource) {
-  return $resource('/facility/:facilityId/user/programs.json', {}, {});
+services.factory('ProgramsToViewRequisitions', function ($resource) {
+  return $resource('/facility/:facilityId/view/requisition/programs.json', {}, {});
 });
 
 services.factory('RequisitionHeader', function ($resource) {
@@ -86,8 +87,8 @@ services.factory('Roles', function ($resource) {
   return $resource('/roles.json', {}, {});
 });
 
-services.factory('UserSupervisedProgramList', function ($resource) {
-  return $resource('/create/requisition/supervised/programs.json', {}, {})
+services.factory('CreateRequisitionProgramList', function ($resource) {
+  return $resource('/create/requisition/programs.json', {}, {})
 });
 
 services.factory('UserSupervisedFacilitiesForProgram', function ($resource) {
@@ -121,11 +122,6 @@ services.factory('RequisitionsForViewing', function ($resource) {
 services.factory('RequisitionForConvertToOrder', function ($resource) {
   return $resource('/requisitions-for-convert-to-order.json', {}, {});
 });
-
-services.factory('RequisitionForApprovalById', function ($resource) {
-  return $resource('/requisitions-for-approval/:id.json', {}, {});
-});
-
 
 services.factory('LossesAndAdjustmentsReferenceData', function ($resource) {
   return $resource('/requisitions/lossAndAdjustments/reference-data.json', {}, {})
@@ -187,10 +183,6 @@ services.factory('SupervisoryNodes', function ($resource) {
   return $resource('/supervisory-nodes.json', {}, {});
 });
 
-services.factory('RequisitionOrder', function ($resource) {
-  return $resource('/requisitionOrder.json', {}, {});
-});
-
 services.factory('FacilityProgramRights', function ($resource) {
   return $resource('/facility/:facilityId/program/:programId/rights.json');
 });
@@ -200,14 +192,11 @@ services.factory('RequisitionComment', function ($resource) {
 });
 
 services.factory('Orders', function ($resource) {
-  return $resource('/orders.json', {}, {});
+  return $resource('/orders.json', {}, {post:{isArray:true, method:'POST'}});
 });
 
-services.factory('GeographicZones', function($resource){
-    return $resource('/geographicZones.json');
-});
 
-services.factory('FacilityTypes', function($resource){
-    return $resource('/facilityTypes.json');
+services.factory('ReportTemplates', function ($resource) {
+  return $resource('/report-templates.json', {}, {});
 });
 

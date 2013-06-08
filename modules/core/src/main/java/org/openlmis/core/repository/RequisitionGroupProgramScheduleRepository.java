@@ -8,6 +8,7 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
@@ -48,7 +49,7 @@ public class RequisitionGroupProgramScheduleRepository {
   public void insert(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
     populateIdsForRequisitionProgramScheduleEntities(requisitionGroupProgramSchedule);
     validateRequisitionGroupSchedule(requisitionGroupProgramSchedule);
-
+    validateProgramType(requisitionGroupProgramSchedule);
     try {
       mapper.insert(requisitionGroupProgramSchedule);
     } catch (DuplicateKeyException e) {
@@ -56,9 +57,17 @@ public class RequisitionGroupProgramScheduleRepository {
     }
   }
 
+  private void validateProgramType(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
+    Program program = programRepository.getById(requisitionGroupProgramSchedule.getProgram().getId());
+    if(program.isPush()) {
+      throw new DataException("Program type not supported for requisitions");
+    }
+  }
+
   public void update(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
     populateIdsForRequisitionProgramScheduleEntities(requisitionGroupProgramSchedule);
     validateRequisitionGroupSchedule(requisitionGroupProgramSchedule);
+    validateProgramType(requisitionGroupProgramSchedule);
     mapper.update(requisitionGroupProgramSchedule);
   }
 
@@ -100,11 +109,11 @@ public class RequisitionGroupProgramScheduleRepository {
       throw new DataException("Drop off facility code is not present");
   }
 
-  public RequisitionGroupProgramSchedule getScheduleForRequisitionGroupAndProgram(Integer requisitionGroupId, Integer programId) {
+  public RequisitionGroupProgramSchedule getScheduleForRequisitionGroupAndProgram(Long requisitionGroupId, Long programId) {
     return mapper.getScheduleForRequisitionGroupIdAndProgramId(requisitionGroupId, programId);
   }
 
-  public List<Integer> getProgramIDsForRequisitionGroup(Integer requisitionGroupId) {
+  public List<Long> getProgramIDsForRequisitionGroup(Long requisitionGroupId) {
     return mapper.getProgramIDsById(requisitionGroupId);
   }
 

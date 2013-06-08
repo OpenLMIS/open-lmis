@@ -16,9 +16,9 @@ import static com.natpryce.makeiteasy.Property.newProperty;
 public class EmailMessageBuilder {
 
   public static final Property<EmailMessage, String> from = newProperty();
-  public static final Property<EmailMessage, String> to = newProperty();
+  public static final Property<EmailMessage, String> receiver = newProperty();
   public static final Property<EmailMessage, String> subject = newProperty();
-  public static final Property<EmailMessage, String> text = newProperty();
+  public static final Property<EmailMessage, String> content = newProperty();
 
 
   public static final Instantiator<EmailMessage> defaultEmailMessage = new Instantiator<EmailMessage>() {
@@ -27,9 +27,9 @@ public class EmailMessageBuilder {
     public EmailMessage instantiate(PropertyLookup<EmailMessage> lookup) {
 
       EmailMessage message = new EmailMessage();
-      message.setTo(lookup.valueOf(to, "to@openlmis.org"));
+      message.setReceiver(lookup.valueOf(receiver, "to@openlmis.org"));
       message.setSubject(lookup.valueOf(subject, "Test Email"));
-      message.setText(lookup.valueOf(text, "Test Email Text"));
+      message.setContent(lookup.valueOf(content, "Test Email Text"));
 
       return message;
     }

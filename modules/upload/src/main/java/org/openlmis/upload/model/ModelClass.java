@@ -6,21 +6,22 @@
 
 package org.openlmis.upload.model;
 
-import lombok.Getter;
+import lombok.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.collections.Predicate;
 import org.openlmis.upload.Importable;
-import org.openlmis.upload.annotation.ImportField;
-import org.openlmis.upload.annotation.ImportFields;
+import org.openlmis.upload.annotation.*;
 import org.openlmis.upload.exception.UploadException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
 public class ModelClass {
-  @Getter
+
   private Class<? extends Importable> clazz;
 
   private List<Field> importFields;
@@ -37,6 +38,7 @@ public class ModelClass {
   }
 
   public void validateHeaders(List<String> headers) {
+    validateNullHeaders(headers);
     List<String> lowerCaseHeaders = lowerCase(headers);
     if (!acceptExtraHeaders) validateInvalidHeaders(lowerCaseHeaders);
     validateMandatoryFields(lowerCaseHeaders);
@@ -53,7 +55,7 @@ public class ModelClass {
         } else {
           fieldMappings.add(importField.getField().getName() + "." + nestedProperty);
         }
-      }else{
+      } else {
         fieldMappings.add(null);
       }
 
@@ -89,6 +91,14 @@ public class ModelClass {
     }
 
     return result;
+  }
+
+  private void validateNullHeaders(List<String> headers) throws UploadException {
+    for (int i = 0; i < headers.size(); i++) {
+      if (headers.get(i) == null) {
+        throw new UploadException("Header for column " + (i + 1) + " is missing.");
+      }
+    }
   }
 
   private void validateMandatoryFields(List<String> headers) {

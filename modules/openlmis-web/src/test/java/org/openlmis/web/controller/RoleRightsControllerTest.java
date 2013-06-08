@@ -9,6 +9,7 @@ package org.openlmis.web.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -18,6 +19,7 @@ import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.Role;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +43,7 @@ import static org.openlmis.core.matchers.Matchers.facilityMatcher;
 import static org.openlmis.core.matchers.Matchers.programMatcher;
 import static org.openlmis.web.controller.RoleRightsController.*;
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RoleRightsControllerTest {
 
@@ -53,7 +55,7 @@ public class RoleRightsControllerTest {
   private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
 
   RoleRightsController controller;
-  private static final int LOGGED_IN_USERID = 11;
+  private static final Long LOGGED_IN_USERID = 11L;
 
   @Before
   public void setUp() throws Exception {
@@ -105,7 +107,7 @@ public class RoleRightsControllerTest {
   @Test
   public void shouldGetRoleById() throws Exception {
     Role role = new Role();
-    int roleId = 1;
+    Long roleId = 1L;
     when(roleRightsService.getRole(roleId)).thenReturn(role);
 
     OpenLmisResponse response = controller.get(roleId).getBody();
@@ -116,7 +118,7 @@ public class RoleRightsControllerTest {
 
   @Test
   public void shouldUpdateRoleAndRights() throws Exception {
-    Role role = new Role(123, "Role Name",null, "Desc", new HashSet<>(asList(CONFIGURE_RNR)));
+    Role role = new Role(123L, "Role Name",null, "Desc", new HashSet<>(asList(CONFIGURE_RNR)));
 
     OpenLmisResponse response = controller.updateRole(role.getId(), role, httpServletRequest).getBody();
 
@@ -127,7 +129,7 @@ public class RoleRightsControllerTest {
   @Test
   public void shouldReturnErrorMsgIfUpdateFails() throws Exception {
 
-    Role role = new Role(123, "Role Name", FALSE, "Desc", null);
+    Role role = new Role(123L, "Role Name", FALSE, "Desc", null);
 
     doThrow(new DataException("Duplicate Role found")).when(roleRightsService).updateRole(role);
 
@@ -142,8 +144,8 @@ public class RoleRightsControllerTest {
     Set<Right> rights = new HashSet<Right>() {{
       add(CREATE_REQUISITION);
     }};
-    Integer facilityId = 1;
-    Integer programId = 1;
+    Long facilityId = 1L;
+    Long programId = 1L;
     when(roleRightsService.getRightsForUserAndFacilityProgram(eq(LOGGED_IN_USERID), any(Facility.class), any(Program.class))).thenReturn(rights);
     ResponseEntity<OpenLmisResponse> response = controller.getRightsForUserAndFacilityProgram(facilityId, programId, httpServletRequest);
 

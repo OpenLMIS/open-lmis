@@ -16,6 +16,7 @@ describe("LoginController", function () {
     httpBackend = _$httpBackend_;
     scope = $rootScope.$new();
     messageService = _messageService_;
+    spyOn(messageService, 'get');
     controller = $controller;
 
     window = {"location":{"href":"someOtherUrl.html"}};
@@ -25,7 +26,6 @@ describe("LoginController", function () {
   }));
 
 
-//TODO : Find way to test window.location
   it('should not login and show error when login fails', function () {
     scope.username = "john";
     scope.password = "openLmis";
@@ -58,19 +58,19 @@ describe("LoginController", function () {
   it('should show error when username is missing', function () {
     scope.username = undefined;
     scope.doLogin();
-    expect(scope.loginError).toBe('Please enter your username');
+    expect(messageService.get).toHaveBeenCalledWith('error.login.username');
   });
 
   it('should show error when username is only whitespaces', function () {
     scope.username = "   ";
     scope.doLogin();
-    expect(scope.loginError).toBe('Please enter your username');
+    expect(messageService.get).toHaveBeenCalledWith('error.login.username');
   })
 
   it('should show error when password is missing', function () {
     scope.username = "someUser";
     scope.password = undefined;
     scope.doLogin();
-    expect(scope.loginError).toBe('Please enter your password');
+    expect(messageService.get).toHaveBeenCalledWith('error.login.password');
   });
 });

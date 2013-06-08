@@ -18,7 +18,7 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class ProgramProductPrice extends BaseModel implements Importable {
   public static final String PROGRAM_PRODUCT_PRICE_INVALID_PRICE_PER_DOSAGE = "programProductPrice.invalid.price.per.dosage";
 

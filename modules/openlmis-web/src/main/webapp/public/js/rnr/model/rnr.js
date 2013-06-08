@@ -168,6 +168,13 @@ var Rnr = function (rnr, programRnrColumns) {
     return utils.getFormattedDate(startDate) + ' - ' + utils.getFormattedDate(endDate);
   };
 
+  Rnr.prototype.reduceForApproval = function() {
+    var rnr = _.pick(this, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
+    rnr.fullSupplyLineItems = _.map(rnr.fullSupplyLineItems, function(rnrLineItem){ return rnrLineItem.reduceForApproval() });
+    rnr.nonFullSupplyLineItems = _.map(rnr.nonFullSupplyLineItems, function(rnrLineItem){ return rnrLineItem.reduceForApproval() });
+    return rnr;
+  };
+
   Rnr.prototype.init = function () {
     var thisRnr = this;
 

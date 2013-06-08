@@ -5,20 +5,24 @@
   -->
 
 <div>
-  <h2>Upload</h2>
+  <h2 openlmis-message="link.admin.upload"></h2>
   <form id="uploadForm" name="uploadForm" action="/upload" method="POST" enctype="multipart/form-data" novalidate>
     <div>
       <fieldset>
-        <label style="padding-top: 10" for="model">Upload type:</label>
+        <label for="model"><span openlmis-message="upload.label.type"></span>:</label>
 
         <select name="model" id="model" ng-model="model"
                 ng-options="k as v.displayName for (k,v) in supportedUploads" >
           <option value="">-- Select --</option>
                 </select>
+        <span class="field-error" ng-show="uploadForm.model.errorMessage" ng-bind="uploadForm.model.errorMessage"></span>
         <br/>
-        <label style="padding-top: 10" for="csvFile">File: </label>
+        <br/>
+          <label for="csvFile"><span openlmis-message="upload.label.file"></span>:</label>
         <input name="csvFile" id="csvFile" ng-model="csvFile" type="file" accept=".csv"
                value="Choose CSV File to upload" required/>
+        <span class="field-error" ng-show="uploadForm.csvFile.errorMessage" ng-bind="uploadForm.csvFile.errorMessage"></span>
+        <br/>
         <br>
         <div class="alert alert-error" id="saveErrorMsgDiv" ng-show="errorMsg">
           {{errorMsg}}
@@ -26,10 +30,11 @@
         <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="successMsg">
           {{successMsg}}
         </div>
-        <br><br>
-        <input type="submit" value="Upload" class="btn btn-primary">
+        <br>
+        <input type="submit" openlmis-message="link.admin.upload" class="btn btn-primary" ng-disabled="inProgress">
       </fieldset>
 
     </div>
+    <div class="loader-icon" ng-show="inProgress"></div>
   </form>
 </div>

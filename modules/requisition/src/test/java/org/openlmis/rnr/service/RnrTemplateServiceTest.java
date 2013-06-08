@@ -6,22 +6,27 @@
 
 package org.openlmis.rnr.service;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.ProgramService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RnrTemplateServiceTest {
 
@@ -31,14 +36,10 @@ public class RnrTemplateServiceTest {
   @Mock
   private ProgramService programService;
 
+  @InjectMocks
   private RnrTemplateService service;
-  private final static Integer EXISTING_PROGRAM_ID = 1;
+  private final static Long EXISTING_PROGRAM_ID = 1L;
 
-
-  @Before
-  public void setUp() throws Exception {
-    service = new RnrTemplateService(repository, programService);
-  }
 
   @Test
   public void shouldFetchAllRnRColumns() throws Exception {
@@ -51,11 +52,11 @@ public class RnrTemplateServiceTest {
     ProgramRnrTemplate programRnrTemplate = mock(ProgramRnrTemplate.class);
     ArrayList<RnrColumn> rnrColumns = new ArrayList<>();
     when(programRnrTemplate.getRnrColumns()).thenReturn(rnrColumns);
-    when(programRnrTemplate.getProgramId()).thenReturn(1);
+    when(programRnrTemplate.getProgramId()).thenReturn(1L);
     when(programRnrTemplate.validateToSave()).thenReturn(new HashMap<String, OpenLmisMessage>());
     service.saveRnRTemplateForProgram(programRnrTemplate);
     verify(repository).saveProgramRnrTemplate(programRnrTemplate);
-    verify(programService).setTemplateConfigured(1);
+    verify(programService).setTemplateConfigured(1L);
   }
 
   @Test
@@ -68,5 +69,16 @@ public class RnrTemplateServiceTest {
     when(programRnrTemplate.validateToSave()).thenReturn(errors);
     service.saveRnRTemplateForProgram(programRnrTemplate);
     verify(repository, never()).saveProgramRnrTemplate(programRnrTemplate);
+  }
+
+  @Test
+  public void shouldFetchProgramTemplate() throws Exception {
+    List<RnrColumn> columns = new ArrayList<>();
+    when(repository.fetchRnrTemplateColumnsOrMasterColumns(1l)).thenReturn(columns);
+
+    ProgramRnrTemplate template = service.fetchProgramTemplate(1L);
+
+    verify(repository).fetchRnrTemplateColumnsOrMasterColumns(1l);
+    assertThat(template.getRnrColumns(), is(columns));
   }
 }

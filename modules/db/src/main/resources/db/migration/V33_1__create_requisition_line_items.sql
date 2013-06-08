@@ -23,11 +23,12 @@ totalLossesAndAdjustments             INTEGER,
 newPatientCount                       INTEGER,
 stockOutDays                          INTEGER,
 normalizedConsumption                 INTEGER,
-amc                                   NUMERIC(14, 4),
+amc                                   INTEGER,
 maxMonthsOfStock                      INTEGER NOT NULL,
 maxStockQuantity                      INTEGER,
 packsToShip                           INTEGER,
 price                                 NUMERIC(15, 4),
+expirationDate                        VARCHAR(10),
 remarks                               TEXT,
 dosesPerMonth                         INTEGER NOT NULL,
 dosesPerDispensingUnit                INTEGER NOT NULL,
@@ -36,10 +37,11 @@ roundToZero                           BOOLEAN,
 packRoundingThreshold                 INTEGER,
 fullSupply                            BOOLEAN NOT NULL,
 previousStockInHandAvailable          BOOLEAN NOT NULL DEFAULT FALSE,
-modifiedBy                            INTEGER,
-modifiedDate                          TIMESTAMP  DEFAULT  CURRENT_TIMESTAMP,
 createdBy                             INTEGER,
-createdDate                           TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+createdDate                           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+modifiedBy                            INTEGER,
+modifiedDate                          TIMESTAMP  DEFAULT  CURRENT_TIMESTAMP
 );
 
-CREATE INDEX i_requisition_line_items_rnrId ON requisition_line_items(rnrId);
+CREATE INDEX i_requisition_line_items_rnrId_fullSupply_t ON requisition_line_items(rnrId) WHERE fullSupply = TRUE;
+CREATE INDEX i_requisition_line_items_rnrId_fullSupply_f ON requisition_line_items(rnrId) WHERE fullSupply = FALSE;

@@ -17,7 +17,10 @@ import java.util.Date;
 @AllArgsConstructor
 public class AuditFields {
 
-  private int user;
+  private Long user;
   private Date currentTimestamp;
 
+  public AuditFields(Date currentTimestamp) {
+    this.currentTimestamp = currentTimestamp;
+  }
 }

@@ -23,9 +23,9 @@
     </div>
 
   </div>
-  <div class = "rnr-table" >
+  <div class = "rnr-table" tab-scroll bottom-offset="180">
     <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="rnr.no.products"></div>
-    <table id = "fullSupplyTable" class = "table table-bordered" >
+    <table id = "fullSupplyTable" fixed-table-header class = "table table-bordered" >
       <thead >
         <tr ng-show="pageLineItems.length">
           <th class = "col-{{programRnrColumn.name}}" ng-repeat = "programRnrColumn in visibleColumns"
@@ -83,6 +83,17 @@
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
                       <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
                       <span class = "beak-down" ></span >
+                    </span >
+                  </span >
+
+                  <span ng-switch-when = "expirationDate" >
+                    <input ng-disabled = "formDisabled"
+                           id = "{{getId(column.name, $parent)}}" type = "text"
+                           name = "expirationDate{{rnrLineItem['id']}}"
+                           maxlength = "7"
+                           ng-model = "rnrLineItem[column.name]"/>
+                    <span class = "rnr-form-error" ng-show = "rnrLineItem.expirationDateInvalid()"
+                          style = "display:block;" openlmis-message="invalid.date.format">
                     </span >
                   </span >
 
@@ -221,10 +232,10 @@
 
   <div id = "lossesAndAdjustments" modal = "lossesAndAdjustmentsModal"
        options = "{'backdrop':'static', 'escape':false}" >
-    <div class = "modal-header" ><h3 >Losses And Adjustments </h3 ></div >
+    <div class = "modal-header" ><h3 openlmis-message="label.losses.adjustments"> </h3 ></div >
     <div class = "modal-body" >
       <div class = "adjustment-field" >
-        <h5 >Add new Loss/Adjustment</h5 >
+        <h5 openlmis-message="label.add.losses.adjustments"></h5 >
 
         <div class = "row-fluid" >
           <div class = "span5" >
@@ -274,7 +285,7 @@
                      name = "{{adjustment.type.displayOrder}}"
                      type = "text"
                      ng-model = "adjustment.quantity"
-                     ng-change = "currentRnrLineItem.reEvaluateTotalLossesAndAdjustments(rnr, programRnrColumnList); resetModalError()"
+                     ng-change = "currentRnrLineItem.reEvaluateTotalLossesAndAdjustments(rnr, programRnrColumnList); resetModalErrorAndSetFormDirty()"
                      rnr-validator = "positiveInteger"
                      maxlength = "8"
                      ng-class = "highlightRequiredFieldInModal(adjustment.quantity)"
@@ -292,7 +303,7 @@
 
       <div class = "adjustment-total clearfix alert alert-warning"
            ng-show = "currentRnrLineItem.lossesAndAdjustments.length > 0" >
-        <span class = "pull-left" >Total</span ><span
+        <span class = "pull-left" openlmis-message="label.losses.total"></span ><span
         ng-bind = "currentRnrLineItem.totalLossesAndAdjustments" ></span >
       </div >
       <div class = "alert alert-danger" id = "modalErrorMessage"

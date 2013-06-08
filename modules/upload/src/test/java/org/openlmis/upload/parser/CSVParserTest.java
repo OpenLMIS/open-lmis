@@ -10,7 +10,9 @@ package org.openlmis.upload.parser;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.AuditFields;
@@ -21,16 +23,19 @@ import org.openlmis.upload.model.ModelClass;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+@Category(UnitTests.class)
 public class CSVParserTest {
 
-  public static final int MODIFIED_BY = 1;
+  public static final Long MODIFIED_BY = 1L;
   private CSVParser csvParser;
   private DummyRecordHandler recordHandler;
 
@@ -65,8 +70,8 @@ public class CSVParserTest {
     List<Importable> importedObjects = recordHandler.getImportedObjects();
     assertEquals(23, ((DummyImportable) importedObjects.get(0)).getMandatoryIntField());
     assertEquals("Random1", ((DummyImportable) importedObjects.get(0)).getMandatoryStringField());
-    assertEquals(25, ((DummyImportable) importedObjects.get(MODIFIED_BY)).getMandatoryIntField());
-    assertEquals("Random2", ((DummyImportable) importedObjects.get(MODIFIED_BY)).getMandatoryStringField());
+    assertEquals(25, ((DummyImportable) importedObjects.get(1)).getMandatoryIntField());
+    assertEquals("Random2", ((DummyImportable) importedObjects.get(1)).getMandatoryStringField());
   }
 
 
@@ -171,5 +176,22 @@ public class CSVParserTest {
     DummyImportable dummyImportable = (DummyImportable) recordHandler.getImportedObjects().get(0);
     assertThat(dummyImportable.getMultipleNestedFields().getEntityCode1(), is("code1-1"));
     assertThat(dummyImportable.getMultipleNestedFields().getEntityCode2(), is("code1-2"));
+  }
+
+  @Test
+  public void shouldPostProcessRecordsAfterSuccessfulUpload() throws UnsupportedEncodingException {
+    String csvInput = "mandatory string field   , mandatoryIntField, entity 1 code, entity 2 code\n" +
+      " Random1               , 23, code1-1, code1-2\n" +
+      " Random2                , 25, code2-1, code2-2\n";
+
+    InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
+
+
+    DummyRecordHandler spyRecordHandler = spy(recordHandler);
+    csvParser.process(inputStream, dummyImportableClass, spyRecordHandler, auditFields);
+    DummyImportable dummyImportable = (DummyImportable) spyRecordHandler.getImportedObjects().get(0);
+    assertThat(dummyImportable.getMultipleNestedFields().getEntityCode1(), is("code1-1"));
+    assertThat(dummyImportable.getMultipleNestedFields().getEntityCode2(), is("code1-2"));
+    verify(spyRecordHandler).postProcess();
   }
 }

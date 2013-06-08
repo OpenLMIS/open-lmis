@@ -9,6 +9,8 @@ package org.openlmis.shipment.file.csv.handler;
 import lombok.NoArgsConstructor;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.service.ShipmentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
@@ -16,12 +18,14 @@ import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Set;
 
 @Component
 @NoArgsConstructor
 public class ShipmentFilePostProcessHandler {
 
+  private static Logger logger = LoggerFactory.getLogger(ShipmentFilePostProcessHandler.class);
   @Autowired
   private ShipmentService shipmentService;
   @Autowired
@@ -34,15 +38,16 @@ public class ShipmentFilePostProcessHandler {
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo(shipmentFile.getName(), processingError);
     shipmentService.insertShipmentFileInfo(shipmentFileInfo);
 
-    Set<Integer> orderIds = shipmentFileReader.getOrderIds(shipmentFile);
-    shipmentService.updateOrders(orderIds, shipmentFileInfo);
+    Set<Long> orderIds = shipmentFileReader.getOrderIds(shipmentFile);
+    shipmentService.updateStatusAndShipmentIdForOrders(new ArrayList(orderIds), shipmentFileInfo);
 
     if (processingError) sendErrorFileToFtp(shipmentFile);
   }
 
   private void sendErrorFileToFtp(File file) {
-    Message<?> message = MessageBuilder.withPayload(file).build();
+    Message<File> message = MessageBuilder.withPayload(file).build();
     ftpOutputChannel.send(message);
+    logger.info("Sent  error file to FTP " + file.getName());
   }
 
 }

@@ -32,15 +32,15 @@ var utils = {
     return utils.parseIntWithBaseTen(number);
   },
 
-  isPositiveNumber: function (value) {
-    var INTEGER_REGEXP = /^\d*$/;
-    return INTEGER_REGEXP.test(value);
-  },
-
   isValidPage: function (pageNumber, totalPages) {
     pageNumber = parseInt(pageNumber, 10);
     return !!pageNumber && pageNumber > 0 && pageNumber <= totalPages;
+  },
+
+  isEmpty: function (value) {
+    return (value == null || value == undefined || value.toString().trim().length == 0);
   }
+
 };
 
 String.prototype.format = function() {

@@ -26,9 +26,10 @@ public class BaseController {
   public static final String FORBIDDEN_EXCEPTION = "forbidden.exception";
   public static final String ACCEPT_JSON = "Accept=application/json";
   public static final String ACCEPT_PDF = "Accept=application/pdf";
+  public static final String ACCEPT_CSV = "Accept=application/csv";
 
-  protected Integer loggedInUserId(HttpServletRequest request) {
-    return (Integer) request.getSession().getAttribute(USER_ID);
+  protected Long loggedInUserId(HttpServletRequest request) {
+    return (Long) request.getSession().getAttribute(USER_ID);
   }
 
   protected String homePageUrl() {

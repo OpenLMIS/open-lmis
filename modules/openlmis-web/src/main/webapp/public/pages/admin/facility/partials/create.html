@@ -4,9 +4,11 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<div xmlns="http://www.w3.org/1999/html">
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
 <div ng-hide="facility.id"><h2 openlmis-message="create.facility.addNew"></h2></div>
-<div ng-show="facility.id"><h2 openlmis-message="edit.facility.edit"></h2></div>
+<div ng-show="facility.id">
+  <h2 id="edit-facility-header" openlmis-message="edit.facility.edit"></h2>
+</div>
 
 <form ng-submit="saveFacility()" id="create-facility" name="facilityForm" novalidate
       ng-disabled="facility.dataReportable == 'false'">
@@ -106,7 +108,7 @@
       <div class="form-field radio-group">
         <input ng-model="facility.active" type="radio" name="isActive" value="true"
                ng:required="true" ng-disabled="facility.dataReportable == 'false'"/><strong
-        openlmis-message="button.yes"></strong> &nbsp; &nbsp;
+          openlmis-message="button.yes"></strong> &nbsp; &nbsp;
         &nbsp;
         <input ng-model="facility.active" type="radio" name="isActive" value="false"
                ng-disabled="facility.dataReportable == 'false'"/><strong openlmis-message="button.no"></strong>
@@ -258,7 +260,7 @@
                   openlmis-message="create.facility.mandatoryStartDate">
             </span>
           </td>
-          <td><input type="button" class="btn btn-primary" id="supported-program-add" value="Add"
+          <td><input type="button" class="btn btn-primary" id="supported-program-add" openlmis-message="button.add"
                      ng-disabled="!supportedProgram.program.id" ng-click="addSupportedProgram(supportedProgram)"></td>
         </tr>
         </tbody>
@@ -410,10 +412,10 @@
       <div class="form-field radio-group">
         <input ng-model="facility.hasElectronicScc" type="radio" name="has-electronic-scc"
                value="true" ng-disabled="facility.dataReportable == 'false'"/><strong
-        openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+          openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
         <input ng-model="facility.hasElectronicScc" type="radio" name="has-electronic-scc"
                value="false" ng-disabled="facility.dataReportable == 'false'"/><strong
-        openlmis-message="button.no"></strong>
+          openlmis-message="button.no"></strong>
       </div>
     </div>
 
@@ -423,10 +425,10 @@
       <div class="form-field radio-group">
         <input ng-model="facility.hasElectronicDar" type="radio" name="has-electronic-dar"
                value="true" ng-disabled="facility.dataReportable == 'false'"/><strong
-        openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+          openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
         <input ng-model="facility.hasElectronicDar" type="radio" name="has-electronic-dar"
                value="false" ng-disabled="facility.dataReportable == 'false'"/><strong
-        openlmis-message="button.no"></strong>
+          openlmis-message="button.no"></strong>
       </div>
     </div>
   </div>
@@ -473,36 +475,12 @@
        ng-click="showConfirmFacilityDeleteWindow()" openlmis-message="button.delete"></a>
   </div>
   <div class="form-cell button-row" ng-show="facility.dataReportable == 'false'">
-    <a href="" class="btn btn-primary save-button" ng-show="facility.id!=null" ng-click="restoreConfirmModal=true"
+    <a href="" class="btn btn-primary save-button" ng-show="facility.id!=null" ng-click="showConfirmFacilityRestore()"
        openlmis-message="button.restore"></a>
   </div>
 
-  <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"></div>
-  <div class="toolbar-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"></div>
-
-</div>
-
-<div id="restoreConfirmModal" modal="restoreConfirmModal">
-  <div class="modal-header"><h3 openlmis-message="create.facility.restoreFacility"></h3></div>
-  <div class="modal-body">
-    <p>"{{originalFacilityName}}" / "{{originalFacilityCode}}" will be restored in the system</p>
-  </div>
-  <div class="modal-footer">
-    <a href="" class="btn btn-primary" ng-click="restoreConfirmModal=false; activeConfirmModal=true;"
-       data-dismiss="modal" openlmis-message="button.ok"></a>
-    <a href="" class="btn" ng-click="restoreConfirmModal=false" openlmis-message="button.cancel"></a>
-  </div>
-</div>
-
-<div id="activeConfirmModel" modal="activeConfirmModal">
-  <div class="modal-header"><h3 openlmis-message="create.facility.activateFacility"></h3></div>
-  <div class="modal-body">
-    <p openlmis-message="create.facility.setFacilityActive"></p>
-  </div>
-  <div class="modal-footer">
-    <a href="" class="btn btn-primary" ng-click="restoreFacility(true)" openlmis-message="button.yes"></a>
-    <a href="" class="btn" ng-click="restoreFacility(false)" data-dismiss="modal" openlmis-message="button.no"></a>
-  </div>
+  <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+  <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
 </div>
 
 </div>

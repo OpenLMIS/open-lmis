@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -18,6 +19,7 @@ import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
+import org.openlmis.db.categories.UnitTests;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.*;
@@ -29,6 +31,7 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.startDate;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ProcessingPeriodRepositoryTest {
   @Rule
@@ -47,17 +50,17 @@ public class ProcessingPeriodRepositoryTest {
   @Test
   public void shouldGetAllPeriodsForGivenSchedule() throws Exception {
     List<ProcessingPeriod> processingPeriodList = new ArrayList<>();
-    when(mapper.getAll(123)).thenReturn(processingPeriodList);
-    List<ProcessingPeriod> periods = repository.getAll(123);
+    when(mapper.getAll(123L)).thenReturn(processingPeriodList);
+    List<ProcessingPeriod> periods = repository.getAll(123L);
 
-    verify(mapper).getAll(123);
+    verify(mapper).getAll(123L);
     assertThat(periods, is(processingPeriodList));
   }
 
   @Test
   public void shouldGetAllPeriodsAfterAGivenDateAndPeriod() throws Exception {
-    int scheduleId = 1;
-    Integer startingPeriodId = 10;
+    Long scheduleId = 1L;
+    Long startingPeriodId = 10L;
     DateTime currentDate = new DateTime();
     Date programStartDate = currentDate.minusMonths(1).toDate();
     List<ProcessingPeriod> processingPeriods = Arrays.asList(new ProcessingPeriod());
@@ -70,7 +73,7 @@ public class ProcessingPeriodRepositoryTest {
 
   @Test
   public void shouldGetAllPeriodsAfterAGivenDate() throws Exception {
-    int scheduleId = 1;
+    Long scheduleId = 1L;
     DateTime currentDate = new DateTime();
     Date programStartDate = currentDate.minusMonths(1).toDate();
     List<ProcessingPeriod> processingPeriods = Arrays.asList(new ProcessingPeriod());
@@ -168,9 +171,9 @@ public class ProcessingPeriodRepositoryTest {
   @Test
   public void shouldGetPeriodById() throws Exception {
     final ProcessingPeriod expected = new ProcessingPeriod();
-    when(mapper.getById(1)).thenReturn(expected);
-    final ProcessingPeriod actual = repository.getById(1);
-    verify(mapper).getById(1);
+    when(mapper.getById(1L)).thenReturn(expected);
+    final ProcessingPeriod actual = repository.getById(1L);
+    verify(mapper).getById(1L);
     assertThat(actual, is(expected));
   }
 
@@ -178,7 +181,7 @@ public class ProcessingPeriodRepositoryTest {
   public void shouldGetImmediatePreviousPeriod() throws Exception {
     ProcessingPeriod previousPeriod = new ProcessingPeriod();
 
-    ProcessingPeriod period = new ProcessingPeriod(1);
+    ProcessingPeriod period = new ProcessingPeriod(1L);
     when(mapper.getImmediatePreviousPeriodFor(period)).thenReturn(previousPeriod);
 
     assertThat(repository.getImmediatePreviousPeriod(period), is(previousPeriod));
@@ -189,7 +192,7 @@ public class ProcessingPeriodRepositoryTest {
     Date startDate = DateTime.now().toDate();
     Date endDate = DateTime.now().toDate();
     List<ProcessingPeriod> expected = new ArrayList<>();
-    Integer scheduleId = 1;
+    Long scheduleId = 1L;
     when(mapper.getAllPeriodsForDateRange(scheduleId, startDate, endDate)).thenReturn(expected);
 
     List<ProcessingPeriod> actual = repository.getAllPeriodsForDateRange(scheduleId, startDate, endDate);

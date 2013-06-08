@@ -17,7 +17,7 @@ function ApproveRnrListController($scope, requisitionList, $location) {
     showSelectionCheckbox:false,
     enableColumnResize: true,
     showColumnMenu:false,
-    sortInfo:{ field:'submittedDate', direction:'ASC'},
+    sortInfo:{ fields: ['submittedDate'], directions: ['asc'] },
     showFilter:false,
     columnDefs:[
       {field:'programName', displayName:'Program' },

@@ -9,9 +9,11 @@ package org.openlmis.core.upload;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
 
@@ -20,7 +22,7 @@ import java.util.Date;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-
+@Category(UnitTests.class)
 public class AbstractModelPersistenceHandlerTest {
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
@@ -33,7 +35,7 @@ public class AbstractModelPersistenceHandlerTest {
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("code: upload.record.error, params: { error; 1 }");
 
-    handler.execute(importable, 2, new AuditFields(1, null));
+    handler.execute(importable, 2, new AuditFields(1L, null));
   }
 
 
@@ -41,14 +43,14 @@ public class AbstractModelPersistenceHandlerTest {
   public void shouldAddAuditInformationToModel() throws Exception {
 
     Date currentTimestamp = new Date();
-    AuditFields auditFields = new AuditFields(1, currentTimestamp);
+    AuditFields auditFields = new AuditFields(1L, currentTimestamp);
     Importable currentRecord = new TestImportable();
     AbstractModelPersistenceHandler handler = instantiateHandler(null);
 
     handler.execute(currentRecord, 1, auditFields);
 
     assertThat(((BaseModel) currentRecord).getModifiedDate(), is(currentTimestamp));
-    assertThat(((BaseModel) currentRecord).getModifiedBy(), is(1));
+    assertThat(((BaseModel) currentRecord).getModifiedBy(), is(1L));
     assertThat(((BaseModel) currentRecord).getId(), is(nullValue()));
   }
 
@@ -56,11 +58,11 @@ public class AbstractModelPersistenceHandlerTest {
   public void shouldAddIdFromExistingModel() throws Exception {
 
     final Date currentTimestamp = new Date();
-    AuditFields auditFields = new AuditFields(1, currentTimestamp);
+    AuditFields auditFields = new AuditFields(1L, currentTimestamp);
     Importable currentRecord = new TestImportable();
     BaseModel existing = new BaseModel() {
     };
-    existing.setId(2);
+    existing.setId(2L);
     existing.setModifiedDate(DateUtils.addDays(currentTimestamp, -1));
 
     AbstractModelPersistenceHandler handler = instantiateHandler(existing);
@@ -68,19 +70,19 @@ public class AbstractModelPersistenceHandlerTest {
     handler.execute(currentRecord, 1, auditFields);
 
     assertThat(((BaseModel) currentRecord).getModifiedDate(), is(currentTimestamp));
-    assertThat(((BaseModel) currentRecord).getModifiedBy(), is(1));
-    assertThat(((BaseModel) currentRecord).getId(), is(2));
+    assertThat(((BaseModel) currentRecord).getModifiedBy(), is(1L));
+    assertThat(((BaseModel) currentRecord).getId(), is(2L));
   }
 
   @Test
   public void shouldThrowExceptionIfModifiedDateOfExistingRecordIsSameAsCurrentTimeStamp() throws Exception {
 
     final Date currentTimestamp = new Date();
-    AuditFields auditFields = new AuditFields(1, currentTimestamp);
+    AuditFields auditFields = new AuditFields(1L, currentTimestamp);
     Importable currentRecord = new TestImportable();
     BaseModel existing = new BaseModel() {
     };
-    existing.setId(2);
+    existing.setId(2L);
     existing.setModifiedDate(currentTimestamp);
 
     AbstractModelPersistenceHandler handler = instantiateHandler(existing);

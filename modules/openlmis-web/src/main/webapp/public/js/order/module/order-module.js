@@ -3,9 +3,14 @@
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+require(['../../shared/app', '../controller/view-order-list-controller'], function (app) {
+  app.loadApp();
+  angular.module('order', ['openlmis', 'ngGrid']).config(['$routeProvider', function ($routeProvider) {
+    $routeProvider.
+      when('/view-orders', {controller: ViewOrderListController, templateUrl: 'partials/view-order.html', resolve: ViewOrderListController.resolve}).
+      otherwise({redirectTo: '/view-orders'});
 
-var orderModule = angular.module('order', ['openlmis', 'ngGrid']).config(['$routeProvider', function ($routeProvider) {
-  $routeProvider.
-    when('/view-orders', {controller:ViewOrderListController, templateUrl:'partials/view-order.html', resolve:ViewOrderListController.resolve}).
-    otherwise({redirectTo:'/view-orders'});
-}]);
+  }]);
+  angular.bootstrap(document, ['order']);
+
+});

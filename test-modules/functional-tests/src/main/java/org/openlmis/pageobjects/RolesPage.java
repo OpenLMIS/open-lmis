@@ -27,7 +27,7 @@ public class RolesPage extends Page {
 
   Map<String, WebElement> webElementMap = new HashMap();
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Add new')]")
+  @FindBy(how = How.ID, using = "role-add-new")
   private static WebElement createNewRoleButton;
 
   @FindBy(how = How.ID, using = "name")
@@ -90,7 +90,7 @@ public class RolesPage extends Page {
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Edit role')]")
   private static WebElement editRoleHeader;
 
-  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Roles')]")
+  @FindBy(how = How.XPATH, using = "//h2/span[contains(text(),'Roles')]")
   private static WebElement rolesHeader;
 
   public RolesPage(TestWebDriver driver) throws IOException {
@@ -117,22 +117,22 @@ public class RolesPage extends Page {
 
     testWebDriver.waitForElementToAppear(createNewRoleButton);
     createNewRoleButton.click();
-      if(programDependant){
-        clickProgramRole();
-        testWebDriver.waitForElementToAppear(continueButton);
-        testWebDriver.click(continueButton);
-      }
+    if (programDependant) {
+      clickProgramRole();
+      testWebDriver.waitForElementToAppear(continueButton);
+      testWebDriver.click(continueButton);
+    }
     testWebDriver.sleep(1000);
-    testWebDriver.handleScrollByPixels(0,2000);
+    testWebDriver.handleScrollByPixels(0, 2000);
     for (String right : rights) {
-          testWebDriver.sleep(500);
-          webElementMap.get(right).click();
-      }
+      testWebDriver.sleep(500);
+      webElementMap.get(right).click();
+    }
 
-      for (String right : rights) {
-          if(!webElementMap.get(right).isSelected())
-          testWebDriver.click(webElementMap.get(right));
-      }
+    for (String right : rights) {
+      if (!webElementMap.get(right).isSelected())
+        testWebDriver.click(webElementMap.get(right));
+    }
     roleNameField.sendKeys(roleName);
     roleDescription.sendKeys(roleDesc);
     saveButton.click();
@@ -141,54 +141,49 @@ public class RolesPage extends Page {
 
   }
 
-  public void clickARole(String roleName){
-    WebElement role=testWebDriver.getElementByXpath("//a[contains(text(),'"+roleName+"')]");
+  public void clickARole(String roleName) {
+    WebElement role = testWebDriver.getElementByXpath("//a[contains(text(),'" + roleName + "')]");
     testWebDriver.waitForElementToAppear(role);
     role.click();
     testWebDriver.waitForElementToAppear(editRoleHeader);
   }
 
-  public void clickProgramRole(){
+  public void clickProgramRole() {
     testWebDriver.waitForElementToAppear(programRoleType);
     programRoleType.click();
     testWebDriver.sleep(100);
   }
 
-  public void clickAdminRole(){
+  public void clickAdminRole() {
     testWebDriver.waitForElementToAppear(adminRoleType);
     adminRoleType.click();
     testWebDriver.sleep(100);
   }
 
-  public void verifyProgramRoleRadioNonEditable()
-  {
+  public void verifyProgramRoleRadioNonEditable() {
     testWebDriver.waitForElementToAppear(programRoleType);
     assertTrue(testWebDriver.getAttribute(programRoleType, "disabled"), true);
   }
 
-  public void verifyAdminRoleRadioNonEditable()
-  {
+  public void verifyAdminRoleRadioNonEditable() {
     testWebDriver.waitForElementToAppear(adminRoleType);
     assertTrue(testWebDriver.getAttribute(adminRoleType, "disabled"), true);
   }
 
-  public void verifyRoleSelected(List<String> roleList)
-  {
+  public void verifyRoleSelected(List<String> roleList) {
     for (String right : roleList) {
       testWebDriver.sleep(500);
       assertTrue(webElementMap.get(right).isSelected());
     }
   }
 
-  public void clickSaveButton()
-  {
+  public void clickSaveButton() {
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
     testWebDriver.sleep(100);
   }
 
-  public void clickCancelButton()
-  {
+  public void clickCancelButton() {
     testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();
     testWebDriver.waitForElementToAppear(rolesHeader);

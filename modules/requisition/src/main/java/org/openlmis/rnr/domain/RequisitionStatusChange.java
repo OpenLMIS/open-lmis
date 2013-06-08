@@ -1,3 +1,4 @@
+
 /*
  * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
@@ -15,17 +16,17 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequisitionStatusChange {
-  private Integer id;
+public class RequisitionStatusChange{
+  private Long id;
 
-  private Integer rnrId;
+  private Long rnrId;
   private RnrStatus status;
-  private Integer statusChangedBy;
-  private Date statusChangeDate;
+  private Long createdBy;
+  private Date createdDate;
 
   public RequisitionStatusChange(Rnr requisition) {
     this.rnrId = requisition.getId();
     this.status = requisition.getStatus();
-    this.statusChangedBy = requisition.getModifiedBy();
+    this.createdBy = requisition.getModifiedBy();
   }
 }

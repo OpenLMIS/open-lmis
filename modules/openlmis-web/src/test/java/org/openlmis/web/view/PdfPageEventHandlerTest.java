@@ -14,7 +14,9 @@ import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.joda.time.DateTime;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.view.pdf.PdfPageEventHandler;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -32,7 +34,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
-
+@Category(UnitTests.class)
 @PrepareForTest({PdfPageEventHandler.class, BaseFont.class})
 public class PdfPageEventHandlerTest {
 

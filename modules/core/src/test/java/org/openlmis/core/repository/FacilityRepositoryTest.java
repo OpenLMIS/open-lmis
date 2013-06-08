@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -18,14 +19,13 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -33,12 +33,11 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.builder.FacilityBuilder.FACILITY_TYPE_ID;
-import static org.openlmis.core.builder.FacilityBuilder.GEOGRAPHIC_ZONE_CODE;
-import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({DateTime.class})
 public class FacilityRepositoryTest {
@@ -53,7 +52,7 @@ public class FacilityRepositoryTest {
 
   private FacilityRepository repository;
   private DateTime now;
-  private GeographicLevel defaultGeographicLevel = new GeographicLevel(1, "levelCode", "levelName", 4);
+  private GeographicLevel defaultGeographicLevel = new GeographicLevel(1L, "levelCode", "levelName", 4);
 
   @Before
   public void setUp() {
@@ -131,10 +130,10 @@ public class FacilityRepositoryTest {
   public void shouldSetFacilityOperatorIdWhenCodeIsValid() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.getOperatedBy().setCode("valid code");
-    when(mapper.getOperatedByIdForCode("valid code")).thenReturn(1);
+    when(mapper.getOperatedByIdForCode("valid code")).thenReturn(1L);
 
     repository.save(facility);
-    assertThat(facility.getOperatedBy().getId(), is(1));
+    assertThat(facility.getOperatedBy().getId(), is(1L));
   }
 
   @Test
@@ -163,16 +162,16 @@ public class FacilityRepositoryTest {
     Facility facility = make(a(defaultFacility));
     facility.getFacilityType().setCode("valid code");
     FacilityType facilityType = new FacilityType("code");
-    facilityType.setId(1);
+    facilityType.setId(1L);
     when(mapper.getFacilityTypeForCode("valid code")).thenReturn(facilityType);
 
     repository.save(facility);
-    assertThat(facility.getFacilityType().getId(), is(1));
+    assertThat(facility.getFacilityType().getId(), is(1L));
   }
 
   @Test
   public void shouldGetFacilityById() throws Exception {
-    Integer facilityId = 1;
+    Long facilityId = 1L;
     Facility facility = new Facility();
     facility.setId(facilityId);
 
@@ -186,7 +185,7 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldUpdateFacilityIfIDIsSet() throws Exception {
     Facility facility = make(a(defaultFacility));
-    facility.setId(1);
+    facility.setId(1L);
 
     repository.save(facility);
     verify(mapper).update(facility);
@@ -203,16 +202,20 @@ public class FacilityRepositoryTest {
 
   @Test
   public void shouldUpdateDataReportableActiveFlag() {
-
     Facility facility = make(a(defaultFacility));
-    repository.updateDataReportableAndActiveFor(facility);
+    when(mapper.getById(facility.getId())).thenReturn(facility);
+
+    Facility returnedFacility = repository.updateDataReportableAndActiveFor(facility);
+
+    assertThat(returnedFacility, is(facility));
     verify(mapper).updateDataReportableAndActiveFor(facility);
+    verify(mapper).getById(facility.getId());
   }
 
   @Test
   public void shouldReturnIdForTheGivenCode() {
-    when(mapper.getIdForCode("ABC")).thenReturn(10);
-    assertThat(repository.getIdForCode("ABC"), is(10));
+    when(mapper.getIdForCode("ABC")).thenReturn(10L);
+    assertThat(repository.getIdForCode("ABC"), is(10L));
   }
 
   @Test
@@ -237,7 +240,7 @@ public class FacilityRepositoryTest {
   public void shouldSetGeographicZoneFromCodeAfterValidation() throws Exception {
     Facility facility = make(a(defaultFacility));
     GeographicZone existingZone = new GeographicZone();
-    int existingId = 1;
+    Long existingId = 1L;
     existingZone.setId(existingId);
     existingZone.setLevel(defaultGeographicLevel);
     when(geographicZoneRepository.getByCode(facility.getGeographicZone().getCode())).thenReturn(existingZone);
@@ -280,11 +283,11 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldGetHomeFacilityForUserWithRight() throws Exception {
     Facility expectedFacility = new Facility();
-    when(mapper.getHomeFacilityWithRights(1, "{APPROVE_REQUISITION, CREATE_REQUISITION}")).thenReturn(expectedFacility);
-    Facility userHomeFacility = repository.getHomeFacilityForRights(1, Right.APPROVE_REQUISITION, Right.CREATE_REQUISITION);
+    when(mapper.getHomeFacilityWithRights(1L, "{APPROVE_REQUISITION, CREATE_REQUISITION}")).thenReturn(expectedFacility);
+    Facility userHomeFacility = repository.getHomeFacilityForRights(1L, Right.APPROVE_REQUISITION, Right.CREATE_REQUISITION);
 
     assertThat(userHomeFacility, is(expectedFacility));
-    verify(mapper).getHomeFacilityWithRights(1, "{APPROVE_REQUISITION, CREATE_REQUISITION}");
+    verify(mapper).getHomeFacilityWithRights(1L, "{APPROVE_REQUISITION, CREATE_REQUISITION}");
   }
 
 }

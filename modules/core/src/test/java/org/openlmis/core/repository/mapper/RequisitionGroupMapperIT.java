@@ -8,9 +8,11 @@ package org.openlmis.core.repository.mapper;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.domain.*;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -29,10 +31,11 @@ import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.*;
 import static org.openlmis.core.builder.SupervisoryNodeBuilder.defaultSupervisoryNode;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class RequisitionGroupMapperIT {
   @Autowired
   RequisitionGroupMapper requisitionGroupMapper;
@@ -91,7 +94,7 @@ public class RequisitionGroupMapperIT {
 
     requisitionGroup.setName("updated name");
     requisitionGroup.setDescription("updated description");
-    supervisoryNode.setId(2);
+    supervisoryNode.setId(2L);
 
     requisitionGroupMapper.update(requisitionGroup);
 
@@ -101,7 +104,7 @@ public class RequisitionGroupMapperIT {
     assertThat(resultRequisitionGroup.getModifiedDate(), is(requisitionGroup.getModifiedDate()));
     assertThat(resultRequisitionGroup.getName(), is("updated name"));
     assertThat(resultRequisitionGroup.getDescription(), is("updated description"));
-    assertThat(resultRequisitionGroup.getSupervisoryNode().getId(), is(2));
+    assertThat(resultRequisitionGroup.getSupervisoryNode().getId(), is(2L));
   }
 
   @Test
@@ -132,7 +135,7 @@ public class RequisitionGroupMapperIT {
     RequisitionGroupMember requisitionGroupMember = new RequisitionGroupMember();
     requisitionGroupMember.setFacility(facility);
     requisitionGroupMember.setRequisitionGroup(requisitionGroup);
-    requisitionGroupMember.setModifiedBy(1);
+    requisitionGroupMember.setModifiedBy(1L);
     requisitionGroupMemberMapper.insert(requisitionGroupMember);
 
     assertThat(requisitionGroupMapper.getRequisitionGroupForProgramAndFacility(requisitionGroupProgramSchedule.getProgram(),

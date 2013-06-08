@@ -5,5 +5,11 @@ CREATE TABLE requisition_line_item_losses_adjustments (
   requisitionLineItemId         INTEGER REFERENCES requisition_line_items(id),
   type                          VARCHAR(250) REFERENCES losses_adjustments_types(name),
   quantity                      INTEGER,
+  createdBy                       INTEGER,
+  createdDate                     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy                      INTEGER,
+  modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(requisitionLineItemId, type)
 );
+
+CREATE INDEX i_requisition_line_item_losses_adjustments_lineItemId ON requisition_line_item_losses_adjustments(requisitionLineItemId);

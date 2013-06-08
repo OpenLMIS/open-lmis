@@ -7,10 +7,11 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class FacilityOperator {
-    private Integer id;
+@EqualsAndHashCode(callSuper = false)
+public class FacilityOperator extends BaseModel{
     private String code;
     private String text;
     private Integer displayOrder;

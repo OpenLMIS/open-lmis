@@ -8,17 +8,23 @@ package org.openlmis.core.repository.mapper;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.utils.mapper.TestVendorMapper;
+import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.email.domain.EmailMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -33,10 +39,11 @@ import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.UserBuilder.*;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class UserMapperIT {
 
   @Autowired
@@ -53,6 +60,8 @@ public class UserMapperIT {
   private SupervisoryNodeMapper supervisoryNodeMapper;
   @Autowired
   TestVendorMapper vendorMapper;
+  @Autowired
+  QueryExecutor queryExecutor;
 
   private Facility facility;
   private SupervisoryNode supervisoryNode;
@@ -122,7 +131,7 @@ public class UserMapperIT {
     Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
 
     Role role = insertRole();
-    roleRightsMapper.createRoleRight(role.getId(), APPROVE_REQUISITION);
+    roleRightsMapper.createRoleRight(role, APPROVE_REQUISITION);
 
     roleAssignmentMapper.insertRoleAssignment(someUser.getId(), program.getId(), supervisoryNode.getId(), role.getId());
 
@@ -305,6 +314,20 @@ public class UserMapperIT {
 
     User user = userMapper.selectUserByUserNameAndPassword(defaultUserName, "random");
     assertThat(user, is(nullValue()));
+  }
+
+  @Test
+  public void shouldInsertEmailNotification() throws Exception {
+    EmailMessage emailMessage = new EmailMessage("toUser@email.com", "subject for email", "content of email");
+    int insertCount = userMapper.insertEmailNotification(emailMessage);
+
+    assertThat(insertCount, is(1));
+
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM email_notifications WHERE id=?", Arrays.asList(emailMessage.getId()));
+    resultSet.next();
+    assertThat(resultSet.getString("receiver"), is("toUser@email.com"));
+    assertThat(resultSet.getString("subject"), is("subject for email"));
+    assertThat(resultSet.getString("content"), is("content of email"));
   }
 
   private Program insertProgram(Program program) {

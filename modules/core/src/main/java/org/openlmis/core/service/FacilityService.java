@@ -8,21 +8,21 @@ package org.openlmis.core.service;
 
 
 import lombok.NoArgsConstructor;
+import org.ict4h.atomfeed.server.service.Event;
+import org.ict4h.atomfeed.server.service.EventService;
+import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.exception.DataException;
+import org.openlmis.core.dto.FacilityFeedDTO;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
-import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.net.URISyntaxException;
+import java.util.*;
 
 @Service
 @NoArgsConstructor
@@ -36,18 +36,22 @@ public class FacilityService {
   private GeographicZoneRepository geographicZoneRepository;
   private SupervisoryNodeService supervisoryNodeService;
 
+  private EventService eventService;
+
   public static final String SUPPORTED_PROGRAMS_INVALID = "supported.programs.invalid";
 
   @Autowired
   public FacilityService(FacilityRepository facilityRepository, ProgramSupportedRepository programSupportedRepository,
                          ProgramRepository programRepository, SupervisoryNodeService supervisoryNodeService,
-                         RequisitionGroupService requisitionGroupService, GeographicZoneRepository geographicZoneRepository) {
+                         RequisitionGroupService requisitionGroupService, GeographicZoneRepository geographicZoneRepository,
+                         EventService eventService) {
     this.facilityRepository = facilityRepository;
     this.programSupportedRepository = programSupportedRepository;
     this.programRepository = programRepository;
     this.supervisoryNodeService = supervisoryNodeService;
     this.requisitionGroupService = requisitionGroupService;
     this.geographicZoneRepository = geographicZoneRepository;
+    this.eventService = eventService;
   }
 
   @Transactional
@@ -66,26 +70,17 @@ public class FacilityService {
     return facilityRepository.getAll();
   }
 
-  public List<Facility> getAllFacilitiesDetail(){
-    return facilityRepository.getAllFacilitiesDetail();
-  }
-
-  public List<Facility> getMailingLabels(){
-      return facilityRepository.getMailingLabels();
-  }
-
   public void uploadSupportedProgram(ProgramSupported programSupported) {
     programSupported.isValid();
 
-    Integer facilityId = facilityRepository.getIdForCode(programSupported.getFacilityCode());
+    Long facilityId = facilityRepository.getIdForCode(programSupported.getFacilityCode());
     programSupported.setFacilityId(facilityId);
-    Integer programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
+    Long programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
     programSupported.setProgram(new Program(programId));
 
     if (programSupported.getId() == null) {
       programSupportedRepository.addSupportedProgram(programSupported);
-    }
-    else{
+    } else {
       programSupportedRepository.updateSupportedProgram(programSupported);
     }
   }
@@ -102,26 +97,32 @@ public class FacilityService {
     return geographicZoneRepository.getAllGeographicZones();
   }
 
-  public List<GeographicZone> getAllGeographicZones() {
-        return geographicZoneRepository.getAllZones();
-  }
-
-
-  public Facility getHomeFacility(Integer userId) {
+  public Facility getHomeFacility(Long userId) {
     return facilityRepository.getHomeFacility(userId);
   }
 
-  public Facility getById(Integer id) {
+  public Facility getById(Long id) {
     Facility facility = facilityRepository.getById(id);
     facility.setSupportedPrograms(programSupportedRepository.getAllByFacilityId(id));
     return facility;
   }
 
-  public void updateDataReportableAndActiveFor(Facility facility) {
-    facilityRepository.updateDataReportableAndActiveFor(facility);
+  public Facility updateDataReportableAndActiveFor(Facility facility) {
+    Facility updatedFacility = facilityRepository.updateDataReportableAndActiveFor(facility);
+    updatedFacility.setSupportedPrograms(programSupportedRepository.getAllByFacilityId(facility.getId()));
+
+    getFacilityAndNotify(facility);
+
+    return updatedFacility;
   }
 
-  public List<Facility> getUserSupervisedFacilities(Integer userId, Integer programId, Right... rights) {
+  private void getFacilityAndNotify(Facility facility) {
+    facility = facilityRepository.getById(facility.getId());
+
+    notifyFacilityFeed(facility);
+  }
+
+  public List<Facility> getUserSupervisedFacilities(Long userId, Long programId, Right... rights) {
     List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, rights);
     List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes);
     return facilityRepository.getFacilitiesBy(programId, requisitionGroups);
@@ -136,9 +137,19 @@ public class FacilityService {
       programSupported.isValid();
     }
     facilityRepository.save(facility);
+    getFacilityAndNotify(facility);
   }
 
-  public List<Facility> getForUserAndRights(Integer userId, Right... rights) {
+  private void notifyFacilityFeed(Facility facility) {
+    try{
+      FacilityFeedDTO facilityFeedDTO = new FacilityFeedDTO(facility);
+      eventService.notify(new Event(UUID.randomUUID().toString(), "Facility", DateTime.now(), "", facilityFeedDTO.getSerializedContents(), "facility"));
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public List<Facility> getForUserAndRights(Long userId, Right... rights) {
     List<SupervisoryNode> supervisoryNodesInHierarchy = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, rights);
     List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodesInHierarchy);
     final Set<Facility> userFacilities = new HashSet<>(facilityRepository.getAllInRequisitionGroups(requisitionGroups));
@@ -159,8 +170,8 @@ public class FacilityService {
   }
 
   public ProgramSupported getProgramSupported(ProgramSupported programSupported) {
-    Integer facilityId = facilityRepository.getIdForCode(programSupported.getFacilityCode());
-    Integer programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
+    Long facilityId = facilityRepository.getIdForCode(programSupported.getFacilityCode());
+    Long programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
 
     return programSupportedRepository.getByFacilityIdAndProgramId(facilityId, programId);
   }

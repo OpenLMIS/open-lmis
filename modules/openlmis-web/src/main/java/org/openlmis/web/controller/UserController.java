@@ -75,7 +75,7 @@ public class UserController extends BaseController {
   }
 
   @RequestMapping(value = "/forgot-password", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> sendPasswordTokenEmail(@RequestBody User user, HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> sendPasswordTokenEmail(@RequestBody User user) {
     try {
       String resetPasswordLink = baseUrl + RESET_PASSWORD_PATH;
       userService.sendForgotPasswordEmail(user, resetPasswordLink);
@@ -105,7 +105,7 @@ public class UserController extends BaseController {
   @RequestMapping(value = "/users/{id}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USERS')")
   public ResponseEntity<OpenLmisResponse> update(@RequestBody User user,
-                                                 @PathVariable("id") Integer id,
+                                                 @PathVariable("id") Long id,
                                                  HttpServletRequest request) {
     ResponseEntity<OpenLmisResponse> successResponse;
     user.setModifiedBy(loggedInUserId(request));
@@ -128,7 +128,7 @@ public class UserController extends BaseController {
 
   @RequestMapping(value = "/users/{id}", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USERS')")
-  public User get(@PathVariable(value = "id") Integer id) {
+  public User get(@PathVariable(value = "id") Long id) {
     return userService.getById(id);
   }
 

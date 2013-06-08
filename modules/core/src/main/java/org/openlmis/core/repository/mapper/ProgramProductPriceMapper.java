@@ -25,7 +25,7 @@ public interface ProgramProductPriceMapper {
   @Select({"SELECT * FROM program_product_price_history where id = #{id}"})
   @Results({@Result(property = "programProduct.id", column = "programProductId"),
       @Result(property = "programProduct.currentPrice", column = "price")})
-  ProgramProductPrice getById(Integer id);
+  ProgramProductPrice getById(Long id);
 
   @Select({"SELECT * FROM program_product_price_history WHERE programProductId = #{id} AND endDate IS NULL"})
   @Results({@Result(property = "programProduct.id", column = "programProductId"),

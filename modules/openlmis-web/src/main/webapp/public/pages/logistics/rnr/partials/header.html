@@ -4,8 +4,8 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<div id="requisition-header">
-  <h2>Report and Requisition for <span ng-bind="rnr.program.name + ' (' + rnr.facility.facilityType.name + ')'"></span>
+<div id="requisition-header" ng-hide="fullScreen">
+  <h2><span openlmis-message="label.requisition"></span>&nbsp;<span ng-bind="rnr.program.name + ' (' + rnr.facility.facilityType.name + ')'"></span>
     <span class="pull-right">
       <a class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf" openlmis-message="button.print"></a>
     </span>
@@ -14,16 +14,16 @@
   <div class="info-box">
     <div class="row-fluid">
       <div class="span3">
-        <strong>Facility: </strong><span ng-bind="rnr.facility.code + ' - ' + rnr.facility.name"></span>
+        <strong openlmis-message="label.facility"> </strong>&nbsp;<span ng-bind="rnr.facility.code + ' - ' + rnr.facility.name"></span>
       </div>
       <div class="span3">
-        <strong>Operated by: </strong><span ng-bind="rnr.facility.operatedBy.text"></span>
+        <strong openlmis-message="label.facility.operatedBy"></strong> &nbsp;<span ng-bind="rnr.facility.operatedBy.text"></span>
       </div>
       <div class="span3">
-        <strong>Maximum Stock Level: </strong><span ng-bind="rnr.facility.facilityType.nominalMaxMonth"></span>
+        <strong openlmis-message="label.facility.maximumStock"> </strong> &nbsp;<span ng-bind="rnr.facility.facilityType.nominalMaxMonth"></span>
       </div>
       <div class="span3">
-        <strong>Emergency Order Point: </strong><span ng-bind="rnr.facility.facilityType.nominalEop"></span>
+        <strong openlmis-message="label.facility.emergencyOrder"></strong> &nbsp;<span ng-bind="rnr.facility.facilityType.nominalEop"></span>
       </div>
     </div>
     <div class="row-fluid">
@@ -36,7 +36,7 @@
           ng-bind="rnr.facility.geographicZone.parent.name"></span>
       </div>
       <div class="span3">
-        <strong>Reporting Period: </strong><span ng-bind="rnr.periodDisplayName()"></span>
+        <strong openlmis-message="label.facility.reportingPeriod"></strong>&nbsp;<span ng-bind="rnr.periodDisplayName()"></span>
       </div>
       <div class="span3"></div>
     </div>

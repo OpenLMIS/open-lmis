@@ -24,7 +24,7 @@ CREATE TABLE facilities (
     sdp BOOLEAN NOT NULL,
     online BOOLEAN,
     satellite BOOLEAN,
-    satelliteParentCode VARCHAR(6) REFERENCES facilities(code),
+    satelliteParentId INTEGER REFERENCES facilities(id),
     hasElectricity BOOLEAN,
     hasElectronicScc BOOLEAN,
     hasElectronicDar BOOLEAN,
@@ -33,10 +33,10 @@ CREATE TABLE facilities (
     goDownDate DATE,
     comment  TEXT,
     dataReportable BOOLEAN,
-    modifiedBy INTEGER,
-    modifiedDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     createdBy INTEGER,
-    createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+    createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modifiedBy INTEGER,
+    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX i_facility_name ON facilities(name);

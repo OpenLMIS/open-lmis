@@ -6,7 +6,6 @@
 
 package org.openlmis.core.service;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
@@ -21,31 +20,29 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@NoArgsConstructor
 public class UserService {
   public static final String USER_EMAIL_NOT_FOUND = "user.email.not.found";
   public static final String USER_EMAIL_INCORRECT = "user.email.incorrect";
   public static final String PASSWORD_RESET_TOKEN_INVALID = "user.password.reset.token.invalid";
   private static final String USER_USERNAME_INCORRECT = "user.username.incorrect";
 
+  @Autowired
   private UserRepository userRepository;
-
+  @Autowired
   private EmailService emailService;
-
+  @Autowired
   private RoleAssignmentService roleAssignmentService;
+  @Autowired
   private MessageService messageService;
 
-  @Autowired
-  public UserService(UserRepository userRepository, RoleAssignmentService roleAssignmentService, EmailService emailService, MessageService messageService) {
-    this.userRepository = userRepository;
-    this.emailService = emailService;
-    this.roleAssignmentService = roleAssignmentService;
-    this.messageService = messageService;
-  }
 
 
   public void create(User user, String resetPasswordLink) {
     validateAndSave(user);
+    sendUserCreationEmail(user, resetPasswordLink);
+  }
+
+  public void sendUserCreationEmail(User user, String resetPasswordLink) {
     EmailMessage emailMessage = accountCreatedEmailMessage(user, resetPasswordLink);
     sendEmail(emailMessage);
   }
@@ -95,11 +92,11 @@ public class UserService {
 
   private EmailMessage createEmailMessage(User user, String resetPasswordLink) {
     EmailMessage emailMessage = new EmailMessage();
-    emailMessage.setTo(user.getEmail());
+    emailMessage.setReceiver(user.getEmail());
     String passwordResetToken = generateUUID();
     String[] passwordResetLink = new String[]{resetPasswordLink + passwordResetToken};
     String mailBody = messageService.message("passwordreset.email.body", passwordResetLink);
-    emailMessage.setText(mailBody);
+    emailMessage.setContent(mailBody);
 
     userRepository.insertPasswordResetToken(user, passwordResetToken);
 
@@ -126,7 +123,7 @@ public class UserService {
     return userRepository.searchUser(userSearchParam);
   }
 
-  public User getById(Integer id) {
+  public User getById(Long id) {
     User user = userRepository.getById(id);
     user.setHomeFacilityRoles(roleAssignmentService.getHomeFacilityRoles(id));
     user.setSupervisorRoles(roleAssignmentService.getSupervisorRoles(id));
@@ -134,8 +131,8 @@ public class UserService {
     return user;
   }
 
-  public Integer getUserIdByPasswordResetToken(String token) {
-    Integer userId = userRepository.getUserIdForPasswordResetToken(token);
+  public Long getUserIdByPasswordResetToken(String token) {
+    Long userId = userRepository.getUserIdForPasswordResetToken(token);
     if (userId == null) {
       throw new DataException(PASSWORD_RESET_TOKEN_INVALID);
     }
@@ -143,7 +140,7 @@ public class UserService {
   }
 
   public void updateUserPassword(String token, String password) {
-    Integer userId = getUserIdByPasswordResetToken(token);
+    Long userId = getUserIdByPasswordResetToken(token);
     userRepository.updateUserPassword(userId, Encoder.hash(password));
     userRepository.deletePasswordResetTokenForUser(userId);
   }
@@ -154,5 +151,15 @@ public class UserService {
 
   public User selectUserByUserNameAndPassword(String userName, String password) {
     return userRepository.selectUserByUserNameAndPassword(userName, password);
+  }
+
+  public void createUser(User user, String passwordResetLink) {
+    validateAndSave(user);
+    prepareForEmailNotification(user, passwordResetLink);
+  }
+
+  private void prepareForEmailNotification(User user, String passwordResetLink) {
+    EmailMessage emailMessage = accountCreatedEmailMessage(user, passwordResetLink);
+    userRepository.insertEmailNotification(emailMessage);
   }
 }

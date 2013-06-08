@@ -7,29 +7,33 @@
 package org.openlmis.rnr.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 
+import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
-import static org.openlmis.rnr.domain.RnrLineItem.RNR_VALIDATION_ERROR;
-import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
-import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
+import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_NULL)
-public class Rnr {
-  private Integer id;
+@EqualsAndHashCode(callSuper = false)
+public class Rnr extends BaseModel {
+
+  public static final String PRODUCT_CODE_INVALID = "product.code.invalid";
+
   private Facility facility;
   private Program program;
   private ProcessingPeriod period;
@@ -40,15 +44,16 @@ public class Rnr {
   private List<RnrLineItem> fullSupplyLineItems = new ArrayList<>();
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
 
+  @Transient
+  @JsonIgnore
+  private List<RnrLineItem> allLineItems = new ArrayList<>();
+
   private Facility supplyingFacility;
-  private Integer supervisoryNodeId;
-  private Integer modifiedBy;
-  private Date modifiedDate;
+  private Long supervisoryNodeId;
   private Date submittedDate;
-  private OrderBatch orderBatch;
   private List<Comment> comments = new ArrayList<>();
 
-  public Rnr(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
+  public Rnr(Long facilityId, Long programId, Long periodId, Long modifiedBy) {
     facility = new Facility();
     facility.setId(facilityId);
     program = new Program();
@@ -58,7 +63,7 @@ public class Rnr {
     this.modifiedBy = modifiedBy;
   }
 
-  public Rnr(Integer facilityId, Integer programId, Integer periodId, List<FacilityApprovedProduct> facilityApprovedProducts, Integer modifiedBy) {
+  public Rnr(Long facilityId, Long programId, Long periodId, List<FacilityApprovedProduct> facilityApprovedProducts, Long modifiedBy) {
     this(facilityId, programId, periodId, modifiedBy);
     fillLineItems(facilityApprovedProducts);
   }
@@ -69,6 +74,10 @@ public class Rnr {
     this.period = period;
   }
 
+  public Rnr(Long id) {
+    this.id = id;
+  }
+
   public void add(RnrLineItem rnrLineItem, Boolean fullSupply) {
     if (fullSupply) {
       fullSupplyLineItems.add(rnrLineItem);
@@ -77,19 +86,38 @@ public class Rnr {
     }
   }
 
-  public void calculate(List<RnrColumn> programRnrColumns) {
+  public void calculateForApproval() {
     for (RnrLineItem lineItem : fullSupplyLineItems) {
-      lineItem.validateMandatoryFields(programRnrColumns);
-      lineItem.calculate(period, programRnrColumns, this.getStatus());
-      lineItem.validateCalculatedFields(programRnrColumns);
+      lineItem.calculatePacksToShip();
     }
-
     for (RnrLineItem lineItem : nonFullSupplyLineItems) {
-      lineItem.validateNonFullSupply();
+      lineItem.calculatePacksToShip();
     }
-
     this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
+  }
+
+  public void calculate(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+    this.fullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost = new Money("0");
+    calculateForFullSupply(template, lossesAndAdjustmentsTypes);
+    calculateForNonFullSupply();
+  }
+
+  private void calculateForNonFullSupply() {
+    for (RnrLineItem lineItem : nonFullSupplyLineItems) {
+      lineItem.validateNonFullSupply();
+      lineItem.calculatePacksToShip();
+      this.nonFullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost.add(lineItem.calculateCost());
+    }
+  }
+
+  private void calculateForFullSupply(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+    for (RnrLineItem lineItem : fullSupplyLineItems) {
+      lineItem.validateMandatoryFields(template);
+      lineItem.calculateForFullSupply(period, template, this.getStatus(), lossesAndAdjustmentsTypes);
+      lineItem.validateCalculatedFields(template);
+      this.fullSupplyItemsSubmittedCost = this.fullSupplyItemsSubmittedCost.add(lineItem.calculateCost());
+    }
   }
 
   private Money calculateCost(List<RnrLineItem> lineItems) {
@@ -102,8 +130,8 @@ public class Rnr {
   }
 
   public void fillLineItems(List<FacilityApprovedProduct> facilityApprovedProducts) {
-    for (FacilityApprovedProduct programProduct : facilityApprovedProducts) {
-      RnrLineItem requisitionLineItem = new RnrLineItem(null, programProduct, modifiedBy);
+    for (FacilityApprovedProduct facilityApprovedProduct : facilityApprovedProducts) {
+      RnrLineItem requisitionLineItem = new RnrLineItem(null, facilityApprovedProduct, modifiedBy);
       add(requisitionLineItem, true);
     }
   }
@@ -130,8 +158,7 @@ public class Rnr {
     addPreviousNormalizedConsumptionFrom(secondLastPeriodsRnr);
   }
 
-  public void prepareForApproval() {
-    status = IN_APPROVAL;
+  public void setDefaultApprovedQuantity() {
     for (RnrLineItem item : fullSupplyLineItems) {
       item.setDefaultApprovedQuantity();
     }
@@ -140,18 +167,12 @@ public class Rnr {
     }
   }
 
-  public void copyApproverEditableFields(Rnr rnr) {
-    this.modifiedBy = rnr.getModifiedBy();
-    for (RnrLineItem thisLineItem : this.fullSupplyLineItems) {
-      RnrLineItem otherLineItem = rnr.findCorrespondingLineItem(thisLineItem);
-      thisLineItem.copyApproverEditableFields(otherLineItem);
-      thisLineItem.setModifiedBy(rnr.getModifiedBy());
+  private List<RnrLineItem> getAllLineItems() {
+    if (this.allLineItems.isEmpty()) {
+      this.allLineItems.addAll(this.getFullSupplyLineItems());
+      this.allLineItems.addAll(this.getNonFullSupplyLineItems());
     }
-    for (RnrLineItem thisLineItem : this.nonFullSupplyLineItems) {
-      RnrLineItem otherLineItem = rnr.findCorrespondingLineItem(thisLineItem);
-      thisLineItem.copyApproverEditableFields(otherLineItem);
-      thisLineItem.setModifiedBy(rnr.getModifiedBy());
-    }
+    return allLineItems;
   }
 
   public void fillBasicInformation(Facility facility, Program program, ProcessingPeriod period) {
@@ -173,10 +194,7 @@ public class Rnr {
   }
 
   private RnrLineItem findCorrespondingLineItem(final RnrLineItem item) {
-    List<RnrLineItem> allLineItems = new ArrayList<>();
-    allLineItems.addAll(fullSupplyLineItems);
-    allLineItems.addAll(nonFullSupplyLineItems);
-    return (RnrLineItem) find(allLineItems, new Predicate() {
+    return (RnrLineItem) find(getAllLineItems(), new Predicate() {
       @Override
       public boolean evaluate(Object o) {
         RnrLineItem lineItem = (RnrLineItem) o;
@@ -185,46 +203,15 @@ public class Rnr {
     });
   }
 
-  public void copyUserEditableFields(Rnr otherRequisition, List<RnrColumn> programRnrColumns) {
-    this.modifiedBy = otherRequisition.modifiedBy;
-    for (RnrLineItem thisLineItem : fullSupplyLineItems) {
-      RnrLineItem otherLineItem = otherRequisition.findCorrespondingLineItem(thisLineItem);
-      if (otherLineItem == null)
-        throw new DataException(RNR_VALIDATION_ERROR);
-      thisLineItem.copyUserEditableFields(otherLineItem, programRnrColumns);
-      thisLineItem.setModifiedBy(otherRequisition.getModifiedBy());
-    }
-    this.nonFullSupplyLineItems = otherRequisition.nonFullSupplyLineItems;
-    for (RnrLineItem thisLineItem : this.nonFullSupplyLineItems) {
-      thisLineItem.setModifiedBy(otherRequisition.getModifiedBy());
-    }
-  }
-
   public void setFieldsAccordingToTemplate(ProgramRnrTemplate template) {
     for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.setLineItemFieldsAccordingToTemplate(template);
     }
   }
 
-  public void calculateForApproval() {
-    for (RnrLineItem lineItem : fullSupplyLineItems) {
-      lineItem.calculatePacksToShip();
-    }
-    this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
-    this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
-  }
-
-  public void copyEditableFields(Rnr otherRnr, List<RnrColumn> programRnrColumns) {
-    if (status == IN_APPROVAL)
-      copyApproverEditableFields(otherRnr);
-    else
-      copyUserEditableFields(otherRnr, programRnrColumns);
-  }
-
-  public void convertToOrder(OrderBatch orderBatch, Integer userId) {
+  public void convertToOrder(Long userId) {
     this.status = RELEASED;
     this.modifiedBy = userId;
-    this.orderBatch = orderBatch;
   }
 
   public void fillFullSupplyCost() {
@@ -233,6 +220,69 @@ public class Rnr {
 
   public void fillNonFullSupplyCost() {
     this.nonFullSupplyItemsSubmittedCost = calculateCost(this.nonFullSupplyLineItems);
+  }
+
+  public void validateForApproval() {
+    validateLineItemsForApproval(fullSupplyLineItems);
+    validateLineItemsForApproval(nonFullSupplyLineItems);
+  }
+
+  private void validateLineItemsForApproval(List<RnrLineItem> lineItems) {
+    for (RnrLineItem lineItem : lineItems) {
+      lineItem.validateForApproval();
+    }
+  }
+
+  public void copyCreatorEditableFields(Rnr rnr, ProgramRnrTemplate template) {
+    this.modifiedBy = rnr.getModifiedBy();
+    copyCreatorEditableFieldsForFullSupply(rnr, template);
+    copyCreatorEditableFieldsForNonFullSupply(rnr, template);
+  }
+
+  private void copyCreatorEditableFieldsForNonFullSupply(Rnr rnr, ProgramRnrTemplate template) {
+    for (RnrLineItem lineItem : rnr.nonFullSupplyLineItems) {
+      RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
+      if (savedLineItem == null) {
+        lineItem.setModifiedBy(rnr.getModifiedBy());
+        this.nonFullSupplyLineItems.add(lineItem);
+      } else {
+        savedLineItem.setModifiedBy(rnr.getModifiedBy());
+        savedLineItem.copyCreatorEditableFieldsForNonFullSupply(lineItem, template);
+      }
+    }
+  }
+
+  private void copyCreatorEditableFieldsForFullSupply(Rnr rnr, ProgramRnrTemplate template) {
+    for (RnrLineItem lineItem : rnr.fullSupplyLineItems) {
+      RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
+      if (savedLineItem == null) throw new DataException(PRODUCT_CODE_INVALID);
+      savedLineItem.copyCreatorEditableFieldsForFullSupply(lineItem, template);
+      savedLineItem.setModifiedBy(rnr.getModifiedBy());
+    }
+  }
+
+  public void copyApproverEditableFields(Rnr rnr, ProgramRnrTemplate template) {
+    this.modifiedBy = rnr.modifiedBy;
+    copyApproverEditableFieldsToLineItems(rnr, template, rnr.fullSupplyLineItems);
+    copyApproverEditableFieldsToLineItems(rnr, template, rnr.nonFullSupplyLineItems);
+  }
+
+  private void copyApproverEditableFieldsToLineItems(Rnr rnr, ProgramRnrTemplate template, List<RnrLineItem> lineItems) {
+    for (RnrLineItem lineItem : lineItems) {
+      RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
+      if (savedLineItem == null) throw new DataException(PRODUCT_CODE_INVALID);
+      savedLineItem.setModifiedBy(rnr.modifiedBy);
+      savedLineItem.copyApproverEditableFields(lineItem, template);
+    }
+  }
+
+  public void setAuditFieldsForRequisition(Long modifiedBy, RnrStatus status) {
+    this.status = status;
+    Date operationDate = new Date();
+
+    if (status.equals(SUBMITTED)) setSubmittedDate(operationDate);
+
+    this.modifiedBy = modifiedBy;
   }
 }
 

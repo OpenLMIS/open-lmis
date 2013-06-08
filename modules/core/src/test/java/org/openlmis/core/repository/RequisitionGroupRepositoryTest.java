@@ -8,6 +8,7 @@ package org.openlmis.core.repository;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.Mock;
 import org.openlmis.core.builder.RequisitionGroupBuilder;
 import org.openlmis.core.domain.Facility;
@@ -16,6 +17,7 @@ import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.RequisitionGroupMapper;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+@Category(UnitTests.class)
 public class RequisitionGroupRepositoryTest {
 
   RequisitionGroupRepository repository;
@@ -71,8 +74,8 @@ public class RequisitionGroupRepositoryTest {
 
   @Test
   public void shouldGetRequisitionGroupForFacilityAndProgram() throws Exception {
-    Facility facility = new Facility(1);
-    Program program = new Program(1);
+    Facility facility = new Facility(1L);
+    Program program = new Program(1L);
     repository.getRequisitionGroupForProgramAndFacility(program, facility);
     verify(mapper).getRequisitionGroupForProgramAndFacility(program, facility);
   }

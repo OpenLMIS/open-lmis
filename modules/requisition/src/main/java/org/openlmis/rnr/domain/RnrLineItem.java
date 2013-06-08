@@ -7,8 +7,10 @@
 package org.openlmis.rnr.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
@@ -19,31 +21,29 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.Math.floor;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
-import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
 import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_EMPTY)
-public class RnrLineItem {
+@EqualsAndHashCode(callSuper = false)
+public class RnrLineItem extends BaseModel {
 
   public static final String RNR_VALIDATION_ERROR = "rnr.validation.error";
 
   public static final Float MULTIPLIER = 3f;
   public static final Float NUMBER_OF_DAYS = 30f;
-  private Integer id;
 
-  private Integer rnrId;
+  private Long rnrId;
 
-  //todo hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
+  //TODO : hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
   private String product;
   private Integer productDisplayOrder;
   private String productCode;
@@ -78,22 +78,20 @@ public class RnrLineItem {
   private Integer quantityApproved;
 
   private Integer packsToShip;
+  private String expirationDate;
   private String remarks;
 
   private List<Integer> previousNormalizedConsumptions = new ArrayList<>();
 
   private Boolean previousStockInHandAvailable = false;
-  @JsonIgnore
-  private Integer modifiedBy;
-
-  @JsonIgnore
-  private Date modifiedDate;
 
   private Money price;
 
+  private Integer total;
+
   private static Logger logger = LoggerFactory.getLogger(RnrLineItem.class);
 
-  public RnrLineItem(Integer rnrId, FacilityApprovedProduct facilityApprovedProduct, Integer modifiedBy) {
+  public RnrLineItem(Long rnrId, FacilityApprovedProduct facilityApprovedProduct, Long modifiedBy) {
     this.rnrId = rnrId;
 
     this.maxMonthsOfStock = facilityApprovedProduct.getMaxMonthsOfStock();
@@ -127,17 +125,65 @@ public class RnrLineItem {
 
   }
 
-  public void addLossesAndAdjustments(LossesAndAdjustments lossesAndAdjustments) {
-    this.lossesAndAdjustments.add(lossesAndAdjustments);
+  public void setDefaultApprovedQuantity() {
+    quantityApproved = fullSupply ? calculatedOrderQuantity : quantityRequested;
+  }
+
+  public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem lineItem) {
+    if (lineItem == null) {
+      this.beginningBalance = 0;
+      return;
+    }
+    this.beginningBalance = lineItem.getStockInHand();
+    this.setPreviousStockInHandAvailable(TRUE);
+  }
+
+  void setLineItemFieldsAccordingToTemplate(ProgramRnrTemplate template) {
+    if (!template.columnsVisible(QUANTITY_RECEIVED)) quantityReceived = 0;
+    if (!template.columnsVisible(QUANTITY_DISPENSED)) quantityDispensed = 0;
+    if (!template.columnsVisible(LOSSES_AND_ADJUSTMENTS))
+      totalLossesAndAdjustments = 0;
+    newPatientCount = 0;
+    stockOutDays = 0;
   }
 
 
-  public void calculate(ProcessingPeriod period, List<RnrColumn> rnrColumns, RnrStatus rnrStatus) {
-    ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
-    calculateTotalLossesAndAdjustments();
+  public void validateForApproval() {
+    if (quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
+  }
+
+  public void validateMandatoryFields(ProgramRnrTemplate template) {
+
+    String[] nonNullableFields = {BEGINNING_BALANCE, QUANTITY_RECEIVED, QUANTITY_DISPENSED, NEW_PATIENT_COUNT, STOCK_OUT_DAYS};
+    for (String fieldName : nonNullableFields) {
+      if (template.columnsVisible(fieldName) && !template.columnsCalculated(fieldName)) {
+        if (getValueFor(fieldName) == null) {
+          throw new DataException(RNR_VALIDATION_ERROR);
+        }
+      }
+    }
+
+    requestedQuantityConditionalValidation(template);
+  }
+
+  public void validateNonFullSupply() {
+    if (!(quantityRequested != null && quantityRequested >= 0 && isPresent(reasonForRequestedQuantity)))
+      throw new DataException(RNR_VALIDATION_ERROR);
+  }
+
+  public void validateCalculatedFields(ProgramRnrTemplate template) {
+    boolean validQuantityDispensed = true;
+    if (template.getRnrColumns().get(0).isFormulaValidationRequired()) {
+      validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
+    }
+    boolean valid = quantityDispensed >= 0 && stockInHand >= 0 && validQuantityDispensed;
+    if (!valid) throw new DataException(RNR_VALIDATION_ERROR);
+  }
+
+  public void calculateForFullSupply(ProcessingPeriod period, ProgramRnrTemplate template, RnrStatus rnrStatus, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+    calculateTotalLossesAndAdjustments(lossesAndAdjustmentsTypes);
     if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
-    if (template.columnsCalculated(QUANTITY_DISPENSED))
-      calculateQuantityDispensed();
+    if (template.columnsCalculated(QUANTITY_DISPENSED)) calculateQuantityDispensed();
     calculateNormalizedConsumption();
     if (rnrStatus == AUTHORIZED) {
       calculateAmc(period);
@@ -153,27 +199,124 @@ public class RnrLineItem {
     amc = Math.round(((float) normalizedConsumption + sumOfPreviousNormalizedConsumptions()) / denominator);
   }
 
+  public void calculatePacksToShip() {
+    Integer orderQuantity = getOrderQuantity();
+    if (orderQuantity == null || packSize == null) {
+      packsToShip = null;
+    } else {
+      packsToShip = orderQuantity == 0 ? 0 : round(floor(orderQuantity / packSize), orderQuantity);
+    }
+  }
+
+  public void calculateMaxStockQuantity() {
+    maxStockQuantity = maxMonthsOfStock * amc;
+  }
+
+  public void calculateOrderQuantity() {
+    if (isAnyNull(maxStockQuantity, stockInHand)) {
+      calculatedOrderQuantity = null;
+    } else {
+      calculatedOrderQuantity = (maxStockQuantity - stockInHand < 0) ? 0 : maxStockQuantity - stockInHand;
+    }
+  }
+
+  public void calculateNormalizedConsumption() {
+    Float consumptionAdjustedWithStockOutDays = ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays) == 0 ? quantityDispensed :
+      (quantityDispensed * ((MULTIPLIER * NUMBER_OF_DAYS) / ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays)));
+    Float adjustmentForNewPatients = (newPatientCount * ((Double) Math.ceil(
+      dosesPerMonth.doubleValue() / dosesPerDispensingUnit)).floatValue()) * MULTIPLIER;
+
+    normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
+  }
+
+  public void calculateTotalLossesAndAdjustments(List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+    totalLossesAndAdjustments = 0;
+    for (LossesAndAdjustments lossAndAdjustment : lossesAndAdjustments) {
+      if (getAdditive(lossAndAdjustment, lossesAndAdjustmentsTypes)) {
+        totalLossesAndAdjustments += lossAndAdjustment.getQuantity();
+      } else {
+        totalLossesAndAdjustments -= lossAndAdjustment.getQuantity();
+      }
+    }
+  }
+
+  public void calculateQuantityDispensed() {
+    if (isAnyNull(beginningBalance, quantityReceived, totalLossesAndAdjustments, stockInHand)) {
+      quantityDispensed = null;
+    } else {
+      this.quantityDispensed = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.stockInHand;
+    }
+  }
+
+  public void calculateStockInHand() {
+    this.stockInHand = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.quantityDispensed;
+  }
+
+  public Money calculateCost() {
+    if (packsToShip != null) {
+      return price.multiply(BigDecimal.valueOf(packsToShip));
+    }
+    return new Money("0");
+  }
+
+  private void copyField(String fieldName, RnrLineItem lineItem, ProgramRnrTemplate template) {
+    if (!template.columnsVisible(fieldName) || !template.columnsUserInput(fieldName)) {
+      return;
+    }
+
+    try {
+      Field field = this.getClass().getDeclaredField(fieldName);
+      field.set(this, field.get(lineItem));
+    } catch (Exception e) {
+      logger.error("Error in reading RnrLineItem's field", e);
+    }
+  }
+
+  private void copyTotalLossesAndAdjustments(RnrLineItem item, ProgramRnrTemplate template) {
+    if (template.columnsVisible(LOSSES_AND_ADJUSTMENTS))
+      this.totalLossesAndAdjustments = item.totalLossesAndAdjustments;
+  }
+
+  private void copyBeginningBalance(RnrLineItem item, ProgramRnrTemplate template) {
+    if (!this.previousStockInHandAvailable && template.columnsVisible(BEGINNING_BALANCE))
+      this.beginningBalance = item.beginningBalance;
+  }
+
+  public void copyCreatorEditableFieldsForFullSupply(RnrLineItem lineItem, ProgramRnrTemplate template) {
+    copyBeginningBalance(lineItem, template);
+    copyTotalLossesAndAdjustments(lineItem, template);
+    for (RnrColumn column : template.getRnrColumns()) {
+      String fieldName = column.getName();
+      if (fieldName.equals(QUANTITY_APPROVED)) continue;
+      copyField(fieldName, lineItem, template);
+    }
+  }
+
+  public void copyCreatorEditableFieldsForNonFullSupply(RnrLineItem lineItem, ProgramRnrTemplate template) {
+    String[] editableFields = {QUANTITY_REQUESTED, REMARKS, REASON_FOR_REQUESTED_QUANTITY};
+
+    for (String fieldName : editableFields) {
+      copyField(fieldName, lineItem, template);
+    }
+  }
+
+  public void copyApproverEditableFields(RnrLineItem lineItem, ProgramRnrTemplate template) {
+    String[] approverEditableFields = {QUANTITY_APPROVED, REMARKS};
+    for (String fieldName : approverEditableFields) {
+      copyField(fieldName, lineItem, template);
+    }
+  }
+
+  public void addLossesAndAdjustments(LossesAndAdjustments lossesAndAdjustments) {
+    this.lossesAndAdjustments.add(lossesAndAdjustments);
+  }
+
   private Integer sumOfPreviousNormalizedConsumptions() {
     Integer total = 0;
     for (Integer consumption : previousNormalizedConsumptions) {
       total += consumption;
     }
     return total;
-  }
-
-  public void validateMandatoryFields(List<RnrColumn> templateColumns) {
-    ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
-
-    String[] nonNullableFields = {BEGINNING_BALANCE, QUANTITY_RECEIVED, QUANTITY_DISPENSED, NEW_PATIENT_COUNT, STOCK_OUT_DAYS};
-    for (String fieldName : nonNullableFields) {
-      if (template.columnsVisible(fieldName) && !template.columnsCalculated(fieldName)) {
-        if (getValueFor(fieldName) == null) {
-          throw new DataException(RNR_VALIDATION_ERROR);
-        }
-      }
-    }
-
-    requestedQuantityConditionalValidation(template);
   }
 
   private void requestedQuantityConditionalValidation(ProgramRnrTemplate template) {
@@ -195,31 +338,9 @@ public class RnrLineItem {
     return value;
   }
 
-  public void validateNonFullSupply() {
-    if (!(quantityRequested != null && quantityRequested >= 0 && isPresent(reasonForRequestedQuantity)))
-      throw new DataException(RNR_VALIDATION_ERROR);
-  }
-
-  public void validateCalculatedFields(List<RnrColumn> rnrColumns) {
-    boolean validQuantityDispensed = true;
-    if (rnrColumns.get(0).isFormulaValidationRequired()) {
-      validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
-    }
-    boolean valid = quantityDispensed >= 0 && stockInHand >= 0 && validQuantityDispensed;
-    if (!valid) throw new DataException(RNR_VALIDATION_ERROR);
-  }
 
   private boolean isPresent(Object value) {
     return value != null;
-  }
-
-  public void calculatePacksToShip() {
-    Integer orderQuantity = getOrderQuantity();
-    if (orderQuantity == null || packSize == null) {
-      packsToShip = null;
-    } else {
-      packsToShip = orderQuantity == 0 ? 0 : round(floor(orderQuantity / packSize), orderQuantity);
-    }
   }
 
   private Integer getOrderQuantity() {
@@ -240,113 +361,23 @@ public class RnrLineItem {
     return packsToShip.intValue();
   }
 
-  public void calculateOrderQuantity() {
-    if (isAnyNull(maxStockQuantity, stockInHand)) {
-      calculatedOrderQuantity = null;
-    } else {
-      calculatedOrderQuantity = (maxStockQuantity - stockInHand < 0) ? 0 : maxStockQuantity - stockInHand;
-    }
-  }
-
-  public void calculateMaxStockQuantity() {
-    maxStockQuantity = maxMonthsOfStock * amc;
-  }
-
-  public void calculateNormalizedConsumption() {
-    Float consumptionAdjustedWithStockOutDays = ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays) == 0 ? quantityDispensed :
-      (quantityDispensed * ((MULTIPLIER * NUMBER_OF_DAYS) / ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays)));
-    Float adjustmentForNewPatients = (newPatientCount * ((Double) Math.ceil(
-      dosesPerMonth.doubleValue() / dosesPerDispensingUnit)).floatValue()) * MULTIPLIER;
-
-    normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
-  }
-
-  public void calculateTotalLossesAndAdjustments() {
-    totalLossesAndAdjustments = 0;
-    for (LossesAndAdjustments lossAndAdjustment : lossesAndAdjustments) {
-      if (lossAndAdjustment.getType().getAdditive()) {
-        totalLossesAndAdjustments += lossAndAdjustment.getQuantity();
-      } else {
-        totalLossesAndAdjustments -= lossAndAdjustment.getQuantity();
+  private boolean getAdditive(final LossesAndAdjustments lossAndAdjustment, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+    Predicate predicate = new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return lossAndAdjustment.getType().getName().equals(((LossesAndAdjustmentsType) o).getName());
       }
-    }
+    };
+
+    LossesAndAdjustmentsType lossAndAdjustmentTypeFromList = (LossesAndAdjustmentsType) CollectionUtils.find(
+      lossesAndAdjustmentsTypes, predicate);
+
+    return lossAndAdjustmentTypeFromList.getAdditive();
   }
 
   public void addPreviousNormalizedConsumptionFrom(RnrLineItem rnrLineItem) {
     if (rnrLineItem != null)
       this.previousNormalizedConsumptions.add(rnrLineItem.normalizedConsumption);
-  }
-
-  public void setDefaultApprovedQuantity() {
-    quantityApproved = fullSupply ? calculatedOrderQuantity : quantityRequested;
-  }
-
-
-  public void copyApproverEditableFields(RnrLineItem item) {
-    if (item == null) return;
-    this.quantityApproved = item.quantityApproved;
-    this.remarks = item.remarks;
-  }
-
-  public void copyUserEditableFields(RnrLineItem item, List<RnrColumn> programRnrColumns) {
-    ProgramRnrTemplate template = new ProgramRnrTemplate(programRnrColumns);
-
-    copyBeginningBalance(item, template);
-
-    for (RnrColumn column : template.getRnrColumns()) {
-      if (!column.isVisible() || column.getSource() != USER_INPUT || column.getName().equals(QUANTITY_APPROVED)) {
-        continue;
-      }
-
-      try {
-        Field field = this.getClass().getDeclaredField(column.getName());
-        field.set(this, field.get(item));
-      } catch (Exception e) {
-        logger.error("Error in reading RnrLineItem's field", e);
-      }
-    }
-  }
-
-  private void copyBeginningBalance(RnrLineItem item, ProgramRnrTemplate template) {
-    if (!this.previousStockInHandAvailable && template.columnsVisible(BEGINNING_BALANCE))
-      this.beginningBalance = item.beginningBalance;
-  }
-
-  public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem lineItem) {
-    if (lineItem == null) {
-      this.beginningBalance = 0;
-      return;
-    }
-    this.beginningBalance = lineItem.getStockInHand();
-    this.setPreviousStockInHandAvailable(TRUE);
-  }
-
-  void setLineItemFieldsAccordingToTemplate(ProgramRnrTemplate template) {
-    if (!template.columnsVisible(QUANTITY_RECEIVED)) quantityReceived = 0;
-    if (!template.columnsVisible(QUANTITY_DISPENSED)) quantityDispensed = 0;
-    if (!template.columnsVisible(LOSSES_AND_ADJUSTMENTS))
-      totalLossesAndAdjustments = 0;
-    newPatientCount = 0;
-    stockOutDays = 0;
-  }
-
-  public void calculateStockInHand() {
-    this.stockInHand = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.quantityDispensed;
-  }
-
-  public void calculateQuantityDispensed() {
-    if (isAnyNull(beginningBalance, quantityReceived, totalLossesAndAdjustments, stockInHand)) {
-      quantityDispensed = null;
-    } else {
-      this.quantityDispensed = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.stockInHand;
-    }
-  }
-
-  public Money calculateCost() {
-    if (packsToShip != null) {
-      return price.multiply(BigDecimal.valueOf(packsToShip));
-    }
-    return new Money("0");
   }
 
   private boolean isAnyNull(Integer... fields) {

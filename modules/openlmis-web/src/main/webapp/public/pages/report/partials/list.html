@@ -1,0 +1,42 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 20.
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div>
+  <h2><span openlmis-message="reports.header"></span>
+    <a ng-href="#/create" class="pull-right btn btn-primary" ng-show="hasPermission('MANAGE_REPORTS')"
+       openlmis-message="button.addNew"></a>
+  </h2>
+
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="successMessage" ng-show="successMessage"/>
+
+  <div class="alert alert-info" ng-hide="reportTemplates.length" openlmis-message="no.reports.message">
+
+  </div>
+  <table class="table table-striped table-bordered" ng-show="reportTemplates.length">
+    <thead>
+    <tr class="gradient-header">
+      <th class="col-desc" openlmis-message="report.name.label">
+      </th>
+      <th class="col-right" openlmis-message="view.label">
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="reportTemplate in reportTemplates">
+      <td>
+        <div>{{reportTemplate.name}}</div>
+      </td>
+      <td>
+        <div>
+          <a href="/reports/{{reportTemplate.id}}/pdf" target="_blank" openlmis-message="report.type.pdf"></a>
+          <a href="/reports/{{reportTemplate.id}}/xls" target="_blank" openlmis-message="report.type.xls"></a>
+          <a href="/reports/{{reportTemplate.id}}/csv" target="_blank" openlmis-message="report.type.csv"></a>
+          <a href="/reports/{{reportTemplate.id}}/html" target="_blank" openlmis-message="report.type.html"></a>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

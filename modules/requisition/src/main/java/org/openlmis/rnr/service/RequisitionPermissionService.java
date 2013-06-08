@@ -6,7 +6,6 @@
 
 package org.openlmis.rnr.service;
 
-import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.Facility;
@@ -27,37 +26,32 @@ import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Service
-@NoArgsConstructor
 public class RequisitionPermissionService {
 
 
+  @Autowired
   private RoleRightsService roleRightsService;
+  @Autowired
   private RoleAssignmentService roleAssignmentService;
 
-  @Autowired
-  public RequisitionPermissionService(RoleRightsService roleRightsService, RoleAssignmentService roleAssignmentService) {
-    this.roleRightsService = roleRightsService;
-    this.roleAssignmentService = roleAssignmentService;
-  }
-
-  public Boolean hasPermission(Integer userId, Facility facility, Program program, Right... rights) {
+  public Boolean hasPermission(Long userId, Facility facility, Program program, Right... rights) {
     Set<Right> userRights = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
     return CollectionUtils.containsAny(userRights, asList(rights));
 
   }
 
-  public Boolean hasPermission(Integer userId, Rnr rnr, Right... rights) {
+  public Boolean hasPermission(Long userId, Rnr rnr, Right... rights) {
     return hasPermission(userId, rnr.getFacility(), rnr.getProgram(), rights);
   }
 
-  public boolean hasPermissionToSave(Integer userId, Rnr rnr) {
+  public boolean hasPermissionToSave(Long userId, Rnr rnr) {
     return (rnr.getStatus() == INITIATED && hasPermission(userId, rnr, CREATE_REQUISITION)) ||
         (rnr.getStatus() == SUBMITTED && hasPermission(userId, rnr, AUTHORIZE_REQUISITION)) ||
         (rnr.getStatus() == AUTHORIZED && hasPermission(userId, rnr, APPROVE_REQUISITION)) ||
         (rnr.getStatus() == IN_APPROVAL && hasPermission(userId, rnr, APPROVE_REQUISITION));
   }
 
-  public boolean hasPermissionToApprove(Integer userId, final Rnr rnr) {
+  public boolean hasPermissionToApprove(Long userId, final Rnr rnr) {
     List<RoleAssignment> assignments = roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, userId);
 
     return CollectionUtils.exists(assignments, new Predicate() {
@@ -67,5 +61,9 @@ public class RequisitionPermissionService {
         return (o1.getSupervisoryNode().getId().equals(rnr.getSupervisoryNodeId()));
       }
     });
+  }
+
+  public boolean hasPermission(Long userId, Right right) {
+    return roleRightsService.getRights(userId).contains(right);
   }
 }

@@ -3,12 +3,12 @@
 
 DROP TABLE IF EXISTS product_categories;
 CREATE TABLE product_categories (
-  id SERIAL PRIMARY KEY,
-  code VARCHAR(50) NOT NULL UNIQUE ,
-  name VARCHAR(100) NOT NULL,
-  displayOrder INTEGER NOT NULL,
-  modifiedBy INTEGER,
-  modifiedDate TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
-  createdBy INTEGER,
-  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+  id           SERIAL PRIMARY KEY,
+  code         VARCHAR(50)  NOT NULL UNIQUE,
+  name         VARCHAR(100) NOT NULL,
+  displayOrder INTEGER      NOT NULL,
+  createdBy    INTEGER,
+  createdDate  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy   INTEGER,
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

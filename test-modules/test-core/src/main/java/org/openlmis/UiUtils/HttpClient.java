@@ -1,143 +1,125 @@
 package org.openlmis.UiUtils;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
-
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.params.AuthPolicy;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.protocol.ClientContext;
-
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.util.EntityUtils;
 
-import static org.apache.http.auth.AuthScope.ANY_HOST;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+
 import static org.apache.http.client.protocol.ClientContext.AUTH_CACHE;
 import static org.apache.http.protocol.HTTP.UTF_8;
 
 public class HttpClient {
 
-    private DefaultHttpClient httpClient;
-    private BasicHttpContext httpContext;
+  public static final String GET = "GET";
+  public static final String POST = "POST";
+  public static final String PUT = "PUT";
 
+  public static final String HOST = "localhost";
+  public static final int PORT = 9091;
+  public static final String PROTOCOL = "http";
 
-    public String SendJSON(String json, String url, String commMethod, String username, String password) {
-        if (username != "" && password != "") {
-            HttpHost targetHost = new HttpHost("localhost", 9091, "http");
+  private DefaultHttpClient httpClient;
+  private BasicHttpContext httpContext;
 
-            httpClient.getCredentialsProvider().setCredentials(
-                    new AuthScope("localhost", 9091),
-                    new UsernamePasswordCredentials(username, password)
-            );
+  public ResponseEntity SendJSON(String json, String url, String commMethod, String username, String password) {
+//    if (StringUtils.isEmpty(username) && StringUtils.isEmpty(password)) return null;
 
-            AuthCache authCache = new BasicAuthCache();
-            BasicScheme basicAuth = new BasicScheme();
-            authCache.put(targetHost, basicAuth);
-            httpContext.setAttribute(AUTH_CACHE, authCache);
+    HttpHost targetHost = new HttpHost(HOST, PORT, PROTOCOL);
+    AuthScope localhost = new AuthScope(HOST, PORT);
 
-        }
-        HttpPost httppost = new HttpPost(url);
-        httppost.setHeader(new BasicHeader("Content-Type", "application/json;charset=UTF-8"));
-        HttpResponse response;
-        HttpEntity entity;
-        String responseBody = null;
-        try {
+    UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username, password);
+    httpClient.getCredentialsProvider().setCredentials(localhost, credentials);
 
+    AuthCache authCache = new BasicAuthCache();
+    authCache.put(targetHost, new BasicScheme());
 
-            switch (commMethod) {
-                case "GET":
-                    HttpGet httpget = new HttpGet(url);
-                    response = httpClient.execute(httpget, httpContext);
-                    int statusCode = response.getStatusLine().getStatusCode();
-                    entity = response.getEntity();
-                    BufferedReader rd1 = new BufferedReader(new InputStreamReader(entity.getContent()));
-                    responseBody = rd1.readLine();
-                    entity.getContent().close();
-                    break;
-                case "POST":
-                    httppost.setEntity(new StringEntity(json, UTF_8));
+    httpContext.setAttribute(AUTH_CACHE, authCache);
 
-                    response = httpClient.execute(httppost, httpContext);
-
-                    entity = response.getEntity();
-                    BufferedReader rd = new BufferedReader(new InputStreamReader(entity.getContent()));
-                    responseBody = rd.readLine();
-                    break;
-
-            }
-            return responseBody;
-
-            // Create a response handler
-
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-
-        }
-        return "";
+    try {
+      return handleRequest(commMethod, json, url);
+    } catch (ClientProtocolException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+    return null;
+  }
 
+
+  private ResponseEntity handleRequest(String commMethod, String json, String url) throws IOException {
+    HttpResponse response;
+    HttpEntity entity;
+    BufferedReader rd;
+    String sCurrentLine;
+    String sCompleteResponse="";
+
+    HttpRequestBase httpRequest = getHttpRequest(commMethod, url);
+
+    prepareRequestHeaderAndEntity(commMethod, json, httpRequest);
+
+    response = httpClient.execute(httpRequest, httpContext);
+    entity = response.getEntity();
+
+    rd = new BufferedReader(new InputStreamReader(entity.getContent()));
+
+    ResponseEntity responseEntity = new ResponseEntity();
+    responseEntity.setStatus(response.getStatusLine().getStatusCode());
+
+      while ((sCurrentLine = rd.readLine()) != null) {
+          sCompleteResponse= sCompleteResponse + (sCurrentLine);
+      }
+    responseEntity.setResponse(sCompleteResponse);
+
+    EntityUtils.consume(entity);
+
+    return responseEntity;
+  }
+
+  private HttpRequestBase getHttpRequest(String commMethod, String url) {
+    switch (commMethod) {
+      case GET:
+        return new HttpGet(url);
+      case POST:
+        return new HttpPost(url);
+      case PUT:
+        return new HttpPut(url);
+    }
+    return null;
+  }
+
+  private void prepareRequestHeaderAndEntity(String commMethod, String json, HttpRequestBase httpRequest)
+    throws UnsupportedEncodingException {
+
+    if (commMethod.equals(GET)) return;
+
+    httpRequest.setHeader(new BasicHeader("Content-Type", "application/json;charset=UTF-8"));
+    ((HttpEntityEnclosingRequestBase) httpRequest).setEntity(new StringEntity(json, UTF_8));
+  }
 
   public void createContext() {
     this.httpClient = new DefaultHttpClient();
-    String responseBody = "";
-    final HttpParams params = new BasicHttpParams();
     CookieStore cookieStore = new BasicCookieStore();
     httpContext = new BasicHttpContext();
     httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
   }
-
-  public void login(String loginUrl, String userName, String password) throws IOException {
-    HttpPost httppost = new HttpPost(loginUrl);
-    httppost.setHeader(new BasicHeader("X-Requested-With", "XMLHttpRequest"));
-    List nameValuePairs = new ArrayList(2);
-    nameValuePairs.add(new BasicNameValuePair("j_username", userName));
-    nameValuePairs.add(new BasicNameValuePair("j_password", password));
-    httppost.setHeader(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
-    httppost.setHeader(new BasicHeader("Connection", "keep-alive"));
-    httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, UTF_8));
-    HttpResponse response = httpClient.execute(httppost, httpContext);
-
-    System.out.println(response.getStatusLine().toString());
-    response.getEntity().getContent().close();
-
-
-  }
-/*
-    public static void main(String args[]) throws IOException {
-        HttpClient client = new HttpClient();
-        client.createContext();
-        //System.out.println(client.SendJSON("", "http://localhost:9091/", "GET"));
-        client.login("http://localhost:9091/j_spring_security_check","Admin123","Admin123");
-        System.out.println(client.SendJSON("/Users/Raman/open-lmis/test-modules/test-core/src/main/java/org/openlmis/UiUtils/DummyJSON.txt", "http://localhost:9091/facilities.json", "POST"));
-
-        //       new ServiceUtils().createJson();
-
-
-    }*/
 }

@@ -10,7 +10,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
   $scope.validateFormula = $scope.rnrColumns[0].formulaValidationRequired;
   $scope.program = program;
   $scope.$parent.message = "";
-  $scope.selectProgramUrl = "/public/pages/admin/rnr-template/create.html#/select-program";
+  $scope.selectProgramUrl = "/public/pages/admin/rnr-template/index.html#/select-program";
   $scope.arithmeticValidationLabel = false;
 
   var setRnRTemplateValidateFlag = function () {
@@ -23,7 +23,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     updatePosition();
     setRnRTemplateValidateFlag();
     RnRColumnList.post({programId: $routeParams.programId}, $scope.rnrColumns, function () {
-      $scope.$parent.message = "Template saved successfully!";
+      $scope.$parent.message = messageService.get("template.save.success");
       $scope.error = "";
       $scope.errorMap = undefined;
       $location.path('select-program');
@@ -70,7 +70,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     } else {
       $scope.arithmeticValidationStatusLabel = 'OFF';
       $scope.arithmeticValidationToggleLabel = 'ON';
-      $scope.arithmeticValidationMessage = '';
+      $scope.arithmeticValidationMessage = "";
     }
   };
   setArithmeticValidationLabel();

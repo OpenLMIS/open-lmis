@@ -9,6 +9,7 @@ package org.openlmis.core.service;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -20,6 +21,7 @@ import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.*;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +35,13 @@ import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 
 @RunWith(MockitoJUnitRunner.class)
+@Category(UnitTests.class)
 public class RequisitionGroupMemberServiceTest {
 
   RequisitionGroupMemberService service;
 
-  public static final Integer RG_ID = 1;
-  public static final Integer FACILITY_ID = 100;
+  public static final Long RG_ID = 1L;
+  public static final Long FACILITY_ID = 100L;
 
   @Mock
   RequisitionGroupMemberRepository requisitionGroupMemberRepository;
@@ -53,7 +56,7 @@ public class RequisitionGroupMemberServiceTest {
 
   RequisitionGroup requisitionGroup;
   RequisitionGroupMember requisitionGroupMember;
-  List<Integer> programIdList;
+  List<Long> programIdList;
 
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
@@ -70,7 +73,7 @@ public class RequisitionGroupMemberServiceTest {
     requisitionGroupMember.setFacility(facility);
 
     programIdList = new ArrayList<>();
-    programIdList.add(1);
+    programIdList.add(1L);
 
     service = new RequisitionGroupMemberService(requisitionGroupMemberRepository, facilityRepository,
       requisitionGroupRepository, requisitionGroupProgramScheduleRepository, programRepository);
@@ -113,7 +116,7 @@ public class RequisitionGroupMemberServiceTest {
     when(requisitionGroupRepository.getByCode(requisitionGroupMember.getRequisitionGroup())).thenReturn(requisitionGroup);
     when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(FACILITY_ID);
 
-    when(requisitionGroupProgramScheduleRepository.getProgramIDsForRequisitionGroup(RG_ID)).thenReturn(new ArrayList<Integer>());
+    when(requisitionGroupProgramScheduleRepository.getProgramIDsForRequisitionGroup(RG_ID)).thenReturn(new ArrayList<Long>());
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("No Program(s) mapped for Requisition Group");
@@ -126,17 +129,17 @@ public class RequisitionGroupMemberServiceTest {
     when(requisitionGroupRepository.getByCode(requisitionGroupMember.getRequisitionGroup())).thenReturn(requisitionGroup);
     when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(FACILITY_ID);
 
-    ArrayList<Integer> programIdsForRequisitionGroup = new ArrayList<>();
-    Integer commonProgramId = 1;
+    ArrayList<Long> programIdsForRequisitionGroup = new ArrayList<>();
+    Long commonProgramId = 1L;
     programIdsForRequisitionGroup.add(commonProgramId);
-    programIdsForRequisitionGroup.add(2);
-    programIdsForRequisitionGroup.add(3);
+    programIdsForRequisitionGroup.add(2L);
+    programIdsForRequisitionGroup.add(3L);
 
     when(requisitionGroupProgramScheduleRepository.getProgramIDsForRequisitionGroup(RG_ID)).thenReturn(programIdsForRequisitionGroup);
 
-    ArrayList<Integer> requisitionGroupProgramIdsForFacility = new ArrayList<>();
+    ArrayList<Long> requisitionGroupProgramIdsForFacility = new ArrayList<>();
     requisitionGroupProgramIdsForFacility.add(commonProgramId);
-    requisitionGroupProgramIdsForFacility.add(4);
+    requisitionGroupProgramIdsForFacility.add(4L);
 
     when(requisitionGroupMemberRepository.getRequisitionGroupProgramIdsForFacilityId(FACILITY_ID)).thenReturn(requisitionGroupProgramIdsForFacility);
 
@@ -157,7 +160,7 @@ public class RequisitionGroupMemberServiceTest {
 
     when(requisitionGroupRepository.getByCode(requisitionGroupMember.getRequisitionGroup())).thenReturn(requisitionGroup);
 
-    requisitionGroupMember.setId(1);
+    requisitionGroupMember.setId(1L);
 
     service.save(requisitionGroupMember);
 

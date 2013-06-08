@@ -6,7 +6,6 @@
 
 package org.openlmis.rnr.service;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
@@ -21,20 +20,14 @@ import java.util.Map;
 
 
 @Service
-@NoArgsConstructor
 public class RnrTemplateService {
 
+  @Autowired
   private RnrTemplateRepository rnrRepository;
+  @Autowired
   private ProgramService programService;
 
-
-  @Autowired
-  public RnrTemplateService(RnrTemplateRepository rnrRepository, ProgramService programService) {
-    this.rnrRepository = rnrRepository;
-    this.programService = programService;
-  }
-
-  public List<RnrColumn> fetchAllRnRColumns(Integer programId) {
+  public List<RnrColumn> fetchAllRnRColumns(Long programId) {
     return rnrRepository.fetchRnrTemplateColumnsOrMasterColumns(programId);
   }
 
@@ -52,7 +45,11 @@ public class RnrTemplateService {
   }
 
 
-  public List<RnrColumn> fetchColumnsForRequisition(Integer programId) {
+  public List<RnrColumn> fetchColumnsForRequisition(Long programId) {
     return rnrRepository.fetchColumnsForRequisition(programId);
+  }
+
+  public ProgramRnrTemplate fetchProgramTemplate(Long programId) {
+    return new ProgramRnrTemplate(programId, fetchAllRnRColumns(programId));
   }
 }

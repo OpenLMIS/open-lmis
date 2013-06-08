@@ -9,6 +9,7 @@ package org.openlmis.core.service;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -17,6 +18,7 @@ import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityApprovedProductRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -26,7 +28,7 @@ import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.*;
 
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class FacilityApprovedProductServiceTest {
 
@@ -61,13 +63,13 @@ public class FacilityApprovedProductServiceTest {
 
     FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
 
-    Integer programId = 45;
-    Integer productId = 10;
-    Integer programProductId = 100;
+    Long programId = 45L;
+    Long productId = 10L;
+    Long programProductId = 100L;
 
     when(programService.getIdForCode(defaultProgramCode)).thenReturn(programId);
     when(productService.getIdForCode(defaultProductCode)).thenReturn(productId);
-    when(programProductService.getIdByProgramIdAndProductId(programId, productId)).thenReturn(100);
+    when(programProductService.getIdByProgramIdAndProductId(programId, productId)).thenReturn(100L);
     when(facilityService.getFacilityTypeByCode(facilityApprovedProduct.getFacilityType())).thenReturn(new FacilityType());
 
     facilityApprovedProductService.save(facilityApprovedProduct);
@@ -116,8 +118,8 @@ public class FacilityApprovedProductServiceTest {
   public void shouldNotSaveFacilityApprovedProductAndThrowAnExceptionWhenProgramProductDoesNotExist() throws Exception {
     FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
 
-    Integer programId = 1;
-    Integer productId = 2;
+    Long programId = 1L;
+    Long productId = 2L;
 
     when(programService.getIdForCode(defaultProgramCode)).thenReturn(programId);
     when(productService.getIdForCode(defaultProductCode)).thenReturn(productId);

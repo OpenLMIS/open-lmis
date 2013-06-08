@@ -4,11 +4,11 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $location, currency, $routeParams, $dialog) {
+function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $location, currency, $routeParams, $dialog, $rootScope) {
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
   $scope.currency = currency;
-  $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
+  $scope.visibleColumns = _.where(rnrColumns, {'visible':true});
   $scope.error = "";
   $scope.message = "";
 
@@ -21,6 +21,11 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     angular.element(event.target).parents(".dropdown").click();
     $location.search('page', page);
   };
+
+  $scope.getFullScreen = function() {
+    $rootScope.fullScreen = !$rootScope.fullScreen;
+    angular.element(window).scrollTop(0);
+  }
 
   function updateSupplyType() {
     $scope.showNonFullSupply = !!($routeParams.supplyType == 'non-full-supply');
@@ -77,16 +82,18 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     return prefix + "_" + parent.$parent.$index;
   };
 
-
   function removeExtraDataForPostFromRnr() {
-    var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": []};
+    var rnr = _.pick(this, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
+    if (!$scope.pageLineItems[0].fullSupply) {
+      rnr.nonFullSupplyLineItems = _.map($scope.pageLineItems, function (rnrLineItem) {
+        return rnrLineItem.reduceForApproval()
+      });
+    } else {
+      rnr.fullSupplyLineItems = _.map($scope.pageLineItems, function (rnrLineItem) {
+        return rnrLineItem.reduceForApproval()
+      });
+    }
 
-    _.each($scope.rnr.fullSupplyLineItems, function (lineItem) {
-      rnr.fullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
-    });
-    _.each($scope.rnr.nonFullSupplyLineItems, function (lineItem) {
-      rnr.nonFullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
-    });
     return rnr;
   }
 
@@ -100,7 +107,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
 
   $scope.saveRnr = function (preventMessage) {
     var rnr = removeExtraDataForPostFromRnr();
-    Requisitions.update({id: $scope.rnr.id, operation: "save"},
+    Requisitions.update({id:$scope.rnr.id, operation:"save"},
       rnr, function (data) {
         if (preventMessage == true) return;
         $scope.message = data.success;
@@ -128,7 +135,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   }
 
   function resetErrorPages() {
-    $scope.errorPages = {fullSupply: [], nonFullSupply: []};
+    $scope.errorPages = {fullSupply:[], nonFullSupply:[]};
     updateShownErrorPages();
   }
 
@@ -137,18 +144,18 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   };
 
   $scope.dialogCloseCallback = function (result) {
-    if(result) {
+    if (result) {
       approveValidatedRnr();
     }
   };
 
   showConfirmModal = function () {
     var options = {
-      id: "confirmDialog",
-      header: "Confirm Action",
-      body: "Are you sure? Please confirm."
+      id:"confirmDialog",
+      header:"Confirm Action",
+      body:"Are you sure? Please confirm."
     };
-    OpenLmisDialog.new(options, $scope.dialogCloseCallback, $dialog);
+    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog);
   };
 
   $scope.approveRnr = function () {
@@ -171,44 +178,43 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     $scope.message = "";
   }
 
-   var approveValidatedRnr = function () {
-    var rnr = removeExtraDataForPostFromRnr();
-    Requisitions.update({id: $scope.rnr.id, operation: "approve"},
-      rnr, function (data) {
-        $scope.$parent.message = data.success;
-        $scope.error = "";
-        $location.path("rnr-for-approval");
-      }, function (data) {
-        $scope.error = data.error;
-        $scope.message = "";
-      });
+  var approveValidatedRnr = function () {
+    if ($scope.approvalForm.$dirty) $scope.saveRnr();
+    Requisitions.update({id:$scope.rnr.id, operation:"approve"}, {}, function (data) {
+      $scope.$parent.message = data.success;
+      $scope.error = "";
+      $location.path("rnr-for-approval");
+    }, function (data) {
+      $scope.error = data.error;
+      $scope.message = "";
+    });
   };
 
 }
 
 ApproveRnrController.resolve = {
 
-  requisition: function ($q, $timeout, RequisitionForApprovalById, $route) {
+  requisition:function ($q, $timeout, RequisitionById, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      RequisitionForApprovalById.get({id: $route.current.params.rnr}, function (data) {
+      RequisitionById.get({id:$route.current.params.rnr}, function (data) {
         deferred.resolve(data.rnr);
       }, {});
     }, 100);
     return deferred.promise;
   },
 
-  rnrColumns: function ($q, $timeout, ProgramRnRColumnList, $route) {
+  rnrColumns:function ($q, $timeout, ProgramRnRColumnList, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      ProgramRnRColumnList.get({programId: $route.current.params.program}, function (data) {
+      ProgramRnRColumnList.get({programId:$route.current.params.program}, function (data) {
         deferred.resolve(data.rnrColumnList);
       }, {});
     }, 100);
     return deferred.promise;
   },
 
-  currency: function ($q, $timeout, ReferenceData) {
+  currency:function ($q, $timeout, ReferenceData) {
     var deferred = $q.defer();
     $timeout(function () {
       ReferenceData.get({}, function (data) {

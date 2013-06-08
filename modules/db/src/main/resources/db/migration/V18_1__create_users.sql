@@ -17,10 +17,10 @@ CREATE TABLE users (
   facilityId INT REFERENCES facilities(id),
   active BOOLEAN DEFAULT FALSE,
   vendorId INTEGER references vendors(id),
-  modifiedBy INTEGER,
-  modifiedDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
   createdBy INTEGER,
-  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy INTEGER,
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
   constraint email_not_null check
     (

@@ -9,10 +9,7 @@ package org.openlmis.core.builder;
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
-import org.openlmis.core.domain.DosageUnit;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductCategory;
-import org.openlmis.core.domain.ProductForm;
+import org.openlmis.core.domain.*;
 
 import static com.natpryce.makeiteasy.Property.newProperty;
 
@@ -68,6 +65,10 @@ public class ProductBuilder {
       form.setCode("Tablet");
       form.setId(1L);
       product.setForm(form);
+      ProductGroup productGroup = new ProductGroup();
+      productGroup.setCode("PG");
+      productGroup.setId(1L);
+      product.setProductGroup(productGroup);
 
       ProductCategory category = new ProductCategory();
       category.setCode(lookup.valueOf(productCategoryCode, CATEGORY_CODE));

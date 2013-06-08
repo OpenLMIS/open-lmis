@@ -5,64 +5,21 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<html lang="en" ng-app="rnr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Open-LMIS</title>
-  <script src="/public/lib/jquery/jquery-1.8.2.min.js"></script>
-  <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>
-  <script src="/public/lib/underscore/underscore-min.js"></script>
-  <script src="/public/lib/angular/angular.js"></script>
-  <script src="/public/lib/angular/angular-resource.js"></script>
-  <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
-  <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
+  <title openlmis-message="app.title"></title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/public/lib/select2-release-3.2/select2.css">
-  <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
-  <script src="/public/lib/angular-ui/ng-grid/ng-grid-2.0.2.debug.js"></script>
-  <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
-
-  <script src="/public/js/shared/util.js"></script>
-  <script src="/public/js/shared/services/services.js"></script>
-  <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
-  <script type="text/javascript" src="/public/js/shared/services/authorization-service.js"></script>
-  <script src="/public/js/shared/controller/header-controller.js"></script>
-  <script src="/public/js/shared/controller/login-controller.js"></script>
-  <script src="/public/js/shared/app.js"></script>
-  <!-- App directives -->
-  <script src="/public/js/shared/directives/comment-box.js"></script>
-  <script src="/public/js/shared/directives/form-toolbar.js"></script>
-  <script src="/public/js/shared/directives/openlmis-message.js"></script>
-  <script src="/public/js/shared/directives/openlmis-pagination.js"></script>
-  <script src="/public/js/shared/directives/placeholder.js"></script>
-  <script src="/public/js/shared/directives/ui-nav.js"></script>
-
-  <script src="/public/js/rnr/module/rnr-module.js"></script>
-  <script src="/public/js/rnr/controller/initiate-rnr-controller.js"></script>
-  <script src="/public/js/rnr/controller/initiate-my-facility-rnr-controller.js"></script>
-  <script src="/public/js/rnr/controller/initiate-my-supervised-facilities-rnr-controller.js"></script>
-  <script src="/public/js/rnr/controller/create-requisition-controller.js"></script>
-  <script src="/public/js/rnr/controller/create-full-supply-controller.js"></script>
-  <script src="/public/js/rnr/controller/create-non-full-supply-controller.js"></script>
-  <script src="/public/js/rnr/controller/approve/approve-rnr-list-controller.js"></script>
-  <script src="/public/js/rnr/controller/approve/approve-rnr-controller.js"></script>
-  <script src="/public/js/rnr/controller/approve/approve-full-supply-controller.js"></script>
-  <script src="/public/js/rnr/controller/approve/approve-non-full-supply-controller.js"></script>
-  <script src="/public/js/rnr/controller/convert-to-order-list-controller.js"></script>
-  <script src="/public/js/rnr/controller/view/view-rnr-list-controller.js"></script>
-  <script src="/public/js/rnr/controller/view/view-rnr-controller.js"></script>
-  <script src="/public/js/rnr/controller/view/view-full-supply-controller.js"></script>
-  <script src="/public/js/rnr/controller/view/view-non-full-supply-controller.js"></script>
-  <script src="/public/js/shared/controller/navigation-controller.js"></script>
-    <script src="/public/js/shared/open-lmis-dialog.js"></script>
-  <script src="/public/lib/localstorage/localStorage.js"></script>
-  <script src="/public/lib/select2-release-3.2/select2.js"></script>
-  <script src="/public/js/shared/localStorageKeys.js"></script>
-  <script src="/public/js/rnr/model/rnr-line-item.js"></script>
-  <script src="/public/js/rnr/model/loss-and-adjustment.js"></script>
-  <script src="/public/js/rnr/model/rnr.js"></script>
+  <link rel="stylesheet" href="/public/lib/select2/select2.css">
   <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/ng-grid.css">
   <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
+  <script data-main="/public/js/rnr/module/rnr-module" src="/public/lib/requirejs/require.js"></script>
+  <script type="text/javascript">
+    requirejs.config({
+      urlArgs: 'v=@version@'
+    });
+  </script>
 
   <!--[if IE 9]>
   <link rel="stylesheet" href="/public/css/ie9.css"/>

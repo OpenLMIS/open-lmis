@@ -17,15 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @Controller
 @NoArgsConstructor
@@ -34,22 +34,21 @@ public class RestController {
   public static final String ACCEPT_JSON = "Accept=application/json";
   public static final String UNEXPECTED_EXCEPTION = "unexpected.exception";
   public static final String FORBIDDEN_EXCEPTION = "forbidden.exception";
+  public static final String RNR = "R&R";
 
   @Autowired
   private RestService restService;
 
   @RequestMapping(value = "/rest-api/requisitions", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity submitRequisition(@RequestBody Report report, Principal principal) {
-    Vendor vendor = new Vendor();
-    vendor.setName(principal.getName());
-    report.setVendor(vendor);
+    report.setVendor(new Vendor(principal.getName()));
     Rnr requisition;
     try {
       requisition = restService.submitReport(report);
     } catch (DataException e) {
       return RestResponse.error(e, HttpStatus.BAD_REQUEST);
     }
-    return RestResponse.response("R&R", requisition.getId());
+    return RestResponse.response(RNR, requisition.getId());
   }
 
 
@@ -59,5 +58,17 @@ public class RestController {
       return error(FORBIDDEN_EXCEPTION, HttpStatus.FORBIDDEN);
     }
     return error(UNEXPECTED_EXCEPTION, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  @RequestMapping(value = "/rest-api/requisitions/{id}/approve", method = PUT, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> approve(@PathVariable Long id, @RequestBody Report report, Principal principal) {
+    report.setRequisitionId(id);
+    report.setVendor(new Vendor(principal.getName()));
+    try {
+      Rnr approveRnr = restService.approve(report);
+      return RestResponse.response(RNR, approveRnr.getId());
+    } catch (DataException e) {
+      return RestResponse.error(e, HttpStatus.BAD_REQUEST);
+    }
   }
 }

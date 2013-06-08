@@ -30,7 +30,7 @@ public class RequisitionGroupBuilder {
             RequisitionGroup requisitionGroup = new RequisitionGroup();
             requisitionGroup.setCode(lookup.valueOf(code, REQUISITION_GROUP_CODE));
             requisitionGroup.setName(lookup.valueOf(name, REQUISITION_GROUP_NAME));
-            requisitionGroup.setModifiedBy(1);
+            requisitionGroup.setModifiedBy(1L);
             requisitionGroup.setModifiedDate(lookup.valueOf(modifiedDate, REQUISITION_GROUP_DATE));
             return requisitionGroup;
         }

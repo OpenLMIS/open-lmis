@@ -7,9 +7,11 @@
 package org.openlmis.core.repository.mapper;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -23,9 +25,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 @Transactional
 public class GeographicZoneMapperIT {
 
@@ -34,7 +37,10 @@ public class GeographicZoneMapperIT {
 
   @Test
   public void shouldSaveGeographicZone() throws Exception {
-    GeographicZone geographicZone = new GeographicZone(null, "code", "name", new GeographicLevel(2,"state", "State", 2), null);
+    GeographicZone geographicZone = new GeographicZone(null, "code", "name", new GeographicLevel(2L,"state", "State", 2), null);
+    geographicZone.setCatchmentPopulation(10000L);
+    geographicZone.setLongitude(333.9874);
+    geographicZone.setLatitude(-256.7249);
     Date date = new Date();
     geographicZone.setModifiedDate(date);
 
@@ -50,7 +56,7 @@ public class GeographicZoneMapperIT {
     String code = "state";
     GeographicLevel geographicLevel = mapper.getGeographicLevelByCode(code);
     assertThat(geographicLevel.getName(), is("State"));
-    assertThat(geographicLevel.getId(), is(2));
+    assertThat(geographicLevel.getId(), is(2L));
   }
 
   @Test
@@ -75,7 +81,7 @@ public class GeographicZoneMapperIT {
   @Test
   public void shouldGetGeographicZoneWithParent() throws Exception {
     GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "district", "District",null), null);
-    GeographicZone expectedZone = new GeographicZone(4, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "city", "City", null), parent);
+    GeographicZone expectedZone = new GeographicZone(4L, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "city", "City", null), parent);
 
     GeographicZone zone = mapper.getGeographicZoneById(4);
 
@@ -84,12 +90,14 @@ public class GeographicZoneMapperIT {
 
   @Test
   public void shouldUpdateGeographicZone() throws Exception {
-    GeographicZone geographicZone = new GeographicZone(null, "code", "name", new GeographicLevel(2,"state", "State", 2), null);
+    GeographicZone geographicZone = new GeographicZone(null, "code", "name", new GeographicLevel(2L,"state", "State", 2), null);
+    geographicZone.setLongitude(123.9878);
 
     mapper.insert(geographicZone);
 
     geographicZone.setName("new name");
-    geographicZone.setLevel(new GeographicLevel(1,"country", "Country", 1));
+    geographicZone.setLevel(new GeographicLevel(1L,"country", "Country", 1));
+    geographicZone.setLongitude(-111.9877);
 
     mapper.update(geographicZone);
 

@@ -8,11 +8,13 @@ package org.openlmis.core.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.repository.ProductCategoryRepository;
+import org.openlmis.db.categories.UnitTests;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -20,6 +22,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.isNotNull;
 import static org.mockito.Mockito.*;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ProductCategoryServiceTest {
 
@@ -37,9 +40,9 @@ public class ProductCategoryServiceTest {
   @Test
   public void shouldGetProductCategoryIdByCode(){
     String categoryCode = "category code";
-    Integer categoryId = 1;
+    Long categoryId = 1L;
     when(productCategoryRepository.getProductCategoryIdByCode(categoryCode)).thenReturn(categoryId);
-    Integer productCategoryIdByCode = productCategoryService.getProductCategoryIdByCode(categoryCode);
+    Long productCategoryIdByCode = productCategoryService.getProductCategoryIdByCode(categoryCode);
 
     verify(productCategoryRepository).getProductCategoryIdByCode(categoryCode);
     assertThat(productCategoryIdByCode, is(categoryId));
@@ -48,7 +51,7 @@ public class ProductCategoryServiceTest {
   @Test
   public void shouldUpdateProductCategoryIfAlreadyExists() {
     ProductCategory productCategory = new ProductCategory();
-    productCategory.setId(1);
+    productCategory.setId(1L);
     productCategoryService.save(productCategory);
     verify(productCategoryRepository).update(productCategory);
     verify(productCategoryRepository, never()).insert(productCategory);

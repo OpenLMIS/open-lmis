@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class Program extends BaseModel {
 
   private String code;
@@ -22,17 +22,18 @@ public class Program extends BaseModel {
   private String description;
   private Boolean active;
   private boolean templateConfigured;
+  private boolean push;
 
-  public Program(Integer id) {
+  public Program(Long id) {
     this.id = id;
   }
 
-  public Program(Integer id, String name) {
+  public Program(Long id, String name) {
     this.id = id;
     this.name = name;
   }
 
-  public Program(Integer id, String code, String name, String description, Boolean active, boolean templateConfigured) {
+  public Program(Long id, String code, String name, String description, Boolean active, boolean templateConfigured) {
     this.code = code;
     this.name = name;
     this.description = description;

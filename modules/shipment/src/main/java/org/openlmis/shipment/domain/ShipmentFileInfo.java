@@ -7,13 +7,15 @@ package org.openlmis.shipment.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class ShipmentFileInfo extends BaseModel{
-  private String name;
-  private boolean error;
+  private String fileName;
+  private boolean processingError;
 }

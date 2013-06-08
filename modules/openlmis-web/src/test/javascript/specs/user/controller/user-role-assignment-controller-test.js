@@ -7,12 +7,21 @@
 describe("User", function () {
 
   beforeEach(module('openlmis.services'));
+  beforeEach(module('ui.bootstrap.dialog'));
+  beforeEach(module('openlmis.localStorage'));
 
   describe("User Role Assignment Controller", function () {
 
-    var scope, $httpBackend, ctrl;
+    var scope, $httpBackend, ctrl,messageService;
 
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller) {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller,_messageService_) {
+
+      messageService = _messageService_;
+
+      spyOn(messageService, 'get').andCallFake(function (value) {
+        if (value == 'label.active') return "Active"
+        if (value == 'label.inactive') return "Inactive"
+      })
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
       ctrl = $controller(UserRoleAssignmentController, {$scope:scope});
@@ -121,15 +130,17 @@ describe("User", function () {
 
     it("should delete home facility roles from the list", function () {
       scope.rowNum = 1;
+      scope.supervisorRole = false;
       scope.user = {"homeFacilityRoles": [{"roleIds":[1]},{"roleIds":[1,2]},{"roleIds":[3]}]};
-      scope.deleteHomeFacilityRole();
+      scope.deleteFacilityRole(true);
       expect(scope.user.homeFacilityRoles).toEqual([{"roleIds":[1]},{"roleIds":[3]}])
     });
 
     it("should delete supervisory roles from the list", function () {
       scope.rowNum = 1;
+      scope.supervisorRole = true;
       scope.user = {"supervisorRoles": [{"roleIds":[1]},{"roleIds":[1,2]},{"roleIds":[3]}]};
-      scope.deleteSupervisorRole();
+      scope.deleteFacilityRole(true);
       expect(scope.user.supervisorRoles).toEqual([{"roleIds":[1]},{"roleIds":[3]}])
     });
 

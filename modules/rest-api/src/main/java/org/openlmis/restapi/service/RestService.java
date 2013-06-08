@@ -12,6 +12,7 @@ import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.UserService;
 import org.openlmis.core.service.VendorService;
+import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
@@ -19,19 +20,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static java.util.Arrays.asList;
+
 @Service
 @NoArgsConstructor
 public class RestService {
 
   public static final String USER_USERNAME_INCORRECT = "user.username.incorrect";
   @Autowired
-  UserService userService;
+  private UserService userService;
 
   @Autowired
-  RequisitionService requisitionService;
+  private RequisitionService requisitionService;
 
   @Autowired
-  VendorService vendorService;
+  private VendorService vendorService;
+
+  @Autowired
+  private OrderService orderService;
 
   @Transactional
   public Rnr submitReport(Report report) {
@@ -40,10 +46,11 @@ public class RestService {
 
     User user = getValidatedUser(report);
 
-
     Rnr requisition = requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId());
 
     requisition.setFullSupplyLineItems(report.getProducts());
+
+    requisitionService.save(requisition);
 
     requisitionService.submit(requisition);
 
@@ -66,6 +73,18 @@ public class RestService {
       throw new DataException(USER_USERNAME_INCORRECT);
     }
     return user;
+  }
+
+  @Transactional
+  public Rnr approve(Report report) {
+    fillVendor(report);
+    User user = getValidatedUser(report);
+    Rnr requisition = report.getRequisition();
+    requisition.setModifiedBy(user.getId());
+    requisitionService.save(requisition);
+    requisitionService.approve(requisition);
+    orderService.convertToOrder(asList(requisition), user.getId());
+    return requisition;
   }
 
 }

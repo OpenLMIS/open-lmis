@@ -10,10 +10,10 @@ CREATE TABLE program_product_price_history (
     source VARCHAR(50),
     startDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     endDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modifiedBy INTEGER,
-    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     createdBy INTEGER,
-    createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+    createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modifiedBy INTEGER,
+    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX i_program_product_price_history_programProductId ON program_product_price_history(programProductId);

@@ -5,9 +5,9 @@
   -->
 
 <div class="login-container">
-  <h1>Logistics Management Information Systems</h1>
+  <h1 openlmis-message="app.header"></h1>
   <div class="login-form" ng-controller="LoginController">
-    <h2>Sign In</h2>
+    <h2 openlmis-message="header.sign.in"></h2>
     <form ng-submit="doLogin()" novalidate>
       <fieldset>
         <div class="login-form-row">
@@ -18,10 +18,10 @@
         </div>
         <div class="alert alert-error" ng-bind="loginError" ng-show="loginError"></div>
         <div class="login-form-row">
-          <input class="btn btn-primary" type="submit" value="Sign in" ng-disabled="disableSignInButton"/>
+          <input class="btn btn-primary" type="submit" value="Sign in" openlmis-message="button.signIn" ng-disabled="disableSignInButton"/>
         </div>
         <div class="login-form-row forgot-link">
-          <a ng-click="goToForgotPassword()">Forgot password?</a>
+          <a ng-click="goToForgotPassword()" openlmis-message="link.forgot.password"></a>
         </div>
       </fieldset>
     </form>

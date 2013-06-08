@@ -9,6 +9,7 @@ package org.openlmis.core.repository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -19,6 +20,7 @@ import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,7 @@ import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisiti
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class SupervisoryNodeRepositoryTest {
   @Rule
@@ -54,11 +56,11 @@ public class SupervisoryNodeRepositoryTest {
   @Before
   public void setUp() throws Exception {
     supervisoryNode = new SupervisoryNode();
-    supervisoryNode.setId(10);
+    supervisoryNode.setId(10L);
     supervisoryNode.setFacility(new Facility());
     SupervisoryNode parent = new SupervisoryNode();
     parent.setCode("PSN");
-    parent.setId(20);
+    parent.setId(20L);
     supervisoryNode.setParent(parent);
     repository = new SupervisoryNodeRepository(supervisoryNodeMapper, facilityRepository, requisitionGroupRepository);
   }
@@ -77,8 +79,8 @@ public class SupervisoryNodeRepositoryTest {
 
   @Test
   public void shouldReturnIdForTheGivenCode() {
-    when(supervisoryNodeMapper.getIdForCode("ABC")).thenReturn(10);
-    assertThat(repository.getIdForCode("ABC"), is(10));
+    when(supervisoryNodeMapper.getIdForCode("ABC")).thenReturn(10L);
+    assertThat(repository.getIdForCode("ABC"), is(10L));
   }
 
   @Test
@@ -91,19 +93,19 @@ public class SupervisoryNodeRepositoryTest {
 
   @Test
   public void shouldReturnParentIdForASupervisoryNode() {
-    when(supervisoryNodeMapper.getSupervisoryNode(10)).thenReturn(supervisoryNode);
+    when(supervisoryNodeMapper.getSupervisoryNode(10L)).thenReturn(supervisoryNode);
 
     supervisoryNode.getParent().setId(null);
-    assertThat(repository.getSupervisoryNodeParentId(10), is(nullValue()));
+    assertThat(repository.getSupervisoryNodeParentId(10L), is(nullValue()));
 
-    supervisoryNode.getParent().setId(20);
-    assertThat(repository.getSupervisoryNodeParentId(10), is(20));
+    supervisoryNode.getParent().setId(20L);
+    assertThat(repository.getSupervisoryNodeParentId(10L), is(20L));
   }
 
   @Test
   public void shouldGetSupervisoryNodeForFacilityProgram() throws Exception {
-    Facility facility = new Facility(1);
-    Program program = new Program(1);
+    Facility facility = new Facility(1L);
+    Program program = new Program(1L);
     SupervisoryNode expectedSupervisoryNode = new SupervisoryNode();
     RequisitionGroup requisitionGroup = make(a(defaultRequisitionGroup, with(code, "test code")));
     when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility)).thenReturn(requisitionGroup);
@@ -116,8 +118,8 @@ public class SupervisoryNodeRepositoryTest {
 
   @Test
   public void shouldReturnSupervisoryNodeAsNullWhenThereIsNoScheduleForAGivenRequisitionGroupAndProgram() throws Exception {
-    Facility facility = new Facility(1);
-    Program program = new Program(1);
+    Facility facility = new Facility(1L);
+    Program program = new Program(1L);
     when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility)).thenReturn(null);
 
     SupervisoryNode actualSupervisoryNode = repository.getFor(facility, program);
@@ -127,8 +129,8 @@ public class SupervisoryNodeRepositoryTest {
 
   @Test
   public void shouldGetAllSupervisoryNodesInHierarchy() throws Exception {
-    Integer userId = 1;
-    Integer programId = 1;
+    Long userId = 1L;
+    Long programId = 1L;
     List<SupervisoryNode> expectedList = new ArrayList<>();
     when(supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyBy(userId, programId, "{CREATE_REQUISITION, AUTHORIZE_REQUISITION}")).thenReturn(expectedList);
     List<SupervisoryNode> actualList = repository.getAllSupervisoryNodesInHierarchyBy(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
@@ -139,9 +141,9 @@ public class SupervisoryNodeRepositoryTest {
   @Test
   public void shouldGetParentNodeForAGiveSupervisoryNode() throws Exception {
     SupervisoryNode expected = new SupervisoryNode();
-    when(supervisoryNodeMapper.getParent(1)).thenReturn(expected);
-    final SupervisoryNode actual = repository.getParent(1);
-    verify(supervisoryNodeMapper).getParent(1);
+    when(supervisoryNodeMapper.getParent(1L)).thenReturn(expected);
+    final SupervisoryNode actual = repository.getParent(1L);
+    verify(supervisoryNodeMapper).getParent(1L);
     assertThat(actual, is(expected));
   }
 
@@ -159,18 +161,18 @@ public class SupervisoryNodeRepositoryTest {
   @Test
   public void shouldGetSupervisoryNodesWithRightsForUser() throws Exception {
     List<SupervisoryNode> expected = new ArrayList<>();
-    when(supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyByUserAndRights(1, "{CREATE_REQUISITION, AUTHORIZE_REQUISITION}")).thenReturn(expected);
+    when(supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyByUserAndRights(1L, "{CREATE_REQUISITION, AUTHORIZE_REQUISITION}")).thenReturn(expected);
 
-    List<SupervisoryNode> actual = repository.getAllSupervisoryNodesInHierarchyBy(1, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
+    List<SupervisoryNode> actual = repository.getAllSupervisoryNodesInHierarchyBy(1L, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
 
     assertThat(actual, is(expected));
-    verify(supervisoryNodeMapper).getAllSupervisoryNodesInHierarchyByUserAndRights(1, "{CREATE_REQUISITION, AUTHORIZE_REQUISITION}");
+    verify(supervisoryNodeMapper).getAllSupervisoryNodesInHierarchyByUserAndRights(1L, "{CREATE_REQUISITION, AUTHORIZE_REQUISITION}");
   }
 
   @Test
   public void shouldGetAllParentSupervisoryNodesInHierarchy() throws Exception {
     List<SupervisoryNode> expected = new ArrayList<>();
-    SupervisoryNode supervisoryNode = new SupervisoryNode(1);
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
     when(supervisoryNodeMapper.getAllParentSupervisoryNodesInHierarchy(supervisoryNode)).thenReturn(expected);
 
     List<SupervisoryNode> actual = repository.getAllParentSupervisoryNodesInHierarchy(supervisoryNode);

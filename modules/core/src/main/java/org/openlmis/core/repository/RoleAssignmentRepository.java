@@ -28,31 +28,31 @@ public class RoleAssignmentRepository {
     this.mapper = roleAssignmentMapper;
   }
 
-  public List<RoleAssignment> getRoleAssignmentsForUserWithRight(Right right, int userId) {
+  public List<RoleAssignment> getRoleAssignmentsForUserWithRight(Right right, Long userId) {
     return mapper.getRoleAssignmentsWithGivenRightForAUser(right, userId);
   }
 
-  public void insertRoleAssignment(Integer userId, Integer programId, Integer supervisoryNodeId, Integer roleId) {
+  public void insertRoleAssignment(Long userId, Long programId, Long supervisoryNodeId, Long roleId) {
     mapper.insertRoleAssignment(userId, programId, supervisoryNodeId, roleId);
   }
 
-  public void deleteAllRoleAssignmentsForUser(Integer id) {
+  public void deleteAllRoleAssignmentsForUser(Long id) {
     mapper.deleteAllRoleAssignmentsForUser(id);
   }
 
-  public List<RoleAssignment> getSupervisorRoles(Integer userId) {
+  public List<RoleAssignment> getSupervisorRoles(Long userId) {
     return mapper.getSupervisorRoles(userId);
   }
 
-  public List<RoleAssignment> getHomeFacilityRoles(Integer userId) {
+  public List<RoleAssignment> getHomeFacilityRoles(Long userId) {
     return mapper.getHomeFacilityRoles(userId);
   }
 
-  public List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(Integer userId, Integer programId, Right... rights) {
+  public List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(Long userId, Long programId, Right... rights) {
     return mapper.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, commaSeparateRightNames(rights));
   }
 
-  public RoleAssignment getAdminRole(int userId) {
+  public RoleAssignment getAdminRole(Long userId) {
     return mapper.getAdminRole(userId);
   }
 }

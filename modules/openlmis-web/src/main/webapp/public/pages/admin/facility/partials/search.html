@@ -5,19 +5,24 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html">
-  <h2>Search facility
-    <a href="#/create-facility" class="pull-right btn btn-primary">Add new</a>
+  <h2>
+    <span openlmis-message="search.facility.header"></span>
+    <a id="add-new-facility" href="#/create-facility" class="pull-right btn btn-primary" openlmis-message="button.addNew"></a>
   </h2>
-  <div class="alert alert-success" id="saveSuccessMsgDiv"  ng-show="facilityId">
-    <span ng-bind="message"></span>.&nbsp;&nbsp;<a ng-href="#/edit/{{facilityId}}" openlmis-message="search.viewHere"></a>
+
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="facilityId">
+    <span ng-bind="message"></span>.&nbsp;&nbsp;<a ng-href="#/edit/{{facilityId}}"
+                                                   openlmis-message="search.viewHere"></a>
   </div>
 
-  <input id="searchFacility" class="search-query" type="text" ng-model="query" ng-change="updateFilteredQueryList()" placeholder="Enter facility code or name" />
+  <input id="searchFacility" class="search-query" type="text" ng-model="query" ng-change="updateFilteredQueryList()"
+         placeholder="Enter facility code or name"/>
+
   <div class="form-tip" openlmis-message="search.threeCharacters"></div>
 
   <div class="facility-list" ng-show="query.length > 2">
     <h3>
-      <ng-pluralize count="resultCount" 
+      <ng-pluralize count="resultCount"
                     when="{ 0: 'No matches found for \'{{query}}\'',
                             1: '1 match found for \'{{query}}\'',
                             other: '{} matches found for \'{{query}}\''}">

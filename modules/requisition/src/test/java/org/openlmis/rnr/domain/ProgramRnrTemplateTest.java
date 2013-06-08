@@ -8,7 +8,9 @@ package org.openlmis.rnr.domain;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.Map;
 
@@ -18,7 +20,7 @@ import static org.junit.Assert.assertThat;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.RnRColumnSource.CALCULATED;
 import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
-
+@Category(UnitTests.class)
 public class ProgramRnrTemplateTest {
 
 
@@ -26,7 +28,7 @@ public class ProgramRnrTemplateTest {
 
   @Before
   public void setup() {
-    template = new ProgramRnrTemplate(1, asList(
+    template = new ProgramRnrTemplate(1L, asList(
         rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
         rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
         rnrColumn(STOCK_OUT_DAYS, false, CALCULATED, "stockOutDays"),
@@ -41,7 +43,7 @@ public class ProgramRnrTemplateTest {
 
   @Test
   public void shouldNotGiveErrorIfDependentsAreNotMissing() throws Exception {
-    Map<String, OpenLmisMessage> errors = new ProgramRnrTemplate(1, asList(
+    Map<String, OpenLmisMessage> errors = new ProgramRnrTemplate(1L, asList(
         rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
         rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
         rnrColumn(STOCK_OUT_DAYS, false, CALCULATED, "stockOutDays"),

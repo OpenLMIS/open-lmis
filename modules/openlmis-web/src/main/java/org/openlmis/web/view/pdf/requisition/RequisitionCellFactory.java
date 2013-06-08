@@ -60,6 +60,13 @@ public class RequisitionCellFactory {
         result.add(numberCell(currency + lineItem.getPrice()));
         continue;
       }
+
+      if (rnrColumn.getName().equals("total") && lineItem.getQuantityReceived() != null && lineItem.getBeginningBalance() != null) {
+        Integer total = lineItem.getBeginningBalance() + lineItem.getQuantityReceived();
+        result.add(numberCell(total.toString()));
+        continue;
+      }
+
       Field field = RnrLineItem.class.getDeclaredField(rnrColumn.getName());
       field.setAccessible(true);
       Object fieldValue = field.get(lineItem);

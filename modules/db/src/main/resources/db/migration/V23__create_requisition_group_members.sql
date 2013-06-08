@@ -5,10 +5,10 @@ CREATE TABLE requisition_group_members (
   id SERIAL PRIMARY KEY,
   requisitionGroupId INT NOT NULL REFERENCES requisition_groups(id),
   facilityId INT NOT NULL REFERENCES facilities(id),
+  createdBy INTEGER,
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
-  createdBy INTEGER,
   UNIQUE (requisitionGroupId, facilityId)
 );
 

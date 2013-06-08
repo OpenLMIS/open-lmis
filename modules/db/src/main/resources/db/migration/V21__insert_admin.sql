@@ -12,7 +12,9 @@ INSERT INTO roles
   ((select id from roles where name = 'Admin'), 'MANAGE_ROLE'),
   ((select id from roles where name = 'Admin'), 'MANAGE_SCHEDULE'),
   ((select id from roles where name = 'Admin'), 'CONFIGURE_RNR'),
-  ((select id from roles where name = 'Admin'), 'MANAGE_USERS');
+  ((select id from roles where name = 'Admin'), 'MANAGE_USERS'),
+  ((select id from roles where name = 'Admin'), 'VIEW_REPORTS'),
+  ((select id from roles where name = 'Admin'), 'MANAGE_REPORTS');
 
 INSERT INTO users
   (userName, password,vendorId, facilityId, firstName, lastName, email, active) VALUES

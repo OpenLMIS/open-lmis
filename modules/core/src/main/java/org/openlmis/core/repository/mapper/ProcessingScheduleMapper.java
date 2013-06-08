@@ -19,7 +19,7 @@ import java.util.List;
 public interface ProcessingScheduleMapper {
 
   @Select("SELECT id FROM processing_schedules WHERE LOWER(code) = LOWER(#{code})")
-  Integer getIdForCode(String code);
+  Long getIdForCode(String code);
 
   @Insert({"INSERT INTO processing_schedules",
     "(code, name, description, modifiedBy)",
@@ -36,5 +36,5 @@ public interface ProcessingScheduleMapper {
   Integer update(ProcessingSchedule schedule);
 
   @Select("SELECT * FROM processing_schedules WHERE id = #{id}")
-  ProcessingSchedule get(Integer id);
+  ProcessingSchedule get(Long id);
 }

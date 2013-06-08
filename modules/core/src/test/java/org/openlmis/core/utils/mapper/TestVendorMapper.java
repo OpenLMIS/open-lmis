@@ -20,5 +20,5 @@ public interface TestVendorMapper {
   void insert(Vendor vendor);
 
   @Select("SELECT * FROM vendors WHERE id = #{id}")
-  Vendor get(Integer id);
+  Vendor get(Long id);
 }

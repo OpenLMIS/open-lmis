@@ -23,9 +23,9 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 public class RnrDTO {
 
-  private Integer id;
+  private Long id;
   private String programName;
-  private Integer programId;
+  private Long programId;
   private String facilityName;
   private String facilityCode;
   private Date submittedDate;
@@ -33,17 +33,15 @@ public class RnrDTO {
   private Date periodStartDate;
   private Date periodEndDate;
   private String periodName;
-  private Integer facilityId;
+  private Long facilityId;
   private String supplyingDepot;
   private String status;
-  private Integer orderBatchId;
-  private Date orderDate;
-  private Integer modifiedBy;
+  private Long modifiedBy;
 
   public static List<RnrDTO> prepareForListApproval(List<Rnr> requisitions) {
     List<RnrDTO> result = new ArrayList<>();
     for (Rnr requisition : requisitions) {
-      result.add(prepareForListApproval(requisition));
+      result.add(prepareDTOWithSupplyingDepot(requisition));
     }
     return result;
   }
@@ -58,7 +56,7 @@ public class RnrDTO {
     return result;
   }
 
-  private static RnrDTO prepareForListApproval(Rnr requisition) {
+  public static RnrDTO prepareDTOWithSupplyingDepot(Rnr requisition) {
     RnrDTO rnrDTO = populateDTOWithRequisition(requisition);
     if (requisition.getSupplyingFacility() != null) {
       rnrDTO.supplyingDepot = requisition.getSupplyingFacility().getName();
@@ -81,20 +79,9 @@ public class RnrDTO {
     return rnrDTO;
   }
 
-  public static List<RnrDTO> prepareForOrderView(List<Rnr> rnrList) {
-    List<RnrDTO> rnrDTOs = new ArrayList<>();
-    for (Rnr requisition : rnrList) {
-      rnrDTOs.add(prepareForOrderView(requisition));
-    }
-    return rnrDTOs;
-  }
-
-  private static RnrDTO prepareForOrderView(Rnr requisition) {
-    RnrDTO rnrDTO = prepareForListApproval(requisition);
-    rnrDTO.setOrderBatchId(requisition.getOrderBatch().getId());
-    rnrDTO.setOrderDate(requisition.getOrderBatch().getCreateTimeStamp());
+  public static RnrDTO prepareForOrderView(Rnr requisition) {
+    RnrDTO rnrDTO = prepareDTOWithSupplyingDepot(requisition);
     rnrDTO.setPeriodName(requisition.getPeriod().getName());
-    rnrDTO.setStatus(requisition.getStatus().name());
     return rnrDTO;
   }
 }

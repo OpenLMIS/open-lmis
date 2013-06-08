@@ -9,10 +9,12 @@ package org.openlmis.core.repository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProgramMapper;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.*;
 
+@Category(UnitTests.class)
 public class ProgramRepositoryTest {
 
   private ProgramMapper programMapper;
@@ -38,26 +41,26 @@ public class ProgramRepositoryTest {
 
   @Test
   public void shouldReturnIdForTheGivenCode() {
-    when(programMapper.getIdForCode("ABC")).thenReturn(10);
-    assertThat(programRepository.getIdByCode("ABC"), is(10));
+    when(programMapper.getIdForCode("ABC")).thenReturn(10L);
+    assertThat(programRepository.getIdByCode("ABC"), is(10L));
   }
 
   @Test
   public void shouldGetProgramsSupportedByFacilityForUserWithRight() throws Exception {
-    Integer facilityId = 1;
-    Integer userId = 1;
+    Long facilityId = 1L;
+    Long userId = 1L;
     List<Program> programs = new ArrayList<>();
-    when(programMapper.getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, "{AUTHORIZE_REQUISITION, CREATE_REQUISITION}")).thenReturn(programs);
+    when(programMapper.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, "{AUTHORIZE_REQUISITION, CREATE_REQUISITION}")).thenReturn(programs);
 
-    List<Program> result = programRepository.getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, AUTHORIZE_REQUISITION, CREATE_REQUISITION);
+    List<Program> result = programRepository.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, AUTHORIZE_REQUISITION, CREATE_REQUISITION);
 
-    verify(programMapper).getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, "{AUTHORIZE_REQUISITION, CREATE_REQUISITION}");
+    verify(programMapper).getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, "{AUTHORIZE_REQUISITION, CREATE_REQUISITION}");
     assertThat(result, is(programs));
   }
 
   @Test
   public void shouldGetProgramsSupportedByFacilitySupervisedByUserWithRights() throws Exception {
-    Integer userId = 1;
+    Long userId = 1L;
     List<Program> programs = new ArrayList<>();
     when(programMapper.getUserSupervisedActivePrograms(userId, "{AUTHORIZE_REQUISITION, CREATE_REQUISITION}")).thenReturn(programs);
 
@@ -78,38 +81,49 @@ public class ProgramRepositoryTest {
   @Test
   public void shouldReturnActiveProgramsForUserWithGivenRight() throws Exception {
     List<Program> expectedPrograms = new ArrayList<>();
-    when(programMapper.getActiveProgramsForUserWithRights(1, "{APPROVE_REQUISITION, CREATE_REQUISITION}")).thenReturn(expectedPrograms);
-    List<Program> resultPrograms = programRepository.getActiveProgramsForUserWithRights(1, APPROVE_REQUISITION, CREATE_REQUISITION);
+    when(programMapper.getActiveProgramsForUserWithRights(1L, "{APPROVE_REQUISITION, CREATE_REQUISITION}")).thenReturn(expectedPrograms);
+    List<Program> resultPrograms = programRepository.getActiveProgramsForUserWithRights(1L, APPROVE_REQUISITION, CREATE_REQUISITION);
 
-    verify(programMapper).getActiveProgramsForUserWithRights(1, "{APPROVE_REQUISITION, CREATE_REQUISITION}");
+    verify(programMapper).getActiveProgramsForUserWithRights(1L, "{APPROVE_REQUISITION, CREATE_REQUISITION}");
     assertThat(resultPrograms, is(expectedPrograms));
   }
 
   @Test
   public void shouldGetProgramById() throws Exception {
     final Program expectedProgram = new Program();
-    when(programMapper.getById(1)).thenReturn(expectedProgram);
-    final Program actualProgram = programRepository.getById(1);
+    when(programMapper.getById(1L)).thenReturn(expectedProgram);
+    final Program actualProgram = programRepository.getById(1L);
 
-    verify(programMapper).getById(1);
+    verify(programMapper).getById(1L);
     assertThat(actualProgram, is(expectedProgram));
   }
 
   @Test
   public void shouldGetAllSupportedProgramsForFacility() throws Exception {
     List<Program> expectedPrograms = new ArrayList<>();
-    when(programMapper.getByFacilityId(1)).thenReturn(expectedPrograms);
+    when(programMapper.getByFacilityId(1L)).thenReturn(expectedPrograms);
 
-    List<Program> programs = programRepository.getByFacility(1);
+    List<Program> programs = programRepository.getByFacility(1L);
 
     assertThat(programs, is(expectedPrograms));
-    verify(programMapper, times(1)).getByFacilityId(1);
+    verify(programMapper, times(1)).getByFacilityId(1L);
+  }
+
+  @Test
+  public void shouldGetSupportedProgramsForFacilityForAUserForGivenRights() throws Exception {
+    List<Program> expectedPrograms = new ArrayList<>();
+    when(programMapper.getProgramsForUserByFacilityAndRights(1L, 1L, "{AUTHORIZE_REQUISITION, VIEW_REQUISITION}")).thenReturn(expectedPrograms);
+
+    List<Program> programs = programRepository.getProgramsForUserByFacilityAndRights(1L, 1L, AUTHORIZE_REQUISITION, VIEW_REQUISITION);
+
+    assertThat(programs, is(expectedPrograms));
+    verify(programMapper, times(1)).getProgramsForUserByFacilityAndRights(1L, 1L, "{AUTHORIZE_REQUISITION, VIEW_REQUISITION}");
   }
 
   @Test
   public void shouldSetTemplateConfiguredFlag() throws Exception {
-    programRepository.setTemplateConfigured(1);
+    programRepository.setTemplateConfigured(1L);
 
-    verify(programMapper).setTemplateConfigured(1);
+    verify(programMapper).setTemplateConfigured(1L);
   }
 }

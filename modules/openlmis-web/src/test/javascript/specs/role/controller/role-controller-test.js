@@ -7,6 +7,7 @@
 describe("Role", function () {
 
   beforeEach(module('openlmis.services'));
+  beforeEach(module('openlmis.localStorage'))
   beforeEach(module('ui.bootstrap.dialog'));
 
   describe("Create Role", function () {

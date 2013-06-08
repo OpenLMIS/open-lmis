@@ -36,19 +36,19 @@ public class SupervisoryNodeRepository {
     supervisoryNodeMapper.insert(supervisoryNode);
   }
 
-  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Integer userId, Integer programId, Right... rights) {
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Long programId, Right... rights) {
     return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyBy(userId, programId, commaSeparateRightNames(rights));
   }
 
-  public Integer getIdForCode(String code) {
-    Integer supervisoryNodeId = supervisoryNodeMapper.getIdForCode(code);
+  public Long getIdForCode(String code) {
+    Long supervisoryNodeId = supervisoryNodeMapper.getIdForCode(code);
     if (supervisoryNodeId == null)
       throw new DataException("Invalid SupervisoryNode Code");
 
     return supervisoryNodeId;
   }
 
-  public Integer getSupervisoryNodeParentId(Integer supervisoryNodeId) {
+  public Long getSupervisoryNodeParentId(Long supervisoryNodeId) {
     SupervisoryNode parent = supervisoryNodeMapper.getSupervisoryNode(supervisoryNodeId).getParent();
     return parent == null ? null : parent.getId();
   }
@@ -58,7 +58,7 @@ public class SupervisoryNodeRepository {
     return (requisitionGroup == null) ? null : supervisoryNodeMapper.getFor(requisitionGroup.getCode());
   }
 
-  public SupervisoryNode getParent(Integer id) {
+  public SupervisoryNode getParent(Long id) {
     return supervisoryNodeMapper.getParent(id);
   }
 
@@ -66,7 +66,7 @@ public class SupervisoryNodeRepository {
     return supervisoryNodeMapper.getAll();
   }
 
-  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Integer userId, Right... rights) {
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Right... rights) {
     return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyByUserAndRights(userId, commaSeparateRightNames(rights));
   }
 

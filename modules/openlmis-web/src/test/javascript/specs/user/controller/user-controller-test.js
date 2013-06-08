@@ -7,17 +7,19 @@
 describe("User", function () {
 
   beforeEach(module('openlmis.services'));
+  beforeEach(module('openlmis.localStorage'));
   beforeEach(module('ui.bootstrap.dialog'));
 
   describe("User Controller", function () {
 
-    var scope, $httpBackend, ctrl, user, location, roles;
+    var scope, $httpBackend, ctrl, user, location, roles, messageService;
 
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, _messageService_) {
+      messageService = _messageService_;
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
       location = $location;
-      roles=  [
+      roles = [
         {
           "id": 1,
           "name": "Admin",
@@ -29,30 +31,39 @@ describe("User", function () {
           "adminRole": false
         }
       ];
-      $httpBackend.expectGET("/roles.json").respond(200, {"roles":roles});
-      $httpBackend.expectGET("/programs.json").respond(200, {"programs":[
-        {"id":1, active:false},
-        {id:2, active:true}
+
+      spyOn(messageService, 'get').andCallFake(function (value) {
+        if (value == 'label.active') return "Active"
+        if (value == 'label.inactive') return "Inactive"
+      })
+
+      $httpBackend.expectGET("/roles.json").respond(200, {"roles": roles});
+      $httpBackend.expectGET("/programs.json").respond(200, {"programs": [
+        {"id": 1, active: false},
+        {id: 2, active: true}
       ]});
-      $httpBackend.expectGET("/supervisory-nodes.json").respond(200, {"supervisoryNodes":[]});
-      ctrl = $controller(UserController, {$scope:scope}, $location);
-      scope.userForm = {$error:{ pattern:"" }};
+      $httpBackend.expectGET("/supervisory-nodes.json").respond(200, {"supervisoryNodes": []});
+      ctrl = $controller(UserController, {$scope: scope}, $location);
+      scope.userForm = {$error: { pattern: "" }};
     }));
 
     it('should set roles in scope', function () {
       $httpBackend.flush();
       expect(scope.allRoles).toEqual(roles);
-      var adminRoles =  [
+      var adminRoles = [
         {
           "id": 1,
           "name": "Admin",
           "adminRole": true
-        }];
-      var nonAdminRoles = [{
-        "id": 2,
-        "name": "Store In-Charge",
-        "adminRole": false
-      }];
+        }
+      ];
+      var nonAdminRoles = [
+        {
+          "id": 2,
+          "name": "Store In-Charge",
+          "adminRole": false
+        }
+      ];
       expect(scope.adminRoles.length).toBe(1);
       expect(scope.adminRoles[0].name).toBe("Admin");
       expect(scope.nonAdminRoles.length).toBe(1);
@@ -62,8 +73,8 @@ describe("User", function () {
     it('should set programs in scope with added status', function () {
       $httpBackend.flush();
       expect(scope.programs).toEqual([
-        {"id":1, active:false, status:'Inactive'},
-        {id:2, active:true, status:'Active'}
+        {"id": 1, active: false, status: 'Inactive'},
+        {id: 2, active: true, status: 'Active'}
       ]);
     });
 
@@ -73,22 +84,22 @@ describe("User", function () {
     });
 
     it('should update user successful', function () {
-      scope.user = {"id":123, "userName":"User420"};
-      $httpBackend.expectPUT('/users/123.json', scope.user).respond(200, {"success":"Saved successfully", "user":{id:123}});
+      scope.user = {"id": 123, "userName": "User420"};
+      $httpBackend.expectPUT('/users/123.json', scope.user).respond(200, {"success": "Saved successfully", "user": {id: 123}});
 
       scope.saveUser();
       $httpBackend.flush();
 
       expect(scope.message).toEqual("Saved successfully");
-      expect(scope.user).toEqual({id:123});
+      expect(scope.user).toEqual({id: 123});
       expect(scope.showError).toBeFalsy();
       expect(scope.error).toEqual("");
       expect(location.path()).toBe('/');
     });
 
     it('should give error message if save not successful and not redirect the user', function () {
-      scope.user = {"userName":"User420"};
-      $httpBackend.expectPOST('/users.json').respond(400, {"error":"errorMsg"});
+      scope.user = {"userName": "User420"};
+      $httpBackend.expectPOST('/users.json').respond(400, {"error": "errorMsg"});
       var path = '/create';
       location.path(path);
       scope.saveUser();
@@ -99,14 +110,14 @@ describe("User", function () {
     });
 
     it("should throw error when username contains space", function () {
-      scope.user = {"userName":"User 420"};
+      scope.user = {"userName": "User 420"};
       scope.validateUserName();
       expect(scope.userNameInvalid).toBeTruthy();
     });
 
     it("should get facilities when user enters 3 characters in search", function () {
-      var facilityResponse = {"facilityList":[
-        {"code":"F101"}
+      var facilityResponse = {"facilityList": [
+        {"code": "F101"}
       ]};
       $httpBackend.expectGET('/facilities.json?searchParam=F10').respond(facilityResponse);
 
@@ -115,85 +126,85 @@ describe("User", function () {
 
       $httpBackend.flush();
       expect(scope.filteredFacilities).toEqual([
-        {"code":"F101"}
+        {"code": "F101"}
       ]);
     });
 
     it("should filter facilities by facility code when more than 3 characters are entered for search", function () {
       scope.facilityList = [
-        {"name":"Village1", "code":"F10111"},
-        {"name":"Village2", "code":"F10200"}
+        {"name": "Village1", "code": "F10111"},
+        {"name": "Village2", "code": "F10200"}
       ];
 
       scope.query = "F101";
       scope.showFacilitySearchResults();
 
       expect(scope.filteredFacilities).toEqual([
-        {"name":"Village1", "code":"F10111"}
+        {"name": "Village1", "code": "F10111"}
       ]);
     });
 
     it("should filter facilities by facility name when more than 3 characters are entered for search", function () {
       scope.facilityList = [
-        {"name":"Village Dispensary", "code":"F10111"},
-        {"name":"Facility2", "code":"F10200"}
+        {"name": "Village Dispensary", "code": "F10111"},
+        {"name": "Facility2", "code": "F10200"}
       ];
 
       scope.query = "Vill";
       scope.showFacilitySearchResults();
 
       expect(scope.filteredFacilities).toEqual([
-        {"name":"Village Dispensary", "code":"F10111"}
+        {"name": "Village Dispensary", "code": "F10111"}
       ]);
     });
 
     it("should not create a user with empty role", function () {
-      var userWithoutRole = {userName:"User 123", homeFacilityRoles:[
-        {programId:111, roleIds:[1]},
-        {programId:222}
+      var userWithoutRole = {userName: "User 123", homeFacilityRoles: [
+        {programId: 111, roleIds: [1]},
+        {programId: 222}
       ]};
-      scope.userForm = {$error:{ required:false}};
+      scope.userForm = {$error: { required: false}};
       scope.user = userWithoutRole;
 
       expect(scope.saveUser()).toEqual(false);
     });
 
     it("should create a user with role assignments, if all required fields are present, and jump to search user page", function () {
-      var userWithRoleAssignments = {userName:"User 123", homeFacilityRoles:[
-        {programId:111, roleIds:[1, 2, 3]},
-        {programId:222, roleIds:[1]}
+      var userWithRoleAssignments = {userName: "User 123", homeFacilityRoles: [
+        {programId: 111, roleIds: [1, 2, 3]},
+        {programId: 222, roleIds: [1]}
       ]};
-      scope.userForm = {$error:{ required:false}};
+      scope.userForm = {$error: { required: false}};
       scope.user = userWithRoleAssignments;
       location.path("create");
-      $httpBackend.expectPOST('/users.json', userWithRoleAssignments).respond(200, {"success":"Saved successfully", user:{id:500}});
+      $httpBackend.expectPOST('/users.json', userWithRoleAssignments).respond(200, {"success": "Saved successfully", user: {id: 500}});
 
       expect(scope.saveUser()).toEqual(true);
       $httpBackend.flush();
       expect(scope.message).toEqual("Saved successfully");
-      expect(scope.user).toEqual({id:500});
+      expect(scope.user).toEqual({id: 500});
       expect(scope.showError).toBeFalsy();
       expect(scope.error).toEqual("");
       expect(location.path()).toBe('/');
     });
 
     it("should create a user without role assignment, if all required fields are present", function () {
-      var userWithoutRoleAssignment = {userName:"User 123"};
-      scope.userForm = {$error:{ required:false}};
+      var userWithoutRoleAssignment = {userName: "User 123"};
+      scope.userForm = {$error: { required: false}};
       scope.user = userWithoutRoleAssignment;
-      $httpBackend.expectPOST('/users.json', userWithoutRoleAssignment).respond(200, {"success":"Saved successfully", user:{id:500}});
+      $httpBackend.expectPOST('/users.json', userWithoutRoleAssignment).respond(200, {"success": "Saved successfully", user: {id: 500}});
       location.path('/create');
       expect(scope.saveUser()).toEqual(true);
       $httpBackend.flush();
       expect(scope.message).toEqual("Saved successfully");
-      expect(scope.user).toEqual({id:500});
+      expect(scope.user).toEqual({id: 500});
       expect(scope.showError).toBeFalsy();
       expect(scope.error).toEqual("");
       expect(location.path()).toBe('/');
     });
 
     it('should set facilitySelected in scope, whenever user selects a facility as "My Facility" when supported programs are not populated', function () {
-      var facility = {id:74, code:'F10', name:'facilityName'};
+      var facility = {id: 74, code: 'F10', name: 'facilityName'};
       scope.allSupportedPrograms = undefined;
 
       var data = {};
@@ -207,10 +218,10 @@ describe("User", function () {
     });
 
     it('should set facilitySelected in scope, whenever user selects a facility as "My Facility" when supported programs are populated', function () {
-      var facility = {id:74, code:'F10', name:'facilityName'};
+      var facility = {id: 74, code: 'F10', name: 'facilityName'};
       scope.allSupportedPrograms = [
-        {id:1, code:'HIV'},
-        {id:2, code:'ARV'}
+        {id: 1, code: 'HIV'},
+        {id: 2, code: 'ARV'}
       ];
 
       var data = {};
@@ -242,10 +253,10 @@ describe("User", function () {
       scope = $rootScope.$new();
       routeParams = $routeParams;
       routeParams.userId = 1;
-      var user = {"id":1};
+      var user = {"id": 1};
       $httpBackend = _$httpBackend_;
-      $httpBackend.when('GET', '/users/1.json').respond({"userName":"User420"});
-      ctrl = $controller(UserController, {$scope:scope, $routeParams:routeParams, user:user});
+      $httpBackend.when('GET', '/users/1.json').respond({"userName": "User420"});
+      ctrl = $controller(UserController, {$scope: scope, $routeParams: routeParams, user: user});
     }));
 
 

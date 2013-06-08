@@ -23,7 +23,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
 public class User extends BaseModel implements Importable {
   @ImportField(mandatory = true, name = "User Name")
@@ -57,8 +57,7 @@ public class User extends BaseModel implements Importable {
   @ImportField(name = "Supervisor User Name", nested = "userName")
   private User supervisor;
 
-  private Integer facilityId;
-  private Integer modifiedBy;
+  private Long facilityId;
 
   private List<RoleAssignment> supervisorRoles;
   private List<RoleAssignment> homeFacilityRoles;
@@ -67,13 +66,19 @@ public class User extends BaseModel implements Importable {
   private static final String INVALID_EMAIL_ERROR_CODE = "user.email.invalid";
 
   private static final String INVALID_USER_NAME_ERROR_CODE = "user.userName.invalid";
-  private Integer vendorId;
+  private Long vendorId;
 
-  public User(Integer id, String userName) {
+  public User(Long id, String userName) {
     this.id = id;
     this.userName = userName;
   }
 
+  public static User getLWUser(User user) {
+    User lwUSer = new User();
+    lwUSer.setId(user.getId());
+    lwUSer.setEmail(user.getEmail());
+    return lwUSer;
+  }
 
   public void validate() {
     validateEmail();

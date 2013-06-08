@@ -176,7 +176,7 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@id='s2id_nonFullSupplyProductsCategory']/a/span")
   private static WebElement categoryDropDownLink;
 
-  @FindBy(how = XPATH, using = "//input[@class='select2-input select2-focused']")
+  @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
   private static WebElement productDropDownTextField;
 
   @FindBy(how = XPATH, using = "//div[@class='select2-result-label']")
@@ -185,8 +185,7 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@id='s2id_nonFullSupplyProductsCodeAndName']/a/span")
   private static WebElement productDropDownLink;
 
-
-  @FindBy(how = XPATH, using = "//input[@class='select2-input select2-focused']")
+  @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
   private static WebElement categoryDropDownTextField;
 
   @FindBy(how = XPATH, using = "//div[@class='select2-result-label']")
@@ -508,12 +507,14 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(categoryDropDownLink);
 
     categoryDropDownLink.click();
+    testWebDriver.sleep(200);
     testWebDriver.waitForElementToAppear(categoryDropDownTextField);
     categoryDropDownTextField.sendKeys(category);
     testWebDriver.waitForElementToAppear(categoryDropDownValue);
     categoryDropDownValue.click();
 
     productDropDownLink.click();
+    testWebDriver.sleep(200);
     testWebDriver.waitForElementToAppear(productDropDownTextField);
     productDropDownTextField.sendKeys(productCode);
     testWebDriver.waitForElementToAppear(productDropDownValue);
@@ -559,7 +560,7 @@ public class InitiateRnRPage extends RequisitionPage {
       } catch (NoSuchElementException e) {
         continue;
       }
-      if (actualColumnHeading.trim().toUpperCase().contains(heading.toUpperCase())) {
+      if (actualColumnHeading.trim().toUpperCase().equals(heading.toUpperCase())) {
         flag = true;
         break;
       }
@@ -581,7 +582,7 @@ public class InitiateRnRPage extends RequisitionPage {
       } catch (NoSuchElementException e) {
         continue;
       }
-      if (actualColumnHeading.trim().toUpperCase().contains(heading.toUpperCase())) {
+      if (actualColumnHeading.trim().toUpperCase().equals(heading.toUpperCase())) {
         flag = true;
         break;
       }

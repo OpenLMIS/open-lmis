@@ -30,32 +30,34 @@ public class RequisitionBuilder {
 
   public static final Property<Rnr, RnrStatus> status = newProperty();
   public static final Property<Rnr, Date> submittedDate = newProperty();
-  public static final Property<Rnr, Integer> periodId = newProperty();
-  public static final Property<Rnr, Integer> modifiedBy = newProperty();
+  public static final Property<Rnr, Long> periodId = newProperty();
+  public static final Property<Rnr, Long> modifiedBy = newProperty();
   public static final Property<Rnr, Facility> facility = newProperty();
   public static final Property<Rnr, Program> program = newProperty();
+  public static final Property<Rnr, Long> id = newProperty();
 
   public static final Date SUBMITTED_DATE = new DateTime().withDate(2013, 3, 19).toDate();
-  public static final Program PROGRAM = make(a(ProgramBuilder.defaultProgram, with(ProgramBuilder.programId, 3)));
+  public static final Program PROGRAM = make(a(ProgramBuilder.defaultProgram, with(ProgramBuilder.programId, 3L)));
+  public static final Long ID = 1L;
   public static final Instantiator<Rnr> defaultRnr = new Instantiator<Rnr>() {
 
     @Override
     public Rnr instantiate(PropertyLookup<Rnr> lookup) {
       Rnr rnr = new Rnr();
-      rnr.setId(1);
+      rnr.setId(lookup.valueOf(id, ID));
       Facility defaultFacility = make(a(FacilityBuilder.defaultFacility));
-      defaultFacility.setId(3);
+      defaultFacility.setId(3L);
       rnr.setFacility(lookup.valueOf(facility, defaultFacility));
       rnr.setProgram(lookup.valueOf(program, PROGRAM));
       rnr.setPeriod(make(a(ProcessingPeriodBuilder.defaultProcessingPeriod)));
-      rnr.getPeriod().setId(lookup.valueOf(periodId, 3));
+      rnr.getPeriod().setId(lookup.valueOf(periodId, 3L));
       rnr.setStatus(lookup.valueOf(status, RnrStatus.INITIATED));
       rnr.setSubmittedDate(lookup.valueOf(submittedDate, SUBMITTED_DATE));
       rnr.setSupplyingFacility(make(a(FacilityBuilder.defaultFacility)));
-      rnr.getSupplyingFacility().setId(5);
+      rnr.getSupplyingFacility().setId(5L);
       RnrLineItem rnrLineItemCost48 = make(a(RnrLineItemBuilder.defaultRnrLineItem));
       rnr.add(rnrLineItemCost48, true);
-      rnr.setModifiedBy(lookup.valueOf(modifiedBy, 1));
+      rnr.setModifiedBy(lookup.valueOf(modifiedBy, 1L));
       return rnr;
     }
   };

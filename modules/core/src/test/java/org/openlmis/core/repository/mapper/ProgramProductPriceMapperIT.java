@@ -8,9 +8,11 @@ package org.openlmis.core.repository.mapper;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.*;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -23,10 +25,11 @@ import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProductBuilder.displayOrder;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class ProgramProductPriceMapperIT {
 
   @Autowired
@@ -58,14 +61,14 @@ public class ProgramProductPriceMapperIT {
     String source = "MoH";
     Money pricePerDosage = new Money("1.50");
     ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, pricePerDosage, source);
-    programProductPrice.setModifiedBy(1);
+    programProductPrice.setModifiedBy(1L);
 
     programProductPriceMapper.insertNewCurrentPrice(programProductPrice);
-    programProductPrice.setModifiedBy(2);
+    programProductPrice.setModifiedBy(2L);
     programProductPriceMapper.closeLastActivePrice(programProductPrice);
     ProgramProductPrice result = programProductPriceMapper.getById(programProductPrice.getId());
     assertThat(result.getEndDate(), is(notNullValue()));
-    assertThat(result.getModifiedBy(), is(2));
+    assertThat(result.getModifiedBy(), is(2L));
   }
 
   @Test
@@ -73,12 +76,12 @@ public class ProgramProductPriceMapperIT {
     String source = "MoH";
     Money pricePerDosage = new Money("1.50");
     ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, pricePerDosage, source);
-    programProductPrice.setModifiedBy(1);
+    programProductPrice.setModifiedBy(1L);
     programProductPriceMapper.insertNewCurrentPrice(programProductPrice);
     ProgramProductPrice result = programProductPriceMapper.getById(programProductPrice.getId());
     assertThat(result.getEndDate(), is(nullValue()));
     assertThat(result.getStartDate(), is(notNullValue()));
-    assertThat(result.getModifiedBy(), is(1));
+    assertThat(result.getModifiedBy(), is(1L));
     assertThat(result.getPricePerDosage(), is(pricePerDosage));
     assertThat(result.getProgramProduct().getCurrentPrice(), is(programProduct.getCurrentPrice()));
   }
@@ -88,7 +91,7 @@ public class ProgramProductPriceMapperIT {
     String source = "MoH";
     Money pricePerDosage = new Money("1.50");
     ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, pricePerDosage, source);
-    programProductPrice.setModifiedBy(1);
+    programProductPrice.setModifiedBy(1L);
 
     programProductPriceMapper.insertNewCurrentPrice(programProductPrice);
 

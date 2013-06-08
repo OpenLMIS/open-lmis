@@ -5,7 +5,11 @@
  */
 
 'use strict';
-angular.module('upload', ['openlmis']).config(['$routeProvider', function ($routeProvider) {
-  $routeProvider.when('/upload', {controller:UploadController, templateUrl:'partials/form.html'}).
-    otherwise({redirectTo:'/upload'});
-}]);
+require(['../../shared/app','../controller/upload-controller'], function (app) {
+  app.loadApp();
+  angular.module('upload', ['openlmis']).config(['$routeProvider', function ($routeProvider) {
+    $routeProvider.when('/upload', {controller: UploadController, templateUrl: 'partials/form.html'}).
+      otherwise({redirectTo: '/upload'});
+  }]);
+  angular.bootstrap(document, ['upload']);
+});

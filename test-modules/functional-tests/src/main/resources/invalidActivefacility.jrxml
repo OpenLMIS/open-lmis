@@ -1,0 +1,200 @@
+
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="New Dataset 1" uuid="4c4995cc-f05b-4ad4-86a4-dbb4f6a6eedd">
+		<queryString language="SQL">
+			<![CDATA[select * from users]]>
+		</queryString>
+		<field name="id" class="java.lang.Integer"/>
+		<field name="username" class="java.lang.String"/>
+		<field name="password" class="java.lang.String"/>
+		<field name="firstname" class="java.lang.String"/>
+		<field name="lastname" class="java.lang.String"/>
+		<field name="employeeid" class="java.lang.String"/>
+		<field name="jobtitle" class="java.lang.String"/>
+		<field name="primarynotificationmethod" class="java.lang.String"/>
+		<field name="officephone" class="java.lang.String"/>
+		<field name="cellphone" class="java.lang.String"/>
+		<field name="email" class="java.lang.String"/>
+		<field name="supervisorid" class="java.lang.Integer"/>
+		<field name="facilityid" class="java.lang.Integer"/>
+		<field name="active" class="java.lang.Boolean"/>
+		<group name="username">
+			<groupExpression><![CDATA[$F{username}]]></groupExpression>
+		</group>
+	</subDataset>
+	<queryString>
+		<![CDATA[select f.code as facilitycode, f.name as facilityname, ft.name as facilitytypename, fo.text as facilityoperatedbytext, f.sdp as sdp, f.golivedate as golivedate from facilities f, facility_types ft, facility_operators fo where f.active= true and  ft.id=f.typeid and fo.id=f.operatedbyid]]>
+	</queryString>
+	<field name="facilitycode" class="java.lang.String"/>
+	<field name="facilityname" class="java.lang.String"/>
+	<field name="facilitytypename" class="java.lang.String"/>
+	<field name="facilityoperatedbytext" class="java.lang.String"/>
+	<field name="sdp" class="java.lang.String"/>
+	<field name="golivedate" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="53" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="aaa042fa-8a60-4146-9797-814623574916" x="525" y="33" width="134" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Is an SDP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e4438365-29da-4d36-9528-08ee1678a36d" x="659" y="33" width="123" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[GoLive Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ef159a2f-33d9-42ba-9b59-6670c74bd785" x="393" y="33" width="132" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Operated By	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9a07393f-5522-4bce-9f72-d87cd57c5a0d" x="266" y="33" width="127" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d949733d-046b-41aa-a2a4-3d5c0bd9170a" x="0" y="33" width="107" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Facility Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a3153510-d287-46ad-835a-df817aa47786" x="107" y="33" width="159" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="212194e9-72ca-4321-8f61-a735ab2074b7" x="0" y="1" width="710" height="32"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="24" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Active Facility Report]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="2dd094dc-e4b5-43c0-89ab-02f2dda79bb5" x="710" y="1" width="72" height="32"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="20">
+			<textField>
+				<reportElement uuid="3d831628-4452-410d-a9d9-fbfb06612a8f" x="0" y="0" width="107" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{facilitycode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="70a35c82-b9a3-4c1e-980c-6e20451ed89f" x="107" y="0" width="159" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{facilityname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="871fa864-f591-49dc-8cdc-613a1d372dff" x="266" y="0" width="127" height="20"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{facilitytypename}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="82939d7e-fb59-4d75-96f1-53581ae1e4c6" x="393" y="0" width="132" height="20"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{facilityoperatedbytext}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a53a747-4dff-422b-bd24-991f34be8fe6" x="525" y="0" width="134" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sdp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="31a5cb98-63f7-4f48-b820-cf92efbe739c" x="659" y="0" width="123" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{golivedate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20">
+			<textField>
+				<reportElement uuid="1abcd2c7-1ce1-4a4b-a6cd-4885e7254155" x="710" y="0" width="72" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2e4a2985-b901-4963-b62f-68c26194b7c3" x="0" y="0" width="710" height="20"/>
+				<textElement/>
+				<text><![CDATA[ ]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

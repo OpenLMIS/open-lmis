@@ -4,5 +4,6 @@
 CREATE TABLE rights (
   name VARCHAR(200) PRIMARY KEY,
   adminRight BOOLEAN NOT NULL,
-  description VARCHAR(200)
+  description VARCHAR(200),
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

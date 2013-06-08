@@ -20,6 +20,10 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.lossesAndAdjustments = tempLossesAndAdjustments;
   };
 
+  RnrLineItem.prototype.reduceForApproval = function() {
+    return _.pick(this, 'id', 'productCode', 'quantityApproved', 'remarks');
+  };
+
   RnrLineItem.prototype.init = function () {
     this.initLossesAndAdjustments();
     if (this.previousNormalizedConsumptions == undefined || this.previousNormalizedConsumptions == null)
@@ -27,6 +31,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
 
     this.reEvaluateTotalLossesAndAdjustments();
     this.fillConsumptionOrStockInHand();
+    this.calculateCost();
   };
 
   RnrLineItem.prototype.fillConsumptionOrStockInHand = function () {
@@ -39,17 +44,18 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.calculateConsumption();
     this.calculateStockInHand();
     this.fillNormalizedConsumption();
+    this.calculateTotal();
   };
 
-  function statusBeforeApproval() {
-    return rnrStatus == 'INITIATED' || rnrStatus == 'SUBMITTED' || rnrStatus == 'AUTHORIZED';
+  function statusBeforeAuthorized() {
+    return rnrStatus == 'INITIATED' || rnrStatus == 'SUBMITTED';
   }
 
   RnrLineItem.prototype.fillPacksToShip = function () {
     this.quantityApproved = utils.getValueFor(this.quantityApproved);
     var orderQuantity;
 
-    if (statusBeforeApproval()) orderQuantity = isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
+    if (statusBeforeAuthorized()) orderQuantity = isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
     else orderQuantity = this.quantityApproved;
 
     this.calculatePacksToShip(orderQuantity);
@@ -141,6 +147,15 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
 
   RnrLineItem.prototype.calculateCost = function () {
     this.cost = !utils.isNumber(this.packsToShip) ? 0 : parseFloat(this.packsToShip * this.price).toFixed(2);
+  };
+
+  RnrLineItem.prototype.calculateTotal = function () {
+    if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived)) {
+      this.total = this.beginningBalance + this.quantityReceived
+    }
+    else {
+      this.total = null;
+    }
   };
 
   RnrLineItem.prototype.calculateConsumption = function () {
@@ -267,6 +282,8 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
         if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name)) return;
         if (column.name == 'quantityRequested') {
           valid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);
+        } else if (column.name == 'expirationDate') {
+          valid = !rnrLineItem.expirationDateInvalid();
         } else {
           valid = !isUndefined(rnrLineItem[column.name]);
         }
@@ -285,12 +302,17 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     return "";
   };
 
+  RnrLineItem.prototype.expirationDateInvalid = function () {
+    var regExp = /^(0[1-9]|1[012])[/]((2)\d\d\d)$/;
+    return !isUndefined(this.expirationDate) && !regExp.test(this.expirationDate);
+  }
+
   RnrLineItem.prototype.validateForApproval = function () {
     return isUndefined(this.quantityApproved) ? false : true;
   };
 
   RnrLineItem.prototype.valid = function () {
-    if (rnrStatus == 'IN_APPROVAL') return this.validateForApproval();
+    if (rnrStatus == 'IN_APPROVAL' || rnrStatus == 'AUTHORIZED') return this.validateForApproval();
     if (this.fullSupply) return this.validateRequiredFieldsForFullSupply() && this.formulaValid();
     return this.validateRequiredFieldsForNonFullSupply();
   };

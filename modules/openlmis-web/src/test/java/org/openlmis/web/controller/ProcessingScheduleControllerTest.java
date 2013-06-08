@@ -9,11 +9,13 @@ package org.openlmis.web.controller;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.openlmis.core.domain.ProcessingSchedule;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProcessingScheduleService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,19 +28,22 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.web.controller.ProcessingScheduleController.SCHEDULE;
 import static org.openlmis.web.controller.ProcessingScheduleController.SCHEDULES;
 
+@Category(UnitTests.class)
 public class ProcessingScheduleControllerTest {
   @Rule
   public ExpectedException expectedEx = org.junit.rules.ExpectedException.none();
 
   String scheduleName = "Test schedule name";
 
-  private static final Integer userId = 1;
+  private static final Long userId = 1L;
   private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
 
   @Mock
@@ -70,9 +75,9 @@ public class ProcessingScheduleControllerTest {
   public void shouldGetASchedule() throws Exception {
 
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
-    when(processingScheduleService.get(1)).thenReturn(processingSchedule);
+    when(processingScheduleService.get(1L)).thenReturn(processingSchedule);
 
-    ResponseEntity<OpenLmisResponse> responseEntity = processingScheduleController.get(1);
+    ResponseEntity<OpenLmisResponse> responseEntity = processingScheduleController.get(1L);
 
     Map<String, Object> responseEntityData = responseEntity.getBody().getData();
     assertThat((ProcessingSchedule) responseEntityData.get(SCHEDULE), is(processingSchedule));
@@ -80,11 +85,11 @@ public class ProcessingScheduleControllerTest {
 
   @Test
   public void shouldReturnErrorMessageWhileGettingAScheduleForIdThatDoesNotExist() {
-    doThrow(new DataException("Schedule not found")).when(processingScheduleService).get(1);
+    doThrow(new DataException("Schedule not found")).when(processingScheduleService).get(1L);
 
-    ResponseEntity<OpenLmisResponse> response = processingScheduleController.get(1);
+    ResponseEntity<OpenLmisResponse> response = processingScheduleController.get(1L);
 
-    verify(processingScheduleService).get(1);
+    verify(processingScheduleService).get(1L);
 
     assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
     assertThat(response.getBody().getErrorMsg(), is("Schedule not found"));
@@ -129,6 +134,8 @@ public class ProcessingScheduleControllerTest {
     assertThat(response.getBody().getErrorMsg(), is("Schedule can not be saved without its name."));
   }
 
+
+
   @Test
   public void shouldUpdateAndReturnTheSchedule() {
     ProcessingSchedule processingSchedule = new ProcessingSchedule("testCode", "testName");
@@ -137,7 +144,7 @@ public class ProcessingScheduleControllerTest {
 
     when(mockedSchedule.getName()).thenReturn(scheduleName);
 
-    ResponseEntity<OpenLmisResponse> response = processingScheduleController.update(processingSchedule, 1, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = processingScheduleController.update(processingSchedule, 1L, httpServletRequest);
     assertThat(processingSchedule.getModifiedBy(), is(userId));
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -149,7 +156,7 @@ public class ProcessingScheduleControllerTest {
   @Test
   public void shouldReturnErrorResponseWhenTryingToUpdateAScheduleWithNoCodeSet() throws Exception {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
-    processingSchedule.setId(1);
+    processingSchedule.setId(1L);
     doThrow(new DataException("Schedule can not be saved without its code.")).when(processingScheduleService).save(processingSchedule);
     ResponseEntity<OpenLmisResponse> response = processingScheduleController.create(processingSchedule, httpServletRequest);
 
@@ -162,7 +169,7 @@ public class ProcessingScheduleControllerTest {
   @Test
   public void shouldReturnErrorResponseWhenTryingToUpdateAScheduleWithNoNameSet() {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
-    processingSchedule.setId(1);
+    processingSchedule.setId(1L);
     processingSchedule.setCode("testCode");
     doThrow(new DataException("Schedule can not be saved without its name.")).when(processingScheduleService).save(processingSchedule);
     ResponseEntity<OpenLmisResponse> response = processingScheduleController.create(processingSchedule, httpServletRequest);

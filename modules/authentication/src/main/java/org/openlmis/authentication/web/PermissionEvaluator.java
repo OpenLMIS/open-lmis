@@ -27,7 +27,7 @@ public class PermissionEvaluator {
     this.roleRightService = roleRightService;
   }
 
-  public Boolean hasPermission(Integer userId, String commaSeparatedRights) {
+  public Boolean hasPermission(Long userId, String commaSeparatedRights) {
     return CollectionUtils.containsAny(roleRightService.getRights(userId), getRightList(commaSeparatedRights));
   }
 

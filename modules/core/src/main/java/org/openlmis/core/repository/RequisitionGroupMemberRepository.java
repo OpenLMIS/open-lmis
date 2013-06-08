@@ -51,7 +51,7 @@ public class RequisitionGroupMemberRepository {
     }
   }
 
-  public List<Integer> getRequisitionGroupProgramIdsForFacilityId(Integer facilityId) {
+  public List<Long> getRequisitionGroupProgramIdsForFacilityId(Long facilityId) {
     return mapper.getRequisitionGroupProgramIdsForFacilityId(facilityId);
   }
 

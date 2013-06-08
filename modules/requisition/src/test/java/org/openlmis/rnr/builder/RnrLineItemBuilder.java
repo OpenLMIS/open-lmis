@@ -34,6 +34,7 @@ public class RnrLineItemBuilder {
   public static final Property<RnrLineItem, Integer> packRoundingThreshold = newProperty();
   public static final Property<RnrLineItem, Integer> packSize = newProperty();
   public static final Property<RnrLineItem, Integer> quantityApproved = newProperty();
+  public static final Property<RnrLineItem, String> remarks = newProperty();
   public static final Property<RnrLineItem, String> reasonForRequestedQuantity = newProperty();
   public static final Property<RnrLineItem, Integer> packsToShip = newProperty();
   public static final Property<RnrLineItem, Integer> productCategoryDisplayOrder = newProperty();
@@ -42,13 +43,6 @@ public class RnrLineItemBuilder {
   public static final Property<RnrLineItem, Integer> quantityRequested = newProperty();
   private static Property<RnrLineItem, String> productCategory = newProperty();
 
-  public static final LossesAndAdjustments ONE_LOSS = new LossesAndAdjustments() {{
-    setQuantity(1);
-    LossesAndAdjustmentsType type = new LossesAndAdjustmentsType();
-    type.setAdditive(true);
-    type.setName("TRANSFER_IN");
-    setType(type);
-  }};
   public static final int STOCK_IN_HAND = 4;
   public static final int BEGINNING_BALANCE = 10;
   public static final int QUANTITY_RECEIVED = 3;
@@ -66,6 +60,14 @@ public class RnrLineItemBuilder {
   public static final String PRODUCT_CODE = "P999";
   public static final Integer PRODUCT_DISPLAY_ORDER = null;
   public static final String PRODUCT_CATEGORY = "C1";
+
+  public static final LossesAndAdjustments ONE_LOSS = new LossesAndAdjustments() {{
+    setQuantity(1);
+    LossesAndAdjustmentsType type = new LossesAndAdjustmentsType();
+    type.setAdditive(true);
+    type.setName("TRANSFER_IN");
+    setType(type);
+  }};
 
   public static final Instantiator<RnrLineItem> defaultRnrLineItem = new Instantiator<RnrLineItem>() {
 
@@ -106,7 +108,7 @@ public class RnrLineItemBuilder {
       rnrLineItem.setQuantityRequested(lookup.valueOf(quantityRequested, QUANTITY_REQUESTED));
       rnrLineItem.setReasonForRequestedQuantity(lookup.valueOf(reasonForRequestedQuantity, REASON_FOR_REQUESTED_QUANTITY));
       rnrLineItem.setPacksToShip(lookup.valueOf(packsToShip, PACKS_TO_SHIP));
-      rnrLineItem.setRemarks(REMARKS);
+      rnrLineItem.setRemarks(lookup.valueOf(remarks, REMARKS));
       rnrLineItem.setProductCategoryDisplayOrder(lookup.valueOf(productCategoryDisplayOrder, PRODUCT_CATEGORY_DISPLAY_ORDER));
       rnrLineItem.setProductDisplayOrder(lookup.valueOf(productDisplayOrder, PRODUCT_DISPLAY_ORDER));
       return rnrLineItem;

@@ -36,7 +36,7 @@ public class SupervisoryNodeBuilder {
             supervisoryNode.setCode(lookup.valueOf(code, SUPERVISORY_NODE_CODE));
             supervisoryNode.setName(lookup.valueOf(name, SUPERVISORY_NODE_NAME));
             supervisoryNode.setFacility(lookup.valueOf(facility, make(a(defaultFacility))));
-            supervisoryNode.setModifiedBy(1);
+            supervisoryNode.setModifiedBy(1L);
             supervisoryNode.setModifiedDate(lookup.valueOf(modifiedDate, SUPERVISORY_NODE_DATE));
             return supervisoryNode;
         }

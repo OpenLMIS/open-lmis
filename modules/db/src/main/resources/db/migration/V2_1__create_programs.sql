@@ -6,12 +6,13 @@ CREATE TABLE programs (
     code VARCHAR(50) NOT NULL UNIQUE,
     name VARCHAR(50),
     description VARCHAR(50),
-    budgetingApplies BOOLEAN,
-    usesDar BOOLEAN,
     active BOOLEAN,
     templateConfigured BOOLEAN,
-    lastModifiedBy INTEGER,
-    lastModifiedDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+    budgetingApplies BOOLEAN,
+    usesDar BOOLEAN,
+    push BOOLEAN,
     createdBy INTEGER,
-    createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+    createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modifiedBy INTEGER,
+    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

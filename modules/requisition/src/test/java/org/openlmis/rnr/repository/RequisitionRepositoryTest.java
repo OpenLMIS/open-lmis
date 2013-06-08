@@ -9,6 +9,7 @@ package org.openlmis.rnr.repository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -21,6 +22,8 @@ import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
+import org.openlmis.db.categories.UnitTests;
+import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.mapper.*;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -28,23 +31,26 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
-import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
+import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 @PrepareForTest(RequisitionStatusChange.class)
 public class RequisitionRepositoryTest {
 
-  public static final Integer FACILITY_ID = 1;
-  public static final Integer PROGRAM_ID = 1;
-  public static final Integer PERIOD_ID = 1;
-  public static final Integer HIV = 1;
+  public static final Long FACILITY_ID = 1L;
+  public static final Long PROGRAM_ID = 1L;
+  public static final Long PERIOD_ID = 1L;
+  public static final Long HIV = 1L;
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -77,9 +83,11 @@ public class RequisitionRepositoryTest {
   public void setUp() throws Exception {
     rnr = new Rnr();
     rnrLineItem1 = new RnrLineItem();
-    rnrLineItem1.setId(1);
+    rnrLineItem1.setId(1L);
+    rnrLineItem1.setBeginningBalance(10);
     rnrLineItem2 = new RnrLineItem();
-    rnrLineItem2.setId(2);
+    rnrLineItem2.setId(2L);
+    rnrLineItem2.setBeginningBalance(5);
     rnr.add(rnrLineItem1, true);
     rnr.add(rnrLineItem2, true);
     rnrLineItem1.addLossesAndAdjustments(lossAndAdjustmentForLineItem);
@@ -93,14 +101,14 @@ public class RequisitionRepositoryTest {
 
   @Test
   public void shouldInsertRnrAndItsLineItems() throws Exception {
-    rnr.setId(1);
+    rnr.setId(1L);
     requisitionRepository.insert(rnr);
     assertThat(rnr.getStatus(), is(INITIATED));
     verify(requisitionMapper).insert(rnr);
     verify(rnrLineItemMapper, times(2)).insert(any(RnrLineItem.class));
     verify(lossesAndAdjustmentsMapper, never()).insert(any(RnrLineItem.class), any(LossesAndAdjustments.class));
     RnrLineItem rnrLineItem = rnr.getFullSupplyLineItems().get(0);
-    assertThat(rnrLineItem.getRnrId(), is(1));
+    assertThat(rnrLineItem.getRnrId(), is(1L));
   }
 
   @Test
@@ -115,6 +123,21 @@ public class RequisitionRepositoryTest {
     verify(rnrLineItemMapper).update(rnrLineItem2);
   }
 
+  @Test
+  public void shouldApproveRnrAndItsLineItems() throws Exception {
+    rnr.setStatus(RnrStatus.IN_APPROVAL);
+    ArrayList<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
+    RnrLineItem nonFullSupplyLineItem = new RnrLineItem();
+    nonFullSupplyLineItems.add(nonFullSupplyLineItem);
+    rnr.setNonFullSupplyLineItems(nonFullSupplyLineItems);
+    requisitionRepository.approve(rnr);
+    verify(requisitionMapper).update(rnr);
+    verify(lossesAndAdjustmentsMapper, never()).deleteByLineItemId(rnrLineItem1.getId());
+    verify(lossesAndAdjustmentsMapper, never()).insert(rnrLineItem1, lossAndAdjustmentForLineItem);
+    verify(rnrLineItemMapper).updateOnApproval(rnrLineItem1);
+    verify(rnrLineItemMapper).updateOnApproval(rnrLineItem2);
+    verify(rnrLineItemMapper).updateOnApproval(nonFullSupplyLineItem);
+  }
 
   @Test
   public void shouldReturnNullIfRnrNotDefined() {
@@ -129,7 +152,7 @@ public class RequisitionRepositoryTest {
   @Test
   public void shouldGetRnrById() throws Exception {
     Rnr expectedRnr = new Rnr();
-    Integer rnrId = 1;
+    Long rnrId = 1L;
     when(requisitionMapper.getById(rnrId)).thenReturn(expectedRnr);
     Rnr returnedRnr = requisitionRepository.getById(rnrId);
     assertThat(returnedRnr, is(expectedRnr));
@@ -137,7 +160,7 @@ public class RequisitionRepositoryTest {
 
   @Test
   public void shouldThrowExceptionIfRnrNotFound() throws Exception {
-    Integer rnrId = 1;
+    Long rnrId = 1L;
     when(requisitionMapper.getById(rnrId)).thenReturn(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Requisition Not Found");
@@ -164,7 +187,7 @@ public class RequisitionRepositoryTest {
   }
 
   @Test
-  public void shouldUpdateAllNonFullSupplyLineItems() throws Exception {
+  public void shouldInsertAllNonFullSupplyLineItems() throws Exception {
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setBeginningBalance(2);
     RnrLineItem rnrLineItem2 = new RnrLineItem();
@@ -175,54 +198,73 @@ public class RequisitionRepositoryTest {
 
     requisitionRepository.update(rnr);
 
-    verify(rnrLineItemMapper).deleteAllNonFullSupplyForRequisition(rnr.getId());
     verify(rnrLineItemMapper).insertNonFullSupply(rnrLineItem);
     verify(rnrLineItemMapper).insertNonFullSupply(rnrLineItem2);
     verify(rnrLineItemMapper, never()).insertNonFullSupply(fullSupply);
   }
 
   @Test
+  public void shouldUpdateOnApprovalExistingNonFullSupplyLineItems() throws Exception {
+    long rnrId = 1L;
+    rnr.setId(rnrId);
+    RnrLineItem rnrLineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem));
+    rnrLineItem.setProductCode("P1");
+    rnrLineItem.setRnrId(rnrId);
+    RnrLineItem rnrLineItem2 = make(a(RnrLineItemBuilder.defaultRnrLineItem));
+    rnrLineItem2.setProductCode("P2");
+    rnrLineItem2.setRnrId(rnrId);
+    rnr.add(rnrLineItem, false);
+    rnr.add(rnrLineItem2, false);
+    when(rnrLineItemMapper.getExistingNonFullSupplyItemByRnrIdAndProductCode(rnrId, "P1")).thenReturn(rnrLineItem);
+    when(rnrLineItemMapper.getExistingNonFullSupplyItemByRnrIdAndProductCode(rnrId, "P2")).thenReturn(rnrLineItem2);
+
+    rnrLineItem.setQuantityApproved(5);
+    rnrLineItem2.setQuantityRequested(3);
+
+    rnr.setStatus(IN_APPROVAL);
+    requisitionRepository.update(rnr);
+
+    verify(rnrLineItemMapper).updateOnApproval(rnr.getFullSupplyLineItems().get(0));
+    verify(rnrLineItemMapper).updateOnApproval(rnr.getFullSupplyLineItems().get(1));
+    verify(rnrLineItemMapper).updateOnApproval(rnr.getNonFullSupplyLineItems().get(0));
+    verify(rnrLineItemMapper).updateOnApproval(rnr.getNonFullSupplyLineItems().get(1));
+  }
+
+  @Test
+  public void shouldUpdateExistingNonFullSupplyLineItems() throws Exception {
+    long rnrId = 1L;
+    rnr.setId(rnrId);
+    RnrLineItem rnrLineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem));
+    rnrLineItem.setProductCode("P1");
+    rnrLineItem.setRnrId(rnrId);
+    rnr.add(rnrLineItem, false);
+    when(rnrLineItemMapper.getExistingNonFullSupplyItemByRnrIdAndProductCode(rnrId, "P1")).thenReturn(rnrLineItem);
+
+    rnrLineItem.setQuantityApproved(5);
+
+    rnr.setStatus(INITIATED);
+    requisitionRepository.update(rnr);
+
+    verify(rnrLineItemMapper).update(rnr.getFullSupplyLineItems().get(0));
+    verify(rnrLineItemMapper).update(rnr.getFullSupplyLineItems().get(1));
+    verify(rnrLineItemMapper).update(rnr.getNonFullSupplyLineItems().get(0));
+  }
+
+  @Test
   public void shouldGetRequisitionsForFacilityProgramAndPeriods() throws Exception {
-    Facility facility = new Facility(1);
-    Program program = new Program(1);
-    List<ProcessingPeriod> periods = asList(new ProcessingPeriod(1), new ProcessingPeriod(2));
+    Facility facility = new Facility(1L);
+    Program program = new Program(1L);
+    List<ProcessingPeriod> periods = asList(new ProcessingPeriod(1L), new ProcessingPeriod(2L));
     when(separator.commaSeparateIds(periods)).thenReturn("{1, 2}");
     List<Rnr> expected = new ArrayList<>();
-    when(requisitionMapper.get(facility, program, "{1, 2}")).thenReturn(expected);
+    when(requisitionMapper.getPostSubmitRequisitions(facility, program, "{1, 2}")).thenReturn(expected);
 
-    List<Rnr> actual = requisitionRepository.get(facility, program, periods);
+    List<Rnr> actual = requisitionRepository.getPostSubmitRequisitions(facility, program, periods);
 
     assertThat(actual, is(expected));
-    verify(requisitionMapper).get(facility, program, "{1, 2}");
+    verify(requisitionMapper).getPostSubmitRequisitions(facility, program, "{1, 2}");
   }
 
-  @Test
-  public void shouldCreateOrderBatch() throws Exception {
-    OrderBatch orderBatch = new OrderBatch();
-    requisitionRepository.createOrderBatch(orderBatch);
-    verify(requisitionMapper).createOrderBatch(orderBatch);
-  }
-
-  @Test
-  public void shouldGetOrderById() throws Exception {
-    OrderBatch orderBatch = new OrderBatch();
-    orderBatch.setCreatedByUserId(1);
-    when(requisitionMapper.getOrderBatchById(1)).thenReturn(orderBatch);
-    OrderBatch orderBatchReturned = requisitionRepository.getOrderBatchById(1);
-    verify(requisitionMapper).getOrderBatchById(1);
-    assertThat(orderBatchReturned, is(orderBatch));
-  }
-
-  @Test
-  public void shouldGetOrderBatches() throws Exception {
-    List<Rnr> expectedRequisitions = new ArrayList<>();
-    when(requisitionMapper.getByStatus(RELEASED)).thenReturn(expectedRequisitions);
-
-    List<Rnr> rnrs = requisitionRepository.getByStatus(RELEASED);
-
-    assertThat(rnrs, is(expectedRequisitions));
-    verify(requisitionMapper).getByStatus(RELEASED);
-  }
 
   @Test
   public void shouldGetCategoryCount() {
@@ -240,9 +282,9 @@ public class RequisitionRepositoryTest {
   @Test
   public void shouldGetCommentsForARnR() throws Exception {
     List<Comment> comments = new ArrayList<>();
-    when(commentMapper.getByRnrId(1)).thenReturn(comments);
-    List<Comment> returnedComments = requisitionRepository.getCommentsByRnrID(1);
-    verify(commentMapper).getByRnrId(1);
+    when(commentMapper.getByRnrId(1L)).thenReturn(comments);
+    List<Comment> returnedComments = requisitionRepository.getCommentsByRnrID(1L);
+    verify(commentMapper).getByRnrId(1L);
     assertThat(returnedComments, is(comments));
   }
 
@@ -263,4 +305,17 @@ public class RequisitionRepositoryTest {
     verify(requisitionStatusChangeMapper).insert(requisitionStatusChange);
   }
 
+  @Test
+  public void itShouldUseMapperToReturnRequisitionWithoutLineItems() throws Exception {
+
+    long periodId = 8L;
+    long programId = 5L;
+    long facilityId = 3L;
+
+    Rnr requisition = new Rnr();
+
+    when(requisitionMapper.getRequisitionWithoutLineItems(facilityId,programId, periodId)).thenReturn(requisition);
+    Rnr receivedRnr = requisitionRepository.getRequisitionWithoutLineItems(facilityId, programId, periodId);
+    assertThat(receivedRnr, is(requisition));
+  }
 }

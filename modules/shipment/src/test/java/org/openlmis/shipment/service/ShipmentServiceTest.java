@@ -8,28 +8,46 @@ package org.openlmis.shipment.service;
 
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.shipment.domain.ShippedLineItem;
+import org.openlmis.db.categories.UnitTests;
+import org.openlmis.order.domain.Order;
+import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
+import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
 
-import static org.mockito.Mockito.verify;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+import static java.lang.Boolean.FALSE;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.*;
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ShipmentServiceTest {
 
   @Mock
   private ShipmentRepository shipmentRepository;
+  @Mock
+  private OrderService orderService;
   @InjectMocks
   private ShipmentService shipmentService;
 
   @Test
   public void shouldInsertShipment() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem();
+    ShippedLineItem shippedLineItem = mock(ShippedLineItem.class);
+
     shipmentService.insertShippedLineItem(shippedLineItem);
+
+    verify(shippedLineItem).validateForSave();
     verify(shipmentRepository).insertShippedLineItem(shippedLineItem);
   }
 
@@ -38,5 +56,40 @@ public class ShipmentServiceTest {
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
     shipmentService.insertShipmentFileInfo(shipmentFileInfo);
     verify(shipmentRepository).insertShipmentFileInfo(shipmentFileInfo);
+  }
+
+  @Test
+  public void shouldUpdateOrders() throws Exception {
+    final ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
+    shipmentFileInfo.setId(1L);
+    shipmentFileInfo.setProcessingError(FALSE);
+    List<Long> orderIds = new ArrayList<>();
+    orderIds.add(1L);
+
+    shipmentService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
+
+    final ArgumentMatcher<List<Order>> argumentMatcher = new ArgumentMatcher<List<Order>>() {
+      @Override
+      public boolean matches(Object argument) {
+        List<Order> orders = (List<Order>) argument;
+        Order order = orders.get(0);
+        return order.getShipmentFileInfo().equals(shipmentFileInfo) && order.getRnr().getId().equals(1L);
+      }
+    };
+    verify(orderService).updateFulfilledAndShipmentIdForOrders(argThat(argumentMatcher));
+  }
+
+
+  @Test
+  public void shouldGetProcessedTimeStampByOrderId() throws Exception {
+    ShippedLineItem shippedLineItem = new ShippedLineItem();
+    shippedLineItem.setRnrId(1L);
+    Date expectedTimestamp = new Date();
+    when(shipmentRepository.getProcessedTimeStamp(shippedLineItem)).thenReturn(expectedTimestamp);
+
+    Date processTimeStamp = shipmentService.getProcessedTimeStamp(shippedLineItem);
+
+    assertThat(processTimeStamp, is(expectedTimestamp));
+    verify(shipmentRepository).getProcessedTimeStamp(shippedLineItem);
   }
 }

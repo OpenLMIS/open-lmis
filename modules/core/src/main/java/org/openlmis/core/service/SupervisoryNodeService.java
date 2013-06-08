@@ -53,11 +53,11 @@ public class SupervisoryNodeService {
     }
   }
 
-  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Integer userId, Integer programId, Right... rights) {
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Long programId, Right... rights) {
     return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId, programId, rights);
   }
 
-  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Integer userId, Right... rights) {
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Right... rights) {
     return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId, rights);
   }
 
@@ -72,7 +72,7 @@ public class SupervisoryNodeService {
 
     List<User> users;
     while ((users = userRepository.getUsersWithRightInNodeForProgram(program, supervisoryNode, APPROVE_REQUISITION)).size() == 0) {
-      Integer supervisoryNodeId = supervisoryNodeRepository.getSupervisoryNodeParentId(supervisoryNode.getId());
+      Long supervisoryNodeId = supervisoryNodeRepository.getSupervisoryNodeParentId(supervisoryNode.getId());
       if (supervisoryNodeId == null) return null;
       supervisoryNode = new SupervisoryNode(supervisoryNodeId);
     }
@@ -80,7 +80,7 @@ public class SupervisoryNodeService {
     return users.get(0);
   }
 
-  public SupervisoryNode getParent(Integer id) {
+  public SupervisoryNode getParent(Long id) {
     return supervisoryNodeRepository.getParent(id);
   }
 

@@ -12,7 +12,11 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.*;
+import org.testng.annotations.Test;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.DataProvider;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -186,12 +190,17 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     ViewOrdersPage viewOrdersPage = homePagelmu.navigateViewOrders();
     String requisitionId = dbWrapper.getLatestRequisitionId();
-    viewOrdersPage.verifyOrderListElements(program, "ORD" + requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "RELEASED");
+    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "RELEASED", true);
+    dbWrapper.updatePacksToShip("0");
+    homePagelmu.navigateConvertToOrder();
+    homePagelmu.navigateViewOrders();
+    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "RELEASED", false);
+
   }
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, boolean adminRole) throws IOException, SQLException {
     UserPage userPage = homePage.navigateToUser();
-    String userID = userPage.enterAndverifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dburlGlobal);
+    String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dburlGlobal);
     dbWrapper.updateUser(passwordUsers, userEmail);
     userPage.enterMyFacilityAndMySupervisedFacilityData(userFirstName, userLastName, facility, program, supervisoryNode, role, adminRole);
     return userID;

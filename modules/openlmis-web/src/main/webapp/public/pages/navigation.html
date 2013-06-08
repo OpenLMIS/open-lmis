@@ -4,88 +4,92 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<div class="navigation" ng-controller="NavigationController" ui-nav>
-    <ul class="clearfix" style="display:none">
-        <li><a href="/">Home</a></li>
+<div class="navigation" ng-controller="NavigationController" ui-nav ng-hide="fullScreen">
+  <ul class="clearfix" style="display:none">
+    <li><a href="/" openlmis-message="link.home"></a></li>
 
-        <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION') || hasPermission('APPROVE_REQUISITION') ||
+    <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION') || hasPermission('APPROVE_REQUISITION') ||
        hasPermission('CONVERT_TO_ORDER') || hasPermission('VIEW_REQUISITION')  ">
-            <a href="javascript: void(0)">Requisitions</a>
+      <a href="javascript: void(0)" openlmis-message="link.requisitions"></a>
+
+      <div class="submenu">
+        <ul>
+          <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION')">
+            <a href="/public/pages/logistics/rnr/index.html" openlmis-message="link.requisitions.create.authorize"></a>
+          </li>
+          <li ng-show="hasPermission('APPROVE_REQUISITION')">
+            <a href="/public/pages/logistics/rnr/index.html#/rnr-for-approval" openlmis-message="link.requisition.approve"></a>
+          </li>
+          <li ng-show="hasPermission('CONVERT_TO_ORDER')">
+            <a href="/public/pages/logistics/rnr/index.html#/requisitions-for-convert-to-order" openlmis-message="link.requisitions.convertToOrder"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_REQUISITION')">
+            <a href="/public/pages/logistics/rnr/index.html#/view-requisitions" openlmis-message="link.requisition.view"></a>
+          </li>
+          <li class="beak"></li>
+        </ul>
+      </div>
+
+    </li>
+
+    <li ng-show="hasPermission('VIEW_ORDER')">
+      <a href="javascript: void(0)" openlmis-message="link.orders"></a>
+
+      <div class="submenu">
+        <ul>
+          <li ng-show="hasPermission('VIEW_ORDER')">
+            <a href="/public/pages/logistics/order/index.html#/" openlmis-message="link.orders.view"></a>
+          </li>
+          <li class="beak"></li>
+        </ul>
+      </div>
+
+    </li>
+
+    <li ng-show="hasPermission('VIEW_REPORTS')">
+      <a href="/public/pages/report/index.html" openlmis-message="link.reports"></a>
+    </li>
+
+    <li>
+      <a href="javascript: void(0)" openlmis-message="link.administration"></a>
+
+      <div class="submenu">
+        <ul>
+          <li ng-show="hasPermission('UPLOADS')">
+            <a href="/public/pages/admin/upload/index.html" openlmis-message="link.admin.upload"></a>
+          </li>
+
+          <li class="has-children">
+            <a href="javascript: void(0);" openlmis-message="link.admin.configure"></a>
+
             <div class="submenu">
               <ul>
-                <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION')">
-                  <a href="/public/pages/logistics/rnr/index.html#/">Create / Authorize</a>
-                </li>
-                <li ng-show="hasPermission('APPROVE_REQUISITION')">
-                  <a href="/public/pages/logistics/rnr/index.html#/rnr-for-approval">Approve</a>
-                </li>
-                <li ng-show="hasPermission('CONVERT_TO_ORDER')">
-                  <a href="/public/pages/logistics/rnr/index.html#/requisitions-for-convert-to-order">Convert to Order</a>
-                </li>
-                <li ng-show="hasPermission('VIEW_REQUISITION')">
-                  <a href="/public/pages/logistics/rnr/index.html#/view-requisitions">View</a>
+                <li ng-show="hasPermission('CONFIGURE_RNR')">
+                  <a href="/public/pages/admin/rnr-template/index.html" openlmis-message="link.admin.configure.requisitionTemplate"></a>
                 </li>
                 <li class="beak"></li>
               </ul>
             </div>
+          </li>
 
-        </li>
+          <li class="has-children">
+            <a href="/public/pages/admin/facility/index.html" openlmis-message="link.admin.manage"></a>
 
-        <li ng-show="hasPermission('VIEW_ORDER')">
-            <a href="javascript: void(0)">Orders</a>
-
-            <div class="submenu">
-                <ul>
-                    <li ng-show="hasPermission('VIEW_ORDER')">
-                        <a href="/public/pages/logistics/order/index.html#/">View Orders</a>
-                    </li>
-                    <li class="beak"></li>
-                </ul>
-            </div>
-
-        </li>
-
-        <li>
-            <a href="javascript: void(0)">Administration</a>
             <div class="submenu">
               <ul>
-                  <li ng-show="hasPermission('UPLOADS')">
-                      <a href="/public/pages/admin/upload/index.html">Upload</a>
-                  </li>
-
-                  <li class="has-children">
-                      <a href="javascript: void(0);">Configure</a>
-                      <div class="submenu">
-                        <ul>
-                            <li ng-show="hasPermission('CONFIGURE_RNR')">
-                                <a href="/public/pages/admin/rnr-template/create.html">R &amp; R Template</a>
-                            </li>
-                            <li class="beak"></li>
-                        </ul>
-                      </div>
-                  </li>
-
-                  <li class="has-children">
-                      <a href="/public/pages/admin/facility/index.html#/search">Manage</a>
-                      <div class="submenu">
-                        <ul>
-                            <li ng-show="hasPermission('MANAGE_FACILITY')">
-                                <a href="/public/pages/admin/facility/index.html#/search">Facilities</a>
-                            </li>
-                            <li ng-show="hasPermission('MANAGE_ROLE')">
-                                <a href="/public/pages/admin/role/index.html">Roles</a>
-                            </li>
-                            <li ng-show="hasPermission('MANAGE_SCHEDULE')">
-                                <a href="/public/pages/admin/schedule/index.html">Schedules</a>
-                            </li>
-                            <li ng-show="hasPermission('MANAGE_USERS')">
-                                <a href="/public/pages/admin/user/index.html#/search">Users</a>
-                            </li>
-                            <li class="beak"></li>
-                        </ul>
-                      </div>
-                  </li>
-                  <li class="beak"></li>
+                <li ng-show="hasPermission('MANAGE_FACILITY')">
+                  <a href="/public/pages/admin/facility/index.html" openlmis-message="link.admin.manage.facilities"></a>
+                </li>
+                <li ng-show="hasPermission('MANAGE_ROLE')">
+                  <a href="/public/pages/admin/role/index.html" openlmis-message="link.admin.manage.roles"></a>
+                </li>
+                <li ng-show="hasPermission('MANAGE_SCHEDULE')">
+                  <a href="/public/pages/admin/schedule/index.html" openlmis-message="link.admin.manage.schedules"></a>
+                </li>
+                <li ng-show="hasPermission('MANAGE_USERS')">
+                  <a href="/public/pages/admin/user/index.html" openlmis-message="link.admin.manage.users"></a>
+                </li>
+                <li class="beak"></li>
               </ul>
           </div>
 
@@ -122,7 +126,7 @@
                     </li>
 
                     <!--<li ng-show="hasPermission('VIEW_CONSUMPTION_REPORT')">-->
-                        <!--<a href="/public/pages/reports/consumption/index.html">Consumption Report</a>-->
+                    <!--<a href="/public/pages/reports/consumption/index.html">Consumption Report</a>-->
                     <!--</li>-->
                 </ul>
             </div>

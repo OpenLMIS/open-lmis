@@ -7,14 +7,14 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ProductForm {
-
-    private long id;
-    private String code;
-    private int displayOrder;
+@EqualsAndHashCode(callSuper = false)
+public class ProductForm extends BaseModel {
+  private String code;
+  private int displayOrder;
 
 }

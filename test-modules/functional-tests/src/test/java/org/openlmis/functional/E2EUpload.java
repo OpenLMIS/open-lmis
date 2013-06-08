@@ -15,13 +15,19 @@ import org.openlmis.pageobjects.RolesPage;
 import org.openlmis.pageobjects.UploadPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.*;
+import org.testng.annotations.Test;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.DataProvider;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -56,6 +62,9 @@ public class E2EUpload extends TestCaseHelper {
     String userId = "200";
     dbWrapper.alterUserID(userName, userId);
     dbWrapper.insertRoleAssignment(userId, "User");
+
+    verifyInValidProductGroupUpload(uploadPage);
+    verifyValidProductGroupUpload(uploadPage);
 
     verifyValidProductCategoryUpload(uploadPage);
     verifyInvalidProductCategoryUpload(uploadPage);
@@ -164,6 +173,8 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_Subsequent_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_PUSH_Program.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
 
   }
 
@@ -250,6 +261,8 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data_Population_Lat_Long.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInvalidGeographicZoneUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -259,6 +272,11 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Lat.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Long.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+
   }
 
   private void verifyValidProductPriceUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -293,51 +311,86 @@ public class E2EUpload extends TestCaseHelper {
   }
 
 
-  private void verifyValidUserUpload(UploadPage uploadPage) throws FileNotFoundException {
+  private void verifyValidUserUpload(UploadPage uploadPage) throws IOException, SQLException {
+    String tableName = "users";
     uploadPage.uploadUsers("QA_Users.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
   }
 
-  private void verifyInValidUserUpload(UploadPage uploadPage) throws FileNotFoundException {
+  private void verifyInValidUserUpload(UploadPage uploadPage) throws IOException, SQLException {
+    String tableName = "users";
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_Email.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_EmployeeId.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_UserName.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Invalid_Supervisor.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Subsequent_Duplicate_Username.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Subsequent_InvalidCombination.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
   }
 
-  private void verifyValidProductCategoryUpload(UploadPage uploadPage) throws FileNotFoundException {
+  private void verifyValidProductCategoryUpload(UploadPage uploadPage) throws IOException, SQLException {
+    String tableName="product_categories";
     uploadPage.uploadProductCategory("QA_Productcategoryupload.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "18");
     uploadPage.uploadProductCategory("QA_Productcategoryupload_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "20");
   }
 
-  private void verifyInvalidProductCategoryUpload(UploadPage uploadPage) throws FileNotFoundException {
+  private void verifyInvalidProductCategoryUpload(UploadPage uploadPage) throws IOException, SQLException {
+    String tableName="product_categories";
     uploadPage.uploadProductCategory("QA_ProductCategoryUpload_DuplicateCategoryCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "20");
     uploadPage.uploadProductCategory("QA_Productcategoryupload_Subsequent_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "20");
   }
 
-  private void verifyInValidProductUpload(UploadPage uploadPage) throws FileNotFoundException {
+  private void verifyInValidProductUpload(UploadPage uploadPage) throws IOException, SQLException {
+    String tableName="products";
     uploadPage.uploadProductsInvalidScenarios("QA_products_Duplicate_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
+    uploadPage.uploadProductsInvalidScenarios("QA_Products_Invalid_ProductGroupCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
   }
 
-  private void verifyValidProductUpload(UploadPage uploadPage) throws FileNotFoundException {
+  private void verifyValidProductUpload(UploadPage uploadPage) throws IOException, SQLException {
+    String tableName="products";
     uploadPage.uploadProducts("QA_products.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "1");
     uploadPage.uploadProducts("QA_products_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
   }
+
+    private void verifyInValidProductGroupUpload(UploadPage uploadPage) throws IOException, SQLException {
+        uploadPage.uploadProductGroupsScenarios("QA_Product_Group_Duplicate.csv");
+        uploadPage.verifyErrorMessageOnUploadScreen();
+    }
+
+    private void verifyValidProductGroupUpload(UploadPage uploadPage) throws IOException, SQLException {
+        uploadPage.uploadProductGroupsScenarios("QA_product_group.csv");
+        uploadPage.verifySuccessMessageOnUploadScreen();
+        uploadPage.uploadProductGroupsScenarios("QA_Product_Group_Subsequent.csv");
+        uploadPage.verifySuccessMessageOnUploadScreen();
+    }
 
   @AfterMethod(groups = {"functional"})
   public void tearDown() throws Exception {

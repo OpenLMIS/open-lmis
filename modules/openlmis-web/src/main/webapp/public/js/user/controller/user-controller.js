@@ -4,14 +4,14 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function UserController($scope, $routeParams, $location, $dialog, Users, User, AllFacilities, Roles, Facility, Programs, SupervisoryNodes) {
+function UserController($scope, $routeParams, $location, $dialog, Users, User, AllFacilities, Roles, Facility, Programs, SupervisoryNodes, messageService) {
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
   $scope.showSupervisorRoleMappingError = false;
   $scope.user = {};
 
   if ($routeParams.userId) {
-    User.get({id:$routeParams.userId}, function (data) {
+    User.get({id: $routeParams.userId}, function (data) {
       $scope.user = data.user;
       loadUserFacility();
     }, {});
@@ -26,7 +26,7 @@ function UserController($scope, $routeParams, $location, $dialog, Users, User, A
 
   Programs.get({}, function (data) {
     $.each(data.programs, function (index, program) {
-      program.status = program.active ? 'Active' : 'Inactive';
+      program.status = program.active ? messageService.get("label.active") : messageService.get('label.inactive');
     });
     $scope.programs = data.programs;
   });
@@ -94,7 +94,7 @@ function UserController($scope, $routeParams, $location, $dialog, Users, User, A
 
     var requiredFieldsPresent = function (user) {
       if ($scope.userForm.$error.required || !validateRoleAssignment(user)) {
-        $scope.error = "Please correct errors before saving.";
+        $scope.error = messageService.get("form.error");
         $scope.showError = true;
         return false;
       } else {
@@ -105,7 +105,7 @@ function UserController($scope, $routeParams, $location, $dialog, Users, User, A
     if (!requiredFieldsPresent($scope.user))  return false;
 
     if ($scope.user.id) {
-      User.update({id:$scope.user.id}, $scope.user, successHandler, errorHandler);
+      User.update({id: $scope.user.id}, $scope.user, successHandler, errorHandler);
     } else {
       Users.save({}, $scope.user, successHandler, errorHandler);
     }
@@ -122,7 +122,7 @@ function UserController($scope, $routeParams, $location, $dialog, Users, User, A
 
     if (len >= 3) {
       if (len == 3) {
-        AllFacilities.get({searchParam:query}, function (data) {
+        AllFacilities.get({searchParam: query}, function (data) {
           $scope.facilityList = data.facilityList;
           $scope.filteredFacilities = $scope.facilityList;
           $scope.resultCount = $scope.filteredFacilities.length;
@@ -156,18 +156,21 @@ function UserController($scope, $routeParams, $location, $dialog, Users, User, A
 
   $scope.confirmFacilityDelete = function () {
     var dialogOpts = {
-      id:"deleteFacilityModal",
-      header:"Delete facility",
-      body:"All programs and roles association for this facility will be deleted."
+      id: "deleteFacilityModal",
+      header: messageService.get('delete.facility.header'),
+      body: messageService.get('confirm.programRole.deletion')
     };
-    OpenLmisDialog.new(dialogOpts, $scope.clearSelectedFacility, $dialog);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.clearSelectedFacility, $dialog);
   };
 
   var loadUserFacility = function () {
     if (!utils.isNullOrUndefined($scope.user.facilityId)) {
       if (utils.isNullOrUndefined($scope.allSupportedPrograms)) {
-        Facility.get({id:$scope.user.facilityId}, function (data) {
-          $scope.allSupportedPrograms = data.facility.supportedPrograms;
+        Facility.get({id: $scope.user.facilityId}, function (data) {
+          $scope.allSupportedPrograms = _.filter(data.facility.supportedPrograms, function (supportedProgram) {
+            return !supportedProgram.program.push;
+          });
+
           $scope.facilitySelected = data.facility;
         }, {});
       }

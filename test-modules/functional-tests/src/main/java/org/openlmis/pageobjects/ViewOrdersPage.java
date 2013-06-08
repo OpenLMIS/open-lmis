@@ -23,7 +23,7 @@ public class ViewOrdersPage extends RequisitionPage {
   @FindBy(how = How.ID, using = "NoRequisitionsPendingMessage")
   private static WebElement NoRequisitionsPendingMessage;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col0 colt0']/div[@class='ngCellText ng-scope']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col0 colt0']/span")
   private static WebElement orderNumberOnViewOrdersScreen;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
@@ -38,7 +38,7 @@ public class ViewOrdersPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col4 colt4']/span")
   private static WebElement supplyDepotOnViewOrderScreen;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col6 colt6']/span")
+  @FindBy(how = How.XPATH, using = "(//div[@id='orderStatus'])[1]")
   private static WebElement orderStatusOnViewOrderScreen;
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
@@ -47,13 +47,19 @@ public class ViewOrdersPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//div[@id='NoRequisitionsPendingMessage']")
   private static WebElement noRequisitionPendingMessage;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Download CSV')]")
+  private static WebElement downloadCSVLink;
+
+  @FindBy(how = How.XPATH, using = "//span[contains(text(),'No products in this order')]")
+  private static WebElement noOrderMessage;
+
   public ViewOrdersPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
   }
 
-  public void verifyOrderListElements(String program, String orderNumber, String facilityCodeName, String periodDetails, String supplyFacilityName, String orderStatus) throws IOException {
+  public void verifyOrderListElements(String program, String orderNumber, String facilityCodeName, String periodDetails, String supplyFacilityName, String orderStatus, boolean downloadLinkPresent) throws IOException {
     testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
     SeleneseTestNgHelper.assertEquals(programOnViewOrderScreen.getText().trim(), program);
     SeleneseTestNgHelper.assertEquals(orderNumberOnViewOrdersScreen.getText().trim(), orderNumber);
@@ -61,6 +67,10 @@ public class ViewOrdersPage extends RequisitionPage {
     SeleneseTestNgHelper.assertEquals(periodDetailsOnViewOrderScreen.getText().trim(), periodDetails);
     SeleneseTestNgHelper.assertEquals(supplyDepotOnViewOrderScreen.getText().trim(), supplyFacilityName);
     SeleneseTestNgHelper.assertEquals(orderStatusOnViewOrderScreen.getText().trim(), orderStatus);
+    if (downloadLinkPresent)
+      SeleneseTestNgHelper.assertTrue("'Download CSV' link should show up", downloadCSVLink.isDisplayed());
+    else
+      SeleneseTestNgHelper.assertTrue("'No products in this order' message should show up", noOrderMessage.isDisplayed());
   }
 
 }

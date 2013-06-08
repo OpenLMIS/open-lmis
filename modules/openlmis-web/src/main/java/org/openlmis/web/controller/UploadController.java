@@ -8,6 +8,7 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.db.service.DbService;
 import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.AuditFields;
@@ -16,24 +17,36 @@ import org.openlmis.upload.parser.CSVParser;
 import org.openlmis.web.model.UploadBean;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
+
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @NoArgsConstructor
 public class UploadController extends BaseController {
+
+  public static final String SELECT_UPLOAD_TYPE = "upload.select.type";
+  public static final String INCORRECT_FILE = "upload.incorrect.file";
+  public static final String FILE_IS_EMPTY = "upload.file.empty";
+  public static final String INCORRECT_FILE_FORMAT = "upload.incorrect.file.format";
+  public static final String SUCCESS = "success";
+  public static final String MODEL = "model";
+  public static final String ERROR = "error";
+  public static final String SUPPORTED_UPLOADS = "supportedUploads";
 
   @Autowired
   private CSVParser csvParser;
@@ -42,27 +55,19 @@ public class UploadController extends BaseController {
   @Resource
   private Map<String, UploadBean> uploadBeansMap;
 
-  private static ResourceBundle resourceBundle = ResourceBundle.getBundle("messages");
-
-
-  String uploadPage = "redirect:/public/pages/admin/upload/index.html#/upload?";
-
-
   public UploadController(CSVParser csvParser, Map<String, UploadBean> uploadBeansMap, DbService dbService) {
     this.csvParser = csvParser;
     this.uploadBeansMap = uploadBeansMap;
     this.dbService = dbService;
   }
 
-  @RequestMapping(value = "/upload", method = RequestMethod.POST)
+  @RequestMapping(value = "/upload", method = POST)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UPLOADS')")
-  public String upload(@RequestParam(value = "csvFile", required = true) MultipartFile csvFile,
-                       @RequestParam(value = "model", required = true) String model,
-                       HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> upload(MultipartFile csvFile, String model, HttpServletRequest request) {
     try {
-      String error = validateFile(model, csvFile);
-      if (error != null) {
-        return errorPage(error, model);
+      OpenLmisMessage errorMessage = validateFile(model, csvFile);
+      if (errorMessage != null) {
+        return errorResponse(errorMessage, model);
       }
 
       int initialRecordCount = dbService.getCount(uploadBeansMap.get(model).getTableName());
@@ -71,16 +76,15 @@ public class UploadController extends BaseController {
       int recordsToBeUploaded = csvParser.process(csvFile.getInputStream(), new ModelClass(uploadBeansMap.get(model).getImportableClass()),
         uploadBeansMap.get(model).getRecordHandler(), new AuditFields(loggedInUserId(request), currentTimestamp));
 
-      return redirectToSuccessRoute(model, initialRecordCount, recordsToBeUploaded);
-
+      return successResponse(model, initialRecordCount, recordsToBeUploaded);
     } catch (DataException dataException) {
-      return errorPage(dataException.getOpenLmisMessage().resolve(resourceBundle), model);
+      return errorResponse(dataException.getOpenLmisMessage(), model);
     } catch (UploadException | IOException e) {
-      return errorPage(e.getMessage(), model);
+      return errorResponse(new OpenLmisMessage(e.getMessage()), model);
     }
   }
 
-  private String redirectToSuccessRoute(String model, int initialRecordCount, int recordsToBeUploaded) {
+  private ResponseEntity<OpenLmisResponse> successResponse(String model, int initialRecordCount, int recordsToBeUploaded) {
     int finalRecordCount = dbService.getCount(uploadBeansMap.get(model).getTableName());
     int recordsCreated = finalRecordCount - initialRecordCount;
 
@@ -90,30 +94,37 @@ public class UploadController extends BaseController {
   @RequestMapping(value = "/supported-uploads", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UPLOADS')")
   public ResponseEntity<OpenLmisResponse> getSupportedUploads() {
-    return OpenLmisResponse.response("supportedUploads", uploadBeansMap);
+    return OpenLmisResponse.response(SUPPORTED_UPLOADS, uploadBeansMap);
   }
 
-  private String validateFile(String model, MultipartFile csvFile) {
-    String error = null;
+  private OpenLmisMessage validateFile(String model, MultipartFile csvFile) {
+    OpenLmisMessage errorMessage = null;
     if (model.isEmpty()) {
-      error = "Please select the upload type";
+      errorMessage = new OpenLmisMessage(SELECT_UPLOAD_TYPE);
     } else if (!uploadBeansMap.containsKey(model)) {
-      error = "Incorrect file";
-    } else if (csvFile.isEmpty()) {
-      error = "File is empty";
+      errorMessage = new OpenLmisMessage(INCORRECT_FILE);
+    } else if (csvFile == null || csvFile.isEmpty()) {
+      errorMessage = new OpenLmisMessage(FILE_IS_EMPTY);
     } else if (!csvFile.getOriginalFilename().endsWith(".csv")) {
-      error = "Incorrect file format , Please upload " + model + " data as a \".csv\" file";
+      errorMessage = new OpenLmisMessage(INCORRECT_FILE_FORMAT, model);
     }
-    return error;
+    return errorMessage;
   }
 
-  private String successPage(String model, int recordsCreated, int recordsUpdated) {
-    return uploadPage + "model=" + model + "&success=" + "File uploaded successfully. " +
-      "'Number of records created: " + recordsCreated + "', 'Number of records updated : " + recordsUpdated + "'";
+  private ResponseEntity<OpenLmisResponse> successPage(String model, int recordsCreated, int recordsUpdated) {
+    String successMessage = "File uploaded successfully. " +
+      "'Number of records created: " + recordsCreated + "', 'Number of records updated: " + recordsUpdated + "'";
+    Map<String, OpenLmisMessage> responseMessages = new HashMap<>();
+    responseMessages.put(SUCCESS, new OpenLmisMessage(successMessage));
+    responseMessages.put(MODEL, new OpenLmisMessage(model));
+    return OpenLmisResponse.response(responseMessages, HttpStatus.OK, MediaType.TEXT_HTML_VALUE);
   }
 
-  private String errorPage(String error, String model) {
-    return uploadPage + "model=" + model + "&error=" + error;
+  private ResponseEntity<OpenLmisResponse> errorResponse(OpenLmisMessage errorMessage, String model) {
+    Map<String, OpenLmisMessage> responseMessages = new HashMap<>();
+    responseMessages.put(ERROR, errorMessage);
+    responseMessages.put(MODEL, new OpenLmisMessage(model));
+    return OpenLmisResponse.response(responseMessages, HttpStatus.OK, MediaType.TEXT_HTML_VALUE);
   }
 
 }

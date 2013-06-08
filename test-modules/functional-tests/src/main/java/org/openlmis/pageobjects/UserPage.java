@@ -50,7 +50,7 @@ public class UserPage extends Page {
   private static WebElement cancelButton;
 
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Add new')]")
+  @FindBy(how = How.ID, using = "user-add-new")
   private static WebElement addNewButton;
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']/span")
@@ -122,7 +122,7 @@ public class UserPage extends Page {
 
   }
 
-  public String enterAndverifyUserDetails(String userName, String email, String firstName, String lastName, String baseurl, String dburl) throws IOException, SQLException {
+  public String enterAndVerifyUserDetails(String userName, String email, String firstName, String lastName, String baseurl, String dburl) throws IOException, SQLException {
     testWebDriver.waitForElementToAppear(addNewButton);
     addNewButton.click();
     testWebDriver.waitForElementToAppear(userNameField);
@@ -134,8 +134,9 @@ public class UserPage extends Page {
     firstNameField.sendKeys(firstName);
     lastNameField.clear();
     lastNameField.sendKeys(lastName);
-
+    testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
+    testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(viewHereLink);
 
     SeleneseTestNgHelper.assertTrue("User '" + firstName + " " + lastName + "' has been successfully created, password link sent on registered Email address message is not getting displayed", successMessage.isDisplayed());
@@ -152,7 +153,7 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(searchFacility);
     if (!adminRole) {
       searchFacility.clear();
-      testWebDriver.handleScrollByPixels(0, 4000);
+      testWebDriver.handleScrollByPixels(0, 5000);
       searchFacility.sendKeys(facilityCode);
       for (int i = 0; i < facilityCode.length(); i++) {
         searchFacility.sendKeys(Keys.ARROW_LEFT);
@@ -253,6 +254,14 @@ public class UserPage extends Page {
     WebElement roleElement = testWebDriver.getElementByXpath("//div[contains(text(),'" + roleName + "')]");
     SeleneseTestNgHelper.assertTrue(roleName + " should be displayed", roleElement.isDisplayed());
   }
+
+    public String getAllProgramsToSupervise() {
+        return programsToSupervise.getText();
+    }
+
+    public String getAllProgramsHomeFacility() {
+        return programsMyFacility.getText();
+    }
 
   public void clickViewHere() {
     testWebDriver.waitForElementToAppear(viewHereLink);

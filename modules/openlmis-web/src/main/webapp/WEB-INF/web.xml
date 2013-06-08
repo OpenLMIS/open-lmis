@@ -30,7 +30,7 @@
 
     <context-param>
         <param-name>log4jConfigLocation</param-name>
-        <param-value>classpath:/config/openlmis_logging.xml</param-value>
+        <param-value>classpath:openlmis_logging.xml</param-value>
     </context-param>
 
     <listener>

@@ -9,10 +9,12 @@ package org.openlmis.core.repository.mapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,10 +39,11 @@ import static org.openlmis.core.builder.UserBuilder.facilityId;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class SupervisoryNodeMapperIT {
 
   SupervisoryNode supervisoryNode;
@@ -108,7 +111,7 @@ public class SupervisoryNodeMapperIT {
   public void shouldGetSupervisoryNodeIdByCode() throws Exception {
     supervisoryNodeMapper.insert(supervisoryNode);
 
-    Integer fetchedId = supervisoryNodeMapper.getIdForCode(supervisoryNode.getCode());
+    Long fetchedId = supervisoryNodeMapper.getIdForCode(supervisoryNode.getCode());
 
     assertThat(fetchedId, is(supervisoryNode.getId()));
   }
@@ -135,8 +138,8 @@ public class SupervisoryNodeMapperIT {
     Role configureRnrRole = new Role("configure rnr", FALSE, "random description");
     roleRightsMapper.insertRole(configureRnrRole);
 
-    roleRightsMapper.createRoleRight(createRole.getId(), CREATE_REQUISITION);
-    roleRightsMapper.createRoleRight(configureRnrRole.getId(), CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(createRole, CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(configureRnrRole, CONFIGURE_RNR);
 
     supervisoryNodeMapper.insert(supervisoryNode);
 
@@ -174,8 +177,8 @@ public class SupervisoryNodeMapperIT {
     Role configureRnrRole = new Role("configure rnr", FALSE, "random description");
     roleRightsMapper.insertRole(configureRnrRole);
 
-    roleRightsMapper.createRoleRight(createRole.getId(), CREATE_REQUISITION);
-    roleRightsMapper.createRoleRight(configureRnrRole.getId(), CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(createRole, CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(configureRnrRole, CONFIGURE_RNR);
 
     supervisoryNodeMapper.insert(supervisoryNode);
 
@@ -271,7 +274,7 @@ public class SupervisoryNodeMapperIT {
   }
 
   private Role insertRoleAssignments(Program program, User user, Role role, SupervisoryNode supervisoryNode) {
-    Integer supervisoryNodeId = supervisoryNode == null ? null : supervisoryNode.getId();
+    Long supervisoryNodeId = supervisoryNode == null ? null : supervisoryNode.getId();
     roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), supervisoryNodeId, role.getId());
     return role;
   }

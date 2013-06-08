@@ -10,16 +10,16 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
+import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.configurationReader.StaticReferenceDataReader;
-import org.openlmis.web.form.RnrList;
 import org.openlmis.web.model.RnrReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
-import static org.openlmis.rnr.dto.RnrDTO.*;
+import static org.openlmis.rnr.dto.RnrDTO.prepareForListApproval;
+import static org.openlmis.rnr.dto.RnrDTO.prepareForView;
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
@@ -50,7 +51,6 @@ public class RequisitionController extends BaseController {
   public static final String RNR_TEMPLATE = "rnr_template";
 
   public static final String PERIODS = "periods";
-  public static final String ORDERS = "orders";
   public static final String CURRENCY = "currency";
 
   public static final String COMMENTS = "comments";
@@ -58,6 +58,9 @@ public class RequisitionController extends BaseController {
   private RequisitionService requisitionService;
   private RnrTemplateService rnrTemplateService;
   private StaticReferenceDataReader staticReferenceDataReader;
+  public static final String LOSSES_AND_ADJUSTMENT_TYPES = "lossesAndAdjustmentTypes";
+
+  private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
 
   @Autowired
   public RequisitionController(RequisitionService requisitionService, RnrTemplateService rnrTemplateService, StaticReferenceDataReader staticReferenceDataReader) {
@@ -67,10 +70,9 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> initiateRnr(@RequestParam("facilityId") Integer facilityId,
-                                                      @RequestParam("programId") Integer programId,
-                                                      @RequestParam("periodId") Integer periodId,
+  public ResponseEntity<OpenLmisResponse> initiateRnr(@RequestParam("facilityId") Long facilityId,
+                                                      @RequestParam("programId") Long programId,
+                                                      @RequestParam("periodId") Long periodId,
                                                       HttpServletRequest request) {
     try {
       return response(RNR, requisitionService.initiate(facilityId, programId, periodId, loggedInUserId(request)));
@@ -98,9 +100,8 @@ public class RequisitionController extends BaseController {
 
 
   @RequestMapping(value = "/requisitions/{id}/save", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> saveRnr(@RequestBody Rnr rnr,
-                                                  @PathVariable("id") Integer id,
+                                                  @PathVariable("id") Long id,
                                                   HttpServletRequest request) {
     try {
       rnr.setId(id);
@@ -113,14 +114,15 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions/{id}/submit", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> submit(@RequestBody Rnr rnr,
-                                                 @PathVariable("id") Integer id,
+  public ResponseEntity<OpenLmisResponse> submit(@PathVariable("id") Long id,
                                                  HttpServletRequest request) {
     try {
-      rnr.setId(id);
+      Rnr rnr = new Rnr(id);
       rnr.setModifiedBy(loggedInUserId(request));
-      return success(requisitionService.submit(rnr));
+      Rnr submittedRnr = requisitionService.submit(rnr);
+
+      return success(requisitionService.getSubmitMessageBasedOnSupervisoryNode(submittedRnr.getFacility(),
+        submittedRnr.getProgram()));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
@@ -134,29 +136,27 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions/{id}/authorize", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'AUTHORIZE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> authorize(@RequestBody Rnr rnr,
-                                                    @PathVariable("id") Integer id,
+  public ResponseEntity<OpenLmisResponse> authorize(@PathVariable("id") Long id,
                                                     HttpServletRequest request) {
     try {
-      rnr.setId(id);
+      Rnr rnr = new Rnr(id);
       rnr.setModifiedBy(loggedInUserId(request));
-      OpenLmisMessage openLmisMessage = requisitionService.authorize(rnr);
-      return success(openLmisMessage);
+      Rnr authorizedRnr = requisitionService.authorize(rnr);
+      return success(requisitionService.getAuthorizeMessageBasedOnSupervisoryNode(authorizedRnr.getFacility(),authorizedRnr.getProgram()));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
   }
 
   @RequestMapping(value = "/requisitions/{id}/approve", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'APPROVE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> approve(@RequestBody Rnr rnr, @PathVariable("id") Integer id, HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> approve(@PathVariable("id") Long id, HttpServletRequest request) {
+    Rnr rnr = new Rnr(id);
     rnr.setModifiedBy(loggedInUserId(request));
-    rnr.setId(id);
     try {
       return success(requisitionService.approve(rnr));
     } catch (DataException dataException) {
-      return error(dataException, HttpStatus.BAD_REQUEST);
+      logger.warn("Error in approving requisition #{}", id, dataException);
+      return error(dataException, BAD_REQUEST);
     }
   }
 
@@ -178,8 +178,8 @@ public class RequisitionController extends BaseController {
   @RequestMapping(value = "/logistics/facility/{facilityId}/program/{programId}/periods", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(
-      @PathVariable("facilityId") Integer facilityId,
-      @PathVariable("programId") Integer programId) {
+      @PathVariable("facilityId") Long facilityId,
+      @PathVariable("programId") Long programId) {
     try {
       List<ProcessingPeriod> periodList = requisitionService.getAllPeriodsForInitiatingRequisition(facilityId, programId);
       Rnr currentRequisition = getRequisitionForCurrentPeriod(facilityId, programId, periodList);
@@ -191,27 +191,18 @@ public class RequisitionController extends BaseController {
     }
   }
 
-  private Rnr getRequisitionForCurrentPeriod(Integer facilityId, Integer programId, List<ProcessingPeriod> periodList) {
+  private Rnr getRequisitionForCurrentPeriod(Long facilityId, Long programId, List<ProcessingPeriod> periodList) {
     if (periodList == null || periodList.isEmpty()) return null;
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodList.get(0).getId());
+    boolean withoutLineItems = true;
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId,
+        periodList.get(0).getId(), withoutLineItems);
     List<Rnr> rnrList = requisitionService.get(criteria);
     return (rnrList == null || rnrList.isEmpty()) ? null : rnrList.get(0);
   }
 
-  @RequestMapping(value = "/requisitions-for-approval/{id}", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'APPROVE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getRnrForApprovalById(@PathVariable Integer id, HttpServletRequest request) {
-    try {
-      return response(RNR, requisitionService.getRnrForApprovalById(id, loggedInUserId(request)));
-    } catch (DataException dataException) {
-      return error(dataException, HttpStatus.NOT_FOUND);
-    }
-  }
-
-
   @RequestMapping(value = "/requisitions/{id}", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getById(@PathVariable Integer id) {
+  public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id) {
     try {
       return response(RNR, requisitionService.getFullRequisitionById(id));
     } catch (DataException dataException) {
@@ -221,24 +212,20 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/requisitions/{id}/print", method = GET, headers = ACCEPT_PDF)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
-  public ModelAndView printRequisition(@PathVariable Integer id) {
+  public ModelAndView printRequisition(@PathVariable Long id) {
     ModelAndView modelAndView = new ModelAndView("requisitionPDF");
     Rnr requisition = requisitionService.getFullRequisitionById(id);
     modelAndView.addObject(RNR, requisition);
+    modelAndView.addObject(LOSSES_AND_ADJUSTMENT_TYPES, requisitionService.getLossesAndAdjustmentsTypes());
     modelAndView.addObject(RNR_TEMPLATE, rnrTemplateService.fetchColumnsForRequisition(requisition.getProgram().getId()));
     modelAndView.addObject(CURRENCY, staticReferenceDataReader.getCurrency());
     return modelAndView;
   }
 
-  @RequestMapping(value = "/orders", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER, CONVERT_TO_ORDER')")
-  public ResponseEntity<OpenLmisResponse> getOrders() {
-    return OpenLmisResponse.response(ORDERS, prepareForOrderView(requisitionService.getOrders()));
-  }
 
   @RequestMapping(value = "/requisitions/{id}/comments", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> insertComment(@RequestBody Comment comment, @PathVariable("id") Integer id, HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> insertComment(@RequestBody Comment comment, @PathVariable("id") Long id, HttpServletRequest request) {
     comment.setRnrId(id);
     User author = new User();
     author.setId(loggedInUserId(request));
@@ -248,7 +235,7 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions/{id}/comments", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getCommentsForARnr(@PathVariable Integer id) {
+  public ResponseEntity<OpenLmisResponse> getCommentsForARnr(@PathVariable Long id) {
     return response(COMMENTS, requisitionService.getCommentsByRnrId(id));
   }
 }

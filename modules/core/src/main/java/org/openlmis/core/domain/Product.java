@@ -18,7 +18,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @Data
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class Product extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, name = "Product Code")
@@ -72,6 +72,8 @@ public class Product extends BaseModel implements Importable {
   @ImportField(mandatory = true, type = "String", name = "Product Category", nested = "code")
   private ProductCategory category;
 
+  @ImportField(type = "String", name = "Product Group", nested = "code")
+  private ProductGroup productGroup;
 
   @ImportField(type = "String", name = "Dosage Units", nested = "code")
   private DosageUnit dosageUnit;

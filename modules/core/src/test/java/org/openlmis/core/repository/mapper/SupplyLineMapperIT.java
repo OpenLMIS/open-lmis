@@ -7,6 +7,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
@@ -15,6 +16,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -27,10 +29,11 @@ import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class SupplyLineMapperIT {
 
     @Autowired
@@ -107,12 +110,12 @@ public class SupplyLineMapperIT {
     mapper.insert(supplyLine);
 
     supplyLine.setDescription("New Description");
-    supplyLine.setModifiedBy(2);
+    supplyLine.setModifiedBy(2L);
 
     mapper.update(supplyLine);
 
     assertThat(supplyLine.getDescription(), is("New Description"));
-    assertThat(supplyLine.getModifiedBy(), is(2));
+    assertThat(supplyLine.getModifiedBy(), is(2L));
   }
 
   @Test

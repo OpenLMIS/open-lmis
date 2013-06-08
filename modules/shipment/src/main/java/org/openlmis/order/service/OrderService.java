@@ -10,12 +10,13 @@ import lombok.NoArgsConstructor;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.dto.RnrDTO;
+import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,13 +33,53 @@ public class OrderService {
   }
 
   @Transactional
-  public void convertToOrder(List<RnrDTO> rnrList, Integer userId) {
+  public void convertToOrder(List<Rnr> rnrList, Long userId) {
     requisitionService.releaseRequisitionsAsOrder(rnrList, userId);
     Order order;
-    for(RnrDTO rnrDTO : rnrList) {
-      rnrDTO.setModifiedBy(userId);
-      order = new Order(rnrDTO);
+    for (Rnr rnr : rnrList) {
+      rnr.setModifiedBy(userId);
+      order = new Order(rnr);
       orderRepository.save(order);
     }
+  }
+
+  public List<Order> getOrders() {
+    List<Order> orders = orderRepository.getOrders();
+    Rnr rnr;
+    for (Order order : orders) {
+      rnr = requisitionService.getFullRequisitionById(order.getRnr().getId());
+      removeUnorderedProducts(rnr);
+      order.setRnr(rnr);
+    }
+    return orders;
+  }
+
+  public Order getOrderForDownload(Long id) {
+    Order order = orderRepository.getById(id);
+    Rnr requisition = requisitionService.getFullRequisitionById(order.getRnr().getId());
+    removeUnorderedProducts(requisition);
+    order.setRnr(requisition);
+    return order;
+  }
+
+  private void removeUnorderedProducts(Rnr requisition) {
+    List<RnrLineItem> fullSupplyLineItems = requisition.getFullSupplyLineItems();
+    requisition.setFullSupplyLineItems(getLineItemsForOrder(fullSupplyLineItems));
+    List<RnrLineItem> nonFullSupplyLineItems = requisition.getNonFullSupplyLineItems();
+    requisition.setNonFullSupplyLineItems(getLineItemsForOrder(nonFullSupplyLineItems));
+  }
+
+  private List<RnrLineItem> getLineItemsForOrder(List<RnrLineItem> rnrLineItems) {
+    List<RnrLineItem> lineItemsForOrder = new ArrayList<>();
+    for (RnrLineItem rnrLineItem : rnrLineItems) {
+      if (rnrLineItem.getPacksToShip() > 0) {
+        lineItemsForOrder.add(rnrLineItem);
+      }
+    }
+    return lineItemsForOrder;
+  }
+
+  public void updateFulfilledAndShipmentIdForOrders(List<Order> orders) {
+    orderRepository.updateStatusAndShipmentIdForOrder(orders);
   }
 }

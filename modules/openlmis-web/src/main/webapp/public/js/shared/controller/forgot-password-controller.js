@@ -4,25 +4,28 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ForgotPasswordController($scope, ForgotPassword) {
+function ForgotPasswordController($scope, ForgotPassword,messageService) {
 
   $scope.user = {};
-  $scope.submitButtonLabel = "Submit";
+  $scope.submitButtonLabel = messageService.get('button.submit');
   $scope.submitDisabled = false;
     $scope.sendForgotPasswordEmail = function(){
     if (!$scope.user.userName && !$scope.user.email) {
-           $scope.error="Please enter either your Email or Username";
+           $scope.error= messageService.get('enter.emailInfo');
     } else {
-      $scope.submitButtonLabel = "Sending...";
+      $scope.submitButtonLabel = messageService.get('sending.label');
       $scope.submitDisabled = true;
       ForgotPassword.save({}, $scope.user, function () {
         window.location = "email-sent.html";
       }, function (data) {
         $scope.submitDisabled = false;
-        $scope.submitButtonLabel = "Submit";
+        $scope.submitButtonLabel = messageService.get('button.submit');
         $scope.error = data.data.error;
       });
       }
     }
 
+  $scope.goToLogin = function() {
+    window.location = "login.html";
+  }
 }

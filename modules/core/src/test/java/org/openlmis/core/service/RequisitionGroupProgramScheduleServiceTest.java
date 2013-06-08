@@ -8,10 +8,12 @@ package org.openlmis.core.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.repository.RequisitionGroupProgramScheduleRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -21,6 +23,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.RequisitionGroupProgramScheduleBuilder.*;
 
+@Category(UnitTests.class)
 public class RequisitionGroupProgramScheduleServiceTest {
 
   @Mock
@@ -53,7 +56,7 @@ public class RequisitionGroupProgramScheduleServiceTest {
   public void shouldUpdateRequisitionGroupProgramScheduleWhenIdIsNotNull() throws Exception {
 
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
-    requisitionGroupProgramSchedule.setId(1);
+    requisitionGroupProgramSchedule.setId(1L);
     RequisitionGroupProgramScheduleRepository spyRequisitionGroupProgramScheduleRepository = spy(new RequisitionGroupProgramScheduleRepository());
     service = new RequisitionGroupProgramScheduleService(spyRequisitionGroupProgramScheduleRepository);
 

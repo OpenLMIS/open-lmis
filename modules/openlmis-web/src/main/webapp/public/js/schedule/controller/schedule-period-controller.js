@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Period, $location) {
+function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Period, $location, messageService) {
   $scope.newPeriod = {};
   $scope.oneDay = 1000 * 60 * 60 * 24;
   $scope.lastPeriodId = "";
@@ -14,7 +14,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
     $scope.error = "";
     $scope.schedule = data.schedule;
   }, function () {
-    $scope.$parent.errorInValidSchedule = "Error Identifying Schedule";
+    $scope.$parent.errorInValidSchedule = messageService.get("error.identify.schedule");
     $location.path("/list");
   });
 
@@ -48,7 +48,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
   $scope.createPeriod = function () {
     function validatePeriod() {
       if ($scope.calculateDays($scope.newPeriod.startDate, $scope.newPeriod.endDate) == null) {
-        $scope.error = "End Date must be greater than Start Date";
+        $scope.error = messageService.get("error.endDate");
         $scope.message = "";
         return false;
       }
@@ -114,7 +114,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
           });
         } else {
           $scope.message = "";
-          $scope.error = "Period's Start Date is smaller than Current Date";
+          $scope.error = messageService.get("error.startDate");
         }
       }
     });

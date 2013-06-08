@@ -22,11 +22,11 @@ import static org.openlmis.core.service.FacilityService.SUPPORTED_PROGRAMS_INVAL
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProgramSupported extends BaseModel implements Importable {
 
-  private Integer facilityId;
+  private Long facilityId;
 
   @ImportField(mandatory = true, name = "Program Code", nested = "code")
   private Program program;

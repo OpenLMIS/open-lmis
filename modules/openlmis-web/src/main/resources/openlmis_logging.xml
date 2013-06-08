@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+    <appender name="logFileAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="openlmis-web.log"/>
+        <param name="MaxFileSize" value="1MB"/>
+        <param name="MaxBackupIndex" value="5"/>
+        <param name="Append" value="true"/>
+        <param name="Encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.EnhancedPatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} [%-5p][%-16.16t][%40.40c] - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="consoleAppender" class="org.apache.log4j.ConsoleAppender">
+        <param name="Append" value="true"/>
+        <param name="Encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.EnhancedPatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} [%-5p][%-16.16t][%80.80c] - %m%n"/>
+        </layout>
+    </appender>
+
+    <logger name="java.sql" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
+    <logger name="org.openlmis.rnr.repository.mapper">
+        <level value="DEBUG"/>
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
+    <logger name="org.openlmis.db.repository.mapper">
+        <level value="DEBUG"/>
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
+    <logger name="org.openlmis.core.repository.mapper">
+        <level value="DEBUG"/>
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
+    <logger name="org.openlmis.shipment.repository.mapper">
+        <level value="DEBUG"/>
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
+    <logger name="org.openlmis.web">
+        <level value="INFO"/>
+        <appender-ref ref="logFileAppender"/>
+    </logger>
+
+    <root>
+        <level value="INFO"/>
+        <appender-ref ref="logFileAppender"/>
+    </root>
+</log4j:configuration>

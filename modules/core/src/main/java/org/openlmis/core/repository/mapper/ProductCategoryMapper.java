@@ -26,7 +26,7 @@ public interface ProductCategoryMapper {
   public void insert(ProductCategory productCategory);
 
   @Select("SELECT * FROM product_categories WHERE id = #{id}")
-  public ProductCategory getProductCategoryById(Integer id);
+  public ProductCategory getProductCategoryById(Long id);
 
   @Select("SELECT * FROM product_categories WHERE LOWER(code) = LOWER(#{code})")
   public ProductCategory getProductCategoryByCode(String code);
@@ -36,5 +36,5 @@ public interface ProductCategoryMapper {
   public void update(ProductCategory category);
 
   @Select("SELECT id FROM product_categories WHERE LOWER(code) = LOWER(#{code})")
-  public Integer getProductCategoryIdByCode(String categoryCode);
+  public Long getProductCategoryIdByCode(String categoryCode);
 }

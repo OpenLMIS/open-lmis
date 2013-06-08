@@ -10,9 +10,11 @@ import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.SupervisoryNode;
@@ -20,6 +22,7 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.repository.UserRepository;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
@@ -37,10 +40,13 @@ import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.service.UserService.PASSWORD_RESET_TOKEN_INVALID;
+import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
+@Category(UnitTests.class)
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(Encoder.class)
+@PrepareForTest({Encoder.class, UserService.class})
 public class UserServiceTest {
 
   public static final String FORGET_PASSWORD_LINK = "http://openLMIS.org";
@@ -62,15 +68,16 @@ public class UserServiceTest {
   @Mock
   private MessageService messageService;
 
+  @InjectMocks
+  private UserService userService;
+
 
   @Before
   public void setUp() throws Exception {
-    userService = new UserService(userRepository, roleAssignmentService, emailService, messageService);
     when(messageService.message("accountcreated.email.subject")).thenReturn("Account created message");
     when(messageService.message("forgotpassword.email.subject")).thenReturn("Forgot password email subject");
-  }
 
-  private UserService userService;
+  }
 
   private Matcher<EmailMessage> emailMessageMatcher(final EmailMessage that) {
     return new ArgumentMatcher<EmailMessage>() {
@@ -111,7 +118,7 @@ public class UserServiceTest {
     User user = new User();
     user.setUserName("Admin");
     user.setEmail("random@random.com");
-    user.setId(1111);
+    user.setId(1111L);
 
     EmailMessage emailMessage = new EmailMessage("random@random.com", "Forgot password email subject", "email body");
     when(userRepository.getByEmail(user.getEmail())).thenReturn(user);
@@ -120,7 +127,7 @@ public class UserServiceTest {
     when(Encoder.hash(anyString())).thenReturn("token");
 
     when(messageService.message("passwordreset.email.body", new String[]{FORGET_PASSWORD_LINK + "token"}))
-      .thenReturn("email body");
+        .thenReturn("email body");
 
     userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
 
@@ -144,31 +151,18 @@ public class UserServiceTest {
   }
 
   @Test
-  public void shouldReturnSearchResultsWhenUserExists() throws Exception {
-    User user = new User();
-    String userSearchParam = "abc";
-    List<User> listOfUsers = Arrays.asList(new User());
-
-    when(userRepository.searchUser(userSearchParam)).thenReturn(listOfUsers);
-
-    List<User> listOfReturnedUsers = userService.searchUser(userSearchParam);
-
-    assertTrue(listOfReturnedUsers.contains(user));
-  }
-
-  @Test
   public void shouldReturnUserIfIdExists() throws Exception {
     User user = new User();
     List<RoleAssignment> homeFacilityRoles = Arrays.asList(new RoleAssignment());
     List<RoleAssignment> supervisorRoles = Arrays.asList(new RoleAssignment());
 
-    when(userRepository.getById(1)).thenReturn(user);
-    when(roleAssignmentService.getHomeFacilityRoles(1)).thenReturn(homeFacilityRoles);
-    when(roleAssignmentService.getSupervisorRoles(1)).thenReturn(supervisorRoles);
+    when(userRepository.getById(1L)).thenReturn(user);
+    when(roleAssignmentService.getHomeFacilityRoles(1L)).thenReturn(homeFacilityRoles);
+    when(roleAssignmentService.getSupervisorRoles(1L)).thenReturn(supervisorRoles);
     RoleAssignment adminRole = new RoleAssignment();
-    when(roleAssignmentService.getAdminRole(1)).thenReturn(adminRole);
+    when(roleAssignmentService.getAdminRole(1L)).thenReturn(adminRole);
 
-    User returnedUser = userService.getById(1);
+    User returnedUser = userService.getById(1L);
 
     assertThat(returnedUser, is(user));
     assertThat(returnedUser.getHomeFacilityRoles(), is(homeFacilityRoles));
@@ -188,7 +182,7 @@ public class UserServiceTest {
   @Test
   public void shouldSaveUserWithProgramRoleMapping() throws Exception {
     User user = new User();
-    RoleAssignment userRoleAssignment = new RoleAssignment(1, 2, 3, null);
+    RoleAssignment userRoleAssignment = new RoleAssignment(1L, 2L, 3L, null);
     List<RoleAssignment> homeFacilityRoles = new ArrayList<>();
     homeFacilityRoles.add(userRoleAssignment);
     user.setHomeFacilityRoles(homeFacilityRoles);
@@ -200,9 +194,22 @@ public class UserServiceTest {
   }
 
   @Test
+  public void shouldReturnSearchResultsWhenUserExists() throws Exception {
+    User user = new User();
+    String userSearchParam = "abc";
+    List<User> listOfUsers = Arrays.asList(new User());
+
+    when(userRepository.searchUser(userSearchParam)).thenReturn(listOfUsers);
+
+    List<User> listOfReturnedUsers = userService.searchUser(userSearchParam);
+
+    assertTrue(listOfReturnedUsers.contains(user));
+  }
+
+  @Test
   public void shouldSaveUsersSupervisoryRoles() throws Exception {
     User user = new User();
-    final RoleAssignment roleAssignment = new RoleAssignment(1, 1, 1, new SupervisoryNode(1));
+    final RoleAssignment roleAssignment = new RoleAssignment(1L, 1L, 1L, new SupervisoryNode(1L));
     List<RoleAssignment> supervisorRoles = Arrays.asList(roleAssignment);
     user.setSupervisorRoles(supervisorRoles);
 
@@ -216,10 +223,10 @@ public class UserServiceTest {
   @Test
   public void shouldSaveUsersWithAllRoles() throws Exception {
     User user = new User();
-    final RoleAssignment roleAssignment = new RoleAssignment(1, 1, 1, new SupervisoryNode(1));
+    final RoleAssignment roleAssignment = new RoleAssignment(1L, 1L, 1L, new SupervisoryNode(1L));
     List<RoleAssignment> supervisorRoles = Arrays.asList(roleAssignment);
     RoleAssignment adminRoleAssignment = new RoleAssignment();
-    adminRoleAssignment.setRoleId(1);
+    adminRoleAssignment.setRoleId(1L);
     user.setAdminRole(adminRoleAssignment);
     user.setSupervisorRoles(supervisorRoles);
 
@@ -234,7 +241,7 @@ public class UserServiceTest {
   @Test
   public void shouldUpdateUser() throws Exception {
     User user = new User();
-    final RoleAssignment roleAssignment = new RoleAssignment(1, 1, 1, new SupervisoryNode(1));
+    final RoleAssignment roleAssignment = new RoleAssignment(1L, 1L, 1L, new SupervisoryNode(1L));
     List<RoleAssignment> supervisorRoles = Arrays.asList(roleAssignment);
     user.setSupervisorRoles(supervisorRoles);
 
@@ -261,12 +268,31 @@ public class UserServiceTest {
   @Test
   public void shouldReturnUserIdIfPasswordResetTokenIsValid() throws Exception {
     String validToken = "validToken";
-    Integer expectedUserId = 1;
+    Long expectedUserId = 1L;
     when(userRepository.getUserIdForPasswordResetToken(validToken)).thenReturn(expectedUserId);
 
-    Integer userId = userService.getUserIdByPasswordResetToken(validToken);
+    Long userId = userService.getUserIdByPasswordResetToken(validToken);
 
     verify(userRepository).getUserIdForPasswordResetToken(validToken);
     assertThat(userId, is(expectedUserId));
+  }
+
+  @Test
+  public void shouldCreateUserInDB() throws Exception {
+    User user = new User();
+
+    EmailMessage emailMessage = new EmailMessage();
+    whenNew(EmailMessage.class).withNoArguments().thenReturn(emailMessage);
+
+    when(messageService.message("accountcreated.email.subject")).thenReturn("Account created message");
+
+    userService.createUser(user, "resetPasswordLink");
+
+    verify(userRepository).create(user);
+    verify(userRepository).insertEmailNotification(emailMessage);
+    verify(emailService, never()).send(emailMessage);
+    verify(roleAssignmentService).saveHomeFacilityRoles(user);
+    verify(roleAssignmentService).saveSupervisoryRoles(user);
+    verify(roleAssignmentService).saveAdminRole(user);
   }
 }

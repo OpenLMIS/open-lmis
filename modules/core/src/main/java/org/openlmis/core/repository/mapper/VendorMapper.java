@@ -18,4 +18,7 @@ public interface VendorMapper {
 
   @Select("SELECT authToken FROM vendors WHERE name = #{name}")
   String getToken(String name);
+
+  @Select("SELECT V.name, V.active FROM vendors V INNER JOIN users U ON V.id = U.vendorId WHERE U.id = #{id}")
+  Vendor getByUserId(long id);
 }

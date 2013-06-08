@@ -24,7 +24,7 @@ public class ProductCategoryService {
     this.productCategoryRepository = productCategoryRepository;
   }
 
-  public Integer getProductCategoryIdByCode(String code) {
+  public Long getProductCategoryIdByCode(String code) {
     return productCategoryRepository.getProductCategoryIdByCode(code);
   }
 

@@ -7,10 +7,10 @@ CREATE TABLE requisition_groups (
   name VARCHAR(50) NOT NULL,
   description VARCHAR(250),
   supervisoryNodeId INTEGER,
-  modifiedBy INTEGER,
-  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   createdBy INTEGER,
-  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy INTEGER,
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX i_requisition_group_supervisoryNodeId ON requisition_groups(supervisoryNodeId);

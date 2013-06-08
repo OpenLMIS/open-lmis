@@ -4,7 +4,7 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<div ng-controller="UserRoleAssignmentController">
+<div ng-controller="UserRoleAssignmentController" tab-scroll>
   <div class="fluid-grid">
     <div class="row-fluid">
       <div class="span6">
@@ -17,16 +17,6 @@
           </span>
         </div>
       </div>
-    </div>
-  </div>
-  <div tabindex="-1" id="deleteAdminRolesModal" modal="deleteAdminRolesModal" close="restoreAdminRole()">
-    <div class="modal-header"><h3 openlmis-message="create.user.deleteAdminRoleHeader"></h3></div>
-    <div class="modal-body">
-      <p openlmis-message="create.user.deleteAdminRoles"></p>
-    </div>
-    <div class="modal-footer">
-      <a href="" class="btn btn-primary" ng-click="deleteAdminRolesModal=false" openlmis-message="button.ok"></a>
-      <a href="" class="btn" ng-click="restoreAdminRole()" openlmis-message="button.cancel"></a>
     </div>
   </div>
 </div>

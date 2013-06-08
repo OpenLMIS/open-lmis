@@ -4,15 +4,17 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<h2>View Orders</h2>
+<h2 openlmis-message="link.orders.view"></h2>
 
 <div class="app-form">
     <div class="form-group">
-        <h3>Order List</h3>
+        <h3 openlmis-message="label.order.list"></h3>
 
         <div class="alert alert-info" id="noOrdersPresent" ng-hide="orders.length">
-            No R&Rs have been released as Orders yet
+            <span openlmis-message="message.no.order"></span>
         </div>
+      <div class="alert alert-info" id="noOrders" ng-show="downloadMessage" ng-bind="downloadMessage">
+      </div>
         <div>
             <div class="gridStyle" ng-grid="gridOptions" ng-show="orders.length"></div>
         </div>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+    <import resource="classpath*:applicationContext-db.xml"/>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${jdbc.driverClassName}"/>
+        <property name="jdbcUrl" value="${openlmis.jdbc.url}"/>
+        <property name="user" value="${openlmis.jdbc.username}"/>
+        <property name="password" value="${openlmis.jdbc.password}"/>
+        <property name="maxPoolSize" value="${openlmis.conn.pool.maxPoolSize}"/>
+        <property name="acquireIncrement" value="${openlmis.conn.pool.acquireIncrement}"/>
+        <property name="acquireRetryAttempts" value="${openlmis.conn.pool.acquireRetryAttempts}"/>
+        <property name="acquireRetryDelay" value="${openlmis.conn.pool.acquireRetryDelay}"/>
+        <property name="debugUnreturnedConnectionStackTraces"
+                  value="${openlmis.conn.pool.debugUnreturnedConnectionStackTraces}"/>
+        <property name="idleConnectionTestPeriod" value="${openlmis.conn.pool.idleConnectionTestPeriod}"/>
+        <property name="initialPoolSize" value="${openlmis.conn.pool.initialPoolSize}"/>
+        <property name="maxConnectionAge" value="${openlmis.conn.pool.maxConnectionAge}"/>
+        <property name="maxIdleTime" value="${openlmis.conn.pool.maxIdleTime}"/>
+        <property name="maxIdleTimeExcessConnections" value="${openlmis.conn.pool.maxIdleTimeExcessConnections}"/>
+        <property name="maxStatements" value="${openlmis.conn.pool.maxStatements}"/>
+        <property name="maxStatementsPerConnection" value="${openlmis.conn.pool.maxStatementsPerConnection}"/>
+        <property name="minPoolSize" value="${openlmis.conn.pool.minPoolSize}"/>
+        <property name="numHelperThreads" value="${openlmis.conn.pool.numHelperThreads}"/>
+        <property name="statementCacheNumDeferredCloseThreads"
+                  value="${openlmis.conn.pool.statementCacheNumDeferredCloseThreads}"/>
+        <property name="testConnectionOnCheckin" value="${openlmis.conn.pool.testConnectionOnCheckin}"/>
+        <property name="unreturnedConnectionTimeout" value="${openlmis.conn.pool.unreturnedConnectionTimeout}"/>
+    </bean>
+
+    <import resource="classpath*:atomFeedContext.xml"/>
+
+</beans>

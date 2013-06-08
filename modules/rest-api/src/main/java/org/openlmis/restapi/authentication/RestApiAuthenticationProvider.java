@@ -10,6 +10,7 @@ import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.service.VendorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -30,15 +31,13 @@ public class RestApiAuthenticationProvider implements AuthenticationProvider {
     vendor.setName((String) authentication.getPrincipal());
     vendor.setAuthToken((String) authentication.getCredentials());
 
-    if (!vendor.isValid()) return null;
+    if (!vendorService.authenticate(vendor))
+      throw new BadCredentialsException("Could not authenticate Vendor");
 
     Collection<? extends GrantedAuthority> authorities = null;
 
-    if (!vendorService.authenticate(vendor)) {
-      return null;
-    }
-
-    return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), authorities);
+    return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(),
+      authorities);
   }
 
   @Override

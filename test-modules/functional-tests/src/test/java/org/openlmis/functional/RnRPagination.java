@@ -16,10 +16,14 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ViewRequisitionPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.testng.annotations.Test;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.DataProvider;
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional

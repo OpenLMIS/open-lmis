@@ -27,11 +27,12 @@
     </bean>
 
     <bean class="org.springframework.web.servlet.view.XmlViewResolver">
-        <property name="order" value="2"/>
+        <property name="order" value="0"/>
         <property name="location">
             <value>/WEB-INF/spring-pdf-views.xml</value>
         </property>
     </bean>
+
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="order" value="3"/>

@@ -29,35 +29,47 @@ public class ProgramService {
     this.programSupportedRepository = programSupportedRepository;
   }
 
-  public List<Program> getByFacility(Integer facilityId) {
+  public List<Program> getByFacility(Long facilityId) {
     return programRepository.getByFacility(facilityId);
+  }
+
+  public List<Program> getAllPullPrograms() {
+    return programRepository.getAllPullPrograms();
+  }
+
+  public List<Program> getAllPushPrograms() {
+    return programRepository.getAllPushPrograms();
+  }
+
+  public List<Program> getProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, Right... rights) {
+    return programRepository.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, rights);
+  }
+
+  public List<Program> getProgramForSupervisedFacilities(Long userId, Right... rights) {
+    return programRepository.getUserSupervisedActiveProgramsWithRights(userId, rights);
+  }
+
+  public Long getIdForCode(String code) {
+    return programRepository.getIdByCode(code);
+  }
+
+  public Date getProgramStartDate(Long facilityId, Long programId) {
+    return programSupportedRepository.getProgramStartDate(facilityId, programId);
+  }
+
+  public Program getById(Long id) {
+    return programRepository.getById(id);
+  }
+
+  public void setTemplateConfigured(Long id) {
+    programRepository.setTemplateConfigured(id);
+  }
+
+  public List<Program> getProgramsForUserByFacilityAndRights(Long facilityId, Long userId, Right... rights) {
+    return programRepository.getProgramsForUserByFacilityAndRights(facilityId, userId, rights);
   }
 
   public List<Program> getAll() {
     return programRepository.getAll();
-  }
-
-  public List<Program> getProgramsSupportedByFacilityForUserWithRights(Integer facilityId, Integer userId, Right... rights) {
-    return programRepository.getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, rights);
-  }
-
-  public List<Program> getUserSupervisedActiveProgramsWithRights(Integer userId, Right... rights) {
-    return programRepository.getUserSupervisedActiveProgramsWithRights(userId, rights);
-  }
-
-  public Integer getIdForCode(String code) {
-    return programRepository.getIdByCode(code);
-  }
-
-  public Date getProgramStartDate(Integer facilityId, Integer programId) {
-    return programSupportedRepository.getProgramStartDate(facilityId, programId);
-  }
-
-  public Program getById(Integer id) {
-    return programRepository.getById(id);
-  }
-
-  public void setTemplateConfigured(int id) {
-    programRepository.setTemplateConfigured(id);
   }
 }

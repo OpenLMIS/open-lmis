@@ -7,9 +7,11 @@
 package org.openlmis.upload.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.openlmis.upload.annotation.ImportField;
 
 @Data
+@NoArgsConstructor
 public class Field {
   java.lang.reflect.Field field;
   private boolean mandatory;

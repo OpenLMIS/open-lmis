@@ -6,16 +6,19 @@
 
 package org.openlmis.rnr.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 
 @Data
 @NoArgsConstructor
-public class LossesAndAdjustmentsType {
-
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+public class LossesAndAdjustmentsType extends BaseModel{
     private String name;
     private String description;
     private Boolean additive;
     private Integer displayOrder;
-
 }

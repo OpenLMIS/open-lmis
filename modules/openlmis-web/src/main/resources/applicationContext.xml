@@ -69,7 +69,8 @@
     <import resource="classpath:/applicationContext-report.xml"/>
     <import resource="classpath:/applicationContext-restapi.xml"/>
     <import resource="classpath:/applicationContext-shipment.xml"/>
-
+    <import resource="classpath:/applicationContext-reporting.xml"/>
+    <import resource="classpath:/applicationContext-allocation.xml"/>
 
     <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>
 
@@ -78,6 +79,7 @@
 
     <mvc:resources mapping="/public/**" location="/public/"/>
     <mvc:resources mapping="/error/**" location="/public/"/>
+    <mvc:resources mapping="/favicon.ico" location="/"/>
 
     <mvc:interceptors>
         <bean id="noCacheInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
@@ -228,7 +230,7 @@
                         <property name="tableName" value="product_categories"/>
                     </bean>
                 </entry>
-                <entry key="GeographicZone">
+                <entry key="geographicZone">
                     <bean class="org.openlmis.web.model.UploadBean">
                         <property name="displayName" value="Geographic Zones"/>
                         <property name="importableClass">
@@ -236,6 +238,26 @@
                         </property>
                         <property name="recordHandler" ref="geographicZonePersistenceHandler"/>
                         <property name="tableName" value="geographic_zones"/>
+                    </bean>
+                </entry>
+                <entry key="productGroup">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Product Groups"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.ProductGroup</value>
+                        </property>
+                        <property name="recordHandler" ref="productGroupPersistenceHandler"/>
+                        <property name="tableName" value="product_groups"/>
+                    </bean>
+                </entry>
+                <entry key="deliveryZone">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Delivery Zones"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.allocation.domain.DeliveryZone</value>
+                        </property>
+                        <property name="recordHandler" ref="deliveryZoneHandler"/>
+                        <property name="tableName" value="delivery_zones"/>
                     </bean>
                 </entry>
             </map>

@@ -7,13 +7,13 @@
 <div class="total-cost-container">
     <div class="cost-values">
         <small>
-            Total Cost For Full Supply Products:
+            <span openlmis-message="label.total.cost.full.supply"></span>
             <strong>
                 <span id="fullSupplyItemsCost" class="cell-text"
                       ng-bind="rnr.fullSupplyItemsSubmittedCost | currency:currency"></span>
             </strong>
             &nbsp;|&nbsp;
-            Total Cost For Non Full Supply Products:
+            <span openlmis-message="label.total.cost.non.full.supply"></span>
             <strong>
                 <span id="nonFullSupplyItemsCost" class="cell-text"
                       ng-bind="rnr.nonFullSupplyItemsSubmittedCost | currency:currency"></span>
@@ -21,7 +21,7 @@
         </small>
         &nbsp;|&nbsp;
         <strong>
-            Total R&amp;R Cost:
+            <span openlmis-message="label.total.cost"></span>
             <span id="totalCost" class="cell-text"
                   ng-bind="rnr.calculateTotalLineItemCost() | currency:currency"></span>
         </strong>

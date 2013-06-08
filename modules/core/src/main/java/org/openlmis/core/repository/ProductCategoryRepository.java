@@ -53,7 +53,7 @@ public class ProductCategoryRepository {
     return categoryMapper.getProductCategoryByCode(productCategory.getCode());
   }
 
-  public Integer getProductCategoryIdByCode(String categoryCode) {
+  public Long getProductCategoryIdByCode(String categoryCode) {
     return categoryMapper.getProductCategoryIdByCode(categoryCode);
   }
 

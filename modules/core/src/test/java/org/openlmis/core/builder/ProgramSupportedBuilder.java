@@ -19,14 +19,14 @@ import static org.joda.time.DateTime.now;
 
 public class ProgramSupportedBuilder {
   public static Property<ProgramSupported, String> supportedFacilityCode = newProperty();
-  public static Property<ProgramSupported, Integer> supportedFacilityId = newProperty();
+  public static Property<ProgramSupported, Long> supportedFacilityId = newProperty();
   public static Property<ProgramSupported, Program> supportedProgram = newProperty();
   public static Property<ProgramSupported, Boolean> isActive = newProperty();
   public static Property<ProgramSupported, Date> startDate = newProperty();
 
-  public static final Integer FACILITY_ID = 101;
+  public static final Long FACILITY_ID = 101L;
   public static final String FACILITY_CODE = "F_CD";
-  public static final Integer PROGRAM_ID = 101;
+  public static final Long PROGRAM_ID = 101L;
   public static final String PROGRAM_CODE = "P_CD";
   private static final String PROGRAM_NAME = "P_NAME";
   public static final Boolean IS_ACTIVE = true;
@@ -41,7 +41,7 @@ public class ProgramSupportedBuilder {
       programSupported.setProgram(lookup.valueOf(supportedProgram, new Program(PROGRAM_ID, PROGRAM_CODE, PROGRAM_NAME, null, null, false)));
       programSupported.setStartDate(lookup.valueOf(startDate, START_DATE));
       programSupported.setActive(lookup.valueOf(isActive, IS_ACTIVE));
-      programSupported.setModifiedBy(1);
+      programSupported.setModifiedBy(1L);
       programSupported.setModifiedDate(now().toDate());
       return programSupported;
     }

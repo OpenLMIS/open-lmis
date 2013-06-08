@@ -7,11 +7,11 @@
 package org.openlmis.rnr.dto;
 
 import org.junit.Test;
-import org.openlmis.rnr.domain.OrderBatch;
+import org.junit.experimental.categories.Category;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -19,7 +19,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
-
+@Category(UnitTests.class)
 public class RnrDTOTest {
   @Test
   public void shouldPrepareRequisitionsForApproval() throws Exception {
@@ -65,28 +65,5 @@ public class RnrDTOTest {
     assertThat(rnrDTO.getStatus(), is(rnr.getStatus().name()));
   }
 
-  @Test
-  public void shouldPrepareRequisitionsForOrderBatch() throws Exception {
-    Rnr rnr = make(a(defaultRnr));
-    Date orderDate = new Date();
-    OrderBatch orderBatch = new OrderBatch(1, orderDate, null, null, null);
-    rnr.setOrderBatch(orderBatch);
-    List<Rnr> rnrList = Arrays.asList(rnr);
-    List<RnrDTO> rnrDTOs = RnrDTO.prepareForOrderView(rnrList);
 
-    RnrDTO rnrDTO = rnrDTOs.get(0);
-    assertThat(rnrDTO.getOrderBatchId(),is(rnr.getOrderBatch().getId()));
-    assertThat(rnrDTO.getId(), is(rnr.getId()));
-    assertThat(rnrDTO.getProgramId(), is(rnr.getProgram().getId()));
-    assertThat(rnrDTO.getFacilityId(), is(rnr.getFacility().getId()));
-    assertThat(rnrDTO.getProgramName(), is(rnr.getProgram().getName()));
-    assertThat(rnrDTO.getFacilityCode(), is(rnr.getFacility().getCode()));
-    assertThat(rnrDTO.getFacilityName(), is(rnr.getFacility().getName()));
-    assertThat(rnrDTO.getOrderDate(), is(rnr.getOrderBatch().getCreateTimeStamp()));
-    assertThat(rnrDTO.getOrderBatchId(), is(rnr.getOrderBatch().getId()));
-    assertThat(rnrDTO.getPeriodStartDate(), is(rnr.getPeriod().getStartDate()));
-    assertThat(rnrDTO.getPeriodEndDate(), is(rnr.getPeriod().getEndDate()));
-    assertThat(rnrDTO.getPeriodName(), is(rnr.getPeriod().getName()));
-    assertThat(rnrDTO.getSupplyingDepot(), is(rnr.getSupplyingFacility().getName()));
-  }
 }

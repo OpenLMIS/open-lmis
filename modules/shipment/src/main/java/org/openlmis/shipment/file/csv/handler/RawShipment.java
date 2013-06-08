@@ -17,5 +17,5 @@ import org.openlmis.upload.annotation.ImportField;
 @NoArgsConstructor
 public class RawShipment implements Importable {
   @ImportField(type = "int",name = "Order Number")
-  private Integer orderNumber;
+  private Long orderNumber;
 }

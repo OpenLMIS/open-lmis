@@ -14,16 +14,18 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openlmis.LmisThreadLocal;
+import org.openlmis.db.categories.UnitTests;
 
 import java.io.ByteArrayOutputStream;
 
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
 import static org.mockito.Mockito.when;
-
+@Category(UnitTests.class)
 public class ApplicationLoggerTest {
     private Logger logger;
     private ByteArrayOutputStream outputStream;

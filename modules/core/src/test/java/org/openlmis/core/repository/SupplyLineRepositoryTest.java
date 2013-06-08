@@ -9,6 +9,7 @@ package org.openlmis.core.repository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -18,7 +19,7 @@ import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupplyLineMapper;
-import org.springframework.dao.DuplicateKeyException;
+import org.openlmis.db.categories.UnitTests;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -26,6 +27,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
+@Category(UnitTests.class)
 @RunWith(org.mockito.runners.MockitoJUnitRunner.class)
 public class SupplyLineRepositoryTest {
   @Mock
@@ -51,10 +53,10 @@ public class SupplyLineRepositoryTest {
 
   @Test
   public void shouldInsertSupplyLine() {
-    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1)).thenReturn(null);
+    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1L);
+    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1L);
+    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1L);
+    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1L)).thenReturn(null);
 
     supplyLineRepository.insert(supplyLine);
     verify(supplyLineMapper).insert(supplyLine);
@@ -62,10 +64,10 @@ public class SupplyLineRepositoryTest {
 
   @Test
   public void shouldThrowExceptionForDuplicateSupplyLines() {
-    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1)).thenReturn(null);
+    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1L);
+    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1L);
+    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1L);
+    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1L)).thenReturn(null);
     doThrow(new DataException("Duplicate entry for Supply Line found")).when(supplyLineMapper).insert(supplyLine);
 
     expectedEx.expect(DataException.class);
@@ -75,7 +77,7 @@ public class SupplyLineRepositoryTest {
   }
 
   @Test
-  public void shouldReturnSupplyLineBySupervisoryNodeAndProgram(){
+  public void shouldReturnSupplyLineBySupervisoryNodeAndProgram() {
     Program program = new Program();
     SupervisoryNode supervisoryNode = new SupervisoryNode();
     when(supplyLineMapper.getSupplyLineBy(supervisoryNode, program)).thenReturn(supplyLine);

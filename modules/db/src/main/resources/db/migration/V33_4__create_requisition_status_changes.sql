@@ -6,6 +6,8 @@ CREATE TABLE requisition_status_changes (
   id                              SERIAL PRIMARY KEY,
   rnrId                           INTEGER     NOT NULL REFERENCES requisitions (id),
   status                          VARCHAR(20) NOT NULL,
-  statusChangedBy                 INTEGER NOT NULL REFERENCES users(id),
-  statusChangeDate                TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  createdBy                       INTEGER NOT NULL REFERENCES users(id),
+  createdDate                     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy                      INTEGER NOT NULL REFERENCES users(id),
+  modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

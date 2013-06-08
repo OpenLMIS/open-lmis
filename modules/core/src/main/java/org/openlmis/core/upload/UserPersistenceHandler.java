@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.openlmis.core.repository.UserRepository.DUPLICATE_USER_NAME_FOUND;
 
 @Component
@@ -23,7 +26,6 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
   private UserService userService;
   private String baseUrl;
   public static final String RESET_PASSWORD_PATH = "public/pages/reset-password.html#/token/";
-
 
   @Autowired
   public UserPersistenceHandler(UserService userService, @Value("${mail.base.url}") String baseUrl) {
@@ -38,7 +40,8 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
 
   @Override
   protected void save(BaseModel record) {
-    userService.create((User) record, baseUrl + RESET_PASSWORD_PATH);
+    User user = (User) record;
+    userService.createUser(user, baseUrl + RESET_PASSWORD_PATH);
   }
 
   @Override

@@ -9,9 +9,11 @@ package org.openlmis.core.repository.mapper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.ProcessingSchedule;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,10 +29,11 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.*;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class ProcessingScheduleMapperIT {
   @Rule
   public ExpectedException expectedEx = org.junit.rules.ExpectedException.none();
@@ -58,7 +61,7 @@ public class ProcessingScheduleMapperIT {
       with(code, "test code"),
       with(name, "test name"),
       with(description, "desc"),
-      with(modifiedBy, 1)));
+      with(modifiedBy, 1L)));
 
     Integer insertionCount = processingScheduleMapper.insert(processingSchedule);
 
@@ -70,7 +73,7 @@ public class ProcessingScheduleMapperIT {
     assertThat(processingSchedule.getCode(), is("test code"));
     assertThat(processingSchedule.getName(), is("test name"));
     assertThat(processingSchedule.getDescription(), is("desc"));
-    assertThat(processingSchedule.getModifiedBy(), is(1));
+    assertThat(processingSchedule.getModifiedBy(), is(1L));
     assertThat(processingSchedule.getModifiedDate(), is(notNullValue()));
   }
 
@@ -80,7 +83,7 @@ public class ProcessingScheduleMapperIT {
       with(code, "test code"),
       with(name, "test name"),
       with(description, "desc"),
-      with(modifiedBy, 1)));
+      with(modifiedBy, 1L)));
     processingScheduleMapper.insert(processingSchedule);
     processingScheduleMapper.insert(processingSchedule2);
 
@@ -107,7 +110,7 @@ public class ProcessingScheduleMapperIT {
     processingSchedule.setCode("Q1stM_updated");
     processingSchedule.setName("QuarterMonthly_Updated");
     processingSchedule.setDescription("QuarterMonthDesc_Updated");
-    processingSchedule.setModifiedBy(2);
+    processingSchedule.setModifiedBy(2L);
 
     Integer updateCount = processingScheduleMapper.update(processingSchedule);
 
@@ -116,7 +119,7 @@ public class ProcessingScheduleMapperIT {
     assertThat(updatedSchedule.getCode(), is("Q1stM_updated"));
     assertThat(updatedSchedule.getName(), is("QuarterMonthly_Updated"));
     assertThat(updatedSchedule.getDescription(), is("QuarterMonthDesc_Updated"));
-    assertThat(updatedSchedule.getModifiedBy(), is(2));
+    assertThat(updatedSchedule.getModifiedBy(), is(2L));
     // TODO : need to figure out a way to flush session cache before committing so that the updated default value can be fetched
     // assertThat(updatedSchedule.getModifiedDate(), is(not(creationDate)));
   }

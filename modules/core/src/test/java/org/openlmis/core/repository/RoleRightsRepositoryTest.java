@@ -9,6 +9,7 @@ package org.openlmis.core.repository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -20,6 +21,7 @@ import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.RoleRightsMapper;
+import org.openlmis.db.categories.UnitTests;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.*;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RoleRightsRepositoryTest {
 
@@ -56,24 +59,24 @@ public class RoleRightsRepositoryTest {
   @Test
   public void shouldSaveRoleWithMappings() throws Exception {
     role.setRights(new HashSet<>(asList(CONFIGURE_RNR, CREATE_REQUISITION)));
-    role.setId(1);
+    role.setId(1L);
     roleRightsRepository.createRole(role);
 
     verify(roleRightsMapper).insertRole(role);
-    verify(roleRightsMapper).createRoleRight(1, CONFIGURE_RNR);
-    verify(roleRightsMapper).createRoleRight(1, CREATE_REQUISITION);
+    verify(roleRightsMapper).createRoleRight(role, CONFIGURE_RNR);
+    verify(roleRightsMapper).createRoleRight(role, CREATE_REQUISITION);
   }
 
   @Test
   public void shouldSaveRoleWithMappingsAndTheirDependentMappings() throws Exception {
     role.setRights(new HashSet<>(asList(CONFIGURE_RNR, CREATE_REQUISITION)));
-    role.setId(1);
+    role.setId(1L);
     roleRightsRepository.createRole(role);
 
     verify(roleRightsMapper).insertRole(role);
-    verify(roleRightsMapper).createRoleRight(1, CONFIGURE_RNR);
-    verify(roleRightsMapper).createRoleRight(1, CREATE_REQUISITION);
-    verify(roleRightsMapper, times(1)).createRoleRight(1, VIEW_REQUISITION);
+    verify(roleRightsMapper).createRoleRight(role, CONFIGURE_RNR);
+    verify(roleRightsMapper).createRoleRight(role, CREATE_REQUISITION);
+    verify(roleRightsMapper, times(1)).createRoleRight(role, VIEW_REQUISITION);
   }
 
   @Test
@@ -89,7 +92,7 @@ public class RoleRightsRepositoryTest {
   @Test
   public void shouldNotUpdateToDuplicateRoleName() {
     Role role = new Role("Name", FALSE, "Desc");
-    role.setId(123);
+    role.setId(123L);
     doThrow(DuplicateKeyException.class).when(roleRightsMapper).updateRole(role);
 
     expectedEx.expect(DataException.class);
@@ -110,7 +113,7 @@ public class RoleRightsRepositoryTest {
   @Test
   public void shouldGetRoleById() throws Exception {
     Role role = new Role();
-    int roleId = 1;
+    Long roleId = 1L;
     when(roleRightsMapper.getRole(roleId)).thenReturn(role);
 
     Role fetchedRole = roleRightsRepository.getRole(roleId);
@@ -122,31 +125,31 @@ public class RoleRightsRepositoryTest {
   @Test
   public void shouldUpdateRole() {
     role.setRights(new HashSet<>(asList(CONFIGURE_RNR)));
-    role.setId(100);
+    role.setId(100L);
     roleRightsRepository.updateRole(role);
     verify(roleRightsMapper).updateRole(role);
-    verify(roleRightsMapper).deleteAllRightsForRole(100);
-    verify(roleRightsMapper).createRoleRight(100, CONFIGURE_RNR);
+    verify(roleRightsMapper).deleteAllRightsForRole(100L);
+    verify(roleRightsMapper).createRoleRight(role, CONFIGURE_RNR);
   }
 
   @Test
   public void shouldUpdateRoleAlongWithDependentRights() {
     role.setRights(new HashSet<>(asList(CREATE_REQUISITION)));
-    role.setId(100);
+    role.setId(100L);
 
     roleRightsRepository.updateRole(role);
 
     verify(roleRightsMapper).updateRole(role);
-    verify(roleRightsMapper).deleteAllRightsForRole(100);
-    verify(roleRightsMapper).createRoleRight(100, CREATE_REQUISITION);
-    verify(roleRightsMapper).createRoleRight(100, VIEW_REQUISITION);
+    verify(roleRightsMapper).deleteAllRightsForRole(100L);
+    verify(roleRightsMapper).createRoleRight(role, CREATE_REQUISITION);
+    verify(roleRightsMapper).createRoleRight(role, VIEW_REQUISITION);
   }
 
   @Test
   public void shouldGetRightsForAUserOnSupervisoryNodeAndProgram() throws Exception {
-    Integer userId = 1;
-    List<SupervisoryNode> supervisoryNodes = asList(new SupervisoryNode(2), new SupervisoryNode(3));
-    Program program = new Program(3);
+    Long userId = 1L;
+    List<SupervisoryNode> supervisoryNodes = asList(new SupervisoryNode(2L), new SupervisoryNode(3L));
+    Program program = new Program(3L);
     List<Right> expected = null;
     when(commaSeparator.commaSeparateIds(supervisoryNodes)).thenReturn("{2, 3}");
     when(roleRightsMapper.getRightsForUserOnSupervisoryNodeAndProgram(userId, "{2, 3}", program)).thenReturn(expected);
@@ -158,8 +161,8 @@ public class RoleRightsRepositoryTest {
 
   @Test
   public void shouldGetRightsForAUserOnHomeFacilityAndProgram() throws Exception {
-    Integer userId = 1;
-    Program program = new Program(3);
+    Long userId = 1L;
+    Program program = new Program(3L);
     List<Right> expected = null;
     when(roleRightsMapper.getRightsForUserOnHomeFacilityAndProgram(userId, program)).thenReturn(expected);
     List<Right> result = roleRightsRepository.getRightsForUserOnHomeFacilityAndProgram(userId, program);

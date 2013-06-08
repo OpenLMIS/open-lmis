@@ -9,6 +9,7 @@ package org.openlmis.core.service;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -23,6 +24,7 @@ import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.SupplyLineRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -30,7 +32,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class SupplyLineServiceTest {
 
@@ -83,11 +85,11 @@ public class SupplyLineServiceTest {
 
   @Test
   public void shouldInsertSupplyLineIfDoesNotExist() throws Exception {
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
-    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1);
-    supplyLine.getSupervisoryNode().setId(1);
-    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1)).thenReturn(null);
+    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1L);
+    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1L);
+    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1L);
+    supplyLine.getSupervisoryNode().setId(1L);
+    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1L)).thenReturn(null);
 
     supplyLine.setId(null);
 
@@ -98,13 +100,13 @@ public class SupplyLineServiceTest {
 
   @Test
   public void shouldUpdateSupplyLineIfExists() throws Exception {
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
-    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1);
-    supplyLine.getSupervisoryNode().setId(1);
-    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1)).thenReturn(null);
+    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1L);
+    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1L);
+    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1L);
+    supplyLine.getSupervisoryNode().setId(1L);
+    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1L)).thenReturn(null);
 
-    supplyLine.setId(1);
+    supplyLine.setId(1L);
 
     supplyLineService.save(supplyLine);
 
@@ -114,11 +116,11 @@ public class SupplyLineServiceTest {
 
   @Test
   public void shouldGetExistingSupplyLine() throws Exception {
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
-    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1);
-    supplyLine.getSupervisoryNode().setId(1);
-    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1)).thenReturn(null);
+    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1L);
+    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1L);
+    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1L);
+    supplyLine.getSupervisoryNode().setId(1L);
+    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1L)).thenReturn(null);
     when(supplyLineRepository.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine)).thenReturn(supplyLine);
     supplyLineService.save(supplyLine);
 

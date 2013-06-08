@@ -14,6 +14,6 @@ import lombok.Data;
 public class UserToken {
 
     private final String userName;
-    private final Integer userId;
+    private final Long userId;
     private final boolean authenticated;
 }

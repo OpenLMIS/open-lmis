@@ -11,15 +11,19 @@ function ViewOrderListController($scope, orders) {
     showFooter: false,
     showColumnMenu: false,
     showFilter: false,
-
+    enableColumnResize:true,
+    enableSorting: false,
     columnDefs: [
-      {field: 'id', displayName: 'Order No.', cellTemplate:"<div class='ngCellText'><span ng-cell-text>ORD{{row.entity.id}}</span></div>"},
-      {field: 'facilityCode', displayName: 'Facility Code-Name', cellTemplate:"<div class='ngCellText'><span ng-cell-text>{{row.entity.facilityCode}} - {{row.entity.facilityName}}</span></div>"},
-      {field: 'programName', displayName: "Program Name"},
-      {field: 'periodName', displayName: "Period", cellTemplate:"<div class='ngCellText'><span ng-cell-text>{{row.entity.periodName}} ({{row.entity.periodStartDate | date: 'dd/MM/yyyy'}} - {{row.entity.periodEndDate | date: 'dd/MM/yyyy'}})</span></div>"},
-      {field: 'supplyingDepot', displayName: "Supplying Depot"},
-      {field: 'modifiedDate', displayName: "Order Date/Time", cellFilter: "date:'dd/MM/yyyy hh:mm:ss'"},
-      {field: 'status', displayName: "Order Status"}
+      {field: 'rnr.id', displayName: 'Order No.'},
+      {field: 'facilityCode', displayName: 'Facility Code-Name', cellTemplate:"<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.facilityCode}} - {{row.entity.rnr.facilityName}}</span></div>"},
+      {field: 'rnr.programName', displayName: "Program Name"},
+      {field: 'periodName', displayName: "Period", cellTemplate:"<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.periodName}} ({{row.entity.rnr.periodStartDate | date: 'dd/MM/yyyy'}} - {{row.entity.rnr.periodEndDate | date: 'dd/MM/yyyy'}})</span></div>"},
+      {field: 'rnr.supplyingDepot', displayName: "Supplying Depot"},
+      {field: 'createdDate', displayName: "Order Date/Time", cellFilter: "date:'dd/MM/yyyy hh:mm:ss'"},
+      {field: 'status', displayName: "Order Status",
+        cellTemplate:"<div class='ngCellText'><span ng-cell-text><div id=\"orderStatus\">{{row.entity.status}} <span ng-show='row.entity.shipmentError' >(Shipment File Error)</span></div> "},
+      {cellTemplate: "<div class='ngCellText'><a ng-show=\"row.entity.productsOrdered\" ng-href='/orders/{{row.entity.id}}/download.csv'>Download CSV</a>" +
+        "<span ng-show=\"!row.entity.productsOrdered\"  ng-cell-text>No products in this order</span></div>"}
     ]
   };
 }

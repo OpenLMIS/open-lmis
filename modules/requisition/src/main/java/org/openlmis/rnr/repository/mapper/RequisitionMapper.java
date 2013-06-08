@@ -11,9 +11,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RoleAssignment;
-import org.openlmis.rnr.domain.OrderBatch;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,13 +27,12 @@ public interface RequisitionMapper {
   @Update({"UPDATE requisitions SET",
       "modifiedBy = #{modifiedBy},",
       "status = #{status},",
-      "modifiedDate = DEFAULT,",
+      "modifiedDate = CURRENT_TIMESTAMP,",
       "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
       "submittedDate = #{submittedDate},",
       "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost},",
       "supervisoryNodeId = #{supervisoryNodeId},",
-      "supplyingFacilityId = #{supplyingFacility.id},",
-      "orderBatchId = #{orderBatch.id}",
+      "supplyingFacilityId = #{supplyingFacility.id}",
       "WHERE id = #{id}"})
   void update(Rnr requisition);
 
@@ -46,14 +43,12 @@ public interface RequisitionMapper {
       @Result(property = "facility.id", column = "facilityId"),
       @Result(property = "period.id", column = "periodId"),
       @Result(property = "supplyingFacility.id", column = "supplyingFacilityId"),
-      @Result(property = "orderBatch", javaType = OrderBatch.class, column = "orderBatchId",
-          one = @One(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getOrderBatchById")),
       @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
       @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId")),
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId"))
   })
-  Rnr getById(Integer rnrId);
+  Rnr getById(Long rnrId);
 
   @Select({"SELECT id, programId, facilityId, periodId, submittedDate, modifiedDate",
       "FROM requisitions ",
@@ -80,23 +75,22 @@ public interface RequisitionMapper {
                                   @Param("period") ProcessingPeriod period);
 
 
-  @Select("SELECT * FROM requisitions " +
-      "WHERE facilityId = #{facilityId} " +
-      "AND programId = #{programId} " +
-      "AND status NOT IN ('INITIATED', 'SUBMITTED') " +
-      "ORDER BY submittedDate DESC " +
-      "LIMIT 1")
+  @Select({"SELECT * FROM requisitions R",
+      "WHERE facilityId = #{facilityId}",
+      "AND programId = #{programId} ",
+      "AND status NOT IN ('INITIATED', 'SUBMITTED')",
+      "ORDER BY (select startDate from processing_periods where id=R.periodId) DESC",
+      "LIMIT 1"})
   @Results(value = {
       @Result(property = "facility.id", column = "facilityId"),
       @Result(property = "program.id", column = "programId"),
-      @Result(property = "period.id", column = "periodId"),
+      @Result(property = "period.id", column = "periodId")
   })
-  Rnr getLastRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Integer facilityId,
-                                                 @Param(value = "programId") Integer programId);
+  Rnr getLastRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Long facilityId,
+                                                 @Param(value = "programId") Long programId);
 
   @Select("SELECT id, programId, facilityId, periodId, supplyingFacilityId, submittedDate, modifiedDate FROM requisitions WHERE STATUS='APPROVED' ORDER BY submittedDate")
   @Results(value = {
-      @Result(property = "id", column = "id"),
       @Result(property = "facility.id", column = "facilityId"),
       @Result(property = "program.id", column = "programId"),
       @Result(property = "period.id", column = "periodId"),
@@ -104,36 +98,29 @@ public interface RequisitionMapper {
   })
   List<Rnr> getApprovedRequisitions();
 
-  @Select({"SELECT * FROM requisitions ",
-      "WHERE facilityId = #{facility.id} AND programId = #{program.id} AND periodId = ANY (#{periods}::INTEGER[]) AND status NOT IN ('INITIATED', 'SUBMITTED')"})
+  @Select({"SELECT * FROM requisitions WHERE",
+      "facilityId = #{facility.id} AND",
+      "programId = #{program.id} AND ",
+      "periodId = ANY (#{periods}::INTEGER[]) AND ",
+      "status NOT IN ('INITIATED', 'SUBMITTED')"})
   @Results(value = {
-      @Result(property = "id", column = "id"),
       @Result(property = "facility.id", column = "facilityId"),
       @Result(property = "program.id", column = "programId"),
       @Result(property = "period.id", column = "periodId")
   })
-  List<Rnr> get(@Param("facility") Facility facility, @Param("program") Program program, @Param("periods") String periodIds);
+  List<Rnr> getPostSubmitRequisitions(@Param("facility") Facility facility, @Param("program") Program program, @Param("periods") String periodIds);
 
-  @Insert("INSERT INTO order_batches(createdByUserId, createTimeStamp) VALUES (#{createdByUserId}, DEFAULT)")
-  @Options(useGeneratedKeys = true)
-  void createOrderBatch(OrderBatch orderBatch);
-
-  @Select("SELECT * from order_batches WHERE id = #{id}")
-  OrderBatch getOrderBatchById(Integer id);
-
-
-  @Select({"SELECT R.*, O.id orderBatchId, O.createdByUserId orderBatchCreatedByUserId, O.createTimeStamp createTimeStamp FROM",
-      "requisitions R INNER JOIN order_Batches O on R.orderbatchId = O.id",
-      "WHERE R.status = #{status}",
-      "ORDER BY O.createTimeStamp DESC"})
+  @Select({"SELECT * FROM requisitions WHERE",
+      "facilityId = #{facilityId} AND",
+      "programId = #{programId} AND ",
+      "periodId = #{periodId}"
+  })
   @Results(value = {
       @Result(property = "facility.id", column = "facilityId"),
       @Result(property = "program.id", column = "programId"),
-      @Result(property = "period.id", column = "periodId"),
-      @Result(property = "supplyingFacility.id", column = "supplyingFacilityId"),
-      @Result(property = "orderBatch.id", column = "orderBatchId"),
-      @Result(property = "orderBatch.createTimeStamp", column = "createTimeStamp"),
-      @Result(property = "orderBatch.createdByUserId", column = "orderBatchCreatedByUserId")
+      @Result(property = "period.id", column = "periodId")
   })
-  List<Rnr> getByStatus(RnrStatus status);
+  Rnr getRequisitionWithoutLineItems(@Param("facilityId") Long facilityId,
+                                     @Param("programId") Long programId,
+                                     @Param("periodId") Long periodId);
 }

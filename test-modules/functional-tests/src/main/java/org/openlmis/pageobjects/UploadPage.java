@@ -66,14 +66,13 @@ public class UploadPage extends Page {
     uploadFilePath = this.getClass().getClassLoader().getResource(fileName).toExternalForm();//.getFile();
     setCsvPath.sendKeys(uploadFilePath);
     uploadButton.click();
+    testWebDriver.sleep(500);
   }
 
 
   public void verifySuccessMessageOnUploadScreen() {
-    String successMessage = "File uploaded successfully. 'Number of records created: *', 'Number of records updated : *'";
     testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
     SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
-    SeleneseTestNgHelper.assertEquals(saveSuccessMsgDiv.getText().trim(), successMessage);
     testWebDriver.setImplicitWait(implicitWait);
   }
 
@@ -117,6 +116,12 @@ public class UploadPage extends Page {
 
   public void uploadProductsInvalidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Products");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
+  }
+
+  public void uploadProductGroupsScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Product Groups");
     uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
   }

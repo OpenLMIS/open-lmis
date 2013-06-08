@@ -5,18 +5,6 @@
  */
 
 describe('R&R test', function () {
-  xit('should calculate total cost on initialization', function () {
-    spyOn(Rnr.prototype, 'init');
-//    spyOn2.andCallThrough();
-//    spyOn(Rnr.prototype, 'calculateFullSupplyItemsSubmittedCost');
-//    spyOn(Rnr.prototype, 'calculateNonFullSupplyItemsSubmittedCost');
-
-    var rnr = Rnr.prototype;
-
-    expect(Rnr.prototype.init).toHaveBeenCalled();
-//    expect(Rnr.prototype.calculateFullSupplyItemsSubmittedCost).toHaveBeenCalled();
-//    expect(Rnr.prototype.calculateNonFullSupplyItemsSubmittedCost).toHaveBeenCalled();
-  });
 
   it('should sort non full supply line items during init', function() {
     var rnrLineItem1 = {productCategoryDisplayOrder:3};
@@ -32,8 +20,22 @@ describe('R&R test', function () {
     expect(rnr.nonFullSupplyLineItems[0].productCategoryDisplayOrder).toEqual(1);
     expect(rnr.nonFullSupplyLineItems[1].productCategoryDisplayOrder).toEqual(2);
     expect(rnr.nonFullSupplyLineItems[2].productCategoryDisplayOrder).toEqual(3);
+  });
 
+  it('should leave the R&R only with basic information', function() {
+    var lineItem1 = new RnrLineItem();
+    var lineItem2 = new RnrLineItem();
+    spyOn(lineItem1, 'reduceForApproval');
+    spyOn(lineItem2, 'reduceForApproval');
+    spyOn(_, 'pick').andCallThrough();
 
+    var rnr = new Rnr({fullSupplyLineItems: [lineItem1, lineItem2], period: {numberOfMonths:3}}, []);
+
+    rnr.reduceForApproval();
+
+    expect(lineItem1.reduceForApproval).toHaveBeenCalled();
+    expect(lineItem2.reduceForApproval).toHaveBeenCalled();
+    expect(_.pick).toHaveBeenCalledWith(rnr, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
   });
 
   it('should prepare line item objects inside rnr', function () {

@@ -9,10 +9,12 @@ package org.openlmis.core.upload;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.service.RequisitionGroupService;
+import org.openlmis.db.categories.UnitTests;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -21,10 +23,10 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-
+@Category(UnitTests.class)
 public class RequisitionGroupHandlerTest {
 
-  public static final Integer USER = 1;
+  public static final Long USER = 1L;
   RequisitionGroupHandler requisitionGroupHandler;
 
   @Mock

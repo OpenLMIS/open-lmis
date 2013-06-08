@@ -11,7 +11,6 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -70,12 +69,6 @@ public class FacilityRepository {
     }
   }
 
-  private void setFacilityId(Facility savedFacility, Facility facility) {
-    if (savedFacility != null) {
-      facility.setId(savedFacility.getId());
-    }
-  }
-
   private void validateGeographicZone(Facility facility) {
     if (LOWEST_GEO_LEVEL == null) {
       LOWEST_GEO_LEVEL = geographicZoneRepository.getLowestGeographicLevel();
@@ -113,7 +106,7 @@ public class FacilityRepository {
     String operatedByCode = facility.getOperatedBy().getCode();
     if (operatedByCode == null || operatedByCode.isEmpty()) return;
 
-    Integer operatedById = mapper.getOperatedByIdForCode(operatedByCode);
+    Long operatedById = mapper.getOperatedByIdForCode(operatedByCode);
     if (operatedById == null) throw new DataException("Invalid reference data 'Operated By'");
 
     facility.getOperatedBy().setId(operatedById);
@@ -127,20 +120,20 @@ public class FacilityRepository {
     return mapper.getAllOperators();
   }
 
-  public Facility getHomeFacility(Integer userId) {
+  public Facility getHomeFacility(Long userId) {
     return mapper.getHomeFacility(userId);
   }
 
-  public Facility getById(Integer id) {
+  public Facility getById(Long id) {
     return mapper.getById(id);
   }
 
-  public void updateDataReportableAndActiveFor(Facility facility) {
+  public Facility updateDataReportableAndActiveFor(Facility facility) {
     mapper.updateDataReportableAndActiveFor(facility);
-
+    return mapper.getById(facility.getId());
   }
 
-  public List<Facility> getFacilitiesBy(Integer programId, List<RequisitionGroup> requisitionGroups) {
+  public List<Facility> getFacilitiesBy(Long programId, List<RequisitionGroup> requisitionGroups) {
     return mapper.getFacilitiesBy(programId, commaSeparator.commaSeparateIds(requisitionGroups));
   }
 
@@ -148,8 +141,8 @@ public class FacilityRepository {
     return mapper.getAllInRequisitionGroups(commaSeparator.commaSeparateIds(requisitionGroups));
   }
 
-  public Integer getIdForCode(String code) {
-    Integer facilityId = mapper.getIdForCode(code);
+  public Long getIdForCode(String code) {
+    Long facilityId = mapper.getIdForCode(code);
 
     if (facilityId == null)
       throw new DataException("Invalid Facility Code");
@@ -161,7 +154,7 @@ public class FacilityRepository {
     return mapper.searchFacilitiesByCodeOrName(searchParam);
   }
 
-  public Facility getHomeFacilityForRights(Integer userId, Right... rights) {
+  public Facility getHomeFacilityForRights(Long userId, Right... rights) {
     return mapper.getHomeFacilityWithRights(userId, commaSeparateRightNames(rights));
   }
 

@@ -9,7 +9,8 @@
 <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
-    <title>OpenLMIS</title>
+    <title openlmis-message="app.title"></title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
 
     <link rel="stylesheet" href="/public/css/login.css">
@@ -21,13 +22,12 @@
 <body>
 <div class="login-page">
     <div class="login-container">
-        <h1>Logistics Management Information Systems</h1>
+        <h1 openlmis-message="app.header"></h1>
 
         <div class="forgot-password-form">
-            <h2>Email Sent!</h2>
+            <h2 openlmis-message="email.sent.message"></h2>
 
-            <div class="form-desc">
-                Please check your email and click on reset password link.
+            <div class="form-desc" openlmis-message="email.check.message">
             </div>
         </div>
 

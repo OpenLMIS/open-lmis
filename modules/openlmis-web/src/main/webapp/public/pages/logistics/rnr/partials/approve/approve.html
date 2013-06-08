@@ -5,13 +5,16 @@
   -->
 
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
-<div class="rnr-tabs">
+<div class="rnr-tabs clearfix">
   <ul class="clearfix">
     <li ng-class="{'selected': !showNonFullSupply, 'has-error': fullSupplyTabError}">
       <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab">Full Supply Product(s)</a></li>
     <li ng-class="{'selected': showNonFullSupply, 'has-error': nonFullSupplyTabError}">
       <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
   </ul>
+  <a class="btn pull-right" ng-click="getFullScreen()">
+    <i ng-class="{'icon-resize-full': !fullScreen, 'icon-resize-small': fullScreen}"></i>
+  </a>
 </div>
 
 <form name="approvalForm" novalidate>

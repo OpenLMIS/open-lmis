@@ -6,5 +6,6 @@ CREATE TABLE facility_operators   (
    id  SERIAL PRIMARY KEY,
    code varchar NOT NULL UNIQUE,
    text varchar(20),
-   displayOrder INTEGER
+   displayOrder INTEGER,
+   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

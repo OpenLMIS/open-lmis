@@ -8,10 +8,10 @@ CREATE TABLE requisition_group_program_schedules (
   scheduleId INTEGER REFERENCES processing_schedules(id) NOT NULL,
   directDelivery BOOLEAN NOT NULL,
   dropOffFacilityId INTEGER REFERENCES facilities(id),
+  createdBy INTEGER,
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
-  createdBy INTEGER,
   UNIQUE (requisitionGroupId, programId)
 );
 

@@ -5,7 +5,7 @@
  */
 
 var OpenLmisDialog = {
-  new:function (overrideOpts, callback, $dialog) {
+  newDialog:function (overrideOpts, callback, $dialog) {
     var defaults = {
       id:"",
       header:"Header",
@@ -25,7 +25,43 @@ var OpenLmisDialog = {
         $scope.dialogOptions = _.extend(defaults, overrideOpts);
       }
     };
+    var closeCallback = function(result) {
+      var tabbables = olDialog.modalEl.find(":tabbable");
+      tabbables.last().unbind("keydown");
+      tabbables.first().unbind("keydown");
 
-    $dialog.dialog(opts).open().then(callback);
+      callback(result);
+    };
+
+    var olDialog = $dialog.dialog(opts);
+    olDialog.open().then(closeCallback);
+
+
+
+    var autoFocus = function() {
+      if(olDialog.isOpen()) {
+        var tabbables = olDialog.modalEl.find(":tabbable");
+        tabbables.first().focus();
+        tabbables.last().bind("keydown", function(e) {
+          if (e.which == 9 && !e.shiftKey) {
+            tabbables.first().focus();
+            e.preventDefault();
+          }
+
+        });
+        tabbables.first().bind("keydown", function(e) {
+          if (e.which == 9 && e.shiftKey) {
+            tabbables.last().focus();
+            e.preventDefault();
+          }
+        });
+      }
+      else {
+        setTimeout(function() {
+          autoFocus();
+        }, 10);
+      }
+    };
+    autoFocus();
   }
 };

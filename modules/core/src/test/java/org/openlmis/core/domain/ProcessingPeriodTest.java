@@ -9,9 +9,11 @@ package org.openlmis.core.domain;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -19,6 +21,7 @@ import java.util.Date;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.*;
 
+@Category(UnitTests.class)
 public class ProcessingPeriodTest {
 
   @Rule

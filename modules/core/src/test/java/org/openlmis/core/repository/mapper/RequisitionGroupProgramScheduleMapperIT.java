@@ -8,11 +8,13 @@ package org.openlmis.core.repository.mapper;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingSchedule;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -31,10 +33,11 @@ import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcess
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class RequisitionGroupProgramScheduleMapperIT {
 
   @Autowired
@@ -56,7 +59,7 @@ public class RequisitionGroupProgramScheduleMapperIT {
   public void setUp() throws Exception {
     requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
 
-    requisitionGroupProgramSchedule.setModifiedBy(1);
+    requisitionGroupProgramSchedule.setModifiedBy(1L);
     requisitionGroupProgramSchedule.setModifiedDate(new Date(0));
 
     requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
@@ -110,7 +113,7 @@ public class RequisitionGroupProgramScheduleMapperIT {
 
     requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
 
-    List<Integer> resultProgramId = requisitionGroupProgramScheduleMapper.getProgramIDsById(requisitionGroupProgramSchedule.getRequisitionGroup().getId());
+    List<Long> resultProgramId = requisitionGroupProgramScheduleMapper.getProgramIDsById(requisitionGroupProgramSchedule.getRequisitionGroup().getId());
 
     assertThat(resultProgramId.size(), is(1));
     assertThat(resultProgramId.get(0), is(requisitionGroupProgramSchedule.getProgram().getId()));

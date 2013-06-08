@@ -2,20 +2,24 @@ package org.openlmis.core.service;
 
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.repository.VendorRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
+@Category(UnitTests.class)
 public class VendorServiceTest {
 
   @Mock
@@ -28,7 +32,6 @@ public class VendorServiceTest {
   public void shouldGetVendor() throws Exception {
     Vendor expectedVendor = new Vendor();
     when(vendorRepository.getByName("vendor")).thenReturn(expectedVendor);
-
 
     Vendor vendor = service.getByName("vendor");
 
@@ -64,5 +67,23 @@ public class VendorServiceTest {
 
     assertTrue(authenticated);
     verify(vendorRepository).getToken(vendor.getName());
+  }
+
+  @Test
+  public void shouldGetVendorByUserId() throws Exception {
+    Vendor expectedVendor = new Vendor();
+    when(vendorRepository.getByUserId(1L)).thenReturn(expectedVendor);
+
+    Vendor actualVendor = service.getByUserId(1L);
+
+    assertThat(actualVendor, is((expectedVendor)));
+    verify(vendorRepository).getByUserId(1L);
+  }
+
+  @Test
+  public void shouldReturnFalseIfVendorIsInvalid() {
+    Vendor vendor = mock(Vendor.class);
+    when(vendor.isValid()).thenReturn(false);
+    assertThat(service.authenticate(vendor), is(Boolean.FALSE));
   }
 }

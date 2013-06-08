@@ -12,12 +12,11 @@ CREATE TABLE requisitions (
   nonFullSupplyItemsSubmittedCost NUMERIC(15, 4),
   supervisoryNodeId               INTEGER     REFERENCES supervisory_nodes (id),
   supplyingFacilityId             INTEGER REFERENCES facilities(id),
-  orderBatchId                    INTEGER REFERENCES order_batches(id),
-  modifiedBy                      INTEGER,
   submittedDate                   TIMESTAMP,
-  modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   createdBy                       INTEGER,
-  createdDate                     TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+  createdDate                     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy                      INTEGER,
+  modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE (facilityId, programId, periodId)
 );
 

@@ -8,10 +8,12 @@ package org.openlmis.web.authentication;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.openlmis.authentication.UserToken;
 import org.openlmis.authentication.service.UserAuthenticationService;
 import org.openlmis.authentication.web.UserAuthenticationProvider;
 import org.openlmis.core.domain.User;
+import org.openlmis.db.categories.UnitTests;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,7 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-
+@Category(UnitTests.class)
 public class UserAuthenticationProviderTest {
 
   private UserAuthenticationService userService;
@@ -41,14 +43,14 @@ public class UserAuthenticationProviderTest {
     User user = new User();
     user.setUserName(validUser);
     user.setPassword(password);
-    when(userService.authorizeUser(user)).thenReturn(new UserToken(validUser, 1, true));
+    when(userService.authorizeUser(user)).thenReturn(new UserToken(validUser, 1L, true));
     Authentication authentication = new TestingAuthenticationToken(validUser, password);
 
     Authentication authenticate = userAuthenticationProvider.authenticate(authentication);
 
 
     assertThat(authenticate, instanceOf(UsernamePasswordAuthenticationToken.class));
-    assertThat((Integer)authenticate.getPrincipal(), is(equalTo(1)));
+    assertThat((Long)authenticate.getPrincipal(), is(equalTo(1L)));
     assertThat(authenticate.getCredentials(), is(equalTo(null)));
     assertThat(authenticate.isAuthenticated(), is(true));
   }

@@ -10,10 +10,12 @@ package org.openlmis.core.repository.mapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.Product;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
@@ -28,10 +30,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+@Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class ProductMapperIT {
 
   public static final String PRODUCT_DOSAGE_UNIT_MG = "mg";
@@ -61,8 +64,8 @@ public class ProductMapperIT {
 
   @Test
   public void shouldReturnDosageUnitIdForCode() {
-    Integer id = productMapper.getDosageUnitIdForCode(PRODUCT_DOSAGE_UNIT_MG);
-    assertThat(id, CoreMatchers.is(1));
+    Long id = productMapper.getDosageUnitIdForCode(PRODUCT_DOSAGE_UNIT_MG);
+    assertThat(id, CoreMatchers.is(1L));
 
     id = productMapper.getDosageUnitIdForCode("invalid dosage unit");
     assertThat(id, CoreMatchers.is(nullValue()));
@@ -70,8 +73,8 @@ public class ProductMapperIT {
 
   @Test
   public void shouldReturnProductFormIdForCode() {
-    Integer id = productMapper.getProductFormIdForCode(PRODUCT_FORM_TABLET);
-    assertThat(id, CoreMatchers.is(1));
+    Long id = productMapper.getProductFormIdForCode(PRODUCT_FORM_TABLET);
+    assertThat(id, CoreMatchers.is(1L));
 
     id = productMapper.getProductFormIdForCode("invalid product form");
     assertThat(id, CoreMatchers.is(nullValue()));
@@ -80,7 +83,7 @@ public class ProductMapperIT {
   @Test
   public void shouldReturnNullForInvalidProductCode() {
     String code = "invalid_code";
-    Integer productId = productMapper.getIdByCode(code);
+    Long productId = productMapper.getIdByCode(code);
     assertThat(productId, is(nullValue()));
   }
 
@@ -88,7 +91,7 @@ public class ProductMapperIT {
   public void shouldReturnProductIdForValidProductCode() {
     Product product = make(a(ProductBuilder.defaultProduct));
     productMapper.insert(product);
-    Integer id = productMapper.getIdByCode(product.getCode());
+    Long id = productMapper.getIdByCode(product.getCode());
     assertThat(id, is(product.getId()));
   }
 
@@ -102,6 +105,7 @@ public class ProductMapperIT {
     assertThat(expectedProduct.getPrimaryName(), is(product.getPrimaryName()));
   }
 
+
   @Test
   public void shouldUpdateProduct() {
     Product product = make(a(ProductBuilder.defaultProduct));
@@ -112,10 +116,20 @@ public class ProductMapperIT {
 
     productMapper.update(product);
 
-    Product returnedProduct = productMapper.getById(product.getId());
+    Product returnedProduct = productMapper.getByCode(product.getCode());
 
     assertThat(returnedProduct.getPrimaryName(), is("Updated Name"));
     assertThat(returnedProduct.getAlternateItemCode(), is("Alternate Code"));
 
+  }
+
+  @Test
+  public void shouldGetAProductById(){
+    Product product = make(a(ProductBuilder.defaultProduct));
+    productMapper.insert(product);
+    Product expectedProduct = productMapper.getById(product.getId());
+    assertThat(expectedProduct.getId(), is(product.getId()));
+    assertThat(expectedProduct.getCode(), is(product.getCode()));
+    assertThat(expectedProduct.getPrimaryName(), is(product.getPrimaryName()));
   }
 }

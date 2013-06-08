@@ -6,23 +6,32 @@
 
 package org.openlmis.restapi.authentication;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.service.VendorService;
+import org.openlmis.db.categories.UnitTests;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
+import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RestApiAuthenticationProviderTest {
+
+  @Rule
+  public ExpectedException expectedException = none();
 
   @Mock
   VendorService vendorService;
@@ -31,7 +40,7 @@ public class RestApiAuthenticationProviderTest {
   RestApiAuthenticationProvider restApiAuthenticationProvider;
 
   @Test
-  public void shouldAuthenticateVendorWithNameAndAuthTokenAndReturnNullIfInvalid() throws Exception {
+  public void shouldThrowExceptionForInvalidCredentialsDuringVendorAuthentication() throws Exception {
     Authentication authentication = mock(Authentication.class);
     String externalSystem = "externalSystem";
     when(authentication.getPrincipal()).thenReturn(externalSystem);
@@ -42,34 +51,12 @@ public class RestApiAuthenticationProviderTest {
     vendor.setAuthToken("invalid token");
     when(vendorService.authenticate(vendor)).thenReturn(false);
 
-    Authentication authenticated = restApiAuthenticationProvider.authenticate(authentication);
+    expectedException.expect(BadCredentialsException.class);
+    expectedException.expectMessage("Could not authenticate Vendor");
 
-    assertThat(authenticated, is(nullValue()));
+    restApiAuthenticationProvider.authenticate(authentication);
+
     verify(vendorService).authenticate(vendor);
-  }
-
-  @Test
-  public void shouldReturnNullIfVendorName() throws Exception {
-    Authentication authentication = mock(Authentication.class);
-    String nullSystem = null;
-    when(authentication.getPrincipal()).thenReturn(nullSystem);
-
-    Authentication authenticated = restApiAuthenticationProvider.authenticate(authentication);
-
-    assertThat(authenticated, is(nullValue()));
-    verify(vendorService, never()).getByName(nullSystem);
-  }
-
-  @Test
-  public void shouldReturnNullIfAuthTokenNull() throws Exception {
-    Authentication authentication = mock(Authentication.class);
-    String nullSystem = null;
-    when(authentication.getCredentials()).thenReturn(nullSystem);
-
-    Authentication authenticated = restApiAuthenticationProvider.authenticate(authentication);
-
-    assertThat(authenticated, is(nullValue()));
-    verify(vendorService, never()).getByName(nullSystem);
   }
 
   @Test

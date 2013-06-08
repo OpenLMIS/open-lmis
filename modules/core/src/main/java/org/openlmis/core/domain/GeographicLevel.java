@@ -8,15 +8,21 @@ package org.openlmis.core.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GeographicLevel {
-  Integer id;
+@EqualsAndHashCode(callSuper = false)
+public class GeographicLevel extends BaseModel{
   String code;
   String name;
   Integer levelNumber;
+
+  public GeographicLevel(Long id, String code, String name, Integer levelNumber){
+    this(code, name, levelNumber);
+    this.id = id;
+  }
 }
 

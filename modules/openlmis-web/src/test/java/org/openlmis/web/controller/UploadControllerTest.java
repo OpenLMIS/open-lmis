@@ -9,13 +9,17 @@ package org.openlmis.web.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.upload.ProductPersistenceHandler;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.db.service.DbService;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.model.AuditFields;
@@ -38,12 +42,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
-
-//@RunWith(MockitoJUnitRunner.class)
+@Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
 public class UploadControllerTest {
 
-  public static final Integer USER = 1;
+  public static final Long USER = 1L;
 
   @Mock
   CSVParser csvParser;
@@ -70,7 +73,6 @@ public class UploadControllerTest {
 
   @Before
   public void setUp() throws Exception {
-    initMocks(this);
     request = new MockHttpServletRequest();
     MockHttpSession session = new MockHttpSession();
     session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, USER);
@@ -83,18 +85,18 @@ public class UploadControllerTest {
   @Test
   public void shouldThrowErrorIfUnsupportedModelIsSupplied() throws Exception {
     MultipartFile multipartFile = mock(MultipartFile.class);
-    String uploadPage = controller.upload(multipartFile, "Random", request);
-    assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?model=Random&" +
-      "error=Incorrect file"));
+    ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(multipartFile, "Random", request);
+    assertThat(uploadResponse.getBody().getErrorMsg(), is("Incorrect file"));
+    assertThat(uploadResponse.getBody().getData().get("model").toString(), is("Random"));
   }
 
   @Test
   public void shouldThrowErrorIfFileIsEmpty() throws Exception {
     byte[] content = new byte[0];
     MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
-    String uploadPage = controller.upload(multiPartMock, "product", request);
-    assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?model=product&" +
-      "error=File is empty"));
+    ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(multiPartMock, "product", request);
+    assertThat(uploadResponse.getBody().getErrorMsg(), is("File is empty"));
+    assertThat(uploadResponse.getBody().getData().get("model").toString(), is("product"));
   }
 
   @Test
@@ -102,9 +104,11 @@ public class UploadControllerTest {
     byte[] content = new byte[1];
     MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
 
-    String uploadPage = controller.upload(multiPartMock, "product", request);
-    assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?model=product&" +
-      "success=File uploaded successfully. 'Number of records created: 0', 'Number of records updated : 0'"));
+    ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(multiPartMock, "product", request);
+    assertThat(uploadResponse.getBody().getSuccessMsg(), is("File uploaded successfully. " +
+      "'Number of records created: 0', " +
+      "'Number of records updated: 0'"));
+    assertThat(uploadResponse.getBody().getData().get("model").toString(), is("product"));
   }
 
   @Test
@@ -115,10 +119,11 @@ public class UploadControllerTest {
     InputStream mockInputStream = mock(InputStream.class);
     when(mockMultiPart.getInputStream()).thenReturn(mockInputStream);
 
-    String uploadPage = controller.upload(mockMultiPart, "product", request);
-
-    assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?model=product&" +
-      "success=File uploaded successfully. 'Number of records created: 0', 'Number of records updated : 0'"));
+    ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(mockMultiPart, "product", request);
+    assertThat(uploadResponse.getBody().getSuccessMsg(), is("File uploaded successfully. " +
+      "'Number of records created: 0', " +
+      "'Number of records updated: 0'"));
+    assertThat(uploadResponse.getBody().getData().get("model").toString(), is("product"));
 
     verify(csvParser).process(eq(mockMultiPart.getInputStream()), argThat(modelMatcher(Product.class)), eq(handler), eq(auditFields));
   }
@@ -138,9 +143,9 @@ public class UploadControllerTest {
     byte[] content = new byte[1];
     MockMultipartFile multiPartMock = new MockMultipartFile("mock.doc", content);
 
-    String uploadPage = controller.upload(multiPartMock, "product", request);
-    assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?model=product&" +
-      "error=Incorrect file format , Please upload product data as a \".csv\" file"));
+    ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(multiPartMock, "product", request);
+    assertThat(uploadResponse.getBody().getErrorMsg(), is("Incorrect file format.  Please upload product data as a '.csv' file."));
+    assertThat(uploadResponse.getBody().getData().get("model").toString(), is("product"));
   }
 
   @Test
@@ -160,11 +165,13 @@ public class UploadControllerTest {
 
     when(dbService.getCount(productUploadBean.getTableName())).thenReturn(10).thenReturn(25);
     when(csvParser.process(eq(mockMultiPartFile.getInputStream()), argThat(modelMatcher(Product.class)), eq(handler), eq(auditFields))).thenReturn(20);
-    String message = controller.upload(mockMultiPartFile, "product", request);
+    ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(mockMultiPartFile, "product", request);
 
     verify(dbService, times(2)).getCount(productUploadBean.getTableName());
-    assertThat(message, is(String.format("redirect:/public/pages/admin/upload/index.html#/upload?model=product&success=File uploaded successfully. " +
-      "'Number of records created: %d', 'Number of records updated : %d'", 15, 5)));
+    assertThat(uploadResponse.getBody().getSuccessMsg(), is("File uploaded successfully. " +
+      "'Number of records created: 15', " +
+      "'Number of records updated: 5'"));
+    assertThat(uploadResponse.getBody().getData().get("model").toString(), is("product"));
   }
 
   @Test
@@ -185,4 +192,6 @@ public class UploadControllerTest {
     verify(csvParser).process(eq(mockInputStream), argThat(modelMatcher(Product.class)), eq(handler), eq(auditFields));
     verify(dbService).getCurrentTimestamp();
   }
+
+
 }

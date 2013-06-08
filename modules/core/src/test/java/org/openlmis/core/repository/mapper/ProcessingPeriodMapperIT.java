@@ -10,11 +10,13 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProcessingSchedule;
+import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ContextConfiguration;
@@ -36,9 +38,10 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.code;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
 
+@Category(IntegrationTests.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 @Transactional
 public class ProcessingPeriodMapperIT {
   @Rule
@@ -79,7 +82,7 @@ public class ProcessingPeriodMapperIT {
     ProcessingPeriod period1 = make(a(defaultProcessingPeriod, with(scheduleId, schedule.getId())));
     mapper.insert(period1);
 
-    List<ProcessingPeriod> fetchedPeriods = mapper.getAll(1233);
+    List<ProcessingPeriod> fetchedPeriods = mapper.getAll(1233L);
     assertTrue(fetchedPeriods.isEmpty());
   }
 
@@ -101,7 +104,7 @@ public class ProcessingPeriodMapperIT {
     assertThat(insertedPeriod.getStartDate(), is(date1));
     assertThat(insertedPeriod.getEndDate(), is(date2));
     assertThat(insertedPeriod.getNumberOfMonths(), is(3));
-    assertThat(insertedPeriod.getModifiedBy(), is(1));
+    assertThat(insertedPeriod.getModifiedBy(), is(1L));
     assertThat(insertedPeriod.getModifiedDate(), is(notNullValue()));
   }
 

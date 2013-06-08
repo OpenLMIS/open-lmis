@@ -446,6 +446,38 @@ describe('RnrLineItem', function () {
     });
   });
 
+  describe('Calculate Total', function () {
+    it('should set total when beginningBalance and quantityReceived are available', function () {
+      var lineItem = {"beginningBalance":11, "quantityReceived":200};
+      var rnrLineItem = new RnrLineItem({}, null, null);
+      jQuery.extend(rnrLineItem, lineItem);
+
+      rnrLineItem.calculateTotal();
+
+      expect(rnrLineItem.total).toEqual(211);
+    });
+
+    it('should not calculate total when beginningBalance is not available', function () {
+      var lineItem = {"quantityReceived":200};
+      var rnrLineItem = new RnrLineItem({}, null, null);
+      jQuery.extend(rnrLineItem, lineItem);
+
+      rnrLineItem.calculateTotal();
+
+      expect(rnrLineItem.total).toEqual(null);
+    });
+
+    it('should not calculate total when quantityReceived is not available', function () {
+      var lineItem = {"beginningBalance":200};
+      var rnrLineItem = new RnrLineItem({}, null, null);
+      jQuery.extend(rnrLineItem, lineItem);
+
+      rnrLineItem.calculateTotal();
+
+      expect(rnrLineItem.total).toEqual(null);
+    });
+  });
+
   describe('Losses and adjustment for line item', function () {
     it('should create losses and adjustment object out of losses and adjustment json data when RnrLineItem Is Created', function () {
       var lossAndAdjustment1 = {"type":{"name":"Loss1", "additive":true}, "quantity":45};
@@ -896,6 +928,48 @@ describe('RnrLineItem', function () {
       expect(isValid).toBeTruthy();
     });
 
+    it('should return true if expiration date is valid', function () {
+      programRnrColumnList = [
+        {"source":{"name":"USER_INPUT"}, "name":"beginningBalance", "visible":true},
+        {"source":{"name":"USER_INPUT"}, "name":"quantityReceived", "visible":true},
+        {"source":{"name":"USER_INPUT"}, "name":"quantityDispensed", "visible":true},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"newPatientCount"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"stockOutDays"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityRequested"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"reasonForRequestedQuantity"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"remarks"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"lossesAndAdjustments"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"expirationDate"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityApproved"}
+      ];
+      var rnrLineItem = {'beginningBalance':'45', 'stockOutDays':'23', 'quantityDispensed':'23', 'quantityReceived':'89', 'newPatientCount':45,
+        'quantityRequested':'7', 'reasonForRequestedQuantity':'reason', remarks:'', lossesAndAdjustments:'', expirationDate:'11/2012', quantityApproved:''};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+      var isValid = rnrLineItem.validateRequiredFieldsForFullSupply();
+      expect(isValid).toBeTruthy();
+    });
+
+    it('should return false if expiration date is invalid', function () {
+      programRnrColumnList = [
+        {"source":{"name":"USER_INPUT"}, "name":"beginningBalance", "visible":true},
+        {"source":{"name":"USER_INPUT"}, "name":"quantityReceived", "visible":true},
+        {"source":{"name":"USER_INPUT"}, "name":"quantityDispensed", "visible":true},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"newPatientCount"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"stockOutDays"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityRequested"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"reasonForRequestedQuantity"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"remarks"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"lossesAndAdjustments"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"expirationDate"},
+        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityApproved"}
+      ];
+      var rnrLineItem = {'beginningBalance':'45', 'stockOutDays':'23', 'quantityDispensed':'23', 'quantityReceived':'89', 'newPatientCount':45,
+        'quantityRequested':'7', 'reasonForRequestedQuantity':'reason', remarks:'', lossesAndAdjustments:'', expirationDate:'11/212', quantityApproved:''};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+      var isValid = rnrLineItem.validateRequiredFieldsForFullSupply();
+      expect(isValid).toBeFalsy();
+    });
+
     it('should return true if required fields for non full supply are not filled', function () {
       programRnrColumnList = [
         {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityRequested"},
@@ -1039,6 +1113,17 @@ describe('RnrLineItem', function () {
       expect(isValid).toBeTruthy();
     });
 
+    it('should validate non full supply line item in rnr for authorization and and return true if valid', function () {
+      var rnrLineItem = {fullSupply:false};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList, 'AUTHORIZED');
+
+      spyOn(rnrLineItem, 'validateForApproval').andReturn(true);
+
+      var isValid = rnrLineItem.valid();
+
+      expect(isValid).toBeTruthy();
+    });
+
     it('should return true if quantity approved filled', function () {
       var rnrLineItem = {fullSupply:false, quantityApproved:56};
       rnrLineItem = new RnrLineItem(rnrLineItem, 5, [], 'IN_APPROVAL');
@@ -1053,6 +1138,14 @@ describe('RnrLineItem', function () {
       var valid = rnrLineItem.validateForApproval();
 
       expect(valid).toBeFalsy();
+    });
+
+    it('should reduce rnr line item to have only productCode, approvedQuantity and remarks', function () {
+      var rnrLineItem = {id:1, beginningBalance:10, quantityDispensed:5, quantityReceived:2, fullSupply:true, quantityApproved:3, remarks:'some remarks', productCode: 'P10'};
+      rnrLineItem = new RnrLineItem(rnrLineItem, 5, [], 'IN_APPROVAL');
+      var reducedRnrLineItem = rnrLineItem.reduceForApproval();
+
+      expect(reducedRnrLineItem).toEqual( {id:1, productCode: 'P10', quantityApproved:3, remarks:'some remarks'});
     });
 
   });

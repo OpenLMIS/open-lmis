@@ -7,9 +7,10 @@
 package org.openlmis.core.upload;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.openlmis.core.domain.ProductCategory;
-import org.openlmis.core.repository.ProductCategoryRepository;
 import org.openlmis.core.service.ProductCategoryService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.upload.model.AuditFields;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -17,7 +18,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-
+@Category(UnitTests.class)
 public class ProductCategoryPersistenceHandlerTest {
 
 
@@ -27,7 +28,7 @@ public class ProductCategoryPersistenceHandlerTest {
     ProductCategoryService productCategoryService = mock(ProductCategoryService.class);
     ProductCategory productCategory = new ProductCategory();
 
-    new ProductCategoryPersistenceHandler(productCategoryService).execute(productCategory, 0, new AuditFields(1, null));
+    new ProductCategoryPersistenceHandler(productCategoryService).execute(productCategory, 0, new AuditFields(1L, null));
     verify(productCategoryService).save(productCategory);
   }
 }

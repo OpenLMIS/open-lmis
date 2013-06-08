@@ -8,6 +8,7 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.*;
+import org.openlmis.email.domain.EmailMessage;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -45,7 +46,8 @@ public interface UserMapper {
     "FROM users U INNER JOIN role_assignments RA ON U.id = RA.userId INNER JOIN role_rights RR ON RA.roleId = RR.roleId ",
     "WHERE RA.programId = #{program.id} AND RA.supervisoryNodeId = #{supervisoryNode.id} AND RR.rightName = #{right}"})
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))
-  List<User> getUsersWithRightInNodeForProgram(@Param("program") Program program, @Param("supervisoryNode") SupervisoryNode supervisoryNode, @Param("right") Right right);
+  List<User> getUsersWithRightInNodeForProgram(@Param("program") Program program, @Param("supervisoryNode") SupervisoryNode supervisoryNode,
+                                               @Param("right") Right right);
 
   @Select(value = "SELECT id,firstName,lastName,email FROM users where LOWER(firstName) like '%'|| LOWER(#{userSearchParam}) ||'%' OR LOWER(lastName) like '%'|| " +
     "LOWER(#{userSearchParam}) ||'%' OR LOWER(email) like '%'|| LOWER(#{userSearchParam}) ||'%'")
@@ -56,18 +58,21 @@ public interface UserMapper {
   void update(User user);
 
   @Select("SELECT id, userName, firstName, lastName, employeeId, facilityId, jobTitle, officePhone, primaryNotificationMethod, cellPhone, email FROM users WHERE id=#{id}")
-  User getById(Integer id);
+  User getById(Long id);
 
   @Insert("INSERT INTO user_password_reset_tokens (userId, token) VALUES (#{user.id}, #{token})")
   void insertPasswordResetToken(@Param(value = "user") User user, @Param(value = "token") String token);
 
   @Select("SELECT userId FROM user_password_reset_tokens WHERE token = #{token}")
-  Integer getUserIdForPasswordResetToken(String token);
+  Long getUserIdForPasswordResetToken(String token);
 
   @Delete("DELETE FROM user_password_reset_tokens WHERE userId = #{userId}")
-  void deletePasswordResetTokenForUser(Integer userId);
+  void deletePasswordResetTokenForUser(Long userId);
 
   @Update("UPDATE users SET password = #{password}, active = TRUE WHERE id = #{userId}")
-  void updateUserPassword(@Param(value = "userId") Integer userId, @Param(value = "password") String password);
+  void updateUserPassword(@Param(value = "userId") Long userId, @Param(value = "password") String password);
 
+  @Insert("INSERT INTO email_notifications(receiver, subject, content) VALUES (#{receiver}, #{subject}, #{content})")
+  @Options(useGeneratedKeys = true)
+  int insertEmailNotification(EmailMessage emailMessage);
 }

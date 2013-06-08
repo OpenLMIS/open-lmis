@@ -21,20 +21,20 @@ public class ProcessingPeriodBuilder {
 
   public static final Property<ProcessingPeriod, String> name = newProperty();
   public static final Property<ProcessingPeriod, String> description = newProperty();
-  public static final Property<ProcessingPeriod, Integer> scheduleId = newProperty();
+  public static final Property<ProcessingPeriod, Long> scheduleId = newProperty();
   public static final Property<ProcessingPeriod, Date> startDate = newProperty();
   public static final Property<ProcessingPeriod, Date> endDate = newProperty();
   public static final Property<ProcessingPeriod, Integer> numberOfMonths = newProperty();
-  public static final Property<ProcessingPeriod, Integer> modifiedBy = newProperty();
-  public static final Property<ProcessingPeriod, Integer> id = newProperty();
+  public static final Property<ProcessingPeriod, Long> modifiedBy = newProperty();
+  public static final Property<ProcessingPeriod, Long> id = newProperty();
 
   public static final String PERIOD_NAME = "Month1";
   public static final String PERIOD_DESC = "first month";
-  public static final Integer MODIFIED_BY = 1;
+  public static final Long MODIFIED_BY = 1L;
   public static Date START_DATE;
   public static Date END_DATE;
   public static final Integer NUMBER_OF_MONTHS = 1;
-  public static final Integer SCHEDULE_ID = 1;
+  public static final Long SCHEDULE_ID = 1L;
 
   static {
     try {
@@ -50,7 +50,7 @@ public class ProcessingPeriodBuilder {
 
     @Override
     public ProcessingPeriod instantiate(PropertyLookup<ProcessingPeriod> lookup) {
-      Integer nullInteger = null;
+      Long nullLong = null;
       ProcessingPeriod period = new ProcessingPeriod();
       period.setName(lookup.valueOf(name, PERIOD_NAME));
       period.setDescription(lookup.valueOf(description, PERIOD_DESC));
@@ -59,7 +59,7 @@ public class ProcessingPeriodBuilder {
       period.setNumberOfMonths(lookup.valueOf(numberOfMonths, NUMBER_OF_MONTHS));
       period.setModifiedBy(lookup.valueOf(modifiedBy, MODIFIED_BY));
       period.setScheduleId(lookup.valueOf(scheduleId, SCHEDULE_ID));
-      period.setId(lookup.valueOf(id, nullInteger));
+      period.setId(lookup.valueOf(id, nullLong));
       return period;
     }
   };

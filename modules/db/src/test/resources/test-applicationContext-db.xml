@@ -17,8 +17,6 @@
     <context:annotation-config/>
     <context:spring-configured/>
 
-    <context:component-scan base-package="org.openlmis.db"/>
-
     <bean id="dbProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 
         <property name="locations">
@@ -33,31 +31,5 @@
         </property>
     </bean>
 
-    <tx:annotation-driven transaction-manager="transactionManager"/>
-
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource">
-            <ref bean="dataSource"/>
-        </property>
-    </bean>
-
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-        <property name="driverClass" value="${jdbc.driverClassName}"/>
-        <property name="jdbcUrl" value="${jdbc.url}"/>
-        <property name="user" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
-        <property name="maxPoolSize" value="${conn.pool.maxPoolSize}"/>
-        <property name="initialPoolSize" value="${conn.pool.initialPoolSize}"/>
-    </bean>
-
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="typeHandlersPackage" value="org.openlmis.core.repository.typehandler"/>
-    </bean>
-
-    <bean id="myBatisMapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="org.openlmis*"/>
-        <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
-    </bean>
-
+    <import resource="classpath*:applicationContext-db.xml"/>
 </beans>

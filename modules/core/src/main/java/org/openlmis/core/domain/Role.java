@@ -17,7 +17,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class Role extends BaseModel {
   private String name;
   private Boolean adminRole;
@@ -28,7 +28,7 @@ public class Role extends BaseModel {
     this(name, adminRole, description, null);
   }
 
-  public Role(Integer id, String name, Boolean adminRole, String description, Set<Right> rights) {
+  public Role(Long id, String name, Boolean adminRole, String description, Set<Right> rights) {
     this(name, adminRole, description, rights);
     this.id = id;
   }
