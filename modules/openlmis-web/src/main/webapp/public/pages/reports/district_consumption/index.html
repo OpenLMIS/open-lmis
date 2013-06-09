@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" ng-app="districtconsumption">
+
+<head>
+    <meta charset="utf-8">
+    <title>Open-LMIS</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
+
+
+    <link rel="stylesheet" href="/public/css/app.css">
+
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
+    <script data-main="/public/js/reports/district_consumption/module/district_consumption-module" src="/public/lib/requirejs/require.js"></script>
+    <script type="text/javascript">
+        requirejs.config({
+            urlArgs: 'v=@version@'
+        });
+    </script>
+    <!--[if IE 9]>
+    <link rel="stylesheet" href="/public/css/ie9.css"/>
+    <![endif]-->
+</head>
+<body onunload="">
+<div id="wrap">
+  <ng-include src="'/public/pages/header.html'"></ng-include>
+  <ng-include src="'/public/pages/navigation.html'"></ng-include>
+  <div class="content">
+    <div ng-view></div>
+  </div>
+</div>
+
+</body>
+</html>
