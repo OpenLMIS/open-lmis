@@ -5,7 +5,7 @@
  */
 
 
-var loadNext = ['jQueryUi', 'angularResource', 'angularUi', 'uiBootstrap', 'bootstrap', 'localStorage', 'services', ''];
+var loadNext = ['jQueryUi', 'angularResource', 'angularUi', 'uiBootstrap', 'bootstrap', 'localStorage', 'services','reports' ,''];
 var loadFirst = ['jQuery', 'underscore', 'angular'];
 
 requirejs.config({
@@ -21,6 +21,7 @@ requirejs.config({
     uiBootstrap: '../../lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min',
     localStorage: '../../lib/localstorage/localStorage',
     services: 'services/services',
+    reports: 'services/reports',
     messageService: 'services/message-service',
     navigateBackService: 'services/navigate-back-service',
     authorizationService: 'services/authorization-service',
@@ -38,6 +39,7 @@ requirejs.config({
     fixedTableHeader: 'directives/fixed-table-header',
     uiNav: 'directives/ui-nav',
     ngGrid: '../../lib/angular-ui/ng-grid/ng-grid-2.0.5.min',
+    ngGridFlexibleHeight: '../../lib/angular-ui/ng-grid/ng-grid-flexible-height',
     jQueryForm: '../../lib/jquery/jquery.form',
     select2: '../../lib/select2/select2',
     select2Ext: 'select2-ext'
@@ -60,7 +62,9 @@ requirejs.config({
     'bootstrap': { deps: loadFirst},
     'localStorage': {deps: loadFirst},
     'services': {deps: loadFirst},
+    'reports': {deps:['services']},
     'ngGrid': {deps: ['angularResource']},
+    'ngGridFlexibleHeight' : {deps: ['ngGrid']},
     'directives': {deps: ['messageService'] },
     'commentBox': {deps: ['directives']},
     'formToolbar': {deps: ['directives']},
