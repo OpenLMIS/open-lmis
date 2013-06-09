@@ -26,7 +26,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @Controller
 @NoArgsConstructor
 @RequestMapping(value = "/reports")
-public class ReportController  extends BaseController {
+public class InteractiveReportController  extends BaseController {
 
     public static final String USER_ID = "USER_ID";
 
