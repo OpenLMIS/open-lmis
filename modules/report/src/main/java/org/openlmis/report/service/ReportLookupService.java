@@ -1,6 +1,7 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.service.ConfigurationService;
 import org.openlmis.report.mapper.lookup.AdjustmentTypeReportMapper;
 import org.openlmis.report.mapper.lookup.*;
@@ -21,35 +22,32 @@ import java.util.*;
 @NoArgsConstructor
 public class ReportLookupService {
 
+    @Autowired
     private ProductReportMapper productMapper;
-    private RequisitionGroupReportMapper rgMapper;
-    private ProductCategoryReportMapper productCategoryMapper;
-    private AdjustmentTypeReportMapper adjustmentTypeReportMapper;
-    private ConfigurationService configurationService;
-    private ScheduleReportMapper scheduleMapper;
-    private ProgramReportMapper programMapper;
-    private FacilityTypeReportMapper facilityTypeMapper;
 
     @Autowired
-    public ReportLookupService(
-                                ProductReportMapper productMapper
-                                , RequisitionGroupReportMapper rgMapper
-                                , ProductCategoryReportMapper productCategoryMapper
-                                , AdjustmentTypeReportMapper adjustmentTypeReportMapper
-                                , ConfigurationService configurationService
-                                , ScheduleReportMapper scheduleMapper
-                                , ProgramReportMapper programMapper
-                                , FacilityTypeReportMapper facilityTypeMapper
-                             ){
-        this.productMapper = productMapper;
-        this.rgMapper = rgMapper;
-        this.productCategoryMapper = productCategoryMapper;
-        this.adjustmentTypeReportMapper = adjustmentTypeReportMapper;
-        this.configurationService = configurationService;
-        this.programMapper = programMapper;
-        this.scheduleMapper = scheduleMapper;
-        this.facilityTypeMapper = facilityTypeMapper;
-    }
+    private RequisitionGroupReportMapper rgMapper;
+
+    @Autowired
+    private ProductCategoryReportMapper productCategoryMapper;
+
+    @Autowired
+    private AdjustmentTypeReportMapper adjustmentTypeReportMapper;
+
+    @Autowired
+    private ConfigurationService configurationService;
+
+    @Autowired
+    private ScheduleReportMapper scheduleMapper;
+
+    @Autowired
+    private ProgramReportMapper programMapper;
+
+    @Autowired
+    private FacilityTypeReportMapper facilityTypeMapper;
+
+
+
 
     public List<Product> getAllProducts(){
         return productMapper.getAll();
@@ -114,4 +112,8 @@ public class ReportLookupService {
         return scheduleMapper.getAll();
     }
 
+    //TODO: implement this method
+    public List<GeographicZone> getAllZones() {
+        return null;//geographicmapper.getAllZones();
+    }
 }
