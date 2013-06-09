@@ -30,14 +30,11 @@ public class InteractiveReportController  extends BaseController {
 
     public static final String USER_ID = "USER_ID";
 
+    @Autowired
     private ReportManager reportManager;
-    private ReportLookupService reportService;
 
     @Autowired
-    public ReportController(ReportManager reportManager, ReportLookupService reportService) {
-        this.reportManager  = reportManager;
-        this.reportService = reportService;
-    }
+    private ReportLookupService reportService;
 
     @RequestMapping(value = "/download/{reportKey}/{outputOption}")
     public void showReport(
