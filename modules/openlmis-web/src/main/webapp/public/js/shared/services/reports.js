@@ -76,3 +76,12 @@ services.factory('ReportSchedules', function ($resource) {
 services.factory('ReportFacilityTypes', function ($resource) {
     return $resource('/reports/facilityTypes.json', {}, {});
 });
+
+services.factory('FacilityList', function ($resource) {
+    return $resource('/reportdata/facilitylist.json', {}, {});
+});
+
+
+services.factory('GeographicZones', function ($resource) {
+    return $resource('/reports/geographicZones.json', {}, {});
+});
