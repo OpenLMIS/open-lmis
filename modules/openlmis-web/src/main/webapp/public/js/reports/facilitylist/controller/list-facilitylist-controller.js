@@ -191,8 +191,8 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
         sortInfo: $scope.sortInfo,
         showColumnMenu: true,
         showFilter: true,
-        autoFit :true,
-        plugins: [new ngGridFlexibleHeightPlugin()]
+        autoFit :true//,
+       // plugins: [new ngGridFlexibleHeightPlugin()]
       
     };
 }
