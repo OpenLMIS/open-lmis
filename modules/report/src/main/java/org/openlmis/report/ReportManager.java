@@ -77,7 +77,8 @@ public class ReportManager {
            throw new ReportException("invalid report");
        }
 
-       User currentUser = userService.getById(userId);
+
+       User currentUser = userService.getById(Long.parseLong(String.valueOf(userId)));
        List<? extends ReportData> dataSource = report.getReportDataProvider().getReportDataByFilterCriteria(params, DataSourceType.BEAN_COLLECTION_DATA_SOURCE);
 
        // Read the report template from file.
