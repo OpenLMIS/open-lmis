@@ -62,9 +62,6 @@ public class GeographicZoneRepository {
     return mapper.getAllGeographicZones();
   }
 
-  public List<GeographicZone> getAllZones() {
-        return mapper.getAllZones();
-  }
   public void insert(GeographicZone zone) {
     try {
       mapper.insert(zone);
