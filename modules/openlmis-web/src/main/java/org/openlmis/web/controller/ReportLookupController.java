@@ -1,6 +1,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.report.model.dto.AdjustmentType;
 import org.openlmis.report.model.dto.Product;
 import org.openlmis.report.model.dto.Schedule;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -37,12 +39,11 @@ public class ReportLookupController extends BaseController {
     public static final String OPEN_LMIS_OPERATION_YEARS = "years";
     public static final String OPEN_LMIS_OPERATION_MONTHS = "months";
 
-    private ReportLookupService reportLookupService;
-
     @Autowired
-    public ReportLookupController(ReportLookupService productReportService) {
-        this.reportLookupService = productReportService;
-    }
+    private ReportLookupService reportLookupService;
+    @Autowired
+    private FacilityService facilityService;
+
 
     @RequestMapping(value="/programs", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getPrograms(){
@@ -103,6 +104,11 @@ public class ReportLookupController extends BaseController {
         months.put(OPEN_LMIS_OPERATION_MONTHS,reportLookupService.getAllMonths());
 
         return months;
+    }
+
+    @RequestMapping(value = "/geographicZones", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllGeographicZones(HttpServletRequest request) {
+        return OpenLmisResponse.response("zones", reportLookupService.getAllZones());
     }
 
 }
