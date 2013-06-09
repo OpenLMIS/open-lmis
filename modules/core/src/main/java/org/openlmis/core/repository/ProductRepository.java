@@ -116,8 +116,4 @@ public class ProductRepository {
     return mapper.getProductFormIdForCode(code);
   }
 
-   public List<Product> getAll(){
-       return mapper.getAll();
-   }
-
 }

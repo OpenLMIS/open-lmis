@@ -81,7 +81,4 @@ public class ProductService {
     return repository.getByCode(code);
   }
 
-    public List<Product> getAllProducts() {
-        return repository.getAll();
-    }
 }
