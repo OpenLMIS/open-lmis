@@ -1,7 +1,6 @@
 package org.openlmis.report.service;
 
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.GeographicZone;
+import lombok.NoArgsConstructor;;
 import org.openlmis.core.service.ConfigurationService;
 import org.openlmis.report.mapper.lookup.AdjustmentTypeReportMapper;
 import org.openlmis.report.mapper.lookup.*;
@@ -46,7 +45,8 @@ public class ReportLookupService {
     @Autowired
     private FacilityTypeReportMapper facilityTypeMapper;
 
-
+    @Autowired
+    private GeographicZoneReportMapper geographicZoneMapper;
 
 
     public List<Product> getAllProducts(){
@@ -113,7 +113,7 @@ public class ReportLookupService {
     }
 
     //TODO: implement this method
-    public List<GeographicZone> getAllZones() {
-        return null;//geographicmapper.getAllZones();
+    public List<org.openlmis.report.model.dto.GeographicZone> getAllZones() {
+        return geographicZoneMapper.getAll();
     }
 }
