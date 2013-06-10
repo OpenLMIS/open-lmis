@@ -272,6 +272,16 @@
                         <property name="tableName" value="delivery_zone_program_schedules"/>
                     </bean>
                 </entry>
+                <entry key="deliveryZoneMember">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Delivery Zone Members"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.allocation.domain.DeliveryZoneMember</value>
+                        </property>
+                        <property name="recordHandler" ref="deliveryZoneMemberHandler"/>
+                        <property name="tableName" value="delivery_zone_members"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

@@ -26,7 +26,6 @@ public interface DeliveryZoneProgramScheduleMapper {
       "INNER JOIN delivery_zones DZ ON DZ.id = DZPS.deliveryZoneId WHERE LOWER(P.code) = LOWER(#{programCode}) AND",
       "LOWER(DZ.code) = LOWER(#{deliveryZoneCode})"})
   @Results({
-      @Result(property = "id", column = "id"),
       @Result(property = "program.id", column = "programId"),
       @Result(property = "deliveryZone.id", column = "deliveryZoneId"),
       @Result(property = "schedule.id", column = "scheduleId")

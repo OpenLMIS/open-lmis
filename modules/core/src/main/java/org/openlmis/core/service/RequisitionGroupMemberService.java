@@ -50,14 +50,14 @@ public class RequisitionGroupMemberService {
     setIdsForRequisitionGroupMemberEntitiesAndValidate(requisitionGroupMember);
 
     if (requisitionGroupMember.getId() == null) {
-      validateIfFacilityIsAlreadyAssignedToRequistionGroupForProgram(requisitionGroupMember);
+      validateIfFacilityIsAlreadyAssignedToRequisitionGroupForProgram(requisitionGroupMember);
       requisitionGroupMemberRepository.insert(requisitionGroupMember);
     } else {
       requisitionGroupMemberRepository.update(requisitionGroupMember);
     }
   }
 
-  private void validateIfFacilityIsAlreadyAssignedToRequistionGroupForProgram(RequisitionGroupMember requisitionGroupMember) {
+  private void validateIfFacilityIsAlreadyAssignedToRequisitionGroupForProgram(RequisitionGroupMember requisitionGroupMember) {
     List<Long> commonProgramIds = getCommonProgramIdsForRequisitionGroupAndFacility(requisitionGroupMember);
 
     if (commonProgramIds.size() > 0) {

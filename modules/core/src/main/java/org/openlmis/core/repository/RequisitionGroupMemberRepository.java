@@ -11,10 +11,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.repository.mapper.ProgramMapper;
-import org.openlmis.core.repository.mapper.RequisitionGroupMapper;
 import org.openlmis.core.repository.mapper.RequisitionGroupMemberMapper;
-import org.openlmis.core.repository.mapper.RequisitionGroupProgramScheduleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
@@ -26,21 +23,10 @@ import java.util.List;
 public class RequisitionGroupMemberRepository {
 
   private RequisitionGroupMemberMapper mapper;
-  private RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper;
-  private RequisitionGroupMapper requisitionGroupMapper;
-  private ProgramMapper programMapper;
-  private FacilityRepository facilityRepository;
-  private RequisitionGroupRepository requisitionGroupRepository;
 
   @Autowired
-  public RequisitionGroupMemberRepository(RequisitionGroupMemberMapper requisitionGroupMemberMapper, RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper,
-                                          RequisitionGroupMapper requisitionGroupMapper, FacilityRepository facilityRepository, ProgramMapper programMapper, RequisitionGroupRepository requisitionGroupRepository) {
+  public RequisitionGroupMemberRepository(RequisitionGroupMemberMapper requisitionGroupMemberMapper) {
     this.mapper = requisitionGroupMemberMapper;
-    this.requisitionGroupProgramScheduleMapper = requisitionGroupProgramScheduleMapper;
-    this.requisitionGroupMapper = requisitionGroupMapper;
-    this.facilityRepository = facilityRepository;
-    this.programMapper = programMapper;
-    this.requisitionGroupRepository = requisitionGroupRepository;
   }
 
   public void insert(RequisitionGroupMember requisitionGroupMember) {

@@ -83,9 +83,8 @@ public class RequisitionGroupMemberRepositoryTest {
     programIdList.add(1);
 
     initMocks(this);
-    repository = new RequisitionGroupMemberRepository(requisitionGroupMemberMapper,
-      requisitionGroupProgramScheduleMapper, requisitionGroupMapper, facilityRepository, programMapper,
-      requisitionGroupRepository);
+    repository = new RequisitionGroupMemberRepository(requisitionGroupMemberMapper
+    );
   }
 
   @Test

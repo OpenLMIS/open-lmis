@@ -84,7 +84,10 @@ public class DeliveryZoneProgramScheduleMapperIT {
     expectedDZPS.setCreatedBy(deliveryZoneProgramSchedule.getCreatedBy());
     assertThat(actual.getCreatedDate(), is(notNullValue()));
     actual.setCreatedDate(null);
-    assertThat(actual, is(expectedDZPS));
+
+    assertThat(actual.getProgram().getId(), is(expectedDZPS.getProgram().getId()));
+    assertThat(actual.getDeliveryZone().getId(), is(expectedDZPS.getDeliveryZone().getId()));
+    assertThat(actual.getSchedule().getId(), is(expectedDZPS.getSchedule().getId()));
   }
 
   @Test

@@ -6,10 +6,22 @@
 
 package org.openlmis.allocation.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.annotation.ImportField;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class DeliveryZoneMember extends BaseModel implements Importable{
+
+  @ImportField(name = "Delivery Zone", nested = "code", mandatory = true)
+  private DeliveryZone deliveryZone;
+
+  @ImportField(name = "Facility", nested = "code", mandatory = true)
+  private Facility facility;
 }
