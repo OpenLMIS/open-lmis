@@ -7,15 +7,13 @@
 package org.openlmis.core.repository.mapper;
 
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
-import org.openlmis.core.domain.Money;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -128,5 +126,70 @@ public class ProgramProductMapperIT {
 
     assertThat(programProducts.size(), is(1));
     assertThat(programProducts.get(0).getId(), is(programProduct.getId()));
+  }
+
+  @Test
+  public void shouldInsertISAForAProgramProduct() {
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProductMapper.insert(programProduct);
+
+    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 0.039f, 4, 10f, 25f, 50, 17);
+    programProductMapper.insertISA(programProductISA);
+
+    assertNotNull(programProductISA.getId());
+  }
+
+  @Test
+  public void shouldGetProgramProductISAById() {
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProductMapper.insert(programProduct);
+
+    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 0.039f, 4, 10f, 25f, 50, 17);
+    programProductMapper.insertISA(programProductISA);
+
+    ProgramProductISA savedISA = programProductMapper.getISAByProgramProductId(programProduct.getId());
+
+    assertNotNull(savedISA.getModifiedDate());
+    savedISA.setModifiedDate(null);
+    assertThat(savedISA, is(programProductISA));
+  }
+
+  @Test
+  public void shouldGetProgramProductWithISAByProgram() {
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProductMapper.insert(programProduct);
+
+    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 0.039f, 4, 10f, 25f, 50, 17);
+    programProductMapper.insertISA(programProductISA);
+
+    List<ProgramProduct> savedProgramProducts = programProductMapper.getWithISAByProgram(program.getId());
+
+    assertThat(savedProgramProducts.size(), is(1));
+    Assert.assertNotNull(savedProgramProducts.get(0).getProgramProductISA());
+  }
+
+  @Test
+  public void shouldUpdateProgramProductISA(){
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProductMapper.insert(programProduct);
+
+    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 0.039f, 4, 10f, 25f, 50, 17);
+    programProductMapper.insertISA(programProductISA);
+
+    programProductISA.setWhoRatio(0.50f);
+    programProductISA.setDosesPerYear(5);
+    programProductISA.setWastageRate(5f);
+    programProductISA.setBufferPercentage(10f);
+    programProductISA.setMinimumValue(25);
+    programProductISA.setAdjustmentValue(40);
+
+    programProductMapper.updateISA(programProductISA);
+
+    ProgramProductISA savedProgramProductISA = programProductMapper.getISAByProgramProductId(programProduct.getId());
+
+    Assert.assertNotNull(savedProgramProductISA.getModifiedDate());
+    savedProgramProductISA.setModifiedDate(null);
+    assertThat(savedProgramProductISA, is(programProductISA));
+
   }
 }

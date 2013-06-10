@@ -18,6 +18,7 @@ import org.openlmis.upload.annotation.ImportField;
 @EqualsAndHashCode(callSuper = false)
 public class ProgramProduct extends BaseModel implements Importable {
 
+
   @ImportField(name = "Program Code", type = "String", nested = "code", mandatory = true)
   private Program program;
   @ImportField(name = "Product Code", type = "String", nested = "code", mandatory = true)
@@ -26,6 +27,8 @@ public class ProgramProduct extends BaseModel implements Importable {
   private Integer dosesPerMonth;
   @ImportField(name = "Is Active", type = "boolean", mandatory = true)
   private boolean active;
+
+  private ProgramProductISA programProductISA;
 
   private Money currentPrice;
   public static final String PROGRAM_PRODUCT_INVALID_CURRENT_PRICE = "programProduct.invalid.current.price";

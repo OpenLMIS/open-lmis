@@ -1400,7 +1400,7 @@
       leadingWhitespace:( div.firstChild.nodeType === 3 ),
 
       // Make sure that tbody elements aren't automatically inserted
-      // IE will insert them into empty tables
+      // IE will insertProgramProductISA them into empty tables
       tbody:!div.getElementsByTagName("tbody").length,
 
       // Make sure that link elements get serialized correctly by innerHTML
@@ -6701,7 +6701,7 @@
       var old = {},
         ret, name;
 
-      // Remember the old values, and insert the new ones
+      // Remember the old values, and insertProgramProductISA the new ones
       for (name in options) {
         old[ name ] = elem.style[ name ];
         elem.style[ name ] = options[ name ];
@@ -23819,7 +23819,7 @@
               });
             }
             if (!multiple && !selectedSet) {
-              // nothing was selected, we have to insert the undefined item
+              // nothing was selected, we have to insertProgramProductISA the undefined item
               optionGroups[''].unshift({id:'?', label:'', selected:true});
             }
 

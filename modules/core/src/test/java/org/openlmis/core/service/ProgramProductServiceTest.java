@@ -14,10 +14,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Money;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductPrice;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramProductRepository;
 import org.openlmis.db.categories.UnitTests;
@@ -128,5 +125,20 @@ public class ProgramProductServiceTest {
 
     assertThat(programProducts, is(expectedProgramProducts));
     verify(programProductRepository).getByProgram(program);
+  }
+
+  @Test
+  public void shouldInsertProgramProductISAIfDoesNotExist(){
+    ProgramProductISA programProductISA = new ProgramProductISA();
+    programProductService.saveProgramProductISA(programProductISA);
+    verify(programProductRepository).insertProgramProductISA(programProductISA);
+  }
+
+  @Test
+  public void shouldUpdateProgramProductISAIfExists(){
+      ProgramProductISA programProductISA = new ProgramProductISA();
+    programProductISA.setId(1l);
+    programProductService.saveProgramProductISA(programProductISA);
+    verify(programProductRepository).updateProgramProductISA(programProductISA);
   }
 }
