@@ -356,8 +356,8 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Repor
         sortInfo: $scope.sortInfo,
         showColumnMenu: true,
         enableRowReordering: true,
-        showFilter: true//,
-        //plugins: [new ngGridFlexibleHeightPlugin()]
+        showFilter: true,
+        plugins: [new ngGridFlexibleHeightPlugin()]
 
     };
 

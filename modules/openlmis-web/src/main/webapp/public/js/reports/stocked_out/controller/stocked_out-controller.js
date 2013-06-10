@@ -418,8 +418,8 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
         sortInfo: $scope.sortInfo,
         showColumnMenu: true,
         enableRowReordering: true,
-        showFilter: true//,
-        //plugins: [new ngGridFlexibleHeightPlugin()]
+        showFilter: true,
+        plugins: [new ngGridFlexibleHeightPlugin()]
 
     };
 
