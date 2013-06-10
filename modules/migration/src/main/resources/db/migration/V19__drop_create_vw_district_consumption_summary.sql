@@ -1,3 +1,4 @@
+DROP VIEW  public.vw_district_consumption_summary;
 CREATE VIEW public.vw_district_consumption_summary
 (
   program_id,
@@ -12,7 +13,7 @@ CREATE VIEW public.vw_district_consumption_summary
   facility_type_id,
   requisition_group_id,
   requisition_group_name,
-  requisition_group_noteid,
+  supervisory_node_id,
   facility_code,
   facility_id,
   facility_name,
@@ -41,7 +42,7 @@ SELECT DISTINCT
   facility_types.id AS facility_type_id,
   requisition_groups.id AS requisition_group_id,
   requisition_groups.name AS requisition_group_name,
-  requisition_groups.supervisorynodeid AS requisition_group_noteid,
+  requisition_groups.supervisorynodeid AS supervisory_node_id,
   facilities.code AS facility_code,
   facilities.id AS facility_id,
   facilities.name AS facility_name,
