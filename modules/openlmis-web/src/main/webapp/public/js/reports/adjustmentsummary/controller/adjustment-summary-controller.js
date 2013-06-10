@@ -459,13 +459,13 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
     });
 
 
-        $scope.export   = function (type){
+        $scope.exportReport   = function (type){
 
             $scope.filterObject.pdformat =1;
             var params = jQuery.param($scope.filterObject);
             var url = '/reports/download/adjustment_summary/' + type +'?' + params;
             window.location.href = url;
-        }
+        };
 
         $scope.goToPage = function (page, event) {
             angular.element(event.target).parents(".dropdown").click();
@@ -567,8 +567,8 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
         sortInfo: $scope.sortInfo,
         showColumnMenu: true,
         enableRowReordering: true,
-        showFilter: true//,
-        //plugins: [new ngGridFlexibleHeightPlugin()]
+        showFilter: true,
+        plugins: [new ngGridFlexibleHeightPlugin()]
 
     };
 

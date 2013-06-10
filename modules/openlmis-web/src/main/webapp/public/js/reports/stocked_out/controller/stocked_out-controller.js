@@ -135,7 +135,7 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
-        $scope.export   = function (type){
+        $scope.exportReport   = function (type){
 
             var param = $scope.getParams(1, 1);
             var paramString = jQuery.param(param);
@@ -418,8 +418,8 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
         sortInfo: $scope.sortInfo,
         showColumnMenu: true,
         enableRowReordering: true,
-        showFilter: true//,
-        //plugins: [new ngGridFlexibleHeightPlugin()]
+        showFilter: true,
+        plugins: [new ngGridFlexibleHeightPlugin()]
 
     };
 

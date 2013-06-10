@@ -37,7 +37,7 @@ function SupplyStatusController($scope, RequisitionGroupsByProgramSchedule , Req
 
         //filter form data section
         $scope.filterObject =  {
-             facilityType : $scope.period,
+             facilityType : $scope.period
 
         };
 
@@ -77,7 +77,7 @@ function SupplyStatusController($scope, RequisitionGroupsByProgramSchedule , Req
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
-        $scope.export   = function (type){
+        $scope.exportReport   = function (type){
 
             var param = $scope.getParams(1, 1);
             var paramString = jQuery.param(param);
@@ -186,8 +186,8 @@ function SupplyStatusController($scope, RequisitionGroupsByProgramSchedule , Req
         sortInfo: $scope.sortInfo,
         showColumnMenu: true,
         enableRowReordering: true,
-        showFilter: true//,
-        //plugins: [new ngGridFlexibleHeightPlugin()]
+        showFilter: true,
+        plugins: [new ngGridFlexibleHeightPlugin()]
 
     };
 

@@ -58,7 +58,7 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
-        $scope.export   = function (type){
+        $scope.exportReport   = function (type){
             var url = '/reports/download/summary/' + type +'?period=' + $scope.period + '&program=' + $scope.program;
             window.open(url);
         }
@@ -161,8 +161,8 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
         sortInfo: $scope.sortInfo,
         showColumnMenu: true,
         enableRowReordering: true,
-        showFilter: true//,
-        //plugins: [new ngGridFlexibleHeightPlugin()]
+        showFilter: true,
+        plugins: [new ngGridFlexibleHeightPlugin()]
 
     };
 

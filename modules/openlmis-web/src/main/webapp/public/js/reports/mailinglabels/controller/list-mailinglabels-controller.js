@@ -71,7 +71,7 @@ function ListMailinglabelsController($scope, MailingLabels, ReportFacilityTypes,
             $scope.filterGrid();
         });
 
-    $scope.export   = function (type){
+    $scope.exportReport   = function (type){
         var url = '/reports/download/mailinglabels/' + type +'?facilityCodeFilter=' +  $scope.filterObject.facilityCodeFilter + '&facilityNameFilter=' +  $scope.filterObject.facilityNameFilter + '&facilityTypeId=' +  $scope.filterObject.facilityTypeId ;
         if(type == "mailing-list"){
             url = '/reports/download/mailinglabels/list/' + "pdf" +'?facilityCodeFilter=' +  $scope.filterObject.facilityCodeFilter + '&facilityNameFilter=' +  $scope.filterObject.facilityNameFilter + '&facilityTypeId=' +  $scope.filterObject.facilityTypeId ;
@@ -180,8 +180,8 @@ function ListMailinglabelsController($scope, MailingLabels, ReportFacilityTypes,
         showColumnMenu: true,
         enableRowReordering: true,
         showFilter: true,
-        autoFit :true//,
-        //plugins: [new ngGridFlexibleHeightPlugin()]
+        autoFit :true,
+        plugins: [new ngGridFlexibleHeightPlugin()]
 
     };
 

@@ -26,6 +26,12 @@ modules/report/src/main/template/openlmis-report-footer-landscape.jasper
 modules/report/src/main/template/openlmis-report-header-landscape.jasper
 modules/report/src/main/resources/facilities-listings.jasper
 modules/report/src/main/resources/facility-mailing-list.jasper
+modules/report/src/main/resources/adjustment-summary.jasper
+modules/report/src/main/resources/average-consumption.jasper
+modules/report/src/main/resources/district-consumption.jasper
+modules/report/src/main/resources/stocked-out-facilities.jasper
+
+
 .classpath
 .project
 atlassian-ide-plugin.xml

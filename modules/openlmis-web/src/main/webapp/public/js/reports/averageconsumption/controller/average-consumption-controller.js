@@ -449,7 +449,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
         });
 
 
-        $scope.export   = function (type){
+        $scope.exportReport   = function (type){
 
             $scope.filterObject.pdformat =1;
             var params = jQuery.param($scope.filterObject);
@@ -560,8 +560,8 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
         sortInfo: $scope.sortInfo,
         showColumnMenu: true,
         enableRowReordering: true,
-        showFilter: true//,
-        //plugins: [new ngGridFlexibleHeightPlugin()]
+        showFilter: true,
+        plugins: [new ngGridFlexibleHeightPlugin()]
 
     };
 
