@@ -6,9 +6,12 @@
 
 package org.openlmis.web.controller;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.service.DbService;
@@ -39,22 +42,19 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @NoArgsConstructor
 public class UserController extends BaseController {
 
+  @Autowired
   private RoleRightsService roleRightService;
+
+  @Autowired
   private UserService userService;
+
+  @Getter
+  @Setter
+  private String baseUrl;
 
   public static final String USER_ID = "userId";
   public static final String TOKEN_VALID = "TOKEN_VALID";
   private static final String RESET_PASSWORD_PATH = "public/pages/reset-password.html#/token/";
-
-
-  private String baseUrl;
-
-  @Autowired
-  public UserController(RoleRightsService roleRightService, UserService userService, @Value("${mail.base.url}") String baseUrl) {
-    this.roleRightService = roleRightService;
-    this.userService = userService;
-    this.baseUrl = baseUrl;
-  }
 
   @RequestMapping(value = "/user-context", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> user(HttpServletRequest httpServletRequest) {
@@ -71,7 +71,7 @@ public class UserController extends BaseController {
 
   @RequestMapping(value = "/authentication-error", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> authenticationError() {
-    return error("user.login.error", HttpStatus.UNAUTHORIZED);
+    return error(messageService.message("user.login.error"), HttpStatus.UNAUTHORIZED);
   }
 
   @RequestMapping(value = "/forgot-password", method = POST, headers = ACCEPT_JSON)

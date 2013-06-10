@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.reporting.model.ReportTemplate;
 import org.openlmis.core.exception.DataException;
@@ -32,6 +33,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.web.controller.ReportTemplateController.JASPER_CREATE_REPORT_SUCCESS;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -42,6 +44,9 @@ public class ReportTemplateControllerTest {
 
   @Mock
   private ReportTemplateService reportTemplateService;
+
+  @Mock
+  private MessageService messageService;
 
   @InjectMocks
   private ReportTemplateController controller;
@@ -63,7 +68,8 @@ public class ReportTemplateControllerTest {
     MockMultipartFile reportTemplateFile = new MockMultipartFile("template.jrxml","template.jrxml","", new byte[1]);
     ReportTemplate report = new ReportTemplate();
     whenNew(ReportTemplate.class).withArguments("reportName", reportTemplateFile, USER).thenReturn(report);
-    ResponseEntity<OpenLmisResponse> response = controller.createJasperReportTemplate(request, reportTemplateFile, "reportName");
+    when(messageService.message(JASPER_CREATE_REPORT_SUCCESS)).thenReturn("Report created successfully");
+      ResponseEntity < OpenLmisResponse > response = controller.createJasperReportTemplate(request, reportTemplateFile, "reportName");
 
     assertThat(response.getBody().getSuccessMsg(), is("Report created successfully"));
     verify(reportTemplateService).insert(report);

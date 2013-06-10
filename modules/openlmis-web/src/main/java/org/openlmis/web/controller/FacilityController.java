@@ -11,6 +11,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.web.model.FacilityReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -33,8 +34,7 @@ import java.util.Map;
 import static org.openlmis.core.domain.Facility.createFacilityToBeDeleted;
 import static org.openlmis.core.domain.Facility.createFacilityToBeRestored;
 import static org.openlmis.core.domain.Right.*;
-import static org.openlmis.web.response.OpenLmisResponse.error;
-import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
@@ -43,6 +43,7 @@ public class FacilityController extends BaseController {
 
   @Autowired
   private FacilityService facilityService;
+
   @Autowired
   private ProgramService programService;
 
@@ -101,7 +102,7 @@ public class FacilityController extends BaseController {
     } catch (DataException exception) {
       return createErrorResponse(facility, exception);
     }
-    response = success(new OpenLmisMessage("message.facility.created.success", facility.getName()));
+    response = success(messageService.message("message.facility.created.success", facility.getName()));
     response.getBody().addData("facility", facility);
     return response;
   }
@@ -116,7 +117,7 @@ public class FacilityController extends BaseController {
     } catch (DataException exception) {
       return createErrorResponse(facility, exception);
     }
-    response = success(new OpenLmisMessage("message.facility.updated.success", facility.getName()));
+    response = success(messageService.message("message.facility.updated.success", facility.getName()));
     response.getBody().addData("facility", facility);
     return response;
   }
@@ -134,7 +135,7 @@ public class FacilityController extends BaseController {
     Facility facilityToBeDeleted = createFacilityToBeDeleted(facilityId, loggedInUserId(httpServletRequest));
     Facility deletedFacility = facilityService.updateDataReportableAndActiveFor(facilityToBeDeleted);
 
-    response = success(new OpenLmisMessage("delete.facility.success", deletedFacility.getName(),
+    response = success(messageService.message("delete.facility.success", deletedFacility.getName(),
       deletedFacility.getCode()));
     response.getBody().addData("facility", deletedFacility);
     return response;
@@ -148,7 +149,7 @@ public class FacilityController extends BaseController {
     Facility facilityToBeDeleted = createFacilityToBeRestored(facilityId, loggedInUserId(request), active);
     Facility restoredFacility = facilityService.updateDataReportableAndActiveFor(facilityToBeDeleted);
 
-    response = success(new OpenLmisMessage("restore.facility.success", restoredFacility.getName(),
+    response = success(messageService.message("restore.facility.success", restoredFacility.getName(),
       restoredFacility.getCode()));
     response.getBody().addData("facility", restoredFacility);
     return response;

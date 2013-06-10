@@ -9,6 +9,7 @@ package org.openlmis.restapi.controller;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestService;

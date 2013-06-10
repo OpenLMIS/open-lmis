@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.mockito.ArgumentMatcher;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.RnrColumn;
@@ -31,13 +32,16 @@ public class RnrTemplateControllerTest {
 
   private RnrTemplateService rnrTemplateService;
   private RnrTemplateController rnrTemplateController;
+  private MessageService messageService;
 
   private Long existingProgramId = 1L;
 
   @Before
   public void setUp() throws Exception {
     rnrTemplateService = mock(RnrTemplateService.class);
+    messageService = mock(MessageService.class);
     rnrTemplateController = new RnrTemplateController(rnrTemplateService);
+    rnrTemplateController.setMessageService(messageService);
   }
 
   @Test

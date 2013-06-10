@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -107,7 +109,7 @@ public class RequisitionController extends BaseController {
       rnr.setId(id);
       rnr.setModifiedBy(loggedInUserId(request));
       requisitionService.save(rnr);
-      return OpenLmisResponse.success(RNR_SAVE_SUCCESS);
+      return OpenLmisResponse.success(messageService.message(RNR_SAVE_SUCCESS));
     } catch (DataException e) {
       return OpenLmisResponse.error(e, BAD_REQUEST);
     }
@@ -121,8 +123,8 @@ public class RequisitionController extends BaseController {
       rnr.setModifiedBy(loggedInUserId(request));
       Rnr submittedRnr = requisitionService.submit(rnr);
 
-      return success(requisitionService.getSubmitMessageBasedOnSupervisoryNode(submittedRnr.getFacility(),
-        submittedRnr.getProgram()));
+      return success(messageService.message(requisitionService.getSubmitMessageBasedOnSupervisoryNode(submittedRnr.getFacility(),
+        submittedRnr.getProgram())));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
@@ -142,7 +144,8 @@ public class RequisitionController extends BaseController {
       Rnr rnr = new Rnr(id);
       rnr.setModifiedBy(loggedInUserId(request));
       Rnr authorizedRnr = requisitionService.authorize(rnr);
-      return success(requisitionService.getAuthorizeMessageBasedOnSupervisoryNode(authorizedRnr.getFacility(),authorizedRnr.getProgram()));
+      return success(messageService.message(requisitionService.getAuthorizeMessageBasedOnSupervisoryNode(
+        authorizedRnr.getFacility(), authorizedRnr.getProgram())));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
@@ -154,7 +157,7 @@ public class RequisitionController extends BaseController {
     rnr.setModifiedBy(loggedInUserId(request));
     try {
       Rnr approvedRnr = requisitionService.approve(rnr);
-      return success(requisitionService.getApproveMessageBasedOnParentNode(approvedRnr));
+      return success(messageService.message(requisitionService.getApproveMessageBasedOnParentNode(approvedRnr)));
     } catch (DataException dataException) {
       logger.warn("Error in approving requisition #{}", id, dataException);
       return error(dataException, BAD_REQUEST);

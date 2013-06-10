@@ -8,6 +8,7 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.RnRColumnSource;
 import org.openlmis.rnr.domain.RnrColumn;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +36,7 @@ import java.util.Map;
 @NoArgsConstructor
 public class RnrTemplateController extends BaseController{
 
+  public static final String RNR_TEMPLATE_SAVE_SUCCESS = "template.save.success";
   private RnrTemplateService rnrTemplateService;
 
   @Autowired
@@ -66,10 +69,20 @@ public class RnrTemplateController extends BaseController{
       Map<String, OpenLmisMessage> validationErrors = rnrTemplateService.saveRnRTemplateForProgram(programRnrTemplate);
       ResponseEntity responseEntity;
       if (validationErrors != null && validationErrors.size() > 0) {
-        responseEntity = OpenLmisResponse.response(validationErrors, HttpStatus.BAD_REQUEST);
+        Map<String, String> validationErrorMessages = getMessages(validationErrors);
+        responseEntity = OpenLmisResponse.response(validationErrorMessages, HttpStatus.BAD_REQUEST);
       } else {
-        responseEntity = OpenLmisResponse.success("Saved Successfully");
+        responseEntity = OpenLmisResponse.success(messageService.message(RNR_TEMPLATE_SAVE_SUCCESS));
       }
       return responseEntity;
   }
+
+  private Map<String, String> getMessages(Map<String, OpenLmisMessage> validationErrors) {
+    Map<String, String> validationErrorMessages = new HashMap<>();
+    for (String key : validationErrors.keySet()) {
+      validationErrorMessages.put(key, messageService.message(key));
+    }
+    return validationErrorMessages;
+  }
+
 }

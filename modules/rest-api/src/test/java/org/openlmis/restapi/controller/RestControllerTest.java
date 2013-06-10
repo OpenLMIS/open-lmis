@@ -14,11 +14,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestService;
 import org.openlmis.rnr.domain.Rnr;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.security.Principal;
@@ -27,9 +32,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.restapi.controller.RestController.RNR;
+import static org.openlmis.restapi.controller.RestController.UNEXPECTED_EXCEPTION;
 import static org.openlmis.restapi.response.RestResponse.ERROR;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(RestResponse.class)
 public class RestControllerTest {
 
   @Mock
@@ -38,12 +47,16 @@ public class RestControllerTest {
   @InjectMocks
   RestController controller;
 
+  @Mock
+  MessageService messageService;
+
   Principal principal;
 
   @Before
   public void setUp() throws Exception {
     principal = mock(Principal.class);
     when(principal.getName()).thenReturn("vendor name");
+    mockStatic(RestResponse.class);
   }
 
   @Test
@@ -53,6 +66,8 @@ public class RestControllerTest {
     Rnr requisition = new Rnr();
     requisition.setId(1L);
     when(service.submitReport(report)).thenReturn(requisition);
+    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, requisition.getId()), HttpStatus.OK);
+    when(RestResponse.response(RNR, requisition.getId())).thenReturn(expectResponse);
 
     ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
 
@@ -66,7 +81,10 @@ public class RestControllerTest {
 
     Rnr requisition = new Rnr();
     requisition.setId(1L);
-    doThrow(new DataException(errorMessage)).when(service).submitReport(report);
+    DataException dataException = new DataException(errorMessage);
+    doThrow(dataException).when(service).submitReport(report);
+    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), HttpStatus.BAD_REQUEST);
+    when(RestResponse.error(dataException, HttpStatus.BAD_REQUEST)).thenReturn(expectResponse);
 
     ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
 
@@ -94,6 +112,9 @@ public class RestControllerTest {
     Rnr expectedRnr = new Rnr();
     when(service.approve(report)).thenReturn(expectedRnr);
 
+    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, expectedRnr.getId()), HttpStatus.OK);
+    when(RestResponse.response(RNR, expectedRnr.getId())).thenReturn(expectResponse);
+
     ResponseEntity<RestResponse> response = controller.approve(id, report, principal);
 
     assertThat((Long) response.getBody().getData().get(RNR), is(expectedRnr.getId()));
@@ -108,7 +129,10 @@ public class RestControllerTest {
     Long requisitionId = 1L;
     Report report = new Report();
 
-    doThrow(new DataException(errorMessage)).when(service).approve(report);
+    DataException dataException = new DataException(errorMessage);
+    doThrow(dataException).when(service).approve(report);
+    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), HttpStatus.BAD_REQUEST);
+    when(RestResponse.error(dataException, HttpStatus.BAD_REQUEST)).thenReturn(expectResponse);
 
     ResponseEntity<RestResponse> response = controller.approve(requisitionId, report, principal);
 
@@ -117,8 +141,16 @@ public class RestControllerTest {
 
   @Test
   public void shouldResolveUnhandledException() throws Exception {
+    String errorMessage = "Oops, something has gone wrong. Please try again later";
+    when(messageService.message(UNEXPECTED_EXCEPTION)).thenReturn(errorMessage);
+
+    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), HttpStatus.INTERNAL_SERVER_ERROR);
+
+    when(RestResponse.error(UNEXPECTED_EXCEPTION, HttpStatus.INTERNAL_SERVER_ERROR)).thenReturn(expectedResponse);
+
     final ResponseEntity<RestResponse> response = controller.handleException(new Exception());
+
     final RestResponse body = response.getBody();
-    assertThat((String) body.getData().get(ERROR), is("Oops, something has gone wrong. Please try again later"));
+    assertThat((String) body.getData().get(ERROR), is(errorMessage));
   }
 }

@@ -18,6 +18,8 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.upload.ProductPersistenceHandler;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.db.service.DbService;
@@ -42,6 +44,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.web.controller.UploadController.UPLOAD_FILE_SUCCESS;
+
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class UploadControllerTest {
@@ -53,6 +58,9 @@ public class UploadControllerTest {
 
   @Mock
   DbService dbService;
+
+  @Mock
+  MessageService messageService;
 
   RecordHandler handler = new ProductPersistenceHandler(null);
 
@@ -73,6 +81,7 @@ public class UploadControllerTest {
 
   @Before
   public void setUp() throws Exception {
+    initMocks(this);
     request = new MockHttpServletRequest();
     MockHttpSession session = new MockHttpSession();
     session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, USER);
@@ -85,30 +94,37 @@ public class UploadControllerTest {
   @Test
   public void shouldThrowErrorIfUnsupportedModelIsSupplied() throws Exception {
     MultipartFile multipartFile = mock(MultipartFile.class);
+    OpenLmisMessage message= new OpenLmisMessage(UploadController.INCORRECT_FILE);
+    when(messageService.message(message)).thenReturn("Incorrect file");
     ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(multipartFile, "Random", request);
     assertThat(uploadResponse.getBody().getErrorMsg(), is("Incorrect file"));
-    assertThat(uploadResponse.getBody().getData().get("model").toString(), is("Random"));
   }
 
   @Test
   public void shouldThrowErrorIfFileIsEmpty() throws Exception {
     byte[] content = new byte[0];
     MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
+    OpenLmisMessage message= new OpenLmisMessage(UploadController.FILE_IS_EMPTY);
+    when(messageService.message(message)).thenReturn("File is empty");
+
     ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(multiPartMock, "product", request);
     assertThat(uploadResponse.getBody().getErrorMsg(), is("File is empty"));
-    assertThat(uploadResponse.getBody().getData().get("model").toString(), is("product"));
   }
 
   @Test
   public void shouldParseIfFileIsCsv() throws Exception {
     byte[] content = new byte[1];
     MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
+    String uploadSuccessMessage = "File uploaded successfully.  " +
+      "'Number of records created: 0', " +
+      "'Number of records updated: 0'";
+
+    OpenLmisMessage successMessage = new OpenLmisMessage(UPLOAD_FILE_SUCCESS, 0 + "", 0 + "");
+    when(messageService.message(successMessage)).thenReturn(uploadSuccessMessage);
 
     ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(multiPartMock, "product", request);
-    assertThat(uploadResponse.getBody().getSuccessMsg(), is("File uploaded successfully. " +
-      "'Number of records created: 0', " +
-      "'Number of records updated: 0'"));
-    assertThat(uploadResponse.getBody().getData().get("model").toString(), is("product"));
+
+    assertThat(uploadResponse.getBody().getSuccessMsg(), is(uploadSuccessMessage));
   }
 
   @Test
@@ -119,11 +135,14 @@ public class UploadControllerTest {
     InputStream mockInputStream = mock(InputStream.class);
     when(mockMultiPart.getInputStream()).thenReturn(mockInputStream);
 
-    ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(mockMultiPart, "product", request);
-    assertThat(uploadResponse.getBody().getSuccessMsg(), is("File uploaded successfully. " +
+    String uploadSuccessMessage = "File uploaded successfully. " +
       "'Number of records created: 0', " +
-      "'Number of records updated: 0'"));
-    assertThat(uploadResponse.getBody().getData().get("model").toString(), is("product"));
+      "'Number of records updated: 0'";
+    OpenLmisMessage successMessage = new OpenLmisMessage(UPLOAD_FILE_SUCCESS, 0 + "", 0 + "");
+    when(messageService.message(successMessage)).thenReturn(uploadSuccessMessage);
+
+    ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(mockMultiPart, "product", request);
+    assertThat(uploadResponse.getBody().getSuccessMsg(), is(uploadSuccessMessage));
 
     verify(csvParser).process(eq(mockMultiPart.getInputStream()), argThat(modelMatcher(Product.class)), eq(handler), eq(auditFields));
   }
@@ -143,9 +162,11 @@ public class UploadControllerTest {
     byte[] content = new byte[1];
     MockMultipartFile multiPartMock = new MockMultipartFile("mock.doc", content);
 
+    OpenLmisMessage message= new OpenLmisMessage(UploadController.INCORRECT_FILE_FORMAT, "product");
+    when(messageService.message(message)).thenReturn("Incorrect file format.  Please upload product data as a '.csv' file.");
+
     ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(multiPartMock, "product", request);
     assertThat(uploadResponse.getBody().getErrorMsg(), is("Incorrect file format.  Please upload product data as a '.csv' file."));
-    assertThat(uploadResponse.getBody().getData().get("model").toString(), is("product"));
   }
 
   @Test
@@ -165,13 +186,17 @@ public class UploadControllerTest {
 
     when(dbService.getCount(productUploadBean.getTableName())).thenReturn(10).thenReturn(25);
     when(csvParser.process(eq(mockMultiPartFile.getInputStream()), argThat(modelMatcher(Product.class)), eq(handler), eq(auditFields))).thenReturn(20);
+
+    String uploadSuccessMessage = "File uploaded successfully. " +
+      "'Number of records created: 15', " +
+      "'Number of records updated: 5'";
+    OpenLmisMessage successMessage = new OpenLmisMessage(UPLOAD_FILE_SUCCESS, "15", "5");
+    when(messageService.message(successMessage)).thenReturn(uploadSuccessMessage);
+
     ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(mockMultiPartFile, "product", request);
 
     verify(dbService, times(2)).getCount(productUploadBean.getTableName());
-    assertThat(uploadResponse.getBody().getSuccessMsg(), is("File uploaded successfully. " +
-      "'Number of records created: 15', " +
-      "'Number of records updated: 5'"));
-    assertThat(uploadResponse.getBody().getData().get("model").toString(), is("product"));
+    assertThat(uploadResponse.getBody().getSuccessMsg(), is(uploadSuccessMessage));
   }
 
   @Test
