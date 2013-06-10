@@ -200,3 +200,10 @@ services.factory('ReportTemplates', function ($resource) {
   return $resource('/report-templates.json', {}, {});
 });
 
+services.factory('PushProgram', function ($resource) {
+  return $resource('/push/programs.json', {}, {});
+});
+
+services.factory('ProgramProducts', function ($resource) {
+  return $resource('/programProducts/programId/:programId.json', {}, {});
+});

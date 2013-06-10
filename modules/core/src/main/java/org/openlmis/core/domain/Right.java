@@ -37,7 +37,8 @@ public enum Right {
   AUTHORIZE_REQUISITION("Requisition - Authorize", FALSE, "Permission to edit, authorize and recall requisitions", VIEW_REQUISITION),
   APPROVE_REQUISITION("Requisition - Approve", FALSE, "Permission to approve requisitions", VIEW_REQUISITION),
   CONVERT_TO_ORDER("Requisition - Convert to Order", TRUE, "Permission to convert requisitions to order"),
-  VIEW_ORDER("Requisition - View Orders", TRUE, "Permission to view orders");
+  VIEW_ORDER("Requisition - View Orders", TRUE, "Permission to view orders"),
+  MANAGE_PROGRAM_PRODUCT("Admin - Manage Program Product", TRUE, "Permission to manage program products");
 
   @Getter
   private final String rightName;

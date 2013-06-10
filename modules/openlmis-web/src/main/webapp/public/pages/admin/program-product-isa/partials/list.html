@@ -1,0 +1,47 @@
+<div>
+
+  <div>
+    <h3>Configure Product ISAs</h3>
+  </div>
+  <!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+  <div>
+    <p>Program </p>
+    <select id="program" name="program" ng-model="programId" ng-options="i.id as i.name for i in programs"
+            ng-change="loadProgramProducts()">
+      <option value=""> Select Program</option>
+    </select>
+
+
+  </div>
+
+  <div ng-show="programId">
+    <p>Products</p>
+
+    <div class="span4 offset8 grid-filters">
+      <input id="searchProduct" class="search-query" ng-change="filterProducts()" type="text"
+             ng-model="query" placeholder="Search..."/>
+    </div>
+    <div>
+      <table border="1">
+        <thead>
+        <th>Product name</th>
+        <th>ISA formula</th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="programProduct in programProducts">
+          <td ng-bind="programProduct.product.primaryName">
+          </td>
+          <td>
+            <span ng-bind="getFormula(programProduct.productISA)"></span>
+            <input value="Edit formula" type="button"/>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
