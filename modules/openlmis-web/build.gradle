@@ -28,7 +28,6 @@ buildscript {
         classpath 'com.eriwen:gradle-js-plugin:1.5.0'
     }
 }
-
 javascript.source {
     dev {
         js {
@@ -38,7 +37,7 @@ javascript.source {
         }
     }
 }
-
+def separator = File.separator
 war {
     from("src/main/webapp/public/minJs/") {
         into "public/js/"
@@ -64,7 +63,8 @@ task minifyJSFiles() {
         println "Minifying Javascript files..."
         int i=0;
         javascript.source.dev.js.files.each { File file ->
-            def dest = new File(file.absolutePath.replace('/js/', '/minJs/'))
+
+            def dest = new File(file.absolutePath.replace(separator+'js'+separator,separator+'minJs'+separator))
             dest.getParentFile().mkdirs()
             dest.createNewFile()
             new JsMinifier().minifyJsFile(
