@@ -6,15 +6,18 @@
 package org.openlmis.allocation.repository;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.allocation.domain.DeliveryZoneProgramSchedule;
 import org.openlmis.allocation.repository.mapper.DeliveryZoneProgramScheduleMapper;
+import org.openlmis.db.categories.UnitTests;
 
 import static org.mockito.Mockito.verify;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class DeliveryZoneProgramScheduleRepositoryTest {
 

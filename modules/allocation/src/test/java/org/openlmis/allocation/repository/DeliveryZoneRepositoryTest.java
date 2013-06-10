@@ -7,19 +7,21 @@
 package org.openlmis.allocation.repository;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.allocation.domain.DeliveryZone;
 import org.openlmis.allocation.repository.mapper.DeliveryZoneMapper;
+import org.openlmis.db.categories.UnitTests;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class DeliveryZoneRepositoryTest {
 

@@ -8,6 +8,7 @@ package org.openlmis.allocation.service;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -21,6 +22,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.ProgramService;
+import org.openlmis.db.categories.UnitTests;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -30,6 +32,7 @@ import static org.openlmis.allocation.builder.DeliveryZoneBuilder.defaultDeliver
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class DeliveryZoneProgramScheduleServiceTest {
 

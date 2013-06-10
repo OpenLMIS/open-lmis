@@ -6,6 +6,7 @@
 package org.openlmis.allocation.handler;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -14,6 +15,7 @@ import org.openlmis.allocation.builder.DeliveryZoneProgramScheduleBuilder;
 import org.openlmis.allocation.domain.DeliveryZoneProgramSchedule;
 import org.openlmis.allocation.service.DeliveryZoneProgramScheduleService;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.db.categories.UnitTests;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -22,7 +24,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class DeliveryZoneProgramScheduleHandlerTest {
 
