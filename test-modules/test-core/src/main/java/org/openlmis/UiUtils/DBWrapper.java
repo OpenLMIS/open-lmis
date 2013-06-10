@@ -118,16 +118,15 @@ public class DBWrapper {
     update("DELETE FROM requisition_line_items;");
     update("DELETE FROM requisitions;");
     update("delete from supply_lines;");
-    update("delete from supervisory_nodes;");
     update("delete from programs_supported;");
     update("delete from requisition_group_members;");
-    update("delete from facilities;");
-    update("delete from geographic_zones where code not in ('Root','Arusha','Dodoma', 'Ngorongoro');");
-    update("delete from programs_supported;");
     update("delete from program_rnr_columns;");
     update("delete from requisition_group_program_schedules ;");
     update("delete from requisition_groups;");
     update("delete from requisition_group_members;");
+    update("delete from supervisory_nodes;");
+    update("delete from facilities;");
+    update("delete from geographic_zones where code not in ('Root','Arusha','Dodoma', 'Ngorongoro');");
     update("delete from processing_periods;");
     update("delete from processing_schedules;");
 
