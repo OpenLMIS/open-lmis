@@ -72,3 +72,11 @@ test-modules/test-core/test-core.eml
 test-modules/test-modules.eml
 modules/report/src/main/resources/mailing-labels_bak.jasper
 modules/report/src/main/resources/non-reporting-facilities.jasper
+modules/report/src/main/resources/non-reporting-facility-detail.jasper
+modules/report/src/main/resources/non-reporting-facility-summary.jasper
+modules/report/src/main/template/facilities-listings.jasper
+modules/report/src/main/template/facilities.jasper
+modules/report/src/main/template/facility-mailing-list.jasper
+modules/report/src/main/template/facility-report.jasper
+modules/report/src/main/template/mailing-labels_bak.jasper
+modules/report/src/main/template/non-reporting-facility-detail.jasper
