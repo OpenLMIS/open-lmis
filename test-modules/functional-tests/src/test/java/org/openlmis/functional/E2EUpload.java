@@ -110,6 +110,10 @@ public class E2EUpload extends TestCaseHelper {
 
     verifyInvalidSupplyLinesUpload(uploadPage);
     verifyValidSupplyLinesUpload(uploadPage);
+
+    verifyValidDeliveryZonesUpload(uploadPage);
+//    verifyInValidDeliveryZonesUpload(uploadPage);
+
   }
 
   private void verifyValidSupplyLinesUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -389,6 +393,18 @@ public class E2EUpload extends TestCaseHelper {
         uploadPage.uploadProductGroupsScenarios("QA_product_group.csv");
         uploadPage.verifySuccessMessageOnUploadScreen();
         uploadPage.uploadProductGroupsScenarios("QA_Product_Group_Subsequent.csv");
+        uploadPage.verifySuccessMessageOnUploadScreen();
+    }
+
+    private void verifyInValidDeliveryZonesUpload(UploadPage uploadPage) throws IOException, SQLException {
+        uploadPage.uploadDeliveryZones("QA_Delivery_Zones_Duplicate.csv");
+        uploadPage.verifyErrorMessageOnUploadScreen();
+    }
+
+    private void verifyValidDeliveryZonesUpload(UploadPage uploadPage) throws IOException, SQLException {
+        uploadPage.uploadDeliveryZones("QA_Delivery_Zones.csv");
+        uploadPage.verifySuccessMessageOnUploadScreen();
+        uploadPage.uploadDeliveryZones("QA_Delivery_Zones_Subsequent.csv");
         uploadPage.verifySuccessMessageOnUploadScreen();
     }
 

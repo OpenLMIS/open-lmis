@@ -107,6 +107,17 @@ public class UploadPage extends Page {
     testWebDriver.sleep(250);
   }
 
+    public void uploadDeliveryZones(String uploadFileNameWithExtension) throws FileNotFoundException {
+        selectUploadType("Delivery Zones");
+        uploadFile(uploadFileNameWithExtension);
+        testWebDriver.sleep(250);
+    }
+
+    public void uploadDeliveryZonesInvalidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
+        selectUploadType("Delivery Zones");
+        uploadFile(uploadFileNameWithExtension);
+        testWebDriver.sleep(250);
+    }
 
   public void uploadProducts(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Products");
