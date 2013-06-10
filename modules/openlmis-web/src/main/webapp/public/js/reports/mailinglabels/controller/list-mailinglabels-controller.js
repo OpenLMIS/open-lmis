@@ -180,8 +180,8 @@ function ListMailinglabelsController($scope, MailingLabels, ReportFacilityTypes,
         showColumnMenu: true,
         enableRowReordering: true,
         showFilter: true,
-        autoFit :true,
-        plugins: [new ngGridFlexibleHeightPlugin()]
+        autoFit :true//,
+        //plugins: [new ngGridFlexibleHeightPlugin()]
 
     };
 
