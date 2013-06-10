@@ -1,3 +1,8 @@
+/*
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package org.openlmis.allocation.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
@@ -10,8 +15,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DeliveryZoneMapper {
 
-  @Insert({"INSERT INTO delivery_zones (code, name, description, createdBy, modifiedBy)",
-  "VALUES (#{code}, #{name}, #{description}, #{createdBy}, #{modifiedBy})"})
+  @Insert({"INSERT INTO delivery_zones (code, name, description, createdBy, modifiedBy, modifiedDate)",
+  "VALUES (#{code}, #{name}, #{description}, #{createdBy}, #{modifiedBy}, #{modifiedDate})"})
   @Options(useGeneratedKeys = true)
   void insert(DeliveryZone zone);
 
@@ -22,6 +27,6 @@ public interface DeliveryZoneMapper {
   @Select({"SELECT * FROM delivery_zones WHERE id = #{id}"})
   DeliveryZone getById(Long id);
 
-  @Select({"SELECT * FROM delivery_zones WHERE code = #{code}"})
+  @Select({"SELECT * FROM delivery_zones WHERE LOWER(code) = LOWER(#{code})"})
   DeliveryZone getByCode(String code);
 }

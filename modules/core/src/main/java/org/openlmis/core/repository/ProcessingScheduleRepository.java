@@ -51,4 +51,8 @@ public class ProcessingScheduleRepository {
       throw new DataException("A Schedule with this code already exists");
     }
   }
+
+  public ProcessingSchedule getByCode(String code) {
+    return processingScheduleMapper.getByCode(code);
+  }
 }

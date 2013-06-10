@@ -95,4 +95,8 @@ public class ProcessingScheduleService {
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(facility, program);
     return periodRepository.getAllPeriodsForDateRange(requisitionGroupProgramSchedule.getProcessingSchedule().getId(), startDate, endDate);
   }
+
+  public ProcessingSchedule getByCode(String code) {
+    return repository.getByCode(code);
+  }
 }

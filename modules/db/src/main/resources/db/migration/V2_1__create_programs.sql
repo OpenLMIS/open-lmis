@@ -16,3 +16,5 @@ CREATE TABLE programs (
     modifiedBy INTEGER,
     modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE UNIQUE INDEX uc_programs_lower_code ON programs(LOWER(code));

@@ -72,4 +72,8 @@ public class ProgramService {
   public List<Program> getAll() {
     return programRepository.getAll();
   }
+
+  public Program getByCode(String code) {
+    return programRepository.getByCode(code);
+  }
 }

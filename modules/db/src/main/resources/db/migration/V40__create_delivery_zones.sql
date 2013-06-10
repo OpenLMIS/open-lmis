@@ -11,3 +11,5 @@ CREATE TABLE delivery_zones (
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE UNIQUE INDEX uc_delivery_zones_lower_code ON delivery_zones(LOWER(code));

@@ -8,6 +8,7 @@ package org.openlmis.allocation.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
@@ -16,6 +17,7 @@ import java.util.Date;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
+@NoArgsConstructor
 public class DeliveryZone extends BaseModel implements Importable {
 
   @ImportField(name = "Delivery zone code", mandatory = true)
@@ -28,4 +30,7 @@ public class DeliveryZone extends BaseModel implements Importable {
   Long createdBy;
   Date createdDate;
 
+  public DeliveryZone(Long id) {
+    this.id = id;
+  }
 }

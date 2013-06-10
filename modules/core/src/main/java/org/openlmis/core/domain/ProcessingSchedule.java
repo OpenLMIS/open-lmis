@@ -17,7 +17,7 @@ import org.openlmis.core.exception.DataException;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ProcessingSchedule extends BaseModel{
+public class ProcessingSchedule extends BaseModel {
   private String code;
   private String name;
   private String description;
@@ -26,6 +26,10 @@ public class ProcessingSchedule extends BaseModel{
 
   public ProcessingSchedule(String code, String name) {
     this(code, name, null);
+  }
+
+  public ProcessingSchedule(Long id) {
+    this.id = id;
   }
 
   public void validate() {
