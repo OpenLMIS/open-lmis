@@ -258,7 +258,7 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Repor
 
 
 
-        $scope.export   = function (type){
+        $scope.exportReport   = function (type){
             var url = '/reports/download/consumption/' + type +'?zone=' + $scope.zone + '&facilityType=' + $scope.facilityType;
             window.location.href = url;
         }

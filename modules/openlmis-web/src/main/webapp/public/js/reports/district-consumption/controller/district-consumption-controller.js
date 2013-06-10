@@ -431,7 +431,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             $scope.filterGrid();
         });
 
-       $scope.export   = function (type){
+       $scope.exportReport   = function (type){
 
             $scope.filterObject.pdformat =1;
             var params = jQuery.param($scope.filterObject);
