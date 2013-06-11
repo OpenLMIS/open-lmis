@@ -1,4 +1,4 @@
-Delivery Zone,Program,Schedule
-DZ1,VACCINES,Q1stM
-DZ2,VACCINES,Q1stM
-DZ3,VACCINES,M
+ Delivery Zone,Facility
+DZ1,F11
+DZ2,F10
+DZ3,F11

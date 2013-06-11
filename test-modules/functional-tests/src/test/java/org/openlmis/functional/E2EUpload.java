@@ -435,10 +435,10 @@ public class E2EUpload extends TestCaseHelper {
     }
 
     private void verifyValidDeliveryZonesMembersUpload(UploadPage uploadPage) throws IOException, SQLException {
-        //uploadPage.uploadDeliveryZoneMembersInvalidScenarios("QA_Delivery_Zone_Members.csv") ;
-        //uploadPage.verifySuccessMessageOnUploadScreen();
-        //uploadPage.uploadDeliveryZoneMembersInvalidScenarios("QA_Delivery_Zone_Members_Subsequent.csv") ;
-        //uploadPage.verifySuccessMessageOnUploadScreen();
+        uploadPage.uploadDeliveryZoneMembersInvalidScenarios("QA_Delivery_Zone_Members.csv") ;
+        uploadPage.verifySuccessMessageOnUploadScreen();
+        uploadPage.uploadDeliveryZoneMembersInvalidScenarios("QA_Delivery_Zone_Members_Subsequent.csv") ;
+        uploadPage.verifySuccessMessageOnUploadScreen();
     }
 
     private void verifyInValidDeliveryZonesWarehousesUpload(UploadPage uploadPage) throws IOException, SQLException {
