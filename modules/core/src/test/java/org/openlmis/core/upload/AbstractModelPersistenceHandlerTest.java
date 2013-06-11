@@ -7,33 +7,57 @@
 package org.openlmis.core.upload;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.Mockito.*;
+
+
 @Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
 public class AbstractModelPersistenceHandlerTest {
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 
+
+  @Mock
+  MessageService messageService;
+
+  AbstractModelPersistenceHandler handler ;
+
+  @Before
+  public void setUp() throws Exception {
+    initMocks(this);
+    handler = instantiateHandlerThrowingExceptionOnSave();
+    handler.messageService = messageService;
+  }
+
   @Test
   public void shouldAppendRowNumberToExceptionMessage() throws Exception {
-    AbstractModelPersistenceHandler handler = instantiateHandlerThrowingExceptionOnSave();
 
     Importable importable = new TestImportable();
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("code: upload.record.error, params: { error; 1 }");
 
     handler.execute(importable, 2, new AuditFields(1L, null));
   }
@@ -88,14 +112,15 @@ public class AbstractModelPersistenceHandlerTest {
     AbstractModelPersistenceHandler handler = instantiateHandler(existing);
 
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Duplicate Record");
+
+    handler.messageService = messageService;
 
     handler.execute(currentRecord, 1, auditFields);
 
   }
 
   private AbstractModelPersistenceHandler instantiateHandlerThrowingExceptionOnSave() {
-    return new AbstractModelPersistenceHandler() {
+    return new AbstractModelPersistenceHandler(messageService) {
       @Override
       protected BaseModel getExisting(BaseModel record) {
         return null;

@@ -6,6 +6,7 @@
 
 package org.openlmis.core.upload;
 
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 @Component("AbstractModelPersistenceHandler")
 @NoArgsConstructor
+@AllArgsConstructor
 public abstract class AbstractModelPersistenceHandler implements RecordHandler<Importable> {
 
   @Autowired
