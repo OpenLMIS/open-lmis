@@ -15,8 +15,6 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-import java.util.Date;
-
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
@@ -29,11 +27,4 @@ public class DeliveryZoneWarehouse extends BaseModel implements Importable {
   @ImportField(name = "Warehouse", nested = "code", mandatory = true)
   private Facility warehouse;
 
-  private Long createdBy;
-  private Date createdDate;
-
-  public DeliveryZoneWarehouse(DeliveryZone deliveryZone, Facility warehouse) {
-    this.deliveryZone = deliveryZone;
-    this.warehouse = warehouse;
-  }
 }

@@ -12,9 +12,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.Report;
@@ -84,7 +82,7 @@ public class RestControllerTest {
     DataException dataException = new DataException(errorMessage);
     doThrow(dataException).when(service).submitReport(report);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), HttpStatus.BAD_REQUEST);
-    when(RestResponse.error(dataException, HttpStatus.BAD_REQUEST)).thenReturn(expectResponse);
+    when(RestResponse.error(dataException.getOpenLmisMessage(), HttpStatus.BAD_REQUEST)).thenReturn(expectResponse);
 
     ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
 
@@ -132,7 +130,7 @@ public class RestControllerTest {
     DataException dataException = new DataException(errorMessage);
     doThrow(dataException).when(service).approve(report);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), HttpStatus.BAD_REQUEST);
-    when(RestResponse.error(dataException, HttpStatus.BAD_REQUEST)).thenReturn(expectResponse);
+    when(RestResponse.error(dataException.getOpenLmisMessage(), HttpStatus.BAD_REQUEST)).thenReturn(expectResponse);
 
     ResponseEntity<RestResponse> response = controller.approve(requisitionId, report, principal);
 

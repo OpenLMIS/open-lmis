@@ -15,8 +15,6 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-import java.util.Date;
-
 @EqualsAndHashCode(callSuper = false)
 @Data
 @NoArgsConstructor
@@ -30,9 +28,6 @@ public class DeliveryZoneProgramSchedule extends BaseModel implements Importable
 
   @ImportField(name = "Schedule", nested = "code", mandatory = true)
   private ProcessingSchedule schedule;
-
-  private Long createdBy;
-  private Date createdDate;
 
   public DeliveryZoneProgramSchedule(Long deliveryZoneId, Long programId, Long processingScheduleId) {
     deliveryZone = new DeliveryZone(deliveryZoneId);

@@ -29,11 +29,4 @@ public class DeliveryZoneMember extends BaseModel implements Importable{
   @ImportField(name = "Facility", nested = "code", mandatory = true)
   private Facility facility;
 
-  private Long createdBy;
-  private Date createdDate;
-
-  public DeliveryZoneMember(DeliveryZone deliveryZone, Facility facility) {
-    this.deliveryZone = deliveryZone;
-    this.facility = facility;
-  }
 }

@@ -30,7 +30,9 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
       throwExceptionIfProcessedInCurrentUpload(auditFields, existing);
       currentRecord.setModifiedBy(auditFields.getUser());
       currentRecord.setModifiedDate(auditFields.getCurrentTimestamp());
-      if(existing != null) currentRecord.setId(existing.getId());
+      if(existing != null)
+        currentRecord.setId(existing.getId());
+      else currentRecord.setCreatedBy(auditFields.getUser());
       save(currentRecord);
 
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {

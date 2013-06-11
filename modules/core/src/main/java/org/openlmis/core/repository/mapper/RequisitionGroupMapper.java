@@ -18,8 +18,8 @@ import java.util.List;
 public interface RequisitionGroupMapper {
 
     @Insert("INSERT INTO requisition_groups" +
-            "(code, name, description, supervisoryNodeId, modifiedBy, modifiedDate) " +
-            "values (#{code}, #{name}, #{description}, #{supervisoryNode.id}, #{modifiedBy}, #{modifiedDate}) ")
+            "(code, name, description, supervisoryNodeId, createdBy, modifiedBy, modifiedDate) " +
+            "values (#{code}, #{name}, #{description}, #{supervisoryNode.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate}) ")
     @Options(useGeneratedKeys = true)
     Integer insert(RequisitionGroup requisitionGroup);
 
