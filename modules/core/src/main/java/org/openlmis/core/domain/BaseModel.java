@@ -53,23 +53,23 @@ public abstract class BaseModel {
     this.modifiedBy = modifiedBy;
   }
 
-  @JsonProperty("modifiedDate")
+  @JsonProperty("createdDate")
   public Date getCreatedDate() {
-    return modifiedDate;
+    return createdDate;
   }
 
   @JsonIgnore
-  public void setCreatedDate(Date modifiedDate) {
-    this.modifiedDate = modifiedDate;
+  public void setCreatedDate(Date createdDate) {
+    this.createdDate = createdDate;
   }
 
-  @JsonProperty("modifiedBy")
+  @JsonProperty("createdBy")
   public Long getCreatedBy() {
-    return modifiedBy;
+    return createdBy;
   }
 
   @JsonIgnore
-  public void setCreatedBy(Long modifiedBy) {
-    this.modifiedBy = modifiedBy;
+  public void setCreatedBy(Long createdBy) {
+    this.createdBy = createdBy;
   }
 }
