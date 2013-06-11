@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DeliveryZoneWarehouseMapper {
 
-  @Insert({"INSERT INTO delivery_zone_warehouses(deliveryZoneId, warehouseId, createdBy, createdDate, modifiedDate)",
+  @Insert({"INSERT INTO delivery_zone_warehouses(deliveryZoneId, warehouseId, createdBy, modifiedBy, modifiedDate)",
                           "VALUES(#{deliveryZone.id}, #{warehouse.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate})"})
   @Options(useGeneratedKeys = true)
   void insert(DeliveryZoneWarehouse warehouse);

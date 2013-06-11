@@ -16,6 +16,8 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.db.categories.UnitTests;
 
+import java.util.Arrays;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.mockito.Mockito.verify;
@@ -39,6 +41,9 @@ public class DeliveryZoneMemberServiceTest {
   private FacilityService facilityService;
 
   @Mock
+  private DeliveryZoneProgramScheduleService deliveryZoneProgramScheduleService;
+
+  @Mock
   private DeliveryZoneService deliveryZoneService;
 
   DeliveryZoneMember member;
@@ -50,6 +55,8 @@ public class DeliveryZoneMemberServiceTest {
     member.setDeliveryZone(make(a(defaultDeliveryZone)));
     when(facilityService.getByCode(member.getFacility())).thenReturn(member.getFacility());
     when(deliveryZoneService.getByCode(member.getDeliveryZone().getCode())).thenReturn(member.getDeliveryZone());
+    when(deliveryZoneProgramScheduleService.getProgramIdsForDeliveryZones(member.getDeliveryZone().getId())).thenReturn(Arrays.asList(new Long[]{1L}));
+    when(repository.getDeliveryZoneProgramIdsForFacility(member.getFacility().getId())).thenReturn(Arrays.asList(new Long[]{2L}));
   }
 
   @Test
@@ -81,6 +88,27 @@ public class DeliveryZoneMemberServiceTest {
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("deliveryZone.code.invalid");
+
+    service.save(member);
+  }
+
+  @Test
+  public void shouldThrowErrorIfFacilityMappedForSameProgramToDifferentDeliveryZones() throws Exception {
+    when(deliveryZoneProgramScheduleService.getProgramIdsForDeliveryZones(member.getDeliveryZone().getId())).thenReturn(Arrays.asList(new Long[]{1L}));
+    when(repository.getDeliveryZoneProgramIdsForFacility(member.getFacility().getId())).thenReturn(Arrays.asList(new Long[]{1L}));
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("facility.exists.for.program.in.multiple.zones");
+
+    service.save(member);
+  }
+
+  @Test
+  public void shouldThrowErrorIfNoProgramsMappedForDeliveryZone() throws Exception {
+    when(deliveryZoneProgramScheduleService.getProgramIdsForDeliveryZones(member.getDeliveryZone().getId())).thenReturn(Arrays.asList(new Long[]{}));
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("no.program.mapped.for.delivery.zone");
 
     service.save(member);
   }

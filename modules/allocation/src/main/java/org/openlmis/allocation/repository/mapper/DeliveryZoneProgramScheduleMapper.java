@@ -9,6 +9,8 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.allocation.domain.DeliveryZoneProgramSchedule;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface DeliveryZoneProgramScheduleMapper {
@@ -32,4 +34,8 @@ public interface DeliveryZoneProgramScheduleMapper {
   })
   DeliveryZoneProgramSchedule getByDeliveryZoneCodeAndProgramCode(@Param("deliveryZoneCode") String deliveryZoneCode,
                                                                   @Param("programCode") String programCode);
+
+  @Select("SELECT programId FROM delivery_zone_program_schedules WHERE deliveryZoneId = #{deliveryZoneId}")
+  List<Long> getProgramsIdsForDeliveryZones(Long deliveryZoneId);
+
 }

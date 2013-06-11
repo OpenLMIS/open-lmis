@@ -5,6 +5,8 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.allocation.domain.DeliveryZoneMember;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface DeliveryZoneMemberMapper {
 
@@ -24,4 +26,8 @@ public interface DeliveryZoneMemberMapper {
       })
   DeliveryZoneMember getByDeliveryZoneCodeAndFacilityCode(@Param("deliveryZoneCode") String deliveryZoneCode,
                                                           @Param("facilityCode") String facilityCode);
+
+  @Select({"SELECT DZPS.programId from delivery_zone_program_schedules DZPS",
+      "INNER JOIN delivery_zone_members DZM ON DZM.deliveryZoneId = DZPS.deliveryZoneId AND DZM.facilityId = #{facilityId}"})
+  List<Long> getDeliveryZoneProgramIdsForFacility(Long facilityId);
 }

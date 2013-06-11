@@ -4,10 +4,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.allocation.builder.DeliveryZoneProgramScheduleBuilder;
 import org.openlmis.allocation.domain.DeliveryZone;
 import org.openlmis.allocation.domain.DeliveryZoneMember;
+import org.openlmis.allocation.domain.DeliveryZoneProgramSchedule;
+import org.openlmis.core.builder.ProcessingScheduleBuilder;
+import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingSchedule;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
+import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,6 +24,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -40,9 +49,19 @@ public class DeliveryZoneMemberMapperIT {
   @Autowired
   FacilityMapper facilityMapper;
 
+  @Autowired
+  DeliveryZoneProgramScheduleMapper deliveryZoneProgramScheduleMapper;
+
+  @Autowired
+  ProcessingScheduleMapper processingScheduleMapper;
+
+  @Autowired
+  ProgramMapper programMapper;
+
   private DeliveryZoneMember member;
   private DeliveryZone deliveryZone;
   private Facility facility;
+
 
   @Before
   public void setUp() throws Exception {
@@ -74,5 +93,27 @@ public class DeliveryZoneMemberMapperIT {
     DeliveryZoneMember updatedMember = mapper.getByDeliveryZoneCodeAndFacilityCode(deliveryZone.getCode(), facility.getCode());
 
     assertThat(updatedMember.getModifiedDate(), is(modifiedDate));
+  }
+
+  @Test
+  public void shouldGetDeliveryZoneProgramIdsForFacility() throws Exception {
+    ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
+    processingScheduleMapper.insert(processingSchedule);
+
+    Program program = make(a(ProgramBuilder.defaultProgram));
+    programMapper.insert(program);
+
+    DeliveryZoneProgramSchedule deliveryZoneProgramSchedule = make(a(DeliveryZoneProgramScheduleBuilder.defaultDZProgramSchedule));
+    deliveryZoneProgramSchedule.setDeliveryZone(deliveryZone);
+    deliveryZoneProgramSchedule.setSchedule(processingSchedule);
+    deliveryZoneProgramSchedule.setProgram(program);
+
+    deliveryZoneProgramScheduleMapper.insert(deliveryZoneProgramSchedule);
+
+    mapper.insert(member);
+
+    List<Long> deliveryZoneProgramIdsForFacility = mapper.getDeliveryZoneProgramIdsForFacility(member.getFacility().getId());
+
+    assertThat(deliveryZoneProgramIdsForFacility.contains(deliveryZoneProgramSchedule.getProgram().getId()), is(true));
   }
 }

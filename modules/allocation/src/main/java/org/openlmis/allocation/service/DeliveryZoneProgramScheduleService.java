@@ -16,6 +16,8 @@ import org.openlmis.core.service.ProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DeliveryZoneProgramScheduleService {
 
@@ -70,5 +72,9 @@ public class DeliveryZoneProgramScheduleService {
 
   public DeliveryZoneProgramSchedule getByDeliveryZoneCodeAndProgramCode(String deliveryZoneCode, String programCode) {
     return repository.getByDeliveryZoneCodeAndProgramCode(deliveryZoneCode, programCode);
+  }
+
+  public List<Long> getProgramIdsForDeliveryZones(Long deliveryZoneId) {
+    return repository.getProgramIdsForDeliveryZones(deliveryZoneId);
   }
 }

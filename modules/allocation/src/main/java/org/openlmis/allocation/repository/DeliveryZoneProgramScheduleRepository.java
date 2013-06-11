@@ -10,6 +10,8 @@ import org.openlmis.allocation.repository.mapper.DeliveryZoneProgramScheduleMapp
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class DeliveryZoneProgramScheduleRepository {
 
@@ -26,5 +28,9 @@ public class DeliveryZoneProgramScheduleRepository {
 
   public DeliveryZoneProgramSchedule getByDeliveryZoneCodeAndProgramCode(String deliveryZoneCode, String programCode) {
     return mapper.getByDeliveryZoneCodeAndProgramCode(deliveryZoneCode, programCode);
+  }
+
+  public List<Long> getProgramIdsForDeliveryZones(Long deliveryZoneId) {
+    return mapper.getProgramsIdsForDeliveryZones(deliveryZoneId);
   }
 }

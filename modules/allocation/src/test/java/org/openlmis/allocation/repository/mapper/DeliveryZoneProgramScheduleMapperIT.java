@@ -25,6 +25,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -102,5 +104,14 @@ public class DeliveryZoneProgramScheduleMapperIT {
     DeliveryZoneProgramSchedule returned = mapper.getByDeliveryZoneCodeAndProgramCode(deliveryZone.getCode(), program.getCode());
 
     assertDZPSEquals(deliveryZoneProgramSchedule, returned);
+  }
+
+  @Test
+  public void shouldGetProgramIdsForDeliveryZone() throws Exception {
+    mapper.insert(deliveryZoneProgramSchedule);
+    List<Long> programIds = mapper.getProgramsIdsForDeliveryZones(deliveryZoneProgramSchedule.getDeliveryZone().getId());
+
+    assertThat(programIds.get(0), is(deliveryZoneProgramSchedule.getProgram().getId()));
+    assertThat(programIds.size(), is(1));
   }
 }
