@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProgramProductISA extends BaseModel {
 
-  Long programProductId;
   Float whoRatio;
   Integer dosesPerYear;
   Float wastageRate;

@@ -133,7 +133,7 @@ public class ProgramProductMapperIT {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProductMapper.insert(programProduct);
 
-    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 0.039f, 4, 10f, 25f, 50, 17);
+    ProgramProductISA programProductISA = new ProgramProductISA(0.039f, 4, 10f, 25f, 50, 17);
     programProductMapper.insertISA(programProductISA);
 
     assertNotNull(programProductISA.getId());
@@ -144,10 +144,10 @@ public class ProgramProductMapperIT {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProductMapper.insert(programProduct);
 
-    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 0.039f, 4, 10f, 25f, 50, 17);
+    ProgramProductISA programProductISA = new ProgramProductISA(0.039f, 4, 10f, 25f, 50, 17);
     programProductMapper.insertISA(programProductISA);
 
-    ProgramProductISA savedISA = programProductMapper.getISAByProgramProductId(programProduct.getId());
+    ProgramProductISA savedISA = programProductMapper.getISAById(programProductISA.getId());
 
     assertNotNull(savedISA.getModifiedDate());
     savedISA.setModifiedDate(null);
@@ -159,8 +159,9 @@ public class ProgramProductMapperIT {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProductMapper.insert(programProduct);
 
-    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 0.039f, 4, 10f, 25f, 50, 17);
+    ProgramProductISA programProductISA = new ProgramProductISA(0.039f, 4, 10f, 25f, 50, 17);
     programProductMapper.insertISA(programProductISA);
+    programProductMapper.updateProgramProductForISA(programProduct.getId(), programProductISA);
 
     List<ProgramProduct> savedProgramProducts = programProductMapper.getWithISAByProgram(program.getId());
 
@@ -169,11 +170,11 @@ public class ProgramProductMapperIT {
   }
 
   @Test
-  public void shouldUpdateProgramProductISA(){
+  public void shouldUpdateProgramProductISA() {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProductMapper.insert(programProduct);
 
-    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 0.039f, 4, 10f, 25f, 50, 17);
+    ProgramProductISA programProductISA = new ProgramProductISA(0.039f, 4, 10f, 25f, 50, 17);
     programProductMapper.insertISA(programProductISA);
 
     programProductISA.setWhoRatio(0.50f);
@@ -185,11 +186,26 @@ public class ProgramProductMapperIT {
 
     programProductMapper.updateISA(programProductISA);
 
-    ProgramProductISA savedProgramProductISA = programProductMapper.getISAByProgramProductId(programProduct.getId());
+    ProgramProductISA savedProgramProductISA = programProductMapper.getISAById(programProductISA.getId());
 
     Assert.assertNotNull(savedProgramProductISA.getModifiedDate());
     savedProgramProductISA.setModifiedDate(null);
     assertThat(savedProgramProductISA, is(programProductISA));
 
+  }
+
+  @Test
+  public void shouldUpdateProgramProductForISA() {
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProductMapper.insert(programProduct);
+
+    ProgramProductISA programProductISA = new ProgramProductISA(0.039f, 4, 10f, 25f, 50, 17);
+    programProductMapper.insertISA(programProductISA);
+
+    programProductMapper.updateProgramProductForISA(programProduct.getId(), programProductISA);
+
+    List<ProgramProduct> savedProgramProduct = programProductMapper.getWithISAByProgram(program.getId());
+
+    assertThat(savedProgramProduct.get(0).getProgramProductISA(), is(programProductISA));
   }
 }

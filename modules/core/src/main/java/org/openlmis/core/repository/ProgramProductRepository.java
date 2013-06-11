@@ -110,8 +110,9 @@ public class ProgramProductRepository {
     return mapper.getWithISAByProgram(programId);
   }
 
-  public void insertProgramProductISA(ProgramProductISA programProductISA) {
+  public void insertProgramProductISA(Long programProductId, ProgramProductISA programProductISA) {
     mapper.insertISA(programProductISA);
+    mapper.updateProgramProductForISA(programProductId, programProductISA);
   }
 
   public void updateProgramProductISA(ProgramProductISA programProductISA) {

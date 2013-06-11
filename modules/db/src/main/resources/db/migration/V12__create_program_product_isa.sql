@@ -4,7 +4,6 @@
 DROP TABLE IF EXISTS program_product_isa;
 CREATE TABLE program_product_isa (
     id SERIAL PRIMARY KEY,
-    programProductId INTEGER REFERENCES program_products(id) NOT NULL,
     whoRatio NUMERIC (8,4) NOT NULL,
     dosesPerYear INTEGER NOT NULL,
     wastageRate NUMERIC(6,2) NOT NULL,
@@ -12,11 +11,9 @@ CREATE TABLE program_product_isa (
     minimumValue INTEGER NOT NULL,
     adjustmentValue INTEGER NOT NULL,
     modifiedBy INTEGER,
-    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (programProductId)
+    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX i_program_product_isa ON program_product_isa(programProductId);
 
 
 

@@ -207,3 +207,8 @@ services.factory('PushProgram', function ($resource) {
 services.factory('ProgramProducts', function ($resource) {
   return $resource('/programProducts/programId/:programId.json', {}, {});
 });
+
+
+services.factory('ProgramProductsISA', function ($resource) {
+  return $resource('/programProducts/programProductISA/:programProductId.json', {}, {});
+});

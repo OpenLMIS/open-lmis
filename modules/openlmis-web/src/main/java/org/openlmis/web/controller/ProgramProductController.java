@@ -6,7 +6,6 @@
 
 package org.openlmis.web.controller;
 
-import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.service.ProgramProductService;
@@ -16,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -38,10 +38,10 @@ public class ProgramProductController extends BaseController {
     return OpenLmisResponse.response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
   }
 
-  @RequestMapping(value = "/programProducts/{programProductISAId}", method = POST , headers = ACCEPT_JSON)
+  @RequestMapping(value = "/programProducts/programProductISA/{programProductId}", method = POST , headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-  public void saveProgramProductISA(ProgramProductISA programProductISA) {
-    programProductService.saveProgramProductISA(programProductISA);
+  public void saveProgramProductISA(@PathVariable Long programProductId, @RequestBody ProgramProductISA programProductISA) {
+    programProductService.saveProgramProductISA(programProductId, programProductISA);
   }
 }
 

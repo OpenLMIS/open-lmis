@@ -6,6 +6,7 @@ CREATE TABLE program_products (
     id SERIAL PRIMARY KEY,
     programId INTEGER REFERENCES programs(id) NOT NULL,
     productId INTEGER REFERENCES products(id) NOT NULL,
+    programProductISAId INTEGER REFERENCES program_product_isa(id),
     dosesPerMonth INTEGER NOT NULL,
     active BOOLEAN NOT NULL,
     currentPrice NUMERIC(20,2) DEFAULT 0,
@@ -17,3 +18,4 @@ CREATE TABLE program_products (
 );
 
 CREATE INDEX i_program_product_programId_productId ON program_products(programId, productId);
+CREATE INDEX i_program_product_programProductISAId ON program_products(programProductISAId);

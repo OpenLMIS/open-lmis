@@ -116,7 +116,7 @@ public class ProgramProductServiceTest {
   }
 
   @Test
-  public void shouldGetAllProductsByProgram(){
+  public void shouldGetAllProductsByProgram() {
     Program program = new Program();
     List<ProgramProduct> expectedProgramProducts = new ArrayList<>();
     when(programProductRepository.getByProgram(program)).thenReturn(expectedProgramProducts);
@@ -128,17 +128,19 @@ public class ProgramProductServiceTest {
   }
 
   @Test
-  public void shouldInsertProgramProductISAIfDoesNotExist(){
+  public void shouldInsertProgramProductISAIfDoesNotExist() {
     ProgramProductISA programProductISA = new ProgramProductISA();
-    programProductService.saveProgramProductISA(programProductISA);
-    verify(programProductRepository).insertProgramProductISA(programProductISA);
+    Long programProductId = 1L;
+    programProductService.saveProgramProductISA(programProductId, programProductISA);
+    verify(programProductRepository).insertProgramProductISA(programProductId, programProductISA);
   }
 
   @Test
-  public void shouldUpdateProgramProductISAIfExists(){
-      ProgramProductISA programProductISA = new ProgramProductISA();
+  public void shouldUpdateProgramProductISAIfExists() {
+    ProgramProductISA programProductISA = new ProgramProductISA();
     programProductISA.setId(1l);
-    programProductService.saveProgramProductISA(programProductISA);
+    Long programProductId = 2L;
+    programProductService.saveProgramProductISA(programProductId, programProductISA);
     verify(programProductRepository).updateProgramProductISA(programProductISA);
   }
 }

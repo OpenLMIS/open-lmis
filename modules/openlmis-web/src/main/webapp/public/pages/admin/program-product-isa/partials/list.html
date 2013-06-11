@@ -1,13 +1,13 @@
+<!--
+~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+~
+~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
 <div>
 
   <div>
     <h3>Configure Product ISAs</h3>
   </div>
-  <!--
-  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
-  ~
-  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
-  -->
   <div>
     <p>Program </p>
     <select id="program" name="program" ng-model="programId" ng-options="i.id as i.name for i in programs"
@@ -37,7 +37,7 @@
           </td>
           <td>
             <span ng-bind="getFormula(programProduct.programProductISA)"></span>
-            <input value="Edit formula" type="button" ng-click = "showProductISA(programProduct)"/>
+            <input value="Edit formula" type="button" ng-click="showProductISA(programProduct)"/>
           </td>
         </tr>
         </tbody>
@@ -48,68 +48,92 @@
 
   <div id="programProductISA" modal="programProductISAModal"
        options="{'backdrop':'static', 'escape':false}">
-    <div class="modal-header"><h3> ISA formula for </h3></div>
+    <div class="modal-header"><h3> ISA formula for <span ng-bind="currentProgramProduct.program.name"></span></h3></div>
     <div class="modal-body">
-      <div class="adjustment-field">
-        <h5> Formula Variables </h5>
+      <form name="isaForm">
+        <div>
+          <h5> Formula Variables </h5>
 
-        <div class="row-fluid">
-          <div class="span5">
-            WHO target population percentage
+          <div class="row-fluid">
+            <div class="span5">
+              WHO target population percentage
+            </div>
+            <div class="span3">
+              <input type="text" ng-required="true" ng-model="currentProgramProduct.programProductISA.whoRatio"/>
+            </div>
           </div>
-          <div class="span3">
-            <input type="text"/>
+
+          <div class="row-fluid">
+            <div class="span5">
+              Doses per patient per year
+            </div>
+            <div class="span3">
+              <input type="text" ng-required="true" ng-model="currentProgramProduct.programProductISA.dosesPerYear"/>
+            </div>
+          </div>
+
+          <div class="row-fluid">
+            <div class="span5">
+              Avearge wastage rate (%)
+            </div>
+            <div class="span3">
+              <input type="text" ng-required="true" ng-model="currentProgramProduct.programProductISA.wastageRate"/>
+            </div>
+          </div>
+
+          <div class="row-fluid">
+            <div class="span5">
+              Buffer stock level (%)
+            </div>
+            <div class="span3">
+              <input type="text" ng-required="true"
+                     ng-model="currentProgramProduct.programProductISA.bufferPercentage"/>
+            </div>
+          </div>
+
+          <div class="row-fluid">
+            <div class="span5">
+              Adjustment quantity (+/-)
+            </div>
+            <div class="span3">
+              <input type="text" ng-required="true" ng-model="currentProgramProduct.programProductISA.adjustmentValue"/>
+            </div>
           </div>
         </div>
 
-        <div class="row-fluid">
-          <div class="span5">
-            Doses per patient per year
-          </div>
-          <div class="span3">
-            <input type="text"/>
-          </div>
-        </div>
+        <h5> Minimum value </h5>
 
         <div class="row-fluid">
           <div class="span5">
-            Avearge wastage rate (%)
+            ISA minimum value
           </div>
           <div class="span3">
-            <input type="text"/>
+            <input type="text" ng-required="true" ng-model="currentProgramProduct.programProductISA.minimumValue"/>
           </div>
         </div>
-
-        <div class="row-fluid">
-          <div class="span5">
-            Buffer stock level (%)
-          </div>
-          <div class="span3">
-            <input type="text"/>
-          </div>
-        </div>
-
-        <div class="row-fluid">
-          <div class="span5">
-            Adjustment quantity (+/-)
-          </div>
-          <div class="span3">
-            <input type="text"/>
-          </div>
-        </div>
-
-
+      </form>
+      <div class="row-fluid" ng-show="programProductISA">
+        Monthly restock amount =
+        <span ng-bind="getFormula(currentProgramProduct.programProductISA)"></span>
       </div>
 
-    </div>
-    <div class="modal-footer">
-      <input type="button" class="btn btn-primary save-button"
-             value="Save"/>
-      <input type="button"
-             class="btn btn-cancel" value="Cancel"/>
+      <div class="row-fluid">
+        A population of <input type="text"/> will need
+        <span ng-bind="getFormula(currentProgramProduct.programProductISA)"></span> doses of <span
+        ng-bind="currentProgramProduct.program.name"></span>
+        per month
+      </div>
 
+      <div class="modal-footer">
+        <input type="button" class="btn btn-primary save-button"
+               ng-click="saveProductISA()"
+               value="Save"/>
+        <input type="button"
+               ng-click="clearAndCloseProgramProductISAModal();modalError=''"
+               class="btn btn-cancel" value="Cancel"/>
+
+      </div>
     </div>
+
+
   </div>
-
-
-</div>

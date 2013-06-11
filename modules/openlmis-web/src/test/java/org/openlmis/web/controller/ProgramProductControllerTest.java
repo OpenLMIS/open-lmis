@@ -46,7 +46,8 @@ public class ProgramProductControllerTest {
   @Test
   public void shouldSaveProgramProductISA(){
     ProgramProductISA programProductISA = new ProgramProductISA();
-    programProductController.saveProgramProductISA(programProductISA);
-    verify(programProductService).saveProgramProductISA(programProductISA);
+    Long programProductId = 1l;
+    programProductController.saveProgramProductISA(programProductId, programProductISA);
+    verify(programProductService).saveProgramProductISA(programProductId, programProductISA);
   }
 }

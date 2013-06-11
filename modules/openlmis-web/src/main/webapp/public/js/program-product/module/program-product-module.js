@@ -7,7 +7,7 @@
 'use strict';
 require(['../../shared/app', '../controller/program-product-controller'], function (app) {
   app.loadApp();
- angular.module('programProductModule', ['openlmis']).config(['$routeProvider', function ($routeProvider) {
+ angular.module('programProductModule', ['openlmis',  'ui.bootstrap.modal']).config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
       when('/select-push-program', {
         controller: ProgramProductListController,

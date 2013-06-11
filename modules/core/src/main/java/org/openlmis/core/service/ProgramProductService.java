@@ -83,9 +83,9 @@ public class ProgramProductService {
     return programProductRepository.getWithISAByProgram(programId);
   }
 
-  public void saveProgramProductISA(ProgramProductISA programProductISA) {
+  public void saveProgramProductISA(Long programProductId, ProgramProductISA programProductISA) {
     if (programProductISA.getId() == null) {
-      programProductRepository.insertProgramProductISA(programProductISA);
+      programProductRepository.insertProgramProductISA(programProductId, programProductISA);
     } else {
       programProductRepository.updateProgramProductISA(programProductISA);
     }

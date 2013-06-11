@@ -4,41 +4,59 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ProgramProductListController($scope, programs, ProgramProducts) {
+function ProgramProductListController($scope, programs, ProgramProducts, ProgramProductsISA) {
 
   $scope.programs = programs;
-  $scope.programProductISAModal = false;
+
 
   $scope.loadProgramProducts = function () {
     if ($scope.programId) {
       ProgramProducts.get({programId:$scope.programId}, function (data) {
         $scope.programProducts = data.PROGRAM_PRODUCT_LIST;
-        $scope.filteredProducts =  data.PROGRAM_PRODUCT_LIST;
+        $scope.filteredProducts = data.PROGRAM_PRODUCT_LIST;
       }, {});
     }
   };
 
 
-  $scope.filterProducts = function() {
+  $scope.filterProducts = function () {
     $scope.filteredProducts = [];
     var query = $scope.query || "";
 
     $scope.filteredProducts = $.grep($scope.programProducts, function (programProduct) {
-      return programProduct.product.primaryName.toLowerCase().indexOf(query.toLowerCase()) != -1;;
+      return programProduct.product.primaryName.toLowerCase().indexOf(query.toLowerCase()) != -1;
+      ;
     });
 
     $scope.resultCount = $scope.filteredProducts.length;
   }
 
-  $scope.showProductISA = function(programProduct) {
+  $scope.showProductISA = function (programProduct) {
     $scope.currentProgramProduct = programProduct;
     $scope.programProductISAModal = true;
-
   }
+
+  $scope.clearAndCloseProgramProductISAModal = function () {
+    $scope.currentProgramProduct = null;
+    $scope.programProductISAModal = false;
+  }
+
+
+  $scope.saveProductISA = function () {
+    if ($scope.isaForm.$error.required) {
+
+    } else {
+      ProgramProductsISA.save({programProductId:$scope.currentProgramProduct.id}, $scope.currentProgramProduct.programProductISA, function () {
+        $scope.message = "ISA saved successfully";
+        $scope.programProductISAModal = false;
+      }, {});
+    }
+  }
+
   $scope.getFormula = function (programProductISA) {
-    if(programProductISA)
-    return "(population) * " + programProductISA.whoRatio + " * " + programProductISA.dosesPerMonth + " * "
-      + programProductISA.wastageRate + " * / 12 * " + programProductISA.bufferPercentage ;
+    if (programProductISA && programProductISA.whoRatio && programProductISA.dosesPerYear && programProductISA.wastageRate && programProductISA.bufferPercentage)
+      return "(population) * " + programProductISA.whoRatio + " * " + programProductISA.dosesPerYear + " * "
+        + programProductISA.wastageRate + " * / 12 * " + programProductISA.bufferPercentage;
     else "";
   }
 }
