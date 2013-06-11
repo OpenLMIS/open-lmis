@@ -119,7 +119,7 @@ public class DeleteFacilityPage extends Page {
 
   public DeleteFacilityPage(TestWebDriver driver) throws IOException {
     super(driver);
-    PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
+    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
 
   }
@@ -141,7 +141,7 @@ public class DeleteFacilityPage extends Page {
 
   public void deleteFacility(String facilityCodeValue, String facilityNameValue) {
 
-    String expectedMessageOnAlert = "'" + facilityNameValue + "' / '" + facilityCodeValue + "' will be deleted from the system.";
+    String expectedMessageOnAlert = "''" + facilityNameValue + "'' / ''" + facilityCodeValue + "'' will be deleted from the system.";
     verifyHeader("Edit facility");
     clickDeleteButtonOnFacilityScreen();
     verifyDeleteAlert(expectedMessageOnAlert);

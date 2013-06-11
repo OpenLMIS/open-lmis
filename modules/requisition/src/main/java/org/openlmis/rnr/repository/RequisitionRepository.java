@@ -24,6 +24,8 @@ import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 @Repository
 public class RequisitionRepository {
 
+  public static final String RNR_NOT_FOUND = "rnr.not.found";
+
   @Autowired
   private RequisitionMapper requisitionMapper;
   @Autowired
@@ -119,7 +121,7 @@ public class RequisitionRepository {
 
   public Rnr getById(Long rnrId) {
     Rnr requisition = requisitionMapper.getById(rnrId);
-    if (requisition == null) throw new DataException("Requisition Not Found");
+    if (requisition == null) throw new DataException(RNR_NOT_FOUND);
     return requisition;
   }
 

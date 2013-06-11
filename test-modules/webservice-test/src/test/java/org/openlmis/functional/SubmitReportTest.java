@@ -123,7 +123,7 @@ public class SubmitReportTest extends TestCaseHelper {
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
     assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(responseEntity.getResponse(), "{\"error\":\"Invalid period.\"}");
+    assertEquals(responseEntity.getResponse(), "{\"error\":\"Please finish all R&R of previous period(s)\"}");
   }
 
   @Test(groups = {"webservice"})
@@ -193,7 +193,7 @@ public class SubmitReportTest extends TestCaseHelper {
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
     assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(response, "{\"error\":\"Invalid data.\"}");
+    assertEquals(response, "{\"error\":\"R&R has errors, please correct them to proceed.\"}");
   }
 
   @Test(groups = {"webservice"})

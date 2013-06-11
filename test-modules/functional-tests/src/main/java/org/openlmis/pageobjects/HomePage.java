@@ -170,7 +170,7 @@ public class HomePage extends Page {
 
   public HomePage(TestWebDriver driver) throws IOException {
     super(driver);
-    PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
+    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
     //SeleneseTestNgHelper.assertTrue(usernameDisplay.isDisplayed());
   }

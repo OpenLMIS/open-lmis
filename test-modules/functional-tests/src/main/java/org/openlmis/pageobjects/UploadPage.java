@@ -44,7 +44,7 @@ public class UploadPage extends Page {
   public UploadPage(TestWebDriver driver) throws IOException {
     super(driver);
 
-    PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
+    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(30);
     testWebDriver.waitForElementToAppear(uploadButton);
     verifyUploadPage();

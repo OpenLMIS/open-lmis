@@ -134,7 +134,7 @@ public class DBWrapper {
     update("delete from geographic_zones where code not in ('Root','Arusha','Dodoma', 'Ngorongoro');");
     update("delete from processing_periods;");
     update("delete from processing_schedules;");
-
+    update("delete from atomfeed.event_records;");
   }
 
 

@@ -47,7 +47,7 @@ public class RestController {
     try {
       requisition = restService.submitReport(report);
     } catch (DataException e) {
-      return RestResponse.error(e, HttpStatus.BAD_REQUEST);
+      return RestResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
     }
     return RestResponse.response(RNR, requisition.getId());
   }
@@ -69,7 +69,7 @@ public class RestController {
       Rnr approveRnr = restService.approve(report);
       return RestResponse.response(RNR, approveRnr.getId());
     } catch (DataException e) {
-      return RestResponse.error(e, HttpStatus.BAD_REQUEST);
+      return RestResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
     }
   }
 }
