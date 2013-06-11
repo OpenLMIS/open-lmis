@@ -9,7 +9,6 @@ package org.openlmis.web.controller;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
-import org.openlmis.core.service.MessageService;
 import org.openlmis.db.service.DbService;
 import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.AuditFields;
@@ -70,7 +69,7 @@ public class UploadController extends BaseController {
     try {
       OpenLmisMessage errorMessage = validateFile(model, csvFile);
       if (errorMessage != null) {
-        return errorResponse(errorMessage, model);
+        return errorResponse(errorMessage);
       }
 
       int initialRecordCount = dbService.getCount(uploadBeansMap.get(model).getTableName());
@@ -81,9 +80,11 @@ public class UploadController extends BaseController {
 
       return successResponse(model, initialRecordCount, recordsToBeUploaded);
     } catch (DataException dataException) {
-      return errorResponse(dataException.getOpenLmisMessage(), model);
-    } catch (UploadException | IOException e) {
-      return errorResponse(new OpenLmisMessage(e.getMessage()), model);
+      return errorResponse(dataException.getOpenLmisMessage());
+    } catch (UploadException e) {
+      return errorResponse(new OpenLmisMessage(e.getCode(),e.getParams()));
+    } catch(IOException e){
+      return errorResponse(new OpenLmisMessage(e.getMessage()));
     }
   }
 
@@ -116,13 +117,16 @@ public class UploadController extends BaseController {
 
   private ResponseEntity<OpenLmisResponse> successPage(String model, int recordsCreated, int recordsUpdated) {
     Map<String, String> responseMessages = new HashMap<>();
-    responseMessages.put(SUCCESS, messageService.message(new OpenLmisMessage(UPLOAD_FILE_SUCCESS, recordsCreated + "", recordsUpdated+"")));
+    OpenLmisMessage openLmisMessage = new OpenLmisMessage(UPLOAD_FILE_SUCCESS, recordsCreated + "", recordsUpdated + "");
+    String message = messageService.message(openLmisMessage);
+    responseMessages.put(SUCCESS, message);
     return OpenLmisResponse.response(responseMessages, HttpStatus.OK, MediaType.TEXT_HTML_VALUE);
   }
 
-  private ResponseEntity<OpenLmisResponse> errorResponse(OpenLmisMessage errorMessage, String model) {
+  private ResponseEntity<OpenLmisResponse> errorResponse(OpenLmisMessage errorMessage) {
     Map<String, String> responseMessages = new HashMap<>();
-        responseMessages.put(ERROR, messageService.message(errorMessage));
+    String message = messageService.message(errorMessage);
+    responseMessages.put(ERROR, message);
     return OpenLmisResponse.response(responseMessages, HttpStatus.OK, MediaType.TEXT_HTML_VALUE);
   }
 
