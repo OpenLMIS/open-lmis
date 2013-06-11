@@ -77,7 +77,7 @@ function SupplyStatusController($scope, RequisitionGroupsByProgramSchedule , Req
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
-        $scope.exportReport   = function (type){
+        $scope.export   = function (type){
 
             var param = $scope.getParams(1, 1);
             var paramString = jQuery.param(param);
