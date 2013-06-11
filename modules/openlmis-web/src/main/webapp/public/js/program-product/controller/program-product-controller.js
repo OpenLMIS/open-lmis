@@ -4,10 +4,12 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+
 function ProgramProductListController($scope, programs, ProgramProducts, ProgramProductsISA) {
 
   $scope.programs = programs;
-
+  $scope.population = 0;
+  $scope.isaValue = 0;
 
   $scope.loadProgramProducts = function () {
     if ($scope.programId) {
@@ -41,23 +43,49 @@ function ProgramProductListController($scope, programs, ProgramProducts, Program
     $scope.programProductISAModal = false;
   }
 
+  $scope.highlightRequired = function (value) {
+    if ($scope.inputClass && (isUndefined(value))) {
+      return "required-error";
+    }
+    return null;
+  };
+
+  $scope.$watch('currentProgramProduct', function () {
+    if ($scope.currentProgramProduct)
+      $scope.calculateValue($scope.currentProgramProduct.programProductISA);
+  }, true);
 
   $scope.saveProductISA = function () {
     if ($scope.isaForm.$error.required) {
-
+      $scope.inputClass = true;
+      $scope.error = "Please fill required values"
+      $scope.message = "";
     } else {
+      $scope.inputClass = false;
       ProgramProductsISA.save({programProductId:$scope.currentProgramProduct.id}, $scope.currentProgramProduct.programProductISA, function () {
         $scope.message = "ISA saved successfully";
+        $scope.error = "";
         $scope.programProductISAModal = false;
       }, {});
     }
   }
 
+  $scope.isPresent = function (programProductISA) {
+    return programProductISA && programProductISA.whoRatio && programProductISA.dosesPerYear && programProductISA.wastageRate
+      && programProductISA.bufferPercentage && programProductISA.adjustmentValue;
+  }
+
   $scope.getFormula = function (programProductISA) {
-    if (programProductISA && programProductISA.whoRatio && programProductISA.dosesPerYear && programProductISA.wastageRate && programProductISA.bufferPercentage)
+    if ($scope.isPresent(programProductISA))
       return "(population) * " + programProductISA.whoRatio + " * " + programProductISA.dosesPerYear + " * "
-        + programProductISA.wastageRate + " * / 12 * " + programProductISA.bufferPercentage;
+        + programProductISA.wastageRate + " / 12 * " + programProductISA.bufferPercentage + programProductISA.adjustmentValue;
     else "";
+  }
+
+  $scope.calculateValue = function (programProductISA) {
+    if ($scope.isPresent(programProductISA))
+      $scope.isaValue = $scope.population * programProductISA.whoRatio * programProductISA.dosesPerYear *
+        +programProductISA.wastageRate / 12 * programProductISA.bufferPercentage + programProductISA.adjustmentValue;
   }
 }
 
