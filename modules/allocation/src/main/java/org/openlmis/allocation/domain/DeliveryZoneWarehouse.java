@@ -8,6 +8,7 @@ package org.openlmis.allocation.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
@@ -16,6 +17,7 @@ import org.openlmis.upload.annotation.ImportField;
 
 import java.util.Date;
 
+@EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

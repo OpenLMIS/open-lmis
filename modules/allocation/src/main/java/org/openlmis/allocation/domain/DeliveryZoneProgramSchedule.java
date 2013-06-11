@@ -7,6 +7,7 @@
 package org.openlmis.allocation.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.ProcessingSchedule;
@@ -16,6 +17,7 @@ import org.openlmis.upload.annotation.ImportField;
 
 import java.util.Date;
 
+@EqualsAndHashCode(callSuper = false)
 @Data
 @NoArgsConstructor
 public class DeliveryZoneProgramSchedule extends BaseModel implements Importable {

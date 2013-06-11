@@ -8,6 +8,7 @@ package org.openlmis.core.domain;
 
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.upload.Importable;
@@ -17,6 +18,7 @@ import java.util.Date;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+@EqualsAndHashCode(callSuper = false)
 @Data
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
