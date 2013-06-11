@@ -8,8 +8,11 @@ package org.openlmis.allocation.service;
 
 import org.openlmis.allocation.domain.DeliveryZone;
 import org.openlmis.allocation.repository.DeliveryZoneRepository;
+import org.openlmis.core.domain.Right;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class DeliveryZoneService {
@@ -26,5 +29,9 @@ public class DeliveryZoneService {
 
   public DeliveryZone getByCode(String code) {
     return repository.getByCode(code);
+  }
+
+  public List<DeliveryZone> getByUserForRight(long userId, Right right) {
+    return repository.getByUserForRight(userId, right);
   }
 }

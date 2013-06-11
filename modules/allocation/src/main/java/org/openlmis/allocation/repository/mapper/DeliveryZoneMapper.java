@@ -5,12 +5,12 @@
  */
 package org.openlmis.allocation.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.allocation.domain.DeliveryZone;
+import org.openlmis.core.domain.Right;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface DeliveryZoneMapper {
@@ -29,4 +29,9 @@ public interface DeliveryZoneMapper {
 
   @Select({"SELECT * FROM delivery_zones WHERE LOWER(code) = LOWER(#{code})"})
   DeliveryZone getByCode(String code);
+
+  @Select({"SELECT DZ.* FROM delivery_zones DZ INNER JOIN role_assignments RA ON RA.deliveryZoneId = DZ.id",
+    "INNER JOIN role_rights RR ON RR.roleId = RA.roleId",
+    "WHERE RR.rightName = #{right}"})
+  List<DeliveryZone> getByUserForRight(@Param("userId") long userId, @Param("right") Right right);
 }

@@ -16,10 +16,14 @@ import org.openlmis.allocation.domain.DeliveryZone;
 import org.openlmis.allocation.repository.DeliveryZoneRepository;
 import org.openlmis.db.categories.UnitTests;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.openlmis.core.domain.Right.PLAN_DISTRIBUTION;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -59,5 +63,16 @@ public class DeliveryZoneServiceTest {
 
     verify(repository).getByCode("code");
     assertThat(returnedZone, is(zone));
+  }
+
+  @Test
+  public void shouldGetAllDeliveryZonesForAUser() throws Exception {
+    List<DeliveryZone> deliveryZones = new ArrayList<>();
+    when(repository.getByUserForRight(1l, PLAN_DISTRIBUTION)).thenReturn(deliveryZones);
+
+    List<DeliveryZone> returnedZones = service.getByUserForRight(1l, PLAN_DISTRIBUTION);
+
+    verify(repository).getByUserForRight(1l, PLAN_DISTRIBUTION);
+    assertThat(returnedZones, is(deliveryZones));
   }
 }

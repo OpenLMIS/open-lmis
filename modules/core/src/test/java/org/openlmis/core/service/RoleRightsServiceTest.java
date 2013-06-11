@@ -28,10 +28,11 @@ import java.util.Set;
 import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.Right.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -63,24 +64,48 @@ public class RoleRightsServiceTest {
   @Test
   public void shouldGetAllRightsInAlphabeticalOrder() throws Exception {
     List<Right> allRights = new ArrayList<>(new RoleRightsService().getAllRights());
-    assertThat(allRights.get(0), is(CONFIGURE_RNR));
-    assertThat(allRights.get(1), is(Right.MANAGE_FACILITY));
-    assertThat(allRights.get(2), is(Right.MANAGE_PROGRAM_PRODUCT));
-    assertThat(allRights.get(3), is(Right.MANAGE_ROLE));
-    assertThat(allRights.get(4), is(Right.MANAGE_SCHEDULE));
-    assertThat(allRights.get(5), is(Right.MANAGE_USERS));
-    assertThat(allRights.get(6), is(Right.UPLOADS));
-    assertThat(allRights.get(7), is(Right.MANAGE_REPORTS));
-    assertThat(allRights.get(8), is(Right.VIEW_REPORTS));
-    assertThat(allRights.get(9), is(Right.APPROVE_REQUISITION));
-    assertThat(allRights.get(10), is(Right.AUTHORIZE_REQUISITION));
-    assertThat(allRights.get(11), is(Right.CONVERT_TO_ORDER));
-    assertThat(allRights.get(12), is(Right.CREATE_REQUISITION));
-    assertThat(allRights.get(13), is(Right.VIEW_REQUISITION));
-    assertThat(allRights.get(14), is(Right.VIEW_ORDER));
-    assertThat(allRights.get(0).getAdminRight(), is(true));
+    List<Right> alphabeticalRights = asList(CONFIGURE_RNR,
+      MANAGE_FACILITY,
+      MANAGE_PROGRAM_PRODUCT,
+      MANAGE_ROLE,
+      MANAGE_SCHEDULE,
+      MANAGE_USERS,
+      UPLOADS,
+      PLAN_DISTRIBUTION,
+      MANAGE_REPORTS,
+      VIEW_REPORTS,
+      APPROVE_REQUISITION,
+      AUTHORIZE_REQUISITION,
+      CONVERT_TO_ORDER,
+      CREATE_REQUISITION,
+      VIEW_REQUISITION,
+      VIEW_ORDER);
+
+    assertThat(allRights, is(alphabeticalRights));
   }
 
+  @Test
+  public void shouldCheckAdminRightHasIsAdminTrue() throws Exception {
+    assertTrue(UPLOADS.getAdminRight());
+    assertTrue(MANAGE_FACILITY.getAdminRight());
+    assertTrue(MANAGE_PROGRAM_PRODUCT.getAdminRight());
+    assertTrue(MANAGE_REPORTS.getAdminRight());
+    assertTrue(MANAGE_ROLE.getAdminRight());
+    assertTrue(MANAGE_SCHEDULE.getAdminRight());
+    assertTrue(MANAGE_USERS.getAdminRight());
+    assertTrue(CONVERT_TO_ORDER.getAdminRight());
+    assertTrue(VIEW_ORDER.getAdminRight());
+    assertTrue(CONFIGURE_RNR.getAdminRight());
+  }
+
+  @Test
+  public void shouldCheckTransactionalRightIsNotAdminRight() throws Exception {
+    assertFalse(CREATE_REQUISITION.getAdminRight());
+    assertFalse(AUTHORIZE_REQUISITION.getAdminRight());
+    assertFalse(APPROVE_REQUISITION.getAdminRight());
+    assertFalse(PLAN_DISTRIBUTION.getAdminRight());
+    assertFalse(VIEW_REQUISITION.getAdminRight());
+  }
 
   @Test
   public void shouldSaveRole() throws Exception {

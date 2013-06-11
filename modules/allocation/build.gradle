@@ -13,11 +13,14 @@ dependencies {
             'commons-lang:commons-lang:2.6',
             'commons-collections:commons-collections:20040616',
             'org.codehaus.jackson:jackson-mapper-asl:1.9.11',
+            'javax.servlet:servlet-api:2.5',
             project(':modules:db'),
-            project(':modules:core')
+            project(':modules:core'),
+            project(':modules:authentication')
+
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
             project(':modules:db'),
-            project(path : ':modules:core', configuration: 'testFixtures')
+            project(path: ':modules:core', configuration: 'testFixtures')
 
 }
