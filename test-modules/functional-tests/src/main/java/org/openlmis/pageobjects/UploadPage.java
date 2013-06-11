@@ -119,6 +119,30 @@ public class UploadPage extends Page {
         testWebDriver.sleep(250);
     }
 
+    public void uploadDeliveryZoneProgramSchedule(String uploadFileNameWithExtension) throws FileNotFoundException {
+        selectUploadType("Map Delivery Zones To Program Schedule");
+        uploadFile(uploadFileNameWithExtension);
+        testWebDriver.sleep(250);
+    }
+
+    public void uploadDeliveryZoneProgramScheduleInvalidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
+        selectUploadType("Map Delivery Zones To Program Schedule");
+        uploadFile(uploadFileNameWithExtension);
+        testWebDriver.sleep(250);
+    }
+
+    public void uploadDeliveryZoneMembers(String uploadFileNameWithExtension) throws FileNotFoundException {
+        selectUploadType("Delivery Zone Members");
+        uploadFile(uploadFileNameWithExtension);
+        testWebDriver.sleep(250);
+    }
+
+    public void uploadDeliveryZoneMembersInvalidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
+        selectUploadType("Delivery Zone Members");
+        uploadFile(uploadFileNameWithExtension);
+        testWebDriver.sleep(250);
+    }
+
   public void uploadProducts(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Products");
     uploadFile(uploadFileNameWithExtension);

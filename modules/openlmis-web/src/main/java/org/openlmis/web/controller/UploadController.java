@@ -117,14 +117,12 @@ public class UploadController extends BaseController {
   private ResponseEntity<OpenLmisResponse> successPage(String model, int recordsCreated, int recordsUpdated) {
     Map<String, String> responseMessages = new HashMap<>();
     responseMessages.put(SUCCESS, messageService.message(new OpenLmisMessage(UPLOAD_FILE_SUCCESS, recordsCreated + "", recordsUpdated+"")));
-    responseMessages.put(MODEL, messageService.message(new OpenLmisMessage(model)));
     return OpenLmisResponse.response(responseMessages, HttpStatus.OK, MediaType.TEXT_HTML_VALUE);
   }
 
   private ResponseEntity<OpenLmisResponse> errorResponse(OpenLmisMessage errorMessage, String model) {
     Map<String, String> responseMessages = new HashMap<>();
-    responseMessages.put(ERROR, messageService.message(errorMessage));
-    responseMessages.put(MODEL, messageService.message(new OpenLmisMessage(model)));
+        responseMessages.put(ERROR, messageService.message(errorMessage));
     return OpenLmisResponse.response(responseMessages, HttpStatus.OK, MediaType.TEXT_HTML_VALUE);
   }
 

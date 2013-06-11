@@ -112,7 +112,13 @@ public class E2EUpload extends TestCaseHelper {
     verifyValidSupplyLinesUpload(uploadPage);
 
     verifyValidDeliveryZonesUpload(uploadPage);
-//    verifyInValidDeliveryZonesUpload(uploadPage);
+    verifyInValidDeliveryZonesUpload(uploadPage);
+
+    verifyValidDeliveryZonesProgramScheduleUpload(uploadPage);
+    verifyInValidDeliveryZonesProgramScheduleUpload(uploadPage);
+
+      verifyValidDeliveryZonesMembersUpload(uploadPage);
+      verifyInValidDeliveryZonesMembersUpload(uploadPage);
 
   }
 
@@ -397,7 +403,7 @@ public class E2EUpload extends TestCaseHelper {
     }
 
     private void verifyInValidDeliveryZonesUpload(UploadPage uploadPage) throws IOException, SQLException {
-        uploadPage.uploadDeliveryZones("QA_Delivery_Zones_Duplicate.csv");
+        uploadPage.uploadDeliveryZonesInvalidScenarios("QA_Delivery_Zones_Duplicate.csv") ;
         uploadPage.verifyErrorMessageOnUploadScreen();
     }
 
@@ -405,6 +411,30 @@ public class E2EUpload extends TestCaseHelper {
         uploadPage.uploadDeliveryZones("QA_Delivery_Zones.csv");
         uploadPage.verifySuccessMessageOnUploadScreen();
         uploadPage.uploadDeliveryZones("QA_Delivery_Zones_Subsequent.csv");
+        uploadPage.verifySuccessMessageOnUploadScreen();
+    }
+
+    private void verifyInValidDeliveryZonesProgramScheduleUpload(UploadPage uploadPage) throws IOException, SQLException {
+        uploadPage.uploadDeliveryZoneProgramSchedule("QA_Delivery_Zone_Program_Schedule_Duplicate.csv") ;
+        uploadPage.verifyErrorMessageOnUploadScreen();
+    }
+
+    private void verifyValidDeliveryZonesProgramScheduleUpload(UploadPage uploadPage) throws IOException, SQLException {
+        uploadPage.uploadDeliveryZoneProgramScheduleInvalidScenarios("QA_Delivery_Zone_Program_Schedule.csv") ;
+        uploadPage.verifySuccessMessageOnUploadScreen();
+        uploadPage.uploadDeliveryZoneProgramScheduleInvalidScenarios("QA_Delivery_Zone_Program_Schedule_Subsequent.csv") ;
+        uploadPage.verifySuccessMessageOnUploadScreen();
+    }
+
+    private void verifyInValidDeliveryZonesMembersUpload(UploadPage uploadPage) throws IOException, SQLException {
+        uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Program_Schedule_Duplicate.csv") ;
+        uploadPage.verifyErrorMessageOnUploadScreen();
+    }
+
+    private void verifyValidDeliveryZonesMembersUpload(UploadPage uploadPage) throws IOException, SQLException {
+        uploadPage.uploadDeliveryZoneMembersInvalidScenarios("QA_Delivery_Zone_Members.csv") ;
+        uploadPage.verifySuccessMessageOnUploadScreen();
+        uploadPage.uploadDeliveryZoneMembersInvalidScenarios("QA_Delivery_Zone_Members_Subsequent.csv") ;
         uploadPage.verifySuccessMessageOnUploadScreen();
     }
 
