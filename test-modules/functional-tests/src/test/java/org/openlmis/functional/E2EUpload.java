@@ -120,6 +120,9 @@ public class E2EUpload extends TestCaseHelper {
     verifyValidDeliveryZonesMembersUpload(uploadPage);
     verifyInValidDeliveryZonesMembersUpload(uploadPage);
 
+    verifyValidDeliveryZonesWarehousesUpload(uploadPage);
+    verifyInValidDeliveryZonesWarehousesUpload(uploadPage);
+
   }
 
   private void verifyValidSupplyLinesUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -435,6 +438,18 @@ public class E2EUpload extends TestCaseHelper {
         //uploadPage.uploadDeliveryZoneMembersInvalidScenarios("QA_Delivery_Zone_Members.csv") ;
         //uploadPage.verifySuccessMessageOnUploadScreen();
         //uploadPage.uploadDeliveryZoneMembersInvalidScenarios("QA_Delivery_Zone_Members_Subsequent.csv") ;
+        //uploadPage.verifySuccessMessageOnUploadScreen();
+    }
+
+    private void verifyInValidDeliveryZonesWarehousesUpload(UploadPage uploadPage) throws IOException, SQLException {
+        //uploadPage.uploadDeliveryZoneWarehouses("QA_Delivery_Zone_warehouses_Duplicate.csv") ;
+        //uploadPage.verifyErrorMessageOnUploadScreen();
+    }
+
+    private void verifyValidDeliveryZonesWarehousesUpload(UploadPage uploadPage) throws IOException, SQLException {
+        //uploadPage.uploadDeliveryZoneWarehousesInvalidScenarios("QA_Delivery_Zone_warehouses.csv") ;
+        //uploadPage.verifySuccessMessageOnUploadScreen();
+        //uploadPage.uploadDeliveryZoneWarehousesInvalidScenarios("QA_Delivery_Zone_warehouses_Subsequent.csv") ;
         //uploadPage.verifySuccessMessageOnUploadScreen();
     }
 
