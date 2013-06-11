@@ -7,18 +7,39 @@
 function ProgramProductListController($scope, programs, ProgramProducts) {
 
   $scope.programs = programs;
+  $scope.programProductISAModal = false;
 
   $scope.loadProgramProducts = function () {
     if ($scope.programId) {
       ProgramProducts.get({programId:$scope.programId}, function (data) {
         $scope.programProducts = data.PROGRAM_PRODUCT_LIST;
+        $scope.filteredProducts =  data.PROGRAM_PRODUCT_LIST;
       }, {});
     }
   };
 
 
+  $scope.filterProducts = function() {
+    $scope.filteredProducts = [];
+    var query = $scope.query || "";
+
+    $scope.filteredProducts = $.grep($scope.programProducts, function (programProduct) {
+      return programProduct.product.primaryName.toLowerCase().indexOf(query.toLowerCase()) != -1;;
+    });
+
+    $scope.resultCount = $scope.filteredProducts.length;
+  }
+
+  $scope.showProductISA = function(programProduct) {
+    $scope.currentProgramProduct = programProduct;
+    $scope.programProductISAModal = true;
+
+  }
   $scope.getFormula = function (programProductISA) {
-    return "some formula";
+    if(programProductISA)
+    return "(population) * " + programProductISA.whoRatio + " * " + programProductISA.dosesPerMonth + " * "
+      + programProductISA.wastageRate + " * / 12 * " + programProductISA.bufferPercentage ;
+    else "";
   }
 }
 
