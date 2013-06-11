@@ -64,6 +64,13 @@ function ProgramProductListController($scope, programs, ProgramProducts, Program
       $scope.inputClass = false;
       ProgramProductsISA.save({programProductId:$scope.currentProgramProduct.id}, $scope.currentProgramProduct.programProductISA, function () {
         $scope.message = "ISA saved successfully";
+        setTimeout(function () {
+          $scope.$apply(function () {
+            angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
+              $rootScope.message = '';
+            });
+          });
+        }, 3000);
         $scope.error = "";
         $scope.programProductISAModal = false;
       }, {});
@@ -72,20 +79,22 @@ function ProgramProductListController($scope, programs, ProgramProducts, Program
 
   $scope.isPresent = function (programProductISA) {
     return programProductISA && programProductISA.whoRatio && programProductISA.dosesPerYear && programProductISA.wastageRate
-      && programProductISA.bufferPercentage && programProductISA.adjustmentValue;
+      && programProductISA.bufferPercentage && programProductISA.adjustmentValue && programProductISA.minimumValue;
   }
 
   $scope.getFormula = function (programProductISA) {
     if ($scope.isPresent(programProductISA))
       return "(population) * " + programProductISA.whoRatio + " * " + programProductISA.dosesPerYear + " * "
-        + programProductISA.wastageRate + " / 12 * " + programProductISA.bufferPercentage + programProductISA.adjustmentValue;
+        + programProductISA.wastageRate + " / 12 * " + programProductISA.bufferPercentage + " +  " + programProductISA.adjustmentValue;
     else "";
   }
 
   $scope.calculateValue = function (programProductISA) {
-    if ($scope.isPresent(programProductISA))
+    if ($scope.isPresent(programProductISA) && $scope.population) {
       $scope.isaValue = $scope.population * programProductISA.whoRatio * programProductISA.dosesPerYear *
-        +programProductISA.wastageRate / 12 * programProductISA.bufferPercentage + programProductISA.adjustmentValue;
+        programProductISA.wastageRate / 12 * programProductISA.bufferPercentage + programProductISA.adjustmentValue;
+      $scope.isaValue = Math.ceil(($scope.isaValue > parseInt(programProductISA.minimumValue)) ? $scope.isaValue : programProductISA.minimumValue);
+    }
   }
 }
 
