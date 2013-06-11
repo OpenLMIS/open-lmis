@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class DeliveryZoneMemberService {
 
   public static final String FACILITY_CODE_INVALID = "facility.code.invalid";
+  public static final String DELIVERY_ZONE_CODE_INVALID = "deliveryZone.code.invalid";
 
   @Autowired
   DeliveryZoneMemberRepository repository;
@@ -34,7 +35,7 @@ public class DeliveryZoneMemberService {
 
   private void fillDeliveryZone(DeliveryZoneMember member) {
     DeliveryZone zone = deliveryZoneService.getByCode(member.getDeliveryZone().getCode());
-    if(zone == null) throw new DataException("deliveryZone.code.invalid");
+    if(zone == null) throw new DataException(DELIVERY_ZONE_CODE_INVALID);
     member.setDeliveryZone(zone);
   }
 

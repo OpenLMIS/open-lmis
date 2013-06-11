@@ -3,7 +3,6 @@
 
 CREATE TABLE delivery_zone_warehouses (
   id                    SERIAL PRIMARY KEY,
-  description           VARCHAR(250),
   deliveryZoneId        INTEGER REFERENCES delivery_zones(id) NOT NULL,
   warehouseId           INTEGER REFERENCES facilities(id) NOT NULL,
   createdBy             INTEGER,

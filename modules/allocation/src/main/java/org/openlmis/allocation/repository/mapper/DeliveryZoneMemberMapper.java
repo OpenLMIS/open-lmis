@@ -8,7 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DeliveryZoneMemberMapper {
 
-  @Insert("INSERT INTO delivery_zone_members(deliveryZoneId, facilityId) VALUES(#{deliveryZone.id}, #{facility.id})")
+  @Insert({"INSERT INTO delivery_zone_members(deliveryZoneId, facilityId, createdBy, modifiedBy, modifiedDate)",
+      "VALUES(#{deliveryZone.id}, #{facility.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate})"})
   @Options(useGeneratedKeys = true)
   void insert(DeliveryZoneMember member);
 

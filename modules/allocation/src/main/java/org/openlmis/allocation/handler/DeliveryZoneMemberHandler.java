@@ -26,6 +26,6 @@ public class DeliveryZoneMemberHandler extends AbstractModelPersistenceHandler{
 
   @Override
   protected String getDuplicateMessageKey() {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    return null;
   }
 }

@@ -42,6 +42,7 @@ public class DeliveryZoneMemberServiceTest {
   private DeliveryZoneService deliveryZoneService;
 
   DeliveryZoneMember member;
+
   @Before
   public void setUp() throws Exception {
     member = new DeliveryZoneMember();
@@ -65,7 +66,7 @@ public class DeliveryZoneMemberServiceTest {
   }
 
   @Test
-  public void shouldThrowErrorIfInvalidProgramCode() throws Exception {
+  public void shouldThrowErrorIfInvalidFacilityCode() throws Exception {
     when(facilityService.getByCode(member.getFacility())).thenReturn(null);
 
     expectedException.expect(DataException.class);
@@ -83,5 +84,4 @@ public class DeliveryZoneMemberServiceTest {
 
     service.save(member);
   }
-
 }
