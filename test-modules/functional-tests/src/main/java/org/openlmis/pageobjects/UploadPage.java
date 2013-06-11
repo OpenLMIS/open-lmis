@@ -120,13 +120,13 @@ public class UploadPage extends Page {
     }
 
     public void uploadDeliveryZoneProgramSchedule(String uploadFileNameWithExtension) throws FileNotFoundException {
-        selectUploadType("Map Delivery Zones To Program Schedule");
+        selectUploadType("Map Delivery Zones To Program Schedules");
         uploadFile(uploadFileNameWithExtension);
         testWebDriver.sleep(250);
     }
 
     public void uploadDeliveryZoneProgramScheduleInvalidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
-        selectUploadType("Map Delivery Zones To Program Schedule");
+        selectUploadType("Map Delivery Zones To Program Schedules");
         uploadFile(uploadFileNameWithExtension);
         testWebDriver.sleep(250);
     }

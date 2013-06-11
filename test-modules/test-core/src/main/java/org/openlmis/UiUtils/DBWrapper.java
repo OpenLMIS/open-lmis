@@ -124,6 +124,9 @@ public class DBWrapper {
     update("delete from requisition_group_program_schedules ;");
     update("delete from requisition_groups;");
     update("delete from requisition_group_members;");
+    update("delete from delivery_zone_program_schedules ;");
+    update("delete from delivery_zones;");
+    update("delete from delivery_zone_members;");
     update("delete from supervisory_nodes;");
     update("delete from facilities;");
     update("delete from geographic_zones where code not in ('Root','Arusha','Dodoma', 'Ngorongoro');");
