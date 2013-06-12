@@ -36,10 +36,10 @@ public class DeliveryZoneMemberService {
   public void save(DeliveryZoneMember member) {
     fillFacility(member);
     fillDeliveryZone(member);
-    validateIfFacilityAlreadyAssignedToDeliveryZoneForProgram(member);
-    if (member.getId() == null)
+    if (member.getId() == null) {
+      validateIfFacilityAlreadyAssignedToDeliveryZoneForProgram(member);
       repository.insert(member);
-    else
+    } else
       repository.update(member);
   }
 
