@@ -7,14 +7,11 @@
 package org.openlmis.core.upload;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.hamcrest.Matcher;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.BaseModel;
@@ -23,15 +20,14 @@ import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 
 @Category(UnitTests.class)
@@ -40,24 +36,17 @@ public class AbstractModelPersistenceHandlerTest {
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 
-
   @Mock
   MessageService messageService;
 
-  AbstractModelPersistenceHandler handler ;
-
-  @Before
-  public void setUp() throws Exception {
-    initMocks(this);
-    handler = instantiateHandlerThrowingExceptionOnSave();
-    handler.messageService = messageService;
-  }
 
   @Test
   public void shouldAppendRowNumberToExceptionMessage() throws Exception {
-
+    AbstractModelPersistenceHandler handler = instantiateHandlerThrowingExceptionOnSave();
     Importable importable = new TestImportable();
-    expectedEx.expect(DataException.class);
+    expectedEx.expect(dataExceptionMatcher("upload.record.error", "Error Msg", "1"));
+
+    when(messageService.message("error.code")).thenReturn("Error Msg");
 
     handler.execute(importable, 2, new AuditFields(1L, null));
   }
@@ -110,10 +99,10 @@ public class AbstractModelPersistenceHandlerTest {
     existing.setModifiedDate(currentTimestamp);
 
     AbstractModelPersistenceHandler handler = instantiateHandler(existing);
+    when(messageService.message("duplicate.record.error.code")).thenReturn("Duplicate Record");
 
     expectedEx.expect(DataException.class);
-
-    handler.messageService = messageService;
+    expectedEx.expectMessage("Duplicate Record");
 
     handler.execute(currentRecord, 1, auditFields);
 
@@ -128,19 +117,19 @@ public class AbstractModelPersistenceHandlerTest {
 
       @Override
       protected void save(BaseModel record) {
-        throw new DataException("error");
+        throw new DataException("error.code");
       }
 
       @Override
       protected String getDuplicateMessageKey() {
-        return "Duplicate Record";
+        return "duplicate.record.error.code";
       }
 
     };
   }
 
   private AbstractModelPersistenceHandler instantiateHandler(final BaseModel existing) {
-    return new AbstractModelPersistenceHandler() {
+    return new AbstractModelPersistenceHandler(messageService) {
       @Override
       protected BaseModel getExisting(BaseModel record) {
         return existing;
@@ -152,7 +141,7 @@ public class AbstractModelPersistenceHandlerTest {
 
       @Override
       protected String getDuplicateMessageKey() {
-        return "Duplicate Record";
+        return "duplicate.record.error.code";
       }
 
     };

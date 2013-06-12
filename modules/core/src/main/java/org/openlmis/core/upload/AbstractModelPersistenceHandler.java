@@ -6,7 +6,6 @@
 
 package org.openlmis.core.upload;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
@@ -19,13 +18,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
-@Component("AbstractModelPersistenceHandler")
+@Component
 @NoArgsConstructor
-@AllArgsConstructor
 public abstract class AbstractModelPersistenceHandler implements RecordHandler<Importable> {
 
+  private MessageService messageService;
+
   @Autowired
-  MessageService messageService;
+  public AbstractModelPersistenceHandler(MessageService messageService) {
+    this.messageService = messageService;
+  }
 
   @Override
   public void execute(Importable importable, int rowNumber, AuditFields auditFields) {
@@ -37,17 +39,17 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
       throwExceptionIfProcessedInCurrentUpload(auditFields, existing);
       currentRecord.setModifiedBy(auditFields.getUser());
       currentRecord.setModifiedDate(auditFields.getCurrentTimestamp());
-      if(existing != null)
+      if (existing != null) {
         currentRecord.setId(existing.getId());
-      else currentRecord.setCreatedBy(auditFields.getUser());
+      } else {
+        currentRecord.setCreatedBy(auditFields.getUser());
+      }
       save(currentRecord);
 
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
       throw new DataException(new OpenLmisMessage("upload.record.error", messageService.message("incorrect.data.length"), rowNumberAsString));
     } catch (DataException exception) {
-      if (exception.getOpenLmisMessage() != null) {
-        throw new DataException(new OpenLmisMessage("upload.record.error", messageService.message(exception.getOpenLmisMessage().getCode()), rowNumberAsString));
-      }
+      throw new DataException(new OpenLmisMessage("upload.record.error", messageService.message(exception.getOpenLmisMessage().getCode()), rowNumberAsString));
     }
   }
 

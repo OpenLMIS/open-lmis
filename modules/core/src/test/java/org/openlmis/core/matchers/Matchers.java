@@ -12,6 +12,7 @@ import org.mockito.ArgumentMatcher;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 
 @Category(UnitTests.class)
@@ -43,6 +44,20 @@ public class Matchers {
       public boolean matches(Object argument) {
         Facility facility = (Facility) argument;
         return facility.getId().equals(id);
+      }
+    };
+  }
+
+  public static ArgumentMatcher<DataException> dataExceptionMatcher(final String code, final String... params) {
+    return new ArgumentMatcher<DataException>() {
+      @Override
+      public boolean matches(Object argument) {
+        DataException dataException = (DataException) argument;
+        if (!dataException.getOpenLmisMessage().getCode().equals(code)) return false;
+        for (int index = 0; index < params.length; index++) {
+          if (!dataException.getOpenLmisMessage().getParams()[index].equals(params[index])) return false;
+        }
+        return true;
       }
     };
   }
