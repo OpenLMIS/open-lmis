@@ -13,13 +13,14 @@ function UploadController($scope, SupportedUploads, messageService) {
   $scope.$on('$viewContentLoaded', function () {
     var options = {
       beforeSubmit: $scope.validate,
-      success:processResponse
+      success: processResponse,
+      error: failureHandler
     };
     $('#uploadForm').ajaxForm(options);
   });
 
-  $scope.validate = function(formData, jqForm, options) {
-    $scope.$apply(function() {
+  $scope.validate = function (formData) {
+    $scope.$apply(function () {
       $scope.inProgress = true;
       $scope.successMsg = $scope.errorMsg = "";
       if (setErrorMessageIfEmpty(formData[0].value, 'model', 'upload.select.type')) {
@@ -42,6 +43,14 @@ function UploadController($scope, SupportedUploads, messageService) {
     }
   }
 
+  var failureHandler = function (response) {
+    var errorMessage = JSON.parse(response.responseText).error;
+    $scope.$apply(function () {
+      $scope.errorMsg = errorMessage;
+      $scope.inProgress = false;
+    });
+  }
+
   function processResponse(responseText) {
     var response = JSON.parse(responseText);
     $scope.$apply(function () {
@@ -58,6 +67,7 @@ function UploadController($scope, SupportedUploads, messageService) {
       $scope.inProgress = false;
     });
   }
+
   var successHandler = function (data) {
     $scope.successMsg = data.success;
     $scope.errorMsg = "";
