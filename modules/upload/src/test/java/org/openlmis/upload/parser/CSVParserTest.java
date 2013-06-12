@@ -7,13 +7,11 @@
 package org.openlmis.upload.parser;
 
 
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.mockito.ArgumentMatcher;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.exception.UploadException;
@@ -34,6 +32,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.openlmis.upload.matchers.ExceptionMatcher.uploadExceptionMatcher;
 
 @Category(UnitTests.class)
 public class CSVParserTest {
@@ -196,17 +195,4 @@ public class CSVParserTest {
     verify(spyRecordHandler).postProcess();
   }
 
-  public static Matcher<UploadException> uploadExceptionMatcher(final String code, final String... params) {
-    return new ArgumentMatcher<UploadException>() {
-      @Override
-      public boolean matches(Object argument) {
-        UploadException uploadException = (UploadException) argument;
-        if (!uploadException.getCode().equals(code)) return false;
-        for (int index = 0; index < params.length; index++) {
-          if (!uploadException.getParams()[index].equals(params[index])) return false;
-        }
-        return true;
-      }
-    };
-  }
 }
