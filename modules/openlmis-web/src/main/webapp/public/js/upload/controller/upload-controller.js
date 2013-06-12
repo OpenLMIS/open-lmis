@@ -63,7 +63,6 @@ function UploadController($scope, SupportedUploads, messageService) {
         $scope.errorMsg = response.error;
       }
 
-      $scope.model = response.model;
       $scope.inProgress = false;
     });
   }
