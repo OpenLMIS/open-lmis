@@ -69,4 +69,10 @@ public interface ProcessingPeriodMapper {
   List<ProcessingPeriod> getAllPeriodsForDateRange(@Param("scheduleId") Long scheduleId,
                                                    @Param("startDate") Date startDate,
                                                    @Param("endDate") Date endDate);
+
+  @Select({"SELECT * FROM processing_periods",
+    "WHERE scheduleId = #{scheduleId}",
+    "AND startDate <= COALESCE(#{beforeDate}, NOW())",
+    "ORDER BY startDate DESC"})
+  List<ProcessingPeriod> getAllPeriodsBefore(@Param("scheduleId")Long scheduleId, @Param("beforeDate")Date beforeDate);
 }

@@ -262,4 +262,17 @@ public class ProcessingScheduleServiceTest {
     verify(periodRepository).getAllPeriodsForDateRange(scheduleId, startDate, endDate);
     assertThat(actual, is(expected));
   }
+
+  @Test
+  public void shouldGetProcessingPeriodsBeforeGivenDate() throws Exception {
+    Date date = new Date();
+    List<ProcessingPeriod> expectedPeriods = new ArrayList<>();
+    when(periodRepository.getAllPeriodsBefore(1l, date)).thenReturn(expectedPeriods);
+
+    List<ProcessingPeriod> returnedPeriods = service.getAllPeriodsBefore(1l, date);
+
+    assertThat(returnedPeriods, is(expectedPeriods));
+    verify(periodRepository).getAllPeriodsBefore(1l, date);
+
+  }
 }

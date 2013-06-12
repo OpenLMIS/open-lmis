@@ -8,6 +8,7 @@ package org.openlmis.allocation.service;
 import org.openlmis.allocation.domain.DeliveryZone;
 import org.openlmis.allocation.domain.DeliveryZoneProgramSchedule;
 import org.openlmis.allocation.repository.DeliveryZoneProgramScheduleRepository;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProcessingSchedule;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
@@ -76,5 +77,14 @@ public class DeliveryZoneProgramScheduleService {
 
   public List<Long> getProgramIdsForDeliveryZones(Long deliveryZoneId) {
     return repository.getProgramIdsForDeliveryZones(deliveryZoneId);
+  }
+
+  public List<ProcessingPeriod> getPeriodsForDeliveryZoneAndProgram(Long zoneId, Long programId) {
+    ProcessingSchedule schedule = repository.getProcessingScheduleByZoneAndProgram(zoneId, programId);
+    return scheduleService.getAllPeriodsBefore(schedule.getId(), null);
+  }
+
+  public ProcessingSchedule getProcessingScheduleByZoneAndProgram(long zoneId, long programId) {
+    return repository.getProcessingScheduleByZoneAndProgram(zoneId, programId);
   }
 }

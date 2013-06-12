@@ -7,6 +7,7 @@ package org.openlmis.allocation.repository;
 
 import org.openlmis.allocation.domain.DeliveryZoneProgramSchedule;
 import org.openlmis.allocation.repository.mapper.DeliveryZoneProgramScheduleMapper;
+import org.openlmis.core.domain.ProcessingSchedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -32,5 +33,9 @@ public class DeliveryZoneProgramScheduleRepository {
 
   public List<Long> getProgramIdsForDeliveryZones(Long deliveryZoneId) {
     return mapper.getProgramsIdsForDeliveryZones(deliveryZoneId);
+  }
+
+  public ProcessingSchedule getProcessingScheduleByZoneAndProgram(long zoneId, long programId) {
+    return mapper.getProcessingScheduleByZoneAndProgram(zoneId, programId);
   }
 }

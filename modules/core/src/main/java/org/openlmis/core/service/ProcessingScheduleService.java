@@ -99,4 +99,8 @@ public class ProcessingScheduleService {
   public ProcessingSchedule getByCode(String code) {
     return repository.getByCode(code);
   }
+
+  public List<ProcessingPeriod> getAllPeriodsBefore(Long scheduleId, Date beforeDate) {
+    return periodRepository.getAllPeriodsBefore(scheduleId, beforeDate);
+  }
 }

@@ -17,6 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.allocation.domain.DeliveryZone;
 import org.openlmis.allocation.domain.DeliveryZoneProgramSchedule;
 import org.openlmis.allocation.repository.DeliveryZoneProgramScheduleRepository;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProcessingSchedule;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
@@ -24,8 +25,13 @@ import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.db.categories.UnitTests;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.openlmis.allocation.builder.DeliveryZoneBuilder.defaultDeliveryZone;
@@ -125,5 +131,34 @@ public class DeliveryZoneProgramScheduleServiceTest {
     expectedException.expectMessage("error.program.not.push");
 
     service.save(deliveryZoneProgramSchedule);
+  }
+
+  @Test
+  public void shouldGetProcessingScheduleByZoneAndProgram() throws Exception {
+    ProcessingSchedule expectedSchedule = new ProcessingSchedule();
+    Long scheduleId = 3l;
+    expectedSchedule.setId(scheduleId);
+    when(repository.getProcessingScheduleByZoneAndProgram(1l, 2l)).thenReturn(expectedSchedule);
+
+    ProcessingSchedule processingSchedule = service.getProcessingScheduleByZoneAndProgram(1l, 2l);
+
+    assertThat(processingSchedule, is(expectedSchedule));
+    verify(repository).getProcessingScheduleByZoneAndProgram(1l, 2l);
+  }
+
+  @Test
+  public void shouldGetPeriodsForProgramAndDeliveryZone() throws Exception {
+    ProcessingSchedule expectedSchedule = new ProcessingSchedule();
+    Long scheduleId = 3l;
+    expectedSchedule.setId(scheduleId);
+    List<ProcessingPeriod> periods = new ArrayList<>();
+    when(scheduleService.getAllPeriodsBefore(scheduleId, null)).thenReturn(periods);
+    when(repository.getProcessingScheduleByZoneAndProgram(1l, 2l)).thenReturn(expectedSchedule);
+
+    List<ProcessingPeriod> returnedPeriods = service.getPeriodsForDeliveryZoneAndProgram(1l, 2l);
+
+    assertThat(returnedPeriods, is(periods));
+    verify(scheduleService).getAllPeriodsBefore(scheduleId, null);
+    verify(repository).getProcessingScheduleByZoneAndProgram(1l, 2l);
   }
 }

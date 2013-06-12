@@ -41,7 +41,7 @@ public class QueryExecutor {
     return preparedStatement.executeQuery();
   }
 
-  public int executeUpdate(String query, List params) throws SQLException {
+  public long executeUpdate(String query, List params) throws SQLException {
     Connection connection = DataSourceUtils.getConnection(dataSource);
     try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
       for (int index = 0; index < params.size(); index++) {
@@ -50,7 +50,7 @@ public class QueryExecutor {
       preparedStatement.executeUpdate();
 
       ResultSet rs = preparedStatement.getGeneratedKeys();
-      int id = -1;
+      long id = -1;
       if (rs.next()) {
         id = rs.getInt(1);
       }

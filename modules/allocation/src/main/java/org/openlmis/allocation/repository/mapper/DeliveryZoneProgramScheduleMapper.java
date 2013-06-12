@@ -7,6 +7,7 @@ package org.openlmis.allocation.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.allocation.domain.DeliveryZoneProgramSchedule;
+import org.openlmis.core.domain.ProcessingSchedule;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -38,4 +39,6 @@ public interface DeliveryZoneProgramScheduleMapper {
   @Select("SELECT programId FROM delivery_zone_program_schedules WHERE deliveryZoneId = #{deliveryZoneId}")
   List<Long> getProgramsIdsForDeliveryZones(Long deliveryZoneId);
 
+  @Select("SELECT scheduleId as id FROM delivery_zone_program_schedules WHERE deliveryZoneId = #{zoneId} AND programId = #{programId}")
+  ProcessingSchedule getProcessingScheduleByZoneAndProgram(@Param("zoneId") long zoneId, @Param("programId") long programId);
 }

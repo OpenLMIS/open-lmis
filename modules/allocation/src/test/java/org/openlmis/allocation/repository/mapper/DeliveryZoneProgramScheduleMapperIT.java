@@ -16,6 +16,7 @@ import org.openlmis.allocation.domain.DeliveryZoneProgramSchedule;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.domain.ProcessingSchedule;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.db.categories.IntegrationTests;
@@ -25,9 +26,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -50,6 +54,8 @@ public class DeliveryZoneProgramScheduleMapperIT {
   ProcessingScheduleMapper scheduleMapper;
   @Autowired
   ProgramMapper programMapper;
+  @Autowired
+  QueryExecutor queryExecutor;
 
   private ProcessingSchedule processingSchedule;
   private DeliveryZone deliveryZone;
@@ -68,8 +74,8 @@ public class DeliveryZoneProgramScheduleMapperIT {
     deliveryZoneMapper.insert(deliveryZone);
 
     deliveryZoneProgramSchedule = make(a(defaultDZProgramSchedule,
-        with(DeliveryZoneProgramScheduleBuilder.program, program),
-        with(schedule, processingSchedule), with(zone, deliveryZone)));
+      with(DeliveryZoneProgramScheduleBuilder.program, program),
+      with(schedule, processingSchedule), with(zone, deliveryZone)));
   }
 
   @Test
@@ -113,5 +119,37 @@ public class DeliveryZoneProgramScheduleMapperIT {
 
     assertThat(programIds.get(0), is(deliveryZoneProgramSchedule.getProgram().getId()));
     assertThat(programIds.size(), is(1));
+  }
+
+  @Test
+  public void shouldGetProcessingScheduleForProgramInDeliveryZone() throws Exception {
+    long deliveryZoneId = insertDeliveryZone("deliveryZoneCode", "DZ name");
+    Long scheduleId = insertSchedule();
+    insertDeliveryZoneProgramSchedule(deliveryZoneId, scheduleId);
+
+    ProcessingSchedule processingSchedule = mapper.getProcessingScheduleByZoneAndProgram(deliveryZoneId, getProgramId());
+
+    assertThat(processingSchedule.getId(), is(scheduleId));
+  }
+
+  private Long getProgramId() throws SQLException {
+    try (ResultSet resultSet = queryExecutor.execute("SELECT id FROM programs WHERE code = 'VACCINES'")) {
+      resultSet.next();
+      return resultSet.getLong(1);
+    }
+  }
+
+  private void insertDeliveryZoneProgramSchedule(long id, Long scheduleId) throws SQLException {
+    queryExecutor.executeUpdate("INSERT INTO delivery_zone_program_schedules(deliveryZoneId, programId, scheduleId ) " +
+      "VALUES(?,(SELECT id FROM programs WHERE code='VACCINES'), ?)", asList(id, scheduleId));
+  }
+
+  private long insertSchedule() throws SQLException {
+    return queryExecutor.executeUpdate("INSERT INTO processing_schedules(code, name, description) values(?, ?, ?)",
+      asList("M", "scheduleName", "desc"));
+  }
+
+  private long insertDeliveryZone(String deliveryZoneCode, String deliveryZoneName) throws SQLException {
+    return queryExecutor.executeUpdate("INSERT INTO delivery_zones (code, name) values (?,?)", asList(deliveryZoneCode, deliveryZoneName));
   }
 }

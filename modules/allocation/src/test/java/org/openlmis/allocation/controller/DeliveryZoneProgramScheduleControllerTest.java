@@ -6,7 +6,6 @@
 
 package org.openlmis.allocation.controller;
 
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -14,12 +13,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.allocation.domain.DeliveryZone;
 import org.openlmis.allocation.response.AllocationResponse;
 import org.openlmis.allocation.service.AllocationPermissionService;
-import org.openlmis.allocation.service.DeliveryZoneService;
+import org.openlmis.allocation.service.DeliveryZoneProgramScheduleService;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
-import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.db.categories.UnitTests;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -30,28 +28,27 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.openlmis.allocation.controller.BaseController.FORBIDDEN_EXCEPTION;
-import static org.openlmis.allocation.controller.DeliveryZoneController.DELIVERY_ZONES;
-import static org.openlmis.core.domain.Right.PLAN_DISTRIBUTION;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class DeliveryZoneControllerTest {
+public class DeliveryZoneProgramScheduleControllerTest {
 
-
+  public static final long ZONE_ID = 1l;
   @InjectMocks
-  DeliveryZoneController controller;
+  DeliveryZoneProgramScheduleController controller;
 
   @Mock
-  DeliveryZoneService service;
+  DeliveryZoneProgramScheduleService scheduleService;
 
   @Mock
   AllocationPermissionService permissionService;
 
-
   MockHttpServletRequest request;
+
   private static final String USER = "user";
   private static final Long USER_ID = 1l;
 
@@ -61,40 +58,32 @@ public class DeliveryZoneControllerTest {
     MockHttpSession session = new MockHttpSession();
     session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
     session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, USER_ID);
+    when(permissionService.hasPermissionOnZone(USER_ID, ZONE_ID)).thenReturn(true);
 
     request.setSession(session);
   }
 
   @Test
-  public void shouldGetAllDeliveryZonesForUser() throws Exception {
+  public void shouldFetchPeriodForAProgramInADeliveryZone() throws Exception {
+    List<ProcessingPeriod> expectedPeriods = new ArrayList<>();
+    when(scheduleService.getPeriodsForDeliveryZoneAndProgram(1l, 3l)).thenReturn(expectedPeriods);
 
-    List<DeliveryZone> deliveryZones = new ArrayList<>();
-    when(service.getByUserForRight(USER_ID, PLAN_DISTRIBUTION)).thenReturn(deliveryZones);
+    ResponseEntity<AllocationResponse> response = controller.getPeriodsForProgramInDeliveryZone(request, ZONE_ID, 3l);
 
-    ResponseEntity<AllocationResponse> response = controller.getDeliveryZonesForInitiatingAllocation(request);
-
-    assertThat((List<DeliveryZone>) response.getBody().getData().get(DELIVERY_ZONES), is(deliveryZones));
+    assertThat(expectedPeriods, is(response.getBody().getData().get("periods")));
+    verify(scheduleService).getPeriodsForDeliveryZoneAndProgram(1l, 3l);
   }
 
   @Test
-  public void shouldGetProgramsForADeliveryZone() throws Exception {
-    List<Program> programs = new ArrayList<>();
-    when(service.getProgramsForDeliveryZone(1l)).thenReturn(programs);
-    when(permissionService.hasPermissionOnZone(USER_ID, 1l)).thenReturn(true);
-    ResponseEntity<AllocationResponse> response = controller.getProgramsForDeliveryZone(request, 1l);
+  public void shouldReturnErrorResponse() throws Exception {
+    List<ProcessingPeriod> expectedPeriods = new ArrayList<>();
+    when(scheduleService.getPeriodsForDeliveryZoneAndProgram(1l, 3l)).thenReturn(expectedPeriods);
+    Long invalidZoneId = 67l;
+    when(permissionService.hasPermissionOnZone(USER_ID, invalidZoneId)).thenReturn(false);
 
-    assertThat((List<Program>) response.getBody().getData().get("deliveryZonePrograms"), is(programs));
-  }
+    ResponseEntity<AllocationResponse> response = controller.getPeriodsForProgramInDeliveryZone(request, invalidZoneId, 3l);
 
-  @Test
-  public void shouldThrowErrorIfUserNotAuthorizedForDeliveryZone() throws Exception {
-    List<Program> programs = new ArrayList<>();
-    when(service.getProgramsForDeliveryZone(1l)).thenReturn(programs);
-    when(permissionService.hasPermissionOnZone(USER_ID, 1l)).thenReturn(false);
-
-    ResponseEntity<AllocationResponse> response = controller.getProgramsForDeliveryZone(request, 1l);
-
-    assertThat(response.getBody().getErrorMsg(), is(FORBIDDEN_EXCEPTION));
     assertThat(response.getStatusCode(), is(UNAUTHORIZED));
+    assertThat(response.getBody().getErrorMsg(), is(FORBIDDEN_EXCEPTION));
   }
 }

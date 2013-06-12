@@ -94,7 +94,7 @@ public class DeliveryZoneMapperIT {
     String deliveryZoneName = "Delivery Zone First";
     String planDistributionRole = "FieldCoordinator";
     String user = "user";
-    int userId = insertUser(user);
+    long userId = insertUser(user);
     insertDeliveryZone(deliveryZoneCode, deliveryZoneName);
     createRoleAssignment(userId, deliveryZoneCode, planDistributionRole);
 
@@ -118,7 +118,7 @@ public class DeliveryZoneMapperIT {
     String deliveryZoneName = "Delivery Zone First";
     String planDistributionRole = "FieldCoordinator";
     String user = "user";
-    int userId = insertUser(user);
+    long userId = insertUser(user);
     insertDeliveryZone(deliveryZoneCode, deliveryZoneName);
     createRoleAssignment(userId, deliveryZoneCode, planDistributionRole);
 
@@ -131,8 +131,8 @@ public class DeliveryZoneMapperIT {
 
   @Test
   public void shouldGetProgramsForDeliveryZone() throws Exception {
-    int deliveryZoneId = insertDeliveryZone("deliveryZoneCode", "DZ name");
-    int scheduleId = insertSchedule();
+    long deliveryZoneId = insertDeliveryZone("deliveryZoneCode", "DZ name");
+    long scheduleId = insertSchedule();
     insertDeliveryZoneProgramSchedule(deliveryZoneId, scheduleId);
 
     List<Program> programs = mapper.getPrograms(deliveryZoneId);
@@ -141,17 +141,17 @@ public class DeliveryZoneMapperIT {
     assertThat(programs.get(0).getCode(), is("VACCINES"));
   }
 
-  private void insertDeliveryZoneProgramSchedule(int id, int scheduleId) throws SQLException {
+  private void insertDeliveryZoneProgramSchedule(long id, long scheduleId) throws SQLException {
     queryExecutor.executeUpdate("INSERT INTO delivery_zone_program_schedules(deliveryZoneId, programId, scheduleId ) " +
       "VALUES(?,(SELECT id FROM programs WHERE code='VACCINES'), ?)", asList(id, scheduleId));
   }
 
-  private int insertSchedule() throws SQLException {
+  private long insertSchedule() throws SQLException {
     return queryExecutor.executeUpdate("INSERT INTO processing_schedules(code, name, description) values(?, ?, ?)",
       asList("M", "scheduleName", "desc"));
   }
 
-  private void createRoleAssignment(int user, String deliveryZoneCode, String planDistributionRole) throws SQLException {
+  private void createRoleAssignment(long user, String deliveryZoneCode, String planDistributionRole) throws SQLException {
     queryExecutor.executeUpdate("INSERT INTO roles (name, adminRole) VALUES (?, 'f')", asList(planDistributionRole));
     queryExecutor.executeUpdate("INSERT INTO role_rights (roleId, rightName) VALUES ((select id from roles where name=?), ?)",
       asList(planDistributionRole, PLAN_DISTRIBUTION.toString()));
@@ -160,12 +160,12 @@ public class DeliveryZoneMapperIT {
       "(SELECT id FROM delivery_zones WHERE code=?))", asList(user, planDistributionRole, deliveryZoneCode));
   }
 
-  private int insertUser(String user) throws SQLException {
+  private long insertUser(String user) throws SQLException {
     return queryExecutor.executeUpdate("INSERT INTO users(username, password, firstname, lastname, email) " +
       "VALUES(?,'password','firstname','lastname', 'email')", asList(user));
   }
 
-  private int insertDeliveryZone(String deliveryZoneCode, String deliveryZoneName) throws SQLException {
+  private long insertDeliveryZone(String deliveryZoneCode, String deliveryZoneName) throws SQLException {
     return queryExecutor.executeUpdate("INSERT INTO delivery_zones (code, name) values (?,?)", asList(deliveryZoneCode, deliveryZoneName));
   }
 }
