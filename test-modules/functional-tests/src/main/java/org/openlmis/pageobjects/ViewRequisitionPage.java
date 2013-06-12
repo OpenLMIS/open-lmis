@@ -65,7 +65,6 @@ public class ViewRequisitionPage extends RequisitionPage {
   @FindBy(how = ID, using = "cost_0")
   private static WebElement totalCostPostApproval;
 
-
   @FindBy(how = ID, using = "newPatientCount_0")
   private static WebElement newPatient;
 

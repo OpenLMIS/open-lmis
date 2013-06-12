@@ -7,6 +7,7 @@
 package org.openlmis.pageobjects;
 
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.ElementNotVisibleException;
@@ -317,18 +318,14 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(adjList);
     String labelAdj = testWebDriver.getText(adjList);
     assertEquals(labelAdj.trim(), "Transfer In");
-//    String adjValue = testWebDriver.getAttribute(adjListValue, "value");
-    // SeleneseTestNgHelper.assertEquals(adjValue, adj);
-    //testWebDriver.waitForElementToAppear(totalAdj);
-    //String totalAdjValue = testWebDriver.getText(totalAdj);
     testWebDriver.sleep(1000);
-    //SeleneseTestNgHelper.assertEquals(totalAdjValue.substring("Total ".length()), adj);
     testWebDriver.sleep(1000);
     doneButton.click();
     testWebDriver.sleep(1000);
 
 
   }
+
 
 
   public void calculateAndVerifyStockOnHand(Integer A, Integer B, Integer C, Integer D) {
@@ -464,12 +461,12 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(500);
   }
 
+
+
   public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue, String productPrimaryName, String productCode, String category, String baseurl, String dburl) throws IOException, SQLException {
-    testWebDriver.waitForElementToAppear(nonFullSupplyTab);
-    nonFullSupplyTab.click();
     DBWrapper dbWrapper = new DBWrapper(baseurl, dburl);
     String nonFullSupplyItems = dbWrapper.fetchNonFullSupplyData(productCode, "2", "1");
-    testWebDriver.waitForElementToAppear(addNonFullSupplyButtonScreen);
+    clickNonFullSupplyTab();
     testWebDriver.sleep(1000);
     addButton.click();
     testWebDriver.sleep(1000);
@@ -592,10 +589,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
 
   public void addMultipleNonFullSupplyLineItems(int numberOfLineItems, boolean isMultipleCategories) throws IOException, SQLException {
-    testWebDriver.waitForElementToAppear(nonFullSupplyTab);
-    nonFullSupplyTab.click();
-
-    testWebDriver.waitForElementToAppear(addNonFullSupplyButtonScreen);
+    clickNonFullSupplyTab();
     testWebDriver.sleep(1000);
     addButton.click();
     testWebDriver.sleep(1000);
