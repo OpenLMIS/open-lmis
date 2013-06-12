@@ -22,8 +22,6 @@ import org.supercsv.util.CsvContext;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static java.util.Arrays.asList;
-
 @Component
 @NoArgsConstructor
 public class CSVParser {
@@ -71,14 +69,13 @@ public class CSVParser {
     CsvContext csvContext = exception.getCsvContext();
     String header = headers[csvContext.getColumnNumber() - 1];
     Integer rowNum = csvContext.getRowNumber() - 1;
-    throw new UploadException(error,header,"of Record No. ", rowNum.toString());
+    throw new UploadException(error, header, "of Record No. ", rowNum.toString());
   }
 
   private void createDataException(String error, String[] headers, SuperCsvException exception) {
     CsvContext csvContext = exception.getCsvContext();
     Integer rowNum = csvContext.getRowNumber() - 1;
-    throw new UploadException(error, headers.toString(),"in Record No. ", rowNum.toString(),csvContext.getRowSource().toString());
-//    throw new UploadException(String.format("%s '%s' in Record No. %d:%s", error, headers), csvContext.getRowNumber() - 1, csvContext.getRowSource().toString()));
+    throw new UploadException(error, headers.toString(), "in Record No. ", rowNum.toString(), csvContext.getRowSource().toString());
   }
 
   public void process(InputStream inputStream, ModelClass modelClass, RecordHandler handler) throws IOException {
