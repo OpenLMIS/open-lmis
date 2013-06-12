@@ -23,7 +23,11 @@ public class MessageService {
 
 
   public String message(String key) {
-    return message(key, Locale.getDefault(), null);
+    return message(key, Locale.getDefault(), (Object) null);
+  }
+
+  public String message(OpenLmisMessage openLmisMessage) {
+    return message(openLmisMessage.getCode(), openLmisMessage.getParams());
   }
 
   public String message(String key, Object... args) {
@@ -31,10 +35,6 @@ public class MessageService {
   }
 
   private String message(String key, Locale locale, Object... args) {
-    return messageSource.getMessage(key, args, locale);
-  }
-
-  public String message(OpenLmisMessage openLmisMessage) {
-    return message(openLmisMessage.getCode(), openLmisMessage.getParams());
+    return messageSource.getMessage(key, args, key, locale);
   }
 }

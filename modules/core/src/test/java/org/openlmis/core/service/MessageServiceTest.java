@@ -42,32 +42,32 @@ public class MessageServiceTest {
   public void shouldGetMessageForKey() {
     String key = "key";
     String expectedMessage = "message";
-    when(messageSource.getMessage(key, null, usLocale)).thenReturn(expectedMessage);
+    when(messageSource.getMessage(key, null, key, usLocale)).thenReturn(expectedMessage);
     String message = messageService.message(key);
-    verify(messageSource).getMessage(key, null, usLocale);
+    verify(messageSource).getMessage(key, null, key, usLocale);
     assertThat(message, is(expectedMessage));
   }
 
   @Test
   public void shouldGetMessageForKeyWithArgs() {
-    String key= "key";
+    String key = "key";
     Object[] args = {"arg1", "arg2"};
     String expectedMessage = "message";
-    when(messageSource.getMessage(key, args, usLocale)).thenReturn(expectedMessage);
+    when(messageSource.getMessage(key, args, key, usLocale)).thenReturn(expectedMessage);
     String message = messageService.message(key, args);
-    verify(messageSource).getMessage(key, args, usLocale);
+    verify(messageSource).getMessage(key, args, key, usLocale);
     assertThat(message, is(expectedMessage));
   }
 
   @Test
-  public void shouldResolveOpenlmisMessage(){
+  public void shouldResolveOpenlmisMessage() {
     String[] args = {"arg1", "arg2"};
     String key = "key";
     OpenLmisMessage openLmisMessage = new OpenLmisMessage(key, args);
     String expectedMessage = "message";
-    when(messageSource.getMessage(key, args, usLocale)).thenReturn(expectedMessage);
+    when(messageSource.getMessage(key, args, key, usLocale)).thenReturn(expectedMessage);
     String message = messageService.message(openLmisMessage);
-    verify(messageSource).getMessage(key, args, usLocale);
+    verify(messageSource).getMessage(key, args, key, usLocale);
     assertThat(message, is(expectedMessage));
 
   }
