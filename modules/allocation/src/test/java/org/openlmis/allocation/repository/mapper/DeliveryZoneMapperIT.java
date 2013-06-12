@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -30,7 +31,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.openlmis.allocation.builder.DeliveryZoneBuilder.defaultDeliveryZone;
-import static org.openlmis.core.domain.Right.PLAN_DISTRIBUTION;
+import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -99,7 +100,7 @@ public class DeliveryZoneMapperIT {
     createRoleAssignment(userId, deliveryZoneCode, planDistributionRole);
 
 
-    List<DeliveryZone> returnedZones = mapper.getByUserForRight(userId, PLAN_DISTRIBUTION);
+    List<DeliveryZone> returnedZones = mapper.getByUserForRight(userId, MANAGE_DISTRIBUTION);
 
 
     assertThat(returnedZones.size(), is(1));
@@ -123,7 +124,7 @@ public class DeliveryZoneMapperIT {
     createRoleAssignment(userId, deliveryZoneCode, planDistributionRole);
 
 
-    List<DeliveryZone> returnedZones = mapper.getByUserForRight(1l, PLAN_DISTRIBUTION);
+    List<DeliveryZone> returnedZones = mapper.getByUserForRight(1l, MANAGE_DISTRIBUTION);
 
 
     assertThat(returnedZones.size(), is(0));
@@ -138,7 +139,14 @@ public class DeliveryZoneMapperIT {
     List<Program> programs = mapper.getPrograms(deliveryZoneId);
 
     assertThat(programs.size(), is(1));
-    assertThat(programs.get(0).getCode(), is("VACCINES"));
+    assertThat(programs.get(0).getId(), is(getProgramId()));
+  }
+
+  private Long getProgramId() throws SQLException {
+    try (ResultSet resultSet = queryExecutor.execute("SELECT id FROM programs WHERE code = 'VACCINES'")) {
+      resultSet.next();
+      return resultSet.getLong(1);
+    }
   }
 
   private void insertDeliveryZoneProgramSchedule(long id, long scheduleId) throws SQLException {
@@ -154,7 +162,7 @@ public class DeliveryZoneMapperIT {
   private void createRoleAssignment(long user, String deliveryZoneCode, String planDistributionRole) throws SQLException {
     queryExecutor.executeUpdate("INSERT INTO roles (name, adminRole) VALUES (?, 'f')", asList(planDistributionRole));
     queryExecutor.executeUpdate("INSERT INTO role_rights (roleId, rightName) VALUES ((select id from roles where name=?), ?)",
-      asList(planDistributionRole, PLAN_DISTRIBUTION.toString()));
+      asList(planDistributionRole, MANAGE_DISTRIBUTION.toString()));
     queryExecutor.executeUpdate("INSERT INTO role_assignments (userId, roleId, deliveryZoneId) " +
       "VALUES (?, (SELECT id FROM roles WHERE name = ?), " +
       "(SELECT id FROM delivery_zones WHERE code=?))", asList(user, planDistributionRole, deliveryZoneCode));

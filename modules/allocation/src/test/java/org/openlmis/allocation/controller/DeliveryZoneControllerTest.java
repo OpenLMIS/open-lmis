@@ -33,7 +33,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static org.openlmis.allocation.controller.BaseController.FORBIDDEN_EXCEPTION;
 import static org.openlmis.allocation.controller.DeliveryZoneController.DELIVERY_ZONES;
-import static org.openlmis.core.domain.Right.PLAN_DISTRIBUTION;
+import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Category(UnitTests.class)
@@ -69,7 +69,7 @@ public class DeliveryZoneControllerTest {
   public void shouldGetAllDeliveryZonesForUser() throws Exception {
 
     List<DeliveryZone> deliveryZones = new ArrayList<>();
-    when(service.getByUserForRight(USER_ID, PLAN_DISTRIBUTION)).thenReturn(deliveryZones);
+    when(service.getByUserForRight(USER_ID, MANAGE_DISTRIBUTION)).thenReturn(deliveryZones);
 
     ResponseEntity<AllocationResponse> response = controller.getDeliveryZonesForInitiatingAllocation(request);
 

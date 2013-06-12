@@ -18,6 +18,10 @@ body {
 
 //bootstrap overrides: buttons
 
+.btn-group.open .btn-primary.dropdown-toggle {
+  background-color: #356b6f;
+}
+
 input, a {
   &.btn-primary {
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7);
@@ -109,6 +113,13 @@ input[type="color"]:focus,
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23,136,143, 0.6);
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23,136,143, 0.6);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23,136,143, 0.6);
+}
+
+.dropdown-menu li>a:hover,
+.dropdown-menu li>a:focus,
+.dropdown-submenu:hover>a {
+  color: #333;
+  background: #D3EBEB;
 }
 
 

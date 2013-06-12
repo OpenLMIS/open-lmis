@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static org.openlmis.allocation.response.AllocationResponse.error;
 import static org.openlmis.allocation.response.AllocationResponse.response;
-import static org.openlmis.core.domain.Right.PLAN_DISTRIBUTION;
+import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -33,13 +33,13 @@ public class DeliveryZoneController extends BaseController {
 
   @RequestMapping(value = "user/deliveryZones", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<AllocationResponse> getDeliveryZonesForInitiatingAllocation(HttpServletRequest request) {
-    return response(DELIVERY_ZONES, service.getByUserForRight(loggedInUserId(request), PLAN_DISTRIBUTION));
+    return response(DELIVERY_ZONES, service.getByUserForRight(loggedInUserId(request), MANAGE_DISTRIBUTION));
   }
 
   @RequestMapping(value = "deliveryZones/{zoneId}/programs", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<AllocationResponse> getProgramsForDeliveryZone(HttpServletRequest request, @PathVariable long zoneId) {
     if (permissionService.hasPermissionOnZone(loggedInUserId(request), zoneId)) {
-      return response(DELIVERY_ZONE_PROGRAMS, service.getProgramsForDeliveryZone(1l));
+      return response(DELIVERY_ZONE_PROGRAMS, service.getProgramsForDeliveryZone(zoneId));
     } else {
       return error(FORBIDDEN_EXCEPTION, UNAUTHORIZED);
     }

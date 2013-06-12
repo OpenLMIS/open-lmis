@@ -24,7 +24,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.openlmis.core.domain.Right.PLAN_DISTRIBUTION;
+import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -68,11 +68,11 @@ public class DeliveryZoneRepositoryTest {
   @Test
   public void shouldGetAllDeliveryZonesForAUser() throws Exception {
     List<DeliveryZone> deliveryZones = new ArrayList<>();
-    when(mapper.getByUserForRight(1l, PLAN_DISTRIBUTION)).thenReturn(deliveryZones);
+    when(mapper.getByUserForRight(1l, MANAGE_DISTRIBUTION)).thenReturn(deliveryZones);
 
-    List<DeliveryZone> returnedZones = repository.getByUserForRight(1l, PLAN_DISTRIBUTION);
+    List<DeliveryZone> returnedZones = repository.getByUserForRight(1l, MANAGE_DISTRIBUTION);
 
-    verify(mapper).getByUserForRight(1l, PLAN_DISTRIBUTION);
+    verify(mapper).getByUserForRight(1l, MANAGE_DISTRIBUTION);
     assertThat(returnedZones, is(deliveryZones));
   }
 

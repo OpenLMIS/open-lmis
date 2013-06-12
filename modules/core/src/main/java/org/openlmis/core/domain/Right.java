@@ -39,7 +39,7 @@ public enum Right {
   CONVERT_TO_ORDER("Requisition - Convert to Order", TRUE, "Permission to convert requisitions to order"),
   VIEW_ORDER("Requisition - View Orders", TRUE, "Permission to view orders"),
   MANAGE_PROGRAM_PRODUCT("Admin - Manage Program Product", TRUE, "Permission to manage program products"),
-  PLAN_DISTRIBUTION("Allocation - Plan", FALSE, "Permission to plan an allocation");
+  MANAGE_DISTRIBUTION("Allocation - Manage", FALSE, "Permission to manage an distribution");
 
   @Getter
   private final String rightName;

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.exists;
-import static org.openlmis.core.domain.Right.PLAN_DISTRIBUTION;
+import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
 
 @Service
 public class AllocationPermissionService {
@@ -23,7 +23,7 @@ public class AllocationPermissionService {
   DeliveryZoneService zoneService;
 
   public boolean hasPermissionOnZone(Long userId, final long zoneId) {
-    List<DeliveryZone> zones = zoneService.getByUserForRight(userId, PLAN_DISTRIBUTION);
+    List<DeliveryZone> zones = zoneService.getByUserForRight(userId, MANAGE_DISTRIBUTION);
 
     return exists(zones, new Predicate() {
       @Override

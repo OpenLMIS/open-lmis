@@ -71,7 +71,7 @@ public class RoleRightsServiceTest {
       MANAGE_SCHEDULE,
       MANAGE_USERS,
       UPLOADS,
-      PLAN_DISTRIBUTION,
+      MANAGE_DISTRIBUTION,
       MANAGE_REPORTS,
       VIEW_REPORTS,
       APPROVE_REQUISITION,
@@ -103,7 +103,7 @@ public class RoleRightsServiceTest {
     assertFalse(CREATE_REQUISITION.getAdminRight());
     assertFalse(AUTHORIZE_REQUISITION.getAdminRight());
     assertFalse(APPROVE_REQUISITION.getAdminRight());
-    assertFalse(PLAN_DISTRIBUTION.getAdminRight());
+    assertFalse(MANAGE_DISTRIBUTION.getAdminRight());
     assertFalse(VIEW_REQUISITION.getAdminRight());
   }
 

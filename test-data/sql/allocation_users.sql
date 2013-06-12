@@ -7,7 +7,7 @@ INSERT INTO roles
 
  INSERT INTO role_rights
  (roleId, rightName) VALUES
- ((select id from roles where name='FieldCoordinator'), 'PLAN_DISTRIBUTION');
+ ((select id from roles where name='FieldCoordinator'), 'MANAGE_DISTRIBUTION');
 
 
  INSERT INTO users

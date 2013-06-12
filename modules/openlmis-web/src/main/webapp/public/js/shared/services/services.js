@@ -212,3 +212,17 @@ services.factory('ProgramProducts', function ($resource) {
 services.factory('ProgramProductsISA', function ($resource) {
   return $resource('/programProducts/programProductISA/:programProductId.json', {}, {});
 });
+
+//Allocation
+
+services.factory('DeliveryZones', function ($resource) {
+  return $resource('/user/deliveryZones.json', {}, {});
+});
+
+services.factory('DeliveryZonePrograms', function ($resource) {
+  return $resource('/deliveryZones/:zoneId/programs.json', {}, {});
+});
+
+services.factory('DeliveryZoneProgramPeriods', function ($resource) {
+  return $resource('/deliveryZones/:zoneId/programs/:programId/periods.json', {}, {});
+});

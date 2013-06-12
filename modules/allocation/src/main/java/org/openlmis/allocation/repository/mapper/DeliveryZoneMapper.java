@@ -36,7 +36,6 @@ public interface DeliveryZoneMapper {
     "WHERE RR.rightName = #{right} AND RA.userId = #{userId}"})
   List<DeliveryZone> getByUserForRight(@Param("userId") long userId, @Param("right") Right right);
 
-  @Select({"SELECT P.* FROM delivery_zone_program_schedules DZPS INNER JOIN programs P ON P.id = DZPS.programId WHERE",
-    "DZPS.deliveryZoneId = #{id}"})
+  @Select({"SELECT programId as id FROM delivery_zone_program_schedules WHERE deliveryZoneId = #{id}"})
   List<Program> getPrograms(long id);
 }

@@ -18,4 +18,4 @@ INSERT INTO rights (name, adminRight, description) VALUES
  ('VIEW_REPORTS',TRUE,'Permission to view reports'),
  ('MANAGE_REPORTS',TRUE,'Permission to manage reports'),
  ('MANAGE_PROGRAM_PRODUCT',TRUE,'Permission to manage program products'),
- ('PLAN_DISTRIBUTION',FALSE,'Permission to plan an allocation');
+ ('MANAGE_DISTRIBUTION',FALSE,'Permission to manage an distribution');

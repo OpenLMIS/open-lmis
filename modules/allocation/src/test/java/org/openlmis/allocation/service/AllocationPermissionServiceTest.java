@@ -21,7 +21,7 @@ import java.util.List;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-import static org.openlmis.core.domain.Right.PLAN_DISTRIBUTION;
+import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
@@ -38,7 +38,7 @@ public class AllocationPermissionServiceTest {
     List<DeliveryZone> zones = new ArrayList<DeliveryZone>() {{
       add(new DeliveryZone(2l));
     }};
-    when(zoneService.getByUserForRight(1l, PLAN_DISTRIBUTION)).thenReturn(zones);
+    when(zoneService.getByUserForRight(1l, MANAGE_DISTRIBUTION)).thenReturn(zones);
 
     assertTrue(permissionService.hasPermissionOnZone(1l, 2l));
   }
@@ -46,7 +46,7 @@ public class AllocationPermissionServiceTest {
   @Test
   public void shouldReturnFalseIfUserDoesNotHavePermissionOnZone() throws Exception {
     List<DeliveryZone> zones = new ArrayList<>();
-    when(zoneService.getByUserForRight(1l, PLAN_DISTRIBUTION)).thenReturn(zones);
+    when(zoneService.getByUserForRight(1l, MANAGE_DISTRIBUTION)).thenReturn(zones);
 
     assertFalse(permissionService.hasPermissionOnZone(1l, 2l));
   }

@@ -18,13 +18,16 @@
             <a href="/public/pages/logistics/rnr/index.html" openlmis-message="link.requisitions.create.authorize"></a>
           </li>
           <li ng-show="hasPermission('APPROVE_REQUISITION')">
-            <a href="/public/pages/logistics/rnr/index.html#/rnr-for-approval" openlmis-message="link.requisition.approve"></a>
+            <a href="/public/pages/logistics/rnr/index.html#/rnr-for-approval"
+               openlmis-message="link.requisition.approve"></a>
           </li>
           <li ng-show="hasPermission('CONVERT_TO_ORDER')">
-            <a href="/public/pages/logistics/rnr/index.html#/requisitions-for-convert-to-order" openlmis-message="link.requisitions.convertToOrder"></a>
+            <a href="/public/pages/logistics/rnr/index.html#/requisitions-for-convert-to-order"
+               openlmis-message="link.requisitions.convertToOrder"></a>
           </li>
           <li ng-show="hasPermission('VIEW_REQUISITION')">
-            <a href="/public/pages/logistics/rnr/index.html#/view-requisitions" openlmis-message="link.requisition.view"></a>
+            <a href="/public/pages/logistics/rnr/index.html#/view-requisitions"
+               openlmis-message="link.requisition.view"></a>
           </li>
           <li class="beak"></li>
         </ul>
@@ -50,6 +53,19 @@
       <a href="/public/pages/report/index.html" openlmis-message="link.reports"></a>
     </li>
 
+    <li ng-show="hasPermission('MANAGE_DISTRIBUTION')">
+      <a href="javascript: void(0)" openlmis-message="link.distributions"></a>
+
+      <div class="submenu">
+        <ul>
+          <li>
+            <a href="/public/pages/logistics/distribution/index.html#/manage" openlmis-message="link.manage"></a>
+          </li>
+          <li class="beak"></li>
+        </ul>
+      </div>
+    </li>
+
     <li>
       <a href="javascript: void(0)" openlmis-message="link.administration"></a>
 
@@ -65,10 +81,12 @@
             <div class="submenu">
               <ul>
                 <li ng-show="hasPermission('CONFIGURE_RNR')">
-                  <a href="/public/pages/admin/rnr-template/index.html" openlmis-message="link.admin.configure.requisitionTemplate"></a>
+                  <a href="/public/pages/admin/rnr-template/index.html"
+                     openlmis-message="link.admin.configure.requisitionTemplate"></a>
                 </li>
                 <li ng-show="hasPermission('MANAGE_PROGRAM_PRODUCT')">
-                  <a href="/public/pages/admin/program-product-isa/index.html" openlmis-message="link.admin.configure.programProductISA"></a>
+                  <a href="/public/pages/admin/program-product-isa/index.html"
+                     openlmis-message="link.admin.configure.programProductISA"></a>
                 </li>
                 <li class="beak"></li>
               </ul>
