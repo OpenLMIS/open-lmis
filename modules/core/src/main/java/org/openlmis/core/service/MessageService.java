@@ -18,8 +18,12 @@ import java.util.Locale;
 @NoArgsConstructor
 public class MessageService {
 
+  private MessageSource messageSource;
+
   @Autowired
-  MessageSource messageSource;
+  public MessageService(MessageSource messageSource) {
+    this.messageSource = messageSource;
+  }
 
 
   public String message(String key) {

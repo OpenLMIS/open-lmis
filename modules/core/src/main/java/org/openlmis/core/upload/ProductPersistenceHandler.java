@@ -12,7 +12,7 @@ import org.openlmis.core.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("productPersistenceHandler")
+@Component
 public class ProductPersistenceHandler extends AbstractModelPersistenceHandler {
 
   public static final String DUPLICATE_PRODUCT_CODE = "Duplicate Product Code";

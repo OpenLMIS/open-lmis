@@ -7,6 +7,7 @@
 package org.openlmis.core.upload;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -27,6 +28,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 
@@ -39,10 +41,17 @@ public class AbstractModelPersistenceHandlerTest {
   @Mock
   MessageService messageService;
 
+  AbstractModelPersistenceHandler handler;
+
+  @Before
+  public void setUp() throws Exception {
+    initMocks(this);
+  }
 
   @Test
   public void shouldAppendRowNumberToExceptionMessage() throws Exception {
-    AbstractModelPersistenceHandler handler = instantiateHandlerThrowingExceptionOnSave();
+    handler = instantiateHandlerThrowingExceptionOnSave();
+    handler.messageService = messageService;
     Importable importable = new TestImportable();
     expectedEx.expect(dataExceptionMatcher("upload.record.error", "Error Msg", "1"));
 
@@ -58,7 +67,7 @@ public class AbstractModelPersistenceHandlerTest {
     Date currentTimestamp = new Date();
     AuditFields auditFields = new AuditFields(1L, currentTimestamp);
     Importable currentRecord = new TestImportable();
-    AbstractModelPersistenceHandler handler = instantiateHandler(null);
+    handler = instantiateHandler(null);
 
     handler.execute(currentRecord, 1, auditFields);
 
@@ -78,7 +87,7 @@ public class AbstractModelPersistenceHandlerTest {
     existing.setId(2L);
     existing.setModifiedDate(DateUtils.addDays(currentTimestamp, -1));
 
-    AbstractModelPersistenceHandler handler = instantiateHandler(existing);
+    handler = instantiateHandler(existing);
 
     handler.execute(currentRecord, 1, auditFields);
 
@@ -98,7 +107,8 @@ public class AbstractModelPersistenceHandlerTest {
     existing.setId(2L);
     existing.setModifiedDate(currentTimestamp);
 
-    AbstractModelPersistenceHandler handler = instantiateHandler(existing);
+    handler = instantiateHandler(existing);
+    handler.messageService = messageService;
     when(messageService.message("duplicate.record.error.code")).thenReturn("Duplicate Record");
 
     expectedEx.expect(DataException.class);
@@ -109,7 +119,7 @@ public class AbstractModelPersistenceHandlerTest {
   }
 
   private AbstractModelPersistenceHandler instantiateHandlerThrowingExceptionOnSave() {
-    return new AbstractModelPersistenceHandler(messageService) {
+    return new AbstractModelPersistenceHandler() {
       @Override
       protected BaseModel getExisting(BaseModel record) {
         return null;
@@ -129,7 +139,7 @@ public class AbstractModelPersistenceHandlerTest {
   }
 
   private AbstractModelPersistenceHandler instantiateHandler(final BaseModel existing) {
-    return new AbstractModelPersistenceHandler(messageService) {
+    return new AbstractModelPersistenceHandler() {
       @Override
       protected BaseModel getExisting(BaseModel record) {
         return existing;

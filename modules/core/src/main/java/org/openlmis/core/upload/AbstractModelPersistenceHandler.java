@@ -22,12 +22,8 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public abstract class AbstractModelPersistenceHandler implements RecordHandler<Importable> {
 
-  private MessageService messageService;
-
   @Autowired
-  public AbstractModelPersistenceHandler(MessageService messageService) {
-    this.messageService = messageService;
-  }
+  MessageService messageService;
 
   @Override
   public void execute(Importable importable, int rowNumber, AuditFields auditFields) {
