@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.allocation.domain.DeliveryZone;
 import org.openlmis.allocation.repository.mapper.DeliveryZoneMapper;
+import org.openlmis.core.domain.Program;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
@@ -73,5 +74,16 @@ public class DeliveryZoneRepositoryTest {
 
     verify(mapper).getByUserForRight(1l, PLAN_DISTRIBUTION);
     assertThat(returnedZones, is(deliveryZones));
+  }
+
+  @Test
+  public void shouldGetProgramForDeliveryZoneBasedOnUserRights() throws Exception {
+    List<Program> programs = new ArrayList<>();
+    when(mapper.getPrograms(1l)).thenReturn(programs);
+
+    List<Program> returnedPrograms = repository.getPrograms(1l);
+
+    verify(mapper).getPrograms(1l);
+    assertThat(returnedPrograms, is(programs));
   }
 }

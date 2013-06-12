@@ -7,6 +7,7 @@ package org.openlmis.allocation.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.allocation.domain.DeliveryZone;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public interface DeliveryZoneMapper {
 
   @Insert({"INSERT INTO delivery_zones (code, name, description, createdBy, modifiedBy, modifiedDate)",
-  "VALUES (#{code}, #{name}, #{description}, #{createdBy}, #{modifiedBy}, #{modifiedDate})"})
+    "VALUES (#{code}, #{name}, #{description}, #{createdBy}, #{modifiedBy}, #{modifiedDate})"})
   @Options(useGeneratedKeys = true)
   void insert(DeliveryZone zone);
 
@@ -32,6 +33,10 @@ public interface DeliveryZoneMapper {
 
   @Select({"SELECT DZ.* FROM delivery_zones DZ INNER JOIN role_assignments RA ON RA.deliveryZoneId = DZ.id",
     "INNER JOIN role_rights RR ON RR.roleId = RA.roleId",
-    "WHERE RR.rightName = #{right}"})
+    "WHERE RR.rightName = #{right} AND RA.userId = #{userId}"})
   List<DeliveryZone> getByUserForRight(@Param("userId") long userId, @Param("right") Right right);
+
+  @Select({"SELECT P.* FROM delivery_zone_program_schedules DZPS INNER JOIN programs P ON P.id = DZPS.programId WHERE",
+    "DZPS.deliveryZoneId = #{id}"})
+  List<Program> getPrograms(long id);
 }
