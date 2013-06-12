@@ -49,10 +49,11 @@ war {
 }
 
 tasks.withType(War) {
+    def now = new Date()
+    String currentTime = now.getTime() + "";
     eachFile { FileCopyDetails fileCopy ->
         if (fileCopy.path.contains('public/pages/') && fileCopy.name.endsWith('.html')) {
-            def now = new Date()
-            String currentTime = now.getTime()+"";
+
             fileCopy.filter(ReplaceTokens, tokens: [version: currentTime])
             fileCopy.filter {String line -> line.replace('.css"', '.css?v=' + currentTime + '"')}
         }
@@ -62,7 +63,7 @@ tasks.withType(War) {
 task minifyJSFiles() {
     doLast {
         println "Minifying Javascript files..."
-        int i=0;
+        int i = 0;
         javascript.source.dev.js.files.each { File file ->
             def dest = new File(file.absolutePath.replace('/js/', '/minJs/'))
             dest.getParentFile().mkdirs()
