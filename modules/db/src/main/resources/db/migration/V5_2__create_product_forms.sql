@@ -9,3 +9,5 @@ CREATE TABLE product_forms (
     createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE UNIQUE INDEX uc_product_forms_lower_code ON product_forms(LOWER(code));
+

@@ -11,3 +11,5 @@ CREATE TABLE processing_schedules (
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE UNIQUE INDEX uc_processing_schedules_lower_code ON processing_schedules(LOWER(code));

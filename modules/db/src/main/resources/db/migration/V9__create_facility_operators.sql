@@ -9,3 +9,5 @@ CREATE TABLE facility_operators   (
    displayOrder INTEGER,
    createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE UNIQUE INDEX uc_facility_operators_lower_code ON facility_operators(LOWER(code));

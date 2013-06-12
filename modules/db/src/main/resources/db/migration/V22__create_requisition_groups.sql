@@ -14,3 +14,5 @@ CREATE TABLE requisition_groups (
 );
 
 CREATE INDEX i_requisition_group_supervisoryNodeId ON requisition_groups(supervisoryNodeId);
+
+CREATE UNIQUE INDEX uc_requisition_groups_lower_code ON requisition_groups(LOWER(code));

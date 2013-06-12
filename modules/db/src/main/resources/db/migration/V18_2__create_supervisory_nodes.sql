@@ -15,3 +15,5 @@ CREATE TABLE supervisory_nodes (
 );
 
 CREATE INDEX i_supervisory_node_parentId ON supervisory_nodes(parentId);
+
+CREATE UNIQUE INDEX uc_supervisory_nodes_lower_code ON supervisory_nodes(LOWER(code));

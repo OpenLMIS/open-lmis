@@ -14,4 +14,5 @@ CREATE TABLE facility_types (
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE UNIQUE INDEX uc_facility_types_lower_code ON facility_types(LOWER(code));
 

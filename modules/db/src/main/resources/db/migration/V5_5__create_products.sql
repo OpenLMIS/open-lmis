@@ -58,3 +58,5 @@ CREATE TABLE products (
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE UNIQUE INDEX uc_products_lower_code ON products(LOWER(code));
