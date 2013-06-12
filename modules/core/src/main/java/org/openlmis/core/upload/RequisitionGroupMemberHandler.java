@@ -13,10 +13,8 @@ import org.openlmis.core.service.RequisitionGroupMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 @NoArgsConstructor
-@Component("requisitionGroupMemberHandler")
+@Component()
 public class RequisitionGroupMemberHandler extends AbstractModelPersistenceHandler {
 
   public static final String DUPLICATE_REQUISITION_GROUP_MEMBER = "Duplicate Requisition Group Member found";

@@ -13,7 +13,7 @@ import org.openlmis.core.service.SupervisoryNodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("supervisoryNodeHandler")
+@Component()
 @NoArgsConstructor
 public class SupervisoryNodeHandler extends AbstractModelPersistenceHandler {
 

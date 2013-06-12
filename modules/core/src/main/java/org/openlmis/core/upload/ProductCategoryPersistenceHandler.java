@@ -12,9 +12,7 @@ import org.openlmis.core.service.ProductCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
-@Component("productCategoryPersistenceHandler")
+@Component()
 public class ProductCategoryPersistenceHandler  extends AbstractModelPersistenceHandler {
 
   public static final String DUPLICATE_PRODUCT_CATEGORY = "Duplicate Product Category";

@@ -13,7 +13,7 @@ import org.openlmis.core.service.FacilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("facilityPersistenceHandler")
+@Component()
 @NoArgsConstructor
 public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler {
 
