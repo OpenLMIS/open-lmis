@@ -144,7 +144,7 @@ describe('program product controller', function () {
 
     scope.calculateValue(programProductISA);
 
-    expect(scope.isaValue).toEqual(undefined);
+    expect(scope.isaValue).toEqual(0);
   });
 
 })
