@@ -8,7 +8,7 @@ CREATE TABLE program_product_isa (
     dosesPerYear INTEGER NOT NULL,
     wastageRate NUMERIC(6,2) NOT NULL,
     bufferPercentage NUMERIC(6,2) NOT NULL,
-    minimumValue INTEGER NOT NULL,
+    minimumValue INTEGER,
     adjustmentValue INTEGER NOT NULL,
     modifiedBy INTEGER,
     modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP

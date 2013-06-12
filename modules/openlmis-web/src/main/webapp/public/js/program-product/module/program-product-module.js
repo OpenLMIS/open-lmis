@@ -10,9 +10,9 @@ require(['../../shared/app', '../controller/program-product-controller'], functi
   var programProductModule = angular.module('programProductModule', ['openlmis', 'ui.bootstrap.modal']).config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
       when('/select-push-program', {
-        controller:ProgramProductListController,
+        controller:ProgramProductController,
         templateUrl:'partials/list.html',
-        resolve:ProgramProductListController.resolve }).
+        resolve:ProgramProductController.resolve }).
 
       otherwise({redirectTo:'/select-push-program'});
   }]).directive('numericValidator', function () {

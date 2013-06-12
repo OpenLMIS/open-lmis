@@ -5,7 +5,7 @@
  */
 
 
-function ProgramProductListController($scope, programs, ProgramProducts, ProgramProductsISA) {
+function ProgramProductController($scope, programs, ProgramProducts, ProgramProductsISA) {
 
   $scope.programs = programs;
   $scope.population = 0;
@@ -29,8 +29,6 @@ function ProgramProductListController($scope, programs, ProgramProducts, Program
       return programProduct.product.primaryName.toLowerCase().indexOf(query.toLowerCase()) != -1;
       ;
     });
-
-    $scope.resultCount = $scope.filteredProducts.length;
   }
 
   $scope.showProductISA = function (programProduct) {
@@ -79,13 +77,13 @@ function ProgramProductListController($scope, programs, ProgramProducts, Program
 
   $scope.isPresent = function (programProductISA) {
     return programProductISA && programProductISA.whoRatio && programProductISA.dosesPerYear && programProductISA.wastageRate
-      && programProductISA.bufferPercentage && programProductISA.adjustmentValue && programProductISA.minimumValue;
+      && programProductISA.bufferPercentage && programProductISA.adjustmentValue;
   }
 
   $scope.getFormula = function (programProductISA) {
     if ($scope.isPresent(programProductISA))
       return "(population) * " + programProductISA.whoRatio + " * " + programProductISA.dosesPerYear + " * "
-        + programProductISA.wastageRate + " / 12 * " + programProductISA.bufferPercentage + " +  " + programProductISA.adjustmentValue;
+        + programProductISA.wastageRate + " / 12 * " + programProductISA.bufferPercentage + " + " + programProductISA.adjustmentValue;
     else "";
   }
 
@@ -93,12 +91,15 @@ function ProgramProductListController($scope, programs, ProgramProducts, Program
     if ($scope.isPresent(programProductISA) && $scope.population) {
       $scope.isaValue = $scope.population * programProductISA.whoRatio * programProductISA.dosesPerYear *
         programProductISA.wastageRate / 12 * programProductISA.bufferPercentage + programProductISA.adjustmentValue;
-      $scope.isaValue = Math.ceil(($scope.isaValue > parseInt(programProductISA.minimumValue)) ? $scope.isaValue : programProductISA.minimumValue);
+      $scope.isaValue = Math.ceil($scope.isaValue);
+    }else{
+      $scope.isaValue = 0;
     }
+
   }
 }
 
-ProgramProductListController.resolve = {
+ProgramProductController.resolve = {
   programs:function ($q, PushProgram, $location, $route, $timeout) {
     var deferred = $q.defer();
 

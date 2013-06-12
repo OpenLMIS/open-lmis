@@ -60,9 +60,12 @@
               WHO target population percentage
             </div>
             <div class="span3">
-              <input name="whoRatio" type="text" ng-required="true" ng-model="currentProgramProduct.programProductISA.whoRatio"
-                     numeric-validator = "numericValue" ng-class = "highlightRequired(currentProgramProduct.programProductISA.whoRatio)"/>
-              <div id="whoRatio" style = "display:none;">Please enter numeric value</div>
+              <input name="whoRatio" type="text" ng-required="true"
+                     ng-model="currentProgramProduct.programProductISA.whoRatio"
+                     numeric-validator="numericValue"
+                     ng-class="highlightRequired(currentProgramProduct.programProductISA.whoRatio)"/>
+
+              <div id="whoRatio" style="display:none;">Please enter numeric value</div>
             </div>
           </div>
 
@@ -71,9 +74,12 @@
               Doses per patient per year
             </div>
             <div class="span3">
-              <input name="dosesPerYear" type="text" ng-required="true" ng-model="currentProgramProduct.programProductISA.dosesPerYear"
-                     numeric-validator = "positiveInteger" ng-class = "highlightRequired(currentProgramProduct.programProductISA.dosesPerYear)"/>
-              <div id="dosesPerYear" style = "display:none;">Please enter numeric value</div>
+              <input name="dosesPerYear" type="text" ng-required="true"
+                     ng-model="currentProgramProduct.programProductISA.dosesPerYear"
+                     numeric-validator="positiveInteger"
+                     ng-class="highlightRequired(currentProgramProduct.programProductISA.dosesPerYear)"/>
+
+              <div id="dosesPerYear" style="display:none;">Please enter numeric value</div>
             </div>
           </div>
 
@@ -82,9 +88,12 @@
               Avearge wastage rate (%)
             </div>
             <div class="span3">
-              <input name="wastageRate" type="text" ng-required="true" ng-model="currentProgramProduct.programProductISA.wastageRate"
-                     numeric-validator = "numericValue" ng-class = "highlightRequired(currentProgramProduct.programProductISA.wastageRate)"/>
-              <div id="wastageRate" style = "display:none;">Please enter numeric value</div>
+              <input name="wastageRate" type="text" ng-required="true"
+                     ng-model="currentProgramProduct.programProductISA.wastageRate"
+                     numeric-validator="numericValue"
+                     ng-class="highlightRequired(currentProgramProduct.programProductISA.wastageRate)"/>
+
+              <div id="wastageRate" style="display:none;">Please enter numeric value</div>
             </div>
           </div>
 
@@ -95,8 +104,10 @@
             <div class="span3">
               <input name="bufferPercentage" type="text" ng-required="true"
                      ng-model="currentProgramProduct.programProductISA.bufferPercentage"
-                     numeric-validator = "numericValue" ng-class = "highlightRequired(currentProgramProduct.programProductISA.bufferPercentage)"/>
-              <div id="bufferPercentage" style = "display:none;">Please enter numeric value</div>
+                     numeric-validator="numericValue"
+                     ng-class="highlightRequired(currentProgramProduct.programProductISA.bufferPercentage)"/>
+
+              <div id="bufferPercentage" style="display:none;">Please enter numeric value</div>
             </div>
           </div>
 
@@ -105,9 +116,12 @@
               Adjustment quantity (+/-)
             </div>
             <div class="span3">
-              <input name="adjustmentValue" type="text" ng-required="true" ng-model="currentProgramProduct.programProductISA.adjustmentValue"
-                     numeric-validator = "integer" ng-class = "highlightRequired(currentProgramProduct.programProductISA.adjustmentValue)"/>
-              <div id="adjustmentValue" style = "display:none;">Please enter numeric value</div>
+              <input name="adjustmentValue" type="text" ng-required="true"
+                     ng-model="currentProgramProduct.programProductISA.adjustmentValue"
+                     numeric-validator="integer"
+                     ng-class="highlightRequired(currentProgramProduct.programProductISA.adjustmentValue)"/>
+
+              <div id="adjustmentValue" style="display:none;">Please enter numeric value</div>
             </div>
           </div>
         </div>
@@ -119,9 +133,11 @@
             ISA minimum value
           </div>
           <div class="span3">
-            <input name="minimumValue" type="text" ng-required="true" ng-model="currentProgramProduct.programProductISA.minimumValue"
-                   numeric-validator = "positiveInteger" ng-class = "highlightRequired(currentProgramProduct.programProductISA.minimumValue)"/>
-            <div id="minimumValue" style = "display:none;">Please enter numeric value</div>
+            <input name="minimumValue" type="text" ng-required="false"
+                   ng-model="currentProgramProduct.programProductISA.minimumValue"
+                   numeric-validator="positiveInteger"/>
+
+            <div id="minimumValue" style="display:none;">Please enter numeric value</div>
           </div>
         </div>
       </form>
@@ -132,9 +148,10 @@
 
       <div class="row-fluid">
         A population of <input type="text" ng-model="population"
-                               numeric-validator = "positiveInteger" ng-change="calculateValue(currentProgramProduct.programProductISA)"/> will need
+                               numeric-validator="positiveInteger"
+                               ng-change="calculateValue(currentProgramProduct.programProductISA)"/> will need
         <span ng-bind="isaValue"></span> doses of <span
-        ng-bind="currentProgramProduct.program.name"></span>
+          ng-bind="currentProgramProduct.program.name"></span>
         per month
       </div>
 
