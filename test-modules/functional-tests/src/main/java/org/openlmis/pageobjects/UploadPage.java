@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.*;
+
 public class UploadPage extends Page {
 
   String uploadFilePath = null;
@@ -52,8 +54,8 @@ public class UploadPage extends Page {
 
 
   private void verifyUploadPage() {
-    SeleneseTestNgHelper.assertTrue(uploadButton.isDisplayed());
-    SeleneseTestNgHelper.assertTrue(uploadDropDown.isDisplayed());
+    assertTrue(uploadButton.isDisplayed());
+    assertTrue(uploadDropDown.isDisplayed());
   }
 
   public void selectUploadType(String uploadType) {
@@ -72,15 +74,18 @@ public class UploadPage extends Page {
 
   public void verifySuccessMessageOnUploadScreen() {
     testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
     testWebDriver.setImplicitWait(implicitWait);
   }
 
   public void verifyErrorMessageOnUploadScreen() {
     testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("Error Message Not Displayed", saveErrorMsgDiv.isDisplayed());
+    assertTrue("Error Message Not Displayed", saveErrorMsgDiv.isDisplayed());
     testWebDriver.setImplicitWait(implicitWait);
   }
+    public void validateErrorMessageOnUploadScreen(String message) {
+        assertTrue("Error Message incorrect", saveErrorMsgDiv.getText().contains(message));
+    }
 
   public void uploadAndVerifyGeographicZone(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Geographic Zones");

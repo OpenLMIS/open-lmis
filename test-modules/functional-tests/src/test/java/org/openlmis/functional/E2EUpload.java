@@ -1,7 +1,7 @@
 /*
  * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http:mozilla.org/MPL/2.0/.
  */
 
 package org.openlmis.functional;
@@ -98,26 +98,26 @@ public class E2EUpload extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
     dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
 
-    verifyValidRequisitionGroupProgramScheduleUpload(uploadPage);
     verifyInvalidRequisitionGroupProgramScheduleUpload(uploadPage);
+    verifyValidRequisitionGroupProgramScheduleUpload(uploadPage);
 
-    verifyValidRequisitionGroupMembersUpload(uploadPage);
     verifyInvalidRequisitionGroupMembersUpload(uploadPage);
+    verifyValidRequisitionGroupMembersUpload(uploadPage);
 
     verifyInvalidSupplyLinesUpload(uploadPage);
     verifyValidSupplyLinesUpload(uploadPage);
 
-    verifyValidDeliveryZonesUpload(uploadPage);
     verifyInValidDeliveryZonesUpload(uploadPage);
+    verifyValidDeliveryZonesUpload(uploadPage);
 
-    verifyValidDeliveryZonesProgramScheduleUpload(uploadPage);
     verifyInValidDeliveryZonesProgramScheduleUpload(uploadPage);
+    verifyValidDeliveryZonesProgramScheduleUpload(uploadPage);
 
-    verifyValidDeliveryZonesMembersUpload(uploadPage);
     verifyInValidDeliveryZonesMembersUpload(uploadPage);
+    verifyValidDeliveryZonesMembersUpload(uploadPage);
 
-    verifyValidDeliveryZonesWarehousesUpload(uploadPage);
     verifyInValidDeliveryZonesWarehousesUpload(uploadPage);
+    verifyValidDeliveryZonesWarehousesUpload(uploadPage);
 
   }
 
@@ -129,8 +129,8 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   private void verifyInvalidSupplyLinesUpload(UploadPage uploadPage) throws FileNotFoundException {
-    //uploadPage.uploadSupplyLines("QA_Supply_Lines_InvalidFacilityCode.csv");
-    //uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadSupplyLines("QA_Supply_Lines_InvalidFacilityCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadSupplyLines("QA_Supply_Lines_InvalidProgramCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadSupplyLines("QA_Supply_Lines_DuplicateCombination_SN_Product_Program.csv");
@@ -225,8 +225,8 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   private void verifyInvalidProgramSupportedByFacilitiesUpload(UploadPage uploadPage) throws FileNotFoundException {
-    //uploadPage.uploadProgramSupportedByFacilitiesInvalidScenarios("QA_program_supported_Invalid_FacilityCode.csv");
-    //uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadProgramSupportedByFacilitiesInvalidScenarios("QA_program_supported_Invalid_FacilityCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadProgramSupportedByFacilitiesInvalidScenarios("QA_program_supported_Invalid_ProgramCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
   }
@@ -275,8 +275,8 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   private void verifyInvalidGeographicZoneUpload(UploadPage uploadPage) throws FileNotFoundException {
-    //uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid.csv");
-    //uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Code.csv");
@@ -404,6 +404,11 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInValidDeliveryZonesUpload(UploadPage uploadPage) throws IOException, SQLException {
     uploadPage.uploadDeliveryZonesInvalidScenarios("QA_Delivery_Zones_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate delivery zone Code found");
+    uploadPage.uploadDeliveryZonesInvalidScenarios("QA_Blank.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("File is empty");
+
   }
 
   private void verifyValidDeliveryZonesUpload(UploadPage uploadPage) throws IOException, SQLException {
@@ -416,38 +421,69 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInValidDeliveryZonesProgramScheduleUpload(UploadPage uploadPage) throws IOException, SQLException {
     uploadPage.uploadDeliveryZoneProgramSchedule("QA_Delivery_Zone_Program_Schedule_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+
+    uploadPage.uploadDeliveryZoneProgramSchedule("QA_Delivery_Zone_Program_Schedule_Pull_Program.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Program does not support push mechanism");
+
+    uploadPage.uploadDeliveryZoneProgramSchedule("QA_Delivery_Zone_Program_Schedule_Invalid_Delivery_Zone.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Delivery zone code");
+
+    uploadPage.uploadDeliveryZoneProgramSchedule("QA_Delivery_Zone_Program_Schedule_Invalid_Schedule.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    //uploadPage.validateErrorMessageOnUploadScreen("schedule.code.invalid");
   }
 
   private void verifyValidDeliveryZonesProgramScheduleUpload(UploadPage uploadPage) throws IOException, SQLException {
     uploadPage.uploadDeliveryZoneProgramScheduleInvalidScenarios("QA_Delivery_Zone_Program_Schedule.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+
     uploadPage.uploadDeliveryZoneProgramScheduleInvalidScenarios("QA_Delivery_Zone_Program_Schedule_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInValidDeliveryZonesMembersUpload(UploadPage uploadPage) throws IOException, SQLException {
-    //uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Program_Schedule_Duplicate.csv") ;
-    //uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Members_Duplicate.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Facility Code exists for the same program in multiple Delivery Zones");
+
+    uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Members_Invalid_Member.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Facility code");
+
+    uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Members_Delivery_Zone_Without_Program.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("No Program(s) mapped for Delivery Zones");
   }
 
   private void verifyValidDeliveryZonesMembersUpload(UploadPage uploadPage) throws IOException, SQLException {
     uploadPage.uploadDeliveryZoneMembersInvalidScenarios("QA_Delivery_Zone_Members.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-    //TODO to be fixed with #758
-//        uploadPage.uploadDeliveryZoneMembersInvalidScenarios("QA_Delivery_Zone_Members_Subsequent.csv") ;
-//        uploadPage.verifySuccessMessageOnUploadScreen();
+
+    uploadPage.uploadDeliveryZoneMembersInvalidScenarios("QA_Delivery_Zone_Members_Subsequent.csv") ;
+    uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInValidDeliveryZonesWarehousesUpload(UploadPage uploadPage) throws IOException, SQLException {
     //uploadPage.uploadDeliveryZoneWarehouses("QA_Delivery_Zone_warehouses_Duplicate.csv") ;
     //uploadPage.verifyErrorMessageOnUploadScreen();
+
+    uploadPage.uploadDeliveryZoneWarehouses("QA_Delivery_Zone_Warehouses_Invalid_Delivery_Zone.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Delivery zone code");
+
+    uploadPage.uploadDeliveryZoneWarehouses("QA_Delivery_Zone_Warehouses_Invalid_Warehouse.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Warehouse code");
   }
 
   private void verifyValidDeliveryZonesWarehousesUpload(UploadPage uploadPage) throws IOException, SQLException {
-    //uploadPage.uploadDeliveryZoneWarehousesInvalidScenarios("QA_Delivery_Zone_warehouses.csv") ;
-    //uploadPage.verifySuccessMessageOnUploadScreen();
-    //uploadPage.uploadDeliveryZoneWarehousesInvalidScenarios("QA_Delivery_Zone_warehouses_Subsequent.csv") ;
-    //uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadDeliveryZoneWarehousesInvalidScenarios("QA_Delivery_Zone_warehouses.csv") ;
+    uploadPage.verifySuccessMessageOnUploadScreen();
+
+    uploadPage.uploadDeliveryZoneWarehousesInvalidScenarios("QA_Delivery_Zone_warehouses_Subsequent.csv") ;
+    uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   @AfterMethod(groups = {"functional"})
