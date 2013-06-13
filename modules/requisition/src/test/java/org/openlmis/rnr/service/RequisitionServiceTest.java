@@ -392,7 +392,7 @@ public class RequisitionServiceTest {
 
     OpenLmisMessage message = requisitionService.getSubmitMessageBasedOnSupervisoryNode(FACILITY, PROGRAM);
 
-    assertThat(message.getCode(), is("rnr.submitted.without.supervisor"));
+    assertThat(message.getCode(), is("msg.rnr.submitted.without.supervisor"));
   }
 
   @Test

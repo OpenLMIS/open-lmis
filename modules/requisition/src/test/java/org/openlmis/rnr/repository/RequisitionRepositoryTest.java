@@ -163,7 +163,7 @@ public class RequisitionRepositoryTest {
     Long rnrId = 1L;
     when(requisitionMapper.getById(rnrId)).thenReturn(null);
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("rnr.not.found");
+    expectedException.expectMessage("error.rnr.not.found");
     requisitionRepository.getById(rnrId);
   }
 

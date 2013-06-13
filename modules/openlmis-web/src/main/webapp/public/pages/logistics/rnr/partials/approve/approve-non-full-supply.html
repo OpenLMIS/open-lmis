@@ -6,7 +6,7 @@
 
 <div ng-controller="ApproveNonFullSupplyController">
   <div class="rnr-table">
-    <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="rnr.no.products"></div>
+    <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="label.no.products"></div>
     <table id="nonFullSupplyTable" class="table table-bordered">
       <thead>
       <tr ng-show="pageLineItems.length">
@@ -31,7 +31,7 @@
                            id="{{getId(column.name, $parent)}}"
                            ng-class="highlightRequired(rnrLineItem[column.name])"/>
                     <span class="rnr-form-error" id="quantityApproved{{$parent.$parent.$index}}"
-                          style="display:none;" openlmis-message="rnr.number.error">
+                          style="display:none;" openlmis-message="error.number.only">
                     </span>
                   </div>
                 </span>

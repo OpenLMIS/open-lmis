@@ -147,7 +147,7 @@ describe('CreateRequisitionController', function () {
     scope.rnr = new Rnr({"id": "rnrId"});
     scope.pageLineItems = [rnrLineItem];
     scope.saveRnrForm.$dirty = true;
-    spyOn(scope.rnr, 'validateFullSupply').andReturn('rnr.required.fields.missing.error');
+    spyOn(scope.rnr, 'validateFullSupply').andReturn('error.rnr.required.fields.missing');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
 
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200);
@@ -157,7 +157,7 @@ describe('CreateRequisitionController', function () {
 
     expect(scope.rnr.validateFullSupply).toHaveBeenCalled();
     expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(1);
-    expect(scope.submitError).toEqual("rnr.required.fields.missing.error");
+    expect(scope.submitError).toEqual("error.rnr.required.fields.missing");
   });
 
   it('should not submit rnr with non full supply required field missing error but should save', function () {
@@ -165,7 +165,7 @@ describe('CreateRequisitionController', function () {
     scope.pageLineItems = [rnrLineItem];
     scope.saveRnrForm.$dirty = true;
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
-    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('rnr.required.fields.missing.error');
+    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('error.rnr.required.fields.missing');
     httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200);
 
     scope.submitRnr();
@@ -173,13 +173,13 @@ describe('CreateRequisitionController', function () {
 
     expect(scope.rnr.validateFullSupply).toHaveBeenCalled();
     expect(scope.rnr.validateNonFullSupply).toHaveBeenCalled();
-    expect(scope.submitError).toEqual("rnr.required.fields.missing.error");
+    expect(scope.submitError).toEqual("error.rnr.required.fields.missing");
   });
 
   it('should set non full supply tab error class if non full supply line items have error', function () {
     scope.rnr = new Rnr({"id": "1", "fullSupplyLineItems": []});
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
-    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('rnr.required.fields.missing.error');
+    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('error.rnr.required.fields.missing');
     httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200);
 
     scope.submitRnr();
@@ -189,7 +189,7 @@ describe('CreateRequisitionController', function () {
 
   it('should set non full supply tab error class if non full supply line items have error', function () {
     scope.rnr = new Rnr({"id": "1", "fullSupplyLineItems": []});
-    spyOn(scope.rnr, 'validateFullSupply').andReturn('rnr.required.fields.missing.error');
+    spyOn(scope.rnr, 'validateFullSupply').andReturn('error.rnr.required.fields.missing');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
     httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200);
 
@@ -407,7 +407,7 @@ describe('CreateRequisitionController', function () {
     scope.rnr = new Rnr({"id": "rnrId"});
     scope.pageLineItems = [rnrLineItem];
     scope.saveRnrForm.$dirty = true;
-    spyOn(scope.rnr, 'validateFullSupply').andReturn('rnr.required.fields.missing.error');
+    spyOn(scope.rnr, 'validateFullSupply').andReturn('error.rnr.required.fields.missing');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
 
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200);
@@ -417,7 +417,7 @@ describe('CreateRequisitionController', function () {
 
     expect(scope.rnr.validateFullSupply).toHaveBeenCalled();
     expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(1);
-    expect(scope.submitError).toEqual("rnr.required.fields.missing.error");
+    expect(scope.submitError).toEqual("error.rnr.required.fields.missing");
   });
 
   it('should not authorize rnr with non full supply required field missing error but should save', function () {
@@ -425,7 +425,7 @@ describe('CreateRequisitionController', function () {
     scope.pageLineItems = [rnrLineItem];
     scope.saveRnrForm.$dirty = true;
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
-    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('rnr.required.fields.missing.error');
+    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('error.rnr.required.fields.missing');
     httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200);
 
     scope.authorizeRnr();
@@ -433,7 +433,7 @@ describe('CreateRequisitionController', function () {
 
     expect(scope.rnr.validateFullSupply).toHaveBeenCalled();
     expect(scope.rnr.validateNonFullSupply).toHaveBeenCalled();
-    expect(scope.submitError).toEqual("rnr.required.fields.missing.error");
+    expect(scope.submitError).toEqual("error.rnr.required.fields.missing");
   });
 
   it('should authorize valid rnr', function () {

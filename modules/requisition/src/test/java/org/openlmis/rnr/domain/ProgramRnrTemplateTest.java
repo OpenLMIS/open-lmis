@@ -96,10 +96,10 @@ public class ProgramRnrTemplateTest {
 
     Map<String, OpenLmisMessage> errors = template.validateToSave();
 
-    assertThat(errors.get(QUANTITY_DISPENSED).getCode(), is("interdependent.fields.can.not.be.calculated"));
+    assertThat(errors.get(QUANTITY_DISPENSED).getCode(), is("error.interdependent.fields.can.not.be.calculated"));
     assertThat(errors.get(QUANTITY_DISPENSED).getParams(), is(new String[]{"quantity dispensed", "stock in hand"}));
 
-    assertThat(errors.get(STOCK_IN_HAND).getCode(), is("interdependent.fields.can.not.be.calculated"));
+    assertThat(errors.get(STOCK_IN_HAND).getCode(), is("error.interdependent.fields.can.not.be.calculated"));
     assertThat(errors.get(STOCK_IN_HAND).getParams(), is(new String[]{"quantity dispensed", "stock in hand"}));
 
   }
@@ -129,7 +129,7 @@ public class ProgramRnrTemplateTest {
     template.getRnrColumnsMap().put(REASON_FOR_REQUESTED_QUANTITY, rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, USER_INPUT, "Requested Quantity Reason"));
 
     Map<String, OpenLmisMessage> errors = template.validateToSave();
-    assertThat(errors.get(QUANTITY_REQUESTED).getCode(), is("user.needs.to.enter.requested.quantity.reason"));
+    assertThat(errors.get(QUANTITY_REQUESTED).getCode(), is("error.user.needs.to.enter.requested.quantity.reason"));
     assertThat(errors.get(QUANTITY_REQUESTED).getParams(), is(new String[]{"Requested Quantity","Requested Quantity Reason"}));
   }
 

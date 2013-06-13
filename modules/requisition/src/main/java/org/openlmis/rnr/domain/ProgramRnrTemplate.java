@@ -34,9 +34,9 @@ public class ProgramRnrTemplate {
   public static final String TOTAL = "total";
   public static final String PRODUCT = "product";
   public static final String USER_NEEDS_TO_ENTER_DEPENDENT_FIELD = "user.needs.to.enter.dependent.field";
-  public static final String INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED = "interdependent.fields.can.not.be.calculated";
-  public static final String COLUMN_SHOULD_BE_VISIBLE_IF_USER_INPUT = "column.should.be.visible.if.user.input";
-  public static final String USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON = "user.needs.to.enter.requested.quantity.reason";
+  public static final String INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED = "error.interdependent.fields.can.not.be.calculated";
+  public static final String COLUMN_SHOULD_BE_VISIBLE_IF_USER_INPUT = "error.column.should.be.visible.if.user.input";
+  public static final String USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON = "error.user.needs.to.enter.requested.quantity.reason";
 
   @Getter
   private Map<String, RnrColumn> rnrColumnsMap = new HashMap<>();

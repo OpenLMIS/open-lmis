@@ -22,7 +22,7 @@ import java.util.List;
 @Service
 @NoArgsConstructor
 public class ProcessingScheduleService {
-  public static final String NO_REQUISITION_GROUP_ERROR = "no.requisition.group.error";
+  public static final String NO_REQUISITION_GROUP_ERROR = "error.no.requisition.group";
 
   private ProcessingScheduleRepository repository;
   private ProcessingPeriodRepository periodRepository;

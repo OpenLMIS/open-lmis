@@ -34,17 +34,17 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 @Service
 public class RequisitionService {
 
-  public static final String RNR_AUTHORIZATION_ERROR = "rnr.authorization.error";
-  public static final String RNR_SUBMISSION_ERROR = "rnr.submission.error";
-  public static final String RNR_OPERATION_UNAUTHORIZED = "rnr.operation.unauthorized";
-  public static final String RNR_AUTHORIZED_SUCCESSFULLY = "rnr.authorized.success";
-  public static final String RNR_SUBMITTED_SUCCESSFULLY = "rnr.submitted.success";
-  public static final String RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR = "rnr.authorized.without.supervisor";
-  public static final String RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR = "rnr.approved.without.supervisor";
-  public static final String NO_SUPERVISORY_NODE_CONTACT_ADMIN = "rnr.submitted.without.supervisor";
-  public static final String RNR_PREVIOUS_NOT_FILLED_ERROR = "rnr.previous.not.filled.error";
-  public static final String RNR_APPROVED_SUCCESSFULLY = "rnr.approved.success";
-  public static final String RNR_TEMPLATE_NOT_INITIATED_ERROR = "rnr.template.not.defined.error";
+  public static final String RNR_AUTHORIZATION_ERROR = "error.rnr.authorization";
+  public static final String RNR_SUBMISSION_ERROR = "error.rnr.submission";
+  public static final String RNR_OPERATION_UNAUTHORIZED = "error.rnr.operation.unauthorized";
+  public static final String RNR_AUTHORIZED_SUCCESSFULLY = "msg.rnr.authorized.success";
+  public static final String RNR_SUBMITTED_SUCCESSFULLY = "msg.rnr.submitted.success";
+  public static final String RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR = "msg.rnr.authorized.without.supervisor";
+  public static final String RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR = "msg.rnr.approved.without.supervisor";
+  public static final String NO_SUPERVISORY_NODE_CONTACT_ADMIN = "msg.rnr.submitted.without.supervisor";
+  public static final String RNR_PREVIOUS_NOT_FILLED_ERROR = "error.rnr.previous.not.filled";
+  public static final String RNR_APPROVED_SUCCESSFULLY = "msg.rnr.approved.success";
+  public static final String RNR_TEMPLATE_NOT_INITIATED_ERROR = "error.rnr.template.not.defined";
 
   @Autowired
   private RequisitionRepository requisitionRepository;

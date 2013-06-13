@@ -49,7 +49,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
   if ($scope.programRnrColumnList && $scope.programRnrColumnList.length > 0) {
   } else {
-    $scope.error = "rnr.template.not.defined.error";
+    $scope.error = "error.rnr.template.not.defined";
     $location.path("/init-rnr");
   }
 

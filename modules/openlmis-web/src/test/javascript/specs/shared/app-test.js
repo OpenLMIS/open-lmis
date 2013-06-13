@@ -6,7 +6,7 @@
 describe("Message Directive", function () {
   var elm, scope;
   var messageService;
-  var messageKey = "rnr.number.error";
+  var messageKey = "error.number.only";
   var compile;
 
   beforeEach(module('openlmis'));
@@ -37,7 +37,7 @@ describe("Message Directive", function () {
       compile(elm)(scope);
       scope.$digest();
 
-      expect(elm.text()).toEqual("rnr.number.error");
+      expect(elm.text()).toEqual("error.number.only");
     });
 
     xit('should use message service if key is not in scope', function () {

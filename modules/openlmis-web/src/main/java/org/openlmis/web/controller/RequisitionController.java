@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.message.OpenLmisMessage;
-import org.openlmis.core.service.MessageService;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -48,7 +46,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @NoArgsConstructor
 public class RequisitionController extends BaseController {
   public static final String RNR = "rnr";
-  public static final String RNR_SAVE_SUCCESS = "rnr.save.success";
+  public static final String RNR_SAVE_SUCCESS = "msg.rnr.save.success";
   public static final String RNR_LIST = "rnr_list";
   public static final String RNR_TEMPLATE = "rnr_template";
 
