@@ -91,8 +91,7 @@ public class UploadControllerIT {
 
     when(dbService.getCount("products")).thenReturn(10).thenReturn(12);
 
-    OpenLmisMessage message = new OpenLmisMessage(UploadController.UPLOAD_FILE_SUCCESS, "2", "0");
-    when(messageService.message(message)).thenReturn("File uploaded successfully. " +
+    when(messageService.message(UploadController.UPLOAD_FILE_SUCCESS, 2, 0)).thenReturn("File uploaded successfully. " +
       "'Number of records created: 2', " +
       "'Number of records updated: 0'");
 
@@ -118,8 +117,7 @@ public class UploadControllerIT {
     MockMultipartFile multiPart = new MockMultipartFile("csvFile", "mock.csv", null, in);
 
     when(dbService.getCount("products")).thenReturn(10).thenReturn(12);
-    OpenLmisMessage message = new OpenLmisMessage(UploadController.UPLOAD_FILE_SUCCESS, "2", "1");
-    when(messageService.message(message)).thenReturn("File uploaded successfully. " +
+    when(messageService.message(UploadController.UPLOAD_FILE_SUCCESS, 2, 1)).thenReturn("File uploaded successfully. " +
       "'Number of records created: 2', " +
       "'Number of records updated: 1'");
 
