@@ -57,7 +57,7 @@ public class RnrTemplateController extends BaseController {
 
   @RequestMapping(value = "/rnr/{programId}/columns", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
-  private List<RnrColumn> fetchColumnsForRequisition(@PathVariable("programId") Long programId) {
+  public List<RnrColumn> fetchColumnsForRequisition(@PathVariable("programId") Long programId) {
     return rnrTemplateService.fetchColumnsForRequisition(programId);
   }
 
