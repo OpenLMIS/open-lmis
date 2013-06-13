@@ -567,15 +567,16 @@ public class TemplateConfigPage extends Page {
 
   }
 
-  public void alterTemplateLabelAndVisibility(String columnHeadingToBeAltered) throws IOException {
+  public void alterBeginningBalanceLabel(String columnHeadingToBeAltered) throws IOException {
     testWebDriver.waitForElementToAppear(SaveButton);
     beginningBalance.clear();
     beginningBalance.sendKeys(columnHeadingToBeAltered);
-    testWebDriver.waitForElementToAppear(remarksCheckBox);
-    remarksCheckBox.click();
+    unClickCheckBox(productCodeCheckBox);
     clickSaveButton();
     verifySuccessDiv();
   }
+
+
 
 
 
