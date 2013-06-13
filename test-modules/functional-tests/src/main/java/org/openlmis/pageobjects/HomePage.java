@@ -44,7 +44,7 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Administration')]")
   private static WebElement AdministrationMenuItem;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Manage')]")
+  @FindBy(how = How.ID, using = "manage-option")
   private static WebElement manageFacilityMenuItem;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Facilities')]")
