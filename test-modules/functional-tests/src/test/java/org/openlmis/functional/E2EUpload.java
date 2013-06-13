@@ -432,7 +432,7 @@ public class E2EUpload extends TestCaseHelper {
 
     uploadPage.uploadDeliveryZoneProgramSchedule("QA_Delivery_Zone_Program_Schedule_Invalid_Schedule.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
-    //uploadPage.validateErrorMessageOnUploadScreen("schedule.code.invalid");
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid schedule code");
   }
 
   private void verifyValidDeliveryZonesProgramScheduleUpload(UploadPage uploadPage) throws IOException, SQLException {
@@ -445,6 +445,10 @@ public class E2EUpload extends TestCaseHelper {
 
   private void verifyInValidDeliveryZonesMembersUpload(UploadPage uploadPage) throws IOException, SQLException {
     uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Members_Duplicate.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Delivery Zone code and Member code combination found");
+
+    uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Members_Duplicate_Facility.csv") ;
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Facility Code exists for the same program in multiple Delivery Zones");
 
@@ -466,9 +470,6 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   private void verifyInValidDeliveryZonesWarehousesUpload(UploadPage uploadPage) throws IOException, SQLException {
-    //uploadPage.uploadDeliveryZoneWarehouses("QA_Delivery_Zone_warehouses_Duplicate.csv") ;
-    //uploadPage.verifyErrorMessageOnUploadScreen();
-
     uploadPage.uploadDeliveryZoneWarehouses("QA_Delivery_Zone_Warehouses_Invalid_Delivery_Zone.csv") ;
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Delivery zone code");
