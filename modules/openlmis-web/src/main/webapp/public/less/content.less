@@ -431,18 +431,18 @@ span[class^="tpl-"] {
       border-right: 5px solid transparent;
     }
 
-    .reason-request {
+    .warning-alert {
       display: block;
       margin: 0 0 5px;
       font-size: 0.8em;
-      padding: 1px 8px 1px 28px;
+      padding: 1px 9px 1px 28px;
       background-image: url(../images/warning_triangle.png);
       background-repeat: no-repeat;
       background-position: 7px center;
       position: absolute;
       bottom: 23px;
       left: -3px;
-      min-width: 250px;
+      min-width: 100px;
       border-radius: 17px;
       border-color: #e4b863;
       color: #b38907;
@@ -783,7 +783,7 @@ h3 {
   font-weight: bold;
 }
 
-.reason-request {
+.warning-alert {
   display: block;
   margin: 0 0 5px;
   font-size: 0.9em;
@@ -924,7 +924,7 @@ input.required-error {
   }
 }
 
-input.warning-error {
+input.warning-error,input.ng-invalid-date {
   border-color: #9e811d !important;
   background-color: #feffe1;
   &:focus {

@@ -7,7 +7,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.ElementNotVisibleException;
@@ -141,7 +140,7 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//input[@value='Done']")
   private static WebElement doneButton;
 
-  @FindBy(how = XPATH, using = "//span[@class='alert alert-warning reason-request']")
+  @FindBy(how = XPATH, using = "//span[@class='alert alert-warning warning-alert']")
   private static WebElement requestedQtyWarningMessage;
 
   @FindBy(how = XPATH, using = "//div[@class='info-box']/div[2]/div[3]")

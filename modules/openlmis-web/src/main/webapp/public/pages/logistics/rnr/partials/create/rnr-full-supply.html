@@ -91,10 +91,12 @@
                            id = "{{getId(column.name, $parent)}}" type = "text"
                            name = "expirationDate{{rnrLineItem['id']}}"
                            maxlength = "7"
-                           ng-model = "rnrLineItem[column.name]"/>
-                    <span class = "rnr-form-error" ng-show = "rnrLineItem.expirationDateInvalid()"
-                          style = "display:block;" openlmis-message="error.invalid.date.format">
-                    </span >
+                           ng-model = "rnrLineItem[column.name]"
+                           showError="inputClass"
+                           rnr-validator="date" />
+                    <span class = "alert alert-warning warning-alert" id="expirationDate{{rnrLineItem['id']}}"
+                          style = "display:none;" openlmis-message="error.invalid.date.format">
+                    </span>
                   </span >
 
                   <span ng-switch-when = "quantityDispensed"
@@ -185,9 +187,9 @@
                            ng-required = "rnrLineItem.quantityRequested"
                            ng-class = "highlightWarningBasedOnField(rnrLineItem[column.name],rnrLineItem.quantityRequested)"
                            maxlength = "250" />
-                    <span class = "alert alert-warning reason-request"
+                    <span class = "alert alert-warning warning-alert"
                           ng-show = "rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity"
-                           openlmis-message="error.reason.required">
+                          openlmis-message="error.reason.required">
                     </span >
                   </span >
 

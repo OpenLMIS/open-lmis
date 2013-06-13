@@ -72,7 +72,7 @@
                        ng-required="true"
                        ng-class="highlightWarning(rnrLineItem.reasonForRequestedQuantity)"
                        maxlength="250"/>
-                <span class="alert alert-warning reason-request" openlmis-message="error.reason.required"
+                <span class="alert alert-warning warning-alert" openlmis-message="error.reason.required"
                       ng-show="rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity">
                 </span>
               </span>
@@ -143,7 +143,7 @@
               ng-bind="labelForRnrColumn('reasonForRequestedQuantity')"></span></label>
           <input type="text" class="span12" ng-model="newNonFullSupply.reasonForRequestedQuantity"
                  id="reasonForRequestedQuantity" maxlength="250"/><br>
-            <span class="alert alert-warning reason-request"
+            <span class="alert alert-warning warning-alert"
                   ng-show="newNonFullSupply.quantityRequested && !newNonFullSupply.reasonForRequestedQuantity"
                   openlmis-message="error.reason.required">
             </span>
