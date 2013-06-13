@@ -126,20 +126,4 @@ public class ProgramProductServiceTest {
     verify(programProductRepository).getByProgram(program);
   }
 
-  @Test
-  public void shouldInsertProgramProductISAIfDoesNotExist() {
-    ProgramProductISA programProductISA = new ProgramProductISA();
-    Long programProductId = 1L;
-    programProductService.saveProgramProductISA(programProductId, programProductISA);
-    verify(programProductRepository).insertProgramProductISA(programProductId, programProductISA);
-  }
-
-  @Test
-  public void shouldUpdateProgramProductISAIfExists() {
-    ProgramProductISA programProductISA = new ProgramProductISA();
-    programProductISA.setId(1l);
-    Long programProductId = 2L;
-    programProductService.saveProgramProductISA(programProductId, programProductISA);
-    verify(programProductRepository).updateProgramProductISA(programProductISA);
-  }
 }

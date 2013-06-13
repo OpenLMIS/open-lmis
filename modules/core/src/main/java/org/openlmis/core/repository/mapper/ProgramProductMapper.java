@@ -10,7 +10,6 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductISA;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -45,31 +44,5 @@ public interface ProgramProductMapper {
   })
   List<ProgramProduct> getByProgram(Program program);
 
-  @Insert({"INSERT INTO program_product_isa (whoRatio, dosesPerYear, wastageRate, bufferPercentage, minimumValue, adjustmentValue)",
-    "VALUES (#{whoRatio}, #{dosesPerYear}, #{wastageRate}, #{bufferPercentage} ," +
-      "#{minimumValue}, #{adjustmentValue} )"})
-  @Options(useGeneratedKeys = true)
-  Integer insertISA(ProgramProductISA programProductISA);
 
-  @Select("SELECT * from program_products where programId = #{programId}")
-  @Results(value = {
-    @Result(property = "program", column = "programId", javaType = Program.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
-    @Result(property = "product", column = "productId", javaType = Product.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
-    @Result(property = "programProductISA", column = "programProductISAId", javaType = ProgramProductISA.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.ProgramProductMapper.getISAById"))
-  })
-  List<ProgramProduct> getWithISAByProgram(Long programId);
-
-  @Select("SELECT * FROM program_product_isa WHERE id = #{id}")
-  ProgramProductISA getISAById(Long id);
-
-  @Update({"UPDATE program_product_isa SET whoRatio = #{whoRatio} , dosesPerYear = #{dosesPerYear}, ",
-    "wastageRate = #{wastageRate}, bufferPercentage = #{bufferPercentage}, minimumValue = #{minimumValue}, ",
-    "adjustmentValue = #{adjustmentValue} where id = #{id}"})
-  void updateISA(ProgramProductISA programProductISA);
-
-  @Update({"UPDATE program_products SET programProductISAId = #{programProductISA.id} WHERE id = #{programProductId}"})
-  void updateProgramProductForISA(@Param("programProductId")Long programProductId, @Param("programProductISA") ProgramProductISA programProductISA);
 }

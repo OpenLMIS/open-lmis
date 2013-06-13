@@ -27,8 +27,6 @@ public class ProgramProduct extends BaseModel implements Importable {
   @ImportField(name = "Is Active", type = "boolean", mandatory = true)
   private boolean active;
 
-  private ProgramProductISA programProductISA;
-
   private Money currentPrice;
 
   public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active) {

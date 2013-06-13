@@ -9,7 +9,6 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductRepository;
@@ -79,15 +78,6 @@ public class ProgramProductService {
     return programProductRepository.getByProgram(program);
   }
 
-  public List<ProgramProduct> getProgramProductsWithISAByProgram(Long programId) {
-    return programProductRepository.getWithISAByProgram(programId);
-  }
 
-  public void saveProgramProductISA(Long programProductId, ProgramProductISA programProductISA) {
-    if (programProductISA.getId() == null) {
-      programProductRepository.insertProgramProductISA(programProductId, programProductISA);
-    } else {
-      programProductRepository.updateProgramProductISA(programProductISA);
-    }
-  }
+
 }
