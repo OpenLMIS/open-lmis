@@ -64,7 +64,7 @@ public class RequisitionPdfModel {
 
   private PdfPTable getTableFor(List<RnrLineItem> lineItems, boolean fullSupply) throws DocumentException, NoSuchFieldException, IllegalAccessException {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumnList);
-    List<RnrColumn> visibleColumns = template.getVisibleColumns(fullSupply);
+    List<RnrColumn> visibleColumns = template.getPrintableColumns(fullSupply);
 
     PdfPTable table = prepareRnrLineItemsTable(visibleColumns);
 
@@ -161,8 +161,8 @@ public class RequisitionPdfModel {
 
   private void addHeading(PdfPTable table) throws DocumentException {
     Chunk chunk = new Chunk(String.format("Report and Requisition for: %s (%s)",
-      this.requisition.getProgram().getName(),
-      this.requisition.getFacility().getFacilityType().getName()), H1_FONT);
+        this.requisition.getProgram().getName(),
+        this.requisition.getFacility().getFacilityType().getName()), H1_FONT);
 
     PdfPCell cell = new PdfPCell(new Phrase(chunk));
     cell.setColspan(4);
@@ -202,7 +202,7 @@ public class RequisitionPdfModel {
     insertCell(table, builder.toString(), 1);
     builder = new StringBuilder();
     builder.append("Reporting Period: ").append(DATE_FORMAT.format(requisition.getPeriod().getStartDate())).append(" - ").
-      append(DATE_FORMAT.format(requisition.getPeriod().getEndDate()));
+        append(DATE_FORMAT.format(requisition.getPeriod().getEndDate()));
     insertCell(table, builder.toString(), 2);
   }
 
