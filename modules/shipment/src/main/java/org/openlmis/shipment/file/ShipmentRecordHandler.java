@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@Component("shipmentRecordHandler")
+@Component
 @NoArgsConstructor
 public class ShipmentRecordHandler implements RecordHandler {
   private static Logger logger = LoggerFactory.getLogger(ShipmentRecordHandler.class);

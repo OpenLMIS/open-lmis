@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 
 @NoArgsConstructor
-@Component()
+@Component
 public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersistenceHandler {
 
 

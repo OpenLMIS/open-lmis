@@ -13,7 +13,7 @@ import org.openlmis.core.upload.AbstractModelPersistenceHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("deliveryZoneHandler")
+@Component
 public class DeliveryZoneHandler extends AbstractModelPersistenceHandler {
 
   public static final String DUPLICATE_DELIVERY_ZONE_CODE_FOUND = "Duplicate delivery zone Code found";

@@ -13,7 +13,7 @@ import org.openlmis.core.upload.AbstractModelPersistenceHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("deliveryZoneWarehouseHandler")
+@Component
 public class DeliveryZoneWarehouseHandler extends AbstractModelPersistenceHandler{
 
   @Autowired

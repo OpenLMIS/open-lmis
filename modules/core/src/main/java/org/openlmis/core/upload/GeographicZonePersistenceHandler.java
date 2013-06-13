@@ -12,7 +12,7 @@ import org.openlmis.core.service.GeographicZoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component()
+@Component
 public class GeographicZonePersistenceHandler extends AbstractModelPersistenceHandler {
   public static final String DUPLICATE_GEOGRAPHIC_ZONE_CODE = "Duplicate Geographic Zone Code";
   GeographicZoneService geographicZoneService;

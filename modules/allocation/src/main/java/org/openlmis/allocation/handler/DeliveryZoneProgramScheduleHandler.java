@@ -12,7 +12,7 @@ import org.openlmis.core.upload.AbstractModelPersistenceHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("deliveryZoneProgramScheduleHandler")
+@Component
 public class DeliveryZoneProgramScheduleHandler extends AbstractModelPersistenceHandler {
 
   public static final String DUPLICATE_DELIVERY_ZONE_CODE_AND_PROGRAM_CODE_COMBINATION_ERROR = "error.deliveryZoneProgram.duplicate";
