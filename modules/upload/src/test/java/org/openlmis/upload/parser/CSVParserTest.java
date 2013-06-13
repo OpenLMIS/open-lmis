@@ -116,8 +116,7 @@ public class CSVParserTest {
 
     InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
-    expectedEx.expect(UploadException.class);
-    expectedEx.expectMessage("Header for column 2 is missing.");
+    expectedEx.expect(uploadExceptionMatcher("error.upload.header.missing","2"));
 
     csvParser.process(inputStream, dummyImportableClass, recordHandler, auditFields);
   }

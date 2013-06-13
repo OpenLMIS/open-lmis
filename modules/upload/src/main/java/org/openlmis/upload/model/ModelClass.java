@@ -98,8 +98,8 @@ public class ModelClass {
   private void validateNullHeaders(List<String> headers) throws UploadException {
     for (int i = 0; i < headers.size(); i++) {
       if (headers.get(i) == null) {
-        //TODO externalize
-        throw new UploadException("Header for column " + (i + 1) + " is missing.");
+        String missingHeaderPosition = i + 1 + "";
+        throw new UploadException("error.upload.header.missing", missingHeaderPosition);
       }
     }
   }
@@ -108,8 +108,7 @@ public class ModelClass {
     List<String> missingFields = findMissingFields(headers);
 
     if (!missingFields.isEmpty()) {
-      //TODO externalize
-      throw new UploadException("Missing Mandatory columns in upload file: " + missingFields);
+      throw new UploadException("error.upload.missing.mandatory.columns", missingFields.toString());
     }
   }
 
@@ -117,8 +116,7 @@ public class ModelClass {
     List<String> fieldNames = getAllImportedFieldNames();
     List invalidHeaders = ListUtils.subtract(headers, lowerCase(fieldNames));
     if (!invalidHeaders.isEmpty()) {
-      //TODO externalize
-      throw new UploadException("Invalid Headers in upload file: " + invalidHeaders);
+      throw new UploadException("error.upload.invalid.header", invalidHeaders.toString());
     }
   }
 

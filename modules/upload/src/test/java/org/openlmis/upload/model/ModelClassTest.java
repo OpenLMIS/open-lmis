@@ -18,6 +18,8 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.upload.matchers.ExceptionMatcher.uploadExceptionMatcher;
+
 @Category(UnitTests.class)
 public class ModelClassTest {
 
@@ -36,17 +38,31 @@ public class ModelClassTest {
   @Test
   public void shouldThrowExceptionIfHeaderDoesNotHaveCorrespondingFieldInModel() {
     List<String> headers = new ArrayList<String>() {{
-      add("optionalStringFieldsff");
+      add("not existing field");
       add("mandatory string field");
       add("mandatoryIntField");
     }};
 
-    expectedEx.expect(UploadException.class);
-    expectedEx.expectMessage("Invalid Headers in upload file: [optionalstringfieldsff]");
+    expectedEx.expect(uploadExceptionMatcher("error.upload.invalid.header", "[not existing field]"));
 
     ModelClass modelClass = new ModelClass(DummyImportable.class);
     modelClass.validateHeaders(headers);
   }
+
+  @Test
+  public void shouldThrowExceptionIfHeaderIsNull() {
+    List<String> headers = new ArrayList<String>() {{
+      add("mandatory string field");
+      add(null);
+      add("mandatoryIntField");
+    }};
+
+    expectedEx.expect(uploadExceptionMatcher("error.upload.header.missing", "2"));
+
+    ModelClass modelClass = new ModelClass(DummyImportable.class);
+    modelClass.validateHeaders(headers);
+  }
+
 
   @Test
   public void shouldFindFieldNameGivenTheHeader() {
@@ -68,8 +84,7 @@ public class ModelClassTest {
       add("optionalStringField");
     }};
 
-    expectedEx.expect(UploadException.class);
-    expectedEx.expectMessage("Missing Mandatory columns in upload file: [Mandatory String Field, mandatoryIntField]");
+    expectedEx.expect(uploadExceptionMatcher("error.upload.missing.mandatory.columns", "[Mandatory String Field, mandatoryIntField]"));
 
     ModelClass modelClass = new ModelClass(DummyImportable.class);
     modelClass.validateHeaders(headers);
