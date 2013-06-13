@@ -16,8 +16,9 @@ public class UploadException extends RuntimeException {
   private String code;
   private String[] params = new String[0];
 
-  public UploadException(String message) {
-    super(message);
+  public UploadException(String code) {
+    super(code);
+    this.code = code;
   }
 
   public UploadException(String code,String... params){
