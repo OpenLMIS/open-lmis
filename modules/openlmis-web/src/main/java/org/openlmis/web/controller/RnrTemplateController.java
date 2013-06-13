@@ -14,6 +14,7 @@ import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.form.RnrColumnList;
 import org.openlmis.web.form.RnrTemplateForm;
+import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,9 +64,9 @@ public class RnrTemplateController extends BaseController {
 
   @RequestMapping(value = "/program/{programId}/rnr-template", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_RNR')")
-  public ResponseEntity saveRnRTemplateForProgram(@PathVariable("programId") Long programId,
-                                                  @RequestBody RnrColumnList rnrColumnList,
-                                                  HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> saveRnRTemplateForProgram(@PathVariable("programId") Long programId,
+                                                                    @RequestBody RnrColumnList rnrColumnList,
+                                                                    HttpServletRequest request) {
     ProgramRnrTemplate programRnrTemplate = new ProgramRnrTemplate(programId, rnrColumnList);
     programRnrTemplate.setModifiedBy(loggedInUserId(request));
     Map<String, OpenLmisMessage> validationErrors = rnrTemplateService.saveRnRTemplateForProgram(programRnrTemplate);
