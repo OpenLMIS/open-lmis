@@ -16,11 +16,6 @@ import static org.apache.commons.collections.ListUtils.intersection;
 @Service
 public class DeliveryZoneMemberService {
 
-  public static final String FACILITY_CODE_INVALID = "facility.code.invalid";
-  public static final String DELIVERY_ZONE_CODE_INVALID = "deliveryZone.code.invalid";
-  public static final String FACILITY_PROGRAM_EXISTS_IN_MULTIPLE_DELIVERY_ZONES = "facility.exists.for.program.in.multiple.zones";
-  public static final String NO_PROGRAMS_MAPPED_FOR_DELIVERY_ZONES = "no.program.mapped.for.delivery.zone";
-
   @Autowired
   DeliveryZoneMemberRepository repository;
 
@@ -47,7 +42,7 @@ public class DeliveryZoneMemberService {
     List<Long> commonIds = getCommonProgramsForDeliveryZoneAndFacliity(member);
 
     if (commonIds.size() > 0)
-      throw new DataException(FACILITY_PROGRAM_EXISTS_IN_MULTIPLE_DELIVERY_ZONES);
+      throw new DataException("facility.exists.for.program.in.multiple.zones");
   }
 
   private List<Long> getCommonProgramsForDeliveryZoneAndFacliity(DeliveryZoneMember member) {
@@ -55,7 +50,7 @@ public class DeliveryZoneMemberService {
         getProgramIdsForDeliveryZones(member.getDeliveryZone().getId());
 
     if (programIdsForDeliveryZones.size() == 0)
-      throw new DataException(NO_PROGRAMS_MAPPED_FOR_DELIVERY_ZONES);
+      throw new DataException("no.program.mapped.for.delivery.zone");
 
     List<Long> deliveryZoneProgramIdsForFacility = repository.
         getDeliveryZoneProgramIdsForFacility(member.getFacility().getId());
@@ -65,13 +60,13 @@ public class DeliveryZoneMemberService {
 
   private void fillDeliveryZone(DeliveryZoneMember member) {
     DeliveryZone zone = deliveryZoneService.getByCode(member.getDeliveryZone().getCode());
-    if (zone == null) throw new DataException(DELIVERY_ZONE_CODE_INVALID);
+    if (zone == null) throw new DataException("deliveryZone.code.invalid");
     member.setDeliveryZone(zone);
   }
 
   private void fillFacility(DeliveryZoneMember member) {
     Facility facility = facilityService.getByCode(member.getFacility());
-    if (facility == null) throw new DataException(FACILITY_CODE_INVALID);
+    if (facility == null) throw new DataException("facility.code.invalid");
     member.setFacility(facility);
   }
 

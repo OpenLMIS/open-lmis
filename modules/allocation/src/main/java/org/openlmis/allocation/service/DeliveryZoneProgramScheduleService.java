@@ -22,9 +22,6 @@ import java.util.List;
 @Service
 public class DeliveryZoneProgramScheduleService {
 
-  public static final String PROGRAM_CODE_INVALID = "program.code.invalid";
-  public static final String ERROR_PROGRAM_NOT_PUSH = "error.program.not.push";
-
   @Autowired
   DeliveryZoneProgramScheduleRepository repository;
 
@@ -65,8 +62,8 @@ public class DeliveryZoneProgramScheduleService {
 
   private void fillProgram(DeliveryZoneProgramSchedule deliveryZoneProgramSchedule) {
     Program program = programService.getByCode(deliveryZoneProgramSchedule.getProgram().getCode());
-    if (program == null) throw new DataException(PROGRAM_CODE_INVALID);
-    if (!program.isPush()) throw new DataException(ERROR_PROGRAM_NOT_PUSH);
+    if (program == null) throw new DataException("program.code.invalid");
+    if (!program.isPush()) throw new DataException("error.program.not.push");
 
     deliveryZoneProgramSchedule.setProgram(program);
   }

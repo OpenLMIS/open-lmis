@@ -18,9 +18,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class DeliveryZoneWarehouseService {
 
-  private static final String WAREHOUSE_CODE_INVALID = "warehouse.code.invalid";
-  public static final String DELIVERY_ZONE_CODE_INVALID = "deliveryZone.code.invalid";
-
   @Autowired
   private DeliveryZoneWarehouseRepository repository;
 
@@ -41,13 +38,13 @@ public class DeliveryZoneWarehouseService {
 
   private void fillDeliveryZone(DeliveryZoneWarehouse deliveryZoneWarehouse) {
     DeliveryZone zone = deliveryZoneService.getByCode(deliveryZoneWarehouse.getDeliveryZone().getCode());
-    if(zone == null) throw new DataException(DELIVERY_ZONE_CODE_INVALID);
+    if (zone == null) throw new DataException("deliveryZone.code.invalid");
     deliveryZoneWarehouse.setDeliveryZone(zone);
   }
 
   private void fillFacility(DeliveryZoneWarehouse deliveryZoneWarehouse) {
     Facility facility = facilityService.getByCode(deliveryZoneWarehouse.getWarehouse());
-    if(facility == null) throw new DataException(WAREHOUSE_CODE_INVALID);
+    if (facility == null) throw new DataException("warehouse.code.invalid");
     deliveryZoneWarehouse.setWarehouse(facility);
   }
 
