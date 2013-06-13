@@ -676,4 +676,31 @@ public class DBWrapper {
     return rowCount;
 
   }
+  public void insertRoleAssignmentForDistribution(String userName, String roleName, String deliveryZoneCode) throws SQLException, IOException {
+    update("delete from role_assignments where userId=(select id from users where username='"+userName+"');");
+
+    update("INSERT INTO role_assignments\n" +
+      "  (userId, roleId, deliveryZoneId) VALUES\n" +
+      "  ((SELECT id FROM USERS WHERE username='"+userName+"'), (SELECT id FROM roles WHERE name = '"+roleName+"'),\n" +
+      "  (SELECT id FROM delivery_zones WHERE code='"+deliveryZoneCode+"'));");
+  }
+
+  public void insertDeliveryZone(String code, String name) throws SQLException {
+    update("INSERT INTO delivery_zones ( code ,name)values\n" +
+      "('"+code+"','"+name+"');");
+  }
+
+  public void insertDeliveryZoneMembers(String code, String facility) throws SQLException {
+    update("INSERT INTO delivery_zone_members ( deliveryZoneId ,facilityId )values\n" +
+      "((select id from  delivery_zones where code ='"+code+"'),(select id from  facilities where code ='"+facility+"'));");
+  }
+
+  public void insertDeliveryZoneProgramSchedule(String code, String program, String scheduleCode) throws SQLException {
+    update("INSERT INTO delivery_zone_program_schedules\n" +
+      "(deliveryZoneId, programId, scheduleId ) values(\n" +
+      "(select id from delivery_zones where code='"+code+"'),\n" +
+      "(select id from programs where code='"+program+"'),\n" +
+      "(select id from processing_schedules where code='"+scheduleCode+"')\n" +
+      ");");
+  }
 }

@@ -29,6 +29,9 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Requisitions')]")
   private static WebElement requisitionMenuItem;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Distributions')]")
+  private static WebElement distributionsMenuItem;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Reports')]")
   private static WebElement reportMenuItem;
 
@@ -56,6 +59,9 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Convert to Order')]")
   private static WebElement convertToOrderMenuItem;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Manage')]")
+  private static WebElement manageMenuItem;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'View Orders')]")
   private static WebElement viewOrdersMenuItem;
 
@@ -67,6 +73,9 @@ public class HomePage extends Page {
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Convert Requisitions to Order')]")
   private static WebElement convertToOrderHeader;
+
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Manage distribution')]")
+  private static WebElement manageDistributionHeader;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'View Orders')]")
   private static WebElement viewOrdersHeader;
@@ -172,7 +181,6 @@ public class HomePage extends Page {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
-    //SeleneseTestNgHelper.assertTrue(usernameDisplay.isDisplayed());
   }
 
   public LoginPage logout(String baseurl) throws IOException {
@@ -364,6 +372,16 @@ public class HomePage extends Page {
     testWebDriver.keyPress(convertToOrderMenuItem);
     testWebDriver.waitForElementToAppear(convertToOrderHeader);
     return new ConvertOrderPage(testWebDriver);
+  }
+
+  public DistributionPage navigatePlanDistribution() throws IOException {
+    SeleneseTestNgHelper.assertTrue(distributionsMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(distributionsMenuItem);
+    testWebDriver.keyPress(distributionsMenuItem);
+    testWebDriver.waitForElementToAppear(manageMenuItem);
+    testWebDriver.keyPress(manageMenuItem);
+    testWebDriver.waitForElementToAppear(manageDistributionHeader);
+    return new DistributionPage(testWebDriver);
   }
 
   public ViewOrdersPage navigateViewOrders() throws IOException {
