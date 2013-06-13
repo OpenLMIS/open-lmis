@@ -219,7 +219,7 @@ public class SubmitReportTest extends TestCaseHelper {
     String response = responseEntity.getResponse();
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
-    assertEquals(responseEntity.getStatus(), 200);
+    assertEquals(responseEntity.getStatus(), 201);
     assertTrue(response.contains("{\"R&R\":"));
   }
 

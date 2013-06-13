@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 @NoArgsConstructor
 @Component
@@ -71,6 +70,10 @@ public class RestResponse {
 
   public static ResponseEntity<RestResponse> response(String key, Object value) {
     return new ResponseEntity<>(new RestResponse(key, value), HttpStatus.OK);
+  }
+
+  public static ResponseEntity<RestResponse> response(String key, Object value, HttpStatus status) {
+    return new ResponseEntity<>(new RestResponse(key, value), status);
   }
 
   public static ResponseEntity<RestResponse> response(Map<String, OpenLmisMessage> messages, HttpStatus status) {

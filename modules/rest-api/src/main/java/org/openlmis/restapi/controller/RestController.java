@@ -9,22 +9,23 @@ package org.openlmis.restapi.controller;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.MessageService;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestService;
 import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
 
 import static org.openlmis.restapi.response.RestResponse.error;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
@@ -47,18 +48,18 @@ public class RestController {
     try {
       requisition = restService.submitReport(report);
     } catch (DataException e) {
-      return RestResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
-    return RestResponse.response(RNR, requisition.getId());
+    return RestResponse.response(RNR, requisition.getId(), CREATED);
   }
 
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<RestResponse> handleException(Exception ex) {
     if (ex instanceof AccessDeniedException) {
-      return error(FORBIDDEN_EXCEPTION, HttpStatus.FORBIDDEN);
+      return error(FORBIDDEN_EXCEPTION, FORBIDDEN);
     }
-    return error(UNEXPECTED_EXCEPTION, HttpStatus.INTERNAL_SERVER_ERROR);
+    return error(UNEXPECTED_EXCEPTION, INTERNAL_SERVER_ERROR);
   }
 
   @RequestMapping(value = "/rest-api/requisitions/{id}/approve", method = PUT, headers = ACCEPT_JSON)
@@ -69,7 +70,7 @@ public class RestController {
       Rnr approveRnr = restService.approve(report);
       return RestResponse.response(RNR, approveRnr.getId());
     } catch (DataException e) {
-      return RestResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
   }
 }

@@ -65,7 +65,7 @@ public class RestControllerTest {
     requisition.setId(1L);
     when(service.submitReport(report)).thenReturn(requisition);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, requisition.getId()), HttpStatus.OK);
-    when(RestResponse.response(RNR, requisition.getId())).thenReturn(expectResponse);
+    when(RestResponse.response(RNR, requisition.getId(), HttpStatus.CREATED)).thenReturn(expectResponse);
 
     ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
 
