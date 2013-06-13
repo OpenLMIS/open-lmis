@@ -8,8 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component("deliveryZoneMemberHandler")
-public class DeliveryZoneMemberHandler extends AbstractModelPersistenceHandler{
+public class DeliveryZoneMemberHandler extends AbstractModelPersistenceHandler {
 
+  private static final String DUPLICATE_DELIVERY_ZONE_CODE_AND_MEMBER_CODE_COMBINATION_ERROR = "error.deliveryZone.member.duplicate";
   @Autowired
   DeliveryZoneMemberService service;
 
@@ -26,6 +27,6 @@ public class DeliveryZoneMemberHandler extends AbstractModelPersistenceHandler{
 
   @Override
   protected String getDuplicateMessageKey() {
-    return null;
+    return DUPLICATE_DELIVERY_ZONE_CODE_AND_MEMBER_CODE_COMBINATION_ERROR;
   }
 }
