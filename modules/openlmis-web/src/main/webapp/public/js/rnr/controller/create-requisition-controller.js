@@ -20,10 +20,10 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.errorPages = {fullSupply:[], nonFullSupply:[]};
   $rootScope.fullScreen = false;
 
-  $scope.getFullScreen = function() {
+  $scope.getFullScreen = function () {
     $rootScope.fullScreen = !$rootScope.fullScreen;
     angular.element(window).scrollTop(0);
-  }
+  };
 
   $scope.fillPagedGridData = function () {
     var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
@@ -92,7 +92,8 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
           });
         });
       }, 3000);
-      $scope.saveRnrForm.$setPristine();;
+      $scope.saveRnrForm.$setPristine();
+      ;
     }, function (data) {
       $scope.error = data.error;
     });
@@ -256,6 +257,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
   function removeExtraDataForPostFromRnr() {
     var rnr = {"id":$scope.rnr.id, "fullSupplyLineItems":[], "nonFullSupplyLineItems":[]};
+    if (!$scope.pageLineItems.length) return rnr;
     if (!$scope.pageLineItems[0].fullSupply) {
       _.each($scope.rnr.nonFullSupplyLineItems, function (lineItem) {
         rnr.nonFullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
