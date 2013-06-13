@@ -4,11 +4,11 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<div ng-hide="roles" openlmis-message="message.loading"></div>
+<div ng-hide="roles" openlmis-message="msg.loading"></div>
 <div ng-show="roles">
   <h2>
     <span openlmis-message = "roles.header"></span>
-    <a id="role-add-new" ng-href="#/create" class="pull-right btn btn-primary" openlmis-message="button.addNew"></a>
+    <a id="role-add-new" ng-href="#/create" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
   </h2>
   <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
   <table class="table table-striped table-bordered">
