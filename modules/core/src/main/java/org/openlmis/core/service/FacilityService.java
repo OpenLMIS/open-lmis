@@ -38,8 +38,6 @@ public class FacilityService {
 
   private EventService eventService;
 
-  public static final String SUPPORTED_PROGRAMS_INVALID = "supported.programs.invalid";
-
   @Autowired
   public FacilityService(FacilityRepository facilityRepository, ProgramSupportedRepository programSupportedRepository,
                          ProgramRepository programRepository, SupervisoryNodeService supervisoryNodeService,
@@ -141,7 +139,7 @@ public class FacilityService {
   }
 
   private void notifyFacilityFeed(Facility facility) {
-    try{
+    try {
       FacilityFeedDTO facilityFeedDTO = new FacilityFeedDTO(facility);
       eventService.notify(new Event(UUID.randomUUID().toString(), "Facility", DateTime.now(), "", facilityFeedDTO.getSerializedContents(), "facility"));
     } catch (URISyntaxException e) {
@@ -155,7 +153,7 @@ public class FacilityService {
     final Set<Facility> userFacilities = new HashSet<>(facilityRepository.getAllInRequisitionGroups(requisitionGroups));
     final Facility homeFacility = facilityRepository.getHomeFacilityForRights(userId, rights);
 
-    if(homeFacility!=null) userFacilities.add(homeFacility);
+    if (homeFacility != null) userFacilities.add(homeFacility);
 
     return new ArrayList<>(userFacilities);
 

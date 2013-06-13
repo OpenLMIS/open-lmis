@@ -30,7 +30,6 @@ public class ProgramProduct extends BaseModel implements Importable {
   private ProgramProductISA programProductISA;
 
   private Money currentPrice;
-  public static final String PROGRAM_PRODUCT_INVALID_CURRENT_PRICE = "programProduct.invalid.current.price";
 
   public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active) {
     this.program = program;
@@ -48,6 +47,6 @@ public class ProgramProduct extends BaseModel implements Importable {
   }
 
   public void validate() {
-    if(currentPrice.isNegative()) throw new DataException(PROGRAM_PRODUCT_INVALID_CURRENT_PRICE);
+    if (currentPrice.isNegative()) throw new DataException("programProduct.invalid.current.price");
   }
 }

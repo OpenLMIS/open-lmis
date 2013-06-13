@@ -13,6 +13,8 @@ import org.openlmis.core.exception.DataException;
 
 import java.util.Date;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -39,16 +41,20 @@ public class ProcessingPeriod extends BaseModel {
   }
 
   public void validate() {
-    if (scheduleId == null || scheduleId == 0)
-      throw new DataException("Period can not be saved without its parent Schedule.");
-    if (startDate == null || startDate.toString().isEmpty())
-      throw new DataException("Period can not be saved without its Start Date.");
-    if (endDate == null || endDate.toString().isEmpty())
-      throw new DataException("Period can not be saved without its End Date.");
-    if (name == null || name.isEmpty())
-      throw new DataException("Period can not be saved without its Name.");
-    if (endDate.compareTo(startDate)<=0) {
-      throw new DataException("Period End Date can not be earlier than Start Date.");
+    if (scheduleId == null) {
+      throw new DataException("error.period.without.schedule");
+    }
+    if (startDate == null || startDate.toString().isEmpty()) {
+      throw new DataException("error.period.without.start.date");
+    }
+    if (endDate == null || endDate.toString().isEmpty()) {
+      throw new DataException("error.period.without.end.date");
+    }
+    if (isBlank(name)) {
+      throw new DataException("error.period.without.name");
+    }
+    if (endDate.compareTo(startDate) <= 0) {
+      throw new DataException("error.period.invalid.dates");
     }
   }
 

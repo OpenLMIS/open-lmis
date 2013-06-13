@@ -42,7 +42,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
-import static org.openlmis.core.service.FacilityService.SUPPORTED_PROGRAMS_INVALID;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
@@ -73,7 +72,7 @@ public class FacilityServiceTest {
   public void setUp() throws Exception {
     initMocks(this);
     facilityService = new FacilityService(facilityRepository, programSupportedRepository, programRepository, supervisoryNodeService,
-      requisitionGroupService, geographicZoneRepository, eventService);
+        requisitionGroupService, geographicZoneRepository, eventService);
   }
 
   @Test
@@ -140,7 +139,7 @@ public class FacilityServiceTest {
   public void shouldGiveErrorIfSupportedProgramWithActiveTrueAndStartDateNotProvided() throws Exception {
     ProgramSupported program = createSupportedProgram("facility code", "program code", true, null);
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage(SUPPORTED_PROGRAMS_INVALID);
+    expectedEx.expectMessage("supported.programs.invalid");
 
     facilityService.uploadSupportedProgram(program);
   }
@@ -232,7 +231,7 @@ public class FacilityServiceTest {
     facility.setSupportedPrograms(programs);
 
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage(SUPPORTED_PROGRAMS_INVALID);
+    expectedEx.expectMessage("supported.programs.invalid");
 
     facilityService.insert(facility);
   }
@@ -249,7 +248,7 @@ public class FacilityServiceTest {
     facility.setSupportedPrograms(programs);
 
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage(SUPPORTED_PROGRAMS_INVALID);
+    expectedEx.expectMessage("supported.programs.invalid");
 
     facilityService.update(facility);
   }

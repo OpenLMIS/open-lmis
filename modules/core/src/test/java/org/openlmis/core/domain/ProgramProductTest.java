@@ -16,7 +16,6 @@ import org.openlmis.db.categories.UnitTests;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static org.openlmis.core.domain.ProgramProduct.PROGRAM_PRODUCT_INVALID_CURRENT_PRICE;
 
 @Category(UnitTests.class)
 public class ProgramProductTest {
@@ -28,7 +27,7 @@ public class ProgramProductTest {
     ProgramProduct programProduct = make(a(ProgramProductBuilder.defaultProgramProduct));
     programProduct.setCurrentPrice(new Money("-0.01"));
     expectException.expect(DataException.class);
-    expectException.expectMessage(PROGRAM_PRODUCT_INVALID_CURRENT_PRICE);
+    expectException.expectMessage("programProduct.invalid.current.price");
     programProduct.validate();
   }
 }
