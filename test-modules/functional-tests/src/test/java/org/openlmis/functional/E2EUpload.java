@@ -480,10 +480,10 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   private void verifyValidDeliveryZonesWarehousesUpload(UploadPage uploadPage) throws IOException, SQLException {
-    uploadPage.uploadDeliveryZoneWarehousesInvalidScenarios("QA_Delivery_Zone_Warehouse.csv") ;
+    uploadPage.uploadDeliveryZoneWarehousesInvalidScenarios("QA_Delivery_zone_warehouses.csv") ;
     uploadPage.verifySuccessMessageOnUploadScreen();
 
-    uploadPage.uploadDeliveryZoneWarehousesInvalidScenarios("QA_Delivery_Zone_Warehouse_Subsequent.csv") ;
+    uploadPage.uploadDeliveryZoneWarehousesInvalidScenarios("QA_Delivery_zone_warehouses_Subsequent.csv") ;
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
