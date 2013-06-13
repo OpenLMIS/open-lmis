@@ -16,8 +16,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeliveryZoneHandler extends AbstractModelPersistenceHandler {
 
-  public static final String DUPLICATE_DELIVERY_ZONE_CODE_FOUND = "Duplicate delivery zone Code found";
-
   @Autowired
   private DeliveryZoneService service;
 
@@ -33,6 +31,6 @@ public class DeliveryZoneHandler extends AbstractModelPersistenceHandler {
 
   @Override
   protected String getDuplicateMessageKey() {
-    return DUPLICATE_DELIVERY_ZONE_CODE_FOUND;
+    return "error.duplicate.delivery.zone";
   }
 }

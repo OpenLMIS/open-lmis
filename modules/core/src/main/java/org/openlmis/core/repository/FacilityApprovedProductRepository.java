@@ -20,8 +20,6 @@ import java.util.List;
 @NoArgsConstructor
 public class FacilityApprovedProductRepository {
 
-  public static final String FACILITY_APPROVED_PRODUCT_DUPLICATE = "facilityApprovedProduct.duplicate.found";
-
   private FacilityApprovedProductMapper facilityApprovedProductMapper;
 
   private FacilityMapper facilityMapper;
@@ -48,11 +46,11 @@ public class FacilityApprovedProductRepository {
   }
 
   public void update(FacilityApprovedProduct facilityApprovedProduct) {
-      facilityApprovedProductMapper.updateFacilityApprovedProduct(facilityApprovedProduct);
+    facilityApprovedProductMapper.updateFacilityApprovedProduct(facilityApprovedProduct);
   }
 
   public FacilityApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityApprovedProduct facilityApprovedProduct) {
     return facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(
-      facilityApprovedProduct.getProgramProduct().getId(), facilityApprovedProduct.getFacilityType().getCode());
+        facilityApprovedProduct.getProgramProduct().getId(), facilityApprovedProduct.getFacilityType().getCode());
   }
 }

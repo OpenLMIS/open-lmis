@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeliveryZoneProgramScheduleHandler extends AbstractModelPersistenceHandler {
 
-  public static final String DUPLICATE_DELIVERY_ZONE_CODE_AND_PROGRAM_CODE_COMBINATION_ERROR = "error.deliveryZoneProgram.duplicate";
   @Autowired
   private DeliveryZoneProgramScheduleService service;
 
@@ -33,6 +32,6 @@ public class DeliveryZoneProgramScheduleHandler extends AbstractModelPersistence
 
   @Override
   protected String getDuplicateMessageKey() {
-    return DUPLICATE_DELIVERY_ZONE_CODE_AND_PROGRAM_CODE_COMBINATION_ERROR;
+    return "error.duplicate.delivery.zone.program";
   }
 }

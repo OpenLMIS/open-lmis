@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductPersistenceHandler extends AbstractModelPersistenceHandler {
 
-  public static final String DUPLICATE_PRODUCT_CODE = "Duplicate Product Code";
   private ProductService productService;
 
   @Autowired
@@ -35,7 +34,7 @@ public class ProductPersistenceHandler extends AbstractModelPersistenceHandler {
 
   @Override
   protected String getDuplicateMessageKey() {
-    return DUPLICATE_PRODUCT_CODE;
+    return "error.duplicate.product.code";
   }
 
 }

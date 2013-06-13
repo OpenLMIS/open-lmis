@@ -30,9 +30,9 @@ public class UserRepository {
 
   public static final String USER_DATA_LENGTH_INCORRECT = "user.data.length.incorrect";
   public static final String SUPERVISOR_USER_NOT_FOUND = "supervisor.user.not.found";
-  public static final String DUPLICATE_EMPLOYEE_ID_FOUND = "duplicate.employee.id.found";
-  public static final String DUPLICATE_EMAIL_FOUND = "duplicate.email.found";
-  public static final String DUPLICATE_USER_NAME_FOUND = "duplicate.user.name.found";
+  public static final String DUPLICATE_EMPLOYEE_ID_FOUND = "error.duplicate.employee.id";
+  public static final String DUPLICATE_EMAIL_FOUND = "error.duplicate.email";
+  public static final String DUPLICATE_USER_NAME_FOUND = "error.duplicate.user.name";
 
   @Autowired
   public UserRepository(UserMapper userMapper) {
@@ -81,7 +81,7 @@ public class UserRepository {
     User supervisor = null;
 
     if (user.getSupervisor() != null && user.getSupervisor().getUserName() != null
-      && !user.getSupervisor().getUserName().isEmpty()) {
+        && !user.getSupervisor().getUserName().isEmpty()) {
 
       supervisor = userMapper.getByUsernameAndVendorId(user.getSupervisor());
       if (supervisor == null)

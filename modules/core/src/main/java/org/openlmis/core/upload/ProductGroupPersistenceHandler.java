@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductGroupPersistenceHandler extends AbstractModelPersistenceHandler{
-
-  public static final String DUPLICATE_PRODUCT_GROUP_CODE = "Duplicate Product Group Code";
+public class ProductGroupPersistenceHandler extends AbstractModelPersistenceHandler {
 
   private ProductGroupService productGroupService;
 
@@ -36,6 +34,6 @@ public class ProductGroupPersistenceHandler extends AbstractModelPersistenceHand
 
   @Override
   protected String getDuplicateMessageKey() {
-    return DUPLICATE_PRODUCT_GROUP_CODE;
+    return "error.duplicate.product.group.code";
   }
 }

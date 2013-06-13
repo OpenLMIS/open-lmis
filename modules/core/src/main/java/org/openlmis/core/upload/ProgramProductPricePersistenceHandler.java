@@ -16,8 +16,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProgramProductPricePersistenceHandler extends AbstractModelPersistenceHandler {
 
-  public static final String PROGRAM_PRODUCT_DUPLICATE = "Duplicate program product";
-
   private ProgramProductService programProductService;
 
   @Autowired
@@ -38,7 +36,7 @@ public class ProgramProductPricePersistenceHandler extends AbstractModelPersiste
 
   @Override
   protected String getDuplicateMessageKey() {
-    return PROGRAM_PRODUCT_DUPLICATE;
+    return "error.duplicate.program.product";
   }
 
 }

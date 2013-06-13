@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class RequisitionGroupHandler extends AbstractModelPersistenceHandler {
 
-  public static final String DUPLICATE_REQUISITION_GROUP_CODE = "Duplicate Requisition Group Code found";
-
   private RequisitionGroupService requisitionGroupService;
 
   @Autowired
@@ -38,6 +36,6 @@ public class RequisitionGroupHandler extends AbstractModelPersistenceHandler {
 
   @Override
   protected String getDuplicateMessageKey() {
-    return DUPLICATE_REQUISITION_GROUP_CODE;
+    return "error.duplicate.requisition.group.code";
   }
 }
