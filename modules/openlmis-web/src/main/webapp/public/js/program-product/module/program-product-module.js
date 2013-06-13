@@ -41,7 +41,7 @@ require(['../../shared/app', '../controller/program-product-controller'], functi
   angular.bootstrap(document, ['programProductModule']);
 
   programProductModule.numericValue = function (value, errorHolder) {
-    var NUMBER_REGEXP = /^(\d+\.?\d{0,4}|\.\d{1,4})$/;
+    var NUMBER_REGEXP = /^(\d{0,4}\.?\d{0,4}|\.\d{1,4})$/;
     var valid = (value == undefined) ? true : NUMBER_REGEXP.test(value);
 
     if (errorHolder != undefined) {
@@ -63,7 +63,7 @@ require(['../../shared/app', '../controller/program-product-controller'], functi
   };
 
   programProductModule.integer = function (value, errorHolder) {
-    var INTEGER_REGEXP = /^[-|\d]\d*$/;
+    var INTEGER_REGEXP = /^[-]?\d*$/;
     var valid = (value == undefined) ? true : INTEGER_REGEXP.test(value);
 
     if (errorHolder != undefined) {
@@ -72,9 +72,5 @@ require(['../../shared/app', '../controller/program-product-controller'], functi
 
     return valid;
   };
-
-  function parseIntWithBaseTen(number) {
-    return parseInt(number, 10);
-  }
 
 });
