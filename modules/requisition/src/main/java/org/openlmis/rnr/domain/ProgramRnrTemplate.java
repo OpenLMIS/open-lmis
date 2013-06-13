@@ -127,7 +127,9 @@ public class ProgramRnrTemplate {
 
   private void validateQuantityDispensedAndStockInHandCannotBeCalculatedAtSameTime() {
     if (columnsCalculated(QUANTITY_DISPENSED) && columnsCalculated(STOCK_IN_HAND)) {
-      OpenLmisMessage errorMessage = new OpenLmisMessage(INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED, getRnrColumnLabelFor(QUANTITY_DISPENSED), getRnrColumnLabelFor(STOCK_IN_HAND));
+      OpenLmisMessage errorMessage = new OpenLmisMessage(INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED,
+          getRnrColumnLabelFor(QUANTITY_DISPENSED),
+          getRnrColumnLabelFor(STOCK_IN_HAND));
       errorMap.put(QUANTITY_DISPENSED, errorMessage);
       errorMap.put(STOCK_IN_HAND, errorMessage);
     }
@@ -143,19 +145,26 @@ public class ProgramRnrTemplate {
 
     if (!areSelectedTogether(QUANTITY_REQUESTED, REASON_FOR_REQUESTED_QUANTITY)) {
 
-      if (columnsVisible(QUANTITY_REQUESTED))
-        errorMap.put(QUANTITY_REQUESTED, new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON, getRnrColumnLabelFor(QUANTITY_REQUESTED), getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY)));
-      else
-        errorMap.put(REASON_FOR_REQUESTED_QUANTITY, new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON, getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY), getRnrColumnLabelFor(QUANTITY_REQUESTED)));
+      if (columnsVisible(QUANTITY_REQUESTED)) {
+        errorMap.put(QUANTITY_REQUESTED, new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON,
+            getRnrColumnLabelFor(QUANTITY_REQUESTED),
+            getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY)));
+      } else {
+        errorMap.put(REASON_FOR_REQUESTED_QUANTITY, new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON,
+            getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY),
+            getRnrColumnLabelFor(QUANTITY_REQUESTED)));
+      }
     }
   }
 
+  //TODO refactor
   public List<RnrColumn> getVisibleColumns(boolean fullSupply) {
     List<RnrColumn> visibleRnrColumns = new ArrayList<>();
     if (fullSupply) {
       for (RnrColumn rnrColumn : rnrColumns) {
-        if (rnrColumn.getName().equals("remarks") || rnrColumn.getName().equals("reasonForRequestedQuantity"))
+        if (rnrColumn.getName().equals("remarks") || rnrColumn.getName().equals("reasonForRequestedQuantity")) {
           continue;
+        }
         if (rnrColumn.isVisible()) {
           visibleRnrColumns.add(rnrColumn);
         }
