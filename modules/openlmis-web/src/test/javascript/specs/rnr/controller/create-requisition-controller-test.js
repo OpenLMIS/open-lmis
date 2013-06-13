@@ -97,10 +97,12 @@ describe('CreateRequisitionController', function () {
     scope.rnr = {"id": "rnrId"};
     scope.pageLineItems = [rnrLineItem];
     scope.saveRnrForm.$dirty = true;
+    scope.saveRnrForm.$setPristine = function (){scope.saveRnrForm.pristine = true};
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond({'success': "R&R saved successfully!"});
     scope.saveRnr();
     httpBackend.flush();
     expect(scope.message).toEqual("R&R saved successfully!");
+    expect(scope.saveRnrForm.pristine).toBeTruthy();
   });
 
 
@@ -317,10 +319,13 @@ describe('CreateRequisitionController', function () {
     scope.rnr = {"id": "rnrId"};
     scope.pageLineItems = [rnrLineItem];
     scope.saveRnrForm.$dirty = true;
+    scope.saveRnrForm.$setPristine = function (){scope.saveRnrForm.pristine = true};
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success': "success message"});
     scope.saveRnr(false);
     httpBackend.flush();
     expect(scope.message).toEqual('success message');
+    expect(scope.saveRnrForm.pristine).toBeTruthy();
+
   });
 
   it('should not set message while saving if set message flag false', function () {

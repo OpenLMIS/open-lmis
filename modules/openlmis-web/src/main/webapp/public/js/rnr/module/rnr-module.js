@@ -29,9 +29,6 @@ require(['../../shared/app', '../controller/initiate-rnr-controller', '../contro
           require:'?ngModel',
           link:function (scope, element, attrs, ctrl) {
             rnrModule[attrs.rnrValidator](element, ctrl, scope);
-            scope.$watch(element.attr('showError'), function () {
-              rnrModule[attrs.rnrValidator](element, ctrl, scope);
-            });
           }
         };
       }).run(function ($rootScope) {
@@ -40,7 +37,7 @@ require(['../../shared/app', '../controller/initiate-rnr-controller', '../contro
 
     angular.bootstrap(document, ['rnr']);
 
-    rnrModule.positiveInteger = function (element, ctrl) {
+    rnrModule.positiveInteger = function (element, ctrl, scope) {
       element.bind('blur', function () {
         validationFunction(ctrl.$viewValue, element.attr('name'));
       });
@@ -67,9 +64,10 @@ require(['../../shared/app', '../controller/initiate-rnr-controller', '../contro
     rnrModule.date = function (element, ctrl, scope) {
 
       var shouldSetError = element.attr('showError');
+
       scope.$watch(shouldSetError, function () {
         ctrl.setError = scope[shouldSetError];
-        validationFunction();
+        setTimeout(validationFunction, 0);
       });
 
       element.keyup(function () {
@@ -77,16 +75,16 @@ require(['../../shared/app', '../controller/initiate-rnr-controller', '../contro
       });
       element.bind('blur', validationFunction);
 
-      setTimeout(validationFunction, 0);
+      element.bind('focus', function () {
+        document.getElementById(element.attr('name')).style.display = 'none';
+      });
 
       function validationFunction() {
         var DATE_REGEXP = /^(0[1-9]|1[012])[/]((2)\d\d\d)$/;
         var valid = (isUndefined(ctrl.$viewValue)) ? true : DATE_REGEXP.test(ctrl.$viewValue);
 
-        var errorHolder = element.attr('name');
-        if (errorHolder != undefined) {
-          document.getElementById(errorHolder).style.display = (valid) ? 'none' : 'block';
-        }
+        var errorHolder = document.getElementById(element.attr('name'));
+        errorHolder.style.display = (valid) ? 'none' : 'block';
         if (ctrl.setError)
           ctrl.$setValidity('date', valid);
       }
