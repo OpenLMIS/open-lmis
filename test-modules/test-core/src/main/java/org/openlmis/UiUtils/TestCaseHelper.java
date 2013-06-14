@@ -169,16 +169,17 @@ public class TestCaseHelper {
   public void setupDataForDeliveryZone(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                        String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                        String facilityCodeFirst, String facilityCodeSecond,
-                                       String program, String schedule) throws IOException, SQLException {
+                                       String programFirst, String programSecond, String schedule) throws IOException, SQLException {
     dbWrapper.insertDeliveryZone(deliveryZoneCodeFirst,deliveryZoneNameFirst);
     dbWrapper.insertDeliveryZone(deliveryZoneCodeSecond,deliveryZoneNameSecond);
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeFirst);
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeSecond, facilityCodeSecond);
     dbWrapper.insertProcessingPeriodForDistribution(14, schedule);
-    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst,program,schedule);
+    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst,programFirst,schedule);
+    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond,programSecond,schedule);
   }
 
-  public void setupTestDataToInitiateRnRForDistribution(boolean configureTemplate, String program, String user, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
+  public void setupTestDataToInitiateRnRForDistribution(boolean configureTemplate, String program, String user, String userId, String vendorName, List<String> rightsList, String programCode) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertFacilities("F10", "F11");
     if (configureTemplate)
@@ -191,6 +192,7 @@ public class TestCaseHelper {
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", program, "F10");
+    dbWrapper.updateActiveStatusOfProgram(programCode);
   }
 
 }

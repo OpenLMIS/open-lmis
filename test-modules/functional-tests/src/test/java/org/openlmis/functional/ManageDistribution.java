@@ -46,18 +46,18 @@ public class ManageDistribution extends TestCaseHelper {
 
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
-  public void testManageDistribution(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+  public void testManageDistributionWithSingleDeliveryZone(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                      String facilityCodeFirst, String facilityCodeSecond,
-                                     String program, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                     String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRForDistribution(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnRForDistribution(true, programFirst, userSIC, "200", "openLmis", rightsList,programSecond);
     setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
-      program, schedule);
+      programFirst, programSecond, schedule);
 
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -69,11 +69,14 @@ public class ManageDistribution extends TestCaseHelper {
     verifySelectedOptionFromDeliveryZoneSelectField(distributionPage, defaultDistributionZoneValuesToBeVerified);
 
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+
     homePage.navigateHomePage();
     homePage.navigatePlanDistribution();
 
     List<String> distributionZoneValuesToBeVerified = new ArrayList<String>();
     distributionZoneValuesToBeVerified.add(deliveryZoneNameFirst);
+    distributionZoneValuesToBeVerified.add(deliveryZoneNameSecond);
     verifyDeliveryZoneSelectFieldValues(distributionPage, distributionZoneValuesToBeVerified);
 
     String defaultProgramValuesToBeVerified = NONE_ASSIGNED;
@@ -82,44 +85,47 @@ public class ManageDistribution extends TestCaseHelper {
     String defaultPeriodValuesToBeVerified = NONE_ASSIGNED;
     verifySelectedOptionFromPeriodSelectField(distributionPage, defaultPeriodValuesToBeVerified);
 
-    selectValueFromDeliveryZone(distributionPage, deliveryZoneNameFirst);
 
-    List<String> programValuesToBeVerified = new ArrayList<String>();
-    programValuesToBeVerified.add(program);
-    verifyProgramSelectFieldValues(distributionPage, programValuesToBeVerified);
+    selectValueFromDeliveryZone(distributionPage, deliveryZoneNameFirst);
+    List<String> firstProgramValuesToBeVerified = new ArrayList<String>();
+    firstProgramValuesToBeVerified.add(programFirst);
+    verifyProgramSelectFieldValues(distributionPage, firstProgramValuesToBeVerified);
     verifySelectedOptionFromPeriodSelectField(distributionPage, defaultPeriodValuesToBeVerified);
 
-    selectValueFromProgram(distributionPage, program);
 
+    selectValueFromDeliveryZone(distributionPage, deliveryZoneNameSecond);
+    List<String> secondProgramValuesToBeVerified = new ArrayList<String>();
+    secondProgramValuesToBeVerified.add(programSecond);
+    verifyProgramSelectFieldValues(distributionPage, secondProgramValuesToBeVerified);
+    verifySelectedOptionFromPeriodSelectField(distributionPage, defaultPeriodValuesToBeVerified);
+
+
+    selectValueFromProgram(distributionPage, programSecond);
     List<String> periodValuesToBeVerified = new ArrayList<String>();
-
     verifySelectedOptionFromPeriodSelectField(distributionPage, periodDisplayedByDefault);
     for (int counter = 2; counter <= totalNumberOfPeriods; counter++) {
       String periodWithCounter = period + counter;
       periodValuesToBeVerified.add(periodWithCounter);
     }
     verifyPeriodSelectFieldValuesPresent(distributionPage, periodValuesToBeVerified);
-
     verifyPeriodSelectFieldValuesNotPresent(distributionPage, periodNotToBeDisplayedInDropDown);
 
     selectValueFromPeriod(distributionPage, periodDisplayedByDefault);
 
-    verifySelectedOptionFromDeliveryZoneSelectField(distributionPage, deliveryZoneNameFirst);
-
-    verifySelectedOptionFromProgramSelectField(distributionPage, program);
-
+    verifySelectedOptionFromDeliveryZoneSelectField(distributionPage, deliveryZoneNameSecond);
+    verifySelectedOptionFromProgramSelectField(distributionPage, programSecond);
     verifySelectedOptionFromPeriodSelectField(distributionPage, periodDisplayedByDefault);
 
     selectValueFromDeliveryZone(distributionPage, SELECT_DELIVERY_ZONE);
-
     verifySelectedOptionFromProgramSelectField(distributionPage, defaultProgramValuesToBeVerified);
-
     verifySelectedOptionFromPeriodSelectField(distributionPage, defaultPeriodValuesToBeVerified);
 
     clickProceed(distributionPage);
     verifySubOptionsOfProceedButton(distributionPage);
 
   }
+
+
 
   private void verifyElementsPresent(DistributionPage distributionPage) {
     assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.getSelectDeliveryZoneSelectBox().isDisplayed());
@@ -289,7 +295,7 @@ public class ManageDistribution extends TestCaseHelper {
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
       {"storeincharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
-        "F10", "F11", "VACCINES", "M", "Period", 14}
+        "F10", "F11", "VACCINES","TB", "M", "Period", 14}
     };
 
   }

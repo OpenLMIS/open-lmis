@@ -681,7 +681,6 @@ public class DBWrapper {
 
   }
   public void insertRoleAssignmentForDistribution(String userName, String roleName, String deliveryZoneCode) throws SQLException, IOException {
-    update("delete from role_assignments where userId=(select id from users where username='"+userName+"');");
 
     update("INSERT INTO role_assignments\n" +
       "  (userId, roleId, deliveryZoneId) VALUES\n" +
@@ -715,6 +714,10 @@ public class DBWrapper {
       String endDate="2013-01-0"+counter;
     insertProcessingPeriod("Period"+counter, "PeriodDecs"+counter, startDate, endDate, 1, schedule);
     }
+  }
+
+  public void updateActiveStatusOfProgram(String programCode) throws SQLException {
+    update("update programs SET active='true' where code='"+programCode+"';");
   }
 
 }
