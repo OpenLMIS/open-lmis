@@ -63,7 +63,7 @@ public class ProductServiceTest {
     when(categoryService.getProductCategoryIdByCode("Invalid Code")).thenReturn(null);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.invalid.reference.data.product");
+    expectedException.expectMessage("error.reference.data.invalid.product");
 
     productService.save(product);
   }

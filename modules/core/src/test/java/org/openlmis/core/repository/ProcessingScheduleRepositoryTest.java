@@ -28,6 +28,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
 public class ProcessingScheduleRepositoryTest {
@@ -117,8 +118,8 @@ public class ProcessingScheduleRepositoryTest {
   public void shouldThrowExceptionForDuplicateCodeWhenTryingToInsertScheduleWithExistingCode() throws Exception {
     ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
     when(processingScheduleMapper.insert(processingSchedule)).thenThrow(new DuplicateKeyException(""));
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("A Schedule with this code already exists");
+
+    expectedEx.expect(dataExceptionMatcher("error.schedule.code.exist"));
 
     repository.create(processingSchedule);
   }
@@ -127,8 +128,8 @@ public class ProcessingScheduleRepositoryTest {
   public void shouldThrowExceptionForDuplicateCodeWhenTryingToUpdateScheduleWithExistingCode() throws Exception {
     ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
     when(processingScheduleMapper.update(processingSchedule)).thenThrow(new DuplicateKeyException(""));
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("A Schedule with this code already exists");
+
+    expectedEx.expect(dataExceptionMatcher("error.schedule.code.exist"));
 
     repository.update(processingSchedule);
   }

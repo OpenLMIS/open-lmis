@@ -35,7 +35,7 @@ public class ProcessingScheduleRepository {
     try {
       processingScheduleMapper.insert(processingSchedule);
     } catch (DuplicateKeyException duplicateKeyException) {
-      throw new DataException("A Schedule with this code already exists");
+      throw new DataException("error.schedule.code.exist");
     }
   }
 
@@ -48,7 +48,7 @@ public class ProcessingScheduleRepository {
     try {
       processingScheduleMapper.update(processingSchedule);
     } catch (DuplicateKeyException duplicateKeyException) {
-      throw new DataException("A Schedule with this code already exists");
+      throw new DataException("error.schedule.code.exist");
     }
   }
 

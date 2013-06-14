@@ -125,8 +125,7 @@ public class FacilityRepositoryTest {
     facility.getOperatedBy().setCode("invalid code");
     when(mapper.getOperatedByIdForCode("invalid code")).thenReturn(null);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid reference data 'Operated By'");
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.invalid.operated.by"));
     repository.save(facility);
   }
 
@@ -146,8 +145,8 @@ public class FacilityRepositoryTest {
     facility.getFacilityType().setCode("invalid code");
     when(mapper.getFacilityTypeForCode("invalid code")).thenReturn(null);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid reference data 'Facility Type'");
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.invalid.facility.type"));
+
     repository.save(facility);
   }
 
@@ -156,8 +155,8 @@ public class FacilityRepositoryTest {
     Facility facility = make(a(defaultFacility));
     facility.getFacilityType().setCode("");
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Missing mandatory reference data 'Facility Type'");
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.facility.type.missing"));
+
     repository.save(facility);
   }
 
@@ -225,8 +224,9 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldThrowExceptionWhenCodeDoesNotExist() {
     Mockito.when(mapper.getIdForCode("ABC")).thenReturn(null);
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid Facility Code");
+
+    expectedEx.expect(dataExceptionMatcher("error.facility.code.invalid"));
+
     repository.getIdForCode("ABC");
   }
 
@@ -260,7 +260,7 @@ public class FacilityRepositoryTest {
     Facility facility = make(a(defaultFacility));
     Mockito.when(geographicZoneRepository.getByCode(facility.getGeographicZone().getCode())).thenReturn(null);
 
-    expectedEx.expect(dataExceptionMatcher("error.invalid.reference.data.geo.zone.code"));
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.invalid.geo.zone.code"));
 
     repository.save(facility);
   }

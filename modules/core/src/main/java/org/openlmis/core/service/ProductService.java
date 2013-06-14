@@ -54,7 +54,7 @@ public class ProductService {
     }
     if (product.getProductGroup() != null) {
       ProductGroup productGroup = productGroupRepository.getByCode(product.getProductGroup().getCode());
-      if (productGroup == null) throw new DataException("error.invalid.reference.data.product.group");
+      if (productGroup == null) throw new DataException("error.reference.data.invalid.product.group");
       product.getProductGroup().setId(productGroup.getId());
 
     }
@@ -68,7 +68,7 @@ public class ProductService {
     if (categoryCode == null || categoryCode.isEmpty()) return;
     Long categoryId = categoryService.getProductCategoryIdByCode(category.getCode());
     if (categoryId == null) {
-      throw new DataException("error.invalid.reference.data.product");
+      throw new DataException("error.reference.data.invalid.product");
     }
     category.setId(categoryId);
   }

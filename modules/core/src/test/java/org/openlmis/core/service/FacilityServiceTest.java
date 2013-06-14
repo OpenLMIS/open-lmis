@@ -198,9 +198,10 @@ public class FacilityServiceTest {
   public void shouldRaiseErrorWhenFacilityWithGivenCodeDoesNotExistWhileSavingProgramSupported() throws Exception {
     ProgramSupported programSupported = createSupportedProgram("invalid Code", "valid Code", true, new Date());
 
-    PowerMockito.when(facilityRepository.getIdForCode("invalid Code")).thenThrow(new DataException("Invalid Facility Code"));
+    PowerMockito.when(facilityRepository.getIdForCode("invalid Code")).thenThrow(new DataException("error.facility.code.invalid"));
+
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid Facility Code");
+    expectedEx.expectMessage("error.facility.code.invalid");
 
     facilityService.uploadSupportedProgram(programSupported);
   }

@@ -66,7 +66,7 @@ public class DeliveryZoneMemberService {
 
   private void fillFacility(DeliveryZoneMember member) {
     Facility facility = facilityService.getByCode(member.getFacility());
-    if (facility == null) throw new DataException("facility.code.invalid");
+    if (facility == null) throw new DataException("error.facility.code.invalid");
     member.setFacility(facility);
   }
 

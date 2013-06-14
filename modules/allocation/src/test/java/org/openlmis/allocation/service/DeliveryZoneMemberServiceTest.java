@@ -77,7 +77,7 @@ public class DeliveryZoneMemberServiceTest {
     when(facilityService.getByCode(member.getFacility())).thenReturn(null);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("facility.code.invalid");
+    expectedException.expectMessage("error.facility.code.invalid");
 
     service.save(member);
   }

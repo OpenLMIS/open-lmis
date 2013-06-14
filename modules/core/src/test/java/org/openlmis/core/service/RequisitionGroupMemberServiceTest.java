@@ -76,7 +76,7 @@ public class RequisitionGroupMemberServiceTest {
     programIdList.add(1L);
 
     service = new RequisitionGroupMemberService(requisitionGroupMemberRepository, facilityRepository,
-      requisitionGroupRepository, requisitionGroupProgramScheduleRepository, programRepository);
+        requisitionGroupRepository, requisitionGroupProgramScheduleRepository, programRepository);
   }
 
   @Test
@@ -92,7 +92,7 @@ public class RequisitionGroupMemberServiceTest {
   @Test
   public void shouldGiveErrorIfRGDoesNotExist() throws Exception {
     when(requisitionGroupRepository.getByCode(
-      requisitionGroupMember.getRequisitionGroup())).thenReturn(null);
+        requisitionGroupMember.getRequisitionGroup())).thenReturn(null);
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Requisition Group does not exist");
@@ -103,10 +103,10 @@ public class RequisitionGroupMemberServiceTest {
   @Test
   public void shouldGiveErrorIfFacilityDoesNotExist() throws Exception {
     when(requisitionGroupRepository.getByCode(requisitionGroupMember.getRequisitionGroup())).thenReturn(requisitionGroup);
-    when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenThrow(new DataException("Invalid Facility Code"));
+    when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenThrow(new DataException("error.facility.code.invalid"));
 
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid Facility Code");
+    expectedEx.expectMessage("error.facility.code.invalid");
 
     service.save(requisitionGroupMember);
   }

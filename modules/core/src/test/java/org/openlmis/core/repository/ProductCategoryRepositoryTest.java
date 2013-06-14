@@ -25,7 +25,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
-import static org.openlmis.core.repository.ProductCategoryRepository.DUPLICATE_CATEGORY_NAME;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -49,7 +48,7 @@ public class ProductCategoryRepositoryTest {
     ProductCategory productCategory = new ProductCategory();
     doThrow(new DuplicateKeyException("some exception")).when(productCategoryMapper).insert(productCategory);
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(DUPLICATE_CATEGORY_NAME);
+    expectedException.expectMessage("product.category.name.duplicate");
 
     productCategoryRepository.insert(productCategory);
 
