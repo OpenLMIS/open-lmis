@@ -9,8 +9,8 @@ package org.openlmis.distribution.repository.mapper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openlmis.distribution.domain.AllocationProgramProduct;
-import org.openlmis.distribution.domain.ProgramProductISA;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
@@ -18,13 +18,18 @@ import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
+import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.distribution.domain.AllocationProgramProduct;
+import org.openlmis.distribution.domain.ProgramProductISA;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -32,7 +37,11 @@ import static org.openlmis.core.builder.ProductBuilder.displayOrder;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 
 
-
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = "classpath*:test-applicationContext-distribution.xml")
+@Category(IntegrationTests.class)
+@Transactional
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class ProgramProductMapperIT {
 
   private Product product;
@@ -45,6 +54,7 @@ public class ProgramProductMapperIT {
   @Autowired
   private ProgramProductMapper programProductMapper;
 
+  @Autowired
   private AllocationProgramProductMapper mapper;
 
   @Before

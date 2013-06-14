@@ -72,7 +72,7 @@
     <import resource="classpath:/applicationContext-restapi.xml"/>
     <import resource="classpath:/applicationContext-shipment.xml"/>
     <import resource="classpath:/applicationContext-reporting.xml"/>
-    <import resource="classpath:/applicationContext-allocation.xml"/>
+    <import resource="classpath:/applicationContext-distribution.xml"/>
 
     <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>
 

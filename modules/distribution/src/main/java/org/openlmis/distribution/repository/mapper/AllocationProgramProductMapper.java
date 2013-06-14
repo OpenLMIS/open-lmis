@@ -31,7 +31,7 @@ public interface AllocationProgramProductMapper {
     @Result(property = "product", column = "productId", javaType = Product.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
     @Result(property = "programProductISA", column = "programProductISAId", javaType = ProgramProductISA.class,
-      one = @One(select = "org.openlmis.allocation.repository.mapper.AllocationProgramProductMapper.getISAById"))
+      one = @One(select = "org.openlmis.distribution.repository.mapper.AllocationProgramProductMapper.getISAById"))
   })
   List<AllocationProgramProduct> getWithISAByProgram(Long programId);
 

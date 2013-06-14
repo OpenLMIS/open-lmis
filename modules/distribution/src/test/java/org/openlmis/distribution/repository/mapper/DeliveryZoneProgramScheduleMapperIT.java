@@ -41,7 +41,7 @@ import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:test-applicationContext-allocation.xml")
+@ContextConfiguration(locations = "classpath*:test-applicationContext-distribution.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class DeliveryZoneProgramScheduleMapperIT {
