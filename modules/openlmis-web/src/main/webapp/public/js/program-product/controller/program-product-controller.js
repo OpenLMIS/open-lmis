@@ -5,7 +5,7 @@
  */
 
 
-function ProgramProductController($scope, programs, ProgramProducts, ProgramProductsISA) {
+function ProgramProductController($scope, $rootScope,programs, ProgramProducts, ProgramProductsISA) {
 
   $scope.programs = programs;
   $scope.population = 0;
@@ -16,10 +16,16 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
       ProgramProducts.get({programId:$scope.programId}, function (data) {
         $scope.programProducts = data.PROGRAM_PRODUCT_LIST;
         $scope.filteredProducts = data.PROGRAM_PRODUCT_LIST;
+        $scope.assignFormula($scope.filteredProducts);
       }, {});
     }
   };
 
+  $scope.assignFormula= function(list){
+    $.each(list, function(index, programProduct) {
+      programProduct.formula =  $scope.getFormula(programProduct.programProductISA);
+    });
+  }
 
   $scope.filterProducts = function () {
     $scope.filteredProducts = [];
@@ -27,16 +33,20 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
 
     $scope.filteredProducts = $.grep($scope.programProducts, function (programProduct) {
       return programProduct.product.primaryName.toLowerCase().indexOf(query.toLowerCase()) != -1;
-      ;
     });
   }
 
   $scope.showProductISA = function (programProduct) {
-    $scope.currentProgramProduct = programProduct;
+    programProduct.previousFormula = programProduct.formula;
+    $scope.currentProgramProduct = angular.copy(programProduct);
     $scope.programProductISAModal = true;
   }
 
   $scope.clearAndCloseProgramProductISAModal = function () {
+    if($scope.currentProgramProduct &&  $scope.currentProgramProduct.formula==null){
+      $scope.currentProgramProduct.formula = $scope.currentProgramProduct.previousFormula;
+    }
+    $scope.population=0;
     $scope.currentProgramProduct = null;
     $scope.programProductISAModal = false;
   }
@@ -71,6 +81,7 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
         }, 3000);
         $scope.error = "";
         $scope.programProductISAModal = false;
+        $scope.loadProgramProducts();
       }, {});
     }
   }
