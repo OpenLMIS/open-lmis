@@ -35,8 +35,10 @@ public class ShipmentRecordHandler implements RecordHandler {
 
 
     Date processTimeStamp = shipmentService.getProcessedTimeStamp(shippedLineItem);
-    if (processTimeStamp != null && !processTimeStamp.equals(shippedLineItem.getModifiedDate()))
-      throw new DataException("Order Number Already Processed");
+    if (processTimeStamp != null && !processTimeStamp.equals(shippedLineItem.getModifiedDate())) {
+      logger.error("Process timestamp " + processTimeStamp + " is not equal to " + "modified timestamp " + shippedLineItem.getModifiedDate() + " in row " + rowNumber);
+      throw new DataException("error.duplicate.order");
+    }
 
     ShippedLineItem shippedLineItemFromDB = shipmentService.getShippedLineItem(shippedLineItem);
 
