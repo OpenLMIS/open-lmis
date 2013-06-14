@@ -98,10 +98,6 @@ public class DBWrapper {
   public void deleteData() throws SQLException, IOException {
     update("delete from role_rights where roleid not in(1);");
     update("delete from role_assignments where userid not in (1);");
-    update("delete from delivery_zone_program_schedules;");
-    update("delete from delivery_zone_members;");
-    update("delete from role_assignments where deliveryzoneid = (select id from delivery_zones where code='DZ1');");
-    update("delete from delivery_zones;");
     update("delete from roles where name not in ('Admin');");
     update("delete from facility_approved_products;");
     update("delete from program_product_price_history;");
@@ -128,6 +124,7 @@ public class DBWrapper {
     update("delete from delivery_zone_program_schedules ;");
     update("delete from delivery_zone_warehouses ;");
     update("delete from delivery_zone_members;");
+    update("delete from role_assignments where deliveryzoneid in (select id from delivery_zones where code in('DZ1','DZ2'));");
     update("delete from delivery_zones;");
 
     update("delete from supervisory_nodes;");
