@@ -30,7 +30,7 @@ public class ProductGroupRepository {
     try {
       mapper.insert(productGroup);
     } catch (DuplicateKeyException duplicateKeyException) {
-      throw new DataException("Duplicate Product Group Code Found");
+      throw new DataException("error.duplicate.product.group.code");
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
       String errorMessage = dataIntegrityViolationException.getMessage().toLowerCase();
       if (errorMessage.contains("foreign key") || errorMessage.contains("violates not-null constraint")) {

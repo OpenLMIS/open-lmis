@@ -67,8 +67,8 @@ public class ProductRepositoryTest {
   @Test
   public void shouldRaiseDuplicateProductCodeError() throws Exception {
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Duplicate Product Code found");
+    expectedEx.expect(dataExceptionMatcher("error.duplicate.product.code"));
+
     doThrow(new DuplicateKeyException("")).when(mockedMapper).insert(product);
     repository.insert(product);
   }
@@ -159,8 +159,8 @@ public class ProductRepositoryTest {
     product.getProductGroup().setCode("invalid product group code");
     when(mockedProductGroupMapper.getByCode("invalid product group code")).thenReturn(null);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid reference data 'Product Group'");
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.invalid.product.group"));
+
     repository.insert(product);
   }
 

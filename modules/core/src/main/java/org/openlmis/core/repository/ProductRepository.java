@@ -40,7 +40,7 @@ public class ProductRepository {
       validateAndSetProductGroup(product);
       mapper.insert(product);
     } catch (DuplicateKeyException duplicateKeyException) {
-      throw new DataException("Duplicate Product Code found");
+      throw new DataException("error.duplicate.product.code");
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
       String errorMessage = dataIntegrityViolationException.getMessage().toLowerCase();
       if (errorMessage.contains("foreign key") || errorMessage.contains("violates not-null constraint")) {
@@ -59,7 +59,7 @@ public class ProductRepository {
     if (productGroupCode == null || productGroupCode.isEmpty()) return;
 
     ProductGroup productGroup = productGroupMapper.getByCode(productGroupCode);
-    if (productGroup == null) throw new DataException("Invalid reference data 'Product Group'");
+    if (productGroup == null) throw new DataException("error.reference.data.invalid.product.group");
 
     group.setId(productGroup.getId());
   }
