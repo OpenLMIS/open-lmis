@@ -23,7 +23,6 @@ import java.util.List;
 @NoArgsConstructor
 public class ProgramProductService {
 
-  public static final String PROGRAM_PRODUCT_INVALID = "programProduct.product.program.invalid";
   private ProgramProductRepository programProductRepository;
   private ProgramRepository programRepository;
   private ProductRepository productRepository;
@@ -45,7 +44,7 @@ public class ProgramProductService {
     ProgramProduct programProduct = programProductPrice.getProgramProduct();
     ProgramProduct programProductWithId = programProductRepository.getByProgramAndProductCode(programProduct);
     if (programProductWithId == null)
-      throw new DataException(PROGRAM_PRODUCT_INVALID);
+      throw new DataException("programProduct.product.program.invalid");
 
     programProduct.setId(programProductWithId.getId());
     programProduct.setModifiedBy(programProductPrice.getModifiedBy());
@@ -77,7 +76,4 @@ public class ProgramProductService {
   public List<ProgramProduct> getByProgram(Program program) {
     return programProductRepository.getByProgram(program);
   }
-
-
-
 }

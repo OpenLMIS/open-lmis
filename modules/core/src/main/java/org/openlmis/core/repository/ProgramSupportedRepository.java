@@ -42,9 +42,9 @@ public class ProgramSupportedRepository {
     try {
       programSupportedMapper.addSupportedProgram(programSupported);
     } catch (DuplicateKeyException duplicateKeyException) {
-      throw new DataException("Facility has already been mapped to the program");
+      throw new DataException("error.facility.program.mapping.exists");
     } catch (DataIntegrityViolationException integrityViolationException) {
-      throw new DataException("Invalid reference data 'Program Code'");
+      throw new DataException("error.reference.data.invalid.program");
     }
   }
 
@@ -85,7 +85,7 @@ public class ProgramSupportedRepository {
   }
 
   public ProgramSupported getByFacilityIdAndProgramId(Long facilityId, Long programId) {
-    return programSupportedMapper.getBy(facilityId,programId);
+    return programSupportedMapper.getBy(facilityId, programId);
   }
 
   public void updateSupportedProgram(ProgramSupported programSupported) {

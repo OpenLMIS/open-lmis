@@ -33,6 +33,7 @@ import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_CODE;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
@@ -94,8 +95,7 @@ public class RequisitionGroupMemberServiceTest {
     when(requisitionGroupRepository.getByCode(
         requisitionGroupMember.getRequisitionGroup())).thenReturn(null);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Requisition Group does not exist");
+    expectedEx.expect(dataExceptionMatcher("error.requisition.group.not.exist"));
 
     service.save(requisitionGroupMember);
   }
@@ -119,7 +119,7 @@ public class RequisitionGroupMemberServiceTest {
     when(requisitionGroupProgramScheduleRepository.getProgramIDsForRequisitionGroup(RG_ID)).thenReturn(new ArrayList<Long>());
 
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("No Program(s) mapped for Requisition Group");
+    expectedEx.expect(dataExceptionMatcher("error.no.program.mapped.requisition.group"));
 
     service.save(requisitionGroupMember);
   }

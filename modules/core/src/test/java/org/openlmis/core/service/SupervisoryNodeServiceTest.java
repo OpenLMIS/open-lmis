@@ -37,6 +37,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
 public class SupervisoryNodeServiceTest {
@@ -241,8 +242,7 @@ public class SupervisoryNodeServiceTest {
   public void shouldGiveErrorIfParentNodeCodeDoesNotExist() throws Exception {
     when(supervisoryNodeRepository.getIdForCode(supervisoryNodeWithParent.getParent().getCode())).thenThrow(new DataException("Invalid SupervisoryNode Code"));
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Supervisory Node Parent does not exist");
+    expectedEx.expect(dataExceptionMatcher("error.supervisory.node.parent.not.exist"));
 
     supervisoryNodeService.save(supervisoryNodeWithParent);
 

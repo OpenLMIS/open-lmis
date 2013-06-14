@@ -70,7 +70,7 @@ public class ProgramProductRepository {
 
   private void validateProductCode(String code) {
     if (code == null || code.isEmpty() || productRepository.getIdByCode(code) == null) {
-      throw new DataException("Invalid Product Code");
+      throw new DataException("product.code.invalid");
     }
   }
 
@@ -103,8 +103,6 @@ public class ProgramProductRepository {
   public List<ProgramProduct> getByProgram(Program program) {
     return mapper.getByProgram(program);
   }
-
-
 
 
 }

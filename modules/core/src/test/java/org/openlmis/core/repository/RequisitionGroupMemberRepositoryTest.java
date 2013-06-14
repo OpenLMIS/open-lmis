@@ -17,7 +17,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.RequisitionGroupMapper;
 import org.openlmis.core.repository.mapper.RequisitionGroupMemberMapper;
@@ -35,6 +34,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -98,8 +98,7 @@ public class RequisitionGroupMemberRepositoryTest {
   public void shouldSaveMappingIfMappingAlreadyExists() throws Exception {
     doThrow(DataIntegrityViolationException.class).when(requisitionGroupMemberMapper).insert(requisitionGroupMember);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Facility to Requisition Group mapping already exists");
+    expectedEx.expect(dataExceptionMatcher("error.facility.requisition.group.mapping.exists"));
 
     repository.insert(requisitionGroupMember);
 
@@ -111,11 +110,11 @@ public class RequisitionGroupMemberRepositoryTest {
     requisitionGroup.setId(5L);
     facility.setId(4L);
     when(requisitionGroupMemberMapper.
-      getMappingByRequisitionGroupIdAndFacilityId(requisitionGroup, facility)).
-      thenReturn(requisitionGroupMember);
+        getMappingByRequisitionGroupIdAndFacilityId(requisitionGroup, facility)).
+        thenReturn(requisitionGroupMember);
 
     RequisitionGroupMember returnedRGMember = repository.
-      getRequisitionGroupMemberForRequisitionGroupIdAndFacilityId(requisitionGroup, facility);
+        getRequisitionGroupMemberForRequisitionGroupIdAndFacilityId(requisitionGroup, facility);
 
     assertThat(returnedRGMember, is(requisitionGroupMember));
   }

@@ -43,7 +43,7 @@ public class RoleRightsRepository {
     try {
       roleRightsMapper.insertRole(role);
     } catch (DuplicateKeyException e) {
-      throw new DataException("Duplicate Role found");
+      throw new DataException("error.duplicate.role");
     }
 
     createRoleRights(role);
@@ -53,7 +53,7 @@ public class RoleRightsRepository {
     try {
       roleRightsMapper.updateRole(role);
     } catch (DuplicateKeyException e) {
-      throw new DataException("Duplicate Role found");
+      throw new DataException("error.duplicate.role");
     }
     roleRightsMapper.deleteAllRightsForRole(role.getId());
     createRoleRights(role);

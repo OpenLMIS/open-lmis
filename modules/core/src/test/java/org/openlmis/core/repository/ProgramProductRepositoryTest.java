@@ -19,6 +19,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.matchers.Matchers;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductPriceMapper;
@@ -106,8 +107,7 @@ public class ProgramProductRepositoryTest {
     when(programRepository.getIdByCode(program.getCode())).thenReturn(1L);
     ProgramProduct programProduct = new ProgramProduct(program, new Product(), 10, true);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid Product Code");
+    expectedEx.expect(Matchers.dataExceptionMatcher("product.code.invalid"));
 
     programProductRepository.save(programProduct);
   }

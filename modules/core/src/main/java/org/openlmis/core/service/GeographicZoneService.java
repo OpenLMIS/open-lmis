@@ -34,14 +34,14 @@ public class GeographicZoneService {
   private void validateAndSetParent(GeographicZone geographicZone) {
     geographicZone.setLevel(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
     if (geographicZone.getLevel() == null)
-      throw new DataException("Invalid Geographic Level Code");
+      throw new DataException("error.geo.level.invalid");
     if (geographicZone.getParent() == null) {
       geographicZone.setParent(repository.getByCode("Root"));
       return;
     }
     geographicZone.setParent(repository.getByCode(geographicZone.getParent().getCode()));
     if (geographicZone.getParent() == null)
-      throw new DataException("Invalid Geographic Zone Parent Code");
+      throw new DataException("error.geo.zone.parent.invalid");
   }
 
   public GeographicZone getByCode(GeographicZone geographicZone) {

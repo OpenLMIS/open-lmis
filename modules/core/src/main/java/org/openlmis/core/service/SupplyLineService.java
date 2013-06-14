@@ -22,12 +22,10 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 public class SupplyLineService {
 
-
   private SupplyLineRepository supplyLineRepository;
   private ProgramRepository programRepository;
   private FacilityRepository facilityRepository;
   private SupervisoryNodeRepository supervisoryNodeRepository;
-
 
   @Autowired
   public SupplyLineService(SupplyLineRepository supplyLineRepository, ProgramRepository programRepository, FacilityRepository facilityRepository, SupervisoryNodeRepository supervisoryNodeRepository) {
@@ -60,13 +58,13 @@ public class SupplyLineService {
 
   private void validateIfSupervisoryNodeIsTopmostNode(SupplyLine supplyLine) {
     Long supervisoryNodeParentId = supervisoryNodeRepository.getSupervisoryNodeParentId(supplyLine.getSupervisoryNode().getId());
-    if (supervisoryNodeParentId != null)
-      throw new DataException("Supervising Node is not the Top node");
+    if (supervisoryNodeParentId != null) {
+      throw new DataException("error.supervisory.node.not.top.node");
+    }
   }
 
   public SupplyLine getExisting(SupplyLine supplyLine) {
     populateIdsForSupplyLine(supplyLine);
     return supplyLineRepository.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine);
   }
-
 }

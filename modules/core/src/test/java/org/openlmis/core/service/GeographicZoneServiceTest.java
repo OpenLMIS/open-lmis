@@ -17,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.db.categories.UnitTests;
 
@@ -27,6 +26,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -58,9 +58,9 @@ public class GeographicZoneServiceTest {
   @Test
   public void shouldSaveGeographicZone() throws Exception {
     when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
-      new GeographicLevel(1L, "abc", "abc", 1));
+        new GeographicLevel(1L, "abc", "abc", 1));
     when(repository.getByCode(geographicZone.getParent().getCode())).thenReturn(
-      new GeographicZone(1L, "xyz", "xyz", null, null));
+        new GeographicZone(1L, "xyz", "xyz", null, null));
 
     service.save(geographicZone);
 
@@ -73,12 +73,10 @@ public class GeographicZoneServiceTest {
 
   @Test
   public void shouldThrowAnExceptionIfParentCodeIsInvalid() throws Exception {
-    when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
-      new GeographicLevel(1L, "abc", "abc", 1));
+    when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(new GeographicLevel(1L, "abc", "abc", 1));
     when(repository.getByCode(geographicZone.getParent().getCode())).thenReturn(null);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid Geographic Zone Parent Code");
+    expectedEx.expect(dataExceptionMatcher("error.geo.zone.parent.invalid"));
 
     service.save(geographicZone);
   }
@@ -87,18 +85,16 @@ public class GeographicZoneServiceTest {
   public void shouldThrowAnExceptionIfGeographicLevelCodeIsInvalid() throws Exception {
     when(repository.getByCode(geographicZone.getLevel().getCode())).thenReturn(null);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid Geographic Level Code");
+    expectedEx.expect(dataExceptionMatcher("error.geo.level.invalid"));
 
     service.save(geographicZone);
   }
-
 
   @Test
   public void shouldSetRootAsParentIfParentIsNull() throws Exception {
     GeographicZone expected = new GeographicZone(1L, "Root", "Root", null, null);
     when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
-      new GeographicLevel(1L, "abc", "abc", 1));
+        new GeographicLevel(1L, "abc", "abc", 1));
     when(repository.getByCode(ROOT_GEOGRAPHIC_ZONE_CODE)).thenReturn(expected);
     geographicZone.setParent(null);
 

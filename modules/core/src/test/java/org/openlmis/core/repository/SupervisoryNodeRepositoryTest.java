@@ -18,7 +18,6 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.openlmis.db.categories.UnitTests;
 
@@ -35,6 +34,7 @@ import static org.openlmis.core.builder.RequisitionGroupBuilder.code;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -86,8 +86,9 @@ public class SupervisoryNodeRepositoryTest {
   @Test
   public void shouldThrowExceptionWhenCodeDoesNotExist() {
     when(supervisoryNodeMapper.getIdForCode("ABC")).thenReturn(null);
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid SupervisoryNode Code");
+
+    expectedEx.expect(dataExceptionMatcher("error.supervisory.node.invalid"));
+
     repository.getIdForCode("ABC");
   }
 

@@ -33,7 +33,7 @@ public class RequisitionGroupMemberRepository {
     try {
       mapper.insert(requisitionGroupMember);
     } catch (DataIntegrityViolationException ex) {
-      throw new DataException("Facility to Requisition Group mapping already exists");
+      throw new DataException("error.facility.requisition.group.mapping.exists");
     }
   }
 
@@ -42,7 +42,7 @@ public class RequisitionGroupMemberRepository {
   }
 
   public RequisitionGroupMember getRequisitionGroupMemberForRequisitionGroupIdAndFacilityId(
-    RequisitionGroup requisitionGroup, Facility facility) {
+      RequisitionGroup requisitionGroup, Facility facility) {
     return mapper.getMappingByRequisitionGroupIdAndFacilityId(requisitionGroup, facility);
   }
 
