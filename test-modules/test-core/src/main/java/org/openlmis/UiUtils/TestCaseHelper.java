@@ -86,11 +86,12 @@ public class TestCaseHelper {
     dbWrapper.insertRoleAssignment(userId, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
-//    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
-//    dbWrapper.insertProcessingPeriod("Period2", "second period", "2012-01-16", "2013-01-30", 1, "M");
+    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
+    dbWrapper.insertProcessingPeriod("Period2", "second period", "2012-01-16", "2013-01-30", 1, "M");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", program, "F10");
   }
+
 
   public void setupRnRTestDataRnRForCommTrack(boolean configureGenericTemplate, String program, String user, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
@@ -175,6 +176,21 @@ public class TestCaseHelper {
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeSecond, facilityCodeSecond);
     dbWrapper.insertProcessingPeriodForDistribution(14, schedule);
     dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst,program,schedule);
+  }
+
+  public void setupTestDataToInitiateRnRForDistribution(boolean configureTemplate, String program, String user, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
+    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
+    dbWrapper.insertFacilities("F10", "F11");
+    if (configureTemplate)
+      dbWrapper.configureTemplate(program);
+
+    setupTestUserRoleRightsData(userId, user, vendorName, rightsList);
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+    dbWrapper.insertRoleAssignment(userId, "store in-charge");
+    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
+    dbWrapper.insertSchedule("M", "Monthly", "Month");
+    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
+    dbWrapper.insertSupplyLines("N1", program, "F10");
   }
 
 }

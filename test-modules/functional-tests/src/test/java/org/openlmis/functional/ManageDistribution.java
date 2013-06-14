@@ -53,7 +53,7 @@ public class ManageDistribution extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnRForDistribution(true, program, userSIC, "200", "openLmis", rightsList);
     setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
