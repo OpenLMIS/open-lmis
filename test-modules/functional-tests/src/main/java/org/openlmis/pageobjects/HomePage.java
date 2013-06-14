@@ -32,6 +32,9 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Distributions')]")
   private static WebElement distributionsMenuItem;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Home')]")
+  private static WebElement homeMenuItem;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Reports')]")
   private static WebElement reportMenuItem;
 
@@ -382,6 +385,14 @@ public class HomePage extends Page {
     testWebDriver.keyPress(manageMenuItem);
     testWebDriver.waitForElementToAppear(manageDistributionHeader);
     return new DistributionPage(testWebDriver);
+  }
+
+  public HomePage navigateHomePage() throws IOException {
+    SeleneseTestNgHelper.assertTrue(homeMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(homeMenuItem);
+    testWebDriver.keyPress(homeMenuItem);
+    testWebDriver.sleep(500);
+    return new HomePage(testWebDriver);
   }
 
   public ViewOrdersPage navigateViewOrders() throws IOException {

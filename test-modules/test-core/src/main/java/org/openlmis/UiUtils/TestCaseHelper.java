@@ -86,8 +86,8 @@ public class TestCaseHelper {
     dbWrapper.insertRoleAssignment(userId, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
-    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
-    dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
+//    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
+//    dbWrapper.insertProcessingPeriod("Period2", "second period", "2012-01-16", "2013-01-30", 1, "M");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", program, "F10");
   }
@@ -173,6 +173,7 @@ public class TestCaseHelper {
     dbWrapper.insertDeliveryZone(deliveryZoneCodeSecond,deliveryZoneNameSecond);
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeFirst);
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeSecond, facilityCodeSecond);
+    dbWrapper.insertProcessingPeriodForDistribution(14, schedule);
     dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst,program,schedule);
   }
 

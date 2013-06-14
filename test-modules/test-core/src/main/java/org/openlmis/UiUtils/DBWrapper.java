@@ -98,6 +98,10 @@ public class DBWrapper {
   public void deleteData() throws SQLException, IOException {
     update("delete from role_rights where roleid not in(1);");
     update("delete from role_assignments where userid not in (1);");
+    update("delete from delivery_zone_program_schedules;");
+    update("delete from delivery_zone_members;");
+    update("delete from role_assignments where deliveryzoneid = (select id from delivery_zones where code='DZ1');");
+    update("delete from delivery_zones;");
     update("delete from roles where name not in ('Admin');");
     update("delete from facility_approved_products;");
     update("delete from program_product_price_history;");
@@ -703,4 +707,14 @@ public class DBWrapper {
       "(select id from processing_schedules where code='"+scheduleCode+"')\n" +
       ");");
   }
+
+
+  public void insertProcessingPeriodForDistribution(int numberOfPeriodsRequired, String schedule) throws IOException, SQLException {
+    for(int counter=1;counter<=numberOfPeriodsRequired;counter++) {
+      String startDate="2013-01-0"+counter;
+      String endDate="2013-01-0"+counter;
+    insertProcessingPeriod("Period"+counter, "PeriodDecs"+counter, startDate, endDate, 1, schedule);
+    }
+  }
+
 }

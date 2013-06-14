@@ -36,6 +36,8 @@ public class ManageDistribution extends TestCaseHelper {
 
   public static final String NONE_ASSIGNED = "--None Assigned--";
   public static final String SELECT_DELIVERY_ZONE = "--Select Delivery Zone--";
+  public static final String periodDisplayedByDefault = "Period14";
+  public static final String periodNotToBeDisplayedInDropDown = "Period1";
 
   @BeforeMethod(groups = {"functional2"})
   public void setUp() throws Exception {
@@ -47,7 +49,7 @@ public class ManageDistribution extends TestCaseHelper {
   public void testManageDistribution(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                      String facilityCodeFirst, String facilityCodeSecond,
-                                     String program, String schedule, String period) throws Exception {
+                                     String program, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
@@ -56,12 +58,19 @@ public class ManageDistribution extends TestCaseHelper {
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
       program, schedule);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     verifyElementsPresent(distributionPage);
+
+    String defaultDistributionZoneValuesToBeVerified = NONE_ASSIGNED;
+    verifySelectedOptionFromDeliveryZoneSelectField(distributionPage, defaultDistributionZoneValuesToBeVerified);
+
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+    homePage.navigateHomePage();
+    homePage.navigatePlanDistribution();
 
     List<String> distributionZoneValuesToBeVerified = new ArrayList<String>();
     distributionZoneValuesToBeVerified.add(deliveryZoneNameFirst);
@@ -83,18 +92,32 @@ public class ManageDistribution extends TestCaseHelper {
     selectValueFromProgram(distributionPage, program);
 
     List<String> periodValuesToBeVerified = new ArrayList<String>();
-    periodValuesToBeVerified.add(period);
-    verifyPeriodSelectFieldValues(distributionPage, periodValuesToBeVerified);
 
-    selectValueFromPeriod(distributionPage, period);
+    verifySelectedOptionFromPeriodSelectField(distributionPage, periodDisplayedByDefault);
+    for (int counter = 2; counter <= totalNumberOfPeriods; counter++) {
+      String periodWithCounter = period + counter;
+      periodValuesToBeVerified.add(periodWithCounter);
+    }
+    verifyPeriodSelectFieldValuesPresent(distributionPage, periodValuesToBeVerified);
+
+    verifyPeriodSelectFieldValuesNotPresent(distributionPage, periodNotToBeDisplayedInDropDown);
+
+    selectValueFromPeriod(distributionPage, periodDisplayedByDefault);
 
     verifySelectedOptionFromDeliveryZoneSelectField(distributionPage, deliveryZoneNameFirst);
+
     verifySelectedOptionFromProgramSelectField(distributionPage, program);
-    verifySelectedOptionFromPeriodSelectField(distributionPage, period);
+
+    verifySelectedOptionFromPeriodSelectField(distributionPage, periodDisplayedByDefault);
 
     selectValueFromDeliveryZone(distributionPage, SELECT_DELIVERY_ZONE);
+
     verifySelectedOptionFromProgramSelectField(distributionPage, defaultProgramValuesToBeVerified);
+
     verifySelectedOptionFromPeriodSelectField(distributionPage, defaultPeriodValuesToBeVerified);
+
+    clickProceed(distributionPage);
+    verifySubOptionsOfProceedButton(distributionPage);
 
   }
 
@@ -144,7 +167,7 @@ public class ManageDistribution extends TestCaseHelper {
         }
       }
     } else {
-      fail("Values in select field are not same in number as vales to be verified");
+      fail("Values in select field are not same in number as values to be verified");
     }
     assertEquals(valuesToBeVerifiedCounter, finalCounter);
     assertEquals(valuesInSelectFieldCounter - 1, finalCounter);
@@ -174,13 +197,13 @@ public class ManageDistribution extends TestCaseHelper {
         }
       }
     } else {
-      fail("Values in select field are not same in number as vales to be verified");
+      fail("Values in select field are not same in number as values to be verified");
     }
     assertEquals(valuesToBeVerifiedCounter, finalCounter);
     assertEquals(valuesInSelectFieldCounter - 1, finalCounter);
   }
 
-  private void verifyPeriodSelectFieldValues(DistributionPage distributionPage, List<String> valuesToBeVerified) {
+  private void verifyPeriodSelectFieldValuesPresent(DistributionPage distributionPage, List<String> valuesToBeVerified) {
     List<WebElement> selectFieldValues = testWebDriver.getOptions(distributionPage.getSelectPeriodSelectBox());
     int valuesInSelectFieldCounter = 0;
     int valuesToBeVerifiedCounter = 0;
@@ -204,25 +227,52 @@ public class ManageDistribution extends TestCaseHelper {
         }
       }
     } else {
-      fail("Values in select field are not same in number as vales to be verified");
+      fail("Values in select field are not same in number as values to be verified");
     }
     assertEquals(valuesToBeVerifiedCounter, finalCounter);
     assertEquals(valuesInSelectFieldCounter - 1, finalCounter);
   }
 
+  private void verifyPeriodSelectFieldValuesNotPresent(DistributionPage distributionPage, String valueToBeVerified) {
+    List<WebElement> selectFieldValues = testWebDriver.getOptions(distributionPage.getSelectPeriodSelectBox());
+    boolean flag = false;
+
+
+    for (WebElement webElement : selectFieldValues) {
+      if (valueToBeVerified.equalsIgnoreCase(webElement.getText().trim())) {
+        flag = true;
+        break;
+      }
+
+    }
+    assertTrue(valueToBeVerified + " should not exist in period drop down", flag == false);
+  }
+
+
   private void verifySelectedOptionFromDeliveryZoneSelectField(DistributionPage distributionPage, String valuesToBeVerified) {
     WebElement selectFieldValue = testWebDriver.getFirstSelectedOption(distributionPage.getSelectDeliveryZoneSelectBox());
-    assertEquals(selectFieldValue.getText(), valuesToBeVerified);
+    assertEquals(valuesToBeVerified, selectFieldValue.getText());
   }
 
   private void verifySelectedOptionFromProgramSelectField(DistributionPage distributionPage, String valuesToBeVerified) {
     WebElement selectFieldValue = testWebDriver.getFirstSelectedOption(distributionPage.getSelectProgramSelectBox());
-    assertEquals(selectFieldValue.getText(), valuesToBeVerified);
+    assertEquals(valuesToBeVerified, selectFieldValue.getText());
   }
 
   private void verifySelectedOptionFromPeriodSelectField(DistributionPage distributionPage, String valuesToBeVerified) {
     WebElement selectFieldValue = testWebDriver.getFirstSelectedOption(distributionPage.getSelectPeriodSelectBox());
-    assertEquals(selectFieldValue.getText(), valuesToBeVerified);
+    assertEquals(valuesToBeVerified, selectFieldValue.getText());
+  }
+
+  private void clickProceed(DistributionPage distributionPage) {
+    testWebDriver.waitForElementToAppear(distributionPage.getProceedButton());
+    distributionPage.getProceedButton().click();
+    testWebDriver.waitForElementToAppear(distributionPage.getViewWarehouseLoadAmountLink());
+  }
+
+  private void verifySubOptionsOfProceedButton(DistributionPage distributionPage) {
+    assertTrue("getViewWarehouseLoadAmount Link should be present", distributionPage.getViewWarehouseLoadAmountLink().isDisplayed());
+    assertTrue("getInputFacilityData Link should be present", distributionPage.getInputFacilityDataLink().isDisplayed());
   }
 
 
@@ -239,7 +289,7 @@ public class ManageDistribution extends TestCaseHelper {
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
       {"storeincharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
-        "F10", "F11", "VACCINES", "M", "Period2"}
+        "F10", "F11", "VACCINES", "M", "Period", 14}
     };
 
   }

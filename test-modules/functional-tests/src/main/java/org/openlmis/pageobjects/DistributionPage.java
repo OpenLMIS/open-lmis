@@ -35,10 +35,17 @@ public class DistributionPage extends RequisitionPage {
   private static WebElement selectProgramSelectBox;
 
   @FindBy(how = ID, using = "selectPeriod")
+
   private static WebElement selectPeriodSelectBox;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Proceed')]")
   private static WebElement proceedButton;
+
+  @FindBy(how = XPATH, using = "//a[contains(text(),'View warehouse load amount')]")
+  private static WebElement viewWarehouseLoadAmountLink;
+
+  @FindBy(how = XPATH, using = "//a[contains(text(),'Input facility data')]")
+  private static WebElement inputFacilityDataLink;
 
 
 
@@ -80,6 +87,22 @@ public class DistributionPage extends RequisitionPage {
 
   public  void setSelectDeliveryZoneSelectBox(WebElement selectDeliveryZoneSelectBox) {
     DistributionPage.selectDeliveryZoneSelectBox = selectDeliveryZoneSelectBox;
+  }
+
+  public static WebElement getInputFacilityDataLink() {
+    return inputFacilityDataLink;
+  }
+
+  public static void setInputFacilityDataLink(WebElement inputFacilityDataLink) {
+    DistributionPage.inputFacilityDataLink = inputFacilityDataLink;
+  }
+
+  public static WebElement getViewWarehouseLoadAmountLink() {
+    return viewWarehouseLoadAmountLink;
+  }
+
+  public static void setViewWarehouseLoadAmountLink(WebElement viewWarehouseLoadAmountLink) {
+    DistributionPage.viewWarehouseLoadAmountLink = viewWarehouseLoadAmountLink;
   }
 
 }
