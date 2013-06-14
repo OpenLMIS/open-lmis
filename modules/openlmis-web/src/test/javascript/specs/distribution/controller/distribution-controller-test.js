@@ -30,17 +30,18 @@ describe('DistributionController', function () {
     expect(scope.programs).toEqual(programs.deliveryZonePrograms);
   });
 
-  it('should load periods', function () {
+  it('should load periods and set only top 13 periods in scope', function () {
     scope.selectedProgram = {id:2};
     scope.selectedZone = {id:1};
     var periods = {periods:[
-      {id:1}
+      {id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1}
     ]};
     httpBackend.expect('GET', '/deliveryZones/1/programs/2/periods.json').respond(200, periods);
 
     scope.loadPeriods();
     httpBackend.flush();
 
-    expect(scope.periods).toEqual(periods.periods);
+    expect(scope.periods.length).toEqual(13);
+    expect(scope.periods).toEqual(periods.periods.slice(0,13));
   });
 });

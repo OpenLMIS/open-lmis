@@ -26,7 +26,7 @@ function DistributionController($scope, deliveryZones, DeliveryZonePrograms, mes
   $scope.loadPeriods = function() {
     $scope.periods = [];
     DeliveryZoneProgramPeriods.get({zoneId: $scope.selectedZone.id, programId: $scope.selectedProgram.id}, function(data) {
-      $scope.periods = data.periods;
+      $scope.periods = data.periods.length ? data.periods.slice(0, 13) : [];
       $scope.selectedPeriod = $scope.periods.length ? $scope.periods[0] : NONE_ASSIGNED_LABEL;
     }, function(data) {
       $scope.error = data.data.error;
