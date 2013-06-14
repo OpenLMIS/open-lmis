@@ -29,7 +29,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.ProgramProductBuilder.defaultProgramProduct;
-import static org.openlmis.core.repository.ProgramProductRepository.PROGRAM_PRODUCT_INVALID;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -87,7 +86,7 @@ public class ProgramProductServiceTest {
     when(programProductRepository.getByProgramAndProductCode(programProduct)).thenReturn(null);
 
     expectException.expect(DataException.class);
-    expectException.expectMessage(PROGRAM_PRODUCT_INVALID);
+    expectException.expectMessage("programProduct.product.program.invalid");
 
     programProductService.updateProgramProductPrice(programProductPrice);
   }

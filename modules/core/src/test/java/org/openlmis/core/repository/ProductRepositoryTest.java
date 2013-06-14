@@ -105,8 +105,8 @@ public class ProductRepositoryTest {
     product.getDosageUnit().setCode("invalid code");
     when(mockedMapper.getDosageUnitIdForCode("invalid code")).thenReturn(null);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid reference data 'Dosage Unit'");
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.invalid.dosage.unit"));
+
     repository.insert(product);
   }
 
@@ -124,8 +124,7 @@ public class ProductRepositoryTest {
     product.getForm().setCode("invalid code");
     when(mockedMapper.getProductFormIdForCode("invalid code")).thenReturn(null);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid reference data 'Product Form'");
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.invalid.product.form"));
     repository.insert(product);
   }
 

@@ -81,7 +81,7 @@ public class ProductRepository {
     if (productFormCode == null || productFormCode.isEmpty()) return;
 
     Long productFormId = mapper.getProductFormIdForCode(productFormCode);
-    if (productFormId == null) throw new DataException("Invalid reference data 'Product Form'");
+    if (productFormId == null) throw new DataException("error.reference.data.invalid.product.form");
 
     form.setId(productFormId);
   }
@@ -95,7 +95,7 @@ public class ProductRepository {
 
     Long dosageUnitId = mapper.getDosageUnitIdForCode(dosageUnitCode);
     if (dosageUnitId == null)
-      throw new DataException("Invalid reference data 'Dosage Unit'");
+      throw new DataException("error.reference.data.invalid.dosage.unit");
 
     dosageUnit.setId(dosageUnitId);
   }
