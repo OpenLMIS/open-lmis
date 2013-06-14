@@ -66,7 +66,7 @@ public class RoleRightsMapperIT {
   public void shouldSetupRightsForAdminRole() {
     Set<Right> adminRights = roleRightsMapper.getAllRightsForUserByUserName("Admin123");
     assertEquals(9, adminRights.size());
-    Assert.assertTrue(adminRights.containsAll(asList(CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_ROLE,MANAGE_PROGRAM_PRODUCT, MANAGE_SCHEDULE, UPLOADS, MANAGE_REPORTS, VIEW_REPORTS)));
+    Assert.assertTrue(adminRights.containsAll(asList(CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_ROLE, MANAGE_PROGRAM_PRODUCT, MANAGE_SCHEDULE, UPLOADS, MANAGE_REPORTS, VIEW_REPORTS)));
   }
 
   @Test
@@ -111,7 +111,7 @@ public class RoleRightsMapperIT {
 
   @Test
   public void shouldGetRoleAndRights() throws Exception {
-    Role role = new Role(111L, "role name", Boolean.FALSE, "description", null);
+    Role role = new Role("role name", Boolean.FALSE, "description", null);
     roleRightsMapper.insertRole(role);
 
     roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
@@ -156,7 +156,7 @@ public class RoleRightsMapperIT {
 
   @Test
   public void shouldUpdateRole() {
-    Role role = new Role(11L, "Right Name", Boolean.FALSE, "Right Desc", null);
+    Role role = new Role("Right Name", Boolean.FALSE, "Right Desc", null);
     roleRightsMapper.insertRole(role);
 
     role.setName("Right2");
@@ -176,7 +176,7 @@ public class RoleRightsMapperIT {
 
   @Test
   public void shouldDeleteRights() throws Exception {
-    Role role = new Role(11L, "Right Name", Boolean.FALSE, "Right Desc", null);
+    Role role = new Role("Right Name", Boolean.FALSE, "Right Desc", null);
     roleRightsMapper.insertRole(role);
     roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
     roleRightsMapper.createRoleRight(role, UPLOADS);
