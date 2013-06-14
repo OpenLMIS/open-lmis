@@ -93,7 +93,6 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
         });
       }, 3000);
       $scope.saveRnrForm.$setPristine();
-      ;
     }, function (data) {
       $scope.error = data.error;
     });
