@@ -36,7 +36,7 @@ public class DriverFactory {
     Separator = getProperty("file.separator");
     File parentDir = new File(getProperty("user.dir")).getParentFile();
     OUTPUT_FOLDER = parentDir.getParent() + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
-    INPUT_ZIP_FILE_IEDRIVER = OUTPUT_FOLDER + "IEDriverServer_x64_2.31.0.zip";
+    INPUT_ZIP_FILE_IEDRIVER = OUTPUT_FOLDER + "IEDriverServer_x64_2.33.0.zip";
     INPUT_ZIP_FILE_CHROMEDRIVER = OUTPUT_FOLDER + "chromedriver.zip";
 
 
