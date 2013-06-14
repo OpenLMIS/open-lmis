@@ -131,6 +131,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
         $scope.rnr.status = "SUBMITTED";
         $scope.formDisabled = !$scope.hasPermission('AUTHORIZE_REQUISITION');
         $scope.submitMessage = data.success;
+        $scope.saveRnrForm.$setPristine();
       }, function (data) {
         $scope.submitError = data.data.error;
       });
@@ -171,6 +172,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
       $scope.rnr.status = "AUTHORIZED";
       $scope.formDisabled = true;
       $scope.submitMessage = data.success;
+      $scope.saveRnrForm.$setPristine();
     }, function (data) {
       $scope.submitError = data.data.error;
     });

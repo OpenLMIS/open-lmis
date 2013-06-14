@@ -142,8 +142,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
-//    initiateRnRPage.clickFullSupplyTab();
-//    initiateRnRPage.verifyTotalField();
+    initiateRnRPage.clickFullSupplyTab();
+    initiateRnRPage.verifyTotalField();
     initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
     initiateRnRPage.verifyApproveButtonNotPresent();
 
