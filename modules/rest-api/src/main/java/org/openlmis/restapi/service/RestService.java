@@ -26,7 +26,6 @@ import static java.util.Arrays.asList;
 @NoArgsConstructor
 public class RestService {
 
-  public static final String USER_USERNAME_INCORRECT = "user.username.incorrect";
   @Autowired
   private UserService userService;
 
@@ -70,7 +69,7 @@ public class RestService {
     reportUser.setVendorId(report.getVendor().getId());
     User user = userService.getByUsernameAndVendorId(reportUser);
     if (user == null) {
-      throw new DataException(USER_USERNAME_INCORRECT);
+      throw new DataException("user.username.incorrect");
     }
     return user;
   }
