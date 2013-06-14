@@ -31,6 +31,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
@@ -74,25 +75,28 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldRaiseIncorrectReferenceDataError() throws Exception {
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Missing/Invalid Reference data");
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.missing"));
+
     doThrow(new DataIntegrityViolationException("foreign key")).when(mockedMapper).insert(product);
+
     repository.insert(product);
   }
 
   @Test
   public void shouldRaiseMissingReferenceDataError() throws Exception {
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Missing/Invalid Reference data");
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.missing"));
+
     doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mockedMapper).insert(product);
+
     repository.insert(product);
   }
 
   @Test
   public void shouldRaiseIncorrectDataValueError() throws Exception {
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Incorrect data length");
+    expectedEx.expect(dataExceptionMatcher("error.incorrect.length"));
+
     doThrow(new DataIntegrityViolationException("value too long")).when(mockedMapper).insert(product);
+
     repository.insert(product);
   }
 

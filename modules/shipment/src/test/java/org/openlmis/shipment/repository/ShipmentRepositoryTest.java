@@ -25,9 +25,9 @@ import java.util.Date;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
+
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ShipmentRepositoryTest {
@@ -84,8 +84,7 @@ public class ShipmentRepositoryTest {
     shippedLineItem.setProductCode("R10");
     doThrow(new DataIntegrityViolationException("Incorrect data length")).when(shipmentMapper).insertShippedLineItem(shippedLineItem);
 
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("Invalid data length");
+    expectedException.expect(dataExceptionMatcher("error.incorrect.length"));
 
     shipmentRepository.insertShippedLineItem(shippedLineItem);
   }

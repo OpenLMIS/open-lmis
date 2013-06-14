@@ -13,7 +13,6 @@ import org.openlmis.core.repository.mapper.ProductGroupMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -35,9 +34,9 @@ public class ProductGroupRepository {
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
       String errorMessage = dataIntegrityViolationException.getMessage().toLowerCase();
       if (errorMessage.contains("foreign key") || errorMessage.contains("violates not-null constraint")) {
-        throw new DataException("Missing/Invalid Reference data");
+        throw new DataException("error.reference.data.missing");
       } else {
-        throw new DataException("Incorrect data length");
+        throw new DataException("error.incorrect.length");
       }
     }
   }

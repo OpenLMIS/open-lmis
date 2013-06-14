@@ -51,13 +51,13 @@ public class FacilityRepository {
         mapper.update(facility);
       }
     } catch (DuplicateKeyException duplicateKeyException) {
-      throw new DataException("Duplicate Facility Code found");
+      throw new DataException("error.duplicate.facility.code");
     } catch (DataIntegrityViolationException integrityViolationException) {
       String errorMessage = integrityViolationException.getMessage().toLowerCase();
       if (errorMessage.contains("foreign key") || errorMessage.contains("not-null constraint")) {
-        throw new DataException("Missing/Invalid Reference data");
+        throw new DataException("error.reference.data.missing");
       }
-      throw new DataException("Incorrect data length");
+      throw new DataException("error.incorrect.length");
     }
   }
 
@@ -69,11 +69,11 @@ public class FacilityRepository {
     facility.setGeographicZone(geographicZone);
 
     if (facility.getGeographicZone() == null) {
-      throw new DataException("Invalid reference data 'Geographic Zone Code'");
+      throw new DataException("error.invalid.reference.data.geo.zone.code");
     }
 
     if (facility.getGeographicZone().getLevel().getLevelNumber() != LOWEST_GEO_LEVEL) {
-      throw new DataException("Geographic Zone Code must be at the lowest administrative level in your hierarchy");
+      throw new DataException("error.geo.zone.not.at.lowest.level");
     }
   }
 

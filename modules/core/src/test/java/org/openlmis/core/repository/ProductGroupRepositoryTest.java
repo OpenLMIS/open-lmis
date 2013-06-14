@@ -23,6 +23,7 @@ import org.springframework.dao.DuplicateKeyException;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -67,21 +68,22 @@ public class ProductGroupRepositoryTest {
 
   @Test
   public void shouldThrowDataIntegrityViolationExceptionWhenMissingMandatoryData() throws Exception {
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Missing/Invalid Reference data");
-    repository = new ProductGroupRepository(mapper);
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.missing"));
+
     ProductGroup productGroup = new ProductGroup();
     doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mapper).insert(productGroup);
-    repository.insert(productGroup);
+
+    new ProductGroupRepository(mapper).insert(productGroup);
   }
 
   @Test
   public void shouldThrowIncorrectDataLengthErrorWhenInvalidDataLength() throws Exception {
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Incorrect data length");
-    repository = new ProductGroupRepository(mapper);
+    expectedEx.expect(dataExceptionMatcher("error.incorrect.length"));
+
     ProductGroup productGroup = new ProductGroup();
+
     doThrow(new DataIntegrityViolationException("")).when(mapper).insert(productGroup);
-    repository.insert(productGroup);
+
+    new ProductGroupRepository(mapper).insert(productGroup);
   }
 }

@@ -34,6 +34,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityBuilder.*;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -82,9 +83,10 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldRaiseDuplicateFacilityCodeError() throws Exception {
     Facility facility = make(a(defaultFacility));
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Duplicate Facility Code found");
+    expectedEx.expect(dataExceptionMatcher("error.duplicate.facility.code"));
+
     doThrow(new DuplicateKeyException("")).when(mapper).insert(facility);
+
     repository.save(facility);
   }
 
@@ -92,7 +94,7 @@ public class FacilityRepositoryTest {
   public void shouldRaiseIncorrectReferenceDataError() throws Exception {
     Facility facility = make(a(defaultFacility));
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Missing/Invalid Reference data");
+    expectedEx.expectMessage("");
     doThrow(new DataIntegrityViolationException("foreign key")).when(mapper).insert(facility);
     repository.save(facility);
   }
@@ -100,18 +102,20 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldRaiseMissingReferenceDataError() throws Exception {
     Facility facility = make(a(defaultFacility));
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Missing/Invalid Reference data");
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.missing"));
+
     doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mapper).insert(facility);
+
     repository.save(facility);
   }
 
   @Test
   public void shouldRaiseIncorrectDataValueError() throws Exception {
     Facility facility = make(a(defaultFacility));
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Incorrect data length");
+    expectedEx.expect(dataExceptionMatcher("error.incorrect.length"));
+
     doThrow(new DataIntegrityViolationException("value too long")).when(mapper).insert(facility);
+
     repository.save(facility);
   }
 
@@ -256,8 +260,7 @@ public class FacilityRepositoryTest {
     Facility facility = make(a(defaultFacility));
     Mockito.when(geographicZoneRepository.getByCode(facility.getGeographicZone().getCode())).thenReturn(null);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid reference data 'Geographic Zone Code'");
+    expectedEx.expect(dataExceptionMatcher("error.invalid.reference.data.geo.zone.code"));
 
     repository.save(facility);
   }
@@ -274,8 +277,7 @@ public class FacilityRepositoryTest {
     Mockito.when(geographicZoneRepository.getByCode(facility.getGeographicZone().getCode())).thenReturn(geographicZone);
     Mockito.when(geographicZoneRepository.getLowestGeographicLevel()).thenReturn(3);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Geographic Zone Code must be at the lowest administrative level in your hierarchy");
+    expectedEx.expect(dataExceptionMatcher("error.geo.zone.not.at.lowest.level"));
 
     repository.save(facility);
   }

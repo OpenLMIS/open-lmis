@@ -38,9 +38,9 @@ public class ProductCategoryRepository {
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
       String errorMessage = dataIntegrityViolationException.getMessage().toLowerCase();
       if (errorMessage.contains("foreign key") || errorMessage.contains("violates not-null constraint")) {
-        throw new DataException("Missing/Invalid Reference data");
+        throw new DataException("error.reference.data.missing");
       } else {
-        throw new DataException("Incorrect data length");
+        throw new DataException("error.incorrect.length");
       }
     }
   }
