@@ -7,15 +7,13 @@
 package org.openlmis.core.repository.mapper;
 
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
-import org.openlmis.core.domain.Money;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -129,4 +127,6 @@ public class ProgramProductMapperIT {
     assertThat(programProducts.size(), is(1));
     assertThat(programProducts.get(0).getId(), is(programProduct.getId()));
   }
+
+
 }

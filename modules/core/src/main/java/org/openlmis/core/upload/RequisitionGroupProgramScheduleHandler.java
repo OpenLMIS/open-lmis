@@ -15,11 +15,9 @@ import org.springframework.stereotype.Component;
 
 
 @NoArgsConstructor
-@Component("requisitionGroupProgramScheduleHandler")
+@Component
 public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersistenceHandler {
 
-
-  private static final String DUPLICATE_REQUISITION_GROUP_AND_PROGRAM_FOUND = "Duplicate Requisition Group Code And Program Code Combination found";
 
   private RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService;
 
@@ -30,7 +28,7 @@ public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersist
 
   @Override
   protected BaseModel getExisting(BaseModel record) {
-    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = (RequisitionGroupProgramSchedule)record;
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = (RequisitionGroupProgramSchedule) record;
     return requisitionGroupProgramScheduleService.getScheduleForRequisitionGroupCodeAndProgramCode(requisitionGroupProgramSchedule);
   }
 
@@ -41,7 +39,7 @@ public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersist
 
   @Override
   protected String getDuplicateMessageKey() {
-    return DUPLICATE_REQUISITION_GROUP_AND_PROGRAM_FOUND;
+    return "error.duplicate.requisition.group.program.schedule";
   }
 
 }

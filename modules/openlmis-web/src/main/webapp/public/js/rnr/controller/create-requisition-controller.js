@@ -20,10 +20,10 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.errorPages = {fullSupply:[], nonFullSupply:[]};
   $rootScope.fullScreen = false;
 
-  $scope.getFullScreen = function() {
+  $scope.getFullScreen = function () {
     $rootScope.fullScreen = !$rootScope.fullScreen;
     angular.element(window).scrollTop(0);
-  }
+  };
 
   $scope.fillPagedGridData = function () {
     var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
@@ -49,7 +49,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
   if ($scope.programRnrColumnList && $scope.programRnrColumnList.length > 0) {
   } else {
-    $scope.error = "rnr.template.not.defined.error";
+    $scope.error = "error.rnr.template.not.defined";
     $location.path("/init-rnr");
   }
 
@@ -92,7 +92,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
           });
         });
       }, 3000);
-      $scope.saveRnrForm.$dirty = false;
+      $scope.saveRnrForm.$setPristine();
     }, function (data) {
       $scope.error = data.error;
     });
@@ -131,6 +131,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
         $scope.rnr.status = "SUBMITTED";
         $scope.formDisabled = !$scope.hasPermission('AUTHORIZE_REQUISITION');
         $scope.submitMessage = data.success;
+        $scope.saveRnrForm.$setPristine();
       }, function (data) {
         $scope.submitError = data.data.error;
       });
@@ -171,6 +172,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
       $scope.rnr.status = "AUTHORIZED";
       $scope.formDisabled = true;
       $scope.submitMessage = data.success;
+      $scope.saveRnrForm.$setPristine();
     }, function (data) {
       $scope.submitError = data.data.error;
     });
@@ -256,6 +258,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
   function removeExtraDataForPostFromRnr() {
     var rnr = {"id":$scope.rnr.id, "fullSupplyLineItems":[], "nonFullSupplyLineItems":[]};
+    if (!$scope.pageLineItems.length) return rnr;
     if (!$scope.pageLineItems[0].fullSupply) {
       _.each($scope.rnr.nonFullSupplyLineItems, function (lineItem) {
         rnr.nonFullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));

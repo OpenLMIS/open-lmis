@@ -23,7 +23,8 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
-import static org.openlmis.rnr.domain.RnrStatus.*;
+import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
+import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 @Data
 @NoArgsConstructor
@@ -31,8 +32,6 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 @JsonSerialize(include = NON_NULL)
 @EqualsAndHashCode(callSuper = false)
 public class Rnr extends BaseModel {
-
-  public static final String PRODUCT_CODE_INVALID = "product.code.invalid";
 
   private Facility facility;
   private Program program;
@@ -255,7 +254,7 @@ public class Rnr extends BaseModel {
   private void copyCreatorEditableFieldsForFullSupply(Rnr rnr, ProgramRnrTemplate template) {
     for (RnrLineItem lineItem : rnr.fullSupplyLineItems) {
       RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
-      if (savedLineItem == null) throw new DataException(PRODUCT_CODE_INVALID);
+      if (savedLineItem == null) throw new DataException("product.code.invalid");
       savedLineItem.copyCreatorEditableFieldsForFullSupply(lineItem, template);
       savedLineItem.setModifiedBy(rnr.getModifiedBy());
     }
@@ -270,7 +269,7 @@ public class Rnr extends BaseModel {
   private void copyApproverEditableFieldsToLineItems(Rnr rnr, ProgramRnrTemplate template, List<RnrLineItem> lineItems) {
     for (RnrLineItem lineItem : lineItems) {
       RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
-      if (savedLineItem == null) throw new DataException(PRODUCT_CODE_INVALID);
+      if (savedLineItem == null) throw new DataException("product.code.invalid");
       savedLineItem.setModifiedBy(rnr.modifiedBy);
       savedLineItem.copyApproverEditableFields(lineItem, template);
     }

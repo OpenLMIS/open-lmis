@@ -177,7 +177,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
     response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
     assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(response, "{\"error\":\"Invalid data.\"}");
+    assertEquals(response, "{\"error\":\"R&R has errors, please correct them to proceed.\"}");
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})

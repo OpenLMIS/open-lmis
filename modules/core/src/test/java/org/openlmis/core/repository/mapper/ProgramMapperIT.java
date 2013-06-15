@@ -122,6 +122,13 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   }
 
   @Test
+  public void shouldGetByCode() throws Exception {
+    Program program = make(a(defaultProgram));
+    programMapper.insert(program);
+    assertThat(program, is(programMapper.getByCode(ProgramBuilder.PROGRAM_CODE)));
+  }
+
+  @Test
   public void shouldReturnProgramById() throws Exception {
     Program program = make(a(defaultProgram));
     programMapper.insert(program);

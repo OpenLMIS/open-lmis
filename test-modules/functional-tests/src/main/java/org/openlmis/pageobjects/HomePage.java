@@ -29,6 +29,12 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Requisitions')]")
   private static WebElement requisitionMenuItem;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Distributions')]")
+  private static WebElement distributionsMenuItem;
+
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Home')]")
+  private static WebElement homeMenuItem;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Reports')]")
   private static WebElement reportMenuItem;
 
@@ -44,7 +50,7 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Administration')]")
   private static WebElement AdministrationMenuItem;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Manage')]")
+  @FindBy(how = How.ID, using = "manage-option")
   private static WebElement manageFacilityMenuItem;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Facilities')]")
@@ -55,6 +61,9 @@ public class HomePage extends Page {
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Convert to Order')]")
   private static WebElement convertToOrderMenuItem;
+
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Manage')]")
+  private static WebElement manageMenuItem;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'View Orders')]")
   private static WebElement viewOrdersMenuItem;
@@ -67,6 +76,9 @@ public class HomePage extends Page {
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Convert Requisitions to Order')]")
   private static WebElement convertToOrderHeader;
+
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Manage distribution')]")
+  private static WebElement manageDistributionHeader;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'View Orders')]")
   private static WebElement viewOrdersHeader;
@@ -200,9 +212,8 @@ public class HomePage extends Page {
 
   public HomePage(TestWebDriver driver) throws IOException {
     super(driver);
-    PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
+    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
-    //SeleneseTestNgHelper.assertTrue(usernameDisplay.isDisplayed());
   }
 
   public LoginPage logout(String baseurl) throws IOException {
@@ -394,6 +405,24 @@ public class HomePage extends Page {
     testWebDriver.keyPress(convertToOrderMenuItem);
     testWebDriver.waitForElementToAppear(convertToOrderHeader);
     return new ConvertOrderPage(testWebDriver);
+  }
+
+  public DistributionPage navigatePlanDistribution() throws IOException {
+    SeleneseTestNgHelper.assertTrue(distributionsMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(distributionsMenuItem);
+    testWebDriver.keyPress(distributionsMenuItem);
+    testWebDriver.waitForElementToAppear(manageMenuItem);
+    testWebDriver.keyPress(manageMenuItem);
+    testWebDriver.waitForElementToAppear(manageDistributionHeader);
+    return new DistributionPage(testWebDriver);
+  }
+
+  public HomePage navigateHomePage() throws IOException {
+    SeleneseTestNgHelper.assertTrue(homeMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(homeMenuItem);
+    testWebDriver.keyPress(homeMenuItem);
+    testWebDriver.sleep(500);
+    return new HomePage(testWebDriver);
   }
 
   public ViewOrdersPage navigateViewOrders() throws IOException {

@@ -13,13 +13,9 @@ import org.openlmis.core.service.RequisitionGroupMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 @NoArgsConstructor
-@Component("requisitionGroupMemberHandler")
+@Component
 public class RequisitionGroupMemberHandler extends AbstractModelPersistenceHandler {
-
-  public static final String DUPLICATE_REQUISITION_GROUP_MEMBER = "Duplicate Requisition Group Member found";
 
   private RequisitionGroupMemberService requisitionGroupMemberService;
 
@@ -30,7 +26,7 @@ public class RequisitionGroupMemberHandler extends AbstractModelPersistenceHandl
 
   @Override
   protected BaseModel getExisting(BaseModel record) {
-    return requisitionGroupMemberService.getExisting((RequisitionGroupMember)record);
+    return requisitionGroupMemberService.getExisting((RequisitionGroupMember) record);
   }
 
   @Override
@@ -40,7 +36,7 @@ public class RequisitionGroupMemberHandler extends AbstractModelPersistenceHandl
 
   @Override
   protected String getDuplicateMessageKey() {
-    return DUPLICATE_REQUISITION_GROUP_MEMBER;
+    return "error.duplicate.requisition.group.member";
   }
 
 }

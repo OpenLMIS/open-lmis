@@ -35,13 +35,12 @@ public class RnrTemplateService {
   public Map<String, OpenLmisMessage> saveRnRTemplateForProgram(ProgramRnrTemplate programTemplate) {
     Map<String, OpenLmisMessage> errors = programTemplate.validateToSave();
 
-    if (!(errors.isEmpty())) {
-      return errors;
+    if (errors.isEmpty()) {
+      rnrRepository.saveProgramRnrTemplate(programTemplate);
+      programService.setTemplateConfigured(programTemplate.getProgramId());
     }
 
-    rnrRepository.saveProgramRnrTemplate(programTemplate);
-    programService.setTemplateConfigured(programTemplate.getProgramId());
-    return null;
+    return errors;
   }
 
 

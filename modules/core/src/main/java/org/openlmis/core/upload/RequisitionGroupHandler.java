@@ -13,11 +13,9 @@ import org.openlmis.core.service.RequisitionGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("requisitionGroupHandler")
+@Component
 @NoArgsConstructor
 public class RequisitionGroupHandler extends AbstractModelPersistenceHandler {
-
-  public static final String DUPLICATE_REQUISITION_GROUP_CODE = "Duplicate Requisition Group Code found";
 
   private RequisitionGroupService requisitionGroupService;
 
@@ -38,6 +36,6 @@ public class RequisitionGroupHandler extends AbstractModelPersistenceHandler {
 
   @Override
   protected String getDuplicateMessageKey() {
-    return DUPLICATE_REQUISITION_GROUP_CODE;
+    return "error.duplicate.requisition.group.code";
   }
 }

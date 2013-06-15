@@ -45,5 +45,4 @@ public class Program extends BaseModel {
   public Program basicInformation() {
     return new Program(id, name);
   }
-
 }

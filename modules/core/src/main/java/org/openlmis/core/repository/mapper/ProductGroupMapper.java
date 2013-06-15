@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductGroupMapper {
 
-  @Insert("INSERT INTO product_groups(code, name, modifiedDate, modifiedBy) VALUES (#{code}, #{name}, #{modifiedDate}, #{modifiedBy})")
+  @Insert("INSERT INTO product_groups(code, name, createdBy, modifiedDate, modifiedBy) VALUES (#{code}, #{name}, #{createdBy}, #{modifiedDate}, #{modifiedBy})")
   @Options(useGeneratedKeys = true)
   public void insert(ProductGroup productGroup);
 

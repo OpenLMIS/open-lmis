@@ -20,7 +20,6 @@ import java.util.Date;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class ProgramProductPrice extends BaseModel implements Importable {
-  public static final String PROGRAM_PRODUCT_PRICE_INVALID_PRICE_PER_DOSAGE = "programProductPrice.invalid.price.per.dosage";
 
   @ImportFields(importFields = {
       @ImportField(name = "Program Code", type = "String", nested = "program.code", mandatory = true),
@@ -46,6 +45,6 @@ public class ProgramProductPrice extends BaseModel implements Importable {
 
   public void validate() {
     programProduct.validate();
-    if(pricePerDosage.isNegative()) throw new DataException(PROGRAM_PRODUCT_PRICE_INVALID_PRICE_PER_DOSAGE);
+    if (pricePerDosage.isNegative()) throw new DataException("programProductPrice.invalid.price.per.dosage");
   }
 }

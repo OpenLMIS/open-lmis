@@ -36,7 +36,9 @@ public class LoginPage extends Page {
 //    baseUrl = "http://localhost:9091/";
     BASE_URL = baseUrl;
     testWebDriver.setBaseURL(BASE_URL);
-    PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
+    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
+//    new AjaxElementLocatorFactory(testWebDriver.)
+//    PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver, this));
     testWebDriver.setImplicitWait(10);
     testWebDriver.waitForElementToAppear(userNameField);
     SeleneseTestNgHelper.assertTrue(userNameField.isDisplayed());

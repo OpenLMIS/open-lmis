@@ -55,14 +55,14 @@ var Rnr = function (rnr, programRnrColumns) {
 
     function validateRequiredFields(lineItem) {
       if (lineItem.validateRequiredFieldsForFullSupply()) return true;
-      errorMessage = "rnr.validation.error";
+      errorMessage = "error.rnr.validation";
 
       return false;
     }
 
     function validateFormula(lineItem) {
       if (lineItem.formulaValid()) return true;
-      errorMessage = "rnr.validation.error";
+      errorMessage = "error.rnr.validation";
 
       return false;
     }
@@ -79,7 +79,7 @@ var Rnr = function (rnr, programRnrColumns) {
 
     var validateRequiredFields = function (lineItem) {
       if (lineItem.validateRequiredFieldsForNonFullSupply()) return true;
-      errorMessage = "rnr.validation.error";
+      errorMessage = "error.rnr.validation";
 
       return false;
     };
@@ -94,7 +94,7 @@ var Rnr = function (rnr, programRnrColumns) {
     var error = '';
     $(this.fullSupplyLineItems).each(function (i, lineItem) {
       if (isUndefined(lineItem.quantityApproved)) {
-        error = 'rnr.validation.error';
+        error = 'error.rnr.validation';
         return false;
       }
     });
@@ -105,7 +105,7 @@ var Rnr = function (rnr, programRnrColumns) {
     var error = '';
     $(this.nonFullSupplyLineItems).each(function (i, lineItem) {
       if (isUndefined(lineItem.quantityApproved)) {
-        error = 'rnr.validation.error';
+        error = 'error.rnr.validation';
         return false;
       }
     });

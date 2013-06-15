@@ -68,16 +68,16 @@ public class PeriodsPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@value='Delete']")
   private static WebElement deleteButton;
 
-  @FindBy(how = How.XPATH, using = "(//div[@class='row-fluid schedule-row ng-scope']/div[@class='span2 ng-binding'])[2]")
+  @FindBy(how = How.XPATH, using = "(//div[@class='row-fluid list-row ng-scope']/div[@class='span2 ng-binding'])[2]")
   private static WebElement startDateList;
 
-  @FindBy(how = How.XPATH, using = "(//div[@class='row-fluid schedule-row ng-scope']/div[@class='span2 ng-binding'])[3]")
+  @FindBy(how = How.XPATH, using = "(//div[@class='row-fluid list-row ng-scope']/div[@class='span2 ng-binding'])[3]")
   private static WebElement endDateList;
 
 
   public PeriodsPage(TestWebDriver driver) throws IOException {
     super(driver);
-    PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
+    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
 
   }

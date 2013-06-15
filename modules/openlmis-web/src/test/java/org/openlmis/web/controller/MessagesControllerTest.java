@@ -25,6 +25,6 @@ public class MessagesControllerTest {
     MessagesController messagesController = new MessagesController();
     ResponseEntity<OpenLmisResponse> response = messagesController.getAllMessages();
     Map<String, String> messages = (Map<String, String>)response.getBody().getData().get(MESSAGES);
-    assertThat(messages.get("rnr.authorized.success"), is("R&R authorized successfully!"));
+    assertThat(messages.get("msg.rnr.authorized.success"), is("R&R authorized successfully!"));
   }
 }

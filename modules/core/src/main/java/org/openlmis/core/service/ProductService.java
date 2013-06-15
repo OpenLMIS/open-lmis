@@ -22,8 +22,6 @@ public class ProductService {
   private ProductRepository repository;
   private ProductGroupRepository productGroupRepository;
   private ProductCategoryService categoryService;
-  public static final String INVALID_PRODUCT_CATEGORY_CODE = "product.reference.category.invalid";
-  private static final String INVALID_PRODUCT_GROUP_CODE = "product.reference.group.invalid";
 
   @Autowired
   public ProductService(ProductRepository repository, ProductCategoryService categoryService, ProductGroupRepository productGroupRepository) {
@@ -54,7 +52,7 @@ public class ProductService {
     }
     if (product.getProductGroup() != null) {
       ProductGroup productGroup = productGroupRepository.getByCode(product.getProductGroup().getCode());
-      if (productGroup == null) throw new DataException(INVALID_PRODUCT_GROUP_CODE);
+      if (productGroup == null) throw new DataException("error.reference.data.invalid.product.group");
       product.getProductGroup().setId(productGroup.getId());
 
     }
@@ -68,7 +66,7 @@ public class ProductService {
     if (categoryCode == null || categoryCode.isEmpty()) return;
     Long categoryId = categoryService.getProductCategoryIdByCode(category.getCode());
     if (categoryId == null) {
-      throw new DataException(INVALID_PRODUCT_CATEGORY_CODE);
+      throw new DataException("error.reference.data.invalid.product");
     }
     category.setId(categoryId);
   }

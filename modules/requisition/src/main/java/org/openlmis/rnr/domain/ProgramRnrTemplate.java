@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
+
 public class ProgramRnrTemplate {
 
   public static final String STOCK_IN_HAND = "stockInHand";
@@ -33,10 +35,18 @@ public class ProgramRnrTemplate {
   public static final String PRICE = "price";
   public static final String TOTAL = "total";
   public static final String PRODUCT = "product";
+  public static final String DISPENSING_UNIT = "dispensingUnit";
+  public static final String PRODUCT_CODE = "productCode";
+  public static final String PACKS_TO_SHIP = "packsToShip";
+
+  final List<String> nonPrintableFullSupplyColumnNames = asList(REMARKS, REASON_FOR_REQUESTED_QUANTITY);
+  final List<String> printableNonFullSupplyColumnNames = asList(PRODUCT, PRODUCT_CODE, DISPENSING_UNIT, QUANTITY_REQUESTED, PACKS_TO_SHIP, PRICE, COST, QUANTITY_APPROVED);
+
   public static final String USER_NEEDS_TO_ENTER_DEPENDENT_FIELD = "user.needs.to.enter.dependent.field";
-  public static final String INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED = "interdependent.fields.can.not.be.calculated";
-  public static final String COLUMN_SHOULD_BE_VISIBLE_IF_USER_INPUT = "column.should.be.visible.if.user.input";
-  public static final String USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON = "user.needs.to.enter.requested.quantity.reason";
+  public static final String INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED = "error.interdependent.fields.can.not.be.calculated";
+  public static final String COLUMN_SHOULD_BE_VISIBLE_IF_USER_INPUT = "error.column.should.be.visible.if.user.input";
+  public static final String USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON = "error.user.needs.to.enter.requested.quantity.reason";
+
 
   @Getter
   private Map<String, RnrColumn> rnrColumnsMap = new HashMap<>();
@@ -127,7 +137,9 @@ public class ProgramRnrTemplate {
 
   private void validateQuantityDispensedAndStockInHandCannotBeCalculatedAtSameTime() {
     if (columnsCalculated(QUANTITY_DISPENSED) && columnsCalculated(STOCK_IN_HAND)) {
-      OpenLmisMessage errorMessage = new OpenLmisMessage(INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED, getRnrColumnLabelFor(QUANTITY_DISPENSED), getRnrColumnLabelFor(STOCK_IN_HAND));
+      OpenLmisMessage errorMessage = new OpenLmisMessage(INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED,
+          getRnrColumnLabelFor(QUANTITY_DISPENSED),
+          getRnrColumnLabelFor(STOCK_IN_HAND));
       errorMap.put(QUANTITY_DISPENSED, errorMessage);
       errorMap.put(STOCK_IN_HAND, errorMessage);
     }
@@ -143,37 +155,31 @@ public class ProgramRnrTemplate {
 
     if (!areSelectedTogether(QUANTITY_REQUESTED, REASON_FOR_REQUESTED_QUANTITY)) {
 
-      if (columnsVisible(QUANTITY_REQUESTED))
-        errorMap.put(QUANTITY_REQUESTED, new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON, getRnrColumnLabelFor(QUANTITY_REQUESTED), getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY)));
-      else
-        errorMap.put(REASON_FOR_REQUESTED_QUANTITY, new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON, getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY), getRnrColumnLabelFor(QUANTITY_REQUESTED)));
+      if (columnsVisible(QUANTITY_REQUESTED)) {
+        errorMap.put(QUANTITY_REQUESTED, new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON,
+            getRnrColumnLabelFor(QUANTITY_REQUESTED),
+            getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY)));
+      } else {
+        errorMap.put(REASON_FOR_REQUESTED_QUANTITY, new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON,
+            getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY),
+            getRnrColumnLabelFor(QUANTITY_REQUESTED)));
+      }
     }
   }
 
-  public List<RnrColumn> getVisibleColumns(boolean fullSupply) {
-    List<RnrColumn> visibleRnrColumns = new ArrayList<>();
-    if (fullSupply) {
-      for (RnrColumn rnrColumn : rnrColumns) {
-        if (rnrColumn.getName().equals("remarks") || rnrColumn.getName().equals("reasonForRequestedQuantity"))
-          continue;
-        if (rnrColumn.isVisible()) {
-          visibleRnrColumns.add(rnrColumn);
-        }
-      }
-    } else {
-      for (RnrColumn rnrColumn : rnrColumns) {
-        if (rnrColumn.getName().equals("product") || rnrColumn.getName().equals("productCode") ||
-            rnrColumn.getName().equals("dispensingUnit") || rnrColumn.getName().equals("quantityRequested") ||
-            rnrColumn.getName().equals("packsToShip") || rnrColumn.getName().equals("price") ||
-            rnrColumn.getName().equals("cost") || rnrColumn.getName().equals("quantityApproved")) {
-          if (rnrColumn.isVisible()) {
-            visibleRnrColumns.add(rnrColumn);
-          }
+  public List<RnrColumn> getPrintableColumns(boolean fullSupply) {
+    List<RnrColumn> printableRnrColumns = new ArrayList<>();
+
+    for (RnrColumn rnrColumn : rnrColumns) {
+      if (rnrColumn.isVisible()) {
+        if (fullSupply && !nonPrintableFullSupplyColumnNames.contains(rnrColumn.getName())) {
+          printableRnrColumns.add(rnrColumn);
+        } else if (!fullSupply && printableNonFullSupplyColumnNames.contains(rnrColumn.getName())) {
+          printableRnrColumns.add(rnrColumn);
         }
       }
     }
-    return visibleRnrColumns;
+    return printableRnrColumns;
   }
-
 
 }

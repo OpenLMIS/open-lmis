@@ -63,9 +63,6 @@ public class User extends BaseModel implements Importable {
   private List<RoleAssignment> homeFacilityRoles;
   private RoleAssignment adminRole;
 
-  private static final String INVALID_EMAIL_ERROR_CODE = "user.email.invalid";
-
-  private static final String INVALID_USER_NAME_ERROR_CODE = "user.userName.invalid";
   private Long vendorId;
 
   public User(Long id, String userName) {
@@ -93,12 +90,12 @@ public class User extends BaseModel implements Importable {
     final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     Pattern pattern = Pattern.compile(EMAIL_PATTERN);
     if (email != null && !pattern.matcher(email).matches())
-      throw new DataException(INVALID_EMAIL_ERROR_CODE);
+      throw new DataException("user.email.invalid");
   }
 
   private void validateUserName() {
     if (userName != null && userName.trim().contains(" "))
-      throw new DataException(INVALID_USER_NAME_ERROR_CODE);
+      throw new DataException("user.userName.invalid");
   }
 
   public User basicInformation() {

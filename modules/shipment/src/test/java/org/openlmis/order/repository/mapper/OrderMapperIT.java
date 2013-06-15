@@ -163,7 +163,7 @@ public class OrderMapperIT {
     assertThat(savedOrder.getRnr().getId(), is(expectedOrder.getRnr().getId()));
   }
 
-  private int updateOrderCreatedTime(Order order, Date date) throws SQLException {
+  private long updateOrderCreatedTime(Order order, Date date) throws SQLException {
     List paramList = new ArrayList();
     paramList.add(new java.sql.Date(date.getTime()));
     paramList.add(order.getId());

@@ -66,7 +66,7 @@ public class GeographicZoneRepository {
     try {
       mapper.insert(zone);
     } catch (DataIntegrityViolationException e) {
-      throw new DataException("Incorrect Data Length");
+      throw new DataException("error.incorrect.length");
     }
   }
 
@@ -74,7 +74,7 @@ public class GeographicZoneRepository {
     try {
       mapper.update(zone);
     } catch (DataIntegrityViolationException e) {
-      throw new DataException("Incorrect Data Length");
+      throw new DataException("error.incorrect.length");
     }
   }
 

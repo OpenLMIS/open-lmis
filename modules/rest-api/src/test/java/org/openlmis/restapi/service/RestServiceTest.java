@@ -36,13 +36,11 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.restapi.builder.ReportBuilder.defaultReport;
-import static org.openlmis.restapi.service.RestService.USER_USERNAME_INCORRECT;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
+
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(RestService.class)
@@ -119,7 +117,7 @@ public class RestServiceTest {
     when(userService.getByUsernameAndVendorId(user)).thenReturn(null);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(USER_USERNAME_INCORRECT);
+    expectedException.expectMessage("user.username.incorrect");
 
     service.submitReport(report);
   }
@@ -134,7 +132,7 @@ public class RestServiceTest {
     when(userService.getByUsernameAndVendorId(user)).thenReturn(null);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(USER_USERNAME_INCORRECT);
+    expectedException.expectMessage("user.username.incorrect");
 
     service.submitReport(report);
   }
@@ -166,7 +164,7 @@ public class RestServiceTest {
     when(userService.getByUsernameAndVendorId(user)).thenReturn(null);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(USER_USERNAME_INCORRECT);
+    expectedException.expectMessage("user.username.incorrect");
 
     service.approve(report);
   }

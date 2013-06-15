@@ -65,7 +65,6 @@ public class ViewRequisitionPage extends RequisitionPage {
   @FindBy(how = ID, using = "cost_0")
   private static WebElement totalCostPostApproval;
 
-
   @FindBy(how = ID, using = "newPatientCount_0")
   private static WebElement newPatient;
 
@@ -80,7 +79,7 @@ public class ViewRequisitionPage extends RequisitionPage {
 
   public ViewRequisitionPage(TestWebDriver driver) throws IOException {
     super(driver);
-    PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 1), this);
+    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);
 
   }

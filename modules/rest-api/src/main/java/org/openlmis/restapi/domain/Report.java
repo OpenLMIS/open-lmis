@@ -20,7 +20,6 @@ import java.util.List;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Report {
-  public static final String ERROR_MANDATORY_FIELD_MISSING = "error.restapi.mandatory.missing";
   private Long requisitionId;
   private Long facilityId;
   private Long programId;
@@ -30,8 +29,9 @@ public class Report {
   private List<RnrLineItem> products;
 
   public void validate() {
-    if (facilityId == null || programId == null || periodId == null || userId == null || vendor == null)
-      throw new DataException(ERROR_MANDATORY_FIELD_MISSING);
+    if (facilityId == null || programId == null || periodId == null || userId == null || vendor == null) {
+      throw new DataException("error.restapi.mandatory.missing");
+    }
   }
 
   public Rnr getRequisition() {

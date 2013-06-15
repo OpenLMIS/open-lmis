@@ -13,11 +13,10 @@ import org.openlmis.core.service.FacilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("facilityPersistenceHandler")
+@Component
 @NoArgsConstructor
 public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler {
 
-  public static final String DUPLICATE_FACILITY_CODE = "Duplicate Facility Code";
   private FacilityService facilityService;
 
   @Autowired
@@ -37,7 +36,7 @@ public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler 
 
   @Override
   protected String getDuplicateMessageKey() {
-    return DUPLICATE_FACILITY_CODE;
+    return "error.duplicate.facility.code";
   }
 
 

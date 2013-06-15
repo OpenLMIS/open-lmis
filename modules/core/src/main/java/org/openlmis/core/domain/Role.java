@@ -14,6 +14,8 @@ import org.openlmis.core.exception.DataException;
 
 import java.util.Set;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,14 +30,9 @@ public class Role extends BaseModel {
     this(name, adminRole, description, null);
   }
 
-  public Role(Long id, String name, Boolean adminRole, String description, Set<Right> rights) {
-    this(name, adminRole, description, rights);
-    this.id = id;
-  }
-
   public void validate() {
-    if (name == null || name.isEmpty()) throw new DataException("Role can not be created without name.");
+    if (isBlank(name)) throw new DataException("error.role.without.name");
     if (rights == null || rights.isEmpty())
-      throw new DataException("Role can not be created without any rights assigned to it.");
+      throw new DataException("error.role.without.rights");
   }
 }

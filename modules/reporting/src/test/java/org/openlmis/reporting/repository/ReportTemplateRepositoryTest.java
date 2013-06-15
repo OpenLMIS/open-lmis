@@ -13,15 +13,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.reporting.model.ReportTemplate;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.reporting.repository.mapper.ReportTemplateMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
-import static org.openlmis.reporting.repository.ReportTemplateRepository.REPORT_WITH_SAME_NAME_ALREADY_EXISTS;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
@@ -47,7 +46,7 @@ public class ReportTemplateRepositoryTest {
     doThrow(DataIntegrityViolationException.class).when(reportTemplateMapper).insert(template);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(REPORT_WITH_SAME_NAME_ALREADY_EXISTS);
+    expectedException.expectMessage("report.template.name.already.exists");
     reportTemplateRepository.insert(template);
   }
 }

@@ -12,12 +12,9 @@ import org.openlmis.core.service.ProductCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+@Component
+public class ProductCategoryPersistenceHandler extends AbstractModelPersistenceHandler {
 
-@Component("productCategoryPersistenceHandler")
-public class ProductCategoryPersistenceHandler  extends AbstractModelPersistenceHandler {
-
-  public static final String DUPLICATE_PRODUCT_CATEGORY = "Duplicate Product Category";
   ProductCategoryService productCategoryService;
 
   @Autowired
@@ -27,7 +24,7 @@ public class ProductCategoryPersistenceHandler  extends AbstractModelPersistence
 
   @Override
   protected BaseModel getExisting(BaseModel record) {
-    return productCategoryService.getExisting((ProductCategory)record);
+    return productCategoryService.getExisting((ProductCategory) record);
   }
 
   @Override
@@ -37,6 +34,6 @@ public class ProductCategoryPersistenceHandler  extends AbstractModelPersistence
 
   @Override
   protected String getDuplicateMessageKey() {
-    return DUPLICATE_PRODUCT_CATEGORY;
+    return "error.duplicate.product.category";
   }
 }

@@ -1,0 +1,69 @@
+<!--
+  ~ Copyright � 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div class="init-rnr">
+  <h2 openlmis-message="label.manage.distribution"></h2>
+
+  <br/>
+
+  <div>
+    <div class="row-fluid">
+      <div class="span12">
+        <label openlmis-message="label.distribution.deliveryZone"></label>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <select id="selectDeliveryZone" class="span3" ng-model="selectedZone"
+              ng-options="i as i.name for i in deliveryZones"
+              ng-change="loadPrograms()">
+        <option ng-bind="zonePlaceholder"></option>
+      </select>
+    </div>
+
+    <br/>
+
+    <div class="row-fluid">
+      <div class="span12">
+        <label openlmis-message="label.program"></label>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <select id="selectProgram" class="span3" ng-model="selectedProgram" ng-options="i as i.name for i in programs"
+              ng-change="loadPeriods()">
+        <option ng-bind="programOptionMessage()"></option>
+      </select>
+    </div>
+
+    <br/>
+
+
+    <div class="row-fluid">
+      <div class="span12">
+        <label openlmis-message="label.period"></label>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <select id="selectPeriod" class="span3" ng-model="selectedPeriod" ng-options="i as i.name for i in periods">
+        <option ng-bind="periodOptionMessage()"></option>
+      </select>
+    </div>
+
+    <br/><br/>
+
+    <div class="btn-group">
+      <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#">
+        Proceed
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a openlmis-message="option.distribution.viewLoadAmount"></a></li>
+        <li><a openlmis-message="option.distribution.inputFacilityData"></a></li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>

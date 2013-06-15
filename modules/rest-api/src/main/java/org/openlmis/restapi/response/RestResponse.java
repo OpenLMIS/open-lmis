@@ -11,18 +11,27 @@ import org.codehaus.jackson.annotate.JsonAnyGetter;
 import org.codehaus.jackson.annotate.JsonAnySetter;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.core.service.MessageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 @NoArgsConstructor
+@Component
 public class RestResponse {
   public static final String ERROR = "error";
   public static final String SUCCESS = "success";
-  private static ResourceBundle resourceBundle = ResourceBundle.getBundle("restapi_messages");
+
+  private static MessageService messageService;
+
+  @Autowired(required = true)
+  public void setMessageService(MessageService messageService){
+    RestResponse.messageService = messageService;
+  }
 
   private Map<String, Object> data = new HashMap<>();
 
@@ -40,23 +49,31 @@ public class RestResponse {
   }
 
   public static ResponseEntity<RestResponse> success(String successMsgCode) {
-    return new ResponseEntity<>(new RestResponse(SUCCESS, new OpenLmisMessage(successMsgCode).resolve(resourceBundle)), HttpStatus.OK);
+    return new ResponseEntity<>(new RestResponse(SUCCESS, messageService.message(new OpenLmisMessage(successMsgCode))), HttpStatus.OK);
   }
 
   public static ResponseEntity<RestResponse> success(OpenLmisMessage openLmisMessage) {
-    return new ResponseEntity<>(new RestResponse(SUCCESS, openLmisMessage.resolve(resourceBundle)), HttpStatus.OK);
+    return new ResponseEntity<>(new RestResponse(SUCCESS, messageService.message(openLmisMessage)), HttpStatus.OK);
+  }
+
+  public static ResponseEntity<RestResponse> error(OpenLmisMessage openLmisMessage, HttpStatus statusCode) {
+    return new ResponseEntity<>(new RestResponse(ERROR, messageService.message(openLmisMessage)), statusCode);
   }
 
   public static ResponseEntity<RestResponse> error(String errorMsgCode, HttpStatus statusCode) {
-    return new ResponseEntity<>(new RestResponse(ERROR, new OpenLmisMessage(errorMsgCode).resolve(resourceBundle)), statusCode);
+    return new ResponseEntity<>(new RestResponse(ERROR, messageService.message(new OpenLmisMessage(errorMsgCode))), statusCode);
   }
 
   public static ResponseEntity<RestResponse> error(DataException exception, HttpStatus httpStatus) {
-    return new ResponseEntity<>(new RestResponse(ERROR, exception.getOpenLmisMessage().resolve(resourceBundle)), httpStatus);
+    return new ResponseEntity<>(new RestResponse(ERROR, messageService.message(exception.getOpenLmisMessage().getCode())), httpStatus);
   }
 
   public static ResponseEntity<RestResponse> response(String key, Object value) {
     return new ResponseEntity<>(new RestResponse(key, value), HttpStatus.OK);
+  }
+
+  public static ResponseEntity<RestResponse> response(String key, Object value, HttpStatus status) {
+    return new ResponseEntity<>(new RestResponse(key, value), status);
   }
 
   public static ResponseEntity<RestResponse> response(Map<String, OpenLmisMessage> messages, HttpStatus status) {
@@ -73,7 +90,7 @@ public class RestResponse {
 
   private void setData(Map<String, OpenLmisMessage> errors) {
     for (String key : errors.keySet()) {
-      addData(key, errors.get(key).resolve(resourceBundle));
+      addData(key, messageService.message(errors.get(key)));
     }
   }
 

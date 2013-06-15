@@ -12,7 +12,29 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class UploadException extends RuntimeException {
-  public UploadException(String message) {
-    super(message);
+
+  private String code;
+  private String[] params = new String[0];
+
+  public UploadException(String code) {
+    super(code);
+    this.code = code;
+  }
+
+  public UploadException(String code,String... params){
+    this.code = code;
+    this.params = params;
+  }
+
+  @Override
+  public String toString(){
+    if(params.length == 0) return code;
+
+    StringBuilder messageBuilder = new StringBuilder("code: "+code+ ", params: { ");
+    for(String param : params){
+      messageBuilder.append("; ").append(param);
+    }
+    messageBuilder.append(" }");
+    return messageBuilder.toString().replaceFirst("; ","");
   }
 }

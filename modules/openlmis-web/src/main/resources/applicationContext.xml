@@ -70,7 +70,7 @@
     <import resource="classpath:/applicationContext-restapi.xml"/>
     <import resource="classpath:/applicationContext-shipment.xml"/>
     <import resource="classpath:/applicationContext-reporting.xml"/>
-    <import resource="classpath:/applicationContext-allocation.xml"/>
+    <import resource="classpath:/applicationContext-distribution.xml"/>
 
     <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>
 
@@ -254,10 +254,40 @@
                     <bean class="org.openlmis.web.model.UploadBean">
                         <property name="displayName" value="Delivery Zones"/>
                         <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.allocation.domain.DeliveryZone</value>
+                            <value type="java.lang.Class">org.openlmis.distribution.domain.DeliveryZone</value>
                         </property>
                         <property name="recordHandler" ref="deliveryZoneHandler"/>
                         <property name="tableName" value="delivery_zones"/>
+                    </bean>
+                </entry>
+                <entry key="deliveryZoneProgramSchedule">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Map Delivery Zones To Program Schedules"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.distribution.domain.DeliveryZoneProgramSchedule</value>
+                        </property>
+                        <property name="recordHandler" ref="deliveryZoneProgramScheduleHandler"/>
+                        <property name="tableName" value="delivery_zone_program_schedules"/>
+                    </bean>
+                </entry>
+                <entry key="deliveryZoneMember">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Delivery Zone Members"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.distribution.domain.DeliveryZoneMember</value>
+                        </property>
+                        <property name="recordHandler" ref="deliveryZoneMemberHandler"/>
+                        <property name="tableName" value="delivery_zone_members"/>
+                    </bean>
+                </entry>
+                <entry key="deliveryZoneWarehouse">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Delivery Zone Warehouses"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.distribution.domain.DeliveryZoneWarehouse</value>
+                        </property>
+                        <property name="recordHandler" ref="deliveryZoneWarehouseHandler"/>
+                        <property name="tableName" value="delivery_zone_warehouses"/>
                     </bean>
                 </entry>
             </map>

@@ -16,8 +16,8 @@ import java.util.List;
 public interface RequisitionGroupProgramScheduleMapper {
 
   @Insert("INSERT INTO requisition_group_program_schedules" +
-    "(requisitionGroupId, programId, scheduleId, directDelivery, dropOffFacilityId, modifiedBy, modifiedDate) " +
-    "VALUES(#{requisitionGroup.id}, #{program.id}, #{processingSchedule.id}, #{directDelivery}, #{dropOffFacility.id}, #{modifiedBy}, #{modifiedDate})")
+    "(requisitionGroupId, programId, scheduleId, directDelivery, dropOffFacilityId, createdBy, modifiedBy, modifiedDate) " +
+    "VALUES(#{requisitionGroup.id}, #{program.id}, #{processingSchedule.id}, #{directDelivery}, #{dropOffFacility.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
   Integer insert(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule);
 

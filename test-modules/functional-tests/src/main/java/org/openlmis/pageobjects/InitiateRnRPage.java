@@ -140,7 +140,7 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//input[@value='Done']")
   private static WebElement doneButton;
 
-  @FindBy(how = XPATH, using = "//span[@class='alert alert-warning reason-request']")
+  @FindBy(how = XPATH, using = "//span[@class='alert alert-warning warning-alert']")
   private static WebElement requestedQtyWarningMessage;
 
   @FindBy(how = XPATH, using = "//div[@class='info-box']/div[2]/div[3]")
@@ -232,7 +232,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public InitiateRnRPage(TestWebDriver driver) throws IOException {
     super(driver);
-    PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 1), this);
+    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);
   }
 
@@ -317,18 +317,14 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(adjList);
     String labelAdj = testWebDriver.getText(adjList);
     assertEquals(labelAdj.trim(), "Transfer In");
-//    String adjValue = testWebDriver.getAttribute(adjListValue, "value");
-    // SeleneseTestNgHelper.assertEquals(adjValue, adj);
-    //testWebDriver.waitForElementToAppear(totalAdj);
-    //String totalAdjValue = testWebDriver.getText(totalAdj);
     testWebDriver.sleep(1000);
-    //SeleneseTestNgHelper.assertEquals(totalAdjValue.substring("Total ".length()), adj);
     testWebDriver.sleep(1000);
     doneButton.click();
     testWebDriver.sleep(1000);
 
 
   }
+
 
 
   public void calculateAndVerifyStockOnHand(Integer A, Integer B, Integer C, Integer D) {
@@ -464,12 +460,12 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(500);
   }
 
+
+
   public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue, String productPrimaryName, String productCode, String category, String baseurl, String dburl) throws IOException, SQLException {
-    testWebDriver.waitForElementToAppear(nonFullSupplyTab);
-    nonFullSupplyTab.click();
     DBWrapper dbWrapper = new DBWrapper(baseurl, dburl);
     String nonFullSupplyItems = dbWrapper.fetchNonFullSupplyData(productCode, "2", "1");
-    testWebDriver.waitForElementToAppear(addNonFullSupplyButtonScreen);
+    clickNonFullSupplyTab();
     testWebDriver.sleep(1000);
     addButton.click();
     testWebDriver.sleep(1000);
@@ -551,7 +547,7 @@ public class InitiateRnRPage extends RequisitionPage {
     String actualColumnHeading = null;
     for (int i = 0; i < noOfColumns; i++) {
       try {
-        testWebDriver.sleep(100);
+//        testWebDriver.sleep(100);
         WebElement columnElement = testWebDriver.getElementByXpath(xpathTillTrTag + "/th[" + (i + 1) + "]");
         columnElement.click();
         actualColumnHeading = columnElement.getText();
@@ -573,7 +569,7 @@ public class InitiateRnRPage extends RequisitionPage {
     String actualColumnHeading = null;
     for (int i = 0; i < noOfColumns; i++) {
       try {
-        testWebDriver.sleep(100);
+//        testWebDriver.sleep(100);
         WebElement columnElement = testWebDriver.getElementByXpath(xpathTillTrTag + "/th[" + (i + 1) + "]");
         columnElement.click();
         actualColumnHeading = columnElement.getText();
@@ -592,10 +588,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
 
   public void addMultipleNonFullSupplyLineItems(int numberOfLineItems, boolean isMultipleCategories) throws IOException, SQLException {
-    testWebDriver.waitForElementToAppear(nonFullSupplyTab);
-    nonFullSupplyTab.click();
-
-    testWebDriver.waitForElementToAppear(addNonFullSupplyButtonScreen);
+    clickNonFullSupplyTab();
     testWebDriver.sleep(1000);
     addButton.click();
     testWebDriver.sleep(1000);

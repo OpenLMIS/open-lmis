@@ -12,10 +12,9 @@ import org.openlmis.core.service.ProgramProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("programProductPersistenceHandler")
+@Component
 public class ProgramProductPersistenceHandler extends AbstractModelPersistenceHandler {
 
-  public static final String DUPLICATE_PRODUCT_PROGRAM_CODE_COMBINATION = "Duplicate entry for Product Code and Program Code combination found";
   private ProgramProductService programProductService;
 
   @Autowired
@@ -35,7 +34,7 @@ public class ProgramProductPersistenceHandler extends AbstractModelPersistenceHa
 
   @Override
   protected String getDuplicateMessageKey() {
-    return DUPLICATE_PRODUCT_PROGRAM_CODE_COMBINATION;
+    return "error.duplicate.program.product.combination";
   }
 
 }

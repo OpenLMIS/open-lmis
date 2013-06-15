@@ -31,7 +31,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.openlmis.rnr.builder.RequisitionBuilder.modifiedBy;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
-import static org.openlmis.rnr.domain.Rnr.PRODUCT_CODE_INVALID;
 import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -161,11 +160,11 @@ public class RnrTest {
   @Test
   public void testCalculatePacksToShip() throws Exception {
     RnrLineItem lineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem,
-      with(roundToZero, true),
-      with(packRoundingThreshold, 6),
-      with(quantityApproved, 66),
-      with(packSize, 10),
-      with(roundToZero, false)));
+        with(roundToZero, true),
+        with(packRoundingThreshold, 6),
+        with(quantityApproved, 66),
+        with(packSize, 10),
+        with(roundToZero, false)));
     rnr.setFullSupplyLineItems(asList(lineItem));
     rnr.setNonFullSupplyLineItems(asList(lineItem));
 
@@ -260,7 +259,7 @@ public class RnrTest {
     rnr.setFullSupplyLineItems(asList(spyLineItem1));
 
     exception.expect(DataException.class);
-    exception.expectMessage(PRODUCT_CODE_INVALID);
+    exception.expectMessage("product.code.invalid");
 
     rnr.copyCreatorEditableFields(newRnr, template);
   }
@@ -281,7 +280,7 @@ public class RnrTest {
     rnr.setFullSupplyLineItems(asList(spyLineItem1));
 
     exception.expect(DataException.class);
-    exception.expectMessage(PRODUCT_CODE_INVALID);
+    exception.expectMessage("product.code.invalid");
 
     rnr.copyApproverEditableFields(newRnr, template);
   }

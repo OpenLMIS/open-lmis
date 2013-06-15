@@ -6,8 +6,8 @@
 
 directives.directive('openlmisMessage', function (messageService) {
   return {
-    restrict: 'A',
-    link: function (scope, element, attrs) {
+    restrict:'A',
+    link:function (scope, element, attrs) {
       var key = scope[attrs.openlmisMessage] || attrs.openlmisMessage;
       var keyWithArgs = key.split("|");
       var refreshMessages = function () {
@@ -21,6 +21,19 @@ directives.directive('openlmisMessage', function (messageService) {
 
       scope.$watch("[" + keyWithArgs.toString() + "]", refreshMessages, true);
       scope.$on('messagesPopulated', refreshMessages);
+
+      function replaceArgs(scope, displayMessage, args) {
+        $.each(args, function (index, arg) {
+          if (index > 0) {
+            var value = scope[arg];
+            if (value == null || value == undefined) {
+              value = arg;
+            }
+            displayMessage = displayMessage.replace("{" + (index - 1) + "}", value);
+          }
+        });
+        return displayMessage;
+      }
     }
   }
 });

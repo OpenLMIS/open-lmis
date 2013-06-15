@@ -51,8 +51,13 @@ public class ProcessingScheduleMapperIT {
   @Test
   public void shouldGetIdByCode() throws Exception {
     processingScheduleMapper.insert(processingSchedule);
-    assertThat(processingSchedule.getId(), is(notNullValue()));
     assertThat(processingScheduleMapper.getIdForCode("Q1stM"), is(processingSchedule.getId()));
+  }
+
+  @Test
+  public void shouldGetByCode() throws Exception {
+    processingScheduleMapper.insert(processingSchedule);
+    assertThat(processingScheduleMapper.getByCode("Q1stM"), is(processingSchedule));
   }
 
   @Test

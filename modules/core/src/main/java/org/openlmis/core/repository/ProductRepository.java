@@ -40,13 +40,13 @@ public class ProductRepository {
       validateAndSetProductGroup(product);
       mapper.insert(product);
     } catch (DuplicateKeyException duplicateKeyException) {
-      throw new DataException("Duplicate Product Code found");
+      throw new DataException("error.duplicate.product.code");
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
       String errorMessage = dataIntegrityViolationException.getMessage().toLowerCase();
       if (errorMessage.contains("foreign key") || errorMessage.contains("violates not-null constraint")) {
-        throw new DataException("Missing/Invalid Reference data");
+        throw new DataException("error.reference.data.missing");
       } else {
-        throw new DataException("Incorrect data length");
+        throw new DataException("error.incorrect.length");
       }
     }
   }
@@ -59,7 +59,7 @@ public class ProductRepository {
     if (productGroupCode == null || productGroupCode.isEmpty()) return;
 
     ProductGroup productGroup = productGroupMapper.getByCode(productGroupCode);
-    if (productGroup == null) throw new DataException("Invalid reference data 'Product Group'");
+    if (productGroup == null) throw new DataException("error.reference.data.invalid.product.group");
 
     group.setId(productGroup.getId());
   }
@@ -81,7 +81,7 @@ public class ProductRepository {
     if (productFormCode == null || productFormCode.isEmpty()) return;
 
     Long productFormId = mapper.getProductFormIdForCode(productFormCode);
-    if (productFormId == null) throw new DataException("Invalid reference data 'Product Form'");
+    if (productFormId == null) throw new DataException("error.reference.data.invalid.product.form");
 
     form.setId(productFormId);
   }
@@ -95,7 +95,7 @@ public class ProductRepository {
 
     Long dosageUnitId = mapper.getDosageUnitIdForCode(dosageUnitCode);
     if (dosageUnitId == null)
-      throw new DataException("Invalid reference data 'Dosage Unit'");
+      throw new DataException("error.reference.data.invalid.dosage.unit");
 
     dosageUnit.setId(dosageUnitId);
   }

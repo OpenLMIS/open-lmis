@@ -10,7 +10,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
   $scope.lastPeriodId = "";
   var displayTime = 8000;
 
-  Schedule.get({id:$routeParams.id}, function (data) {
+  Schedule.get({id: $routeParams.id}, function (data) {
     $scope.error = "";
     $scope.schedule = data.schedule;
   }, function () {
@@ -18,7 +18,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
     $location.path("/list");
   });
 
-  Periods.get({scheduleId:$routeParams.id}, function (data) {
+  Periods.get({scheduleId: $routeParams.id}, function (data) {
     $scope.periodList = data.periods;
     prepareNewPeriod();
   }, {});
@@ -60,7 +60,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
     if (!validatePeriod()) return;
     $scope.showErrorForCreate = false;
 
-    Periods.save({scheduleId:$routeParams.id}, $scope.newPeriod, function (data) {
+    Periods.save({scheduleId: $routeParams.id}, $scope.newPeriod, function (data) {
       $scope.periodList.unshift($scope.newPeriod);
       $scope.message = data.success;
       $scope.newPeriod.id = data.id;
@@ -73,7 +73,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
       if ($scope.periodList.length != 0)
         resetNewPeriod(new Date($scope.periodList[0].endDate).getTime());
       else
-      $scope.newPeriod = {};
+        $scope.newPeriod = {};
     }, function (data) {
       $scope.message = "";
       $scope.error = data.data.error;
@@ -99,11 +99,11 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
     $($scope.periodList).each(function (index, periodObject) {
       if (periodObject.id == periodId) {
         if (!inValidateStartDate(periodObject)) {
-          Period.remove({id:periodId}, function (data) {
+          Period.remove({id: periodId}, function (data) {
             $scope.periodList.splice(index, 1);
             $scope.message = data.success;
             $scope.error = "";
-            if($scope.periodList.length > 0 ) {
+            if ($scope.periodList.length > 0) {
               resetNewPeriod(new Date($scope.periodList[0].endDate).getTime());
             } else {
               $scope.newPeriod.startDate = undefined;
@@ -114,7 +114,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
           });
         } else {
           $scope.message = "";
-          $scope.error = messageService.get("error.startDate");
+          $scope.error = messageService.get("error.period.start.date");
         }
       }
     });
@@ -131,7 +131,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
     return (periodToDelete.startDate - Date.now()) <= 0;
   };
 
-  var prepareNewPeriod = function() {
+  var prepareNewPeriod = function () {
     if ($scope.periodList.length != 0)
       resetNewPeriod(new Date($scope.periodList[0].endDate).getTime());
     else

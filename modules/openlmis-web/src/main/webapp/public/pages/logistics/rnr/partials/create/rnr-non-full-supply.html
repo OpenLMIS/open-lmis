@@ -61,7 +61,7 @@
                        rnr-validator="positiveInteger" maxlength="8"
                        ng-change="rnr.fillPacksToShip(rnrLineItem)"/>
                 <span class="rnr-form-error" id="quantityRequested{{rnrLineItem['productCode']}}"
-                      style="display:none;" openlmis-message="rnr.number.error">
+                      style="display:none;" openlmis-message="error.number.only">
                 </span>
               </span>
 
@@ -72,7 +72,7 @@
                        ng-required="true"
                        ng-class="highlightWarning(rnrLineItem.reasonForRequestedQuantity)"
                        maxlength="250"/>
-                <span class="alert alert-warning reason-request" openlmis-message="rnr.requested.quantity.reason.warning"
+                <span class="alert alert-warning warning-alert" openlmis-message="error.reason.required"
                       ng-show="rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity">
                 </span>
               </span>
@@ -99,12 +99,12 @@
 <form name="nonFullSupplyForm">
   <div id="nonFullSupplyProductsModal" modal="nonFullSupplyProductsModal"
        options="{ backdrop: 'static', escape: false}">
-    <div class="modal-header"><h3 openlmis-message="rnr.label.add.non.full.supply"></h3></div>
+    <div class="modal-header"><h3 openlmis-message="label.rnr.add.non.full.supply"></h3></div>
     <div class="modal-body">
 
       <div class="row-fluid">
         <div class="span7">
-          <label for="nonFullSupplyProductsCategory" openlmis-message="rnr.label.category"></label>
+          <label for="nonFullSupplyProductsCategory" openlmis-message="label.category"></label>
           <select ui-select2 class="span11 bottom-spacer" id="nonFullSupplyProductsCategory"
                   ng-model="nonFullSupplyProductCategory" name="productName"
                   data-placeholder="-- Select category --"
@@ -117,7 +117,7 @@
 
       <div class="row-fluid">
         <div class="span7">
-          <label for="nonFullSupplyProductsCodeAndName" openlmis-message="rnr.label.product.code"></label>
+          <label for="nonFullSupplyProductsCodeAndName" openlmis-message="label.product.code"></label>
           <select ui-select2 class="span11 bottom-spacer" id="nonFullSupplyProductsCodeAndName"
                   ng-model="facilityApprovedProduct" name="productCode" data-placeholder="-- Select product --"
                   ng-options="facilityApprovedProduct.programProduct.product.code+' | '+facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay">
@@ -135,7 +135,7 @@
                  id="quantityRequested"
                  rnr-validator="positiveInteger" maxlength="8"/><br>
             <span class="rnr-form-error" style="display:none;" id="newNonFullSupply.quantityRequested"
-                  openlmis-message="rnr.number.error">
+                  openlmis-message="error.number.only">
             </span>
         </div>
         <div class="span6">
@@ -143,9 +143,9 @@
               ng-bind="labelForRnrColumn('reasonForRequestedQuantity')"></span></label>
           <input type="text" class="span12" ng-model="newNonFullSupply.reasonForRequestedQuantity"
                  id="reasonForRequestedQuantity" maxlength="250"/><br>
-            <span class="alert alert-warning reason-request"
+            <span class="alert alert-warning warning-alert"
                   ng-show="newNonFullSupply.quantityRequested && !newNonFullSupply.reasonForRequestedQuantity"
-                  openlmis-message="rnr.requested.quantity.reason.warning">
+                  openlmis-message="error.reason.required">
             </span>
         </div>
         <div class="span3">
@@ -174,7 +174,7 @@
                      ng-required="true" maxlength="8" ng-model="nonFullSupplyProduct.quantityRequested"
                      placeholder="Quantity"/>
                 <span class="rnr-form-error" style="display:none;"
-                      id="nonFullSupplyProductQuantityRequested{{$index}}" openlmis-message="rnr.number.error">
+                      id="nonFullSupplyProductQuantityRequested{{$index}}" openlmis-message="error.number.only">
                 </span>
             </div>
           </div>

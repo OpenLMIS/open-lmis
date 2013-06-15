@@ -31,6 +31,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
@@ -66,33 +67,36 @@ public class ProductRepositoryTest {
   @Test
   public void shouldRaiseDuplicateProductCodeError() throws Exception {
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Duplicate Product Code found");
+    expectedEx.expect(dataExceptionMatcher("error.duplicate.product.code"));
+
     doThrow(new DuplicateKeyException("")).when(mockedMapper).insert(product);
     repository.insert(product);
   }
 
   @Test
   public void shouldRaiseIncorrectReferenceDataError() throws Exception {
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Missing/Invalid Reference data");
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.missing"));
+
     doThrow(new DataIntegrityViolationException("foreign key")).when(mockedMapper).insert(product);
+
     repository.insert(product);
   }
 
   @Test
   public void shouldRaiseMissingReferenceDataError() throws Exception {
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Missing/Invalid Reference data");
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.missing"));
+
     doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mockedMapper).insert(product);
+
     repository.insert(product);
   }
 
   @Test
   public void shouldRaiseIncorrectDataValueError() throws Exception {
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Incorrect data length");
+    expectedEx.expect(dataExceptionMatcher("error.incorrect.length"));
+
     doThrow(new DataIntegrityViolationException("value too long")).when(mockedMapper).insert(product);
+
     repository.insert(product);
   }
 
@@ -101,8 +105,8 @@ public class ProductRepositoryTest {
     product.getDosageUnit().setCode("invalid code");
     when(mockedMapper.getDosageUnitIdForCode("invalid code")).thenReturn(null);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid reference data 'Dosage Unit'");
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.invalid.dosage.unit"));
+
     repository.insert(product);
   }
 
@@ -120,8 +124,7 @@ public class ProductRepositoryTest {
     product.getForm().setCode("invalid code");
     when(mockedMapper.getProductFormIdForCode("invalid code")).thenReturn(null);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid reference data 'Product Form'");
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.invalid.product.form"));
     repository.insert(product);
   }
 
@@ -155,8 +158,8 @@ public class ProductRepositoryTest {
     product.getProductGroup().setCode("invalid product group code");
     when(mockedProductGroupMapper.getByCode("invalid product group code")).thenReturn(null);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid reference data 'Product Group'");
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.invalid.product.group"));
+
     repository.insert(product);
   }
 

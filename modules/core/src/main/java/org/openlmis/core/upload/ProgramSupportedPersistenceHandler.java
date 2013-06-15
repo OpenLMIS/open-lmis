@@ -12,10 +12,9 @@ import org.openlmis.core.service.FacilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("programSupportedPersistenceHandler")
+@Component
 public class ProgramSupportedPersistenceHandler extends AbstractModelPersistenceHandler {
 
-  public static final String FACILITY_ALREADY_MAPPED_TO_PROGRAM = "Facility has already been mapped to the program ";
   private FacilityService facilityService;
 
   @Autowired
@@ -35,7 +34,7 @@ public class ProgramSupportedPersistenceHandler extends AbstractModelPersistence
 
   @Override
   protected String getDuplicateMessageKey() {
-    return FACILITY_ALREADY_MAPPED_TO_PROGRAM;
+    return "error.duplicate.program.supported";
   }
 
 }

@@ -19,7 +19,7 @@ import org.openlmis.upload.annotation.ImportField;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ShippedLineItem extends BaseModel implements Importable{
+public class ShippedLineItem extends BaseModel implements Importable {
   @ImportField(mandatory = true, type = "int", name = "Order Number")
   private Long rnrId;
 
@@ -29,8 +29,10 @@ public class ShippedLineItem extends BaseModel implements Importable{
   @ImportField(mandatory = true, type = "intFromDouble", name = "Quantity Shipped")
   private Integer quantityShipped;
 
-  public void validateForSave(){
-    if(quantityShipped <0) throw new DataException("Quantity shipped can not be negative");
+  public void validateForSave() {
+    if (quantityShipped < 0) {
+      throw new DataException("error.negative.shipped.quantity");
+    }
   }
 
 }

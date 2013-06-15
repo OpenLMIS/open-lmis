@@ -17,8 +17,6 @@ import org.openlmis.upload.annotation.ImportField;
 
 import java.util.Date;
 
-import static org.openlmis.core.service.FacilityService.SUPPORTED_PROGRAMS_INVALID;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -42,6 +40,6 @@ public class ProgramSupported extends BaseModel implements Importable {
 
   public void isValid() {
     if (this.active && this.startDate == null)
-      throw new DataException(SUPPORTED_PROGRAMS_INVALID);
+      throw new DataException("supported.programs.invalid");
   }
 }

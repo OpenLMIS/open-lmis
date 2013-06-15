@@ -59,13 +59,13 @@ public class FacilityRepository {
         mapper.update(facility);
       }
     } catch (DuplicateKeyException duplicateKeyException) {
-      throw new DataException("Duplicate Facility Code found");
+      throw new DataException("error.duplicate.facility.code");
     } catch (DataIntegrityViolationException integrityViolationException) {
       String errorMessage = integrityViolationException.getMessage().toLowerCase();
       if (errorMessage.contains("foreign key") || errorMessage.contains("not-null constraint")) {
-        throw new DataException("Missing/Invalid Reference data");
+        throw new DataException("error.reference.data.missing");
       }
-      throw new DataException("Incorrect data length");
+      throw new DataException("error.incorrect.length");
     }
   }
 
@@ -77,24 +77,24 @@ public class FacilityRepository {
     facility.setGeographicZone(geographicZone);
 
     if (facility.getGeographicZone() == null) {
-      throw new DataException("Invalid reference data 'Geographic Zone Code'");
+      throw new DataException("error.reference.data.invalid.geo.zone.code");
     }
 
     if (facility.getGeographicZone().getLevel().getLevelNumber() != LOWEST_GEO_LEVEL) {
-      throw new DataException("Geographic Zone Code must be at the lowest administrative level in your hierarchy");
+      throw new DataException("error.geo.zone.not.at.lowest.level");
     }
   }
 
   private void validateAndSetFacilityType(Facility facility) {
     FacilityType facilityType = facility.getFacilityType();
     if (facilityType == null || facilityType.getCode() == null || facilityType.getCode().isEmpty())
-      throw new DataException("Missing mandatory reference data 'Facility Type'");
+      throw new DataException("error.reference.data.facility.type.missing");
 
     String facilityTypeCode = facilityType.getCode();
     FacilityType existingFacilityType = mapper.getFacilityTypeForCode(facilityTypeCode);
 
     if (existingFacilityType == null)
-      throw new DataException("Invalid reference data 'Facility Type'");
+      throw new DataException("error.reference.data.invalid.facility.type");
 
     facilityType.setId(existingFacilityType.getId());
 
@@ -107,7 +107,7 @@ public class FacilityRepository {
     if (operatedByCode == null || operatedByCode.isEmpty()) return;
 
     Long operatedById = mapper.getOperatedByIdForCode(operatedByCode);
-    if (operatedById == null) throw new DataException("Invalid reference data 'Operated By'");
+    if (operatedById == null) throw new DataException("error.reference.data.invalid.operated.by");
 
     facility.getOperatedBy().setId(operatedById);
   }
@@ -145,7 +145,7 @@ public class FacilityRepository {
     Long facilityId = mapper.getIdForCode(code);
 
     if (facilityId == null)
-      throw new DataException("Invalid Facility Code");
+      throw new DataException("error.facility.code.invalid");
 
     return facilityId;
   }

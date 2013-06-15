@@ -26,7 +26,6 @@ public class FacilityApprovedProduct extends BaseModel implements Importable {
   @ImportField(mandatory = true, name = "Facility Type Code", nested = "code")
   private FacilityType facilityType;
 
-
   @ImportFields(importFields = {
       @ImportField(name = "Program Code", nested = "program.code", mandatory = true),
       @ImportField(name = "Product Code", nested = "product.code", mandatory = true)})

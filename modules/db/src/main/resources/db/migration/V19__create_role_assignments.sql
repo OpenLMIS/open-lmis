@@ -6,6 +6,7 @@ CREATE TABLE role_assignments (
   roleId INTEGER REFERENCES roles(id) NOT NULL,
   programId INTEGER REFERENCES programs(id),
   supervisoryNodeId INTEGER REFERENCES supervisory_nodes(id),
+  deliveryZoneId INTEGER REFERENCES delivery_zones(id),
 
   CONSTRAINT unique_role_assignment UNIQUE (userId, roleId, programId, supervisoryNodeId)
 );

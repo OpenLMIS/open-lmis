@@ -19,9 +19,9 @@ public interface ProductCategoryMapper {
 
 
   @Insert({"INSERT INTO product_categories",
-      "(code, name, displayOrder, modifiedBy, modifiedDate)",
+      "(code, name, displayOrder, createdBy, modifiedBy, modifiedDate)",
       "VALUES",
-      "(#{code}, #{name}, #{displayOrder}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))"})
+      "(#{code}, #{name}, #{displayOrder}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))"})
   @Options(useGeneratedKeys = true)
   public void insert(ProductCategory productCategory);
 

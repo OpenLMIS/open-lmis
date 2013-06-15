@@ -17,13 +17,10 @@ import org.openlmis.upload.parser.CSVParser;
 import org.openlmis.web.model.UploadBean;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -33,6 +30,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.openlmis.web.response.OpenLmisResponse.response;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
@@ -43,8 +44,8 @@ public class UploadController extends BaseController {
   public static final String INCORRECT_FILE = "upload.incorrect.file";
   public static final String FILE_IS_EMPTY = "upload.file.empty";
   public static final String INCORRECT_FILE_FORMAT = "upload.incorrect.file.format";
+  public static final String UPLOAD_FILE_SUCCESS = "upload.file.successfull";
   public static final String SUCCESS = "success";
-  public static final String MODEL = "model";
   public static final String ERROR = "error";
   public static final String SUPPORTED_UPLOADS = "supportedUploads";
 
@@ -52,6 +53,7 @@ public class UploadController extends BaseController {
   private CSVParser csvParser;
   @Autowired
   DbService dbService;
+
   @Resource
   private Map<String, UploadBean> uploadBeansMap;
 
@@ -67,20 +69,22 @@ public class UploadController extends BaseController {
     try {
       OpenLmisMessage errorMessage = validateFile(model, csvFile);
       if (errorMessage != null) {
-        return errorResponse(errorMessage, model);
+        return errorResponse(errorMessage);
       }
 
       int initialRecordCount = dbService.getCount(uploadBeansMap.get(model).getTableName());
       Date currentTimestamp = dbService.getCurrentTimestamp();
 
       int recordsToBeUploaded = csvParser.process(csvFile.getInputStream(), new ModelClass(uploadBeansMap.get(model).getImportableClass()),
-        uploadBeansMap.get(model).getRecordHandler(), new AuditFields(loggedInUserId(request), currentTimestamp));
+          uploadBeansMap.get(model).getRecordHandler(), new AuditFields(loggedInUserId(request), currentTimestamp));
 
       return successResponse(model, initialRecordCount, recordsToBeUploaded);
     } catch (DataException dataException) {
-      return errorResponse(dataException.getOpenLmisMessage(), model);
-    } catch (UploadException | IOException e) {
-      return errorResponse(new OpenLmisMessage(e.getMessage()), model);
+      return errorResponse(dataException.getOpenLmisMessage());
+    } catch (UploadException e) {
+      return errorResponse(new OpenLmisMessage(e.getCode(), e.getParams()));
+    } catch (IOException e) {
+      return errorResponse(new OpenLmisMessage(e.getMessage()));
     }
   }
 
@@ -88,13 +92,13 @@ public class UploadController extends BaseController {
     int finalRecordCount = dbService.getCount(uploadBeansMap.get(model).getTableName());
     int recordsCreated = finalRecordCount - initialRecordCount;
 
-    return successPage(model, recordsCreated, recordsToBeUploaded - recordsCreated);
+    return successPage(recordsCreated, recordsToBeUploaded - recordsCreated);
   }
 
-  @RequestMapping(value = "/supported-uploads", method = RequestMethod.GET, headers = "Accept=application/json")
+  @RequestMapping(value = "/supported-uploads", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UPLOADS')")
   public ResponseEntity<OpenLmisResponse> getSupportedUploads() {
-    return OpenLmisResponse.response(SUPPORTED_UPLOADS, uploadBeansMap);
+    return response(SUPPORTED_UPLOADS, uploadBeansMap);
   }
 
   private OpenLmisMessage validateFile(String model, MultipartFile csvFile) {
@@ -111,20 +115,18 @@ public class UploadController extends BaseController {
     return errorMessage;
   }
 
-  private ResponseEntity<OpenLmisResponse> successPage(String model, int recordsCreated, int recordsUpdated) {
-    String successMessage = "File uploaded successfully. " +
-      "'Number of records created: " + recordsCreated + "', 'Number of records updated: " + recordsUpdated + "'";
-    Map<String, OpenLmisMessage> responseMessages = new HashMap<>();
-    responseMessages.put(SUCCESS, new OpenLmisMessage(successMessage));
-    responseMessages.put(MODEL, new OpenLmisMessage(model));
-    return OpenLmisResponse.response(responseMessages, HttpStatus.OK, MediaType.TEXT_HTML_VALUE);
+  private ResponseEntity<OpenLmisResponse> successPage(int recordsCreated, int recordsUpdated) {
+    Map<String, String> responseMessages = new HashMap<>();
+    String message = messageService.message(UPLOAD_FILE_SUCCESS, recordsCreated, recordsUpdated);
+    responseMessages.put(SUCCESS, message);
+    return response(responseMessages, OK, TEXT_HTML_VALUE);
   }
 
-  private ResponseEntity<OpenLmisResponse> errorResponse(OpenLmisMessage errorMessage, String model) {
-    Map<String, OpenLmisMessage> responseMessages = new HashMap<>();
-    responseMessages.put(ERROR, errorMessage);
-    responseMessages.put(MODEL, new OpenLmisMessage(model));
-    return OpenLmisResponse.response(responseMessages, HttpStatus.OK, MediaType.TEXT_HTML_VALUE);
+  private ResponseEntity<OpenLmisResponse> errorResponse(OpenLmisMessage errorMessage) {
+    Map<String, String> responseMessages = new HashMap<>();
+    String message = messageService.message(errorMessage);
+    responseMessages.put(ERROR, message);
+    return response(responseMessages, OK, TEXT_HTML_VALUE);
   }
 
 }

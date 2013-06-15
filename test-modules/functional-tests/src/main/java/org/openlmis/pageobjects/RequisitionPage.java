@@ -18,6 +18,7 @@ import java.util.Date;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static org.openqa.selenium.support.How.ID;
+import static org.openqa.selenium.support.How.XPATH;
 
 public class RequisitionPage extends Page {
   @FindBy(how = ID, using = "comments")
@@ -32,6 +33,20 @@ public class RequisitionPage extends Page {
   private static WebElement okButton;
   @FindBy(how = ID, using = "button_Cancel")
   private static WebElement cancelButton;
+  @FindBy(how = ID, using = "total_0")
+  private static WebElement total;
+  @FindBy(how = ID, using = "beginningBalance_0")
+  private static WebElement beginningBalance;
+  @FindBy(how = ID, using = "quantityReceived_0")
+  private static WebElement quantityReceived;
+  @FindBy(how = ID, using = "nonFullSupplyTab")
+  private static WebElement nonFullSupplyTab;
+  @FindBy(how = ID, using = "fullSupplyTab")
+  private static WebElement fullSupplyTab;
+  @FindBy(how = ID, using = "cost_0")
+  private static WebElement totalCost;
+  @FindBy(how = XPATH, using = "//input[@value='Add']")
+  private static WebElement addNonFullSupplyButtonScreen;
 
   protected RequisitionPage(TestWebDriver driver) {
     super(driver);
@@ -114,6 +129,38 @@ public class RequisitionPage extends Page {
   public void clickCancel() {
     testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();
+  }
+
+  public void verifyTotalField()
+  {
+    testWebDriver.waitForElementToAppear(total);
+    String totalValue = total.getText();
+    String beginningBalanceValue = testWebDriver.getAttribute(beginningBalance, "value");
+    String quantityReceivedValue = testWebDriver.getAttribute(quantityReceived, "value");
+    SeleneseTestNgHelper.assertEquals(totalValue,String.valueOf(Integer.parseInt(beginningBalanceValue)+Integer.parseInt(quantityReceivedValue)));
+  }
+
+  public void verifyTotalFieldPostAuthorize()
+  {
+    testWebDriver.waitForElementToAppear(total);
+    String totalValue = total.getText();
+    String beginningBalanceValue = beginningBalance.getText();
+    String quantityReceivedValue = quantityReceived.getText();
+    SeleneseTestNgHelper.assertEquals(totalValue,String.valueOf(Integer.parseInt(beginningBalanceValue)+Integer.parseInt(quantityReceivedValue)));
+  }
+
+  public void clickFullSupplyTab()
+  {
+    testWebDriver.waitForElementToAppear(fullSupplyTab);
+    fullSupplyTab.click();
+    testWebDriver.waitForElementToAppear(totalCost);
+  }
+
+  public void clickNonFullSupplyTab()
+  {
+    testWebDriver.waitForElementToAppear(nonFullSupplyTab);
+    nonFullSupplyTab.click();
+    testWebDriver.waitForElementToAppear(addNonFullSupplyButtonScreen);
   }
 
 }

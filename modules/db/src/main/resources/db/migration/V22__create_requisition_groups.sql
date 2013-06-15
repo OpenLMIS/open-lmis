@@ -6,7 +6,7 @@ CREATE TABLE requisition_groups (
   code varchar(50) NOT NULL UNIQUE,
   name VARCHAR(50) NOT NULL,
   description VARCHAR(250),
-  supervisoryNodeId INTEGER,
+  supervisoryNodeId INTEGER REFERENCES supervisory_nodes(id),
   createdBy INTEGER,
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedBy INTEGER,
@@ -14,3 +14,5 @@ CREATE TABLE requisition_groups (
 );
 
 CREATE INDEX i_requisition_group_supervisoryNodeId ON requisition_groups(supervisoryNodeId);
+
+CREATE UNIQUE INDEX uc_requisition_groups_lower_code ON requisition_groups(LOWER(code));

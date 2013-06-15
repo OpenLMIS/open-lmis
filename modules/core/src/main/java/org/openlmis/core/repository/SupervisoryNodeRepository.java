@@ -43,7 +43,7 @@ public class SupervisoryNodeRepository {
   public Long getIdForCode(String code) {
     Long supervisoryNodeId = supervisoryNodeMapper.getIdForCode(code);
     if (supervisoryNodeId == null)
-      throw new DataException("Invalid SupervisoryNode Code");
+      throw new DataException("error.supervisory.node.invalid");
 
     return supervisoryNodeId;
   }

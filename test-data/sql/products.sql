@@ -317,7 +317,9 @@ INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, 
 (3, (SELECT id from products WHERE code = 'P147'), 30, 50, true),
 (3, (SELECT id from products WHERE code = 'P148'), 30, 50, true),
 (3, (SELECT id from products WHERE code = 'P149'), 30, 50, true),
-(3, (SELECT id from products WHERE code = 'P150'), 30, 50, true);
+(3, (SELECT id from products WHERE code = 'P150'), 30, 50, true),
+(5, (SELECT id from products WHERE code = 'P10'), 30, 50, true),
+(5, (SELECT id from products WHERE code = 'P11'), 30, 50, true);
 
 
 

@@ -205,7 +205,7 @@ public class ProcessingScheduleServiceTest {
   public void shouldThrowExceptionWhenNoRequisitionGroupExistsForAFacilityAndProgram() throws Exception {
     when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(new Program(1L), new Facility(2L))).thenReturn(null);
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(ProcessingScheduleService.NO_REQUISITION_GROUP_ERROR);
+    expectedException.expectMessage("error.no.requisition.group");
 
     service.getAllPeriodsAfterDateAndPeriod(1L, 2L, null, null);
   }
@@ -254,12 +254,25 @@ public class ProcessingScheduleServiceTest {
 
     when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility)).thenReturn(requisitionGroup);
     when(requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(
-      requisitionGroup.getId(), program.getId())).thenReturn(requisitionGroupProgramSchedule);
+        requisitionGroup.getId(), program.getId())).thenReturn(requisitionGroupProgramSchedule);
     when(periodRepository.getAllPeriodsForDateRange(scheduleId, startDate, endDate)).thenReturn(expected);
 
     List<ProcessingPeriod> actual = service.getAllPeriodsForDateRange(facility, program, startDate, endDate);
 
     verify(periodRepository).getAllPeriodsForDateRange(scheduleId, startDate, endDate);
     assertThat(actual, is(expected));
+  }
+
+  @Test
+  public void shouldGetProcessingPeriodsBeforeGivenDate() throws Exception {
+    Date date = new Date();
+    List<ProcessingPeriod> expectedPeriods = new ArrayList<>();
+    when(periodRepository.getAllPeriodsBefore(1l, date)).thenReturn(expectedPeriods);
+
+    List<ProcessingPeriod> returnedPeriods = service.getAllPeriodsBefore(1l, date);
+
+    assertThat(returnedPeriods, is(expectedPeriods));
+    verify(periodRepository).getAllPeriodsBefore(1l, date);
+
   }
 }

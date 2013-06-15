@@ -30,6 +30,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.startDate;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -99,8 +100,7 @@ public class ProcessingPeriodRepositoryTest {
     doNothing().when(processingPeriod).validate();
     doThrow(DuplicateKeyException.class).when(mapper).insert(processingPeriod);
 
-    exException.expect(DataException.class);
-    exException.expectMessage("Period Name already exists for this schedule");
+    exException.expect(dataExceptionMatcher("error.period.exist.for.schedule"));
 
     repository.insert(processingPeriod);
 
@@ -125,8 +125,7 @@ public class ProcessingPeriodRepositoryTest {
     when(mapper.getLastAddedProcessingPeriod(processingPeriod.getScheduleId())).thenReturn(lastAddedPeriod);
     doThrow(DataException.class).when(mapper).insert(processingPeriod);
 
-    exException.expect(DataException.class);
-    exException.expectMessage("Period's Start Date is smaller than Previous Period's End Date");
+    exException.expect(dataExceptionMatcher("error.period.start.date.less.than.last.period.end.date"));
 
     repository.insert(processingPeriod);
   }
@@ -138,8 +137,8 @@ public class ProcessingPeriodRepositoryTest {
     periodStartDate.add(Calendar.DATE, -1);
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(startDate, periodStartDate.getTime())));
     when(mapper.getById(processingPeriod.getId())).thenReturn(processingPeriod);
-    exException.expect(DataException.class);
-    exException.expectMessage("Period's Start Date is smaller than Current Date");
+
+    exException.expect(dataExceptionMatcher("error.period.start.date"));
 
     repository.delete(processingPeriod.getId());
   }
@@ -149,8 +148,8 @@ public class ProcessingPeriodRepositoryTest {
     Calendar periodStartDate = Calendar.getInstance();
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(startDate, periodStartDate.getTime())));
     when(mapper.getById(processingPeriod.getId())).thenReturn(processingPeriod);
-    exException.expect(DataException.class);
-    exException.expectMessage("Period's Start Date is smaller than Current Date");
+
+    exException.expect(dataExceptionMatcher("error.period.start.date"));
 
     repository.delete(processingPeriod.getId());
   }
@@ -198,6 +197,19 @@ public class ProcessingPeriodRepositoryTest {
     List<ProcessingPeriod> actual = repository.getAllPeriodsForDateRange(scheduleId, startDate, endDate);
     verify(mapper).getAllPeriodsForDateRange(scheduleId, startDate, endDate);
     assertThat(actual, is(expected));
+  }
+
+  @Test
+  public void shouldGetProcessingPeriodsBeforeGivenDate() throws Exception {
+    Date date = new Date();
+    List<ProcessingPeriod> expectedPeriods = new ArrayList<>();
+    when(mapper.getAllPeriodsBefore(1l, date)).thenReturn(expectedPeriods);
+
+    List<ProcessingPeriod> returnedPeriods = repository.getAllPeriodsBefore(1l, date);
+
+    assertThat(returnedPeriods, is(expectedPeriods));
+    verify(mapper).getAllPeriodsBefore(1l, date);
+
   }
 
 }

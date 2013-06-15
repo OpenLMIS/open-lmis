@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
@@ -21,6 +22,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
@@ -32,6 +34,7 @@ import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.configurationReader.StaticReferenceDataReader;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
@@ -54,7 +57,9 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.service.RequisitionService.RNR_SUBMITTED_SUCCESSFULLY;
 import static org.openlmis.web.controller.RequisitionController.*;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -75,13 +80,19 @@ public class RequisitionControllerTest {
   private RnrTemplateService rnrTemplateService;
   @Mock
   private StaticReferenceDataReader staticReferenceDataReader;
+  @Mock
+  private MessageService messageService;
 
   private MockHttpServletRequest request;
+
+  @InjectMocks
   private RequisitionController controller;
+
   private Rnr rnr;
 
   @Before
   public void setUp() throws Exception {
+    initMocks(this);
     request = new MockHttpServletRequest();
     MockHttpSession session = new MockHttpSession();
     session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
@@ -89,9 +100,6 @@ public class RequisitionControllerTest {
 
     request.setSession(session);
 
-    requisitionService = mock(RequisitionService.class);
-    rnrTemplateService = mock(RnrTemplateService.class);
-    controller = new RequisitionController(requisitionService, rnrTemplateService, staticReferenceDataReader);
     rnr = new Rnr();
   }
 
@@ -130,6 +138,9 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldSaveWIPRnr() throws Exception {
+
+    when(messageService.message(RNR_SAVE_SUCCESS)).thenReturn("R&R submitted successfully!");
+
     controller.saveRnr(rnr, rnr.getId(), request);
 
     verify(requisitionService).save(rnr);
@@ -166,10 +177,12 @@ public class RequisitionControllerTest {
     whenNew(Rnr.class).withArguments(1L).thenReturn(rnr);
     Rnr submittedRnr = make(a(defaultRnr));
     when(requisitionService.submit(rnr)).thenReturn(submittedRnr);
-    when(requisitionService.getSubmitMessageBasedOnSupervisoryNode(submittedRnr.getFacility(), submittedRnr.getProgram())).thenReturn(new OpenLmisMessage("test.msg.key"));
+    OpenLmisMessage message = new OpenLmisMessage(RNR_SUBMITTED_SUCCESSFULLY);
+    when(requisitionService.getSubmitMessageBasedOnSupervisoryNode(submittedRnr.getFacility(), submittedRnr.getProgram())).thenReturn(message);
+    when(messageService.message(message)).thenReturn("R&R submitted successfully!");
 
     ResponseEntity<OpenLmisResponse> response = controller.submit(rnr.getId(), request);
-    assertThat(response.getBody().getSuccessMsg(), is("test.msg.key"));
+    assertThat(response.getBody().getSuccessMsg(), is("R&R submitted successfully!"));
     verify(requisitionService).submit(rnr);
     verify(requisitionService).getSubmitMessageBasedOnSupervisoryNode(submittedRnr.getFacility(), submittedRnr.getProgram());
     assertThat(rnr.getModifiedBy(), is(USER_ID));
@@ -195,8 +208,10 @@ public class RequisitionControllerTest {
     whenNew(Rnr.class).withArguments(1L).thenReturn(rnr);
     Rnr authorizedRnr = make(a(defaultRnr));
     when(requisitionService.authorize(rnr)).thenReturn(authorizedRnr);
+    OpenLmisMessage openLmisMessage = new OpenLmisMessage(code);
     when(requisitionService.getAuthorizeMessageBasedOnSupervisoryNode(authorizedRnr.getFacility(),
-      authorizedRnr.getProgram())).thenReturn(new OpenLmisMessage(code));
+      authorizedRnr.getProgram())).thenReturn(openLmisMessage);
+    when(messageService.message(openLmisMessage)).thenReturn(message);
 
     ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr.getId(), request);
 
@@ -230,6 +245,9 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldGiveSuccessResponseIfRnrSavedSuccessfully() throws Exception {
+
+    when(messageService.message(RNR_SAVE_SUCCESS)).thenReturn("R&R saved successfully!");
+
     ResponseEntity<OpenLmisResponse> response = controller.saveRnr(rnr, rnr.getId(), request);
     verify(requisitionService).save(rnr);
     assertThat(response.getBody().getSuccessMsg(), is("R&R saved successfully!"));
@@ -253,13 +271,17 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldApproveRequisitionAndTagWithModifiedBy() throws Exception {
-    when(requisitionService.approve(rnr)).thenReturn(new OpenLmisMessage("some message"));
+    Rnr approvedrnr = new Rnr();
+    when(requisitionService.approve(rnr)).thenReturn(approvedrnr);
     whenNew(Rnr.class).withArguments(rnr.getId()).thenReturn(rnr);
+    OpenLmisMessage message = new OpenLmisMessage("message.key");
+    when(messageService.message(message)).thenReturn("R&R saved successfully!");
+    when(requisitionService.getApproveMessageBasedOnParentNode(approvedrnr)).thenReturn(message);
     final ResponseEntity<OpenLmisResponse> response = controller.approve(rnr.getId(), request);
     verify(requisitionService).approve(rnr);
     assertThat(rnr.getModifiedBy(), CoreMatchers.is(USER_ID));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat(response.getBody().getSuccessMsg(), is("some message"));
+    assertThat(response.getBody().getSuccessMsg(), is("R&R saved successfully!"));
   }
 
   @Test

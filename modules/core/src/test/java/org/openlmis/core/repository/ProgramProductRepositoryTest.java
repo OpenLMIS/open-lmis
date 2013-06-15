@@ -19,6 +19,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.matchers.Matchers;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductPriceMapper;
@@ -32,7 +33,6 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -40,7 +40,6 @@ import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramProductBuilder.PRODUCT_CODE;
 import static org.openlmis.core.builder.ProgramProductBuilder.PROGRAM_CODE;
-import static org.openlmis.core.repository.ProgramProductRepository.PROGRAM_PRODUCT_INVALID;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
@@ -108,8 +107,7 @@ public class ProgramProductRepositoryTest {
     when(programRepository.getIdByCode(program.getCode())).thenReturn(1L);
     ProgramProduct programProduct = new ProgramProduct(program, new Product(), 10, true);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid Product Code");
+    expectedEx.expect(Matchers.dataExceptionMatcher("product.code.invalid"));
 
     programProductRepository.save(programProduct);
   }
@@ -126,7 +124,7 @@ public class ProgramProductRepositoryTest {
   public void shouldThrowExceptionIfNoProgramProductExistForGivenProgramIdAndProductId() {
     when(programProductMapper.getIdByProgramAndProductId(1L, 2L)).thenReturn(null);
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage(PROGRAM_PRODUCT_INVALID);
+    expectedEx.expectMessage("programProduct.product.program.invalid");
     programProductRepository.getIdByProgramIdAndProductId(1L, 2L);
   }
 
@@ -190,9 +188,9 @@ public class ProgramProductRepositoryTest {
 
     verify(programProductMapper).update(programProduct);
   }
-  
+
   @Test
-  public void shouldGetProgramProductsByProgram(){
+  public void shouldGetProgramProductsByProgram() {
     Program program = new Program();
     List<ProgramProduct> expectedProgramProducts = new ArrayList<>();
     when(programProductMapper.getByProgram(program)).thenReturn(expectedProgramProducts);

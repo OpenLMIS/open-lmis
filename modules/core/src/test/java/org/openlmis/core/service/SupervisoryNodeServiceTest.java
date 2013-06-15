@@ -29,7 +29,6 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -38,6 +37,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
+
 @Category(UnitTests.class)
 public class SupervisoryNodeServiceTest {
 
@@ -241,8 +242,7 @@ public class SupervisoryNodeServiceTest {
   public void shouldGiveErrorIfParentNodeCodeDoesNotExist() throws Exception {
     when(supervisoryNodeRepository.getIdForCode(supervisoryNodeWithParent.getParent().getCode())).thenThrow(new DataException("Invalid SupervisoryNode Code"));
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Supervisory Node Parent does not exist");
+    expectedEx.expect(dataExceptionMatcher("error.supervisory.node.parent.not.exist"));
 
     supervisoryNodeService.save(supervisoryNodeWithParent);
 
@@ -252,10 +252,10 @@ public class SupervisoryNodeServiceTest {
   @Test
   public void shouldGiveErrorIfFacilityCodeDoesNotExist() throws Exception {
     when(supervisoryNodeRepository.getIdForCode(supervisoryNodeWithParent.getParent().getCode())).thenReturn(1L);
-    when(facilityRepository.getIdForCode(supervisoryNodeWithParent.getFacility().getCode())).thenThrow(new DataException("Invalid Facility Code"));
+    when(facilityRepository.getIdForCode(supervisoryNodeWithParent.getFacility().getCode())).thenThrow(new DataException("error.facility.code.invalid"));
 
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid Facility Code");
+    expectedEx.expectMessage("error.facility.code.invalid");
 
     supervisoryNodeService.save(supervisoryNodeWithParent);
 

@@ -1,0 +1,26 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+apply plugin: 'cobertura'
+
+dependencies {
+    compile 'org.springframework:spring-core:3.1.1.RELEASE',
+            'org.springframework:spring-aspects:3.1.1.RELEASE',
+            'org.aspectj:aspectjrt:1.7.0',
+            'commons-lang:commons-lang:2.6',
+            'commons-collections:commons-collections:20040616',
+            'org.codehaus.jackson:jackson-mapper-asl:1.9.11',
+            'javax.servlet:servlet-api:2.5',
+            project(':modules:db'),
+            project(':modules:core'),
+            project(':modules:authentication')
+
+
+    testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
+            project(':modules:db'),
+            project(path: ':modules:core', configuration: 'testFixtures')
+
+}

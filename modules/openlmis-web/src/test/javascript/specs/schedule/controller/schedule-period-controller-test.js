@@ -80,7 +80,7 @@ describe("Period", function () {
       ];
       scope.newPeriod = {"name": "newName", "startDate": new Date(2011, 3, 1, 0, 0), "endDate": new Date(2011, 2, 1, 0, 0), "description": "newDescription"};
       scope.deletePeriod("periodId");
-      expect(messageService.get).toHaveBeenCalledWith('error.startDate');
+      expect(messageService.get).toHaveBeenCalledWith('error.period.start.date');
       expect(scope.message).toEqual("");
       expect(scope.periodList.length).toEqual(1);
       expect(scope.newPeriod.startDate).toEqual(new Date(2011, 3, 1, 0, 0));
@@ -92,7 +92,7 @@ describe("Period", function () {
       ];
       scope.newPeriod = {"name": "newName", "startDate": new Date(2011, 3, 1, 0, 0), "endDate": new Date(2011, 2, 1, 0, 0), "description": "newDescription"};
       scope.deletePeriod("periodId");
-      expect(messageService.get).toHaveBeenCalledWith('error.startDate');
+      expect(messageService.get).toHaveBeenCalledWith('error.period.start.date');
       expect(scope.message).toEqual("");
       expect(scope.periodList.length).toEqual(1);
       expect(scope.newPeriod.startDate).toEqual(new Date(2011, 3, 1, 0, 0));

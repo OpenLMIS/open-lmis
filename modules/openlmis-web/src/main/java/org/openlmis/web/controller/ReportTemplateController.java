@@ -48,9 +48,9 @@ public class ReportTemplateController extends BaseController {
     try {
       ReportTemplate reportTemplate = new ReportTemplate(name, file, loggedInUserId(request));
       reportTemplateService.insert(reportTemplate);
-      return success(JASPER_CREATE_REPORT_SUCCESS, MediaType.TEXT_HTML_VALUE);
+      return success(messageService.message(JASPER_CREATE_REPORT_SUCCESS), MediaType.TEXT_HTML_VALUE);
     } catch (IOException e) {
-      return error(JASPER_CREATE_REPORT_ERROR, OK, MediaType.TEXT_HTML_VALUE);
+      return error(messageService.message(JASPER_CREATE_REPORT_ERROR), OK, MediaType.TEXT_HTML_VALUE);
     } catch (DataException e) {
       return OpenLmisResponse.error(e, OK, MediaType.TEXT_HTML_VALUE);
     }

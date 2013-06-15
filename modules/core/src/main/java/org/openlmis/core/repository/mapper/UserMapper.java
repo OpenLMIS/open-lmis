@@ -7,14 +7,14 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.User;
 import org.openlmis.email.domain.EmailMessage;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
-
-import static org.apache.ibatis.jdbc.SelectBuilder.*;
 
 @Repository
 public interface UserMapper {
@@ -24,10 +24,10 @@ public interface UserMapper {
 
   @Insert({"INSERT INTO users",
     "(userName, facilityId, firstName, lastName, employeeId, jobTitle,",
-    "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, vendorId, modifiedBy, modifiedDate)",
+    "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, vendorId, createdBy, modifiedBy, modifiedDate)",
     "VALUES",
     "(#{userName}, #{facilityId}, #{firstName}, #{lastName}, #{employeeId}, #{jobTitle},",
-    "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, COALESCE(#{vendorId},(SELECT id FROM vendors WHERE name = 'openLmis')), #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))"})
+    "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, COALESCE(#{vendorId},(SELECT id FROM vendors WHERE name = 'openLmis')), #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))"})
   @Options(useGeneratedKeys = true)
   Integer insert(User user);
 

@@ -6,20 +6,23 @@
 
 package org.openlmis.web.controller;
 
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.mockito.ArgumentMatcher;
+import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.form.RnrColumnList;
 import org.openlmis.web.form.RnrTemplateForm;
+import org.openlmis.web.response.OpenLmisResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -31,13 +34,16 @@ public class RnrTemplateControllerTest {
 
   private RnrTemplateService rnrTemplateService;
   private RnrTemplateController rnrTemplateController;
+  private MessageService messageService;
 
   private Long existingProgramId = 1L;
 
   @Before
   public void setUp() throws Exception {
     rnrTemplateService = mock(RnrTemplateService.class);
+    messageService = mock(MessageService.class);
     rnrTemplateController = new RnrTemplateController(rnrTemplateService);
+    rnrTemplateController.setMessageService(messageService);
   }
 
   @Test
@@ -56,14 +62,35 @@ public class RnrTemplateControllerTest {
 
     MockHttpServletRequest request = new MockHttpServletRequest();
 
-    rnrTemplateController.saveRnRTemplateForProgram(existingProgramId, rnrColumns, request);
-    Matcher<ProgramRnrTemplate> matcher = new ArgumentMatcher<ProgramRnrTemplate>() {
-      @Override
-      public boolean matches(Object argument) {
-        ProgramRnrTemplate programRnrTemplate1 = (ProgramRnrTemplate) argument;
-        return programRnrTemplate1.getRnrColumns().equals(rnrColumns);
-      }
-    };
-    verify(rnrTemplateService).saveRnRTemplateForProgram(argThat(matcher));
+    when(rnrTemplateService.saveRnRTemplateForProgram((ProgramRnrTemplate) any())).thenReturn(new HashMap<String, OpenLmisMessage>());
+    when(messageService.message("template.save.success")).thenReturn("dummy success");
+    ResponseEntity<OpenLmisResponse> responseEntity = rnrTemplateController.saveRnRTemplateForProgram(existingProgramId, rnrColumns, request);
+
+    assertThat(responseEntity.getBody().getSuccessMsg(), is("dummy success"));
+  }
+
+  @Test
+  public void shouldFetchColumnsForRnr() throws Exception {
+    long programId = 1L;
+    rnrTemplateController.fetchColumnsForRequisition(programId);
+
+    verify(rnrTemplateService).fetchColumnsForRequisition(1L);
+  }
+
+  @Test
+  public void shouldReturnErrorMessagesForCorrespondingFields() throws Exception {
+
+    RnrColumnList rnrColumns = new RnrColumnList();
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    HashMap<String, OpenLmisMessage> errorMap = new HashMap<>();
+    OpenLmisMessage openLmisMessage = new OpenLmisMessage("code", "param1", "param2");
+    errorMap.put("key", openLmisMessage);
+    when(rnrTemplateService.saveRnRTemplateForProgram((ProgramRnrTemplate) any())).thenReturn(errorMap);
+    when(messageService.message(openLmisMessage)).thenReturn("dummy message param1 param2");
+
+    ResponseEntity<OpenLmisResponse> responseEntity = rnrTemplateController.saveRnRTemplateForProgram(existingProgramId, rnrColumns, request);
+
+    assertThat((String) responseEntity.getBody().getData().get("key"), is("dummy message param1 param2"));
+
   }
 }

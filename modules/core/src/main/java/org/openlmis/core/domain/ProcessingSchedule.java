@@ -17,23 +17,25 @@ import org.openlmis.core.exception.DataException;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ProcessingSchedule extends BaseModel{
+public class ProcessingSchedule extends BaseModel {
   private String code;
   private String name;
   private String description;
-  public static final String SCHEDULE_WITHOUT_CODE = "schedule.without.code";
-  public static final String SCHEDULE_WITHOUT_NAME = "schedule.without.name";
 
   public ProcessingSchedule(String code, String name) {
     this(code, name, null);
   }
 
+  public ProcessingSchedule(Long id) {
+    this.id = id;
+  }
+
   public void validate() {
     if (code == null || code.isEmpty()) {
-      throw new DataException(SCHEDULE_WITHOUT_CODE);
+      throw new DataException("schedule.without.code");
     }
     if (name == null || name.isEmpty()) {
-      throw new DataException(SCHEDULE_WITHOUT_NAME);
+      throw new DataException("schedule.without.name");
     }
   }
 }
