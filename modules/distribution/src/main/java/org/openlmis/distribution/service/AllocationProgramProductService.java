@@ -6,31 +6,43 @@
 
 package org.openlmis.distribution.service;
 
-import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.distribution.domain.AllocationProgramProduct;
 import org.openlmis.distribution.domain.ProgramProductISA;
 import org.openlmis.distribution.repository.AllocationProgramProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-@Component
-@NoArgsConstructor
+
+@Service
 public class AllocationProgramProductService {
 
   @Autowired
-  private AllocationProgramProductRepository programProductISARepository;
+  private AllocationProgramProductRepository repository;
 
-  public void saveProgramProductISA(Long programProductId, ProgramProductISA programProductISA) {
-    if (programProductISA.getId() == null) {
-      programProductISARepository.insertProgramProductISA(programProductId, programProductISA);
-    } else {
-      programProductISARepository.updateProgramProductISA(programProductISA);
+  @Autowired
+  ProgramProductService programProductService;
+
+  public List<AllocationProgramProduct> get(Long programId) {
+    List<ProgramProduct> programProducts = programProductService.getByProgram(new Program(programId));
+    List<AllocationProgramProduct> allocationProgramProducts = new ArrayList<>();
+    for (ProgramProduct programProduct : programProducts) {
+      AllocationProgramProduct allocationProgramProduct = new AllocationProgramProduct(programProduct);
+      allocationProgramProduct.setProgramProductISA(repository.getIsa(allocationProgramProduct.getId()));
+      allocationProgramProducts.add(allocationProgramProduct);
     }
+    return allocationProgramProducts;
   }
 
-  public List<AllocationProgramProduct> getProgramProductsWithISAByProgram(Long programId) {
-    return programProductISARepository.getWithISAByProgram(programId);
+  public void insertISA(ProgramProductISA isa) {
+    repository.insertISA(isa);
   }
 
+  public void updateISA(ProgramProductISA isa) {
+    repository.updateISA(isa);
+  }
 }

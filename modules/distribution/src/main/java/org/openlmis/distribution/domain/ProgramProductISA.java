@@ -18,6 +18,7 @@ import org.openlmis.core.domain.BaseModel;
 @NoArgsConstructor
 public class ProgramProductISA extends BaseModel {
 
+  Long programProductId;
   Float whoRatio;
   Integer dosesPerYear;
   Float wastageRate;
@@ -25,4 +26,14 @@ public class ProgramProductISA extends BaseModel {
   Integer minimumValue;
   Integer adjustmentValue;
 
+  Integer calculatedIsa;
+
+  public ProgramProductISA(Float whoRatio, Integer dosesPerYear, Float wastageRate, Float bufferPercentage, Integer minimumValue, Integer adjustmentValue) {
+    this.whoRatio = whoRatio;
+    this.dosesPerYear = dosesPerYear;
+    this.wastageRate = wastageRate;
+    this.bufferPercentage = bufferPercentage;
+    this.minimumValue = minimumValue;
+    this.adjustmentValue = adjustmentValue;
+  }
 }

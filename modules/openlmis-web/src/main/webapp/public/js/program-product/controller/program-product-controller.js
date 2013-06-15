@@ -5,7 +5,7 @@
  */
 
 
-function ProgramProductController($scope, $rootScope,programs, ProgramProducts, ProgramProductsISA) {
+function ProgramProductController($scope, $rootScope, programs, ProgramProducts, ProgramProductsISA) {
 
   $scope.programs = programs;
   $scope.population = 0;
@@ -21,9 +21,9 @@ function ProgramProductController($scope, $rootScope,programs, ProgramProducts, 
     }
   };
 
-  $scope.assignFormula= function(list){
-    $.each(list, function(index, programProduct) {
-      programProduct.formula =  $scope.getFormula(programProduct.programProductISA);
+  $scope.assignFormula = function (list) {
+    $.each(list, function (index, programProduct) {
+      programProduct.formula = $scope.getFormula(programProduct.programProductISA);
     });
   }
 
@@ -43,10 +43,10 @@ function ProgramProductController($scope, $rootScope,programs, ProgramProducts, 
   }
 
   $scope.clearAndCloseProgramProductISAModal = function () {
-    if($scope.currentProgramProduct &&  $scope.currentProgramProduct.formula==null){
+    if ($scope.currentProgramProduct && $scope.currentProgramProduct.formula == null) {
       $scope.currentProgramProduct.formula = $scope.currentProgramProduct.previousFormula;
     }
-    $scope.population=0;
+    $scope.population = 0;
     $scope.currentProgramProduct = null;
     $scope.programProductISAModal = false;
   }
@@ -66,11 +66,11 @@ function ProgramProductController($scope, $rootScope,programs, ProgramProducts, 
   $scope.saveProductISA = function () {
     if ($scope.isaForm.$error.required) {
       $scope.inputClass = true;
-      $scope.error = "Please fill required values"
+      $scope.error = "Please fill required values";
       $scope.message = "";
     } else {
       $scope.inputClass = false;
-      ProgramProductsISA.save({programProductId:$scope.currentProgramProduct.id}, $scope.currentProgramProduct.programProductISA, function () {
+      var successCallBack = function () {
         $scope.message = "ISA saved successfully";
         setTimeout(function () {
           $scope.$apply(function () {
@@ -82,28 +82,32 @@ function ProgramProductController($scope, $rootScope,programs, ProgramProducts, 
         $scope.error = "";
         $scope.programProductISAModal = false;
         $scope.loadProgramProducts();
-      }, {});
+      };
+      if ($scope.currentProgramProduct.programProductISA.id)
+        ProgramProductsISA.update({programProductId:$scope.currentProgramProduct.id, isaId:$scope.currentProgramProduct.programProductISA.id},
+          $scope.currentProgramProduct.programProductISA, successCallBack, {});
+      else
+        ProgramProductsISA.save({programProductId:$scope.currentProgramProduct.id}, $scope.currentProgramProduct.programProductISA, successCallBack, {});
     }
-  }
+  };
 
   $scope.isPresent = function (programProductISA) {
     return programProductISA && programProductISA.whoRatio && programProductISA.dosesPerYear && programProductISA.wastageRate
       && programProductISA.bufferPercentage && programProductISA.adjustmentValue;
-  }
+  };
 
   $scope.getFormula = function (programProductISA) {
     if ($scope.isPresent(programProductISA))
       return "(population) * " + programProductISA.whoRatio + " * " + programProductISA.dosesPerYear + " * "
         + programProductISA.wastageRate + " / 12 * " + programProductISA.bufferPercentage + " + " + programProductISA.adjustmentValue;
-    else "";
-  }
+  };
 
   $scope.calculateValue = function (programProductISA) {
     if ($scope.isPresent(programProductISA) && $scope.population) {
       $scope.isaValue = $scope.population * programProductISA.whoRatio * programProductISA.dosesPerYear *
         programProductISA.wastageRate / 12 * programProductISA.bufferPercentage + programProductISA.adjustmentValue;
       $scope.isaValue = Math.ceil($scope.isaValue);
-    }else{
+    } else {
       $scope.isaValue = 0;
     }
 

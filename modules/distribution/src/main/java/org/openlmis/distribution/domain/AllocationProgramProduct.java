@@ -7,11 +7,16 @@
 package org.openlmis.distribution.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.openlmis.core.domain.ProgramProduct;
 
+@EqualsAndHashCode(callSuper = false)
 @Data
 public class AllocationProgramProduct extends ProgramProduct {
 
-    ProgramProductISA programProductISA;
+  public AllocationProgramProduct(ProgramProduct programProduct) {
+    super(programProduct);
+  }
 
+  ProgramProductISA programProductISA;
 }

@@ -44,6 +44,15 @@ public class ProgramProduct extends BaseModel implements Importable {
     this.currentPrice = currentPrice;
   }
 
+  public ProgramProduct(ProgramProduct programProduct) {
+    this.id = programProduct.id;
+    this.program = programProduct.program;
+    this.product = programProduct.product;
+    this.dosesPerMonth = programProduct.dosesPerMonth;
+    this.active = programProduct.active;
+    this.currentPrice = programProduct.currentPrice;
+  }
+
   public void validate() {
     if (currentPrice.isNegative()) throw new DataException("programProduct.invalid.current.price");
   }

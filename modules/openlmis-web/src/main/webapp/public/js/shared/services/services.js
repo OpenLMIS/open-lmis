@@ -210,7 +210,7 @@ services.factory('ProgramProducts', function ($resource) {
 
 
 services.factory('ProgramProductsISA', function ($resource) {
-  return $resource('/programProducts/programProductISA/:programProductId.json', {}, {});
+  return $resource('/programProducts/:programProductId/isa/:isaId.json', {isaId:'@isaId'}, {update:{method:'PUT'}});
 });
 
 //Allocation
