@@ -16,6 +16,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
@@ -48,8 +49,6 @@ public class DistributionPage extends RequisitionPage {
   private static WebElement inputFacilityDataLink;
 
 
-
-
   public DistributionPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -57,52 +56,90 @@ public class DistributionPage extends RequisitionPage {
 
   }
 
-  public  WebElement getSelectDeliveryZoneSelectBox() {
+  public void selectValueFromDeliveryZone(String valueToBeSelected) {
+    testWebDriver.waitForElementToAppear(getSelectDeliveryZoneSelectBox());
+    testWebDriver.selectByVisibleText(getSelectDeliveryZoneSelectBox(), valueToBeSelected);
+  }
+
+  public void selectValueFromProgram(String valueToBeSelected) {
+    testWebDriver.waitForElementToAppear(getSelectProgramSelectBox());
+    testWebDriver.selectByVisibleText(getSelectProgramSelectBox(), valueToBeSelected);
+  }
+
+  public void selectValueFromPeriod(String valueToBeSelected) {
+    testWebDriver.waitForElementToAppear(getSelectPeriodSelectBox());
+    testWebDriver.selectByVisibleText(getSelectPeriodSelectBox(), valueToBeSelected);
+  }
+
+  public void clickProceed() {
+    testWebDriver.waitForElementToAppear(getProceedButton());
+    getProceedButton().click();
+    testWebDriver.waitForElementToAppear(getViewWarehouseLoadAmountLink());
+  }
+
+  public List<WebElement> getAllSelectOptionsFromDeliveryZone() {
+    testWebDriver.waitForElementToAppear(getSelectDeliveryZoneSelectBox());
+    List<WebElement> options = testWebDriver.getOptions(getSelectDeliveryZoneSelectBox());
+    return options;
+  }
+
+  public List<WebElement> getAllSelectOptionsFromProgram() {
+    testWebDriver.waitForElementToAppear(getSelectProgramSelectBox());
+    List<WebElement> options = testWebDriver.getOptions(getSelectProgramSelectBox());
+    return options;
+  }
+
+  public List<WebElement> getAllSelectOptionsFromPeriod() {
+    testWebDriver.waitForElementToAppear(getSelectPeriodSelectBox());
+    List<WebElement> options = testWebDriver.getOptions(getSelectPeriodSelectBox());
+    return options;
+  }
+
+  public WebElement getFirstSelectedOptionFromDeliveryZone() {
+    testWebDriver.waitForElementToAppear(getSelectDeliveryZoneSelectBox());
+    WebElement option = testWebDriver.getFirstSelectedOption(getSelectDeliveryZoneSelectBox());
+    return option;
+  }
+
+  public WebElement getFirstSelectedOptionFromProgram() {
+    testWebDriver.waitForElementToAppear(getSelectProgramSelectBox());
+    WebElement option = testWebDriver.getFirstSelectedOption(getSelectProgramSelectBox());
+    return option;
+  }
+
+  public WebElement getFirstSelectedOptionFromPeriod() {
+    testWebDriver.waitForElementToAppear(getSelectPeriodSelectBox());
+    WebElement option = testWebDriver.getFirstSelectedOption(getSelectPeriodSelectBox());
+    return option;
+  }
+
+  public WebElement getSelectDeliveryZoneSelectBox() {
     return selectDeliveryZoneSelectBox;
   }
 
-  public  WebElement getSelectProgramSelectBox() {
+  public WebElement getSelectProgramSelectBox() {
     return selectProgramSelectBox;
   }
 
-  public  void setSelectProgramSelectBox(WebElement selectProgramSelectBox) {
-    DistributionPage.selectProgramSelectBox = selectProgramSelectBox;
-  }
 
-  public  WebElement getSelectPeriodSelectBox() {
+  public WebElement getSelectPeriodSelectBox() {
     return selectPeriodSelectBox;
   }
 
-  public  void setSelectPeriodSelectBox(WebElement selectPeriodSelectBox) {
-    DistributionPage.selectPeriodSelectBox = selectPeriodSelectBox;
-  }
 
-  public  WebElement getProceedButton() {
+  public WebElement getProceedButton() {
     return proceedButton;
   }
 
-  public  void setProceedButton(WebElement proceedButton) {
-    DistributionPage.proceedButton = proceedButton;
-  }
-
-  public  void setSelectDeliveryZoneSelectBox(WebElement selectDeliveryZoneSelectBox) {
-    DistributionPage.selectDeliveryZoneSelectBox = selectDeliveryZoneSelectBox;
-  }
 
   public static WebElement getInputFacilityDataLink() {
     return inputFacilityDataLink;
   }
 
-  public static void setInputFacilityDataLink(WebElement inputFacilityDataLink) {
-    DistributionPage.inputFacilityDataLink = inputFacilityDataLink;
-  }
 
   public static WebElement getViewWarehouseLoadAmountLink() {
     return viewWarehouseLoadAmountLink;
   }
 
-  public static void setViewWarehouseLoadAmountLink(WebElement viewWarehouseLoadAmountLink) {
-    DistributionPage.viewWarehouseLoadAmountLink = viewWarehouseLoadAmountLink;
-  }
 
 }
