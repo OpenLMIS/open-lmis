@@ -5,8 +5,7 @@
  */
 
 
-function ProgramProductController($scope, $rootScope, programs, ProgramProducts, ProgramProductsISA) {
-
+function ProgramProductController($scope, programs, ProgramProducts, ProgramProductsISA) {
   $scope.programs = programs;
   $scope.population = 0;
   $scope.isaValue = 0;
@@ -70,25 +69,26 @@ function ProgramProductController($scope, $rootScope, programs, ProgramProducts,
       $scope.message = "";
     } else {
       $scope.inputClass = false;
-      var successCallBack = function () {
-        $scope.message = "ISA saved successfully";
-        setTimeout(function () {
-          $scope.$apply(function () {
-            angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
-              $rootScope.message = '';
-            });
-          });
-        }, 3000);
-        $scope.error = "";
-        $scope.programProductISAModal = false;
-        $scope.loadProgramProducts();
-      };
       if ($scope.currentProgramProduct.programProductISA.id)
         ProgramProductsISA.update({programProductId:$scope.currentProgramProduct.id, isaId:$scope.currentProgramProduct.programProductISA.id},
           $scope.currentProgramProduct.programProductISA, successCallBack, {});
       else
         ProgramProductsISA.save({programProductId:$scope.currentProgramProduct.id}, $scope.currentProgramProduct.programProductISA, successCallBack, {});
     }
+  };
+
+  var successCallBack = function () {
+    $scope.message = "ISA saved successfully";
+    setTimeout(function () {
+      $scope.$apply(function () {
+        angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
+          $scope.message = '';
+        });
+      });
+    }, 3000);
+    $scope.error = "";
+    $scope.programProductISAModal = false;
+    $scope.loadProgramProducts();
   };
 
   $scope.isPresent = function (programProductISA) {

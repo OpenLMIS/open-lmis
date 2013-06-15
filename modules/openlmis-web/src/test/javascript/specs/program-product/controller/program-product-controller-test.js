@@ -76,11 +76,24 @@ describe('program product controller', function () {
     expect(returnValue).toEqual(null);
   });
 
-  it("should save program product ISA when", function () {
+  it("should update program product ISA if id already exists", function () {
     var programProductISA = {"id": 1, "whoRatio": 4, "dosesPerYear": 5, "bufferPercentage": 6, "adjustmentValue": 55};
     scope.currentProgramProduct = {"id": 1, "programProductISA": programProductISA};
 
-    $httpBackend.expectPOST('/programProducts/programProductISA/1.json', programProductISA).respond(200);
+    $httpBackend.expect('PUT','/programProducts/1/isa/1.json', programProductISA).respond(200);
+
+    scope.saveProductISA();
+    $httpBackend.flush();
+    expect(scope.message).toEqual("ISA saved successfully");
+    expect(scope.programProductISAModal).toBeFalsy();
+    expect(scope.error).toEqual("");
+  });
+
+  it("should save program product ISA if id does not exist", function () {
+    var programProductISA = {"whoRatio": 4, "dosesPerYear": 5, "bufferPercentage": 6, "adjustmentValue": 55};
+    scope.currentProgramProduct = {"id": 1, "programProductISA": programProductISA};
+
+    $httpBackend.expect('POST','/programProducts/1/isa.json', programProductISA).respond(200);
 
     scope.saveProductISA();
     $httpBackend.flush();
