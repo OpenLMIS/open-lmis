@@ -66,7 +66,8 @@ public class ManageDistribution extends TestCaseHelper {
     verifyElementsPresent(distributionPage);
 
     String defaultDistributionZoneValuesToBeVerified = NONE_ASSIGNED;
-    verifySelectedOptionFromDeliveryZoneSelectField(distributionPage, defaultDistributionZoneValuesToBeVerified);
+    WebElement actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromDeliveryZone();
+    verifySelectedOptionFromSelectField(defaultDistributionZoneValuesToBeVerified, actualSelectFieldElement);
 
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
@@ -77,48 +78,62 @@ public class ManageDistribution extends TestCaseHelper {
     List<String> distributionZoneValuesToBeVerified = new ArrayList<String>();
     distributionZoneValuesToBeVerified.add(deliveryZoneNameFirst);
     distributionZoneValuesToBeVerified.add(deliveryZoneNameSecond);
-    verifyDeliveryZoneSelectFieldValues(distributionPage, distributionZoneValuesToBeVerified);
+    List<WebElement> valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromDeliveryZone();
+    verifyAllSelectFieldValues(distributionZoneValuesToBeVerified, valuesPresentInDropDown);
 
     String defaultProgramValuesToBeVerified = NONE_ASSIGNED;
-    verifySelectedOptionFromProgramSelectField(distributionPage, defaultProgramValuesToBeVerified);
+    actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromProgram();
+    verifySelectedOptionFromSelectField(defaultProgramValuesToBeVerified, actualSelectFieldElement);
 
     String defaultPeriodValuesToBeVerified = NONE_ASSIGNED;
-    verifySelectedOptionFromPeriodSelectField(distributionPage, defaultPeriodValuesToBeVerified);
+    actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
+    verifySelectedOptionFromSelectField(defaultPeriodValuesToBeVerified, actualSelectFieldElement);
 
 
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     List<String> firstProgramValuesToBeVerified = new ArrayList<String>();
     firstProgramValuesToBeVerified.add(programFirst);
-    verifyProgramSelectFieldValues(distributionPage, firstProgramValuesToBeVerified);
-    verifySelectedOptionFromPeriodSelectField(distributionPage, defaultPeriodValuesToBeVerified);
+    valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromProgram();
+    verifyAllSelectFieldValues(firstProgramValuesToBeVerified, valuesPresentInDropDown);
+    actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
+    verifySelectedOptionFromSelectField(defaultPeriodValuesToBeVerified, actualSelectFieldElement);
 
 
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameSecond);
     List<String> secondProgramValuesToBeVerified = new ArrayList<String>();
     secondProgramValuesToBeVerified.add(programSecond);
-    verifyProgramSelectFieldValues(distributionPage, secondProgramValuesToBeVerified);
-    verifySelectedOptionFromPeriodSelectField(distributionPage, defaultPeriodValuesToBeVerified);
+    valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromProgram();
+    verifyAllSelectFieldValues(secondProgramValuesToBeVerified, valuesPresentInDropDown);
+    actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
+    verifySelectedOptionFromSelectField(defaultPeriodValuesToBeVerified, actualSelectFieldElement);
 
 
     distributionPage.selectValueFromProgram(programSecond);
     List<String> periodValuesToBeVerified = new ArrayList<String>();
-    verifySelectedOptionFromPeriodSelectField(distributionPage, periodDisplayedByDefault);
+    actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
+    verifySelectedOptionFromSelectField(periodDisplayedByDefault, actualSelectFieldElement);
     for (int counter = 2; counter <= totalNumberOfPeriods; counter++) {
       String periodWithCounter = period + counter;
       periodValuesToBeVerified.add(periodWithCounter);
     }
-    verifyPeriodSelectFieldValuesPresent(distributionPage, periodValuesToBeVerified);
-    verifyPeriodSelectFieldValuesNotPresent(distributionPage, periodNotToBeDisplayedInDropDown);
+    valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromPeriod();
+    verifyAllSelectFieldValues(periodValuesToBeVerified, valuesPresentInDropDown);
+    verifySelectFieldValueNotPresent(periodNotToBeDisplayedInDropDown, valuesPresentInDropDown);
 
     distributionPage.selectValueFromPeriod(periodDisplayedByDefault);
 
-    verifySelectedOptionFromDeliveryZoneSelectField(distributionPage, deliveryZoneNameSecond);
-    verifySelectedOptionFromProgramSelectField(distributionPage, programSecond);
-    verifySelectedOptionFromPeriodSelectField(distributionPage, periodDisplayedByDefault);
+    actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromDeliveryZone();
+    verifySelectedOptionFromSelectField(deliveryZoneNameSecond, actualSelectFieldElement);
+    actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromProgram();
+    verifySelectedOptionFromSelectField(programSecond, actualSelectFieldElement);
+    actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
+    verifySelectedOptionFromSelectField(periodDisplayedByDefault, actualSelectFieldElement);
 
     distributionPage.selectValueFromDeliveryZone(SELECT_DELIVERY_ZONE);
-    verifySelectedOptionFromProgramSelectField(distributionPage, defaultProgramValuesToBeVerified);
-    verifySelectedOptionFromPeriodSelectField(distributionPage, defaultPeriodValuesToBeVerified);
+    actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromProgram();
+    verifySelectedOptionFromSelectField(defaultProgramValuesToBeVerified, actualSelectFieldElement);
+    actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
+    verifySelectedOptionFromSelectField(defaultPeriodValuesToBeVerified, actualSelectFieldElement);
 
     distributionPage.clickProceed();
     verifySubOptionsOfProceedButton(distributionPage);
@@ -134,20 +149,18 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
 
-  private void verifyDeliveryZoneSelectFieldValues(DistributionPage distributionPage, List<String> valuesToBeVerified) {
-    testWebDriver.waitForElementToAppear(distributionPage.getSelectDeliveryZoneSelectBox());
-    List<WebElement> selectFieldValues = distributionPage.getAllSelectOptionsFromDeliveryZone();
+  private void verifyAllSelectFieldValues(List<String> valuesToBeVerified, List<WebElement> valuesPresentInDropDown) {
     int valuesInSelectFieldCounter = 0;
     int valuesToBeVerifiedCounter = 0;
     int finalCounter = 0;
     int counterOfFirstSelectValueToBeSkipped = 0;
     for (String values : valuesToBeVerified)
       valuesToBeVerifiedCounter++;
-    for (WebElement webElement : selectFieldValues)
+    for (WebElement webElement : valuesPresentInDropDown)
       valuesInSelectFieldCounter++;
 
     if (valuesToBeVerifiedCounter == valuesInSelectFieldCounter - 1) {
-      for (WebElement webElement : selectFieldValues) {
+      for (WebElement webElement : valuesPresentInDropDown) {
         counterOfFirstSelectValueToBeSkipped++;
         if (counterOfFirstSelectValueToBeSkipped != 1) {
           for (String values : valuesToBeVerified) {
@@ -165,97 +178,22 @@ public class ManageDistribution extends TestCaseHelper {
     assertEquals(valuesInSelectFieldCounter - 1, finalCounter);
   }
 
-  private void verifyProgramSelectFieldValues(DistributionPage distributionPage, List<String> valuesToBeVerified) {
-    testWebDriver.waitForElementToAppear(distributionPage.getSelectProgramSelectBox());
-    List<WebElement> selectFieldValues = distributionPage.getAllSelectOptionsFromProgram();
-    int valuesInSelectFieldCounter = 0;
-    int valuesToBeVerifiedCounter = 0;
-    int finalCounter = 0;
-    int counterOfFirstSelectValueToBeSkipped = 0;
-    for (String values : valuesToBeVerified)
-      valuesToBeVerifiedCounter++;
-    for (WebElement webElement : selectFieldValues)
-      valuesInSelectFieldCounter++;
 
-    if (valuesToBeVerifiedCounter == valuesInSelectFieldCounter - 1) {
-      for (WebElement webElement : selectFieldValues) {
-        counterOfFirstSelectValueToBeSkipped++;
-        if (counterOfFirstSelectValueToBeSkipped != 1) {
-          for (String values : valuesToBeVerified) {
-            if (values.equalsIgnoreCase(webElement.getText().trim())) {
-              finalCounter++;
-            }
-          }
-
-        }
-      }
-    } else {
-      fail("Values in select field are not same in number as values to be verified");
-    }
-    assertEquals(valuesToBeVerifiedCounter, finalCounter);
-    assertEquals(valuesInSelectFieldCounter - 1, finalCounter);
-  }
-
-  private void verifyPeriodSelectFieldValuesPresent(DistributionPage distributionPage, List<String> valuesToBeVerified) {
-    testWebDriver.waitForElementToAppear(distributionPage.getSelectPeriodSelectBox());
-    List<WebElement> selectFieldValues = distributionPage.getAllSelectOptionsFromPeriod();
-    int valuesInSelectFieldCounter = 0;
-    int valuesToBeVerifiedCounter = 0;
-    int finalCounter = 0;
-    int counterOfFirstSelectValueToBeSkipped = 0;
-    for (String values : valuesToBeVerified)
-      valuesToBeVerifiedCounter++;
-    for (WebElement webElement : selectFieldValues)
-      valuesInSelectFieldCounter++;
-
-    if (valuesToBeVerifiedCounter == valuesInSelectFieldCounter - 1) {
-      for (WebElement webElement : selectFieldValues) {
-        counterOfFirstSelectValueToBeSkipped++;
-        if (counterOfFirstSelectValueToBeSkipped != 1) {
-          for (String values : valuesToBeVerified) {
-            if (values.equalsIgnoreCase(webElement.getText().trim())) {
-              finalCounter++;
-            }
-          }
-
-        }
-      }
-    } else {
-      fail("Values in select field are not same in number as values to be verified");
-    }
-    assertEquals(valuesToBeVerifiedCounter, finalCounter);
-    assertEquals(valuesInSelectFieldCounter - 1, finalCounter);
-  }
-
-  private void verifyPeriodSelectFieldValuesNotPresent(DistributionPage distributionPage, String valueToBeVerified) {
-    List<WebElement> selectFieldValues = distributionPage.getAllSelectOptionsFromPeriod();
+  private void verifySelectFieldValueNotPresent(String valueToBeVerified, List<WebElement> valuesPresentInDropDown) {
     boolean flag = false;
-
-
-    for (WebElement webElement : selectFieldValues) {
+    for (WebElement webElement : valuesPresentInDropDown) {
       if (valueToBeVerified.equalsIgnoreCase(webElement.getText().trim())) {
         flag = true;
         break;
       }
-
     }
     assertTrue(valueToBeVerified + " should not exist in period drop down", flag == false);
   }
 
 
-  private void verifySelectedOptionFromDeliveryZoneSelectField(DistributionPage distributionPage, String valuesToBeVerified) {
-    WebElement selectFieldValue = distributionPage.getFirstSelectedOptionFromDeliveryZone();
-    assertEquals(valuesToBeVerified, selectFieldValue.getText());
-  }
-
-  private void verifySelectedOptionFromProgramSelectField(DistributionPage distributionPage, String valuesToBeVerified) {
-    WebElement selectFieldValue = distributionPage.getFirstSelectedOptionFromProgram();
-    assertEquals(valuesToBeVerified, selectFieldValue.getText());
-  }
-
-  private void verifySelectedOptionFromPeriodSelectField(DistributionPage distributionPage, String valuesToBeVerified) {
-    WebElement selectFieldValue = distributionPage.getFirstSelectedOptionFromPeriod();
-    assertEquals(valuesToBeVerified, selectFieldValue.getText());
+  private void verifySelectedOptionFromSelectField(String valuesToBeVerified, WebElement actualSelectFieldElement) {
+    testWebDriver.waitForElementToAppear(actualSelectFieldElement);
+    assertEquals(valuesToBeVerified, actualSelectFieldElement.getText());
   }
 
 
