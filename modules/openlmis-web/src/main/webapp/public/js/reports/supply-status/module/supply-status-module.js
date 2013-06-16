@@ -1,5 +1,5 @@
 'use strict';
-require(['../../../shared/app' , '../controller/supply_status-controller'], function (app) {
+require(['../../../shared/app' , '../controller/supply-status-controller'], function (app) {
     app.loadApp();
     angular.module('supply_status', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider', function ($routeProvider) {
