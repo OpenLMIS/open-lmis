@@ -1,5 +1,5 @@
 'use strict';
-require(['../../../shared/app' , '../controller/stocked_out-controller'], function (app) {
+require(['../../../shared/app' , '../controller/stocked-out-controller'], function (app) {
     app.loadApp();
 
     angular.module('stocked_out', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
