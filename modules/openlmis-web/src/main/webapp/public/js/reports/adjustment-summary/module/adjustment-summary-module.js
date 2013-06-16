@@ -12,5 +12,5 @@ require(['../../../shared/app' , '../controller/adjustment-summary-controller'],
         }
     );
 
-angular.bootstrap(document, ['adjustmentsummary']);
+    angular.bootstrap(document, ['adjustmentsummary']);
 });
