@@ -39,7 +39,7 @@ requirejs.config({
     fixedTableHeader: 'directives/fixed-table-header',
     uiNav: 'directives/ui-nav',
     ngGrid: '../../lib/angular-ui/ng-grid/ng-grid-2.0.5.min',
-    ngGridFlexibleHeight: '../../lib/angular-ui/ng-grid/ng-grid-flexible-height',
+    ngGridFlexibleHeight: '../../lib/angular-ui/ng-grid-flexible-height',
     jQueryForm: '../../lib/jquery/jquery.form',
     select2: '../../lib/select2/select2',
     select2Ext: 'select2-ext'
@@ -82,7 +82,7 @@ requirejs.config({
 });
 
 define(["messageService", "authorizationService", "navigateBackService", "loginController", "headerController", "navigationController", "localStorageKeys", "util", "open-lmis-dialog",
-  'commentBox', 'formToolbar', 'openlmisMessage', 'openlmisPagination', 'modalEvents', 'placeholder', 'tabScroll', 'fixedTableHeader', 'uiNav', 'ngGrid', 'jQueryForm', 'select2', 'select2Ext'], function () {
+  'commentBox', 'formToolbar', 'openlmisMessage', 'openlmisPagination', 'modalEvents', 'placeholder', 'tabScroll', 'fixedTableHeader', 'uiNav', 'ngGrid','ngGridFlexibleHeight', 'jQueryForm', 'select2', 'select2Ext'], function () {
 
   var loadApp = function () {
 
