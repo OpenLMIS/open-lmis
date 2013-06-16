@@ -1,5 +1,5 @@
 'use strict';
-require(['../../../shared/app' , '../controller/list-mailinglabels-controller'], function (app) {
+require(['../../../shared/app' , '../controller/mailing-labels-controller'], function (app) {
     app.loadApp();
     angular.module('mailinglabels', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
         .config(['$routeProvider', function ($routeProvider) {
