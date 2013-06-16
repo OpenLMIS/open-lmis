@@ -1,4 +1,4 @@
-function DistrictConsumptionReportController($scope, DistrictConsumptionReport, Products , Programs, ProductCategories, RequisitionGroups , FacilityTypes, GeographicZones, OperationYears,Months, $http, $routeParams,$location) {
+function DistrictConsumptionReportController($scope, DistrictConsumptionReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones, OperationYears,Months, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -144,7 +144,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
              pdformat : 0
         };
 
-        FacilityTypes.get(function(data) {
+        ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
             $scope.facilityTypes.push({'name': 'All Facility Types'});
         });
@@ -172,7 +172,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             $scope.zones.push({'name': 'All Geographic Zones'});
         });
 
-        Programs.get(function(data){
+        ReportPrograms.get(function(data){
             $scope.programs = data.programs;
             $scope.programs.push({'name':'All Programs'});
         });
