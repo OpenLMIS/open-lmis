@@ -89,7 +89,9 @@ public class FacilityFeedDTO extends BaseFeedDTO {
     this.fax = facility.getFax();
     this.address1 = facility.getAddress1();
     this.address2 = facility.getAddress2();
-    this.geographicZoneID = facility.getGeographicZone().getId();
+    if(facility.getGeographicZone() != null){
+        this.geographicZoneID = facility.getGeographicZone().getId();
+    }
     this.catchmentPopulation = facility.getCatchmentPopulation();
     this.latitude = facility.getLatitude();
     this.longitude = facility.getLongitude();
