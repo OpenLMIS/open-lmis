@@ -1,5 +1,5 @@
 'use strict';
-require(['../../../shared/app' , '../controller/list-facilitylist-controller'], function (app) {
+require(['../../../shared/app' , '../controller/facility-list-controller'], function (app) {
 
     app.loadApp();
     angular.module('facilitylist', ['openlmis' , 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
