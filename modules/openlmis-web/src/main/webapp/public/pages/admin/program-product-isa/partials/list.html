@@ -169,7 +169,7 @@
       <div class="row-fluid">
         <div id="ISA-population" class="calculatedAmount">
           <span openlmis-message="label.isa.population.of"></span>
-          <input type="text" ng-model="population"
+          <input type="text" ng-model="population" name="population"
                  numeric-validator="positiveInteger"
                  ng-change="calculateValue(currentProgramProduct.programProductISA)"/>
           <span openlmis-message="label.isa.will.need"></span>
@@ -177,6 +177,7 @@
           <span openlmis-message="label.isa.doses.of"></span>
           <span ng-bind="currentProgramProduct.program.name"></span>
           <span openlmis-message="label.isa.per.month"></span>
+          <div id="population" class="form-error" openlmis-message="error.enter.numeric.value"></div>
         </div>
       </div>
 

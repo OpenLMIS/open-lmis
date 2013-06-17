@@ -58,8 +58,9 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
   };
 
   $scope.$watch('currentProgramProduct', function () {
-    if ($scope.currentProgramProduct)
+    if ($scope.currentProgramProduct) {
       $scope.calculateValue($scope.currentProgramProduct.programProductISA);
+    }
   }, true);
 
   $scope.saveProductISA = function () {
@@ -97,9 +98,11 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
 
 
   $scope.isPresent = function (programProductISA) {
-    return programProductISA && isDefined(programProductISA.whoRatio) && isDefined(programProductISA.dosesPerYear) &&
+    var present =  programProductISA && isDefined(programProductISA.whoRatio) && isDefined(programProductISA.dosesPerYear) &&
       isDefined(programProductISA.wastageRate) && isDefined(programProductISA.bufferPercentage) &&
       isDefined(programProductISA.adjustmentValue);
+    if(present) $scope.error = null;
+    return present;
   };
 
   $scope.getFormula = function (programProductISA) {
