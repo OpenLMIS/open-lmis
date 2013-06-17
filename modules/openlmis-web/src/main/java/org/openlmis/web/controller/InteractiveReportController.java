@@ -44,7 +44,8 @@ public class InteractiveReportController  extends BaseController {
             ,HttpServletResponse response
     )
     {
-       Integer userId = (Integer) request.getSession().getAttribute(USER_ID);
+       //TODO: change the methods to have a long user id parameter instead of integer
+       Integer userId = Integer.parseInt( request.getSession().getAttribute(USER_ID).toString());
 
         switch (outputOption.toUpperCase()){
             case "PDF":
