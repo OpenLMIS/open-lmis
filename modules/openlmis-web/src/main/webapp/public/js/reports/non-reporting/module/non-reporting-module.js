@@ -8,7 +8,7 @@ require(['../../../shared/app' , '../controller/non-reporting-controller'], func
                 otherwise({redirectTo:'/list'});
         }]).run(
         function ($rootScope, AuthorizationService) {
-            AuthorizationService.preAuthorize('VIEW_REPORTS');
+            AuthorizationService.preAuthorize('VIEW_NON_REPORTING_FACILITIES');
         }
     );
 

@@ -8,7 +8,7 @@ require(['../../../shared/app' , '../controller/average-consumption-controller']
         otherwise({redirectTo:'/list'});
     }]).run(
         function ($rootScope, AuthorizationService) {
-            AuthorizationService.preAuthorize('VIEW_REPORTS');
+            AuthorizationService.preAuthorize('VIEW_AVERAGE_CONSUMPTION_REPORT');
         }
     );
 

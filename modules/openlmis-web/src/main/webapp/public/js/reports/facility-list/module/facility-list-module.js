@@ -8,7 +8,7 @@ require(['../../../shared/app' , '../controller/facility-list-controller'], func
         when('/list', {controller:ListFacilitiesController, templateUrl:'partials/list.html',reloadOnSearch:false}).
         otherwise({redirectTo:'/list'});
     }]).run(function ($rootScope, AuthorizationService) {
-            AuthorizationService.preAuthorize('VIEW_REPORTS');
+            AuthorizationService.preAuthorize('VIEW_FACILITY_REPORT');
         });
 
     angular.bootstrap(document, ['facilitylist']);

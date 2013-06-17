@@ -9,7 +9,7 @@ require(['../../../shared/app' , '../controller/district-consumption-controller'
         when('/list', {controller:DistrictConsumptionReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
         otherwise({redirectTo:'/list'});
     }]).run(function ($rootScope, AuthorizationService) {
-            AuthorizationService.preAuthorize('VIEW_REPORTS');
+            AuthorizationService.preAuthorize('VIEW_DISTRICT_CONSUMPTION_REPORT');
         });
         angular.bootstrap(document, ['district_consumption']);
     });

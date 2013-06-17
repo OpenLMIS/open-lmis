@@ -8,7 +8,7 @@ require(['../../../shared/app' , '../controller/consumption-controller'], functi
         otherwise({redirectTo:'/list'});
     }]).run(
         function ($rootScope, AuthorizationService) {
-            AuthorizationService.preAuthorize('VIEW_REPORTS');
+            AuthorizationService.preAuthorize('VIEW_CONSUMPTION_REPORT');
         }
     );
 

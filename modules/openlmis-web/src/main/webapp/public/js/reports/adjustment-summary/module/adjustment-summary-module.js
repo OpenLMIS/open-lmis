@@ -8,7 +8,7 @@ require(['../../../shared/app' , '../controller/adjustment-summary-controller'],
         otherwise({redirectTo:'/list'});
     }]).run(
         function ($rootScope, AuthorizationService) {
-            AuthorizationService.preAuthorize('VIEW_REPORTS');
+            AuthorizationService.preAuthorize('VIEW_ADJUSTMENT_SUMMARY_REPORT');
         }
     );
 

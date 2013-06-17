@@ -9,7 +9,7 @@ require(['../../../shared/app' , '../controller/stocked-out-controller'], functi
         otherwise({redirectTo:'/list'});
     }]).run(
     function ($rootScope, AuthorizationService) {
-        AuthorizationService.preAuthorize('VIEW_REPORTS');
+        AuthorizationService.preAuthorize('VIEW_STOCKED_OUT_REPORT');
     }
 );
 

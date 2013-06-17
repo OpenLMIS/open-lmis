@@ -8,7 +8,7 @@ require(['../../../shared/app' , '../controller/summary-controller'], function (
             otherwise({redirectTo:'/list'});
         }]).run(
             function ($rootScope, AuthorizationService) {
-                AuthorizationService.preAuthorize('VIEW_REPORTS');
+                AuthorizationService.preAuthorize('VIEW_SUMMARY_REPORT');
             }
     );
 

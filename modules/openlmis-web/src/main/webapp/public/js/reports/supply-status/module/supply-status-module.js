@@ -8,7 +8,7 @@ require(['../../../shared/app' , '../controller/supply-status-controller'], func
             otherwise({redirectTo:'/list'});
         }]).run(
         function ($rootScope, AuthorizationService) {
-            AuthorizationService.preAuthorize('VIEW_REPORTS');
+            AuthorizationService.preAuthorize('VIEW_SUPPLY_STATUS_REPORT');
         }
     );
 

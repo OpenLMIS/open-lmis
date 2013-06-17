@@ -8,7 +8,7 @@ require(['../../../shared/app' , '../controller/reporting-rate-controller'], fun
                 otherwise({redirectTo:'/list'});
         }]).run(
         function ($rootScope, AuthorizationService) {
-            AuthorizationService.preAuthorize('VIEW_REPORTS');
+            AuthorizationService.preAuthorize('VIEW_REPORTING_RATE_REPORT');
         }
     );
 

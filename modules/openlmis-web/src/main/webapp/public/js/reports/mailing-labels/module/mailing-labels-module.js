@@ -8,7 +8,7 @@ require(['../../../shared/app' , '../controller/mailing-labels-controller'], fun
                 otherwise({redirectTo:'/list'});
         }]).run(
         function ($rootScope, AuthorizationService) {
-            AuthorizationService.preAuthorize('VIEW_REPORTS');
+            AuthorizationService.preAuthorize('VIEW_MAILING_LABEL_REPORT');
         }
     );
 
