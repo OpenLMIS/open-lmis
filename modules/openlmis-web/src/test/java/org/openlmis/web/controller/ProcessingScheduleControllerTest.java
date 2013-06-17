@@ -11,12 +11,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.ProcessingSchedule;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -37,6 +41,7 @@ import static org.openlmis.web.controller.ProcessingScheduleController.SCHEDULE;
 import static org.openlmis.web.controller.ProcessingScheduleController.SCHEDULES;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
 public class ProcessingScheduleControllerTest {
   @Rule
   public ExpectedException expectedEx = org.junit.rules.ExpectedException.none();
@@ -49,12 +54,15 @@ public class ProcessingScheduleControllerTest {
   @Mock
   ProcessingScheduleService processingScheduleService;
 
-  ProcessingScheduleController processingScheduleController;
+  @Mock
+  MessageService messageService;
+
+  @InjectMocks
+  private ProcessingScheduleController processingScheduleController;
 
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    processingScheduleController = new ProcessingScheduleController(processingScheduleService);
     MockHttpSession mockHttpSession = new MockHttpSession();
     httpServletRequest.setSession(mockHttpSession);
     mockHttpSession.setAttribute(USER_ID, userId);
@@ -99,6 +107,7 @@ public class ProcessingScheduleControllerTest {
   public void shouldCreateAndReturnANewSchedule() {
     ProcessingSchedule processingSchedule = new ProcessingSchedule("testCode", "testName");
     ProcessingSchedule mockedSchedule = mock(ProcessingSchedule.class);
+    when(messageService.message("message.schedule.created.success", "Test schedule name")).thenReturn("'Test schedule name' created successfully");
     when(processingScheduleService.save(processingSchedule)).thenReturn(mockedSchedule);
     when(mockedSchedule.getName()).thenReturn(scheduleName);
 
@@ -141,8 +150,8 @@ public class ProcessingScheduleControllerTest {
     ProcessingSchedule processingSchedule = new ProcessingSchedule("testCode", "testName");
     ProcessingSchedule mockedSchedule = mock(ProcessingSchedule.class);
     when(processingScheduleService.save(processingSchedule)).thenReturn(mockedSchedule);
-
     when(mockedSchedule.getName()).thenReturn(scheduleName);
+    when(messageService.message("message.schedule.updated.success", "Test schedule name")).thenReturn("'Test schedule name' updated successfully");
 
     ResponseEntity<OpenLmisResponse> response = processingScheduleController.update(processingSchedule, 1L, httpServletRequest);
     assertThat(processingSchedule.getModifiedBy(), is(userId));
