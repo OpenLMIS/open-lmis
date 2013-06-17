@@ -39,6 +39,8 @@ javascript.source {
     }
 }
 
+def separator = File.separator
+
 war {
     from("src/main/webapp/public/minJs/") {
         into "public/js/"
@@ -121,7 +123,7 @@ dependencies {
             project(':modules:shipment'),
             project(':modules:rest-api'),
             project(':modules:reporting'),
-            project(':modules:allocation'),
+            //project(':modules:allocation'),
             project(':modules:distribution'),
             project(':modules:report')
 
