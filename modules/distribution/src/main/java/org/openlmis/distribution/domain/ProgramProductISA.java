@@ -28,12 +28,4 @@ public class ProgramProductISA extends BaseModel {
 
   Integer calculatedIsa;
 
-  public ProgramProductISA(Float whoRatio, Integer dosesPerYear, Float wastageRate, Float bufferPercentage, Integer minimumValue, Integer adjustmentValue) {
-    this.whoRatio = whoRatio;
-    this.dosesPerYear = dosesPerYear;
-    this.wastageRate = wastageRate;
-    this.bufferPercentage = bufferPercentage;
-    this.minimumValue = minimumValue;
-    this.adjustmentValue = adjustmentValue;
-  }
 }

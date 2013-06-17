@@ -91,21 +91,29 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
     $scope.loadProgramProducts();
   };
 
+  function isDefined(value) {
+    return !(value == null || value == undefined || value == "-");
+  }
+
+
   $scope.isPresent = function (programProductISA) {
-    return programProductISA && programProductISA.whoRatio && programProductISA.dosesPerYear && programProductISA.wastageRate
-      && programProductISA.bufferPercentage && programProductISA.adjustmentValue;
+    return programProductISA && isDefined(programProductISA.whoRatio) && isDefined(programProductISA.dosesPerYear) &&
+      isDefined(programProductISA.wastageRate) && isDefined(programProductISA.bufferPercentage) &&
+      isDefined(programProductISA.adjustmentValue);
   };
 
   $scope.getFormula = function (programProductISA) {
-    if ($scope.isPresent(programProductISA))
+    if ($scope.isPresent(programProductISA)) {
+      var adjustmentVal = parseInt(programProductISA.adjustmentValue) > 0 ? programProductISA.adjustmentValue : "(" + programProductISA.adjustmentValue + ")";
       return "(population) * " + programProductISA.whoRatio + " * " + programProductISA.dosesPerYear + " * "
-        + programProductISA.wastageRate + " / 12 * " + programProductISA.bufferPercentage + " + " + programProductISA.adjustmentValue;
+        + programProductISA.wastageRate + " / 12 * " + programProductISA.bufferPercentage + " + " + adjustmentVal;
+    }
   };
 
   $scope.calculateValue = function (programProductISA) {
     if ($scope.isPresent(programProductISA) && $scope.population) {
-      $scope.isaValue = $scope.population * programProductISA.whoRatio * programProductISA.dosesPerYear *
-        programProductISA.wastageRate / 12 * programProductISA.bufferPercentage + programProductISA.adjustmentValue;
+      $scope.isaValue = parseInt($scope.population) * parseInt(programProductISA.whoRatio) * parseInt(programProductISA.dosesPerYear) *
+        parseInt(programProductISA.wastageRate) / 12 * parseInt(programProductISA.bufferPercentage) + parseInt(programProductISA.adjustmentValue);
       $scope.isaValue = Math.ceil($scope.isaValue);
     } else {
       $scope.isaValue = 0;

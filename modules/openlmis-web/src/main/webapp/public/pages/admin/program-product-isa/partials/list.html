@@ -72,8 +72,8 @@
             <div class="span4">
               <input id="who-ratio" name="whoRatio" type="text" ng-required="true"
                      ng-model="currentProgramProduct.programProductISA.whoRatio"
-                     maxlength="9"
-                     numeric-validator="numericValue"
+                     maxlength="8"
+                     numeric-validator="positiveInteger"
                      ng-class="highlightRequired(currentProgramProduct.programProductISA.whoRatio)"/>
 
               <div id="whoRatio" class="form-error" openlmis-message="error.enter.numeric.value"></div>
@@ -88,6 +88,7 @@
               <input id="doses-per-year" name="dosesPerYear" type="text" ng-required="true"
                      ng-model="currentProgramProduct.programProductISA.dosesPerYear"
                      numeric-validator="positiveInteger"
+                     maxlength="6"
                      ng-class="highlightRequired(currentProgramProduct.programProductISA.dosesPerYear)"/>
 
               <div id="dosesPerYear" class="form-error" openlmis-message="error.enter.numeric.value"></div>
@@ -101,8 +102,8 @@
             <div class="span4">
               <input id="wastage-rate" name="wastageRate" type="text" ng-required="true"
                      ng-model="currentProgramProduct.programProductISA.wastageRate"
-                     numeric-validator="numericValue"
-                     maxlength="7"
+                     numeric-validator="positiveInteger"
+                     maxlength="8"
                      ng-class="highlightRequired(currentProgramProduct.programProductISA.wastageRate)"/>
 
               <div id="wastageRate" class="form-error" openlmis-message="error.enter.numeric.value"></div>
@@ -116,8 +117,8 @@
             <div class="span4">
               <input id="buffer-percentage" name="bufferPercentage" type="text" ng-required="true"
                      ng-model="currentProgramProduct.programProductISA.bufferPercentage"
-                     numeric-validator="numericValue"
-                     maxlength="7"
+                     numeric-validator="positiveInteger"
+                     maxlength="8"
                      ng-class="highlightRequired(currentProgramProduct.programProductISA.bufferPercentage)"/>
 
               <div id="bufferPercentage" class="form-error" openlmis-message="error.enter.numeric.value"></div>
@@ -132,6 +133,7 @@
               <input id="adjustment-value" name="adjustmentValue" type="text" ng-required="true"
                      ng-model="currentProgramProduct.programProductISA.adjustmentValue"
                      numeric-validator="integer"
+                     maxlength="6"
                      ng-class="highlightRequired(currentProgramProduct.programProductISA.adjustmentValue)"/>
 
               <div id="adjustmentValue" class="form-error" openlmis-message="error.enter.numeric.value"></div>
@@ -139,7 +141,7 @@
           </div>
         </div>
 
-        <div class="ISAFormulaModalSubContent">
+        <!--<div class="ISAFormulaModalSubContent">
           <h5 openlmis-message="label.isa.formula.modal.minimum.value"></h5>
 
           <div class="row-fluid">
@@ -154,7 +156,7 @@
               <div id="minimumValue" class="form-error" openlmis-message="error.enter.numeric.value"></div>
             </div>
           </div>
-        </div>
+        </div>-->
       </form>
       <div class="row-fluid">
         <div id="monthlyRestockAmount" class="calculatedAmount"

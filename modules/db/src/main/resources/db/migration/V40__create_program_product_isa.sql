@@ -4,11 +4,11 @@
 DROP TABLE IF EXISTS program_product_isa;
 CREATE TABLE program_product_isa (
     id SERIAL PRIMARY KEY,
-    whoRatio NUMERIC (8,4) NOT NULL,
+    whoRatio INTEGER NOT NULL,
     dosesPerYear INTEGER NOT NULL,
-    wastageRate NUMERIC(6,2) NOT NULL,
+    wastageRate INTEGER NOT NULL,
     programProductId INTEGER REFERENCES program_products(id),
-    bufferPercentage NUMERIC(6,2) NOT NULL,
+    bufferPercentage INTEGER NOT NULL,
     minimumValue INTEGER,
     adjustmentValue INTEGER NOT NULL,
     calculatedIsa INTEGER,
