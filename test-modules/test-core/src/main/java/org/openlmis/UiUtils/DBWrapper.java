@@ -101,24 +101,23 @@ public class DBWrapper {
     update("delete from roles where name not in ('Admin');");
     update("delete from facility_approved_products;");
     update("delete from program_product_price_history;");
-    update("delete from program_product_isa;");
-    update("delete from facility_approved_products;");
-    update("delete from program_products;");
-    update("delete from products;");
-    update("delete from product_categories;");
 
     update("delete from orders;");
     update("DELETE FROM requisition_status_changes;");
-    update("DELETE FROM requisition_line_item_losses_adjustments;");
-    update("DELETE FROM requisition_line_items;");
-    update("delete from products;");
-    update("delete from product_categories;");
+
     update("delete from user_password_reset_tokens ;");
     update("delete from comments;");
     update("delete from users where userName not like('Admin%');");
     update("DELETE FROM requisition_line_item_losses_adjustments;");
     update("DELETE FROM requisition_line_items;");
     update("DELETE FROM requisitions;");
+
+    update("delete from program_product_isa;");
+    update("delete from facility_approved_products;");
+    update("delete from program_products;");
+    update("delete from products;");
+    update("delete from product_categories;");
+
     update("delete from supply_lines;");
     update("delete from programs_supported;");
     update("delete from requisition_group_members;");
