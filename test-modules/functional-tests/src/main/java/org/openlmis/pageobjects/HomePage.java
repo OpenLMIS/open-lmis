@@ -32,6 +32,9 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Distributions')]")
   private static WebElement distributionsMenuItem;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Program Product ISA')]")
+  private static WebElement programProductISAMenuItem;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Home')]")
   private static WebElement homeMenuItem;
 
@@ -385,6 +388,16 @@ public class HomePage extends Page {
     testWebDriver.keyPress(manageMenuItem);
     testWebDriver.waitForElementToAppear(manageDistributionHeader);
     return new DistributionPage(testWebDriver);
+  }
+
+  public ProgramProductISAPage navigateProgramProductISA() throws IOException {
+     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+     testWebDriver.keyPress(AdministrationMenuItem);
+     testWebDriver.waitForElementToAppear(TemplateConfigTab);
+     testWebDriver.keyPress(TemplateConfigTab);
+     testWebDriver.waitForElementToAppear(programProductISAMenuItem);
+     testWebDriver.keyPress(programProductISAMenuItem);
+     return new ProgramProductISAPage(testWebDriver);
   }
 
   public HomePage navigateHomePage() throws IOException {

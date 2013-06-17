@@ -131,6 +131,11 @@ public class TestCaseHelper {
     dbWrapper.insertFacilityApprovedProducts(product1, product2, program, facilityType);
   }
 
+    public void setupProgramProductTestData(String product1, String product2, String program) throws IOException, SQLException {
+        dbWrapper.insertProducts(product1, product2);
+        dbWrapper.insertProgramProducts(product1, product2, program);
+    }
+
   public void setupRequisitionGroupData(String RGCode1, String RGCode2, String SupervisoryNodeCode1, String SupervisoryNodeCode2, String Facility1, String Facility2) throws IOException, SQLException {
     dbWrapper.insertRequisitionGroups(RGCode1, RGCode2, SupervisoryNodeCode1, SupervisoryNodeCode2);
     dbWrapper.insertRequisitionGroupMembers(Facility1, Facility2);
