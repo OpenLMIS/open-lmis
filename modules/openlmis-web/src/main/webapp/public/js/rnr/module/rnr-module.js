@@ -32,7 +32,7 @@ require(['../../shared/app', '../controller/initiate-rnr-controller', '../contro
           }
         };
       }).run(function ($rootScope) {
-        $rootScope.pageSize = 2;
+        $rootScope.pageSize = 20;
       });
 
     angular.bootstrap(document, ['rnr']);

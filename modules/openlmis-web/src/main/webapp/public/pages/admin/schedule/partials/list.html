@@ -68,7 +68,7 @@
         <div class="row-fluid list-row">
           <div class="span1">
             <input type="button" ng-hide="schedulesBackupMap[schedule.id].edit" class="btn btn-mini pull-right"
-                   value="Edit"
+                   openlmis-message="button.edit"
                    ng-click="startScheduleEdit(schedule, backupScheduleRow); schedulesBackupMap[schedule.id].edit=true;"/>
           </div>
 
@@ -110,8 +110,8 @@
         <div ng-show="schedulesBackupMap[schedule.id].edit" class="row-fluid schedule-button-row">
           <div class="span1"></div>
           <div class="span2">
-            <input type="submit" class="btn btn-primary btn-small" value="Save"/>
-            <input type="button" class="btn btn-cancel btn-small" value="Cancel"
+            <input type="submit" class="btn btn-primary btn-small" openlmis-message="button.save"/>
+            <input type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel"
                    ng-click="cancelScheduleEdit(schedule, backupScheduleRow); schedulesBackupMap[schedule.id].edit=false"/>
           </div>
           <div ng-show="schedulesBackupMap[schedule.id].error" class="span9 form-error"
