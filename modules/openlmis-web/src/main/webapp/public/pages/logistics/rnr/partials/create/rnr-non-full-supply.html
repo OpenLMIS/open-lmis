@@ -6,15 +6,10 @@
 
 <div ng-controller="CreateNonFullSupplyController" xmlns="http://www.w3.org/1999/html">
 <div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.nonFullSupply">
-  <div class="dropdown">
-    <a class="dropdown-toggle">
-      Errors found on
-      <ng-pluralize count="errorPages.nonFullSupply.length"
-                    when="{ 1: '{} page',
-                                    other: '{} pages'}">
-
-      </ng-pluralize>
-      |
+  <div ng-switch on="errorPages.nonFullSupply.length" class="dropdown">
+    <a ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
+    <a ng-switch-default class="dropdown-toggle">
+      Errors found on {{errorPages.nonFullSupply.length}} pages
     </a>
     <ul class="dropdown-menu">
       <li ng-repeat="page in errorPages.nonFullSupply">
@@ -23,6 +18,7 @@
     </ul>
   </div>
 </div>
+
 <div class="clearfix">
   <br/>
   <input type="button" ng-click="showAddNonFullSupplyModal()" class="pull-right btn btn-primary"

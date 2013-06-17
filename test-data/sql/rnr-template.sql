@@ -19,7 +19,7 @@ values
 (12, (select id from programs where code = 'TB'), true, 'C', 12, 'Adjusted Total Consumption'),
 (13, (select id from programs where code = 'TB'), true, 'C', 13, 'Average Monthly Consumption(AMC)'),
 (14, (select id from programs where code = 'TB'), true, 'C', 14, 'Maximum Stock Quantity'),
-(15, (select id from programs where code = 'TB'), true, 'C', 15, 'Calculate d Order Quantity'),
+(15, (select id from programs where code = 'TB'), true, 'C', 15, 'Calculated Order Quantity'),
 (16, (select id from programs where code = 'TB'), true, 'U', 16, 'Requested Quantity'),
 (17, (select id from programs where code = 'TB'), true, 'U', 17, 'Requested Quantity Explanation'),
 (18, (select id from programs where code = 'TB'), true, 'U', 18, 'Approved Quantity'),

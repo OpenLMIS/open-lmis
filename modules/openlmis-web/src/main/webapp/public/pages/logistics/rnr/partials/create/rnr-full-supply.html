@@ -6,20 +6,16 @@
 
 <div ng-controller = "CreateFullSupplyController" >
   <div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.fullSupply">
-    <div class="dropdown">
-      <a class="dropdown-toggle">
-            Errors found on
-            <ng-pluralize count="errorPages.fullSupply.length"
-                                when="{ 1: '{} page',
-                                        other: '{} pages'}">
-
-            </ng-pluralize> |
-          </a>
-          <ul class="dropdown-menu">
-            <li ng-repeat="page in errorPages.fullSupply">
-              <a ng-click="goToPage(page, $event)">{{page}}</a>
-            </li>
-          </ul>
+    <div ng-switch on="errorPages.fullSupply.length" class="dropdown">
+      <a ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
+      <a ng-switch-default class="dropdown-toggle">
+        Errors found on {{errorPages.fullSupply.length}} pages
+      </a>
+      <ul class="dropdown-menu">
+        <li ng-repeat="page in errorPages.fullSupply">
+          <a ng-click="goToPage(page, $event)">{{page}}</a>
+        </li>
+      </ul>
     </div>
 
   </div>

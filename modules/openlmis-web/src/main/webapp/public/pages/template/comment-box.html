@@ -19,7 +19,7 @@
     <li class="comment" ng-repeat="comment in rnrComments">
       <span ng-bind="comment.commentText"></span>
 
-      <div class="comment-info"><span openlmis-message="label.by" ></span> By: <span ng-bind="comment.author.userName"></span> | <span class="comment-date"
+      <div class="comment-info"><span openlmis-message="label.by" ></span> <span ng-bind="comment.author.userName"></span> | <span class="comment-date"
                                                                                              ng-bind="comment.createdDate | date:'HH:mm:ss  dd/MM/yyyy'"></span>
       </div>
     </li>
