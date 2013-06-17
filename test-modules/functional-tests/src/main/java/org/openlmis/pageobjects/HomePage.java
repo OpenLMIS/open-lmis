@@ -17,6 +17,8 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
 
+import static org.openqa.selenium.support.How.ID;
+
 
 public class HomePage extends Page {
 
@@ -181,6 +183,9 @@ public class HomePage extends Page {
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
   private static WebElement errorMsg;
+
+  @FindBy(how = ID, using = "program")
+  private static WebElement selectProgramSelectBox;
 
 
   public HomePage(TestWebDriver driver) throws IOException {
@@ -397,6 +402,7 @@ public class HomePage extends Page {
      testWebDriver.keyPress(TemplateConfigTab);
      testWebDriver.waitForElementToAppear(programProductISAMenuItem);
      testWebDriver.keyPress(programProductISAMenuItem);
+    testWebDriver.waitForElementToAppear(selectProgramSelectBox);
      return new ProgramProductISAPage(testWebDriver);
   }
 

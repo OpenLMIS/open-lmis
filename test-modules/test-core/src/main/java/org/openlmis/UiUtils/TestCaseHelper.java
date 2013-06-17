@@ -131,10 +131,15 @@ public class TestCaseHelper {
     dbWrapper.insertFacilityApprovedProducts(product1, product2, program, facilityType);
   }
 
-    public void setupProgramProductTestData(String product1, String product2, String program) throws IOException, SQLException {
-        dbWrapper.insertProducts(product1, product2);
-        dbWrapper.insertProgramProducts(product1, product2, program);
-    }
+  public void setupProgramProductTestData(String product1, String product2, String program) throws IOException, SQLException {
+    dbWrapper.insertProducts(product1, product2);
+    dbWrapper.insertProgramProducts(product1, product2, program);
+  }
+
+  public void setupProgramProductTestDataWithCategories(String product, String productName, String category, String program) throws IOException, SQLException {
+    dbWrapper.insertProductWithCategory(product,productName,category);
+    dbWrapper.insertProgramProductsWithCategory(product, program);
+  }
 
   public void setupRequisitionGroupData(String RGCode1, String RGCode2, String SupervisoryNodeCode1, String SupervisoryNodeCode2, String Facility1, String Facility2) throws IOException, SQLException {
     dbWrapper.insertRequisitionGroups(RGCode1, RGCode2, SupervisoryNodeCode1, SupervisoryNodeCode2);
@@ -175,13 +180,13 @@ public class TestCaseHelper {
                                        String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                        String facilityCodeFirst, String facilityCodeSecond,
                                        String programFirst, String programSecond, String schedule) throws IOException, SQLException {
-    dbWrapper.insertDeliveryZone(deliveryZoneCodeFirst,deliveryZoneNameFirst);
-    dbWrapper.insertDeliveryZone(deliveryZoneCodeSecond,deliveryZoneNameSecond);
+    dbWrapper.insertDeliveryZone(deliveryZoneCodeFirst, deliveryZoneNameFirst);
+    dbWrapper.insertDeliveryZone(deliveryZoneCodeSecond, deliveryZoneNameSecond);
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeFirst);
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeSecond, facilityCodeSecond);
     dbWrapper.insertProcessingPeriodForDistribution(14, schedule);
-    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst,programFirst,schedule);
-    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond,programSecond,schedule);
+    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programFirst, schedule);
+    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond, programSecond, schedule);
   }
 
   public void setupTestDataToInitiateRnRForDistribution(boolean configureTemplate, String program, String user, String userId, String vendorName, List<String> rightsList, String programCode) throws IOException, SQLException {
