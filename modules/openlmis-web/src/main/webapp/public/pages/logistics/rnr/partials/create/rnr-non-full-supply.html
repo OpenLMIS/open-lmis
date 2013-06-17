@@ -8,8 +8,7 @@
 <div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.nonFullSupply">
   <div ng-switch on="errorPages.nonFullSupply.length" class="dropdown">
     <a ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
-    <a ng-switch-default class="dropdown-toggle">
-      Errors found on {{errorPages.nonFullSupply.length}} pages
+    <a ng-switch-default class="dropdown-toggle" openlmis-message="error.multiple.pages|nonFullSupplyErrorPagesCount">
     </a>
     <ul class="dropdown-menu">
       <li ng-repeat="page in errorPages.nonFullSupply">

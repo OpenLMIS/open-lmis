@@ -110,6 +110,8 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
   function setErrorPages() {
     $scope.errorPages = $scope.rnr.getErrorPages($scope.pageSize);
+    $scope.fullSupplyErrorPagesCount = $scope.errorPages.fullSupply.length;
+    $scope.nonFullSupplyErrorPagesCount = $scope.errorPages.nonFullSupply.length;
   }
 
   $scope.submitRnr = function () {

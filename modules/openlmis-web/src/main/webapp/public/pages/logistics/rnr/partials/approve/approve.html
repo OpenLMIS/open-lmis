@@ -21,9 +21,7 @@
   <div id="pageErrors" class="rnr-page-errors" ng-show="shownErrorPages">
     <div ng-switch on="shownErrorPages.length" class="dropdown">
       <a ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
-      <a ng-switch-default class="dropdown-toggle">
-        Errors found on {{shownErrorPages.length}} pages
-      </a>
+      <a ng-switch-default class="dropdown-toggle" openlmis-message="error.multiple.pages|errorPagesCount"></a>
       <ul class="dropdown-menu">
         <li ng-repeat="page in shownErrorPages">
           <a ng-click="goToPage(page, $event)">{{page}}</a>

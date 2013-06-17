@@ -44,6 +44,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
 
   function updateShownErrorPages() {
     $scope.shownErrorPages = $scope.showNonFullSupply ? $scope.errorPages.nonFullSupply : $scope.errorPages.fullSupply;
+    $scope.errorPagesCount = !isUndefined($scope.shownErrorPages) ? $scope.shownErrorPages.length : null;
   }
 
   function fillPageData() {

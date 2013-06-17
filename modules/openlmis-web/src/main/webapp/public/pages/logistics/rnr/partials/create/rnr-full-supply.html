@@ -8,9 +8,7 @@
   <div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.fullSupply">
     <div ng-switch on="errorPages.fullSupply.length" class="dropdown">
       <a ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
-      <a ng-switch-default class="dropdown-toggle">
-        Errors found on {{errorPages.fullSupply.length}} pages
-      </a>
+      <a ng-switch-default class="dropdown-toggle" openlmis-message="error.multiple.pages|fullSupplyErrorPagesCount"></a>
       <ul class="dropdown-menu">
         <li ng-repeat="page in errorPages.fullSupply">
           <a ng-click="goToPage(page, $event)">{{page}}</a>
@@ -240,7 +238,7 @@
             <select ng-disabled = "formDisabled"
                     ng-model = "lossAndAdjustment.type"
                     ng-options = "i as i.description for i in lossesAndAdjustmentTypesToDisplay" >
-              <option value = "" >--Select Type--</option >
+              <option value = "" openlmis-message="label.select.type"></option >
             </select >
           </div >
           <div class = "span3" >
