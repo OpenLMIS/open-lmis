@@ -102,7 +102,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       header:messageService.get('message.setProgramStartDate'),
       body:messageService.get('message.dateChangeConfirmMessage')
     };
-    OpenLmisDialog.newDialog(dialogOpts, $scope.dateChangeCallback, $dialog);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.dateChangeCallback, $dialog, messageService);
   };
 
   $scope.dateChangeCallback = function (result) {
@@ -157,7 +157,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       header:messageService.get('delete.facility.header'),
       body:messageService.get('delete.facility.confirm', $scope.originalFacilityName, $scope.originalFacilityCode)
     };
-    OpenLmisDialog.newDialog(dialogOpts, $scope.deleteFacilityCallBack, $dialog);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.deleteFacilityCallBack, $dialog, messageService);
   };
 
   $scope.showConfirmFacilityRestore = function () {
@@ -166,7 +166,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       header:messageService.get("create.facility.restoreFacility"),
       body:"'{0}' / '{1}' will be restored to the system.".format($scope.originalFacilityName, $scope.originalFacilityCode)
     };
-    OpenLmisDialog.newDialog(dialogOpts, $scope.restoreFacilityCallBack, $dialog);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.restoreFacilityCallBack, $dialog, messageService);
   };
 
   $scope.restoreFacilityCallBack = function (result) {
@@ -180,7 +180,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       header:messageService.get("create.facility.activateFacility"),
       body:messageService.get("create.facility.setFacilityActive")
     };
-    OpenLmisDialog.newDialog(dialogOpts, $scope.activateFacilityCallBack, $dialog);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.activateFacilityCallBack, $dialog, messageService);
   };
 
   $scope.activateFacilityCallBack = function (result) {

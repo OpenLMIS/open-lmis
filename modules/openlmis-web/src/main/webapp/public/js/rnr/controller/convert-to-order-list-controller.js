@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ConvertToOrderListController($scope, requisitionList, Orders, RequisitionForConvertToOrder, $dialog) {
+function ConvertToOrderListController($scope, requisitionList, Orders, RequisitionForConvertToOrder, $dialog, messageService) {
   $scope.requisitions = requisitionList;
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];
@@ -20,14 +20,14 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
     sortInfo:{ fields: ['submittedDate'], directions: ['asc'] },
     showFilter: false,
     columnDefs: [
-      {field: 'programName', displayName: 'Program' },
-      {field: 'facilityCode', displayName: 'Facility Code'},
-      {field: 'facilityName', displayName: "Facility Name"},
-      {field: 'periodStartDate', displayName: "Period Start Date", cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'periodEndDate', displayName: "Period End Date", cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'submittedDate', displayName: "Date Submitted", cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'modifiedDate', displayName: "Date Modified", cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'supplyingDepot', displayName: "Supplying Depot"}
+      {field: 'programName', displayName: messageService.get("program.header") },
+      {field: 'facilityCode', displayName: messageService.get("option.value.facility.code")},
+      {field: 'facilityName', displayName: messageService.get("option.value.facility.name")},
+      {field: 'periodStartDate', displayName: messageService.get("column.name.period.start.date"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'periodEndDate', displayName: messageService.get("column.name.period.end.date"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'submittedDate', displayName: messageService.get("column.name.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'modifiedDate', displayName: messageService.get("column.name.date.modified"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'supplyingDepot', displayName: messageService.get("column.name.supplying.depot")}
     ]
   };
 
@@ -52,17 +52,17 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
   showConfirmModal = function () {
     var options = {
       id: "confirmDialog",
-      header: "Confirm Action",
-      body: "Are you sure? Please confirm."
+      header:messageService.get("label.confirm.action"),
+      body:messageService.get("msg.question.confirmation")
     };
-    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog);
+    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog, messageService);
   };
 
   $scope.convertToOrder = function () {
     $scope.message = "";
     $scope.noRequisitionSelectedMessage = "";
     if ($scope.gridOptions.selectedItems.length == 0) {
-      $scope.noRequisitionSelectedMessage = "Please select at least one Requisition for Converting to Order.";
+      $scope.noRequisitionSelectedMessage = messageService.get("msg.select.atleast.one.rnr");
       return;
     }
     showConfirmModal();
@@ -76,12 +76,12 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
         $scope.filterRequisitions();
       });
 
-      $scope.message = "The requisition(s) have been successfully converted to Orders";
+      $scope.message = messageService.get("msg.rnr.converted.to.order");
       $scope.error = "";
     };
 
     var errorHandler = function () {
-      $scope.error = "Error Occurred";
+      $scope.error = messageService.get("msg.error.occurred");
     };
 
     Orders.post({}, $scope.gridOptions.selectedItems, successHandler, errorHandler);

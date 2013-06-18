@@ -16,7 +16,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService) {
         header: messageService.get("create.user.deleteAdminRoleHeader"),
         body: messageService.get("create.user.deleteAdminRoles")
       };
-      OpenLmisDialog.newDialog(dialogOpts, $scope.restoreAdminRole, $dialog);
+      OpenLmisDialog.newDialog(dialogOpts, $scope.restoreAdminRole, $dialog, messageService);
 
       window.lastAdminRoleRemoved = e.removed;
     }
@@ -40,7 +40,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService) {
       body: messageService.get("create.user.homeRoles.delete.warning")
     };
 
-    OpenLmisDialog.newDialog(dialogOpts, $scope.deleteFacilityRole, $dialog);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.deleteFacilityRole, $dialog, messageService);
     $scope.rowNum = rowNum;
     $scope.supervisorRole =  supervisoryRole ? true : false;
   };

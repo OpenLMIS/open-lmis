@@ -5,14 +5,16 @@
  */
 
 describe('ViewRnrListController', function () {
-  var scope, httpBackend, controller, facilities, rnrList, location;
+  var scope, httpBackend, controller, facilities, rnrList, location, messageService;
 
   beforeEach(module('openlmis.services'));
-  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location) {
+  beforeEach(module('openlmis.localStorage'));
+  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location, _messageService_) {
     location = $location;
     scope = $rootScope.$new();
     httpBackend = $httpBackend;
     controller = $controller;
+    messageService = _messageService_;
     facilities = [
       {"id":1}
     ];

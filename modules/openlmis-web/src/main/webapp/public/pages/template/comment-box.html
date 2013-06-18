@@ -31,7 +31,7 @@
     <div>
       <span ng-bind="250-comment.length" class="comment-length"></span>
       <span ng-show="error" openlmis-message="error"></span>
-      <input id="addButton" type="button" value="Add" ng-click="addComments()" ng-disabled="!comment.length"
+      <input id="addButton" type="button" openlmis-message="button.add" ng-click="addComments()" ng-disabled="!comment.length"
              class="btn btn-primary pull-right"/>
     </div>
 

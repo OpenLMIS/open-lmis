@@ -6,16 +6,18 @@
 
 describe('Approve Requisition controller', function () {
 
-  var scope, ctrl, httpBackend, location, routeParams, controller, requisition,
+  var scope, ctrl, httpBackend, location, routeParams, controller, requisition, messageService,
     programRnrColumnList, nonFullSupplyLineItems, lineItems, dialog, rnrLineItem;
   beforeEach(module('openlmis.services'));
+  beforeEach(module('openlmis.localStorage'));
   beforeEach(module('ui.bootstrap.dialog'));
 
-  beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, _messageService_) {
     scope = $rootScope.$new();
     location = $location;
     controller = $controller;
     httpBackend = $httpBackend;
+    messageService = _messageService_;
 //    dialog = $dialog;
     routeParams = {"rnr":"1", "program":"1"};
     lineItems = [];

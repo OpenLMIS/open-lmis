@@ -107,7 +107,7 @@ public class DeleteFacilityPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'25')]")
   private static WebElement startDateCalender;
 
-  @FindBy(how = How.ID, using = "button_OK")
+  @FindBy(how = How.ID, using = "button_Ok")
   private static WebElement startDateAlert;
 
   @FindBy(how = How.ID, using = "supported-program-add")

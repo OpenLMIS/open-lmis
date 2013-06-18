@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ApproveRnrListController($scope, requisitionList, $location) {
+function ApproveRnrListController($scope, requisitionList, $location, messageService) {
   $scope.requisitions = requisitionList;
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];
@@ -20,13 +20,13 @@ function ApproveRnrListController($scope, requisitionList, $location) {
     sortInfo:{ fields: ['submittedDate'], directions: ['asc'] },
     showFilter:false,
     columnDefs:[
-      {field:'programName', displayName:'Program' },
-      {field:'facilityCode', displayName:'Facility Code'},
-      {field:'facilityName', displayName:"Facility Name"},
-      {field:'periodStartDate', displayName:"Period Start Date", cellFilter:"date:'dd/MM/yyyy'"},
-      {field:'periodEndDate', displayName:"Period End Date", cellFilter:"date:'dd/MM/yyyy'"},
-      {field:'submittedDate', displayName:"Date Submitted", cellFilter:"date:'dd/MM/yyyy'"},
-      {field:'modifiedDate', displayName:"Date Modified", cellFilter:"date:'dd/MM/yyyy'"}
+      {field: 'programName', displayName: messageService.get("program.header") },
+      {field: 'facilityCode', displayName: messageService.get("option.value.facility.code")},
+      {field: 'facilityName', displayName: messageService.get("option.value.facility.name")},
+      {field: 'periodStartDate', displayName: messageService.get("column.name.period.start.date"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'periodEndDate', displayName: messageService.get("column.name.period.end.date"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'submittedDate', displayName: messageService.get("column.name.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'modifiedDate', displayName: messageService.get("column.name.date.modified"), cellFilter: "date:'dd/MM/yyyy'"}
     ]
   };
 

@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ViewRnrListController($scope, facilities, RequisitionsForViewing, ProgramsToViewRequisitions, $location) {
+function ViewRnrListController($scope, facilities, RequisitionsForViewing, ProgramsToViewRequisitions, $location, messageService) {
   $scope.facilities = facilities;
   $scope.facilityLabel = (!$scope.facilities.length) ? "--None Assigned--" : "--Select Facility--";
   $scope.programLabel = "--None Assigned--";
@@ -27,14 +27,14 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
     rowHeight:44,
     enableSorting:true,
     sortInfo:{ fields: ['submittedDate'], directions: ['asc'] },
-    columnDefs:[
-      {field:'programName', displayName:'Program' },
-      {field:'facilityCode', displayName:'Facility Code'},
-      {field:'facilityName', displayName:"Facility Name"},
-      {field:'periodStartDate', displayName:"Period Start Date", cellFilter:"date:'dd/MM/yyyy'"},
-      {field:'periodEndDate', displayName:"Period End Date", cellFilter:"date:'dd/MM/yyyy'"},
-      {field:'submittedDate', displayName:"Date Submitted", cellFilter:"date:'dd/MM/yyyy'"},
-      {field:'modifiedDate', displayName:"Date Modified", cellFilter:"date:'dd/MM/yyyy'"},
+    columnDefs: [
+      {field: 'programName', displayName: messageService.get("program.header") },
+      {field: 'facilityCode', displayName: messageService.get("option.value.facility.code")},
+      {field: 'facilityName', displayName: messageService.get("option.value.facility.name")},
+      {field: 'periodStartDate', displayName: messageService.get("column.name.period.start.date"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'periodEndDate', displayName: messageService.get("column.name.period.end.date"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'submittedDate', displayName: messageService.get("column.name.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'modifiedDate', displayName: messageService.get("column.name.date.modified"), cellFilter: "date:'dd/MM/yyyy'"},
       {field:'status', displayName:'Status'}
     ]
   };
