@@ -73,7 +73,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
     programProductISAPage.fillProgramProductISA("12345678", "2", "0", "4", "-50", "10");
     String formula = programProductISAPage.getISAFormulaFromISAFormulaModal();
     programProductISAPage.saveISA();
-    programProductISAPage.verifySuccessMessageDiv();
     programProductISAPage.verifyISAFormula(formula);
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
