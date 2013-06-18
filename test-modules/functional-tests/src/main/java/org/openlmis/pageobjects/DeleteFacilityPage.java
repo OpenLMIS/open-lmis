@@ -89,7 +89,7 @@ public class DeleteFacilityPage extends Page {
   @FindBy(how = How.ID, using = "code")
   private static WebElement facilityCode;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Save']")
+  @FindBy(how = How.ID, using = "save-button")
   private static WebElement SaveButton;
 
   @FindBy(how = How.ID, using = "edit-facility-header")
