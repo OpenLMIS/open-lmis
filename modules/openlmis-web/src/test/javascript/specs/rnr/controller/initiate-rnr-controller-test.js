@@ -6,17 +6,22 @@
 
 describe('InitiateRnrController', function () {
 
-  var scope, ctrl, $httpBackend, location, facilities, programs, rootScope;
+  var scope, ctrl, $httpBackend, location, facilities, programs, rootScope, messageService;
 
   beforeEach(module('openlmis.services'));
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
+  beforeEach(module('openlmis.localStorage'));
+
+  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, _messageService_) {
     scope = $rootScope.$new();
     rootScope = $rootScope;
     rootScope.hasPermission = function () {
       return true;
     };
+
     $httpBackend = _$httpBackend_;
     location = $location;
+    messageService = _messageService_;
+
     facilities = [
       {"id":"10134", "name":"National Warehouse", "description":null}
     ];
@@ -26,17 +31,6 @@ describe('InitiateRnrController', function () {
 
     ctrl = $controller(InitiateRnrController, {$scope:scope, $rootScope:rootScope});
   }));
-
-  it('should set error message if program not defined', function () {
-    scope.initRnr();
-    expect(scope.error).toEqual("Please select Facility, Program and Period to proceed");
-  });
-
-
-  it('should set error message if facility not defined', function () {
-    scope.initRnr();
-    expect(scope.error).toEqual("Please select Facility, Program and Period to proceed");
-  });
 
   it('should get existing rnr if already initiated', function () {
     scope.selectedProgram = {"code":"hiv", "id":2};
@@ -61,9 +55,14 @@ describe('InitiateRnrController', function () {
     $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights:[{right:'AUTHORIZE_REQUISITION'}]});
     $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr":{"id":1, status:"INITIATED"}});
 
+    spyOn(messageService, 'get').andCallFake(function (arg) {
+      return "Requisition not submitted yet";
+    });
+
     scope.initRnr();
     $httpBackend.flush();
 
+    expect(messageService.get).toHaveBeenCalledWith('error.requisition.not.submitted');
     expect(scope.error).toEqual("Requisition not submitted yet");
   });
 
@@ -109,18 +108,32 @@ describe('InitiateRnrController', function () {
     $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(null);
     spyOn(rootScope, 'hasPermission').andReturn(false);
 
+    spyOn(messageService, 'get').andCallFake(function (arg) {
+      return "Requisition not initiated yet";
+    });
+
     scope.initRnr();
     $httpBackend.flush();
-
+    expect(messageService.get).toHaveBeenCalledWith('error.requisition.not.initiated');
     expect(scope.error).toEqual("Requisition not initiated yet");
   });
 
   it('should set appropriate message for facility', function () {
     scope.facilities = null;
-    expect(scope.facilityOptionMessage()).toEqual('--none assigned--');
+    spyOn(messageService, 'get').andCallFake(function (arg) {
+      if (arg == 'label.none.assigned') {
+        return "--None Assigned--";
+      }
+      else {
+        return "--Select Facility--";
+      }
+    });
+    expect(scope.facilityOptionMessage()).toEqual('--None Assigned--');
+    expect(messageService.get).toHaveBeenCalledWith('label.none.assigned');
 
     scope.facilities = facilities;
-    expect(scope.facilityOptionMessage()).toEqual('--choose facility--');
+    expect(scope.facilityOptionMessage()).toEqual('--Select Facility--');
+    expect(messageService.get).toHaveBeenCalledWith('label.select.facility');
   });
 
   describe('periods', function () {
@@ -138,6 +151,10 @@ describe('InitiateRnrController', function () {
       var rnr = {"id":1, "status":"INITIATED", "period":{"id" : 1}};
       $httpBackend.expectGET('/logistics/facility/20/program/10/periods.json').respond({"periods":periods, "rnr":rnr});
 
+      spyOn(messageService, 'get').andCallFake(function (arg) {
+        return "Previous R&R pending";
+      });
+
       scope.loadPeriods();
       $httpBackend.flush();
 
@@ -146,6 +163,8 @@ describe('InitiateRnrController', function () {
         {"id":2, "name":"Second Month", "description":"Second Month Description", "rnrStatus":"Previous R&R pending"},
         {"id":3, "name":"Third Month", "description":"Third Month Description", "rnrStatus":"Previous R&R pending"}
       ]);
+
+      expect(messageService.get).toHaveBeenCalledWith('msg.rnr.previous.pending');
       expect(scope.selectedPeriod).toEqual(periods[0]);
       expect(scope.error).toEqual('');
     });
@@ -153,12 +172,16 @@ describe('InitiateRnrController', function () {
     it('should display appropriate message if no periods found for selected facility and program', function () {
       $httpBackend.expectGET('/logistics/facility/20/program/10/periods.json').respond({"periods":[], "rnr":undefined});
 
+      spyOn(messageService, 'get').andCallFake(function (arg) {
+        return "No period(s) available";
+      });
       scope.loadPeriods();
       $httpBackend.flush();
 
       expect(scope.periodGridData).toEqual([
         {"name":"No period(s) available"}
       ]);
+      expect(messageService.get).toHaveBeenCalledWith('msg.no.period.available');
       expect(scope.selectedPeriod).toEqual(null);
       expect(scope.error).toEqual('');
     });

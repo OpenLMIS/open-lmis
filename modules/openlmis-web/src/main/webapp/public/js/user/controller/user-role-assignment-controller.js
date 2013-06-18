@@ -67,7 +67,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService) {
       program.program.status = program.program.active ? messageService.get('label.active') : messageService.get('label.inactive');
     });
 
-    $scope.selectedProgramMessage = (programsToDisplay.length) ? messageService.get('label.selectProgram') : messageService.get('label.noProgramLeft') ;
+    $scope.selectedProgramMessage = (programsToDisplay.length) ? messageService.get('label.select.program') : messageService.get('label.noProgramLeft') ;
 
     return programsToDisplay;
   };

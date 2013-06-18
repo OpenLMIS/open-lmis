@@ -72,7 +72,8 @@ public class UserControllerTest {
     httpServletRequest = new MockHttpServletRequest();
     session = new MockHttpSession();
     httpServletRequest.setSession(session);
-    userController.setBaseUrl(baseUrl);
+    userController = new UserController(roleRightService, userService, baseUrl);
+    userController.setMessageService(messageService);
   }
 
   @Test
