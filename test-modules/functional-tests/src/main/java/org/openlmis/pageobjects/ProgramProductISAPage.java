@@ -76,6 +76,9 @@ public class ProgramProductISAPage extends Page {
   @FindBy(how = ID, using = "saveFailMessage")
   private static WebElement saveFailMessage;
 
+  @FindBy(how = ID, using = "searchProduct")
+  private static WebElement searchProduct;
+
   @FindBy(how = XPATH, using = "(//div[@id='programProductFormula'])[1]")
   private static WebElement ISAFormulaFromConfigureProgramISAModalWindow;
 
@@ -87,6 +90,11 @@ public class ProgramProductISAPage extends Page {
 
   @FindBy(how = XPATH, using = "//div[contains(text(),'Please enter numeric value')]")
   private static WebElement pleaseEnterNumericValueError;
+
+  @FindBy(how = ID, using = "productPrimaryName")
+  private static WebElement productPrimaryName;
+
+
 
 
   public ProgramProductISAPage(TestWebDriver driver) throws IOException {
@@ -230,6 +238,13 @@ public class ProgramProductISAPage extends Page {
   }
 
   public void searchProduct(String product) {
+    testWebDriver.waitForElementToAppear(searchProduct);
     searchProductTextBox.sendKeys(product);
   }
+
+  public void verifySearchResults(String product) {
+    testWebDriver.waitForElementToAppear(productPrimaryName);
+    assertTrue("Product "+product+" should be displayed as a search Result",productPrimaryName.isDisplayed());
+  }
+
 }

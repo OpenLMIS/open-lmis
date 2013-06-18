@@ -78,6 +78,16 @@ public class ManageProgramProductISA extends TestCaseHelper {
     homePage.navigateHomePage();
   }
 
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Search")
+  public void testSearchBox(String userSIC, String password, String program, String productName) throws Exception {
+    ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage(userSIC, password);
+    programProductISAPage.selectProgram(program);
+    programProductISAPage.searchProduct(productName);
+    programProductISAPage.verifySearchResults(productName);
+    HomePage homePage = new HomePage(testWebDriver);
+    homePage.navigateHomePage();
+  }
+
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Verify-Push-Type-Program")
   public void testPushTypeProgramsInDropDown(String userSIC, String password, String program1, String program2) throws Exception {
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage(userSIC, password);
@@ -152,6 +162,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     return programProductISAPage;
   }
 
+
   private ProgramProductISAPage navigateConfigureProductISAPage(String userSIC, String password) throws IOException {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -199,6 +210,14 @@ public class ManageProgramProductISA extends TestCaseHelper {
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
       {"Admin123", "Admin123", "VACCINES"}
+    };
+
+  }
+
+  @DataProvider(name = "Data-Provider-Function-Search")
+  public Object[][] parameterIntTestSearch() {
+    return new Object[][]{
+      {"Admin123", "Admin123","VACCINES","antibiotic1"}
     };
 
   }
