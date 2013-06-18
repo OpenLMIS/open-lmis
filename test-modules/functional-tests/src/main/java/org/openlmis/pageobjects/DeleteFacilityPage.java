@@ -30,7 +30,7 @@ public class DeleteFacilityPage extends Page {
   @FindBy(how = How.LINK_TEXT, using = "Delete")
   private static WebElement deleteButton;
 
-  @FindBy(how = How.LINK_TEXT, using = "OK")
+  @FindBy(how = How.LINK_TEXT, using = "Ok")
   private static WebElement okButton;
 
   @FindBy(how = How.XPATH, using = "//div[@id='deleteFacilityDialog']/div[@class='modal-body']/p")
@@ -64,7 +64,7 @@ public class DeleteFacilityPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='restoreConfirmModal']/div[@class='modal-body']/p")
   private static WebElement restoreMessageOnAlert;
 
-  @FindBy(how = How.LINK_TEXT, using = "OK")
+  @FindBy(how = How.LINK_TEXT, using = "Ok")
   private static WebElement okLink;
 
   @FindBy(how = How.XPATH, using = " //div[@id='activeConfirmModel']/div[@class='modal-body']/p")
