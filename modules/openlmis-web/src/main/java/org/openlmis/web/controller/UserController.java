@@ -11,13 +11,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
-import org.openlmis.db.service.DbService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -79,7 +76,7 @@ public class UserController extends BaseController {
     try {
       String resetPasswordLink = baseUrl + RESET_PASSWORD_PATH;
       userService.sendForgotPasswordEmail(user, resetPasswordLink);
-      return success("Email sent");
+      return success(messageService.message("email.sent"));
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
@@ -96,8 +93,7 @@ public class UserController extends BaseController {
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
-    successResponse = success(String.format("User '%s %s' has been successfully created, password link has been sent on registered Email address",
-      user.getFirstName(), user.getLastName()));
+    successResponse = success(messageService.message("message.user.created.success.email.sent", user.getFirstName(), user.getLastName()));
     successResponse.getBody().addData("user", user);
     return successResponse;
   }
@@ -115,7 +111,7 @@ public class UserController extends BaseController {
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
-    successResponse = success("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully updated");
+    successResponse = success(messageService.message("message.user.updated.success", user.getFirstName(), user.getLastName()));
     successResponse.getBody().addData("user", user);
     return successResponse;
   }
@@ -149,7 +145,7 @@ public class UserController extends BaseController {
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
-    return success("Password Reset");
+    return success(messageService.message("password.reset"));
   }
 
 }

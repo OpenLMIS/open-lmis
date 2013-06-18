@@ -77,7 +77,8 @@ public class ProcessingScheduleController extends BaseController {
       ResponseEntity<OpenLmisResponse> response;
       if (createOperation) {
         response = success(messageService.message("message.schedule.created.success", savedSchedule.getName()));
-      } else { response = success(messageService.message("message.schedule.updated.success", savedSchedule.getName()));
+      } else {
+        response = success(messageService.message("message.schedule.updated.success", savedSchedule.getName()));
       }
       response.getBody().addData(SCHEDULE, savedSchedule);
       return response;
