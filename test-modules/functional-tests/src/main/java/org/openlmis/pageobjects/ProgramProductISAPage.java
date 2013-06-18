@@ -172,6 +172,7 @@ public class ProgramProductISAPage extends Page {
   }
 
   public void verifyISAFormula(String ISAFormula) {
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(ISAFormulaFromConfigureProgramISAModalWindow);
     String formulaConfigureProgramWindow = ISAFormulaFromConfigureProgramISAModalWindow.getText();
     assertEquals(ISAFormula, formulaConfigureProgramWindow);
