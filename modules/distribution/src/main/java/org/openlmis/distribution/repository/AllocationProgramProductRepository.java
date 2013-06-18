@@ -6,7 +6,9 @@
 
 package org.openlmis.distribution.repository;
 
+import org.openlmis.distribution.domain.AllocationProgramProduct;
 import org.openlmis.distribution.domain.ProgramProductISA;
+import org.openlmis.distribution.repository.mapper.FacilityProgramProductMapper;
 import org.openlmis.distribution.repository.mapper.IsaMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -16,6 +18,9 @@ public class AllocationProgramProductRepository {
 
   @Autowired
   IsaMapper isaMapper;
+
+  @Autowired
+  FacilityProgramProductMapper mapper;
 
   public void insertISA(ProgramProductISA programProductISA) {
     isaMapper.insert(programProductISA);
@@ -27,5 +32,21 @@ public class AllocationProgramProductRepository {
 
   public ProgramProductISA getIsa(Long id) {
     return isaMapper.getIsa(id);
+  }
+
+  public AllocationProgramProduct getByProgramProductId(Long programProductId) {
+    ProgramProductISA isa = isaMapper.getIsa(programProductId);
+    AllocationProgramProduct allocationProgramProduct = new AllocationProgramProduct();
+    allocationProgramProduct.setProgramProductIsa(isa);
+    return allocationProgramProduct;
+  }
+
+  public Integer getOverriddenIsa(Long programProductId, Long facilityId) {
+    return mapper.getOverriddenIsa(programProductId, facilityId);
+  }
+
+  public void save(AllocationProgramProduct product) {
+    mapper.removeFacilityProgramProductMapping(product.getFacilityId(), product.getProgramProductId());
+    mapper.insert(product);
   }
 }

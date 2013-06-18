@@ -4,12 +4,11 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-services.factory('navigateBackService', function() {
-   var navigateBack = {};
+package org.openlmis.distribution.controller;
 
-   navigateBack.setData = function(data) {
-    $.extend(navigateBack,  data)
-   };
+import org.openlmis.distribution.domain.AllocationProgramProduct;
 
-   return navigateBack;
-});
+import java.util.ArrayList;
+
+public class AllocationProgramProductList extends ArrayList<AllocationProgramProduct>{
+}

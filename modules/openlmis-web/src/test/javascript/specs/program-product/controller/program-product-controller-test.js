@@ -29,7 +29,7 @@ describe('program product controller', function () {
 
   it('should get program products', function () {
     scope.programId = 1;
-    $httpBackend.expectGET('/programProducts/programId/1.json').respond(200, {"PROGRAM_PRODUCT_LIST": programProducts});
+    $httpBackend.expectGET('/programProducts/programId/1.json').respond(200, {"programProductList": programProducts});
     scope.loadProgramProducts();
     $httpBackend.flush();
     expect(scope.programProducts).toEqual(programProducts);
@@ -77,10 +77,10 @@ describe('program product controller', function () {
   });
 
   it("should update program product ISA if id already exists", function () {
-    var programProductISA = {"id": 1, "whoRatio": 4, "dosesPerYear": 5, "bufferPercentage": 6, "adjustmentValue": 55};
-    scope.currentProgramProduct = {"id": 1, "programProductISA": programProductISA};
+    var programProductIsa = {"id": 1, "whoRatio": 4, "dosesPerYear": 5, "bufferPercentage": 6, "adjustmentValue": 55};
+    scope.currentProgramProduct = {"id": 1, "programProductIsa": programProductIsa};
 
-    $httpBackend.expect('PUT','/programProducts/1/isa/1.json', programProductISA).respond(200);
+    $httpBackend.expect('PUT','/programProducts/1/isa/1.json', programProductIsa).respond(200);
 
     scope.saveProductISA();
     $httpBackend.flush();
@@ -90,10 +90,10 @@ describe('program product controller', function () {
   });
 
   it("should save program product ISA if id does not exist", function () {
-    var programProductISA = {"whoRatio": 4, "dosesPerYear": 5, "bufferPercentage": 6, "adjustmentValue": 55};
-    scope.currentProgramProduct = {"id": 1, "programProductISA": programProductISA};
+    var programProductIsa = {"whoRatio": 4, "dosesPerYear": 5, "bufferPercentage": 6, "adjustmentValue": 55};
+    scope.currentProgramProduct = {"id": 1, "programProductIsa": programProductIsa};
 
-    $httpBackend.expect('POST','/programProducts/1/isa.json', programProductISA).respond(200);
+    $httpBackend.expect('POST','/programProducts/1/isa.json', programProductIsa).respond(200);
 
     scope.saveProductISA();
     $httpBackend.flush();
@@ -113,49 +113,49 @@ describe('program product controller', function () {
   });
 
   it("should return true if all fields are entered for the formula", function () {
-    var programProductISA = {"whoRatio": 2, "dosesPerYear": 23, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
-    var returnValue = scope.isPresent(programProductISA);
+    var programProductIsa = {"whoRatio": 2, "dosesPerYear": 23, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
+    var returnValue = scope.isPresent(programProductIsa);
     expect(returnValue).toBeTruthy();
   });
 
   it("should return false if atleast one field is not entered for the formula", function () {
-    var programProductISA = {"whoRatio": 2, "dosesPerYear": undefined, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
-    var returnValue = scope.isPresent(programProductISA);
+    var programProductIsa = {"whoRatio": 2, "dosesPerYear": undefined, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
+    var returnValue = scope.isPresent(programProductIsa);
     expect(returnValue).toBeFalsy();
   });
 
 
- it("should return correct formula when programProductISA and its properties are properly defined",function(){
-   var programProductISA = {"whoRatio": 2, "dosesPerYear": 1, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
-   var formula = scope.getFormula(programProductISA);
+ it("should return correct formula when programProductIsa and its properties are properly defined",function(){
+   var programProductIsa = {"whoRatio": 2, "dosesPerYear": 1, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
+   var formula = scope.getFormula(programProductIsa);
    expect(formula).toEqual("(population) * 2 * 1 * 47 / 12 * 45 + 6");
  })
 
 
-  it("should return blank formula when programProductISA is not properly defined ",function(){
+  it("should return blank formula when programProductIsa is not properly defined ",function(){
     spyOn(scope,"isPresent").andReturn(Boolean.false);
     var formula = scope.getFormula(undefined);
     expect(formula).toEqual(undefined);
   });
 
   it("should return calculated value based on formula",function(){
-    var programProductISA = {"whoRatio": 2, "dosesPerYear": 1, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
+    var programProductIsa = {"whoRatio": 2, "dosesPerYear": 1, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
     scope.population = 2;
-    programProductISA.minimumValue = 2;
+    programProductIsa.minimumValue = 2;
 
-    var value = scope.population * programProductISA.whoRatio * programProductISA.dosesPerYear *
-        programProductISA.wastageRate / 12 * programProductISA.bufferPercentage + programProductISA.adjustmentValue;
+    var value = scope.population * programProductIsa.whoRatio * programProductIsa.dosesPerYear *
+        programProductIsa.wastageRate / 12 * programProductIsa.bufferPercentage + programProductIsa.adjustmentValue;
 
-    scope.calculateValue(programProductISA);
+    scope.calculateValue(programProductIsa);
 
     expect(scope.isaValue).toEqual(Math.ceil(value));
   });
 
   it("should not return calculated value if population is undefined", function () {
-    var programProductISA = {"whoRatio": 2, "dosesPerYear": 1, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
-    programProductISA.minimumValue = 2;
+    var programProductIsa = {"whoRatio": 2, "dosesPerYear": 1, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
+    programProductIsa.minimumValue = 2;
 
-    scope.calculateValue(programProductISA);
+    scope.calculateValue(programProductIsa);
 
     expect(scope.isaValue).toEqual(0);
   });

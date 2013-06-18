@@ -16,6 +16,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.distribution.controller.AllocationProgramProductList;
 import org.openlmis.distribution.domain.AllocationProgramProduct;
 import org.openlmis.distribution.domain.ProgramProductISA;
 import org.openlmis.distribution.repository.AllocationProgramProductRepository;
@@ -25,7 +26,6 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
@@ -67,16 +67,79 @@ public class AllocationProgramProductServiceTest {
       add(programProduct2);
     }};
     when(programProductService.getByProgram(new Program(1l))).thenReturn(products);
-    ProgramProductISA isa1 = new ProgramProductISA();
-    when(repository.getIsa(1l)).thenReturn(isa1);
-    ProgramProductISA isa2 = new ProgramProductISA();
-    when(repository.getIsa(2l)).thenReturn(isa2);
+
+    AllocationProgramProduct allocationProduct1 = spy(new AllocationProgramProduct());
+    allocationProduct1.setId(1l);
+    when(repository.getByProgramProductId(programProduct.getId())).thenReturn(allocationProduct1);
+
+    AllocationProgramProduct allocationProduct2 = spy(new AllocationProgramProduct());
+    allocationProduct1.setId(2l);
+    when(repository.getByProgramProductId(programProduct2.getId())).thenReturn(allocationProduct2);
 
     List<AllocationProgramProduct> returnedProducts = service.get(1l);
 
-    assertThat(returnedProducts.get(0).getProgramProductISA(), is(isa1));
-    assertThat(returnedProducts.get(1).getProgramProductISA(), is(isa2));
+    assertThat(returnedProducts.get(0), is(allocationProduct1));
+    assertThat(returnedProducts.get(1), is(allocationProduct2));
     verify(programProductService).getByProgram(new Program(1l));
-    verify(repository, times(2)).getIsa(anyLong());
+    verify(allocationProduct1).fillFrom(programProduct);
+    verify(allocationProduct2).fillFrom(programProduct2);
+    verify(repository).getByProgramProductId(programProduct.getId());
+    verify(repository).getByProgramProductId(programProduct2.getId());
+  }
+
+  @Test
+  public void shouldGetProductsFilledWithIsaForAFacility() throws Exception {
+    long facilityId = 2l;
+    final ProgramProduct programProduct = new ProgramProduct();
+    programProduct.setId(1l);
+    final ProgramProduct programProduct2 = new ProgramProduct();
+    programProduct2.setId(2l);
+
+    List<ProgramProduct> products = new ArrayList<ProgramProduct>() {{
+      add(programProduct);
+      add(programProduct2);
+    }};
+    when(programProductService.getByProgram(new Program(1l))).thenReturn(products);
+
+    AllocationProgramProduct allocationProduct1 = spy(new AllocationProgramProduct());
+    allocationProduct1.setId(1l);
+    when(repository.getByProgramProductId(programProduct.getId())).thenReturn(allocationProduct1);
+    when(repository.getOverriddenIsa(programProduct.getId(), facilityId)).thenReturn(34);
+
+    AllocationProgramProduct allocationProduct2 = spy(new AllocationProgramProduct());
+    allocationProduct1.setId(2l);
+    when(repository.getByProgramProductId(programProduct2.getId())).thenReturn(allocationProduct2);
+    when(repository.getOverriddenIsa(programProduct2.getId(), facilityId)).thenReturn(44);
+
+    List<AllocationProgramProduct> returnedProducts = service.getForProgramAndFacility(1l, facilityId);
+
+    assertThat(returnedProducts.get(0), is(allocationProduct1));
+    assertThat(returnedProducts.get(0).getOverriddenIsa(), is(34));
+
+    assertThat(returnedProducts.get(1), is(allocationProduct2));
+    assertThat(returnedProducts.get(1).getOverriddenIsa(), is(44));
+
+    verify(programProductService).getByProgram(new Program(1l));
+    verify(allocationProduct1).fillFrom(programProduct);
+    verify(allocationProduct2).fillFrom(programProduct2);
+    verify(repository).getOverriddenIsa(programProduct.getId(), facilityId);
+    verify(repository).getOverriddenIsa(programProduct2.getId(), facilityId);
+  }
+
+  @Test
+  public void shouldSaveAllocationProgramProductList() throws Exception {
+    final AllocationProgramProduct allocationProduct1 = spy(new AllocationProgramProduct());
+    allocationProduct1.setId(1l);
+    final AllocationProgramProduct allocationProduct2 = spy(new AllocationProgramProduct());
+    allocationProduct1.setId(2l);
+    AllocationProgramProductList allocationProgramProducts = new AllocationProgramProductList() {{
+      add(allocationProduct1);
+      add(allocationProduct2);
+    }};
+
+    service.saveOverriddenIsa(1l, 2l, allocationProgramProducts);
+
+    verify(repository).save(allocationProduct1);
+    verify(repository).save(allocationProduct2);
   }
 }

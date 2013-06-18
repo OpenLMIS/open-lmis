@@ -13,8 +13,8 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
   $scope.loadProgramProducts = function () {
     if ($scope.programId) {
       ProgramProducts.get({programId:$scope.programId}, function (data) {
-        $scope.programProducts = data.PROGRAM_PRODUCT_LIST;
-        $scope.filteredProducts = data.PROGRAM_PRODUCT_LIST;
+        $scope.programProducts = data.programProductList;
+        $scope.filteredProducts = data.programProductList;
         $scope.assignFormula($scope.filteredProducts);
       }, {});
     }
@@ -22,7 +22,7 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
 
   $scope.assignFormula = function (list) {
     $.each(list, function (index, programProduct) {
-      programProduct.formula = $scope.getFormula(programProduct.programProductISA);
+      programProduct.formula = $scope.getFormula(programProduct.programProductIsa);
     });
   }
 
@@ -63,7 +63,7 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
 
   $scope.$watch('currentProgramProduct', function () {
     if ($scope.currentProgramProduct) {
-      $scope.calculateValue($scope.currentProgramProduct.programProductISA);
+      $scope.calculateValue($scope.currentProgramProduct.programProductIsa);
     }
   }, true);
 
@@ -74,11 +74,11 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
       $scope.message = "";
     } else {
       $scope.inputClass = false;
-      if ($scope.currentProgramProduct.programProductISA.id)
-        ProgramProductsISA.update({programProductId:$scope.currentProgramProduct.id, isaId:$scope.currentProgramProduct.programProductISA.id},
-          $scope.currentProgramProduct.programProductISA, successCallBack, {});
+      if ($scope.currentProgramProduct.programProductIsa.id)
+        ProgramProductsISA.update({programProductId:$scope.currentProgramProduct.id, isaId:$scope.currentProgramProduct.programProductIsa.id},
+          $scope.currentProgramProduct.programProductIsa, successCallBack, {});
       else
-        ProgramProductsISA.save({programProductId:$scope.currentProgramProduct.id}, $scope.currentProgramProduct.programProductISA, successCallBack, {});
+        ProgramProductsISA.save({programProductId:$scope.currentProgramProduct.id}, $scope.currentProgramProduct.programProductIsa, successCallBack, {});
     }
   };
 
@@ -101,26 +101,26 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
   }
 
 
-  $scope.isPresent = function (programProductISA) {
-    var present = programProductISA && isDefined(programProductISA.whoRatio) && isDefined(programProductISA.dosesPerYear) &&
-      isDefined(programProductISA.wastageRate) && isDefined(programProductISA.bufferPercentage) &&
-      isDefined(programProductISA.adjustmentValue);
+  $scope.isPresent = function (programProductIsa) {
+    var present = programProductIsa && isDefined(programProductIsa.whoRatio) && isDefined(programProductIsa.dosesPerYear) &&
+      isDefined(programProductIsa.wastageRate) && isDefined(programProductIsa.bufferPercentage) &&
+      isDefined(programProductIsa.adjustmentValue);
     if (present) $scope.error = null;
     return present;
   };
 
-  $scope.getFormula = function (programProductISA) {
-    if ($scope.isPresent(programProductISA)) {
-      var adjustmentVal = parseInt(programProductISA.adjustmentValue) > 0 ? programProductISA.adjustmentValue : "(" + programProductISA.adjustmentValue + ")";
-      return "(population) * " + programProductISA.whoRatio + " * " + programProductISA.dosesPerYear + " * "
-        + programProductISA.wastageRate + " / 12 * " + programProductISA.bufferPercentage + " + " + adjustmentVal;
+  $scope.getFormula = function (programProductIsa) {
+    if ($scope.isPresent(programProductIsa)) {
+      var adjustmentVal = parseInt(programProductIsa.adjustmentValue) > 0 ? programProductIsa.adjustmentValue : "(" + programProductIsa.adjustmentValue + ")";
+      return "(population) * " + programProductIsa.whoRatio + " * " + programProductIsa.dosesPerYear + " * "
+        + programProductIsa.wastageRate + " / 12 * " + programProductIsa.bufferPercentage + " + " + adjustmentVal;
     }
   };
 
-  $scope.calculateValue = function (programProductISA) {
-    if ($scope.isPresent(programProductISA) && $scope.population) {
-      $scope.isaValue = parseInt($scope.population) * parseInt(programProductISA.whoRatio) * parseInt(programProductISA.dosesPerYear) *
-        parseInt(programProductISA.wastageRate) / 12 * parseInt(programProductISA.bufferPercentage) + parseInt(programProductISA.adjustmentValue);
+  $scope.calculateValue = function (programProductIsa) {
+    if ($scope.isPresent(programProductIsa) && $scope.population) {
+      $scope.isaValue = parseInt($scope.population) * parseInt(programProductIsa.whoRatio) * parseInt(programProductIsa.dosesPerYear) *
+        parseInt(programProductIsa.wastageRate) / 12 * parseInt(programProductIsa.bufferPercentage) + parseInt(programProductIsa.adjustmentValue);
       $scope.isaValue = Math.ceil($scope.isaValue);
     } else {
       $scope.isaValue = 0;

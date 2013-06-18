@@ -6,17 +6,22 @@
 
 package org.openlmis.distribution.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProgramProduct;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class AllocationProgramProduct extends ProgramProduct {
+  Long programProductId;
 
-  public AllocationProgramProduct(ProgramProduct programProduct) {
-    super(programProduct);
-  }
+  Long facilityId;
 
-  ProgramProductISA programProductISA;
+  Integer overriddenIsa;
+
+  ProgramProductISA programProductIsa;
 }

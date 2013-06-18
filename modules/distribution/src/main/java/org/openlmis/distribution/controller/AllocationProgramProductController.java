@@ -28,7 +28,7 @@ public class AllocationProgramProductController extends BaseController {
   @Autowired
   private AllocationProgramProductService service;
 
-  public static final String PROGRAM_PRODUCT_LIST = "PROGRAM_PRODUCT_LIST";
+  public static final String PROGRAM_PRODUCT_LIST = "programProductList";
 
   @RequestMapping(value = "/programProducts/programId/{programId}", method = GET, headers = BaseController.ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
@@ -47,9 +47,18 @@ public class AllocationProgramProductController extends BaseController {
 
   @RequestMapping(value = "/programProducts/{programProductId}/isa/{isaId}", method = PUT, headers = BaseController.ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-  public void updateIsa(@PathVariable Long isaId, @RequestBody ProgramProductISA programProductISA) {
+  public void updateIsa(@PathVariable Long isaId,@PathVariable Long programProductId,  @RequestBody ProgramProductISA programProductISA) {
     programProductISA.setId(isaId);
+    programProductISA.setProgramProductId(programProductId);
     service.updateISA(programProductISA);
   }
+
+  @RequestMapping(value = "/facility/{facilityId}/programProduct/{programProductId}/isa", method = POST, headers = BaseController.ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
+  public void overrideIsa(@PathVariable Long facilityId, @PathVariable Long programProductId, @RequestBody AllocationProgramProductList products) {
+    service.saveOverriddenIsa(facilityId, programProductId, products);
+  }
+
+
 }
 

@@ -71,10 +71,10 @@
             </div>
             <div class="span4">
               <input id="who-ratio" name="whoRatio" type="text" ng-required="true"
-                     ng-model="currentProgramProduct.programProductISA.whoRatio"
+                     ng-model="currentProgramProduct.programProductIsa.whoRatio"
                      maxlength="8"
                      numeric-validator="positiveInteger"
-                     ng-class="highlightRequired(currentProgramProduct.programProductISA.whoRatio)"/>
+                     ng-class="highlightRequired(currentProgramProduct.programProductIsa.whoRatio)"/>
 
               <div id="whoRatio" class="form-error" openlmis-message="error.enter.numeric.value"></div>
             </div>
@@ -86,10 +86,10 @@
             </div>
             <div class="span4">
               <input id="doses-per-year" name="dosesPerYear" type="text" ng-required="true"
-                     ng-model="currentProgramProduct.programProductISA.dosesPerYear"
+                     ng-model="currentProgramProduct.programProductIsa.dosesPerYear"
                      numeric-validator="positiveInteger"
                      maxlength="6"
-                     ng-class="highlightRequired(currentProgramProduct.programProductISA.dosesPerYear)"/>
+                     ng-class="highlightRequired(currentProgramProduct.programProductIsa.dosesPerYear)"/>
 
               <div id="dosesPerYear" class="form-error" openlmis-message="error.enter.numeric.value"></div>
             </div>
@@ -101,10 +101,10 @@
             </div>
             <div class="span4">
               <input id="wastage-rate" name="wastageRate" type="text" ng-required="true"
-                     ng-model="currentProgramProduct.programProductISA.wastageRate"
+                     ng-model="currentProgramProduct.programProductIsa.wastageRate"
                      numeric-validator="positiveInteger"
                      maxlength="8"
-                     ng-class="highlightRequired(currentProgramProduct.programProductISA.wastageRate)"/>
+                     ng-class="highlightRequired(currentProgramProduct.programProductIsa.wastageRate)"/>
 
               <div id="wastageRate" class="form-error" openlmis-message="error.enter.numeric.value"></div>
             </div>
@@ -116,10 +116,10 @@
             </div>
             <div class="span4">
               <input id="buffer-percentage" name="bufferPercentage" type="text" ng-required="true"
-                     ng-model="currentProgramProduct.programProductISA.bufferPercentage"
+                     ng-model="currentProgramProduct.programProductIsa.bufferPercentage"
                      numeric-validator="positiveInteger"
                      maxlength="8"
-                     ng-class="highlightRequired(currentProgramProduct.programProductISA.bufferPercentage)"/>
+                     ng-class="highlightRequired(currentProgramProduct.programProductIsa.bufferPercentage)"/>
 
               <div id="bufferPercentage" class="form-error" openlmis-message="error.enter.numeric.value"></div>
             </div>
@@ -131,38 +131,22 @@
             </div>
             <div class="span4">
               <input id="adjustment-value" name="adjustmentValue" type="text" ng-required="true"
-                     ng-model="currentProgramProduct.programProductISA.adjustmentValue"
+                     ng-model="currentProgramProduct.programProductIsa.adjustmentValue"
                      numeric-validator="integer"
                      maxlength="6"
-                     ng-class="highlightRequired(currentProgramProduct.programProductISA.adjustmentValue)"/>
+                     ng-class="highlightRequired(currentProgramProduct.programProductIsa.adjustmentValue)"/>
 
               <div id="adjustmentValue" class="form-error" openlmis-message="error.enter.numeric.value"></div>
             </div>
           </div>
         </div>
 
-        <!--<div class="ISAFormulaModalSubContent">
-          <h5 openlmis-message="label.isa.formula.modal.minimum.value"></h5>
-
-          <div class="row-fluid">
-            <div class="span6">
-              <label for="minimum-value" openlmis-message="label.isa.minimum.value"></label>
-            </div>
-            <div class="span4">
-              <input id="minimum-value" name="minimumValue" type="text"
-                     ng-model="currentProgramProduct.programProductISA.minimumValue"
-                     numeric-validator="positiveInteger"/>
-
-              <div id="minimumValue" class="form-error" openlmis-message="error.enter.numeric.value"></div>
-            </div>
-          </div>
-        </div>-->
       </form>
       <div class="row-fluid">
         <div id="monthlyRestockAmount" class="calculatedAmount"
-             ng-show="isPresent(currentProgramProduct.programProductISA)">
+             ng-show="isPresent(currentProgramProduct.programProductIsa)">
           <span openlmis-message="label.isa.monthly.restock.amount"></span>
-          <span ng-bind="getFormula(currentProgramProduct.programProductISA)"></span>
+          <span ng-bind="getFormula(currentProgramProduct.programProductIsa)"></span>
         </div>
       </div>
 
@@ -171,7 +155,7 @@
           <span openlmis-message="label.isa.population.of"></span>
           <input type="text" ng-model="population" name="population"
                  numeric-validator="positiveInteger"
-                 ng-change="calculateValue(currentProgramProduct.programProductISA)"/>
+                 ng-change="calculateValue(currentProgramProduct.programProductIsa)"/>
           <span openlmis-message="label.isa.will.need"></span>
           <span ng-bind="isaValue"></span>
           <span openlmis-message="label.isa.doses.of"></span>

@@ -6,9 +6,11 @@
 
 package org.openlmis.distribution.service;
 
+import org.apache.commons.collections.Closure;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.service.ProgramProductService;
+import org.openlmis.distribution.controller.AllocationProgramProductList;
 import org.openlmis.distribution.domain.AllocationProgramProduct;
 import org.openlmis.distribution.domain.ProgramProductISA;
 import org.openlmis.distribution.repository.AllocationProgramProductRepository;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.apache.commons.collections.CollectionUtils.forAllDo;
 
 @Service
 public class AllocationProgramProductService {
@@ -29,20 +33,58 @@ public class AllocationProgramProductService {
 
   public List<AllocationProgramProduct> get(Long programId) {
     List<ProgramProduct> programProducts = programProductService.getByProgram(new Program(programId));
-    List<AllocationProgramProduct> allocationProgramProducts = new ArrayList<>();
-    for (ProgramProduct programProduct : programProducts) {
-      AllocationProgramProduct allocationProgramProduct = new AllocationProgramProduct(programProduct);
-      allocationProgramProduct.setProgramProductISA(repository.getIsa(allocationProgramProduct.getId()));
-      allocationProgramProducts.add(allocationProgramProduct);
-    }
+    final List<AllocationProgramProduct> allocationProgramProducts = new ArrayList<>();
+    forAllDo(programProducts, new Closure() {
+      @Override
+      public void execute(Object o) {
+        allocationProgramProducts.add(getAllocationProduct((ProgramProduct) o));
+      }
+    });
     return allocationProgramProducts;
+  }
+
+  public List<AllocationProgramProduct> getForProgramAndFacility(Long programId, final Long facilityId) {
+    List<ProgramProduct> programProducts = programProductService.getByProgram(new Program(programId));
+    final List<AllocationProgramProduct> allocationProgramProducts = new ArrayList<>();
+    forAllDo(programProducts, new Closure() {
+      @Override
+      public void execute(Object o) {
+        allocationProgramProducts.add(getAllocationProduct((ProgramProduct) o, facilityId));
+      }
+    });
+    return allocationProgramProducts;
+  }
+
+  private AllocationProgramProduct getAllocationProduct(ProgramProduct programProduct) {
+    AllocationProgramProduct allocationProgramProduct = repository.getByProgramProductId(programProduct.getId());
+    allocationProgramProduct.fillFrom(programProduct);
+    return allocationProgramProduct;
+  }
+
+  private AllocationProgramProduct getAllocationProduct(ProgramProduct programProduct, Long facilityId) {
+    AllocationProgramProduct allocationProgramProduct = getAllocationProduct(programProduct);
+    allocationProgramProduct.setOverriddenIsa(repository.getOverriddenIsa(programProduct.getId(), facilityId));
+    return allocationProgramProduct;
   }
 
   public void insertISA(ProgramProductISA isa) {
     repository.insertISA(isa);
   }
 
+
   public void updateISA(ProgramProductISA isa) {
     repository.updateISA(isa);
+  }
+
+  public void saveOverriddenIsa(final Long facilityId, final Long programProductId, AllocationProgramProductList products) {
+    forAllDo(products, new Closure() {
+      @Override
+      public void execute(Object o) {
+        AllocationProgramProduct product = (AllocationProgramProduct) o;
+        product.setFacilityId(facilityId);
+        product.setProgramProductId(programProductId);
+        repository.save(product);
+      }
+    });
   }
 }

@@ -47,7 +47,7 @@
       <label for="name" openlmis-message="create.facility.name"></label>
 
       <div class="form-field">
-        <input ng-model="facility.name" name="name" id="name" type="text" maxlength="50" ng:required="true"
+        <input ng-model="facility.name" name="name" id="name" type="text" maxlength="50" ng-required="true"
                ng-disabled="facility.dataReportable == 'false'"/>
         <span class="field-error" ng-show="facilityForm.name.$error.required && showError"
               openlmis-message="missing.value">
@@ -61,7 +61,7 @@
 
       <div class="form-field">
         <select name="facilityType" id="facility-type" ng-model="facility.facilityType.code"
-                ng-options="i.code as i.name for i in facilityTypes" ng:required="true"
+                ng-options="i.code as i.name for i in facilityTypes" ng-required="true"
                 ng-disabled="facility.dataReportable == 'false'">
           <option value="" openlmis-message="create.facility.select.facilityType"></option>
         </select>
@@ -91,7 +91,7 @@
       <label openlmis-message="create.facility.serviceDeliveryPoint"></label>
 
       <div class="form-field radio-group">
-        <input type="radio" name="isSdp" value="true" ng-model="facility.sdp" ng:required="true"
+        <input type="radio" name="isSdp" value="true" ng-model="facility.sdp" ng-required="true"
                ng-disabled="facility.dataReportable == 'false'"/><strong openlmis-message="button.yes"></strong>
         &nbsp; &nbsp; &nbsp;
         <input ng-model="facility.sdp" type="radio" name="isSdp" value="false"
@@ -107,7 +107,7 @@
 
       <div class="form-field radio-group">
         <input ng-model="facility.active" type="radio" name="isActive" value="true"
-               ng:required="true" ng-disabled="facility.dataReportable == 'false'"/><strong
+               ng-required="true" ng-disabled="facility.dataReportable == 'false'"/><strong
           openlmis-message="button.yes"></strong> &nbsp; &nbsp;
         &nbsp;
         <input ng-model="facility.active" type="radio" name="isActive" value="false"
@@ -126,7 +126,7 @@
       <div class="form-field">
         <input ng-model="facility.goLiveDate" name="goLiveDate" id="go-live-date" type="text"
                value="{{facility.goLiveDate | date:'dd/MM/yyyy'}}" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
-               readonly ng-change="blurDateFields()" ng:required="true"
+               readonly ng-change="blurDateFields()" ng-required="true"
                ng-disabled="facility.dataReportable == 'false'"/>
         <span class="field-error" ng-show="facilityForm.goLiveDate.$error.required && showError"
               openlmis-message="missing.value">
@@ -277,7 +277,61 @@
     </div>
   </div>
 </div>
-<!-- /form-group -->
+
+
+<div id="programProductISA" modal="programProductsISAModal" options="{'backdrop':'static', 'escape':true}" ng-controller="IsaModalController">
+  <form name="IsaProductListForm">
+  <div class="modal-header">
+    <h3>
+      <span openlmis-message="label.isa.header"></span>
+      <span ng-bind="currentProgram.name"></span>
+    </h3>
+  </div>
+  <div class="modal-body">
+    <hr ng-show="allocationProgramProducts[currentProgram.id].length > 0"/>
+    <div class="isa-product-list" ng-show="allocationProgramProducts[currentProgram.id].length > 0">
+          <table class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                <th openlmis-message="label.product"></th>
+                <th openlmis-message="label.calculated.isa"></th>
+                <th openlmis-message="label.overridden.isa"></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="programProduct in allocationProgramProducts[currentProgram.id]">
+                <td>
+                  <span id="product-name{{$index}}" ng-bind="programProduct.product.primaryName"></span>
+                </td>
+                <td>
+                  <span id="calculated-isa{{$index}}" ng-bind="programProduct.calculatedIsa"></span>
+                </td>
+                <td ng-form="overrideForm">
+                  <input id="override-isa{{$index}}" name="overriddenISA" type="text" numeric-validator="numericValue"
+                         ng-model="programProduct.overriddenISA" />
+                  <div class="form-error" ng-show="overrideForm.overriddenISA.$error.numeric"
+                       openlmis-message="error.enter.numeric.value"></div>
+                </td>
+                <td>
+                  <input id="use-calculated-button{{$index}}" type="button" openlmis-message="button.use.calculated" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+
+</div>
+    <div class="modal-footer">
+      <input type="button" class="btn btn-primary" openlmis-message="button.save"
+        ng-click="saveISA()" />
+      <input type="button" ng-click="$parent.programProductsISAModal = false"
+             class="btn btn-cancel" openlmis-message="button.cancel"/>
+    </div>
+</form>
+</div>
+
+  <!-- /form-group -->
 
 <div class="form-group">
   <h3 openlmis-message="create.facility.geographicalInformation"></h3>
@@ -479,7 +533,7 @@
 
 <div form-toolbar id="action_buttons" class="action-buttons">
   <div class="form-cell button-row" ng-show="facility.dataReportable == 'true'">
-    <input type="submit" class="btn btn-primary save-button" value="Save"/>
+    <input type="submit" id="save-button" class="btn btn-primary save-button" openlmis-message="button.save"/>
     <a href="" class="btn btn-danger delete-button" ng-show="facility.id!=null"
        ng-click="showConfirmFacilityDeleteWindow()" openlmis-message="button.delete"></a>
   </div>

@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, RestoreFacility, $location, $dialog, messageService) {
+function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, RestoreFacility, $location, ProgramProducts, $dialog, messageService) {
   $scope.message = "";
   initialize();
 
@@ -25,6 +25,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       updateProgramsToDisplay();
       $scope.facility.dataReportable = "true";
     }
+    $scope.allocationProgramProducts = [];
   }
 
   function getFacilityWithDateObjects(facility) {
@@ -43,7 +44,8 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   }
 
   $scope.showISAEditModal = function (supportedProgram) {
-
+    $scope.currentProgram = supportedProgram.program;
+    $scope.programProductsISAModal = true;
   };
 
   $scope.saveFacility = function () {

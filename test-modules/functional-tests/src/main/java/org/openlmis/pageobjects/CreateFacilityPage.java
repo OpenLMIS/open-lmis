@@ -125,7 +125,7 @@ public class CreateFacilityPage extends Page {
   @FindBy(how = ID, using = "supported-program-add")
   private static WebElement addSupportedProgram;
 
-  @FindBy(how = XPATH, using = "//input[@value='Save']")
+  @FindBy(how = ID, using = "save-button")
   private static WebElement SaveButton;
 
   @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']/span")

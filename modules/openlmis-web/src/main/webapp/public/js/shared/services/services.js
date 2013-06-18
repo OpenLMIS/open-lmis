@@ -209,11 +209,15 @@ services.factory('ProgramProducts', function ($resource) {
 });
 
 
+//Allocation
+
 services.factory('ProgramProductsISA', function ($resource) {
   return $resource('/programProducts/:programProductId/isa/:isaId.json', {isaId:'@isaId'}, {update:{method:'PUT'}});
 });
 
-//Allocation
+services.factory('AllocationProgramProducts', function ($resource) {
+  return $resource('/facility/:facilityId/programProduct/:programProductId.json', {isaId:'@isaId'}, {update:{method:'PUT'}});
+});
 
 services.factory('DeliveryZones', function ($resource) {
   return $resource('/user/deliveryZones.json', {}, {});

@@ -1,3 +1,8 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package org.openlmis.distribution.controller;
 
 import org.junit.Test;
@@ -59,9 +64,10 @@ public class AllocationProgramProductControllerTest {
   @Test
   public void shouldUpdateProgramProductISA() {
     ProgramProductISA programProductISA = new ProgramProductISA();
-    Long programProductId = 1l;
+    Long isaId = 1l;
+    Long programProductId = 2l;
 
-    controller.updateIsa(programProductId, programProductISA);
+    controller.updateIsa(isaId, programProductId, programProductISA);
 
     verify(service).updateISA(programProductISA);
   }
