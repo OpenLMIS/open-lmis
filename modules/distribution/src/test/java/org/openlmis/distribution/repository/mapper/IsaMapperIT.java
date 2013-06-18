@@ -59,7 +59,7 @@ public class IsaMapperIT {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProductMapper.insert(programProduct);
 
-    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 0.039f, 4, 10f, 25f, 50, 17, 1);
+    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 23f, 4, 10f, 25f, 50, 17, 1);
     mapper.insert(programProductISA);
 
     programProductISA.setCalculatedIsa(23);
@@ -75,7 +75,7 @@ public class IsaMapperIT {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProductMapper.insert(programProduct);
 
-    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 0.039f, 4, 10f, 25f, 50, 17, 1);
+    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 23f, 4, 10f, 25f, 50, 17, 1);
     mapper.insert(programProductISA);
 
     ProgramProductISA returnedIsa = mapper.getIsa(programProduct.getId());

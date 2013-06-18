@@ -77,7 +77,7 @@ public class ProgramProductISAPage extends Page {
   private static WebElement saveFailMessage;
 
   @FindBy(how = XPATH, using = "(//div[@id='programProductFormula'])[1]")
-  private static WebElement ISAFormulaFromConfigureProgramISA;
+  private static WebElement ISAFormulaFromConfigureProgramISAModalWindow;
 
   @FindBy(how = XPATH, using = "//div[@id='monthlyRestockAmount']/span[@class='ng-binding']")
   private static WebElement ISAFormulaFromISAFormulaModal;
@@ -167,12 +167,14 @@ public class ProgramProductISAPage extends Page {
   }
 
   public void verifySuccessMessageDiv() {
+    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
     assertTrue("Save success message should show up", saveSuccessMsgDiv.isDisplayed());
   }
 
   public void verifyISAFormula(String ISAFormula) {
-    testWebDriver.waitForElementToAppear(this.ISAFormulaFromConfigureProgramISA);
-    assertEquals(ISAFormula, this.ISAFormulaFromConfigureProgramISA);
+    testWebDriver.waitForElementToAppear(ISAFormulaFromConfigureProgramISAModalWindow);
+    String formulaConfigureProgramWindow = ISAFormulaFromConfigureProgramISAModalWindow.getText();
+    assertEquals(ISAFormula, formulaConfigureProgramWindow);
   }
 
   public String getISAFormulaFromISAFormulaModal() {
