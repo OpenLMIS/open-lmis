@@ -19,10 +19,10 @@ import org.openlmis.core.domain.BaseModel;
 public class ProgramProductISA extends BaseModel {
 
   Long programProductId;
-  Float whoRatio;
+  Double whoRatio;
   Integer dosesPerYear;
-  Float wastageRate;
-  Float bufferPercentage;
+  Double wastageRate;
+  Double bufferPercentage;
   Integer minimumValue;
   Integer adjustmentValue;
 

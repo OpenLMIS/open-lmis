@@ -36,6 +36,9 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
   }
 
   $scope.showProductISA = function (programProduct) {
+    $scope.inputClass = false;
+    $scope.population = 0;
+    $scope.error = null;
     programProduct.previousFormula = programProduct.formula;
     $scope.currentProgramProduct = angular.copy(programProduct);
     $scope.programProductISAModal = true;
@@ -46,6 +49,7 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
       $scope.currentProgramProduct.formula = $scope.currentProgramProduct.previousFormula;
     }
     $scope.population = 0;
+    $scope.inputClass = false;
     $scope.currentProgramProduct = null;
     $scope.programProductISAModal = false;
   }
@@ -98,10 +102,10 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
 
 
   $scope.isPresent = function (programProductISA) {
-    var present =  programProductISA && isDefined(programProductISA.whoRatio) && isDefined(programProductISA.dosesPerYear) &&
+    var present = programProductISA && isDefined(programProductISA.whoRatio) && isDefined(programProductISA.dosesPerYear) &&
       isDefined(programProductISA.wastageRate) && isDefined(programProductISA.bufferPercentage) &&
       isDefined(programProductISA.adjustmentValue);
-    if(present) $scope.error = null;
+    if (present) $scope.error = null;
     return present;
   };
 
