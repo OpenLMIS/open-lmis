@@ -71,10 +71,10 @@ public class ManageProgramProductISA extends TestCaseHelper {
   public void testISAFormula(String userSIC, String password, String program) throws Exception {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
     programProductISAPage.fillProgramProductISA("12345678", "2", "0", "4", "-50", "10");
-    programProductISAPage.saveISA();
-//    programProductISAPage.verifySuccessMessageDiv();
     String formula = programProductISAPage.getISAFormulaFromISAFormulaModal();
-//    programProductISAPage.verifyISAFormula(formula);
+    programProductISAPage.saveISA();
+    programProductISAPage.verifySuccessMessageDiv();
+    programProductISAPage.verifyISAFormula(formula);
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
   }
