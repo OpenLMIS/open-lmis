@@ -83,7 +83,7 @@ public class RnrTemplateController extends BaseController {
     Map<String, String> validationErrorMessages = new HashMap<>();
     for (Map.Entry<String, OpenLmisMessage> entry : validationErrors.entrySet()) {
       String fieldName = entry.getKey();
-      validationErrorMessages.put(fieldName, messageService.message(entry.getValue()));
+      validationErrorMessages.put(fieldName, messageService.message(entry.getValue().getCode(), entry.getValue().getParams()));
     }
     return validationErrorMessages;
   }
