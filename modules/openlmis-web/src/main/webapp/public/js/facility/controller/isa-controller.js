@@ -3,35 +3,49 @@
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-function IsaModalController($scope, ProgramProducts) {
+function IsaModalController($scope, FacilityProgramProducts, $routeParams) {
 
-  $scope.$watch('currentProgram', function () {
+  $scope.$watch('$parent.programProductsISAModal', function () {
+    if (!$scope.$parent.programProductsISAModal) return;
+
     if (!$scope.currentProgram) return;
 
-    if ($scope.allocationProgramProducts[$scope.currentProgram.id]) return;
+    $scope.currentProgramProducts = [];
 
-    ProgramProducts.get({programId: $scope.currentProgram.id}, function (data) {
-      $scope.allocationProgramProducts[$scope.currentProgram.id] = data.programProductList;
+    if ($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]) {
+      $scope.currentProgramProducts = angular.copy($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]);
+      return;
+    }
 
-      var population = $scope.$parent.facility.catchmentPopulation;
+    FacilityProgramProducts.get({programId: $scope.currentProgram.id, facilityId: $routeParams.facilityId}, function (data) {
 
-      if (isUndefined(population)) return;
+      $scope.$parent.allocationProgramProductsList[$scope.currentProgram.id] = angular.copy(data.programProductList);
 
-      $($scope.allocationProgramProducts[$scope.currentProgram.id]).each(function (index, product) {
+      $($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]).each(function (index, product) {
 
-        if (isUndefined(product.programProductIsa))
+        var population = $scope.$parent.facility.catchmentPopulation;
 
-          product.calculatedIsa = Math.ceil(parseInt(population) * parseInt(product.programProductIsa.whoRatio) * parseInt(product.programProductIsa.dosesPerYear) *
-            parseInt(product.programProductIsa.wastageRate) / 12 * parseInt(product.programProductIsa.bufferPercentage) + parseInt(product.programProductIsa.adjustmentValue));
+        if (isUndefined(population) || isUndefined(product.programProductIsa)) return;
+
+        product.calculatedIsa = Math.ceil(utils.parseIntWithBaseTen(population) * utils.parseIntWithBaseTen(product.programProductIsa.whoRatio) *
+          utils.parseIntWithBaseTen(product.programProductIsa.dosesPerYear) * utils.parseIntWithBaseTen(product.programProductIsa.wastageRate) / 12 *
+          utils.parseIntWithBaseTen(product.programProductIsa.bufferPercentage) + utils.parseIntWithBaseTen(product.programProductIsa.adjustmentValue));
 
       });
+
+      $scope.currentProgramProducts = angular.copy($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]);
 
     }, function (data) {
     });
   });
 
-  $scope.saveISA = function () {
+  $scope.updateISA = function () {
+    $scope.$parent.allocationProgramProductsList[$scope.currentProgram.id] = angular.copy($scope.currentProgramProducts);
+    $scope.$parent.programProductsISAModal = false;
+  }
 
+  $scope.resetISAModal = function () {
+    $scope.$parent.programProductsISAModal = false;
   }
 
 }

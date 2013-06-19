@@ -137,7 +137,7 @@ public class AllocationProgramProductServiceTest {
       add(allocationProduct2);
     }};
 
-    service.saveOverriddenIsa(1l, 2l, allocationProgramProducts);
+    service.saveOverriddenIsa(1l, allocationProgramProducts);
 
     verify(repository).save(allocationProduct1);
     verify(repository).save(allocationProduct2);

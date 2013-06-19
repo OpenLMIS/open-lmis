@@ -30,14 +30,21 @@ public class AllocationProgramProductController extends BaseController {
 
   public static final String PROGRAM_PRODUCT_LIST = "programProductList";
 
-  @RequestMapping(value = "/programProducts/programId/{programId}", method = GET, headers = BaseController.ACCEPT_JSON)
+  @RequestMapping(value = "/programProducts/programId/{programId}", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
   public ResponseEntity<AllocationResponse> getProgramProductsByProgram(@PathVariable Long programId) {
     List<AllocationProgramProduct> programProductsByProgram = service.get(programId);
     return AllocationResponse.response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
   }
 
-  @RequestMapping(value = "/programProducts/{programProductId}/isa", method = POST, headers = BaseController.ACCEPT_JSON)
+  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/isa", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
+  public ResponseEntity<AllocationResponse> getProgramProductsByProgramAndFacility(@PathVariable Long programId, @PathVariable Long facilityId) {
+    List<AllocationProgramProduct> programProductsByProgram = service.getForProgramAndFacility(programId, facilityId);
+    return AllocationResponse.response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
+  }
+
+  @RequestMapping(value = "/programProducts/{programProductId}/isa", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
   public void insertIsa(@PathVariable Long programProductId, @RequestBody ProgramProductISA programProductISA) {
     programProductISA.setProgramProductId(programProductId);
@@ -45,7 +52,7 @@ public class AllocationProgramProductController extends BaseController {
   }
 
 
-  @RequestMapping(value = "/programProducts/{programProductId}/isa/{isaId}", method = PUT, headers = BaseController.ACCEPT_JSON)
+  @RequestMapping(value = "/programProducts/{programProductId}/isa/{isaId}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
   public void updateIsa(@PathVariable Long isaId,@PathVariable Long programProductId,  @RequestBody ProgramProductISA programProductISA) {
     programProductISA.setId(isaId);
@@ -53,10 +60,10 @@ public class AllocationProgramProductController extends BaseController {
     service.updateISA(programProductISA);
   }
 
-  @RequestMapping(value = "/facility/{facilityId}/programProduct/{programProductId}/isa", method = POST, headers = BaseController.ACCEPT_JSON)
+  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/isa", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public void overrideIsa(@PathVariable Long facilityId, @PathVariable Long programProductId, @RequestBody AllocationProgramProductList products) {
-    service.saveOverriddenIsa(facilityId, programProductId, products);
+  public void overrideIsa(@PathVariable Long facilityId, @RequestBody AllocationProgramProductList products) {
+    service.saveOverriddenIsa(facilityId, products);
   }
 
 

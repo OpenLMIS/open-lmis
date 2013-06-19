@@ -15,7 +15,7 @@ services.factory('Programs', function ($resource) {
 });
 
 services.factory('RnRColumnList', function ($resource) {
-  return $resource('/program/:programId/rnr-template.json', {}, {post:{isArray:true, method:'POST'}});
+  return $resource('/program/:programId/rnr-template.json', {}, {post: {isArray: true, method: 'POST'}});
 });
 
 services.factory('ProgramRnRColumnList', function ($resource) {
@@ -23,11 +23,11 @@ services.factory('ProgramRnRColumnList', function ($resource) {
 });
 
 services.factory('Facility', function ($resource) {
-  return $resource('/facilities/:id.json', {}, {update:{method:'PUT'}});
+  return $resource('/facilities/:id.json', {}, {update: {method: 'PUT'}});
 });
 
 services.factory('RestoreFacility', function ($resource) {
-  return $resource('/facilities/:id/restore.json', {}, {update:{method:'PUT'}});
+  return $resource('/facilities/:id/restore.json', {}, {update: {method: 'PUT'}});
 });
 
 services.factory('UserContext', function ($resource) {
@@ -39,7 +39,7 @@ services.factory('Users', function ($resource) {
 });
 
 services.factory('User', function ($resource) {
-  return $resource('/users/:id.json', {}, {update:{method:'PUT'}});
+  return $resource('/users/:id.json', {}, {update: {method: 'PUT'}});
 });
 
 
@@ -80,7 +80,7 @@ services.factory('Rights', function ($resource) {
 });
 
 services.factory('Role', function ($resource) {
-  return $resource('/roles/:id.json', {}, {update:{method:'PUT'}});
+  return $resource('/roles/:id.json', {}, {update: {method: 'PUT'}});
 });
 
 services.factory('Roles', function ($resource) {
@@ -100,7 +100,7 @@ services.factory('ReferenceData', function ($resource) {
 });
 
 services.factory('Requisitions', function ($resource) {
-  return $resource('/requisitions/:id/:operation.json', {}, {update:{method:'PUT'}});
+  return $resource('/requisitions/:id/:operation.json', {}, {update: {method: 'PUT'}});
 });
 
 services.factory('Requisition', function ($resource) {
@@ -132,7 +132,7 @@ services.factory('Schedules', function ($resource) {
 });
 
 services.factory('Schedule', function ($resource) {
-  return $resource('/schedules/:id.json', {}, {update:{method:'PUT'}});
+  return $resource('/schedules/:id.json', {}, {update: {method: 'PUT'}});
 });
 
 services.factory('Periods', function ($resource) {
@@ -168,7 +168,7 @@ services.factory('RequisitionLineItem', function ($resource) {
 });
 
 services.factory('UpdateUserPassword', function ($resource) {
-  return $resource('/user/resetPassword/:token.json', {}, {update:{method:'PUT'}});
+  return $resource('/user/resetPassword/:token.json', {}, {update: {method: 'PUT'}});
 });
 
 services.factory('ValidatePasswordToken', function ($resource) {
@@ -192,13 +192,16 @@ services.factory('RequisitionComment', function ($resource) {
 });
 
 services.factory('Orders', function ($resource) {
-  return $resource('/orders.json', {}, {post:{isArray:true, method:'POST'}});
+  return $resource('/orders.json', {}, {post: {isArray: true, method: 'POST'}});
 });
 
 
 services.factory('ReportTemplates', function ($resource) {
   return $resource('/report-templates.json', {}, {});
 });
+
+//Allocation
+
 
 services.factory('PushProgram', function ($resource) {
   return $resource('/push/programs.json', {}, {});
@@ -208,15 +211,16 @@ services.factory('ProgramProducts', function ($resource) {
   return $resource('/programProducts/programId/:programId.json', {}, {});
 });
 
-
-//Allocation
+services.factory('FacilityProgramProducts', function ($resource) {
+  return $resource('/facility/:facilityId/program/:programId/isa.json', {}, {post: {method: 'POST', isArray: true}});
+});
 
 services.factory('ProgramProductsISA', function ($resource) {
-  return $resource('/programProducts/:programProductId/isa/:isaId.json', {isaId:'@isaId'}, {update:{method:'PUT'}});
+  return $resource('/programProducts/:programProductId/isa/:isaId.json', {isaId: '@isaId'}, {update: {method: 'PUT'}});
 });
 
 services.factory('AllocationProgramProducts', function ($resource) {
-  return $resource('/facility/:facilityId/programProduct/:programProductId.json', {isaId:'@isaId'}, {update:{method:'PUT'}});
+  return $resource('/facility/:facilityId/programProduct/:programProductId.json', {isaId: '@isaId'}, {update: {method: 'PUT'}});
 });
 
 services.factory('DeliveryZones', function ($resource) {

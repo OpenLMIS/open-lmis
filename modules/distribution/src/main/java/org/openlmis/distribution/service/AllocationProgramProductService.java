@@ -76,13 +76,12 @@ public class AllocationProgramProductService {
     repository.updateISA(isa);
   }
 
-  public void saveOverriddenIsa(final Long facilityId, final Long programProductId, AllocationProgramProductList products) {
+  public void saveOverriddenIsa(final Long facilityId, AllocationProgramProductList products) {
     forAllDo(products, new Closure() {
       @Override
       public void execute(Object o) {
         AllocationProgramProduct product = (AllocationProgramProduct) o;
         product.setFacilityId(facilityId);
-        product.setProgramProductId(programProductId);
         repository.save(product);
       }
     });

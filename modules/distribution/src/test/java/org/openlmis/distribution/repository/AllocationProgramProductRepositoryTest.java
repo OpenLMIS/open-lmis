@@ -69,6 +69,7 @@ public class AllocationProgramProductRepositoryTest {
     AllocationProgramProduct allocationProgramProduct = repository.getByProgramProductId(1L);
 
     assertThat(allocationProgramProduct.getProgramProductIsa(), is(expectedIsa));
+    assertThat(allocationProgramProduct.getProgramProductId(), is(1l));
     verify(isaMapper).getIsa(1L);
   }
 

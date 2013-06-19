@@ -38,6 +38,7 @@ public class AllocationProgramProductRepository {
     ProgramProductISA isa = isaMapper.getIsa(programProductId);
     AllocationProgramProduct allocationProgramProduct = new AllocationProgramProduct();
     allocationProgramProduct.setProgramProductIsa(isa);
+    allocationProgramProduct.setProgramProductId(programProductId);
     return allocationProgramProduct;
   }
 
