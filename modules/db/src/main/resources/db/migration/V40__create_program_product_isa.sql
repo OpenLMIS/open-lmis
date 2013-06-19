@@ -7,7 +7,7 @@ CREATE TABLE program_product_isa (
     whoRatio INTEGER NOT NULL,
     dosesPerYear INTEGER NOT NULL,
     wastageRate INTEGER NOT NULL,
-    programProductId INTEGER REFERENCES program_products(id),
+    programProductId INTEGER REFERENCES program_products(id) NOT NULL,
     bufferPercentage INTEGER NOT NULL,
     minimumValue INTEGER,
     adjustmentValue INTEGER NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE program_product_isa (
     modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX i_program_product_isa_programProductId ON program_product_isa(programProductId);
+CREATE UNIQUE INDEX i_program_product_isa_programProductId ON program_product_isa(programProductId);
 
 
 

@@ -9,7 +9,7 @@ package org.openlmis.distribution.repository;
 import org.openlmis.distribution.domain.AllocationProgramProduct;
 import org.openlmis.distribution.domain.ProgramProductISA;
 import org.openlmis.distribution.repository.mapper.FacilityProgramProductMapper;
-import org.openlmis.distribution.repository.mapper.IsaMapper;
+import org.openlmis.distribution.repository.mapper.ProgramProductIsaMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -17,25 +17,25 @@ import org.springframework.stereotype.Repository;
 public class AllocationProgramProductRepository {
 
   @Autowired
-  IsaMapper isaMapper;
+  ProgramProductIsaMapper programProductIsaMapper;
 
   @Autowired
   FacilityProgramProductMapper mapper;
 
   public void insertISA(ProgramProductISA programProductISA) {
-    isaMapper.insert(programProductISA);
+    programProductIsaMapper.insert(programProductISA);
   }
 
   public void updateISA(ProgramProductISA programProductISA) {
-    isaMapper.update(programProductISA);
+    programProductIsaMapper.update(programProductISA);
   }
 
-  public ProgramProductISA getIsa(Long id) {
-    return isaMapper.getIsa(id);
+  public ProgramProductISA getIsaByProgramProductId(Long programProductId) {
+    return programProductIsaMapper.getIsaByProgramProductId(programProductId);
   }
 
   public AllocationProgramProduct getByProgramProductId(Long programProductId) {
-    ProgramProductISA isa = isaMapper.getIsa(programProductId);
+    ProgramProductISA isa = programProductIsaMapper.getIsaByProgramProductId(programProductId);
     AllocationProgramProduct allocationProgramProduct = new AllocationProgramProduct();
     allocationProgramProduct.setProgramProductIsa(isa);
     allocationProgramProduct.setProgramProductId(programProductId);
@@ -47,7 +47,7 @@ public class AllocationProgramProductRepository {
   }
 
   public void save(AllocationProgramProduct product) {
-    mapper.removeFacilityProgramProductMapping(product.getFacilityId(), product.getProgramProductId());
+    mapper.removeFacilityProgramProductMapping(product.getProgramProductId(), product.getFacilityId());
     mapper.insert(product);
   }
 }

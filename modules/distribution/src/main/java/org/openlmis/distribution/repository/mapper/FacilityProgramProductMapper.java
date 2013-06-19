@@ -22,5 +22,5 @@ public interface FacilityProgramProductMapper {
   Integer getOverriddenIsa(@Param("programProductId")Long programProductId, @Param("facilityId") Long facilityId);
 
   @Delete("DELETE FROM facility_program_products WHERE facilityId = #{facilityId} AND programProductId = #{programProductId}")
-  void removeFacilityProgramProductMapping(@Param("facilityId") Long facilityId, @Param("programProductId") Long programProductId);
+  void removeFacilityProgramProductMapping(@Param("programProductId") Long programProductId, @Param("facilityId") Long facilityId);
 }

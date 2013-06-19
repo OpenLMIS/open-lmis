@@ -15,7 +15,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.AllocationProgramProduct;
 import org.openlmis.distribution.domain.ProgramProductISA;
 import org.openlmis.distribution.repository.mapper.FacilityProgramProductMapper;
-import org.openlmis.distribution.repository.mapper.IsaMapper;
+import org.openlmis.distribution.repository.mapper.ProgramProductIsaMapper;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -30,7 +30,7 @@ public class AllocationProgramProductRepositoryTest {
   AllocationProgramProductRepository repository;
 
   @Mock
-  IsaMapper isaMapper;
+  ProgramProductIsaMapper programProductIsaMapper;
 
   @Mock
   FacilityProgramProductMapper mapper;
@@ -40,37 +40,37 @@ public class AllocationProgramProductRepositoryTest {
   public void shouldInsertISA() throws Exception {
     ProgramProductISA isa = new ProgramProductISA();
     repository.insertISA(isa);
-    verify(isaMapper).insert(isa);
+    verify(programProductIsaMapper).insert(isa);
   }
 
   @Test
   public void shouldUpdateISA() throws Exception {
     ProgramProductISA isa = new ProgramProductISA();
     repository.updateISA(isa);
-    verify(isaMapper).update(isa);
+    verify(programProductIsaMapper).update(isa);
   }
 
   @Test
   public void shouldGetIsa() throws Exception {
     ProgramProductISA expectedIsa = new ProgramProductISA();
-    when(isaMapper.getIsa(1l)).thenReturn(expectedIsa);
+    when(programProductIsaMapper.getIsaByProgramProductId(1l)).thenReturn(expectedIsa);
 
-    ProgramProductISA isa = repository.getIsa(1l);
+    ProgramProductISA isa = repository.getIsaByProgramProductId(1l);
 
-    verify(isaMapper).getIsa(1l);
+    verify(programProductIsaMapper).getIsaByProgramProductId(1l);
     assertThat(expectedIsa, is(isa));
   }
 
   @Test
   public void shouldGetAllocationProgramProductWithIsa() throws Exception {
     ProgramProductISA expectedIsa = new ProgramProductISA();
-    when(isaMapper.getIsa(1l)).thenReturn(expectedIsa);
+    when(programProductIsaMapper.getIsaByProgramProductId(1l)).thenReturn(expectedIsa);
 
     AllocationProgramProduct allocationProgramProduct = repository.getByProgramProductId(1L);
 
     assertThat(allocationProgramProduct.getProgramProductIsa(), is(expectedIsa));
     assertThat(allocationProgramProduct.getProgramProductId(), is(1l));
-    verify(isaMapper).getIsa(1L);
+    verify(programProductIsaMapper).getIsaByProgramProductId(1L);
   }
 
   @Test
@@ -94,7 +94,7 @@ public class AllocationProgramProductRepositoryTest {
 
     repository.save(product);
 
-    verify(mapper).removeFacilityProgramProductMapping(facilityId, programProductId);
+    verify(mapper).removeFacilityProgramProductMapping(programProductId, facilityId);
     verify(mapper).insert(product);
   }
 }

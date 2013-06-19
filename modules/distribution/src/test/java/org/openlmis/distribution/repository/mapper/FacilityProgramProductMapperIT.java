@@ -20,7 +20,6 @@ import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.distribution.domain.AllocationProgramProduct;
-import org.openlmis.distribution.domain.ProgramProductISA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -90,7 +89,7 @@ public class FacilityProgramProductMapperIT {
     AllocationProgramProduct facilityProgramProduct = new AllocationProgramProduct(programProduct.getId(), facility.getId(), 34, null);
     mapper.insert(facilityProgramProduct);
 
-    mapper.removeFacilityProgramProductMapping(facility.getId(), programProduct.getId());
+    mapper.removeFacilityProgramProductMapping(programProduct.getId(), facility.getId());
 
     assertThat(mapper.getOverriddenIsa(programProduct.getId(), facility.getId()), is(nullValue()));
   }

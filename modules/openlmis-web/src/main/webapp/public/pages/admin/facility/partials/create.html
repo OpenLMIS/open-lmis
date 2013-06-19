@@ -249,7 +249,7 @@
                     <td ng-show="!supportedProgram.program.push">
                         <span openlmis-message="label.request"></span>
                     </td>
-                    <td><a class="close" id="remove{{$index}}" ng-click="removeSupportedProgram(supportedProgram)"
+                    <td><a class="close" id="remove{{$index}}" ng-click="showRemoveProgramConfirmDialog(supportedProgram)"
                            openlmis-message="create.facility.removeProgram"></a></td>
                 </tr>
                 <tr class="add-supported-program-row">
@@ -284,7 +284,6 @@
     </div>
 </div>
 
-
 <div id="programProductISA" modal="programProductsISAModal" options="{'backdrop':'static', 'escape':false}"
      ng-controller="IsaModalController">
     <form name="IsaProductListForm">
@@ -315,10 +314,11 @@
                             <span id="calculated-isa{{$index}}" ng-bind="programProduct.calculatedIsa"></span>
                         </td>
                         <td ng-form="overrideForm">
-                            <input id="override-isa{{$index}}" name="overriddenISA" type="text" ng-model="programProduct.overriddenIsa"/>
+                            <input id="override-isa{{$index}}" name="overrideISA{{$index}}" type="text" ng-model="programProduct.overriddenIsa"
+                                   numeric-validator="numericValue" />
 
-                            <div class="form-error" ng-show="overrideForm.overriddenISA.$error.numeric"
-                                 openlmis-message="error.enter.numeric.value"></div>
+                            <span id="overrideISA{{$index}}" class="form-error" ng-show="overrideForm.overriddenISA.$error.numeric"
+                                 openlmis-message="error.enter.numeric.value" style="display:none;"></span>
                         </td>
                         <td>
                             <input id="use-calculated-button{{$index}}" type="button"
@@ -332,10 +332,8 @@
         </div>
 
         <div class="modal-footer">
-            <input type="button" class="btn btn-primary" openlmis-message="button.done"
-                   ng-click="updateISA()"/>
-            <input type="button" ng-click="resetISAModal()"
-                   class="btn btn-cancel" openlmis-message="button.cancel"/>
+            <input type="button" class="btn btn-primary" openlmis-message="button.done" ng-click="updateISA()"/>
+            <input type="button" class="btn btn-cancel" openlmis-message="button.cancel" ng-click="resetISAModal()"/>
         </div>
     </form>
 </div>

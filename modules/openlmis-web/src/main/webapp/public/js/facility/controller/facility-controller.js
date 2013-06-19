@@ -143,9 +143,27 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     }
   };
 
-  $scope.removeSupportedProgram = function (supportedProgram) {
+  $scope.showRemoveProgramConfirmDialog = function (supportedProgram) {
+    $scope.selectedSupportedProgram = supportedProgram;
+    var options = {
+      id: "removeProgramConfirmDialog",
+      header: messageService.get('delete.facility.program.header'),
+      body: messageService.get('delete.facility.program.confirm', $scope.selectedSupportedProgram.program.name)
+    };
+    OpenLmisDialog.newDialog(options, $scope.removeSupportedProgramConfirm, $dialog, messageService);
+  };
+
+  $scope.removeSupportedProgramConfirm = function(result) {
+    if(result) {
+      $scope.removeSupportedProgram()
+    }
+    $scope.selectedSupportedProgram = undefined;
+  }
+
+
+  $scope.removeSupportedProgram = function () {
     if ($scope.facility.dataReportable == 'false') return;
-    $scope.facility.supportedPrograms = _.without($scope.facility.supportedPrograms, supportedProgram);
+    $scope.facility.supportedPrograms = _.without($scope.facility.supportedPrograms, $scope.selectedSupportedProgram);
     updateProgramsToDisplay();
   };
 

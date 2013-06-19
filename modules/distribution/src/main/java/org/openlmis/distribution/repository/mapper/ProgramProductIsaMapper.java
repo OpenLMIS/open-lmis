@@ -13,7 +13,7 @@ import org.openlmis.distribution.domain.ProgramProductISA;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IsaMapper {
+public interface ProgramProductIsaMapper {
 
   @Insert({"INSERT INTO program_product_isa",
     "(programProductId, whoRatio, dosesPerYear, wastageRate, bufferPercentage, minimumValue, adjustmentValue, calculatedIsa)",
@@ -28,5 +28,5 @@ public interface IsaMapper {
   void update(ProgramProductISA programProductISA);
 
   @Select("SELECT * FROM program_product_isa WHERE programProductId = #{programProductId}")
-  ProgramProductISA getIsa(Long programProductId);
+  ProgramProductISA getIsaByProgramProductId(Long programProductId);
 }

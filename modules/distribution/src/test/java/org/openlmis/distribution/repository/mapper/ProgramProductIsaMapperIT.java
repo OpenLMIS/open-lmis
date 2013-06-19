@@ -30,7 +30,7 @@ import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 @Category(IntegrationTests.class)
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-public class IsaMapperIT {
+public class ProgramProductIsaMapperIT {
 
 
   private Product product;
@@ -44,7 +44,7 @@ public class IsaMapperIT {
   private ProgramProductMapper programProductMapper;
 
   @Autowired
-  private IsaMapper mapper;
+  private ProgramProductIsaMapper mapper;
 
   @Before
   public void setUp() throws Exception {
@@ -65,7 +65,7 @@ public class IsaMapperIT {
     programProductISA.setCalculatedIsa(23);
     mapper.update(programProductISA);
 
-    ProgramProductISA returnedIsa = mapper.getIsa(programProduct.getId());
+    ProgramProductISA returnedIsa = mapper.getIsaByProgramProductId(programProduct.getId());
 
     assertThat(returnedIsa, is(programProductISA));
   }
@@ -78,7 +78,7 @@ public class IsaMapperIT {
     ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 23d, 4, 10d, 25d, 50, 17, 1);
     mapper.insert(programProductISA);
 
-    ProgramProductISA returnedIsa = mapper.getIsa(programProduct.getId());
+    ProgramProductISA returnedIsa = mapper.getIsaByProgramProductId(programProduct.getId());
 
     assertThat(returnedIsa, is(programProductISA));
   }

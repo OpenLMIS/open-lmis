@@ -117,12 +117,32 @@ describe("Facility Controller", function () {
         {"code":"HIV", "name":"HIV", "description":"HIV", "active":true, "program":{"id":2}}
       ];
 
-      scope.removeSupportedProgram(arvProgram);
+      scope.selectedSupportedProgram = arvProgram;
+
+      scope.removeSupportedProgramConfirm(true);
 
       expect(scope.facility.supportedPrograms.length).toEqual(1);
       expect(scope.facility.supportedPrograms[0].code).toEqual("HIV");
       expect(scope.facility.supportedPrograms[0].program.id).toEqual(2);
+      expect(scope.selectedSupportedProgram).toEqual(undefined);
+    });
 
+    it('should not remove program supported when not confirmed on dialog', function() {
+      scope.facility.supportedPrograms = [];
+      var arvProgram = {"code":"ARV", "name":"ARV", "description":"ARV", "active":true, "startDate":"1/12/12", "program":{"id":1}};
+      scope.facility.supportedPrograms = [
+        arvProgram,
+        {"code":"HIV", "name":"HIV", "description":"HIV", "active":true, "program":{"id":2}}
+      ];
+
+      scope.selectedSupportedProgram = arvProgram;
+
+      scope.removeSupportedProgramConfirm(false);
+
+      expect(scope.facility.supportedPrograms.length).toEqual(2);
+      expect(scope.facility.supportedPrograms[0].code).toEqual("ARV");
+      expect(scope.facility.supportedPrograms[0].program.id).toEqual(1);
+      expect(scope.selectedSupportedProgram).toEqual(undefined);
     });
 
     it('should edit start date', function () {
