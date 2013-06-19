@@ -35,7 +35,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
       {field: 'periodEndDate', displayName: messageService.get("column.name.period.end.date"), cellFilter: "date:'dd/MM/yyyy'"},
       {field: 'submittedDate', displayName: messageService.get("column.name.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
       {field: 'modifiedDate', displayName: messageService.get("column.name.date.modified"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field:'status', displayName:'Status'}
+      {field:'status', displayName:messageService.get("column.name.status")}
     ]
   };
 
@@ -62,7 +62,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
   };
 
   function setRequisitionsFoundMessage() {
-    $scope.requisitionFoundMessage = ($scope.requisitions.length) ? "" : "No Requisitions found";
+    $scope.requisitionFoundMessage = ($scope.requisitions.length) ? "" : messageService.get("msg.no.rnr.found");
   }
 
   $scope.filterRequisitions = function () {

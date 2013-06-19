@@ -45,13 +45,13 @@
     <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
 
     <div class="form-cell button-row">
-      <input type="button" value="Save" ng-click="saveRnr()" class="btn btn-primary save-button"/>
-      <input type="button" ng-click="approveRnr()" class="btn btn-primary submit-button" value="Approve"/>
+      <input type="button" openlmis-message="button.save" ng-click="saveRnr()" class="btn btn-primary save-button"/>
+      <input type="button" ng-click="approveRnr()" class="btn btn-primary submit-button" openlmis-message="button.approve"/>
 
       <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
       <div class="toolbar-success" id="saveSuccessMsgDiv" ng-show="message" ng-bind="message"></div>
       <input id="comments" type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
-             value="Comments"/>
+             openlmis-message="comments.header"/>
       <comment-box updatable="true" show="showCommentBox"></comment-box>
     </div>
   </div>

@@ -16,7 +16,8 @@ directives.directive('openlmisMessage', function (messageService) {
         if (!isUndefined(keyWithArgs) && keyWithArgs.length > 1) {
           displayMessage = replaceArgs(scope, displayMessage, keyWithArgs);
         }
-        element[0].localName == "input" ? element.attr("value", displayMessage) : element.html(displayMessage);
+        var children = element.children();
+        element[0].localName == "input" ? element.attr("value", displayMessage) : element.html(displayMessage).append(children);
       };
 
       scope.$watch("[" + keyWithArgs.toString() + "]", refreshMessages, true);

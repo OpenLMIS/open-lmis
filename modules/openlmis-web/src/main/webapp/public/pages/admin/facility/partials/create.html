@@ -18,9 +18,9 @@
 
     <h3 openlmis-message="label.basicInformation"></h3>
 
-    <div class="form-row clearfix">
-        <div class="form-cell">
-            <label for="code" openlmis-message="create.facility.code"></label>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="code" openlmis-message="create.facility.code"><span class="label-required"> *</span></label>
 
             <div class="form-field">
                 <input ng-model="facility.code" name="code" id="code" type="text" maxlength="50" ng-required="true"
@@ -42,9 +42,9 @@
         </div>
     </div>
 
-    <div class="form-row clearfix">
-        <div class="form-cell">
-            <label for="name" openlmis-message="create.facility.name"></label>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="name" openlmis-message="create.facility.name"><span class="label-required"> *</span></label>
 
             <div class="form-field">
                 <input ng-model="facility.name" name="name" id="name" type="text" maxlength="50" ng-required="true"
@@ -56,8 +56,8 @@
             </div>
         </div>
 
-        <div class="form-cell">
-            <label for="facility-type" openlmis-message="create.facility.facilityType"></label>
+    <div class="form-cell">
+      <label for="facility-type" openlmis-message="create.facility.facilityType"><span class="label-required"> *</span></label>
 
             <div class="form-field">
                 <select name="facilityType" id="facility-type" ng-model="facility.facilityType.code"
@@ -86,9 +86,9 @@
         </div>
     </div>
 
-    <div class="form-row clearfix">
-        <div class="form-cell">
-            <label openlmis-message="create.facility.serviceDeliveryPoint"></label>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label openlmis-message="create.facility.serviceDeliveryPoint"><span class="label-required"> *</span></label>
 
             <div class="form-field radio-group">
                 <input type="radio" name="isSdp" value="true" ng-model="facility.sdp" ng-required="true"
@@ -102,8 +102,8 @@
             </div>
         </div>
 
-        <div class="form-cell">
-            <label openlmis-message="create.facility.activeFacility"></label>
+    <div class="form-cell">
+      <label openlmis-message="create.facility.activeFacility"><span class="label-required"> *</span></label>
 
             <div class="form-field radio-group">
                 <input ng-model="facility.active" type="radio" name="isActive" value="true"
@@ -118,10 +118,11 @@
             </div>
         </div>
     </div>
+  </div>
 
-    <div class="form-row clearfix">
-        <div class="form-cell">
-            <label for="go-live-date" openlmis-message="create.facility.goLiveDate"></label>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="go-live-date" openlmis-message="create.facility.goLiveDate"><span class="label-required"> *</span></label>
 
             <div class="form-field">
                 <input ng-model="facility.goLiveDate" name="goLiveDate" id="go-live-date" type="text"
@@ -345,9 +346,9 @@
 <div class="form-group">
     <h3 openlmis-message="create.facility.geographicalInformation"></h3>
 
-    <div class="form-row clearfix">
-        <div class="form-cell">
-            <label for="geographic-zone" openlmis-message="create.facility.geographicZone"></label>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="geographic-zone" openlmis-message="create.facility.geographicZone"><span class="label-required"> *</span></label>
 
             <div class="form-field">
                 <select id="geographic-zone" name="geographicZone" ng-model="facility.geographicZone.code"

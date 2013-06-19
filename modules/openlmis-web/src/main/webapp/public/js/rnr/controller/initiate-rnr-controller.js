@@ -84,7 +84,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
   };
 
   var getPeriodSpecificButton = function (activeForRnr) {
-    return '<input type="button" ng-click="initRnr()" value="Proceed" class="btn btn-primary btn-small grid-btn" ng-show="' + activeForRnr + '"/>';
+    return '<input type="button" ng-click="initRnr()" openlmis-message="button.proceed" class="btn btn-primary btn-small grid-btn" ng-show="' + activeForRnr + '"/>';
   };
 
   var optionMessage = function (entity, defaultMessage) {
