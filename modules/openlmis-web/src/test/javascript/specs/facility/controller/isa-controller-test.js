@@ -6,8 +6,6 @@
 
 describe("ISA Controller", function () {
   beforeEach(module('openlmis.services'));
-  beforeEach(module('ui.bootstrap.dialog'));
-  beforeEach(module('openlmis.localStorage'));
 
   describe("Override ISA", function () {
     var scope, httpBackend, ctrl, routeParams;
@@ -18,8 +16,6 @@ describe("ISA Controller", function () {
       scope.$parent.allocationProgramProductsList = []
       routeParams = $routeParams;
       httpBackend = _$httpBackend_;
-      $rootScope.fixToolBar = function () {
-      };
       ctrl = $controller(IsaModalController, {$scope: scope, facilityProgramProducts: null, $routeParams: routeParams});
     }));
 
@@ -30,6 +26,98 @@ describe("ISA Controller", function () {
       httpBackend.when('GET', '/facility/1/program/1/isa.json').respond(scope.currentProgramProducts);
       scope.updateISA();
       expect(scope.$parent.allocationProgramProductsList[scope.currentProgram.id].length).toEqual(2);
+    });
+
+    it('should return immediately if modal is closed', function() {
+      scope.$parent.programProductsISAModal = false;
+      scope.currentProgram = {id : 1};
+      scope.$apply();
+      httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should return immediately if current program is null', function() {
+      scope.$parent.programProductsISAModal = true;
+      scope.currentProgram = null;
+      scope.$apply();
+      httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should set currentProgramProducts if already present in scope and return immediately', function() {
+      scope.currentProgram = {id : 1};
+      var currentProducts = [{programProductId: 1, facilityId: 1, overriddenIsa: 34},
+        {programProductId: 2, facilityId: 1, overriddenIsa: 45}];
+      scope.$parent.allocationProgramProductsList[scope.currentProgram.id] = currentProducts;
+      scope.$parent.programProductsISAModal = true;
+      scope.$apply();
+      httpBackend.verifyNoOutstandingRequest();
+      expect(scope.currentProgramProducts).toEqual(currentProducts);
+    });
+
+    it('should fetch facility program products for given programId and facilityId when not present', function() {
+      scope.currentProgram = {id : 1};
+      var currentProducts = [{programProductId: 1, facilityId: 1, overriddenIsa: 34},
+        {programProductId: 2, facilityId: 1, overriddenIsa: 45}];
+      routeParams.facilityId = 1;
+      scope.$parent.facility = {id:1, catchmentPopulation : 100};
+      scope.$parent.allocationProgramProductsList[scope.currentProgram.id] = null;
+      scope.$parent.programProductsISAModal = true;
+      var programProductList = {programProductList: currentProducts};
+      httpBackend.expectGET('/facility/1/program/1/isa.json').respond(programProductList, 200);
+      scope.$apply();
+      httpBackend.flush();
+      expect(scope.$parent.allocationProgramProductsList[scope.currentProgram.id]).toEqual(currentProducts);
+      expect(scope.currentProgramProducts).toEqual(scope.$parent.allocationProgramProductsList[scope.currentProgram.id]);
+    });
+
+    it('should not calculate ISA values when catchment population and programProductISA(s) are null', function() {
+      scope.currentProgram = {id : 1};
+      var currentProducts = [
+        {programProductId: 1, facilityId: 1, overriddenIsa: 34, programProductIsa: {}},
+        {programProductId: 2, facilityId: 1, overriddenIsa: 45, programProductIsa: {}}
+      ];
+      routeParams.facilityId = 1;
+      scope.$parent.facility = {id:1, catchmentPopulation : null};
+      scope.$parent.allocationProgramProductsList[scope.currentProgram.id] = null;
+      scope.$parent.programProductsISAModal = true;
+      var programProductList = {programProductList: currentProducts};
+      httpBackend.expectGET('/facility/1/program/1/isa.json').respond(programProductList, 200);
+      scope.$apply();
+      httpBackend.flush();
+      expect(scope.$parent.allocationProgramProductsList[scope.currentProgram.id][0].calculatedIsa).toEqual(null);
+      expect(scope.$parent.allocationProgramProductsList[scope.currentProgram.id][1].calculatedIsa).toEqual(null);
+    });
+
+    it('should calculate ISA values for all facility program products', function() {
+      scope.currentProgram = {id : 1};
+      var currentProducts = [
+        {programProductId: 1, facilityId: 1, overriddenIsa: 34, programProductIsa: {
+          whoRatio: 10,
+          dosesPerYear: 10,
+          wastageRate: 10,
+          bufferPercentage: 50,
+          minimumValue: 10,
+          adjustmentValue: 15
+        }},
+        {programProductId: 2, facilityId: 1, overriddenIsa: 45, programProductIsa: {
+          whoRatio: 1,
+          dosesPerYear: 1,
+          wastageRate: 1,
+          bufferPercentage: 5,
+          minimumValue: 1,
+          adjustmentValue: 5
+        }}
+      ];
+      routeParams.facilityId = 1;
+      scope.$parent.facility = {id:1, catchmentPopulation : 1000};
+      scope.$parent.allocationProgramProductsList[scope.currentProgram.id] = null;
+      scope.$parent.programProductsISAModal = true;
+      var programProductList = {programProductList: currentProducts};
+      httpBackend.expectGET('/facility/1/program/1/isa.json').respond(programProductList, 200);
+      scope.$apply();
+      httpBackend.flush();
+      expect(scope.$parent.allocationProgramProductsList[scope.currentProgram.id][0].calculatedIsa).toEqual(4166682);
+      expect(scope.$parent.allocationProgramProductsList[scope.currentProgram.id][1].calculatedIsa).toEqual(422);
+      expect(scope.currentProgramProducts).toEqual(scope.$parent.allocationProgramProductsList[scope.currentProgram.id]);
     });
 
   });
