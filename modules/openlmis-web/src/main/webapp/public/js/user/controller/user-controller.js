@@ -160,7 +160,7 @@ function UserController($scope, $routeParams, $location, $dialog, Users, User, A
       header: messageService.get('delete.facility.header'),
       body: messageService.get('confirm.programRole.deletion')
     };
-    OpenLmisDialog.newDialog(dialogOpts, $scope.clearSelectedFacility, $dialog);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.clearSelectedFacility, $dialog, messageService);
   };
 
   var loadUserFacility = function () {
