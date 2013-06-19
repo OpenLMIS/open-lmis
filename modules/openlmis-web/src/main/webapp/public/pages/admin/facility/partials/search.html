@@ -21,14 +21,11 @@
   <div class="form-tip" openlmis-message="search.threeCharacters"></div>
 
   <div class="facility-list" ng-show="query.length > 2">
-    <h3>
-      <ng-pluralize count="resultCount"
-                    when="{ 0: 'No matches found for \'{{query}}\'',
-                            1: '1 match found for \'{{query}}\'',
-                            other: '{} matches found for \'{{query}}\''}">
-
-      </ng-pluralize>
-    </h3>
+    <div ng-switch on="resultCount">
+      <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
+      <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
+      <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
+    </div>
     <a class="close-btn" href="javascript:void(0);" ng-click="clearSearch()"></a>
     <ul>
       <li ng-repeat="facility in facilityList">
