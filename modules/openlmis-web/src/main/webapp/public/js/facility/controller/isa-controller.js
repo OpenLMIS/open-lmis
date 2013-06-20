@@ -10,7 +10,10 @@ function IsaModalController($scope, FacilityProgramProducts, ProgramProducts, $r
 
       var population = $scope.$parent.facility.catchmentPopulation;
 
-      if (isUndefined(population) || isUndefined(product.programProductIsa)) return;
+      if (isUndefined(population) || isUndefined(product.programProductIsa)) {
+        product.calculatedIsa = undefined;
+        return;
+      }
 
       product.calculatedIsa = Math.ceil(utils.parseIntWithBaseTen(population) * utils.parseIntWithBaseTen(product.programProductIsa.whoRatio) *
         utils.parseIntWithBaseTen(product.programProductIsa.dosesPerYear) * utils.parseIntWithBaseTen(product.programProductIsa.wastageRate) / 12 *
