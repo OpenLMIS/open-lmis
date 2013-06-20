@@ -16,7 +16,7 @@ public class QueryHelpers {
         for (Object entryObject : params.keySet())
         {
             String entry = entryObject.toString();
-            if(entry.startsWith("sort-")){
+            if(entry.startsWith("sort-") &&  (entry.endsWith("asc") || entry.endsWith("desc"))){
                 if(sortOrder == ""){
                     sortOrder = entry.substring(5) + " " + ((String[])params.get(entry))[0];
                 }else{

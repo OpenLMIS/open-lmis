@@ -40,7 +40,7 @@ public class SummaryQueryBuilder {
             predicate = predicate.isEmpty() ? "where r.periodid = "+ period : " and r.periodid = "+ period;
         }
         if (program != null &&  !program.equals("undefined") && !program.isEmpty()) {
-            predicate = predicate.isEmpty() ? "where r.programid = "+ program : " and r.programid = "+ program;
+            predicate += predicate.isEmpty() ? "where r.programid = "+ program : " and r.programid = "+ program;
         }
 
         return predicate;
