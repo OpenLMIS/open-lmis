@@ -6,12 +6,11 @@
 
 describe('InitiateRnrController', function () {
 
-  var scope, ctrl, $httpBackend, location, facilities, programs, rootScope, messageService;
+  var scope, ctrl, $httpBackend, location, facilities, programs, rootScope, messageService, navigateBackService;
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
-
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, _messageService_) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, _messageService_, _navigateBackService_) {
     scope = $rootScope.$new();
     rootScope = $rootScope;
     rootScope.hasPermission = function () {
@@ -21,7 +20,7 @@ describe('InitiateRnrController', function () {
     $httpBackend = _$httpBackend_;
     location = $location;
     messageService = _messageService_;
-
+    navigateBackService = _navigateBackService_;
     facilities = [
       {"id":"10134", "name":"National Warehouse", "description":null}
     ];
@@ -31,6 +30,86 @@ describe('InitiateRnrController', function () {
 
     ctrl = $controller(InitiateRnrController, {$scope:scope, $rootScope:rootScope});
   }));
+
+  it("should not reset rnr data when navigated back from create rnr form", function() {
+    var testData = {selectedType: 2, selectedProgram: {"code":"HIV", "id":1}, selectedFacilityId: 1, isNavigatedBack: true};
+    navigateBackService.setData(testData);
+    spyOn(scope,'loadFacilitiesForProgram');
+    scope.$broadcast('$viewContentLoaded');
+    expect(scope.selectedProgram).not.toEqual(null);
+    expect(scope.selectedFacilityId).not.toEqual(null);
+    expect(scope.loadFacilitiesForProgram).toHaveBeenCalled();
+  });
+
+  it("should reset rnr data when selectedType is changed", function() {
+    var testData = {selectedType: 2, selectedProgram: {"code":"HIV", "id":1}, selectedFacilityId: 1, isNavigatedBack: false};
+    navigateBackService.setData(testData);
+    scope.$broadcast('$viewContentLoaded');
+    expect(scope.selectedProgram).toEqual(null);
+    expect(scope.selectedFacilityId).toEqual(null);
+  });
+
+  it("should retain all the previous values when navigated back from create rnr screen", function() {
+    var testData = {selectedType: 2, selectedProgram: {"code":"HIV", "id":1}, selectedFacilityId: 1, isNavigatedBack: true};
+    navigateBackService.setData(testData);
+    scope.programs = programs;
+    spyOn(scope,'loadFacilitiesForProgram');
+    spyOn(scope,'loadFacilityData');
+    spyOn(scope,'loadPeriods');
+    scope.$broadcast('$viewContentLoaded');
+    scope.$digest();
+    expect(scope.selectedType).toEqual(testData.selectedType);
+    expect(scope.selectedProgram).toEqual(testData.selectedProgram);
+    expect(scope.selectedFacilityId).toEqual(testData.selectedFacilityId);
+    expect(scope.loadFacilityData).toHaveBeenCalledWith(scope.selectedType);
+    expect(scope.loadFacilitiesForProgram).toHaveBeenCalled();
+    expect(scope.loadPeriods).toHaveBeenCalled();
+  });
+
+  it("should return facilities if selected type is 0 and facility list is not empty", function(){
+    var selectedType = 0;
+    var UserFacilityListResponse = {"facilityList":[
+      {"id":1,"code":"F11","name":"lokesh"}
+    ]};
+    var RequisitionResponse = {"programList":[
+      {"code":"HIV", "id":1}
+    ]};
+
+    $httpBackend.when('GET', '/logistics/user/facilities.json').respond(UserFacilityListResponse);
+    $httpBackend.when('GET', '/create/requisition/programs.json?facilityId=1').respond(RequisitionResponse);
+    scope.loadFacilityData(selectedType);
+    $httpBackend.flush();
+    expect(scope.facilityDisplayName).toEqual('F11-lokesh');
+    expect(scope.selectedFacilityId).toEqual(1);
+    expect(scope.programs).toEqual([{"code":"HIV", "id":1}]);
+  });
+
+  it("should not return facilities if selected type is 0 and facility list is empty", function(){
+    var selectedType = 0;
+    var UserFacilityListResponse = {"facilityList":[]};
+
+    spyOn(messageService, 'get').andCallFake(function (arg) {
+      return "--none assigned--";
+    });
+    $httpBackend.when('GET', '/logistics/user/facilities.json').respond(UserFacilityListResponse);
+    scope.loadFacilityData(selectedType);
+    $httpBackend.flush();
+    expect(scope.facilityDisplayName).toEqual('--none assigned--');
+    expect(scope.program).toEqual(null);
+    expect(scope.selectedProgram).toEqual(null);
+  });
+
+  it("should return program list if selected type is 1",function(){
+   var selectedType = 1;
+   var RequisitionResponse = {"programList":[
+     {"code":"HIV", "id":1}
+   ]};
+
+   $httpBackend.when('GET', '/create/requisition/programs.json').respond(RequisitionResponse);
+   scope.loadFacilityData(selectedType);
+   $httpBackend.flush();
+   expect(scope.programs).toEqual([{"code":"HIV", "id":1}]);
+  });
 
   it('should get existing rnr if already initiated', function () {
     scope.selectedProgram = {"code":"hiv", "id":2};
@@ -116,6 +195,20 @@ describe('InitiateRnrController', function () {
     $httpBackend.flush();
     expect(messageService.get).toHaveBeenCalledWith('error.requisition.not.initiated');
     expect(scope.error).toEqual("Requisition not initiated yet");
+  });
+
+  it('should save the selected data in the navigateBackService', function(){
+    scope.selectedType = 0;
+    scope.selectedProgram = {"code":"hiv", "id":2};
+    scope.selectedFacilityId = 1;
+    scope.selectedPeriod = {"id":3};
+    var testData =  {selectedType: scope.selectedType, selectedProgram: scope.selectedProgram, selectedFacilityId: scope.selectedFacilityId, isNavigatedBack: true};
+    spyOn(navigateBackService,'setData');
+    $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights:[{right:'CREATE_REQUISITION'}]});
+    $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr":{"id":1, status:"INITIATED"}});
+    scope.initRnr();
+    $httpBackend.flush();
+    expect(navigateBackService.setData).toHaveBeenCalledWith(testData);
   });
 
   it('should set appropriate message for facility', function () {
