@@ -46,6 +46,7 @@ describe("ISA Controller", function () {
       scope.currentProgram = {id : 1};
       var currentProducts = [{programProductId: 1, facilityId: 1, overriddenIsa: 34},
         {programProductId: 2, facilityId: 1, overriddenIsa: 45}];
+      scope.$parent.facility = {catchmentPopulation : 89};
       scope.$parent.allocationProgramProductsList[scope.currentProgram.id] = currentProducts;
       scope.$parent.programProductsISAModal = true;
       scope.$apply();

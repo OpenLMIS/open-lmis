@@ -3,7 +3,21 @@
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-function IsaModalController($scope, FacilityProgramProducts, $routeParams) {
+function IsaModalController($scope, FacilityProgramProducts, ProgramProducts, $routeParams) {
+
+  function calculateIsa(products) {
+    $(products).each(function (index, product) {
+
+      var population = $scope.$parent.facility.catchmentPopulation;
+
+      if (isUndefined(population) || isUndefined(product.programProductIsa)) return;
+
+      product.calculatedIsa = Math.ceil(utils.parseIntWithBaseTen(population) * utils.parseIntWithBaseTen(product.programProductIsa.whoRatio) *
+        utils.parseIntWithBaseTen(product.programProductIsa.dosesPerYear) * utils.parseIntWithBaseTen(product.programProductIsa.wastageRate) / 12 *
+        utils.parseIntWithBaseTen(product.programProductIsa.bufferPercentage) + utils.parseIntWithBaseTen(product.programProductIsa.adjustmentValue));
+
+    });
+  }
 
   $scope.$watch('$parent.programProductsISAModal', function () {
     if (!$scope.$parent.programProductsISAModal) return;
@@ -13,30 +27,29 @@ function IsaModalController($scope, FacilityProgramProducts, $routeParams) {
     $scope.currentProgramProducts = [];
 
     if ($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]) {
+      calculateIsa($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]);
       $scope.filteredProducts = $scope.currentProgramProducts = angular.copy($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]);
       return;
     }
 
-    FacilityProgramProducts.get({programId: $scope.currentProgram.id, facilityId: $routeParams.facilityId}, function (data) {
+    var successFunc = function (data) {
 
       $scope.$parent.allocationProgramProductsList[$scope.currentProgram.id] = data.programProductList;
 
-      $($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]).each(function (index, product) {
-
-        var population = $scope.$parent.facility.catchmentPopulation;
-
-        if (isUndefined(population) || isUndefined(product.programProductIsa)) return;
-
-        product.calculatedIsa = Math.ceil(utils.parseIntWithBaseTen(population) * utils.parseIntWithBaseTen(product.programProductIsa.whoRatio) *
-          utils.parseIntWithBaseTen(product.programProductIsa.dosesPerYear) * utils.parseIntWithBaseTen(product.programProductIsa.wastageRate) / 12 *
-          utils.parseIntWithBaseTen(product.programProductIsa.bufferPercentage) + utils.parseIntWithBaseTen(product.programProductIsa.adjustmentValue));
-
-      });
+      calculateIsa($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]);
 
       $scope.filteredProducts = $scope.currentProgramProducts = angular.copy($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]);
 
-    }, function (data) {
-    });
+    };
+
+    if ($routeParams.facilityId) {
+      FacilityProgramProducts.get({programId: $scope.currentProgram.id, facilityId: $routeParams.facilityId}, successFunc, function (data) {
+      });
+    } else {
+      ProgramProducts.get({programId: $scope.currentProgram.id}, successFunc, function (data) {
+      });
+    }
+
   });
 
   $scope.updateISA = function () {
