@@ -46,11 +46,9 @@ function IsaModalController($scope, FacilityProgramProducts, ProgramProducts, $r
     };
 
     if ($routeParams.facilityId) {
-      FacilityProgramProducts.get({programId: $scope.currentProgram.id, facilityId: $routeParams.facilityId}, successFunc, function (data) {
-      });
+      FacilityProgramProducts.get({programId: $scope.currentProgram.id, facilityId: $routeParams.facilityId}, successFunc, function (data) {});
     } else {
-      ProgramProducts.get({programId: $scope.currentProgram.id}, successFunc, function (data) {
-      });
+      ProgramProducts.get({programId: $scope.currentProgram.id}, successFunc, function (data) {});
     }
 
   });

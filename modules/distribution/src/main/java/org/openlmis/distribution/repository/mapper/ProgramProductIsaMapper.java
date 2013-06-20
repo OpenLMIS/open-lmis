@@ -16,15 +16,15 @@ import org.springframework.stereotype.Repository;
 public interface ProgramProductIsaMapper {
 
   @Insert({"INSERT INTO program_product_isa",
-    "(programProductId, whoRatio, dosesPerYear, wastageRate, bufferPercentage, minimumValue, maximumValue, adjustmentValue, calculatedIsa)",
+    "(programProductId, whoRatio, dosesPerYear, wastageRate, bufferPercentage, minimumValue, maximumValue, adjustmentValue)",
     "VALUES (#{programProductId}, #{whoRatio}, #{dosesPerYear}, #{wastageRate}, #{bufferPercentage},",
-    "#{minimumValue}, #{maximumValue}, #{adjustmentValue}, #{calculatedIsa} )"})
+    "#{minimumValue}, #{maximumValue}, #{adjustmentValue} )"})
   @Options(useGeneratedKeys = true)
   void insert(ProgramProductISA programProductISA);
 
   @Update({"UPDATE program_product_isa SET whoRatio = #{whoRatio} , dosesPerYear = #{dosesPerYear}, ",
     "wastageRate = #{wastageRate}, bufferPercentage = #{bufferPercentage}, minimumValue = #{minimumValue}, ",
-    "maximumValue = #{maximumValue}, adjustmentValue = #{adjustmentValue}, calculatedIsa = #{calculatedIsa} where id = #{id}"})
+    "maximumValue = #{maximumValue}, adjustmentValue = #{adjustmentValue} where id = #{id}"})
   void update(ProgramProductISA programProductISA);
 
   @Select("SELECT * FROM program_product_isa WHERE programProductId = #{programProductId}")

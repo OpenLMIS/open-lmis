@@ -26,7 +26,4 @@ public class ProgramProductISA extends BaseModel {
   Integer minimumValue;
   Integer maximumValue;
   Integer adjustmentValue;
-
-  Integer calculatedIsa;
-
 }
