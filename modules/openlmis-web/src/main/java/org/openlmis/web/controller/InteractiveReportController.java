@@ -68,8 +68,8 @@ public class InteractiveReportController  extends BaseController {
        showReport("facility_mailing_list",outputOption,request,response);
    }
 
-    @RequestMapping(value = "/reportdata/facilitylist", method = GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_FACILITY_REPORT')")
+    @RequestMapping(value = "/facilitylist", method = GET, headers = ACCEPT_JSON)
+    //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_FACILITY_REPORT')")
     public Pages getFacilityLists( //@PathVariable(value = "reportKey") String reportKey,
                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                     @RequestParam(value = "max", required = false, defaultValue = "10") int max,
