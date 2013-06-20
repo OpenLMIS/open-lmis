@@ -120,5 +120,66 @@ describe("ISA Controller", function () {
       expect(scope.currentProgramProducts).toEqual(scope.$parent.allocationProgramProductsList[scope.currentProgram.id]);
     });
 
+    it('should reset all isa values', function() {
+      var currentProducts = [
+        {programProductId: 1, facilityId: 1, overriddenIsa: 34, programProductIsa: {}},
+        {programProductId: 2, facilityId: 1, overriddenIsa: 45, programProductIsa: {}}
+      ];
+      scope.currentProgramProducts = currentProducts;
+
+      scope.resetAllToCalculatedIsa();
+
+      expect(scope.currentProgramProducts[0].overriddenIsa).toEqual(null);
+      expect(scope.currentProgramProducts[1].overriddenIsa).toEqual(null);
+    });
+
+    it('should filter program products based on query', function() {
+      var currentProducts = [
+        {programProductId: 1, facilityId: 1, overriddenIsa: 34, programProductIsa: {}, product: {primaryName: 'abcd'}},
+        {programProductId: 2, facilityId: 1, overriddenIsa: 45, programProductIsa: {}, product: {primaryName: 'efgh'}}
+      ];
+      scope.currentProgramProducts = currentProducts;
+      scope.query = 'ef';
+      scope.updateCurrentProgramProducts();
+
+      expect(scope.filteredProducts).toEqual([currentProducts[1]]);
+    });
+
+    it('should filter program products based on query even for case mismatch', function() {
+      var currentProducts = [
+        {programProductId: 1, facilityId: 1, overriddenIsa: 34, programProductIsa: {}, product: {primaryName: 'abcd'}},
+        {programProductId: 2, facilityId: 1, overriddenIsa: 45, programProductIsa: {}, product: {primaryName: 'efgh'}}
+      ];
+      scope.currentProgramProducts = currentProducts;
+      scope.query = 'EF';
+      scope.updateCurrentProgramProducts();
+
+      expect(scope.filteredProducts).toEqual([currentProducts[1]]);
+    });
+
+    it('should have all program products if query is empty', function() {
+      var currentProducts = [
+        {programProductId: 1, facilityId: 1, overriddenIsa: 34, programProductIsa: {}, product: {primaryName: 'abcd'}},
+        {programProductId: 2, facilityId: 1, overriddenIsa: 45, programProductIsa: {}, product: {primaryName: 'efgh'}}
+      ];
+      scope.currentProgramProducts = currentProducts;
+      scope.query = '';
+      scope.updateCurrentProgramProducts();
+
+      expect(scope.filteredProducts).toEqual(currentProducts);
+    });
+
+    it('should filter program products based on query even if query contains leading and trailing whitespace', function() {
+      var currentProducts = [
+        {programProductId: 1, facilityId: 1, overriddenIsa: 34, programProductIsa: {}, product: {primaryName: 'abcd'}},
+        {programProductId: 2, facilityId: 1, overriddenIsa: 45, programProductIsa: {}, product: {primaryName: 'efgh'}}
+      ];
+      scope.currentProgramProducts = currentProducts;
+      scope.query = '  efgh  ';
+      scope.updateCurrentProgramProducts();
+
+      expect(scope.filteredProducts).toEqual([currentProducts[1]]);
+    });
+
   });
 });

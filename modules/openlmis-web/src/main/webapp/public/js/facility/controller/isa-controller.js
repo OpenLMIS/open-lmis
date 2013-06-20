@@ -13,13 +13,13 @@ function IsaModalController($scope, FacilityProgramProducts, $routeParams) {
     $scope.currentProgramProducts = [];
 
     if ($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]) {
-      $scope.currentProgramProducts = angular.copy($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]);
+      $scope.filteredProducts = $scope.currentProgramProducts = angular.copy($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]);
       return;
     }
 
     FacilityProgramProducts.get({programId: $scope.currentProgram.id, facilityId: $routeParams.facilityId}, function (data) {
 
-      $scope.$parent.allocationProgramProductsList[$scope.currentProgram.id] = angular.copy(data.programProductList);
+      $scope.$parent.allocationProgramProductsList[$scope.currentProgram.id] = data.programProductList;
 
       $($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]).each(function (index, product) {
 
@@ -33,7 +33,7 @@ function IsaModalController($scope, FacilityProgramProducts, $routeParams) {
 
       });
 
-      $scope.currentProgramProducts = angular.copy($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]);
+      $scope.filteredProducts = $scope.currentProgramProducts = angular.copy($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]);
 
     }, function (data) {
     });
@@ -46,6 +46,30 @@ function IsaModalController($scope, FacilityProgramProducts, $routeParams) {
 
   $scope.resetISAModal = function () {
     $scope.$parent.programProductsISAModal = false;
+  }
+
+  $scope.resetAllToCalculatedIsa = function () {
+    $($scope.currentProgramProducts).each(function (index, product) {
+      product.overriddenIsa = null;
+    });
+  }
+
+  $scope.updateCurrentProgramProducts = function () {
+    $scope.filteredProducts = [];
+    $scope.query = $scope.query.trim();
+
+    if (!$scope.query.length) {
+      $scope.filteredProducts = $scope.currentProgramProducts;
+      return;
+    }
+
+    $($scope.currentProgramProducts).each(function (index, product) {
+      var searchString = $scope.query.toLowerCase();
+      if (product.product.primaryName.toLowerCase().indexOf(searchString) >= 0) {
+        $scope.filteredProducts.push(product);
+      }
+    });
+
   }
 
 }

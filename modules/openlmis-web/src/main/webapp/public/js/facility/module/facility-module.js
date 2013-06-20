@@ -45,7 +45,7 @@ require(['../../shared/app', '../controller/facility-controller', '../controller
     angular.bootstrap(document, ['facility']);
 
     facilityModule.numericValue = function (value, errorHolder) {
-      var NUMBER_REGEXP = /^(\d{0,4}\.?\d{0,4}|\.\d{1,4})$/;
+      var NUMBER_REGEXP = /^\d*$/;
       var valid = (value == undefined) ? true : NUMBER_REGEXP.test(value);
 
       if (errorHolder != undefined) {

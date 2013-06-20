@@ -183,7 +183,7 @@ span.field-error {
       width: 100%;
     }
     &.programs-table {
-      width: 60%;
+      width: 70%;
     }
   }
 }
@@ -1677,4 +1677,36 @@ input[placeholder].placeholder{
   font-style: italic;
   padding: 8px 0 0;
   font-size: 0.9em;
+}
+
+#override-isa-table {
+  margin: 5px;
+  div {
+    &.has-overridden-isa {
+      background-color: #FFFFE7;
+    }
+    .isa-list-row {
+      padding: 12px 0;
+      border: 1px solid #EEE;
+      border-top: 0;
+      input[type="text"] {
+        width: 76%;
+      }
+      div:first-child {
+        padding-left: 20px;
+      }
+      div:last-child input[type="button"] {
+        float: right;
+        margin-right: 12px;
+      }
+    }
+  }
+
+  .use-calculated-isa-column {
+    min-width: 140px;
+  }
+}
+
+#searchProduct.search-query {
+  margin-bottom: 8px;
 }

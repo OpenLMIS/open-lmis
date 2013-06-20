@@ -49,24 +49,25 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   };
 
   function saveAllocationProgramProducts() {
-    var defers = [];
+    var promises = [];
 
     var keys = _.keys($scope.allocationProgramProductsList);
 
-    $(keys).each(function(index, key) {
-      defers.push($q.defer());
+    $(keys).each(function (index, key) {
+      var deferred = $q.defer();
+      promises.push(deferred.promise);
 
       var program = $scope.allocationProgramProductsList[key][0].program;
 
       FacilityProgramProducts.post({facilityId: $routeParams.facilityId, programId: program.id}, $scope.allocationProgramProductsList[key], function (data) {
-        defers[index].resolve();
+        deferred.resolve();
       }, function () {
-        defers[index].reject("error.facility.allocation.product.save");
+        deferred.reject({error: "error.facility.allocation.product.save", program: program.name});
       });
 
     })
 
-    return defers;
+    return promises;
   }
 
   $scope.saveFacility = function () {
@@ -84,15 +85,17 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       $q.all(promises).then(function () {
         $scope.showError = "true";
         $scope.error = "";
+        $scope.errorProgram = "";
         $scope.$parent.message = data.success;
         $scope.facility = getFacilityWithDateObjects(data.facility);
         $scope.$parent.facilityId = $scope.facility.id;
         populateFlags($scope);
         $location.path('');
-      }, function(error) {
+      }, function (error) {
         $scope.showError = "true";
         $scope.message = "";
-        $scope.error = error;
+        $scope.error = error.error;
+        $scope.errorProgram = error.program;
       })
     };
 
@@ -153,8 +156,8 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     OpenLmisDialog.newDialog(options, $scope.removeSupportedProgramConfirm, $dialog, messageService);
   };
 
-  $scope.removeSupportedProgramConfirm = function(result) {
-    if(result) {
+  $scope.removeSupportedProgramConfirm = function (result) {
+    if (result) {
       $scope.removeSupportedProgram()
     }
     $scope.selectedSupportedProgram = undefined;
