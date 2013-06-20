@@ -75,6 +75,8 @@ public class UploadPage extends Page {
   public void verifySuccessMessageOnUploadScreen() {
     testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
     assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    String successMessage = "File uploaded successfully";
+    assertTrue("Success Message '" + successMessage + "' should show up", saveSuccessMsgDiv.getText().toUpperCase().trim().contains(successMessage.toUpperCase().trim()));
     testWebDriver.setImplicitWait(implicitWait);
   }
 
@@ -84,7 +86,8 @@ public class UploadPage extends Page {
     testWebDriver.setImplicitWait(implicitWait);
   }
     public void validateErrorMessageOnUploadScreen(String message) {
-        assertTrue("Error Message incorrect", saveErrorMsgDiv.getText().contains(message));
+        assertTrue("Error Message incorrect : " + "Expected '" + message + "' but saw '" + saveErrorMsgDiv.getText() + "'.", saveErrorMsgDiv.getText().trim().contains(message.trim()));
+
     }
 
   public void uploadAndVerifyGeographicZone(String uploadFileNameWithExtension) throws FileNotFoundException {
@@ -130,7 +133,7 @@ public class UploadPage extends Page {
         testWebDriver.sleep(250);
     }
 
-    public void uploadDeliveryZoneProgramScheduleInvalidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
+    public void uploadDeliveryZoneProgramScheduleValidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
         selectUploadType("Map Delivery Zones To Program Schedules");
         uploadFile(uploadFileNameWithExtension);
         testWebDriver.sleep(250);
@@ -142,7 +145,7 @@ public class UploadPage extends Page {
         testWebDriver.sleep(250);
     }
 
-    public void uploadDeliveryZoneMembersInvalidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
+    public void uploadDeliveryZoneMembersValidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
         selectUploadType("Delivery Zone Members");
         uploadFile(uploadFileNameWithExtension);
         testWebDriver.sleep(250);
@@ -154,7 +157,7 @@ public class UploadPage extends Page {
         testWebDriver.sleep(250);
     }
 
-    public void uploadDeliveryZoneWarehousesInvalidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
+    public void uploadDeliveryZoneWarehousesValidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
         selectUploadType("Delivery Zone Warehouses");
         uploadFile(uploadFileNameWithExtension);
         testWebDriver.sleep(250);
