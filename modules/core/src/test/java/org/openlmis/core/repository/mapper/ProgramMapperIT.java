@@ -26,9 +26,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.lang.Boolean.FALSE;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
@@ -268,6 +266,15 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     List<Program> programs = programMapper.getProgramsForUserByFacilityAndRights(facility.getId(), user.getId(), rights);
     assertThat(programs.size(), is(1));
     assertTrue(programs.contains(activeProgram));
+  }
+
+
+  @Test
+  public void shouldGetAllProgramsInOrderByRegimentTemplateConfiguredAndName() {
+    insertProgram(make(a(defaultProgram, with(regimenTemplateConfigured, true))));
+    List<Program> programs = programMapper.getAllByRegimenTemplate();
+    assertThat(programs.size(), is(6));
+    assertThat(programs.get(0).getCode(), is(ProgramBuilder.PROGRAM_CODE));
   }
 
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {

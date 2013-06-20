@@ -9,3 +9,4 @@
 \i src/main/resources/seed/product_forms.sql
 \i src/main/resources/seed/product_groups.sql
 \i src/main/resources/seed/programs.sql
+\i src/main/resources/seed/regimen_categories.sql

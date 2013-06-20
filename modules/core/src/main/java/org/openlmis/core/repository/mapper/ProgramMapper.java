@@ -109,6 +109,11 @@ public interface ProgramMapper {
   @Select("SELECT * FROM programs ORDER BY templateConfigured DESC, name")
   List<Program> getAll();
 
+
+
   @Select("SELECT * FROM programs WHERE LOWER(code) = LOWER(#{code})")
   Program getByCode(String code);
+
+  @Select("SELECT * FROM programs ORDER BY regimenTemplateConfigured DESC, name")
+  List<Program> getAllByRegimenTemplate();
 }
