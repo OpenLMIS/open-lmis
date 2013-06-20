@@ -61,7 +61,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
-    String date_time = createFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy);
+    String date_time = createFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
+      geoZone, facilityType, operatedBy, "500000");
     String facility_code = facilityCodePrefix + date_time;
     String facility_name = facilityNamePrefix + date_time;
     createFacilityPage.verifyMessageOnFacilityScreen(facility_name, "created");

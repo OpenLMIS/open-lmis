@@ -96,7 +96,7 @@ public class DeleteFacilityPage extends Page {
   private static WebElement facilityHeader;
 
   @FindBy(how = How.ID, using = "programs-supported")
-  private static WebElement programsSupported;
+  public static WebElement programsSupported;
 
   @FindBy(how = How.ID, using = "supported-program-active")
   private static WebElement programsSupportedActiveFlag;

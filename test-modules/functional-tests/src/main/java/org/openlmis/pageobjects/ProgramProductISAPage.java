@@ -121,26 +121,31 @@ public class ProgramProductISAPage extends Page {
 
   public void enterValueInAdjustmentTextField(String adjustmentValue) {
     testWebDriver.waitForElementToAppear(adjustmentValueTextBox);
+    adjustmentValueTextBox.clear();
     adjustmentValueTextBox.sendKeys(adjustmentValue);
   }
 
   public void enterValueInBufferPercentageTextField(String bufferPercentage) {
     testWebDriver.waitForElementToAppear(bufferPercentageTextBox);
+    bufferPercentageTextBox.clear();
     bufferPercentageTextBox.sendKeys(bufferPercentage);
   }
 
   public void enterValueInWastageTextField(String wastage) {
     testWebDriver.waitForElementToAppear(wastageRateTextBox);
+    wastageRateTextBox.clear();
     wastageRateTextBox.sendKeys(wastage);
   }
 
   public void enterValueInDosesTextField(String dosesPerYear) {
     testWebDriver.waitForElementToAppear(dosesPerYearTextBox);
+    dosesPerYearTextBox.clear();
     dosesPerYearTextBox.sendKeys(dosesPerYear);
   }
 
   public void enterValueInRadioTextField(String ratio) {
     testWebDriver.waitForElementToAppear(ratioTextBox);
+    ratioTextBox.clear();
     ratioTextBox.sendKeys(ratio);
   }
 
