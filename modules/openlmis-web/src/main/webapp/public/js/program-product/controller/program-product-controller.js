@@ -113,10 +113,11 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
 
   $scope.getFormula = function (programProductIsa) {
     if ($scope.isPresent(programProductIsa)) {
-      var adjustmentVal = parseInt(programProductIsa.adjustmentValue, 10) > 0 ? programProductIsa.adjustmentValue : "(" + programProductIsa.adjustmentValue + ")";
+      var adjustmentVal = utils.parseIntWithBaseTen(programProductIsa.adjustmentValue);
+      adjustmentVal = adjustmentVal > 0 ? adjustmentVal : "(" + adjustmentVal + ")";
       return "(population) * " +
           (programProductIsa.whoRatio / 100).toFixed(3) +
-          " * " + programProductIsa.dosesPerYear +
+          " * " + utils.parseIntWithBaseTen(programProductIsa.dosesPerYear) +
           " * " + (1 + programProductIsa.wastageRate / 100).toFixed(3) +
           " / 12 * " + (1 + programProductIsa.bufferPercentage / 100).toFixed(3) +
           " + " + adjustmentVal;

@@ -70,6 +70,9 @@ public class ProgramProductISAPage extends Page {
   @FindBy(how = XPATH, using = "//input[@value='Cancel']")
   private static WebElement programProductISACancelButton;
 
+  @FindBy(how = ID, using = "calculateButton")
+  private static WebElement testCalculationButton;
+
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement saveSuccessMsgDiv;
 
@@ -176,6 +179,9 @@ public class ProgramProductISAPage extends Page {
 
   public String fillPopulation(String population) {
     populationTextBox.sendKeys(population);
+    testWebDriver.sleep(100);
+    testCalculationButton.click();
+    testWebDriver.sleep(100);
     return testWebDriver.getText(isaValueLabel);
   }
 
