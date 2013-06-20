@@ -84,7 +84,7 @@ describe('program product controller', function () {
 
     scope.saveProductISA();
     $httpBackend.flush();
-    expect(scope.message).toEqual("ISA saved successfully");
+    expect(scope.message).toEqual("message.isa.save.success");
     expect(scope.programProductISAModal).toBeFalsy();
     expect(scope.error).toEqual("");
   });
@@ -97,7 +97,7 @@ describe('program product controller', function () {
 
     scope.saveProductISA();
     $httpBackend.flush();
-    expect(scope.message).toEqual("ISA saved successfully");
+    expect(scope.message).toEqual("message.isa.save.success");
     expect(scope.programProductISAModal).toBeFalsy();
     expect(scope.error).toEqual("");
   });
@@ -108,7 +108,7 @@ describe('program product controller', function () {
     scope.saveProductISA();
 
     expect(scope.inputClass).toBeTruthy();
-    expect(scope.error).toEqual("Please fill required values");
+    expect(scope.error).toEqual("form.error");
     expect(scope.message).toEqual("");
   });
 

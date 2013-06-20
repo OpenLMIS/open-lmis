@@ -70,7 +70,7 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
   $scope.saveProductISA = function () {
     if ($scope.isaForm.$error.required) {
       $scope.inputClass = true;
-      $scope.error = "Please fill required values";
+      $scope.error = "form.error";
       $scope.message = "";
     } else {
       $scope.inputClass = false;
@@ -83,7 +83,7 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
   };
 
   var successCallBack = function () {
-    $scope.message = "ISA saved successfully";
+    $scope.message = "message.isa.save.success";
     setTimeout(function () {
       $scope.$apply(function () {
         angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {

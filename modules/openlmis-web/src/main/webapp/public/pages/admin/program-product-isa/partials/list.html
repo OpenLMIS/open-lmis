@@ -21,7 +21,7 @@
   </div>
 
   <div ng-show="programId">
-    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"></div>
+    <div class="alert alert-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
     <div class="row-fluid product-isa">
       <div class="span2">
         <label><span openlmis-message="label.products"></span>:</label>
@@ -165,7 +165,7 @@
         </div>
       </div>
 
-      <div class="alert alert-error" id="saveFailMessage" ng-bind="error" ng-show="error">
+      <div class="alert alert-error" id="saveFailMessage" openlmis-message="error" ng-show="error">
       </div>
 
     </div>
@@ -173,10 +173,10 @@
     <div class="modal-footer">
       <input type="button" class="btn btn-primary save-button"
              ng-click="saveProductISA()"
-             value="Save"/>
+             openlmis-message="button.save"/>
       <input type="button"
              ng-click="clearAndCloseProgramProductISAModal();error=''"
-             class="btn btn-cancel" value="Cancel"/>
+             class="btn btn-cancel" openlmis-message="button.cancel"/>
     </div>
 
   </div>
