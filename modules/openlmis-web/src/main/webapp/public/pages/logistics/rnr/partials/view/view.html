@@ -8,9 +8,9 @@
 <div class="rnr-tabs clearfix">
   <ul class="clearfix">
     <li ng-class="{'selected': !showNonFullSupply}">
-      <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab">Full Supply Product(s)</a></li>
+      <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab" openlmis-message="label.full.supply.products"></a></li>
     <li ng-class="{'selected': showNonFullSupply}">
-      <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
+      <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab" openlmis-message="label.non.full.supply.products"></a></li>
   </ul>
 </div>
 

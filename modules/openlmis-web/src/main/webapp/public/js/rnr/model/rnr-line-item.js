@@ -295,9 +295,9 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   };
 
   RnrLineItem.prototype.getErrorMessage = function () {
-    if (this.stockInHand < 0) return 'Stock On Hand is calculated to be negative, please validate entries';
-    if (this.quantityDispensed < 0) return 'Total Quantity Consumed is calculated to be negative, please validate entries';
-    if (this.arithmeticallyInvalid()) return 'The entries are arithmetically invalid, please recheck';
+    if (this.stockInHand < 0) return "error.stock.on.hand.negative";
+    if (this.quantityDispensed < 0) return "error.quantity.consumed.negative";
+    if (this.arithmeticallyInvalid()) return "error.arithmetically.invalid";
 
     return "";
   };

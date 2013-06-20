@@ -6,8 +6,8 @@
 
 function ViewRnrListController($scope, facilities, RequisitionsForViewing, ProgramsToViewRequisitions, $location, messageService) {
   $scope.facilities = facilities;
-  $scope.facilityLabel = (!$scope.facilities.length) ? "--None Assigned--" : "--Select Facility--";
-  $scope.programLabel = "--None Assigned--";
+  $scope.facilityLabel = (!$scope.facilities.length) ? messageService.get("label.none.assigned") : messageService.get("label.select.facility");
+  $scope.programLabel = messageService.get("label.none.assigned");
   $scope.selectedItems = [];
 
   var selectionFunc = function (rowItem, event) {
@@ -47,7 +47,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
 
   function setProgramsLabel() {
     $scope.selectedProgramId = undefined;
-    $scope.programLabel = (!$scope.programs.length) ? "--None Assigned--" : "All";
+    $scope.programLabel = (!$scope.programs.length) ? messageService.get("label.none.assigned") : messageService.get("label.all");
   }
 
   $scope.loadProgramsForFacility = function () {

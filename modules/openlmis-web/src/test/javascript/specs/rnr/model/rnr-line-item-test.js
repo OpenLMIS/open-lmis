@@ -656,7 +656,7 @@ describe('RnrLineItem', function () {
 
       spyOn(rnrLineItem, 'arithmeticallyInvalid').andReturn("error");
       var errorMsg = rnrLineItem.getErrorMessage();
-      expect(errorMsg).toEqual("The entries are arithmetically invalid, please recheck");
+      expect(errorMsg).toEqual("error.arithmetically.invalid");
     });
 
     it("should give error message for negative stock in hand", function () {
@@ -666,7 +666,7 @@ describe('RnrLineItem', function () {
 
       var errorMsg = rnrLineItem.getErrorMessage();
 
-      expect(errorMsg).toEqual("Stock On Hand is calculated to be negative, please validate entries");
+      expect(errorMsg).toEqual("error.stock.on.hand.negative");
     });
 
     it("should give error message for negative quantity dispensed ", function () {
@@ -677,7 +677,7 @@ describe('RnrLineItem', function () {
 
       var errorMsg = rnrLineItem.getErrorMessage();
 
-      expect(errorMsg).toEqual("Total Quantity Consumed is calculated to be negative, please validate entries");
+      expect(errorMsg).toEqual("error.quantity.consumed.negative");
     });
 
   });

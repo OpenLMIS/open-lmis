@@ -57,7 +57,7 @@
                     </span >
 
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
-                      <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
+                      <span ng-bind = "lineItemErrorMessage(rnrLineItem)" ></span >
                       <span class = "beak-down" ></span >
                     </span >
                   </span >
@@ -75,7 +75,7 @@
                           style = "display:none;" openlmis-message="error.number.only">
                     </span >
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
-                      <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
+                      <span ng-bind = "lineItemErrorMessage(rnrLineItem)" ></span >
                       <span class = "beak-down" ></span >
                     </span >
                   </span >
@@ -108,7 +108,7 @@
                     </span >
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()"
                           style = "background: red;" >
-                      <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
+                      <span ng-bind = "lineItemErrorMessage(rnrLineItem)" ></span >
                       <span class = "beak-down" ></span >
                     </span >
                   </span >
@@ -138,7 +138,7 @@
                           style = "display:none;" openlmis-message="error.number.only">
                     </span >
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
-                      <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
+                      <span ng-bind = "lineItemErrorMessage(rnrLineItem)" ></span >
                       <span class = "beak-down" ></span >
                     </span >
                   </span >
@@ -206,7 +206,7 @@
                         ng-class = "getCellErrorClass(rnrLineItem)" >
                     <span id = "{{getId(column.name, $parent)}}" ng-bind = "rnrLineItem[column.name]" class = "cell-text" > </span >
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
-                      <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
+                      <span ng-bind = "lineItemErrorMessage(rnrLineItem)" ></span >
                       <span class = "beak-down" ></span >
                     </span >
                   </span >

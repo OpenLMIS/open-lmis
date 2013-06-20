@@ -16,10 +16,10 @@ describe('ViewRnrListController', function () {
     controller = $controller;
     messageService = _messageService_;
     facilities = [
-      {"id":1}
+      {"id": 1}
     ];
-    rnrList = {'rnr_list':[]};
-    controller(ViewRnrListController, {$scope:scope, facilities:facilities, $location:location});
+    rnrList = {'rnr_list': []};
+    controller(ViewRnrListController, {$scope: scope, facilities: facilities, $location: location});
   }));
 
   it('should initialize facilities', function () {
@@ -27,18 +27,23 @@ describe('ViewRnrListController', function () {
   });
 
   it('should set facility label', function () {
-    controller(ViewRnrListController, {$scope:scope, facilities:[]});
+    spyOn(messageService, 'get').andCallFake(function (arg) {
+      return "--None Assigned--";
+    });
+    controller(ViewRnrListController, {$scope: scope, facilities: []});
+
+    expect(messageService.get).toHaveBeenCalledWith("label.none.assigned");
     expect("--None Assigned--").toEqual(scope.facilityLabel);
   });
 
   it('should load should raise error and return if if form invalid', function () {
-    scope.viewRequisitionForm = {$invalid:true};
+    scope.viewRequisitionForm = {$invalid: true};
     scope.loadRequisitions();
     expect(scope.errorShown).toBeTruthy();
   });
 
   it('should get requisitions with program id if selected ', function () {
-    scope.viewRequisitionForm = {$invalid:false};
+    scope.viewRequisitionForm = {$invalid: false};
     scope.selectedFacilityId = 1;
     scope.startDate = 'startDate';
     scope.endDate = 'endDate';
@@ -48,7 +53,7 @@ describe('ViewRnrListController', function () {
   });
 
   it('should get requisitions without program id if all', function () {
-    scope.viewRequisitionForm = {$invalid:false};
+    scope.viewRequisitionForm = {$invalid: false};
     scope.selectedFacilityId = 1;
     scope.startDate = 'startDate';
     scope.endDate = 'endDate';
@@ -58,7 +63,7 @@ describe('ViewRnrListController', function () {
 
 
   it('should get requisitions with program id if selected, set requisitions and filteredRequisitions', function () {
-    scope.viewRequisitionForm = {$invalid:false};
+    scope.viewRequisitionForm = {$invalid: false};
     scope.selectedFacilityId = 1;
     scope.startDate = 'startDate';
     scope.endDate = 'endDate';
@@ -71,14 +76,14 @@ describe('ViewRnrListController', function () {
   });
 
   it('should get requisitions with program id if selected, set requisitions and filteredRequisitions', function () {
-    scope.viewRequisitionForm = {$invalid:false};
+    scope.viewRequisitionForm = {$invalid: false};
     scope.selectedFacilityId = 1;
     scope.startDate = 'startDate';
     scope.endDate = 'endDate';
     scope.selectedProgramId = 1;
     var expectedUrl = '/requisitions-list.json?dateRangeEnd=endDate&dateRangeStart=startDate&facilityId=1&programId=1';
-    var rnrList = {'rnr_list':[
-      {'id':1}
+    var rnrList = {'rnr_list': [
+      {'id': 1}
     ]};
 
     loadRequisitions(expectedUrl, rnrList);
@@ -90,7 +95,7 @@ describe('ViewRnrListController', function () {
 
   it('should filter requisitions against program name and return no results if not found', function () {
     scope.requisitions = [
-      {'status':"abcd"}
+      {'status': "abcd"}
     ];
     scope.query = "first";
 
@@ -101,8 +106,8 @@ describe('ViewRnrListController', function () {
 
   it('should filter requisitions against program name and return results', function () {
     scope.requisitions = [
-      {'status':"first requisition"},
-      {'status':"abcd"}
+      {'status': "first requisition"},
+      {'status': "abcd"}
     ];
     scope.query = "first";
 
@@ -139,7 +144,7 @@ describe('ViewRnrListController', function () {
 
   it('should open a requisition with id 1 and for program 2 and full-supply', function () {
     scope.selectedItems = [
-      {'id':1, 'programId':2}
+      {'id': 1, 'programId': 2}
     ];
     scope.openRequisition();
     expect(location.url()).toEqual("/requisition/1/2?supplyType=full-supply&page=1");
