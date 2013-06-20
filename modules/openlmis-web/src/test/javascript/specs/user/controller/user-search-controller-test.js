@@ -6,16 +6,14 @@
 
 describe("User Search Controller", function () {
 
-  var scope, $httpBackend, ctrl, navigateBackService, location;
+  var scope, $httpBackend, ctrl;
   beforeEach(module('openlmis.services'));
   var searchTextId = 'searchTextId';
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _navigateBackService_, $location) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller) {
     scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     scope.query = "joh";
-    navigateBackService = _navigateBackService_;
-    location = $location;
 
     ctrl = $controller('UserSearchController', {$scope:scope});
   }));
@@ -65,23 +63,4 @@ describe("User Search Controller", function () {
     expect(scope.filteredUsers).toEqual([user1]);
     expect(scope.resultCount).toEqual(1);
   });
-
-  it("should save query into shared service on clicking edit link",function(){
-    spyOn(navigateBackService, 'setData');
-    spyOn(location, 'path');
-    scope.query = "lokesh";
-    scope.editUser(2);
-    expect(navigateBackService.setData).toHaveBeenCalledWith({query: "lokesh"});
-    expect(location.path).toHaveBeenCalledWith('edit/2');
-  });
-
-  it("should retain previous query value and update filtered query list when dom is loaded", function() {
-    spyOn(scope,'showUserSearchResults');
-    var query = "lok";
-    navigateBackService.setData({query: query});
-    scope.$broadcast('$viewContentLoaded');
-    expect(query).toEqual(scope.query);
-    expect(scope.showUserSearchResults).toHaveBeenCalledWith('searchUser');
-  });
-
 });

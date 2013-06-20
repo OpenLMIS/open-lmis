@@ -8,8 +8,8 @@ services.factory('navigateBackService', function() {
    var navigateBack = {};
 
    navigateBack.setData = function(data) {
-    angular.extend(navigateBack,  data);
-   }
+    $.extend(navigateBack,  data)
+   };
 
    return navigateBack;
 });
