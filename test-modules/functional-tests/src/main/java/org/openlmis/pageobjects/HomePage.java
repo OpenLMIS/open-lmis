@@ -247,12 +247,9 @@ public class HomePage extends Page {
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
     testWebDriver.keyPress(TemplateConfigTab);
-    //TemplateConfigTab.click();
     testWebDriver.waitForElementToAppear(RnRTemplateConfigTab);
     testWebDriver.keyPress(RnRTemplateConfigTab);
-    //RnRTemplateConfigTab.click();
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById(programme));
-    //testWebDriver.selectByVisibleText(ProgramDropDown, programme);
     testWebDriver.getElementById(programme).click();
 
     return new TemplateConfigPage(testWebDriver);
@@ -396,14 +393,14 @@ public class HomePage extends Page {
   }
 
   public ProgramProductISAPage navigateProgramProductISA() throws IOException {
-     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
-     testWebDriver.keyPress(AdministrationMenuItem);
-     testWebDriver.waitForElementToAppear(TemplateConfigTab);
-     testWebDriver.keyPress(TemplateConfigTab);
-     testWebDriver.waitForElementToAppear(programProductISAMenuItem);
-     testWebDriver.keyPress(programProductISAMenuItem);
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    testWebDriver.keyPress(AdministrationMenuItem);
+    testWebDriver.waitForElementToAppear(TemplateConfigTab);
+    testWebDriver.keyPress(TemplateConfigTab);
+    testWebDriver.waitForElementToAppear(programProductISAMenuItem);
+    testWebDriver.keyPress(programProductISAMenuItem);
     testWebDriver.waitForElementToAppear(selectProgramSelectBox);
-     return new ProgramProductISAPage(testWebDriver);
+    return new ProgramProductISAPage(testWebDriver);
   }
 
   public HomePage navigateHomePage() throws IOException {
