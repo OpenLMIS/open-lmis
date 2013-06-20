@@ -130,6 +130,10 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 
   $scope.showConfirmDateChangeWindow = function (program) {
     window.program = program;
+    if(getProgramById(program.program.id).push) {
+      $scope.dateChangeCallback(true);
+      return;
+    }
     var dialogOpts = {
       id: "dateChangeConfirmModal",
       header: messageService.get('message.setProgramStartDate'),
