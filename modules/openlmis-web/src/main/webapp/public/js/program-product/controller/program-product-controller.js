@@ -12,7 +12,7 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
 
   $scope.loadProgramProducts = function () {
     if ($scope.programId) {
-      ProgramProducts.get({programId:$scope.programId}, function (data) {
+      ProgramProducts.get({programId: $scope.programId}, function (data) {
         $scope.programProducts = data.programProductList;
         $scope.filteredProducts = data.programProductList;
         $scope.assignFormula($scope.filteredProducts);
@@ -39,6 +39,8 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
     $scope.inputClass = false;
     $scope.population = 0;
     $scope.error = null;
+    if (programProduct.programProductIsa == null)
+      programProduct.programProductIsa = {"adjustmentValue": 0, "bufferPercentage": 0, "dosesPerYear": 0, "wastageRate": 0, "whoRatio": 0};
     programProduct.previousFormula = programProduct.formula;
     $scope.currentProgramProduct = angular.copy(programProduct);
     $scope.programProductISAModal = true;
@@ -61,24 +63,25 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
     return null;
   };
 
-  $scope.$watch('currentProgramProduct', function () {
-    if ($scope.currentProgramProduct) {
-      $scope.calculateValue($scope.currentProgramProduct.programProductIsa);
-    }
-  }, true);
 
   $scope.saveProductISA = function () {
     if ($scope.isaForm.$error.required) {
       $scope.inputClass = true;
       $scope.error = "form.error";
       $scope.message = "";
-    } else {
+    }
+    else if ((($scope.currentProgramProduct.programProductIsa.minimumValue != null) && ($scope.currentProgramProduct.programProductIsa.maximumValue != null))
+        && (parseInt($scope.currentProgramProduct.programProductIsa.minimumValue, 10) > parseInt($scope.currentProgramProduct.programProductIsa.maximumValue, 10))) {
+      $scope.error = "error.minimum.greater.than.maximum";
+      $scope.message = "";
+    }
+    else {
       $scope.inputClass = false;
       if ($scope.currentProgramProduct.programProductIsa.id)
-        ProgramProductsISA.update({programProductId:$scope.currentProgramProduct.id, isaId:$scope.currentProgramProduct.programProductIsa.id},
-          $scope.currentProgramProduct.programProductIsa, successCallBack, {});
+        ProgramProductsISA.update({programProductId: $scope.currentProgramProduct.id, isaId: $scope.currentProgramProduct.programProductIsa.id},
+            $scope.currentProgramProduct.programProductIsa, successCallBack, {});
       else
-        ProgramProductsISA.save({programProductId:$scope.currentProgramProduct.id}, $scope.currentProgramProduct.programProductIsa, successCallBack, {});
+        ProgramProductsISA.save({programProductId: $scope.currentProgramProduct.id}, $scope.currentProgramProduct.programProductIsa, successCallBack, {});
     }
   };
 
@@ -103,34 +106,40 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
 
   $scope.isPresent = function (programProductIsa) {
     var present = programProductIsa && isDefined(programProductIsa.whoRatio) && isDefined(programProductIsa.dosesPerYear) &&
-      isDefined(programProductIsa.wastageRate) && isDefined(programProductIsa.bufferPercentage) &&
-      isDefined(programProductIsa.adjustmentValue);
-    if (present) $scope.error = null;
+        isDefined(programProductIsa.wastageRate) && isDefined(programProductIsa.bufferPercentage) &&
+        isDefined(programProductIsa.adjustmentValue);
     return present;
   };
 
   $scope.getFormula = function (programProductIsa) {
     if ($scope.isPresent(programProductIsa)) {
       var adjustmentVal = parseInt(programProductIsa.adjustmentValue, 10) > 0 ? programProductIsa.adjustmentValue : "(" + programProductIsa.adjustmentValue + ")";
-      return "(population) * " + programProductIsa.whoRatio + " * " + programProductIsa.dosesPerYear + " * "
-        + programProductIsa.wastageRate + " / 12 * " + programProductIsa.bufferPercentage + " + " + adjustmentVal;
+      return "(population) * " +
+          (programProductIsa.whoRatio / 100).toFixed(3) +
+          " * " + programProductIsa.dosesPerYear +
+          " * " + (1 + programProductIsa.wastageRate / 100).toFixed(3) +
+          " / 12 * " + (1 + programProductIsa.bufferPercentage / 100).toFixed(3) +
+          " + " + adjustmentVal;
     }
   };
 
   $scope.calculateValue = function (programProductIsa) {
-    if ($scope.isPresent(programProductIsa) && $scope.population) {
-      $scope.isaValue = parseInt($scope.population, 10) * parseInt(programProductIsa.whoRatio, 10) * parseInt(programProductIsa.dosesPerYear, 10) *
-        parseInt(programProductIsa.wastageRate, 10) / 12 * parseInt(programProductIsa.bufferPercentage, 10) + parseInt(programProductIsa.adjustmentValue, 10);
-      $scope.isaValue = Math.ceil($scope.isaValue);
+    if ($scope.population) {
+      $scope.isaValue = parseInt($scope.population, 10) *
+          (utils.parseIntWithBaseTen(programProductIsa.whoRatio) / 100) *
+          (utils.parseIntWithBaseTen(programProductIsa.dosesPerYear)) *
+          (1 + utils.parseIntWithBaseTen(programProductIsa.wastageRate) / 100) / 12 *
+          (1 + utils.parseIntWithBaseTen(programProductIsa.bufferPercentage) / 100) +
+          (utils.parseIntWithBaseTen(programProductIsa.adjustmentValue));
+      $scope.isaValue = $scope.isaValue < 0 ? 0 : Math.ceil($scope.isaValue);
     } else {
       $scope.isaValue = 0;
     }
-
   }
 }
 
 ProgramProductController.resolve = {
-  programs:function ($q, PushProgram, $location, $route, $timeout) {
+  programs: function ($q, PushProgram, $location, $route, $timeout) {
     var deferred = $q.defer();
 
     $timeout(function () {

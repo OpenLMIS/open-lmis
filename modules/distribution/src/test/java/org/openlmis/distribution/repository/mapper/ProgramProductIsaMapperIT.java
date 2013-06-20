@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ *  If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.distribution.repository.mapper;
 
 import org.junit.Before;
@@ -59,7 +65,7 @@ public class ProgramProductIsaMapperIT {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProductMapper.insert(programProduct);
 
-    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 23d, 4, 10d, 25d, 50, 17, 1);
+    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 23d, 4, 10d, 25d, 20, 50, 17, 1);
     mapper.insert(programProductISA);
 
     programProductISA.setCalculatedIsa(23);
@@ -75,7 +81,7 @@ public class ProgramProductIsaMapperIT {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProductMapper.insert(programProduct);
 
-    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 23d, 4, 10d, 25d, 50, 17, 1);
+    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 23d, 4, 10d, 25d, 20, 50, 17, 1);
     mapper.insert(programProductISA);
 
     ProgramProductISA returnedIsa = mapper.getIsaByProgramProductId(programProduct.getId());

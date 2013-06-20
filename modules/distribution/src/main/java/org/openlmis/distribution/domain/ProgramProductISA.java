@@ -24,6 +24,7 @@ public class ProgramProductISA extends BaseModel {
   Double wastageRate;
   Double bufferPercentage;
   Integer minimumValue;
+  Integer maximumValue;
   Integer adjustmentValue;
 
   Integer calculatedIsa;

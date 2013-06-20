@@ -128,7 +128,7 @@ describe('program product controller', function () {
  it("should return correct formula when programProductIsa and its properties are properly defined",function(){
    var programProductIsa = {"whoRatio": 2, "dosesPerYear": 1, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
    var formula = scope.getFormula(programProductIsa);
-   expect(formula).toEqual("(population) * 2 * 1 * 47 / 12 * 45 + 6");
+   expect(formula).toEqual("(population) * 0.020 * 1 * 1.470 / 12 * 1.450 + 6");
  })
 
 
@@ -143,12 +143,9 @@ describe('program product controller', function () {
     scope.population = 2;
     programProductIsa.minimumValue = 2;
 
-    var value = scope.population * programProductIsa.whoRatio * programProductIsa.dosesPerYear *
-        programProductIsa.wastageRate / 12 * programProductIsa.bufferPercentage + programProductIsa.adjustmentValue;
-
     scope.calculateValue(programProductIsa);
 
-    expect(scope.isaValue).toEqual(Math.ceil(value));
+    expect(scope.isaValue).toEqual(7);
   });
 
   it("should not return calculated value if population is undefined", function () {
