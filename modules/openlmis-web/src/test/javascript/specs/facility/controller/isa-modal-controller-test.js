@@ -116,8 +116,8 @@ describe("ISA Controller", function () {
       httpBackend.expectGET('/facility/1/program/1/isa.json').respond(programProductList, 200);
       scope.$apply();
       httpBackend.flush();
-      expect(scope.$parent.allocationProgramProductsList[scope.currentProgram.id][0].calculatedIsa).toEqual(4166682);
-      expect(scope.$parent.allocationProgramProductsList[scope.currentProgram.id][1].calculatedIsa).toEqual(422);
+      expect(scope.$parent.allocationProgramProductsList[scope.currentProgram.id][0].calculatedIsa).toEqual(153);
+      expect(scope.$parent.allocationProgramProductsList[scope.currentProgram.id][1].calculatedIsa).toEqual(6);
       expect(scope.currentProgramProducts).toEqual(scope.$parent.allocationProgramProductsList[scope.currentProgram.id]);
     });
 
