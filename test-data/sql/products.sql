@@ -332,8 +332,14 @@ INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, 
 (3, (SELECT id from products WHERE code = 'P148'), 30, 50, true),
 (3, (SELECT id from products WHERE code = 'P149'), 30, 50, true),
 (3, (SELECT id from products WHERE code = 'P150'), 30, 50, true),
-(5, (SELECT id from products WHERE code = 'P149'), 30, 50, true),
-(5, (SELECT id from products WHERE code = 'P150'), 30, 50, true);
+(5, (SELECT id from products WHERE code = 'polio10dose'), 30, 12.5, true),
+(5, (SELECT id from products WHERE code = 'polio20dose'), 30, 12.5, true),
+(5, (SELECT id from products WHERE code = 'penta1'), 30, 12.5, true),
+(5, (SELECT id from products WHERE code = 'penta10'), 30, 12.5, true),
+(5, (SELECT id from products WHERE code = 'syringe5ml'), 30, 12.5, true),
+(5, (SELECT id from products WHERE code = 'syringe0.5ml'), 30, 12.5, true),
+(5, (SELECT id from products WHERE code = 'syringe0.05ml'), 30, 12.5, true);
+
 
 
 
