@@ -159,20 +159,26 @@ describe("Facility Controller", function () {
   });
 
   describe("Facility resolve", function () {
-    var $httpBackend, ctrl, $timeout, $route;
+    var $httpBackend, ctrl, $timeout, $route, $q;
+    var deferredObject;
     beforeEach(module('openlmis.services'));
 
     beforeEach(inject(function(_$httpBackend_, $controller, _$timeout_, _$route_) {
       $httpBackend = _$httpBackend_;
+      deferredObject = {promise: {id: 1}, resolve: function () {}};
+      spyOn(deferredObject, 'resolve');
+      $q = {defer: function() {return deferredObject}};
       $timeout = _$timeout_;
       ctrl = $controller;
       $route = _$route_;
-    }))
+    }));
 
     it('should get facility reference data', function () {
-      $httpBackend.expect('GET', '/facilities/reference-data.json').respond({'id' : '23'});
-      ctrl(FacilityController.resolve.facilityReferenceData, {});
+      $httpBackend.expect('GET', '/facilities/reference-data.json').respond({facility: {'id' : '23'}});
+      ctrl(FacilityController.resolve.facilityReferenceData, {$q: $q});
       $timeout.flush();
+      $httpBackend.flush();
+      expect(deferredObject.resolve).toHaveBeenCalled();
     });
 
     it('should get facility if edit route contains id', function () {
