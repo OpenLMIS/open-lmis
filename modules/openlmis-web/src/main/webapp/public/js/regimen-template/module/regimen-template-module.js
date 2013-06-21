@@ -5,21 +5,17 @@
  */
 
 'use strict';
-require(['../../shared/app', '../controller/regimen-template-controller', '../controller/save-regimen-template-controller'], function (app) {
-  app.loadApp();
-  angular.module('regimenTemplate', ['openlmis']).config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.
-      when('/select-program', {
-        controller:ConfigureRegimenTemplateController,
-        templateUrl:'partials/select-program.html',
-        resolve:ConfigureRegimenTemplateController.resolve }).
+angular.module('regimenTemplate', ['openlmis']).config(['$routeProvider', function ($routeProvider) {
+  $routeProvider.
+    when('/select-program', {
+      controller: ConfigureRegimenTemplateController,
+      templateUrl: 'partials/select-program.html',
+      resolve: ConfigureRegimenTemplateController.resolve }).
 
-      when('/create-regimen-template/:programId', {
-        controller:SaveRegimenTemplateController,
-        templateUrl:'partials/form.html',
-        resolve:SaveRegimenTemplateController.resolve}).
+    when('/create-regimen-template/:programId', {
+      controller: SaveRegimenTemplateController,
+      templateUrl: 'partials/form.html',
+      resolve: SaveRegimenTemplateController.resolve}).
 
-      otherwise({redirectTo:'/select-program'});
-  }]);
-  angular.bootstrap(document, ['regimenTemplate']);
-});
+    otherwise({redirectTo: '/select-program'});
+}]);

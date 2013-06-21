@@ -21,4 +21,4 @@ ConfigureRegimenTemplateController.resolve = {
 
     return deferred.promise;
   }
-}
+};
