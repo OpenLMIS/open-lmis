@@ -59,7 +59,7 @@ public class ManageISA extends TestCaseHelper {
     DeleteFacilityPage deleteFacilityPage = new DeleteFacilityPage(testWebDriver);
     deleteFacilityPage.searchFacility(date_time);
     deleteFacilityPage.clickFacilityList();
-    createFacilityPage.verifyOverriddenIsa(24);
+    createFacilityPage.verifyOverriddenIsa("24");
 
   }
 
@@ -85,11 +85,16 @@ public class ManageISA extends TestCaseHelper {
         createFacilityPage.overrideIsa(24);
         createFacilityPage.verifyCalculatedIsa(671);
         createFacilityPage.clickIsaDoneButton();
-        createFacilityPage.verifyOverriddenIsa(24);
+        createFacilityPage.verifyOverriddenIsa("24");
 
         createFacilityPage.overrideIsa(30);
         createFacilityPage.clickIsaCancelButton();
-        createFacilityPage.verifyOverriddenIsa(24);
+        createFacilityPage.verifyOverriddenIsa("24");
+
+        createFacilityPage.overrideIsa(30);
+        createFacilityPage.clickUseCalculatedIsaButton();
+        createFacilityPage.clickIsaDoneButton();
+        createFacilityPage.verifyOverriddenIsa("");
 
         createFacilityPage.editPopulation(valueOf(30));
         createFacilityPage.overrideIsa(24);
