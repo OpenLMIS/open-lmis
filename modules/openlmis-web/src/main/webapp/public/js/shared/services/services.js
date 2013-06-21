@@ -243,3 +243,7 @@ services.factory('RegimenCategories', function ($resource) {
   return $resource('/regimenCategories.json', {}, {});
 });
 
+
+services.factory('Regimens', function($resource){
+  return $resource('/regimens.json', {}, {update: {method: 'PUT', isArray: true}});
+});

@@ -19,32 +19,41 @@
     <div class="span3">Name</div>
     <div class="span3">Active</div>
   </div>
-  <div class="row-fluid">
-    <div class="span3"><span><select ng-model="newRegimen.regimenCategory"
-                                     ng-options="regimenCategory as regimenCategory.name for regimenCategory in regimenCategories">
-    </select></span></div>
-    <div class="span3"><span><input type="text" ng-required="true" ng-model="newRegimen.code"/></span></div>
-    <div class="span3"><span><input type="text" ng-required="true" ng-model="newRegimen.name"/></span></div>
-    <div class="span3"><span><input type="text" ng-required="true" ng-model="newRegimen.active"/></span></div>
-  </div>
-  <div class="row-fluid">
-    <input type="button" class="btn btn-primary" openlmis-message="button.add" ng-click="addNewRegimen()"/>
-  </div>
+
+  <form name="newRegimenForm">
+    <div class="row-fluid">
+      <div class="span3"><span><select ng-model="newRegimen.category"
+                                       ng-options="regimenCategory as regimenCategory.name for regimenCategory in regimenCategories"
+                                       ng-required="true">
+      </select></span></div>
+      <div class="span3"><span><input type="text" ng-model="newRegimen.code" ng-required="true"/></span></div>
+      <div class="span3"><span><input type="text" ng-model="newRegimen.name" ng-required="true"/></span></div>
+      <div class="span3"><span><input type="checkbox" ng-model="newRegimen.active" ng-required="true"/></span></div>
+    </div>
+    <div class="alert alert-error" id="addFailMessage" openlmis-message="newRegimenError" ng-show="newRegimenError">
+    </div>
+    <div class="row-fluid">
+      <input type="button" class="btn btn-primary" openlmis-message="button.add" ng-click="addNewRegimen()"/>
+    </div>
+  </form>
 
   <form name="configureRegimenTemplateForm" ng-submit="save()">
 
     <div class="rnr-template-columns">
-      <ul>
-        <li ng-repeat="regimen in regimens">
+      <ul ng-repeat="category in regimenCategories">
+        <li><span ng-show="regimensByCategory[category.id].length > 0" ng-bind="category.name">
+        </span></li>
+        <li ng-repeat="regimen in regimensByCategory[category.id]">
           <div class="drag-handle"></div>
           <span class="tpl-visible">
             <input type="checkbox" ng-model="regimen.active"/>
           </span>
           <span class="tpl-label">
-            <input name="regimenCode" type="text" ng-model="regimen.code" required/>
+
+            <input name="regimenCode" type="text" ng-model="regimen.code"/>
           </span>
           <span class="tpl-label">
-            <input name="regimenName" type="text" ng-model="regimen.name" required/>
+            <input name="regimenName" type="text" ng-model="regimen.name"/>
           </span>
         </li>
       </ul>

@@ -31,7 +31,7 @@ public class RegimenController extends BaseController {
 
   @RequestMapping(value = "/regimens", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE')")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody List<Regimen> regimens) {
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody RegimenList regimens) {
     try {
       service.save(regimens);
       return success("regimens.saved.successfully");

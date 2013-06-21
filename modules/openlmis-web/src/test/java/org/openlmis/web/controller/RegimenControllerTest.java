@@ -35,7 +35,7 @@ public class RegimenControllerTest {
   @Test
   public void shouldInsertARegimen() {
     Regimen regimen = new Regimen();
-    List<Regimen> regimens = Arrays.asList(regimen);
+    RegimenList regimens = (RegimenList) Arrays.asList(regimen);
     controller.save(regimens);
     verify(service).save(regimens);
   }
