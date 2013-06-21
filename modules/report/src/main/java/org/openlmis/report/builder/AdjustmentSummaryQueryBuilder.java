@@ -67,13 +67,13 @@ public class AdjustmentSummaryQueryBuilder {
             if(filter.getRgroupId() != 0){
                 WHERE("requisition_group_id = #{filterCriteria.rgroupId}");
             }
-            if(filter.getProductId() != 0){
+            if(filter.getProductId() != -1){
                 WHERE("product_id= #{filterCriteria.productId}");
             }
-            if(filter.getProgramId() != 0){
+            if(filter.getProgramId() != -1){  //Unless All programs selected
                 WHERE("program_id = #{filterCriteria.programId}");
             }
-            if(filter.getAdjustmentTypeId() != null && !filter.getAdjustmentTypeId().isEmpty()){
+            if(!filter.getAdjustmentTypeId().equals("-1") ){
                 WHERE("adjustment_type = #{filterCriteria.adjustmentTypeId}");
             }
         }

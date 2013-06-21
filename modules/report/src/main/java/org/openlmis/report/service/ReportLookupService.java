@@ -1,6 +1,6 @@
 package org.openlmis.report.service;
 
-import lombok.NoArgsConstructor;;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.service.ConfigurationService;
 import org.openlmis.report.mapper.lookup.AdjustmentTypeReportMapper;
 import org.openlmis.report.mapper.lookup.*;
