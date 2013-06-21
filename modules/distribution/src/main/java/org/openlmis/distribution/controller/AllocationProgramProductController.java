@@ -60,7 +60,7 @@ public class AllocationProgramProductController extends BaseController {
     service.updateISA(programProductISA);
   }
 
-  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/isa", method = POST, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/isa", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
   public void overrideIsa(@PathVariable Long facilityId, @RequestBody AllocationProgramProductList products) {
     service.saveOverriddenIsa(facilityId, products);

@@ -59,7 +59,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 
       var program = $scope.allocationProgramProductsList[key][0].program;
 
-      FacilityProgramProducts.post({facilityId: $scope.facility.id, programId: program.id}, $scope.allocationProgramProductsList[key], function (data) {
+      FacilityProgramProducts.update({facilityId: $scope.facility.id, programId: program.id}, $scope.allocationProgramProductsList[key], function (data) {
         deferred.resolve();
       }, function () {
         deferred.reject({error: "error.facility.allocation.product.save", program: program.name});
