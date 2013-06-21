@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-directives.directive('openlmisMessage', function (messageService) {
+app.directive('openlmisMessage',function (messageService) {
   return {
     restrict:'A',
     link:function (scope, element, attrs) {

@@ -5,15 +5,8 @@
  */
 
 function UserSearchController($scope, $location, Users, navigateBackService) {
-  $scope.$on('$viewContentLoaded', function() {
-    $scope.$apply($scope.query = navigateBackService.query);
-    $scope.showUserSearchResults('searchUser');
-  });
-  $scope.previousQuery = '';
-
-  $scope.showUserSearchResults = function (id) {
-    var query = document.getElementById(id).value;
-    $scope.query = query;
+  $scope.showUserSearchResults = function () {
+    var query = $scope.query;
 
     var len = (query == undefined) ? 0 : query.length;
 
@@ -24,7 +17,7 @@ function UserSearchController($scope, $location, Users, navigateBackService) {
         return true;
       }
       $scope.previousQuery = query;
-      Users.get({param:$scope.query.substr(0, 3)}, function (data) {
+      Users.get({param: $scope.query.substr(0, 3)}, function (data) {
         $scope.userList = data.userList;
         filterUserByName(query);
       }, {});
@@ -34,6 +27,11 @@ function UserSearchController($scope, $location, Users, navigateBackService) {
       return false;
     }
   };
+
+  $scope.previousQuery = '';
+  $scope.query = navigateBackService.query;
+  $scope.showUserSearchResults();
+
 
   $scope.editUser = function (id) {
     var data = {query: $scope.query};
@@ -56,10 +54,10 @@ function UserSearchController($scope, $location, Users, navigateBackService) {
       var fullName = user.firstName.toLowerCase() + ' ' + user.lastName.toLowerCase();
 
       if (user.firstName.toLowerCase().indexOf() >= 0 ||
-          user.lastName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
-          fullName.indexOf(query.trim().toLowerCase()) >= 0 ||
-          user.email.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0
-          ) {
+        user.lastName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
+        fullName.indexOf(query.trim().toLowerCase()) >= 0 ||
+        user.email.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0
+        ) {
         $scope.filteredUsers.push(user);
       }
     });

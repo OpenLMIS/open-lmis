@@ -25,4 +25,6 @@ public interface RegimenMapper {
 
   @Update("UPDATE regimens set code=#{code}, name=#{name}, active=#{active}, displayOrder = #{displayOrder}")
   void update(Regimen regimen);
+
+
 }

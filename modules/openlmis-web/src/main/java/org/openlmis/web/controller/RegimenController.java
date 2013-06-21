@@ -1,6 +1,7 @@
 package org.openlmis.web.controller;
 
 import org.openlmis.core.domain.Regimen;
+import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RegimenService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -12,14 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
-import static org.openlmis.web.controller.BaseController.UNEXPECTED_EXCEPTION;
-import static org.openlmis.web.response.OpenLmisResponse.error;
-import static org.openlmis.web.response.OpenLmisResponse.response;
-import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
@@ -29,6 +26,8 @@ public class RegimenController extends BaseController {
   @Autowired
   RegimenService service;
   public static final String REGIMENS = "regimens";
+  public static final String REGIMEN_CATEGORIES = "regimen_categories";
+
 
   @RequestMapping(value = "/regimens", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE')")
@@ -41,15 +40,28 @@ public class RegimenController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/programId/{programId}/regimens", method  = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/programId/{programId}/regimens", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE')")
   public ResponseEntity<OpenLmisResponse> getByProgram(@PathVariable Long programId) {
-    try{
+    try {
       ResponseEntity<OpenLmisResponse> response;
-      List<Regimen> regimens =  service.getByProgram(programId);
-      response = response("regimens", regimens);
+      List<Regimen> regimens = service.getByProgram(programId);
+      response = response(REGIMENS, regimens);
       return response;
-    }catch(DataException dataException){
+    } catch (DataException dataException) {
+      return error(UNEXPECTED_EXCEPTION, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @RequestMapping(value = "/regimenCategories", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE')")
+  public ResponseEntity<OpenLmisResponse> getAllRegimenCategories() {
+    try {
+      ResponseEntity<OpenLmisResponse> response;
+      List<RegimenCategory> regimenCategories = service.getAllRegimenCategories();
+      response = response(REGIMEN_CATEGORIES, regimenCategories);
+      return response;
+    } catch (DataException dataException) {
       return error(UNEXPECTED_EXCEPTION, HttpStatus.BAD_REQUEST);
     }
   }

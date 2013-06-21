@@ -5,21 +5,17 @@
  */
 
 'use strict';
-require(['../../shared/app', '../controller/configure-rnr-template-controller', '../controller/save-rnr-template-controller'], function (app) {
-  app.loadApp();
-  angular.module('createRnRTemplate', ['openlmis']).config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.
-      when('/select-program', {
-        controller: ConfigureRnRTemplateController,
-        templateUrl: 'partials/select-program.html',
-        resolve: ConfigureRnRTemplateController.resolve }).
+angular.module('createRnRTemplate', ['openlmis']).config(['$routeProvider', function ($routeProvider) {
+  $routeProvider.
+    when('/select-program', {
+      controller:ConfigureRnRTemplateController,
+      templateUrl:'partials/select-program.html',
+      resolve:ConfigureRnRTemplateController.resolve }).
 
-      when('/create-rnr-template/:programId', {
-        controller: SaveRnrTemplateController,
-        templateUrl: 'partials/form.html',
-        resolve: SaveRnrTemplateController.resolve }).
+    when('/create-rnr-template/:programId', {
+      controller:SaveRnrTemplateController,
+      templateUrl:'partials/form.html',
+      resolve:SaveRnrTemplateController.resolve }).
 
-      otherwise({redirectTo: '/select-program'});
-  }]);
-  angular.bootstrap(document, ['createRnRTemplate']);
-});
+    otherwise({redirectTo:'/select-program'});
+}]);
