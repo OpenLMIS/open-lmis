@@ -304,7 +304,7 @@
                 </div>
                 <div id="override-isa-table">
                     <div class="row-fluid list-header">
-                        <div class="span3" openlmis-message="label.product"></div>
+                        <div class="span4" openlmis-message="label.product"></div>
                         <div class="span2" openlmis-message="label.calculated.isa"></div>
                         <div class="span3" openlmis-message="label.overridden.isa"></div>
                         <div class="span3"></div>
@@ -312,12 +312,12 @@
 
                     <div ng-class="{'has-overridden-isa': programProduct.overriddenIsa != null || programProduct.overriddenIsa != undefined}"
                          ng-repeat="programProduct in filteredProducts">
-                        <div class="row-fluid isa-list-row">
-                            <div class="span3">
+                        <div class="row-fluid list-row">
+                            <div class="span4">
                                 <span id="product-name{{$index}}" ng-bind="programProduct.product.primaryName"></span>
                             </div>
                             <div class="span2">
-                                <span id="calculated-isa{{$index}}" ng-bind="programProduct.calculatedIsa"></span>
+                                <span id="calculated-isa{{$index}}"ng-bind="programProduct.calculatedIsa"></span>
                             </div>
                             <div class="span3" ng-form="overrideForm">
                                 <input id="override-isa{{$index}}" name="overrideISA{{$index}}" type="text" ng-model="programProduct.overriddenIsa"

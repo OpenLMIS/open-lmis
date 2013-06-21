@@ -5,7 +5,7 @@
  */
 
 'use strict';
-require(['../../shared/app', '../controller/facility-controller', '../controller/facility-search-controller', '../controller/isa-controller'],
+require(['../../shared/app', '../controller/facility-controller', '../controller/facility-search-controller', '../controller/isa-modal-controller'],
   function (app) {
     app.loadApp();
     var facilityModule = angular.module('facility', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']);
