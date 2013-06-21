@@ -1,0 +1,39 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div>
+  <h2 openlmis-message="label.admin.configure.regimenTemplate"></h2>
+
+  <div id="saveSuccessMsgDiv" class="alert alert-success" ng-bind="message" ng-show="message"></div>
+  <div>
+    <table class="configure-program-table table table-striped table-bordered">
+      <thead>
+      <tr>
+        <th openlmis-message="program.header"></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="program in programs">
+        <td ng-bind="program.name"></td>
+        <td>
+          <ng-switch on="program.regimenTemplateConfigured">
+            <span ng-switch-when="true">
+              <i class="icon-ok"></i> <span openlmis-message="template.configured"></span>
+              (<a id="{{program.name}}" ng-click="configure(program.id)" openlmis-message="link.edit">Edit</a>)
+            </span>
+            <span ng-switch-default>
+              <a id="{{program.name}}" ng-click="configure(program.id)" class="btn btn-primary">
+                <i class="icon-cog"></i> &nbsp;<span openlmis-message="template.configure"></span>
+              </a>
+            </span>
+          </ng-switch>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
