@@ -12,7 +12,6 @@ CREATE TABLE program_product_isa (
     minimumValue INTEGER,
     maximumValue INTEGER,
     adjustmentValue INTEGER NOT NULL,
-    calculatedIsa INTEGER,
     modifiedBy INTEGER,
     modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

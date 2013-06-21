@@ -69,9 +69,10 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
       $scope.inputClass = true;
       $scope.error = "form.error";
       $scope.message = "";
+      return;
     }
-    else if ((($scope.currentProgramProduct.programProductIsa.minimumValue != null) && ($scope.currentProgramProduct.programProductIsa.maximumValue != null))
-        && (parseInt($scope.currentProgramProduct.programProductIsa.minimumValue, 10) > parseInt($scope.currentProgramProduct.programProductIsa.maximumValue, 10))) {
+
+    else if (validateMaxIsLessThanMinValue($scope.currentProgramProduct.programProductIsa.maximumValue, $scope.currentProgramProduct.programProductIsa.minimumValue)) {
       $scope.error = "error.minimum.greater.than.maximum";
       $scope.message = "";
     }
@@ -84,6 +85,10 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
         ProgramProductsISA.save({programProductId: $scope.currentProgramProduct.id}, $scope.currentProgramProduct.programProductIsa, successCallBack, {});
     }
   };
+
+  var validateMaxIsLessThanMinValue = function (maxValue, minValue) {
+    return((maxValue && minValue) != null && utils.parseIntWithBaseTen(maxValue) < utils.parseIntWithBaseTen(minValue));
+  }
 
   var successCallBack = function () {
     $scope.message = "message.isa.save.success";
@@ -125,6 +130,14 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
   };
 
   $scope.calculateValue = function (programProductIsa) {
+    if (validateMaxIsLessThanMinValue(programProductIsa.maximumValue, programProductIsa.minimumValue)) {
+      $scope.error = "error.minimum.greater.than.maximum";
+      $scope.message = "";
+      $scope.population = 0;
+      $scope.isaValue = 0;
+      return;
+    }
+
     if ($scope.population) {
       $scope.isaValue = parseInt($scope.population, 10) *
           (utils.parseIntWithBaseTen(programProductIsa.whoRatio) / 100) *
@@ -132,7 +145,12 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
           (1 + utils.parseIntWithBaseTen(programProductIsa.wastageRate) / 100) / 12 *
           (1 + utils.parseIntWithBaseTen(programProductIsa.bufferPercentage) / 100) +
           (utils.parseIntWithBaseTen(programProductIsa.adjustmentValue));
-      $scope.isaValue = $scope.isaValue < 0 ? 0 : Math.ceil($scope.isaValue);
+      if (programProductIsa.minimumValue != null && $scope.isaValue < programProductIsa.minimumValue)
+        $scope.isaValue = programProductIsa.minimumValue;
+      else if (programProductIsa.maximumValue != null && $scope.isaValue > programProductIsa.maximumValue)
+        $scope.isaValue = programProductIsa.maximumValue;
+      else
+        $scope.isaValue = $scope.isaValue < 0 ? 0 : Math.ceil($scope.isaValue);
     } else {
       $scope.isaValue = 0;
     }

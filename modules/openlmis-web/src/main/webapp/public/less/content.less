@@ -1462,8 +1462,8 @@ input[placeholder].placeholder{
 }
 
 #programProductISA {
-    width: 850px;
-    margin-left: -425px;
+    width: 1000px;
+    margin-left: -500px;
     margin-top: -260px;
     label {
         text-align: right;
@@ -1473,13 +1473,16 @@ input[placeholder].placeholder{
     }
     .modal-body {
         padding-top: 5px;
+        max-height: 500px;
         form {
             margin: 0 0 10px;
-            height: 290px;
         }
         input[type="text"] {
             padding: 4px 6px;
         }
+      .label {
+        font-size: 1.1em;
+      }
     }
     .calculatedAmount {
         border: 1px solid rgb(218, 218, 218);
@@ -1505,6 +1508,7 @@ input[placeholder].placeholder{
     }
     .form-error {
         display: none;
+        margin: -6px 0 8px 0;
     }
 }
 

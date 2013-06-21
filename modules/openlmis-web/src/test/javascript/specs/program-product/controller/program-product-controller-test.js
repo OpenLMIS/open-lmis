@@ -148,6 +148,26 @@ describe('program product controller', function () {
     expect(scope.isaValue).toEqual(7);
   });
 
+  it("should return isa minimum value if calculated value is less than minimum value",function(){
+    var programProductIsa = {"whoRatio": 2, "dosesPerYear": 1, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
+    scope.population = 2;
+    programProductIsa.minimumValue = 500;
+
+    scope.calculateValue(programProductIsa);
+
+    expect(scope.isaValue).toEqual(500);
+  });
+
+  it("should return isa maximum value if calculated value is more than maximum value",function(){
+    var programProductIsa = {"whoRatio": 2, "dosesPerYear": 1, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
+    scope.population = 2;
+    programProductIsa.maximumValue = 5;
+
+    scope.calculateValue(programProductIsa);
+
+    expect(scope.isaValue).toEqual(5);
+  });
+
   it("should not return calculated value if population is undefined", function () {
     var programProductIsa = {"whoRatio": 2, "dosesPerYear": 1, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
     programProductIsa.minimumValue = 2;

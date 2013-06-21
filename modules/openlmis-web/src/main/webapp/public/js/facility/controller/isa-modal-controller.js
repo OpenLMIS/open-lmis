@@ -15,10 +15,20 @@ function IsaModalController($scope, FacilityProgramProducts, ProgramProducts, $r
         return;
       }
 
-      product.calculatedIsa = Math.ceil(utils.parseIntWithBaseTen(population) * utils.parseIntWithBaseTen(product.programProductIsa.whoRatio) *
-        utils.parseIntWithBaseTen(product.programProductIsa.dosesPerYear) * utils.parseIntWithBaseTen(product.programProductIsa.wastageRate) / 12 *
-        utils.parseIntWithBaseTen(product.programProductIsa.bufferPercentage) + utils.parseIntWithBaseTen(product.programProductIsa.adjustmentValue));
+      var isaValue = (utils.parseIntWithBaseTen(population)) *
+          (utils.parseIntWithBaseTen(product.programProductIsa.whoRatio) / 100) *
+          (utils.parseIntWithBaseTen(product.programProductIsa.dosesPerYear)) *
+          (1 + utils.parseIntWithBaseTen(product.programProductIsa.wastageRate) / 100) / 12 *
+          (1 + utils.parseIntWithBaseTen(product.programProductIsa.bufferPercentage) / 100) +
+          (utils.parseIntWithBaseTen(product.programProductIsa.adjustmentValue));
+      if (product.programProductIsa.minimumValue != null && isaValue < product.programProductIsa.minimumValue)
+        isaValue = product.programProductIsa.minimumValue;
+      else if (product.programProductIsa.maximumValue != null && isaValue > product.programProductIsa.maximumValue)
+        isaValue = product.programProductIsa.maximumValue;
+      else
+        isaValue = isaValue < 0 ? 0 : Math.ceil(isaValue);
 
+      product.calculatedIsa = isaValue;
     });
   }
 
@@ -46,9 +56,11 @@ function IsaModalController($scope, FacilityProgramProducts, ProgramProducts, $r
     };
 
     if ($routeParams.facilityId) {
-      FacilityProgramProducts.get({programId: $scope.currentProgram.id, facilityId: $routeParams.facilityId}, successFunc, function (data) {});
+      FacilityProgramProducts.get({programId: $scope.currentProgram.id, facilityId: $routeParams.facilityId}, successFunc, function (data) {
+      });
     } else {
-      ProgramProducts.get({programId: $scope.currentProgram.id}, successFunc, function (data) {});
+      ProgramProducts.get({programId: $scope.currentProgram.id}, successFunc, function (data) {
+      });
     }
 
   });
