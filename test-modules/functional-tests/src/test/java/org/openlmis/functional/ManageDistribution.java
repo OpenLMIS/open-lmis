@@ -111,6 +111,7 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.selectValueFromProgram(programSecond);
     List<String> periodValuesToBeVerified = new ArrayList<String>();
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
+
     verifySelectedOptionFromSelectField(periodDisplayedByDefault, actualSelectFieldElement);
     for (int counter = 2; counter <= totalNumberOfPeriods; counter++) {
       String periodWithCounter = period + counter;
@@ -181,6 +182,7 @@ public class ManageDistribution extends TestCaseHelper {
 
 
   private void verifySelectedOptionFromSelectField(String valuesToBeVerified, WebElement actualSelectFieldElement) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(actualSelectFieldElement);
     assertEquals(valuesToBeVerified, actualSelectFieldElement.getText());
   }

@@ -13,11 +13,11 @@
     </groups>
     <classes preserver-order="true">
       <class name="org.openlmis.functional.ManageISA">
-    </class>
+      </class>
       <class name="org.openlmis.functional.ManageProgramProductISA">
       </class>
-      <!--<class name="org.openlmis.functional.ManageDistribution">-->
-      <!--</class>-->
+      <class name="org.openlmis.functional.ManageDistribution">
+      </class>
       <class name="org.openlmis.functional.ManageRolesAndUsers">
       </class>
       <class name="org.openlmis.functional.ManageReport">
