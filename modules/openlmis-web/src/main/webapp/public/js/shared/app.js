@@ -45,7 +45,8 @@ app.config(function ($httpProvider) {
   $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 });
 
-app.run(function ($rootScope) {
+app.run(function ($rootScope, messageService) {
+  messageService.populate();
   $rootScope.$on('$routeChangeStart', function () {
     angular.element('#ui-datepicker-div').hide();
     //TODO delete modal window

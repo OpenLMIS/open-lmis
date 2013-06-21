@@ -53,3 +53,8 @@ app.directive('placeholder',function () {
     }
   };
 });
+
+
+jQuery.support.placeholder = !!function () {
+  return "placeholder" in document.createElement("input");
+}();
