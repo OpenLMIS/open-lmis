@@ -7,7 +7,6 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
@@ -36,7 +35,7 @@ public class ManageISA extends TestCaseHelper {
 
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
-  public void shouldOverrideIsa(String userSIC, String password, String program) throws Exception {
+  public void shouldOverrideIsaNewFacility(String userSIC, String password, String program) throws Exception {
     setupProgramProductISA(program,"P1","1", "2", "3", "4", null, null, "5");
       LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
       HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -48,26 +47,60 @@ public class ManageISA extends TestCaseHelper {
     String facilityCodePrefix = "FCcode";
     String facilityNamePrefix = "FCname";
 
-    createFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,
+    String date_time = createFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,
       program, geoZone, facilityType, operatedBy, valueOf(333), true);
 
     createFacilityPage.overrideIsa(24);
     createFacilityPage.verifyCalculatedIsa(671);
     createFacilityPage.clickIsaDoneButton();
-    createFacilityPage.verifyOverriddenIsa(24);
     SaveButton.click();
+
     createFacilityPage.verifySuccessMessage();
+    DeleteFacilityPage deleteFacilityPage = new DeleteFacilityPage(testWebDriver);
+    deleteFacilityPage.searchFacility(date_time);
+    deleteFacilityPage.clickFacilityList();
+    createFacilityPage.verifyOverriddenIsa(24);
+
   }
 
+    @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+    public void shouldOverrideIsaExistingFacility(String userSIC, String password, String program) throws Exception {
+        setupProgramProductISA(program,"P1","1", "2", "3", "4", "100", "1000", "5");
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        loginPage.loginAs(userSIC, password);
+        CreateFacilityPage createFacilityPage = new HomePage(testWebDriver).navigateCreateFacility();
+        String geoZone = "Ngorongoro";
+        String facilityType = "Lvl3 Hospital";
+        String operatedBy = "MoH";
+        String facilityCodePrefix = "FCcode";
+        String facilityNamePrefix = "FCname";
 
-  private ProgramProductISAPage navigateProgramProductISAPage(String userSIC, String password, String program) throws IOException {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
-    ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
-    programProductISAPage.selectProgram(program);
-    programProductISAPage.editFormula();
-    return programProductISAPage;
-  }
+        String date_time = createFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,
+                program, geoZone, facilityType, operatedBy, valueOf(333), true);
+        SaveButton.click();
+        DeleteFacilityPage deleteFacilityPage = new DeleteFacilityPage(testWebDriver);
+        deleteFacilityPage.searchFacility(date_time);
+        deleteFacilityPage.clickFacilityList();
+
+        createFacilityPage.overrideIsa(24);
+        createFacilityPage.verifyCalculatedIsa(671);
+        createFacilityPage.clickIsaDoneButton();
+        createFacilityPage.verifyOverriddenIsa(24);
+
+        createFacilityPage.overrideIsa(30);
+        createFacilityPage.clickIsaCancelButton();
+        createFacilityPage.verifyOverriddenIsa(24);
+
+        createFacilityPage.editPopulation(valueOf(30));
+        createFacilityPage.overrideIsa(24);
+        //createFacilityPage.verifyCalculatedIsa(100);
+        createFacilityPage.clickIsaCancelButton();
+
+        createFacilityPage.editPopulation(valueOf(3000));
+        createFacilityPage.overrideIsa(24);
+        //createFacilityPage.verifyCalculatedIsa(1000);
+        createFacilityPage.clickIsaCancelButton();
+    }
 
 
   @AfterMethod(groups = {"functional2"})

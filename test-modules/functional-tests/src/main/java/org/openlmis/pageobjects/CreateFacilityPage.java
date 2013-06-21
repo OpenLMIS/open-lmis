@@ -7,6 +7,7 @@
 package org.openlmis.pageobjects;
 
 
+import org.apache.commons.lang.StringUtils;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -164,6 +165,9 @@ public class CreateFacilityPage extends Page {
   @FindBy(how = XPATH, using = "//input[@value='Done']")
   private static WebElement doneIsaButton;
 
+  @FindBy(how = XPATH, using = "//input[@value='Cancel']")
+  private static WebElement cancelIsaButton;
+
   public CreateFacilityPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -284,8 +288,16 @@ public class CreateFacilityPage extends Page {
   public void overrideIsa(int overriddenIsa) {
     modifyIsaValueLink.click();
     testWebDriver.waitForElementToAppear(overrideIsaTable);
-
+      while (!StringUtils.isEmpty(overrideIsaTable.getAttribute("value")))
+          overrideIsaTable.sendKeys("\u0008"); // "\u0008" - is backspace char
     overrideIsaTextField.sendKeys(valueOf(overriddenIsa));
+  }
+
+  public void editPopulation(String population) {
+    testWebDriver.waitForElementToAppear(catchmentPopulation);
+      while (!StringUtils.isEmpty(catchmentPopulation.getAttribute("value")))
+          catchmentPopulation.sendKeys("\u0008"); // "\u0008" - is backspace char
+      catchmentPopulation.sendKeys(valueOf(population));
   }
 
   public void verifyCalculatedIsa(int calculatedIsa) {
@@ -297,7 +309,13 @@ public class CreateFacilityPage extends Page {
     doneIsaButton.click();
   }
 
-  public void verifyOverriddenIsa(int expectedIsa) {
+  public void clickIsaCancelButton() {
+    testWebDriver.waitForElementToAppear(cancelIsaButton);
+    cancelIsaButton.click();
+  }
+
+
+    public void verifyOverriddenIsa(int expectedIsa) {
     modifyIsaValueLink.click();
     testWebDriver.waitForElementToAppear(overrideIsaTable);
 
