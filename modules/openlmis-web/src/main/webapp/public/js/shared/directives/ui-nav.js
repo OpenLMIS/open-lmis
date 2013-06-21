@@ -4,11 +4,11 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-directives.directive('uiNav', function () {
+app.directive('uiNav',function () {
   return {
-    restrict: 'A',
+    restrict:'A',
 
-    link: function (scope, element, attrs) {
+    link:function (scope, element, attrs) {
       //Identify all the menu lists
       var lists = $(".navigation ul");
 
