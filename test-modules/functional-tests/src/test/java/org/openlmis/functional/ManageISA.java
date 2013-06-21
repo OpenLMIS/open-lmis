@@ -36,10 +36,9 @@ public class ManageISA extends TestCaseHelper {
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void shouldOverrideIsa(String userSIC, String password, String program) throws Exception {
-    ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
-    programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "5", "10");
-    programProductISAPage.saveISA();
-
+    setupProgramProductISA(program,"P1","1", "2", "3", "4", null, null, "5");
+      LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+      HomePage homePage = loginPage.loginAs(userSIC, password);
     CreateFacilityPage createFacilityPage = new HomePage(testWebDriver).navigateCreateFacility();
 
     String geoZone = "Ngorongoro";
