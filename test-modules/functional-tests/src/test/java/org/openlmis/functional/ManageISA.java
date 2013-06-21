@@ -1,7 +1,7 @@
 /*
  * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 package org.openlmis.functional;
@@ -51,7 +51,7 @@ public class ManageISA extends TestCaseHelper {
       program, geoZone, facilityType, operatedBy, valueOf(333), true);
 
     createFacilityPage.overrideIsa(24);
-    createFacilityPage.verifyCalculatedIsa(671);
+    createFacilityPage.verifyCalculatedIsa(6);
     createFacilityPage.clickIsaDoneButton();
     SaveButton.click();
 
@@ -65,7 +65,7 @@ public class ManageISA extends TestCaseHelper {
 
     @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
     public void shouldOverrideIsaExistingFacility(String userSIC, String password, String program) throws Exception {
-        setupProgramProductISA(program,"P1","1", "2", "3", "4", "100", "1000", "5");
+        setupProgramProductISA(program,"P1","1", "2", "3", "100", "100", "1000", "5");
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
         loginPage.loginAs(userSIC, password);
         CreateFacilityPage createFacilityPage = new HomePage(testWebDriver).navigateCreateFacility();
@@ -83,7 +83,7 @@ public class ManageISA extends TestCaseHelper {
         deleteFacilityPage.clickFacilityList();
 
         createFacilityPage.overrideIsa(24);
-        createFacilityPage.verifyCalculatedIsa(671);
+        createFacilityPage.verifyCalculatedIsa(100);
         createFacilityPage.clickIsaDoneButton();
         createFacilityPage.verifyOverriddenIsa("24");
 
@@ -98,12 +98,12 @@ public class ManageISA extends TestCaseHelper {
 
         createFacilityPage.editPopulation(valueOf(30));
         createFacilityPage.overrideIsa(24);
-        //createFacilityPage.verifyCalculatedIsa(100);
+        createFacilityPage.verifyCalculatedIsa(100);
         createFacilityPage.clickIsaCancelButton();
 
         createFacilityPage.editPopulation(valueOf(3000));
         createFacilityPage.overrideIsa(24);
-        //createFacilityPage.verifyCalculatedIsa(1000);
+        createFacilityPage.verifyCalculatedIsa(100);
         createFacilityPage.clickIsaCancelButton();
     }
 

@@ -62,7 +62,7 @@ public class ProgramProductISAPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='ISA-population']/input")
   private static WebElement ISAPopulationTextField;
 
-  @FindBy(how = XPATH, using = "//div[@id='ISA-population' and @class='calculatedAmount']/span[3][@class='ng-binding']")
+  @FindBy(how = XPATH, using = "//div[@id='ISA-population']/span[@ng-bind='isaValue']")
   private static WebElement isaValueLabel;
 
   @FindBy(how = XPATH, using = "//div[@id='ISA-population' and @class='calculatedAmount']/input[@class='ng-pristine ng-valid']")

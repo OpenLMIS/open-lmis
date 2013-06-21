@@ -80,22 +80,34 @@ public class ManageProgramProductISA extends TestCaseHelper {
     homePage.navigateHomePage();
   }
 
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  public void testProgramProductISADecimal(String userSIC, String password, String program) throws Exception {
+    ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
+    programProductISAPage.fillProgramProductISA("3.9", "3", "10", "25", "0", "", "");
+    String actualISA = programProductISAPage.fillPopulation("1000");
+    String expectedISA = calculateISA("0.039", "3", "1.1", "1.25", "0", "0",
+      "20", "1000");
+    assertEquals(expectedISA,actualISA);
+    programProductISAPage.cancelISA();
+    HomePage homePage = new HomePage(testWebDriver);
+    homePage.navigateHomePage();
+  }
+
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testISAFormula(String userSIC, String password, String program) throws Exception {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
-    programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "5", "5", "1000");
-//    programProductISAPage.fillProgramProductISA("999.999", "999", "999.999", "999.999", "999999", "5", "1000");
+    programProductISAPage.fillProgramProductISA("999.999", "999", "999.999", "999.999", "999999", "5", "1000");
     programProductISAPage.fillPopulation("1");
     String isaFormula = programProductISAPage.getISAFormulaFromISAFormulaModal();
-    String expectedISAFormula = "(population) * 0.010 * 2 * 1.030 / 12 * 1.040 + 5";
-//    String expectedISAFormula = "(population) * 9.999 * 999 * 10.999 / 12 * 10.999 + 999999";
+    String expectedISAFormula = "(population) * 10.000 * 999 * 11.000 / 12 * 11.000 + 999999";
     assertEquals(expectedISAFormula, isaFormula);
     programProductISAPage.saveISA();
     programProductISAPage.verifyISAFormula(isaFormula);
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
   }
+
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Search")
   public void testSearchBox(String userSIC, String password, String program, String productName) throws Exception {
@@ -193,7 +205,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   public String calculateISA(String ratio, String dosesPerYear, String wastage, String bufferPercentage, String adjustmentValue,
                              String minimumValue, String maximumValue, String population) {
-    Float calculatedISA = Integer.parseInt(population) * Float.parseFloat(ratio) * Float.parseFloat(dosesPerYear) * Float.parseFloat(wastage) / 12 * Float.parseFloat(bufferPercentage) + Float.parseFloat(adjustmentValue);
+    Float calculatedISA = Integer.parseInt(population) * Float.parseFloat(ratio) * Float.parseFloat(dosesPerYear) * Float.parseFloat(wastage) / 12 * Float.parseFloat(bufferPercentage) + Integer.parseInt(adjustmentValue);
     if (calculatedISA <= Float.parseFloat(minimumValue))
       return (minimumValue);
     else if (calculatedISA >= Float.parseFloat(maximumValue))

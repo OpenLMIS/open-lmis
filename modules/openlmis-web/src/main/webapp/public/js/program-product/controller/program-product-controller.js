@@ -140,10 +140,10 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
 
     if ($scope.population) {
       $scope.isaValue = parseInt($scope.population, 10) *
-          (utils.parseIntWithBaseTen(programProductIsa.whoRatio) / 100) *
+          (parseFloat(programProductIsa.whoRatio) / 100) *
           (utils.parseIntWithBaseTen(programProductIsa.dosesPerYear)) *
-          (1 + utils.parseIntWithBaseTen(programProductIsa.wastageRate) / 100) / 12 *
-          (1 + utils.parseIntWithBaseTen(programProductIsa.bufferPercentage) / 100) +
+          (1 + parseFloat(programProductIsa.wastageRate) / 100) / 12 *
+          (1 + parseFloat(programProductIsa.bufferPercentage) / 100) +
           (utils.parseIntWithBaseTen(programProductIsa.adjustmentValue));
       if (programProductIsa.minimumValue != null && $scope.isaValue < programProductIsa.minimumValue)
         $scope.isaValue = programProductIsa.minimumValue;
