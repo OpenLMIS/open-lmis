@@ -12,7 +12,6 @@
       </run>
     </groups>
     <classes preserver-order="true">
-
       <class name="org.openlmis.functional.ManageISA">
       </class>
       <class name="org.openlmis.functional.ManageProgramProductISA">

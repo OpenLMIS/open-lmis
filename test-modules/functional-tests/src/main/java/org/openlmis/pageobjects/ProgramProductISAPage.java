@@ -9,6 +9,7 @@ package org.openlmis.pageobjects;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -148,7 +149,8 @@ public class ProgramProductISAPage extends Page {
 
   public void enterValueInRadioTextField(String ratio) {
     testWebDriver.waitForElementToAppear(ratioTextBox);
-    ratioTextBox.clear();
+    ratioTextBox.sendKeys(Keys.ARROW_RIGHT);
+    ratioTextBox.sendKeys(Keys.BACK_SPACE);
     ratioTextBox.sendKeys(ratio);
   }
 
@@ -178,6 +180,7 @@ public class ProgramProductISAPage extends Page {
 
 
   public String fillPopulation(String population) {
+    populationTextBox.clear();
     populationTextBox.sendKeys(population);
     testWebDriver.sleep(100);
     testCalculationButton.click();

@@ -7,6 +7,7 @@
 package org.openlmis.functional;
 
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
@@ -54,8 +55,8 @@ public class ManageISA extends TestCaseHelper {
     createFacilityPage.verifyCalculatedIsa(671);
     createFacilityPage.clickIsaDoneButton();
     createFacilityPage.verifyOverriddenIsa(24);
-
     SaveButton.click();
+    createFacilityPage.verifySuccessMessage();
   }
 
 

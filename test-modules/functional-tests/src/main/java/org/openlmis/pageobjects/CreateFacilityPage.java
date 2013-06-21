@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.lang.String.valueOf;
 import static org.openqa.selenium.support.How.ID;
@@ -274,6 +275,11 @@ public class CreateFacilityPage extends Page {
     testWebDriver.sleep(500);
   }
 
+  public void verifySuccessMessage() {
+    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+    assertTrue("Save success message should show up", saveSuccessMsgDiv.isDisplayed());
+  }
+
 
   public void overrideIsa(int overriddenIsa) {
     modifyIsaValueLink.click();
@@ -297,5 +303,6 @@ public class CreateFacilityPage extends Page {
 
     assertEquals(testWebDriver.getAttribute(overrideIsaTextField, "value"), valueOf(expectedIsa));
     clickIsaDoneButton();
+    testWebDriver.sleep(1000);
   }
 }
