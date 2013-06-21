@@ -5,18 +5,34 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<html xmlns="http://www.w3.org/1999/html">
+<html xmlns="http://www.w3.org/1999/html" ng-app="openlmis">
 <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
     <title openlmis-message="app.title"></title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <script src="/public/lib/jquery/jquery-1.8.2.min.js"></script>
+    <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>
+    <script src="/public/lib/angular/angular.min.js"></script>
+    <script src="/public/lib/angular/angular-resource.min.js"></script>
+    <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
+    <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
+    <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
+    <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
 
-    <link rel="stylesheet" href="/public/css/login.css">
-  <!--[if IE 9]>
-    <link rel="stylesheet" href="/public/css/ie9.css" />
-  <![endif]-->
+    <script src="/public/js/shared/services/services.js"></script>
+    <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
+    <script src="/public/js/shared/app.js"></script>
+    <!-- App directives -->
+    <script src="/public/js/shared/directives/openlmis-message.js"></script>
+
+    <link rel="stylesheet" href="/public/css/app.css">
+    <script src="/public/lib/localstorage/localStorage.js"></script>
+    <script src="/public/js/shared/localStorageKeys.js"></script>
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
+    <!--[if IE 9]>
+    <!--<link rel="stylesheet" href="/public/css/ie9.css" />-->
 </head>
 
 <body>
