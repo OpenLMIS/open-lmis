@@ -69,7 +69,7 @@ public class GeographicZoneMapperIT {
   @Test
   public void shouldGetAllGeographicZonesOfLowestLevelExceptRootGeographicZone() throws Exception {
     List<GeographicZone> allGeographicZones = mapper.getAllGeographicZones();
-    assertThat(allGeographicZones.size(), is(1));
+    assertThat(allGeographicZones.size(), is(10));
     GeographicZone geographicZone = allGeographicZones.get(0);
 
     assertThat(geographicZone.getCode(), is("Ngorongoro"));
@@ -81,9 +81,9 @@ public class GeographicZoneMapperIT {
   @Test
   public void shouldGetGeographicZoneWithParent() throws Exception {
     GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "district", "District",null), null);
-    GeographicZone expectedZone = new GeographicZone(4L, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "city", "City", null), parent);
+    GeographicZone expectedZone = new GeographicZone(5L, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "city", "City", null), parent);
 
-    GeographicZone zone = mapper.getGeographicZoneById(4);
+    GeographicZone zone = mapper.getGeographicZoneById(5);
 
     assertThat(zone, is(expectedZone));
   }

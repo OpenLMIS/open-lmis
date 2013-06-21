@@ -2,22 +2,49 @@
 -- If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 DELETE FROM geographic_zones;
+
 INSERT INTO geographic_zones
 (code, name, levelId, parent) values
-('Root', 'Root', (SELECT id FROM geographic_levels WHERE code = 'country'), (SELECT id FROM geographic_zones WHERE code = 'Root')),
-('Arusha', 'Arusha',(SELECT id FROM geographic_levels WHERE code = 'state'), (SELECT id FROM geographic_zones WHERE code = 'Root')),
-('Dodoma', 'Dodoma', (SELECT id FROM geographic_levels WHERE code = 'district'), (SELECT id FROM geographic_zones WHERE code = 'Arusha')),
-('Ngorongoro', 'Ngorongoro', (SELECT id FROM geographic_levels WHERE code = 'city'), (SELECT id FROM geographic_zones WHERE code = 'Dodoma')),
+('Root', 'Root', (SELECT id FROM geographic_levels WHERE code = 'country'), NULL);
 
-('Mozambique', 'Mozambique', (SELECT id FROM geographic_levels WHERE code = 'country'), (SELECT id FROM geographic_zones WHERE code = 'Mozambique')),
+INSERT INTO geographic_zones
+(code, name, levelId, parent) values
+('Mozambique', 'Mozambique', (SELECT id FROM geographic_levels WHERE code = 'country'), NULL);
+
+
+INSERT INTO geographic_zones
+(code, name, levelId, parent) values
+('Arusha', 'Arusha',(SELECT id FROM geographic_levels WHERE code = 'state'), (SELECT id FROM geographic_zones WHERE code = 'Root'));
+
+
+INSERT INTO geographic_zones
+(code, name, levelId, parent) values
+('Dodoma', 'Dodoma',(SELECT id FROM geographic_levels WHERE code = 'district'), (SELECT id FROM geographic_zones WHERE code = 'Arusha'));
+
+INSERT INTO geographic_zones
+(code, name, levelId, parent) values
+('Ngorongoro', 'Ngorongoro', (SELECT id FROM geographic_levels WHERE code = 'city'), (SELECT id FROM geographic_zones WHERE code = 'Dodoma'));
+
+INSERT INTO geographic_zones
+(code, name, levelId, parent) values
 ('Cabo Delgado Province', 'Cabo Delgado Province', (SELECT id FROM geographic_levels WHERE code = 'state'), (SELECT id FROM geographic_zones WHERE code = 'Mozambique')),
 ('Gaza Province', 'Gaza Province', (SELECT id FROM geographic_levels WHERE code = 'state'), (SELECT id FROM geographic_zones WHERE code = 'Mozambique')),
-('Inhambane Province', 'Inhambane Province', (SELECT id FROM geographic_levels WHERE code = 'state'), (SELECT id FROM geographic_zones WHERE code = 'Mozambique')),
+('Inhambane Province', 'Inhambane Province', (SELECT id FROM geographic_levels WHERE code = 'state'), (SELECT id FROM geographic_zones WHERE code = 'Mozambique'));
 
-('Norte', 'Norte', (SELECT id FROM geographic_levels WHERE code = 'district'), (SELECT id FROM geographic_zones WHERE code = 'Cabo Delgado Province')),
-('Centro', 'Centro', (SELECT id FROM geographic_levels WHERE code = 'district'), (SELECT id FROM geographic_zones WHERE code = 'Gaza Province')),
-('Sul', 'Sul', (SELECT id FROM geographic_levels WHERE code = 'district'), (SELECT id FROM geographic_zones WHERE code = 'Inhambane Province')),
+INSERT INTO geographic_zones
+(code, name, levelId, parent) values
+('Norte', 'Norte', (SELECT id FROM geographic_levels WHERE code = 'district'), (SELECT id FROM geographic_zones WHERE code = 'Cabo Delgado Province'));
 
+INSERT INTO geographic_zones
+(code, name, levelId, parent) values
+('Centro', 'Centro', (SELECT id FROM geographic_levels WHERE code = 'district'), (SELECT id FROM geographic_zones WHERE code = 'Gaza Province'));
+
+INSERT INTO geographic_zones
+(code, name, levelId, parent) values
+('Sul', 'Sul', (SELECT id FROM geographic_levels WHERE code = 'district'), (SELECT id FROM geographic_zones WHERE code = 'Inhambane Province'));
+
+INSERT INTO geographic_zones
+(code, name, levelId, parent) values
 ('District1', 'District1', (SELECT id FROM geographic_levels WHERE code = 'city'), (SELECT id FROM geographic_zones WHERE code = 'Norte')),
 ('District2', 'District2', (SELECT id FROM geographic_levels WHERE code = 'city'), (SELECT id FROM geographic_zones WHERE code = 'Norte')),
 ('District3', 'District3', (SELECT id FROM geographic_levels WHERE code = 'city'), (SELECT id FROM geographic_zones WHERE code = 'Norte')),
