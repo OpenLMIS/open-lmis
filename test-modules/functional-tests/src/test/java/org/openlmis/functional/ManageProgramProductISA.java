@@ -46,10 +46,22 @@ public class ManageProgramProductISA extends TestCaseHelper {
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testMinimumProgramProductISA(String userSIC, String password, String program) throws Exception {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
-    programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "5", "10");
+    programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "5", "10", "1000");
     String actualISA = programProductISAPage.fillPopulation("1");
-    String expectedISA = calculateISA("0.01", "2", "1.03", "1.04", "5", "10", "1");
-    assertEquals(actualISA, expectedISA);
+    String expectedISA = calculateISA("0.01", "2", "1.03", "1.04", "5", "10", "1000", "1");
+    assertEquals(expectedISA,actualISA);
+    programProductISAPage.cancelISA();
+    HomePage homePage = new HomePage(testWebDriver);
+    homePage.navigateHomePage();
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  public void testMaximumProgramProductISA(String userSIC, String password, String program) throws Exception {
+    ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
+    programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "55", "10", "50");
+    String actualISA = programProductISAPage.fillPopulation("1");
+    String expectedISA = calculateISA("0.01", "2", "1.03", "1.04", "55", "10", "50", "1");
+    assertEquals(expectedISA,actualISA);
     programProductISAPage.cancelISA();
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
@@ -58,22 +70,29 @@ public class ManageProgramProductISA extends TestCaseHelper {
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testProgramProductISA(String userSIC, String password, String program) throws Exception {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
-    programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "50", "10");
+    programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "5", "5", "1000");
     String actualISA = programProductISAPage.fillPopulation("1");
-    String expectedISA = calculateISA("0.01", "2", "1.03", "1.04", "50", "10", "1");
-    assertEquals(actualISA, expectedISA);
+    String expectedISA = calculateISA("0.01", "2", "1.03", "1.04", "5", "5",
+      "1000", "1");
+    assertEquals(expectedISA,actualISA);
     programProductISAPage.cancelISA();
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
   }
 
+
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testISAFormula(String userSIC, String password, String program) throws Exception {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
-    programProductISAPage.fillProgramProductISA("12345678", "2", "0", "4", "-50", "10");
-    String formula = programProductISAPage.getISAFormulaFromISAFormulaModal();
+    programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "5", "5", "1000");
+//    programProductISAPage.fillProgramProductISA("999.999", "999", "999.999", "999.999", "999999", "5", "1000");
+    programProductISAPage.fillPopulation("1");
+    String isaFormula = programProductISAPage.getISAFormulaFromISAFormulaModal();
+    String expectedISAFormula = "(population) * 0.010 * 2 * 1.030 / 12 * 1.040 + 5";
+//    String expectedISAFormula = "(population) * 9.999 * 999 * 10.999 / 12 * 10.999 + 999999";
+    assertEquals(expectedISAFormula, isaFormula);
     programProductISAPage.saveISA();
-    programProductISAPage.verifyISAFormula(formula);
+    programProductISAPage.verifyISAFormula(isaFormula);
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
   }
@@ -136,7 +155,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testVerifyMandatoryFields(String userSIC, String password, String program) throws Exception {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
-    programProductISAPage.fillProgramProductISA("", "1", "2", "3", "4", "10");
+    programProductISAPage.fillProgramProductISA("", "1", "2", "3", "4", "10", "10");
     programProductISAPage.verifyFieldsOnISAModalWindow();
     programProductISAPage.saveISA();
     programProductISAPage.verifyMandatoryFieldsToBeFilled();
@@ -147,7 +166,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testVerifyMonthlyRestockAmountFieldAvailability(String userSIC, String password, String program) throws Exception {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
-    programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "0", "10");
+    programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "0", "10", "10");
     programProductISAPage.verifyMonthlyRestockAmountPresent();
     programProductISAPage.cancelISA();
     HomePage homePage = new HomePage(testWebDriver);
@@ -172,12 +191,14 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
 
-  public String calculateISA(String ratio, String dosesPerYear, String wastage, String bufferPercentage, String adjustmentValue, String minimumValue, String population) {
+  public String calculateISA(String ratio, String dosesPerYear, String wastage, String bufferPercentage, String adjustmentValue,
+                             String minimumValue, String maximumValue, String population) {
     Float calculatedISA = Integer.parseInt(population) * Float.parseFloat(ratio) * Float.parseFloat(dosesPerYear) * Float.parseFloat(wastage) / 12 * Float.parseFloat(bufferPercentage) + Float.parseFloat(adjustmentValue);
-//    if (calculatedISA < Float.parseFloat(minimumValue))
-//      return (minimumValue);
-//    else
-      return (new BigDecimal(calculatedISA).setScale(0, BigDecimal.ROUND_CEILING)).toString();
+    if (calculatedISA <= Float.parseFloat(minimumValue))
+      return (minimumValue);
+    else if (calculatedISA >= Float.parseFloat(maximumValue))
+      return (maximumValue);
+    return (new BigDecimal(calculatedISA).setScale(0, BigDecimal.ROUND_CEILING)).toString();
   }
 
 

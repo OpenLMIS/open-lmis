@@ -56,6 +56,9 @@ public class ProgramProductISAPage extends Page {
   @FindBy(how = ID, using = "minimum-value")
   private static WebElement minimumValueTextBox;
 
+  @FindBy(how = ID, using = "maximum-value")
+  private static WebElement maximumValueTextBox;
+
   @FindBy(how = XPATH, using = "//div[@id='ISA-population']/input")
   private static WebElement ISAPopulationTextField;
 
@@ -108,19 +111,26 @@ public class ProgramProductISAPage extends Page {
 
   }
 
-  public void fillProgramProductISA(String ratio, String dosesPerYear, String wastage, String bufferPercentage, String adjustmentValue, String minimumValue) {
+  public void fillProgramProductISA(String ratio, String dosesPerYear, String wastage, String bufferPercentage,
+                                    String adjustmentValue, String minimumValue, String maximumValue) {
     testWebDriver.waitForElementToAppear(ratioTextBox);
     enterValueInRadioTextField(ratio);
     enterValueInDosesTextField(dosesPerYear);
     enterValueInWastageTextField(wastage);
     enterValueInBufferPercentageTextField(bufferPercentage);
     enterValueInAdjustmentTextField(adjustmentValue);
-//    enterValueInMinimumTextField(minimumValue);
+    enterValueInMinimumTextField(minimumValue);
+    enterValueInMaximumTextField(maximumValue);
   }
 
   public void enterValueInMinimumTextField(String minimumValue) {
     testWebDriver.waitForElementToAppear(minimumValueTextBox);
     minimumValueTextBox.sendKeys(minimumValue);
+  }
+
+  public void enterValueInMaximumTextField(String minimumValue) {
+    testWebDriver.waitForElementToAppear(maximumValueTextBox);
+    maximumValueTextBox.sendKeys(minimumValue);
   }
 
   public void enterValueInAdjustmentTextField(String adjustmentValue) {
@@ -187,6 +197,7 @@ public class ProgramProductISAPage extends Page {
     testWebDriver.sleep(100);
     return testWebDriver.getText(isaValueLabel);
   }
+
 
   public void verifySuccessMessageDiv() {
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
