@@ -65,18 +65,8 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
 
 
   $scope.saveProductISA = function () {
-    if ($scope.isaForm.$error.required) {
-      $scope.inputClass = true;
-      $scope.error = "form.error";
-      $scope.message = "";
-      return;
-    }
 
-    else if (validateMaxIsLessThanMinValue($scope.currentProgramProduct.programProductIsa.maximumValue, $scope.currentProgramProduct.programProductIsa.minimumValue)) {
-      $scope.error = "error.minimum.greater.than.maximum";
-      $scope.message = "";
-    }
-    else {
+     if(validateForm($scope.currentProgramProduct.programProductIsa)) {
       $scope.inputClass = false;
       if ($scope.currentProgramProduct.programProductIsa.id)
         ProgramProductsISA.update({programProductId: $scope.currentProgramProduct.id, isaId: $scope.currentProgramProduct.programProductIsa.id},
@@ -86,7 +76,7 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
     }
   };
 
-  var validateMaxIsLessThanMinValue = function (maxValue, minValue) {
+  var isMaxLessThanMinValue = function (maxValue, minValue) {
     return((maxValue && minValue) != null && utils.parseIntWithBaseTen(maxValue) < utils.parseIntWithBaseTen(minValue));
   }
 
@@ -129,16 +119,27 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
     }
   };
 
-  $scope.calculateValue = function (programProductIsa) {
-    if (validateMaxIsLessThanMinValue(programProductIsa.maximumValue, programProductIsa.minimumValue)) {
+  var validateForm = function (programProductIsa) {
+    if ($scope.isaForm.$error.required) {
+      $scope.inputClass = true;
+      $scope.error = "form.error";
+      $scope.message = "";
+      return false;
+    }
+    if (isMaxLessThanMinValue(programProductIsa.maximumValue, programProductIsa.minimumValue)) {
       $scope.error = "error.minimum.greater.than.maximum";
       $scope.message = "";
       $scope.population = 0;
       $scope.isaValue = 0;
-      return;
+      return false;
     }
+    return true;
+  };
+  $scope.calculateValue = function (programProductIsa) {
+    if(!validateForm(programProductIsa))
+      return;
 
-    if ($scope.population) {
+    if ($scope.population >=0) {
       $scope.isaValue = parseInt($scope.population, 10) *
           (parseFloat(programProductIsa.whoRatio) / 100) *
           (utils.parseIntWithBaseTen(programProductIsa.dosesPerYear)) *

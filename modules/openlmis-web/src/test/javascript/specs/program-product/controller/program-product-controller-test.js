@@ -103,6 +103,8 @@ describe('program product controller', function () {
   });
 
   it("should not save ISA if required fields are not filled", function () {
+    var programProductIsa = {"whoRatio": 4, "dosesPerYear": 5, "bufferPercentage": 6, "adjustmentValue": 55};
+    scope.currentProgramProduct = {"id": 1, "programProductIsa": programProductIsa};
     scope.isaForm.$error.required = true;
 
     scope.saveProductISA();
@@ -110,6 +112,19 @@ describe('program product controller', function () {
     expect(scope.inputClass).toBeTruthy();
     expect(scope.error).toEqual("form.error");
     expect(scope.message).toEqual("");
+  });
+
+  it("should not save ISA if maximum isa value is less than minimum isa value", function () {
+    var programProductIsa = {"whoRatio": 4, "dosesPerYear": 5, "bufferPercentage": 6, "adjustmentValue": 55 ,
+      "minimumValue":50, "maximumValue":5};
+    scope.currentProgramProduct = {"id": 1, "programProductIsa": programProductIsa};
+
+    scope.saveProductISA();
+
+    expect(scope.error).toEqual("error.minimum.greater.than.maximum");
+    expect(scope.message).toEqual("");
+    expect(scope.population).toEqual(0);
+    expect(scope.isaValue).toEqual(0);
   });
 
   it("should return true if all fields are entered for the formula", function () {
@@ -151,6 +166,7 @@ describe('program product controller', function () {
   it("should return isa minimum value if calculated value is less than minimum value",function(){
     var programProductIsa = {"whoRatio": 2, "dosesPerYear": 1, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
     scope.population = 2;
+    scope.isaForm.$error.required = false;
     programProductIsa.minimumValue = 500;
 
     scope.calculateValue(programProductIsa);
@@ -160,6 +176,7 @@ describe('program product controller', function () {
 
   it("should return isa maximum value if calculated value is more than maximum value",function(){
     var programProductIsa = {"whoRatio": 2, "dosesPerYear": 1, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
+    scope.isaForm.$error.required = false;
     scope.population = 2;
     programProductIsa.maximumValue = 5;
 
@@ -171,6 +188,7 @@ describe('program product controller', function () {
   it("should not return calculated value if population is undefined", function () {
     var programProductIsa = {"whoRatio": 2, "dosesPerYear": 1, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6};
     programProductIsa.minimumValue = 2;
+    scope.population = undefined;
 
     scope.calculateValue(programProductIsa);
 
