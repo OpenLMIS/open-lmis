@@ -1,7 +1,7 @@
 /*
  * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 function IsaModalController($scope, FacilityProgramProducts, ProgramProducts, $routeParams) {
 
@@ -14,21 +14,10 @@ function IsaModalController($scope, FacilityProgramProducts, ProgramProducts, $r
         product.calculatedIsa = "--";
         return;
       }
+      var programProductIsa = new ProgramProductISA();
+      programProductIsa.init(product.programProductIsa);
 
-      var isaValue = (utils.parseIntWithBaseTen(population)) *
-          (utils.parseIntWithBaseTen(product.programProductIsa.whoRatio) / 100) *
-          (utils.parseIntWithBaseTen(product.programProductIsa.dosesPerYear)) *
-          (1 + utils.parseIntWithBaseTen(product.programProductIsa.wastageRate) / 100) / 12 *
-          (1 + utils.parseIntWithBaseTen(product.programProductIsa.bufferPercentage) / 100) +
-          (utils.parseIntWithBaseTen(product.programProductIsa.adjustmentValue));
-      if (product.programProductIsa.minimumValue != null && isaValue < product.programProductIsa.minimumValue)
-        isaValue = product.programProductIsa.minimumValue;
-      else if (product.programProductIsa.maximumValue != null && isaValue > product.programProductIsa.maximumValue)
-        isaValue = product.programProductIsa.maximumValue;
-      else
-        isaValue = isaValue < 0 ? 0 : Math.ceil(isaValue);
-
-      product.calculatedIsa = isaValue;
+      product.calculatedIsa = programProductIsa.calculate(population);
     });
   }
 

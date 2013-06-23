@@ -187,9 +187,9 @@
       </div>
       <div class="row-fluid">
         <div id="monthlyRestockAmount" class="calculatedAmount"
-             ng-show="isPresent(currentProgramProduct.programProductIsa)">
+             ng-show="currentProgramProduct.programProductIsa.isPresent()">
           <span openlmis-message="label.isa.monthly.restock.amount"></span>
-          <span ng-bind="getFormula(currentProgramProduct.programProductIsa)"></span>
+          <span ng-bind="currentProgramProduct.programProductIsa.getIsaFormula()"></span>
         </div>
       </div>
 

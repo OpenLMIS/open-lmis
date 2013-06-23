@@ -7,7 +7,6 @@
 
 function ProgramProductController($scope, programs, ProgramProducts, ProgramProductsISA) {
   $scope.programs = programs;
-  $scope.population = 0;
   $scope.isaValue = 0;
 
   $scope.loadProgramProducts = function () {
@@ -22,7 +21,12 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
 
   $scope.assignFormula = function (list) {
     $.each(list, function (index, programProduct) {
-      programProduct.formula = $scope.getFormula(programProduct.programProductIsa);
+      if (programProduct.programProductIsa) {
+        var programProductIsa = new ProgramProductISA();
+        programProductIsa.init(programProduct.programProductIsa);
+        programProduct.programProductIsa = programProductIsa;
+        programProduct.formula = programProduct.programProductIsa.getIsaFormula();
+      }
     });
   }
 
@@ -39,17 +43,14 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
     $scope.inputClass = false;
     $scope.population = 0;
     $scope.error = null;
-    if (programProduct.programProductIsa == null)
-      programProduct.programProductIsa = {"adjustmentValue": 0, "bufferPercentage": 0, "dosesPerYear": 0, "wastageRate": 0, "whoRatio": 0};
-    programProduct.previousFormula = programProduct.formula;
-    $scope.currentProgramProduct = angular.copy(programProduct);
+    if (programProduct.programProductIsa == undefined)
+      programProduct.programProductIsa = new ProgramProductISA();
+
+    $scope.currentProgramProduct = programProduct;
     $scope.programProductISAModal = true;
   }
 
   $scope.clearAndCloseProgramProductISAModal = function () {
-    if ($scope.currentProgramProduct && $scope.currentProgramProduct.formula == null) {
-      $scope.currentProgramProduct.formula = $scope.currentProgramProduct.previousFormula;
-    }
     $scope.population = 0;
     $scope.inputClass = false;
     $scope.currentProgramProduct = null;
@@ -65,8 +66,7 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
 
 
   $scope.saveProductISA = function () {
-
-     if(validateForm($scope.currentProgramProduct.programProductIsa)) {
+    if (validateForm($scope.currentProgramProduct.programProductIsa)) {
       $scope.inputClass = false;
       if ($scope.currentProgramProduct.programProductIsa.id)
         ProgramProductsISA.update({programProductId: $scope.currentProgramProduct.id, isaId: $scope.currentProgramProduct.programProductIsa.id},
@@ -76,9 +76,6 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
     }
   };
 
-  var isMaxLessThanMinValue = function (maxValue, minValue) {
-    return((maxValue && minValue) != null && utils.parseIntWithBaseTen(maxValue) < utils.parseIntWithBaseTen(minValue));
-  }
 
   var successCallBack = function () {
     $scope.message = "message.isa.save.success";
@@ -94,30 +91,6 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
     $scope.loadProgramProducts();
   };
 
-  function isDefined(value) {
-    return !(value == null || value == undefined || value == "-");
-  }
-
-
-  $scope.isPresent = function (programProductIsa) {
-    var present = programProductIsa && isDefined(programProductIsa.whoRatio) && isDefined(programProductIsa.dosesPerYear) &&
-        isDefined(programProductIsa.wastageRate) && isDefined(programProductIsa.bufferPercentage) &&
-        isDefined(programProductIsa.adjustmentValue);
-    return present;
-  };
-
-  $scope.getFormula = function (programProductIsa) {
-    if ($scope.isPresent(programProductIsa)) {
-      var adjustmentVal = utils.parseIntWithBaseTen(programProductIsa.adjustmentValue);
-      adjustmentVal = adjustmentVal > 0 ? adjustmentVal : "(" + adjustmentVal + ")";
-      return "(population) * " +
-          (programProductIsa.whoRatio / 100).toFixed(3) +
-          " * " + utils.parseIntWithBaseTen(programProductIsa.dosesPerYear) +
-          " * " + (1 + programProductIsa.wastageRate / 100).toFixed(3) +
-          " / 12 * " + (1 + programProductIsa.bufferPercentage / 100).toFixed(3) +
-          " + " + adjustmentVal;
-    }
-  };
 
   var validateForm = function (programProductIsa) {
     if ($scope.isaForm.$error.required) {
@@ -126,7 +99,7 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
       $scope.message = "";
       return false;
     }
-    if (isMaxLessThanMinValue(programProductIsa.maximumValue, programProductIsa.minimumValue)) {
+    if (programProductIsa.isMaxLessThanMinValue()) {
       $scope.error = "error.minimum.greater.than.maximum";
       $scope.message = "";
       $scope.population = 0;
@@ -135,26 +108,12 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
     }
     return true;
   };
+
   $scope.calculateValue = function (programProductIsa) {
-    if(!validateForm(programProductIsa))
+    if (!validateForm(programProductIsa))
       return;
 
-    if ($scope.population >=0) {
-      $scope.isaValue = parseInt($scope.population, 10) *
-          (parseFloat(programProductIsa.whoRatio) / 100) *
-          (utils.parseIntWithBaseTen(programProductIsa.dosesPerYear)) *
-          (1 + parseFloat(programProductIsa.wastageRate) / 100) / 12 *
-          (1 + parseFloat(programProductIsa.bufferPercentage) / 100) +
-          (utils.parseIntWithBaseTen(programProductIsa.adjustmentValue));
-      if (programProductIsa.minimumValue != null && $scope.isaValue < programProductIsa.minimumValue)
-        $scope.isaValue = programProductIsa.minimumValue;
-      else if (programProductIsa.maximumValue != null && $scope.isaValue > programProductIsa.maximumValue)
-        $scope.isaValue = programProductIsa.maximumValue;
-      else
-        $scope.isaValue = $scope.isaValue < 0 ? 0 : Math.ceil($scope.isaValue);
-    } else {
-      $scope.isaValue = 0;
-    }
+    $scope.isaValue = programProductIsa.calculate($scope.population);
   }
 }
 
