@@ -40,7 +40,7 @@ angular.bootstrap(document, ['programProductModule']);
 
 programProductModule.numericValue = function (value, errorHolder) {
   var NUMBERIC_REGEXP_FIXED_PRECISION = /^(\d{0,3}\.\d{0,3}|\d{0,3})$/;
-  var NUMBER_REGEXP = /^\d*\.?\d*$/;
+  var NUMBER_REGEXP = /^\d*\.?\d{1,3}$/;
   var valid = (value == undefined) ? true : NUMBERIC_REGEXP_FIXED_PRECISION.test(value);
 
     if (errorHolder != undefined) {

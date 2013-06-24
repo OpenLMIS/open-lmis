@@ -28,7 +28,7 @@ var ProgramProductISA = function () {
   }
 
   ProgramProductISA.prototype.isDefined = function (value) {
-    return !(value == null || value == undefined || value == "-");
+    return !(value == null || value == undefined || value == "-" || value == "." || value[value.length - 1] == '.');
   }
 
   ProgramProductISA.prototype.isMaxLessThanMinValue = function () {

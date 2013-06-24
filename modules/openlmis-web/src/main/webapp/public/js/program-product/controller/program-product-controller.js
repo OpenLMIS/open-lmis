@@ -42,8 +42,10 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
   $scope.showProductISA = function (programProduct) {
     $scope.inputClass = false;
     $scope.population = 0;
+    $scope.isaValue = 0;
     $scope.error = null;
-    if (programProduct.programProductIsa == undefined)
+    angular.element(".form-error").hide();
+    if (programProduct.programProductIsa == undefined || programProduct.programProductIsa.id == undefined)
       programProduct.programProductIsa = new ProgramProductISA();
 
     $scope.currentProgramProduct = programProduct;
@@ -112,8 +114,8 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
   $scope.calculateValue = function (programProductIsa) {
     if (!validateForm(programProductIsa))
       return;
-
-    $scope.isaValue = programProductIsa.calculate($scope.population);
+    if (programProductIsa.isPresent())
+      $scope.isaValue = programProductIsa.calculate($scope.population);
   }
 }
 
