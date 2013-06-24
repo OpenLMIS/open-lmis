@@ -128,14 +128,14 @@ describe('ProgramProductIsa', function () {
     programProductIsa.adjustmentValue = -10;
     var isaFormula = programProductIsa.getIsaFormula();
 
-    expect(isaFormula).toEqual("(population) * 0.000 * 0 * 1.000 / 12 * 1.000 + (-10)")
+    expect(isaFormula).toEqual("(population) * 0.00000 * 0 * 1.00000 / 12 * 1.00000 + (-10)")
   });
 
   it('should return isa formula for adjustment value greater than zero', function () {
     programProductIsa.adjustmentValue = 4;
     var isaFormula = programProductIsa.getIsaFormula();
 
-    expect(isaFormula).toEqual("(population) * 0.000 * 0 * 1.000 / 12 * 1.000 + 4")
+    expect(isaFormula).toEqual("(population) * 0.00000 * 0 * 1.00000 / 12 * 1.00000 + 4")
   });
 
 })

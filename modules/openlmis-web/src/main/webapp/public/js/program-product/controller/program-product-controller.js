@@ -48,7 +48,7 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
     if (programProduct.programProductIsa == undefined || programProduct.programProductIsa.id == undefined)
       programProduct.programProductIsa = new ProgramProductISA();
 
-    $scope.currentProgramProduct = programProduct;
+    $scope.currentProgramProduct = angular.copy(programProduct);
     $scope.programProductISAModal = true;
   }
 
