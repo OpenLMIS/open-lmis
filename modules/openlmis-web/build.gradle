@@ -54,7 +54,7 @@ tasks.withType(War) {
     eachFile { FileCopyDetails fileCopy ->
         if (fileCopy.path.contains('public/pages/') && fileCopy.name.endsWith('.html')) {
 
-            fileCopy.filter(ReplaceTokens, tokens: [version: currentTime])
+            fileCopy.filter {String line -> line.replace('.js"', '.js?v=' + currentTime + '"')}
             fileCopy.filter {String line -> line.replace('.css"', '.css?v=' + currentTime + '"')}
         }
     }
