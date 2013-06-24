@@ -100,6 +100,9 @@ public class HomePage extends Page {
   @FindBy(how = How.LINK_TEXT, using = "R & R Template")
   private static WebElement RnRTemplateConfigTab;
 
+  @FindBy(how = How.LINK_TEXT, using = "Regimen Template")
+  private static WebElement RegimenTemplateConfigTab;
+
   @FindBy(how = How.LINK_TEXT, using = "R & R")
   private static WebElement ConfigureTemplateSelectProgramPage;
 
@@ -253,6 +256,19 @@ public class HomePage extends Page {
     testWebDriver.getElementById(programme).click();
 
     return new TemplateConfigPage(testWebDriver);
+  }
+
+  public RegimenTemplateConfigPage selectProgramToRegimenConfigTemplate(String programme) {
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    testWebDriver.keyPress(AdministrationMenuItem);
+    testWebDriver.waitForElementToAppear(TemplateConfigTab);
+    testWebDriver.keyPress(TemplateConfigTab);
+    testWebDriver.waitForElementToAppear(RegimenTemplateConfigTab);
+    testWebDriver.keyPress(RegimenTemplateConfigTab);
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementById(programme));
+    testWebDriver.getElementById(programme).click();
+
+    return new RegimenTemplateConfigPage(testWebDriver);
   }
 
   public String navigateAndInitiateRnr(String program) throws IOException {
