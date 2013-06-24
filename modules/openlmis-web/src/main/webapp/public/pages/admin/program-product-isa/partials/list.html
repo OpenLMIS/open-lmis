@@ -96,7 +96,7 @@
                    ng-change="error=''"
                    ng-class="highlightRequired(currentProgramProduct.programProductIsa.dosesPerYear)"/>
 
-            <div id="dosesPerYear" class="form-error" openlmis-message="error.enter.numeric.value"></div>
+            <div id="dosesPerYear" class="form-error" openlmis-message="error.enter.number.only"></div>
           </div>
         </div>
 
@@ -150,7 +150,7 @@
                    ng-class="highlightRequired(currentProgramProduct.programProductIsa.adjustmentValue)"/>
             <span>(+/-)</span>
 
-            <div id="adjustmentValue" class="form-error" openlmis-message="error.enter.numeric.value"></div>
+            <div id="adjustmentValue" class="form-error" openlmis-message="error.enter.number.only"></div>
           </div>
         </div>
 
@@ -165,7 +165,7 @@
                    numeric-validator="positiveInteger"
                    maxlength="6"/>
 
-            <div id="minimumValue" class="form-error" openlmis-message="error.enter.numeric.value"></div>
+            <div id="minimumValue" class="form-error" openlmis-message="error.enter.number.only"></div>
           </div>
         </div>
 
@@ -180,7 +180,7 @@
                    numeric-validator="positiveInteger"
                    maxlength="6"/>
 
-            <div id="maximumValue" class="form-error" openlmis-message="error.enter.numeric.value"></div>
+            <div id="maximumValue" class="form-error" openlmis-message="error.enter.number.only"></div>
           </div>
         </div>
 
@@ -213,7 +213,7 @@
                ng-click="calculateValue(currentProgramProduct.programProductIsa)"
                openlmis-message="button.test.calculation"/>
 
-        <div id="population" class="form-error" openlmis-message="error.enter.numeric.value"></div>
+        <div id="population" class="form-error" openlmis-message="error.enter.number.only"></div>
       </div>
     </div>
 

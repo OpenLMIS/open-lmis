@@ -39,10 +39,10 @@ var ProgramProductISA = function () {
     var adjustmentVal = utils.parseIntWithBaseTen(this.adjustmentValue);
     adjustmentVal = adjustmentVal > 0 ? adjustmentVal : "(" + adjustmentVal + ")";
     return "(population) * " +
-        (this.whoRatio / 100).toFixed(3) +
+        (this.whoRatio / 100).toFixed(5) +
         " * " + utils.parseIntWithBaseTen(this.dosesPerYear) +
-        " * " + (1 + this.wastageRate / 100).toFixed(3) +
-        " / 12 * " + (1 + this.bufferPercentage / 100).toFixed(3) +
+        " * " + (1 + this.wastageRate / 100).toFixed(5) +
+        " / 12 * " + (1 + this.bufferPercentage / 100).toFixed(5) +
         " + " + adjustmentVal;
   }
 

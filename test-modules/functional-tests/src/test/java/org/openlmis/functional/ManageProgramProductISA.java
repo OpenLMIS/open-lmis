@@ -98,7 +98,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     programProductISAPage.fillProgramProductISA("999.999", "999", "999.999", "999.999", "999999", "5", "1000");
     programProductISAPage.fillPopulation("1");
     String isaFormula = programProductISAPage.getISAFormulaFromISAFormulaModal();
-    String expectedISAFormula = "(population) * 10.000 * 999 * 11.000 / 12 * 11.000 + 999999";
+    String expectedISAFormula = "(population) * 9.99999 * 999 * 10.99999 / 12 * 10.99999 + 999999";
     assertEquals(expectedISAFormula, isaFormula);
     programProductISAPage.saveISA();
     programProductISAPage.verifyISAFormula(isaFormula);
