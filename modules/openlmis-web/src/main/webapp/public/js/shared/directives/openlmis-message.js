@@ -8,8 +8,7 @@ app.directive('openlmisMessage',function (messageService) {
   return {
     restrict:'A',
     link:function (scope, element, attrs) {
-      var key = scope[attrs.openlmisMessage] || attrs.openlmisMessage;
-      var keyWithArgs = key.split("|");
+      var keyWithArgs = attrs.openlmisMessage.split("|");
       var refreshMessages = function () {
         var key = scope[keyWithArgs[0]] || keyWithArgs[0];
         var displayMessage = messageService.get(key) || key;

@@ -68,6 +68,10 @@ describe('Rnr Template controllers', function () {
     });
 
     it('should toggle arithmetic validation flag', function () {
+      spyOn(messageService, 'get').andCallFake(function(arg) {
+        if(arg == 'label.on') return 'ON';
+        if(arg == 'label.off') return 'OFF';
+      })
       scope.validateFormula = true;
       scope.toggleValidateFormulaFlag();
       expect(scope.validateFormula).toBeFalsy();

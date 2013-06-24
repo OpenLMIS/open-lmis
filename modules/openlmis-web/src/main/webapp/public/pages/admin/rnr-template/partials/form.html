@@ -52,7 +52,10 @@
 
     <div class="alert alert-info arithmetic-valid-msg" ng-show="arithmeticValidationMessageShown">
       <div class="row-fluid">
-        <div class="span9" openlmis-message="message.arithmeticValidation.status|arithmeticValidationStatusLabel|arithmeticValidationMessage">
+        <div class="span9">
+            <span openlmis-message="message.arithmeticValidation.status"></span>
+            <strong openlmis-message="arithmeticValidationStatusLabel"></strong>.
+            <span ng-show="arithmeticValidationMessage" openlmis-message="arithmeticValidationMessage"></span>
         </div>
         <div class="span3">
           <a href="javascript:void(0);" class="btn btn-primary btn-mini pull-right"
