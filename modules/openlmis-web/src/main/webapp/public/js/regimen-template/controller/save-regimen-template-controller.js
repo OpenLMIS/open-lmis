@@ -3,7 +3,6 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
   $scope.regimens = regimens;
   $scope.regimenCategories = regimenCategories;
   $scope.selectProgramUrl = "/public/pages/admin/regimen-template/index.html#/select-program";
-
   $scope.regimensByCategory = {};
 
 
@@ -30,10 +29,23 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
     } else {
       $scope.newRegimen.programId = $scope.program.id;
       $scope.newRegimen.displayOrder = 1;
+      $scope.newRegimen.disable = true;
       addRegimenByCategory($scope.newRegimen);
       $scope.newRegimenError = null;
+      $scope.newRegimen = null;
     }
-    $scope.newRegimen = null;
+  };
+
+  $scope.editRow = function (regimen) {
+    regimen.disable = false;
+  };
+
+  $scope.saveRow = function (regimen) {
+    if ($scope.regimenEditForm.$error.required) {
+
+    } else {
+      regimen.disable = true;
+    }
   };
 
   $scope.save = function () {
