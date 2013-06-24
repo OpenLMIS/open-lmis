@@ -267,34 +267,50 @@ span[class^="tpl-"] {
 
 .rnr-template-columns {
   margin-bottom: 10px;
-}
-
-.rnr-template-columns ul {
+  ul {
   list-style: none;
   margin: 0;
+  &>li {
+    border: 1px solid #DDD;
+    border-color: transparent #BBB #DDD;
+    border-top: 0;
+    background: #FCFCFC;
+    font-size: 0.9em;
+    position: relative;
+
+    .drag-handle {
+      background: url("../images/sort-icon.png") no-repeat left center;
+      position: absolute;
+      width: 12px;
+      height: 16px;
+      left: 10px;
+      top: 50%;
+      margin-top: -9px;
+      cursor: move;
+      display: none;
+    }
+  }
+  &> li:hover .drag-handle {
+    display: block;
+    }
+
+  }
+  input[type="button"] {
+   margin-left: 50px;
+  }
 }
 
-.rnr-template-columns ul > li {
-  border: 1px solid #DDD;
-  border-color: transparent #BBB #DDD;
-  border-top: 0;
-  background: #FCFCFC;
-  font-size: 0.9em;
-  position: relative;
-}
-.rnr-template-columns ul > li .drag-handle {
-  background: url("../images/sort-icon.png") no-repeat left center;
-  position: absolute;
-  width: 12px;
-  height: 16px;
-  left: 10px;
-  top: 50%;
-  margin-top: -9px;
-  cursor: move;
-  display: none;
-}
-.rnr-template-columns ul > li:hover .drag-handle {
-  display: block;
+
+form#regimen-edit-form .rnr-template-columns ul{
+   &> li {
+    background: #f9f9f9;
+   }
+   li.category-name {
+    background: white;
+    div {
+     font-size: 12px;
+    }
+   }
 }
 
 .rnr-tabs {
@@ -393,6 +409,7 @@ span[class^="tpl-"] {
     background: linear-gradient(to bottom, #f9f9f9 0%,#e0e0e0 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#e0e0e0',GradientType=0 ); /* IE6-9 */
   }
+
   .table-bordered th,
   .table-bordered td {
     border-left: none;
@@ -861,7 +878,9 @@ h3 {
   &:hover {
     background-color: #F9F9F9;
   }
-
+  input[type="button"] {
+    margin-left: 20px;
+  }
 }
 .program-isa {
   padding-top: 10px;
