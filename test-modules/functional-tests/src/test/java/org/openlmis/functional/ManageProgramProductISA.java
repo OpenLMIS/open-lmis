@@ -48,7 +48,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
     programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "5", "10", "1000");
     String actualISA = programProductISAPage.fillPopulation("1");
-    String expectedISA = calculateISA("0.01", "2", "1.03", "1.04", "5", "10", "1000", "1");
+    String expectedISA = calculateISA("1", "2", "3", "4", "5", "10", "1000","1");
     assertEquals(expectedISA,actualISA);
     programProductISAPage.cancelISA();
     HomePage homePage = new HomePage(testWebDriver);
@@ -60,7 +60,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
     programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "55", "10", "50");
     String actualISA = programProductISAPage.fillPopulation("1");
-    String expectedISA = calculateISA("0.01", "2", "1.03", "1.04", "55", "10", "50", "1");
+    String expectedISA = calculateISA("1", "2", "3", "4", "55", "10", "50","1");
     assertEquals(expectedISA,actualISA);
     programProductISAPage.cancelISA();
     HomePage homePage = new HomePage(testWebDriver);
@@ -72,8 +72,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
     programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "5", "5", "1000");
     String actualISA = programProductISAPage.fillPopulation("1");
-    String expectedISA = calculateISA("0.01", "2", "1.03", "1.04", "5", "5",
-      "1000", "1");
+    String expectedISA = calculateISA("1", "2", "3", "4", "5", "5", "1000","1");
     assertEquals(expectedISA,actualISA);
     programProductISAPage.cancelISA();
     HomePage homePage = new HomePage(testWebDriver);
@@ -85,8 +84,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
     programProductISAPage.fillProgramProductISA("3.9", "3", "10", "25", "0", "", "");
     String actualISA = programProductISAPage.fillPopulation("1000");
-    String expectedISA = calculateISA("0.039", "3", "1.1", "1.25", "0", "0",
-      "20", "1000");
+    String expectedISA = calculateISA("3.9", "3", "10", "25", "0", "0", "20","1000");
     assertEquals(expectedISA,actualISA);
     programProductISAPage.cancelISA();
     HomePage homePage = new HomePage(testWebDriver);
@@ -203,14 +201,27 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
 
-  public String calculateISA(String ratio, String dosesPerYear, String wastage, String bufferPercentage, String adjustmentValue,
-                             String minimumValue, String maximumValue, String population) {
-    Float calculatedISA = Integer.parseInt(population) * Float.parseFloat(ratio) * Float.parseFloat(dosesPerYear) * Float.parseFloat(wastage) / 12 * Float.parseFloat(bufferPercentage) + Integer.parseInt(adjustmentValue);
-    if (calculatedISA <= Float.parseFloat(minimumValue))
+  public String calculateISA(String ratioValue, String dosesPerYearValue, String wastageValue, String bufferPercentageValue, String adjustmentValue,
+                             String minimumValue, String maximumValue, String populationValue) {
+
+    Float calculatedISA;
+    Integer population = Integer.parseInt(populationValue);
+    Float ratio = Float.parseFloat(ratioValue) / 100;
+    Integer dossesPerYear = Integer.parseInt(dosesPerYearValue);
+    Float wastage = (Float.parseFloat(wastageValue) / 100) + 1;
+    Float bufferPercentage = (Float.parseFloat(bufferPercentageValue) / 100) + 1;
+    Float minimum = Float.parseFloat(minimumValue);
+    Float maximum = Float.parseFloat(maximumValue);
+
+    Integer adjustment = Integer.parseInt(adjustmentValue);
+
+    calculatedISA = (((population * ratio * dossesPerYear * wastage) / 12) * bufferPercentage) + adjustment;
+
+    if (calculatedISA <= minimum)
       return (minimumValue);
-    else if (calculatedISA >= Float.parseFloat(maximumValue))
+    else if (calculatedISA >= maximum)
       return (maximumValue);
-    return (new BigDecimal(calculatedISA).setScale(0, BigDecimal.ROUND_CEILING)).toString();
+    return (new BigDecimal(calculatedISA).setScale(0,BigDecimal.ROUND_CEILING)).toString();
   }
 
 
