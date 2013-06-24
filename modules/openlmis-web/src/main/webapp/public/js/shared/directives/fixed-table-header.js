@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-directives.directive('fixedTableHeader', function() {
+app.directive('fixedTableHeader', function() {
   return {
     restrict: 'EA',
     link: function (scope, element, attr, ctrl) {
