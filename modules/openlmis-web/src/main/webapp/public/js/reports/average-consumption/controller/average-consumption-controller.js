@@ -114,12 +114,14 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
 
 
         $scope.filterGrid = function (){
-            /*if ($scope.filterForm.$invalid) {
-                alert('form is invalid')
+
+            $(".ngFooterPanel").css("margin-left",$(".span3").width() + ($(".span3").width()/3)) ;
+            if ($scope.filterForm.$invalid) {
                 $scope.errorShown = true;
                 return;
-            }*/
+            }
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+
         };
 
         //filter form data section

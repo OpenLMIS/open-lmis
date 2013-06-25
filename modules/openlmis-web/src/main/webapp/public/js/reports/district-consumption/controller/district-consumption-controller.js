@@ -110,7 +110,10 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             return $scope.periodType == 'semi-anual';
         };
         $scope.filterGrid = function (){
-          $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            //fixes ngGrid footer alignment
+            $(".ngFooterPanel").css("margin-left",$(".span3").width() + ($(".span3").width()/3)) ;
+
+            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
         //filter form data section

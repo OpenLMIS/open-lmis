@@ -112,6 +112,8 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
         $scope.filterGrid = function (){
 
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+
+            $(".ngFooterPanel").css("margin-left",$(".span3").width() + ($(".span3").width()/3)) ;
         };
 
         //filter form data section
@@ -542,6 +544,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
                    // $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
             });
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+
         }, true);
 
     $scope.gridOptions = {
