@@ -35,19 +35,30 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @Test(groups = {"smoke"}, dataProvider = "Data-Provider")
   public void testVerifyNewRegimenCreated(String program, String[] credentials) throws Exception {
+    dbWrapper.setRegimenTemplateConfiguredForProgram(false,program);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
     regimenTemplateConfigPage.configureProgram(program);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen,"Code1","Name1",true);
     regimenTemplateConfigPage.SaveRegime();
-//    verifySuccessMessage(regimenTemplateConfigPage);
+    verifySuccessMessage(regimenTemplateConfigPage);
+    verifyProgramConfigured(program);
 
   }
 
   public void verifySuccessMessage(RegimenTemplateConfigPage regimenTemplateConfigPage) {
-    testWebDriver.waitForElementToAppear(regimenTemplateConfigPage.getSaveErrorMsgDiv());
-    assertTrue("saveSuccessMsgDiv should show up", regimenTemplateConfigPage.getSaveErrorMsgDiv().isDisplayed());
+    testWebDriver.waitForElementToAppear(regimenTemplateConfigPage.getSaveSuccessMsgDiv());
+    assertTrue("saveSuccessMsgDiv should show up", regimenTemplateConfigPage.getSaveSuccessMsgDiv().isDisplayed());
+    String saveSuccessfullyMessage = "Regimens saved successfully";
+    assertTrue("Message showing '"+saveSuccessfullyMessage+"' should show up", regimenTemplateConfigPage.getSaveSuccessMsgDiv().getText().trim().equals(saveSuccessfullyMessage));
+
+  }
+
+  public void verifyProgramConfigured( String program) {
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[@id='" + program + "']"));
+    assertTrue("",testWebDriver.getElementByXpath("//a[@id='" + program + "']").getText().trim().equals("Edit"));
+
   }
 
   @AfterMethod(groups = {"smoke","functional2"})

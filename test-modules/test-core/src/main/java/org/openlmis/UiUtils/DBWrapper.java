@@ -138,6 +138,7 @@ public class DBWrapper {
     update("delete from processing_periods;");
     update("delete from processing_schedules;");
     update("delete from atomfeed.event_records;");
+    update("delete from regimens;");
   }
 
 
@@ -745,6 +746,10 @@ public class DBWrapper {
 
   public void updateActiveStatusOfProgram(String programCode) throws SQLException {
     update("update programs SET active='true' where code='"+programCode+"';");
+  }
+
+  public void setRegimenTemplateConfiguredForProgram(boolean flag,String programName) throws SQLException {
+    update("update programs set regimentemplateconfigured='"+flag+"' where name='"+programName+"';");
   }
 
 }

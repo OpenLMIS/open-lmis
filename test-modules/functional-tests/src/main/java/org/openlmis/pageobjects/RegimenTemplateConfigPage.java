@@ -37,7 +37,7 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'(Change)')]")
   private static WebElement changeLink;
 
-  @FindBy(how = How.ID, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='message']")
+  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='message']")
   private static WebElement saveSuccessMsgDiv;
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='error']")
