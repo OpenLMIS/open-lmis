@@ -24,6 +24,9 @@ public class RegimenServiceTest {
   @Mock
   RegimenRepository repository;
 
+  @Mock
+  ProgramService programService;
+
   @InjectMocks
   RegimenService service;
 
@@ -42,6 +45,7 @@ public class RegimenServiceTest {
     service.save(1L, regimens);
     verify(repository).insert(regimen);
     verify(repository).deleteByProgramId(1L);
+    verify(programService).setRegimenTemplateConfigured(1L);
   }
 
   @Test

@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 function SaveRegimenTemplateController($scope, program, regimens, regimenCategories, messageService, Regimens, $location) {
 
   $scope.program = program;
@@ -5,6 +11,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
   $scope.regimenCategories = regimenCategories;
   $scope.selectProgramUrl = "/public/pages/admin/regimen-template/index.html#/select-program";
   $scope.regimensByCategory = {};
+  $scope.$parent.message = "";
 
   function addRegimenByCategory(regimen) {
     var regimenCategoryId = regimen.category.id;

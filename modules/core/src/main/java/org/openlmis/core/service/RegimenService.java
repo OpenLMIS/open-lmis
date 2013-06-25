@@ -14,11 +14,15 @@ public class RegimenService {
   @Autowired
   RegimenRepository repository;
 
+  @Autowired
+  ProgramService programService;
+
   public void save(Long programId, List<Regimen> regimens) {
     repository.deleteByProgramId(programId);
     for (Regimen regimen : regimens) {
       repository.insert(regimen);
     }
+    programService.setRegimenTemplateConfigured(programId);
   }
 
   public List<Regimen> getByProgram(Long programId) {

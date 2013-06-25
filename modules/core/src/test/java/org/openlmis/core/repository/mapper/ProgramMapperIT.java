@@ -37,7 +37,8 @@ import static org.openlmis.core.builder.UserBuilder.facilityId;
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-public class ProgramMapperIT extends SpringIntegrationTest {
+public class
+  ProgramMapperIT extends SpringIntegrationTest {
 
   public static final String PROGRAM_CODE = "HIV";
   public static final Integer PROGRAM_ID = 1;
@@ -241,6 +242,16 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     Program returnedProgram = programMapper.getById(program.getId());
 
     assertThat(returnedProgram.isTemplateConfigured(), is(true));
+  }
+
+  @Test
+  public void shouldSetRegimenTemplateConfiguredFlag() {
+    Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"), with(templateStatus, false), with(regimenTemplateConfigured, false))));
+    programMapper.setRegimenTemplateConfigured(program.getId());
+
+    Program returnedProgram = programMapper.getById(program.getId());
+
+    assertThat(returnedProgram.isRegimenTemplateConfigured(), is(true));
   }
 
   @Test
