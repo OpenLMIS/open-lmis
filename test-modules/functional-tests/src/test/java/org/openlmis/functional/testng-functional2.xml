@@ -22,9 +22,9 @@
       </class>
       <class name="org.openlmis.functional.ManageRolesAndUsers">
       </class>
-      <class name="org.openlmis.functional.ManageReport">
+      <class name="org.openlmis.functional.ConfigureRegimenProgramTemplate">
       </class>
-      <!--<class name="org.openlmis.functional.ConfigureRegimenProgramTemplate">-->
+      <!--<class name="org.openlmis.functional.ManageReport">-->
       <!--</class>-->
     </classes>
   </test>

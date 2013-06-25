@@ -27,25 +27,27 @@ import static org.openlmis.pageobjects.CreateFacilityPage.SaveButton;
 
 public class ManageISA extends TestCaseHelper {
 
-  @BeforeMethod(groups = {"functional2"})
+  private static String geoZone = "Ngorongoro";
+  private static String facilityType = "Lvl3 Hospital";
+  private static String operatedBy = "MoH";
+  private static String facilityCodePrefix = "FCcode";
+  private static String facilityNamePrefix = "FCname";
+
+  @BeforeMethod(groups = {"smoke","functional2"})
   public void setUp() throws Exception {
     super.setup();
     setupProgramProductTestDataWithCategories("P1", "antibiotic1", "C1", "VACCINES");
   }
 
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function")
   public void shouldOverrideIsaNewFacility(String userSIC, String password, String program) throws Exception {
     setupProgramProductISA(program,"P1","1", "2", "3", "4", null, null, "5");
       LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
       HomePage homePage = loginPage.loginAs(userSIC, password);
     CreateFacilityPage createFacilityPage = new HomePage(testWebDriver).navigateCreateFacility();
 
-    String geoZone = "Ngorongoro";
-    String facilityType = "Lvl3 Hospital";
-    String operatedBy = "MoH";
-    String facilityCodePrefix = "FCcode";
-    String facilityNamePrefix = "FCname";
+
 
     String date_time = createFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,
       program, geoZone, facilityType, operatedBy, valueOf(333), true);
@@ -69,11 +71,6 @@ public class ManageISA extends TestCaseHelper {
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
         loginPage.loginAs(userSIC, password);
         CreateFacilityPage createFacilityPage = new HomePage(testWebDriver).navigateCreateFacility();
-        String geoZone = "Ngorongoro";
-        String facilityType = "Lvl3 Hospital";
-        String operatedBy = "MoH";
-        String facilityCodePrefix = "FCcode";
-        String facilityNamePrefix = "FCname";
 
         String date_time = createFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,
                 program, geoZone, facilityType, operatedBy, valueOf(333), true);
@@ -108,7 +105,7 @@ public class ManageISA extends TestCaseHelper {
     }
 
 
-  @AfterMethod(groups = {"functional2"})
+  @AfterMethod(groups = {"smoke","functional2"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);

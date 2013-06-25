@@ -79,6 +79,58 @@ public class RegimenTemplateConfigPage extends Page {
     addButton.click();
   }
 
+  public WebElement getLogoutLink() {
+    return logoutLink;
+  }
+
+  public WebElement getSaveButton() {
+    return SaveButton;
+  }
+
+  public WebElement getCancelButton() {
+    return CancelButton;
+  }
+
+  public WebElement getChangeLink() {
+    return changeLink;
+  }
+
+  public WebElement getSaveSuccessMsgDiv() {
+    return saveSuccessMsgDiv;
+  }
+
+  public WebElement getSaveErrorMsgDiv() {
+    return saveErrorMsgDiv;
+  }
+
+  public static WebElement getNewRegimenCategoryDropDown() {
+    return newRegimenCategoryDropDown;
+  }
+
+  public WebElement getNewRegimenCodeTextBox() {
+    return newRegimenCodeTextBox;
+  }
+
+  public WebElement getNewRegimenNameTextBox() {
+    return newRegimenNameTextBox;
+  }
+
+  public WebElement getNewRegimenActiveCheckBox() {
+    return newRegimenActiveCheckBox;
+  }
+
+  public WebElement getAddButton() {
+    return addButton;
+  }
+
+  public WebElement getEditButton() {
+    return editButton;
+  }
+
+  public String getTEMPLATE_SUCCESS_MESSAGE() {
+    return TEMPLATE_SUCCESS_MESSAGE;
+  }
+
   public void configureProgram(String program) {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[@id='" + program + "']/span"));
     testWebDriver.getElementByXpath("//a[@id='" + program + "']/span").click();
@@ -93,8 +145,4 @@ public class RegimenTemplateConfigPage extends Page {
     CancelButton.click();
   }
 
-  public void verifySuccessMessage() {
-    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
-    SeleneseTestNgHelper.assertTrue("saveSuccessMsgDiv should show up", saveSuccessMsgDiv.isDisplayed());
-  }
 }

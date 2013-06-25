@@ -5,16 +5,26 @@
   -->
 
 <suite name="Openlmis Smoke" verbose="10" allow-return-values="true">
-    <test name="Openlmis test">
-        <groups>
-            <run>
-                <include name="smoke"/>
-            </run>
-        </groups>
-        <classes>
-            <class name="org.openlmis.functional.E2EInitiateRnR">
-            </class>
-        </classes>
-    </test>
+  <test name="Openlmis test">
+    <groups>
+      <run>
+        <include name="smoke"/>
+      </run>
+    </groups>
+    <classes>
+      <class name="org.openlmis.functional.E2EInitiateRnR">
+      </class>
+      <class name="org.openlmis.functional.ConfigureRegimenProgramTemplate">
+      </class>
+      <class name="org.openlmis.functional.ManageDistribution">
+      </class>
+      <class name="org.openlmis.functional.ManageISA">
+      </class>
+      <class name="org.openlmis.functional.ManageProgramProductISA">
+      </class>
+      <class name="org.openlmis.functional.ForgotPassword">
+      </class>
+    </classes>
+  </test>
 </suite>
 

@@ -34,7 +34,7 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.*;
 public class ForgotPassword extends TestCaseHelper {
 
 
-  @BeforeMethod(groups = {"functional2"})
+  @BeforeMethod(groups = {"smoke","functional2"})
   public void setUp() throws Exception {
     super.setup();
   }
@@ -110,7 +110,7 @@ public class ForgotPassword extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function")
   public void testVerifyValidUserNameValidEmail(String userName,  String email) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
@@ -158,7 +158,7 @@ public class ForgotPassword extends TestCaseHelper {
   }
 
 
-  @AfterMethod(groups = {"functional2"})
+  @AfterMethod(groups = {"smoke","functional2"})
   public void tearDown() throws Exception {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();

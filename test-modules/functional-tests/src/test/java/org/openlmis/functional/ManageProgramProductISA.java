@@ -32,7 +32,7 @@ import static com.thoughtworks.selenium.SeleneseTestBase.*;
 
 public class ManageProgramProductISA extends TestCaseHelper {
 
-  @BeforeMethod(groups = {"functional2"})
+  @BeforeMethod(groups = {"smoke","functional2"})
   public void setUp() throws Exception {
     super.setup();
     setupProgramProductTestDataWithCategories("P1", "antibiotic1", "C1", "VACCINES");
@@ -79,7 +79,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     homePage.navigateHomePage();
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function")
   public void testProgramProductISADecimal(String userSIC, String password, String program) throws Exception {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
     programProductISAPage.fillProgramProductISA("3.9", "3", "10", "25", "0", "", "");
@@ -92,7 +92,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function")
   public void testISAFormula(String userSIC, String password, String program) throws Exception {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
     programProductISAPage.fillProgramProductISA("999.999", "999", "999.999", "999.999", "999999", "5", "1000");
@@ -243,7 +243,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   }
 
-  @AfterMethod(groups = {"functional2"})
+  @AfterMethod(groups = {"smoke","functional2"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
