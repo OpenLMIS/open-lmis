@@ -81,7 +81,26 @@ services.factory('FacilityList', function ($resource) {
     return $resource('/reportdata/facilitylist.json', {}, {});
 });
 
-
 services.factory('GeographicZones', function ($resource) {
     return $resource('/reports/geographicZones.json', {}, {});
 });
+
+services.factory('GeographicZone', function ($resource) {
+    return $resource('/geographicZone/:id.json', {}, {update:{method:'PUT'}});
+});
+
+services.factory('CreateGeographicZone', function ($resource) {
+    return $resource('/geographicZone/insert.json', {}, {insert:{method:'POST'}});
+});
+
+services.factory('GeographicLevels', function($resource) {
+    return $resource('/geographicLevels.json',{},{});
+});
+
+services.factory('GetGeographicZone',function($resource){
+    return $resource('/geographicZone/getDetails/:id.json',{},{});
+});
+
+services.factory('SetGeographicZone',function($resource){
+    return $resource('/geographicZone/setDetails.json',{},{update:{method:'POST'}});
+})
