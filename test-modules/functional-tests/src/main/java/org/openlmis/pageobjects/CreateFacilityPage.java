@@ -291,16 +291,16 @@ public class CreateFacilityPage extends Page {
   public void overrideIsa(int overriddenIsa) {
     modifyIsaValueLink.click();
     testWebDriver.waitForElementToAppear(overrideIsaTable);
-      while (!StringUtils.isEmpty(overrideIsaTable.getAttribute("value")))
-          overrideIsaTable.sendKeys("\u0008"); // "\u0008" - is backspace char
+    while (!StringUtils.isEmpty(overrideIsaTable.getAttribute("value")))
+      overrideIsaTable.sendKeys("\u0008"); // "\u0008" - is backspace char
     overrideIsaTextField.sendKeys(valueOf(overriddenIsa));
   }
 
   public void editPopulation(String population) {
     testWebDriver.waitForElementToAppear(catchmentPopulation);
-      while (!StringUtils.isEmpty(catchmentPopulation.getAttribute("value")))
-          catchmentPopulation.sendKeys("\u0008"); // "\u0008" - is backspace char
-      catchmentPopulation.sendKeys(valueOf(population));
+    while (!StringUtils.isEmpty(catchmentPopulation.getAttribute("value")))
+      catchmentPopulation.sendKeys("\u0008"); // "\u0008" - is backspace char
+    catchmentPopulation.sendKeys(valueOf(population));
   }
 
   public void verifyCalculatedIsa(int calculatedIsa) {
@@ -319,12 +319,13 @@ public class CreateFacilityPage extends Page {
 
   public void clickUseCalculatedIsaButton() {
     testWebDriver.waitForElementToAppear(useCalculatedIsabutton);
-      useCalculatedIsabutton.click();
+    useCalculatedIsabutton.click();
   }
 
 
-
-    public void verifyOverriddenIsa(String expectedIsa) {
+  public void verifyOverriddenIsa(String expectedIsa) {
+    testWebDriver.handleScrollByPixels(0,1000);
+    testWebDriver.waitForElementToAppear(modifyIsaValueLink);
     modifyIsaValueLink.click();
     testWebDriver.waitForElementToAppear(overrideIsaTable);
 
