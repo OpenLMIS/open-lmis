@@ -81,7 +81,20 @@ services.factory('FacilityList', function ($resource) {
     return $resource('/reportdata/facilitylist.json', {}, {});
 });
 
-
 services.factory('GeographicZones', function ($resource) {
     return $resource('/reports/geographicZones.json', {}, {});
 });
+
+services.factory('Supplylinelist', function ($resource) {
+    return $resource('/supplylineslist.json', {}, {});
+});
+
+services.factory('Supplylines', function ($resource) {
+    return $resource('/supplylines.json', {});
+});
+
+services.factory('Supplyline', function ($resource) {
+    return $resource('/supplylines/:id.json', {}, {update:{method:'PUT'}});
+});
+
+

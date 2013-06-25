@@ -14,6 +14,8 @@ import org.openlmis.core.repository.mapper.SupplyLineMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @NoArgsConstructor
 public class SupplyLineRepository {
@@ -36,6 +38,14 @@ public class SupplyLineRepository {
   public void update(SupplyLine supplyLine) {
     supplyLineMapper.update(supplyLine);
   }
+
+    public List<SupplyLine> getAllSupplyLine() {
+        return supplyLineMapper.getAllSupplyLine();
+    }
+
+    public SupplyLine get(Long id) {
+        return supplyLineMapper.get(id);
+    }
 
   public SupplyLine getSupplyLineBySupervisoryNodeProgramAndFacility(SupplyLine supplyLine) {
     return supplyLineMapper.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine);

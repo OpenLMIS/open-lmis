@@ -18,6 +18,8 @@ import org.openlmis.core.repository.SupplyLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @NoArgsConstructor
 public class SupplyLineService {
@@ -35,7 +37,20 @@ public class SupplyLineService {
     this.supervisoryNodeRepository = supervisoryNodeRepository;
   }
 
-  public SupplyLine getSupplyLineBy(SupervisoryNode supervisoryNode, Program program) {
+    public List<SupplyLine> getAllSupplyLine() {
+        return supplyLineRepository.getAllSupplyLine();
+    }
+
+    public SupplyLine get(Long id) {
+        SupplyLine supplyLine = supplyLineRepository.get(id);
+        if (supplyLine == null) {
+            throw new DataException("error.supplyline.not.found");
+        }
+        return supplyLine;
+    }
+
+
+    public SupplyLine getSupplyLineBy(SupervisoryNode supervisoryNode, Program program) {
     return supplyLineRepository.getSupplyLineBy(supervisoryNode, program);
   }
 
@@ -50,6 +65,21 @@ public class SupplyLineService {
     this.supplyLineRepository.update(supplyLine);
   }
 
+// mahmed - 06.20.2013
+    public SupplyLine saveSupplyLine(SupplyLine supplyLine) {
+        validateIfSupervisoryNodeIsTopmostNode(supplyLine);
+
+        if (supplyLine.getId() == null) {
+            this.supplyLineRepository.insert(supplyLine);
+        }  else
+        {
+            this.supplyLineRepository.update(supplyLine);
+        }
+
+        return supplyLineRepository.get(supplyLine.getId());
+    }
+
+
   private void populateIdsForSupplyLine(SupplyLine supplyLine) {
     supplyLine.getProgram().setId(programRepository.getIdByCode(supplyLine.getProgram().getCode()));
     supplyLine.getSupplyingFacility().setId(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode()));
@@ -59,6 +89,7 @@ public class SupplyLineService {
   private void validateIfSupervisoryNodeIsTopmostNode(SupplyLine supplyLine) {
     Long supervisoryNodeParentId = supervisoryNodeRepository.getSupervisoryNodeParentId(supplyLine.getSupervisoryNode().getId());
     if (supervisoryNodeParentId != null) {
+
       throw new DataException("error.supervisory.node.not.top.node");
     }
   }
