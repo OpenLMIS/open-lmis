@@ -103,6 +103,9 @@ public class HomePage extends Page {
   @FindBy(how = How.LINK_TEXT, using = "Regimen Template")
   private static WebElement RegimenTemplateConfigTab;
 
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Regimen Template')]")
+  private static WebElement RegimenTemplateHeader;
+
   @FindBy(how = How.LINK_TEXT, using = "R & R")
   private static WebElement ConfigureTemplateSelectProgramPage;
 
@@ -258,15 +261,14 @@ public class HomePage extends Page {
     return new TemplateConfigPage(testWebDriver);
   }
 
-  public RegimenTemplateConfigPage selectProgramToRegimenConfigTemplate(String programme) {
+  public RegimenTemplateConfigPage navigateToRegimenConfigTemplate() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
     testWebDriver.keyPress(TemplateConfigTab);
     testWebDriver.waitForElementToAppear(RegimenTemplateConfigTab);
     testWebDriver.keyPress(RegimenTemplateConfigTab);
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementById(programme));
-    testWebDriver.getElementById(programme).click();
+    testWebDriver.waitForElementToAppear(RegimenTemplateHeader);
 
     return new RegimenTemplateConfigPage(testWebDriver);
   }

@@ -38,7 +38,7 @@ public class RegimenTemplateConfigPage extends Page {
   private static WebElement changeLink;
 
   @FindBy(how = How.ID, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='message']")
-  private static WebElement saveSuccessMsg;
+  private static WebElement saveSuccessMsgDiv;
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='error']")
   private static WebElement saveErrorMsgDiv;
@@ -58,6 +58,8 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@value='Add']")
   private static WebElement addButton;
 
+  @FindBy(how = How.XPATH, using = "//input[@value='Edit']")
+  private static WebElement editButton;
 
   private static String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
 
@@ -67,20 +69,32 @@ public class RegimenTemplateConfigPage extends Page {
     testWebDriver.setImplicitWait(10);
   }
 
-  public void AddNewRegimen(String category, String code, String name, Boolean isActive){
-      testWebDriver.waitForElementsToAppear(newRegimenCategoryDropDown,newRegimenCodeTextBox);
-      testWebDriver.selectByVisibleText(newRegimenCategoryDropDown,category);
-      newRegimenCodeTextBox.sendKeys(code);
-      newRegimenNameTextBox.sendKeys(name);
-      if (isActive)
-        newRegimenActiveCheckBox.click();
-      addButton.click();
+  public void AddNewRegimen(String category, String code, String name, Boolean isActive) {
+    testWebDriver.waitForElementsToAppear(newRegimenCategoryDropDown, newRegimenCodeTextBox);
+    testWebDriver.selectByVisibleText(newRegimenCategoryDropDown, category);
+    newRegimenCodeTextBox.sendKeys(code);
+    newRegimenNameTextBox.sendKeys(name);
+    if (isActive)
+      newRegimenActiveCheckBox.click();
+    addButton.click();
   }
 
-    public void SaveRegime(){
-        SaveButton.click();
-    }
-    public void CancelRegime(){
-        CancelButton.click();
-    }
+  public void configureProgram(String program) {
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[@id='" + program + "']/span"));
+    testWebDriver.getElementByXpath("//a[@id='" + program + "']/span").click();
+    testWebDriver.waitForElementToAppear(SaveButton);
+  }
+
+  public void SaveRegime() {
+    SaveButton.click();
+  }
+
+  public void CancelRegime() {
+    CancelButton.click();
+  }
+
+  public void verifySuccessMessage() {
+    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+    SeleneseTestNgHelper.assertTrue("saveSuccessMsgDiv should show up", saveSuccessMsgDiv.isDisplayed());
+  }
 }

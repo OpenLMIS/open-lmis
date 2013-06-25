@@ -14,9 +14,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 
@@ -24,18 +21,24 @@ import java.util.List;
 
 public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
+  private static String adultsRegimen = "Adults";
+  private static String paediatricsRegimen = "Paediatrics";
+
   @BeforeMethod(groups = {"functional"})
   public void setUp() throws Exception {
     super.setup();
   }
 
+
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider")
   public void testVerifyNewRegimenCreated(String program, String[] credentials) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.selectProgramToRegimenConfigTemplate(program);
-    regimenTemplateConfigPage.AddNewRegimen("Adults","Code1","Name1",true);
+    RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
+    regimenTemplateConfigPage.configureProgram(program);
+    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen,"Code1","Name1",true);
     regimenTemplateConfigPage.SaveRegime();
+    regimenTemplateConfigPage.verifySuccessMessage();
   }
 
 
@@ -51,7 +54,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   @DataProvider(name = "Data-Provider")
   public Object[][] parameterVerifyRnRScreen() {
     return new Object[][]{
-      {"HIV", new String[]{"Admin123", "Admin123"}}
+      {"ESSENTIAL MEDICINES", new String[]{"Admin123", "Admin123"}}
     };
 
   }
