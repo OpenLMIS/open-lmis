@@ -17,13 +17,15 @@ var programProductModule = angular.module('programProductModule', ['openlmis', '
       return {
         require: '?ngModel',
         link: function (scope, element, attrs, ctrl) {
-          var validationFunction = programProductModule[attrs.numericValidator];
+          var validationFunction = programProductModule[attrs.numericValidator.split(',')[0]];
+          var integerPartLength = attrs.numericValidator.split(',')[1];
+          var fractionalPartLength = attrs.numericValidator.split(',')[2];
 
           element.bind('blur', function () {
-            validationFunction(ctrl.$modelValue, element.attr('name'));
+            validationFunction(ctrl.$modelValue, element.attr('name'), integerPartLength, fractionalPartLength);
           });
           ctrl.$parsers.unshift(function (viewValue) {
-            if (validationFunction(viewValue, element.attr('name'))) {
+            if (validationFunction(viewValue, element.attr('name'), integerPartLength, fractionalPartLength)) {
               if (viewValue == "")  viewValue = undefined;
               return viewValue;
             } else {
@@ -38,13 +40,17 @@ var programProductModule = angular.module('programProductModule', ['openlmis', '
 
 angular.bootstrap(document, ['programProductModule']);
 
-programProductModule.numericValue = function (value, errorHolder) {
-  var NUMBERIC_REGEXP_FIXED_PRECISION = /^(\d{0,3}\.\d{0,3}|\d{0,3})$/;
-  var REGEX_FOR_THREE_DIGITS_AFTER_DECIMAL = /\.\d{3}.$/
-  var NUMBER_REGEXP = /^\d*\.?\d{1,4}$/;
-  var valid = (value == undefined) ? true : NUMBERIC_REGEXP_FIXED_PRECISION.test(value);
+programProductModule.numericValue = function (value, errorHolder, integerPartLength, fractionalPartLength) {
+  var str = '^(\\d{0,' + integerPartLength + '}\\.\\d{0,' + fractionalPartLength + '}|\\d{0,' + integerPartLength + '})$';
+  var NUMERIC_REGEXP_FIXED_PRECISION = new RegExp(str);
+  str = '\\.\\d{' + fractionalPartLength + '}.$';
+  var REGEX_FOR_DIGITS_AFTER_DECIMAL = new RegExp(str);
+  str = '^\\d*\\.?\\d{1,' + fractionalPartLength + '}$';
+  var NUMBER_REGEXP = new RegExp(str);
 
-  if (errorHolder != undefined && REGEX_FOR_THREE_DIGITS_AFTER_DECIMAL.test(value) != true) {
+  var valid = (value == undefined) ? true : NUMERIC_REGEXP_FIXED_PRECISION.test(value);
+
+  if (errorHolder != undefined && REGEX_FOR_DIGITS_AFTER_DECIMAL.test(value) != true) {
     document.getElementById(errorHolder).style.display = ((value == undefined) ? true : (NUMBER_REGEXP.test(value))) ? 'none' : 'block';
   }
 
@@ -65,7 +71,7 @@ programProductModule.positiveInteger = function (value, errorHolder) {
 
 programProductModule.integer = function (value, errorHolder) {
   var INTEGER_REGEXP_FIXED_LENGTH = /^[-]?\d{0,6}$/;
-  var REGEX_FOR_SIX_DIGITS=/\d{6}.$/
+  var REGEX_FOR_SIX_DIGITS = /\d{6}.$/
   var INTEGER_REGEXP = /^[-]?\d*$/;
   var valid = (value == undefined) ? true : INTEGER_REGEXP_FIXED_LENGTH.test(value);
 

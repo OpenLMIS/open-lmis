@@ -9,7 +9,6 @@ package org.openlmis.core.service;
 import org.apache.commons.collections.Closure;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.domain.AllocationProgramProduct;
 import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.repository.AllocationProgramProductRepository;
