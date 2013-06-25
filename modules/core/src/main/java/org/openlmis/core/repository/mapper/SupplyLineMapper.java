@@ -8,20 +8,34 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface SupplyLineMapper {
 
-  @Insert("INSERT INTO supply_lines " +
-    "(description, supervisoryNodeId, programId, supplyingFacilityId, createdBy, modifiedBy, modifiedDate)" +
-    "VALUES (#{description}, #{supervisoryNode.id}, #{program.id}, #{supplyingFacility.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
-  @Options(useGeneratedKeys = true)
-  Integer insert(SupplyLine supplyLine);
+    @Insert("INSERT INTO supply_lines " +
+            "(description, supervisoryNodeId, programId, supplyingFacilityId, createdBy, modifiedBy, modifiedDate)" +
+            "VALUES (#{description}, #{supervisoryNode.id}, #{program.id}, #{supplyingFacility.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
+    @Options(useGeneratedKeys = true)
+    Integer insert(SupplyLine supplyLine);
 
-  @Select("SELECT * FROM supply_lines WHERE supervisoryNodeId = #{supervisoryNode.id} AND programId = #{program.id}")
+
+    @Select("SELECT * FROM supply_lines " +
+            "ORDER BY description")
+    List<SupplyLine> getAllSupplyLine();
+
+
+
+
+  @Select("SELECT * FROM supply_lines WHERE id = #{id}")
+  SupplyLine get(Long id);
+
+    @Select("SELECT * FROM supply_lines WHERE supervisoryNodeId = #{supervisoryNode.id} AND programId = #{program.id}")
   @Results(value = {
     @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
   })

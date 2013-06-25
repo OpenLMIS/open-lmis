@@ -103,4 +103,18 @@ services.factory('GetGeographicZone',function($resource){
 
 services.factory('SetGeographicZone',function($resource){
     return $resource('/geographicZone/setDetails.json',{},{update:{method:'POST'}});
-})
+});
+
+services.factory('Supplylinelist', function ($resource) {
+    return $resource('/supplylineslist.json', {}, {});
+});
+
+services.factory('Supplylines', function ($resource) {
+    return $resource('/supplylines.json', {});
+});
+
+services.factory('Supplyline', function ($resource) {
+    return $resource('/supplylines/:id.json', {}, {update:{method:'PUT'}});
+});
+
+

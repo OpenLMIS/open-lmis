@@ -40,6 +40,7 @@ public enum Right {
   VIEW_ORDER("Requisition - View Orders", TRUE, "Permission to view orders"),
   MANAGE_PROGRAM_PRODUCT("Admin - Manage Program Product", TRUE, "Permission to manage program products"),
   MANAGE_DISTRIBUTION("Allocation - Manage", FALSE, "Permission to manage an distribution"),
+  MANAGE_SUPPLYLINE("Admin - Manage Supply Line", TRUE, "Permission to manage supply line"),
 
 VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", TRUE, "Permission to view Facility List Report"),
 VIEW_MAILING_LABEL_REPORT("Report - Facility Listing (V2)", TRUE, "Permission to view mailing labels for facilities"),
