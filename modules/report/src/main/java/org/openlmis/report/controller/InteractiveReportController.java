@@ -1,7 +1,7 @@
-package org.openlmis.web.controller;
+package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.report.Report;
+import org.openlmis.report.*;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.ReportOutputOption;
 import org.openlmis.report.model.Pages;
@@ -68,8 +68,8 @@ public class InteractiveReportController  extends BaseController {
        showReport("facility_mailing_list",outputOption,request,response);
    }
 
-    @RequestMapping(value = "/reportdata/facilitylist", method = GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_FACILITY_REPORT')")
+    @RequestMapping(value = "/facilitylist", method = GET, headers = BaseController.ACCEPT_JSON)
+    //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_FACILITY_REPORT')")
     public Pages getFacilityLists( //@PathVariable(value = "reportKey") String reportKey,
                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                     @RequestParam(value = "max", required = false, defaultValue = "10") int max,
@@ -85,7 +85,7 @@ public class InteractiveReportController  extends BaseController {
         return new Pages(page,totalRecCount,max,facilityReportList);
     }
 
-    @RequestMapping(value = "/reportdata/mailingLabels", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/reportdata/mailingLabels", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_MAILING_LABEL_REPORT')")
     public Pages getFacilityListsWtihLables( //@PathVariable(value = "reportKey") String reportKey,
                       @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -102,7 +102,7 @@ public class InteractiveReportController  extends BaseController {
         return new Pages(page,totalRecCount,max,mailingLabelReports);
     }
 
-    @RequestMapping(value = "/reportdata/consumption", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/reportdata/consumption", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_CONSUMPTION_REPORT')")
     public Pages getConsumptionData( //@PathVariable(value = "reportKey") String reportKey,
                                              @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -121,7 +121,7 @@ public class InteractiveReportController  extends BaseController {
         return new Pages(page,totalRecCount,max,consumptionReportList);
     }
 
-    @RequestMapping(value = "/reportdata/averageConsumption", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/reportdata/averageConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_AVERAGE_CONSUMPTION_REPORT')")
     public Pages getAverageConsumptionData( //@PathVariable(value = "reportKey") String reportKey,
                                      @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -140,7 +140,7 @@ public class InteractiveReportController  extends BaseController {
 
 
 
-    @RequestMapping(value = "/summary", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/summary", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_SUMMARY_REPORT')")
     public Pages getSummaryData( //@PathVariable(value = "reportKey") String reportKey,
                                      @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -160,7 +160,7 @@ public class InteractiveReportController  extends BaseController {
         return new Pages(page,totalRecCount,max,reportList);
     }
 
-    @RequestMapping(value = "/non_reporting", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/non_reporting", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_NON_REPORTING_FACILITIES')")
     public Pages getNonReportingFacilitiesData( //@PathVariable(value = "reportKey") String reportKey,
                                  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -181,7 +181,7 @@ public class InteractiveReportController  extends BaseController {
     }
 
 
-    @RequestMapping(value = "/stockedOut", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/stockedOut", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_STOCKED_OUT_REPORT')")
     public Pages getStockedOutReportData( //@PathVariable(value = "reportKey") String reportKey,
                                                 @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -201,7 +201,7 @@ public class InteractiveReportController  extends BaseController {
         return new Pages(page,totalRecCount,max,reportList);
     }
 
-     @RequestMapping(value = "/reportdata/adjustmentSummary", method = GET, headers = ACCEPT_JSON)
+     @RequestMapping(value = "/reportdata/adjustmentSummary", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ADJUSTMENT_SUMMARY_REPORT')")
     public Pages getAdjustmentSummaryData(  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                             @RequestParam(value = "max", required = false, defaultValue = "10") int max,
@@ -217,7 +217,7 @@ public class InteractiveReportController  extends BaseController {
         return new Pages(page,totalRecCount,max,adjustmentSummaryReportList);
     }
 
-    @RequestMapping(value = "/reportdata/districtConsumption", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/reportdata/districtConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
     public Pages getDistrictConsumptionData(  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                             @RequestParam(value = "max", required = false, defaultValue = "10") int max,

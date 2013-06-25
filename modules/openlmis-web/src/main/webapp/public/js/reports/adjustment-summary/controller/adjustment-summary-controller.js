@@ -112,6 +112,8 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
         $scope.filterGrid = function (){
 
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+
+            $(".ngFooterPanel").css("margin-left",$(".span3").width() + ($(".span3").width()/3)) ;
         };
 
         //filter form data section
@@ -155,12 +157,12 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 
         AdjustmentTypes.get(function(data){
         $scope.adjustmentTypes = data.adjustmentTypeList;
-        $scope.adjustmentTypes.push({'description': 'All Adjustment Types'});
+        $scope.adjustmentTypes.push({'description': 'All Adjustment Types','name':'All'});
          });
 
         Products.get(function(data){
             $scope.products = data.productList;
-            $scope.products.push({'name': 'All Products'});
+            $scope.products.push({'name': 'All Products','id':'All'});
         });
 
         ProductCategories.get(function(data){
@@ -183,7 +185,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 
         ReportPrograms.get(function(data){
             $scope.programs = data.programs;
-            $scope.programs.push({'name':'All Programs'});
+            $scope.programs.push({'name':'All Programs','id':'All'});
         });
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
@@ -401,7 +403,9 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
         });
 
         $scope.$watch('product', function(selection){
-            if(selection != undefined || selection == ""){
+            if(selection == "All"){
+                $scope.filterObject.productId =  -1;
+            }else if(selection != undefined || selection == ""){
                 $scope.filterObject.productId =  selection;
             }else{
                 $scope.filterObject.productId =  0;
@@ -426,7 +430,9 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
         });
 
         $scope.$watch('program', function(selection){
-            if(selection != undefined || selection == ""){
+            if(selection == "All"){
+                $scope.filterObject.programId =  -1;
+            }else if(selection != undefined || selection == ""){
                 $scope.filterObject.programId =  selection;
             }else{
                 $scope.filterObject.programId =  0;
@@ -434,23 +440,19 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             $scope.filterGrid();
         });
 
-    $scope.$watch('program.value', function(selection){
-        if(selection != undefined || selection == ""){
-            $scope.filterObject.programId =  selection;
-        }else{
-            $scope.filterObject.programId =  0;
-        }
-        $scope.filterGrid();
-    });
-
     $scope.$watch('adjustmentType.value', function(selection){
-        if(selection != undefined || selection == ""){
-            $scope.filterObject.adjustmentTypeId =  selection;
-            $.each( $scope.adjustmentTypes,function( item,idx){
-                if(idx.name == selection){
-                    $scope.filterObject.adjustmentType = idx.description;
-                }
-            });
+        if(selection == "All"){
+            $scope.filterObject.adjustmentTypeId =  -1;
+            $scope.filterObject.adjustmentType = "All";
+
+        }else if(selection != undefined || selection == ""){
+                $scope.filterObject.adjustmentTypeId =  selection;
+                $.each( $scope.adjustmentTypes,function( item,idx){
+                    if(idx.name == selection){
+                        $scope.filterObject.adjustmentType = idx.description;
+                    }
+                });
+
         }else{
             $scope.filterObject.adjustmentTypeId =  "";
             $scope.filterObject.adjustmentType = "";
@@ -542,6 +544,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
                    // $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
             });
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+
         }, true);
 
     $scope.gridOptions = {

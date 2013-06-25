@@ -1,4 +1,4 @@
-package org.openlmis.web.controller;
+package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.service.FacilityService;
@@ -9,7 +9,7 @@ import org.openlmis.report.model.dto.Program;
 import org.openlmis.report.model.dto.ProductCategory;
 import org.openlmis.report.model.dto.RequisitionGroup;
 import org.openlmis.report.service.ReportLookupService;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.report.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,33 +45,33 @@ public class ReportLookupController extends BaseController {
     private FacilityService facilityService;
 
 
-    @RequestMapping(value="/programs", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value="/programs", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getPrograms(){
         return OpenLmisResponse.response( "programs", this.reportLookupService.getAllPrograms() );
     }
 
-    @RequestMapping(value="/schedules", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value="/schedules", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getSchedules(){
         return OpenLmisResponse.response( "schedules", this.reportLookupService.getAllSchedules() ) ;
     }
 
-    @RequestMapping(value="/facilityTypes", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value="/facilityTypes", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getFacilityTypes(){
         return OpenLmisResponse.response( "facilityTypes", this.reportLookupService.getFacilityTypes() ) ;
     }
 
 
-    @RequestMapping(value="/products", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value="/products", method = GET, headers = BaseController.ACCEPT_JSON)
     public List<Product> getProducts(){
           return this.reportLookupService.getAllProducts();
     }
 
-    @RequestMapping(value="/rgroups", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value="/rgroups", method = GET, headers = BaseController.ACCEPT_JSON)
     public List<RequisitionGroup> getRequisitionGroups(){
         return this.reportLookupService.getAllRequisitionGroups();
     }
 
-    @RequestMapping(value="/reporting_groups_by_program_schedule", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value="/reporting_groups_by_program_schedule", method = GET, headers = BaseController.ACCEPT_JSON)
     public List<RequisitionGroup> getRequisitionGroupsByProgramSchedule(
             @RequestParam(value = "program", required = true, defaultValue = "1") int program,
             @RequestParam(value = "schedule", required = true, defaultValue = "10") int schedule
@@ -80,17 +80,17 @@ public class ReportLookupController extends BaseController {
     }
 
 
-    @RequestMapping(value="/productCategories", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value="/productCategories", method = GET, headers = BaseController.ACCEPT_JSON)
     public List<ProductCategory> getProductCategories(){
         return this.reportLookupService.getAllProductCategories();
     }
 
-    @RequestMapping(value="/adjustmentTypes", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value="/adjustmentTypes", method = GET, headers = BaseController.ACCEPT_JSON)
     public List<AdjustmentType> getAdjustmentTypes(){
         return this.reportLookupService.getAllAdjustmentTypes();
     }
 
-    @RequestMapping(value = "/operationYears", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/operationYears", method = GET, headers = BaseController.ACCEPT_JSON)
     public Map getOperationYears() {
         MultiValueMap operationPeriods = new LinkedMultiValueMap<>();
         operationPeriods.put(OPEN_LMIS_OPERATION_YEARS,reportLookupService.getOperationYears());
@@ -98,7 +98,7 @@ public class ReportLookupController extends BaseController {
         return operationPeriods;
     }
 
-    @RequestMapping(value = "/months", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/months", method = GET, headers = BaseController.ACCEPT_JSON)
     public Map getAllMonths() {
         MultiValueMap months = new LinkedMultiValueMap<>();
         months.put(OPEN_LMIS_OPERATION_MONTHS,reportLookupService.getAllMonths());
@@ -106,7 +106,7 @@ public class ReportLookupController extends BaseController {
         return months;
     }
 
-    @RequestMapping(value = "/geographicZones", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/geographicZones", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getAllGeographicZones(HttpServletRequest request) {
         return OpenLmisResponse.response("zones", reportLookupService.getAllZones());
     }

@@ -78,7 +78,7 @@ services.factory('ReportFacilityTypes', function ($resource) {
 });
 
 services.factory('FacilityList', function ($resource) {
-    return $resource('/reportdata/facilitylist.json', {}, {});
+    return $resource('/reports/facilitylist.json', {}, {});
 });
 
 services.factory('GeographicZones', function ($resource) {

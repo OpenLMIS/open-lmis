@@ -18,15 +18,12 @@
                                         <div class="clearfix ">
                                             <div class="form-cell horizontalFilters">
                                                 <div >
-                                                    <label class="labels">Program<span class="label-required">*</span></label>
+                                                    <label class="labels">Program</label>
                                                     <div class="form-fields">
                                                         <select ui-select2 style="width:200px;" name="program"  ng-model="program"  ng-options="option.id as option.name for option in programs" ng-required="true">
 
                                                         </select>
-                                                         <span class="field-error" ng-show="filterForm.program.$error.required && errorShown">Please
-                                                            select this value</span>
-
-                                                    </div>
+                                                     </div>
                                                 </div>
                                             </div>
 
@@ -60,7 +57,7 @@
 
                                                 </select>
                                             </span>
-                                           <!-- <span ng-show="isQuarterly()">
+                                            <span ng-show="isQuarterly()">
                                                 <select  style="width:80px;" class="input-small" ng-required="true"  name="startQuarter" ng-model="startQuarter" ng-options="option.value as option.name for option in startQuarters">
 
                                                 </select>
@@ -68,7 +65,7 @@
                                              <span ng-show="isSemiAnnualy()">
                                             <select  style="width:80px;" ng-required="true"  name="startHalf" ng-model="startHalf" ng-options="option.value as option.name for option in startSemiAnnuals">
 
-                                            </select>-->
+                                            </select>
                                         </span>
                                                 </div>
                                             </div>
@@ -85,7 +82,7 @@
 
                                                 </select>
                                             </span>
-                                           <!-- <span ng-show="isQuarterly()">
+                                            <span ng-show="isQuarterly()">
                                                 <select  style="width:80px;" class="input-small" ng-required="true"  name="endQuarter" ng-model="endQuarter" ng-options="option.value as option.name for option in endQuarters">
 
                                                 </select>
@@ -94,7 +91,7 @@
                                              <span ng-show="isSemiAnnualy()">
                                             <select style="width:80px;" ng-required="true"  name="endHalf" ng-model="endHalf" ng-options="option.value as option.name for option in endSemiAnnuals">
 
-                                            </select>-->
+                                            </select>
                                         </span>
                                                 </div>
                                             </div>
@@ -152,7 +149,7 @@
                             </div>
                             <div class="span9">
                                 <div class="gridStyleReport" ng-grid="gridOptions"></div>
-                                <div id="center-footer-div" style="position: fixed; bottom: 0px; z-index: 20; left: 35%;">
+                                <div id="center-footer-div" style="position: fixed; bottom: 0px; z-index: 20; left: 50%;">
                                     <span class="report-label">Min Mos : {{MinMos}}</span>  <span class="report-data">Max Mos : {{MaxMos}}</span>
                                 </div>
                             </div>
