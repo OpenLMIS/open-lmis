@@ -20,5 +20,7 @@
       href="/public/pages/admin/schedule/index.html"><span id="schedule-tab" openlmis-message="menu.header.schedules"></span></a></li>
     <li ng-show="hasPermission('MANAGE_USERS')" ng-class="userSelected"><a
       href="/public/pages/admin/user/index.html#/search"><span id="user-tab" openlmis-message="menu.headers.users"></span></a></li>
+    <li ng-show="hasPermission('MANAGE_GEOGRAPHIC_ZONES')" ng-class="geographicZonesSelected"><a
+      href="/public/pages/admin/geographic-zones/index.html#/search"><span id="geographic-zones-tab" openlmis-message="menu.headers.geographic-zones"></span></a></li>
   </ul>
 </div>
