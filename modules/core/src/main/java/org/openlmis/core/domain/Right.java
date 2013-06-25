@@ -49,8 +49,9 @@ VIEW_NON_REPORTING_FACILITIES("Report - Non Reporting Facility Report", TRUE, "P
 VIEW_ADJUSTMENT_SUMMARY_REPORT("Report - Adjustment Summary Report", TRUE, "Permission to view adjustment summary Report"),
 VIEW_SUPPLY_STATUS_REPORT("Report - Supply Status by Facility",TRUE, "Permission to view Supply Status by Facility Report"),
 VIEW_STOCKED_OUT_REPORT("Report - Stocked Out Report", TRUE, "Permission to view stocked out product report"),
-VIEW_DISTRICT_CONSUMPTION_REPORT("Report - District Consumption Comparison", TRUE, "Permission to view district consumption comparison report");
+VIEW_DISTRICT_CONSUMPTION_REPORT("Report - District Consumption Comparison", TRUE, "Permission to view district consumption comparison report"),
 
+MANAGE_GEOGRAPHIC_ZONES ("Admin - Manage Geographic Zones", TRUE, "Permission to manage geographic zones.");
 
     @Getter
   private final String rightName;
