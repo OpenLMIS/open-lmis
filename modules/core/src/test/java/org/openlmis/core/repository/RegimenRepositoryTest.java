@@ -44,13 +44,6 @@ public class RegimenRepositoryTest {
   }
 
   @Test
-  public void shouldUpdateARegimen() {
-    Regimen regimen = new Regimen();
-    repository.update(regimen);
-    verify(mapper).update(regimen);
-  }
-
-  @Test
   public void shouldGetRegimenByProgram() {
     List<Regimen> expectedRegimens = new ArrayList<>();
     Long programId = 1l;

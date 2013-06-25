@@ -4,7 +4,6 @@ function ConfigureRegimenTemplateController($scope, programs, $location) {
   $scope.configure = function(programId) {
     $location.path('/create-regimen-template/' + programId);
   };
-
 }
 
 ConfigureRegimenTemplateController.resolve = {

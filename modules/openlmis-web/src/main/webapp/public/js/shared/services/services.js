@@ -10,6 +10,10 @@ services.factory('ActivePrograms', function ($resource) {
   return $resource('/active/programs.json', {}, {});
 });
 
+services.factory('PullPrograms', function ($resource) {
+  return $resource('/pull/programs.json', {}, {});
+});
+
 services.factory('Programs', function ($resource) {
   return $resource('/programs.json', {}, {});
 });
@@ -202,7 +206,6 @@ services.factory('ReportTemplates', function ($resource) {
 
 //Allocation
 
-
 services.factory('PushProgram', function ($resource) {
   return $resource('/push/programs.json', {}, {});
 });
@@ -243,7 +246,6 @@ services.factory('RegimenCategories', function ($resource) {
   return $resource('/regimenCategories.json', {}, {});
 });
 
-
 services.factory('Regimens', function($resource){
-  return $resource('/regimens.json', {}, {update: {method: 'PUT', isArray: true}});
+  return $resource('/programId/:programId/regimens.json', {}, {post: {method: 'POST', isArray: true}});
 });

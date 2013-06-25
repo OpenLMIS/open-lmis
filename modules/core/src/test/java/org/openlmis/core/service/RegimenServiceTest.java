@@ -9,7 +9,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.repository.RegimenRepository;
-import org.openlmis.core.repository.mapper.RegimenCategoryMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,16 +38,10 @@ public class RegimenServiceTest {
   }
 
   @Test
-  public void shouldSaveARegimenIfDoesNotAlreadyExist() {
-    service.save(regimens);
+  public void shouldSaveARegimens() {
+    service.save(1L, regimens);
     verify(repository).insert(regimen);
-  }
-
-  @Test
-  public void shouldUpdateARegimenIfAlreadyExist() {
-    regimen.setId(1l);
-    service.save(regimens);
-    verify(repository).update(regimen);
+    verify(repository).deleteByProgramId(1L);
   }
 
   @Test

@@ -4,6 +4,7 @@ import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RegimenService;
+import org.openlmis.web.form.RegimenList;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,23 +19,25 @@ import java.util.List;
 
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 public class RegimenController extends BaseController {
 
+  public static final String REGIMENS_SAVED_SUCCESSFULLY = "regimens.saved.successfully";
+
   @Autowired
   RegimenService service;
+
   public static final String REGIMENS = "regimens";
   public static final String REGIMEN_CATEGORIES = "regimen_categories";
 
-
-  @RequestMapping(value = "/regimens", method = PUT, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/programId/{programId}/regimens", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE')")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody RegimenList regimens) {
+  public ResponseEntity<OpenLmisResponse> save(@PathVariable("programId") Long programId, @RequestBody RegimenList regimens) {
     try {
-      service.save(regimens);
-      return success("regimens.saved.successfully");
+      service.save(programId, regimens);
+      return success(messageService.message(REGIMENS_SAVED_SUCCESSFULLY));
     } catch (Exception e) {
       return error(UNEXPECTED_EXCEPTION, HttpStatus.BAD_REQUEST);
     }
@@ -42,7 +45,7 @@ public class RegimenController extends BaseController {
 
   @RequestMapping(value = "/programId/{programId}/regimens", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE')")
-  public ResponseEntity<OpenLmisResponse> getByProgram(@PathVariable Long programId) {
+  public ResponseEntity<OpenLmisResponse> getByProgram(@PathVariable("programId") Long programId) {
     try {
       ResponseEntity<OpenLmisResponse> response;
       List<Regimen> regimens = service.getByProgram(programId);

@@ -73,20 +73,19 @@ public class RegimenMapperIT {
   }
 
   @Test
-  public void shouldUpdateARegimen(){
-    mapper.insert(regimen);
-    regimen.setName("Regimen Updated Name");
-    regimen.setCode("Regimen Updated Code");
-    regimen.setActive(true);
-    regimen.setDisplayOrder(2);
+  public void shouldDeleteAllRegimensForProgram() throws Exception {
 
-    mapper.update(regimen);
+    Long progId = 1l;
+    Regimen adultRegimen1 = make(a(defaultRegimen, with(regimenCode,"CODE_1"), with(displayOrder, 1), with(programId, progId)));
+    mapper.insert(adultRegimen1);
+    Regimen adultRegimen2 = make(a(defaultRegimen, with(regimenCode,"CODE_2"), with(displayOrder, 2), with(programId, progId)));
+    mapper.insert(adultRegimen2);
 
-    List<Regimen> updatedRegimenList = mapper.getByProgram(regimen.getProgramId());
-    assertThat(updatedRegimenList.get(0).getName(),is("Regimen Updated Name"));
-    assertThat(updatedRegimenList.get(0).getCode(),is("Regimen Updated Code"));
-    assertThat(updatedRegimenList.get(0).getActive(),is(true));
-    assertThat(updatedRegimenList.get(0).getDisplayOrder(),is(2));
+    mapper.deleteByProgramId(progId);
+
+    List<Regimen> result = mapper.getByProgram(progId);
+
+    assertThat(result.size(), is(0));
+
   }
-
 }

@@ -8,11 +8,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.service.RegimenService;
+import org.openlmis.web.form.RegimenList;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -35,9 +35,10 @@ public class RegimenControllerTest {
   @Test
   public void shouldInsertARegimen() {
     Regimen regimen = new Regimen();
-    RegimenList regimens = (RegimenList) Arrays.asList(regimen);
-    controller.save(regimens);
-    verify(service).save(regimens);
+    RegimenList regimens = new RegimenList();
+    regimens.add(regimen);
+    controller.save(1L, regimens);
+    verify(service).save(1L, regimens);
   }
 
   @Test

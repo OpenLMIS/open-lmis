@@ -1,4 +1,4 @@
-package org.openlmis.web.controller;
+package org.openlmis.web.form;
 
 import org.openlmis.core.domain.Regimen;
 

@@ -22,15 +22,15 @@ public class RegimenRepository {
     mapper.insert(regimen);
   }
 
-  public void update(Regimen regimen) {
-    mapper.update(regimen);
-  }
-
   public List<Regimen> getByProgram(Long programId) {
     return mapper.getByProgram(programId);
   }
 
   public List<RegimenCategory> getAllRegimenCategories() {
     return regimenCategoryMapper.getAll();
+  }
+
+  public void deleteByProgramId(Long programId) {
+    mapper.deleteByProgramId(programId);
   }
 }

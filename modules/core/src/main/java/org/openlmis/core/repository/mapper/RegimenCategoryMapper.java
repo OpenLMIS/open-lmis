@@ -11,4 +11,7 @@ public interface RegimenCategoryMapper {
 
   @Select({"SELECT * FROM regimen_categories ORDER BY displayOrder, name"})
   List<RegimenCategory> getAll();
+
+  @Select({"SELECT * FROM regimen_categories WHERE id = #{id}"})
+  RegimenCategory getById(Long id);
 }

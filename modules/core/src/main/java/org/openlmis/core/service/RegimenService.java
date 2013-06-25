@@ -14,16 +14,12 @@ public class RegimenService {
   @Autowired
   RegimenRepository repository;
 
-  public void save(List<Regimen> regimens) {
+  public void save(Long programId, List<Regimen> regimens) {
+    repository.deleteByProgramId(programId);
     for (Regimen regimen : regimens) {
-      if (regimen.getId() != null) {
-        repository.update(regimen);
-      } else {
-        repository.insert(regimen);
-      }
+      repository.insert(regimen);
     }
   }
-
 
   public List<Regimen> getByProgram(Long programId) {
     return repository.getByProgram(programId);
