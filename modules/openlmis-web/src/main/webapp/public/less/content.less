@@ -295,39 +295,22 @@ span[class^="tpl-"] {
     }
 
   }
+  input[type="button"] {
+   margin-left: 50px;
+  }
 }
 
 
-
-
-#newRegimenForm {
-  .form-group {
-    position: relative;
-    padding: 10px 0 0 0;
-    border-top: 1px solid #A0A0A0;
-    margin: 14px 0 0 0;
-  }
-  .form-cell {
-    width: 23%;
-    padding: 6px 10px 0px;
-    &:last-child {
-      padding-top: 32px;
-      input[type="checkbox"] {
-        margin-top: 0px;
-      }
-      label {
-        padding-left: 5px;
-        display: inline;
-      }
+form#regimen-edit-form .rnr-template-columns ul{
+   &> li {
+    background: #f9f9f9;
+   }
+   li.category-name {
+    background: white;
+    div {
+     font-size: 12px;
     }
-  }
-  #addNewRegimen {
-    margin: 5px 0px 5px 10px;
-  }
-
-  #addFailMessage {
-    margin: 5px 10px 9px 10px;;
-  }
+   }
 }
 
 .rnr-tabs {
@@ -874,7 +857,7 @@ h3 {
     line-height: 40px;
   }
   div:first-child {
-    padding-left: 10px;
+    padding-left: 20px;
   }
 }
 
@@ -886,7 +869,7 @@ h3 {
     width: 76%;
   }
   div:first-child {
-    padding-left: 10px;
+    padding-left: 20px;
   }
   div:last-child input[type="button"] {
     float: right;
@@ -1738,77 +1721,4 @@ input[placeholder].placeholder{
 
 #searchProduct.search-query {
   margin-bottom: 8px;
-}
-
-
-.regimenForm {
-  .rnr-template-head {
-     .row-fluid {
-        padding-top: 10px;
-        span {
-            padding-left: 25px;
-        }
-     }
-  }
-  .categoryName {
-    background: #45a7ad;
-    color: white;
-    font-size: 0.9em;
-    border-top: 0;
-    div {
-      padding: 2px 10px;
-    }
-  }
-  .rnr-template-columns {
-    max-width: 1383px;
-    border: 1px solid #EEE;
-    border-top: 0;
-    background: white;
-    margin-bottom: 0px;
-    position: relative;
-    padding-top: 6px;
-    padding-bottom: 3px;
-    &:hover {
-       background-color: #f9f9f9;
-       .drag-handle {
-         display: block;
-       }
-       input[type="text"]:disabled, [class*="span"] {
-         background-color: #f9f9f9;
-         border-color: #f9f9f9;
-       }
-    }
-    input[type="checkbox"] {
-        margin-left: 13px;
-    }
-   .drag-handle {
-      background: url("../images/sort-icon.png") no-repeat left center;
-      width: 12px;
-      height: 16px;
-      cursor: move;
-      display: none;
-      top: 12px;
-      left: 6px;
-      position: absolute;
-      display: none;
-   }
-
-   [class*="span"] {
-      border-top: 0;
-      background: #white;
-      font-size: 0.9em;
-      span {
-       padding-left: 22px;
-      }
-   }
-   input[type="text"] {
-      &:disabled {
-        border-color: white;
-        background-color: white;
-        cursor: auto;
-        box-shadow: none;
-      }
-   }
-
-  }
 }
