@@ -82,7 +82,7 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Convert Requisitions to Order')]")
   private static WebElement convertToOrderHeader;
 
-  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Manage distribution')]")
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Manage a Distribution')]")
   private static WebElement manageDistributionHeader;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'View Orders')]")
