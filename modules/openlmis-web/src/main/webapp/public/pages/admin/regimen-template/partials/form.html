@@ -24,16 +24,22 @@
   <form name="newRegimenForm">
     <div class="list-row">
     <div class="row-fluid">
-      <div class="span3"><span><select id="new-regimen-category"
-                                       ng-model="newRegimen.category"
-                                       ng-options="regimenCategory as regimenCategory.name for regimenCategory in regimenCategories"
-                                       ng-required="true">
-                         </select></span></div>
-      <div class="span3"><span><input type="text" id="new-regimen-code" name="newRegimenCode" ng-model="newRegimen.code" ng-required="true"/></span>
+      <div class="span3"><span>
+        <select id="new-regimen-category"
+                 ng-model="newRegimen.category"
+                 ng-options="regimenCategory as regimenCategory.name for regimenCategory in regimenCategories"
+                 ng-required="true"
+                 ng-class="highlightRequired(newRegimen.category)">
+        </select>
+      </span></div>
+      <div class="span3"><span>
+        <input type="text" id="new-regimen-code" name="newRegimenCode" ng-model="newRegimen.code" ng-required="true" ng-class="highlightRequired(newRegimen.code)"/></span>
       </div>
-      <div class="span3"><span><input type="text" id="new-regimen-name" name="newRegimenName" ng-model="newRegimen.name" ng-required="true"/></span>
+      <div class="span3"><span>
+        <input type="text" id="new-regimen-name" name="newRegimenName" ng-model="newRegimen.name" ng-required="true" ng-class="highlightRequired(newRegimen.name)"/></span>
       </div>
-      <div class="span3"><span><input type="checkbox" id="new-regimen-active" name="newRegimenActive" ng-model="newRegimen.active"/></span>
+      <div class="span3"><span>
+        <input type="checkbox" id="new-regimen-active" name="newRegimenActive" ng-model="newRegimen.active" ng-required="true" ng-class="highlightRequired(newRegimen.active)"/></span>
       </div>
     </div>
       <input type="button" class="btn btn-primary" id="add-new-regimen" openlmis-message="button.add" ng-click="addNewRegimen()" />
@@ -53,30 +59,34 @@
     </div>
 
     <div class="rnr-template-columns">
-      <ul ui-sortable ng-model="regimenCategories" id="sortable" ng-repeat="category in regimenCategories">
+      <ul ng-model="regimenCategories" ng-repeat="category in regimenCategories">
         <li class="category-name">
           <span ng-show="regimensByCategory[category.id].length > 0" ng-bind="category.name"></span>
         </li>
-        <li ng-repeat="regimen in regimensByCategory[category.id]">
-          <div class="drag-handle"></div>
-          <span class="tpl-visible">
-            <input type="checkbox" ng-model="regimen.active" ng-disabled="regimen.disable"/>
-          </span>
-          <span class="tpl-label">
-            <input name="regimenCode" type="text" ng-model="regimen.code" ng-required="true"
-                   ng-disabled="regimen.disable"/>
-          </span>
-          <span class="tpl-label">
-            <input name="regimenName" type="text" ng-model="regimen.name" ng-required="true"
-                   ng-disabled="regimen.disable"/>
-          </span>
-          <span ng-show="regimen.disable">
-            <input name="button" type="button" class= "btn btn-mini" value="Edit" ng-click="editRow(regimen)"/>
-          </span>
-          <span ng-show="!regimen.disable">
-            <input name="button" type="button" class= "btn btn-mini" value="Done" ng-click="saveRow(regimen)"/>
-          </span>
-        </li>
+        <div class="rnr-template-columns">
+        <ul ui-sortable ng-model="regimensByCategory[category.id]" id="sortable">
+          <li ng-repeat="regimen in regimensByCategory[category.id]">
+            <div class="drag-handle"></div>
+            <span class="tpl-visible">
+              <input type="checkbox" ng-model="regimen.active" ng-disabled="regimen.disable"/>
+            </span>
+            <span class="tpl-label">
+              <input name="regimenCode" type="text" ng-model="regimen.code" ng-required="true"
+                     ng-disabled="regimen.disable"/>
+            </span>
+            <span class="tpl-label">
+              <input name="regimenName" type="text" ng-model="regimen.name" ng-required="true"
+                     ng-disabled="regimen.disable"/>
+            </span>
+            <span ng-show="regimen.disable">
+              <input name="button" type="button" class= "btn btn-mini" value="Edit" ng-click="editRow(regimen)"/>
+            </span>
+            <span ng-show="!regimen.disable">
+              <input name="button" type="button" class= "btn btn-mini" value="Done" ng-click="saveRow(regimen)"/>
+            </span>
+          </li>
+        </ul>
+          </div>
       </ul>
     </div>
 
