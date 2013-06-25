@@ -22,7 +22,6 @@ import java.util.List;
 @Component
 @NoArgsConstructor
 public class ProgramProductRepository {
-  public static final String PROGRAM_PRODUCT_INVALID = "programProduct.product.program.invalid";
 
   private ProgramProductMapper mapper;
   private ProgramRepository programRepository;
@@ -56,7 +55,7 @@ public class ProgramProductRepository {
         mapper.update(programProduct);
       }
     } catch (DuplicateKeyException duplicateKeyException) {
-      throw new DataException("Duplicate entry for Product Code and Program Code combination found");
+      throw new DataException("error.duplicate.product.code.program.code");
     }
   }
 
@@ -64,14 +63,14 @@ public class ProgramProductRepository {
     Long programProductId = mapper.getIdByProgramAndProductId(programId, productId);
 
     if (programProductId == null)
-      throw new DataException(PROGRAM_PRODUCT_INVALID);
+      throw new DataException("programProduct.product.program.invalid");
 
     return programProductId;
   }
 
   private void validateProductCode(String code) {
     if (code == null || code.isEmpty() || productRepository.getIdByCode(code) == null) {
-      throw new DataException("Invalid Product Code");
+      throw new DataException("product.code.invalid");
     }
   }
 
@@ -81,7 +80,7 @@ public class ProgramProductRepository {
 
   public ProgramProduct getByProgramAndProductCode(ProgramProduct programProduct) {
     return getByProgramAndProductId(programRepository.getIdByCode(programProduct.getProgram().getCode()),
-      productRepository.getIdByCode(programProduct.getProduct().getCode()));
+        productRepository.getIdByCode(programProduct.getProduct().getCode()));
   }
 
   public ProgramProduct getByProgramAndProductId(Long programId, Long productId) {
@@ -104,4 +103,6 @@ public class ProgramProductRepository {
   public List<ProgramProduct> getByProgram(Program program) {
     return mapper.getByProgram(program);
   }
+
+
 }

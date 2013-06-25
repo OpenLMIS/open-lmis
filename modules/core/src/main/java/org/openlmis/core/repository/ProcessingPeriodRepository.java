@@ -39,14 +39,14 @@ public class ProcessingPeriodRepository {
       validateStartDateGreaterThanLastPeriodEndDate(processingPeriod);
       mapper.insert(processingPeriod);
     } catch (DuplicateKeyException e) {
-      throw new DataException("Period Name already exists for this schedule");
+      throw new DataException("error.period.exist.for.schedule");
     }
   }
 
   private void validateStartDateGreaterThanLastPeriodEndDate(ProcessingPeriod processingPeriod) {
     ProcessingPeriod lastAddedProcessingPeriod = mapper.getLastAddedProcessingPeriod(processingPeriod.getScheduleId());
     if (lastAddedProcessingPeriod != null && lastAddedProcessingPeriod.getEndDate().compareTo(processingPeriod.getStartDate()) >= 0)
-      throw new DataException("Period's Start Date is smaller than Previous Period's End Date");
+      throw new DataException("error.period.start.date.less.than.last.period.end.date");
   }
 
   public void delete(Long processingPeriodId) {
@@ -57,14 +57,14 @@ public class ProcessingPeriodRepository {
 
   private void validateStartDateGreaterThanCurrentDate(ProcessingPeriod processingPeriod) {
     if (processingPeriod.getStartDate().compareTo(new Date()) <= 0) {
-      throw new DataException("Period's Start Date is smaller than Current Date");
+      throw new DataException("error.period.start.date");
     }
   }
 
   public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Long scheduleId, Long startPeriodId, Date afterDate, Date beforeDate) {
     return startPeriodId == null ?
-      mapper.getAllPeriodsAfterDate(scheduleId, afterDate, beforeDate) :
-      mapper.getAllPeriodsAfterDateAndPeriod(scheduleId, startPeriodId, afterDate, beforeDate);
+        mapper.getAllPeriodsAfterDate(scheduleId, afterDate, beforeDate) :
+        mapper.getAllPeriodsAfterDateAndPeriod(scheduleId, startPeriodId, afterDate, beforeDate);
   }
 
   public ProcessingPeriod getById(Long id) {
@@ -76,6 +76,10 @@ public class ProcessingPeriodRepository {
   }
 
   public List<ProcessingPeriod> getAllPeriodsForDateRange(Long scheduleId, Date startDate, Date endDate) {
-      return mapper.getAllPeriodsForDateRange(scheduleId, startDate, endDate);
+    return mapper.getAllPeriodsForDateRange(scheduleId, startDate, endDate);
+  }
+
+  public List<ProcessingPeriod> getAllPeriodsBefore(Long scheduleId, Date beforeDate) {
+    return mapper.getAllPeriodsBefore(scheduleId, beforeDate);
   }
 }

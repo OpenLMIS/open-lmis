@@ -114,6 +114,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.submitRnR();
     initiateRnRPage.verifySubmitRnrErrorMsg();
     initiateRnRPage.calculateAndVerifyStockOnHand(10, 10, 10, 1);
+    initiateRnRPage.verifyTotalField();
 
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
@@ -141,6 +142,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
+    initiateRnRPage.clickFullSupplyTab();
+    initiateRnRPage.verifyTotalField();
     initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
     initiateRnRPage.verifyApproveButtonNotPresent();
 
@@ -162,6 +165,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
     approvePageLowerSNUser.closeCommentPopUp();
     approvePageLowerSNUser.addComments("This is urgent");
     approvePageLowerSNUser.verifyComment("This is urgent", userMO, 2);
+    approvePageLowerSNUser.clickFullSupplyTab();
+    approvePageLowerSNUser.verifyTotalFieldPostAuthorize();
     approvePageLowerSNUser.clickSaveButton();
     approvePageLowerSNUser.clickApproveButton();
     approvePageLowerSNUser.clickOk();
@@ -175,6 +180,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
     approvePageTopSNUser.verifyRnRHeader(facilityCodePrefix, facilityNamePrefix, date_time, program, periodDetails, geoZone, parentGeoZone, operatedBy, facilityType);
     approvePageTopSNUser.verifyApprovedQuantityApprovedFromLowerHierarchy("290");
     approvePageTopSNUser.editApproveQuantityAndVerifyTotalCost("100");
+    approvePageLowerSNUser.clickFullSupplyTab();
+    approvePageTopSNUser.verifyTotalFieldPostAuthorize();
     approvePageTopSNUser.approveRequisition();
     approvePageTopSNUser.clickOk();
     approvePageTopSNUser.verifyNoRequisitionPendingMessage();

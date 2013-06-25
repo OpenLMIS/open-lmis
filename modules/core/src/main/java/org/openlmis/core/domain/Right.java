@@ -38,6 +38,8 @@ public enum Right {
   APPROVE_REQUISITION("Requisition - Approve", FALSE, "Permission to approve requisitions", VIEW_REQUISITION),
   CONVERT_TO_ORDER("Requisition - Convert to Order", TRUE, "Permission to convert requisitions to order"),
   VIEW_ORDER("Requisition - View Orders", TRUE, "Permission to view orders"),
+  MANAGE_PROGRAM_PRODUCT("Admin - Manage Program Product", TRUE, "Permission to manage program products"),
+  MANAGE_DISTRIBUTION("Allocation - Manage", FALSE, "Permission to manage an distribution"),
 
 VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", TRUE, "Permission to view Facility List Report"),
 VIEW_MAILING_LABEL_REPORT("Report - Facility Listing (V2)", TRUE, "Permission to view mailing labels for facilities"),
@@ -49,7 +51,7 @@ VIEW_NON_REPORTING_FACILITIES("Report - Non Reporting Facility Report", TRUE, "P
 VIEW_ADJUSTMENT_SUMMARY_REPORT("Report - Adjustment Summary Report", TRUE, "Permission to view adjustment summary Report"),
 VIEW_SUPPLY_STATUS_REPORT("Report - Supply Status by Facility",TRUE, "Permission to view Supply Status by Facility Report"),
 VIEW_STOCKED_OUT_REPORT("Report - Stocked Out Report", TRUE, "Permission to view stocked out product report"),
-VIEW_DISTRICT_CONSUMPTION_REPORT("Report - District Consumption Comparison", TRUE, "Permission to view district consumption comparison report"),
+VIEW_DISTRICT_CONSUMPTION_REPORT("Report - District Consumption Comparison", TRUE, "Permission to view district consumption comparison report");
 
 MANAGE_GEOGRAPHIC_ZONES ("Admin - Manage Geographic Zones", TRUE, "Permission to manage geographic zones.");
 

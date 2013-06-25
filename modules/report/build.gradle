@@ -6,7 +6,7 @@ dependencies {
             'org.springframework:spring-aop:3.1.1.RELEASE',
             'org.springframework:spring-context-support:3.1.1.RELEASE',
             'javax.servlet:servlet-api:2.5',
-            'log4j:log4j:1.2.17',
+            'log4j:log4j:1.2.15',
             'com.itextpdf:itextpdf:5.4.0',
             'com.lowagie:itext:2.1.7',
             'net.sf.jasperreports:jasperreports:5.0.1',
@@ -14,8 +14,10 @@ dependencies {
             'org.codehaus.groovy:groovy-all:2.1.1',
             'commons-digester:commons-digester:2.1',
             'org.mybatis:mybatis:3.0.1',
+            project(':modules:authentication'),
             project(':modules:db'),
             project(':modules:core')
+
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
             project(':modules:db'),

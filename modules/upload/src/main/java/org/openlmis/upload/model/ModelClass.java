@@ -6,12 +6,14 @@
 
 package org.openlmis.upload.model;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.collections.Predicate;
 import org.openlmis.upload.Importable;
-import org.openlmis.upload.annotation.*;
+import org.openlmis.upload.annotation.ImportField;
+import org.openlmis.upload.annotation.ImportFields;
 import org.openlmis.upload.exception.UploadException;
 
 import java.util.ArrayList;
@@ -96,7 +98,8 @@ public class ModelClass {
   private void validateNullHeaders(List<String> headers) throws UploadException {
     for (int i = 0; i < headers.size(); i++) {
       if (headers.get(i) == null) {
-        throw new UploadException("Header for column " + (i + 1) + " is missing.");
+        String missingHeaderPosition = i + 1 + "";
+        throw new UploadException("error.upload.header.missing", missingHeaderPosition);
       }
     }
   }
@@ -105,7 +108,7 @@ public class ModelClass {
     List<String> missingFields = findMissingFields(headers);
 
     if (!missingFields.isEmpty()) {
-      throw new UploadException("Missing Mandatory columns in upload file: " + missingFields);
+      throw new UploadException("error.upload.missing.mandatory.columns", missingFields.toString());
     }
   }
 
@@ -113,7 +116,7 @@ public class ModelClass {
     List<String> fieldNames = getAllImportedFieldNames();
     List invalidHeaders = ListUtils.subtract(headers, lowerCase(fieldNames));
     if (!invalidHeaders.isEmpty()) {
-      throw new UploadException("Invalid Headers in upload file: " + invalidHeaders);
+      throw new UploadException("error.upload.invalid.header", invalidHeaders.toString());
     }
   }
 

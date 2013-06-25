@@ -22,7 +22,6 @@ public class ProductCategoryRepository {
 
 
   private ProductCategoryMapper categoryMapper;
-  public static final String DUPLICATE_CATEGORY_NAME = "product.category.name.duplicate";
 
   @Autowired
   public ProductCategoryRepository(ProductCategoryMapper categoryMapper) {
@@ -34,13 +33,13 @@ public class ProductCategoryRepository {
     try {
       categoryMapper.insert(productCategory);
     } catch (DuplicateKeyException duplicateKeyException) {
-      throw new DataException(DUPLICATE_CATEGORY_NAME);
+      throw new DataException("product.category.name.duplicate");
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
       String errorMessage = dataIntegrityViolationException.getMessage().toLowerCase();
       if (errorMessage.contains("foreign key") || errorMessage.contains("violates not-null constraint")) {
-        throw new DataException("Missing/Invalid Reference data");
+        throw new DataException("error.reference.data.missing");
       } else {
-        throw new DataException("Incorrect data length");
+        throw new DataException("error.incorrect.length");
       }
     }
   }

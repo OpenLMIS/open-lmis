@@ -36,7 +36,7 @@ import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 @EqualsAndHashCode(callSuper = false)
 public class RnrLineItem extends BaseModel {
 
-  public static final String RNR_VALIDATION_ERROR = "rnr.validation.error";
+  public static final String RNR_VALIDATION_ERROR = "error.rnr.validation";
 
   public static final Float MULTIPLIER = 3f;
   public static final Float NUMBER_OF_DAYS = 30f;

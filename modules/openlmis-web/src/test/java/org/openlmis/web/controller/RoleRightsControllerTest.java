@@ -43,6 +43,7 @@ import static org.openlmis.core.matchers.Matchers.facilityMatcher;
 import static org.openlmis.core.matchers.Matchers.programMatcher;
 import static org.openlmis.web.controller.RoleRightsController.*;
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
+
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RoleRightsControllerTest {
@@ -118,7 +119,7 @@ public class RoleRightsControllerTest {
 
   @Test
   public void shouldUpdateRoleAndRights() throws Exception {
-    Role role = new Role(123L, "Role Name",null, "Desc", new HashSet<>(asList(CONFIGURE_RNR)));
+    Role role = new Role("Role Name", null, "Desc", new HashSet<>(asList(CONFIGURE_RNR)));
 
     OpenLmisResponse response = controller.updateRole(role.getId(), role, httpServletRequest).getBody();
 
@@ -129,7 +130,7 @@ public class RoleRightsControllerTest {
   @Test
   public void shouldReturnErrorMsgIfUpdateFails() throws Exception {
 
-    Role role = new Role(123L, "Role Name", FALSE, "Desc", null);
+    Role role = new Role("Role Name", FALSE, "Desc", null);
 
     doThrow(new DataException("Duplicate Role found")).when(roleRightsService).updateRole(role);
 

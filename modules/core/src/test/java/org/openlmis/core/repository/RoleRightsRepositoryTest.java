@@ -18,7 +18,6 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.Role;
 import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.RoleRightsMapper;
 import org.openlmis.db.categories.UnitTests;
@@ -28,12 +27,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import static java.lang.Boolean.*;
+import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -83,8 +83,7 @@ public class RoleRightsRepositoryTest {
   public void shouldNotSaveDuplicateRole() throws Exception {
     doThrow(DuplicateKeyException.class).when(roleRightsMapper).insertRole(role);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Duplicate Role found");
+    expectedEx.expect(dataExceptionMatcher("error.duplicate.role"));
 
     roleRightsRepository.createRole(role);
   }
@@ -95,8 +94,7 @@ public class RoleRightsRepositoryTest {
     role.setId(123L);
     doThrow(DuplicateKeyException.class).when(roleRightsMapper).updateRole(role);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Duplicate Role found");
+    expectedEx.expect(dataExceptionMatcher("error.duplicate.role"));
 
     roleRightsRepository.updateRole(role);
   }

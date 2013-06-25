@@ -200,3 +200,29 @@ services.factory('ReportTemplates', function ($resource) {
   return $resource('/report-templates.json', {}, {});
 });
 
+services.factory('PushProgram', function ($resource) {
+  return $resource('/push/programs.json', {}, {});
+});
+
+services.factory('ProgramProducts', function ($resource) {
+  return $resource('/programProducts/programId/:programId.json', {}, {});
+});
+
+
+services.factory('ProgramProductsISA', function ($resource) {
+  return $resource('/programProducts/:programProductId/isa/:isaId.json', {isaId:'@isaId'}, {update:{method:'PUT'}});
+});
+
+//Allocation
+
+services.factory('DeliveryZones', function ($resource) {
+  return $resource('/user/deliveryZones.json', {}, {});
+});
+
+services.factory('DeliveryZonePrograms', function ($resource) {
+  return $resource('/deliveryZones/:zoneId/programs.json', {}, {});
+});
+
+services.factory('DeliveryZoneProgramPeriods', function ($resource) {
+  return $resource('/deliveryZones/:zoneId/programs/:programId/periods.json', {}, {});
+});

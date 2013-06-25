@@ -9,8 +9,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
+
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
 public class ShippedLineItemTest {
@@ -22,7 +23,9 @@ public class ShippedLineItemTest {
   public void shouldThrowDataExceptionIfQuantityShippedIsNegative() throws Exception {
     ShippedLineItem shippedLineItem = new ShippedLineItem();
     shippedLineItem.setQuantityShipped(-1);
-    expectedException.expect(DataException.class);
+
+    expectedException.expect(dataExceptionMatcher("error.negative.shipped.quantity"));
+
     shippedLineItem.validateForSave();
   }
 }

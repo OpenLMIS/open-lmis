@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.GeographicLevelMapper;
 import org.openlmis.core.repository.mapper.GeographicZoneMapper;
 import org.openlmis.db.categories.UnitTests;
@@ -27,6 +26,7 @@ import java.util.Date;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -58,12 +58,11 @@ public class GeographicZoneRepositoryTest {
   @Test
   public void shouldThrowErrorIfIncorrectDataLengthWhileInserting() throws Exception {
     when(mapper.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
-      new GeographicLevel(1L, "abc", "abc", 1));
+        new GeographicLevel(1L, "abc", "abc", 1));
     when(mapper.getGeographicZoneByCode(geographicZone.getParent().getCode())).thenReturn(
-      new GeographicZone(1L, "xyz", "xyz", null, null));
+        new GeographicZone(1L, "xyz", "xyz", null, null));
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Incorrect Data Length");
+    expectedEx.expect(dataExceptionMatcher("error.incorrect.length"));
 
     doThrow(new DataIntegrityViolationException("Incorrect Data Length")).when(mapper).insert(geographicZone);
 
@@ -73,12 +72,11 @@ public class GeographicZoneRepositoryTest {
   @Test
   public void shouldThrowErrorIfIncorrectDataLengthWhileUpdating() throws Exception {
     when(mapper.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
-      new GeographicLevel(1L, "abc", "abc", 1));
+        new GeographicLevel(1L, "abc", "abc", 1));
     when(mapper.getGeographicZoneByCode(geographicZone.getParent().getCode())).thenReturn(
-      new GeographicZone(1L, "xyz", "xyz", null, null));
+        new GeographicZone(1L, "xyz", "xyz", null, null));
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Incorrect Data Length");
+    expectedEx.expect(dataExceptionMatcher("error.incorrect.length"));
 
     doThrow(new DataIntegrityViolationException("Incorrect Data Length")).when(mapper).update(geographicZone);
 

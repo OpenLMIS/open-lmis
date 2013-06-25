@@ -61,8 +61,7 @@
 
         <div class="span7 select2-roles">
           <div class="fluid-grid-cell">
-            <select ui-select2 ng-model="selectedRoleIds" placeholder="+ Add Role" multiple="multiple"
-                    style="width:400px">
+            <select ui-select2 ng-model="selectedRoleIds" placeholder="+ Add Role" multiple="multiple">
               <option ng-repeat="role in nonAdminRoles" value="{{role.id}}">{{role.name}}</option>
             </select>
             <span ng-show='hasMappingError(showHomeFacilityRoleMappingError,selectedRoleIds)' class="field-error"

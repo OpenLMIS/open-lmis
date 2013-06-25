@@ -8,3 +8,5 @@ CREATE TABLE geographic_levels (
     levelNumber   INTEGER NOT NULL,
     createdDate   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE UNIQUE INDEX uc_geographic_levels_lower_code ON geographic_levels(LOWER(code));

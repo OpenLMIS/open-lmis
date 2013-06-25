@@ -112,13 +112,13 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//li[@id='J']/span/input")
   private static WebElement requestedQuantityExplanationCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='M']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='Y']/span/input")
   private static WebElement totalCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='M']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='Y']/span[@class='tpl-label']/input")
   private static WebElement totalTextBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='M']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='Y']/span[@class='tpl-source']/span[2]")
   private static WebElement totalSource;
 
   @FindBy(how = How.XPATH, using = "//li[@id='O']/span/input")
@@ -240,7 +240,7 @@ public class TemplateConfigPage extends Page {
 
   public TemplateConfigPage(TestWebDriver driver) {
     super(driver);
-    PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
+    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
   }
 
@@ -567,15 +567,16 @@ public class TemplateConfigPage extends Page {
 
   }
 
-  public void alterTemplateLabelAndVisibility(String columnHeadingToBeAltered) throws IOException {
+  public void alterBeginningBalanceLabel(String columnHeadingToBeAltered) throws IOException {
     testWebDriver.waitForElementToAppear(SaveButton);
     beginningBalance.clear();
     beginningBalance.sendKeys(columnHeadingToBeAltered);
-    testWebDriver.waitForElementToAppear(remarksCheckBox);
-    remarksCheckBox.click();
+    unClickCheckBox(productCodeCheckBox);
     clickSaveButton();
     verifySuccessDiv();
   }
+
+
 
 
 

@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.service.ShipmentService;
@@ -26,6 +25,8 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
+
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ShipmentRecordHandlerTest {
@@ -33,7 +34,8 @@ public class ShipmentRecordHandlerTest {
   private ShipmentService shipmentService;
 
   @Rule
-  public ExpectedException expectedException = ExpectedException.none();;
+  public ExpectedException expectedException = ExpectedException.none();
+  ;
 
   @InjectMocks
   private ShipmentRecordHandler shipmentRecordHandler;
@@ -63,10 +65,9 @@ public class ShipmentRecordHandlerTest {
 
     when(shipmentService.getProcessedTimeStamp(shippedLineItem)).thenReturn(date);
 
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("Order Number Already Processed");
+    expectedException.expect(dataExceptionMatcher("error.duplicate.order"));
 
-    shipmentRecordHandler.execute(shippedLineItem,1,auditFields);
+    shipmentRecordHandler.execute(shippedLineItem, 1, auditFields);
   }
 
   @Test
@@ -82,7 +83,7 @@ public class ShipmentRecordHandlerTest {
 
     when(shipmentService.getShippedLineItem(shippedLineItem)).thenReturn(shippedLineItemFromDB);
 
-    shipmentRecordHandler.execute(shippedLineItem,1,auditFields);
+    shipmentRecordHandler.execute(shippedLineItem, 1, auditFields);
 
     assertThat(shippedLineItem.getModifiedDate(), is(currentTimestamp));
     assertThat(shippedLineItem.getId(), is(shippedLineItemFromDbId));
@@ -102,9 +103,8 @@ public class ShipmentRecordHandlerTest {
 
     when(shipmentService.getProcessedTimeStamp(shippedLineItem)).thenReturn(processedDate);
 
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("Order Number Already Processed");
+    expectedException.expect(dataExceptionMatcher("error.duplicate.order"));
 
-    shipmentRecordHandler.execute(shippedLineItem,1,auditFields);
+    shipmentRecordHandler.execute(shippedLineItem, 1, auditFields);
   }
 }

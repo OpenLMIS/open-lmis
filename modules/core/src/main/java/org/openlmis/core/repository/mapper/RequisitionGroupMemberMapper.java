@@ -18,8 +18,8 @@ import java.util.List;
 public interface RequisitionGroupMemberMapper {
 
   @Insert("INSERT INTO requisition_group_members" +
-    "(requisitionGroupId, facilityId, modifiedBy, modifiedDate) " +
-    "VALUES (#{requisitionGroup.id}, #{facility.id}, #{modifiedBy}, #{modifiedDate})")
+    "(requisitionGroupId, facilityId, createdBy, modifiedBy, modifiedDate) " +
+    "VALUES (#{requisitionGroup.id}, #{facility.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
   Integer insert(RequisitionGroupMember requisitionGroupMember);
 

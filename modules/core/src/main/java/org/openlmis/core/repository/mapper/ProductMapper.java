@@ -6,10 +6,11 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductCategory;
-import org.openlmis.core.domain.ProductForm;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -36,7 +37,7 @@ public interface ProductMapper {
     "specialStorageInstructions," + "specialTransportInstructions," +
     "active," + "fullSupply," + "tracer," + "roundToZero," + "archived," +
     "packRoundingThreshold, categoryId, productGroupId," +
-    "modifiedBy, modifiedDate)" +
+    "createdBy, modifiedBy, modifiedDate)" +
     "VALUES(" +
     "#{code}," +
     "#{alternateItemCode}," +
@@ -59,7 +60,7 @@ public interface ProductMapper {
     "#{specialStorageInstructions}," + "#{specialTransportInstructions}," +
     "#{active}," + "#{fullSupply}," + "#{tracer}," + "#{roundToZero}," + "#{archived}," +
     "#{packRoundingThreshold}, #{category.id},  #{productGroup.id}," +
-    "#{modifiedBy}, #{modifiedDate})")
+    "#{createdBy}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
   Integer insert(Product product);
 

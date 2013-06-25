@@ -64,7 +64,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     String newColumnHeading = "Altered";
       templateConfigPage.unClickExpirationDate();
       templateConfigPage.unClickTotal();
-    templateConfigPage.alterTemplateLabelAndVisibility(newColumnHeading);
+    templateConfigPage.alterBeginningBalanceLabel(newColumnHeading);
 
 
 
@@ -74,11 +74,9 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     homePageSic.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     String tableXpathTillTr = "//table[@id='fullSupplyTable']/thead/tr";
+//    int columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
+//    initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, newColumnHeading, columns);
     int columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
-    initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, newColumnHeading, columns);
-    String columnHeadingNotPresent = "Remarks";
-    columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
-    initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, columnHeadingNotPresent, columns);
       initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, "Expiration Date", columns);
       initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, "Total", columns);
   }

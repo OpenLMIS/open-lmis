@@ -15,3 +15,5 @@ CREATE TABLE geographic_zones (
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE UNIQUE INDEX uc_geographic_zones_lower_code ON geographic_zones(LOWER(code));

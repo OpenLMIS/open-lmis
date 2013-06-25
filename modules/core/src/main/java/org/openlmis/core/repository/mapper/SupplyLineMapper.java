@@ -16,8 +16,8 @@ import org.springframework.stereotype.Repository;
 public interface SupplyLineMapper {
 
   @Insert("INSERT INTO supply_lines " +
-    "(description,supervisoryNodeId,programId,supplyingFacilityId,modifiedBy, modifiedDate)" +
-    "VALUES (#{description},#{supervisoryNode.id},#{program.id},#{supplyingFacility.id},#{modifiedBy},#{modifiedDate})")
+    "(description, supervisoryNodeId, programId, supplyingFacilityId, createdBy, modifiedBy, modifiedDate)" +
+    "VALUES (#{description}, #{supervisoryNode.id}, #{program.id}, #{supplyingFacility.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
   Integer insert(SupplyLine supplyLine);
 

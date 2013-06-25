@@ -119,7 +119,7 @@ public class RequisitionRepository {
 
   public Rnr getById(Long rnrId) {
     Rnr requisition = requisitionMapper.getById(rnrId);
-    if (requisition == null) throw new DataException("Requisition Not Found");
+    if (requisition == null) throw new DataException("error.rnr.not.found");
     return requisition;
   }
 

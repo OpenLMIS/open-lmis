@@ -52,7 +52,6 @@ public class ReportLookupService {
     @Autowired
     private GeographicLevelReportMapper geographicLevelMapper;
 
-
     public List<Product> getAllProducts(){
         return productMapper.getAll();
     }

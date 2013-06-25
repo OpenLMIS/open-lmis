@@ -40,6 +40,7 @@ public class EmailService {
 
   @Async
   public Future<Boolean> send(EmailMessage emailMessage) {
+    EmailMessage msg = emailMessage;
     if (!mailSendingFlag) {
       return new AsyncResult(true);
     }

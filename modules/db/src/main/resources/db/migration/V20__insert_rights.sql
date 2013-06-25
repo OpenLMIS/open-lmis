@@ -16,4 +16,6 @@ INSERT INTO rights (name, adminRight, description) VALUES
  ('VIEW_ORDER',TRUE,'Permission to view orders'),
  ('VIEW_REQUISITION',FALSE,'Permission to view requisition'),
  ('VIEW_REPORTS',TRUE,'Permission to view reports'),
- ('MANAGE_REPORTS',TRUE,'Permission to manage reports');
+ ('MANAGE_REPORTS',TRUE,'Permission to manage reports'),
+ ('MANAGE_PROGRAM_PRODUCT',TRUE,'Permission to manage program products'),
+ ('MANAGE_DISTRIBUTION',FALSE,'Permission to manage an distribution');

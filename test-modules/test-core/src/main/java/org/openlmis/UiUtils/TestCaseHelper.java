@@ -7,6 +7,8 @@
 package org.openlmis.UiUtils;
 
 
+import org.jaxen.function.StringFunction;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -73,28 +75,29 @@ public class TestCaseHelper {
     testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
   }
 
-  public void setupTestDataToInitiateRnR(boolean configureTemplate, String program, String userSIC, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
+  public void setupTestDataToInitiateRnR(boolean configureTemplate, String program, String user, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertFacilities("F10", "F11");
     if (configureTemplate)
       dbWrapper.configureTemplate(program);
 
-    setupTestUserRoleRightsData(userId, userSIC, vendorName, rightsList);
+    setupTestUserRoleRightsData(userId, user, vendorName, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment(userId, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
-    dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
+    dbWrapper.insertProcessingPeriod("Period2", "second period", "2012-01-16", "2013-01-30", 1, "M");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", program, "F10");
   }
 
-  public void setupRnRTestDataRnRForCommTrack(boolean configureGenericTemplate, String program, String userSIC, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
+
+  public void setupRnRTestDataRnRForCommTrack(boolean configureGenericTemplate, String program, String user, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertFacilities("F10", "F11");
 
-    setupTestUserRoleRightsData(userId, userSIC, vendorName, rightsList);
+    setupTestUserRoleRightsData(userId, user, vendorName, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment(userId, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
@@ -113,11 +116,11 @@ public class TestCaseHelper {
     }
   }
 
-  public void setupTestDataToApproveRnR(String userSIC, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
+  public void setupTestDataToApproveRnR(String user, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
     for (String rights : rightsList)
       dbWrapper.assignRight("store in-charge", rights);
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "", vendorName);
+    dbWrapper.insertUser(userId, user, passwordUsers, "F10", "", vendorName);
     dbWrapper.insertSupervisoryNodeSecond("F10", "N2", "Node 2", "N1");
     dbWrapper.insertRoleAssignmentforSupervisoryNode(userId, "store in-charge", "N2");
   }
@@ -161,6 +164,35 @@ public class TestCaseHelper {
     rightsList.add("APPROVE_REQUISITION");
     rightsList.add("CONVERT_TO_ORDER");
     setupTestDataToApproveRnR("commTrack1", "701", "commTrack", rightsList);
+  }
+
+  public void setupDataForDeliveryZone(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                       String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                       String facilityCodeFirst, String facilityCodeSecond,
+                                       String programFirst, String programSecond, String schedule) throws IOException, SQLException {
+    dbWrapper.insertDeliveryZone(deliveryZoneCodeFirst,deliveryZoneNameFirst);
+    dbWrapper.insertDeliveryZone(deliveryZoneCodeSecond,deliveryZoneNameSecond);
+    dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeFirst);
+    dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeSecond, facilityCodeSecond);
+    dbWrapper.insertProcessingPeriodForDistribution(14, schedule);
+    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst,programFirst,schedule);
+    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond,programSecond,schedule);
+  }
+
+  public void setupTestDataToInitiateRnRForDistribution(boolean configureTemplate, String program, String user, String userId, String vendorName, List<String> rightsList, String programCode) throws IOException, SQLException {
+    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
+    dbWrapper.insertFacilities("F10", "F11");
+    if (configureTemplate)
+      dbWrapper.configureTemplate(program);
+
+    setupTestUserRoleRightsData(userId, user, vendorName, rightsList);
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+    dbWrapper.insertRoleAssignment(userId, "store in-charge");
+    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
+    dbWrapper.insertSchedule("M", "Monthly", "Month");
+    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
+    dbWrapper.insertSupplyLines("N1", program, "F10");
+    dbWrapper.updateActiveStatusOfProgram(programCode);
   }
 
 }

@@ -29,6 +29,6 @@ public class StaticReferenceDataReader {
 
   public String getCurrency() {
     Object[] noArgs = null;
-    return messageSource.getMessage("currencySymbol", noArgs, Locale.getDefault());
+    return messageSource.getMessage("label.currency.symbol", noArgs, Locale.getDefault());
   }
 }

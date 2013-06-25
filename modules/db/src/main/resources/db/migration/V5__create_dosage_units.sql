@@ -9,3 +9,5 @@ CREATE TABLE dosage_units (
     createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE UNIQUE INDEX uc_dosage_units_lower_code ON dosage_units(LOWER(code));
+

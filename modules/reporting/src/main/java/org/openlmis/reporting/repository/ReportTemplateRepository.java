@@ -18,7 +18,6 @@ import java.util.List;
 @Repository
 public class ReportTemplateRepository {
 
-  public static final String REPORT_WITH_SAME_NAME_ALREADY_EXISTS = "report.template.name.already.exists";
   @Autowired
   ReportTemplateMapper mapper;
 
@@ -26,7 +25,7 @@ public class ReportTemplateRepository {
     try {
       mapper.insert(reportTemplate);
     } catch (DataIntegrityViolationException integrityViolationException) {
-      throw new DataException(REPORT_WITH_SAME_NAME_ALREADY_EXISTS);
+      throw new DataException("report.template.name.already.exists");
     }
   }
 

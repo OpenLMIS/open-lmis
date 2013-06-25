@@ -11,15 +11,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.openlmis.core.builder.ProcessingPeriodBuilder;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static junit.framework.Assert.*;
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static junit.framework.Assert.fail;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
 public class ProcessingPeriodTest {
@@ -30,7 +31,7 @@ public class ProcessingPeriodTest {
   @Test
   public void shouldNotThrowErrorOnValidateForAValidPeriod() {
 
-    ProcessingPeriod processingPeriod = make(a(org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod));
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod));
     try {
       processingPeriod.validate();
     } catch (Exception e) {
@@ -40,51 +41,51 @@ public class ProcessingPeriodTest {
 
   @Test
   public void shouldNotThrowErrorOnValidateForAPeriodWithNoName() {
-    ProcessingPeriod processingPeriod = make(a(org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod));
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod));
     processingPeriod.setName(null);
 
-    exException.expect(DataException.class);
-    exException.expectMessage("Period can not be saved without its Name.");
+    exException.expect(dataExceptionMatcher("error.period.without.name"));
+
     processingPeriod.validate();
   }
 
   @Test
   public void shouldNotThrowErrorOnValidateForAPeriodWithNoScheduleId() {
-    ProcessingPeriod processingPeriod = make(a(org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod));
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod));
     processingPeriod.setScheduleId(null);
 
-    exException.expect(DataException.class);
-    exException.expectMessage("Period can not be saved without its parent Schedule");
+    exException.expect(dataExceptionMatcher("error.period.without.schedule"));
+
     processingPeriod.validate();
   }
 
   @Test
   public void shouldNotThrowErrorOnValidateForAPeriodWithNoStartDate() {
-    ProcessingPeriod processingPeriod = make(a(org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod));
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod));
     processingPeriod.setStartDate(null);
 
-    exException.expect(DataException.class);
-    exException.expectMessage("Period can not be saved without its Start Date.");
+    exException.expect(dataExceptionMatcher("error.period.without.start.date"));
+
     processingPeriod.validate();
   }
 
   @Test
   public void shouldNotThrowErrorOnValidateForAPeriodWithNoEndDate() {
-    ProcessingPeriod processingPeriod = make(a(org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod));
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod));
     processingPeriod.setEndDate(null);
 
-    exException.expect(DataException.class);
-    exException.expectMessage("Period can not be saved without its End Date.");
+    exException.expect(dataExceptionMatcher("error.period.without.end.date"));
+
     processingPeriod.validate();
   }
 
   @Test
   public void shouldNotThrowErrorOnValidateForAPeriodWithEndDateEarlierToStartDate() {
-    ProcessingPeriod processingPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod));
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod));
     processingPeriod.setStartDate(oneMonthPast(processingPeriod.getEndDate()));
 
-    exException.expect(DataException.class);
-    exException.expectMessage("Period End Date can not be earlier than Start Date.");
+    exException.expect(dataExceptionMatcher("error.period.invalid.dates"));
+
     processingPeriod.validate();
   }
 

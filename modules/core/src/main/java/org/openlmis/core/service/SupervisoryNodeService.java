@@ -22,6 +22,7 @@ import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 @Service
 @NoArgsConstructor
 public class SupervisoryNodeService {
+
   private SupervisoryNodeRepository supervisoryNodeRepository;
   private UserRepository userRepository;
   private FacilityRepository facilityRepository;
@@ -48,7 +49,7 @@ public class SupervisoryNodeService {
       try {
         parentNode.setId(supervisoryNodeRepository.getIdForCode(parentNode.getCode()));
       } catch (DataException e) {
-        throw new DataException("Supervisory Node Parent does not exist");
+        throw new DataException("error.supervisory.node.parent.not.exist");
       }
     }
   }

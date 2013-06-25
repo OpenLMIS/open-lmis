@@ -294,7 +294,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(rnr2);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), processingPeriod2.getId())).
-      thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
+        thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -314,7 +314,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(null);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), null)).
-      thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
+        thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -325,13 +325,13 @@ public class RequisitionServiceTest {
 
   private Rnr createRequisition(Long periodId, RnrStatus status) {
     return make(a(RequisitionBuilder.defaultRnr,
-      with(RequisitionBuilder.periodId, periodId),
-      with(RequisitionBuilder.status, status)));
+        with(RequisitionBuilder.periodId, periodId),
+        with(RequisitionBuilder.status, status)));
   }
 
   private ProcessingPeriod createProcessingPeriod(Long id, DateTime startDate) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-      with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
+        with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
     processingPeriod.setId(id);
     return processingPeriod;
   }
@@ -342,7 +342,7 @@ public class RequisitionServiceTest {
 
     when(rnrTemplateService.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(new ArrayList<RnrColumn>());
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(RNR_TEMPLATE_NOT_INITIATED_ERROR);
+    expectedException.expectMessage("error.rnr.template.not.defined");
 
     Rnr rnr = requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), USER_ID);
 
@@ -358,7 +358,7 @@ public class RequisitionServiceTest {
     setupForInitRnr(date, requisition, validPeriod);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(RNR_PREVIOUS_NOT_FILLED_ERROR);
+    expectedException.expectMessage("error.rnr.previous.not.filled");
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), USER_ID);
 
@@ -373,7 +373,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
-      thenReturn(Arrays.asList(validPeriod));
+        thenReturn(Arrays.asList(validPeriod));
   }
 
   private void setupForInitRnr(Rnr requisition) {
@@ -383,7 +383,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
-      thenReturn(asList(PERIOD));
+        thenReturn(asList(PERIOD));
   }
 
   @Test
@@ -392,7 +392,7 @@ public class RequisitionServiceTest {
 
     OpenLmisMessage message = requisitionService.getSubmitMessageBasedOnSupervisoryNode(FACILITY, PROGRAM);
 
-    assertThat(message.getCode(), is("rnr.submitted.without.supervisor"));
+    assertThat(message.getCode(), is("msg.rnr.submitted.without.supervisor"));
   }
 
   @Test
@@ -476,6 +476,40 @@ public class RequisitionServiceTest {
     assertThat(message.getCode(), is(RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR));
   }
 
+  @Test
+  public void shouldGiveApprovedSuccessIfParentDoesNotExist() throws Exception {
+
+    Rnr rnr = make(a(defaultRnr));
+    when(supervisoryNodeService.getParent(rnr.getSupervisoryNodeId())).thenReturn(null);
+    OpenLmisMessage message = requisitionService.getApproveMessageBasedOnParentNode(rnr);
+
+    assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY));
+  }
+
+  @Test
+  public void shouldGiveApprovedSuccessIfParentExistWtihSupervisor() throws Exception {
+
+    Rnr rnr = make(a(defaultRnr));
+    SupervisoryNode parent = new SupervisoryNode();
+    when(supervisoryNodeService.getParent(rnr.getSupervisoryNodeId())).thenReturn(parent);
+    when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parent, rnr.getProgram())).thenReturn(new User());
+    OpenLmisMessage message = requisitionService.getApproveMessageBasedOnParentNode(rnr);
+
+    assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY));
+  }
+
+
+  @Test
+  public void shouldGiveApprovedSuccessWithoutSupervisorIfApproverDoesNotExitAtParentNode() throws Exception {
+    Rnr rnr = make(a(defaultRnr));
+    SupervisoryNode parent = new SupervisoryNode();
+    when(supervisoryNodeService.getParent(rnr.getSupervisoryNodeId())).thenReturn(parent);
+    when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parent, rnr.getProgram())).thenReturn(null);
+    OpenLmisMessage message = requisitionService.getApproveMessageBasedOnParentNode(rnr);
+
+    assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR));
+
+  }
 
   @Test
   public void shouldSaveRnrIfUserHasAppropriatePermission() {
@@ -589,13 +623,12 @@ public class RequisitionServiceTest {
 
     when(supplyLineService.getSupplyLineBy(supervisoryNode, savedRnr.getProgram())).thenReturn(supplyLine);
 
-    OpenLmisMessage message = requisitionService.approve(authorizedRnr);
+    Rnr rnr = requisitionService.approve(authorizedRnr);
 
     verify(requisitionRepository).approve(savedRnr);
     verify(requisitionRepository).logStatusChange(savedRnr);
     assertThat(savedRnr.getStatus(), is(APPROVED));
     assertThat(savedRnr.getSupervisoryNodeId(), is(nullValue()));
-    assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY));
     assertThat(savedRnr.getModifiedBy(), is(USER_ID));
 
   }
@@ -632,14 +665,13 @@ public class RequisitionServiceTest {
     when(supervisoryNodeService.getParent(1L)).thenReturn(parentNode);
     when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parentNode, PROGRAM)).thenReturn(new User());
 
-    OpenLmisMessage message = requisitionService.approve(authorizedRnr);
+    Rnr rnr = requisitionService.approve(authorizedRnr);
 
     verify(requisitionRepository).approve(savedRnr);
     verify(requisitionRepository).logStatusChange(savedRnr);
     verify(requisitionEventService).notifyForStatusChange(savedRnr);
     assertThat(savedRnr.getStatus(), is(IN_APPROVAL));
     assertThat(savedRnr.getSupervisoryNodeId(), is(2L));
-    assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY));
     assertThat(savedRnr.getModifiedBy(), is(USER_ID));
 
   }
@@ -655,12 +687,11 @@ public class RequisitionServiceTest {
     when(supervisoryNodeService.getParent(1L)).thenReturn(parentNode);
 
     when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parentNode, authorizedRnr.getProgram())).thenReturn(null);
-    OpenLmisMessage message = requisitionService.approve(authorizedRnr);
+    Rnr rnr = requisitionService.approve(authorizedRnr);
 
     verify(requisitionRepository).approve(savedRnr);
     assertThat(savedRnr.getStatus(), is(IN_APPROVAL));
     assertThat(savedRnr.getSupervisoryNodeId(), is(2L));
-    assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR));
     assertThat(savedRnr.getModifiedBy(), is(USER_ID));
   }
 

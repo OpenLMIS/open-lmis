@@ -40,3 +40,5 @@ CREATE TABLE facilities (
 );
 
 CREATE INDEX i_facility_name ON facilities(name);
+
+CREATE UNIQUE INDEX uc_facilities_lower_code ON facilities(LOWER(code));

@@ -27,15 +27,13 @@ import org.openlmis.core.repository.mapper.RequisitionGroupProgramScheduleMapper
 import org.openlmis.db.categories.UnitTests;
 import org.springframework.dao.DuplicateKeyException;
 
-import java.util.Arrays;
-
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
 public class RequisitionGroupProgramScheduleRepositoryTest {
@@ -59,7 +57,6 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
   private Facility dropOffFacility;
 
 
-
   @Before
   public void setUp() throws Exception {
     initMocks(this);
@@ -76,8 +73,8 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
   @Test
   public void shouldGiveErrorIfRequisitionGroupCodeDoesNotExist() throws Exception {
     when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(null);
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Requisition Group Code Does Not Exist");
+
+    expectedEx.expect(dataExceptionMatcher("error.requisition.group.not.exists"));
     repository.insert(requisitionGroupProgramSchedule);
 
     verify(requisitionGroupMapper).getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode());
@@ -85,7 +82,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
   }
 
   @Test
-  public void shouldGiveErrorIfProgramIsOfTypePushWhileInsert(){
+  public void shouldGiveErrorIfProgramIsOfTypePushWhileInsert() {
     Program program = new Program();
     program.setPush(true);
     Long programId = 1L;
@@ -98,15 +95,14 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     when(programRepository.getById(programId)).thenReturn(program);
     when(facilityMapper.getIdForCode(dropOffFacility.getCode())).thenReturn(facilityId);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Program type not supported for requisitions");
+    expectedEx.expect(dataExceptionMatcher("error.program.type.not.supported.requisitions"));
 
     repository.insert(requisitionGroupProgramSchedule);
   }
 
 
   @Test
-  public void shouldGiveErrorIfProgramIsOfTypePushWhileUpdate(){
+  public void shouldGiveErrorIfProgramIsOfTypePushWhileUpdate() {
     Program program = new Program();
     program.setPush(true);
     Long programId = 1L;
@@ -119,11 +115,11 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     when(programRepository.getById(programId)).thenReturn(program);
     when(facilityMapper.getIdForCode(dropOffFacility.getCode())).thenReturn(facilityId);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Program type not supported for requisitions");
+    expectedEx.expect(dataExceptionMatcher("error.program.type.not.supported.requisitions"));
 
     repository.update(requisitionGroupProgramSchedule);
   }
+
   @Test
   public void shouldGiveErrorIfProgramCodeDoesNotExist() throws Exception {
     when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1L);
@@ -139,8 +135,8 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1L);
     when(programRepository.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1L);
     when(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getProcessingSchedule().getCode())).thenReturn(null);
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Schedule Code Does Not Exist");
+
+    expectedEx.expect(dataExceptionMatcher("error.schedule.not.exists"));
 
     repository.insert(requisitionGroupProgramSchedule);
   }
@@ -154,8 +150,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     when(programRepository.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(programId);
     when(programRepository.getById(programId)).thenReturn(program);
     requisitionGroupProgramSchedule.setDirectDelivery(true);
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Duplicate Requisition Group Code And Program Code Combination found");
+    expectedEx.expect(dataExceptionMatcher("error.duplicate.requisition.group.program.combination"));
     repository.insert(requisitionGroupProgramSchedule);
   }
 
@@ -193,8 +188,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
   public void shouldGiveErrorWhenDropOffFacilityIsProvidedAndDirectDeliveryIsTrue() {
     requisitionGroupProgramSchedule.setDirectDelivery(true);
     requisitionGroupProgramSchedule.setDropOffFacility(dropOffFacility);
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Incorrect combination of Direct Delivery and Drop off Facility");
+    expectedEx.expect(dataExceptionMatcher("error.direct.delivery.drop.off.facility.combination.incorrect"));
     repository.insert(requisitionGroupProgramSchedule);
   }
 
@@ -203,7 +197,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     requisitionGroupProgramSchedule.setDirectDelivery(false);
 
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Drop off facility code not defined");
+    expectedEx.expect(dataExceptionMatcher("error.drop.off.facility.not.defined"));
     repository.insert(requisitionGroupProgramSchedule);
   }
 
@@ -217,8 +211,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
 
     requisitionGroupProgramSchedule.setDirectDelivery(false);
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Drop off facility code is not present");
+    expectedEx.expect(dataExceptionMatcher("error.drop.off.facility.not.present"));
     repository.insert(requisitionGroupProgramSchedule);
   }
 

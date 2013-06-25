@@ -70,7 +70,7 @@ public class ViewRequisition extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus(AUTHORIZED);
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.clickRnRList();
-
+    viewRequisitionPage.verifyTotalFieldPostAuthorize();
     HomePage homePageAuthorized = viewRequisitionPage.verifyFieldsPreApproval("12.50", "1");
     ViewRequisitionPage viewRequisitionPageAuthorized = homePageAuthorized.navigateViewRequisition();
     viewRequisitionPageAuthorized.enterViewSearchCriteria();
@@ -89,6 +89,7 @@ public class ViewRequisition extends TestCaseHelper {
     approvePageTopSNUser.verifyAndClickRequisitionPresentForApproval();
     approvePageTopSNUser.editApproveQuantityAndVerifyTotalCostViewRequisition("20");
     approvePageTopSNUser.addComments("Dummy Comments");
+    approvePageTopSNUser.verifyTotalFieldPostAuthorize();
     approvePageTopSNUser.approveRequisition();
     approvePageTopSNUser.clickOk();
     approvePageTopSNUser.verifyNoRequisitionPendingMessage();
@@ -97,6 +98,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageApproved.clickSearch();
     viewRequisitionPageApproved.verifyStatus(APPROVED);
     viewRequisitionPageApproved.clickRnRList();
+    viewRequisitionPageApproved.verifyTotalFieldPostAuthorize();
     viewRequisitionPageApproved.verifyComment("Dummy Comments", userSIC, 1);
     viewRequisitionPageApproved.verifyCommentBoxNotPresent();
 
@@ -110,6 +112,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageOrdered.clickSearch();
     viewRequisitionPageOrdered.verifyStatus(RELEASED);
     viewRequisitionPageOrdered.clickRnRList();
+    viewRequisitionPageOrdered.verifyTotalFieldPostAuthorize();
     viewRequisitionPageOrdered.verifyFieldsPostApproval("25.00", "1");
     viewRequisitionPageOrdered.verifyApprovedQuantityFieldPresent();
   }

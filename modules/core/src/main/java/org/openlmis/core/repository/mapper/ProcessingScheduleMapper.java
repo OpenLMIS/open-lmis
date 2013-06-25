@@ -37,4 +37,7 @@ public interface ProcessingScheduleMapper {
 
   @Select("SELECT * FROM processing_schedules WHERE id = #{id}")
   ProcessingSchedule get(Long id);
+
+  @Select("SELECT * FROM processing_schedules WHERE code = #{code}")
+  ProcessingSchedule getByCode(String code);
 }

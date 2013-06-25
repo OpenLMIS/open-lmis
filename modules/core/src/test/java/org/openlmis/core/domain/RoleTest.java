@@ -6,60 +6,53 @@
 
 package org.openlmis.core.domain;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.HashSet;
 
-import static java.lang.Boolean.*;
+import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
 public class RoleTest {
 
-    Role role;
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
 
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
+  @Test
+  public void shouldGiveErrorIfRoleDoesNotHaveAnyRights() throws Exception {
+    Role role = new Role("role test", FALSE, "description");
 
-    @Before
-    public void setUp() throws Exception {
-        role = new Role("role test", FALSE, " description");
-    }
+    expectedEx.expect(dataExceptionMatcher("error.role.without.rights"));
 
-    @Test
-    public void shouldGiveErrorIfRoleDoesNotHaveAnyRights() throws Exception {
-        expectedEx.expect(DataException.class);
-        expectedEx.expectMessage("Role can not be created without any rights assigned to it.");
-        role.validate();
-    }
+    role.validate();
+  }
 
-    @Test
-    public void shouldGiveErrorIfRoleHasEmptyRightsList() {
-        role.setRights(new HashSet<Right>());
-        expectedEx.expect(DataException.class);
-        expectedEx.expectMessage("Role can not be created without any rights assigned to it.");
-        role.validate();
-    }
+  @Test
+  public void shouldGiveErrorIfRoleHasEmptyRightsList() {
+    Role role = new Role("role test", FALSE, "description", new HashSet<Right>());
+
+    expectedEx.expect(dataExceptionMatcher("error.role.without.rights"));
+
+    role.validate();
+  }
 
 
-    @Test
-    public void shouldGiveErrorIfRoleDoesNotHaveAnyName() throws Exception {
-        Role role = new Role("", FALSE, " description");
-        role.setRights(new HashSet<>(asList(CREATE_REQUISITION)));
-        expectedEx.expect(DataException.class);
-        expectedEx.expectMessage("Role can not be created without name.");
-        role.validate();
+  @Test
+  public void shouldGiveErrorIfRoleDoesNotHaveAnyName() throws Exception {
+    Role role = new Role("", FALSE, "description", new HashSet<>(asList(CREATE_REQUISITION)));
 
-        role.setName(null);
-        expectedEx.expect(DataException.class);
-        expectedEx.expectMessage("Role can not be created without name.");
-        role.validate();
-    }
+    expectedEx.expect(dataExceptionMatcher("error.role.without.name"));
+    role.validate();
+
+    role.setName(null);
+    expectedEx.expect(dataExceptionMatcher("error.role.without.name"));
+    role.validate();
+  }
 }

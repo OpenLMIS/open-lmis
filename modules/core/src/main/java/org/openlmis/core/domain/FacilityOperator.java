@@ -15,5 +15,4 @@ public class FacilityOperator extends BaseModel{
     private String code;
     private String text;
     private Integer displayOrder;
-
 }

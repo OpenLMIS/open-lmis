@@ -16,5 +16,4 @@ import lombok.NoArgsConstructor;
 public class ProductForm extends BaseModel {
   private String code;
   private int displayOrder;
-
 }

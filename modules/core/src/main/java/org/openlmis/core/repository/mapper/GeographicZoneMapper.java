@@ -16,8 +16,8 @@ import java.util.List;
 @Repository
 public interface GeographicZoneMapper {
 
-  @Insert("INSERT INTO geographic_zones (code, name, levelId, parent, catchmentPopulation, longitude, latitude, modifiedBy, modifiedDate) " +
-    "VALUES (#{code}, #{name}, #{level.id}, #{parent.id}, #{catchmentPopulation}, #{longitude}, #{latitude}, #{modifiedBy}, #{modifiedDate})")
+  @Insert("INSERT INTO geographic_zones (code, name, levelId, parent, catchmentPopulation, longitude, latitude, createdBy, modifiedBy, modifiedDate) " +
+    "VALUES (#{code}, #{name}, #{level.id}, #{parent.id}, #{catchmentPopulation}, #{longitude}, #{latitude}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
   Integer insert(GeographicZone geographicZone);
 

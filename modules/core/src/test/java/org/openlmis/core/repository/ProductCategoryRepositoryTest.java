@@ -24,7 +24,7 @@ import org.springframework.dao.DuplicateKeyException;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.repository.ProductCategoryRepository.DUPLICATE_CATEGORY_NAME;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -48,7 +48,7 @@ public class ProductCategoryRepositoryTest {
     ProductCategory productCategory = new ProductCategory();
     doThrow(new DuplicateKeyException("some exception")).when(productCategoryMapper).insert(productCategory);
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(DUPLICATE_CATEGORY_NAME);
+    expectedException.expectMessage("product.category.name.duplicate");
 
     productCategoryRepository.insert(productCategory);
 
@@ -59,8 +59,8 @@ public class ProductCategoryRepositoryTest {
   public void shouldThrowExceptionIfDataLengthIsIncorrectWhileInsertingProductCategory() {
     ProductCategory productCategory = new ProductCategory();
     doThrow(new DataIntegrityViolationException("some error")).when(productCategoryMapper).insert(productCategory);
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("Incorrect data length");
+
+    expectedException.expect(dataExceptionMatcher("error.incorrect.length"));
 
     productCategoryRepository.insert(productCategory);
   }
@@ -69,8 +69,8 @@ public class ProductCategoryRepositoryTest {
   public void shouldThrowExceptionIfMissingCategoryNameWhileInsertingProductCategory() {
     ProductCategory productCategory = new ProductCategory();
     doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(productCategoryMapper).insert(productCategory);
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("Missing/Invalid Reference data");
+
+    expectedException.expect(dataExceptionMatcher("error.reference.data.missing"));
 
     productCategoryRepository.insert(productCategory);
   }
@@ -84,7 +84,7 @@ public class ProductCategoryRepositoryTest {
   }
 
   @Test
-  public void shouldGetCategoryIdByCode(){
+  public void shouldGetCategoryIdByCode() {
     String categoryCode = "category code";
     Long categoryId = 1L;
     when(productCategoryMapper.getProductCategoryIdByCode(categoryCode)).thenReturn(categoryId);

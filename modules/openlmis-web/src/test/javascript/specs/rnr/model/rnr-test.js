@@ -79,7 +79,7 @@ describe('R&R test', function () {
 
     expect(rnr.fullSupplyLineItems[0].validateRequiredFieldsForFullSupply.calls.length).toEqual(1);
     expect(rnr.fullSupplyLineItems[1].validateRequiredFieldsForFullSupply.calls.length).toEqual(0);
-    expect(errorMessage).toEqual('rnr.validation.error');
+    expect(errorMessage).toEqual('error.rnr.validation');
   });
 
   it('should validate R&R full supply line items and return true if required field is not missing', function () {
@@ -124,7 +124,7 @@ describe('R&R test', function () {
     expect(rnr.fullSupplyLineItems[0].formulaValid.calls.length).toEqual(1);
     expect(rnr.fullSupplyLineItems[1].validateRequiredFieldsForFullSupply.calls.length).toEqual(0);
     expect(rnr.fullSupplyLineItems[1].formulaValid.calls.length).toEqual(0);
-    expect(errorMessage).toEqual('rnr.validation.error');
+    expect(errorMessage).toEqual('error.rnr.validation');
   });
 
   it('should validate R&R full supply line items and return true if required field is not missing and arithmetically valid', function () {
@@ -189,7 +189,7 @@ describe('R&R test', function () {
 
     expect(rnr.nonFullSupplyLineItems[0].validateRequiredFieldsForNonFullSupply.calls.length).toEqual(1);
     expect(rnr.nonFullSupplyLineItems[1].validateRequiredFieldsForNonFullSupply.calls.length).toEqual(0);
-    expect(errorMessage).toEqual('rnr.validation.error');
+    expect(errorMessage).toEqual('error.rnr.validation');
   });
 
   it('should fill normalized consumption and update cost', function () {
@@ -290,7 +290,7 @@ describe('R&R test', function () {
 
     var error = rnr.validateFullSupplyForApproval();
 
-    expect(error).toEqual('rnr.validation.error');
+    expect(error).toEqual('error.rnr.validation');
   });
 
   it('should validate rnr full supply line items for approval and return true if required fields not missing', function () {
@@ -312,7 +312,7 @@ describe('R&R test', function () {
 
     var error = rnr.validateNonFullSupplyForApproval();
 
-    expect(error).toEqual('rnr.validation.error');
+    expect(error).toEqual('error.rnr.validation');
   });
 
   it('should validate rnr full supply line items for approval and return true if required fields not missing', function () {

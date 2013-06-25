@@ -22,7 +22,6 @@ import org.openlmis.db.categories.UnitTests;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.openlmis.core.service.ProductService.INVALID_PRODUCT_CATEGORY_CODE;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -64,7 +63,7 @@ public class ProductServiceTest {
     when(categoryService.getProductCategoryIdByCode("Invalid Code")).thenReturn(null);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(INVALID_PRODUCT_CATEGORY_CODE);
+    expectedException.expectMessage("error.reference.data.invalid.product");
 
     productService.save(product);
   }

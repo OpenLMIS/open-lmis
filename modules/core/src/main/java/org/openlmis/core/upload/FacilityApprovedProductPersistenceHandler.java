@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class FacilityApprovedProductPersistenceHandler extends AbstractModelPersistenceHandler {
 
-  public static final String DUPLICATE_FACILITY_APPROVED_PRODUCT = "Duplicate facility approved product.";
   private FacilityApprovedProductService facilityApprovedProductService;
 
   @Autowired
@@ -37,6 +36,6 @@ public class FacilityApprovedProductPersistenceHandler extends AbstractModelPers
 
   @Override
   protected String getDuplicateMessageKey() {
-    return DUPLICATE_FACILITY_APPROVED_PRODUCT;
+    return "error.duplicate.facility.approved.product";
   }
 }

@@ -82,4 +82,8 @@ public class ProgramRepository {
   public List<Program> getAll() {
     return mapper.getAll();
   }
+
+  public Program getByCode(String code) {
+    return mapper.getByCode(code);
+  }
 }

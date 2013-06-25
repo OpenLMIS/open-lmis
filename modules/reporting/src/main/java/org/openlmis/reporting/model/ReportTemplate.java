@@ -30,11 +30,6 @@ import java.io.ObjectOutputStream;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class ReportTemplate extends BaseModel {
-  public static final String CREATE_REPORT_ERROR_FILE_EMPTY = "report.template.error.file.empty";
-  public static final String CREATE_REPORT_ERROR_FILE_TYPE = "report.template.error.file.type";
-  public static final String CREATE_REPORT_ERROR_FILE_MISSING = "report.template.error.file.missing";
-  public static final String CREATE_REPORT_ERROR_FILE_INVALID = "report.template.error.file.invalid";
-  public static final String CREATE_REPORT_ERROR_READING_FILE = "report.template.error.reading.file";
 
   private String name;
 
@@ -45,15 +40,14 @@ public class ReportTemplate extends BaseModel {
   public ReportTemplate(String name, MultipartFile file, Long modifiedBy) throws IOException {
     validateFile(file);
     this.name = name;
-    //this.data = file.getBytes();
     this.modifiedBy = modifiedBy;
   }
 
   private void validateFile(MultipartFile file) {
-    if (file == null) throw new DataException(CREATE_REPORT_ERROR_FILE_MISSING);
+    if (file == null) throw new DataException("report.template.error.file.missing");
     if (!file.getOriginalFilename().endsWith(".jrxml"))
-      throw new DataException(CREATE_REPORT_ERROR_FILE_TYPE);
-    if (file.isEmpty()) throw new DataException(CREATE_REPORT_ERROR_FILE_EMPTY);
+      throw new DataException("report.template.error.file.type");
+    if (file.isEmpty()) throw new DataException("report.template.error.file.empty");
     try {
       JasperReport report = JasperCompileManager.compileReport(file.getInputStream());
       ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -61,9 +55,9 @@ public class ReportTemplate extends BaseModel {
       out.writeObject(report);
       this.data = bos.toByteArray();
     } catch (JRException e) {
-      throw new DataException(CREATE_REPORT_ERROR_FILE_INVALID);
+      throw new DataException("report.template.error.file.invalid");
     } catch (IOException e) {
-      throw new DataException(CREATE_REPORT_ERROR_READING_FILE);
+      throw new DataException("report.template.error.reading.file");
     }
   }
 }

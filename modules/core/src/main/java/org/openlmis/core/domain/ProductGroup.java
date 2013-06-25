@@ -8,15 +8,15 @@ package org.openlmis.core.domain;
 
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-import java.util.Date;
-
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+@EqualsAndHashCode(callSuper = false)
 @Data
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
@@ -27,9 +27,4 @@ public class ProductGroup extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, name = "Product Group Name")
   private String name;
-
-  private Long createdBy;
-
-  private Date createdDate;
-
 }

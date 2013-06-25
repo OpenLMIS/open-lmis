@@ -13,10 +13,7 @@ import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.openlmis.core.domain.ProgramProductPrice.PROGRAM_PRODUCT_PRICE_INVALID_PRICE_PER_DOSAGE;
+import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 public class ProgramProductPriceTest {
@@ -30,15 +27,15 @@ public class ProgramProductPriceTest {
     doNothing().when(programProduct).validate();
     ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, new Money("-1"), "source");
     expectException.expect(DataException.class);
-    expectException.expectMessage(PROGRAM_PRODUCT_PRICE_INVALID_PRICE_PER_DOSAGE);
+    expectException.expectMessage("programProductPrice.invalid.price.per.dosage");
     programProductPrice.validate();
   }
 
   @Test
-    public void shouldValidateProgramProductWhenValidatingProgramProductPrice() throws Exception {
-      ProgramProduct programProduct = mock(ProgramProduct.class);
-      ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, new Money("1"), "source");
-      programProductPrice.validate();
-      verify(programProduct).validate();
+  public void shouldValidateProgramProductWhenValidatingProgramProductPrice() throws Exception {
+    ProgramProduct programProduct = mock(ProgramProduct.class);
+    ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, new Money("1"), "source");
+    programProductPrice.validate();
+    verify(programProduct).validate();
   }
 }

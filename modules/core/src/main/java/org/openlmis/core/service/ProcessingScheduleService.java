@@ -22,7 +22,6 @@ import java.util.List;
 @Service
 @NoArgsConstructor
 public class ProcessingScheduleService {
-  public static final String NO_REQUISITION_GROUP_ERROR = "no.requisition.group.error";
 
   private ProcessingScheduleRepository repository;
   private ProcessingPeriodRepository periodRepository;
@@ -57,7 +56,9 @@ public class ProcessingScheduleService {
 
   public ProcessingSchedule get(Long id) {
     ProcessingSchedule processingSchedule = repository.get(id);
-    if (processingSchedule == null) throw new DataException("Schedule not found");
+    if (processingSchedule == null) {
+      throw new DataException("error.schedule.not.found");
+    }
     return processingSchedule;
   }
 
@@ -72,13 +73,13 @@ public class ProcessingScheduleService {
   public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Long facilityId, Long programId, Date programStartDate, Long startingPeriod) {
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(new Facility(facilityId), new Program(programId));
     return periodRepository.getAllPeriodsAfterDateAndPeriod(requisitionGroupProgramSchedule.getProcessingSchedule().getId(),
-      startingPeriod, programStartDate, new Date());
+        startingPeriod, programStartDate, new Date());
   }
 
   private RequisitionGroupProgramSchedule getSchedule(Facility facility, Program program) {
     RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility);
     if (requisitionGroup == null)
-      throw new DataException(NO_REQUISITION_GROUP_ERROR);
+      throw new DataException("error.no.requisition.group");
 
     return requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(requisitionGroup.getId(), program.getId());
   }
@@ -94,5 +95,13 @@ public class ProcessingScheduleService {
   public List<ProcessingPeriod> getAllPeriodsForDateRange(Facility facility, Program program, Date startDate, Date endDate) {
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(facility, program);
     return periodRepository.getAllPeriodsForDateRange(requisitionGroupProgramSchedule.getProcessingSchedule().getId(), startDate, endDate);
+  }
+
+  public ProcessingSchedule getByCode(String code) {
+    return repository.getByCode(code);
+  }
+
+  public List<ProcessingPeriod> getAllPeriodsBefore(Long scheduleId, Date beforeDate) {
+    return periodRepository.getAllPeriodsBefore(scheduleId, beforeDate);
   }
 }

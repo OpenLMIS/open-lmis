@@ -66,7 +66,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     if ($scope.validateFormula) {
       $scope.arithmeticValidationStatusLabel = 'ON';
       $scope.arithmeticValidationToggleLabel = 'OFF';
-      $scope.arithmeticValidationMessage = messageService.get("rnr.arithmeticValidation.turnedOn")
+      $scope.arithmeticValidationMessage = messageService.get("msg.rnr.arithmeticValidation.turned.on")
     } else {
       $scope.arithmeticValidationStatusLabel = 'OFF';
       $scope.arithmeticValidationToggleLabel = 'ON';

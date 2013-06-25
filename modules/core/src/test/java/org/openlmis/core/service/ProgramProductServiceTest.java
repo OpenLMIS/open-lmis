@@ -14,10 +14,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Money;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductPrice;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramProductRepository;
 import org.openlmis.db.categories.UnitTests;
@@ -32,7 +29,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.ProgramProductBuilder.defaultProgramProduct;
-import static org.openlmis.core.repository.ProgramProductRepository.PROGRAM_PRODUCT_INVALID;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -90,7 +86,7 @@ public class ProgramProductServiceTest {
     when(programProductRepository.getByProgramAndProductCode(programProduct)).thenReturn(null);
 
     expectException.expect(DataException.class);
-    expectException.expectMessage(PROGRAM_PRODUCT_INVALID);
+    expectException.expectMessage("programProduct.product.program.invalid");
 
     programProductService.updateProgramProductPrice(programProductPrice);
   }
@@ -119,7 +115,7 @@ public class ProgramProductServiceTest {
   }
 
   @Test
-  public void shouldGetAllProductsByProgram(){
+  public void shouldGetAllProductsByProgram() {
     Program program = new Program();
     List<ProgramProduct> expectedProgramProducts = new ArrayList<>();
     when(programProductRepository.getByProgram(program)).thenReturn(expectedProgramProducts);
@@ -129,4 +125,5 @@ public class ProgramProductServiceTest {
     assertThat(programProducts, is(expectedProgramProducts));
     verify(programProductRepository).getByProgram(program);
   }
+
 }

@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShippedLineItem;
@@ -25,9 +24,9 @@ import java.util.Date;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
+
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ShipmentRepositoryTest {
@@ -60,8 +59,7 @@ public class ShipmentRepositoryTest {
     shippedLineItem.setRnrId(1L);
     doThrow(new DataIntegrityViolationException("violates foreign key constraint \"shipped_line_items_rnrid_fkey\"")).when(shipmentMapper).insertShippedLineItem(shippedLineItem);
 
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("Unknown order number");
+    expectedException.expect(dataExceptionMatcher("error.unknown.order"));
 
     shipmentRepository.insertShippedLineItem(shippedLineItem);
   }
@@ -72,8 +70,7 @@ public class ShipmentRepositoryTest {
     shippedLineItem.setProductCode("R10");
     doThrow(new DataIntegrityViolationException("violates foreign key constraint \"shipped_line_items_productcode_fkey\"")).when(shipmentMapper).insertShippedLineItem(shippedLineItem);
 
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("Unknown product code");
+    expectedException.expect(dataExceptionMatcher("error.unknown.product"));
 
     shipmentRepository.insertShippedLineItem(shippedLineItem);
   }
@@ -84,8 +81,7 @@ public class ShipmentRepositoryTest {
     shippedLineItem.setProductCode("R10");
     doThrow(new DataIntegrityViolationException("Incorrect data length")).when(shipmentMapper).insertShippedLineItem(shippedLineItem);
 
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("Invalid data length");
+    expectedException.expect(dataExceptionMatcher("error.incorrect.length"));
 
     shipmentRepository.insertShippedLineItem(shippedLineItem);
   }
