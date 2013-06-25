@@ -98,6 +98,10 @@
                                     <a href="/public/pages/admin/user/index.html"
                                        openlmis-message="link.admin.manage.users"></a>
                                 </li>
+                                <li ng-show="hasPermission('MANAGE_GEOGRAPHIC_ZONES')">
+                                    <a href="/public/pages/admin/geographic-zones/index.html"
+                                       openlmis-message="link.admin.manage.geographic-zones"></a>
+                                </li>
                                 <li class="beak"></li>
                             </ul>
                         </div>
