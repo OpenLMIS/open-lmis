@@ -27,21 +27,21 @@
           <div class="span1"></div>
           <div class="span2">
             <input name="code" id="code" type="text" ng-model="newSchedule.code" maxlength="50" ng-required="true"
-                   placeholder="Code"/>
+                   openlmis-message="placeholder.code"/>
             <span class="label-required">*</span>
             <span class="form-error"
                   ng-show="createScheduleForm.code.$error.required && showErrorForCreate" openlmis-message="missing.value"></span>
           </div>
           <div class="span2">
             <input name="name" id="name" type="text" ng-model="newSchedule.name" maxlength="50" ng-required="true"
-                   placeholder="Name"/>
+                   openlmis-message="placeholder.name"/>
             <span class="label-required">*</span>
             <span class="form-error"
                   ng-show="createScheduleForm.name.$error.required && showErrorForCreate" openlmis-message="missing.value"></span>
           </div>
           <div class="span4">
             <input name="description" id="description" type="text" ng-model="newSchedule.description"
-                   maxlength="250" placeholder="Description (optional)"/>
+                   maxlength="250" openlmis-message="placeholder.description.optional"/>
           </div>
           <div class="span2">
             &nbsp;
@@ -76,7 +76,7 @@
             <span ng-hide="schedulesBackupMap[schedule.id].edit" ng-bind="schedule.code"></span>
             <input id="code_{{$index}}" name="code" ng-show="schedulesBackupMap[schedule.id].edit" type="text"
                    ng-model="schedule.code" maxlength="50"
-                   ng-required="true" placeholder="Code"/>
+                   ng-required="true" openlmis-message="placeholder.code"/>
             <span ng-show="schedulesBackupMap[schedule.id].edit" class="label-required">*</span>
             <span class="form-error" ng-show="editScheduleForm.code.$error.required && showErrorForEdit" openlmis-message="missing.value"></span>
           </div>
@@ -85,7 +85,7 @@
             <span ng-hide="schedulesBackupMap[schedule.id].edit" ng-bind="schedule.name"></span>
             <input id="name_{{$index}}" name="name" ng-show="schedulesBackupMap[schedule.id].edit" type="text"
                    ng-model="schedule.name" maxlength="50"
-                   ng-required="true" placeholder="Name"/>
+                   ng-required="true" openlmis-message="placeholder.name"/>
             <span ng-show="schedulesBackupMap[schedule.id].edit" class="label-required">*</span>
             <span class="form-error" ng-show="editScheduleForm.name.$error.required && showErrorForEdit" openlmis-message="missing.value"></span>
           </div>
@@ -94,7 +94,7 @@
             <span ng-hide="schedulesBackupMap[schedule.id].edit" ng-bind="schedule.description"></span>
             <input id="desc_{{$index}}" name="desc" ng-show="schedulesBackupMap[schedule.id].edit" type="text"
                    ng-model="schedule.description"
-                   maxlength="250" placeholder="Description (optional)"/>
+                   maxlength="250" openlmis-message="placeholder.description.optional"/>
           </div>
 
           <div class="span2">

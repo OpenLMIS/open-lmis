@@ -21,8 +21,8 @@
             <div class="row-fluid">
                 <div class="span4 offset8 grid-filters">
                     <input id="searchRequisition" class="search-query" ng-change="filterRequisitions()" type="text"
-                           ng-model="query" placeholder="Search..."/>
-                    in
+                           ng-model="query" openlmis-message="placeholder.search"/>
+                    <span openlmis-message="label.in"></span>
                     <select ng-model="searchField" ng-change="filterRequisitions()">
                         <option value="" openlmis-message="option.value.all"></option>
                         <option value="programName" openlmis-message="option.value.program"></option>

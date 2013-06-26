@@ -223,7 +223,7 @@ services.factory('ProgramProductsISA', function ($resource) {
 });
 
 services.factory('AllocationProgramProducts', function ($resource) {
-  return $resource('/facility/:facilityId/programProduct/:programProductId.json', {isaId: '@isaId'}, {update: {method: 'PUT'}});
+  return $resource('/facility/:facilityId/programProduct/:programProductId.json', {}, {update: {method: 'PUT'}});
 });
 
 services.factory('DeliveryZones', function ($resource) {

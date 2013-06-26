@@ -14,7 +14,7 @@
     </div>
 
     <input id="searchUser" class="search-query input-xlarge" type="text" ng-model="query"
-           on-keyup="showUserSearchResults('searchUser')" placeholder="Enter user firstname, lastname or email"/>
+           on-keyup="showUserSearchResults()" openlmis-message="placeholder.user.search"/>
 
     <div class="form-tip" openlmis-message="search.threeCharacters"></div>
     <div class="facility-list" ng-show="query.length > 2">

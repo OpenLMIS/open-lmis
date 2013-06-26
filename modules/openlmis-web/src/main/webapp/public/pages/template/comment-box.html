@@ -26,7 +26,7 @@
   </ul>
   <div ng-show="updatable">
     <textarea  ng-trim="false" ng-change="validateMaxLength(comment)" rows="5" id="addComment"
-              ng-model="comment" placeholder="Type your comment here"></textarea>
+              ng-model="comment" openlmis-message="placeholder.type.comment"></textarea>
 
     <div>
       <span ng-bind="250-comment.length" class="comment-length"></span>

@@ -18,7 +18,7 @@
             <span class="field-error" ng-show="viewRequisitionForm.selectFacility.$error.required && errorShown" openlmis-message="error.select.value"></span>
       </div>
       <div class="span4">
-        <label openlmis-message="label.program"><span class="label-required"> *</span></label>
+        <label><span openlmis-message="label.program"></span><span class="label-required"> *</span></label>
         <select name="selectProgram" ng-options="program.id as program.name for program in programs"
                 ng-model="selectedProgramId">
           <option ng-bind="programLabel"></option>
@@ -67,7 +67,7 @@
   <div class="row-fluid">
     <div class="span4 offset8 grid-filters">
       <input id="searchRequisition" class="search-query" ng-change="filterRequisitions()" type="text"
-             ng-model="query" placeholder="Search by status..."/>
+             ng-model="query" openlmis-message="placeholder.search.by.status" />
     </div>
   </div>
   <div id='viewReqList' class="gridStyle" ng-grid="rnrListGrid" ng-show="requisitions.length"></div>

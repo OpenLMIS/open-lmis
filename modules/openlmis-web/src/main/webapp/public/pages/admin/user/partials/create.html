@@ -124,7 +124,7 @@
             <div class="form-field autosuggest-input">
               <div class="suggest-field">
                 <input id="searchFacility" type="text" ng-change="showFacilitySearchResults()" ng-model="query"
-                       placeholder="Enter facility code or name" ng-hide="facilitySelected"/>
+                       openlmis-message="placeholder.facility.search" ng-hide="facilitySelected"/>
 
                 <div class="facility-list" ng-show="query.length > 2">
                   <ul>
