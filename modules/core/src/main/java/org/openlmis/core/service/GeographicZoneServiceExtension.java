@@ -26,6 +26,10 @@ public class GeographicZoneServiceExtension extends GeographicZoneService {
         return repository.searchGeographicZone(geographicZoneSearchParam);
     }
 
+    public List<GeographicZone> getAll() {
+        return repository.getAllGeographicZones();
+    }
+
     public void saveNew(GeographicZone geographicZone) {
         repository.insert(geographicZone);
     }
