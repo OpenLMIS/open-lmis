@@ -18,7 +18,7 @@ import java.util.List;
 @Repository
 public interface GeographicZoneMapperExtension extends GeographicZoneMapper {
 
-    @Select(value = "SELECT * FROM users where LOWER(name) like '%'|| LOWER(#{geographicZoneSearchParam}) ||'%' OR LOWER(code) like '%'|| " +
+    @Select(value = "SELECT * FROM geographic_zones where LOWER(name) like '%'|| LOWER(#{geographicZoneSearchParam}) ||'%' OR LOWER(code) like '%'|| " +
             "LOWER(#{geographicZoneSearchParam}) ||'%' ")
     List<GeographicZone> getGeographicZoneWithSearchedName(String geographicZoneSearchParam);
 }
