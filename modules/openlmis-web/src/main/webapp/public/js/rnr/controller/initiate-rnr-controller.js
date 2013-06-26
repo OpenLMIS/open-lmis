@@ -144,7 +144,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
   };
 
 
-  $scope.$watch("error", function (errorMsg, oldErrorMsg) {
+  $scope.$watch("error", function (errorMsg) {
     setTimeout(function () {
       if (errorMsg) {
         document.getElementById('saveSuccessMsgDiv').scrollIntoView();
