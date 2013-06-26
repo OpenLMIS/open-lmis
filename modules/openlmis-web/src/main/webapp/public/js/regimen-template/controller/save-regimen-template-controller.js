@@ -14,7 +14,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
   $scope.$parent.message = "";
 
   function addRegimenByCategory(regimen) {
-    regimen.show = true;
+    regimen.editable = false;
     var regimenCategoryId = regimen.category.id;
     var regimenList = $scope.regimensByCategory[regimenCategoryId];
     if (regimenList) {
@@ -23,6 +23,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
       regimenList = [regimen];
     }
     $scope.regimensByCategory[regimenCategoryId] = regimenList;
+    $scope.error = "";
   }
 
   function filterRegimensByCategory(regimens) {
@@ -38,15 +39,40 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
       $scope.inputClass = true;
       $scope.newRegimenError = messageService.get('label.missing.values');
     } else {
+      if (checkDuplicateRegimenError($scope.newRegimen)) {
+        return;
+      }
       $scope.newRegimen.programId = $scope.program.id;
       $scope.newRegimen.displayOrder = 1;
-      $scope.newRegimen.disable = true;
+      $scope.newRegimen.editable = false;
       addRegimenByCategory($scope.newRegimen);
       $scope.newRegimenError = null;
       $scope.newRegimen = null;
       $scope.inputClass = false;
     }
   };
+
+  function checkDuplicateRegimenError(regimen) {
+    var codes = [];
+    var regimenCode = regimen.code;
+    var duplicateRegimen = false;
+    var regimenLists = _.values($scope.regimensByCategory);
+    $(regimenLists).each(function (index, regimenList) {
+      $(regimenList).each(function (index, loopRegimen) {
+        if (loopRegimen.id != regimen.id) {
+          codes.push(loopRegimen.code);
+          if (codes.length > 0 && _.contains(codes, regimenCode)) {
+            $scope.error = messageService.get('error.duplicate.regimen.code');
+            duplicateRegimen = true;
+            return ;
+          }
+          if(duplicateRegimen) return ;
+        }
+      });
+      if(duplicateRegimen) return ;
+    });
+    return duplicateRegimen;
+  }
 
   $scope.highlightRequired = function (value) {
     if ($scope.inputClass && isUndefined(value)) {
@@ -56,35 +82,55 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
   };
 
   $scope.editRow = function (regimen) {
-    regimen.show = false;
+    regimen.editable = true;
   };
 
   $scope.saveRow = function (regimen) {
+
+    if (checkDuplicateRegimenError(regimen)) {
+      return;
+    }
+
     if (!$scope.regimenEditForm.$error.required) {
-      regimen.show = true;
+      regimen.editable = false;
+      $scope.error = "";
     }
   };
 
+  function checkAllRegimensNotDone() {
+    var notDone = false;
+    var regimenLists = _.values($scope.regimensByCategory);
+    $(regimenLists).each(function (index, regimenList) {
+      $(regimenList).each(function (index, loopRegimen) {
+        if (loopRegimen.editable) {
+          $scope.error = messageService.get('error.regimens.not.done')
+          notDone = true;
+          return;
+        }
+      });
+      if (notDone) return;
+    });
+    return notDone;
+  }
+
   $scope.save = function () {
+
+    if (checkAllRegimensNotDone()) {
+      return;
+    }
+
     var regimenListToSave = [];
     var regimenLists = _.values($scope.regimensByCategory);
-    var duplicateRegimen;
 
     var codes = [];
     $(regimenLists).each(function (index, regimenList) {
       $(regimenList).each(function (index, regimen) {
-        if (codes.length > 0 && _.contains(codes, regimen.code)) {
-          $scope.error = messageService.get('error.duplicate.regimen.code');
-          duplicateRegimen = true;
-          return;
-        }
         codes.push(regimen.code);
-        regimen.show = undefined;
+        regimen.editable = undefined;
         regimen.displayOrder = index + 1;
       });
       regimenListToSave = regimenListToSave.concat(regimenList);
     });
-    if(duplicateRegimen) return;
     Regimens.post({programId: $scope.program.id}, regimenListToSave, function () {
       $scope.$parent.message = messageService.get('regimens.saved.successfully');
       $scope.program.regimenTemplateConfigured = true;
