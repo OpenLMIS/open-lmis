@@ -752,4 +752,14 @@ public class DBWrapper {
     update("update programs set regimentemplateconfigured='"+flag+"' where name='"+programName+"';");
   }
 
+  public String getAllActivePrograms() throws SQLException {
+    String programsString="";
+    ResultSet rs = query("select * from programs where active=true;");
+
+    while (rs.next()) {
+      programsString = programsString+ rs.getString("name");
+    }
+    return programsString;
+  }
+
 }
