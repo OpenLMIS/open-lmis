@@ -752,6 +752,10 @@ public class DBWrapper {
     update("update programs set regimentemplateconfigured='"+flag+"' where name='"+programName+"';");
   }
 
+  public void setRegimenTemplateConfiguredForAllPrograms(boolean flag) throws SQLException {
+    update("update programs set regimentemplateconfigured='"+flag+"';");
+  }
+
   public String getAllActivePrograms() throws SQLException {
     String programsString="";
     ResultSet rs = query("select * from programs where active=true;");

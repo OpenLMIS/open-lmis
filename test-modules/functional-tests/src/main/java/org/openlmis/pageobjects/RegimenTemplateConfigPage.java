@@ -40,7 +40,7 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='message']")
   private static WebElement saveSuccessMsgDiv;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='error']")
+  @FindBy(how = How.ID, using = "saveErrorMsgDiv")
   private static WebElement saveErrorMsgDiv;
 
   @FindBy(how = How.ID, using = "newRegimenCategory")
@@ -60,6 +60,15 @@ public class RegimenTemplateConfigPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//input[@value='Edit']")
   private static WebElement editButton;
+
+  @FindBy(how = How.XPATH, using = "//input[@value='Done']")
+  private static WebElement doneButton;
+
+  @FindBy(how = How.ID, using = "addFailMessage")
+  private static WebElement addFailMessage;
+
+
+
 
   private static String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
 
@@ -81,6 +90,10 @@ public class RegimenTemplateConfigPage extends Page {
 
   public WebElement getLogoutLink() {
     return logoutLink;
+  }
+
+  public  WebElement getAddFailMessage() {
+    return addFailMessage;
   }
 
   public WebElement getSaveButton() {
@@ -135,6 +148,27 @@ public class RegimenTemplateConfigPage extends Page {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[@id='" + program + "']/span"));
     testWebDriver.getElementByXpath("//a[@id='" + program + "']/span").click();
     testWebDriver.waitForElementToAppear(addButton);
+  }
+
+  public void clickEditProgram(String program)
+  {
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[@id='" + program + "']"));
+    testWebDriver.getElementByXpath("//a[@id='" + program + "']").click();
+    testWebDriver.waitForElementToAppear(addButton);
+  }
+
+  public void clickEditButton()
+  {
+    testWebDriver.waitForElementToAppear(editButton);
+    editButton.click();
+    testWebDriver.waitForElementToAppear(doneButton);
+  }
+
+  public void clickDoneButton()
+  {
+    testWebDriver.waitForElementToAppear(doneButton);
+    doneButton.click();
+    testWebDriver.waitForElementToAppear(editButton);
   }
 
   public void SaveRegime() {
