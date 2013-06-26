@@ -56,12 +56,13 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
     var codes = [];
     var regimenCode = regimen.code;
     var duplicateRegimen = false;
-    var regimenLists = _.values($scope.regimensByCategory);
+    var regimenLists = $scope.getRegimenValuesByCategory();
     $(regimenLists).each(function (index, regimenList) {
       $(regimenList).each(function (index, loopRegimen) {
-        if (loopRegimen.id != regimen.id) {
+        if (regimen.$$hashKey != loopRegimen.$$hashKey) {
           codes.push(loopRegimen.code);
-          if (codes.length > 0 && _.contains(codes, regimenCode)) {
+          if (codes.length > 0 && regimenCode!=undefined && _.contains(codes, regimenCode)) {
+            $scope.newRegimenError = "";
             $scope.error = messageService.get('error.duplicate.regimen.code');
             duplicateRegimen = true;
             return ;
@@ -72,6 +73,10 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
       if(duplicateRegimen) return ;
     });
     return duplicateRegimen;
+  }
+
+  $scope.getRegimenValuesByCategory=function(){
+   return _.values($scope.regimensByCategory);
   }
 
   $scope.highlightRequired = function (value) {
@@ -91,10 +96,14 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
       return;
     }
 
-    if (!$scope.regimenEditForm.$error.required) {
-      regimen.editable = false;
-      $scope.error = "";
+    if ($scope.regimenEditForm.$error.required) {
+      regimen.doneRegimenError = messageService.get('label.missing.values');
+      return;
     }
+
+    regimen.doneRegimenError = "";
+    regimen.editable = false;
+    $scope.error = "";
   };
 
   function checkAllRegimensNotDone() {
@@ -126,6 +135,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
     $(regimenLists).each(function (index, regimenList) {
       $(regimenList).each(function (index, regimen) {
         codes.push(regimen.code);
+        regimen.doneRegimenError = undefined;
         regimen.editable = undefined;
         regimen.displayOrder = index + 1;
       });
