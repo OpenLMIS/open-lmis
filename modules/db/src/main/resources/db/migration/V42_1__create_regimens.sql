@@ -6,7 +6,7 @@ CREATE TABLE regimens (
     id SERIAL PRIMARY KEY,
     programId INTEGER NOT NULl references programs(id),
     categoryId INTEGER NOT NULL references regimen_categories(id),
-    code VARCHAR(50) UNIQUE NOT NULL,
+    code VARCHAR(50) NOT NULL,
     name VARCHAR(50) NOT NULL,
     active   BOOLEAN,
     displayOrder INTEGER NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE regimens (
     modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX i_regimens_programId ON regimens(programId);
+CREATE UNIQUE INDEX i_regimens_code_programId ON regimens(code, programId);
 
 
 

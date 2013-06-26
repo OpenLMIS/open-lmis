@@ -12,7 +12,9 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
   $scope.selectProgramUrl = "/public/pages/admin/regimen-template/index.html#/select-program";
   $scope.regimensByCategory = {};
   $scope.$parent.message = "";
+
   function addRegimenByCategory(regimen) {
+    regimen.disable = true;
     var regimenCategoryId = regimen.category.id;
     var regimenList = $scope.regimensByCategory[regimenCategoryId];
     if (regimenList) {
@@ -65,13 +67,23 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
   $scope.save = function () {
     var regimenListToSave = [];
     var regimenLists = _.values($scope.regimensByCategory);
+    var duplicateRegimen;
+
+    var codes = [];
     $(regimenLists).each(function (index, regimenList) {
       $(regimenList).each(function (index, regimen) {
+        if (codes.length > 0 && _.contains(codes, regimen.code)) {
+          $scope.error = messageService.get('error.duplicate.regimen.code');
+          duplicateRegimen = true;
+          return;
+        }
+        codes.push(regimen.code);
         regimen.disable = undefined;
         regimen.displayOrder = index + 1;
       });
       regimenListToSave = regimenListToSave.concat(regimenList);
     });
+    if(duplicateRegimen) return;
     Regimens.post({programId: $scope.program.id}, regimenListToSave, function () {
       $scope.$parent.message = messageService.get('regimens.saved.successfully');
       $scope.program.regimenTemplateConfigured = true;
