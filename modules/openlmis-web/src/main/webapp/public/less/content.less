@@ -328,7 +328,7 @@ span[class^="tpl-"] {
     .row-fluid {
       padding-top: 10px;
       span {
-        padding-left: 25px;
+        padding-left: 35px;
       }
     }
   }
@@ -354,10 +354,6 @@ span[class^="tpl-"] {
       .drag-handle {
         display: block;
       }
-      input[type="text"]:disabled, [class*="span"] {
-        background-color: #f9f9f9;
-        border-color: #f9f9f9;
-      }
     }
     input[type="checkbox"] {
         margin-left: 13px;
@@ -368,27 +364,18 @@ span[class^="tpl-"] {
       height: 16px;
       cursor: move;
       display: none;
-      top: 12px;
-      left: 6px;
+      top: 33%;
+      left: 9px;
       position: absolute;
       display: none;
     }
-    [class*="span"] {
-      border-top: 0;
-      background: #white;
-      font-size: 0.9em;
-      span {
-        padding-left: 22px;
-      }
-   }
-    input[type="text"] {
-      &:disabled {
-        border-color: white;
-        background-color: white;
-        cursor: auto;
-        box-shadow: none;
+    [class*="span"]{
+      div:first-child {
+         padding-left: 7px;
+         padding-top: 4px;
       }
     }
+
   }
 }
 

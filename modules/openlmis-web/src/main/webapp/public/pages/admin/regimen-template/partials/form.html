@@ -73,8 +73,8 @@
     <div class="rnr-template-head">
       <div class="row-fluid">
         <div class="span2"><span openlmis-message="header.code"></span></div>
-        <div class="span4" openlmis-message="header.name"></div>
-        <div class="span2" openlmis-message="label.active"></div>
+        <div class="span4"><span openlmis-message="header.name"></span></div>
+        <div class="span2"><span openlmis-message="label.active"></span></div>
         <div class="span4"></div>
       </div>
     </div>
@@ -85,40 +85,40 @@
           <div ng-show="regimensByCategory[category.id].length > 0" ng-bind="category.name"></div>
         </div>
         <div ui-sortable ng-model="regimensByCategory[category.id]" id="sortable">
-          <div ng-repeat="regimen in regimensByCategory[category.id]" class="row-fluid rnr-template-columns" ng-class="{'editable-row' : !regimen.disable}">
+          <div ng-repeat="regimen in regimensByCategory[category.id]" class="row-fluid rnr-template-columns"
+               ng-class="{'editable-row' : !regimen.show}">
+            <div class="drag-handle"></div>
             <div class="span2">
-              <div class="drag-handle"></div>
-                    <span>
+              <div ng-show="regimen.show"><span ng-bind="regimen.code"></span></div>
                 <input name="regimenCode" type="text" ng-model="regimen.code" ng-required="true"
-                       ng-disabled="regimen.disable"/>
-              </span>
+                       ng-show="!regimen.show"/>
             </div>
             <div class="span4">
+              <div ng-show="regimen.show"><span ng-bind="regimen.name"></span></div>
               <input name="regimenName" type="text" ng-model="regimen.name" ng-required="true"
-                     ng-disabled="regimen.disable"/>
-
+                     ng-show="!regimen.show"/>
             </div>
             <div class="span2">
-              <input type="checkbox" ng-model="regimen.active" ng-disabled="regimen.disable"/>
+              <input type="checkbox" ng-model="regimen.active" ng-disabled="regimen.show"/>
             </div>
-            <div ng-show="regimen.disable" class="span4">
-              <input name="button" type="button" class="btn btn-primary btn-small" value="Edit"
+            <div ng-show="regimen.show" class="span3">
+              <input name="button" type="button" class="btn btn-primary btn-small pull-right" value="Edit"
                      ng-click="editRow(regimen)"/>
             </div>
-            <div ng-show="!regimen.disable" class="span4">
-              <input name="button" type="button" class="btn btn-primary btn-small" value="Done"
+            <div ng-show="!regimen.show" class="span3">
+              <input name="button" type="button" class="btn btn-primary btn-small pull-right" value="Done"
                      ng-click="saveRow(regimen)"/>
             </div>
           </div>
         </div>
       </div>
     </div>
-      <div form-toolbar class="action-buttons">
-        <div class="form-cell button-row">
-          <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
-          <a ng-href="{{selectProgramUrl}}" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
-        </div>
-        <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+    <div form-toolbar class="action-buttons">
+      <div class="form-cell button-row">
+        <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
+        <a ng-href="{{selectProgramUrl}}" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
       </div>
+      <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+    </div>
   </form>
 </div>

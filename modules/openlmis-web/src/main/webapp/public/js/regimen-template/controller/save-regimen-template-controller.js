@@ -14,7 +14,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
   $scope.$parent.message = "";
 
   function addRegimenByCategory(regimen) {
-    regimen.disable = true;
+    regimen.show = true;
     var regimenCategoryId = regimen.category.id;
     var regimenList = $scope.regimensByCategory[regimenCategoryId];
     if (regimenList) {
@@ -56,12 +56,12 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
   };
 
   $scope.editRow = function (regimen) {
-    regimen.disable = false;
+    regimen.show = false;
   };
 
   $scope.saveRow = function (regimen) {
     if (!$scope.regimenEditForm.$error.required) {
-      regimen.disable = true;
+      regimen.show = true;
     }
   };
 
@@ -79,7 +79,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
           return;
         }
         codes.push(regimen.code);
-        regimen.disable = undefined;
+        regimen.show = undefined;
         regimen.displayOrder = index + 1;
       });
       regimenListToSave = regimenListToSave.concat(regimenList);
