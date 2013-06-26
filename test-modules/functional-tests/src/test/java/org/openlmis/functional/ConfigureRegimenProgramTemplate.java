@@ -51,7 +51,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     regimenTemplateConfigPage.configureProgram(program);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, "Code1", "Name1", true);
     regimenTemplateConfigPage.SaveRegime();
-    //verifySuccessMessage(regimenTemplateConfigPage);
+    verifySuccessMessage(regimenTemplateConfigPage);
     verifyProgramConfigured(program);
   }
 
