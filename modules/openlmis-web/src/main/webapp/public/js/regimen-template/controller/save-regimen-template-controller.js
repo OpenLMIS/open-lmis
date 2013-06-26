@@ -44,6 +44,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
       addRegimenByCategory($scope.newRegimen);
       $scope.newRegimenError = null;
       $scope.newRegimen = null;
+      $scope.inputClass = false;
     }
   };
 

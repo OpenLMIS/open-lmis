@@ -85,7 +85,7 @@
           <div ng-show="regimensByCategory[category.id].length > 0" ng-bind="category.name"></div>
         </div>
         <div ui-sortable ng-model="regimensByCategory[category.id]" id="sortable">
-          <div ng-repeat="regimen in regimensByCategory[category.id]" class="row-fluid rnr-template-columns">
+          <div ng-repeat="regimen in regimensByCategory[category.id]" class="row-fluid rnr-template-columns" ng-class="{'editable-row' : !regimen.disable}">
             <div class="span2">
               <div class="drag-handle"></div>
                     <span>

@@ -342,7 +342,7 @@ span[class^="tpl-"] {
     }
   }
   .rnr-template-columns {
-    max-width: 1384px;
+    width: auto;
     border: 1px solid #EEE;
     border-top: 0;
     margin-bottom: 0px;
@@ -390,6 +390,10 @@ span[class^="tpl-"] {
       }
     }
   }
+}
+
+.editable-row {
+  background-color: #F9F9E4;
 }
 
 .rnr-tabs {
@@ -465,6 +469,8 @@ span[class^="tpl-"] {
   color: #555;
   padding: 0 0 0 1px;
 }
+
+
 
 .rnr-table {
   overflow: auto;
@@ -1016,7 +1022,7 @@ h3 {
   }
 }
 
-.required-error {
+input.required-error {
   border-color: #E9322D !important;
   &:focus {
     -webkit-box-shadow: 0 0 6px #F8B9B7;
