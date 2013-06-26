@@ -43,16 +43,16 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='error']")
   private static WebElement saveErrorMsgDiv;
 
-  @FindBy(how = How.ID, using = "new-regimen-category")
+  @FindBy(how = How.ID, using = "newRegimenCategory")
   private static WebElement newRegimenCategoryDropDown;
 
-  @FindBy(how = How.ID, using = "new-regimen-code")
+  @FindBy(how = How.ID, using = "newRegimenCode")
   private static WebElement newRegimenCodeTextBox;
 
-  @FindBy(how = How.ID, using = "new-regimen-name")
+  @FindBy(how = How.ID, using = "newRegimenName")
   private static WebElement newRegimenNameTextBox;
 
-  @FindBy(how = How.ID, using = "new-regimen-active")
+  @FindBy(how = How.ID, using = "newRegimenActive")
   private static WebElement newRegimenActiveCheckBox;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Add']")
@@ -134,7 +134,7 @@ public class RegimenTemplateConfigPage extends Page {
   public void configureProgram(String program) {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[@id='" + program + "']/span"));
     testWebDriver.getElementByXpath("//a[@id='" + program + "']/span").click();
-    testWebDriver.waitForElementToAppear(SaveButton);
+    testWebDriver.waitForElementToAppear(addButton);
   }
 
   public void SaveRegime() {
