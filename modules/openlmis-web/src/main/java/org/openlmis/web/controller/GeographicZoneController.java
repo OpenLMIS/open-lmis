@@ -96,5 +96,11 @@ public class GeographicZoneController extends BaseController {
         return OpenLmisResponse.response("geographicLevels", reportLookupService.getAllGeographicLevels());
     }
 
+    @RequestMapping(value = "/geographicZone/getList", method = GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
+    public ResponseEntity<OpenLmisResponse> getGeographicZoneList(HttpServletRequest request) {
+        return OpenLmisResponse.response("geographicZones",geographicZoneServiceExt.getAll());
+    }
+
 
 }

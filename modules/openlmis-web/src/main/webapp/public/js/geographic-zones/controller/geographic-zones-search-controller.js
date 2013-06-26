@@ -1,4 +1,4 @@
-function GeographicZonesSearchController($scope, $location, GeographicZones, navigateBackService,GetGeographicZone) {
+function GeographicZonesSearchController($scope, $location, GeographicZones, navigateBackService,GeographicZoneList,GetGeographicZone) {
   $scope.$on('$viewContentLoaded', function() {
     $scope.$apply($scope.query = navigateBackService.query);
     $scope.showGeographicZonesSearchResults('searchGeographicZone');
@@ -18,8 +18,8 @@ function GeographicZonesSearchController($scope, $location, GeographicZones, nav
         return true;
       }
       $scope.previousQuery = query;
-      GeographicZones.get({param:$scope.query.substr(0, 3)}, function (data) {
-        $scope.geographicZonesList = data.zones;
+        GeographicZoneList.get({param:$scope.query.substr(0, 3)}, function (data) {
+        $scope.geographicZonesList = data.geographicZoneList;
         filterGeographicZonesByName(query);
       }, {});
 
