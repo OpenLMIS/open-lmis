@@ -40,6 +40,8 @@ function FacilitySearchController($scope, AllFacilities, $location, navigateBack
 
   $scope.updateFilteredQueryList = function () {
 
+    if (!$scope.query) return;
+
     $scope.query = $scope.query.trim();
     var queryLength = $scope.query.length;
     if (queryLength >= 3) {

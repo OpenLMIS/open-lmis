@@ -4,8 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function CreateNonFullSupplyController($scope, $rootScope) {
-
+function CreateNonFullSupplyController($scope, messageService) {
   $scope.visibleNonFullSupplyColumns = _.filter($scope.visibleColumns, function (column) {
     return _.contains(RnrLineItem.visibleForNonFullSupplyColumns, column.name);
   });
@@ -38,7 +37,7 @@ function CreateNonFullSupplyController($scope, $rootScope) {
     });
 
     if (invalid) {
-      $scope.modalError = 'Please correct the highlighted fields before submitting';
+      $scope.modalError = 'error.correct.highlighted';
       return;
     }
     $scope.modalError = undefined;
@@ -109,11 +108,11 @@ function CreateNonFullSupplyController($scope, $rootScope) {
 
   function displayProductsAddedMessage() {
     if ($scope.addedNonFullSupplyProducts.length > 0) {
-      $rootScope.message = "Products added successfully";
+      $scope.$parent.$parent.$parent.message = "msg.product.added";
       setTimeout(function () {
         $scope.$apply(function () {
           angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
-            $rootScope.message = '';
+            $scope.$parent.$parent.$parent.message = '';
           });
         });
       }, 3000);
@@ -155,6 +154,10 @@ function CreateNonFullSupplyController($scope, $rootScope) {
   $scope.highlightRequiredFieldInModal = function (value) {
     if (isUndefined(value)) return "required-error";
     return null;
+  };
+
+  $scope.formatNoMatches = function() {
+    return messageService.get('msg.no.matches.found');
   };
 
 }

@@ -38,7 +38,7 @@ describe("User", function () {
       })
 
       $httpBackend.expectGET("/roles.json").respond(200, {"roles": roles});
-      $httpBackend.expectGET("/programs.json").respond(200, {"programs": [
+      $httpBackend.expectGET("/pull/programs.json").respond(200, {"programs": [
         {"id": 1, active: false},
         {id: 2, active: true}
       ]});

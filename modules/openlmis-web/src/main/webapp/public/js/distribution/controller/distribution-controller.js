@@ -9,7 +9,7 @@ function DistributionController($scope, deliveryZones, DeliveryZonePrograms, mes
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
   var NONE_ASSIGNED_LABEL = messageService.get('label.noneAssigned');
-  var DEFAULT_PROGRAM_MESSAGE = messageService.get('label.selectProgram');
+  var DEFAULT_PROGRAM_MESSAGE = messageService.get('label.select.program');
   var DEFAULT_PERIOD_MESSAGE = messageService.get('label.select.period');
 
   $scope.zonePlaceholder = !!$scope.deliveryZones.length ? DELIVERY_ZONE_LABEL : NONE_ASSIGNED_LABEL;

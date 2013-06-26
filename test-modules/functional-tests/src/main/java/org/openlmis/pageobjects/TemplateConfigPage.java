@@ -235,8 +235,11 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='saveErrorMsgDiv']")
   private static WebElement errorMessageDiv;
 
-  private String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
+  private static String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
 
+  private static String USER_INPUT = "User Input";
+  private static String CALCULATED = "Calculated";
+  private static String REFERENCE_DATA = "Reference Data";
 
   public TemplateConfigPage(TestWebDriver driver) {
     super(driver);
@@ -322,29 +325,35 @@ public class TemplateConfigPage extends Page {
     return new HomePage(testWebDriver);
   }
 
-  public void verifyErrorMessageDivTotalConsumedQuantity() {
+  public void verifyErrorMessageDivTotalConsumedQuantity(String totalConsumedQuantityError) {
     testWebDriver.waitForElementToAppear(totalConsumedQtyErrorMessage);
     assertTrue("Error message not displaying", totalConsumedQtyErrorMessage.isDisplayed());
+    assertTrue("Error message saying '"+totalConsumedQuantityError+"' not displaying", totalConsumedQtyErrorMessage.getText().equals(totalConsumedQuantityError));
   }
 
-  public void verifyErrorMessageDivStockOnHand() {
+  public void verifyErrorMessageDivStockOnHand(String stockOnHandError) {
     testWebDriver.waitForElementToAppear(stockOnHandQtyErrorMessage);
     assertTrue("Error message not displaying", stockOnHandQtyErrorMessage.isDisplayed());
+    assertTrue("Error message saying '"+stockOnHandError+"' not displaying", stockOnHandQtyErrorMessage.getText().equals(stockOnHandError));
   }
 
-  public void verifyErrorMessageDivRequestedQuantity() {
+  public void verifyErrorMessageDivRequestedQuantity(String requestedQuantityError) {
     testWebDriver.waitForElementToAppear(requestedQtyErrorMessage);
     assertTrue("Error message not displaying", requestedQtyErrorMessage.isDisplayed());
+    assertTrue("Error message saying '"+requestedQuantityError+"' not displaying", requestedQtyErrorMessage.getText().equals(requestedQuantityError));
   }
 
-  public void verifyErrorMessageRequestedQuantityExplanation() {
+  public void verifyErrorMessageRequestedQuantityExplanation(String requestedQuantityExplanation) {
     testWebDriver.waitForElementToAppear(requestedQtyExplanationErrorMessage);
     assertTrue("Error message not displaying", requestedQtyExplanationErrorMessage.isDisplayed());
+    assertTrue("Error message saying '"+requestedQuantityExplanation+"' not displaying", requestedQtyExplanationErrorMessage.getText().equals(requestedQuantityExplanation));
   }
 
   public void verifyErrorMessageDivFooter() {
     testWebDriver.waitForElementToAppear(errorMessageDiv);
-    assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
+      assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
+    String footerErrorMessage = "There are some errors in the form. Please resolve them.";
+    assertTrue("Error message saying '"+footerErrorMessage+"' not displaying", errorMessageDiv.getText().equalsIgnoreCase(footerErrorMessage));
   }
 
   public void verifyTurnOffOnButtonAvailable(String messageToShow) {
@@ -380,22 +389,22 @@ public class TemplateConfigPage extends Page {
     assertTrue("Success message should display", saveSuccessMsg.isDisplayed());
   }
 
-  private void verifyCAndEUserInputsAndShouldBeDisplayed(String program) throws IOException {
+  private void verifyCAndEUserInputsAndShouldBeDisplayed() throws IOException {
     testWebDriver.waitForElementToAppear(SaveButton);
     unClickTotalConsumedQuantity();
     unClickStockOnHand();
-    selectFromTotalConsumedQuantityDropDown("User Input");
-    selectFromStockOnHandDropDown("User Input");
+    selectFromTotalConsumedQuantityDropDown(USER_INPUT);
+    selectFromStockOnHandDropDown(USER_INPUT);
     clickSaveButton();
     verifyErrorMessageDivFooter();
-    verifyErrorMessageDivTotalConsumedQuantity();
-    verifyErrorMessageDivStockOnHand();
+    verifyErrorMessageDivTotalConsumedQuantity("If 'Total Consumed Quantity' is user input then it should be visible");
+    verifyErrorMessageDivStockOnHand("If 'Stock on Hand' is user input then it should be visible");
   }
 
   private void verifyArithmeticValidationOnOff() {
     clickTotalConsumedQuantity();
     clickStockOnHand();
-    selectFromTotalConsumedQuantityDropDown("User Input");
+    selectFromTotalConsumedQuantityDropDown(USER_INPUT);
     verifyTurnOffOnButtonAvailable("Option to choose to switch Arithmetic Validation ON/OFF is not available");
     clickTurnOffOnButton(turnOffButton);
 
@@ -405,23 +414,23 @@ public class TemplateConfigPage extends Page {
 
     verifyTextOffOnButton(turnOffButton, "Turn OFF", "Should show 'Turn OFF' on button");
     verifyONOffIndicatorOnScreen(OffOnIndicator, "ON");
-    selectFromStockOnHandDropDown("Calculated");
+    selectFromStockOnHandDropDown(CALCULATED);
     verifyTurnOffOnButtonNotAvailable("Option to choose to switch Arithmetic Validation ON/OFF should not be visible");
 
   }
 
   private void verifyCDerivedEMustViceVersa(String program) throws IOException {
-    selectFromTotalConsumedQuantityDropDown("Calculated");
-    selectFromStockOnHandDropDown("User Input");
+    selectFromTotalConsumedQuantityDropDown(CALCULATED);
+    selectFromStockOnHandDropDown(USER_INPUT);
     unClickStockOnHand();
     clickSaveButton();
     verifyErrorMessageDivFooter();
-    verifyErrorMessageDivTotalConsumedQuantity();
-    verifyErrorMessageDivStockOnHand();
+    verifyErrorMessageDivTotalConsumedQuantity("User needs to enter 'Stock on Hand' to calculate 'Total Consumed Quantity'");
+    verifyErrorMessageDivStockOnHand("If 'Stock on Hand' is user input then it should be visible");
 
     clickStockOnHand();
-    selectFromTotalConsumedQuantityDropDown("User Input");
-    selectFromStockOnHandDropDown("Calculated");
+    selectFromTotalConsumedQuantityDropDown(USER_INPUT);
+    selectFromStockOnHandDropDown(CALCULATED);
     HomePage homePage = clickSaveButton();
     verifySaveSuccessDiv();
     homePage.selectProgramToConfigTemplate(program);
@@ -429,12 +438,12 @@ public class TemplateConfigPage extends Page {
     clickSaveButton();
 
     verifyErrorMessageDivFooter();
-    verifyErrorMessageDivTotalConsumedQuantity();
-    verifyErrorMessageDivStockOnHand();
+    verifyErrorMessageDivStockOnHand("User needs to enter 'Total Consumed Quantity' to calculate 'Stock on Hand'");
+    verifyErrorMessageDivTotalConsumedQuantity("If 'Total Consumed Quantity' is user input then it should be visible");
   }
 
   public void verifyArithmeticValidations(String program) throws IOException {
-    verifyCAndEUserInputsAndShouldBeDisplayed(program);
+    verifyCAndEUserInputsAndShouldBeDisplayed();
     verifyArithmeticValidationOnOff();
     verifyCDerivedEMustViceVersa(program);
 
@@ -443,15 +452,16 @@ public class TemplateConfigPage extends Page {
   private void prepareDataForBusinessRuleCE()throws IOException {
     clickTotalConsumedQuantity();
     clickStockOnHand();
-    selectFromTotalConsumedQuantityDropDown("Calculated");
-    selectFromStockOnHandDropDown("Calculated");
+    selectFromTotalConsumedQuantityDropDown(CALCULATED);
+    selectFromStockOnHandDropDown(CALCULATED);
     clickSaveButton();
 
   }
 
   private void verifyBusinessRuleCE() {
-    verifyErrorMessageDivStockOnHand();
-    verifyErrorMessageDivTotalConsumedQuantity();
+    String independentFieldsCalculatedError = "Interdependent fields ('Total Consumed Quantity', 'Stock on Hand') cannot be of type Calculated at the same time";
+    verifyErrorMessageDivStockOnHand(independentFieldsCalculatedError);
+    verifyErrorMessageDivTotalConsumedQuantity(independentFieldsCalculatedError);
     verifyErrorMessageDivFooter();
   }
 
@@ -468,12 +478,12 @@ public class TemplateConfigPage extends Page {
   }
 
   private void verifyBusinessRuleJW() {
-    verifyErrorMessageDivRequestedQuantity();
+    verifyErrorMessageDivRequestedQuantity("If 'Requested Quantity' is displayed, then 'Requested Quantity Explanation' must also be displayed");
     verifyErrorMessageDivFooter();
   }
 
   private void verifyBusinessRuleWJ() {
-    verifyErrorMessageRequestedQuantityExplanation();
+    verifyErrorMessageRequestedQuantityExplanation("If 'Requested Quantity Explanation' is displayed, then 'Requested Quantity' must also be displayed");
     verifyErrorMessageDivFooter();
   }
 
@@ -515,29 +525,30 @@ public class TemplateConfigPage extends Page {
   }
 
   public void verifyColumnSource() {
+
     testWebDriver.waitForElementToAppear(SaveButton);
-    assertEquals(productCodeSource.getText().trim(), "Reference Data");
-    assertEquals(productNameSource.getText().trim(), "Reference Data");
-    assertEquals(unitOfIssueSource.getText().trim(), "Reference Data");
-    assertEquals(beginningBalanceSource.getText().trim(), "User Input");
-    assertEquals(totalReceivedQuantitySource.getText().trim(), "User Input");
-    assertEquals(totalConsumedQuantitySource.getText().trim(), "User Input");
-    assertEquals(lossesAndAdjSource.getText().trim(), "User Input");
-    assertEquals(stockOnHandSource.getText().trim(), "User Input");
-    assertEquals(newPatientsSource.getText().trim(), "User Input");
-    assertEquals(stockOutDaysSource.getText().trim(), "User Input");
-    assertEquals(adjustedTotalConsumptionSource.getText().trim(), "Calculated");
-    assertEquals(maxStockQuantitySource.getText().trim(), "Calculated");
-    assertEquals(calculatedOrderQuantitySource.getText().trim(), "Calculated");
-    assertEquals(requestedQuantitySource.getText().trim(), "User Input");
-    assertEquals(requestedQuantityExplanationSource.getText().trim(), "User Input");
-    assertEquals(packsToShipSource.getText().trim(), "Calculated");
-    assertEquals(pricePerPackSource.getText().trim(), "Reference Data");
-    assertEquals(totalCostSource.getText().trim(), "Calculated");
-    assertEquals(remarksSource.getText().trim(), "User Input");
-    assertEquals(approvedQuantitySource.getText().trim(), "User Input");
-    assertEquals(expirationDateSource.getText().trim(), "User Input");
-    assertEquals(totalSource.getText().trim(), "Calculated");
+    assertEquals(productCodeSource.getText().trim(), REFERENCE_DATA);
+    assertEquals(productNameSource.getText().trim(), REFERENCE_DATA);
+    assertEquals(unitOfIssueSource.getText().trim(), REFERENCE_DATA);
+    assertEquals(beginningBalanceSource.getText().trim(), USER_INPUT);
+    assertEquals(totalReceivedQuantitySource.getText().trim(), USER_INPUT);
+    assertEquals(totalConsumedQuantitySource.getText().trim(), USER_INPUT);
+    assertEquals(lossesAndAdjSource.getText().trim(), USER_INPUT);
+    assertEquals(stockOnHandSource.getText().trim(), USER_INPUT);
+    assertEquals(newPatientsSource.getText().trim(), USER_INPUT);
+    assertEquals(stockOutDaysSource.getText().trim(), USER_INPUT);
+    assertEquals(adjustedTotalConsumptionSource.getText().trim(), CALCULATED);
+    assertEquals(maxStockQuantitySource.getText().trim(), CALCULATED);
+    assertEquals(calculatedOrderQuantitySource.getText().trim(), CALCULATED);
+    assertEquals(requestedQuantitySource.getText().trim(), USER_INPUT);
+    assertEquals(requestedQuantityExplanationSource.getText().trim(), USER_INPUT);
+    assertEquals(packsToShipSource.getText().trim(), CALCULATED);
+    assertEquals(pricePerPackSource.getText().trim(), REFERENCE_DATA);
+    assertEquals(totalCostSource.getText().trim(), CALCULATED);
+    assertEquals(remarksSource.getText().trim(), USER_INPUT);
+    assertEquals(approvedQuantitySource.getText().trim(), USER_INPUT);
+    assertEquals(expirationDateSource.getText().trim(), USER_INPUT);
+    assertEquals(totalSource.getText().trim(), CALCULATED);
 
   }
 
@@ -547,31 +558,24 @@ public class TemplateConfigPage extends Page {
   }
 
   public void verifyMandatoryColumns() {
-    //verifyMandatoryColumnsEditable(productCodeCheckBox);
     verifyMandatoryColumnsEditable(productNameCheckBox);
   }
 
   public void configureTemplate() {
-    String message = null;
-
     testWebDriver.waitForElementToAppear(SaveButton);
-    verifySourceForTotalConsumedQuantity("User Input");
-    verifySourceForStockOnHand("User Input");
-    testWebDriver.selectByVisibleText(stockInHandDropDown, "Calculated");
+    verifySourceForTotalConsumedQuantity(USER_INPUT);
+    verifySourceForStockOnHand(USER_INPUT);
+    testWebDriver.selectByVisibleText(stockInHandDropDown, CALCULATED);
     testWebDriver.sleep(1500);
     SaveButton.click();
-
     testWebDriver.sleep(2000);
-
     verifySuccessDiv();
-
   }
 
   public void alterBeginningBalanceLabel(String columnHeadingToBeAltered) throws IOException {
     testWebDriver.waitForElementToAppear(SaveButton);
     beginningBalance.clear();
     beginningBalance.sendKeys(columnHeadingToBeAltered);
-    unClickCheckBox(productCodeCheckBox);
     clickSaveButton();
     verifySuccessDiv();
   }
@@ -581,7 +585,9 @@ public class TemplateConfigPage extends Page {
 
 
   private void verifySuccessDiv() {
-    assertTrue("Save success message not showing up", saveSuccessMsg.isDisplayed());
+    String saveSuccessfullyMessage = "Template saved successfully!";
+    assertTrue("'"+saveSuccessfullyMessage+"' div not showing up", saveSuccessMsg.isDisplayed());
+    assertTrue("'"+saveSuccessfullyMessage+"' not showing up", saveSuccessMsg.getText().equals(saveSuccessfullyMessage));
   }
 
     public void clickCheckBox(WebElement chkBox) {

@@ -126,7 +126,7 @@ public class UserServiceTest {
     mockStatic(Encoder.class);
     when(Encoder.hash(anyString())).thenReturn("token");
 
-    when(messageService.message("passwordreset.email.body", new String[]{FORGET_PASSWORD_LINK + "token"}))
+    when(messageService.message("passwordreset.email.body", new Object[]{FORGET_PASSWORD_LINK + "token"}))
         .thenReturn("email body");
 
     userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);

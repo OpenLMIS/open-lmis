@@ -19,19 +19,19 @@
     <li class="comment" ng-repeat="comment in rnrComments">
       <span ng-bind="comment.commentText"></span>
 
-      <div class="comment-info"><span openlmis-message="label.by" ></span> By: <span ng-bind="comment.author.userName"></span> | <span class="comment-date"
+      <div class="comment-info"><span openlmis-message="label.by" ></span> <span ng-bind="comment.author.userName"></span> | <span class="comment-date"
                                                                                              ng-bind="comment.createdDate | date:'HH:mm:ss  dd/MM/yyyy'"></span>
       </div>
     </li>
   </ul>
   <div ng-show="updatable">
     <textarea  ng-trim="false" ng-change="validateMaxLength(comment)" rows="5" id="addComment"
-              ng-model="comment" placeholder="Type your comment here"></textarea>
+              ng-model="comment" openlmis-message="placeholder.type.comment"></textarea>
 
     <div>
       <span ng-bind="250-comment.length" class="comment-length"></span>
       <span ng-show="error" openlmis-message="error"></span>
-      <input id="addButton" type="button" value="Add" ng-click="addComments()" ng-disabled="!comment.length"
+      <input id="addButton" type="button" openlmis-message="button.add" ng-click="addComments()" ng-disabled="!comment.length"
              class="btn btn-primary pull-right"/>
     </div>
 

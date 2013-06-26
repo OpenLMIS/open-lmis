@@ -1,4 +1,4 @@
-directives.directive('modal', function() {
+app.directive('modal', function() {
   return {
     restrict: 'EA',
     link: function(scope, elm, attrs) {

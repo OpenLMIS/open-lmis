@@ -12,10 +12,20 @@
                 <include name="smoke"/>
             </run>
         </groups>
-        <classes>
-            <class name="org.openlmis.functional.E2EInitiateRnR">
-            </class>
-        </classes>
+      <classes>
+        <class name="org.openlmis.functional.E2EInitiateRnR">
+        </class>
+        <class name="org.openlmis.functional.ConfigureRegimenProgramTemplate">
+        </class>
+        <class name="org.openlmis.functional.ManageDistribution">
+        </class>
+        <class name="org.openlmis.functional.ManageISA">
+        </class>
+        <class name="org.openlmis.functional.ManageProgramProductISA">
+        </class>
+        <class name="org.openlmis.functional.ForgotPassword">
+        </class>
+      </classes>
     </test>
 </suite>
 

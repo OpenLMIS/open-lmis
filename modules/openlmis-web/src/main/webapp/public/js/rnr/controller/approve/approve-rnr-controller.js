@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $location, currency, $routeParams, $dialog, $rootScope) {
+function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $location, currency, $routeParams, $dialog, $rootScope, messageService) {
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
   $scope.currency = currency;
@@ -44,6 +44,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
 
   function updateShownErrorPages() {
     $scope.shownErrorPages = $scope.showNonFullSupply ? $scope.errorPages.nonFullSupply : $scope.errorPages.fullSupply;
+    $scope.errorPagesCount = !isUndefined($scope.shownErrorPages) ? $scope.shownErrorPages.length : null;
   }
 
   function fillPageData() {
@@ -152,10 +153,10 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   showConfirmModal = function () {
     var options = {
       id:"confirmDialog",
-      header:"Confirm Action",
-      body:"Are you sure? Please confirm."
+      header:messageService.get("label.confirm.action"),
+      body:messageService.get("msg.question.confirmation")
     };
-    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog);
+    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog, messageService);
   };
 
   $scope.approveRnr = function () {

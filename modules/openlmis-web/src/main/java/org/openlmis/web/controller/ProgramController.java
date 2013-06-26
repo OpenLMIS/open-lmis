@@ -69,7 +69,7 @@ public class ProgramController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/programs", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/pull/programs", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USERS, CONFIGURE_RNR')")
   public ResponseEntity<OpenLmisResponse> getAllPullPrograms() {
     return OpenLmisResponse.response(PROGRAMS, programService.getAllPullPrograms());
@@ -80,9 +80,17 @@ public class ProgramController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getAllPushPrograms() {
     return OpenLmisResponse.response(PROGRAMS, programService.getAllPushPrograms());
   }
+
   @RequestMapping(value = "programs/{id}", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_RNR')")
   public ResponseEntity<OpenLmisResponse> get(@PathVariable Long id) {
     return OpenLmisResponse.response(PROGRAM, programService.getById(id));
   }
+
+  @RequestMapping(value = "/programs", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_REGIMEN_TEMPLATE')")
+  public ResponseEntity<OpenLmisResponse> getAllPrograms() {
+    return OpenLmisResponse.response(PROGRAMS, programService.getAll());
+  }
+
 }

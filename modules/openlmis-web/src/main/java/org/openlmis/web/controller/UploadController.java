@@ -82,7 +82,7 @@ public class UploadController extends BaseController {
     } catch (DataException dataException) {
       return errorResponse(dataException.getOpenLmisMessage());
     } catch (UploadException e) {
-      return errorResponse(new OpenLmisMessage(e.getCode(), e.getParams()));
+      return errorResponse(new OpenLmisMessage(messageService.message(e.getCode(), e.getParams())));
     } catch (IOException e) {
       return errorResponse(new OpenLmisMessage(e.getMessage()));
     }

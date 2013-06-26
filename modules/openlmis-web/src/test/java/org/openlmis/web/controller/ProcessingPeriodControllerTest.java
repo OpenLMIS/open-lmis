@@ -11,13 +11,18 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -33,31 +38,31 @@ import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
 public class ProcessingPeriodControllerTest {
 
   @Rule
   public ExpectedException exException = none();
 
-  private ProcessingPeriodController controller;
-
   @Mock
   private ProcessingScheduleService service;
+  @Mock
+  private MessageService messageService;
+
+  @InjectMocks
+  private ProcessingPeriodController controller;
+
+  private MockHttpServletRequest request = new MockHttpServletRequest();
+
   private final Long SCHEDULE_ID = 123L;
   private final Long USER_ID = 5L;
-  private MockHttpServletRequest request;
   private final Long PROCESSING_PERIOD_ID = 1L;
-  private final Long FACILITY_ID = 1L;
-  private final Long PROGRAM_ID = 2L;
 
   @Before
   public void setUp() throws Exception {
-    initMocks(this);
-    controller = new ProcessingPeriodController(service);
-
-    request = new MockHttpServletRequest();
     MockHttpSession session = new MockHttpSession();
-    session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, USER_ID);
     request.setSession(session);
+    session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, USER_ID);
   }
 
   @Test
@@ -76,6 +81,7 @@ public class ProcessingPeriodControllerTest {
   public void shouldSaveAPeriodForGivenSchedule() throws Exception {
     ProcessingPeriod processingPeriod = new ProcessingPeriod();
 
+    when(messageService.message("message.period.added.success")).thenReturn("Period added successfully");
     ResponseEntity<OpenLmisResponse> responseEntity = controller.save(SCHEDULE_ID, processingPeriod, request);
 
     verify(service).savePeriod(processingPeriod);
@@ -111,6 +117,7 @@ public class ProcessingPeriodControllerTest {
 
   @Test
   public void shouldDeletePeriodIfStartDateGreaterThanCurrentDate() {
+    when(messageService.message("message.period.deleted.success")).thenReturn("Period deleted successfully");
     ResponseEntity<OpenLmisResponse> responseEntity = controller.delete(PROCESSING_PERIOD_ID);
 
     verify(service).deletePeriod(PROCESSING_PERIOD_ID);

@@ -279,7 +279,8 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public void verifyTemplateNotConfiguredMessage() {
     testWebDriver.waitForElementToAppear(configureTemplateErrorDiv);
-    assertTrue("Please contact admin to define R&R template for this program should show up", configureTemplateErrorDiv.isDisplayed());
+    assertTrue("'Please contact admin to define R&R template for this program' div should show up", configureTemplateErrorDiv.isDisplayed());
+    assertTrue("Please contact admin to define R&R template for this program should show up", configureTemplateErrorDiv.getText().equals("Please contact admin to define R&R template for this program"));
 
   }
 
@@ -324,7 +325,6 @@ public class InitiateRnRPage extends RequisitionPage {
 
 
   }
-
 
 
   public void calculateAndVerifyStockOnHand(Integer A, Integer B, Integer C, Integer D) {
@@ -459,7 +459,6 @@ public class InitiateRnRPage extends RequisitionPage {
     assertEquals(totalCostFooter.getText().trim().substring(1), new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
     testWebDriver.sleep(500);
   }
-
 
 
   public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue, String productPrimaryName, String productCode, String category, String baseurl, String dburl) throws IOException, SQLException {

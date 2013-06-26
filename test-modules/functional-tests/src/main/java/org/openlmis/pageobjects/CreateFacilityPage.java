@@ -7,7 +7,7 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
+import org.apache.commons.lang.StringUtils;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static java.lang.String.valueOf;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
@@ -119,14 +122,14 @@ public class CreateFacilityPage extends Page {
   @FindBy(how = XPATH, using = "//a[contains(text(),'25')]")
   private static WebElement startDateCalender;
 
-  @FindBy(how = ID, using = "button_OK")
+  @FindBy(how = ID, using = "button_Ok")
   private static WebElement startDateAlert;
 
   @FindBy(how = ID, using = "supported-program-add")
   private static WebElement addSupportedProgram;
 
-  @FindBy(how = XPATH, using = "//input[@value='Save']")
-  private static WebElement SaveButton;
+  @FindBy(how = ID, using = "save-button")
+  public static WebElement SaveButton;
 
   @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']/span")
   private static WebElement saveSuccessMsgDiv;
@@ -147,6 +150,26 @@ public class CreateFacilityPage extends Page {
   @FindBy(how = XPATH, using = "//div[contains(@id,'MsgDiv')]")
   private static WebElement errorOrSuccessMessage;
 
+  @FindBy(how = XPATH, using = "(//a[contains(text(),'Modify ISA Values')])[1]")
+  private static WebElement modifyIsaValueLink;
+
+  @FindBy(how = ID, using = "override-isa-table")
+  private static WebElement overrideIsaTable;
+
+  @FindBy(how = ID, using = "override-isa0")
+  private static WebElement overrideIsaTextField;
+
+  @FindBy(how = ID, using = "calculated-isa0")
+  private static WebElement calculatedIsaTextField;
+
+  @FindBy(how = ID, using = "use-calculated-button0")
+  private static WebElement useCalculatedIsabutton;
+
+  @FindBy(how = XPATH, using = "//input[@value='Done']")
+  private static WebElement doneIsaButton;
+
+  @FindBy(how = XPATH, using = "//input[@value='Cancel']")
+  private static WebElement cancelIsaButton;
 
   public CreateFacilityPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -158,15 +181,25 @@ public class CreateFacilityPage extends Page {
   private void verifyHeader(String headingToVerify) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(facilityHeader);
-    SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), headingToVerify);
+    assertEquals(facilityHeader.getText().trim(), headingToVerify);
   }
 
-  public String enterValuesInFacility(String facilityCodePrefix, String facilityNamePrefix,
-                                      String program, String geoZone, String facilityTypeValue, String operatedByValue) {
+  public String enterValuesInFacilityAndClickSave(String facilityCodePrefix, String facilityNamePrefix,
+                                                  String program, String geoZone, String facilityTypeValue, String operatedByValue, String population) {
+    String date_time = enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityTypeValue, operatedByValue, population, false);
+
+    SaveButton.click();
+
+    return date_time;
+  }
+
+  public String enterValuesInFacility(String facilityCodePrefix, String facilityNamePrefix, String program,
+                                      String geoZone, String facilityTypeValue, String operatedByValue,
+                                      String population, boolean push) {
     String message = null;
     Date dObj = new Date();
     SimpleDateFormat formatter_date_time = new SimpleDateFormat(
-        "yyyyMMdd-hhmmss");
+      "yyyyMMdd-hhmmss");
     String date_time = formatter_date_time.format(dObj);
 
     String facilityCodeText = facilityCodePrefix + date_time;
@@ -201,17 +234,9 @@ public class CreateFacilityPage extends Page {
     goDownDateCalender.click();
 
     testWebDriver.handleScrollByPixels(0, 1000);
-    testWebDriver.selectByVisibleText(programsSupported, program);
-    programsSupportedActiveFlag.click();
-    testWebDriver.sleep(500);
-    programsSupportedStartDate.click();
-    startDateCalender.click();
-    testWebDriver.sleep(500);
-    startDateAlert.click();
-    testWebDriver.sleep(500);
-    addSupportedProgram.click();
+    addProgram(program, push);
 
-    catchmentPopulation.sendKeys("500000");
+    catchmentPopulation.sendKeys(population);
     latitude.sendKeys("-555.5555");
     longitude.sendKeys("444.4444");
     altitude.sendKeys("4545.4545");
@@ -228,10 +253,21 @@ public class CreateFacilityPage extends Page {
     hasElectronicDar.click();
     facilitySuppliesOthers.click();
     comments.sendKeys("Comments");
-
-    SaveButton.click();
-
     return date_time;
+  }
+
+  private void addProgram(String program, boolean push) {
+    testWebDriver.selectByVisibleText(programsSupported, program);
+    if (!push) {
+      programsSupportedActiveFlag.click();
+      testWebDriver.sleep(500);
+      programsSupportedStartDate.click();
+      startDateCalender.click();
+      testWebDriver.sleep(500);
+      startDateAlert.click();
+      testWebDriver.sleep(500);
+    }
+    addSupportedProgram.click();
   }
 
   public void verifyMessageOnFacilityScreen(String facilityName, String status) {
@@ -242,9 +278,59 @@ public class CreateFacilityPage extends Page {
     } else {
       message = testWebDriver.getText(saveErrorMsgDiv);
     }
-    SeleneseTestNgHelper.assertEquals(message, "Facility '" + facilityName + "' " + status + " successfully");
+    assertEquals(message, "Facility '" + facilityName + "' " + status + " successfully");
     testWebDriver.sleep(500);
   }
 
+  public void verifySuccessMessage() {
+    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+    assertTrue("Save success message should show up", saveSuccessMsgDiv.isDisplayed());
+  }
 
+
+  public void overrideIsa(int overriddenIsa) {
+    modifyIsaValueLink.click();
+    testWebDriver.waitForElementToAppear(overrideIsaTable);
+    while (!StringUtils.isEmpty(overrideIsaTable.getAttribute("value")))
+      overrideIsaTable.sendKeys("\u0008"); // "\u0008" - is backspace char
+    overrideIsaTextField.sendKeys(valueOf(overriddenIsa));
+  }
+
+  public void editPopulation(String population) {
+    testWebDriver.waitForElementToAppear(catchmentPopulation);
+    while (!StringUtils.isEmpty(catchmentPopulation.getAttribute("value")))
+      catchmentPopulation.sendKeys("\u0008"); // "\u0008" - is backspace char
+    catchmentPopulation.sendKeys(valueOf(population));
+  }
+
+  public void verifyCalculatedIsa(int calculatedIsa) {
+    assertEquals(calculatedIsaTextField.getText(), valueOf(calculatedIsa));
+  }
+
+  public void clickIsaDoneButton() {
+    testWebDriver.waitForElementToAppear(doneIsaButton);
+    doneIsaButton.click();
+  }
+
+  public void clickIsaCancelButton() {
+    testWebDriver.waitForElementToAppear(cancelIsaButton);
+    cancelIsaButton.click();
+  }
+
+  public void clickUseCalculatedIsaButton() {
+    testWebDriver.waitForElementToAppear(useCalculatedIsabutton);
+    useCalculatedIsabutton.click();
+  }
+
+
+  public void verifyOverriddenIsa(String expectedIsa) {
+    testWebDriver.handleScrollByPixels(0,1000);
+    testWebDriver.waitForElementToAppear(modifyIsaValueLink);
+    modifyIsaValueLink.click();
+    testWebDriver.waitForElementToAppear(overrideIsaTable);
+
+    assertEquals(overrideIsaTextField.getAttribute("value"), expectedIsa);
+    clickIsaDoneButton();
+    testWebDriver.sleep(1000);
+  }
 }

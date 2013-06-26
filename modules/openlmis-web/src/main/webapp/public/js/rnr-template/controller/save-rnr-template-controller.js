@@ -64,12 +64,12 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
 
   var setArithmeticValidationLabel = function () {
     if ($scope.validateFormula) {
-      $scope.arithmeticValidationStatusLabel = 'ON';
-      $scope.arithmeticValidationToggleLabel = 'OFF';
-      $scope.arithmeticValidationMessage = messageService.get("msg.rnr.arithmeticValidation.turned.on")
+      $scope.arithmeticValidationStatusLabel = messageService.get("label.on");
+      $scope.arithmeticValidationToggleLabel = messageService.get("label.off");
+      $scope.arithmeticValidationMessage = "msg.rnr.arithmeticValidation.turned.on";
     } else {
-      $scope.arithmeticValidationStatusLabel = 'OFF';
-      $scope.arithmeticValidationToggleLabel = 'ON';
+      $scope.arithmeticValidationStatusLabel =  messageService.get("label.off");
+      $scope.arithmeticValidationToggleLabel =  messageService.get("label.on");
       $scope.arithmeticValidationMessage = "";
     }
   };

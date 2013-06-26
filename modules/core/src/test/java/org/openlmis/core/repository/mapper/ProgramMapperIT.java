@@ -26,9 +26,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.lang.Boolean.FALSE;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
@@ -39,7 +37,8 @@ import static org.openlmis.core.builder.UserBuilder.facilityId;
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-public class ProgramMapperIT extends SpringIntegrationTest {
+public class
+  ProgramMapperIT extends SpringIntegrationTest {
 
   public static final String PROGRAM_CODE = "HIV";
   public static final Integer PROGRAM_ID = 1;
@@ -246,6 +245,16 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   }
 
   @Test
+  public void shouldSetRegimenTemplateConfiguredFlag() {
+    Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"), with(templateStatus, false), with(regimenTemplateConfigured, false))));
+    programMapper.setRegimenTemplateConfigured(program.getId());
+
+    Program returnedProgram = programMapper.getById(program.getId());
+
+    assertThat(returnedProgram.isRegimenTemplateConfigured(), is(true));
+  }
+
+  @Test
   public void shouldGetProgramsForAUserByFacilityAndRights() throws Exception {
     Program activeProgram = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
     Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p3"), with(programStatus, false))));
@@ -268,6 +277,15 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     List<Program> programs = programMapper.getProgramsForUserByFacilityAndRights(facility.getId(), user.getId(), rights);
     assertThat(programs.size(), is(1));
     assertTrue(programs.contains(activeProgram));
+  }
+
+
+  @Test
+  public void shouldGetAllProgramsInOrderByRegimentTemplateConfiguredAndName() {
+    insertProgram(make(a(defaultProgram, with(regimenTemplateConfigured, true))));
+    List<Program> programs = programMapper.getAllByRegimenTemplate();
+    assertThat(programs.size(), is(6));
+    assertThat(programs.get(0).getCode(), is(ProgramBuilder.PROGRAM_CODE));
   }
 
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {

@@ -29,7 +29,7 @@ services.factory('messageService', function (Messages, localStorageService, $roo
         }
       });
     }
-    return displayMessage;
+    return displayMessage || keyWithArgs[0];
   };
 
   return{

@@ -131,12 +131,16 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInvalidSupplyLinesUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadSupplyLines("QA_Supply_Lines_InvalidFacilityCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Facility code");
     uploadPage.uploadSupplyLines("QA_Supply_Lines_InvalidProgramCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid program code ");
     uploadPage.uploadSupplyLines("QA_Supply_Lines_DuplicateCombination_SN_Product_Program.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate entry for Supply Line found in Record No");
     uploadPage.uploadSupplyLines("QA_Supply_Lines_ParentNodeNotNull.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Supervising Node is not the Top node in Record No");
   }
 
   private void verifyValidRequisitionGroupMembersUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -149,14 +153,19 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInvalidRequisitionGroupMembersUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidCombination_RG_FacilityCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Requisition Group Member found in Record No");
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidFacilityCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Facility code in Record No");
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidRG.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Requisition Group does not exist in Record No");
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_FacilityCodeAssignedToRGWithOneProgramInCommon.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Facility F10 is already assigned to Requisition Group rg1 running same program ESS_MEDS in Record No");
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_Subsequent_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Requisition Group Member found in Record No");
 
   }
 
@@ -170,20 +179,28 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInvalidRequisitionGroupProgramScheduleUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_InvalidCombination_RG_ProgramCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Requisition Group Code And Program Code Combination found in Record No");
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_InvalidProgramCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid program code in Record No");
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_InvalidScheduleCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Schedule Code Does Not Exist in Record No");
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_DDTrue_DropoffFacilityNotNull.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Incorrect combination of Direct Delivery and Drop off Facility in Record No");
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_DDFalse_DropoffFacilityNull.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Drop off facility code not defined in Record No");
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_DropoffFacilityCodeNotPresent.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Incorrect combination of Direct Delivery and Drop off Facility in Record No");
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_Subsequent_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Requisition Group Code And Program Code Combination found in Record No");
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_PUSH_Program.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Program type not supported for requisitions in Record No");
 
   }
 
@@ -197,8 +214,10 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInValidRequisitionGroupUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadRequisitionGroup("QA_Requisition_Groups_DuplicateRequisitionGroup.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Requisition Group Code found in Record No");
     uploadPage.uploadRequisitionGroup("QA_Requisition_Groups_InvalidSupervisoryNode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Supervisory Node Code in Record No");
   }
 
   private void verifyValidSupervisoryNodesUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -211,10 +230,13 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInValidSupervisoryNodesUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadSupervisoryNodes("QA_Supervisory_Nodes_InvalidFacilityCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Facility code in Record No");
     uploadPage.uploadSupervisoryNodes("QA_Supervisory_Nodes_InvalidParentNode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Supervisory Node Parent does not exist in Record No");
     uploadPage.uploadSupervisoryNodes("QA_Supervisory_Nodes_DuplicateSupervisoryNode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Supervisory Node found in Record No");
   }
 
   private void verifyValidProgramSupportedByFacilitiesUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -227,8 +249,10 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInvalidProgramSupportedByFacilitiesUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadProgramSupportedByFacilitiesInvalidScenarios("QA_program_supported_Invalid_FacilityCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Facility code");
     uploadPage.uploadProgramSupportedByFacilitiesInvalidScenarios("QA_program_supported_Invalid_ProgramCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid program code ");
   }
 
   private void verifyValidFacilityTypeToProductMappingUpload(UploadPage uploadPage) throws IOException, SQLException {
@@ -241,14 +265,19 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInvalidFacilityTypeToProductMappingUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadFacilityTypeToProductMappingInvalidScenarios("QA_Facility_Type_To_Product_Mapping_Invalid_Combination.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate facility approved product. in Record No");
     uploadPage.uploadFacilityTypeToProductMappingInvalidScenarios("QA_Facility_Type_To_Product_Mapping_Invalid_FacilityType.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Facility Type in Record No");
     uploadPage.uploadFacilityTypeToProductMappingInvalidScenarios("QA_Facility_Type_To_Product_Mapping_Invalid_ProductCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid product code");
     uploadPage.uploadFacilityTypeToProductMappingInvalidScenarios("QA_Facility_Type_To_Product_Mapping_Invalid_ProgramCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid program code");
     uploadPage.uploadFacilityTypeToProductMappingInvalidScenarios("QA_Facility_Type_To_Product_Mapping_Invalid_Program_Product_Combination.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Product and Program combination");
   }
 
   private void verifyValidFacilityUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -261,8 +290,10 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInvalidFacilityUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadFacilitiesInvalidScenarios("QA_facilities_Lowest_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Geographic Zone Code must be at the lowest administrative level in your hierarchy in Record No");
     uploadPage.uploadFacilitiesInvalidScenarios("QA_facilities_Duplicate_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Facility Code in Record No");
   }
 
   private void verifyValidGeographicZoneUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -277,14 +308,19 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInvalidGeographicZoneUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Geographic Zone Code of Record No");
     uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Geographic Zone Code in Record No");
     uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Geographic Zone Parent Code in Record No");
     uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Lat.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Incorrect data length in Record No");
     uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Long.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Incorrect data length in Record No");
 
   }
 
@@ -298,10 +334,13 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInvalidProductPriceUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadProgramProductPrice("QA_Product_Price_DuplicateCombination_ProductCode_ProgramCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Program Product in Record No");
     uploadPage.uploadProgramProductPrice("QA_Product_Price_Invalid_Program_Product_Combination.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Product and Program combination");
     uploadPage.uploadProgramProductPrice("QA_Product_Price_InvalidPrice.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Price per pack in Record No");
   }
 
 
@@ -315,8 +354,10 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInvalidProgramProductMappingUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadProgramProductMappingInvalidScenarios("QA_program_product_Invalid_ProductCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid product code");
     uploadPage.uploadProgramProductMappingInvalidScenarios("QA_program_product_Invalid_ProgramCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid program code");
   }
 
 
@@ -331,21 +372,27 @@ public class E2EUpload extends TestCaseHelper {
     String tableName = "users";
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_Email.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate email address in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_EmployeeId.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate employee id in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_UserName.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate User Name in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Invalid_Supervisor.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Supervisor User Name not present in the system in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Subsequent_Duplicate_Username.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate User Name in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Subsequent_InvalidCombination.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate User Name in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
   }
 
@@ -363,9 +410,11 @@ public class E2EUpload extends TestCaseHelper {
     String tableName = "product_categories";
     uploadPage.uploadProductCategory("QA_ProductCategoryUpload_DuplicateCategoryCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Product Category in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "20");
     uploadPage.uploadProductCategory("QA_Productcategoryupload_Subsequent_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Product Category in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "20");
   }
 
@@ -373,9 +422,11 @@ public class E2EUpload extends TestCaseHelper {
     String tableName = "products";
     uploadPage.uploadProductsInvalidScenarios("QA_products_Duplicate_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Product Code in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
     uploadPage.uploadProductsInvalidScenarios("QA_Products_Invalid_ProductGroupCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid reference data Product Group in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
   }
 
@@ -392,6 +443,7 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInValidProductGroupUpload(UploadPage uploadPage) throws IOException, SQLException {
     uploadPage.uploadProductGroupsScenarios("QA_Product_Group_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Product Group Code in Record No");
   }
 
   private void verifyValidProductGroupUpload(UploadPage uploadPage) throws IOException, SQLException {
@@ -421,6 +473,7 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInValidDeliveryZonesProgramScheduleUpload(UploadPage uploadPage) throws IOException, SQLException {
     uploadPage.uploadDeliveryZoneProgramSchedule("QA_Delivery_Zone_Program_Schedule_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Delivery zone code and Program code combination found in Record No");
 
     uploadPage.uploadDeliveryZoneProgramSchedule("QA_Delivery_Zone_Program_Schedule_Pull_Program.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
@@ -436,10 +489,10 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   private void verifyValidDeliveryZonesProgramScheduleUpload(UploadPage uploadPage) throws IOException, SQLException {
-    uploadPage.uploadDeliveryZoneProgramScheduleInvalidScenarios("QA_Delivery_Zone_Program_Schedule.csv");
+    uploadPage.uploadDeliveryZoneProgramScheduleValidScenarios("QA_Delivery_Zone_Program_Schedule.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
-    uploadPage.uploadDeliveryZoneProgramScheduleInvalidScenarios("QA_Delivery_Zone_Program_Schedule_Subsequent.csv");
+    uploadPage.uploadDeliveryZoneProgramScheduleValidScenarios("QA_Delivery_Zone_Program_Schedule_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
@@ -462,10 +515,10 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   private void verifyValidDeliveryZonesMembersUpload(UploadPage uploadPage) throws IOException, SQLException {
-    uploadPage.uploadDeliveryZoneMembersInvalidScenarios("QA_Delivery_Zone_Members.csv");
+    uploadPage.uploadDeliveryZoneMembersValidScenarios("QA_Delivery_Zone_Members.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
-    uploadPage.uploadDeliveryZoneMembersInvalidScenarios("QA_Delivery_Zone_Members_Subsequent.csv") ;
+    uploadPage.uploadDeliveryZoneMembersValidScenarios("QA_Delivery_Zone_Members_Subsequent.csv") ;
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
@@ -480,10 +533,10 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   private void verifyValidDeliveryZonesWarehousesUpload(UploadPage uploadPage) throws IOException, SQLException {
-    uploadPage.uploadDeliveryZoneWarehousesInvalidScenarios("QA_Delivery_zone_warehouses.csv") ;
+    uploadPage.uploadDeliveryZoneWarehousesValidScenarios("QA_Delivery_zone_warehouses.csv") ;
     uploadPage.verifySuccessMessageOnUploadScreen();
 
-    uploadPage.uploadDeliveryZoneWarehousesInvalidScenarios("QA_Delivery_zone_warehouses_Subsequent.csv") ;
+    uploadPage.uploadDeliveryZoneWarehousesValidScenarios("QA_Delivery_zone_warehouses_Subsequent.csv") ;
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 

@@ -297,7 +297,7 @@ public class RequisitionMapperIT {
   }
 
   @Test
-  public void itShouldOnlyLoadRequisitionDataForGivenQuery() throws Exception {
+  public void shouldOnlyLoadRequisitionDataForGivenQuery() throws Exception {
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
 
     Rnr fetchedRnr = mapper.getRequisitionWithoutLineItems(facility.getId(), PROGRAM_ID, processingPeriod1.getId());
@@ -305,8 +305,8 @@ public class RequisitionMapperIT {
     assertThat(fetchedRnr.getId(), is(requisition.getId()));
     assertThat(fetchedRnr.getPeriod().getId(), is(processingPeriod1.getId()));
     assertThat(fetchedRnr.getStatus(), is(INITIATED));
-    assertThat(fetchedRnr.getFullSupplyLineItems(), is(empty()));
-    assertThat(fetchedRnr.getNonFullSupplyLineItems(), is(empty()));
+    assertThat(fetchedRnr.getFullSupplyLineItems().size(), is(0));
+    assertThat(fetchedRnr.getNonFullSupplyLineItems().size(), is(0));
   }
 
   private Rnr insertRequisition(ProcessingPeriod period, RnrStatus status) {

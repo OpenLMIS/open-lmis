@@ -21,13 +21,13 @@
             <div class="row-fluid">
                 <div class="span4 offset8 grid-filters">
                     <input id="searchRequisition" class="search-query" ng-change="filterRequisitions()" type="text"
-                           ng-model="query" placeholder="Search..."/>
-                    in
+                           ng-model="query" openlmis-message="placeholder.search"/>
+                    <span openlmis-message="label.in"></span>
                     <select ng-model="searchField" ng-change="filterRequisitions()">
                         <option value="" openlmis-message="option.value.all"></option>
                         <option value="programName" openlmis-message="option.value.program"></option>
-                        <option value="facilityCode" openlmis-message="option.value.facilityCode"></option>
-                        <option value="facilityName" openlmis-message="option.value.facilityName"></option>
+                        <option value="facilityCode" openlmis-message="option.value.facility.code"></option>
+                        <option value="facilityName" openlmis-message="option.value.facility.name"></option>
                         <option value="supplyingDepot" openlmis-message="option.value.supplyingDepot"></option>
                     </select>
                 </div>
@@ -36,7 +36,7 @@
             <div form-toolbar id="action_buttons" class="action-buttons">
                 <div class="form-cell button-row">
                     <input type="submit" ng-click="convertToOrder()" class="btn btn-primary save-button"
-                           value="Convert To Order"/>
+                           openlmis-message="button.convert.to.order"/>
                 </div>
             </div>
         </div>

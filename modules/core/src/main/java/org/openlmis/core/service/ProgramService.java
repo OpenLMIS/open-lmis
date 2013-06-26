@@ -76,4 +76,8 @@ public class ProgramService {
   public Program getByCode(String code) {
     return programRepository.getByCode(code);
   }
+
+  public void setRegimenTemplateConfigured(Long id) {
+    programRepository.setRegimenTemplateConfigured(id);
+  }
 }

@@ -5,13 +5,13 @@
  */
 
 var OpenLmisDialog = {
-  newDialog:function (overrideOpts, callback, $dialog) {
+  newDialog:function (overrideOpts, callback, $dialog, messageService) {
     var defaults = {
       id:"",
       header:"Header",
       body:"Body",
-      ok:{label:"OK", value:true},
-      cancel:{label:"Cancel", value:false}
+      ok:{label:messageService.get("button.ok"), value:true},
+      cancel:{label:messageService.get("button.cancel"), value:false}
     };
 
     var opts = {

@@ -30,7 +30,7 @@ public class DeleteFacilityPage extends Page {
   @FindBy(how = How.LINK_TEXT, using = "Delete")
   private static WebElement deleteButton;
 
-  @FindBy(how = How.LINK_TEXT, using = "OK")
+  @FindBy(how = How.LINK_TEXT, using = "Ok")
   private static WebElement okButton;
 
   @FindBy(how = How.XPATH, using = "//div[@id='deleteFacilityDialog']/div[@class='modal-body']/p")
@@ -64,7 +64,7 @@ public class DeleteFacilityPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='restoreConfirmModal']/div[@class='modal-body']/p")
   private static WebElement restoreMessageOnAlert;
 
-  @FindBy(how = How.LINK_TEXT, using = "OK")
+  @FindBy(how = How.LINK_TEXT, using = "Ok")
   private static WebElement okLink;
 
   @FindBy(how = How.XPATH, using = " //div[@id='activeConfirmModel']/div[@class='modal-body']/p")
@@ -89,14 +89,14 @@ public class DeleteFacilityPage extends Page {
   @FindBy(how = How.ID, using = "code")
   private static WebElement facilityCode;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Save']")
+  @FindBy(how = How.ID, using = "save-button")
   private static WebElement SaveButton;
 
   @FindBy(how = How.ID, using = "edit-facility-header")
   private static WebElement facilityHeader;
 
   @FindBy(how = How.ID, using = "programs-supported")
-  private static WebElement programsSupported;
+  public static WebElement programsSupported;
 
   @FindBy(how = How.ID, using = "supported-program-active")
   private static WebElement programsSupportedActiveFlag;
@@ -107,7 +107,7 @@ public class DeleteFacilityPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'25')]")
   private static WebElement startDateCalender;
 
-  @FindBy(how = How.ID, using = "button_OK")
+  @FindBy(how = How.ID, using = "button_Ok")
   private static WebElement startDateAlert;
 
   @FindBy(how = How.ID, using = "supported-program-add")

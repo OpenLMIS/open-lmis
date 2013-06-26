@@ -6,20 +6,14 @@
 
 <div ng-controller = "CreateFullSupplyController" >
   <div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.fullSupply">
-    <div class="dropdown">
-      <a class="dropdown-toggle">
-            Errors found on
-            <ng-pluralize count="errorPages.fullSupply.length"
-                                when="{ 1: '{} page',
-                                        other: '{} pages'}">
-
-            </ng-pluralize> |
-          </a>
-          <ul class="dropdown-menu">
-            <li ng-repeat="page in errorPages.fullSupply">
-              <a ng-click="goToPage(page, $event)">{{page}}</a>
-            </li>
-          </ul>
+    <div ng-switch on="errorPages.fullSupply.length" class="dropdown">
+      <a ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
+      <a ng-switch-default class="dropdown-toggle" openlmis-message="error.multiple.pages|fullSupplyErrorPagesCount"></a>
+      <ul class="dropdown-menu">
+        <li ng-repeat="page in errorPages.fullSupply">
+          <a ng-click="goToPage(page, $event)">{{page}}</a>
+        </li>
+      </ul>
     </div>
 
   </div>
@@ -63,7 +57,7 @@
                     </span >
 
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
-                      <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
+                      <span ng-bind = "lineItemErrorMessage(rnrLineItem)" ></span >
                       <span class = "beak-down" ></span >
                     </span >
                   </span >
@@ -81,7 +75,7 @@
                           style = "display:none;" openlmis-message="error.number.only">
                     </span >
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
-                      <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
+                      <span ng-bind = "lineItemErrorMessage(rnrLineItem)" ></span >
                       <span class = "beak-down" ></span >
                     </span >
                   </span >
@@ -114,7 +108,7 @@
                     </span >
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()"
                           style = "background: red;" >
-                      <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
+                      <span ng-bind = "lineItemErrorMessage(rnrLineItem)" ></span >
                       <span class = "beak-down" ></span >
                     </span >
                   </span >
@@ -144,7 +138,7 @@
                           style = "display:none;" openlmis-message="error.number.only">
                     </span >
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
-                      <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
+                      <span ng-bind = "lineItemErrorMessage(rnrLineItem)" ></span >
                       <span class = "beak-down" ></span >
                     </span >
                   </span >
@@ -212,7 +206,7 @@
                         ng-class = "getCellErrorClass(rnrLineItem)" >
                     <span id = "{{getId(column.name, $parent)}}" ng-bind = "rnrLineItem[column.name]" class = "cell-text" > </span >
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
-                      <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
+                      <span ng-bind = "lineItemErrorMessage(rnrLineItem)" ></span >
                       <span class = "beak-down" ></span >
                     </span >
                   </span >
@@ -244,7 +238,7 @@
             <select ng-disabled = "formDisabled"
                     ng-model = "lossAndAdjustment.type"
                     ng-options = "i as i.description for i in lossesAndAdjustmentTypesToDisplay" >
-              <option value = "" >--Select Type--</option >
+              <option value = "" openlmis-message="label.select.type"></option >
             </select >
           </div >
           <div class = "span3" >
@@ -252,7 +246,7 @@
                    name = "quantity{{currentRnrLineItem.id}}"
                    ng-model = "lossAndAdjustment.quantity"
                    rnr-validator = "positiveInteger" prevent-rnr-error = "true" maxlength = "8"
-                   placeholder = "Quantity" />
+                   openlmis-message="placeholder.quantity" />
 
             <div class = "rnr-form-error"
                  id = "quantity{{currentRnrLineItem.id}}"
@@ -287,11 +281,12 @@
                      name = "{{adjustment.type.displayOrder}}"
                      type = "text"
                      ng-model = "adjustment.quantity"
+                     openlmis-message="placeholder.quantity"
                      ng-change = "currentRnrLineItem.reEvaluateTotalLossesAndAdjustments(rnr, programRnrColumnList); resetModalErrorAndSetFormDirty()"
                      rnr-validator = "positiveInteger"
                      maxlength = "8"
                      ng-class = "highlightRequiredFieldInModal(adjustment.quantity)"
-                     data-keyboard = "false"
+                     keyboard = "false"
                 />
 
               <div class = "rnr-form-error"

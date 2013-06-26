@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ViewOrderListController($scope, orders) {
+function ViewOrderListController($scope, orders, messageService) {
   $scope.orders = orders;
 
   $scope.gridOptions = { data: 'orders',
@@ -14,16 +14,16 @@ function ViewOrderListController($scope, orders) {
     enableColumnResize:true,
     enableSorting: false,
     columnDefs: [
-      {field: 'rnr.id', displayName: 'Order No.'},
-      {field: 'facilityCode', displayName: 'Facility Code-Name', cellTemplate:"<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.facilityCode}} - {{row.entity.rnr.facilityName}}</span></div>"},
-      {field: 'rnr.programName', displayName: "Program Name"},
-      {field: 'periodName', displayName: "Period", cellTemplate:"<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.periodName}} ({{row.entity.rnr.periodStartDate | date: 'dd/MM/yyyy'}} - {{row.entity.rnr.periodEndDate | date: 'dd/MM/yyyy'}})</span></div>"},
-      {field: 'rnr.supplyingDepot', displayName: "Supplying Depot"},
-      {field: 'createdDate', displayName: "Order Date/Time", cellFilter: "date:'dd/MM/yyyy hh:mm:ss'"},
-      {field: 'status', displayName: "Order Status",
-        cellTemplate:"<div class='ngCellText'><span ng-cell-text><div id=\"orderStatus\">{{row.entity.status}} <span ng-show='row.entity.shipmentError' >(Shipment File Error)</span></div> "},
-      {cellTemplate: "<div class='ngCellText'><a ng-show=\"row.entity.productsOrdered\" ng-href='/orders/{{row.entity.id}}/download.csv'>Download CSV</a>" +
-        "<span ng-show=\"!row.entity.productsOrdered\"  ng-cell-text>No products in this order</span></div>"}
+      {field: 'rnr.id', displayName: messageService.get("column.name.order.no")},
+      {field: 'facilityCode', displayName: messageService.get("column.name.facility.code.name"), cellTemplate:"<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.facilityCode}} - {{row.entity.rnr.facilityName}}</span></div>"},
+      {field: 'rnr.programName', displayName: messageService.get("label.program")},
+      {field: 'periodName', displayName: messageService.get("label.period"), cellTemplate:"<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.periodName}} ({{row.entity.rnr.periodStartDate | date: 'dd/MM/yyyy'}} - {{row.entity.rnr.periodEndDate | date: 'dd/MM/yyyy'}})</span></div>"},
+      {field: 'rnr.supplyingDepot', displayName: messageService.get("column.name.supplying.depot")},
+      {field: 'createdDate', displayName: messageService.get("column.name.order.date.time"), cellFilter: "date:'dd/MM/yyyy hh:mm:ss'"},
+      {field: 'status', displayName: messageService.get("column.label.order.status"),
+        cellTemplate:"<div class='ngCellText'><span ng-cell-text><div id=\"orderStatus\">{{row.entity.status}} <span ng-show='row.entity.shipmentError' openlmis-message='error.shipment.file'></span></div> "},
+      {cellTemplate: "<div class='ngCellText'><a ng-show=\"row.entity.productsOrdered\" ng-href='/orders/{{row.entity.id}}/download.csv' openlmis-message='link.download.csv'></a>" +
+        "<span ng-show=\"!row.entity.productsOrdered\" openlmis-message='msg.no.product.in.order' ng-cell-text></span></div>"}
     ]
   };
 }

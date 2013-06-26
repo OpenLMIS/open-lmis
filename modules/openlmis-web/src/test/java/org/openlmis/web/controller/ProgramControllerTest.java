@@ -84,7 +84,7 @@ public class ProgramControllerTest {
   }
 
   @Test
-  public void shouldGetListOfAllPrograms() throws Exception {
+  public void shouldGetListOfAllPullPrograms() throws Exception {
     List<Program> expectedPrograms = new ArrayList<>();
 
     when(programService.getAllPullPrograms()).thenReturn(expectedPrograms);
@@ -92,6 +92,19 @@ public class ProgramControllerTest {
     ResponseEntity<OpenLmisResponse> response = controller.getAllPullPrograms();
 
     verify(programService).getAllPullPrograms();
+    List<Program> actual = (List<Program>) response.getBody().getData().get(PROGRAMS);
+    assertThat(actual, is(equalTo(expectedPrograms)));
+  }
+
+  @Test
+  public void shouldGetListOfAllPrograms() throws Exception {
+    List<Program> expectedPrograms = new ArrayList<>();
+
+    when(programService.getAll()).thenReturn(expectedPrograms);
+
+    ResponseEntity<OpenLmisResponse> response = controller.getAllPrograms();
+
+    verify(programService).getAll();
     List<Program> actual = (List<Program>) response.getBody().getData().get(PROGRAMS);
     assertThat(actual, is(equalTo(expectedPrograms)));
   }

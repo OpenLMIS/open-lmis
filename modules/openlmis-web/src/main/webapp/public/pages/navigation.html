@@ -4,18 +4,17 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<div class="navigation" ng-controller="NavigationController" ui-nav ng-hide="fullScreen">
+<div class="navigation toggleFullScreen" ng-controller="NavigationController" ui-nav >
   <ul class="clearfix" style="display:none">
     <li><a href="/" openlmis-message="link.home"></a></li>
 
-    <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION') || hasPermission('APPROVE_REQUISITION') ||
-       hasPermission('CONVERT_TO_ORDER') || hasPermission('VIEW_REQUISITION')  ">
+    <li>
       <a href="javascript: void(0)" openlmis-message="link.requisitions"></a>
 
       <div class="submenu">
         <ul>
           <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION')">
-            <a href="/public/pages/logistics/rnr/index.html" openlmis-message="link.requisitions.create.authorize"></a>
+            <a href="/public/pages/logistics/rnr/index.html#/init-rnr" openlmis-message="link.requisitions.create.authorize"></a>
           </li>
           <li ng-show="hasPermission('APPROVE_REQUISITION')">
             <a href="/public/pages/logistics/rnr/index.html#/rnr-for-approval"
@@ -35,7 +34,7 @@
 
     </li>
 
-    <li ng-show="hasPermission('VIEW_ORDER')">
+    <li>
       <a href="javascript: void(0)" openlmis-message="link.orders"></a>
 
       <div class="submenu">
@@ -53,12 +52,12 @@
       <a href="/public/pages/report/index.html" openlmis-message="link.reports"></a>
     </li>
 
-    <li ng-show="hasPermission('MANAGE_DISTRIBUTION')">
+    <li>
       <a href="javascript: void(0)" openlmis-message="link.distributions"></a>
 
       <div class="submenu">
         <ul>
-          <li>
+          <li ng-show="hasPermission('MANAGE_DISTRIBUTION')">
             <a href="/public/pages/logistics/distribution/index.html#/manage" openlmis-message="link.manage"></a>
           </li>
           <li class="beak"></li>
@@ -83,6 +82,10 @@
                 <li ng-show="hasPermission('CONFIGURE_RNR')">
                   <a href="/public/pages/admin/rnr-template/index.html"
                      openlmis-message="link.admin.configure.requisitionTemplate"></a>
+                </li>
+                <li ng-show="hasPermission('MANAGE_REGIMEN_TEMPLATE')">
+                  <a href="/public/pages/admin/regimen-template/index.html"
+                     openlmis-message="label.admin.configure.regimenTemplate"></a>
                 </li>
                 <li ng-show="hasPermission('MANAGE_PROGRAM_PRODUCT')">
                   <a href="/public/pages/admin/program-product-isa/index.html"

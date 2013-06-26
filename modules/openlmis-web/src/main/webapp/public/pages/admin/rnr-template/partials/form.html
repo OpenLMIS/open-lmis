@@ -8,7 +8,7 @@
   <h2 openlmis-message="requisition.template.header"></h2>
 
   <div class="info-box">
-    <p><span openlmis-message="template.programName"></span> {{program.name}} <a ng-href="{{selectProgramUrl}}" openlmis-message="template.change"></a>
+    <p><strong openlmis-message="template.programName"></strong> {{program.name}} <a ng-href="{{selectProgramUrl}}" openlmis-message="template.change"></a>
     </p>
   </div>
 
@@ -52,7 +52,10 @@
 
     <div class="alert alert-info arithmetic-valid-msg" ng-show="arithmeticValidationMessageShown">
       <div class="row-fluid">
-        <div class="span9" openlmis-message="message.arithmeticValidation.status|arithmeticValidationStatusLabel|arithmeticValidationMessage">
+        <div class="span9">
+            <span openlmis-message="message.arithmeticValidation.status"></span>
+            <strong openlmis-message="arithmeticValidationStatusLabel"></strong>.
+            <span ng-show="arithmeticValidationMessage" openlmis-message="arithmeticValidationMessage"></span>
         </div>
         <div class="span3">
           <a href="javascript:void(0);" class="btn btn-primary btn-mini pull-right"
@@ -64,7 +67,7 @@
 
     <div form-toolbar class="action-buttons">
       <div class="form-cell button-row">
-        <input type="submit" class="btn btn-primary save-button" value="Save"/>
+        <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
         <a ng-href="{{selectProgramUrl}}" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
       </div>
       <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>

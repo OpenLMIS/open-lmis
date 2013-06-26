@@ -18,4 +18,5 @@ INSERT INTO rights (name, adminRight, description) VALUES
  ('VIEW_REPORTS',TRUE,'Permission to view reports'),
  ('MANAGE_REPORTS',TRUE,'Permission to manage reports'),
  ('MANAGE_PROGRAM_PRODUCT',TRUE,'Permission to manage program products'),
- ('MANAGE_DISTRIBUTION',FALSE,'Permission to manage an distribution');
+ ('MANAGE_DISTRIBUTION',FALSE,'Permission to manage an distribution'),
+ ('MANAGE_REGIMEN_TEMPLATE',TRUE,'Permission to manage a regimen template');

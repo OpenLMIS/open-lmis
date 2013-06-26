@@ -183,7 +183,7 @@ span.field-error {
       width: 100%;
     }
     &.programs-table {
-      width: 60%;
+      width: 70%;
     }
   }
 }
@@ -267,34 +267,120 @@ span[class^="tpl-"] {
 
 .rnr-template-columns {
   margin-bottom: 10px;
-}
-
-.rnr-template-columns ul {
+  ul {
   list-style: none;
   margin: 0;
+  &>li {
+    border: 1px solid #DDD;
+    border-color: transparent #BBB #DDD;
+    border-top: 0;
+    background: #FCFCFC;
+    font-size: 0.9em;
+    position: relative;
+
+    .drag-handle {
+      background: url("../images/sort-icon.png") no-repeat left center;
+      position: absolute;
+      width: 12px;
+      height: 16px;
+      left: 10px;
+      top: 50%;
+      margin-top: -9px;
+      cursor: move;
+      display: none;
+    }
+  }
+  &> li:hover .drag-handle {
+    display: block;
+    }
+
+  }
+}
+#newRegimenForm {
+  .form-group {
+    padding: 10px 0 0 0;
+    margin: 14px 0 0 0;
+  }
+  .form-cell {
+    width: 23%;
+    padding: 6px 10px 0px;
+    &:last-child {
+      padding-top: 32px;
+      input[type="checkbox"] {
+        margin-top: 0px;
+      }
+      label {
+        padding-left: 5px;
+        display: inline;
+      }
+    }
+  }
+  #addNewRegimen {
+    margin: 5px 0px 5px 10px;
+  }
+  #addFailMessage {
+    margin: 5px 10px 9px 10px;
+  }
 }
 
-.rnr-template-columns ul > li {
-  border: 1px solid #DDD;
-  border-color: transparent #BBB #DDD;
-  border-top: 0;
-  background: #FCFCFC;
-  font-size: 0.9em;
-  position: relative;
+.regimenForm {
+  .rnr-template-head {
+    .row-fluid {
+      padding-top: 10px;
+      span {
+        padding-left: 35px;
+      }
+    }
+  }
+  .categoryName {
+    background: #45a7ad;
+    color: white;
+    font-size: 0.9em;
+    border-top: 0;
+    div {
+      padding: 2px 10px;
+    }
+  }
+  .rnr-template-columns {
+    width: auto;
+    border: 1px solid #EEE;
+    border-top: 0;
+    margin-bottom: 0px;
+    position: relative;
+    padding-top: 6px;
+    padding-bottom: 3px;
+    &:hover {
+      background-color: #f9f9f9;
+      .drag-handle {
+        display: block;
+      }
+    }
+    input[type="checkbox"] {
+        margin-left: 13px;
+    }
+    .drag-handle {
+      background: url("../images/sort-icon.png") no-repeat left center;
+      width: 12px;
+      height: 16px;
+      cursor: move;
+      display: none;
+      top: 33%;
+      left: 9px;
+      position: absolute;
+      display: none;
+    }
+    [class*="span"]{
+      div:first-child {
+         padding-left: 7px;
+         padding-top: 4px;
+      }
+    }
+
+  }
 }
-.rnr-template-columns ul > li .drag-handle {
-  background: url("../images/sort-icon.png") no-repeat left center;
-  position: absolute;
-  width: 12px;
-  height: 16px;
-  left: 10px;
-  top: 50%;
-  margin-top: -9px;
-  cursor: move;
-  display: none;
-}
-.rnr-template-columns ul > li:hover .drag-handle {
-  display: block;
+
+.editable-row {
+  background-color: #F9F9E4;
 }
 
 .rnr-tabs {
@@ -371,6 +457,8 @@ span[class^="tpl-"] {
   padding: 0 0 0 1px;
 }
 
+
+
 .rnr-table {
   overflow: auto;
   width: 100%;
@@ -393,6 +481,7 @@ span[class^="tpl-"] {
     background: linear-gradient(to bottom, #f9f9f9 0%,#e0e0e0 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#e0e0e0',GradientType=0 ); /* IE6-9 */
   }
+
   .table-bordered th,
   .table-bordered td {
     border-left: none;
@@ -762,7 +851,7 @@ h3 {
   }
 }
 .button-row {
-  padding: 10px 0;
+    padding: 7px 0;
 }
 .gradient-header th {
   background: #EEE;
@@ -861,7 +950,9 @@ h3 {
   &:hover {
     background-color: #F9F9F9;
   }
-
+  input[type="button"] {
+    margin-left: 20px;
+  }
 }
 .program-isa {
   padding-top: 10px;
@@ -1462,8 +1553,8 @@ input[placeholder].placeholder{
 }
 
 #programProductISA {
-    width: 850px;
-    margin-left: -425px;
+    width: 1000px;
+    margin-left: -500px;
     margin-top: -260px;
     label {
         text-align: right;
@@ -1473,13 +1564,16 @@ input[placeholder].placeholder{
     }
     .modal-body {
         padding-top: 5px;
+        max-height: 500px;
         form {
             margin: 0 0 10px;
-            height: 290px;
         }
         input[type="text"] {
             padding: 4px 6px;
         }
+      .label {
+        font-size: 1.1em;
+      }
     }
     .calculatedAmount {
         border: 1px solid rgb(218, 218, 218);
@@ -1505,6 +1599,7 @@ input[placeholder].placeholder{
     }
     .form-error {
         display: none;
+        margin: -6px 0 8px 0;
     }
 }
 
@@ -1667,9 +1762,9 @@ input[placeholder].placeholder{
 }
 
 .cancel-button {
-  position: absolute;
-  top: 10px;
-  left: 75px;
+  float: left;
+  margin-left: 10px;
+  margin-top: 4px;
 }
 
 .no-comments {
@@ -1677,4 +1772,25 @@ input[placeholder].placeholder{
   font-style: italic;
   padding: 8px 0 0;
   font-size: 0.9em;
+}
+
+#override-isa-table {
+  margin: 5px;
+  div {
+    &.has-overridden-isa {
+      background-color: #FFFFE7;
+    }
+  .list-row:hover {
+    background-color: transparent;
+  }
+
+  }
+
+  .use-calculated-isa-column {
+    min-width: 140px;
+  }
+}
+
+#searchProduct.search-query {
+  margin-bottom: 8px;
 }

@@ -108,7 +108,7 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights, $d
       header: messageService.get("header.change.roleType"),
       body: messageService.get("confirm.roleType.change")
     };
-    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog);
+    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog, messageService);
   };
 
   var validRole = function () {

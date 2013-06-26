@@ -40,20 +40,22 @@ public enum Right {
   VIEW_ORDER("Requisition - View Orders", TRUE, "Permission to view orders"),
   MANAGE_PROGRAM_PRODUCT("Admin - Manage Program Product", TRUE, "Permission to manage program products"),
   MANAGE_DISTRIBUTION("Allocation - Manage", FALSE, "Permission to manage an distribution"),
+  MANAGE_REGIMEN_TEMPLATE("Admin - Manage Regimen Template", TRUE, "Permission to manage a regimen template"),
+  MANAGE_DISTRIBUTION("Allocation - Manage", FALSE, "Permission to manage an distribution"),
   MANAGE_SUPPLYLINE("Admin - Manage Supply Line", TRUE, "Permission to manage supply line"),
 
-VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", TRUE, "Permission to view Facility List Report"),
-VIEW_MAILING_LABEL_REPORT("Report - Facility Listing (V2)", TRUE, "Permission to view mailing labels for facilities"),
-VIEW_SUMMARY_REPORT("Report - Summary Report", TRUE, "Permission to view Sumamry Report"),
-VIEW_CONSUMPTION_REPORT("Report - Consumption Report", TRUE, "Permission to view consumption report"),
-VIEW_AVERAGE_CONSUMPTION_REPORT("Report - Average Consumption Report", TRUE, "Permission to view average consumption report"),
-VIEW_REPORTING_RATE_REPORT("Report - Reporting Rate Report", TRUE, "Permission to view reporting rate report"),
-VIEW_NON_REPORTING_FACILITIES("Report - Non Reporting Facility Report", TRUE, "Permission to view Non reporting facilities report"),
-VIEW_ADJUSTMENT_SUMMARY_REPORT("Report - Adjustment Summary Report", TRUE, "Permission to view adjustment summary Report"),
-VIEW_SUPPLY_STATUS_REPORT("Report - Supply Status by Facility",TRUE, "Permission to view Supply Status by Facility Report"),
-VIEW_STOCKED_OUT_REPORT("Report - Stocked Out Report", TRUE, "Permission to view stocked out product report"),
-VIEW_DISTRICT_CONSUMPTION_REPORT("Report - District Consumption Comparison", TRUE, "Permission to view district consumption comparison report"),
-MANAGE_GEOGRAPHIC_ZONES ("Admin - Manage Geographic Zones", TRUE, "Permission to manage geographic zones.");
+  VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", TRUE, "Permission to view Facility List Report"),
+  VIEW_MAILING_LABEL_REPORT("Report - Facility Listing (V2)", TRUE, "Permission to view mailing labels for facilities"),
+  VIEW_SUMMARY_REPORT("Report - Summary Report", TRUE, "Permission to view Sumamry Report"),
+  VIEW_CONSUMPTION_REPORT("Report - Consumption Report", TRUE, "Permission to view consumption report"),
+  VIEW_AVERAGE_CONSUMPTION_REPORT("Report - Average Consumption Report", TRUE, "Permission to view average consumption report"),
+  VIEW_REPORTING_RATE_REPORT("Report - Reporting Rate Report", TRUE, "Permission to view reporting rate report"),
+  VIEW_NON_REPORTING_FACILITIES("Report - Non Reporting Facility Report", TRUE, "Permission to view Non reporting facilities report"),
+  VIEW_ADJUSTMENT_SUMMARY_REPORT("Report - Adjustment Summary Report", TRUE, "Permission to view adjustment summary Report"),
+  VIEW_SUPPLY_STATUS_REPORT("Report - Supply Status by Facility",TRUE, "Permission to view Supply Status by Facility Report"),
+  VIEW_STOCKED_OUT_REPORT("Report - Stocked Out Report", TRUE, "Permission to view stocked out product report"),
+  VIEW_DISTRICT_CONSUMPTION_REPORT("Report - District Consumption Comparison", TRUE, "Permission to view district consumption comparison report"),
+  MANAGE_GEOGRAPHIC_ZONES ("Admin - Manage Geographic Zones", TRUE, "Permission to manage geographic zones.");
 
     @Getter
   private final String rightName;

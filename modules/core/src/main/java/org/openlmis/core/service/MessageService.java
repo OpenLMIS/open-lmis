@@ -31,7 +31,7 @@ public class MessageService {
   }
 
   public String message(OpenLmisMessage openLmisMessage) {
-    return message(openLmisMessage.getCode(), openLmisMessage.getParams());
+    return message(openLmisMessage.getCode(), (Object)openLmisMessage.getParams());
   }
 
   public String message(String key, Object... args) {

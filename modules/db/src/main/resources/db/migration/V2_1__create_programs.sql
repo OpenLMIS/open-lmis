@@ -8,6 +8,7 @@ CREATE TABLE programs (
     description VARCHAR(50),
     active BOOLEAN,
     templateConfigured BOOLEAN,
+    regimenTemplateConfigured BOOLEAN,
     budgetingApplies BOOLEAN,
     usesDar BOOLEAN,
     push BOOLEAN,

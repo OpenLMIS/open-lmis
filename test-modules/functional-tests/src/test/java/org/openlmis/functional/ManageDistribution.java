@@ -39,17 +39,62 @@ public class ManageDistribution extends TestCaseHelper {
   public static final String periodDisplayedByDefault = "Period14";
   public static final String periodNotToBeDisplayedInDropDown = "Period1";
 
-  @BeforeMethod(groups = {"functional2"})
+  @BeforeMethod(groups = {"functional2", "smoke"})
   public void setUp() throws Exception {
     super.setup();
   }
 
 
+  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function")
+  public void testShouldFetchProgramPeriod(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                           String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                           String facilityCodeFirst, String facilityCodeSecond,
+                                           String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("MANAGE_DISTRIBUTION");
+    setupTestDataToInitiateRnRForDistribution(true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond);
+    setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+      deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond,
+      programFirst, programSecond, schedule);
+
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    verifyElementsPresent(distributionPage);
+
+    String defaultDistributionZoneValuesToBeVerified = NONE_ASSIGNED;
+    WebElement actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromDeliveryZone();
+    verifySelectedOptionFromSelectField(defaultDistributionZoneValuesToBeVerified, actualSelectFieldElement);
+
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+
+    homePage.navigateHomePage();
+    homePage.navigatePlanDistribution();
+
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    List<String> firstProgramValuesToBeVerified = new ArrayList<String>();
+    firstProgramValuesToBeVerified.add(programFirst);
+    List<WebElement> valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromProgram();
+    verifyAllSelectFieldValues(firstProgramValuesToBeVerified, valuesPresentInDropDown);
+
+
+    distributionPage.selectValueFromProgram(programFirst);
+    actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
+    verifySelectedOptionFromSelectField(periodDisplayedByDefault, actualSelectFieldElement);
+
+    distributionPage.clickProceed();
+    verifySubOptionsOfProceedButton(distributionPage);
+
+  }
+
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
-  public void testManageDistributionWithSingleDeliveryZone(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                                           String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                                           String facilityCodeFirst, String facilityCodeSecond,
-                                                           String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+  public void testManageDistribution(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                      String facilityCodeFirst, String facilityCodeSecond,
+                                      String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
@@ -111,6 +156,7 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.selectValueFromProgram(programSecond);
     List<String> periodValuesToBeVerified = new ArrayList<String>();
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
+
     verifySelectedOptionFromSelectField(periodDisplayedByDefault, actualSelectFieldElement);
     for (int counter = 2; counter <= totalNumberOfPeriods; counter++) {
       String periodWithCounter = period + counter;
@@ -150,32 +196,21 @@ public class ManageDistribution extends TestCaseHelper {
 
 
   private void verifyAllSelectFieldValues(List<String> valuesToBeVerified, List<WebElement> valuesPresentInDropDown) {
-    int valuesInSelectFieldCounter = 0;
-    int valuesToBeVerifiedCounter = 0;
-    int finalCounter = 0;
-    int counterOfFirstSelectValueToBeSkipped = 0;
-    for (String values : valuesToBeVerified)
-      valuesToBeVerifiedCounter++;
-    for (WebElement webElement : valuesPresentInDropDown)
-      valuesInSelectFieldCounter++;
+    String collectionOfValuesPresentINDropDown = "";
+    int valuesToBeVerifiedCounter = valuesToBeVerified.size();
+    int valuesInSelectFieldCounter = valuesPresentInDropDown.size();
 
     if (valuesToBeVerifiedCounter == valuesInSelectFieldCounter - 1) {
       for (WebElement webElement : valuesPresentInDropDown) {
-        counterOfFirstSelectValueToBeSkipped++;
-        if (counterOfFirstSelectValueToBeSkipped != 1) {
-          for (String values : valuesToBeVerified) {
-            if (values.equalsIgnoreCase(webElement.getText().trim())) {
-              finalCounter++;
-            }
-          }
-
-        }
+        collectionOfValuesPresentINDropDown = collectionOfValuesPresentINDropDown + webElement.getText().trim();
+      }
+      for (String values : valuesToBeVerified) {
+        assertTrue(collectionOfValuesPresentINDropDown.contains(values));
       }
     } else {
       fail("Values in select field are not same in number as values to be verified");
     }
-    assertEquals(valuesToBeVerifiedCounter, finalCounter);
-    assertEquals(valuesInSelectFieldCounter - 1, finalCounter);
+
   }
 
 
@@ -192,6 +227,7 @@ public class ManageDistribution extends TestCaseHelper {
 
 
   private void verifySelectedOptionFromSelectField(String valuesToBeVerified, WebElement actualSelectFieldElement) {
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(actualSelectFieldElement);
     assertEquals(valuesToBeVerified, actualSelectFieldElement.getText());
   }
@@ -203,7 +239,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
 
-  @AfterMethod(groups = {"functional2"})
+  @AfterMethod(groups = {"functional2", "smoke"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);

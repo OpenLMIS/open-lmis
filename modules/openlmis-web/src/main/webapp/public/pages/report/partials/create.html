@@ -9,7 +9,7 @@
 
       <div class="row-fluid clearfix">
         <div class="span5">
-          <label for="name" openlmis-message="create.report.reportName"></label>
+          <label for="name" openlmis-message="create.report.reportName"><span class="label-required"> *</span></label>
 
           <div>
             <input ng-model="reportTemplate.name" name="name" id="name" type="text" maxlength="50"
@@ -23,7 +23,7 @@
 
       <div class="row-fluid clearfix">
         <div class="span5">
-          <label for="name" openlmis-message="create.report.uploadFile"></label>
+          <label for="name" openlmis-message="create.report.uploadFile"><span class="label-required"> *</span></label>
           <div>
             <input ng-model="reportTemplate.file" name="file" id="file" type="file" maxlength="50"
                    ng-required="true" accept=".jrxml"/>

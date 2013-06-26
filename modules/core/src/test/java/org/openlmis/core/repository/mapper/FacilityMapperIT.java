@@ -146,8 +146,8 @@ public class FacilityMapperIT {
     assertThat(resultFacility.getCode(), is("F10010"));
     assertThat(resultFacility.getId(), is(facility.getId()));
     assertThat(resultFacility.getName(), is("Apollo Hospital"));
-    assertThat(resultFacility.getGeographicZone().getName(), is("Dodoma"));
-    assertThat(resultFacility.getGeographicZone().getParent().getName(), is("Arusha"));
+    assertThat(resultFacility.getGeographicZone().getName(), is("Arusha"));
+    assertThat(resultFacility.getGeographicZone().getParent().getName(), is("Root"));
     assertThat(resultFacility.getLatitude(), is(123.45678));
     assertThat(resultFacility.getLongitude(), is(-321.87654));
   }

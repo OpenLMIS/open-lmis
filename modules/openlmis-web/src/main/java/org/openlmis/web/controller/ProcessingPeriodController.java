@@ -25,18 +25,16 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.openlmis.web.response.OpenLmisResponse.success;
 
 @Controller
 @NoArgsConstructor
 public class ProcessingPeriodController extends BaseController {
 
   public static final String PERIODS = "periods";
-  private ProcessingScheduleService processingScheduleService;
 
   @Autowired
-  public ProcessingPeriodController(ProcessingScheduleService processingScheduleService) {
-    this.processingScheduleService = processingScheduleService;
-  }
+  private ProcessingScheduleService processingScheduleService;
 
   @RequestMapping(value = "/schedules/{scheduleId}/periods", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
@@ -55,7 +53,7 @@ public class ProcessingPeriodController extends BaseController {
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
-    ResponseEntity<OpenLmisResponse> successResponse = OpenLmisResponse.success("Period added successfully");
+    ResponseEntity<OpenLmisResponse> successResponse = success(messageService.message("message.period.added.success"));
     successResponse.getBody().addData("id", processingPeriod.getId());
     return successResponse;
   }
@@ -68,6 +66,6 @@ public class ProcessingPeriodController extends BaseController {
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
-    return OpenLmisResponse.success("Period deleted successfully");
+    return success(messageService.message("message.period.deleted.success"));
   }
 }

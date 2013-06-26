@@ -4,10 +4,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-directives.directive('formToolbar', function () {
+app.directive('formToolbar',function () {
   return {
-    restrict: 'A',
-    link: function (scope, element, attrs) {
+    restrict:'A',
+    link:function (scope, element, attrs) {
 
       function fixToolbarWidth() {
         var toolbarWidth = $(document).width() - 26;
