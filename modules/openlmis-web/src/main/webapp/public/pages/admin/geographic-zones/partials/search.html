@@ -21,10 +21,20 @@
             </ng-pluralize>
         </h3>
         <a class="close-btn" href="javascript:void(0);" ng-click="clearSearch()"></a>
-        <ul>
-            <li ng-repeat="geographicZone in filteredGeographicZones">
-                <a ng-click="editGeographicZones(geographicZone.id)">{{geographicZone.name}}</a>
-            </li>
-        </ul>
+
+        <div class="row-fluid list-row">
+            <div class="span3" style="overflow: visible;">Name</a></div>
+            <div class="span3" style="overflow: visible;">Code</div>
+            <div class="span3" style="overflow: visible;">Level</div>
+            <div class="span2" style="overflow: visible;">Parent</div>
+        </div>
+        <div ng-repeat="geographicZone in filteredGeographicZones" class="row-fluid list-row">
+            <div class="span3" style="overflow: visible;"><a ng-click="editGeographicZones(geographicZone.id)">{{geographicZone.name}}</a></div>
+            <div class="span3" style="overflow: visible;"> {{geographicZone.code}}</div>
+            <div class="span3" style="overflow: visible;"> {{geographicZone.level}}</div>
+            <div class="span2" style="overflow: visible;"> {{geographicZone.parent}}</div>
+        </div>
+
+
     </div>
 </div>
