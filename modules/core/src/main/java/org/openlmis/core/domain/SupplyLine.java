@@ -29,4 +29,11 @@ public class SupplyLine extends BaseModel implements Importable {
   @ImportField(mandatory = true, name = "Facility", nested = "code")
   Facility supplyingFacility;
 
+ private Integer supervisorynodeid;
+ private Integer programid;
+ private Integer supplyingfacilityid;
+
+
+
+
 }
