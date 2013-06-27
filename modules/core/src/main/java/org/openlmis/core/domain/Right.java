@@ -41,7 +41,7 @@ public enum Right {
   MANAGE_PROGRAM_PRODUCT("Admin - Manage Program Product", TRUE, "Permission to manage program products"),
   MANAGE_DISTRIBUTION("Allocation - Manage", FALSE, "Permission to manage an distribution"),
   MANAGE_REGIMEN_TEMPLATE("Admin - Manage Regimen Template", TRUE, "Permission to manage a regimen template"),
-  MANAGE_DISTRIBUTION("Allocation - Manage", FALSE, "Permission to manage an distribution"),
+
   MANAGE_SUPPLYLINE("Admin - Manage Supply Line", TRUE, "Permission to manage supply line"),
 
   VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", TRUE, "Permission to view Facility List Report"),
