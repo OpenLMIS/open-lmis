@@ -134,6 +134,13 @@ public class TestWebDriver {
     });
   }
 
+  public void waitForElementsToAppear(final WebElement element, final WebElement elementSecond, final WebElement elementThird ) {
+    (new WebDriverWait(driver, DEFAULT_WAIT_TIME)).until(new ExpectedCondition<Boolean>() {
+      public Boolean apply(WebDriver d) {
+        return (element.isDisplayed() || elementSecond.isDisplayed() || elementThird.isDisplayed());
+      }
+    });
+  }
 
 
   public void waitForTextToAppear(final String textToWaitFor) {

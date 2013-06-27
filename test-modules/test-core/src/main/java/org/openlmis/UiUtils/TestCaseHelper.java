@@ -8,6 +8,8 @@ package org.openlmis.UiUtils;
 
 
 import org.jaxen.function.StringFunction;
+import org.jbehave.core.steps.Steps;
+import org.openqa.selenium.remote.UnreachableBrowserException;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -51,7 +53,10 @@ public class TestCaseHelper {
         Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
         Runtime.getRuntime().exec("taskkill /F /IM iexplore.exe");
       } else {
-        testWebDriver.quitDriver();
+        try {
+          testWebDriver.quitDriver();
+        } catch (UnreachableBrowserException e) {
+        }
       }
       driverFactory.deleteExe();
     } catch (Exception e) {
@@ -137,13 +142,13 @@ public class TestCaseHelper {
   }
 
   public void setupProgramProductTestDataWithCategories(String product, String productName, String category, String program) throws IOException, SQLException {
-    dbWrapper.insertProductWithCategory(product,productName,category);
+    dbWrapper.insertProductWithCategory(product, productName, category);
     dbWrapper.insertProgramProductsWithCategory(product, program);
   }
 
-   public void setupProgramProductISA(String program, String product, String whoratio, String dosesperyear, String wastagerate, String bufferpercentage, String minimumvalue, String maximumvalue, String adjustmentvalue) throws IOException, SQLException {
-        dbWrapper.insertProgramProductISA(program, product, whoratio, dosesperyear, wastagerate, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue);
-   }
+  public void setupProgramProductISA(String program, String product, String whoratio, String dosesperyear, String wastagerate, String bufferpercentage, String minimumvalue, String maximumvalue, String adjustmentvalue) throws IOException, SQLException {
+    dbWrapper.insertProgramProductISA(program, product, whoratio, dosesperyear, wastagerate, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue);
+  }
 
   public void setupRequisitionGroupData(String RGCode1, String RGCode2, String SupervisoryNodeCode1, String SupervisoryNodeCode2, String Facility1, String Facility2) throws IOException, SQLException {
     dbWrapper.insertRequisitionGroups(RGCode1, RGCode2, SupervisoryNodeCode1, SupervisoryNodeCode2);

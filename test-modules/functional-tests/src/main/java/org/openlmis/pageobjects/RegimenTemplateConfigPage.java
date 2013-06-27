@@ -64,10 +64,8 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@value='Done']")
   private static WebElement doneButton;
 
-  @FindBy(how = How.ID, using = "addFailMessage")
-  private static WebElement addFailMessage;
-
-
+  @FindBy(how = How.ID, using = "doneFailMessage")
+  private static WebElement doneFailMessage;
 
 
   private static String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
@@ -92,8 +90,8 @@ public class RegimenTemplateConfigPage extends Page {
     return logoutLink;
   }
 
-  public  WebElement getAddFailMessage() {
-    return addFailMessage;
+  public  WebElement getDoneFailMessage() {
+    return doneFailMessage;
   }
 
   public WebElement getSaveButton() {
@@ -116,7 +114,7 @@ public class RegimenTemplateConfigPage extends Page {
     return saveErrorMsgDiv;
   }
 
-  public static WebElement getNewRegimenCategoryDropDown() {
+  public WebElement getNewRegimenCategoryDropDown() {
     return newRegimenCategoryDropDown;
   }
 
@@ -168,7 +166,7 @@ public class RegimenTemplateConfigPage extends Page {
   {
     testWebDriver.waitForElementToAppear(doneButton);
     doneButton.click();
-    testWebDriver.waitForElementToAppear(editButton);
+    testWebDriver.waitForElementsToAppear(editButton, saveErrorMsgDiv, doneFailMessage);
   }
 
   public void SaveRegime() {
