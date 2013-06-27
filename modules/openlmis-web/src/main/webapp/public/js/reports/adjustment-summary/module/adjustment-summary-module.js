@@ -1,7 +1,4 @@
-'use strict';
-require(['../../../shared/app' , '../controller/adjustment-summary-controller'], function (app) {
-    app.loadApp();
-    angular.module('adjustmentsummary', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('adjustmentsummary', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
         when('/list', {controller:AdjustmentSummaryReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
@@ -12,5 +9,3 @@ require(['../../../shared/app' , '../controller/adjustment-summary-controller'],
         }
     );
 
-    angular.bootstrap(document, ['adjustmentsummary']);
-});
