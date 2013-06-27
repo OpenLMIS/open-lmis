@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static org.openlmis.web.response.OpenLmisResponse.*;
@@ -34,9 +35,9 @@ public class RegimenController extends BaseController {
 
   @RequestMapping(value = "/programId/{programId}/regimens", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE')")
-  public ResponseEntity<OpenLmisResponse> save(@PathVariable("programId") Long programId, @RequestBody RegimenList regimens) {
+  public ResponseEntity<OpenLmisResponse> save(@PathVariable("programId") Long programId, @RequestBody RegimenList regimens,HttpServletRequest request) {
     try {
-      service.save(programId, regimens);
+      service.save(programId,regimens,loggedInUserId(request));
       return success(messageService.message(REGIMENS_SAVED_SUCCESSFULLY));
     } catch (Exception e) {
       return error(UNEXPECTED_EXCEPTION, HttpStatus.BAD_REQUEST);

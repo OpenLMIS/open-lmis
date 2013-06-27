@@ -9,6 +9,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.repository.RegimenRepository;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +44,7 @@ public class RegimenServiceTest {
 
   @Test
   public void shouldSaveARegimens() {
-    service.save(1L, regimens);
+    service.save(1L, regimens,1L );
     verify(repository).insert(regimen);
     verify(repository).deleteByProgramId(1L);
     verify(programService).setRegimenTemplateConfigured(1L);
