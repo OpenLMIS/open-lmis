@@ -1,7 +1,4 @@
-'use strict';
-require(['../../../shared/app' , '../controller/non-reporting-controller'], function (app) {
-    app.loadApp();
-    angular.module('non_reporting', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('non_reporting', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.
                 when('/list', {controller:NonReportingController, templateUrl:'partials/list.html',reloadOnSearch:false}).
@@ -11,6 +8,3 @@ require(['../../../shared/app' , '../controller/non-reporting-controller'], func
             AuthorizationService.preAuthorize('VIEW_NON_REPORTING_FACILITIES');
         }
     );
-
-    angular.bootstrap(document, ['non_reporting']);
-});

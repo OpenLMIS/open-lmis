@@ -1,7 +1,4 @@
-'use strict';
-require(['../../../shared/app' , '../controller/consumption-controller'], function (app) {
-    app.loadApp();
-    angular.module('consumption', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('consumption', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
         when('/list', {controller:ConsumptionReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
@@ -11,6 +8,3 @@ require(['../../../shared/app' , '../controller/consumption-controller'], functi
             AuthorizationService.preAuthorize('VIEW_CONSUMPTION_REPORT');
         }
     );
-
-angular.bootstrap(document, ['consumption']);
-});

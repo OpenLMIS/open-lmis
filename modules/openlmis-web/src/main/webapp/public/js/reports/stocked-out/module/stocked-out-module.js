@@ -1,8 +1,4 @@
-'use strict';
-require(['../../../shared/app' , '../controller/stocked-out-controller'], function (app) {
-    app.loadApp();
-
-    angular.module('stocked_out', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('stocked_out', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
         when('/list', {controller:StockedOutController, templateUrl:'partials/list.html',reloadOnSearch:false}).
@@ -12,6 +8,3 @@ require(['../../../shared/app' , '../controller/stocked-out-controller'], functi
         AuthorizationService.preAuthorize('VIEW_STOCKED_OUT_REPORT');
     }
 );
-
-    angular.bootstrap(document, ['stocked_out']);
-});

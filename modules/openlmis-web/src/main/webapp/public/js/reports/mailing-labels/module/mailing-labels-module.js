@@ -1,7 +1,4 @@
-'use strict';
-require(['../../../shared/app' , '../controller/mailing-labels-controller'], function (app) {
-    app.loadApp();
-    angular.module('mailinglabels', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('mailinglabels', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.
                 when('/list', {controller:ListMailinglabelsController, templateUrl:'partials/list.html',reloadOnSearch:false}).
@@ -11,6 +8,3 @@ require(['../../../shared/app' , '../controller/mailing-labels-controller'], fun
             AuthorizationService.preAuthorize('VIEW_MAILING_LABEL_REPORT');
         }
     );
-
-    angular.bootstrap(document, ['mailinglabels']);
-});
