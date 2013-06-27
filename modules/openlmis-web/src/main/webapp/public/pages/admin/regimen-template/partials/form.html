@@ -69,8 +69,9 @@
     </div>
   </form>
 
-  <form name="regimenEditForm" class="regimenForm" ng-submit="save()" ng-show="getRegimenValuesByCategory().length > 0">
-    <div class="rnr-template-head">
+  <form name="regimenEditForm" class="regimenForm" ng-submit="save()">
+
+    <div class="rnr-template-head" ng-show="getRegimenValuesByCategory().length > 0">
       <div class="row-fluid">
         <div class="span2"><span openlmis-message="header.code"></span></div>
         <div class="span4"><span openlmis-message="header.name"></span></div>
@@ -79,7 +80,7 @@
       </div>
     </div>
 
-    <div class="row-fluid">
+    <div class="row-fluid" ng-show="getRegimenValuesByCategory().length > 0">
       <div ng-model="regimenCategories" ng-repeat="category in regimenCategories" class="ui-sortable">
         <div class="categoryName">
           <div ng-show="regimensByCategory[category.id].length > 0" ng-bind="category.name"></div>
@@ -99,17 +100,17 @@
                      ng-show="regimen.editable"/>
             </div>
             <div class="span2">
-              <input type="checkbox" ng-model="regimen.active" ng-disabled="!regimen.editable"/>
+              <input type="checkbox" ng-model="regimen.active" ng-disabled="!regimen.editable" />
             </div>
             <div ng-show="!regimen.editable" class="span3">
-              <input name="button" type="button" class="btn btn-primary btn-small pull-right" value="Edit"
+              <input name="button" type="button" class="btn btn-primary btn-small pull-right" openlmis-message="button.edit"
                      ng-click="editRow(regimen)"/>
             </div>
             <div ng-show="regimen.editable" class="span3">
-              <input name="button" type="button" class="btn btn-primary btn-small pull-right" value="Done"
+              <input name="button" type="button" class="btn btn-primary btn-small pull-right" openlmis-message="button.done"
                      ng-click="saveRow(regimen)"/>
             </div>
-            <div class="alert alert-error" id="doneFailMessage{{regimen.code}}" openlmis-message="regimen.doneRegimenError"
+            <div class="alert alert-error" id="doneFailMessage{{regimen.code}}" openlmis-message="label.missing.values"
                  ng-show="regimen.doneRegimenError"></div>
           </div>
         </div>

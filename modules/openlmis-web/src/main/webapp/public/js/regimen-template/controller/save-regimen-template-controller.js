@@ -12,6 +12,9 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
   $scope.selectProgramUrl = "/public/pages/admin/regimen-template/index.html#/select-program";
   $scope.regimensByCategory = {};
   $scope.$parent.message = "";
+  $scope.newRegimen = {active:true};
+
+
 
   function addRegimenByCategory(regimen) {
     regimen.editable = false;
@@ -49,6 +52,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
       $scope.newRegimenError = null;
       $scope.newRegimen = null;
       $scope.inputClass = false;
+      $scope.newRegimen = {active:true};
     }
   };
 
@@ -97,11 +101,11 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
     }
 
     if ($scope.regimenEditForm.$error.required) {
-      regimen.doneRegimenError = messageService.get('label.missing.values');
+      regimen.doneRegimenError = true;
       return;
     }
 
-    regimen.doneRegimenError = "";
+    regimen.doneRegimenError = false;
     regimen.editable = false;
     $scope.error = "";
   };
@@ -135,7 +139,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
     $(regimenLists).each(function (index, regimenList) {
       $(regimenList).each(function (index, regimen) {
         codes.push(regimen.code);
-        regimen.doneRegimenError = undefined;
+        regimen.doneRegimenError = false;
         regimen.editable = undefined;
         regimen.displayOrder = index + 1;
       });
