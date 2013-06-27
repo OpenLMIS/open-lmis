@@ -479,8 +479,8 @@ public class FacilityMapperIT {
 
 
     assertThat(memberFacilities.size(), is(3));
-    assertThat(memberFacilities.get(0).getCode(), is("F10011"));
-    assertThat(memberFacilities.get(1).getCode(), is("F10010"));
-    assertThat(memberFacilities.get(2).getCode(), is("F10A"));
+    assertThat(memberFacilities.get(0).getCode(), is("F10A"));
+    assertThat(memberFacilities.get(1).getCode(), is("F10011"));
+    assertThat(memberFacilities.get(2).getCode(), is("F10010"));
   }
 }

@@ -44,5 +44,10 @@ public interface ProgramProductMapper {
   })
   List<ProgramProduct> getByProgram(Program program);
 
-
+  @Select("SELECT * from program_products where id = #{id}")
+  @Results(value = {
+    @Result(property = "product", column = "productId", javaType = Product.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
+  })
+  ProgramProduct getById(Long id);
 }

@@ -158,4 +158,7 @@ public class FacilityRepository {
     return mapper.getByCode(facility.getCode());
   }
 
+  public List<Facility> getAllInDeliveryZoneFor(Long deliveryZoneId, Long programId) {
+    return mapper.getAllInDeliveryZoneFor(deliveryZoneId, programId);
+  }
 }

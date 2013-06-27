@@ -37,12 +37,15 @@ public class FacilityService {
   private SupervisoryNodeService supervisoryNodeService;
 
   private EventService eventService;
+  private AllocationProgramProductService allocationProgramProductService;
 
+
+  //TODO : remove constructor autowiring
   @Autowired
   public FacilityService(FacilityRepository facilityRepository, ProgramSupportedRepository programSupportedRepository,
                          ProgramRepository programRepository, SupervisoryNodeService supervisoryNodeService,
                          RequisitionGroupService requisitionGroupService, GeographicZoneRepository geographicZoneRepository,
-                         EventService eventService) {
+                         EventService eventService, AllocationProgramProductService allocationProgramProductService) {
     this.facilityRepository = facilityRepository;
     this.programSupportedRepository = programSupportedRepository;
     this.programRepository = programRepository;
@@ -50,6 +53,7 @@ public class FacilityService {
     this.requisitionGroupService = requisitionGroupService;
     this.geographicZoneRepository = geographicZoneRepository;
     this.eventService = eventService;
+    this.allocationProgramProductService = allocationProgramProductService;
   }
 
   @Transactional
@@ -172,5 +176,17 @@ public class FacilityService {
     Long programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
 
     return programSupportedRepository.getByFacilityIdAndProgramId(facilityId, programId);
+  }
+
+  public List<Facility> getAllInDeliveryZoneFor(Long deliveryZoneId, Long programId) {
+    List<Facility> facilities = facilityRepository.getAllInDeliveryZoneFor(deliveryZoneId, programId);
+    for(Facility facility : facilities) {
+      ProgramSupported programSupported = programSupportedRepository.getByFacilityIdAndProgramId(facility.getId(), programId);
+      List<ProgramSupported> programsSupported = new ArrayList<>();
+      programsSupported.add(programSupported);
+      programSupported.setProgramProducts(allocationProgramProductService.getByFacilityAndProgram(facility.getId(), programId));
+      facility.setSupportedPrograms(programsSupported);
+    }
+    return facilities;
   }
 }

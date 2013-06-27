@@ -68,11 +68,14 @@ public class FacilityServiceTest {
   @Mock
   private EventService eventService;
 
+  @Mock
+  private AllocationProgramProductService allocationProgramProductService;
+
   @Before
   public void setUp() throws Exception {
     initMocks(this);
     facilityService = new FacilityService(facilityRepository, programSupportedRepository, programRepository, supervisoryNodeService,
-        requisitionGroupService, geographicZoneRepository, eventService);
+      requisitionGroupService, geographicZoneRepository, eventService, allocationProgramProductService);
   }
 
   @Test
@@ -358,6 +361,34 @@ public class FacilityServiceTest {
     assertThat(programSupported.getFacilityId(), is(1L));
     assertThat(programSupported.getProgram().getId(), is(2L));
     verify(programSupportedRepository).updateSupportedProgram(programSupported);
+  }
+
+
+  @Test
+  public void shouldGetAllFacilitiesInDeliveryZoneForSupportedProgram() throws Exception {
+    List<Facility> memberFacilities = new ArrayList<>();
+    Facility facility = new Facility();
+    facility.setId(1L);
+    memberFacilities.add(facility);
+
+    Long deliveryZoneId = 1l;
+    Long programId = 1l;
+    when(facilityRepository.getAllInDeliveryZoneFor(deliveryZoneId, programId)).thenReturn(memberFacilities);
+    ProgramSupported programSupported = new ProgramSupported();
+    List<ProgramSupported> programsSupported = new ArrayList<>();
+    programsSupported.add(programSupported);
+    when(programSupportedRepository.getByFacilityIdAndProgramId(facility.getId(), programId)).thenReturn(programSupported);
+    List<AllocationProgramProduct> allocationProgramProduct = new ArrayList<>();
+    when(allocationProgramProductService.getByFacilityAndProgram(facility.getId(), programId)).thenReturn(allocationProgramProduct);
+
+    List<Facility> facilities = facilityService.getAllInDeliveryZoneFor(deliveryZoneId, programId);
+
+    assertThat(facilities, is(memberFacilities));
+    assertThat(facilities.get(0).getSupportedPrograms(), is(programsSupported));
+    assertThat(facilities.get(0).getSupportedPrograms().get(0).getProgramProducts(), is(allocationProgramProduct));
+    verify(programSupportedRepository).getByFacilityIdAndProgramId(facility.getId(), programId);
+    verify(allocationProgramProductService).getByFacilityAndProgram(facility.getId(), programId);
+    verify(facilityRepository).getAllInDeliveryZoneFor(deliveryZoneId, programId);
   }
 
   private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {
