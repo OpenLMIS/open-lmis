@@ -12,8 +12,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
   $scope.selectProgramUrl = "/public/pages/admin/regimen-template/index.html#/select-program";
   $scope.regimensByCategory = {};
   $scope.$parent.message = "";
-  $scope.newRegimen = {active:true};
-
+  $scope.newRegimen = {active: true};
 
 
   function addRegimenByCategory(regimen) {
@@ -52,7 +51,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
       $scope.newRegimenError = null;
       $scope.newRegimen = null;
       $scope.inputClass = false;
-      $scope.newRegimen = {active:true};
+      $scope.newRegimen = {active: true};
     }
   };
 
@@ -65,22 +64,22 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
       $(regimenList).each(function (index, loopRegimen) {
         if (regimen.$$hashKey != loopRegimen.$$hashKey) {
           codes.push(loopRegimen.code);
-          if (codes.length > 0 && regimenCode!=undefined && _.contains(codes, regimenCode)) {
+          if (codes.length > 0 && regimenCode != undefined && _.contains(codes, regimenCode)) {
             $scope.newRegimenError = "";
             $scope.error = messageService.get('error.duplicate.regimen.code');
             duplicateRegimen = true;
-            return ;
+            return;
           }
-          if(duplicateRegimen) return ;
+          if (duplicateRegimen) return;
         }
       });
-      if(duplicateRegimen) return ;
+      if (duplicateRegimen) return;
     });
     return duplicateRegimen;
   }
 
-  $scope.getRegimenValuesByCategory=function(){
-   return _.values($scope.regimensByCategory);
+  $scope.getRegimenValuesByCategory = function () {
+    return _.values($scope.regimensByCategory);
   }
 
   $scope.highlightRequired = function (value) {
@@ -139,7 +138,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
     $(regimenLists).each(function (index, regimenList) {
       $(regimenList).each(function (index, regimen) {
         codes.push(regimen.code);
-        regimen.doneRegimenError = false;
+        regimen.doneRegimenError = undefined;
         regimen.editable = undefined;
         regimen.displayOrder = index + 1;
       });
