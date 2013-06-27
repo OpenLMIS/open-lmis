@@ -11,8 +11,7 @@ import org.apache.commons.collections.Predicate;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.FacilityBuilder;
-import org.openlmis.core.builder.RequisitionGroupBuilder;
+import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static java.lang.Boolean.FALSE;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.*;
@@ -73,6 +73,19 @@ public class FacilityMapperIT {
 
   @Autowired
   SupervisoryNodeMapper supervisoryNodeMapper;
+
+  @Autowired
+  ProcessingScheduleMapper processingScheduleMapper;
+
+  @Autowired
+  DeliveryZoneMemberMapper deliveryZoneMemberMapper;
+
+
+  @Autowired
+  DeliveryZoneProgramScheduleMapper deliveryZoneProgramScheduleMapper;
+
+  @Autowired
+  DeliveryZoneMapper deliveryZoneMapper;
 
   @Test
   public void shouldFetchAllFacilitiesAvailable() throws Exception {
@@ -152,7 +165,7 @@ public class FacilityMapperIT {
     assertThat(resultFacility.getLongitude(), is(-321.87654));
   }
 
-@Test
+  @Test
   public void shouldInsertFacilityWithSuppliedModifiedDateIfNotNull() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.setLatitude(123.45678);
@@ -167,7 +180,7 @@ public class FacilityMapperIT {
     assertThat(resultFacility.getModifiedDate(), is(calendar.getTime()));
   }
 
-@Test
+  @Test
   public void shouldInsertFacilityWithDbDefalutDateIfSuppliedDateIsNull() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.setLatitude(123.45678);
@@ -402,5 +415,72 @@ public class FacilityMapperIT {
     assert (facilityFromDatabase.getId()).equals(facility.getId());
     assert (facilityFromDatabase.getCode()).equals(facility.getCode());
     assert (facilityFromDatabase.getName()).equals(facility.getName());
+  }
+
+
+  @Test
+  public void shouldGetAllInDeliveryZoneAndOrderByGeographicZoneParentAndFacilityName() {
+    ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
+    processingScheduleMapper.insert(processingSchedule);
+
+    Program program = make(a(ProgramBuilder.defaultProgram));
+    programMapper.insert(program);
+
+    DeliveryZone deliveryZone = make(a(DeliveryZoneBuilder.defaultDeliveryZone));
+    deliveryZoneMapper.insert(deliveryZone);
+
+    DeliveryZoneProgramSchedule deliveryZoneProgramSchedule = make(a(DeliveryZoneProgramScheduleBuilder.defaultDZProgramSchedule));
+    deliveryZoneProgramSchedule.setDeliveryZone(deliveryZone);
+    deliveryZoneProgramSchedule.setSchedule(processingSchedule);
+    deliveryZoneProgramSchedule.setProgram(program);
+    deliveryZoneProgramScheduleMapper.insert(deliveryZoneProgramSchedule);
+
+    Facility facility = make(a(FacilityBuilder.defaultFacility, with(code, "F10A"), with(geographicZoneId, 10L)));
+    mapper.insert(facility);
+    ProgramSupported programSupported = new ProgramSupported();
+    programSupported.setFacilityId(facility.getId());
+    programSupported.setProgram(program);
+    programSupportedMapper.addSupportedProgram(programSupported);
+    DeliveryZoneMember member1 = new DeliveryZoneMember(deliveryZone, facility);
+    deliveryZoneMemberMapper.insert(member1);
+
+    Facility facility2 = make(a(defaultFacility, with(code, "F10011"), with(name, "facility2"), with(active, true), with(geographicZoneId, 9L)));
+    mapper.insert(facility2);
+    programSupported.setFacilityId(facility2.getId());
+    programSupportedMapper.addSupportedProgram(programSupported);
+    DeliveryZoneMember member2 = new DeliveryZoneMember(deliveryZone, facility2);
+    deliveryZoneMemberMapper.insert(member2);
+
+    Facility facility3 = make(a(defaultFacility, with(code, "F10010"), with(name, "facility3"), with(active, true), with(geographicZoneId, 9L)));
+    mapper.insert(facility3);
+    DeliveryZoneMember member3 = new DeliveryZoneMember(deliveryZone, facility3);
+    deliveryZoneMemberMapper.insert(member3);
+    programSupported.setFacilityId(facility3.getId());
+    programSupportedMapper.addSupportedProgram(programSupported);
+
+    Facility facility4 = make(a(defaultFacility, with(code, "F10012"), with(name, "facility4"), with(active, false), with(geographicZoneId, 9L)));
+    mapper.insert(facility4);
+    programSupported.setFacilityId(facility4.getId());
+    programSupportedMapper.addSupportedProgram(programSupported);
+    DeliveryZoneMember member4 = new DeliveryZoneMember(deliveryZone, facility4);
+    deliveryZoneMemberMapper.insert(member4);
+
+    Facility facility5 = make(a(defaultFacility, with(code, "F10013"), with(name, "facility4"), with(geographicZoneId, 9L)));
+    mapper.insert(facility5);
+    programSupported.setFacilityId(facility5.getId());
+    Program unsupportedProgram = new Program();
+    unsupportedProgram.setId(2l);
+    programSupported.setProgram(unsupportedProgram);
+    programSupportedMapper.addSupportedProgram(programSupported);
+    DeliveryZoneMember member5 = new DeliveryZoneMember(deliveryZone, facility5);
+    deliveryZoneMemberMapper.insert(member5);
+
+    List<Facility> memberFacilities = mapper.getAllInDeliveryZoneFor(deliveryZone.getId(), program.getId());
+
+
+    assertThat(memberFacilities.size(), is(3));
+    assertThat(memberFacilities.get(0).getCode(), is("F10011"));
+    assertThat(memberFacilities.get(1).getCode(), is("F10010"));
+    assertThat(memberFacilities.get(2).getCode(), is("F10A"));
   }
 }

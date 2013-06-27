@@ -3,6 +3,7 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.DeliveryZoneMember;
+import org.openlmis.core.domain.Facility;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,4 +31,5 @@ public interface DeliveryZoneMemberMapper {
   @Select({"SELECT DZPS.programId from delivery_zone_program_schedules DZPS",
       "INNER JOIN delivery_zone_members DZM ON DZM.deliveryZoneId = DZPS.deliveryZoneId AND DZM.facilityId = #{facilityId}"})
   List<Long> getDeliveryZoneProgramIdsForFacility(Long facilityId);
+
 }

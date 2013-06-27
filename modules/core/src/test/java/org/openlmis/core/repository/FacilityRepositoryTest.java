@@ -292,4 +292,10 @@ public class FacilityRepositoryTest {
     verify(mapper).getHomeFacilityWithRights(1L, "{APPROVE_REQUISITION, CREATE_REQUISITION}");
   }
 
+  @Test
+  public void shouldGetAllFacilitiesInDeliveryZoneForSupportedProgram() throws Exception {
+
+    mapper.getAll
+
+  }
 }
