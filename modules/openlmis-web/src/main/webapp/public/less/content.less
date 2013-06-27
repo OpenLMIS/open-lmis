@@ -326,13 +326,16 @@ span[class^="tpl-"] {
 .regimenForm {
   .rnr-template-head {
     .row-fluid {
-      padding-top: 10px;
+      padding-top: 8px;
+      [class*="span"] {
+        min-height: 27px;
+      }
       span {
         padding-left: 35px;
       }
     }
   }
-  .categoryName {
+  .category-name {
     background: #45a7ad;
     color: white;
     font-size: 0.9em;
@@ -341,19 +344,26 @@ span[class^="tpl-"] {
       padding: 2px 10px;
     }
   }
+  div[ui-sortable] {
+    > div {
+      border-top: 1px solid #BBB;
+      &:first-child {
+        border-top: 0 none;
+      }
+    }
+  }
   .rnr-template-columns {
-    width: auto;
-    border: 1px solid #EEE;
-    border-top: 0;
     margin-bottom: 0px;
     position: relative;
-    padding-top: 6px;
-    padding-bottom: 3px;
+    padding: 10px 0 8px;
     &:hover {
-      background-color: #f9f9f9;
+      background-color: #ececec;
       .drag-handle {
         display: block;
       }
+    }
+    input[type="text"] {
+      margin-bottom: 8px;
     }
     input[type="checkbox"] {
         margin-left: 13px;
@@ -377,10 +387,20 @@ span[class^="tpl-"] {
     }
 
   }
+  .regiment-list-items {
+    border: 1px solid #BBB;
+    border-top: 0 none;
+  }
 }
 
 .editable-row {
-  background-color: #F9F9E4;
+  background: #ececec;
+  .alert {
+    clear: both;
+    margin: 0 33px;
+    font-size: 0.9em;
+    padding: 3px 10px;
+  }
 }
 
 .rnr-tabs {

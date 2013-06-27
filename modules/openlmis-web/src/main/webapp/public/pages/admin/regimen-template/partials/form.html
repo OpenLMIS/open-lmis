@@ -29,6 +29,7 @@
                     ng-options="regimenCategory as regimenCategory.name for regimenCategory in regimenCategories"
                     ng-required="true"
                     ng-class="highlightRequired(newRegimen.category)">
+              <option value="" openlmis-message="placeholder.select.category"></option>
             </select>
           </div>
         </div>
@@ -39,7 +40,7 @@
 
           <div class="form-field">
             <input type="text" id="newRegimenCode" name="newRegimenCode" ng-model="newRegimen.code" ng-required="true"
-                   ng-class="highlightRequired(newRegimen.code)"/>
+                   ng-class="highlightRequired(newRegimen.code)" maxlength="50" />
           </div>
         </div>
         <div class="form-cell">
@@ -49,7 +50,7 @@
 
           <div class="form-field">
             <input type="text" id="newRegimenName" name="newRegimenName" ng-model="newRegimen.name" ng-required="true"
-                   ng-class="highlightRequired(newRegimen.name)"/>
+                   ng-class="highlightRequired(newRegimen.name)" maxlength="50" />
           </div>
         </div>
         <div class="form-cell">
@@ -80,42 +81,46 @@
       </div>
     </div>
 
-    <div class="row-fluid" ng-show="getRegimenValuesByCategory().length > 0">
-      <div ng-model="regimenCategories" ng-repeat="category in regimenCategories" class="ui-sortable">
-        <div class="categoryName">
-          <div ng-show="regimensByCategory[category.id].length > 0" ng-bind="category.name"></div>
-        </div>
-        <div ui-sortable ng-model="regimensByCategory[category.id]" id="sortable">
-          <div ng-repeat="regimen in regimensByCategory[category.id]" class="row-fluid rnr-template-columns"
-               ng-class="{'editable-row' : regimen.editable}">
-            <div class="drag-handle"></div>
-            <div class="span2">
-              <div ng-show="!regimen.editable"><span ng-bind="regimen.code"></span></div>
-                <input name="regimenCode" type="text" ng-model="regimen.code" ng-required="true"
+    <div class="regiment-list-items">
+      <div class="row-fluid" ng-show="getRegimenValuesByCategory().length > 0">
+        <div ng-model="regimenCategories" ng-repeat="category in regimenCategories" class="ui-sortable">
+          <div class="category-name">
+            <div ng-show="regimensByCategory[category.id].length > 0" ng-bind="category.name"></div>
+          </div>
+          <div ui-sortable ng-model="regimensByCategory[category.id]" id="sortable">
+            <div ng-repeat="regimen in regimensByCategory[category.id]" class="row-fluid rnr-template-columns"
+                 ng-class="{'editable-row' : regimen.editable}">
+              <div class="drag-handle"></div>
+              <div class="span2">
+                <div ng-show="!regimen.editable"><span ng-bind="regimen.code"></span></div>
+                  <input name="regimenCode" type="text" ng-model="regimen.code" ng-required="true"
+                         ng-show="regimen.editable"/>
+              </div>
+              <div class="span4">
+                <div ng-show="!regimen.editable"><span ng-bind="regimen.name"></span></div>
+                <input name="regimenName" type="text" ng-model="regimen.name" ng-required="true"
                        ng-show="regimen.editable"/>
-            </div>
-            <div class="span4">
-              <div ng-show="!regimen.editable"><span ng-bind="regimen.name"></span></div>
-              <input name="regimenName" type="text" ng-model="regimen.name" ng-required="true"
-                     ng-show="regimen.editable"/>
-            </div>
-            <div class="span2">
-              <input type="checkbox" ng-model="regimen.active" ng-disabled="!regimen.editable" />
-            </div>
-            <div ng-show="!regimen.editable" class="span3">
-              <input name="button" type="button" class="btn btn-primary btn-small pull-right" openlmis-message="button.edit"
-                     ng-click="editRow(regimen)"/>
-            </div>
-            <div ng-show="regimen.editable" class="span3">
-              <input name="button" type="button" class="btn btn-primary btn-small pull-right" openlmis-message="button.done"
-                     ng-click="saveRow(regimen)"/>
-            </div>
-            <div class="alert alert-error" id="doneFailMessage{{regimen.code}}" openlmis-message="label.missing.values"
-                 ng-show="regimen.doneRegimenError"></div>
+              </div>
+              <div class="span2">
+                <input type="checkbox" ng-model="regimen.active" ng-disabled="!regimen.editable" />
+              </div>
+              <div ng-show="!regimen.editable" class="span3">
+                <input name="button" type="button" class="btn btn-primary btn-small pull-right" openlmis-message="button.edit"
+                       ng-click="editRow(regimen)"/>
+              </div>
+              <div ng-show="regimen.editable" class="span3">
+                <input name="button" type="button" class="btn btn-primary btn-small pull-right" openlmis-message="button.done"
+                       ng-click="saveRow(regimen)"/>
+              </div>
+              <div class="alert alert-error" id="doneFailMessage{{regimen.code}}" openlmis-message="label.missing.values"
+                   ng-show="regimen.doneRegimenError"></div>
+          </div>
           </div>
         </div>
       </div>
     </div>
+
+
 
     <div form-toolbar class="action-buttons">
       <div class="form-cell button-row">
