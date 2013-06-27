@@ -11,9 +11,8 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.FacilityApprovedProduct;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.service.FacilityApprovedProductService;
-import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
@@ -38,11 +37,11 @@ public class FacilityApprovedProductControllerTest {
     Long facilityId = 1L;
     Long programId = 1L;
     facilityApprovedProductController = new FacilityApprovedProductController(facilityApprovedProductService);
-    ArrayList<FacilityApprovedProduct> nonFullSupplyProducts = new ArrayList<>();
+    ArrayList<FacilityTypeApprovedProduct> nonFullSupplyProducts = new ArrayList<>();
     when(facilityApprovedProductService.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId)).thenReturn(nonFullSupplyProducts);
     ResponseEntity<OpenLmisResponse> openLmisResponse =
       facilityApprovedProductController.getAllNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
     verify(facilityApprovedProductService).getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId);
-    assertThat((ArrayList<FacilityApprovedProduct>) openLmisResponse.getBody().getData().get(FacilityApprovedProductController.NON_FULL_SUPPLY_PRODUCTS), is(nonFullSupplyProducts));
+    assertThat((ArrayList<FacilityTypeApprovedProduct>) openLmisResponse.getBody().getData().get(FacilityApprovedProductController.NON_FULL_SUPPLY_PRODUCTS), is(nonFullSupplyProducts));
   }
 }

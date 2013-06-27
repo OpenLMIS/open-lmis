@@ -201,11 +201,11 @@
                         <property name="tableName" value="users"/>
                     </bean>
                 </entry>
-                <entry key="facilityApprovedProduct">
+                <entry key="facilityTypeApprovedProduct">
                     <bean class="org.openlmis.web.model.UploadBean">
                         <property name="displayName" value="Facility Approved Products"/>
                         <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.FacilityApprovedProduct</value>
+                            <value type="java.lang.Class">org.openlmis.core.domain.FacilityTypeApprovedProduct</value>
                         </property>
                         <property name="recordHandler" ref="facilityApprovedProductPersistenceHandler"/>
                         <property name="tableName" value="facility_approved_products"/>

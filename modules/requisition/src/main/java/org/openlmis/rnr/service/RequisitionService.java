@@ -90,11 +90,11 @@ public class RequisitionService {
 
     validateIfRnrCanBeInitiatedFor(facilityId, programId, periodId);
 
-    List<FacilityApprovedProduct> facilityApprovedProducts;
-    facilityApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
+    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts;
+    facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
         facilityId, programId);
 
-    Rnr requisition = new Rnr(facilityId, programId, periodId, facilityApprovedProducts, modifiedBy);
+    Rnr requisition = new Rnr(facilityId, programId, periodId, facilityTypeApprovedProducts, modifiedBy);
 
     fillFieldsForInitiatedRequisitionAccordingToTemplate(requisition, rnrTemplate);
 

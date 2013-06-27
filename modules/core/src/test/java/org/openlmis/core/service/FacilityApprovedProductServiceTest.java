@@ -14,7 +14,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.FacilityApprovedProduct;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityApprovedProductRepository;
@@ -61,7 +61,7 @@ public class FacilityApprovedProductServiceTest {
   @Test
   public void shouldSaveFacilityApprovedProduct() throws Exception {
 
-    FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = make(a(defaultFacilityApprovedProduct));
 
     Long programId = 45L;
     Long productId = 10L;
@@ -70,53 +70,53 @@ public class FacilityApprovedProductServiceTest {
     when(programService.getIdForCode(defaultProgramCode)).thenReturn(programId);
     when(productService.getIdForCode(defaultProductCode)).thenReturn(productId);
     when(programProductService.getIdByProgramIdAndProductId(programId, productId)).thenReturn(100L);
-    when(facilityService.getFacilityTypeByCode(facilityApprovedProduct.getFacilityType())).thenReturn(new FacilityType());
+    when(facilityService.getFacilityTypeByCode(facilityTypeApprovedProduct.getFacilityType())).thenReturn(new FacilityType());
 
-    facilityApprovedProductService.save(facilityApprovedProduct);
+    facilityApprovedProductService.save(facilityTypeApprovedProduct);
 
     verify(programService).getIdForCode(defaultProgramCode);
     verify(productService).getIdForCode(defaultProductCode);
     verify(programProductService).getIdByProgramIdAndProductId(programId, productId);
-    verify(facilityApprovedProductRepository).insert(facilityApprovedProduct);
+    verify(facilityApprovedProductRepository).insert(facilityTypeApprovedProduct);
 
-    assertThat(facilityApprovedProduct.getProgramProduct().getProgram().getId(), is(programId));
-    assertThat(facilityApprovedProduct.getProgramProduct().getProduct().getId(), is(productId));
-    assertThat(facilityApprovedProduct.getProgramProduct().getId(), is(programProductId));
+    assertThat(facilityTypeApprovedProduct.getProgramProduct().getProgram().getId(), is(programId));
+    assertThat(facilityTypeApprovedProduct.getProgramProduct().getProduct().getId(), is(productId));
+    assertThat(facilityTypeApprovedProduct.getProgramProduct().getId(), is(programProductId));
   }
 
   @Test
   public void shouldNotSaveFacilityApprovedProductAndThrowAnExceptionWhenProgramDoesNotExist() throws Exception {
-    FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = make(a(defaultFacilityApprovedProduct));
 
     doThrow(new DataException("abc")).when(programService).getIdForCode(defaultProgramCode);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("abc");
 
-    facilityApprovedProductService.save(facilityApprovedProduct);
+    facilityApprovedProductService.save(facilityTypeApprovedProduct);
     verify(programService).getIdForCode(defaultProgramCode);
 
-    verify(facilityApprovedProductRepository, never()).insert(facilityApprovedProduct);
+    verify(facilityApprovedProductRepository, never()).insert(facilityTypeApprovedProduct);
   }
 
   @Test
   public void shouldNotSaveFacilityApprovedProductAndThrowAnExceptionWhenProductDoesNotExist() throws Exception {
-    FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = make(a(defaultFacilityApprovedProduct));
 
     doThrow(new DataException("abc")).when(productService).getIdForCode(defaultProductCode);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("abc");
 
-    facilityApprovedProductService.save(facilityApprovedProduct);
+    facilityApprovedProductService.save(facilityTypeApprovedProduct);
 
     verify(productService).getIdForCode(defaultProgramCode);
-    verify(facilityApprovedProductRepository, never()).insert(facilityApprovedProduct);
+    verify(facilityApprovedProductRepository, never()).insert(facilityTypeApprovedProduct);
   }
 
   @Test
   public void shouldNotSaveFacilityApprovedProductAndThrowAnExceptionWhenProgramProductDoesNotExist() throws Exception {
-    FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = make(a(defaultFacilityApprovedProduct));
 
     Long programId = 1L;
     Long productId = 2L;
@@ -129,9 +129,9 @@ public class FacilityApprovedProductServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("abc");
 
-    facilityApprovedProductService.save(facilityApprovedProduct);
+    facilityApprovedProductService.save(facilityTypeApprovedProduct);
 
     verify(programProductService).getIdByProgramIdAndProductId(programId, productId);
-    verify(facilityApprovedProductRepository, never()).insert(facilityApprovedProduct);
+    verify(facilityApprovedProductRepository, never()).insert(facilityTypeApprovedProduct);
   }
 }
