@@ -34,7 +34,17 @@ app.directive('openlmisMessage', function (messageService) {
       }
 
       var refreshMessages = function () {
-        var key = scope[keyWithArgs[0]] || keyWithArgs[0];
+        var evaluatedVariable = scope;
+        var existsInScope = true;
+        $(keyWithArgs[0].split('.')).each(function(index, arg) {
+          evaluatedVariable = evaluatedVariable[arg];
+          if(!evaluatedVariable) {
+            existsInScope = false;
+            return false;
+          }
+        });
+
+        var key = existsInScope ? evaluatedVariable : keyWithArgs[0];
         var displayMessage = messageService.get(key) || key;
         if (!isUndefined(keyWithArgs) && keyWithArgs.length > 1) {
           displayMessage = replaceArgs(scope, displayMessage, keyWithArgs);

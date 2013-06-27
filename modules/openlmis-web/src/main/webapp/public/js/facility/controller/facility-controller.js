@@ -248,7 +248,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.programsToDisplay = _.reject($scope.programs, function (supportedProgram) {
       return _.contains(supportedProgramIds, supportedProgram.id)
     });
-    $scope.programSupportedMessage = ($scope.programsToDisplay.length) ? '--Select Program Supported--' : '--No Program Left--';
+    $scope.programSupportedMessage = ($scope.programsToDisplay.length) ? 'label.select.program.supported' : 'label.no.programs.left';
   }
 
 }
