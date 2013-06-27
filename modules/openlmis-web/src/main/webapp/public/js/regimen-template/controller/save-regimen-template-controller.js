@@ -99,7 +99,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
       return;
     }
 
-    if ($scope.regimenEditForm.$error.required) {
+    if (invalidRegimen(regimen)) {
       regimen.doneRegimenError = true;
       return;
     }
@@ -108,6 +108,11 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
     regimen.editable = false;
     $scope.error = "";
   };
+
+  function invalidRegimen(regimen) {
+    if (isUndefined(regimen.code) || isUndefined(regimen.name)) return true;
+    return false;
+  }
 
   function checkAllRegimensNotDone() {
     var notDone = false;
