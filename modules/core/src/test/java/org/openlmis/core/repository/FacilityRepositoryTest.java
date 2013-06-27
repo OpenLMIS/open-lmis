@@ -295,7 +295,7 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldGetAllFacilitiesInDeliveryZoneForSupportedProgram() throws Exception {
 
-    mapper.getAll
+//    mapper.getAll
 
   }
 }
