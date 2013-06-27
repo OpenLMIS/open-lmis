@@ -97,7 +97,7 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//li[@id='quantityDispensed']/span/input")
   private static WebElement totalConsumedQuantityCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='quantityRequested']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='reasonForRequestedQuantity']/span/input")
   private static WebElement requestedQuantityCheckBox;
 
   @FindBy(how = How.XPATH, using = "//li[@id='expirationDate']/span/input")
