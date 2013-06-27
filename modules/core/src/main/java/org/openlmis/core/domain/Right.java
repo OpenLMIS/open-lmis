@@ -24,31 +24,33 @@ import static java.util.Arrays.asList;
 @JsonDeserialize(using = RightDeSerializer.class)
 public enum Right {
 
-  CONFIGURE_RNR("Admin - Configure Requisition Templates", TRUE, "Permission to create and edit r&r template for any program"),
-  MANAGE_FACILITY("Admin - Manage Facilities", TRUE, "Permission to manage facility(crud)"),
-  MANAGE_ROLE("Admin - Manage Roles", TRUE, "Permission to create and edit roles in the system"),
-  MANAGE_SCHEDULE("Admin - Manage Schedules", TRUE, "Permission to create and edit schedules in the system"),
-  MANAGE_USERS("Admin - Manage Users", TRUE, "Permission to manage users(crud)"),
-  UPLOADS("Admin - Uploads", TRUE, "Permission to upload"),
-  VIEW_REPORTS("Reports - View", TRUE, "Permission to view reports"),
-  MANAGE_REPORTS("Reports - Manage", TRUE, "Permission to manage reports", VIEW_REPORTS),
-  VIEW_REQUISITION("Requisition - View", FALSE, "Permission to view requisitions"),
-  CREATE_REQUISITION("Requisition - Create", FALSE, "Permission to create, edit, submit and recall requisitions", VIEW_REQUISITION),
-  AUTHORIZE_REQUISITION("Requisition - Authorize", FALSE, "Permission to edit, authorize and recall requisitions", VIEW_REQUISITION),
-  APPROVE_REQUISITION("Requisition - Approve", FALSE, "Permission to approve requisitions", VIEW_REQUISITION),
-  CONVERT_TO_ORDER("Requisition - Convert to Order", TRUE, "Permission to convert requisitions to order"),
-  VIEW_ORDER("Requisition - View Orders", TRUE, "Permission to view orders"),
-  MANAGE_PROGRAM_PRODUCT("Admin - Manage Program Product", TRUE, "Permission to manage program products"),
-  MANAGE_DISTRIBUTION("Allocation - Manage", FALSE, "Permission to manage an distribution"),
-  MANAGE_REGIMEN_TEMPLATE("Admin - Manage Regimen Template", TRUE, "Permission to manage a regimen template");
+  CONFIGURE_RNR("right.configure.rnr", TRUE, "Permission to create and edit r&r template for any program"),
+  MANAGE_FACILITY("right.manage.facility", TRUE, "Permission to manage facility(crud)"),
+  MANAGE_ROLE("right.manage.role", TRUE, "Permission to create and edit roles in the system"),
+  MANAGE_SCHEDULE("right.manage.schedule", TRUE, "Permission to create and edit schedules in the system"),
+  MANAGE_USERS("right.manage.user", TRUE, "Permission to manage users(crud)"),
+  UPLOADS("right.upload", TRUE, "Permission to upload"),
+  VIEW_REPORTS("right.view.report", TRUE, "Permission to view reports"),
+  MANAGE_REPORTS("right.manage.report", TRUE, "Permission to manage reports", VIEW_REPORTS),
+  VIEW_REQUISITION("right.view.requisition", FALSE, "Permission to view requisitions"),
+  CREATE_REQUISITION("right.create.requisition", FALSE, "Permission to create, edit, submit and recall requisitions", VIEW_REQUISITION),
+  AUTHORIZE_REQUISITION("right.authorize.requisition", FALSE, "Permission to edit, authorize and recall requisitions", VIEW_REQUISITION),
+  APPROVE_REQUISITION("right.approve.requisition", FALSE, "Permission to approve requisitions", VIEW_REQUISITION),
+  CONVERT_TO_ORDER("right.convert.to.order", TRUE, "Permission to convert requisitions to order"),
+  VIEW_ORDER("right.view.order", TRUE, "Permission to view orders"),
+  MANAGE_PROGRAM_PRODUCT("right.manage.program.product", TRUE, "Permission to manage program products"),
+  MANAGE_DISTRIBUTION("right.manage.distribution", FALSE, "Permission to manage an distribution"),
+  MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", TRUE, "Permission to manage a regimen template");
 
   @Getter
   private final String rightName;
 
   @Getter
   private Boolean adminRight;
+
   @Getter
   private final String description;
+
   @Getter
   private List<Right> defaultRights;
 
