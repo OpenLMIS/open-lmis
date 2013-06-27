@@ -63,8 +63,8 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
     $(regimenLists).each(function (index, regimenList) {
       $(regimenList).each(function (index, loopRegimen) {
         if (regimen.$$hashKey != loopRegimen.$$hashKey) {
-          codes.push(loopRegimen.code);
-          if (codes.length > 0 && regimenCode != undefined && _.contains(codes, regimenCode)) {
+          codes.push(loopRegimen.code.toLowerCase());
+          if (codes.length > 0 && regimenCode != undefined && _.contains(codes, regimenCode.toLowerCase())) {
             $scope.newRegimenError = "";
             $scope.error = messageService.get('error.duplicate.regimen.code');
             duplicateRegimen = true;
@@ -139,10 +139,8 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
     var regimenListToSave = [];
     var regimenLists = _.values($scope.regimensByCategory);
 
-    var codes = [];
     $(regimenLists).each(function (index, regimenList) {
       $(regimenList).each(function (index, regimen) {
-        codes.push(regimen.code);
         regimen.doneRegimenError = undefined;
         regimen.editable = undefined;
         regimen.displayOrder = index + 1;
