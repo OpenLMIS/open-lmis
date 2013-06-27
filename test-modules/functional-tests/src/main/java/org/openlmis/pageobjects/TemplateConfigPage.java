@@ -37,190 +37,190 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='error']")
   private static WebElement saveErrorMsgDiv;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='E']/span[@class='tpl-source']/span/select")
+  @FindBy(how = How.XPATH, using = "//li[@id='stockInHand']/span[@class='tpl-source']/span/select")
   private static WebElement stockInHandDropDown;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='A']/span/span/span/span/input[@type='checkbox']")
+  @FindBy(how = How.XPATH, using = "//li[@id='beginningBalance']/span/span/span/span/input[@type='checkbox']")
   private static WebElement checkboxBeginningBalance;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='C']/span[@class='tpl-source']/span/select")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityDispensed']/span[@class='tpl-source']/span/select")
   private static WebElement dropDownTotalConsumedQuantity;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='W']/span[@class='tpl-error']/div")
+  @FindBy(how = How.XPATH, using = "//li[@id='reasonForRequestedQuantity']/span[@class='tpl-error']/div")
   private static WebElement requestedQtyExplanationErrorMessage;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='J']/span[@class='tpl-error']/div")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityRequested']/span[@class='tpl-error']/div")
   private static WebElement requestedQtyErrorMessage;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='C']/span[@class='tpl-error']/div")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityDispensed']/span[@class='tpl-error']/div")
   private static WebElement totalConsumedQtyErrorMessage;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='E']/span[@class='tpl-error']/div")
+  @FindBy(how = How.XPATH, using = "//li[@id='stockInHand']/span[@class='tpl-error']/div")
   private static WebElement stockOnHandQtyErrorMessage;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='O']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='productCode']/span[@class='tpl-label']/input")
   private static WebElement productCode;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='O']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='productCode']/span[@class='tpl-source']/span[2]")
   private static WebElement productCodeSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='R']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='product']/span[@class='tpl-label']/input")
   private static WebElement productName;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='R']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='product']/span[@class='tpl-source']/span[2]")
   private static WebElement productNameSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='U']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='dispensingUnit']/span[@class='tpl-label']/input")
   private static WebElement unitOfIssue;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='U']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='dispensingUnit']/span[@class='tpl-source']/span[2]")
   private static WebElement unitOfIssueSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='A']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='beginningBalance']/span[@class='tpl-label']/input")
   private static WebElement beginningBalance;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='A']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='beginningBalance']/span[@class='tpl-source']/span[2]")
   private static WebElement beginningBalanceSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='B']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityReceived']/span[@class='tpl-label']/input")
   private static WebElement totalReceivedQuantity;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='B']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityReceived']/span[@class='tpl-source']/span[2]")
   private static WebElement totalReceivedQuantitySource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='C']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityDispensed']/span[@class='tpl-label']/input")
   private static WebElement totalConsumedQuantity;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='C']/span[@class='tpl-source']/span/select/option[@selected='selected']")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityDispensed']/span[@class='tpl-source']/span/select/option[@selected='selected']")
   private static WebElement totalConsumedQuantitySource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='C']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityDispensed']/span/input")
   private static WebElement totalConsumedQuantityCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='W']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityRequested']/span/input")
   private static WebElement requestedQuantityCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='G']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='expirationDate']/span/input")
   private static WebElement expirationDateCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='G']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='expirationDate']/span[@class='tpl-label']/input")
   private static WebElement expirationDateTextBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='G']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='expirationDate']/span[@class='tpl-source']/span[2]")
   private static WebElement expirationDateSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='J']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityRequested']/span/input")
   private static WebElement requestedQuantityExplanationCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='Y']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='total']/span/input")
   private static WebElement totalCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='Y']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='total']/span[@class='tpl-label']/input")
   private static WebElement totalTextBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='Y']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='total']/span[@class='tpl-source']/span[2]")
   private static WebElement totalSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='O']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='productCode']/span/input")
   private static WebElement productCodeCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='R']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='product']/span/input")
   private static WebElement productNameCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='L']/span[@class='tpl-visible']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='remarks']/span[@class='tpl-visible']/input")
   private static WebElement remarksCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='D']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='lossesAndAdjustments']/span[@class='tpl-label']/input")
   private static WebElement lossesAndAdj;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='D']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='lossesAndAdjustments']/span[@class='tpl-source']/span[2]")
   private static WebElement lossesAndAdjSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='E']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='stockInHand']/span[@class='tpl-label']/input")
   private static WebElement stockOnHand;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='E']/span[@class='tpl-source']/span/select/option[@selected='selected']")
+  @FindBy(how = How.XPATH, using = "//li[@id='stockInHand']/span[@class='tpl-source']/span/select/option[@selected='selected']")
   private static WebElement stockOnHandSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='E']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='stockInHand']/span/input")
   private static WebElement stockOnHandCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='F']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='newPatientCount']/span[@class='tpl-label']/input")
   private static WebElement newPatients;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='F']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='newPatientCount']/span[@class='tpl-source']/span[2]")
   private static WebElement newPatientsSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='X']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='stockOutDays']/span[@class='tpl-label']/input")
   private static WebElement stockOutDays;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='X']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='stockOutDays']/span[@class='tpl-source']/span[2]")
   private static WebElement stockOutDaysSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='N']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='normalizedConsumption']/span[@class='tpl-label']/input")
   private static WebElement adjustedTotalConsumption;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='N']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='normalizedConsumption']/span[@class='tpl-source']/span[2]")
   private static WebElement adjustedTotalConsumptionSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='P']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='amc']/span[@class='tpl-label']/input")
   private static WebElement AMC;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='P']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='amc']/span[@class='tpl-source']/span[2]")
   private static WebElement AMCSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='H']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='maxStockQuantity']/span[@class='tpl-label']/input")
   private static WebElement maxStockQuantity;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='H']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='maxStockQuantity']/span[@class='tpl-source']/span[2]")
   private static WebElement maxStockQuantitySource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='I']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='calculatedOrderQuantity']/span[@class='tpl-label']/input")
   private static WebElement calculatedOrderQuantity;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='I']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='calculatedOrderQuantity']/span[@class='tpl-source']/span[2]")
   private static WebElement calculatedOrderQuantitySource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='J']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityRequested']/span[@class='tpl-label']/input")
   private static WebElement requestedQuantity;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='J']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityRequested']/span[@class='tpl-source']/span[2]")
   private static WebElement requestedQuantitySource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='W']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='reasonForRequestedQuantity']/span[@class='tpl-label']/input")
   private static WebElement requestedQuantityExplanation;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='W']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='reasonForRequestedQuantity']/span[@class='tpl-source']/span[2]")
   private static WebElement requestedQuantityExplanationSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='V']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='packsToShip']/span[@class='tpl-label']/input")
   private static WebElement packsToShip;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='V']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='packsToShip']/span[@class='tpl-source']/span[2]")
   private static WebElement packsToShipSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='T']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='price']/span[@class='tpl-label']/input")
   private static WebElement pricePerPack;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='T']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='price']/span[@class='tpl-source']/span[2]")
   private static WebElement pricePerPackSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='Q']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='cost']/span[@class='tpl-label']/input")
   private static WebElement totalCost;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='Q']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='cost']/span[@class='tpl-source']/span[2]")
   private static WebElement totalCostSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='L']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='remarks']/span[@class='tpl-label']/input")
   private static WebElement remarks;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='L']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='remarks']/span[@class='tpl-source']/span[2]")
   private static WebElement remarksSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='K']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityApproved']/span[@class='tpl-label']/input")
   private static WebElement approvedQuantity;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='K']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityApproved']/span[@class='tpl-source']/span[2]")
   private static WebElement approvedQuantitySource;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Turn OFF')]")
