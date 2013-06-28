@@ -10,7 +10,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
   $scope.regimens = regimens;
   $scope.regimenCategories = regimenCategories;
   $scope.selectProgramUrl = "/public/pages/admin/regimen-template/index.html#/select-program";
-  $scope.regimensByCategory = {};
+  $scope.regimensByCategory = [];
   $scope.$parent.message = "";
   $scope.newRegimen = {active: true};
 
@@ -89,12 +89,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
     return null;
   };
 
-  $scope.editRow = function (regimen) {
-    regimen.editable = true;
-  };
-
   $scope.saveRow = function (regimen) {
-
     if (checkDuplicateRegimenError(regimen)) {
       return;
     }
@@ -151,7 +146,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
       $scope.$parent.message = messageService.get('regimens.saved.successfully');
       $scope.program.regimenTemplateConfigured = true;
       $location.path('select-program');
-    }, function (data) {
+    }, function () {
     });
   };
 

@@ -106,7 +106,7 @@
                 </div>
                 <div ng-show="!regimen.editable" class="span3">
                   <input name="button" type="button" class="btn btn-primary btn-small pull-right" openlmis-message="button.edit"
-                         ng-click="editRow(regimen)"/>
+                         ng-click="regimen.editable=true;"/>
                 </div>
                 <div ng-show="regimen.editable" class="span3">
                   <input name="button" type="button" class="btn btn-primary btn-small pull-right" openlmis-message="button.done"
