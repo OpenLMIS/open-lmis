@@ -28,9 +28,8 @@ import java.util.Set;
 import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.*;
 
@@ -87,25 +86,25 @@ public class RoleRightsServiceTest {
 
   @Test
   public void shouldCheckAdminRightHasIsAdminTrue() throws Exception {
-    assertTrue(UPLOADS.getAdminRight());
-    assertTrue(MANAGE_FACILITY.getAdminRight());
-    assertTrue(MANAGE_PROGRAM_PRODUCT.getAdminRight());
-    assertTrue(MANAGE_REPORTS.getAdminRight());
-    assertTrue(MANAGE_ROLE.getAdminRight());
-    assertTrue(MANAGE_SCHEDULE.getAdminRight());
-    assertTrue(MANAGE_USERS.getAdminRight());
-    assertTrue(CONVERT_TO_ORDER.getAdminRight());
-    assertTrue(VIEW_ORDER.getAdminRight());
-    assertTrue(CONFIGURE_RNR.getAdminRight());
+    assertEquals(UPLOADS.getType(), RightType.ADMIN);
+    assertEquals(MANAGE_FACILITY.getType(), RightType.ADMIN);
+    assertEquals(MANAGE_PROGRAM_PRODUCT.getType(), RightType.ADMIN);
+    assertEquals(MANAGE_REPORTS.getType(), RightType.ADMIN);
+    assertEquals(MANAGE_ROLE.getType(), RightType.ADMIN);
+    assertEquals(MANAGE_SCHEDULE.getType(), RightType.ADMIN);
+    assertEquals(MANAGE_USERS.getType(), RightType.ADMIN);
+    assertEquals(CONVERT_TO_ORDER.getType(), RightType.ADMIN);
+    assertEquals(VIEW_ORDER.getType(), RightType.ADMIN);
+    assertEquals(CONFIGURE_RNR.getType(), RightType.ADMIN);
   }
 
   @Test
   public void shouldCheckTransactionalRightIsNotAdminRight() throws Exception {
-    assertFalse(CREATE_REQUISITION.getAdminRight());
-    assertFalse(AUTHORIZE_REQUISITION.getAdminRight());
-    assertFalse(APPROVE_REQUISITION.getAdminRight());
-    assertFalse(MANAGE_DISTRIBUTION.getAdminRight());
-    assertFalse(VIEW_REQUISITION.getAdminRight());
+    assertEquals(CREATE_REQUISITION.getType(), RightType.REQUISITION);
+    assertEquals(AUTHORIZE_REQUISITION.getType(), RightType.REQUISITION);
+    assertEquals(APPROVE_REQUISITION.getType(), RightType.REQUISITION);
+    assertEquals(MANAGE_DISTRIBUTION.getType(), RightType.REQUISITION);
+    assertEquals(VIEW_REQUISITION.getType(), RightType.REQUISITION);
   }
 
   @Test

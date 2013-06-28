@@ -25,8 +25,8 @@ public class RightSerializer extends JsonSerializer<Right> {
     generator.writeString(right.name());
     generator.writeFieldName("rightName");
     generator.writeString(right.getRightName());
-    generator.writeFieldName("adminRight");
-    generator.writeString(right.getAdminRight().toString());
+    generator.writeFieldName("type");
+    generator.writeString(right.getType().name());
     generator.writeEndObject();
   }
 }
