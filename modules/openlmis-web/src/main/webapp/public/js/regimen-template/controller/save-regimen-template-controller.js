@@ -4,9 +4,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function SaveRegimenTemplateController($scope, $routeParams, regimens, regimenColumns, regimenCategories, messageService, Regimens, $location) {
+function SaveRegimenTemplateController($scope, program, regimens, regimenColumns, regimenCategories, messageService, Regimens, $location) {
 
-  $scope.programId = $routeParams.programId;
+  $scope.program = program;
   $scope.regimens = regimens;
   $scope.regimenColumns = regimenColumns;
   $scope.regimenCategories = regimenCategories;
@@ -45,7 +45,7 @@ function SaveRegimenTemplateController($scope, $routeParams, regimens, regimenCo
       if (checkDuplicateRegimenError($scope.newRegimen)) {
         return;
       }
-      $scope.newRegimen.programId = $scope.programId;
+      $scope.newRegimen.programId = $scope.program.id;
       $scope.newRegimen.displayOrder = 1;
       $scope.newRegimen.editable = false;
       addRegimenByCategory($scope.newRegimen);
@@ -146,7 +146,7 @@ function SaveRegimenTemplateController($scope, $routeParams, regimens, regimenCo
     });
     regimenTemplate.regimens = regimenListToSave;
     regimenTemplate.columns = $scope.regimenColumns;
-    Regimens.post({programId: $scope.programId}, regimenTemplate, function () {
+    Regimens.post({programId: $scope.program.id}, regimenTemplate, function () {
       $scope.$parent.message = messageService.get('regimens.saved.successfully');
       $location.path('select-program');
     }, function () {
@@ -156,6 +156,21 @@ function SaveRegimenTemplateController($scope, $routeParams, regimens, regimenCo
 }
 
 SaveRegimenTemplateController.resolve = {
+
+  program: function ($q, Program, $location, $route, $timeout) {
+    var deferred = $q.defer();
+    var id = $route.current.params.programId;
+
+    $timeout(function () {
+      Program.get({id: id}, function (data) {
+        deferred.resolve(data.program);
+      }, function () {
+        $location.path('select-program');
+      });
+    }, 100);
+
+    return deferred.promise;
+  },
 
   regimenColumns: function ($q, RegimenColumns, $location, $route, $timeout) {
     var deferred = $q.defer();
