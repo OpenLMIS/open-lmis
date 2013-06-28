@@ -31,8 +31,8 @@
         <div ng-repeat="geographicZone in filteredGeographicZones" class="row-fluid list-row">
             <div class="span3" style="overflow: visible;"><a ng-click="editGeographicZones(geographicZone.id)">{{geographicZone.name}}</a></div>
             <div class="span3" style="overflow: visible;"> {{geographicZone.code}}</div>
-            <div class="span3" style="overflow: visible;"> {{geographicZone.level}}</div>
-            <div class="span2" style="overflow: visible;"> {{geographicZone.parent}}</div>
+            <div class="span3" style="overflow: visible;"> {{geographicZone.level.name}}</div>
+            <div class="span2" style="overflow: visible;"> {{geographicZone.parent.name}}</div>
         </div>
 
 

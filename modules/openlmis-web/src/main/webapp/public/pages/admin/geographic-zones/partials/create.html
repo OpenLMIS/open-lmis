@@ -37,14 +37,14 @@
                     <div>
                         <label for="level">Level: </label>
                         <div class="form-field">
-                            <select  ui-select2 style="width:200px;" ng-required="true"  name="level" id="level" ng-model="geographicZone.level" ng-options="option as option.name for option in geographicLevels">
+                            <select  style="width:200px;" ng-required="true"  name="level" id="level" ng-model="geographicZone.level.id" ng-options="option.id as option.name for option in geographicLevels">
                             </select>
                         </div>
                     </div>
                     <div>
                         <label for="level">Parent: </label>
                         <div class="form-field">
-                            <select  ui-select2 style="width:200px;" ng-required="true"  name="parent" id="parent" ng-model="geographicZone.parent" ng-options="option as option.name for option in geographicZones">
+                            <select style="width:200px;" ng-required="true"  name="parent" id="parent" ng-model="geographicZone.parent.id" ng-options="option.id as option.name for option in geographicZones">
                             </select>
                         </div>
                     </div>
