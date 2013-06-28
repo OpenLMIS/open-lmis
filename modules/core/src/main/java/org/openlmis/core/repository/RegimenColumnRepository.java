@@ -20,11 +20,7 @@ public class RegimenColumnRepository {
     mapper.insert(regimenColumn);
   }
 
-  public RegimenColumn getRegimenColumnByNameAndProgramId(String name, Long programId) {
-    return mapper.getRegimenColumnByNameAndProgramId(name, programId);
-  }
-
-  public List<RegimenColumn> getAllRegimenColumnsByProgramId(Long programId) {
+  public List<RegimenColumn> getRegimenColumnsByProgramId(Long programId) {
     return mapper.getAllRegimenColumnsByProgramId(programId);
   }
 

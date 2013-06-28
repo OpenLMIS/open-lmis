@@ -9,18 +9,23 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
+import org.openlmis.core.service.ProgramService;
+import org.openlmis.core.service.RegimenColumnService;
 import org.openlmis.core.service.RegimenService;
-import org.openlmis.web.form.RegimenList;
+import org.openlmis.web.form.RegimenTemplate;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
@@ -31,58 +36,74 @@ import static org.openlmis.web.controller.RegimenController.REGIMEN_CATEGORIES;
 @RunWith(MockitoJUnitRunner.class)
 public class RegimenControllerTest {
 
-  public static final Long userId = 1L;
+  @Mock
+  RegimenService regimenService;
 
   @Mock
-  RegimenService service;
+  ProgramService programService;
+
+  @Mock
+  RegimenColumnService regimenColumnService;
 
   @InjectMocks
   RegimenController controller;
 
+  MockHttpServletRequest httpServletRequest;
 
-  private MockHttpServletRequest mockHttpServletRequest;
-
-  private MockHttpSession session;
+  Long userId = 1L;
 
   @Before
   public void setUp() throws Exception {
-    session = new MockHttpSession();
-    mockHttpServletRequest = new MockHttpServletRequest();
-    mockHttpServletRequest.setSession(session);
+    httpServletRequest = new MockHttpServletRequest();
+    MockHttpSession mockHttpSession = new MockHttpSession();
+    httpServletRequest.setSession(mockHttpSession);
+    mockHttpSession.setAttribute(USER, USER);
+    mockHttpSession.setAttribute(USER_ID, userId);
   }
 
   @Test
   public void shouldInsertARegimen() {
     Regimen regimen = new Regimen();
-    RegimenList regimens = new RegimenList();
-    regimens.add(regimen);
-    session.setAttribute(USER, USER);
-    session.setAttribute(USER_ID, userId);
-    controller.save(1L, regimens,mockHttpServletRequest);
-    verify(service).save(1L, regimens,userId );
+    List<Regimen> regimens = Arrays.asList(regimen);
+    RegimenTemplate regimenTemplate = new RegimenTemplate();
+    regimenTemplate.setRegimens(regimens);
+    controller.save(1L, regimenTemplate, httpServletRequest);
+    verify(regimenService).save(1L, regimens, userId);
   }
 
   @Test
   public void shouldGetRegimenByProgram() {
     List<Regimen> expectedRegimens = new ArrayList<>();
     Long programId = 1l;
-    when(service.getByProgram(programId)).thenReturn(expectedRegimens);
+    when(regimenService.getByProgram(programId)).thenReturn(expectedRegimens);
 
     ResponseEntity<OpenLmisResponse> response = controller.getByProgram(programId);
 
-    assertThat((List<Regimen>) response.getBody().getData().get(REGIMENS), is(expectedRegimens));
-    verify(service).getByProgram(programId);
+    assertThat((List<Regimen>) response.getBody().getData().get(REGIMENS),is(expectedRegimens));
+    verify(regimenService).getByProgram(programId);
   }
 
   @Test
   public void shouldGetAllRegimenCategories() throws Exception {
     List<RegimenCategory> expectedRegimenCategories = new ArrayList<>();
-    when(service.getAllRegimenCategories()).thenReturn(expectedRegimenCategories);
+    when(regimenService.getAllRegimenCategories()).thenReturn(expectedRegimenCategories);
 
     ResponseEntity<OpenLmisResponse> response = controller.getAllRegimenCategories();
 
-    assertThat((List<RegimenCategory>) response.getBody().getData().get(REGIMEN_CATEGORIES), is(expectedRegimenCategories));
-    verify(service).getAllRegimenCategories();
+    assertThat((List<RegimenCategory>) response.getBody().getData().get(REGIMEN_CATEGORIES),is(expectedRegimenCategories));
+    verify(regimenService).getAllRegimenCategories();
+  }
 
+  @Test
+  public void shouldSaveRegimenTemplate() throws Exception {
+
+    Long programId = 1L;
+    RegimenTemplate regimenTemplate = new RegimenTemplate();
+
+    controller.save(programId, regimenTemplate, httpServletRequest);
+
+    verify(regimenColumnService).save(regimenTemplate.getColumns());
+    verify(programService).setRegimenTemplateConfigured(programId);
+    verify(regimenService).save(programId, regimenTemplate.getRegimens(), userId);
   }
 }

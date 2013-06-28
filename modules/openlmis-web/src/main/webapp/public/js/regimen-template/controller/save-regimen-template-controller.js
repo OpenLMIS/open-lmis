@@ -4,10 +4,11 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function SaveRegimenTemplateController($scope, program, regimens, regimenCategories, messageService, Regimens, $location) {
+function SaveRegimenTemplateController($scope, $routeParams, regimens, regimenColumns, regimenCategories, messageService, Regimens, $location) {
 
-  $scope.program = program;
+  $scope.programId = $routeParams.programId;
   $scope.regimens = regimens;
+  $scope.regimenColumns = regimenColumns;
   $scope.regimenCategories = regimenCategories;
   $scope.selectProgramUrl = "/public/pages/admin/regimen-template/index.html#/select-program";
   $scope.regimensByCategory = [];
@@ -44,7 +45,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
       if (checkDuplicateRegimenError($scope.newRegimen)) {
         return;
       }
-      $scope.newRegimen.programId = $scope.program.id;
+      $scope.newRegimen.programId = $scope.programId;
       $scope.newRegimen.displayOrder = 1;
       $scope.newRegimen.editable = false;
       addRegimenByCategory($scope.newRegimen);
@@ -131,6 +132,7 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
       return;
     }
 
+    var regimenTemplate = {};
     var regimenListToSave = [];
     var regimenLists = _.values($scope.regimensByCategory);
 
@@ -142,9 +144,10 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
       });
       regimenListToSave = regimenListToSave.concat(regimenList);
     });
-    Regimens.post({programId: $scope.program.id}, regimenListToSave, function () {
+    regimenTemplate.regimens = regimenListToSave;
+    regimenTemplate.columns = $scope.regimenColumns;
+    Regimens.post({programId: $scope.programId}, regimenTemplate, function () {
       $scope.$parent.message = messageService.get('regimens.saved.successfully');
-      $scope.program.regimenTemplateConfigured = true;
       $location.path('select-program');
     }, function () {
     });
@@ -154,13 +157,13 @@ function SaveRegimenTemplateController($scope, program, regimens, regimenCategor
 
 SaveRegimenTemplateController.resolve = {
 
-  regimens: function ($q, ProgramRegimens, $location, $route, $timeout) {
+  regimenColumns: function ($q, RegimenColumns, $location, $route, $timeout) {
     var deferred = $q.defer();
     var id = $route.current.params.programId;
 
     $timeout(function () {
-      ProgramRegimens.get({programId: id}, function (data) {
-        deferred.resolve(data.regimens);
+      RegimenColumns.get({programId: id}, function (data) {
+        deferred.resolve(data.regimen_columns);
       }, function () {
         $location.path('select-program');
       });
@@ -169,13 +172,13 @@ SaveRegimenTemplateController.resolve = {
     return deferred.promise;
   },
 
-  program: function ($q, Program, $location, $route, $timeout) {
+  regimens: function ($q, ProgramRegimens, $location, $route, $timeout) {
     var deferred = $q.defer();
     var id = $route.current.params.programId;
 
     $timeout(function () {
-      Program.get({id: id}, function (data) {
-        deferred.resolve(data.program);
+      ProgramRegimens.get({programId: id}, function (data) {
+        deferred.resolve(data.regimens);
       }, function () {
         $location.path('select-program');
       });

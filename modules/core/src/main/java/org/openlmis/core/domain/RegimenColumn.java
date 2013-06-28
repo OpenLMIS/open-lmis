@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class RegimenColumn extends BaseModel {
 
   private String name;
@@ -18,5 +17,13 @@ public class RegimenColumn extends BaseModel {
   private String dataType;
 
   private Long programId;
+
+  public RegimenColumn (Long programId, String name, String label, String dataType, Boolean visible) {
+    this.programId = programId;
+    this.name = name;
+    this.label = label;
+    this.dataType = dataType;
+    this.visible = visible;
+  }
 
 }

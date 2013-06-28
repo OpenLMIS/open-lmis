@@ -249,3 +249,10 @@ services.factory('RegimenCategories', function ($resource) {
 services.factory('Regimens', function($resource){
   return $resource('/programId/:programId/regimens.json', {}, {post: {method: 'POST', isArray: true}});
 });
+
+services.factory('RegimenColumns', function($resource){
+  return $resource('/programId/:programId/regimenColumns.json', {}, {});
+});
+
+
+
