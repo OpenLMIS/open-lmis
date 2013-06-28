@@ -179,6 +179,17 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     verifyDoneErrorMessage(regimenTemplateConfigPage, requiredErrorMessageSave);
   }
 
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider")
+  public void testVerifyCancelButtonFunctionality(String program, String[] credentials) throws Exception {
+    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
+    regimenTemplateConfigPage.configureProgram(program);
+    regimenTemplateConfigPage.CancelRegime();
+    assertTrue("Clicking Cancel button should be redirected to Regimen Template screen",testWebDriver.getElementByXpath("//a[@id='" + program + "']/span").isDisplayed());
+  }
+
   private void verifyErrorMessage(RegimenTemplateConfigPage regimenTemplateConfigPage, String expectedErrorMessage) {
     testWebDriver.waitForElementToAppear(regimenTemplateConfigPage.getSaveErrorMsgDiv());
     assertEquals(expectedErrorMessage, regimenTemplateConfigPage.getSaveErrorMsgDiv().getText().trim());

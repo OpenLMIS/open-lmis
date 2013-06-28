@@ -60,6 +60,9 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.ID, using = "doneFailMessage")
   private static WebElement doneFailMessage;
 
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Regimen Template')]")
+  private static WebElement regimenTemplateHeader;
+
 
   private static String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
 
@@ -164,7 +167,9 @@ public class RegimenTemplateConfigPage extends Page {
   }
 
   public void CancelRegime() {
+    testWebDriver.waitForElementToAppear(CancelButton);
     CancelButton.click();
+    testWebDriver.waitForElementToAppear(regimenTemplateHeader);
   }
 
 }
