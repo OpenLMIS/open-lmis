@@ -4,10 +4,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function SaveRegimenTemplateController($scope, program, programRegimens, regimenColumns, regimenCategories, messageService, Regimens, $location) {
+function SaveRegimenTemplateController($scope, program, regimens, regimenColumns, regimenCategories, messageService, Regimens, $location) {
 
   $scope.program = program;
-  $scope.regimens = programRegimens;
+  $scope.regimens = regimens;
   $scope.regimenColumns = regimenColumns;
   $scope.regimenCategories = regimenCategories;
   $scope.selectProgramUrl = "/public/pages/admin/regimen-template/index.html#/select-program";
@@ -172,13 +172,13 @@ SaveRegimenTemplateController.resolve = {
     return deferred.promise;
   },
 
-  programRegimens: function ($q, ProgramRegimens, $location, $route, $timeout) {
+  regimenColumns: function ($q, RegimenColumns, $location, $route, $timeout) {
     var deferred = $q.defer();
     var id = $route.current.params.programId;
 
     $timeout(function () {
-      ProgramRegimens.get({programId: id}, function (data) {
-        deferred.resolve(data.regimens);
+      RegimenColumns.get({programId: id}, function (data) {
+        deferred.resolve(data.regimen_columns);
       }, function () {
         $location.path('select-program');
       });
@@ -187,13 +187,13 @@ SaveRegimenTemplateController.resolve = {
     return deferred.promise;
   },
 
-  regimenColumns: function ($q, RegimenColumns, $location, $route, $timeout) {
+  regimens: function ($q, ProgramRegimens, $location, $route, $timeout) {
     var deferred = $q.defer();
     var id = $route.current.params.programId;
 
     $timeout(function () {
-      RegimenColumns.get({programId: id}, function (data) {
-        deferred.resolve(data.regimen_columns);
+      ProgramRegimens.get({programId: id}, function (data) {
+        deferred.resolve(data.regimens);
       }, function () {
         $location.path('select-program');
       });
