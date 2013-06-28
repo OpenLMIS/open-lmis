@@ -33,29 +33,33 @@ public class PageAccessAuthentication extends TestCaseHelper {
   @BeforeMethod(groups = {"smoke"})
   public void setUp() throws Exception {
     super.setup();
-    }
+  }
 
 
   @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-AdminUser")
   public void shouldNotAccessRequisitionPageByAdminUser(String userSIC, String password) throws Exception {
-      LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-      loginPage.loginAs(userSIC, password);
-      testWebDriver.getUrl(baseUrlGlobal + "public/pages/logistics/rnr/index.html#/init-rnr");
-      assertEquals("You are not authorized to view the requested page.", new AccessDeniedPage(testWebDriver).getAccessDeniedText()) ;
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    loginPage.loginAs(userSIC, password);
+    testWebDriver.waitForElementToAppear(new HomePage(testWebDriver).getLogoutLink());
+    testWebDriver.getUrl(baseUrlGlobal + "public/pages/logistics/rnr/index.html#/init-rnr");
+    testWebDriver.sleep(2000);
+    assertEquals("You are not authorized to view the requested page.", new AccessDeniedPage(testWebDriver).getAccessDeniedText());
   }
 
-    @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-StoreInchargeUserUser")
-    public void shouldNotAccessAdminPageByRequisitionUser(String userSIC, String password) throws Exception {
-        List<String> rightsList = new ArrayList<String>();
-        rightsList.add("CREATE_REQUISITION");
-        rightsList.add("VIEW_REQUISITION");
-        setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
+  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-StoreInchargeUserUser")
+  public void shouldNotAccessAdminPageByRequisitionUser(String userSIC, String password) throws Exception {
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("CREATE_REQUISITION");
+    rightsList.add("VIEW_REQUISITION");
+    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
 
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        loginPage.loginAs(userSIC, password);
-        testWebDriver.getUrl(baseUrlGlobal + "public/pages/admin/facility/index.html#/create-facility");
-        assertEquals("You are not authorized to view the requested page.", new AccessDeniedPage(testWebDriver).getAccessDeniedText()) ;
-    }
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    loginPage.loginAs(userSIC, password);
+    testWebDriver.waitForElementToAppear(new HomePage(testWebDriver).getLogoutLink());
+    testWebDriver.getUrl(baseUrlGlobal + "public/pages/admin/facility/index.html#/create-facility");
+    testWebDriver.sleep(2000);
+    assertEquals("You are not authorized to view the requested page.", new AccessDeniedPage(testWebDriver).getAccessDeniedText());
+  }
 
   @AfterMethod(groups = {"smoke"})
   public void tearDown() throws Exception {
@@ -71,11 +75,12 @@ public class PageAccessAuthentication extends TestCaseHelper {
       {"Admin123", "Admin123"}
     };
   }
-   @DataProvider(name = "Data-Provider-Function-StoreInchargeUserUser")
-   public Object[][] parameterIntTestProviderStoreInchargeUserUser() {
-          return new Object[][]{
-                  {"storeincharge", "Admin123"}
-          };
+
+  @DataProvider(name = "Data-Provider-Function-StoreInchargeUserUser")
+  public Object[][] parameterIntTestProviderStoreInchargeUserUser() {
+    return new Object[][]{
+      {"storeincharge", "Admin123"}
+    };
   }
 
 }
