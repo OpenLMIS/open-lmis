@@ -120,7 +120,7 @@ describe('Save Regimen Template Controller', function () {
   });
 
 
-  it('should not save editable row on clicking Done if name not defined', function () {
+  it('should not save editable row on clicking Done if code not defined', function () {
     var regimen = {'name': 'REG5', 'category': {'id': 1}};
     scope.regimensByCategory[1] = regimenList1
     scope.regimensByCategory[2] = regimenList2;
@@ -143,11 +143,11 @@ describe('Save Regimen Template Controller', function () {
     expect(messageService.get).toHaveBeenCalledWith('error.regimens.not.done');
   });
 
-  it('should not save regimens if any row is editable', function () {
+  it('should save regimens', function () {
     scope.regimensByCategory[1] = regimenList1
     scope.regimensByCategory[2] = regimenList2;
     spyOn(messageService, 'get').andCallFake(function(arg) {
-      return 'hello';
+      return 'success';
     });
     $httpBackend.expectPOST('/programId/1/regimens.json').respond(200);
     scope.save();
@@ -155,7 +155,7 @@ describe('Save Regimen Template Controller', function () {
 
     expect(scope.error).toEqual("");
     expect(scope.program.regimenTemplateConfigured).toBeTruthy();
-    expect(scope.$parent.message).toEqual('hello');
+    expect(scope.$parent.message).toEqual('success');
   });
 
 });
