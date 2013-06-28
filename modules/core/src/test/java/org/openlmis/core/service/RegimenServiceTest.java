@@ -33,6 +33,7 @@ public class RegimenServiceTest {
   RegimenService service;
 
   List<Regimen> regimens;
+
   final Regimen regimen = new Regimen();
 
   @Before
@@ -42,13 +43,28 @@ public class RegimenServiceTest {
     }};
   }
 
-  @Test
   public void shouldSaveARegimens() {
     service.save(1L, regimens,1L );
     verify(repository).insert(regimen);
     verify(repository).deleteByProgramId(1L);
     verify(programService).setRegimenTemplateConfigured(1L);
   }
+
+  @Test
+  public void shouldSetRegimenTemplateConfiguredOnSave() {
+    regimen.setProgramId(1L);
+    service.save(null, regimens, 1L);
+    verify(programService).setRegimenTemplateConfigured(1L);
+  }
+
+  @Test
+  public void shouldSetRegimenTemplateConfiguredOnSaveEvenOnNoRegimens() {
+    regimen.setProgramId(1L);
+    service.save(null, new ArrayList<Regimen>(), 1L);
+    verify(programService).setRegimenTemplateConfigured(1L);
+  }
+
+
 
   @Test
   public void shouldGetRegimensByProgram() {
