@@ -12,6 +12,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
@@ -100,7 +101,7 @@ public class FacilityControllerTest {
     Facility facility = new Facility();
     facility.setName("test facility");
 
-    when(messageService.message("message.facility.created.success",facility.getName())).thenReturn("Facility 'test facility' created successfully");
+    when(messageService.message("message.facility.created.success", facility.getName())).thenReturn("Facility 'test facility' created successfully");
 
     ResponseEntity responseEntity = facilityController.insert(facility, httpServletRequest);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
@@ -115,7 +116,7 @@ public class FacilityControllerTest {
   shouldUpdateFacilityAndTagWithModifiedByAndModifiedDate() throws Exception {
     Facility facility = new Facility();
     facility.setName("test facility");
-    when(messageService.message("message.facility.updated.success",facility.getName())).thenReturn("Facility 'test facility' updated successfully");
+    when(messageService.message("message.facility.updated.success", facility.getName())).thenReturn("Facility 'test facility' updated successfully");
     ResponseEntity responseEntity = facilityController.update(facility, httpServletRequest);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
@@ -208,7 +209,7 @@ public class FacilityControllerTest {
     when(Facility.createFacilityToBeDeleted(1L, 1L)).thenReturn(facility);
 
     when(facilityService.updateDataReportableAndActiveFor(facility)).thenReturn(facility);
-    when(messageService.message("delete.facility.success",facility.getName(),facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" deleted successfully");
+    when(messageService.message("delete.facility.success", facility.getName(), facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" deleted successfully");
 
     ResponseEntity<OpenLmisResponse> responseEntity = facilityController.softDelete(httpServletRequest, 1L);
 
@@ -226,13 +227,25 @@ public class FacilityControllerTest {
     when(Facility.createFacilityToBeRestored(1L, 1L, true)).thenReturn(facility);
 
     when(facilityService.updateDataReportableAndActiveFor(facility)).thenReturn(facility);
-    when(messageService.message("restore.facility.success",facility.getName(),facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" restored successfully");
+    when(messageService.message("restore.facility.success", facility.getName(), facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" restored successfully");
 
     ResponseEntity<OpenLmisResponse> responseEntity = facilityController.restore(httpServletRequest, 1L, true);
 
     assertThat(responseEntity.getBody().getSuccessMsg(), is("\"Test Facility\" / \"Test Code\" restored successfully"));
     assertThat((Facility) responseEntity.getBody().getData().get("facility"), is(facility));
     verify(facilityService).updateDataReportableAndActiveFor(facility);
+  }
+
+  @Test
+  public void shouldGetFacilitiesForDeliveryZoneAndProgram() throws Exception {
+
+    List<Facility> facilities = new ArrayList<>();
+    Mockito.when(facilityService.getAllForDeliveryZoneAndProgram(1l, 1l)).thenReturn(facilities);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.getFacilitiesForDeliveryZoneAndProgram(1l, 1l);
+
+    verify(facilityService).getAllForDeliveryZoneAndProgram(1l, 1l);
+    assertThat((List<Facility>) responseEntity.getBody().getData().get("facilities"), is(facilities));
   }
 
   private MockHttpServletRequest httpRequest() {

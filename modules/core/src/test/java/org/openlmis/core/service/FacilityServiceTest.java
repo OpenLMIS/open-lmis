@@ -381,7 +381,7 @@ public class FacilityServiceTest {
     List<AllocationProgramProduct> allocationProgramProduct = new ArrayList<>();
     when(allocationProgramProductService.getByFacilityAndProgram(facility.getId(), programId)).thenReturn(allocationProgramProduct);
 
-    List<Facility> facilities = facilityService.getAllInDeliveryZoneFor(deliveryZoneId, programId);
+    List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
 
     assertThat(facilities, is(memberFacilities));
     assertThat(facilities.get(0).getSupportedPrograms(), is(programsSupported));

@@ -178,7 +178,7 @@ public class FacilityService {
     return programSupportedRepository.getByFacilityIdAndProgramId(facilityId, programId);
   }
 
-  public List<Facility> getAllInDeliveryZoneFor(Long deliveryZoneId, Long programId) {
+  public List<Facility> getAllForDeliveryZoneAndProgram(Long deliveryZoneId, Long programId) {
     List<Facility> facilities = facilityRepository.getAllInDeliveryZoneFor(deliveryZoneId, programId);
     for(Facility facility : facilities) {
       ProgramSupported programSupported = programSupportedRepository.getByFacilityIdAndProgramId(facility.getId(), programId);

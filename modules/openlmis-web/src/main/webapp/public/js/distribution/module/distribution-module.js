@@ -5,7 +5,8 @@
  */
 angular.module('distribution', ['openlmis']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
-    when('/manage', {controller: DistributionController, templateUrl: 'partials/init.html', resolve: DistributionController.resolve}).
-    otherwise({redirectTo: '/manage'});
+      when('/manage', {controller: DistributionController, templateUrl: 'partials/init.html', resolve: DistributionController.resolve}).
+      when('/viewAmounts/:deliveryZoneId/:programId', {controller: ViewLoadAmountController, templateUrl: 'partials/view-load-amount.html', resolve: ViewLoadAmountController.resolve}).
+      otherwise({redirectTo: '/manage'});
 
 }]);

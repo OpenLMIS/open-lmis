@@ -238,6 +238,10 @@ services.factory('DeliveryZoneProgramPeriods', function ($resource) {
   return $resource('/deliveryZones/:zoneId/programs/:programId/periods.json', {}, {});
 });
 
+services.factory('FacilitiesProgramProducts', function ($resource) {
+  return $resource('/deliveryZone/:deliveryZoneId/program/:programId/facilities.json', {}, {});
+});
+
 services.factory('ProgramRegimens', function ($resource) {
   return $resource('/programId/:programId/regimens.json', {}, {});
 });
