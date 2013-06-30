@@ -140,4 +140,20 @@ public class AllocationProgramProductServiceTest {
     verify(repository).save(allocationProduct1);
     verify(repository).save(allocationProduct2);
   }
+
+
+  @Test
+  public void shouldGetAllocationProgramProductsForFacilityAndProgram() throws Exception {
+
+    List<AllocationProgramProduct> allocationProgramProducts = new ArrayList<>();
+    Long facilityId = 1l;
+    Long programId = 1l;
+    when(repository.getByFacilityAndProgram(facilityId, programId)).thenReturn(allocationProgramProducts);
+
+    List<AllocationProgramProduct> returnedAllocationProgramProducts = service.getByFacilityAndProgram(facilityId, programId);
+
+    assertThat(returnedAllocationProgramProducts, is(allocationProgramProducts));
+    verify(repository).getByFacilityAndProgram(facilityId, programId);
+
+  }
 }

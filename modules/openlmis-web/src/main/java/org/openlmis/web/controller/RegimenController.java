@@ -2,9 +2,12 @@ package org.openlmis.web.controller;
 
 import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
+import org.openlmis.core.domain.RegimenColumn;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.ProgramService;
+import org.openlmis.core.service.RegimenColumnService;
 import org.openlmis.core.service.RegimenService;
-import org.openlmis.web.form.RegimenList;
+import org.openlmis.web.form.RegimenTemplate;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static org.openlmis.web.response.OpenLmisResponse.*;
@@ -27,17 +31,26 @@ public class RegimenController extends BaseController {
   public static final String REGIMENS_SAVED_SUCCESSFULLY = "regimens.saved.successfully";
 
   @Autowired
-  RegimenService service;
+  RegimenService regimenService;
+
+  @Autowired
+  RegimenColumnService regimenColumnService;
+
+  @Autowired
+  ProgramService programService;
 
   public static final String REGIMENS = "regimens";
   public static final String REGIMEN_CATEGORIES = "regimen_categories";
+  public static final String REGIMEN_COLUMNS = "regimen_columns";
 
   @RequestMapping(value = "/programId/{programId}/regimens", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE')")
-  public ResponseEntity<OpenLmisResponse> save(@PathVariable("programId") Long programId, @RequestBody RegimenList regimens) {
+  public ResponseEntity<OpenLmisResponse> save(@PathVariable Long programId, @RequestBody RegimenTemplate regimenTemplate, HttpServletRequest request) {
     try {
-      service.save(programId, regimens);
-      return success(messageService.message(REGIMENS_SAVED_SUCCESSFULLY));
+      regimenService.save(programId, regimenTemplate.getRegimens(), loggedInUserId(request));
+      regimenColumnService.save(regimenTemplate.getColumns());
+      programService.setRegimenTemplateConfigured(programId);
+      return success(REGIMENS_SAVED_SUCCESSFULLY);
     } catch (Exception e) {
       return error(UNEXPECTED_EXCEPTION, HttpStatus.BAD_REQUEST);
     }
@@ -48,7 +61,7 @@ public class RegimenController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getByProgram(@PathVariable("programId") Long programId) {
     try {
       ResponseEntity<OpenLmisResponse> response;
-      List<Regimen> regimens = service.getByProgram(programId);
+      List<Regimen> regimens = regimenService.getByProgram(programId);
       response = response(REGIMENS, regimens);
       return response;
     } catch (DataException dataException) {
@@ -61,11 +74,26 @@ public class RegimenController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getAllRegimenCategories() {
     try {
       ResponseEntity<OpenLmisResponse> response;
-      List<RegimenCategory> regimenCategories = service.getAllRegimenCategories();
+      List<RegimenCategory> regimenCategories = regimenService.getAllRegimenCategories();
       response = response(REGIMEN_CATEGORIES, regimenCategories);
       return response;
     } catch (DataException dataException) {
       return error(UNEXPECTED_EXCEPTION, HttpStatus.BAD_REQUEST);
     }
   }
+
+  @RequestMapping(value = "/programId/{programId}/regimenColumns", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE')")
+  public ResponseEntity<OpenLmisResponse> getRegimenColumns(@PathVariable Long programId) {
+    try {
+      ResponseEntity<OpenLmisResponse> response;
+      List<RegimenColumn> regimenColumns = regimenColumnService.getRegimenColumnsByProgramId(programId);
+      response = response(REGIMEN_COLUMNS, regimenColumns);
+      return response;
+    } catch (Exception e) {
+      return error(UNEXPECTED_EXCEPTION, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+
 }

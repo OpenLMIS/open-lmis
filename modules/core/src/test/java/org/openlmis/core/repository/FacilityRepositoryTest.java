@@ -25,6 +25,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -292,4 +293,16 @@ public class FacilityRepositoryTest {
     verify(mapper).getHomeFacilityWithRights(1L, "{APPROVE_REQUISITION, CREATE_REQUISITION}");
   }
 
+  @Test
+  public void shouldGetAllFacilitiesInDeliveryZoneForSupportedProgram() throws Exception {
+    List<Facility> memberFacilities = new ArrayList<>();
+    Long deliveryZoneId = 1l;
+    Long programId = 1l;
+    when(mapper.getAllInDeliveryZoneFor(deliveryZoneId, programId)).thenReturn(memberFacilities);
+
+    List<Facility> facilities = repository.getAllInDeliveryZoneFor(deliveryZoneId, programId);
+
+    assertThat(facilities, is(memberFacilities));
+    verify(mapper).getAllInDeliveryZoneFor(deliveryZoneId, programId);
+  }
 }

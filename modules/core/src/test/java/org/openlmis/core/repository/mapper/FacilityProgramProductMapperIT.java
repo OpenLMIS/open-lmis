@@ -25,6 +25,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static com.natpryce.makeiteasy.MakeItEasy.with;
@@ -63,7 +65,7 @@ public class FacilityProgramProductMapperIT {
 
   @Before
   public void setUp() throws Exception {
-    product = make(a(ProductBuilder.defaultProduct, with(displayOrder, 1)));
+    product = make(a(ProductBuilder.defaultProduct, with(displayOrder, 2)));
     productMapper.insert(product);
     program = make(a(ProgramBuilder.defaultProgram));
     programMapper.insert(program);
@@ -91,5 +93,23 @@ public class FacilityProgramProductMapperIT {
     mapper.removeFacilityProgramProductMapping(programProduct.getId(), facility.getId());
 
     assertThat(mapper.getOverriddenIsa(programProduct.getId(), facility.getId()), is(nullValue()));
+  }
+
+  @Test
+  public void shouldGetPogramProductForFacilityAndProgram() throws Exception {
+    AllocationProgramProduct facilityProgramProduct1 = new AllocationProgramProduct(programProduct.getId(), facility.getId(), 34, null);
+    Product product2 = make(a(ProductBuilder.defaultProduct,with(ProductBuilder.code, "P1000"), with(displayOrder, 1)));
+    productMapper.insert(product2);
+    ProgramProduct programProduct2 = new ProgramProduct(program, product2, 10, true);
+    programProductMapper.insert(programProduct2);
+    AllocationProgramProduct facilityProgramProduct2 = new AllocationProgramProduct(programProduct2.getId(), facility.getId(), 34, null);
+    mapper.insert(facilityProgramProduct1);
+    mapper.insert(facilityProgramProduct2);
+
+    List<AllocationProgramProduct> allocationProgramProducts = mapper.getByFacilityAndProgram(facility.getId(), program.getId());
+
+    assertThat(allocationProgramProducts.size(),is(2));
+    assertThat(allocationProgramProducts.get(0).getProduct().getCode(),is("P1000"));
+    assertThat(allocationProgramProducts.get(1).getProduct().getCode(),is("P999"));
   }
 }

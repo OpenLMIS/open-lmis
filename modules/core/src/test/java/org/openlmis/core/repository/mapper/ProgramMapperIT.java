@@ -288,6 +288,17 @@ public class
     assertThat(programs.get(0).getCode(), is(ProgramBuilder.PROGRAM_CODE));
   }
 
+  @Test
+  public void shouldSetRegimenTemplateConfigured() {
+    Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"), with(regimenTemplateConfigured, false))));
+
+    programMapper.setRegimenTemplateConfigured(program.getId());
+    Program returnedProgram = programMapper.getById(program.getId());
+
+    assertThat(returnedProgram.isRegimenTemplateConfigured(), is(true));
+
+  }
+
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {
     supervisoryNodeMapper.insert(supervisoryNode);
     return supervisoryNode;

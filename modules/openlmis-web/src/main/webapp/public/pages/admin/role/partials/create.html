@@ -67,7 +67,7 @@
               <input id = "{{right.right}}" type = "checkbox" ng-checked = "contains(right.right)"
                      ng-click = "updateRights(checked,right)" ng-model = "checked"
                      ng-disabled = "areRelatedFieldsSelected(right) || role.adminRole == 'false'" />
-              <label for = "{{right.right}}" >{{right.rightName}}</label >
+              <label for = "{{right.right}}" ><span openlmis-message="right.rightName"></span></label >
             </div >
           </div >
           <span class = "field-error" ng-show = "showRightError && role.adminRole=='true'" openlmis-message="create.role.selectRightWarning">
@@ -82,7 +82,7 @@
             <input id = "{{nonAdminRight.right}}" type = "checkbox" ng-checked = "contains(nonAdminRight.right)"
                    ng-click = "updateRights(checked,nonAdminRight)" ng-model = "checked"
                    ng-disabled = "areRelatedFieldsSelected(nonAdminRight) || role.adminRole == 'true'" />
-            <label for = "{{nonAdminRight.right}}" >{{nonAdminRight.rightName}}</label >
+            <label for = "{{nonAdminRight.right}}" ><span openlmis-message="nonAdminRight.rightName"></span></label >
           </div >
           <span class = "field-error" ng-show = "showRightError && role.adminRole=='false'" openlmis-message="create.role.selectRightWarning">
           </span >
@@ -94,8 +94,8 @@
 
     <div form-toolbar id = "action_buttons" class = "action-buttons" >
       <div class = "form-cell button-row" >
-        <input type = "submit" class = "btn btn-primary save-button" openlmis-message="button.save"/>
-        <a type = "button" ng-href = "#/list" class = "btn btn-cancel submit-button" openlmis-message="button.cancel"></a >
+        <input type = "submit" class = "btn btn-primary save-button" openlmis-message="button.save" />
+        <a ng-href = "#/list" class = "btn btn-cancel submit-button" openlmis-message="button.cancel"></a>
       </div >
       <div class = "toolbar-error" id = "saveFailMessage" openlmis-message= "error" ng-show="error" ></div >
     </div >
