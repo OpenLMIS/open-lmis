@@ -13,7 +13,7 @@ import java.util.List;
  * Time: 2:39 AM
  */
 @Repository
-public interface FacilityReportMapper {
+public interface FacilityLookupReportMapper {
 
     @Select("SELECT * " +
             "   FROM " +
