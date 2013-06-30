@@ -56,6 +56,9 @@ public class ReportLookupService {
     @Autowired
     private DosageUnitReportMapper dosageUnitMapper;
 
+    @Autowired
+    private FacilityReportMapper facilityReportMapper;
+
     public List<Product> getAllProducts(){
         return productMapper.getAll();
     }
@@ -130,5 +133,9 @@ public class ReportLookupService {
 
     public List<DosageUnit> getDosageUnits(){
         return dosageUnitMapper.getAll();
+    }
+
+    public List<Facility> getAllFacilities(){
+        return facilityReportMapper.getAll();
     }
 }
