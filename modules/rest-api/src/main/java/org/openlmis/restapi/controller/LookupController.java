@@ -22,20 +22,25 @@ import java.security.Principal;
 @NoArgsConstructor
 public class LookupController {
 
-  public static final String ACCEPT_JSON = "Accept=application/json";
-  public static final String UNEXPECTED_EXCEPTION = "unexpected.exception";
-  public static final String FORBIDDEN_EXCEPTION = "forbidden.exception";
+    public static final String ACCEPT_JSON = "Accept=application/json";
+    public static final String UNEXPECTED_EXCEPTION = "unexpected.exception";
+    public static final String FORBIDDEN_EXCEPTION = "forbidden.exception";
 
 
-  @Autowired
-  private RestService restService;
+    @Autowired
+    private RestService restService;
 
-  @Autowired
-  private ReportLookupService lookupService;
+    @Autowired
+    private ReportLookupService lookupService;
 
-  @RequestMapping(value = "/rest-api/lookup/products", method = RequestMethod.GET, headers = ACCEPT_JSON)
-  public ResponseEntity getProducts( Principal principal) {
+    @RequestMapping(value = "/rest-api/lookup/products", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getProducts( Principal principal) {
     return RestResponse.response("products", lookupService.getAllProducts());
-  }
+    }
 
+
+    @RequestMapping(value = "/rest-api/lookup/dosage-units", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getDosageUnits( Principal principal) {
+        return RestResponse.response("dosage-units", lookupService.getDosageUnits());
+    }
 }

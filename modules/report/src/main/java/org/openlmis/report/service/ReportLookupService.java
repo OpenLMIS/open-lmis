@@ -2,6 +2,7 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.GeographicLevel;
+import org.openlmis.core.repository.mapper.DosageUnitMapper;
 import org.openlmis.core.service.ConfigurationService;
 import org.openlmis.report.mapper.lookup.AdjustmentTypeReportMapper;
 import org.openlmis.report.mapper.lookup.*;
@@ -51,6 +52,9 @@ public class ReportLookupService {
 
     @Autowired
     private GeographicLevelReportMapper geographicLevelMapper;
+
+    @Autowired
+    private DosageUnitReportMapper dosageUnitMapper;
 
     public List<Product> getAllProducts(){
         return productMapper.getAll();
@@ -122,5 +126,9 @@ public class ReportLookupService {
 
     public List<GeographicLevel> getAllGeographicLevels() {
         return geographicLevelMapper.getAll();
+    }
+
+    public List<DosageUnit> getDosageUnits(){
+        return dosageUnitMapper.getAll();
     }
 }
