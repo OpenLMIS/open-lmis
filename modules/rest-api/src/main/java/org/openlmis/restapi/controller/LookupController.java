@@ -40,7 +40,12 @@ public class LookupController {
 
 
     @RequestMapping(value = "/rest-api/lookup/dosage-units", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity getDosageUnits( Principal principal) {
+     public ResponseEntity getDosageUnits( Principal principal) {
         return RestResponse.response("dosage-units", lookupService.getDosageUnits());
+    }
+
+    @RequestMapping(value = "/rest-api/lookup/facility-types", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getFacilityTypes( Principal principal) {
+        return RestResponse.response("facility-types", lookupService.getFacilityTypes());
     }
 }
