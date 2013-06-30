@@ -73,7 +73,7 @@ public enum Right {
     this(rightName, adminRight, description, displayOrder, new Right[0]);
   }
 
-  private Right(String rightName, Boolean adminRight, String description, Right... rights) {
+  private Right(String rightName, Boolean adminRight, String description, Integer displayOrder, Right... rights) {
     this.rightName = rightName;
     this.adminRight = adminRight;
     this.description = description;
