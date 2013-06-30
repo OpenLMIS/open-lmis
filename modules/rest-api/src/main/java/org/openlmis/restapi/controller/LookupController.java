@@ -33,6 +33,12 @@ public class LookupController {
     @Autowired
     private ReportLookupService lookupService;
 
+
+    @RequestMapping(value = "/rest-api/lookup/product-categories", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getProductCategories( Principal principal) {
+        return RestResponse.response("product-categories", lookupService.getAllProductCategories());
+    }
+
     @RequestMapping(value = "/rest-api/lookup/products", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity getProducts( Principal principal) {
     return RestResponse.response("products", lookupService.getAllProducts());
@@ -51,6 +57,8 @@ public class LookupController {
 
     @RequestMapping(value = "/rest-api/lookup/facilities", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity getFacilities( Principal principal) {
-        return RestResponse.response("facilities", lookupService.getFacilities());
+        return RestResponse.response("facilities", lookupService.getAllFacilities());
     }
+
+
 }
