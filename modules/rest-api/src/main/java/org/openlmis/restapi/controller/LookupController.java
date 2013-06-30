@@ -60,5 +60,9 @@ public class LookupController {
         return RestResponse.response("facilities", lookupService.getAllFacilities());
     }
 
+    @RequestMapping(value = "/rest-api/lookup/programs", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getPrograms( Principal principal) {
+        return RestResponse.response("programs", lookupService.getAllPrograms());
+    }
 
 }
