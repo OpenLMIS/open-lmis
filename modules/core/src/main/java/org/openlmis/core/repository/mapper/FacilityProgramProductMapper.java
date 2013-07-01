@@ -17,7 +17,7 @@ public interface FacilityProgramProductMapper {
 
 
   @Insert("INSERT INTO facility_program_products(programProductId, facilityId, overriddenIsa) VALUES " +
-    "(#{programProductId}, #{facilityId}, #{overriddenIsa})")
+    "(#{id}, #{facilityId}, #{overriddenIsa})")
   @Options(useGeneratedKeys = true)
   void insert(AllocationProgramProduct allocationProgramProduct);
 
