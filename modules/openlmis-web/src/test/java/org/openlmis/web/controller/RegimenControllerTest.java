@@ -104,4 +104,16 @@ public class RegimenControllerTest {
     verify(programService).setRegimenTemplateConfigured(programId);
     verify(regimenService).save(programId, regimenTemplate.getRegimens(), userId);
   }
+
+  @Test
+  public void shouldGetRegimenColumns() throws Exception {
+
+    List<Regimen> expectedRegimens = new ArrayList<>();
+    Long programId = 1l;
+    when(regimenService.getByProgram(programId)).thenReturn(expectedRegimens);
+
+    controller.getRegimenColumns(programId, httpServletRequest);
+
+    verify(regimenColumnService).getRegimenColumnsByProgramId(programId, userId);
+  }
 }

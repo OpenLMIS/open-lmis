@@ -84,10 +84,10 @@ public class RegimenController extends BaseController {
 
   @RequestMapping(value = "/programId/{programId}/regimenColumns", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE')")
-  public ResponseEntity<OpenLmisResponse> getRegimenColumns(@PathVariable Long programId) {
+  public ResponseEntity<OpenLmisResponse> getRegimenColumns(@PathVariable Long programId, HttpServletRequest request) {
     try {
       ResponseEntity<OpenLmisResponse> response;
-      List<RegimenColumn> regimenColumns = regimenColumnService.getRegimenColumnsByProgramId(programId);
+      List<RegimenColumn> regimenColumns = regimenColumnService.getRegimenColumnsByProgramId(programId, loggedInUserId(request));
       response = response(REGIMEN_COLUMNS, regimenColumns);
       return response;
     } catch (Exception e) {

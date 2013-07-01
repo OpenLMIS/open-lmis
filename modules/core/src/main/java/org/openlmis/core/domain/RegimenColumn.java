@@ -26,4 +26,9 @@ public class RegimenColumn extends BaseModel {
     this.visible = visible;
   }
 
+  public RegimenColumn (Long programId, String name, String label, String dataType, Boolean visible, Long createdBy) {
+    this(programId, name, label, dataType, visible);
+    this.createdBy = createdBy;
+  }
+
 }

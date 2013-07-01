@@ -49,19 +49,19 @@ public class RegimenColumnService {
   }
 
 
-  public List<RegimenColumn> getRegimenColumnsByProgramId(Long programId) {
+  public List<RegimenColumn> getRegimenColumnsByProgramId(Long programId, Long userId) {
     List<RegimenColumn> regimenColumns = repository.getRegimenColumnsByProgramId(programId);
     if (regimenColumns.isEmpty()) {
-      populateDefaultRegimenColumns(programId, regimenColumns);
+      populateDefaultRegimenColumns(programId, regimenColumns, userId);
     }
     return regimenColumns;
   }
 
-  private void populateDefaultRegimenColumns(Long programId, List<RegimenColumn> regimenColumns) {
-    repository.insert(new RegimenColumn(programId, ON_TREATMENT, messageService.message(NUMBER_OF_PATIENTS_ON_TREATMENT), messageService.message(TYPE_NUMERIC), true));
-    repository.insert(new RegimenColumn(programId, INITIATED_TREATMENT, messageService.message(NUMBER_OF_PATIENTS_TO_BE_INITIATED_TREATMENT), messageService.message(TYPE_NUMERIC), true));
-    repository.insert(new RegimenColumn(programId, STOPPED_TREATMENT, messageService.message(NUMBER_OF_PATIENTS_STOPPED_TREATMENT), messageService.message(TYPE_NUMERIC), true));
-    repository.insert(new RegimenColumn(programId, REMARKS, messageService.message(REMARKS_LABEL), messageService.message(TYPE_TEXT), true));
+  private void populateDefaultRegimenColumns(Long programId, List<RegimenColumn> regimenColumns, Long userId) {
+    repository.insert(new RegimenColumn(programId, ON_TREATMENT, messageService.message(NUMBER_OF_PATIENTS_ON_TREATMENT), messageService.message(TYPE_NUMERIC), true, userId));
+    repository.insert(new RegimenColumn(programId, INITIATED_TREATMENT, messageService.message(NUMBER_OF_PATIENTS_TO_BE_INITIATED_TREATMENT), messageService.message(TYPE_NUMERIC), true, userId));
+    repository.insert(new RegimenColumn(programId, STOPPED_TREATMENT, messageService.message(NUMBER_OF_PATIENTS_STOPPED_TREATMENT), messageService.message(TYPE_NUMERIC), true, userId));
+    repository.insert(new RegimenColumn(programId, REMARKS, messageService.message(REMARKS_LABEL), messageService.message(TYPE_TEXT), true, userId));
     regimenColumns.addAll(repository.getRegimenColumnsByProgramId(programId));
   }
 

@@ -82,7 +82,7 @@ public class RegimenColumnServiceTest {
     List<RegimenColumn> emptyList = new ArrayList<>();
     when(repository.getRegimenColumnsByProgramId(programId)).thenReturn(emptyList);
 
-    service.getRegimenColumnsByProgramId(programId);
+    service.getRegimenColumnsByProgramId(programId, userId);
 
     verify(repository).insert(new RegimenColumn(programId, "onTreatment", null, null, true));
     verify(repository).insert(new RegimenColumn(programId, "initiatedTreatment", null, null, true));
@@ -99,7 +99,7 @@ public class RegimenColumnServiceTest {
 
     when(repository.getRegimenColumnsByProgramId(programId)).thenReturn(Arrays.asList(regimenColumn1, regimenColumn2));
 
-    List<RegimenColumn> resultColumns = service.getRegimenColumnsByProgramId(programId);
+    List<RegimenColumn> resultColumns = service.getRegimenColumnsByProgramId(programId, userId);
 
     verify(repository).getRegimenColumnsByProgramId(programId);
     assertThat(resultColumns.size(), is(2));
