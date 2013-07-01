@@ -46,6 +46,7 @@
         <property name="basename">
             <value>messages</value>
         </property>
+        <property name="defaultEncoding" value="UTF-8"/>
     </bean>
 
     <bean id="localeChangeInterceptor"
