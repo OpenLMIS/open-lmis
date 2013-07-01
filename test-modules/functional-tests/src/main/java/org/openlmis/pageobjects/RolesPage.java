@@ -7,7 +7,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -51,13 +50,13 @@ public class RolesPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='rights-UPLOADS']/input")
   private static WebElement rightUploads;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='nonAdminRights-CREATE_REQUISITION']/input")
+  @FindBy(how = How.XPATH, using = "//div[@id='requisitionRights-CREATE_REQUISITION']/input")
   private static WebElement rightCreateRequisition;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='nonAdminRights-AUTHORIZE_REQUISITION']/input")
+  @FindBy(how = How.XPATH, using = "//div[@id='requisitionRights-AUTHORIZE_REQUISITION']/input")
   private static WebElement rightAuthorizeRequisition;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='nonAdminRights-APPROVE_REQUISITION']/input")
+  @FindBy(how = How.XPATH, using = "//div[@id='requisitionRights-APPROVE_REQUISITION']/input")
   private static WebElement rightApproveRequisition;
 
   @FindBy(how = How.XPATH, using = "//div[@id='rights-CONVERT_TO_ORDER']/input")
@@ -78,8 +77,8 @@ public class RolesPage extends Page {
   @FindBy(how = How.ID, using = "saveFailMessage")
   private static WebElement saveErrorMsgDiv;
 
-  @FindBy(how = How.ID, using = "programRoleType")
-  private static WebElement programRoleType;
+  @FindBy(how = How.ID, using = "requisitionRoleType")
+  private static WebElement requisitionRoleType;
 
   @FindBy(how = How.ID, using = "adminRoleType")
   private static WebElement adminRoleType;
@@ -149,8 +148,8 @@ public class RolesPage extends Page {
   }
 
   public void clickProgramRole() {
-    testWebDriver.waitForElementToAppear(programRoleType);
-    programRoleType.click();
+    testWebDriver.waitForElementToAppear(requisitionRoleType);
+    requisitionRoleType.click();
     testWebDriver.sleep(100);
   }
 
@@ -161,8 +160,8 @@ public class RolesPage extends Page {
   }
 
   public void verifyProgramRoleRadioNonEditable() {
-    testWebDriver.waitForElementToAppear(programRoleType);
-    assertTrue(testWebDriver.getAttribute(programRoleType, "disabled"), true);
+    testWebDriver.waitForElementToAppear(requisitionRoleType);
+    assertTrue(testWebDriver.getAttribute(requisitionRoleType, "disabled"), true);
   }
 
   public void verifyAdminRoleRadioNonEditable() {
