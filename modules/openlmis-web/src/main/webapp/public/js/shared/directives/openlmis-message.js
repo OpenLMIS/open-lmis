@@ -4,19 +4,55 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-directives.directive('openlmisMessage', function (messageService) {
+//  Description:
+//  Including the text from the messages service
+
+app.directive('openlmisMessage', function (messageService) {
   return {
-    restrict:'A',
-    link:function (scope, element, attrs) {
-      var key = scope[attrs.openlmisMessage] || attrs.openlmisMessage;
-      var keyWithArgs = key.split("|");
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+      var keyWithArgs = attrs.openlmisMessage.split("|");
+
+      function useExternalisedMessage(displayMessage) {
+        var children = element.children();
+        if (element[0].localName == 'textarea' || element[0].localName == 'select') {
+          element.attr('placeholder', displayMessage);
+          return;
+        }
+
+        switch (element.attr('type')) {
+          case 'button':
+          case 'submit':
+            element.attr("value", displayMessage);
+            break;
+          case 'text':
+          case 'password':
+            element.attr('placeholder', displayMessage);
+            break;
+
+          default:
+            element.html(displayMessage).append(children);
+            break;
+        }
+      }
+
       var refreshMessages = function () {
-        var key = scope[keyWithArgs[0]] || keyWithArgs[0];
+        var evaluatedVariable = scope;
+        var existsInScope = true;
+        $(keyWithArgs[0].split('.')).each(function(index, arg) {
+          evaluatedVariable = evaluatedVariable[arg];
+          if(!evaluatedVariable) {
+            existsInScope = false;
+            return false;
+          }
+        });
+
+        var key = existsInScope ? evaluatedVariable : keyWithArgs[0];
         var displayMessage = messageService.get(key) || key;
         if (!isUndefined(keyWithArgs) && keyWithArgs.length > 1) {
           displayMessage = replaceArgs(scope, displayMessage, keyWithArgs);
         }
-        element[0].localName == "input" ? element.attr("value", displayMessage) : element.html(displayMessage);
+        useExternalisedMessage(displayMessage);
       };
 
       scope.$watch("[" + keyWithArgs.toString() + "]", refreshMessages, true);

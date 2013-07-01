@@ -55,7 +55,7 @@ public class RoleRightsController extends BaseController {
     role.setModifiedBy(loggedInUserId(request));
     try {
       roleRightsService.saveRole(role);
-      return success("'" + role.getName() + "' created successfully");
+      return success(messageService.message("message.role.created.success", role.getName()));
     } catch (DataException e) {
       return error(e, HttpStatus.CONFLICT);
     }
@@ -86,12 +86,11 @@ public class RoleRightsController extends BaseController {
     } catch (DataException e) {
       return error(e, HttpStatus.CONFLICT);
     }
-
-    return new ResponseEntity<>(new OpenLmisResponse(SUCCESS, role.getName() + " updated successfully"), HttpStatus.OK);
+    return success(messageService.message("message.role.updated.success", role.getName()));
   }
 
   @RequestMapping(value = "facility/{facilityId}/program/{programId}/rights")
-  public ResponseEntity<OpenLmisResponse> getRightsForUserAndFacilityProgram(@PathVariable("facilityId")Long facilityId, @PathVariable("programId") Long programId, HttpServletRequest httpServletRequest) {
+  public ResponseEntity<OpenLmisResponse> getRightsForUserAndFacilityProgram(@PathVariable("facilityId") Long facilityId, @PathVariable("programId") Long programId, HttpServletRequest httpServletRequest) {
     return response(RIGHTS, roleRightsService.getRightsForUserAndFacilityProgram(loggedInUserId(httpServletRequest), new Facility(facilityId), new Program(programId)));
   }
 }

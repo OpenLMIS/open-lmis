@@ -76,6 +76,7 @@ describe('CreateNonFullSupplyController', function () {
   });
 
   it('should add non full supply products to the rnr non full supply line items when Done is clicked', function () {
+    scope.$parent.$parent = {$parent: {}};
     var fillPacksToShip = function () {
     };
     scope.fillPagedGridData = function () {
@@ -88,11 +89,12 @@ describe('CreateNonFullSupplyController', function () {
     expect(scope.$parent.rnr.nonFullSupplyLineItems.length).toEqual(1);
     expect(scope.$parent.rnr.nonFullSupplyLineItems[0].quantityRequested).toEqual(20);
     expect(scope.$parent.rnr.nonFullSupplyLineItems[0].reasonForRequestedQuantity).toEqual("rain");
-    expect(scope.message).toEqual("Products added successfully");
+    expect(scope.$parent.$parent.$parent.message).toEqual("msg.product.added");
     expect(scope.nonFullSupplyProductsModal).toBeFalsy();
   });
 
   it('should add non full supply products to the rnr non full supply line items when Done is clicked in sorted order', function () {
+    scope.$parent.$parent = {$parent: {}};
     var fillPacksToShip = function () {
     };
     scope.fillPagedGridData = function () {
@@ -108,10 +110,6 @@ describe('CreateNonFullSupplyController', function () {
     spyOn(rnrLineItem1, "validateQuantityRequestedAndReason").andReturn(false);
     spyOn(rnrLineItem2, "validateQuantityRequestedAndReason").andReturn(false);
     spyOn(rnrLineItem3, "validateQuantityRequestedAndReason").andReturn(false);
-
-//    spyOn(rnrLineItem1, "compareTo(rnrLineItem2)").andReturn(1);
-//    spyOn(rnrLineItem1.compareTo(rnrLineItem3)).andReturn(-1);
-//    spyOn(rnrLineItem3.compareTo(rnrLineItem2)).andReturn(1);
 
     scope.addNonFullSupplyLineItemsToRnr();
 

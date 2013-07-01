@@ -15,6 +15,7 @@ dependencies {
             'commons-collections:commons-collections:20040616',
             'org.springframework.security:spring-security-core:3.1.2.RELEASE',
             project(':modules:requisition'),
+            project(':modules:report'),
             project(':modules:shipment')
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',

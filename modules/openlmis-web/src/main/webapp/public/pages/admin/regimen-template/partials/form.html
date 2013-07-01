@@ -1,0 +1,134 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div tab-scroll xmlns="http://www.w3.org/1999/html">
+  <h2 openlmis-message="label.admin.configure.regimenTemplate"></h2>
+
+  <div class="info-box">
+    <p><strong openlmis-message="template.programName"></strong> <span ng-bind="program.name"></span> <a
+            ng-href="{{selectProgramUrl}}"
+            openlmis-message="template.change"></a>
+    </p>
+  </div>
+
+  <form name="newRegimenForm" id="newRegimenForm" class="regimenForm">
+    <div class="app-form">
+      <div class="form-group clearfix">
+        <h3 openlmis-message="label.new.regimen"></h3>
+
+        <div class="form-cell">
+          <label for="newRegimenCategory" openlmis-message="label.regimen.category">
+            <span class="label-required"> *</span>
+          </label>
+
+          <div class="form-field">
+            <select id="newRegimenCategory" ng-model="newRegimen.category"
+                    ng-options="regimenCategory as regimenCategory.name for regimenCategory in regimenCategories"
+                    ng-required="true"
+                    ng-class="highlightRequired(newRegimen.category)">
+              <option value="" openlmis-message="placeholder.select.category"></option>
+            </select>
+          </div>
+        </div>
+        <div class="form-cell">
+          <label for="newRegimenCode" openlmis-message="header.code">
+            <span class="label-required"> *</span>
+          </label>
+
+          <div class="form-field">
+            <input type="text" id="newRegimenCode" name="newRegimenCode" ng-model="newRegimen.code" ng-required="true"
+                   ng-class="highlightRequired(newRegimen.code)" maxlength="50" />
+          </div>
+        </div>
+        <div class="form-cell">
+          <label for="newRegimenName" openlmis-message="header.name">
+            <span class="label-required"> *</span>
+          </label>
+
+          <div class="form-field">
+            <input type="text" id="newRegimenName" name="newRegimenName" ng-model="newRegimen.name" ng-required="true"
+                   ng-class="highlightRequired(newRegimen.name)" maxlength="50" />
+          </div>
+        </div>
+        <div class="form-cell">
+          <div class="form-field">
+            <input type="checkbox" id="newRegimenActive" name="newRegimenActive" ng-model="newRegimen.active"
+                   ng-class="highlightRequired(newRegimen.active)"/>
+            <label for="newRegimenActive" openlmis-message="label.active"></label>
+          </div>
+        </div>
+      </div>
+      <div class="alert alert-error" id="addFailMessage" openlmis-message="newRegimenError"
+           ng-show="newRegimenError"></div>
+      <div>
+        <input type="button" class="btn btn-primary" id="addNewRegimen" openlmis-message="button.add"
+               ng-click="addNewRegimen()"/>
+      </div>
+    </div>
+  </form>
+
+  <form name="regimenEditForm" class="regimenForm" ng-submit="save()">
+    <div id="regimenEditForm" ng-show="getRegimenValuesByCategory().length > 0">
+      <div class="rnr-template-head">
+        <div class="row-fluid">
+          <div class="span2"><span openlmis-message="header.code"></span></div>
+          <div class="span4"><span openlmis-message="header.name"></span></div>
+          <div class="span2"><span openlmis-message="label.active"></span></div>
+          <div class="span4"></div>
+        </div>
+      </div>
+
+      <div class="regiment-list-items">
+        <div class="row-fluid" ng-show="getRegimenValuesByCategory().length > 0">
+          <div ng-model="regimenCategories" ng-repeat="category in regimenCategories" class="ui-sortable">
+            <div class="category-name">
+              <div ng-show="regimensByCategory[category.id].length > 0" ng-bind="category.name"></div>
+            </div>
+            <div ui-sortable ng-model="regimensByCategory[category.id]" id="sortable">
+              <div ng-repeat="regimen in regimensByCategory[category.id]" class="row-fluid rnr-template-columns"
+                   ng-class="{'editable-row' : regimen.editable}">
+                <div class="drag-handle"></div>
+                <div class="span2">
+                  <div ng-show="!regimen.editable"><span ng-bind="regimen.code"></span></div>
+                    <input name="regimenCode" type="text" ng-model="regimen.code" ng-required="true"
+                           ng-show="regimen.editable"/>
+                </div>
+                <div class="span4">
+                  <div ng-show="!regimen.editable"><span ng-bind="regimen.name"></span></div>
+                  <input name="regimenName" type="text" ng-model="regimen.name" ng-required="true"
+                         ng-show="regimen.editable"/>
+                </div>
+                <div class="span2">
+                  <input type="checkbox" ng-model="regimen.active" ng-disabled="!regimen.editable" />
+                </div>
+                <div ng-show="!regimen.editable" class="span3">
+                  <input name="button" type="button" class="btn btn-primary btn-small pull-right" openlmis-message="button.edit"
+                         ng-click="regimen.editable=true;"/>
+                </div>
+                <div ng-show="regimen.editable" class="span3">
+                  <input name="button" type="button" class="btn btn-primary btn-small pull-right" openlmis-message="button.done"
+                         ng-click="saveRow(regimen)"/>
+                </div>
+                <div class="alert alert-error" id="doneFailMessage{{regimen.code}}" openlmis-message="label.missing.values"
+                     ng-show="regimen.doneRegimenError"></div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div form-toolbar id="action_buttons" class="action-buttons">
+      <div class="form-cell button-row">
+        <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
+        <a ng-href="{{selectProgramUrl}}" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
+      </div>
+      <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+    </div>
+  </form>
+</div>

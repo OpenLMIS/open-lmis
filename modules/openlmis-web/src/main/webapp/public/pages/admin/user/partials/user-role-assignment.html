@@ -29,7 +29,7 @@
         </div>
         <div class="span7">
           <div class="fluid-grid-cell">
-            <select ui-select2 ng-model="roleAssignment.roleIds" placeholder="+ Add Role"
+            <select ui-select2 ng-model="roleAssignment.roleIds" openlmis-message="placeholder.add.role"
                     multiple="multiple" name="roles" id="roles">
               <option ng-repeat="role in nonAdminRoles" value="{{role.id}}" ng-bind="role.name"></option>
             </select>
@@ -61,7 +61,7 @@
 
         <div class="span7 select2-roles">
           <div class="fluid-grid-cell">
-            <select ui-select2 ng-model="selectedRoleIds" placeholder="+ Add Role" multiple="multiple">
+            <select ui-select2 ng-model="selectedRoleIds" openlmis-message="placeholder.add.role" multiple="multiple">
               <option ng-repeat="role in nonAdminRoles" value="{{role.id}}">{{role.name}}</option>
             </select>
             <span ng-show='hasMappingError(showHomeFacilityRoleMappingError,selectedRoleIds)' class="field-error"

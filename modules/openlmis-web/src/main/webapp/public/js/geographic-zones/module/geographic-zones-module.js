@@ -1,6 +1,3 @@
-'use strict';
-require(['../../shared/app', '../controller/geographic-zones-controller', '../controller/geographic-zones-search-controller'], function (app) {
-  app.loadApp();
   angular.module('geographic-zones', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
@@ -30,7 +27,4 @@ require(['../../shared/app', '../controller/geographic-zones-controller', '../co
       $rootScope.geographicZonesSelected = "selected";
       AuthorizationService.preAuthorize('MANAGE_GEOGRAPHIC_ZONES');
     });
-  angular.bootstrap(document, ['geographic-zones']);
-});
-
 

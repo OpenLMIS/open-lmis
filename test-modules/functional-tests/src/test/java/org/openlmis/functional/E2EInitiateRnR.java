@@ -53,7 +53,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String facilityCodePrefix = "FCcode";
     String facilityNamePrefix = "FCname";
 
-    String date_time = createFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy);
+    String date_time = createFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
+      geoZone, facilityType, operatedBy, "500000");
     createFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
     String facility_code = facilityCodePrefix + date_time;
     String facility_name = facilityNamePrefix + date_time;

@@ -24,6 +24,7 @@ public class HomePage extends Page {
   private static WebElement usernameDisplay;
 
   @FindBy(how = How.LINK_TEXT, using = "Logout")
+
   private static WebElement logoutLink;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Requisitions')]")
@@ -94,6 +95,12 @@ public class HomePage extends Page {
 
   @FindBy(how = How.LINK_TEXT, using = "R & R Template")
   private static WebElement RnRTemplateConfigTab;
+
+  @FindBy(how = How.LINK_TEXT, using = "Regimen Template")
+  private static WebElement RegimenTemplateConfigTab;
+
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Regimen Template')]")
+  private static WebElement RegimenTemplateHeader;
 
   @FindBy(how = How.LINK_TEXT, using = "R & R")
   private static WebElement ConfigureTemplateSelectProgramPage;
@@ -179,8 +186,11 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
   private static WebElement errorMsg;
 
+  @FindBy(how = ID, using = "program")
+  private static WebElement selectProgramSelectBox;
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Product Reports')]")
   private static WebElement ProductReportsMenuItem;
+
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Reports')]")
   private static WebElement ReportsMenuItem;
@@ -214,6 +224,10 @@ public class HomePage extends Page {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
+  }
+
+  public  WebElement getLogoutLink() {
+    return logoutLink;
   }
 
   public LoginPage logout(String baseurl) throws IOException {
@@ -278,6 +292,18 @@ public class HomePage extends Page {
     testWebDriver.getElementById(programme).click();
 
     return new TemplateConfigPage(testWebDriver);
+  }
+
+  public RegimenTemplateConfigPage navigateToRegimenConfigTemplate() {
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    testWebDriver.keyPress(AdministrationMenuItem);
+    testWebDriver.waitForElementToAppear(TemplateConfigTab);
+    testWebDriver.keyPress(TemplateConfigTab);
+    testWebDriver.waitForElementToAppear(RegimenTemplateConfigTab);
+    testWebDriver.keyPress(RegimenTemplateConfigTab);
+    testWebDriver.waitForElementToAppear(RegimenTemplateHeader);
+
+    return new RegimenTemplateConfigPage(testWebDriver);
   }
 
   public String navigateAndInitiateRnr(String program) throws IOException {
@@ -417,6 +443,17 @@ public class HomePage extends Page {
     return new DistributionPage(testWebDriver);
   }
 
+  public ProgramProductISAPage navigateProgramProductISA() throws IOException {
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    testWebDriver.keyPress(AdministrationMenuItem);
+    testWebDriver.waitForElementToAppear(TemplateConfigTab);
+    testWebDriver.keyPress(TemplateConfigTab);
+    testWebDriver.waitForElementToAppear(programProductISAMenuItem);
+    testWebDriver.keyPress(programProductISAMenuItem);
+    testWebDriver.waitForElementToAppear(selectProgramSelectBox);
+    return new ProgramProductISAPage(testWebDriver);
+  }
+
   public HomePage navigateHomePage() throws IOException {
     SeleneseTestNgHelper.assertTrue(homeMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(homeMenuItem);
@@ -439,75 +476,4 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(errorMsg);
     SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "Requisition not initiated yet");
   }
-
-  public FacilityMailingListReportPage navigateViewFacilityMailingListReport() throws IOException {
-    SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
-    testWebDriver.waitForElementToAppear(ReportsMenuItem);
-    testWebDriver.keyPress(ReportsMenuItem);
-    testWebDriver.waitForElementToAppear(FacilityMailingListReportMenu);
-    testWebDriver.keyPress(FacilityMailingListReportMenu);
-    testWebDriver.waitForElementToAppear(facilityListingReportPageHeader);
-    return new FacilityMailingListReportPage(testWebDriver);
-  }
-
-  public FacilityListingReportPage navigateViewFacilityListingReport() throws IOException {
-    SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
-    testWebDriver.waitForElementToAppear(ReportsMenuItem);
-    testWebDriver.keyPress(ReportsMenuItem);
-    testWebDriver.waitForElementToAppear(FacilityListingReportMenu);
-    testWebDriver.keyPress(FacilityListingReportMenu);
-    return new FacilityListingReportPage(testWebDriver);
-  }
-
-  public SummaryReportPage navigateViewSummaryReport() throws IOException{
-    SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
-    testWebDriver.waitForElementToAppear(ReportsMenuItem);
-    testWebDriver.keyPress(ReportsMenuItem);
-    testWebDriver.waitForElementToAppear(SummaryReportMenu);
-    testWebDriver.keyPress(SummaryReportMenu);
-    return new SummaryReportPage(testWebDriver);
-  }
-
-  public NonReportingFacilityReportPage navigateViewNonReportingFacilityReport() throws IOException{
-    SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
-    testWebDriver.waitForElementToAppear(ReportsMenuItem);
-    testWebDriver.keyPress(ReportsMenuItem);
-    testWebDriver.waitForElementToAppear(NonReportingFacilityReportMenu);
-    testWebDriver.keyPress(NonReportingFacilityReportMenu);
-    return new NonReportingFacilityReportPage(testWebDriver);
-  }
-
-  public AverageConsumptionReportPage navigateViewAverageConsumptionReport() throws IOException{
-
-    SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
-    testWebDriver.waitForElementToAppear(ReportsMenuItem);
-    testWebDriver.keyPress(ReportsMenuItem);
-    testWebDriver.waitForElementToAppear(AverageConsumptionReportMenu);
-    testWebDriver.keyPress(AverageConsumptionReportMenu);
-    return new AverageConsumptionReportPage(testWebDriver);
-  }
-
-  public AdjustmentSummaryReportPage navigateViewAdjustmentSummaryReport() throws IOException{
-
-        SeleneseTestNgHelper.assertTrue(ProductReportsMenuItem.isDisplayed());
-        testWebDriver.waitForElementToAppear(ProductReportsMenuItem);
-        testWebDriver.keyPress(ProductReportsMenuItem);
-        testWebDriver.waitForElementToAppear(AdjustmentSummaryReportMenu);
-        testWebDriver.keyPress(AdjustmentSummaryReportMenu);
-        return new AdjustmentSummaryReportPage(testWebDriver);
-    }
-  public StockedOutReportPage navigateViewStockedOutReport() throws IOException{
-
-        SeleneseTestNgHelper.assertTrue(ProductReportsMenuItem.isDisplayed());
-        testWebDriver.waitForElementToAppear(ProductReportsMenuItem);
-        testWebDriver.keyPress(ProductReportsMenuItem);
-        testWebDriver.waitForElementToAppear(StockedOutReportMenu);
-        testWebDriver.keyPress(StockedOutReportMenu);
-        return new StockedOutReportPage(testWebDriver);
-    }
-  public void goBack(){
-      TestWebDriver.getDriver().navigate().back();
-  }
-
-
 }

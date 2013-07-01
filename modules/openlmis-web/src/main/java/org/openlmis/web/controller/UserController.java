@@ -11,10 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
-import org.openlmis.db.service.DbService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,19 +40,22 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @NoArgsConstructor
 public class UserController extends BaseController {
 
-  @Autowired
   private RoleRightsService roleRightService;
-
-  @Autowired
   private UserService userService;
-
-  @Getter
-  @Setter
-  private String baseUrl;
 
   public static final String USER_ID = "userId";
   public static final String TOKEN_VALID = "TOKEN_VALID";
   private static final String RESET_PASSWORD_PATH = "public/pages/reset-password.html#/token/";
+
+
+  private String baseUrl;
+
+  @Autowired
+  public UserController(RoleRightsService roleRightService, UserService userService, @Value("${mail.base.url}") String baseUrl) {
+    this.roleRightService = roleRightService;
+    this.userService = userService;
+    this.baseUrl = baseUrl;
+  }
 
   @RequestMapping(value = "/user-context", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> user(HttpServletRequest httpServletRequest) {
@@ -79,7 +80,7 @@ public class UserController extends BaseController {
     try {
       String resetPasswordLink = baseUrl + RESET_PASSWORD_PATH;
       userService.sendForgotPasswordEmail(user, resetPasswordLink);
-      return success("Email sent");
+      return success(messageService.message("email.sent"));
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
@@ -96,8 +97,7 @@ public class UserController extends BaseController {
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
-    successResponse = success(String.format("User '%s %s' has been successfully created, password link has been sent on registered Email address",
-      user.getFirstName(), user.getLastName()));
+    successResponse = success(messageService.message("message.user.created.success.email.sent", user.getFirstName(), user.getLastName()));
     successResponse.getBody().addData("user", user);
     return successResponse;
   }
@@ -115,7 +115,7 @@ public class UserController extends BaseController {
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
-    successResponse = success("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully updated");
+    successResponse = success(messageService.message("message.user.updated.success", user.getFirstName(), user.getLastName()));
     successResponse.getBody().addData("user", user);
     return successResponse;
   }
@@ -149,7 +149,7 @@ public class UserController extends BaseController {
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
-    return success("Password Reset");
+    return success(messageService.message("password.reset"));
   }
 
 }

@@ -5,7 +5,7 @@
   -->
 
 <div id="lossesAndAdjustments" modal="lossesAndAdjustmentsModal" options="{'backdrop':'static', 'escape':true}">
-    <div class="modal-header"><h3>Losses And Adjustments </h3></div>
+    <div class="modal-header"><h3 openlmis-message="label.losses.adjustments"></h3></div>
     <div class="modal-body">
 
         <hr ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0"/>
@@ -21,7 +21,7 @@
 
         <div class="adjustment-total clearfix alert alert-warning"
              ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0">
-            <span class="pull-left">Total</span><span
+            <span class="pull-left" openlmis-message="label.losses.total"></span><span
                 ng-bind="currentRnrLineItem.totalLossesAndAdjustments"></span>
         </div>
 

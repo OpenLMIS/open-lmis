@@ -155,6 +155,14 @@ public class FacilityController extends BaseController {
     return response;
   }
 
+  @RequestMapping(value = "/deliveryZone/{deliveryZoneId}/program/{programId}/facilities", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION')")
+  public ResponseEntity<OpenLmisResponse> getFacilitiesForDeliveryZoneAndProgram(@PathVariable("deliveryZoneId") Long deliveryZoneId, @PathVariable("programId") Long programId) {
+    List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
+
+    return OpenLmisResponse.response("facilities", facilities);
+  }
+
   private ResponseEntity<OpenLmisResponse> createErrorResponse(Facility facility, DataException exception) {
     ResponseEntity<OpenLmisResponse> response;
     response = error(exception, HttpStatus.BAD_REQUEST);

@@ -41,6 +41,10 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     });
   }
 
+  $scope.sources.forEach(function (source) {
+    source.description = messageService.get(source.description);
+  });
+
   function updateErrorMessage(message) {
     $scope.error = message;
     $scope.message = "";
@@ -64,12 +68,12 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
 
   var setArithmeticValidationLabel = function () {
     if ($scope.validateFormula) {
-      $scope.arithmeticValidationStatusLabel = 'ON';
-      $scope.arithmeticValidationToggleLabel = 'OFF';
-      $scope.arithmeticValidationMessage = messageService.get("msg.rnr.arithmeticValidation.turned.on")
+      $scope.arithmeticValidationStatusLabel = messageService.get("label.on");
+      $scope.arithmeticValidationToggleLabel = messageService.get("label.off");
+      $scope.arithmeticValidationMessage = "msg.rnr.arithmeticValidation.turned.on";
     } else {
-      $scope.arithmeticValidationStatusLabel = 'OFF';
-      $scope.arithmeticValidationToggleLabel = 'ON';
+      $scope.arithmeticValidationStatusLabel =  messageService.get("label.off");
+      $scope.arithmeticValidationToggleLabel =  messageService.get("label.on");
       $scope.arithmeticValidationMessage = "";
     }
   };

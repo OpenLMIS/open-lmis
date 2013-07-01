@@ -6,15 +6,9 @@
 
 <div ng-controller="CreateNonFullSupplyController" xmlns="http://www.w3.org/1999/html">
 <div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.nonFullSupply">
-  <div class="dropdown">
-    <a class="dropdown-toggle">
-      Errors found on
-      <ng-pluralize count="errorPages.nonFullSupply.length"
-                    when="{ 1: '{} page',
-                                    other: '{} pages'}">
-
-      </ng-pluralize>
-      |
+  <div ng-switch on="errorPages.nonFullSupply.length" class="dropdown">
+    <a ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
+    <a ng-switch-default class="dropdown-toggle" openlmis-message="error.multiple.pages|nonFullSupplyErrorPagesCount">
     </a>
     <ul class="dropdown-menu">
       <li ng-repeat="page in errorPages.nonFullSupply">
@@ -23,10 +17,11 @@
     </ul>
   </div>
 </div>
+
 <div class="clearfix">
   <br/>
   <input type="button" ng-click="showAddNonFullSupplyModal()" class="pull-right btn btn-primary"
-         ng-disabled="formDisabled || !(addNonFullSupplyLineItemButtonShown.visible)" value="Add"/>
+         ng-disabled="formDisabled || !(addNonFullSupplyLineItemButtonShown.visible)" openlmis-message="button.add"/>
 </div>
 
 <div class="rnr-table" tab-scroll bottom-offset="180">
@@ -107,7 +102,7 @@
           <label for="nonFullSupplyProductsCategory" openlmis-message="label.category"></label>
           <select ui-select2 class="span11 bottom-spacer" id="nonFullSupplyProductsCategory"
                   ng-model="nonFullSupplyProductCategory" name="productName"
-                  data-placeholder="-- Select category --"
+                  openlmis-message="placeholder.select.category"
                   ng-options="nonFullSupplyProductCategory.name for nonFullSupplyProductCategory in nonFullSupplyProductsCategories"
                   ng-change="updateNonFullSupplyProductsToDisplay(); clearNonFullSupplyProductModalData()">
             <option></option>
@@ -118,9 +113,9 @@
       <div class="row-fluid">
         <div class="span7">
           <label for="nonFullSupplyProductsCodeAndName" openlmis-message="label.product.code"></label>
-          <select ui-select2 class="span11 bottom-spacer" id="nonFullSupplyProductsCodeAndName"
-                  ng-model="facilityApprovedProduct" name="productCode" data-placeholder="-- Select product --"
-                  ng-options="facilityApprovedProduct.programProduct.product.code+' | '+facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay">
+          <select ui-select2="{formatNoMatches: formatNoMatches}" class="span11 bottom-spacer" id="nonFullSupplyProductsCodeAndName"
+                  ng-model="facilityApprovedProduct" name="productCode" openlmis-message="placeholder.select.product"
+                  ng-options="facilityTypeApprovedProduct.programProduct.product.code+' | '+facilityTypeApprovedProduct.programProduct.product.primaryName for facilityTypeApprovedProduct in nonFullSupplyProductsToDisplay">
             <option></option>
           </select>
         </div>
@@ -172,7 +167,7 @@
               <input type="text" ng-class="highlightRequiredFieldInModal(nonFullSupplyProduct.quantityRequested)"
                      name="nonFullSupplyProductQuantityRequested{{$index}}" rnr-validator="positiveInteger"
                      ng-required="true" maxlength="8" ng-model="nonFullSupplyProduct.quantityRequested"
-                     placeholder="Quantity"/>
+                     openlmis-message="placeholder.quantity" />
                 <span class="rnr-form-error" style="display:none;"
                       id="nonFullSupplyProductQuantityRequested{{$index}}" openlmis-message="error.number.only">
                 </span>
@@ -184,7 +179,8 @@
               <input type="text"
                      ng-class="highlightRequiredFieldInModal(nonFullSupplyProduct.reasonForRequestedQuantity)"
                      maxlength="250" ng-required="true"
-                     ng-model="nonFullSupplyProduct.reasonForRequestedQuantity" placeholder="Explanation"/>
+                     ng-model="nonFullSupplyProduct.reasonForRequestedQuantity"
+                     openlmis-message="placeholder.explanation" />
             </div>
           </div>
 
@@ -199,7 +195,7 @@
       </div>
 
     </div>
-    <div class="alert alert-danger" id="modalErrorMessage" ng-show="modalError" ng-bind="modalError"></div>
+    <div class="alert alert-danger" id="modalErrorMessage" ng-show="modalError" openlmis-message="modalError"></div>
 
     <div class="modal-footer">
       <input type="button" id="doneNonFullSupply" class="btn btn-primary"

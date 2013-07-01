@@ -159,7 +159,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   };
 
   RnrLineItem.prototype.calculateConsumption = function () {
-    if (this.getSource('C') != 'CALCULATED') return;
+    if (this.getSource('quantityDispensed') != 'CALCULATED') return;
 
     if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.totalLossesAndAdjustments) && utils.isNumber(this.stockInHand)) {
       this.quantityDispensed = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.stockInHand;
@@ -169,7 +169,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   };
 
   RnrLineItem.prototype.calculateStockInHand = function () {
-    if (this.getSource('E') != 'CALCULATED') return;
+    if (this.getSource('stockInHand') != 'CALCULATED') return;
 
     if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.quantityDispensed)) {
       this.stockInHand = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.quantityDispensed;
@@ -182,7 +182,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     var numberOfMonthsInPeriod = 3; // will be picked up from the database in future
     this.stockOutDays = utils.getValueFor(this.stockOutDays);
     this.newPatientCount = utils.getValueFor(this.newPatientCount);
-    if (this.getSource('F') == null) this.newPatientCount = 0;
+    if (this.getSource('newPatientCount') == null) this.newPatientCount = 0;
 
     if (!utils.isNumber(this.quantityDispensed) || !utils.isNumber(this.stockOutDays) || !utils.isNumber(this.newPatientCount)) {
       this.normalizedConsumption = null;
@@ -250,10 +250,10 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   };
 
   //TODO : Does not belong to RnrLineItem
-  RnrLineItem.prototype.getSource = function (indicator) {
+  RnrLineItem.prototype.getSource = function (name) {
     var code = null;
     $(this.programRnrColumnList).each(function (i, column) {
-      if (column.indicator == indicator) {
+      if (column.name == name) {
         code = column.source.name;
         return false;
       }
@@ -295,9 +295,9 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   };
 
   RnrLineItem.prototype.getErrorMessage = function () {
-    if (this.stockInHand < 0) return 'Stock On Hand is calculated to be negative, please validate entries';
-    if (this.quantityDispensed < 0) return 'Total Quantity Consumed is calculated to be negative, please validate entries';
-    if (this.arithmeticallyInvalid()) return 'The entries are arithmetically invalid, please recheck';
+    if (this.stockInHand < 0) return "error.stock.on.hand.negative";
+    if (this.quantityDispensed < 0) return "error.quantity.consumed.negative";
+    if (this.arithmeticallyInvalid()) return "error.arithmetically.invalid";
 
     return "";
   };

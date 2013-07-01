@@ -86,7 +86,7 @@ public class RnrTemplateControllerTest {
     OpenLmisMessage openLmisMessage = new OpenLmisMessage("code", "param1", "param2");
     errorMap.put("key", openLmisMessage);
     when(rnrTemplateService.saveRnRTemplateForProgram((ProgramRnrTemplate) any())).thenReturn(errorMap);
-    when(messageService.message(openLmisMessage)).thenReturn("dummy message param1 param2");
+    when(messageService.message(openLmisMessage.getCode(), openLmisMessage.getParams())).thenReturn("dummy message param1 param2");
 
     ResponseEntity<OpenLmisResponse> responseEntity = rnrTemplateController.saveRnRTemplateForProgram(existingProgramId, rnrColumns, request);
 

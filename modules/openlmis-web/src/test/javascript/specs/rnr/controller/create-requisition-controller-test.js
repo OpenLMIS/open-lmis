@@ -6,13 +6,13 @@
 
 describe('CreateRequisitionController', function () {
   var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns,
-    lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem;
+    lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService;
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
   beforeEach(module('ui.bootstrap.dialog'));
 
-  beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $routeParams, _localStorageService_) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $routeParams, _localStorageService_, _messageService_) {
     scope = $rootScope.$new();
     rootScope = $rootScope;
     $rootScope.hasPermission = function () {
@@ -20,6 +20,7 @@ describe('CreateRequisitionController', function () {
     location = $location;
     controller = $controller;
     httpBackend = $httpBackend;
+    messageService = _messageService_;
     scope.$parent.facility = "10134";
     scope.$parent.program = {code: "programCode", "id": 1};
 

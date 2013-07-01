@@ -67,7 +67,7 @@ public class SubmitReportTest extends TestCaseHelper {
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
 
     assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(response, "{\"error\":\"User doesn't have access to Program & Facility.\"}");
+    assertEquals(response, "{\"error\":\"User does not have access to Program & Facility.\"}");
   }
 
   @Test(groups = {"webservice"})
@@ -89,7 +89,7 @@ public class SubmitReportTest extends TestCaseHelper {
     String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
     assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(response, "{\"error\":\"User doesn't have access to Program & Facility.\"}");
+    assertEquals(response, "{\"error\":\"User does not have access to Program & Facility.\"}");
   }
 
   @Test(groups = {"webservice"})

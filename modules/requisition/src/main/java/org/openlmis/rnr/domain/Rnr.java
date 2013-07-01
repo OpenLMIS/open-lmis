@@ -62,9 +62,9 @@ public class Rnr extends BaseModel {
     this.modifiedBy = modifiedBy;
   }
 
-  public Rnr(Long facilityId, Long programId, Long periodId, List<FacilityApprovedProduct> facilityApprovedProducts, Long modifiedBy) {
+  public Rnr(Long facilityId, Long programId, Long periodId, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts, Long modifiedBy) {
     this(facilityId, programId, periodId, modifiedBy);
-    fillLineItems(facilityApprovedProducts);
+    fillLineItems(facilityTypeApprovedProducts);
   }
 
   public Rnr(Facility facility, Program program, ProcessingPeriod period) {
@@ -128,9 +128,9 @@ public class Rnr extends BaseModel {
     return totalFullSupplyCost;
   }
 
-  public void fillLineItems(List<FacilityApprovedProduct> facilityApprovedProducts) {
-    for (FacilityApprovedProduct facilityApprovedProduct : facilityApprovedProducts) {
-      RnrLineItem requisitionLineItem = new RnrLineItem(null, facilityApprovedProduct, modifiedBy);
+  public void fillLineItems(List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts) {
+    for (FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts) {
+      RnrLineItem requisitionLineItem = new RnrLineItem(null, facilityTypeApprovedProduct, modifiedBy);
       add(requisitionLineItem, true);
     }
   }

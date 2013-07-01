@@ -5,12 +5,14 @@
  */
 
 describe('ViewOrderListController', function () {
-  var orders, scope, controller;
+  var orders, scope, controller, messageService;
 
   beforeEach(module('openlmis.services'));
-  beforeEach(inject(function ($rootScope, $controller) {
+  beforeEach(module('openlmis.localStorage'));
+  beforeEach(inject(function ($rootScope, $controller, _messageService_) {
     scope = $rootScope.$new();
     controller = $controller;
+    messageService = _messageService_;
     orders = {'orders': [
       {"id": 1}
     ]};

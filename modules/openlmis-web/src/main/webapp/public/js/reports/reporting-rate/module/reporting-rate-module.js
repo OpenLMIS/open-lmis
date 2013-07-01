@@ -1,7 +1,4 @@
-'use strict';
-require(['../../../shared/app' , '../controller/reporting-rate-controller'], function (app) {
-    app.loadApp();
-    angular.module('reporting_rate', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('reporting_rate', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.
                 when('/list', {controller:ReportingRateController, templateUrl:'partials/list.html',reloadOnSearch:false}).
@@ -11,6 +8,3 @@ require(['../../../shared/app' , '../controller/reporting-rate-controller'], fun
             AuthorizationService.preAuthorize('VIEW_REPORTING_RATE_REPORT');
         }
     );
-
-    angular.bootstrap(document, ['reporting_rate']);
-});

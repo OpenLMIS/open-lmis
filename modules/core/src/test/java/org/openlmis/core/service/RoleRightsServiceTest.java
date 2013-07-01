@@ -67,6 +67,7 @@ public class RoleRightsServiceTest {
     List<Right> alphabeticalRights = asList(CONFIGURE_RNR,
       MANAGE_FACILITY,
       MANAGE_PROGRAM_PRODUCT,
+      MANAGE_REGIMEN_TEMPLATE,
       MANAGE_ROLE,
       MANAGE_SCHEDULE,
       MANAGE_USERS,

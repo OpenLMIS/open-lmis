@@ -1,7 +1,4 @@
-'use strict';
-require(['../../../shared/app' , '../controller/summary-controller'], function (app) {
-    app.loadApp();
-    angular.module('summary', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('summary', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
         .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/list', {controller:SummaryReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
@@ -11,6 +8,3 @@ require(['../../../shared/app' , '../controller/summary-controller'], function (
                 AuthorizationService.preAuthorize('VIEW_SUMMARY_REPORT');
             }
     );
-
-    angular.bootstrap(document, ['summary']);
-});

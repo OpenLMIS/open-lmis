@@ -31,7 +31,6 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.Matchers.empty;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.code;
@@ -166,14 +165,14 @@ public class RequisitionMapperIT {
     ProgramProduct fullSupplyProgramProduct = insertProgramProduct(fullSupplyProduct, program);
     ProgramProduct nonFullSupplyProgramProduct = insertProgramProduct(nonFullSupplyProduct, program);
 
-    FacilityApprovedProduct fullSupplyFacilityApprovedProduct = insertFacilityApprovedProduct(fullSupplyProgramProduct);
-    FacilityApprovedProduct nonFullSupplyFacilityApprovedProduct = insertFacilityApprovedProduct(nonFullSupplyProgramProduct);
+    FacilityTypeApprovedProduct fullSupplyFacilityTypeApprovedProduct = insertFacilityApprovedProduct(fullSupplyProgramProduct);
+    FacilityTypeApprovedProduct nonFullSupplyFacilityTypeApprovedProduct = insertFacilityApprovedProduct(nonFullSupplyProgramProduct);
 
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
     insertRequisition(processingPeriod2, INITIATED);
 
-    insertRnrLineItem(requisition, fullSupplyFacilityApprovedProduct);
-    insertRnrLineItem(requisition, nonFullSupplyFacilityApprovedProduct);
+    insertRnrLineItem(requisition, fullSupplyFacilityTypeApprovedProduct);
+    insertRnrLineItem(requisition, nonFullSupplyFacilityTypeApprovedProduct);
 
     Rnr returnedRequisition = mapper.getRequisitionWithLineItems(facility, new Program(PROGRAM_ID), processingPeriod1);
 
@@ -191,9 +190,9 @@ public class RequisitionMapperIT {
     Product product = insertProduct(true, "P1");
     Program program = insertProgram();
     ProgramProduct programProduct = insertProgramProduct(product, program);
-    FacilityApprovedProduct facilityApprovedProduct = insertFacilityApprovedProduct(programProduct);
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = insertFacilityApprovedProduct(programProduct);
 
-    RnrLineItem item1 = insertRnrLineItem(requisition, facilityApprovedProduct);
+    RnrLineItem item1 = insertRnrLineItem(requisition, facilityTypeApprovedProduct);
     lossesAndAdjustmentsMapper.insert(item1, RnrLineItemBuilder.ONE_LOSS);
     Rnr returnedRequisition = mapper.getById(requisition.getId());
 
@@ -297,7 +296,7 @@ public class RequisitionMapperIT {
   }
 
   @Test
-  public void itShouldOnlyLoadRequisitionDataForGivenQuery() throws Exception {
+  public void shouldOnlyLoadRequisitionDataForGivenQuery() throws Exception {
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
 
     Rnr fetchedRnr = mapper.getRequisitionWithoutLineItems(facility.getId(), PROGRAM_ID, processingPeriod1.getId());
@@ -305,8 +304,8 @@ public class RequisitionMapperIT {
     assertThat(fetchedRnr.getId(), is(requisition.getId()));
     assertThat(fetchedRnr.getPeriod().getId(), is(processingPeriod1.getId()));
     assertThat(fetchedRnr.getStatus(), is(INITIATED));
-    assertThat(fetchedRnr.getFullSupplyLineItems(), is(empty()));
-    assertThat(fetchedRnr.getNonFullSupplyLineItems(), is(empty()));
+    assertThat(fetchedRnr.getFullSupplyLineItems().size(), is(0));
+    assertThat(fetchedRnr.getNonFullSupplyLineItems().size(), is(0));
   }
 
   private Rnr insertRequisition(ProcessingPeriod period, RnrStatus status) {
@@ -318,17 +317,17 @@ public class RequisitionMapperIT {
     return rnr;
   }
 
-  private RnrLineItem insertRnrLineItem(Rnr rnr, FacilityApprovedProduct facilityApprovedProduct) {
-    RnrLineItem item = new RnrLineItem(rnr.getId(), facilityApprovedProduct, 1L);
+  private RnrLineItem insertRnrLineItem(Rnr rnr, FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
+    RnrLineItem item = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, 1L);
     lineItemMapper.insert(item);
     return item;
   }
 
-  private FacilityApprovedProduct insertFacilityApprovedProduct(ProgramProduct programProduct) {
-    FacilityApprovedProduct facilityApprovedProduct = make(a(FacilityApprovedProductBuilder.defaultFacilityApprovedProduct));
-    facilityApprovedProduct.setProgramProduct(programProduct);
-    facilityApprovedProductMapper.insert(facilityApprovedProduct);
-    return facilityApprovedProduct;
+  private FacilityTypeApprovedProduct insertFacilityApprovedProduct(ProgramProduct programProduct) {
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = make(a(FacilityApprovedProductBuilder.defaultFacilityApprovedProduct));
+    facilityTypeApprovedProduct.setProgramProduct(programProduct);
+    facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
+    return facilityTypeApprovedProduct;
   }
 
   private ProgramProduct insertProgramProduct(Product product, Program program) {

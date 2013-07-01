@@ -128,5 +128,15 @@ public class ProgramProductMapperIT {
     assertThat(programProducts.get(0).getId(), is(programProduct.getId()));
   }
 
+  @Test
+  public void shouldGetById() throws Exception {
 
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+
+    programProductMapper.insert(programProduct);
+
+    ProgramProduct savedProgramProduct = programProductMapper.getById(programProduct.getId());
+
+    assertThat(savedProgramProduct.getId(), is(programProduct.getId()));
+  }
 }

@@ -84,7 +84,7 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[12]")
   private static WebElement rolesInputFieldMyFacility;
 
-  @FindBy(how = How.LINK_TEXT, using = "OK")
+  @FindBy(how = How.LINK_TEXT, using = "Ok")
   private static WebElement okButton;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[14]")

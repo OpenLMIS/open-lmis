@@ -4,11 +4,14 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-directives.directive('uiNav', function () {
-  return {
-    restrict: 'A',
+//  Description:
+//  Hiding the navigation items based on the rights on the children nodes
 
-    link: function (scope, element, attrs) {
+app.directive('uiNav',function () {
+  return {
+    restrict:'A',
+
+    link:function (scope, element, attrs) {
       //Identify all the menu lists
       var lists = $(".navigation ul");
 

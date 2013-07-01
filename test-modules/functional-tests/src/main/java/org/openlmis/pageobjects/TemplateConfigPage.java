@@ -37,190 +37,190 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='error']")
   private static WebElement saveErrorMsgDiv;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='E']/span[@class='tpl-source']/span/select")
+  @FindBy(how = How.XPATH, using = "//li[@id='stockInHand']/span[@class='tpl-source']/span/select")
   private static WebElement stockInHandDropDown;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='A']/span/span/span/span/input[@type='checkbox']")
+  @FindBy(how = How.XPATH, using = "//li[@id='beginningBalance']/span/span/span/span/input[@type='checkbox']")
   private static WebElement checkboxBeginningBalance;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='C']/span[@class='tpl-source']/span/select")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityDispensed']/span[@class='tpl-source']/span/select")
   private static WebElement dropDownTotalConsumedQuantity;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='W']/span[@class='tpl-error']/div")
+  @FindBy(how = How.XPATH, using = "//li[@id='reasonForRequestedQuantity']/span[@class='tpl-error']/div")
   private static WebElement requestedQtyExplanationErrorMessage;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='J']/span[@class='tpl-error']/div")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityRequested']/span[@class='tpl-error']/div")
   private static WebElement requestedQtyErrorMessage;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='C']/span[@class='tpl-error']/div")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityDispensed']/span[@class='tpl-error']/div")
   private static WebElement totalConsumedQtyErrorMessage;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='E']/span[@class='tpl-error']/div")
+  @FindBy(how = How.XPATH, using = "//li[@id='stockInHand']/span[@class='tpl-error']/div")
   private static WebElement stockOnHandQtyErrorMessage;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='O']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='productCode']/span[@class='tpl-label']/input")
   private static WebElement productCode;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='O']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='productCode']/span[@class='tpl-source']/span[2]")
   private static WebElement productCodeSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='R']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='product']/span[@class='tpl-label']/input")
   private static WebElement productName;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='R']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='product']/span[@class='tpl-source']/span[2]")
   private static WebElement productNameSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='U']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='dispensingUnit']/span[@class='tpl-label']/input")
   private static WebElement unitOfIssue;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='U']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='dispensingUnit']/span[@class='tpl-source']/span[2]")
   private static WebElement unitOfIssueSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='A']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='beginningBalance']/span[@class='tpl-label']/input")
   private static WebElement beginningBalance;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='A']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='beginningBalance']/span[@class='tpl-source']/span[2]")
   private static WebElement beginningBalanceSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='B']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityReceived']/span[@class='tpl-label']/input")
   private static WebElement totalReceivedQuantity;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='B']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityReceived']/span[@class='tpl-source']/span[2]")
   private static WebElement totalReceivedQuantitySource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='C']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityDispensed']/span[@class='tpl-label']/input")
   private static WebElement totalConsumedQuantity;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='C']/span[@class='tpl-source']/span/select/option[@selected='selected']")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityDispensed']/span[@class='tpl-source']/span/select/option[@selected='selected']")
   private static WebElement totalConsumedQuantitySource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='C']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityDispensed']/span/input")
   private static WebElement totalConsumedQuantityCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='W']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='reasonForRequestedQuantity']/span/input")
   private static WebElement requestedQuantityCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='G']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='expirationDate']/span/input")
   private static WebElement expirationDateCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='G']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='expirationDate']/span[@class='tpl-label']/input")
   private static WebElement expirationDateTextBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='G']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='expirationDate']/span[@class='tpl-source']/span[2]")
   private static WebElement expirationDateSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='J']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityRequested']/span/input")
   private static WebElement requestedQuantityExplanationCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='Y']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='total']/span/input")
   private static WebElement totalCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='Y']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='total']/span[@class='tpl-label']/input")
   private static WebElement totalTextBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='Y']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='total']/span[@class='tpl-source']/span[2]")
   private static WebElement totalSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='O']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='productCode']/span/input")
   private static WebElement productCodeCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='R']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='product']/span/input")
   private static WebElement productNameCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='L']/span[@class='tpl-visible']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='remarks']/span[@class='tpl-visible']/input")
   private static WebElement remarksCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='D']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='lossesAndAdjustments']/span[@class='tpl-label']/input")
   private static WebElement lossesAndAdj;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='D']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='lossesAndAdjustments']/span[@class='tpl-source']/span[2]")
   private static WebElement lossesAndAdjSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='E']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='stockInHand']/span[@class='tpl-label']/input")
   private static WebElement stockOnHand;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='E']/span[@class='tpl-source']/span/select/option[@selected='selected']")
+  @FindBy(how = How.XPATH, using = "//li[@id='stockInHand']/span[@class='tpl-source']/span/select/option[@selected='selected']")
   private static WebElement stockOnHandSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='E']/span/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='stockInHand']/span/input")
   private static WebElement stockOnHandCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='F']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='newPatientCount']/span[@class='tpl-label']/input")
   private static WebElement newPatients;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='F']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='newPatientCount']/span[@class='tpl-source']/span[2]")
   private static WebElement newPatientsSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='X']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='stockOutDays']/span[@class='tpl-label']/input")
   private static WebElement stockOutDays;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='X']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='stockOutDays']/span[@class='tpl-source']/span[2]")
   private static WebElement stockOutDaysSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='N']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='normalizedConsumption']/span[@class='tpl-label']/input")
   private static WebElement adjustedTotalConsumption;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='N']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='normalizedConsumption']/span[@class='tpl-source']/span[2]")
   private static WebElement adjustedTotalConsumptionSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='P']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='amc']/span[@class='tpl-label']/input")
   private static WebElement AMC;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='P']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='amc']/span[@class='tpl-source']/span[2]")
   private static WebElement AMCSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='H']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='maxStockQuantity']/span[@class='tpl-label']/input")
   private static WebElement maxStockQuantity;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='H']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='maxStockQuantity']/span[@class='tpl-source']/span[2]")
   private static WebElement maxStockQuantitySource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='I']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='calculatedOrderQuantity']/span[@class='tpl-label']/input")
   private static WebElement calculatedOrderQuantity;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='I']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='calculatedOrderQuantity']/span[@class='tpl-source']/span[2]")
   private static WebElement calculatedOrderQuantitySource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='J']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityRequested']/span[@class='tpl-label']/input")
   private static WebElement requestedQuantity;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='J']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityRequested']/span[@class='tpl-source']/span[2]")
   private static WebElement requestedQuantitySource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='W']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='reasonForRequestedQuantity']/span[@class='tpl-label']/input")
   private static WebElement requestedQuantityExplanation;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='W']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='reasonForRequestedQuantity']/span[@class='tpl-source']/span[2]")
   private static WebElement requestedQuantityExplanationSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='V']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='packsToShip']/span[@class='tpl-label']/input")
   private static WebElement packsToShip;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='V']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='packsToShip']/span[@class='tpl-source']/span[2]")
   private static WebElement packsToShipSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='T']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='price']/span[@class='tpl-label']/input")
   private static WebElement pricePerPack;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='T']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='price']/span[@class='tpl-source']/span[2]")
   private static WebElement pricePerPackSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='Q']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='cost']/span[@class='tpl-label']/input")
   private static WebElement totalCost;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='Q']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='cost']/span[@class='tpl-source']/span[2]")
   private static WebElement totalCostSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='L']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='remarks']/span[@class='tpl-label']/input")
   private static WebElement remarks;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='L']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='remarks']/span[@class='tpl-source']/span[2]")
   private static WebElement remarksSource;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='K']/span[@class='tpl-label']/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityApproved']/span[@class='tpl-label']/input")
   private static WebElement approvedQuantity;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='K']/span[@class='tpl-source']/span[2]")
+  @FindBy(how = How.XPATH, using = "//li[@id='quantityApproved']/span[@class='tpl-source']/span[2]")
   private static WebElement approvedQuantitySource;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Turn OFF')]")
@@ -235,8 +235,11 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='saveErrorMsgDiv']")
   private static WebElement errorMessageDiv;
 
-  private String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
+  private static String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
 
+  private static String USER_INPUT = "User Input";
+  private static String CALCULATED = "Calculated";
+  private static String REFERENCE_DATA = "Reference Data";
 
   public TemplateConfigPage(TestWebDriver driver) {
     super(driver);
@@ -322,29 +325,35 @@ public class TemplateConfigPage extends Page {
     return new HomePage(testWebDriver);
   }
 
-  public void verifyErrorMessageDivTotalConsumedQuantity() {
+  public void verifyErrorMessageDivTotalConsumedQuantity(String totalConsumedQuantityError) {
     testWebDriver.waitForElementToAppear(totalConsumedQtyErrorMessage);
     assertTrue("Error message not displaying", totalConsumedQtyErrorMessage.isDisplayed());
+    assertTrue("Error message saying '"+totalConsumedQuantityError+"' not displaying", totalConsumedQtyErrorMessage.getText().equals(totalConsumedQuantityError));
   }
 
-  public void verifyErrorMessageDivStockOnHand() {
+  public void verifyErrorMessageDivStockOnHand(String stockOnHandError) {
     testWebDriver.waitForElementToAppear(stockOnHandQtyErrorMessage);
     assertTrue("Error message not displaying", stockOnHandQtyErrorMessage.isDisplayed());
+    assertTrue("Error message saying '"+stockOnHandError+"' not displaying", stockOnHandQtyErrorMessage.getText().equals(stockOnHandError));
   }
 
-  public void verifyErrorMessageDivRequestedQuantity() {
+  public void verifyErrorMessageDivRequestedQuantity(String requestedQuantityError) {
     testWebDriver.waitForElementToAppear(requestedQtyErrorMessage);
     assertTrue("Error message not displaying", requestedQtyErrorMessage.isDisplayed());
+    assertTrue("Error message saying '"+requestedQuantityError+"' not displaying", requestedQtyErrorMessage.getText().equals(requestedQuantityError));
   }
 
-  public void verifyErrorMessageRequestedQuantityExplanation() {
+  public void verifyErrorMessageRequestedQuantityExplanation(String requestedQuantityExplanation) {
     testWebDriver.waitForElementToAppear(requestedQtyExplanationErrorMessage);
     assertTrue("Error message not displaying", requestedQtyExplanationErrorMessage.isDisplayed());
+    assertTrue("Error message saying '"+requestedQuantityExplanation+"' not displaying", requestedQtyExplanationErrorMessage.getText().equals(requestedQuantityExplanation));
   }
 
   public void verifyErrorMessageDivFooter() {
     testWebDriver.waitForElementToAppear(errorMessageDiv);
-    assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
+      assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
+    String footerErrorMessage = "There are some errors in the form. Please resolve them.";
+    assertTrue("Error message saying '"+footerErrorMessage+"' not displaying", errorMessageDiv.getText().equalsIgnoreCase(footerErrorMessage));
   }
 
   public void verifyTurnOffOnButtonAvailable(String messageToShow) {
@@ -380,22 +389,22 @@ public class TemplateConfigPage extends Page {
     assertTrue("Success message should display", saveSuccessMsg.isDisplayed());
   }
 
-  private void verifyCAndEUserInputsAndShouldBeDisplayed(String program) throws IOException {
+  private void verifyCAndEUserInputsAndShouldBeDisplayed() throws IOException {
     testWebDriver.waitForElementToAppear(SaveButton);
     unClickTotalConsumedQuantity();
     unClickStockOnHand();
-    selectFromTotalConsumedQuantityDropDown("User Input");
-    selectFromStockOnHandDropDown("User Input");
+    selectFromTotalConsumedQuantityDropDown(USER_INPUT);
+    selectFromStockOnHandDropDown(USER_INPUT);
     clickSaveButton();
     verifyErrorMessageDivFooter();
-    verifyErrorMessageDivTotalConsumedQuantity();
-    verifyErrorMessageDivStockOnHand();
+    verifyErrorMessageDivTotalConsumedQuantity("If 'Total Consumed Quantity' is user input then it should be visible");
+    verifyErrorMessageDivStockOnHand("If 'Stock on Hand' is user input then it should be visible");
   }
 
   private void verifyArithmeticValidationOnOff() {
     clickTotalConsumedQuantity();
     clickStockOnHand();
-    selectFromTotalConsumedQuantityDropDown("User Input");
+    selectFromTotalConsumedQuantityDropDown(USER_INPUT);
     verifyTurnOffOnButtonAvailable("Option to choose to switch Arithmetic Validation ON/OFF is not available");
     clickTurnOffOnButton(turnOffButton);
 
@@ -405,23 +414,23 @@ public class TemplateConfigPage extends Page {
 
     verifyTextOffOnButton(turnOffButton, "Turn OFF", "Should show 'Turn OFF' on button");
     verifyONOffIndicatorOnScreen(OffOnIndicator, "ON");
-    selectFromStockOnHandDropDown("Calculated");
+    selectFromStockOnHandDropDown(CALCULATED);
     verifyTurnOffOnButtonNotAvailable("Option to choose to switch Arithmetic Validation ON/OFF should not be visible");
 
   }
 
   private void verifyCDerivedEMustViceVersa(String program) throws IOException {
-    selectFromTotalConsumedQuantityDropDown("Calculated");
-    selectFromStockOnHandDropDown("User Input");
+    selectFromTotalConsumedQuantityDropDown(CALCULATED);
+    selectFromStockOnHandDropDown(USER_INPUT);
     unClickStockOnHand();
     clickSaveButton();
     verifyErrorMessageDivFooter();
-    verifyErrorMessageDivTotalConsumedQuantity();
-    verifyErrorMessageDivStockOnHand();
+    verifyErrorMessageDivTotalConsumedQuantity("User needs to enter 'Stock on Hand' to calculate 'Total Consumed Quantity'");
+    verifyErrorMessageDivStockOnHand("If 'Stock on Hand' is user input then it should be visible");
 
     clickStockOnHand();
-    selectFromTotalConsumedQuantityDropDown("User Input");
-    selectFromStockOnHandDropDown("Calculated");
+    selectFromTotalConsumedQuantityDropDown(USER_INPUT);
+    selectFromStockOnHandDropDown(CALCULATED);
     HomePage homePage = clickSaveButton();
     verifySaveSuccessDiv();
     homePage.selectProgramToConfigTemplate(program);
@@ -429,12 +438,12 @@ public class TemplateConfigPage extends Page {
     clickSaveButton();
 
     verifyErrorMessageDivFooter();
-    verifyErrorMessageDivTotalConsumedQuantity();
-    verifyErrorMessageDivStockOnHand();
+    verifyErrorMessageDivStockOnHand("User needs to enter 'Total Consumed Quantity' to calculate 'Stock on Hand'");
+    verifyErrorMessageDivTotalConsumedQuantity("If 'Total Consumed Quantity' is user input then it should be visible");
   }
 
   public void verifyArithmeticValidations(String program) throws IOException {
-    verifyCAndEUserInputsAndShouldBeDisplayed(program);
+    verifyCAndEUserInputsAndShouldBeDisplayed();
     verifyArithmeticValidationOnOff();
     verifyCDerivedEMustViceVersa(program);
 
@@ -443,15 +452,16 @@ public class TemplateConfigPage extends Page {
   private void prepareDataForBusinessRuleCE()throws IOException {
     clickTotalConsumedQuantity();
     clickStockOnHand();
-    selectFromTotalConsumedQuantityDropDown("Calculated");
-    selectFromStockOnHandDropDown("Calculated");
+    selectFromTotalConsumedQuantityDropDown(CALCULATED);
+    selectFromStockOnHandDropDown(CALCULATED);
     clickSaveButton();
 
   }
 
   private void verifyBusinessRuleCE() {
-    verifyErrorMessageDivStockOnHand();
-    verifyErrorMessageDivTotalConsumedQuantity();
+    String independentFieldsCalculatedError = "Interdependent fields ('Total Consumed Quantity', 'Stock on Hand') cannot be of type Calculated at the same time";
+    verifyErrorMessageDivStockOnHand(independentFieldsCalculatedError);
+    verifyErrorMessageDivTotalConsumedQuantity(independentFieldsCalculatedError);
     verifyErrorMessageDivFooter();
   }
 
@@ -468,12 +478,12 @@ public class TemplateConfigPage extends Page {
   }
 
   private void verifyBusinessRuleJW() {
-    verifyErrorMessageDivRequestedQuantity();
+    verifyErrorMessageDivRequestedQuantity("If 'Requested Quantity' is displayed, then 'Requested Quantity Explanation' must also be displayed");
     verifyErrorMessageDivFooter();
   }
 
   private void verifyBusinessRuleWJ() {
-    verifyErrorMessageRequestedQuantityExplanation();
+    verifyErrorMessageRequestedQuantityExplanation("If 'Requested Quantity Explanation' is displayed, then 'Requested Quantity' must also be displayed");
     verifyErrorMessageDivFooter();
   }
 
@@ -515,29 +525,30 @@ public class TemplateConfigPage extends Page {
   }
 
   public void verifyColumnSource() {
+
     testWebDriver.waitForElementToAppear(SaveButton);
-    assertEquals(productCodeSource.getText().trim(), "Reference Data");
-    assertEquals(productNameSource.getText().trim(), "Reference Data");
-    assertEquals(unitOfIssueSource.getText().trim(), "Reference Data");
-    assertEquals(beginningBalanceSource.getText().trim(), "User Input");
-    assertEquals(totalReceivedQuantitySource.getText().trim(), "User Input");
-    assertEquals(totalConsumedQuantitySource.getText().trim(), "User Input");
-    assertEquals(lossesAndAdjSource.getText().trim(), "User Input");
-    assertEquals(stockOnHandSource.getText().trim(), "User Input");
-    assertEquals(newPatientsSource.getText().trim(), "User Input");
-    assertEquals(stockOutDaysSource.getText().trim(), "User Input");
-    assertEquals(adjustedTotalConsumptionSource.getText().trim(), "Calculated");
-    assertEquals(maxStockQuantitySource.getText().trim(), "Calculated");
-    assertEquals(calculatedOrderQuantitySource.getText().trim(), "Calculated");
-    assertEquals(requestedQuantitySource.getText().trim(), "User Input");
-    assertEquals(requestedQuantityExplanationSource.getText().trim(), "User Input");
-    assertEquals(packsToShipSource.getText().trim(), "Calculated");
-    assertEquals(pricePerPackSource.getText().trim(), "Reference Data");
-    assertEquals(totalCostSource.getText().trim(), "Calculated");
-    assertEquals(remarksSource.getText().trim(), "User Input");
-    assertEquals(approvedQuantitySource.getText().trim(), "User Input");
-    assertEquals(expirationDateSource.getText().trim(), "User Input");
-    assertEquals(totalSource.getText().trim(), "Calculated");
+    assertEquals(productCodeSource.getText().trim(), REFERENCE_DATA);
+    assertEquals(productNameSource.getText().trim(), REFERENCE_DATA);
+    assertEquals(unitOfIssueSource.getText().trim(), REFERENCE_DATA);
+    assertEquals(beginningBalanceSource.getText().trim(), USER_INPUT);
+    assertEquals(totalReceivedQuantitySource.getText().trim(), USER_INPUT);
+    assertEquals(totalConsumedQuantitySource.getText().trim(), USER_INPUT);
+    assertEquals(lossesAndAdjSource.getText().trim(), USER_INPUT);
+    assertEquals(stockOnHandSource.getText().trim(), USER_INPUT);
+    assertEquals(newPatientsSource.getText().trim(), USER_INPUT);
+    assertEquals(stockOutDaysSource.getText().trim(), USER_INPUT);
+    assertEquals(adjustedTotalConsumptionSource.getText().trim(), CALCULATED);
+    assertEquals(maxStockQuantitySource.getText().trim(), CALCULATED);
+    assertEquals(calculatedOrderQuantitySource.getText().trim(), CALCULATED);
+    assertEquals(requestedQuantitySource.getText().trim(), USER_INPUT);
+    assertEquals(requestedQuantityExplanationSource.getText().trim(), USER_INPUT);
+    assertEquals(packsToShipSource.getText().trim(), CALCULATED);
+    assertEquals(pricePerPackSource.getText().trim(), REFERENCE_DATA);
+    assertEquals(totalCostSource.getText().trim(), CALCULATED);
+    assertEquals(remarksSource.getText().trim(), USER_INPUT);
+    assertEquals(approvedQuantitySource.getText().trim(), USER_INPUT);
+    assertEquals(expirationDateSource.getText().trim(), USER_INPUT);
+    assertEquals(totalSource.getText().trim(), CALCULATED);
 
   }
 
@@ -547,31 +558,24 @@ public class TemplateConfigPage extends Page {
   }
 
   public void verifyMandatoryColumns() {
-    //verifyMandatoryColumnsEditable(productCodeCheckBox);
     verifyMandatoryColumnsEditable(productNameCheckBox);
   }
 
   public void configureTemplate() {
-    String message = null;
-
     testWebDriver.waitForElementToAppear(SaveButton);
-    verifySourceForTotalConsumedQuantity("User Input");
-    verifySourceForStockOnHand("User Input");
-    testWebDriver.selectByVisibleText(stockInHandDropDown, "Calculated");
+    verifySourceForTotalConsumedQuantity(USER_INPUT);
+    verifySourceForStockOnHand(USER_INPUT);
+    testWebDriver.selectByVisibleText(stockInHandDropDown, CALCULATED);
     testWebDriver.sleep(1500);
     SaveButton.click();
-
     testWebDriver.sleep(2000);
-
     verifySuccessDiv();
-
   }
 
   public void alterBeginningBalanceLabel(String columnHeadingToBeAltered) throws IOException {
     testWebDriver.waitForElementToAppear(SaveButton);
     beginningBalance.clear();
     beginningBalance.sendKeys(columnHeadingToBeAltered);
-    unClickCheckBox(productCodeCheckBox);
     clickSaveButton();
     verifySuccessDiv();
   }
@@ -581,7 +585,9 @@ public class TemplateConfigPage extends Page {
 
 
   private void verifySuccessDiv() {
-    assertTrue("Save success message not showing up", saveSuccessMsg.isDisplayed());
+    String saveSuccessfullyMessage = "Template saved successfully!";
+    assertTrue("'"+saveSuccessfullyMessage+"' div not showing up", saveSuccessMsg.isDisplayed());
+    assertTrue("'"+saveSuccessfullyMessage+"' not showing up", saveSuccessMsg.getText().equals(saveSuccessfullyMessage));
   }
 
     public void clickCheckBox(WebElement chkBox) {

@@ -15,11 +15,11 @@ import static com.natpryce.makeiteasy.Property.newProperty;
 
 public class FacilityApprovedProductBuilder {
 
-  public static final Property<FacilityApprovedProduct, String> facilityTypeCode = newProperty();
-  public static final Property<FacilityApprovedProduct, Long> facilityTypeId = newProperty();
-  public static final Property<FacilityApprovedProduct, String> programCode = newProperty();
-  public static final Property<FacilityApprovedProduct, String> productCode = newProperty();
-  public static final Property<FacilityApprovedProduct, Integer> maxMonthsOfStock = newProperty();
+  public static final Property<FacilityTypeApprovedProduct, String> facilityTypeCode = newProperty();
+  public static final Property<FacilityTypeApprovedProduct, Long> facilityTypeId = newProperty();
+  public static final Property<FacilityTypeApprovedProduct, String> programCode = newProperty();
+  public static final Property<FacilityTypeApprovedProduct, String> productCode = newProperty();
+  public static final Property<FacilityTypeApprovedProduct, Integer> maxMonthsOfStock = newProperty();
 
   public static final String defaultFacilityTypeCode = "code";
   public static final Long defaultFacilityTypeId = 1L;
@@ -27,10 +27,10 @@ public class FacilityApprovedProductBuilder {
   public static final String defaultProductCode = "P999";
   public static final Integer defaultMaxMonthsOfStock = 3;
 
-  public static final Instantiator<FacilityApprovedProduct> defaultFacilityApprovedProduct = new Instantiator<FacilityApprovedProduct>() {
+  public static final Instantiator<FacilityTypeApprovedProduct> defaultFacilityApprovedProduct = new Instantiator<FacilityTypeApprovedProduct>() {
 
     @Override
-    public FacilityApprovedProduct instantiate(PropertyLookup<FacilityApprovedProduct> lookup) {
+    public FacilityTypeApprovedProduct instantiate(PropertyLookup<FacilityTypeApprovedProduct> lookup) {
 
       Program program = new Program();
       program.setCode(lookup.valueOf(programCode, defaultProgramCode));
@@ -42,7 +42,7 @@ public class FacilityApprovedProductBuilder {
 
       FacilityType facilityType = new FacilityType(lookup.valueOf(facilityTypeCode, defaultFacilityTypeCode));
       facilityType.setId(lookup.valueOf(facilityTypeId, defaultFacilityTypeId));
-      return new FacilityApprovedProduct(
+      return new FacilityTypeApprovedProduct(
         facilityType,
         programProduct,
         lookup.valueOf(maxMonthsOfStock, defaultMaxMonthsOfStock));

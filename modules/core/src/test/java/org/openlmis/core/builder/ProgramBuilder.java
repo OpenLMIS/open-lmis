@@ -21,6 +21,7 @@ public class ProgramBuilder {
   public static final Property<Program, String> programCode = newProperty();
   public static final Property<Program, Boolean> programStatus = newProperty();
   public static final Property<Program, Boolean> templateStatus = newProperty();
+  public static final Property<Program, Boolean> regimenTemplateConfigured = newProperty();
   public static final Property<Program, Boolean> push = newProperty();
   public static Property<Program, Long> programId = newProperty();
 
@@ -35,6 +36,7 @@ public class ProgramBuilder {
       program.setActive(lookup.valueOf(programStatus, true));
       program.setTemplateConfigured(lookup.valueOf(templateStatus, false));
       program.setPush(lookup.valueOf(push, false));
+      program.setRegimenTemplateConfigured(lookup.valueOf(regimenTemplateConfigured,Boolean.FALSE));
       return program;
     }
   };

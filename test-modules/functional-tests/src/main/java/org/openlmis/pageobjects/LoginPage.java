@@ -26,19 +26,22 @@ public class LoginPage extends Page {
   @FindBy(how = How.ID, using = "password")
   private static WebElement passwordField;
 
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Forgot Password')]")
+  private static WebElement forgotPasswordHeader;
+
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Forgot password?')]")
+  private static WebElement forgotPasswordLink;
+
   private String BASE_URL;
 
   private String baseUrl;
 
   public LoginPage(TestWebDriver driver, String baseUrl) throws IOException {
-      super(driver);
+    super(driver);
 
-//    baseUrl = "http://localhost:9091/";
     BASE_URL = baseUrl;
     testWebDriver.setBaseURL(BASE_URL);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
-//    new AjaxElementLocatorFactory(testWebDriver.)
-//    PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver, this));
     testWebDriver.setImplicitWait(10);
     testWebDriver.waitForElementToAppear(userNameField);
     SeleneseTestNgHelper.assertTrue(userNameField.isDisplayed());
@@ -52,6 +55,13 @@ public class LoginPage extends Page {
     passwordField.sendKeys(password);
     userNameField.submit();
     return new HomePage(testWebDriver);
+  }
+
+  public ForgotPasswordPage clickForgotPasswordLink() throws IOException {
+    testWebDriver.waitForElementToAppear(forgotPasswordLink);
+    forgotPasswordLink.click();
+    testWebDriver.waitForElementToAppear(forgotPasswordHeader);
+    return new ForgotPasswordPage(testWebDriver);
   }
 
 }

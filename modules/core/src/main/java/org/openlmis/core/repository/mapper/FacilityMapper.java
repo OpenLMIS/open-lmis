@@ -13,6 +13,7 @@ import org.openlmis.core.domain.FacilityType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface FacilityMapper {
@@ -113,7 +114,7 @@ public interface FacilityMapper {
   FacilityType getFacilityTypeForCode(String facilityTypeCode);
 
   @Update({"UPDATE facilities SET dataReportable = #{dataReportable}, active=#{active}, " +
-      "modifiedBy=#{modifiedBy}, modifiedDate = NOW() WHERE id =#{id}"})
+    "modifiedBy=#{modifiedBy}, modifiedDate = NOW() WHERE id =#{id}"})
   void updateDataReportableAndActiveFor(Facility facility);
 
   @Select("SELECT id FROM facilities WHERE LOWER(code) = LOWER(#{code})")
@@ -162,4 +163,14 @@ public interface FacilityMapper {
 
   @Select("SELECT * from facilities WHERE code=#{code}")
   Facility getByCode(String code);
+
+  @Select({"SELECT * from facilities f, delivery_zone_members dzm, geographic_zones gz, programs_supported ps ",
+    "WHERE f.id = dzm.facilityId AND",
+    " dzm.deliveryZoneId= #{deliveryZoneId} AND f.active = true ",
+    "AND f.geographiczoneId = gz.id AND f.id=ps.facilityId AND ps.programId = #{programId}  order by gz.name, f.name"})
+  @Results(value = {
+    @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getGeographicZoneById"))
+  })
+  List<Facility> getAllInDeliveryZoneFor(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
 }

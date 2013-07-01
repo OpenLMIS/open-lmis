@@ -11,16 +11,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.Role;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -36,6 +38,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
@@ -45,22 +48,25 @@ import static org.openlmis.web.controller.RoleRightsController.*;
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
 
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
 public class RoleRightsControllerTest {
 
   Role role;
+  private static final Long LOGGED_IN_USERID = 11L;
+  private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
 
   @Mock
   RoleRightsService roleRightsService;
 
-  private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
+  @Mock
+  MessageService messageService;
 
-  RoleRightsController controller;
-  private static final Long LOGGED_IN_USERID = 11L;
+  @InjectMocks
+  private RoleRightsController controller;
 
   @Before
   public void setUp() throws Exception {
-    controller = new RoleRightsController(roleRightsService);
+    initMocks(this);
     MockHttpSession mockHttpSession = new MockHttpSession();
     httpServletRequest.setSession(mockHttpSession);
     mockHttpSession.setAttribute(USER_ID, LOGGED_IN_USERID);
@@ -78,6 +84,7 @@ public class RoleRightsControllerTest {
 
   @Test
   public void shouldSaveRole() throws Exception {
+    when(messageService.message("message.role.created.success", "test role")).thenReturn("'test role' created successfully");
     ResponseEntity<OpenLmisResponse> responseEntity = controller.createRole(role, httpServletRequest);
     verify(roleRightsService).saveRole(role);
     assertThat(role.getModifiedBy(), is(LOGGED_IN_USERID));
@@ -120,6 +127,7 @@ public class RoleRightsControllerTest {
   @Test
   public void shouldUpdateRoleAndRights() throws Exception {
     Role role = new Role("Role Name", null, "Desc", new HashSet<>(asList(CONFIGURE_RNR)));
+    when(messageService.message("message.role.updated.success", "Role Name")).thenReturn("Role Name updated successfully");
 
     OpenLmisResponse response = controller.updateRole(role.getId(), role, httpServletRequest).getBody();
 

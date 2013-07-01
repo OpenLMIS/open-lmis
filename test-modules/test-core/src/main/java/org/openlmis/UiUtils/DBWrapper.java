@@ -112,19 +112,24 @@ public class DBWrapper {
     update("delete from roles where name not in ('Admin');");
     update("delete from facility_approved_products;");
     update("delete from program_product_price_history;");
-    update("delete from program_products;");
+
     update("delete from orders;");
     update("DELETE FROM requisition_status_changes;");
-    update("DELETE FROM requisition_line_item_losses_adjustments;");
-    update("DELETE FROM requisition_line_items;");
-    update("delete from products;");
-    update("delete from product_categories;");
+
     update("delete from user_password_reset_tokens ;");
     update("delete from comments;");
     update("delete from users where userName not like('Admin%');");
     update("DELETE FROM requisition_line_item_losses_adjustments;");
     update("DELETE FROM requisition_line_items;");
     update("DELETE FROM requisitions;");
+
+    update("delete from program_product_isa;");
+    update("delete from facility_approved_products;");
+    update("delete from facility_program_products;");
+    update("delete from program_products;");
+    update("delete from products;");
+    update("delete from product_categories;");
+
     update("delete from supply_lines;");
     update("delete from programs_supported;");
     update("delete from requisition_group_members;");
@@ -144,6 +149,7 @@ public class DBWrapper {
     update("delete from processing_periods;");
     update("delete from processing_schedules;");
     update("delete from atomfeed.event_records;");
+    update("delete from regimens;");
   }
 
 
@@ -275,6 +281,19 @@ public class DBWrapper {
         "('" + product2 + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   5, (Select id from product_categories where code='C1'));\n");
   }
 
+  public void insertProductWithCategory(String product, String productName, String category) throws SQLException, IOException {
+
+    update("INSERT INTO product_categories (code, name, displayOrder) values ('"+category+"', '"+productName+"', 1);");
+    update("INSERT INTO products\n" +
+      "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder, categoryId) values\n" +
+      "('" + product + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    '"+productName+"', '"+productName+"',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE,    1, (Select id from product_categories where code='C1'));\n");
+
+  }
+
+  public void updateProgramToAPushType(String program, boolean flag) throws SQLException {
+    update("update programs set push='"+flag+"' where code='"+program+"';");
+  }
+
 
   public void insertProgramProducts(String product1, String product2, String program) throws SQLException, IOException {
     ResultSet rs = query("Select id from program_products;");
@@ -288,6 +307,18 @@ public class DBWrapper {
         "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product1 + "'), 30, 12.5, true),\n" +
         "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product2 + "'), 30, 0, true);");
   }
+
+  public void insertProgramProductsWithCategory(String product, String program) throws SQLException, IOException {
+
+
+    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n" +
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product + "'), 30, 12.5, true);");
+  }
+
+    public void insertProgramProductISA(String program, String product, String whoratio, String dosesperyear, String wastagerate, String bufferpercentage, String minimumvalue, String maximumvalue, String adjustmentvalue) throws SQLException, IOException {
+        update("INSERT INTO program_product_isa(programproductid, whoratio, dosesperyear, wastagerate, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue) VALUES\n" +
+                "((SELECT ID from program_products where programid=(SELECT ID from programs where code='" + program + "') and productid= (SELECT id from products WHERE code = '" + product + "'))," + whoratio + "," + dosesperyear + "," + wastagerate + "," + bufferpercentage + "," + minimumvalue + "," + maximumvalue + "," + adjustmentvalue  + ");");
+    }
 
   public void insertFacilityApprovedProducts(String product1, String product2, String program, String facilityType) throws SQLException, IOException {
     update("delete from facility_approved_products;");
@@ -726,6 +757,24 @@ public class DBWrapper {
 
   public void updateActiveStatusOfProgram(String programCode) throws SQLException {
     update("update programs SET active='true' where code='"+programCode+"';");
+  }
+
+  public void setRegimenTemplateConfiguredForProgram(boolean flag,String programName) throws SQLException {
+    update("update programs set regimentemplateconfigured='"+flag+"' where name='"+programName+"';");
+  }
+
+  public void setRegimenTemplateConfiguredForAllPrograms(boolean flag) throws SQLException {
+    update("update programs set regimentemplateconfigured='"+flag+"';");
+  }
+
+  public String getAllActivePrograms() throws SQLException {
+    String programsString="";
+    ResultSet rs = query("select * from programs where active=true;");
+
+    while (rs.next()) {
+      programsString = programsString+ rs.getString("name");
+    }
+    return programsString;
   }
 
 }

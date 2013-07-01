@@ -6,7 +6,6 @@
 
 package org.openlmis.rnr.service;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
@@ -22,6 +21,8 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
+import static org.apache.commons.collections.CollectionUtils.containsAny;
+import static org.apache.commons.collections.CollectionUtils.exists;
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
@@ -36,7 +37,7 @@ public class RequisitionPermissionService {
 
   public Boolean hasPermission(Long userId, Facility facility, Program program, Right... rights) {
     Set<Right> userRights = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
-    return CollectionUtils.containsAny(userRights, asList(rights));
+    return containsAny(userRights, asList(rights));
 
   }
 
@@ -54,7 +55,7 @@ public class RequisitionPermissionService {
   public boolean hasPermissionToApprove(Long userId, final Rnr rnr) {
     List<RoleAssignment> assignments = roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, userId);
 
-    return CollectionUtils.exists(assignments, new Predicate() {
+    return exists(assignments, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
         final RoleAssignment o1 = (RoleAssignment) o;

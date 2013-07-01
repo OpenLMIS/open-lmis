@@ -9,7 +9,7 @@
 
       <div class="row-fluid clearfix">
         <div class="span5">
-          <label for="name" openlmis-message="create.report.reportName"></label>
+          <label for="name" openlmis-message="create.report.reportName"><span class="label-required"> *</span></label>
 
           <div>
             <input ng-model="reportTemplate.name" name="name" id="name" type="text" maxlength="50"
@@ -23,7 +23,7 @@
 
       <div class="row-fluid clearfix">
         <div class="span5">
-          <label for="name" openlmis-message="create.report.uploadFile"></label>
+          <label for="name" openlmis-message="create.report.uploadFile"><span class="label-required"> *</span></label>
           <div>
             <input ng-model="reportTemplate.file" name="file" id="file" type="file" maxlength="50"
                    ng-required="true" accept=".jrxml"/>
@@ -39,7 +39,7 @@
     <div form-toolbar id="action_buttons" class="action-buttons">
       <div class="form-cell button-row pull-left">
         <input id="saveReport" class="btn btn-primary save-button" type="submit" openlmis-message="button.save" />
-        <a type = "button" ng-href = "#/list" class = "btn btn-cancel submit-button" openlmis-message="button.cancel"></a >
+        <a ng-href = "#/list" class = "btn btn-cancel submit-button" openlmis-message="button.cancel"></a>
       </div>
       <div id="error" class="toolbar-error" openlmis-message="errorMessage" ng-show="errorMessage"></div>
 

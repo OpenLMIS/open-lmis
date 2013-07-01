@@ -4,12 +4,12 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function DistributionController($scope, deliveryZones, DeliveryZonePrograms, messageService, DeliveryZoneProgramPeriods) {
+function DistributionController($scope, $location, deliveryZones, DeliveryZonePrograms, messageService, DeliveryZoneProgramPeriods) {
 
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
   var NONE_ASSIGNED_LABEL = messageService.get('label.noneAssigned');
-  var DEFAULT_PROGRAM_MESSAGE = messageService.get('label.selectProgram');
+  var DEFAULT_PROGRAM_MESSAGE = messageService.get('label.select.program');
   var DEFAULT_PERIOD_MESSAGE = messageService.get('label.select.period');
 
   $scope.zonePlaceholder = !!$scope.deliveryZones.length ? DELIVERY_ZONE_LABEL : NONE_ASSIGNED_LABEL;
@@ -43,6 +43,11 @@ function DistributionController($scope, deliveryZones, DeliveryZonePrograms, mes
 
   var optionMessage = function (entity, defaultMessage) {
     return entity == null || entity.length == 0 ? NONE_ASSIGNED_LABEL : defaultMessage;
+  };
+
+
+  $scope.viewAmounts = function() {
+    $location.path('/viewAmounts/'+$scope.selectedZone.id+"/"+$scope.selectedProgram.id);
   };
 
 }

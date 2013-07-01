@@ -61,7 +61,6 @@ public class TestWebDriver {
       assertTrue(url.contains(BASE_URL + "public/pages/admin/index.html"));
     else
       assertTrue(url.contains(BASE_URL + "public/pages/logistics/rnr/create.html#/init-rnr"));
-
   }
 
 
@@ -74,6 +73,10 @@ public class TestWebDriver {
 
   public void get() {
     driver.get(BASE_URL);
+  }
+
+  public void getUrl(String url) {
+        driver.get(url);
   }
 
   public static WebDriver getDriver() {
@@ -134,6 +137,13 @@ public class TestWebDriver {
     });
   }
 
+  public void waitForElementsToAppear(final WebElement element, final WebElement elementSecond, final WebElement elementThird ) {
+    (new WebDriverWait(driver, DEFAULT_WAIT_TIME)).until(new ExpectedCondition<Boolean>() {
+      public Boolean apply(WebDriver d) {
+        return (element.isDisplayed() || elementSecond.isDisplayed() || elementThird.isDisplayed());
+      }
+    });
+  }
 
 
   public void waitForTextToAppear(final String textToWaitFor) {

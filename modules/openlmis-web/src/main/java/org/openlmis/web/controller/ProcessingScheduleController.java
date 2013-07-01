@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 
 import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.openlmis.web.response.OpenLmisResponse.success;
 
 @Controller
 @NoArgsConstructor
@@ -62,10 +63,10 @@ public class ProcessingScheduleController extends BaseController {
   @RequestMapping(value = "/schedules/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
   public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Long id) {
-    try{
+    try {
       ProcessingSchedule processingSchedule = processingScheduleService.get(id);
       return OpenLmisResponse.response(SCHEDULE, processingSchedule);
-    } catch (DataException e){
+    } catch (DataException e) {
       return error(e, HttpStatus.NOT_FOUND);
     }
   }
@@ -73,7 +74,12 @@ public class ProcessingScheduleController extends BaseController {
   private ResponseEntity<OpenLmisResponse> saveSchedule(ProcessingSchedule processingSchedule, boolean createOperation) {
     try {
       ProcessingSchedule savedSchedule = processingScheduleService.save(processingSchedule);
-      ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("'" + savedSchedule.getName() + "' "+ (createOperation?"created":"updated") +" successfully");
+      ResponseEntity<OpenLmisResponse> response;
+      if (createOperation) {
+        response = success(messageService.message("message.schedule.created.success", savedSchedule.getName()));
+      } else {
+        response = success(messageService.message("message.schedule.updated.success", savedSchedule.getName()));
+      }
       response.getBody().addData(SCHEDULE, savedSchedule);
       return response;
     } catch (DataException e) {

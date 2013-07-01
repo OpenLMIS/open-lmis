@@ -8,7 +8,7 @@
   <h2 openlmis-message="requisition.template.header"></h2>
 
   <div class="info-box">
-    <p><span openlmis-message="template.programName"></span> {{program.name}} <a ng-href="{{selectProgramUrl}}" openlmis-message="template.change"></a>
+    <p><strong openlmis-message="template.programName"></strong> {{program.name}} <a ng-href="{{selectProgramUrl}}" openlmis-message="template.change"></a>
     </p>
   </div>
 
@@ -21,17 +21,17 @@
   <form name="configureRnRTemplateForm" ng-submit="save()">
     <div class="rnr-template-columns">
       <ul ui-sortable ng-model="rnrColumns" id="sortable">
-        <li id="{{rnrColumn.indicator}}" ng-repeat="rnrColumn in rnrColumns">
+        <li id="{{rnrColumn.name}}" ng-repeat="rnrColumn in rnrColumns">
           <div class="drag-handle"></div>
           <span class="tpl-visible">
             <input type="checkbox" ng-model="rnrColumn.visible" ng-click="setArithmeticValidationMessageShown()" ng-disabled="rnrColumn.mandatory"/>
           </span>
           <span class="tpl-indicator">
-            <div class="indicator" ng-bind="rnrColumn.indicator"></div>
+            <div class="indicator" openlmis-message="rnrColumn.indicator"></div>
           </span>
           <span class="tpl-label">
             <input name="label" type="text" ng-model="rnrColumn.label" required/>
-            <span class="col-desc" ng-bind="rnrColumn.description"></span>
+            <span class="col-desc" openlmis-message="rnrColumn.description"></span>
           </span>
           <span class="tpl-source">
             <span ng-show="rnrColumn.sourceConfigurable">
@@ -39,9 +39,9 @@
                       ng-change="setArithmeticValidationMessageShown()">
               </select>
             </span>
-            <span ng-hide="rnrColumn.sourceConfigurable" ng-bind="rnrColumn.source.description"></span>
+            <span ng-hide="rnrColumn.sourceConfigurable" openlmis-message="rnrColumn.source.description"></span>
             <br/>
-            <a class="rnr-column-formula" href="javascript:void(0);" ng-bind="rnrColumn.formula"></a>
+            <a class="rnr-column-formula" href="javascript:void(0);" ng-show="rnrColumn.formula" openlmis-message="rnrColumn.formula"></a>
           </span>
           <span class="tpl-error" ng-show="errorMap[rnrColumn.name]">
             <div class="alert alert-error" ng-bind="errorMap[rnrColumn.name]"></div>
@@ -52,7 +52,10 @@
 
     <div class="alert alert-info arithmetic-valid-msg" ng-show="arithmeticValidationMessageShown">
       <div class="row-fluid">
-        <div class="span9" openlmis-message="message.arithmeticValidation.status|arithmeticValidationStatusLabel|arithmeticValidationMessage">
+        <div class="span9">
+            <span openlmis-message="message.arithmeticValidation.status"></span>
+            <strong openlmis-message="arithmeticValidationStatusLabel"></strong>.
+            <span ng-show="arithmeticValidationMessage" openlmis-message="arithmeticValidationMessage"></span>
         </div>
         <div class="span3">
           <a href="javascript:void(0);" class="btn btn-primary btn-mini pull-right"
@@ -62,9 +65,9 @@
     </div>
 
 
-    <div form-toolbar class="action-buttons">
+    <div form-toolbar id="action_buttons" class="action-buttons">
       <div class="form-cell button-row">
-        <input type="submit" class="btn btn-primary save-button" value="Save"/>
+        <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
         <a ng-href="{{selectProgramUrl}}" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
       </div>
       <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>

@@ -5,15 +5,11 @@
  */
 
 'use strict';
-require(['../../shared/app', '../controller/reset-password-controller'], function (app) {
-  app.loadApp();
-  angular.module('resetPassword', ['openlmis']).
-    config(['$routeProvider', function ($routeProvider) {
-      $routeProvider.
-        when('/token/:token', {controller: ValidateTokenController, resolve: ValidateTokenController.resolve}).
-        when('/reset/:token', {controller: ResetPasswordController, resolve: ResetPasswordController.resolve, templateUrl: 'partials/reset-password-form.html'}).
-        when('/reset/password/complete', {controller: ResetCompleteController, templateUrl: 'partials/reset-password-complete.html'}).
-        otherwise({redirectTo: '/token/:token'});
-    }]);
-  angular.bootstrap(document, ['resetPassword']);
-});
+angular.module('resetPassword', ['openlmis']).
+  config(['$routeProvider', function ($routeProvider) {
+    $routeProvider.
+      when('/token/:token', {controller: ValidateTokenController, resolve: ValidateTokenController.resolve}).
+      when('/reset/:token', {controller: ResetPasswordController, resolve: ResetPasswordController.resolve, templateUrl: 'partials/reset-password-form.html'}).
+      when('/reset/password/complete', {controller: ResetCompleteController, templateUrl: 'partials/reset-password-complete.html'}).
+      otherwise({redirectTo: '/token/:token'});
+  }]);

@@ -11,11 +11,12 @@ describe("Role", function () {
   beforeEach(module('ui.bootstrap.dialog'));
 
   describe("Create Role", function () {
-    var ctrl, scope, $httpBackend, rights, dialog;
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _$dialog_) {
+    var ctrl, scope, $httpBackend, rights, dialog, messageService;
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _$dialog_, _messageService_) {
       scope = $rootScope.$new();
       dialog = _$dialog_;
       $httpBackend = _$httpBackend_;
+      messageService = _messageService_;
       rights = [
         {"right": "CONFIGURE_RNR", "name": "configure rnr", "adminRight": "true"},
         {"right": "MANAGE_FACILITY", "name": "manage facility", "adminRight": "true"},

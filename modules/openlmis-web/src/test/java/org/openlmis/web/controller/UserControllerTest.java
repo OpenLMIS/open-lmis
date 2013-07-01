@@ -29,7 +29,10 @@ import org.springframework.mock.web.MockHttpSession;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -39,6 +42,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.web.controller.UserController.TOKEN_VALID;
+
 @Category(UnitTests.class)
 public class UserControllerTest {
 
@@ -68,7 +72,8 @@ public class UserControllerTest {
     httpServletRequest = new MockHttpServletRequest();
     session = new MockHttpSession();
     httpServletRequest.setSession(session);
-    userController.setBaseUrl(baseUrl);
+    userController = new UserController(roleRightService, userService, baseUrl);
+    userController.setMessageService(messageService);
   }
 
   @Test
@@ -126,6 +131,7 @@ public class UserControllerTest {
     User user = new User();
     httpServletRequest.getSession().setAttribute(USER_ID, userId);
     httpServletRequest.getSession().setAttribute(USER, USER);
+    when(messageService.message("message.user.created.success.email.sent", null, null)).thenReturn("User 'null null' has been successfully created, password link has been sent on registered Email address");
     ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
 
     verify(userService).create(eq(user), eq("http://localhost:9091/public/pages/reset-password.html#/token/"));
@@ -142,6 +148,7 @@ public class UserControllerTest {
     user.setPassword("password");
     httpServletRequest.getSession().setAttribute(USER_ID, userId);
     httpServletRequest.getSession().setAttribute(USER, USER);
+    when(messageService.message("message.user.updated.success", null, null)).thenReturn("User 'null null' has been successfully updated");
 
     ResponseEntity<OpenLmisResponse> response = userController.update(user, 1L, httpServletRequest);
 
