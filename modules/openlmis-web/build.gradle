@@ -123,8 +123,6 @@ dependencies {
             project(':modules:shipment'),
             project(':modules:rest-api'),
             project(':modules:reporting'),
-            //project(':modules:allocation'),
-            project(':modules:distribution'),
             project(':modules:report')
 
 
