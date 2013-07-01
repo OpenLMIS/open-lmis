@@ -24,7 +24,7 @@ describe('Save Regimen Template Controller', function () {
     regimenList1 = [regimen1, regimen3];
     regimenList2 = [regimen2, regimen4];
     program = {id: 1, name: 'HIV'};
-    regimenColumns = {};
+    regimenColumns = [{'name':'column1', 'label':'columnLabel', 'visible':true, 'dataType':'Numeric'}];
     var regimens = [regimen1, regimen2, regimen3, regimen4];
     var regimenCategories = [
       {'id': 1},
@@ -143,6 +143,37 @@ describe('Save Regimen Template Controller', function () {
     scope.save();
     expect(messageService.get).toHaveBeenCalledWith('error.regimens.not.done');
   });
+
+  it('should not save regimens no reporting field is selected', function () {
+    scope.regimensByCategory[1] = regimenList1
+    scope.regimensByCategory[2] = regimenList2;
+    scope.regimenColumns = [
+      {'name':'column1', 'label':'columnLabel1', 'visible':false, 'dataType':'Numeric'},
+      {'name':'column2', 'label':'columnLabel2', 'visible':false, 'dataType':'Text'}
+    ];
+
+    spyOn(messageService, 'get');
+
+    scope.save();
+    expect(messageService.get).toHaveBeenCalledWith('error.regimens.none.selected');
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should not save regimens when any label is empty', function () {
+    scope.regimensByCategory[1] = regimenList1
+    scope.regimensByCategory[2] = regimenList2;
+    scope.regimenColumns = [
+      {'name':'column1', 'label':'', 'visible':true, 'dataType':'Numeric'},
+      {'name':'column2', 'label':'', 'visible':false, 'dataType':'Text'}
+    ];
+
+    spyOn(messageService, 'get');
+
+    scope.save();
+    expect(messageService.get).toHaveBeenCalledWith('error.regimen.null.label');
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
 
   it('should save regimens', function () {
     scope.regimensByCategory[1] = regimenList1

@@ -1,0 +1,20 @@
+<div id = "reportingFields">
+  <div class = "row-fluid list-header">
+    <div class = "span2" openlmis-message="label.visible"></div>
+    <div class = "span6" openlmis-message="label.column.label"><span class="label-required"> *</span></div>
+    <div class = "span4" openlmis-message="label.data.type"></div>
+  </div>
+
+  <div class = "row-fluid list-row"
+       ng-repeat = "regimenColumn in regimenColumns">
+    <div class = "span2">
+      <input type = "checkbox" ng-model = "regimenColumn.visible"/>
+    </div>
+    <div class = "span6">
+      <input type = "text" ng-model = "regimenColumn.label" ng-class="{'required-error':!regimenColumn.label}"/>
+    </div>
+    <div class = "span4">
+      <span ng-bind = "regimenColumn.dataType"></span>
+    </div>
+  </div>
+</div>

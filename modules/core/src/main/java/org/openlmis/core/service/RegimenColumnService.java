@@ -14,8 +14,23 @@ import java.util.List;
 @AllArgsConstructor
 public class RegimenColumnService {
 
+  public static final String ON_TREATMENT = "onTreatment";
+  public static final String INITIATED_TREATMENT = "initiatedTreatment";
+  public static final String STOPPED_TREATMENT = "stoppedTreatment";
+  public static final String REMARKS = "remarks";
+
+  public static final String NUMBER_OF_PATIENTS_ON_TREATMENT = "regimen.reporting.patients.on.treatment";
+  public static final String NUMBER_OF_PATIENTS_TO_BE_INITIATED_TREATMENT = "regimen.reporting.patients.initiated.treatment";
+  public static final String NUMBER_OF_PATIENTS_STOPPED_TREATMENT = "regimen.reporting.patients.stopped.treatment";
+  public static final String REMARKS_LABEL = "regimen.reporting.patients.remarks";
+  public static final String TYPE_NUMERIC = "regimen.reporting.dataType.numeric";
+  public static final String TYPE_TEXT = "regimen.reporting.dataType.text";
+
   @Autowired
   RegimenColumnRepository repository;
+
+  @Autowired
+  MessageService messageService;
 
   public void save (List<RegimenColumn> regimenColumns) {
     for(RegimenColumn regimenColumn : regimenColumns) {
@@ -41,10 +56,10 @@ public class RegimenColumnService {
   }
 
   private void populateDefaultRegimenColumns(Long programId, List<RegimenColumn> regimenColumns) {
-    repository.insert(new RegimenColumn(programId, "onTreatment", "Number of patients on treatment", "Numeric", true));
-    repository.insert(new RegimenColumn(programId, "'initiatedTreatment'", "Number of patients to be initiated treatment", "Numeric", true));
-    repository.insert(new RegimenColumn(programId, "'stoppedTreatment'", "Number of patients stopped treatment", "Numeric", true));
-    repository.insert(new RegimenColumn(programId, "'remarks'", "Remarks", "Text", true));
+    repository.insert(new RegimenColumn(programId, ON_TREATMENT, messageService.message(NUMBER_OF_PATIENTS_ON_TREATMENT), messageService.message(TYPE_NUMERIC), true));
+    repository.insert(new RegimenColumn(programId, INITIATED_TREATMENT, messageService.message(NUMBER_OF_PATIENTS_TO_BE_INITIATED_TREATMENT), messageService.message(TYPE_NUMERIC), true));
+    repository.insert(new RegimenColumn(programId, STOPPED_TREATMENT, messageService.message(NUMBER_OF_PATIENTS_STOPPED_TREATMENT), messageService.message(TYPE_NUMERIC), true));
+    repository.insert(new RegimenColumn(programId, REMARKS, messageService.message(REMARKS_LABEL), messageService.message(TYPE_TEXT), true));
     regimenColumns.addAll(repository.getRegimenColumnsByProgramId(programId));
   }
 

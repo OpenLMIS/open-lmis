@@ -27,7 +27,7 @@ public interface RegimenColumnMapper {
   @Select("SELECT * FROM program_regimen_columns WHERE name = #{name} AND programId = #{programId}")
   RegimenColumn getRegimenColumnByNameAndProgramId(@Param("name") String name, @Param("programId") Long programId);
 
-  @Select("SELECT * FROM program_regimen_columns WHERE programId = #{programId}")
+  @Select("SELECT * FROM program_regimen_columns WHERE programId = #{programId} ORDER BY id")
   List<RegimenColumn> getAllRegimenColumnsByProgramId(Long programId);
 
   @Update("UPDATE program_regimen_columns SET label = #{label}, visible = #{visible}, dataType = #{dataType} WHERE id = #{id}")

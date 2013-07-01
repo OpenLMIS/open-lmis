@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.RegimenColumn;
@@ -29,12 +30,14 @@ public class RegimenColumnServiceTest {
   @Mock
   RegimenColumnRepository repository;
 
+  @Mock
+  MessageService messageService;
+
   RegimenColumnService service;
 
   @Before
   public void setUp() throws Exception {
-    initMocks(this);
-    service = new RegimenColumnService(repository);
+    service = new RegimenColumnService(repository, messageService);
   }
 
   @Test
@@ -79,10 +82,10 @@ public class RegimenColumnServiceTest {
 
     service.getRegimenColumnsByProgramId(programId);
 
-    verify(repository).insert(new RegimenColumn(programId, "onTreatment", "Number of patients on treatment", "Numeric", true));
-    verify(repository).insert(new RegimenColumn(programId, "'initiatedTreatment'", "Number of patients to be initiated treatment", "Numeric", true));
-    verify(repository).insert(new RegimenColumn(programId, "'stoppedTreatment'", "Number of patients stopped treatment", "Numeric", true));
-    verify(repository).insert(new RegimenColumn(programId, "'remarks'", "Remarks", "Text", true));
+    verify(repository).insert(new RegimenColumn(programId, "onTreatment", null, null, true));
+    verify(repository).insert(new RegimenColumn(programId, "initiatedTreatment", null, null, true));
+    verify(repository).insert(new RegimenColumn(programId, "stoppedTreatment", null, null, true));
+    verify(repository).insert(new RegimenColumn(programId, "remarks", null, null, true));
     verify(repository, times(2)).getRegimenColumnsByProgramId(programId);
   }
 
