@@ -122,7 +122,7 @@ public class CreateFacilityPage extends Page {
   @FindBy(how = XPATH, using = "//a[contains(text(),'25')]")
   private static WebElement startDateCalender;
 
-  @FindBy(how = ID, using = "button_Ok")
+  @FindBy(how = ID, using = "button_OK")
   private static WebElement startDateAlert;
 
   @FindBy(how = ID, using = "supported-program-add")

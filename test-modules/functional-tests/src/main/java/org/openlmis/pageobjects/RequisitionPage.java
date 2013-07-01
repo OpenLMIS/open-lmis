@@ -29,7 +29,7 @@ public class RequisitionPage extends Page {
   private static WebElement addCommentButton;
   @FindBy(how = ID, using = "commentClose")
   private static WebElement commentCloseIcon;
-  @FindBy(how = ID, using = "button_Ok")
+  @FindBy(how = ID, using = "button_OK")
   private static WebElement okButton;
   @FindBy(how = ID, using = "button_Cancel")
   private static WebElement cancelButton;

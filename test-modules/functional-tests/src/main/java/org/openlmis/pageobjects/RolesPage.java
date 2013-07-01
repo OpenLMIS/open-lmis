@@ -83,7 +83,7 @@ public class RolesPage extends Page {
   @FindBy(how = How.ID, using = "adminRoleType")
   private static WebElement adminRoleType;
 
-  @FindBy(how = How.ID, using = "button_Ok")
+  @FindBy(how = How.ID, using = "button_OK")
   private static WebElement continueButton;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Edit role')]")
