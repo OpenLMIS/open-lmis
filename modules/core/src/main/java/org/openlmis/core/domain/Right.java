@@ -42,6 +42,8 @@ public enum Right {
   MANAGE_DISTRIBUTION("right.manage.distribution", FALSE, "Permission to manage an distribution", 9),
   MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", TRUE, "Permission to manage a regimen template", 4),
 
+  
+  MANAGE_PRODUCT("Admin - Manage Products", TRUE, "Permission to manage products",29),
   MANAGE_SUPPLYLINE("Admin - Manage Supply Line", TRUE, "Permission to manage supply line",30),
   VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", TRUE, "Permission to view Facility List Report",31),
   VIEW_MAILING_LABEL_REPORT("Report - Facility Listing (V2)", TRUE, "Permission to view mailing labels for facilities",32),
