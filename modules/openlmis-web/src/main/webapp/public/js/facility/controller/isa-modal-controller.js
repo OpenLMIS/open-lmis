@@ -28,19 +28,19 @@ function IsaModalController($scope, FacilityProgramProducts, ProgramProducts, $r
 
     $scope.currentProgramProducts = [];
 
-    if ($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]) {
-      calculateIsa($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]);
-      $scope.filteredProducts = $scope.currentProgramProducts = angular.copy($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]);
+    if ($scope.$parent.facilityProgramProductsList[$scope.currentProgram.id]) {
+      calculateIsa($scope.$parent.facilityProgramProductsList[$scope.currentProgram.id]);
+      $scope.filteredProducts = $scope.currentProgramProducts = angular.copy($scope.$parent.facilityProgramProductsList[$scope.currentProgram.id]);
       return;
     }
 
     var successFunc = function (data) {
 
-      $scope.$parent.allocationProgramProductsList[$scope.currentProgram.id] = data.programProductList;
+      $scope.$parent.facilityProgramProductsList[$scope.currentProgram.id] = data.programProductList;
 
-      calculateIsa($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]);
+      calculateIsa($scope.$parent.facilityProgramProductsList[$scope.currentProgram.id]);
 
-      $scope.filteredProducts = $scope.currentProgramProducts = angular.copy($scope.$parent.allocationProgramProductsList[$scope.currentProgram.id]);
+      $scope.filteredProducts = $scope.currentProgramProducts = angular.copy($scope.$parent.facilityProgramProductsList[$scope.currentProgram.id]);
 
     };
 
@@ -55,7 +55,7 @@ function IsaModalController($scope, FacilityProgramProducts, ProgramProducts, $r
   });
 
   $scope.updateISA = function () {
-    $scope.$parent.allocationProgramProductsList[$scope.currentProgram.id] = angular.copy($scope.currentProgramProducts);
+    $scope.$parent.facilityProgramProductsList[$scope.currentProgram.id] = angular.copy($scope.currentProgramProducts);
     $scope.$parent.programProductsISAModal = false;
   }
 
