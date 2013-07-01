@@ -80,7 +80,7 @@
                   <label for = "{{right.right}}" ><span openlmis-message="right.rightName"></span></label >
                 </div >
               </div >
-              <span class = "field-error" ng-show = "showRightError && role.type=='true'" openlmis-message="create.role.selectRightWarning">
+              <span class = "field-error" ng-show = "showRightError && role.type=='ADMIN'" openlmis-message="create.role.selectRightWarning">
               </span >
             </td>
 
@@ -94,7 +94,7 @@
                 <label for = "{{allocationRight.right}}" ><span openlmis-message="allocationRight.rightName"></span></label >
               </div >
               </div>
-              <span class = "field-error" ng-show = "showRightError && role.type=='false'" openlmis-message="create.role.selectRightWarning">
+              <span class = "field-error" ng-show = "showRightError && role.type=='ALLOCATION'" openlmis-message="create.role.selectRightWarning">
               </span >
             </td>
 
@@ -108,7 +108,7 @@
                 <label for = "{{requisitionRight.right}}" ><span openlmis-message="requisitionRight.rightName"></span></label >
               </div >
               </div>
-              <span class = "field-error" ng-show = "showRightError && role.type=='false'" openlmis-message="create.role.selectRightWarning">
+              <span class = "field-error" ng-show = "showRightError && role.type=='REQUISITION'" openlmis-message="create.role.selectRightWarning">
               </span >
             </td>
           </tr>

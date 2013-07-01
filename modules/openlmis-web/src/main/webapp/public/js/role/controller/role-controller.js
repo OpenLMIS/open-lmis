@@ -99,8 +99,6 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights, $d
   $scope.dialogCloseCallback = function (result) {
     if (result) {
       $scope.role.rights = [];
-      $scope.showRightError = false;
-      $scope.showError = false;
       $scope.previousType = $scope.role.type;
     } else {
       $scope.role.type = $scope.previousType;
@@ -108,6 +106,8 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights, $d
   };
 
   $scope.showRoleTypeModal = function () {
+    $scope.showRightError = false;
+    $scope.error = "";
     var options = {
       id: "roleTypeDialog",
       header: messageService.get("header.change.roleType"),
@@ -118,7 +118,7 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights, $d
 
   var validRole = function () {
     var valid = true;
-    $scope.showError = false;
+    $scope.error = "";
     $scope.showRightError = false;
     if ($scope.role.name == undefined) {
       $scope.showError = true;
