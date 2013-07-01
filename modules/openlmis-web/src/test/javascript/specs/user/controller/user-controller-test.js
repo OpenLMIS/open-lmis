@@ -23,12 +23,12 @@ describe("User", function () {
         {
           "id": 1,
           "name": "Admin",
-          "adminRole": true
+          "type": "ADMIN"
         },
         {
           "id": 2,
           "name": "Store In-Charge",
-          "adminRole": false
+          "type": "REQUISITION"
         }
       ];
 
@@ -50,20 +50,7 @@ describe("User", function () {
     it('should set roles in scope', function () {
       $httpBackend.flush();
       expect(scope.allRoles).toEqual(roles);
-      var adminRoles = [
-        {
-          "id": 1,
-          "name": "Admin",
-          "adminRole": true
-        }
-      ];
-      var nonAdminRoles = [
-        {
-          "id": 2,
-          "name": "Store In-Charge",
-          "adminRole": false
-        }
-      ];
+
       expect(scope.adminRoles.length).toBe(1);
       expect(scope.adminRoles[0].name).toBe("Admin");
       expect(scope.nonAdminRoles.length).toBe(1);
