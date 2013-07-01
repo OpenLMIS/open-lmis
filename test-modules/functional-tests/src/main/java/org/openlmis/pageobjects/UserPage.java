@@ -149,9 +149,9 @@ public class UserPage extends Page {
 
   }
 
-  public void enterMyFacilityAndMySupervisedFacilityData(String firstName, String lastName, String facilityCode, String program1, String node, String role, boolean adminRole) {
+  public void enterMyFacilityAndMySupervisedFacilityData(String firstName, String lastName, String facilityCode, String program1, String node, String role, String roleType) {
     testWebDriver.waitForElementToAppear(searchFacility);
-    if (!adminRole) {
+    if (roleType != "ADMIN") {
       searchFacility.clear();
       testWebDriver.handleScrollByPixels(0, 5000);
       searchFacility.sendKeys(facilityCode);

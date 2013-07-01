@@ -143,12 +143,12 @@ public class DBWrapper {
   }
 
 
-  public void insertRole(String role, String adminrole, String description) throws SQLException, IOException {
+  public void insertRole(String role, String type, String description) throws SQLException, IOException {
     ResultSet rs = query("Select id from roles;");
 
     update("INSERT INTO roles\n" +
-        " (name,adminrole, description) VALUES\n" +
-        " ('" + role + "', '" + adminrole + "', '" + description + "');");
+        " (name,type, description) VALUES\n" +
+        " ('" + role + "', '" + type + "', '" + description + "');");
 
   }
 

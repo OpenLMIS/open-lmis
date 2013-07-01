@@ -12,11 +12,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.Test;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.DataProvider;
+import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -82,9 +78,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     String userSICUserName = "storeincharge";
-    String userIDSIC = createUserAndAssignRoles(homePage, passwordUsers, "Fatima_Doe@openlmis.com", "Fatima", "Doe", userSICUserName, "F10", program, "Node 1", "Store-in-charge", false);
-    createUserAndAssignRoles(homePage, passwordUsers, "Jake_Doe@openlmis.com", "Jake", "Doe", "lmu", "F10", program, "Node 1", "lmu", true);
-    createUserAndAssignRoles(homePage, passwordUsers, "Jane_Doe@openlmis.com", "Jane", "Doe", "medicalofficer", "F11", program, "Node 2", "Medical-Officer", false);
+    String userIDSIC = createUserAndAssignRoles(homePage, passwordUsers, "Fatima_Doe@openlmis.com", "Fatima", "Doe", userSICUserName, "F10", program, "Node 1", "Store-in-charge", "REQUISITION");
+    createUserAndAssignRoles(homePage, passwordUsers, "Jake_Doe@openlmis.com", "Jake", "Doe", "lmu", "F10", program, "Node 1", "lmu", "ADMIN");
+    createUserAndAssignRoles(homePage, passwordUsers, "Jane_Doe@openlmis.com", "Jane", "Doe", "medicalofficer", "F11", program, "Node 2", "Medical-Officer", "REQUISITION");
 
     dbWrapper.updateRoleGroupMember(facility_code);
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
@@ -206,11 +202,11 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   }
 
-  private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, boolean adminRole) throws IOException, SQLException {
+  private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, String roleType) throws IOException, SQLException {
     UserPage userPage = homePage.navigateToUser();
     String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dburlGlobal);
     dbWrapper.updateUser(passwordUsers, userEmail);
-    userPage.enterMyFacilityAndMySupervisedFacilityData(userFirstName, userLastName, facility, program, supervisoryNode, role, adminRole);
+    userPage.enterMyFacilityAndMySupervisedFacilityData(userFirstName, userLastName, facility, program, supervisoryNode, role, roleType);
     return userID;
   }
 

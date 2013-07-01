@@ -7,7 +7,6 @@
 package org.openlmis.UiUtils;
 
 
-import org.jaxen.function.StringFunction;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
 import java.io.IOException;
@@ -156,8 +155,8 @@ public class TestCaseHelper {
   }
 
   public void setupTestUserRoleRightsData(String userId, String userSIC, String vendorName, List<String> rightsList) throws IOException, SQLException {
-    dbWrapper.insertRole("store in-charge", "false", "");
-    dbWrapper.insertRole("district pharmacist", "false", "");
+    dbWrapper.insertRole("store in-charge", "REQUISITION", "");
+    dbWrapper.insertRole("district pharmacist", "REQUISITION", "");
     for (String rights : rightsList)
       dbWrapper.assignRight("store in-charge", rights);
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
