@@ -1,4 +1,4 @@
-function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportPrograms , Periods , $http, $routeParams,$location) {
+function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportPrograms , Periods , Products ,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
         //to minimize and maximize the filter section
         var section = 1;
 
@@ -35,19 +35,32 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
 
         //filter form data section
         $scope.filterObject =  {
-             facilityType : $scope.period
+             facilityType : $scope.period,
+             programId : $scope.program,
+             periodId : $scope.period,
+             zoneId : $scope.zoneId,
+             productId : $scope.productId
         };
 
         ReportPrograms.get(function(data){
             $scope.programs = data.programs;
             $scope.programs.push({'name':'Select a Program'});
-        })
+        });
+
+        RequisitionGroups.get(function(data){
+            $scope.requisitionGroups = data.requisitionGroupList;
+            $scope.requisitionGroups.push({'name':'All Reporting Groups'});
+        });
 
         ReportSchedules.get(function(data){
-            $scope.schedules = data.schedules;
-            $scope.schedules.push({'name':'Select a Schedule'});
-        })
+        $scope.schedules = data.schedules;
+        $scope.schedules.push({'name':'Select a Schedule'});
+    });
 
+        Products.get(function(data){
+            $scope.products = data.productList;
+            $scope.products.push({'name': 'All Products','id':'All'});
+        });
 
         $scope.ChangeSchedule = function(){
             Periods.get({ scheduleId : $scope.schedule },function(data) {
@@ -55,6 +68,55 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
                 $scope.periods.push({'name': 'Select Period'});
             });
         }
+
+        GeographicZones.get(function(data) {
+            $scope.zones = data.zones;
+            $scope.zones.push({'name': '- All Zones -', 'id' : 'All'});
+        });
+
+        $scope.$watch('product', function(selection){
+            if(selection == "All"){
+                $scope.filterObject.productId =  -1;
+            }else if(selection != undefined || selection == ""){
+                $scope.filterObject.productId =  selection;
+            }else{
+                $scope.filterObject.productId =  0;
+            }
+            $scope.filterGrid();
+        });
+
+        $scope.$watch('period', function(selection){
+            if(selection == "All"){
+                $scope.filterObject.periodId =  -1;
+            }else if(selection != undefined || selection == ""){
+                $scope.filterObject.periodId =  selection;
+            }else{
+                $scope.filterObject.periodId =  0;
+            }
+            $scope.filterGrid();
+        });
+
+        $scope.$watch('program', function(selection){
+            if(selection == "All"){
+                $scope.filterObject.programId =  -1;
+            }else if(selection != undefined || selection == ""){
+                $scope.filterObject.programId =  selection;
+            }else{
+                $scope.filterObject.programId =  0;
+            }
+            $scope.filterGrid();
+        });
+
+        $scope.$watch('zone.value', function(selection){
+            if(selection == "All"){
+                $scope.filterObject.zoneId =  -1;
+            }else if(selection != undefined || selection == ""){
+                $scope.filterObject.zoneId =  selection;
+            }else{
+                $scope.filterObject.zoneId =  0;
+            }
+            $scope.filterGrid();
+        });
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
@@ -98,13 +160,17 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
         $scope.getPagedDataAsync = function (pageSize, page) {
                         var params  = {};
                         if(pageSize != undefined && page != undefined ){
-                                var params =  {
-                                                "max" : pageSize,
-                                                "page" : page
-                                               };
+                            var params =  {
+                                "max" : pageSize,
+                                "page" : page
+                            };
                         }
-                        params.period   = $scope.period;
-                        params.program  = $scope.program;
+
+                        $.each($scope.filterObject, function(index, value) {
+                            if(value != undefined)
+                                params[index] = value;
+                        });
+
 
                         // put out the sort order
                         $.each($scope.sortInfo.fields, function(index, value) {

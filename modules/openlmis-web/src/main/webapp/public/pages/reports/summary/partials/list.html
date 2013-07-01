@@ -14,7 +14,35 @@
                 <div class="app-form" style="padding: 5px;">
                         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
                             <div class="clearfix ">
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Zone</label>
 
+                                    <div class="form-field">
+                                        <select  ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone.value" ng-change="filterGrid()" ng-options="option.id as option.name for option in zones">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Product</label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" name="product"  ng-model="product" ng-options="option.id as option.name for option in products">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Reporting Groups</label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:250px;" name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
+
+                                        </select>
+                                    </div>
+                                </div>
 
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Program</label>
