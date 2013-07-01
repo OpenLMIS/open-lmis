@@ -375,14 +375,14 @@ public class FacilityServiceTest {
     List<ProgramSupported> programsSupported = new ArrayList<>();
     programsSupported.add(programSupported);
     when(programSupportedRepository.getByFacilityIdAndProgramId(facility.getId(), programId)).thenReturn(programSupported);
-    List<AllocationProgramProduct> allocationProgramProduct = new ArrayList<>();
-    when(facilityProgramProductService.getByFacilityAndProgram(facility.getId(), programId)).thenReturn(allocationProgramProduct);
+    List<FacilityProgramProduct> facilityProgramProduct = new ArrayList<>();
+    when(facilityProgramProductService.getByFacilityAndProgram(facility.getId(), programId)).thenReturn(facilityProgramProduct);
 
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
 
     assertThat(facilities, is(memberFacilities));
     assertThat(facilities.get(0).getSupportedPrograms(), is(programsSupported));
-    assertThat(facilities.get(0).getSupportedPrograms().get(0).getProgramProducts(), is(allocationProgramProduct));
+    assertThat(facilities.get(0).getSupportedPrograms().get(0).getProgramProducts(), is(facilityProgramProduct));
     verify(programSupportedRepository).getByFacilityIdAndProgramId(facility.getId(), programId);
     verify(facilityProgramProductService).getByFacilityAndProgram(facility.getId(), programId);
     verify(facilityRepository).getAllInDeliveryZoneFor(deliveryZoneId, programId);

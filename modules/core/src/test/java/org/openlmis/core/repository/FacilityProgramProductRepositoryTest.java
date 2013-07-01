@@ -11,9 +11,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.core.domain.AllocationProgramProduct;
 import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.repository.mapper.FacilityProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductIsaMapper;
@@ -66,7 +66,7 @@ public class FacilityProgramProductRepositoryTest {
   }
 
   @Test
-  public void shouldGetAllocationProgramProductWithIsaForAFacility() throws Exception {
+  public void shouldGetFacilityProgramProductWithIsaForAFacility() throws Exception {
     Long programProductId = 1L;
     Long facilityId = 2L;
     when(mapper.getOverriddenIsa(programProductId, facilityId)).thenReturn(34);
@@ -83,7 +83,7 @@ public class FacilityProgramProductRepositoryTest {
     Long facilityId = 2L;
     ProgramProduct programProduct = new ProgramProduct();
     programProduct.setId(1l);
-    AllocationProgramProduct product = new AllocationProgramProduct(programProduct, facilityId, 34);
+    FacilityProgramProduct product = new FacilityProgramProduct(programProduct, facilityId, 34);
 
     repository.save(product);
 
@@ -92,16 +92,16 @@ public class FacilityProgramProductRepositoryTest {
   }
 
   @Test
-  public void shouldGetAllocationProgramProductsForFacilityAndProgram() throws Exception {
+  public void shouldGetFacilityProgramProductsForFacilityAndProgram() throws Exception {
 
-    List<AllocationProgramProduct> allocationProgramProducts = new ArrayList<>();
+    List<FacilityProgramProduct> facilityProgramProducts = new ArrayList<>();
     Long facilityId = 1l;
     Long programId = 1l;
-    when(mapper.getByFacilityAndProgram(facilityId, programId)).thenReturn(allocationProgramProducts);
+    when(mapper.getByFacilityAndProgram(facilityId, programId)).thenReturn(facilityProgramProducts);
 
-    List<AllocationProgramProduct> returnedAllocationProgramProducts = repository.getByFacilityAndProgram(facilityId, programId);
+    List<FacilityProgramProduct> returnedFacilityProgramProducts = repository.getByFacilityAndProgram(facilityId, programId);
 
-    assertThat(returnedAllocationProgramProducts, is(allocationProgramProducts));
+    assertThat(returnedFacilityProgramProducts, is(facilityProgramProducts));
     verify(mapper).getByFacilityAndProgram(facilityId, programId);
 
   }

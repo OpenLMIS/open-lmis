@@ -7,9 +7,9 @@
 package org.openlmis.core.service;
 
 import org.apache.commons.collections.Closure;
+import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.AllocationProgramProduct;
 import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.repository.FacilityProgramProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,20 +29,20 @@ public class FacilityProgramProductService {
   @Autowired
   ProgramProductService programProductService;
 
-  public List<AllocationProgramProduct> getForProgramAndFacility(Long programId, final Long facilityId) {
+  public List<FacilityProgramProduct> getForProgramAndFacility(Long programId, final Long facilityId) {
     List<ProgramProduct> programProducts = programProductService.getByProgram(new Program(programId));
-    final List<AllocationProgramProduct> allocationProgramProducts = new ArrayList<>();
+    final List<FacilityProgramProduct> facilityProgramProducts = new ArrayList<>();
     forAllDo(programProducts, new Closure() {
       @Override
       public void execute(Object o) {
-        allocationProgramProducts.add(getAllocationProduct((ProgramProduct) o, facilityId));
+        facilityProgramProducts.add(getAllocationProduct((ProgramProduct) o, facilityId));
       }
     });
-    return allocationProgramProducts;
+    return facilityProgramProducts;
   }
 
-  private AllocationProgramProduct getAllocationProduct(ProgramProduct programProduct, Long facilityId) {
-    return new AllocationProgramProduct(programProduct, facilityId, repository.getOverriddenIsa(programProduct.getId(), facilityId));
+  private FacilityProgramProduct getAllocationProduct(ProgramProduct programProduct, Long facilityId) {
+    return new FacilityProgramProduct(programProduct, facilityId, repository.getOverriddenIsa(programProduct.getId(), facilityId));
   }
 
   public void insertISA(ProgramProductISA isa) {
@@ -54,18 +54,18 @@ public class FacilityProgramProductService {
     repository.updateISA(isa);
   }
 
-  public void saveOverriddenIsa(final Long facilityId, List<AllocationProgramProduct> products) {
+  public void saveOverriddenIsa(final Long facilityId, List<FacilityProgramProduct> products) {
     forAllDo(products, new Closure() {
       @Override
       public void execute(Object o) {
-        AllocationProgramProduct product = (AllocationProgramProduct) o;
+        FacilityProgramProduct product = (FacilityProgramProduct) o;
         product.setFacilityId(facilityId);
         repository.save(product);
       }
     });
   }
 
-  public List<AllocationProgramProduct> getByFacilityAndProgram(Long facilityId, Long programId) {
+  public List<FacilityProgramProduct> getByFacilityAndProgram(Long facilityId, Long programId) {
     return repository.getByFacilityAndProgram(facilityId, programId);
   }
 }

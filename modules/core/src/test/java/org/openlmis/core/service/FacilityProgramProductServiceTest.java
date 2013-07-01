@@ -12,10 +12,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.core.domain.AllocationProgramProduct;
 import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.repository.FacilityProgramProductRepository;
 
@@ -67,18 +67,18 @@ public class FacilityProgramProductServiceTest {
     }};
     when(programProductService.getByProgram(new Program(1l))).thenReturn(products);
 
-    AllocationProgramProduct allocationProduct1 = new AllocationProgramProduct(programProduct, 2l, 34);
+    FacilityProgramProduct facilityProduct1 = new FacilityProgramProduct(programProduct, 2l, 34);
     when(repository.getOverriddenIsa(programProduct.getId(), facilityId)).thenReturn(34);
 
-    AllocationProgramProduct allocationProduct2 = new AllocationProgramProduct(programProduct2, 2l, 44);
+    FacilityProgramProduct facilityProduct2 = new FacilityProgramProduct(programProduct2, 2l, 44);
     when(repository.getOverriddenIsa(programProduct2.getId(), facilityId)).thenReturn(44);
 
-    List<AllocationProgramProduct> returnedProducts = service.getForProgramAndFacility(1l, facilityId);
+    List<FacilityProgramProduct> returnedProducts = service.getForProgramAndFacility(1l, facilityId);
 
-    assertThat(returnedProducts.get(0), is(allocationProduct1));
+    assertThat(returnedProducts.get(0), is(facilityProduct1));
     assertThat(returnedProducts.get(0).getOverriddenIsa(), is(34));
 
-    assertThat(returnedProducts.get(1), is(allocationProduct2));
+    assertThat(returnedProducts.get(1), is(facilityProduct2));
     assertThat(returnedProducts.get(1).getOverriddenIsa(), is(44));
 
     verify(programProductService).getByProgram(new Program(1l));
@@ -87,34 +87,34 @@ public class FacilityProgramProductServiceTest {
   }
 
   @Test
-  public void shouldSaveAllocationProgramProductList() throws Exception {
-    final AllocationProgramProduct allocationProduct1 = spy(new AllocationProgramProduct());
-    allocationProduct1.setId(1l);
-    final AllocationProgramProduct allocationProduct2 = spy(new AllocationProgramProduct());
-    allocationProduct1.setId(2l);
-    List<AllocationProgramProduct> allocationProgramProducts = new ArrayList<AllocationProgramProduct>() {{
-      add(allocationProduct1);
-      add(allocationProduct2);
+  public void shouldSaveFacilityProgramProductList() throws Exception {
+    final FacilityProgramProduct facilityProduct1 = spy(new FacilityProgramProduct());
+    facilityProduct1.setId(1l);
+    final FacilityProgramProduct facilityProduct2 = spy(new FacilityProgramProduct());
+    facilityProduct1.setId(2l);
+    List<FacilityProgramProduct> facilityProgramProducts = new ArrayList<FacilityProgramProduct>() {{
+      add(facilityProduct1);
+      add(facilityProduct2);
     }};
 
-    service.saveOverriddenIsa(1l, allocationProgramProducts);
+    service.saveOverriddenIsa(1l, facilityProgramProducts);
 
-    verify(repository).save(allocationProduct1);
-    verify(repository).save(allocationProduct2);
+    verify(repository).save(facilityProduct1);
+    verify(repository).save(facilityProduct2);
   }
 
 
   @Test
-  public void shouldGetAllocationProgramProductsForFacilityAndProgram() throws Exception {
+  public void shouldGetFacilityProgramProductsForFacilityAndProgram() throws Exception {
 
-    List<AllocationProgramProduct> allocationProgramProducts = new ArrayList<>();
+    List<FacilityProgramProduct> facilityProgramProducts = new ArrayList<>();
     Long facilityId = 1l;
     Long programId = 1l;
-    when(repository.getByFacilityAndProgram(facilityId, programId)).thenReturn(allocationProgramProducts);
+    when(repository.getByFacilityAndProgram(facilityId, programId)).thenReturn(facilityProgramProducts);
 
-    List<AllocationProgramProduct> returnedAllocationProgramProducts = service.getByFacilityAndProgram(facilityId, programId);
+    List<FacilityProgramProduct> returnedFacilityProgramProducts = service.getByFacilityAndProgram(facilityId, programId);
 
-    assertThat(returnedAllocationProgramProducts, is(allocationProgramProducts));
+    assertThat(returnedFacilityProgramProducts, is(facilityProgramProducts));
     verify(repository).getByFacilityAndProgram(facilityId, programId);
 
   }

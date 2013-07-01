@@ -21,12 +21,12 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_NULL)
-public class AllocationProgramProduct extends ProgramProduct {
+public class FacilityProgramProduct extends ProgramProduct {
   Long facilityId;
 
   Integer overriddenIsa;
 
-  public AllocationProgramProduct(ProgramProduct programProduct, Long facilityId, Integer overriddenIsa) {
+  public FacilityProgramProduct(ProgramProduct programProduct, Long facilityId, Integer overriddenIsa) {
     super(programProduct);
     this.facilityId = facilityId;
     this.overriddenIsa = overriddenIsa;

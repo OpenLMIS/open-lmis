@@ -6,9 +6,9 @@
 
 package org.openlmis.web.form;
 
-import org.openlmis.core.domain.AllocationProgramProduct;
+import org.openlmis.core.domain.FacilityProgramProduct;
 
 import java.util.ArrayList;
 
-public class AllocationProgramProductList extends ArrayList<AllocationProgramProduct>{
+public class FacilityProgramProductList extends ArrayList<FacilityProgramProduct>{
 }

@@ -6,10 +6,10 @@
 
 package org.openlmis.web.controller;
 
-import org.openlmis.core.domain.AllocationProgramProduct;
+import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.service.FacilityProgramProductService;
-import org.openlmis.web.form.AllocationProgramProductList;
+import org.openlmis.web.form.FacilityProgramProductList;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ public class FacilityProgramProductController extends BaseController {
   @RequestMapping(value = "/facility/{facilityId}/program/{programId}/isa", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
   public ResponseEntity<OpenLmisResponse> getProgramProductsByProgramAndFacility(@PathVariable Long programId, @PathVariable Long facilityId) {
-    List<AllocationProgramProduct> programProductsByProgram = service.getForProgramAndFacility(programId, facilityId);
+    List<FacilityProgramProduct> programProductsByProgram = service.getForProgramAndFacility(programId, facilityId);
     return OpenLmisResponse.response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
   }
 
@@ -56,7 +56,7 @@ public class FacilityProgramProductController extends BaseController {
 
   @RequestMapping(value = "/facility/{facilityId}/program/{programId}/isa", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public void overrideIsa(@PathVariable Long facilityId, @RequestBody AllocationProgramProductList products) {
+  public void overrideIsa(@PathVariable Long facilityId, @RequestBody FacilityProgramProductList products) {
     service.saveOverriddenIsa(facilityId, products);
   }
 

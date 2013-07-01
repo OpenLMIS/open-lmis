@@ -6,7 +6,7 @@
 
 package org.openlmis.core.repository;
 
-import org.openlmis.core.domain.AllocationProgramProduct;
+import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.repository.mapper.FacilityProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductIsaMapper;
@@ -40,12 +40,12 @@ public class FacilityProgramProductRepository {
     return mapper.getOverriddenIsa(programProductId, facilityId);
   }
 
-  public void save(AllocationProgramProduct product) {
+  public void save(FacilityProgramProduct product) {
     mapper.removeFacilityProgramProductMapping(product.getId(), product.getFacilityId());
     mapper.insert(product);
   }
 
-  public List<AllocationProgramProduct> getByFacilityAndProgram(Long facilityId, Long programId) {
+  public List<FacilityProgramProduct> getByFacilityAndProgram(Long facilityId, Long programId) {
     return mapper.getByFacilityAndProgram(facilityId, programId);
   }
 }

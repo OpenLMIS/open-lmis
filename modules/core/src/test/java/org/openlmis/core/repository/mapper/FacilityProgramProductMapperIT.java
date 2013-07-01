@@ -12,13 +12,9 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.repository.mapper.*;
+import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.core.domain.AllocationProgramProduct;
+import org.openlmis.core.domain.FacilityProgramProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -33,9 +29,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProductBuilder.displayOrder;
-import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -77,7 +71,7 @@ public class FacilityProgramProductMapperIT {
 
   @Test
   public void shouldGetOverriddenIsaForProgramProductIdAndFacilityId() throws Exception {
-    AllocationProgramProduct facilityProgramProduct = new AllocationProgramProduct(programProduct, facility.getId(), 34);
+    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, facility.getId(), 34);
     mapper.insert(facilityProgramProduct);
 
     Integer overriddenIsa = mapper.getOverriddenIsa(programProduct.getId(), facility.getId());
@@ -87,7 +81,7 @@ public class FacilityProgramProductMapperIT {
 
   @Test
   public void shouldRemoveFacilityProductMapping() throws Exception {
-    AllocationProgramProduct facilityProgramProduct = new AllocationProgramProduct(programProduct, facility.getId(), 34);
+    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, facility.getId(), 34);
     mapper.insert(facilityProgramProduct);
 
     mapper.removeFacilityProgramProductMapping(programProduct.getId(), facility.getId());
@@ -97,19 +91,19 @@ public class FacilityProgramProductMapperIT {
 
   @Test
   public void shouldGetProgramProductForFacilityAndProgram() throws Exception {
-    AllocationProgramProduct facilityProgramProduct1 = new AllocationProgramProduct(programProduct, facility.getId(), 34);
+    FacilityProgramProduct facilityProgramProduct1 = new FacilityProgramProduct(programProduct, facility.getId(), 34);
     Product product2 = make(a(ProductBuilder.defaultProduct,with(ProductBuilder.code, "P1000"), with(displayOrder, 1)));
     productMapper.insert(product2);
     ProgramProduct programProduct2 = new ProgramProduct(program, product2, 10, true);
     programProductMapper.insert(programProduct2);
-    AllocationProgramProduct facilityProgramProduct2 = new AllocationProgramProduct(programProduct2, facility.getId(), 34);
+    FacilityProgramProduct facilityProgramProduct2 = new FacilityProgramProduct(programProduct2, facility.getId(), 34);
     mapper.insert(facilityProgramProduct1);
     mapper.insert(facilityProgramProduct2);
 
-    List<AllocationProgramProduct> allocationProgramProducts = mapper.getByFacilityAndProgram(facility.getId(), program.getId());
+    List<FacilityProgramProduct> facilityProgramProducts = mapper.getByFacilityAndProgram(facility.getId(), program.getId());
 
-    assertThat(allocationProgramProducts.size(),is(2));
-    assertThat(allocationProgramProducts.get(0).getProduct().getCode(),is("P1000"));
-    assertThat(allocationProgramProducts.get(1).getProduct().getCode(),is("P999"));
+    assertThat(facilityProgramProducts.size(),is(2));
+    assertThat(facilityProgramProducts.get(0).getProduct().getCode(),is("P1000"));
+    assertThat(facilityProgramProducts.get(1).getProduct().getCode(),is("P999"));
   }
 }
