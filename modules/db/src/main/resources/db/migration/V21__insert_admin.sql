@@ -2,8 +2,8 @@
 -- If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 INSERT INTO roles
- (name, adminRole, description) VALUES
- ('Admin',TRUE,'Admin');
+ (name, type, description) VALUES
+ ('Admin','ADMIN','Admin');
 
  INSERT INTO role_rights
   (roleId, rightName) VALUES

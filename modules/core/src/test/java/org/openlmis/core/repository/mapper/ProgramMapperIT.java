@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.lang.Boolean.FALSE;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -32,6 +31,7 @@ import static org.openlmis.core.builder.ProgramBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
+import static org.openlmis.core.domain.RoleType.REQUISITION;
 
 @Category(IntegrationTests.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
@@ -150,7 +150,7 @@ public class
 
     User user = insertUser(facility);
 
-    Role createRnrRole = new Role("R1", FALSE, "Create Requisition");
+    Role createRnrRole = new Role("R1", REQUISITION, "Create Requisition");
     roleRightsMapper.insertRole(createRnrRole);
     roleRightsMapper.createRoleRight(createRnrRole, Right.CREATE_REQUISITION);
     insertRoleAssignments(activeProgramWithCreateRight, user, createRnrRole, supervisoryNode);
@@ -158,7 +158,7 @@ public class
     insertRoleAssignments(activeProgramForHomeFacility, user, createRnrRole, null);
     insertRoleAssignments(activePushProgramWithCreateRight, user, createRnrRole, supervisoryNode);
 
-    Role configureRnrRole = new Role("R2", FALSE, "View Rnr Role");
+    Role configureRnrRole = new Role("R2", REQUISITION, "View Rnr Role");
     roleRightsMapper.insertRole(configureRnrRole);
     roleRightsMapper.createRoleRight(configureRnrRole, Right.CONFIGURE_RNR);
     insertRoleAssignments(activeProgramWithConfigureRight, user, configureRnrRole, supervisoryNode);
@@ -181,11 +181,11 @@ public class
     Facility facility = insertFacility(make(a(defaultFacility)));
     User user = insertUser(facility);
 
-    Role r1 = new Role("r1", FALSE, "random description");
+    Role r1 = new Role("r1", REQUISITION, "random description");
     roleRightsMapper.insertRole(r1);
     roleRightsMapper.createRoleRight(r1, Right.CREATE_REQUISITION);
 
-    Role r2 = new Role("r2", FALSE, "authorize role");
+    Role r2 = new Role("r2", REQUISITION, "authorize role");
     roleRightsMapper.insertRole(r2);
     roleRightsMapper.createRoleRight(r2, Right.AUTHORIZE_REQUISITION);
 
@@ -219,7 +219,7 @@ public class
     Facility facility = insertFacility(make(a(defaultFacility)));
     User user = insertUser(facility);
 
-    Role r1 = new Role("r1", FALSE, "random description");
+    Role r1 = new Role("r1", REQUISITION, "random description");
     roleRightsMapper.insertRole(r1);
     roleRightsMapper.createRoleRight(r1, Right.APPROVE_REQUISITION);
 
@@ -262,7 +262,7 @@ public class
     Facility facility = insertFacility(make(a(defaultFacility)));
     User user = insertUser(facility);
 
-    Role r1 = new Role("r1", FALSE, "random description");
+    Role r1 = new Role("r1", REQUISITION, "random description");
     roleRightsMapper.insertRole(r1);
     roleRightsMapper.createRoleRight(r1, Right.VIEW_REQUISITION);
 

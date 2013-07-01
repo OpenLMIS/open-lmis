@@ -37,10 +37,10 @@ function UserController($scope, $routeParams, $location, $dialog, Users, User, A
 
   function filterRoles() {
     $scope.adminRoles = _.filter($scope.allRoles, function (role) {
-      return role.adminRole;
+      return role.type == 'ADMIN';
     });
     $scope.nonAdminRoles = _.filter($scope.allRoles, function (role) {
-      return !role.adminRole;
+      return role.type != 'ADMIN';
     });
   }
 

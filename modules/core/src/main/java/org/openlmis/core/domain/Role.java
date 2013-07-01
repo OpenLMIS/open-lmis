@@ -22,12 +22,12 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 @EqualsAndHashCode(callSuper = false)
 public class Role extends BaseModel {
   private String name;
-  private Boolean adminRole;
+  private RoleType type;
   private String description;
   private Set<Right> rights;
 
-  public Role(String name, Boolean adminRole, String description) {
-    this(name, adminRole, description, null);
+  public Role(String name, RoleType type, String description) {
+    this(name, type, description, null);
   }
 
   public void validate() {

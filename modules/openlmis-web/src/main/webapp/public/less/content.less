@@ -1755,29 +1755,23 @@ input[placeholder].placeholder{
     color: #666;
   }
 }
-.assigned-rights {
-  background: #FFF;
-  float: left;
-  font-size: 0.9em;
-  width: 360px;
-  margin-right: 40px;
-  border: 1px solid #CCC;
-  border-radius: 5px;
-  padding: 6px 25px;
-  margin-top: 10px;
-  &.is-disabled {
-    background: #EEE;
-    color: #999;
-    h4 {
-      color: #999;
+
+.is-disabled {
+  background: #EEE;
+  color: #999;
+}
+
+.rights-list-column {
+  width: 33.33%;
+}
+
+#rightsTable {
+  tr {
+    &:last-child {
+      td {
+        padding: 20px 9px 20px 20px;
+      }
     }
-  }
-  h4 {
-    font-size: 1.2em;
-    color: #444;
-  }
-  label {
-    font-size: 1em;
   }
 }
 

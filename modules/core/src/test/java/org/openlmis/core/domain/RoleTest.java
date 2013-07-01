@@ -14,9 +14,9 @@ import org.openlmis.db.categories.UnitTests;
 
 import java.util.HashSet;
 
-import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.RoleType.REQUISITION;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
@@ -27,7 +27,7 @@ public class RoleTest {
 
   @Test
   public void shouldGiveErrorIfRoleDoesNotHaveAnyRights() throws Exception {
-    Role role = new Role("role test", FALSE, "description");
+    Role role = new Role("role test", REQUISITION, "description");
 
     expectedEx.expect(dataExceptionMatcher("error.role.without.rights"));
 
@@ -36,7 +36,7 @@ public class RoleTest {
 
   @Test
   public void shouldGiveErrorIfRoleHasEmptyRightsList() {
-    Role role = new Role("role test", FALSE, "description", new HashSet<Right>());
+    Role role = new Role("role test", REQUISITION, "description", new HashSet<Right>());
 
     expectedEx.expect(dataExceptionMatcher("error.role.without.rights"));
 
@@ -46,7 +46,7 @@ public class RoleTest {
 
   @Test
   public void shouldGiveErrorIfRoleDoesNotHaveAnyName() throws Exception {
-    Role role = new Role("", FALSE, "description", new HashSet<>(asList(CREATE_REQUISITION)));
+    Role role = new Role("", REQUISITION, "description", new HashSet<>(asList(CREATE_REQUISITION)));
 
     expectedEx.expect(dataExceptionMatcher("error.role.without.name"));
     role.validate();

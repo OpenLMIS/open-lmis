@@ -17,8 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.openlmis.core.domain.RightType.ADMIN;
-import static org.openlmis.core.domain.RightType.REQUISITION;
+import static org.openlmis.core.domain.RightType.*;
 
 @JsonSerialize(using = RightSerializer.class)
 @JsonDeserialize(using = RightDeSerializer.class)
@@ -39,7 +38,7 @@ public enum Right {
   CONVERT_TO_ORDER("right.convert.to.order", ADMIN, "Permission to convert requisitions to order", 14),
   VIEW_ORDER("right.view.order", ADMIN, "Permission to view orders", 17),
   MANAGE_PROGRAM_PRODUCT("right.manage.program.product", ADMIN, "Permission to manage program products", 3),
-  MANAGE_DISTRIBUTION("right.manage.distribution", REQUISITION, "Permission to manage an distribution", 9),
+  MANAGE_DISTRIBUTION("right.manage.distribution", ALLOCATION, "Permission to manage an distribution", 9),
   MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", ADMIN, "Permission to manage a regimen template", 4);
 
   @Getter

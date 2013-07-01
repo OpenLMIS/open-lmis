@@ -23,8 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static junit.framework.Assert.assertEquals;
 import static org.apache.commons.collections.CollectionUtils.exists;
 import static org.hamcrest.CoreMatchers.is;
@@ -37,6 +35,8 @@ import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.RoleType.ADMIN;
+import static org.openlmis.core.domain.RoleType.REQUISITION;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -74,10 +74,10 @@ public class RoleAssignmentMapperIT {
     Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
     Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
 
-    Role r1 = new Role("r1", FALSE, "random description");
+    Role r1 = new Role("r1", REQUISITION, "random description");
     roleRightsMapper.insertRole(r1);
 
-    Role r2 = new Role("r2", FALSE, "random description");
+    Role r2 = new Role("r2", REQUISITION, "random description");
     roleRightsMapper.insertRole(r2);
 
     roleRightsMapper.createRoleRight(r1, CREATE_REQUISITION);
@@ -102,10 +102,10 @@ public class RoleAssignmentMapperIT {
 
   @Test
   public void shouldGetSupervisorRolesForAUser() throws Exception {
-    Role r1 = new Role("r1", FALSE, "random description");
+    Role r1 = new Role("r1", REQUISITION, "random description");
     roleRightsMapper.insertRole(r1);
 
-    Role r2 = new Role("r2", FALSE, "random description");
+    Role r2 = new Role("r2", REQUISITION, "random description");
     roleRightsMapper.insertRole(r2);
 
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
@@ -126,10 +126,10 @@ public class RoleAssignmentMapperIT {
 
   @Test
   public void shouldGetHomeFacilityRolesForAUser() throws Exception {
-    Role r1 = new Role("r1", FALSE, "random description");
+    Role r1 = new Role("r1", REQUISITION, "random description");
     roleRightsMapper.insertRole(r1);
 
-    Role r2 = new Role("r2", FALSE, "random description");
+    Role r2 = new Role("r2", REQUISITION, "random description");
     roleRightsMapper.insertRole(r2);
 
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
@@ -150,9 +150,9 @@ public class RoleAssignmentMapperIT {
   @Test
   public void shouldGetHomeFacilityRolesForAUserOnAGivenProgramWithRights() throws Exception {
     Long programId = 1L;
-    Role r1 = new Role("r1", FALSE, "random description");
+    Role r1 = new Role("r1", REQUISITION, "random description");
     roleRightsMapper.insertRole(r1);
-    Role r2 = new Role("r2", FALSE, "random description");
+    Role r2 = new Role("r2", REQUISITION, "random description");
     roleRightsMapper.insertRole(r2);
     roleRightsMapper.createRoleRight(r2, Right.CREATE_REQUISITION);
 
@@ -186,9 +186,9 @@ public class RoleAssignmentMapperIT {
   public void shouldGetAdminRolesForUser() throws Exception {
     Long userId = user.getId();
 
-    final Role adminRole = new Role("r1", TRUE, "admin role");
+    final Role adminRole = new Role("r1", ADMIN, "admin role");
     roleRightsMapper.insertRole(adminRole);
-    Role nonAdminRole = new Role("r2", FALSE, "non admin role");
+    Role nonAdminRole = new Role("r2", REQUISITION, "non admin role");
     roleRightsMapper.insertRole(nonAdminRole);
 
     mapper.insertRoleAssignment(userId, null, null, adminRole.getId());

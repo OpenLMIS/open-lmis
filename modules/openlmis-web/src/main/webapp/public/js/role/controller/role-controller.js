@@ -8,19 +8,24 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights, $d
   $scope.$parent.error = "";
   $scope.$parent.message = "";
   $scope.role = {rights: []};
-  $scope.role.adminRole = "true";
 
   if ($routeParams.id) {
     Role.get({id: $routeParams.id}, function (data) {
       $scope.role = data.role;
-      $scope.role.adminRole = data.role.adminRole.toString();
+      $scope.role.type = data.role.type;
+      $scope.previousType = $scope.role.type;
     });
+  }
+  else {
+    $scope.role.type = "ADMIN";
+    $scope.previousType = $scope.role.type;
   }
 
   Rights.get({}, function (data) {
     $scope.rights = data.rights;
-    $scope.adminRights = _.where($scope.rights, {"adminRight": "true"});
-    $scope.nonAdminRights = _.where($scope.rights, {"adminRight": "false"});
+    $scope.adminRights = _.where($scope.rights, {"type": "ADMIN"});
+    $scope.requisitionRights = _.where($scope.rights, {"type": "REQUISITION"});
+    $scope.allocationRights = _.where($scope.rights, {"type": "ALLOCATION"});
   }, {});
 
 
@@ -90,19 +95,19 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights, $d
 
   };
 
+
   $scope.dialogCloseCallback = function (result) {
     if (result) {
       $scope.role.rights = [];
       $scope.showRightError = false;
       $scope.showError = false;
-      $scope.role.adminRole = window.selected.toString();
+      $scope.previousType = $scope.role.type;
     } else {
-      $scope.role.adminRole = (!window.selected).toString();
+      $scope.role.type = $scope.previousType;
     }
   };
 
-  $scope.showRoleTypeModal = function (selected) {
-    window.selected = selected;
+  $scope.showRoleTypeModal = function () {
     var options = {
       id: "roleTypeDialog",
       header: messageService.get("header.change.roleType"),

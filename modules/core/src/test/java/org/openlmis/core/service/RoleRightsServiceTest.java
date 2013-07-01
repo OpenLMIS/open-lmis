@@ -25,13 +25,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RoleType.REQUISITION;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -55,7 +55,7 @@ public class RoleRightsServiceTest {
 
   @Before
   public void setUp() throws Exception {
-    role = new Role("role name", FALSE, "role description");
+    role = new Role("role name", REQUISITION, "role description");
     roleRightsService = new RoleRightsService(roleRightsRepository, supervisoryNodeService, facilityService);
   }
 
@@ -103,7 +103,7 @@ public class RoleRightsServiceTest {
     assertEquals(CREATE_REQUISITION.getType(), RightType.REQUISITION);
     assertEquals(AUTHORIZE_REQUISITION.getType(), RightType.REQUISITION);
     assertEquals(APPROVE_REQUISITION.getType(), RightType.REQUISITION);
-    assertEquals(MANAGE_DISTRIBUTION.getType(), RightType.REQUISITION);
+    assertEquals(MANAGE_DISTRIBUTION.getType(), RightType.ALLOCATION);
     assertEquals(VIEW_REQUISITION.getType(), RightType.REQUISITION);
   }
 

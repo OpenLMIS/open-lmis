@@ -60,6 +60,6 @@ public interface RoleAssignmentMapper {
 
 
   @Select({"SELECT RA.userId, array_agg(RA.roleId) as roleIdsAsString FROM role_assignments RA INNER JOIN roles R ON RA.roleId = R.id",
-    "WHERE userId = #{userId} AND R.adminRole = true GROUP BY userId, supervisoryNodeId, programId"})
+    "WHERE userId = #{userId} AND R.type = 'ADMIN' GROUP BY userId, supervisoryNodeId, programId"})
   RoleAssignment getAdminRole(Long userId);
 }

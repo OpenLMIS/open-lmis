@@ -27,12 +27,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RoleType.REQUISITION;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
@@ -52,7 +52,7 @@ public class RoleRightsRepositoryTest {
 
   @Before
   public void setUp() throws Exception {
-    role = new Role("role name", FALSE, "role description");
+    role = new Role("role name", REQUISITION, "role description");
     roleRightsRepository = new RoleRightsRepository(roleRightsMapper, commaSeparator);
   }
 
@@ -90,7 +90,7 @@ public class RoleRightsRepositoryTest {
 
   @Test
   public void shouldNotUpdateToDuplicateRoleName() {
-    Role role = new Role("Name", FALSE, "Desc");
+    Role role = new Role("Name", REQUISITION, "Desc");
     role.setId(123L);
     doThrow(DuplicateKeyException.class).when(roleRightsMapper).updateRole(role);
 
