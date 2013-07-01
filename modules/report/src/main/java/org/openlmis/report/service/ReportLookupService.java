@@ -62,6 +62,10 @@ public class ReportLookupService {
         return productMapper.getAll();
     }
 
+    public List<ProductList> getFullProductList(){
+        return productMapper.getFullProductList();
+    }
+
     public List<FacilityType> getFacilityTypes(){
         return facilityTypeMapper.getAll();
     }
