@@ -47,7 +47,7 @@ public class StockedOutFacilitiesReportDataProvider extends ReportDataProvider {
         List<MasterReport> reportList = new ArrayList<MasterReport>();
         MasterReport report = new MasterReport();
         report.details =  reportMapper.getReport(getReportFilterData(filterCriteria),rowBounds);
-        report.summary = reportMapper.getReportSummary(filterCriteria);
+        report.summary = reportMapper.getReportSummary(getReportFilterData(filterCriteria));
         reportList.add( report );
 
         List<? extends ReportData> list;
@@ -108,7 +108,7 @@ public class StockedOutFacilitiesReportDataProvider extends ReportDataProvider {
 
     @Override
     public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
-        return reportMapper.getStockedOutTotalFacilities(filterCriteria).get(0);
+        return reportMapper.getStockedOutTotalFacilities(getReportFilterData(filterCriteria)).get(0);
     }
 
 
@@ -120,7 +120,7 @@ public class StockedOutFacilitiesReportDataProvider extends ReportDataProvider {
 
         // spit out the summary section on the report.
         String totalFacilities = reportMapper.getTotalFacilities( params ).get(0).toString();
-        String nonReporting = reportMapper.getStockedOutTotalFacilities( params ).get(0).toString();
+        String nonReporting = reportMapper.getStockedOutTotalFacilities( getReportFilterData(params) ).get(0).toString();
         result.put("TOTAL_FACILITIES", totalFacilities);
         result.put("TOTAL_NON_REPORTING", nonReporting);
 

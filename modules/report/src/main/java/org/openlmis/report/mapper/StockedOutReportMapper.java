@@ -34,7 +34,7 @@ public interface StockedOutReportMapper {
 
     @SelectProvider(type=StockedOutReportQueryBuilder.class, method="getSummaryQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<NameCount> getReportSummary(Map params);
+    public List<NameCount> getReportSummary(@Param("filterCriteria")ReportData filterCriteria);
 
     // Gets the count of the total facility count under the selection criteria
     @SelectProvider(type=StockedOutReportQueryBuilder.class, method="getTotalFacilities")
@@ -44,7 +44,7 @@ public interface StockedOutReportMapper {
     // Gets the count of the total facility count that did not report under the selection criteria
     @SelectProvider(type=StockedOutReportQueryBuilder.class, method="getStockedOutFacilitiesCount")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<Integer> getStockedOutTotalFacilities(Map params);
+    public List<Integer> getStockedOutTotalFacilities(@Param("filterCriteria")ReportData filterCriteria);
 
     //TODO: refactor this out to an appropriate class
     @Select("SELECT id, name " +
