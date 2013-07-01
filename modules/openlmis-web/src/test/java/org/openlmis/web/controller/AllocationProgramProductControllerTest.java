@@ -39,18 +39,6 @@ public class AllocationProgramProductControllerTest {
   private AllocationProgramProductController controller;
 
   @Test
-  public void shouldGetProgramProductsByProgram() throws Exception {
-    List<AllocationProgramProduct> expectedProgramProductList = new ArrayList<>();
-    Long programId = 1l;
-    when(service.get(programId)).thenReturn(expectedProgramProductList);
-
-    ResponseEntity<AllocationResponse> responseEntity = controller.getProgramProductsByProgram(programId);
-
-    assertThat((List<AllocationProgramProduct>) responseEntity.getBody().getData().get(PROGRAM_PRODUCT_LIST), is(expectedProgramProductList));
-    verify(service).get(programId);
-  }
-
-  @Test
   public void shouldInsertProgramProductISA() {
     ProgramProductISA programProductISA = new ProgramProductISA();
     Long programProductId = 1l;

@@ -31,13 +31,6 @@ public class AllocationProgramProductController extends BaseController {
 
   public static final String PROGRAM_PRODUCT_LIST = "programProductList";
 
-  @RequestMapping(value = "/programProducts/programId/{programId}", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-  public ResponseEntity<AllocationResponse> getProgramProductsByProgram(@PathVariable Long programId) {
-    List<AllocationProgramProduct> programProductsByProgram = service.get(programId);
-    return AllocationResponse.response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
-  }
-
   @RequestMapping(value = "/facility/{facilityId}/program/{programId}/isa", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
   public ResponseEntity<AllocationResponse> getProgramProductsByProgramAndFacility(@PathVariable Long programId, @PathVariable Long facilityId) {

@@ -94,7 +94,7 @@ public class AllocationProgramProductRepositoryTest {
   public void shouldReplaceAnyExistingOverriddenIsaWithNewOne() throws Exception {
     Long programProductId = 1L;
     Long facilityId = 2L;
-    AllocationProgramProduct product = new AllocationProgramProduct(programProductId, facilityId, 34, null);
+    AllocationProgramProduct product = new AllocationProgramProduct(programProductId, facilityId, 34);
 
     repository.save(product);
 

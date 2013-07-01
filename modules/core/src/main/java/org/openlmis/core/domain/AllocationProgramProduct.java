@@ -28,5 +28,9 @@ public class AllocationProgramProduct extends ProgramProduct {
 
   Integer overriddenIsa;
 
-  ProgramProductISA programProductIsa;
+  public AllocationProgramProduct(ProgramProduct programProduct, long facilityId, int overriddenIsa) {
+    super(programProduct);
+    this.facilityId = facilityId;
+    this.overriddenIsa = overriddenIsa;
+  }
 }

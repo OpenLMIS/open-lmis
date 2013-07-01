@@ -29,7 +29,7 @@ public interface FacilityProgramProductMapper {
   void removeFacilityProgramProductMapping(@Param("programProductId") Long programProductId, @Param("facilityId") Long facilityId);
 
   @Select({"SELECT fpp.*, pp.productId as productId FROM facility_program_products fpp, program_products pp,products p WHERE fpp.facilityId = #{facilityId} ",
-    "AND pp.programId=#{programId} AND fpp.programProductId = pp.id ANd pp.productId = p.id ORDER BY ",
+    "AND pp.programId=#{programId} AND fpp.programProductId = pp.id AND pp.productId = p.id ORDER BY ",
     "p.displayOrder NULLS LAST, p.code"})
   @Results(value = {
     @Result(property = "product", column = "productId", javaType = Product.class,

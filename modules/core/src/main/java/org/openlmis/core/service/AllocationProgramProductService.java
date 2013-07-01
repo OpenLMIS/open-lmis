@@ -29,18 +29,6 @@ public class AllocationProgramProductService {
   @Autowired
   ProgramProductService programProductService;
 
-  public List<AllocationProgramProduct> get(Long programId) {
-    List<ProgramProduct> programProducts = programProductService.getByProgram(new Program(programId));
-    final List<AllocationProgramProduct> allocationProgramProducts = new ArrayList<>();
-    forAllDo(programProducts, new Closure() {
-      @Override
-      public void execute(Object o) {
-        allocationProgramProducts.add(getAllocationProduct((ProgramProduct) o));
-      }
-    });
-    return allocationProgramProducts;
-  }
-
   public List<AllocationProgramProduct> getForProgramAndFacility(Long programId, final Long facilityId) {
     List<ProgramProduct> programProducts = programProductService.getByProgram(new Program(programId));
     final List<AllocationProgramProduct> allocationProgramProducts = new ArrayList<>();
@@ -53,16 +41,8 @@ public class AllocationProgramProductService {
     return allocationProgramProducts;
   }
 
-  private AllocationProgramProduct getAllocationProduct(ProgramProduct programProduct) {
-    AllocationProgramProduct allocationProgramProduct = repository.getByProgramProductId(programProduct.getId());
-    allocationProgramProduct.fillFrom(programProduct);
-    return allocationProgramProduct;
-  }
-
   private AllocationProgramProduct getAllocationProduct(ProgramProduct programProduct, Long facilityId) {
-    AllocationProgramProduct allocationProgramProduct = getAllocationProduct(programProduct);
-    allocationProgramProduct.setOverriddenIsa(repository.getOverriddenIsa(programProduct.getId(), facilityId));
-    return allocationProgramProduct;
+    return new AllocationProgramProduct(programProduct, facilityId, repository.getOverriddenIsa(programProduct.getId(), facilityId));
   }
 
   public void insertISA(ProgramProductISA isa) {

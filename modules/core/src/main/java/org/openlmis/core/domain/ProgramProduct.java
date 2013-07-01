@@ -9,13 +9,19 @@ package org.openlmis.core.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(include = NON_NULL)
 public class ProgramProduct extends BaseModel implements Importable {
 
   @ImportField(name = "Program Code", type = "String", nested = "code", mandatory = true)
@@ -26,6 +32,8 @@ public class ProgramProduct extends BaseModel implements Importable {
   private Integer dosesPerMonth;
   @ImportField(name = "Is Active", type = "boolean", mandatory = true)
   private boolean active;
+
+  ProgramProductISA programProductIsa;
 
   private Money currentPrice;
 
@@ -48,12 +56,13 @@ public class ProgramProduct extends BaseModel implements Importable {
     if (currentPrice.isNegative()) throw new DataException("programProduct.invalid.current.price");
   }
 
-  public void fillFrom(ProgramProduct programProduct) {
+  public ProgramProduct(ProgramProduct programProduct) {
     this.id = programProduct.id;
     this.program = programProduct.program;
     this.product = programProduct.product;
     this.dosesPerMonth = programProduct.dosesPerMonth;
     this.active = programProduct.active;
     this.currentPrice = programProduct.currentPrice;
+    this.programProductIsa = programProduct.programProductIsa;
   }
 }

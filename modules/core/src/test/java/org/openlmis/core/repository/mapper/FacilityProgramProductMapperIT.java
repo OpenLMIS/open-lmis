@@ -77,7 +77,7 @@ public class FacilityProgramProductMapperIT {
 
   @Test
   public void shouldGetOverriddenIsaForProgramProductIdAndFacilityId() throws Exception {
-    AllocationProgramProduct facilityProgramProduct = new AllocationProgramProduct(programProduct.getId(), facility.getId(), 34, null);
+    AllocationProgramProduct facilityProgramProduct = new AllocationProgramProduct(programProduct.getId(), facility.getId(), 34);
     mapper.insert(facilityProgramProduct);
 
     Integer overriddenIsa = mapper.getOverriddenIsa(programProduct.getId(), facility.getId());
@@ -87,7 +87,7 @@ public class FacilityProgramProductMapperIT {
 
   @Test
   public void shouldRemoveFacilityProductMapping() throws Exception {
-    AllocationProgramProduct facilityProgramProduct = new AllocationProgramProduct(programProduct.getId(), facility.getId(), 34, null);
+    AllocationProgramProduct facilityProgramProduct = new AllocationProgramProduct(programProduct.getId(), facility.getId(), 34);
     mapper.insert(facilityProgramProduct);
 
     mapper.removeFacilityProgramProductMapping(programProduct.getId(), facility.getId());
@@ -96,13 +96,13 @@ public class FacilityProgramProductMapperIT {
   }
 
   @Test
-  public void shouldGetPogramProductForFacilityAndProgram() throws Exception {
-    AllocationProgramProduct facilityProgramProduct1 = new AllocationProgramProduct(programProduct.getId(), facility.getId(), 34, null);
+  public void shouldGetProgramProductForFacilityAndProgram() throws Exception {
+    AllocationProgramProduct facilityProgramProduct1 = new AllocationProgramProduct(programProduct.getId(), facility.getId(), 34);
     Product product2 = make(a(ProductBuilder.defaultProduct,with(ProductBuilder.code, "P1000"), with(displayOrder, 1)));
     productMapper.insert(product2);
     ProgramProduct programProduct2 = new ProgramProduct(program, product2, 10, true);
     programProductMapper.insert(programProduct2);
-    AllocationProgramProduct facilityProgramProduct2 = new AllocationProgramProduct(programProduct2.getId(), facility.getId(), 34, null);
+    AllocationProgramProduct facilityProgramProduct2 = new AllocationProgramProduct(programProduct2.getId(), facility.getId(), 34);
     mapper.insert(facilityProgramProduct1);
     mapper.insert(facilityProgramProduct2);
 

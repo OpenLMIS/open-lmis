@@ -54,38 +54,6 @@ public class AllocationProgramProductServiceTest {
   }
 
   @Test
-  public void shouldGetProductsFilledWithIsa() throws Exception {
-    final ProgramProduct programProduct = new ProgramProduct();
-    programProduct.setId(1l);
-    final ProgramProduct programProduct2 = new ProgramProduct();
-    programProduct2.setId(2l);
-
-    List<ProgramProduct> products = new ArrayList<ProgramProduct>() {{
-      add(programProduct);
-      add(programProduct2);
-    }};
-    when(programProductService.getByProgram(new Program(1l))).thenReturn(products);
-
-    AllocationProgramProduct allocationProduct1 = spy(new AllocationProgramProduct());
-    allocationProduct1.setId(1l);
-    when(repository.getByProgramProductId(programProduct.getId())).thenReturn(allocationProduct1);
-
-    AllocationProgramProduct allocationProduct2 = spy(new AllocationProgramProduct());
-    allocationProduct1.setId(2l);
-    when(repository.getByProgramProductId(programProduct2.getId())).thenReturn(allocationProduct2);
-
-    List<AllocationProgramProduct> returnedProducts = service.get(1l);
-
-    assertThat(returnedProducts.get(0), is(allocationProduct1));
-    assertThat(returnedProducts.get(1), is(allocationProduct2));
-    verify(programProductService).getByProgram(new Program(1l));
-    verify(allocationProduct1).fillFrom(programProduct);
-    verify(allocationProduct2).fillFrom(programProduct2);
-    verify(repository).getByProgramProductId(programProduct.getId());
-    verify(repository).getByProgramProductId(programProduct2.getId());
-  }
-
-  @Test
   public void shouldGetProductsFilledWithIsaForAFacility() throws Exception {
     long facilityId = 2l;
     final ProgramProduct programProduct = new ProgramProduct();
@@ -99,14 +67,10 @@ public class AllocationProgramProductServiceTest {
     }};
     when(programProductService.getByProgram(new Program(1l))).thenReturn(products);
 
-    AllocationProgramProduct allocationProduct1 = spy(new AllocationProgramProduct());
-    allocationProduct1.setId(1l);
-    when(repository.getByProgramProductId(programProduct.getId())).thenReturn(allocationProduct1);
+    AllocationProgramProduct allocationProduct1 = new AllocationProgramProduct(null, 2l, 34);
     when(repository.getOverriddenIsa(programProduct.getId(), facilityId)).thenReturn(34);
 
-    AllocationProgramProduct allocationProduct2 = spy(new AllocationProgramProduct());
-    allocationProduct1.setId(2l);
-    when(repository.getByProgramProductId(programProduct2.getId())).thenReturn(allocationProduct2);
+    AllocationProgramProduct allocationProduct2 = new AllocationProgramProduct(null, 2l, 44);
     when(repository.getOverriddenIsa(programProduct2.getId(), facilityId)).thenReturn(44);
 
     List<AllocationProgramProduct> returnedProducts = service.getForProgramAndFacility(1l, facilityId);
@@ -118,8 +82,6 @@ public class AllocationProgramProductServiceTest {
     assertThat(returnedProducts.get(1).getOverriddenIsa(), is(44));
 
     verify(programProductService).getByProgram(new Program(1l));
-    verify(allocationProduct1).fillFrom(programProduct);
-    verify(allocationProduct2).fillFrom(programProduct2);
     verify(repository).getOverriddenIsa(programProduct.getId(), facilityId);
     verify(repository).getOverriddenIsa(programProduct2.getId(), facilityId);
   }
