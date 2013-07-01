@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.service.ProgramService;
@@ -18,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -102,7 +100,7 @@ public class RegimenControllerTest {
 
     controller.save(programId, regimenTemplate, httpServletRequest);
 
-    verify(regimenColumnService).save(regimenTemplate.getColumns());
+    verify(regimenColumnService).save(regimenTemplate.getColumns(), userId);
     verify(programService).setRegimenTemplateConfigured(programId);
     verify(regimenService).save(programId, regimenTemplate.getRegimens(), userId);
   }

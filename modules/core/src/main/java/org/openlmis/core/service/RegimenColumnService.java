@@ -32,17 +32,19 @@ public class RegimenColumnService {
   @Autowired
   MessageService messageService;
 
-  public void save (List<RegimenColumn> regimenColumns) {
+  public void save(List<RegimenColumn> regimenColumns, Long userId) {
     for(RegimenColumn regimenColumn : regimenColumns) {
-      save(regimenColumn);
+      save(regimenColumn, userId);
     }
   }
 
-  public void save (RegimenColumn regimenColumn) {
+  public void save(RegimenColumn regimenColumn, Long userId) {
     if (regimenColumn.getId() == null) {
+      regimenColumn.setCreatedBy(userId);
       repository.insert(regimenColumn);
       return;
     }
+    regimenColumn.setModifiedBy(userId);
     repository.update(regimenColumn);
   }
 

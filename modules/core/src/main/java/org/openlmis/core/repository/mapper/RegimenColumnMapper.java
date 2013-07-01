@@ -20,8 +20,8 @@ import java.util.List;
 public interface RegimenColumnMapper {
 
   @Insert({"INSERT INTO program_regimen_columns",
-    "(programId, name, label, visible, dataType)",
-    "VALUES (#{programId}, #{name}, #{label}, #{visible}, #{dataType})"})
+    "(programId, name, label, visible, dataType, createdBy)",
+    "VALUES (#{programId}, #{name}, #{label}, #{visible}, #{dataType}, #{createdBy})"})
   public void insert(RegimenColumn regimenColumn);
 
   @Select("SELECT * FROM program_regimen_columns WHERE name = #{name} AND programId = #{programId}")
@@ -30,6 +30,7 @@ public interface RegimenColumnMapper {
   @Select("SELECT * FROM program_regimen_columns WHERE programId = #{programId} ORDER BY id")
   List<RegimenColumn> getAllRegimenColumnsByProgramId(Long programId);
 
-  @Update("UPDATE program_regimen_columns SET label = #{label}, visible = #{visible}, dataType = #{dataType} WHERE id = #{id}")
+  @Update("UPDATE program_regimen_columns SET label = #{label}, visible = #{visible}, dataType = #{dataType}, " +
+    "modifiedBy = #{modifiedBy}, modifiedDate = CURRENT_TIMESTAMP WHERE id = #{id}")
   void update(RegimenColumn regimenColumn);
 }

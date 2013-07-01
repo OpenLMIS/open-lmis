@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.RegimenColumn;
@@ -21,7 +20,6 @@ import static org.mockito.Matchers.isNotNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
@@ -35,29 +33,33 @@ public class RegimenColumnServiceTest {
 
   RegimenColumnService service;
 
+  Long userId = 1L;
+
   @Before
   public void setUp() throws Exception {
     service = new RegimenColumnService(repository, messageService);
   }
 
   @Test
-  public void shouldCallUpdateWhenRegimenColumnHasId() throws Exception {
+  public void shouldCallInsertWhenRegimenColumnDoesNotHaveId() throws Exception {
 
     RegimenColumn regimenColumn = new RegimenColumn(1L, "testName", "testLabel", "numeric", true);
 
-    service.save(regimenColumn);
+    service.save(regimenColumn, userId);
 
     verify(repository).insert(regimenColumn);
+    assertThat(regimenColumn.getCreatedBy(), is(userId));
   }
 
   @Test
-  public void shouldCallInsertWhenRegimenColumnDoesNotHaveId() throws Exception {
+  public void shouldCallUpdateWhenRegimenColumnHasId() throws Exception {
     RegimenColumn regimenColumn = new RegimenColumn(1L, "testName", "testLabel", "numeric", true);
     regimenColumn.setId(1L);
 
-    service.save(regimenColumn);
+    service.save(regimenColumn, userId);
 
     verify(repository).update(regimenColumn);
+    assertThat(regimenColumn.getModifiedBy(), is(userId));
   }
 
   @Test
@@ -67,7 +69,7 @@ public class RegimenColumnServiceTest {
     RegimenColumn regimenColumn2 = new RegimenColumn(1L, "testName2", "testLabel2", "numeric", true);
     regimenColumn2.setId(1L);
 
-    service.save(Arrays.asList(regimenColumn1, regimenColumn2));
+    service.save(Arrays.asList(regimenColumn1, regimenColumn2), userId);
 
     verify(repository).insert(regimenColumn1);
     verify(repository).update(regimenColumn2);

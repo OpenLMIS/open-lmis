@@ -48,7 +48,7 @@ public class RegimenController extends BaseController {
   public ResponseEntity<OpenLmisResponse> save(@PathVariable Long programId, @RequestBody RegimenTemplate regimenTemplate, HttpServletRequest request) {
     try {
       regimenService.save(programId, regimenTemplate.getRegimens(), loggedInUserId(request));
-      regimenColumnService.save(regimenTemplate.getColumns());
+      regimenColumnService.save(regimenTemplate.getColumns(), loggedInUserId(request));
       programService.setRegimenTemplateConfigured(programId);
       return success(REGIMENS_SAVED_SUCCESSFULLY);
     } catch (Exception e) {

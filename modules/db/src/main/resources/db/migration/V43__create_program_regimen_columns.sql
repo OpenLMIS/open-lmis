@@ -9,7 +9,10 @@ CREATE TABLE program_regimen_columns (
     label varchar(100) NOT NULL,
     visible boolean NOT NULL,
     dataType varchar(50) NOT NULL,
-    createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    createdBy INTEGER,
+    createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modifiedBy INTEGER,
+    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE UNIQUE INDEX i_program_regimens_name ON program_regimen_columns(programId, name);
