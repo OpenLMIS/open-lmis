@@ -25,5 +25,9 @@
     <li ng-show="hasPermission('MANAGE_USERS')" ng-class="supplylineSelected">
           <a href="/public/pages/admin/supplyline/index.html"><span id="supplyline-tab" openlmis-message="menu.headers.supplylines"></span></a>
     </li>
+      <li ng-show="hasPermission('MANAGE_PRODUCT')" ng-class="productSelected">
+          <a href="/public/pages/admin/product/index.html"><span id="product-tab">Manage Products</span></a>
+      </li>
+
   </ul>
 </div>

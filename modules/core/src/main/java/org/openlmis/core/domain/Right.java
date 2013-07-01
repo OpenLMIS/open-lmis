@@ -43,8 +43,10 @@ public enum Right {
   MANAGE_REGIMEN_TEMPLATE("Admin - Manage Regimen Template", TRUE, "Permission to manage a regimen template"),
 
   MANAGE_SUPPLYLINE("Admin - Manage Supply Line", TRUE, "Permission to manage supply line"),
+  MANAGE_PRODUCT("Admin - Manage Products", TRUE, "Permission to manage products"),
 
-  VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", TRUE, "Permission to view Facility List Report"),
+
+    VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", TRUE, "Permission to view Facility List Report"),
   VIEW_MAILING_LABEL_REPORT("Report - Facility Listing (V2)", TRUE, "Permission to view mailing labels for facilities"),
   VIEW_SUMMARY_REPORT("Report - Summary Report", TRUE, "Permission to view Sumamry Report"),
   VIEW_CONSUMPTION_REPORT("Report - Consumption Report", TRUE, "Permission to view consumption report"),
