@@ -139,6 +139,7 @@ public class DBWrapper {
     update("delete from processing_schedules;");
     update("delete from atomfeed.event_records;");
     update("delete from regimens;");
+    update("delete from program_regimen_columns;");
   }
 
 

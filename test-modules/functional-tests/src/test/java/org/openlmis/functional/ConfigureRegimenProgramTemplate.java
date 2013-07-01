@@ -11,7 +11,7 @@ import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
-import org.openqa.selenium.remote.UnreachableBrowserException;
+import org.openqa.selenium.WebElement;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -57,6 +57,26 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     verifyProgramsListedOnManageRegimenTemplateScreen(programsList, expectedProgramsString);
     regimenTemplateConfigPage.configureProgram(program);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
+    regimenTemplateConfigPage.SaveRegime();
+    verifySuccessMessage(regimenTemplateConfigPage);
+    verifyProgramConfigured(program);
+  }
+
+  @Test(groups = {"smoke"}, dataProvider = "Data-Provider")
+  public void testVerifyNewRegimenReportingFieldConfiguration(String program, String[] credentials) throws Exception {
+    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    String expectedProgramsString = dbWrapper.getAllActivePrograms();
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
+    List<String> programsList = getProgramsListedOnRegimeScreen();
+    verifyProgramsListedOnManageRegimenTemplateScreen(programsList, expectedProgramsString);
+    regimenTemplateConfigPage.configureProgram(program);
+    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
+    regimenTemplateConfigPage.clickReportingFieldTab();
+    verifyDefaultRegimenReportingFieldsValues(regimenTemplateConfigPage);
+    regimenTemplateConfigPage.unSelectCheckBox(regimenTemplateConfigPage.getNoOfPatientsOnTreatmentCheckBox());
+    sendKeys(regimenTemplateConfigPage.getRemarksTextField(), "Testing column");
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage(regimenTemplateConfigPage);
     verifyProgramConfigured(program);
@@ -187,7 +207,25 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
     regimenTemplateConfigPage.configureProgram(program);
     regimenTemplateConfigPage.CancelRegime();
-    assertTrue("Clicking Cancel button should be redirected to Regimen Template screen",testWebDriver.getElementByXpath("//a[@id='" + program + "']/span").isDisplayed());
+    assertTrue("Clicking Cancel button should be redirected to Regimen Template screen", testWebDriver.getElementByXpath("//a[@id='" + program + "']/span").isDisplayed());
+  }
+
+  private void verifyDefaultRegimenReportingFieldsValues(RegimenTemplateConfigPage regimenTemplateConfigPage) {
+    assertTrue("noOfPatientsOnTreatmentCheckBox should be checked", regimenTemplateConfigPage.getNoOfPatientsOnTreatmentCheckBox().isSelected());
+    assertTrue("noOfPatientsToInitiateTreatmentCheckBox should be checked", regimenTemplateConfigPage.getNoOfPatientsToInitiateTreatmentCheckBox().isSelected());
+    assertTrue("noOfPatientsStoppedTreatmentCheckBox should be checked", regimenTemplateConfigPage.getNoOfPatientsStoppedTreatmentCheckBox().isSelected());
+    assertTrue("remarksCheckBox should be checked", regimenTemplateConfigPage.getRemarksCheckBox().isSelected());
+
+    assertEquals("Number of patients on treatment", testWebDriver.getAttribute(regimenTemplateConfigPage.getNoOfPatientsOnTreatmentTextField(), "value"));
+    assertEquals("Number of patients to be initiated treatment", testWebDriver.getAttribute(regimenTemplateConfigPage.getNoOfPatientsToInitiateTreatmentTextField(), "value"));
+    assertEquals("Number of patients stopped treatment", testWebDriver.getAttribute(regimenTemplateConfigPage.getNoOfPatientsStoppedTreatmentTextField(), "value"));
+    assertEquals("Remarks", testWebDriver.getAttribute(regimenTemplateConfigPage.getRemarksTextField(), "value"));
+
+    assertEquals("Numeric", regimenTemplateConfigPage.getNoOfPatientsOnTreatmentDataType().getText().trim());
+    assertEquals("Numeric", regimenTemplateConfigPage.getNoOfPatientsStoppedTreatmentDataType().getText().trim());
+    assertEquals("Numeric", regimenTemplateConfigPage.getNoOfPatientsToInitiateTreatmentDataType().getText().trim());
+    assertEquals("Text", regimenTemplateConfigPage.getRemarksDataType().getText().trim());
+
   }
 
   private void verifyErrorMessage(RegimenTemplateConfigPage regimenTemplateConfigPage, String expectedErrorMessage) {
@@ -233,6 +271,13 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     for (int i = 0; i < length; i++)
       testWebDriver.getElementByXpath(locator).sendKeys("\u0008");
     testWebDriver.getElementByXpath(locator).sendKeys(value);
+  }
+
+  private void sendKeys(WebElement locator, String value) {
+    int length = testWebDriver.getAttribute(locator, "value").length();
+    for (int i = 0; i < length; i++)
+      locator.sendKeys("\u0008");
+    locator.sendKeys(value);
   }
 
   private List<String> getProgramsListedOnRegimeScreen() {

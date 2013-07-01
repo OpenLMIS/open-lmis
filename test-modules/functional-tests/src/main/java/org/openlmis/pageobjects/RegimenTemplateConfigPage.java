@@ -7,12 +7,16 @@
 package org.openlmis.pageobjects;
 
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
 
 public class RegimenTemplateConfigPage extends Page {
@@ -63,6 +67,48 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Regimen Template')]")
   private static WebElement regimenTemplateHeader;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Regimens')]")
+  private static WebElement regimenTab;
+
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Reporting fields')]")
+  private static WebElement reportingFieldsTab;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[2]/div[1]/input")
+  private static WebElement noOfPatientsOnTreatmentCheckBox;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[3]/div[1]/input")
+  private static WebElement noOfPatientsToInitiateTreatmentCheckBox;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[4]/div[1]/input")
+  private static WebElement noOfPatientsStoppedTreatmentCheckBox;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/div[1]/input")
+  private static WebElement remarksCheckBox;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[2]/div[2]/input")
+  private static WebElement noOfPatientsOnTreatmentTextField;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[3]/div[2]/input")
+  private static WebElement noOfPatientsToInitiateTreatmentTextField;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[4]/div[2]/input")
+  private static WebElement noOfPatientsStoppedTreatmentTextField;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/div[2]/input")
+  private static WebElement remarksTextField;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[2]/div[3]/span")
+  private static WebElement noOfPatientsOnTreatmentDataType;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[3]/div[3]/span")
+  private static WebElement noOfPatientsToInitiateTreatmentDataType;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[4]/div[3]/span")
+  private static WebElement noOfPatientsStoppedTreatmentDataType;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/div[3]/span")
+  private static WebElement remarksDataType;
+
 
   private static String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
 
@@ -70,6 +116,66 @@ public class RegimenTemplateConfigPage extends Page {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
+  }
+
+  public  WebElement getRegimenTemplateHeader() {
+    return regimenTemplateHeader;
+  }
+
+  public  WebElement getRegimenTab() {
+    return regimenTab;
+  }
+
+  public  WebElement getReportingFieldsTab() {
+    return reportingFieldsTab;
+  }
+
+  public  WebElement getNoOfPatientsOnTreatmentCheckBox() {
+    return noOfPatientsOnTreatmentCheckBox;
+  }
+
+  public  WebElement getNoOfPatientsToInitiateTreatmentCheckBox() {
+    return noOfPatientsToInitiateTreatmentCheckBox;
+  }
+
+  public  WebElement getNoOfPatientsStoppedTreatmentCheckBox() {
+    return noOfPatientsStoppedTreatmentCheckBox;
+  }
+
+  public  WebElement getRemarksCheckBox() {
+    return remarksCheckBox;
+  }
+
+  public  WebElement getNoOfPatientsOnTreatmentTextField() {
+    return noOfPatientsOnTreatmentTextField;
+  }
+
+  public  WebElement getNoOfPatientsToInitiateTreatmentTextField() {
+    return noOfPatientsToInitiateTreatmentTextField;
+  }
+
+  public  WebElement getNoOfPatientsStoppedTreatmentTextField() {
+    return noOfPatientsStoppedTreatmentTextField;
+  }
+
+  public  WebElement getRemarksTextField() {
+    return remarksTextField;
+  }
+
+  public  WebElement getNoOfPatientsOnTreatmentDataType() {
+    return noOfPatientsOnTreatmentDataType;
+  }
+
+  public  WebElement getNoOfPatientsToInitiateTreatmentDataType() {
+    return noOfPatientsToInitiateTreatmentDataType;
+  }
+
+  public  WebElement getNoOfPatientsStoppedTreatmentDataType() {
+    return noOfPatientsStoppedTreatmentDataType;
+  }
+
+  public  WebElement getRemarksDataType() {
+    return remarksDataType;
   }
 
   public void AddNewRegimen(String category, String code, String name, Boolean isActive) {
@@ -80,6 +186,40 @@ public class RegimenTemplateConfigPage extends Page {
     if (isActive)
       newRegimenActiveCheckBox.click();
     addButton.click();
+
+  }
+
+  public void clickReportingFieldTab()
+  {
+    testWebDriver.waitForElementToAppear(reportingFieldsTab);
+    reportingFieldsTab.click();
+    testWebDriver.waitForElementToAppear(noOfPatientsOnTreatmentCheckBox);
+  }
+
+
+
+  public void selectCheckBox(WebElement locator)
+  {
+   if(!locator.isSelected()){
+     locator.click();
+   }
+  }
+
+  public void unSelectCheckBox(WebElement locator)
+  {
+    if(locator.isSelected()){
+      locator.click();
+    }
+  }
+
+  public void sendKeys(WebElement element)
+  {
+     testWebDriver.waitForElementToAppear(element);
+    element.clear();
+  }
+
+  public  WebElement getDoneButton() {
+    return doneButton;
   }
 
   public WebElement getLogoutLink() {
