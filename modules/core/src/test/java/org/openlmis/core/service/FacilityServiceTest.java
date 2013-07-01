@@ -14,7 +14,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.FacilityFeedDTO;
@@ -45,6 +48,7 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
 public class FacilityServiceTest {
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
@@ -63,7 +67,6 @@ public class FacilityServiceTest {
   @Mock
   private GeographicZoneRepository geographicZoneRepository;
 
-  private FacilityService facilityService;
 
   @Mock
   private EventService eventService;
@@ -71,12 +74,8 @@ public class FacilityServiceTest {
   @Mock
   private AllocationProgramProductService allocationProgramProductService;
 
-  @Before
-  public void setUp() throws Exception {
-    initMocks(this);
-    facilityService = new FacilityService(facilityRepository, programSupportedRepository, programRepository, supervisoryNodeService,
-      requisitionGroupService, geographicZoneRepository, eventService, allocationProgramProductService);
-  }
+  @InjectMocks
+  private FacilityService facilityService;
 
   @Test
   public void shouldReturnNullIfUserIsNotAssignedAFacility() {

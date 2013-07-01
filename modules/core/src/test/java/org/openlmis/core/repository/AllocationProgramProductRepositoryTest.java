@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.AllocationProgramProductRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.core.domain.AllocationProgramProduct;
@@ -66,18 +67,6 @@ public class AllocationProgramProductRepositoryTest {
   }
 
   @Test
-  public void shouldGetAllocationProgramProductWithIsa() throws Exception {
-    ProgramProductISA expectedIsa = new ProgramProductISA();
-    when(programProductIsaMapper.getIsaByProgramProductId(1l)).thenReturn(expectedIsa);
-
-    AllocationProgramProduct allocationProgramProduct = repository.getByProgramProductId(1L);
-
-    assertThat(allocationProgramProduct.getProgramProductIsa(), is(expectedIsa));
-    assertThat(allocationProgramProduct.getProgramProductId(), is(1l));
-    verify(programProductIsaMapper).getIsaByProgramProductId(1L);
-  }
-
-  @Test
   public void shouldGetAllocationProgramProductWithIsaForAFacility() throws Exception {
     Long programProductId = 1L;
     Long facilityId = 2L;
@@ -92,13 +81,14 @@ public class AllocationProgramProductRepositoryTest {
 
   @Test
   public void shouldReplaceAnyExistingOverriddenIsaWithNewOne() throws Exception {
-    Long programProductId = 1L;
     Long facilityId = 2L;
-    AllocationProgramProduct product = new AllocationProgramProduct(programProductId, facilityId, 34);
+    ProgramProduct programProduct = new ProgramProduct();
+    programProduct.setId(1l);
+    AllocationProgramProduct product = new AllocationProgramProduct(programProduct, facilityId, 34);
 
     repository.save(product);
 
-    verify(mapper).removeFacilityProgramProductMapping(programProductId, facilityId);
+    verify(mapper).removeFacilityProgramProductMapping(1L, facilityId);
     verify(mapper).insert(product);
   }
 

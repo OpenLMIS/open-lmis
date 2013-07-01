@@ -67,10 +67,10 @@ public class AllocationProgramProductServiceTest {
     }};
     when(programProductService.getByProgram(new Program(1l))).thenReturn(products);
 
-    AllocationProgramProduct allocationProduct1 = new AllocationProgramProduct(null, 2l, 34);
+    AllocationProgramProduct allocationProduct1 = new AllocationProgramProduct(programProduct, 2l, 34);
     when(repository.getOverriddenIsa(programProduct.getId(), facilityId)).thenReturn(34);
 
-    AllocationProgramProduct allocationProduct2 = new AllocationProgramProduct(null, 2l, 44);
+    AllocationProgramProduct allocationProduct2 = new AllocationProgramProduct(programProduct2, 2l, 44);
     when(repository.getOverriddenIsa(programProduct2.getId(), facilityId)).thenReturn(44);
 
     List<AllocationProgramProduct> returnedProducts = service.getForProgramAndFacility(1l, facilityId);

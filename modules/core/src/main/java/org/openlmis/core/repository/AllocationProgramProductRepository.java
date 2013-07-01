@@ -36,20 +36,12 @@ public class AllocationProgramProductRepository {
     return programProductIsaMapper.getIsaByProgramProductId(programProductId);
   }
 
-  public AllocationProgramProduct getByProgramProductId(Long programProductId) {
-    ProgramProductISA isa = programProductIsaMapper.getIsaByProgramProductId(programProductId);
-    AllocationProgramProduct allocationProgramProduct = new AllocationProgramProduct();
-    allocationProgramProduct.setProgramProductIsa(isa);
-    allocationProgramProduct.setProgramProductId(programProductId);
-    return allocationProgramProduct;
-  }
-
   public Integer getOverriddenIsa(Long programProductId, Long facilityId) {
     return mapper.getOverriddenIsa(programProductId, facilityId);
   }
 
   public void save(AllocationProgramProduct product) {
-    mapper.removeFacilityProgramProductMapping(product.getProgramProductId(), product.getFacilityId());
+    mapper.removeFacilityProgramProductMapping(product.getId(), product.getFacilityId());
     mapper.insert(product);
   }
 

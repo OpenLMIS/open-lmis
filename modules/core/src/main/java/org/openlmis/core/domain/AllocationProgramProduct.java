@@ -22,8 +22,6 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_NULL)
 public class AllocationProgramProduct extends ProgramProduct {
-  Long programProductId;
-
   Long facilityId;
 
   Integer overriddenIsa;
