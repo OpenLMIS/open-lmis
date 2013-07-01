@@ -15,10 +15,10 @@
   </div>
   <div class="rnr-tabs clearfix">
     <ul>
-      <li class="selected" ng-class="{'has-error': regimensError}">
+      <li class="selected" ng-class="{'has-error': regimensError, 'selected' : !showReportingFields}">
         <a openlmis-message="label.regimens" href="" ng-click="showReportingFields=false;"></a>
       </li>
-      <li ng-class="{'has-error': reportingFieldsError}">
+      <li ng-class="{'has-error': reportingFieldsError, 'selected' : showReportingFields}">
         <a openlmis-message="label.reporting.fields" href="" ng-click="showReportingFields=true;"></a>
       </li>
     </ul>

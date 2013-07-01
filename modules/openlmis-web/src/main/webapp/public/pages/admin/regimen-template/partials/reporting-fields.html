@@ -11,7 +11,7 @@
       <input type = "checkbox" ng-model = "regimenColumn.visible"/>
     </div>
     <div class = "span6">
-      <input type = "text" ng-model = "regimenColumn.label" ng-class="{'required-error':!regimenColumn.label}"/>
+      <input type = "text" ng-model = "regimenColumn.label" ng-class="{'required-error':!regimenColumn.label}" maxlength="100"/>
     </div>
     <div class = "span4">
       <span ng-bind = "regimenColumn.dataType"></span>
