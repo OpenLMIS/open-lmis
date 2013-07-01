@@ -71,12 +71,12 @@
           </tr>
 
           <tr>
-            <td class="rights-list-column" ng-class = "{'is-disabled': role.type == 'ALLOCATION' || role.type == 'REQUISITION'}">
+            <td class="rights-list-column" ng-class = "{'is-disabled': role.type != 'ADMIN'}">
               <div>
                 <div id = "rights-{{right.right}}" class = "checkbox-list clearfix" ng-repeat = "right in adminRights" tab-scroll>
                   <input id = "{{right.right}}" type = "checkbox" ng-checked = "contains(right.right)"
                          ng-click = "updateRights(checked,right)" ng-model = "checked"
-                         ng-disabled = "areRelatedFieldsSelected(right) || role.type == 'false'" />
+                         ng-disabled = "areRelatedFieldsSelected(right) || role.type != 'ADMIN'" />
                   <label for = "{{right.right}}" ><span openlmis-message="right.rightName"></span></label >
                 </div >
               </div >
@@ -84,13 +84,13 @@
               </span >
             </td>
 
-            <td class="rights-list-column" ng-class = "{'is-disabled': role.type == 'ADMIN' || role.type == 'REQUISITION'}">
+            <td class="rights-list-column" ng-class = "{'is-disabled': role.type != 'ALLOCATION'}">
               <div>
                 <div id = "allocationRights-{{allocationRight.right}}" class = "checkbox-list clearfix"
                    ng-repeat = "allocationRight in allocationRights" tab-scroll>
                 <input id = "{{allocationRight.right}}" type = "checkbox" ng-checked = "contains(allocationRight.right)"
                        ng-click = "updateRights(checked,allocationRight)" ng-model = "checked"
-                       ng-disabled = "areRelatedFieldsSelected(allocationRight) || role.type == 'true'" />
+                       ng-disabled = "areRelatedFieldsSelected(allocationRight) || role.type != 'ALLOCATION'" />
                 <label for = "{{allocationRight.right}}" ><span openlmis-message="allocationRight.rightName"></span></label >
               </div >
               </div>
@@ -98,13 +98,13 @@
               </span >
             </td>
 
-            <td class="rights-list-column" ng-class = "{'is-disabled': role.type == 'ALLOCATION' || role.type == 'ADMIN'}">
+            <td class="rights-list-column" ng-class = "{'is-disabled': role.type != 'REQUISITION'}">
               <div>
                 <div id = "requisitionRights-{{requisitionRight.right}}" class = "checkbox-list clearfix"
                    ng-repeat = "requisitionRight in requisitionRights" tab-scroll>
                 <input id = "{{requisitionRight.right}}" type = "checkbox" ng-checked = "contains(requisitionRight.right)"
                        ng-click = "updateRights(checked,requisitionRight)" ng-model = "checked"
-                       ng-disabled = "areRelatedFieldsSelected(requisitionRight) || role.type == 'true'" />
+                       ng-disabled = "areRelatedFieldsSelected(requisitionRight) || role.type != 'REQUISITION'" />
                 <label for = "{{requisitionRight.right}}" ><span openlmis-message="requisitionRight.rightName"></span></label >
               </div >
               </div>
