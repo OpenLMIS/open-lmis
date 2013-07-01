@@ -13,7 +13,6 @@ import org.openlmis.core.domain.FacilityType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Set;
 
 @Repository
 public interface FacilityMapper {
@@ -139,10 +138,12 @@ public interface FacilityMapper {
   @Select("SELECT * from facilities WHERE code=#{code}")
   Facility getByCode(String code);
 
-  @Select({"SELECT * from facilities f, delivery_zone_members dzm, geographic_zones gz, programs_supported ps ",
-    "WHERE f.id = dzm.facilityId AND",
-    " dzm.deliveryZoneId= #{deliveryZoneId} AND f.active = true ",
-    "AND f.geographicZoneId = gz.id AND f.id=ps.facilityId AND ps.programId = #{programId}  order by gz.name, f.name"})
+  @Select({"SELECT F.geographicZoneId, F.name, F.code, F.id, F.catchmentPopulation FROM facilities F INNER JOIN delivery_zone_members DZM ON F.id = DZM.facilityId",
+    "INNER JOIN programs_supported PS ON PS.facilityId = F.id",
+    "INNER JOIN delivery_zones DZ ON DZ.id = DZM.deliveryZoneId",
+    "INNER JOIN delivery_zone_program_schedules DZPS ON DZPS.deliveryZoneId = DZM.deliveryZoneId",
+    "WHERE DZPS.programId = #{programId} AND F.active = true",
+    "AND F.id = PS.facilityId AND PS.programId = #{programId} order by F.name"})
   @Results(value = {
     @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
       one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getGeographicZoneById"))
