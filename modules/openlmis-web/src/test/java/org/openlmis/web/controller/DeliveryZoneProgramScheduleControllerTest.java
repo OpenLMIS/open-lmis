@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.web.response.AllocationResponse;
+import org.openlmis.web.response.OpenLmisResponse;
 import org.openlmis.core.service.AllocationPermissionService;
 import org.openlmis.core.service.DeliveryZoneProgramScheduleService;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
@@ -68,7 +68,7 @@ public class DeliveryZoneProgramScheduleControllerTest {
     List<ProcessingPeriod> expectedPeriods = new ArrayList<>();
     when(scheduleService.getPeriodsForDeliveryZoneAndProgram(1l, 3l)).thenReturn(expectedPeriods);
 
-    ResponseEntity<AllocationResponse> response = controller.getPeriodsForProgramInDeliveryZone(request, ZONE_ID, 3l);
+    ResponseEntity<OpenLmisResponse> response = controller.getPeriodsForProgramInDeliveryZone(request, ZONE_ID, 3l);
 
     assertThat(expectedPeriods, is(response.getBody().getData().get("periods")));
     verify(scheduleService).getPeriodsForDeliveryZoneAndProgram(1l, 3l);
@@ -81,7 +81,7 @@ public class DeliveryZoneProgramScheduleControllerTest {
     Long invalidZoneId = 67l;
     when(permissionService.hasPermissionOnZone(USER_ID, invalidZoneId)).thenReturn(false);
 
-    ResponseEntity<AllocationResponse> response = controller.getPeriodsForProgramInDeliveryZone(request, invalidZoneId, 3l);
+    ResponseEntity<OpenLmisResponse> response = controller.getPeriodsForProgramInDeliveryZone(request, invalidZoneId, 3l);
 
     assertThat(response.getStatusCode(), is(UNAUTHORIZED));
     assertThat(response.getBody().getErrorMsg(), is(FORBIDDEN_EXCEPTION));

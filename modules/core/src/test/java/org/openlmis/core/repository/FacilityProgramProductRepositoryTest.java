@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.repository.AllocationProgramProductRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.core.domain.AllocationProgramProduct;
 import org.openlmis.core.domain.ProgramProductISA;
@@ -29,10 +28,10 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
-public class AllocationProgramProductRepositoryTest {
+public class FacilityProgramProductRepositoryTest {
 
   @InjectMocks
-  AllocationProgramProductRepository repository;
+  FacilityProgramProductRepository repository;
 
   @Mock
   ProgramProductIsaMapper programProductIsaMapper;

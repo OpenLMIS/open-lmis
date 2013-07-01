@@ -37,7 +37,7 @@ public class FacilityService {
   private SupervisoryNodeService supervisoryNodeService;
 
   private EventService eventService;
-  private AllocationProgramProductService allocationProgramProductService;
+  private FacilityProgramProductService facilityProgramProductService;
 
 
   //TODO : remove constructor autowiring
@@ -45,7 +45,7 @@ public class FacilityService {
   public FacilityService(FacilityRepository facilityRepository, ProgramSupportedRepository programSupportedRepository,
                          ProgramRepository programRepository, SupervisoryNodeService supervisoryNodeService,
                          RequisitionGroupService requisitionGroupService, GeographicZoneRepository geographicZoneRepository,
-                         EventService eventService, AllocationProgramProductService allocationProgramProductService) {
+                         EventService eventService, FacilityProgramProductService facilityProgramProductService) {
     this.facilityRepository = facilityRepository;
     this.programSupportedRepository = programSupportedRepository;
     this.programRepository = programRepository;
@@ -53,7 +53,7 @@ public class FacilityService {
     this.requisitionGroupService = requisitionGroupService;
     this.geographicZoneRepository = geographicZoneRepository;
     this.eventService = eventService;
-    this.allocationProgramProductService = allocationProgramProductService;
+    this.facilityProgramProductService = facilityProgramProductService;
   }
 
   @Transactional
@@ -184,7 +184,7 @@ public class FacilityService {
       ProgramSupported programSupported = programSupportedRepository.getByFacilityIdAndProgramId(facility.getId(), programId);
       List<ProgramSupported> programsSupported = new ArrayList<>();
       programsSupported.add(programSupported);
-      programSupported.setProgramProducts(allocationProgramProductService.getByFacilityAndProgram(facility.getId(), programId));
+      programSupported.setProgramProducts(facilityProgramProductService.getByFacilityAndProgram(facility.getId(), programId));
       facility.setSupportedPrograms(programsSupported);
     }
     return facilities;

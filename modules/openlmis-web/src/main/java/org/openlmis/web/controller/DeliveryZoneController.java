@@ -7,8 +7,8 @@ package org.openlmis.web.controller;
 
 
 import org.openlmis.core.service.AllocationPermissionService;
-import org.openlmis.web.response.AllocationResponse;
 import org.openlmis.core.service.DeliveryZoneService;
+import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.openlmis.web.response.AllocationResponse.error;
-import static org.openlmis.web.response.AllocationResponse.response;
 import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
+import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -36,12 +36,12 @@ public class DeliveryZoneController extends BaseController {
   AllocationPermissionService permissionService;
 
   @RequestMapping(value = "user/deliveryZones", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<AllocationResponse> getDeliveryZonesForInitiatingAllocation(HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> getDeliveryZonesForInitiatingAllocation(HttpServletRequest request) {
     return response(DELIVERY_ZONES, service.getByUserForRight(loggedInUserId(request), MANAGE_DISTRIBUTION));
   }
 
   @RequestMapping(value = "deliveryZones/{zoneId}/programs", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<AllocationResponse> getProgramsForDeliveryZone(HttpServletRequest request, @PathVariable long zoneId) {
+  public ResponseEntity<OpenLmisResponse> getProgramsForDeliveryZone(HttpServletRequest request, @PathVariable long zoneId) {
     if (permissionService.hasPermissionOnZone(loggedInUserId(request), zoneId)) {
       return response(DELIVERY_ZONE_PROGRAMS, service.getProgramsForDeliveryZone(zoneId));
     } else {

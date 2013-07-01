@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class AllocationProgramProductRepository {
+public class FacilityProgramProductRepository {
 
   @Autowired
   ProgramProductIsaMapper programProductIsaMapper;

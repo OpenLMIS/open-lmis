@@ -11,7 +11,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.AllocationProgramProduct;
 import org.openlmis.core.domain.ProgramProductISA;
-import org.openlmis.core.repository.AllocationProgramProductRepository;
+import org.openlmis.core.repository.FacilityProgramProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +21,10 @@ import java.util.List;
 import static org.apache.commons.collections.CollectionUtils.forAllDo;
 
 @Service
-public class AllocationProgramProductService {
+public class FacilityProgramProductService {
 
   @Autowired
-  private AllocationProgramProductRepository repository;
+  private FacilityProgramProductRepository repository;
 
   @Autowired
   ProgramProductService programProductService;

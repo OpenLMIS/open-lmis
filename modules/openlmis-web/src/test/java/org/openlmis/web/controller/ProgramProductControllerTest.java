@@ -18,7 +18,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.openlmis.web.controller.AllocationProgramProductController.PROGRAM_PRODUCT_LIST;
+import static org.openlmis.web.controller.FacilityProgramProductController.PROGRAM_PRODUCT_LIST;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProgramProductControllerTest {

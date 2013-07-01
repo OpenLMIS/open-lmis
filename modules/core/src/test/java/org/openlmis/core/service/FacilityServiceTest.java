@@ -9,7 +9,6 @@ package org.openlmis.core.service;
 
 import org.ict4h.atomfeed.server.service.Event;
 import org.ict4h.atomfeed.server.service.EventService;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -41,7 +40,6 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
@@ -72,7 +70,7 @@ public class FacilityServiceTest {
   private EventService eventService;
 
   @Mock
-  private AllocationProgramProductService allocationProgramProductService;
+  private FacilityProgramProductService facilityProgramProductService;
 
   @InjectMocks
   private FacilityService facilityService;
@@ -378,7 +376,7 @@ public class FacilityServiceTest {
     programsSupported.add(programSupported);
     when(programSupportedRepository.getByFacilityIdAndProgramId(facility.getId(), programId)).thenReturn(programSupported);
     List<AllocationProgramProduct> allocationProgramProduct = new ArrayList<>();
-    when(allocationProgramProductService.getByFacilityAndProgram(facility.getId(), programId)).thenReturn(allocationProgramProduct);
+    when(facilityProgramProductService.getByFacilityAndProgram(facility.getId(), programId)).thenReturn(allocationProgramProduct);
 
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
 
@@ -386,7 +384,7 @@ public class FacilityServiceTest {
     assertThat(facilities.get(0).getSupportedPrograms(), is(programsSupported));
     assertThat(facilities.get(0).getSupportedPrograms().get(0).getProgramProducts(), is(allocationProgramProduct));
     verify(programSupportedRepository).getByFacilityIdAndProgramId(facility.getId(), programId);
-    verify(allocationProgramProductService).getByFacilityAndProgram(facility.getId(), programId);
+    verify(facilityProgramProductService).getByFacilityAndProgram(facility.getId(), programId);
     verify(facilityRepository).getAllInDeliveryZoneFor(deliveryZoneId, programId);
   }
 

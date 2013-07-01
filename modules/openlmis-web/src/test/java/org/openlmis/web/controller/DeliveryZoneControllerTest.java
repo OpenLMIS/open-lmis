@@ -15,12 +15,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.DeliveryZone;
-import org.openlmis.web.response.AllocationResponse;
+import org.openlmis.web.response.OpenLmisResponse;
 import org.openlmis.core.service.AllocationPermissionService;
 import org.openlmis.core.service.DeliveryZoneService;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Program;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
@@ -71,7 +72,7 @@ public class DeliveryZoneControllerTest {
     List<DeliveryZone> deliveryZones = new ArrayList<>();
     when(service.getByUserForRight(USER_ID, MANAGE_DISTRIBUTION)).thenReturn(deliveryZones);
 
-    ResponseEntity<AllocationResponse> response = controller.getDeliveryZonesForInitiatingAllocation(request);
+    ResponseEntity<OpenLmisResponse> response = controller.getDeliveryZonesForInitiatingAllocation(request);
 
     assertThat((List<DeliveryZone>) response.getBody().getData().get(DELIVERY_ZONES), is(deliveryZones));
   }
@@ -81,7 +82,7 @@ public class DeliveryZoneControllerTest {
     List<Program> programs = new ArrayList<>();
     when(service.getProgramsForDeliveryZone(1l)).thenReturn(programs);
     when(permissionService.hasPermissionOnZone(USER_ID, 1l)).thenReturn(true);
-    ResponseEntity<AllocationResponse> response = controller.getProgramsForDeliveryZone(request, 1l);
+    ResponseEntity<OpenLmisResponse> response = controller.getProgramsForDeliveryZone(request, 1l);
 
     assertThat((List<Program>) response.getBody().getData().get("deliveryZonePrograms"), is(programs));
   }
@@ -92,7 +93,7 @@ public class DeliveryZoneControllerTest {
     when(service.getProgramsForDeliveryZone(1l)).thenReturn(programs);
     when(permissionService.hasPermissionOnZone(USER_ID, 1l)).thenReturn(false);
 
-    ResponseEntity<AllocationResponse> response = controller.getProgramsForDeliveryZone(request, 1l);
+    ResponseEntity<OpenLmisResponse> response = controller.getProgramsForDeliveryZone(request, 1l);
 
     assertThat(response.getBody().getErrorMsg(), is(FORBIDDEN_EXCEPTION));
     assertThat(response.getStatusCode(), is(UNAUTHORIZED));

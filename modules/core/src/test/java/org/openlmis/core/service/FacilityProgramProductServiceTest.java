@@ -17,7 +17,7 @@ import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.core.domain.AllocationProgramProduct;
 import org.openlmis.core.domain.ProgramProductISA;
-import org.openlmis.core.repository.AllocationProgramProductRepository;
+import org.openlmis.core.repository.FacilityProgramProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +28,13 @@ import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class AllocationProgramProductServiceTest {
+public class FacilityProgramProductServiceTest {
 
   @InjectMocks
-  private AllocationProgramProductService service;
+  private FacilityProgramProductService service;
 
   @Mock
-  private AllocationProgramProductRepository repository;
+  private FacilityProgramProductRepository repository;
 
   @Mock
   ProgramProductService programProductService;

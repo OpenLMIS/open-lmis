@@ -8,9 +8,9 @@ package org.openlmis.web.controller;
 
 import org.openlmis.core.domain.AllocationProgramProduct;
 import org.openlmis.core.domain.ProgramProductISA;
-import org.openlmis.web.response.AllocationResponse;
-import org.openlmis.core.service.AllocationProgramProductService;
+import org.openlmis.core.service.FacilityProgramProductService;
 import org.openlmis.web.form.AllocationProgramProductList;
+import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,18 +24,18 @@ import java.util.List;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
-public class AllocationProgramProductController extends BaseController {
+public class FacilityProgramProductController extends BaseController {
 
   @Autowired
-  private AllocationProgramProductService service;
+  private FacilityProgramProductService service;
 
   public static final String PROGRAM_PRODUCT_LIST = "programProductList";
 
   @RequestMapping(value = "/facility/{facilityId}/program/{programId}/isa", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-  public ResponseEntity<AllocationResponse> getProgramProductsByProgramAndFacility(@PathVariable Long programId, @PathVariable Long facilityId) {
+  public ResponseEntity<OpenLmisResponse> getProgramProductsByProgramAndFacility(@PathVariable Long programId, @PathVariable Long facilityId) {
     List<AllocationProgramProduct> programProductsByProgram = service.getForProgramAndFacility(programId, facilityId);
-    return AllocationResponse.response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
+    return OpenLmisResponse.response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
   }
 
   @RequestMapping(value = "/programProducts/{programProductId}/isa", method = POST, headers = ACCEPT_JSON)
@@ -48,7 +48,7 @@ public class AllocationProgramProductController extends BaseController {
 
   @RequestMapping(value = "/programProducts/{programProductId}/isa/{isaId}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-  public void updateIsa(@PathVariable Long isaId,@PathVariable Long programProductId,  @RequestBody ProgramProductISA programProductISA) {
+  public void updateIsa(@PathVariable Long isaId, @PathVariable Long programProductId, @RequestBody ProgramProductISA programProductISA) {
     programProductISA.setId(isaId);
     programProductISA.setProgramProductId(programProductId);
     service.updateISA(programProductISA);

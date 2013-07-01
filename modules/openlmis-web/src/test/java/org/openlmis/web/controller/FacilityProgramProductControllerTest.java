@@ -11,32 +11,24 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.core.domain.AllocationProgramProduct;
 import org.openlmis.core.domain.ProgramProductISA;
-import org.openlmis.web.response.AllocationResponse;
-import org.openlmis.core.service.AllocationProgramProductService;
+import org.openlmis.core.service.FacilityProgramProductService;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.http.ResponseEntity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.openlmis.web.controller.AllocationProgramProductController.PROGRAM_PRODUCT_LIST;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-public class AllocationProgramProductControllerTest {
+public class FacilityProgramProductControllerTest {
 
 
   @Mock
-  private AllocationProgramProductService service;
+  private FacilityProgramProductService service;
 
   @InjectMocks
-  private AllocationProgramProductController controller;
+  private FacilityProgramProductController controller;
 
   @Test
   public void shouldInsertProgramProductISA() {
