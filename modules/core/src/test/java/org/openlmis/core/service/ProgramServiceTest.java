@@ -78,5 +78,12 @@ public class ProgramServiceTest {
     verify(programRepository).setTemplateConfigured(1L);
 
   }
+
+  @Test
+  public void shouldSetRegimenTemplateConfiguredFlag() {
+    service.setRegimenTemplateConfigured(1L);
+    verify(programRepository).setRegimenTemplateConfigured(1L);
+
+  }
 }
 

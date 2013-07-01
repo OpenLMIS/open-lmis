@@ -19,7 +19,7 @@ public interface FacilityApprovedProductMapper {
     "facilityTypeId, programProductId, maxMonthsOfStock, modifiedBy, modifiedDate) values " +
     "(#{facilityType.id}, #{programProduct.id}, #{maxMonthsOfStock}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
-  Integer insert(FacilityApprovedProduct facilityApprovedProduct);
+  Integer insert(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
 
   @Select({"SELECT fap.*, pp.*, pgm.*, pgm.code as program_code, pgm.name as program_name, pgm.active as program_active, " +
     "p.*, p.code as product_code ",
@@ -65,7 +65,7 @@ public interface FacilityApprovedProductMapper {
     @Result(property = "programProduct.product.dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
       one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
     @Result(property = "facilityType.id", column = "facilityTypeId")})
-  List<FacilityApprovedProduct> getFullSupplyProductsByFacilityAndProgram(@Param("facilityId") Long facilityId,
+  List<FacilityTypeApprovedProduct> getFullSupplyProductsByFacilityAndProgram(@Param("facilityId") Long facilityId,
                                                                           @Param("programId") Long programId);
 
   @Select({"SELECT fap.*, pp.*, pgm.*, pgm.code as program_code, pgm.name as program_name, pgm.active as program_active, " +
@@ -112,19 +112,19 @@ public interface FacilityApprovedProductMapper {
     @Result(property = "programProduct.product.dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
       one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
     @Result(property = "facilityType.id", column = "facilityTypeId")})
-  List<FacilityApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(@Param("facilityId") Long facilityId,
+  List<FacilityTypeApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(@Param("facilityId") Long facilityId,
                                                                              @Param("programId") Long programId);
 
   @Select({"SELECT fap.id, fap.facilityTypeId, fap.programProductId, fap.maxMonthsOfStock, fap.modifiedDate, fap.modifiedBy",
     "FROM facility_approved_products fap, facility_types ft",
     "where fap.programProductId = #{programProductId} and",
     "ft.code = #{facilityTypeCode} and ft.id = fap.facilityTypeId"})
-  FacilityApprovedProduct getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(@Param("programProductId") Long programProductId,
+  FacilityTypeApprovedProduct getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(@Param("programProductId") Long programProductId,
                                                                                           @Param("facilityTypeCode") String facilityTypeCode);
 
   @Update("UPDATE facility_approved_products set " +
     "facilityTypeId=#{facilityType.id}, programProductId=#{programProduct.id}, maxMonthsOfStock=#{maxMonthsOfStock}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} " +
     "where id=#{id}")
-  void updateFacilityApprovedProduct(FacilityApprovedProduct facilityApprovedProduct);
+  void updateFacilityApprovedProduct(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
 
 }

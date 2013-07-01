@@ -8,7 +8,7 @@ package org.openlmis.core.upload;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.FacilityApprovedProduct;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.service.FacilityApprovedProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,12 +26,12 @@ public class FacilityApprovedProductPersistenceHandler extends AbstractModelPers
 
   @Override
   protected BaseModel getExisting(BaseModel record) {
-    return facilityApprovedProductService.getFacilityApprovedProductByProgramProductAndFacilityTypeCode((FacilityApprovedProduct) record);
+    return facilityApprovedProductService.getFacilityApprovedProductByProgramProductAndFacilityTypeCode((FacilityTypeApprovedProduct) record);
   }
 
   @Override
   protected void save(BaseModel record) {
-    facilityApprovedProductService.save((FacilityApprovedProduct) record);
+    facilityApprovedProductService.save((FacilityTypeApprovedProduct) record);
   }
 
   @Override

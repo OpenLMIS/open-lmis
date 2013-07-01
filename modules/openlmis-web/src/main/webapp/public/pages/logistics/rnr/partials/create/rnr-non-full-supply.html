@@ -115,7 +115,7 @@
           <label for="nonFullSupplyProductsCodeAndName" openlmis-message="label.product.code"></label>
           <select ui-select2="{formatNoMatches: formatNoMatches}" class="span11 bottom-spacer" id="nonFullSupplyProductsCodeAndName"
                   ng-model="facilityApprovedProduct" name="productCode" openlmis-message="placeholder.select.product"
-                  ng-options="facilityApprovedProduct.programProduct.product.code+' | '+facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay">
+                  ng-options="facilityTypeApprovedProduct.programProduct.product.code+' | '+facilityTypeApprovedProduct.programProduct.product.primaryName for facilityTypeApprovedProduct in nonFullSupplyProductsToDisplay">
             <option></option>
           </select>
         </div>

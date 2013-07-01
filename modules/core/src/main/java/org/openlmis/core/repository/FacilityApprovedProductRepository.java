@@ -7,7 +7,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.FacilityApprovedProduct;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
@@ -33,24 +33,24 @@ public class FacilityApprovedProductRepository {
     this.productMapper = productMapper;
   }
 
-  public List<FacilityApprovedProduct> getFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
+  public List<FacilityTypeApprovedProduct> getFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
     return facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
 
-  public List<FacilityApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
+  public List<FacilityTypeApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
     return facilityApprovedProductMapper.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
 
-  public void insert(FacilityApprovedProduct facilityApprovedProduct) {
-    facilityApprovedProductMapper.insert(facilityApprovedProduct);
+  public void insert(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
+    facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
   }
 
-  public void update(FacilityApprovedProduct facilityApprovedProduct) {
-    facilityApprovedProductMapper.updateFacilityApprovedProduct(facilityApprovedProduct);
+  public void update(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
+    facilityApprovedProductMapper.updateFacilityApprovedProduct(facilityTypeApprovedProduct);
   }
 
-  public FacilityApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityApprovedProduct facilityApprovedProduct) {
+  public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     return facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(
-        facilityApprovedProduct.getProgramProduct().getId(), facilityApprovedProduct.getFacilityType().getCode());
+        facilityTypeApprovedProduct.getProgramProduct().getId(), facilityTypeApprovedProduct.getFacilityType().getCode());
   }
 }

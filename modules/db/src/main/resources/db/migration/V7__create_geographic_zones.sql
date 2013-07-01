@@ -6,7 +6,7 @@ CREATE TABLE geographic_zones (
   code VARCHAR(50) NOT NULL UNIQUE,
   name VARCHAR(250) NOT NULL,
   levelId INTEGER NOT NULL REFERENCES geographic_levels(id),
-  parent INTEGER REFERENCES geographic_zones(id),
+  parentId INTEGER REFERENCES geographic_zones(id),
   catchmentPopulation INTEGER,
   latitude NUMERIC(8,5),
   longitude NUMERIC(8,5),

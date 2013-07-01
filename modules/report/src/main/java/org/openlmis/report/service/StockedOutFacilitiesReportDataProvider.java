@@ -5,14 +5,12 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.lookup.RequisitionGroupReportMapper;
 import org.openlmis.report.mapper.StockedOutReportMapper;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.filter.StockedOutReportFilter;
 import org.openlmis.report.model.report.MasterReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  */
@@ -34,7 +32,7 @@ public class StockedOutFacilitiesReportDataProvider extends ReportDataProvider {
     protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
         RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET,RowBounds.NO_ROW_LIMIT);
 
-        return reportMapper.getReport(filterCriteria,rowBounds);
+        return reportMapper.getReport(getReportFilterData(filterCriteria),rowBounds);
     }
 
     @Override
@@ -48,8 +46,8 @@ public class StockedOutFacilitiesReportDataProvider extends ReportDataProvider {
 
         List<MasterReport> reportList = new ArrayList<MasterReport>();
         MasterReport report = new MasterReport();
-        report.details =  reportMapper.getReport(filterCriteria,rowBounds);
-        report.summary = reportMapper.getReportSummary(filterCriteria);
+        report.details =  reportMapper.getReport(getReportFilterData(filterCriteria),rowBounds);
+        report.summary = reportMapper.getReportSummary(getReportFilterData(filterCriteria));
         reportList.add( report );
 
         List<? extends ReportData> list;
@@ -58,8 +56,59 @@ public class StockedOutFacilitiesReportDataProvider extends ReportDataProvider {
     }
 
     @Override
+    public ReportData getReportFilterData(Map<String, String[]> params) {
+        String period           = params.get("period")[0];
+        String reportingGroup   = params.get("rgroup")[0] ;
+        String facilityType     = params.get("ftype")[0] ;
+        String program          = params.get("program")[0];
+        String schedule         = params.get("schedule")[0];
+        String productCategory   = params.get("productCategory")[0];
+
+        String periodType = params.get("periodType")[0];
+        String fromYear =  params.get("fromYear")[0];
+        String toYear = params.get("toYear")[0];
+        String fromMonth = params.get("fromMonth")[0];
+        String toMonth = params.get("toMonth")[0];
+
+        Date startDate = null;
+        Date endDate = null;
+        Integer startYear = null;
+        Integer startMonth = null;
+        Integer endYear = null;
+        Integer endMonth = null;
+
+        if(fromYear != null   && !fromYear.equals("undefined")){
+            startYear =  Integer.valueOf(fromYear);
+        }
+
+        if(toYear != null   && !toYear.equals("undefined")){
+            endYear =  Integer.valueOf (toYear);
+        }
+        if(fromMonth != null   && !fromMonth.equals("undefined")){
+            startMonth =  Integer.valueOf(fromMonth);
+        }
+        if(toMonth != null   && !toMonth.equals("undefined")){
+            endMonth =  Integer.valueOf(toMonth);
+        }
+
+        if(periodType !=null && !periodType.equals("predefined")){
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, startYear);
+            calendar.set(Calendar.MONTH, startMonth);
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            startDate = calendar.getTime();
+
+            calendar.set(Calendar.YEAR, endYear);
+            calendar.set(Calendar.MONTH, endMonth);
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+            endDate =calendar.getTime();
+        }
+        return new StockedOutReportFilter(startDate,endDate,period,reportingGroup,facilityType,program,schedule,productCategory,periodType);
+    }
+
+    @Override
     public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
-        return reportMapper.getStockedOutTotalFacilities(filterCriteria).get(0);
+        return reportMapper.getStockedOutTotalFacilities(getReportFilterData(filterCriteria)).get(0);
     }
 
 
@@ -71,7 +120,7 @@ public class StockedOutFacilitiesReportDataProvider extends ReportDataProvider {
 
         // spit out the summary section on the report.
         String totalFacilities = reportMapper.getTotalFacilities( params ).get(0).toString();
-        String nonReporting = reportMapper.getStockedOutTotalFacilities( params ).get(0).toString();
+        String nonReporting = reportMapper.getStockedOutTotalFacilities( getReportFilterData(params) ).get(0).toString();
         result.put("TOTAL_FACILITIES", totalFacilities);
         result.put("TOTAL_NON_REPORTING", nonReporting);
 

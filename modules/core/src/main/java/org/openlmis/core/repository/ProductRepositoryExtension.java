@@ -18,10 +18,12 @@ import java.util.List;
 @Component
 @NoArgsConstructor
 public class ProductRepositoryExtension {
+
+    @Autowired
     private ProductMapperExtension mapper;
 
 
-    @Autowired
+    //@Autowired
     //public ProductRepositoryExtension(ProductMapperExtension mapper) {
     //    this.mapper = mapper;
     //}

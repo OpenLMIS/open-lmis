@@ -84,4 +84,8 @@ public class AllocationProgramProductService {
       }
     });
   }
+
+  public List<AllocationProgramProduct> getByFacilityAndProgram(Long facilityId, Long programId) {
+    return repository.getByFacilityAndProgram(facilityId, programId);
+  }
 }

@@ -91,11 +91,11 @@ public class RnrLineItem extends BaseModel {
 
   private static Logger logger = LoggerFactory.getLogger(RnrLineItem.class);
 
-  public RnrLineItem(Long rnrId, FacilityApprovedProduct facilityApprovedProduct, Long modifiedBy) {
+  public RnrLineItem(Long rnrId, FacilityTypeApprovedProduct facilityTypeApprovedProduct, Long modifiedBy) {
     this.rnrId = rnrId;
 
-    this.maxMonthsOfStock = facilityApprovedProduct.getMaxMonthsOfStock();
-    ProgramProduct programProduct = facilityApprovedProduct.getProgramProduct();
+    this.maxMonthsOfStock = facilityTypeApprovedProduct.getMaxMonthsOfStock();
+    ProgramProduct programProduct = facilityTypeApprovedProduct.getProgramProduct();
     this.price = programProduct.getCurrentPrice();
     ProductCategory category = programProduct.getProduct().getCategory();
     this.productCategory = category.getName();

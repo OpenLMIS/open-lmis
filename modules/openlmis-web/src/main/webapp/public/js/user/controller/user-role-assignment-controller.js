@@ -6,8 +6,8 @@
 
 function UserRoleAssignmentController($scope, $dialog, messageService) {
 
-  $scope.selectSuperviseProgramMessage = '--Select Program--';
-  $scope.selectSupervisoryNodeMessage = '--Select Node--';
+  $scope.selectSuperviseProgramMessage = messageService.get('label.select.program');
+  $scope.selectSupervisoryNodeMessage = messageService.get('label.select.node');
 
   $("#adminRoles").on("change", function (e) {
     if (e.removed) {

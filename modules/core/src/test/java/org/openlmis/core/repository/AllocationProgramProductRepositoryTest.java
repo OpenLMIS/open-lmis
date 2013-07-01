@@ -18,6 +18,9 @@ import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.repository.mapper.FacilityProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductIsaMapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
@@ -76,8 +79,8 @@ public class AllocationProgramProductRepositoryTest {
 
   @Test
   public void shouldGetAllocationProgramProductWithIsaForAFacility() throws Exception {
-    long programProductId = 1L;
-    long facilityId = 2L;
+    Long programProductId = 1L;
+    Long facilityId = 2L;
     when(mapper.getOverriddenIsa(programProductId, facilityId)).thenReturn(34);
 
     Integer overriddenIsa = repository.getOverriddenIsa(programProductId, facilityId);
@@ -89,13 +92,28 @@ public class AllocationProgramProductRepositoryTest {
 
   @Test
   public void shouldReplaceAnyExistingOverriddenIsaWithNewOne() throws Exception {
-    long programProductId = 1L;
-    long facilityId = 2L;
+    Long programProductId = 1L;
+    Long facilityId = 2L;
     AllocationProgramProduct product = new AllocationProgramProduct(programProductId, facilityId, 34, null);
 
     repository.save(product);
 
     verify(mapper).removeFacilityProgramProductMapping(programProductId, facilityId);
     verify(mapper).insert(product);
+  }
+
+  @Test
+  public void shouldGetAllocationProgramProductsForFacilityAndProgram() throws Exception {
+
+    List<AllocationProgramProduct> allocationProgramProducts = new ArrayList<>();
+    Long facilityId = 1l;
+    Long programId = 1l;
+    when(mapper.getByFacilityAndProgram(facilityId, programId)).thenReturn(allocationProgramProducts);
+
+    List<AllocationProgramProduct> returnedAllocationProgramProducts = repository.getByFacilityAndProgram(facilityId, programId);
+
+    assertThat(returnedAllocationProgramProducts, is(allocationProgramProducts));
+    verify(mapper).getByFacilityAndProgram(facilityId, programId);
+
   }
 }

@@ -1,8 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
-import com.natpryce.makeiteasy.MakeItEasy;
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -10,10 +8,7 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.DeliveryZoneMember;
-import org.openlmis.core.domain.DeliveryZoneProgramSchedule;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingSchedule;
-import org.openlmis.core.domain.Program;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -22,7 +17,10 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.List;
+
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -56,12 +54,13 @@ public class DeliveryZoneMemberMapperIT {
 
   @Before
   public void setUp() throws Exception {
-    deliveryZone = MakeItEasy.make(MakeItEasy.a(DeliveryZoneBuilder.defaultDeliveryZone));
+    deliveryZone = make(a(DeliveryZoneBuilder.defaultDeliveryZone));
     zoneMapper.insert(deliveryZone);
-    facility = MakeItEasy.make(MakeItEasy.a(FacilityBuilder.defaultFacility));
+    facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
     member = new DeliveryZoneMember(deliveryZone, facility);
   }
+
 
   @Test
   public void shouldInsertDeliveryZoneMember() throws Exception {
@@ -69,8 +68,8 @@ public class DeliveryZoneMemberMapperIT {
 
     DeliveryZoneMember returned = mapper.getByDeliveryZoneCodeAndFacilityCode(deliveryZone.getCode(), facility.getCode());
 
-    Assert.assertThat(returned.getDeliveryZone().getId(), CoreMatchers.is(member.getDeliveryZone().getId()));
-    Assert.assertThat(returned.getFacility().getId(), CoreMatchers.is(member.getFacility().getId()));
+    assertThat(returned.getDeliveryZone().getId(), CoreMatchers.is(member.getDeliveryZone().getId()));
+    assertThat(returned.getFacility().getId(), CoreMatchers.is(member.getFacility().getId()));
   }
 
   @Test
@@ -83,28 +82,6 @@ public class DeliveryZoneMemberMapperIT {
 
     DeliveryZoneMember updatedMember = mapper.getByDeliveryZoneCodeAndFacilityCode(deliveryZone.getCode(), facility.getCode());
 
-    Assert.assertThat(updatedMember.getModifiedDate(), CoreMatchers.is(modifiedDate));
-  }
-
-  @Test
-  public void shouldGetDeliveryZoneProgramIdsForFacility() throws Exception {
-    ProcessingSchedule processingSchedule = MakeItEasy.make(MakeItEasy.a(ProcessingScheduleBuilder.defaultProcessingSchedule));
-    processingScheduleMapper.insert(processingSchedule);
-
-    Program program = MakeItEasy.make(MakeItEasy.a(ProgramBuilder.defaultProgram));
-    programMapper.insert(program);
-
-    DeliveryZoneProgramSchedule deliveryZoneProgramSchedule = MakeItEasy.make(MakeItEasy.a(DeliveryZoneProgramScheduleBuilder.defaultDZProgramSchedule));
-    deliveryZoneProgramSchedule.setDeliveryZone(deliveryZone);
-    deliveryZoneProgramSchedule.setSchedule(processingSchedule);
-    deliveryZoneProgramSchedule.setProgram(program);
-
-    deliveryZoneProgramScheduleMapper.insert(deliveryZoneProgramSchedule);
-
-    mapper.insert(member);
-
-    List<Long> deliveryZoneProgramIdsForFacility = mapper.getDeliveryZoneProgramIdsForFacility(member.getFacility().getId());
-
-    Assert.assertThat(deliveryZoneProgramIdsForFacility.contains(deliveryZoneProgramSchedule.getProgram().getId()), CoreMatchers.is(true));
+    assertThat(updatedMember.getModifiedDate(), CoreMatchers.is(modifiedDate));
   }
 }

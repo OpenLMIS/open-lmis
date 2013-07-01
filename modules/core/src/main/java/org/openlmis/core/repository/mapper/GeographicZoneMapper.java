@@ -16,7 +16,7 @@ import java.util.List;
 @Repository
 public interface GeographicZoneMapper {
 
-  @Insert("INSERT INTO geographic_zones (code, name, levelId, parent, catchmentPopulation, longitude, latitude, createdBy, modifiedBy, modifiedDate) " +
+  @Insert("INSERT INTO geographic_zones (code, name, levelId, parentId, catchmentPopulation, longitude, latitude, createdBy, modifiedBy, modifiedDate) " +
     "VALUES (#{code}, #{name}, #{level.id}, #{parent.id}, #{catchmentPopulation}, #{longitude}, #{latitude}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
   Integer insert(GeographicZone geographicZone);
@@ -48,8 +48,10 @@ public interface GeographicZoneMapper {
   List<GeographicZone> getAllGeographicZones();
 
 
-  @Select({"SELECT GZ.id AS id, GZ.code AS code, GZ.name AS name, GZ.catchmentPopulation, GZ.longitude, GZ.latitude, GL.code AS levelCode, GL.name AS level, GZP.code AS parentCode, GZP.name AS parentZone, GLP.code AS parentLevelCode, GLP.name AS parentLevel",
-    "FROM geographic_zones GZ INNER JOIN geographic_zones GZP ON GZ.parent = GZP.id",
+  @Select({"SELECT GZ.id AS id, GZ.code AS code, GZ.name AS name, GZ.catchmentPopulation, GZ.longitude, GZ.latitude,",
+    " GL.code AS levelCode, GL.name AS level, GZP.code AS parentCode, GZP.name AS parentZone,",
+    " GLP.code AS parentLevelCode, GLP.name AS parentLevel",
+    "FROM geographic_zones GZ INNER JOIN geographic_zones GZP ON GZ.parentId = GZP.id",
     "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
     "INNER JOIN geographic_levels GLP ON GZP.levelId = GLP.id",
     "WHERE GZ.id = #{geographicZoneId}"})
@@ -63,7 +65,7 @@ public interface GeographicZoneMapper {
   })
   GeographicZone getGeographicZoneById(Integer geographicZoneId);
 
-  @Update({"UPDATE geographic_zones set code = #{code}, name = #{name}, levelId = #{level.id}, parent = #{parent.id}, " +
+  @Update({"UPDATE geographic_zones set code = #{code}, name = #{name}, levelId = #{level.id}, parentId = #{parent.id}, " +
     "catchmentPopulation = #{catchmentPopulation}, longitude = #{longitude}, latitude = #{latitude}, " +
     "modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate}",
     "WHERE id = #{id}"})

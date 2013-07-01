@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ScheduleController($scope, Schedules, Schedule, $location) {
+function ScheduleController($scope, Schedules, Schedule, $location, messageService) {
   $scope.schedulesBackupMap = [];
   $scope.newSchedule = {};
   $scope.schedules = {};
@@ -49,7 +49,7 @@ function ScheduleController($scope, Schedules, Schedule, $location) {
       $scope.newSchedule = {};
     }, function (data) {
       $scope.message = "";
-      $scope.creationError = data.data.error;
+      $scope.creationError = messageService.get(data.data.error);
     });
   };
 
@@ -112,7 +112,7 @@ function ScheduleController($scope, Schedules, Schedule, $location) {
     }, function (data) {
       $scope.message = "";
       $scope.startScheduleEdit(schedule);
-      $scope.schedulesBackupMap[schedule.id].error = data.data.error;
+      $scope.schedulesBackupMap[schedule.id].error = messageService.get(data.data.error);
     });
   };
 

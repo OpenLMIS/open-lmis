@@ -6,6 +6,7 @@
 
 describe("Schedule", function () {
   beforeEach(module('openlmis.services'));
+  beforeEach(module('openlmis.localStorage'));
 
   describe("Schedule Controller", function () {
 

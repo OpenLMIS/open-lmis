@@ -10,7 +10,7 @@ CREATE TABLE master_rnr_columns (
     sourceConfigurable boolean NOT NULL,
     label varchar(200),
     formula varchar(200),
-    indicator varchar(3) not null,
+    indicator varchar(50) not null,
     used boolean NOT NULL,
     visible boolean NOT NULL,
     mandatory boolean NOT NULL,

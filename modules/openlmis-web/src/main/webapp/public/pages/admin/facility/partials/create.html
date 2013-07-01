@@ -257,7 +257,7 @@
                         <select id="programs-supported" ng-model="supportedProgram.program.id"
                                 ng-options="i.id as i.name for i in programsToDisplay"
                                 ng-disabled="facility.dataReportable == 'false'">
-                            <option value="" ng-bind="programSupportedMessage"></option>
+                            <option value="" openlmis-message="programSupportedMessage"></option>
                         </select>
                     </td>
                     <td><input type="checkbox" ng-model="supportedProgram.active" id="supported-program-active"

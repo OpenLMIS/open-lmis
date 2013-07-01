@@ -76,7 +76,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
         $scope.newPeriod = {};
     }, function (data) {
       $scope.message = "";
-      $scope.error = data.data.error;
+      $scope.error = messageService.get(data.data.error);
     });
   };
 
@@ -110,7 +110,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
             }
           }, function (data) {
             $scope.message = "";
-            $scope.error = data.data.error;
+            $scope.error = messageService.get(data.data.error);
           });
         } else {
           $scope.message = "";

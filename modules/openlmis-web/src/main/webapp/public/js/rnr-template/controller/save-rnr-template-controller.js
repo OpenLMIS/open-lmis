@@ -41,6 +41,10 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     });
   }
 
+  $scope.sources.forEach(function (source) {
+    source.description = messageService.get(source.description);
+  });
+
   function updateErrorMessage(message) {
     $scope.error = message;
     $scope.message = "";

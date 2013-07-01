@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductMapperExtension extends ProductMapper{
+public interface ProductMapperExtension{
     @Select(value = "SELECT * FROM Products")
     List<Product> getList();
 }

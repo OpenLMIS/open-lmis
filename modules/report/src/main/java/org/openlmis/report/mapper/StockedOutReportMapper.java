@@ -8,6 +8,7 @@ import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.NonReportingFacilityQueryBuilder;
 import org.openlmis.report.builder.StockedOutReportQueryBuilder;
+import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.dto.NameCount;
 import org.openlmis.report.model.dto.RequisitionGroup;
 import org.openlmis.report.model.report.NonReportingFacilityDetail;
@@ -29,11 +30,11 @@ public interface StockedOutReportMapper {
 
     @SelectProvider(type=StockedOutReportQueryBuilder.class, method="getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<StockedOutFacility> getReport(Map params, @Param("RowBounds") RowBounds rowBounds);
+    public List<StockedOutFacility> getReport(@Param("filterCriteria")ReportData filterCriteria, @Param("RowBounds") RowBounds rowBounds);
 
     @SelectProvider(type=StockedOutReportQueryBuilder.class, method="getSummaryQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<NameCount> getReportSummary(Map params);
+    public List<NameCount> getReportSummary(@Param("filterCriteria")ReportData filterCriteria);
 
     // Gets the count of the total facility count under the selection criteria
     @SelectProvider(type=StockedOutReportQueryBuilder.class, method="getTotalFacilities")
@@ -43,7 +44,7 @@ public interface StockedOutReportMapper {
     // Gets the count of the total facility count that did not report under the selection criteria
     @SelectProvider(type=StockedOutReportQueryBuilder.class, method="getStockedOutFacilitiesCount")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<Integer> getStockedOutTotalFacilities(Map params);
+    public List<Integer> getStockedOutTotalFacilities(@Param("filterCriteria")ReportData filterCriteria);
 
     //TODO: refactor this out to an appropriate class
     @Select("SELECT id, name " +

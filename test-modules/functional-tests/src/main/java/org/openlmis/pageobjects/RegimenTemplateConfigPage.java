@@ -7,19 +7,12 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
-import org.openqa.selenium.support.ui.Select;
-
-import java.io.IOException;
-
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 
 public class RegimenTemplateConfigPage extends Page {
@@ -37,7 +30,7 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'(Change)')]")
   private static WebElement changeLink;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='message']")
+  @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
   private static WebElement saveSuccessMsgDiv;
 
   @FindBy(how = How.ID, using = "saveErrorMsgDiv")
@@ -64,10 +57,11 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@value='Done']")
   private static WebElement doneButton;
 
-  @FindBy(how = How.ID, using = "addFailMessage")
-  private static WebElement addFailMessage;
+  @FindBy(how = How.ID, using = "doneFailMessage")
+  private static WebElement doneFailMessage;
 
-
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Regimen Template')]")
+  private static WebElement regimenTemplateHeader;
 
 
   private static String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
@@ -92,8 +86,8 @@ public class RegimenTemplateConfigPage extends Page {
     return logoutLink;
   }
 
-  public  WebElement getAddFailMessage() {
-    return addFailMessage;
+  public WebElement getDoneFailMessage() {
+    return doneFailMessage;
   }
 
   public WebElement getSaveButton() {
@@ -116,7 +110,7 @@ public class RegimenTemplateConfigPage extends Page {
     return saveErrorMsgDiv;
   }
 
-  public static WebElement getNewRegimenCategoryDropDown() {
+  public WebElement getNewRegimenCategoryDropDown() {
     return newRegimenCategoryDropDown;
   }
 
@@ -150,25 +144,22 @@ public class RegimenTemplateConfigPage extends Page {
     testWebDriver.waitForElementToAppear(addButton);
   }
 
-  public void clickEditProgram(String program)
-  {
+  public void clickEditProgram(String program) {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[@id='" + program + "']"));
     testWebDriver.getElementByXpath("//a[@id='" + program + "']").click();
     testWebDriver.waitForElementToAppear(addButton);
   }
 
-  public void clickEditButton()
-  {
+  public void clickEditButton() {
     testWebDriver.waitForElementToAppear(editButton);
     editButton.click();
     testWebDriver.waitForElementToAppear(doneButton);
   }
 
-  public void clickDoneButton()
-  {
+  public void clickDoneButton() {
     testWebDriver.waitForElementToAppear(doneButton);
     doneButton.click();
-    testWebDriver.waitForElementToAppear(editButton);
+    testWebDriver.waitForElementsToAppear(editButton, saveErrorMsgDiv, doneFailMessage);
   }
 
   public void SaveRegime() {
@@ -176,7 +167,9 @@ public class RegimenTemplateConfigPage extends Page {
   }
 
   public void CancelRegime() {
+    testWebDriver.waitForElementToAppear(CancelButton);
     CancelButton.click();
+    testWebDriver.waitForElementToAppear(regimenTemplateHeader);
   }
 
 }

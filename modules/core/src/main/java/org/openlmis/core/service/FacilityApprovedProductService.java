@@ -7,7 +7,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.FacilityApprovedProduct;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityApprovedProductRepository;
@@ -40,39 +40,39 @@ public class FacilityApprovedProductService {
     this.facilityService = facilityService;
   }
 
-  public List<FacilityApprovedProduct> getFullSupplyFacilityApprovedProductByFacilityAndProgram(Long facilityId, Long programId) {
+  public List<FacilityTypeApprovedProduct> getFullSupplyFacilityApprovedProductByFacilityAndProgram(Long facilityId, Long programId) {
     return repository.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
 
-  public List<FacilityApprovedProduct> getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(Long facilityId, Long programId){
+  public List<FacilityTypeApprovedProduct> getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(Long facilityId, Long programId){
     return repository.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
 
-  public void save(FacilityApprovedProduct facilityApprovedProduct) {
-    fillProgramProductIds(facilityApprovedProduct);
-    FacilityType facilityType = facilityService.getFacilityTypeByCode(facilityApprovedProduct.getFacilityType());
+  public void save(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
+    fillProgramProductIds(facilityTypeApprovedProduct);
+    FacilityType facilityType = facilityService.getFacilityTypeByCode(facilityTypeApprovedProduct.getFacilityType());
     if(facilityType == null) throw new DataException(FACILITY_TYPE_DOES_NOT_EXIST);
 
-    facilityApprovedProduct.getFacilityType().setId(facilityType.getId());
+    facilityTypeApprovedProduct.getFacilityType().setId(facilityType.getId());
 
-    if (facilityApprovedProduct.getId() != null) {
-      repository.update(facilityApprovedProduct);
+    if (facilityTypeApprovedProduct.getId() != null) {
+      repository.update(facilityTypeApprovedProduct);
     } else {
-      repository.insert(facilityApprovedProduct);
+      repository.insert(facilityTypeApprovedProduct);
     }
   }
 
-  public FacilityApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityApprovedProduct facilityApprovedProduct) {
-    fillProgramProductIds(facilityApprovedProduct);
-    return repository.getFacilityApprovedProductByProgramProductAndFacilityTypeCode(facilityApprovedProduct);
+  public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
+    fillProgramProductIds(facilityTypeApprovedProduct);
+    return repository.getFacilityApprovedProductByProgramProductAndFacilityTypeCode(facilityTypeApprovedProduct);
   }
 
-  private void fillProgramProductIds(FacilityApprovedProduct facilityApprovedProduct) {
-    Long programId = programService.getIdForCode(facilityApprovedProduct.getProgramProduct().getProgram().getCode());
-    Long productId = productService.getIdForCode(facilityApprovedProduct.getProgramProduct().getProduct().getCode());
+  private void fillProgramProductIds(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
+    Long programId = programService.getIdForCode(facilityTypeApprovedProduct.getProgramProduct().getProgram().getCode());
+    Long productId = productService.getIdForCode(facilityTypeApprovedProduct.getProgramProduct().getProduct().getCode());
     Long programProductId = programProductService.getIdByProgramIdAndProductId(programId, productId);
-    facilityApprovedProduct.getProgramProduct().getProgram().setId(programId);
-    facilityApprovedProduct.getProgramProduct().getProduct().setId(productId);
-    facilityApprovedProduct.getProgramProduct().setId(programProductId);
+    facilityTypeApprovedProduct.getProgramProduct().getProgram().setId(programId);
+    facilityTypeApprovedProduct.getProgramProduct().getProduct().setId(productId);
+    facilityTypeApprovedProduct.getProgramProduct().setId(programProductId);
   }
 }
