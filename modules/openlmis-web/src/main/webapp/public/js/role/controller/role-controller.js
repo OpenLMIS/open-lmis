@@ -106,15 +106,19 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights, $d
   };
 
   $scope.showRoleTypeModal = function (selectedRoleType) {
-    $scope.role.type = selectedRoleType;
-    $scope.showRightError = false;
-    $scope.error = "";
-    var options = {
-      id: "roleTypeDialog",
-      header: messageService.get("header.change.roleType"),
-      body: messageService.get("confirm.roleType.change")
-    };
-    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog, messageService);
+    if(selectedRoleType == $scope.previousType) {
+      return;
+    } else {
+      $scope.role.type = selectedRoleType;
+      $scope.showRightError = false;
+      $scope.error = "";
+      var options = {
+        id: "roleTypeDialog",
+        header: messageService.get("header.change.roleType"),
+        body: messageService.get("confirm.roleType.change")
+      };
+      OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog, messageService);
+    }
   };
 
   var validRole = function () {
