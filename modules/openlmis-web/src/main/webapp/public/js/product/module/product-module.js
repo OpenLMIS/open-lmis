@@ -3,6 +3,6 @@ angular.module('product', ['openlmis']).config(['$routeProvider', function ($rou
                 when('/list', {controller: ProductController, templateUrl: 'partials/list.html'}).
                 otherwise({redirectTo: '/list'});
         }]).run(function ($rootScope, AuthorizationService) {
-            $rootScope.supplylineSelected = "selected";
+            $rootScope.productSelected = "selected";
             AuthorizationService.preAuthorize('MANAGE_PRODUCT');
         });

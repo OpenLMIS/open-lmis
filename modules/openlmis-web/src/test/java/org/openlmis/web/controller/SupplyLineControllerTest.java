@@ -89,16 +89,17 @@ public class SupplyLineControllerTest {
         assertThat((List<SupplyLine>) responseEntityData.get(SUPPLYLINES), is(supplyLines));
     }
 
-/*
+
     @Test
     public void shouldSaveSupplyline() throws Exception {
         when(messageService.message("message.role.created.success", "test role")).thenReturn("'test role' created successfully");
         ResponseEntity<OpenLmisResponse> responseEntity = supplyLineController.create(supplyline, httpServletRequest);
+
+        //
         verify(supplyLineService).save(supplyline);
         assertThat(supplyline.getModifiedBy(), is(userId));
         String successMsg = (String) responseEntity.getBody().getData().get(SUCCESS);
         assertThat(successMsg, is("'test supply line' created successfully"));
     }
-*/
 
  }

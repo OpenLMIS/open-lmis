@@ -26,6 +26,8 @@
       </class>
       <class name="org.openlmis.functional.ForgotPassword">
       </class>
+      <class name="org.openlmis.functional.E2EManageSupplyline">
+      </class>
     </classes>
   </test>
 </suite>

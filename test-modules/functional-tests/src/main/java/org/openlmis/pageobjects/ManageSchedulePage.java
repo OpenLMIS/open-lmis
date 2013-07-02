@@ -109,8 +109,6 @@ public class ManageSchedulePage extends Page {
     //SeleneseTestNgHelper.assertTrue("'Monthly' updated successfully message not showing up", saveSuccessMsgDiv.isDisplayed());
     testWebDriver.sleep(500);
     SeleneseTestNgHelper.assertEquals(codeFirstNonEditableField.getText().trim(), "M");
-
-
   }
 
   public PeriodsPage navigatePeriods() throws IOException {
