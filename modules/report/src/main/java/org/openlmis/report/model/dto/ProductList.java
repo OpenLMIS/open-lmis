@@ -25,7 +25,7 @@ public class ProductList {
     private String  fullname;
     private Boolean fullsupply;
     private Integer packsize;
-    private Integer strength;
+    private String strength;
     private Boolean tracer;
     private String  type;
     private Integer packroundingthreshold;

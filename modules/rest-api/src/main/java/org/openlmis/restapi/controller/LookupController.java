@@ -34,33 +34,33 @@ public class LookupController {
     private ReportLookupService lookupService;
 
 
-    @RequestMapping(value = "/rest-api/lookup/product-categories", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/rest-api/lookup/product-categories", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity getProductCategories( Principal principal) {
         return RestResponse.response("product-categories", lookupService.getAllProductCategories());
     }
 
-    @RequestMapping(value = "/rest-api/lookup/products", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/rest-api/lookup/products", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity getProducts( Principal principal) {
-    return RestResponse.response("products", lookupService.getAllProducts());
+    return RestResponse.response("products", lookupService.getFullProductList());
     }
 
 
-    @RequestMapping(value = "/rest-api/lookup/dosage-units", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/rest-api/lookup/dosage-units", method = RequestMethod.POST, headers = ACCEPT_JSON)
      public ResponseEntity getDosageUnits( Principal principal) {
         return RestResponse.response("dosage-units", lookupService.getDosageUnits());
     }
 
-    @RequestMapping(value = "/rest-api/lookup/facility-types", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/rest-api/lookup/facility-types", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity getFacilityTypes( Principal principal) {
         return RestResponse.response("facility-types", lookupService.getFacilityTypes());
     }
 
-    @RequestMapping(value = "/rest-api/lookup/facilities", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/rest-api/lookup/facilities", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity getFacilities( Principal principal) {
         return RestResponse.response("facilities", lookupService.getAllFacilities());
     }
 
-    @RequestMapping(value = "/rest-api/lookup/programs", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/rest-api/lookup/programs", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity getPrograms( Principal principal) {
         return RestResponse.response("programs", lookupService.getAllPrograms());
     }
