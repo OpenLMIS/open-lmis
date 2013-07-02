@@ -230,6 +230,10 @@ services.factory('DeliveryZones', function ($resource) {
   return $resource('/user/deliveryZones.json', {}, {});
 });
 
+services.factory('DeliveryZone', function ($resource) {
+  return $resource('/deliveryZones/:id.json', {}, {});
+});
+
 services.factory('DeliveryZonePrograms', function ($resource) {
   return $resource('/deliveryZones/:zoneId/programs.json', {}, {});
 });

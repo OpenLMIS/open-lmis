@@ -14,12 +14,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.DeliveryZone;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.service.AllocationPermissionService;
 import org.openlmis.core.service.DeliveryZoneService;
-import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
-import org.openlmis.core.domain.Program;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +30,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
 import static org.openlmis.web.controller.BaseController.FORBIDDEN_EXCEPTION;
@@ -97,5 +97,18 @@ public class DeliveryZoneControllerTest {
 
     assertThat(response.getBody().getErrorMsg(), is(FORBIDDEN_EXCEPTION));
     assertThat(response.getStatusCode(), is(UNAUTHORIZED));
+  }
+
+  @Test
+  public void shouldGetDeliveryZoneById() throws Exception {
+    DeliveryZone zone = new DeliveryZone();
+    when(service.getById(1l)).thenReturn(zone);
+    when(permissionService.hasPermissionOnZone(USER_ID, 1l)).thenReturn(true);
+
+    ResponseEntity<OpenLmisResponse> response = controller.get(request, 1l);
+
+    verify(service).getById(1l);
+    assertThat((DeliveryZone) response.getBody().getData().get("zone"), is(zone));
+
   }
 }

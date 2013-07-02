@@ -7,10 +7,9 @@
 package org.openlmis.core.service;
 
 import org.openlmis.core.domain.DeliveryZone;
-import org.openlmis.core.repository.DeliveryZoneRepository;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
-import org.openlmis.core.service.ProgramService;
+import org.openlmis.core.repository.DeliveryZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,5 +52,9 @@ public class DeliveryZoneService {
       if (savedProgram.getActive()) fullPrograms.add(savedProgram);
     }
     return fullPrograms;
+  }
+
+  public DeliveryZone getById(Long id) {
+    return repository.getById(id);
   }
 }

@@ -13,10 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.DeliveryZone;
-import org.openlmis.core.repository.DeliveryZoneRepository;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.service.DeliveryZoneService;
-import org.openlmis.core.service.ProgramService;
+import org.openlmis.core.repository.DeliveryZoneRepository;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
@@ -111,5 +109,16 @@ public class DeliveryZoneServiceTest {
 
     assertThat(returnedPrograms, hasItem(activeProgram));
     assertThat(returnedPrograms.size(), is(1));
+  }
+
+  @Test
+  public void shouldGetDeliveryZoneById() throws Exception {
+    DeliveryZone zone = new DeliveryZone();
+    when(repository.getById(1l)).thenReturn(zone);
+
+    DeliveryZone returnedZone = service.getById(1l);
+
+    verify(repository).getById(1l);
+    assertThat(returnedZone, is(zone));
   }
 }

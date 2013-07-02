@@ -40,13 +40,21 @@ public class DeliveryZoneController extends BaseController {
     return response(DELIVERY_ZONES, service.getByUserForRight(loggedInUserId(request), MANAGE_DISTRIBUTION));
   }
 
-  @RequestMapping(value = "deliveryZones/{zoneId}/programs", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getProgramsForDeliveryZone(HttpServletRequest request, @PathVariable long zoneId) {
-    if (permissionService.hasPermissionOnZone(loggedInUserId(request), zoneId)) {
-      return response(DELIVERY_ZONE_PROGRAMS, service.getProgramsForDeliveryZone(zoneId));
+  @RequestMapping(value = "deliveryZones/{id}/programs", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getProgramsForDeliveryZone(HttpServletRequest request, @PathVariable Long id) {
+    if (permissionService.hasPermissionOnZone(loggedInUserId(request), id)) {
+      return response(DELIVERY_ZONE_PROGRAMS, service.getProgramsForDeliveryZone(id));
     } else {
       return error(FORBIDDEN_EXCEPTION, UNAUTHORIZED);
     }
   }
 
+  @RequestMapping(value = "deliveryZones/{id}", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> get(HttpServletRequest request, @PathVariable Long id) {
+    if (permissionService.hasPermissionOnZone(loggedInUserId(request), id)) {
+      return response("zone", service.getById(id));
+    } else {
+      return error(FORBIDDEN_EXCEPTION, UNAUTHORIZED);
+    }
+  }
 }

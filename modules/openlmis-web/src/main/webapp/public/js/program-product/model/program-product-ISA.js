@@ -1,12 +1,12 @@
-var ProgramProductISA = function () {
-  this.id;
-  this.adjustmentValue = 0;
-  this.whoRatio = 0;
-  this.dosesPerYear = 0;
-  this.wastageRate = 0;
-  this.bufferPercentage = 0;
-  this.minimumValue;
-  this.maximumValue;
+var ProgramProductISA = function (isa) {
+
+  $.extend(true, this, isa);
+
+  this.adjustmentValue = this.adjustmentValue || 0;
+  this.whoRatio = this.whoRatio || 0;
+  this.dosesPerYear = this.dosesPerYear || 0;
+  this.wastageRate = this.wastageRate || 0;
+  this.bufferPercentage = this.bufferPercentage || 0;
 
   ProgramProductISA.prototype.init = function (programProductIsa) {
     if (programProductIsa) {
@@ -64,6 +64,8 @@ var ProgramProductISA = function () {
       isaValue = isaValue < 0 ? 0 : isaValue;
     }
     return isaValue;
-  }
+
+
+    }
 
 }
