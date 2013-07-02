@@ -65,12 +65,9 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   @Test(groups = {"smoke"}, dataProvider = "Data-Provider")
   public void testVerifyNewRegimenReportingFieldConfiguration(String program, String[] credentials) throws Exception {
     dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
-    String expectedProgramsString = dbWrapper.getAllActivePrograms();
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
-    List<String> programsList = getProgramsListedOnRegimeScreen();
-    verifyProgramsListedOnManageRegimenTemplateScreen(programsList, expectedProgramsString);
     regimenTemplateConfigPage.configureProgram(program);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
     regimenTemplateConfigPage.clickReportingFieldTab();
@@ -80,6 +77,13 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage(regimenTemplateConfigPage);
     verifyProgramConfigured(program);
+
+    regimenTemplateConfigPage.clickEditProgram(program);
+    verifyProgramDetailsSaved(adultsRegimen, CODE1, NAME1,"Testing column");
+
+    regimenTemplateConfigPage.selectCheckBox(regimenTemplateConfigPage.getNoOfPatientsOnTreatmentCheckBox()) ;
+    regimenTemplateConfigPage.SaveRegime();
+    verifySuccessMessage(regimenTemplateConfigPage);
   }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider")
@@ -304,6 +308,15 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     assertTrue("Program " + program + "should be configured", testWebDriver.getElementByXpath("//a[@id='" + program + "']").getText().trim().equals("Edit"));
 
   }
+
+    private void verifyProgramDetailsSaved(String category, String code, String name, String reportingField) {
+        RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
+        assertEquals(code, regimenTemplateConfigPage.getAddedCode());
+        assertEquals(name, regimenTemplateConfigPage.getAddedName());
+
+        regimenTemplateConfigPage.clickReportingFieldTab();
+        assertEquals(reportingField, regimenTemplateConfigPage.getRemarksTextField().getAttribute("value"));
+    }
 
   @AfterMethod(groups = {"smoke", "functional2"})
   public void tearDown() throws Exception {

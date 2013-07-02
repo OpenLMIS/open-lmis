@@ -109,8 +109,16 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/div[3]/span")
   private static WebElement remarksDataType;
 
+  @FindBy(how = How.XPATH, using = "//div[1][@class='row-fluid rnr-template-columns ng-scope']/div[2][@class='span2']/div/span[@class='ng-binding']")
+  private static WebElement addedCode;
 
-  private static String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
+  @FindBy(how = How.XPATH, using = "//div[1][@class='row-fluid rnr-template-columns ng-scope']/div[3][@class='span4']/div/span[@class='ng-binding']")
+  private static WebElement addedName;
+
+  @FindBy(how = How.XPATH, using = "//div[2][@class='ui-sortable ng-scope ng-pristine ng-valid']/div[1][@class='category-name']/div[@class='ng-binding']")
+  private static WebElement addedCategory;
+
+    private static String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
 
   public RegimenTemplateConfigPage(TestWebDriver driver) {
     super(driver);
@@ -259,6 +267,18 @@ public class RegimenTemplateConfigPage extends Page {
   public WebElement getNewRegimenActiveCheckBox() {
     return newRegimenActiveCheckBox;
   }
+
+  public String getAddedCategory() {
+     return addedCategory.getAttribute("value");
+  }
+
+  public String getAddedCode() {
+      return addedCode.getText();
+  }
+
+    public String getAddedName() {
+        return addedName.getText();
+    }
 
   public WebElement getAddButton() {
     return addButton;
