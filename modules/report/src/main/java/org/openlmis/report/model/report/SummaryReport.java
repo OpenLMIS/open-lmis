@@ -13,15 +13,14 @@ public class SummaryReport implements ReportData {
     private String code;
     private String category;
     private String product;
-
-    private String unit;
     private int openingBalance;
-    private int quantityReceived;
-    private int actualDispensedQuantity;
-    private int adjustedDispensedQuantity;
-    private int adjustedDistributedQuantity;
-    private int balanceOnHand;
-    private int productReportingRate;
-    private int stockOutRate;
+    private int receipts;
+    private int issues;
+    private int adjustments;
+    private int closingBalance;
+    private Double monthsOfStock;
+    private Double averageMonthlyConsumption;
+    private Double maximumStock;
+    private int reorderAmount;
 
 }
