@@ -22,6 +22,8 @@
       </class>
       <class name="org.openlmis.functional.ManageProgramProductISA">
       </class>
+      <class name="org.openlmis.functional.ManageRolesAndUsers">
+      </class>
       <class name="org.openlmis.functional.ForgotPassword">
       </class>
       <class name="org.openlmis.functional.PageAccessAuthentication">

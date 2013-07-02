@@ -212,12 +212,6 @@ public class RegimenTemplateConfigPage extends Page {
     }
   }
 
-  public void sendKeys(WebElement element)
-  {
-     testWebDriver.waitForElementToAppear(element);
-    element.clear();
-  }
-
   public  WebElement getDoneButton() {
     return doneButton;
   }

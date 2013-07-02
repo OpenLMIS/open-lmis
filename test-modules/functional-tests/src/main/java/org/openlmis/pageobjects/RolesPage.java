@@ -24,7 +24,8 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.*;
 
 public class RolesPage extends Page {
 
-  Map<String, WebElement> webElementMap = new HashMap();
+
+  private Map<String, WebElement> webElementMap = new HashMap();
 
   @FindBy(how = How.ID, using = "role-add-new")
   private static WebElement createNewRoleButton;
@@ -43,6 +44,9 @@ public class RolesPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//div[@id='rights-MANAGE_ROLE']/input")
   private static WebElement rightManageRoles;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='allocationRights-MANAGE_DISTRIBUTION']/input")
+  private static WebElement rightManageDistribution;
 
   @FindBy(how = How.XPATH, using = "//div[@id='rights-MANAGE_SCHEDULE']/input")
   private static WebElement rightManageSchedules;
@@ -81,7 +85,11 @@ public class RolesPage extends Page {
   private static WebElement requisitionRoleType;
 
   @FindBy(how = How.ID, using = "adminRoleType")
+
   private static WebElement adminRoleType;
+
+  @FindBy(how = How.ID, using = "allocationRoleType")
+  private static WebElement allocationRoleType;
 
   @FindBy(how = How.ID, using = "button_OK")
   private static WebElement continueButton;
@@ -109,6 +117,103 @@ public class RolesPage extends Page {
     webElementMap.put("Approve Requisition", rightApproveRequisition);
     webElementMap.put("Convert To Order Requisition", rightConvertToOrderRequisition);
     webElementMap.put("View Orders Requisition", rightViewOrders);
+    webElementMap.put("Manage Distribution", rightManageDistribution);
+  }
+
+  public Map<String, WebElement> getWebElementMap() {
+    return webElementMap;
+  }
+
+  public  WebElement getCreateNewRoleButton() {
+    return createNewRoleButton;
+  }
+
+  public  WebElement getRoleNameField() {
+    return roleNameField;
+  }
+
+  public  WebElement getRoleDescription() {
+    return roleDescription;
+  }
+
+  public  WebElement getRightConfigureTemplate() {
+    return rightConfigureTemplate;
+  }
+
+  public  WebElement getRightManageFacilities() {
+    return rightManageFacilities;
+  }
+
+  public  WebElement getRightManageRoles() {
+    return rightManageRoles;
+  }
+
+  public  WebElement getRightManageSchedules() {
+    return rightManageSchedules;
+  }
+
+  public  WebElement getRightUploads() {
+    return rightUploads;
+  }
+
+  public  WebElement getRightCreateRequisition() {
+    return rightCreateRequisition;
+  }
+
+  public  WebElement getRightAuthorizeRequisition() {
+    return rightAuthorizeRequisition;
+  }
+
+  public  WebElement getRightApproveRequisition() {
+    return rightApproveRequisition;
+  }
+
+  public  WebElement getRightConvertToOrderRequisition() {
+    return rightConvertToOrderRequisition;
+  }
+
+  public  WebElement getRightViewOrders() {
+    return rightViewOrders;
+  }
+
+  public  WebElement getSaveButton() {
+    return saveButton;
+  }
+
+  public  WebElement getCancelButton() {
+    return cancelButton;
+  }
+
+  public  WebElement getSaveSuccessMsgDiv() {
+    return saveSuccessMsgDiv;
+  }
+
+  public  WebElement getSaveErrorMsgDiv() {
+    return saveErrorMsgDiv;
+  }
+
+  public  WebElement getContinueButton() {
+    return continueButton;
+  }
+
+  public  WebElement getEditRoleHeader() {
+    return editRoleHeader;
+  }
+
+  public  WebElement getRolesHeader() {
+    return rolesHeader;
+  }
+
+  public  WebElement getRequisitionRoleType() {
+    return requisitionRoleType;
+  }
+
+  public  WebElement getAdminRoleType() {
+    return adminRoleType;
+  }
+
+  public  WebElement getAllocationRoleType() {
+    return allocationRoleType;
   }
 
 
@@ -118,8 +223,7 @@ public class RolesPage extends Page {
     createNewRoleButton.click();
     if (programDependant) {
       clickProgramRole();
-      testWebDriver.waitForElementToAppear(continueButton);
-      testWebDriver.click(continueButton);
+      clickContinueButton();
     }
     testWebDriver.sleep(1000);
     testWebDriver.handleScrollByPixels(0, 2000);
@@ -174,6 +278,13 @@ public class RolesPage extends Page {
       testWebDriver.sleep(500);
       assertTrue(webElementMap.get(right).isSelected());
     }
+  }
+
+  public void clickContinueButton()
+  {
+    testWebDriver.waitForElementToAppear(continueButton);
+    testWebDriver.click(continueButton);
+    testWebDriver.sleep(250);
   }
 
   public void clickSaveButton() {

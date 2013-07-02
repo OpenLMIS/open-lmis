@@ -7,6 +7,7 @@
 package org.openlmis.functional;
 
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 
 @TransactionConfiguration(defaultRollback = true)
@@ -35,6 +37,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public static final String APPROVE_REQUISITION = "Approve Requisition";
   public static final String CONVERT_TO_ORDER_REQUISITION = "Convert To Order Requisition";
   public static final String VIEW_ORDER_REQUISITION = "View Orders Requisition";
+  public static final String MANAGE_DISTRIBUTION = "Manage Distribution";
   public static final String LMU = "lmu";
   public static final String geoZone = "Ngorongoro";
   public static final String facilityType = "Lvl3 Hospital";
@@ -42,9 +45,26 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public static final String facilityCodePrefix = "FCcode";
   public static final String facilityNamePrefix = "FCname";
 
-  @BeforeMethod(groups = {"functional2"})
+  @BeforeMethod(groups = {"smoke","functional2"})
   public void setUp() throws Exception {
     super.setup();
+  }
+
+  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testVerifyRightsDisabledUponSwitch(String user, String program, String[] credentials) throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    RolesPage rolesPage = homePage.navigateRoleAssignments();
+    rolesPage.getCreateNewRoleButton().click();
+    testWebDriver.waitForElementToAppear(rolesPage.getAllocationRoleType());
+    assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), false);
+    assertEquals(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).isEnabled(), true);
+    assertEquals(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled(), false);
+    rolesPage.getAllocationRoleType().click();
+    rolesPage.clickContinueButton();
+    assertEquals(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled(), false);
+    assertEquals(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).isEnabled(), false);
+    assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), true);
   }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
@@ -77,11 +97,9 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     rolesPage.verifyAdminRoleRadioNonEditable();
     rolesPage.verifyRoleSelected(userRoleList);
     homePage.navigateRoleAssignments();
-//    rolesPage.clickCancelButton();
     rolesPage.clickARole(LMU);
     rolesPage.verifyProgramRoleRadioNonEditable();
     rolesPage.verifyRoleSelected(userRoleListLmu);
-//    rolesPage.clickCancelButton();
     dbWrapper.insertSupervisoryNode(facility_code, "N1", "Node 1", "null");
 
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
@@ -114,12 +132,12 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     rolesPage.createRole(roleName, roleDescription, userRoleList, programDependent);
   }
 
-    private void verifyPUSHProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles(UserPage userPage) throws IOException, SQLException {
-        assertFalse(userPage.getAllProgramsHomeFacility().contains("VACCINES"));
-        assertFalse(userPage.getAllProgramsToSupervise().contains("VACCINES"));
-    }
+  private void verifyPUSHProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles(UserPage userPage) throws IOException, SQLException {
+    assertFalse(userPage.getAllProgramsHomeFacility().contains("VACCINES"));
+    assertFalse(userPage.getAllProgramsToSupervise().contains("VACCINES"));
+  }
 
-  @AfterMethod(groups = {"functional2"})
+  @AfterMethod(groups = {"smoke","functional2"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
