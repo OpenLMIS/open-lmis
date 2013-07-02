@@ -69,7 +69,7 @@
                     </div>
 
                     <div class="span2">
-                        <input id="desc_{{$index}}" name="description" type="text" ng:required="true"
+                        <input id="description" name="description" type="text" ng:required="true"
                                ng-model="newSupplyline.description"
                                maxlength="15" placeholder="Description"/>
                         <span class="label-required">*</span>
@@ -107,6 +107,7 @@
 
                     <div class="span1">
                         <input type="button" ng-hide="supplylinesBackupMap[supplyline.id].edit"
+                               id="editBtn_{{$index}}"
                                class="btn btn-mini pull-right"
                                value="Edit"
                                ng-click="startSupplylineEdit(supplyline, backupSupplylineRow); supplylinesBackupMap[supplyline.id].edit=true;"/>
@@ -188,15 +189,16 @@
         <div ng-repeat="sl in supplylineslist" class="row-fluid list-row" ng-hide="supplylinesBackupMap[sl.id].edit">
             <div class="span1" style="float: left">
                 <input type="button" ng-hide="supplylinesBackupMap[sl.id].edit"
+                       id="lstEditBtn_{{$index}}"
                        class="btn btn-mini pull-right"
                        value="Edit"
                        ng-click="startSupplylineEdit(sl, backupSupplylineRow); supplylinesBackupMap[sl.id].edit=true;"/>
             </div>
 
-            <div class="span3" style="overflow: visible;"> {{sl.program}}</div>
-            <div class="span3" style="overflow: visible;"> {{sl.facility}}</div>
-            <div class="span3" style="overflow: visible;"> {{sl.supervisorynode}}</div>
-            <div class="span2" style="overflow: visible;"> {{sl.description}}</div>
+            <div id="lstprogram_{{$index}}" class="span3" style="overflow: visible;"> {{sl.program}}</div>
+            <div id="lstfacility_{{$index}}" class="span3" style="overflow: visible;"> {{sl.facility}}</div>
+            <div id="lstsupervisorynode_{{$index}}" class="span3" style="overflow: visible;"> {{sl.supervisorynode}}</div>
+            <div id="lstdescription_{{$index}}" class="span2" style="overflow: visible;"> {{sl.description}}</div>
         </div>
     </div>
 </div>

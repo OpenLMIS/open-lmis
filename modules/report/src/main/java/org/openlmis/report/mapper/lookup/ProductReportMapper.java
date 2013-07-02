@@ -2,6 +2,7 @@ package org.openlmis.report.mapper.lookup;
 
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.dto.Product;
+import org.openlmis.report.model.dto.ProductList;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,4 +20,10 @@ public interface ProductReportMapper {
             "   FROM " +
             "       products order by name")
     List<Product> getAll();
+
+    @Select("SELECT * " +
+            "   FROM " +
+            "       products")
+    List<ProductList> getFullProductList();
+
 }

@@ -1,0 +1,33 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div>
+    <h2><span>Supply Lines</span>
+        <a href="#" id="supplyline-add-new"
+           class="pull-right btn btn-primary"
+           ng-click="startAddNewSupplyline()">Add New</a></h2>
+
+
+        <div ng-repeat="pr in productslist" class="row-fluid list-row">
+            <div class="span1" style="float: left">
+                <input type="button"
+                       class="btn btn-mini pull-right"
+                       value="Edit"
+                       ng-click=""/>
+            </div>
+
+            <div class="span3" style="overflow: visible;"> {{pr.code}}</div>
+            <div class="span3" style="overflow: visible;"> {{pr.fullname}}</div>
+            <div class="span3" style="overflow: visible;"> {{pr.description}}</div>
+            <div class="span2" style="overflow: visible;"> {{pr.packsize}}</div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
