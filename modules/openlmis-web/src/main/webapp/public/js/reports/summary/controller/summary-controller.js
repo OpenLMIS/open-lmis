@@ -39,22 +39,24 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
              programId : $scope.program,
              periodId : $scope.period,
              zoneId : $scope.zoneId,
-             productId : $scope.productId
+             productId : $scope.productId,
+             rgroupId  : $scope.rgroup,
+             scheduleId : $scope.schedule
         };
 
         ReportPrograms.get(function(data){
             $scope.programs = data.programs;
-            $scope.programs.push({'name':'Select a Program'});
+            $scope.programs.push({'name':'Select a Program', 'id' : 'All'});
         });
 
         RequisitionGroups.get(function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.push({'name':'All Reporting Groups'});
+            $scope.requisitionGroups.push({'name':'All Reporting Groups', 'id' : 'All'});
         });
 
         ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
-        $scope.schedules.push({'name':'Select a Schedule'});
+        $scope.schedules.push({'name':'Select a Schedule', 'id' : 'All'});
     });
 
         Products.get(function(data){
@@ -65,7 +67,7 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
         $scope.ChangeSchedule = function(){
             Periods.get({ scheduleId : $scope.schedule },function(data) {
                 $scope.periods = data.periods;
-                $scope.periods.push({'name': 'Select Period'});
+                $scope.periods.push({'name': 'Select Period','id':'All'});
             });
         }
 
@@ -114,6 +116,28 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
                 $scope.filterObject.zoneId =  selection;
             }else{
                 $scope.filterObject.zoneId =  0;
+            }
+            $scope.filterGrid();
+        });
+
+        $scope.$watch('rgroup', function(selection){
+            if(selection == "All"){
+                $scope.filterObject.rgroupId =  -1;
+            }else if(selection != undefined || selection == ""){
+                $scope.filterObject.rgroupId =  selection;
+            }else{
+                $scope.filterObject.rgroupId =  0;
+            }
+            $scope.filterGrid();
+        });
+
+        $scope.$watch('schedule', function(selection){
+            if(selection == "All"){
+                $scope.filterObject.scheduleId =  -1;
+            }else if(selection != undefined || selection == ""){
+                $scope.filterObject.scheduleId =  selection;
+            }else{
+                $scope.filterObject.scheduleId =  0;
             }
             $scope.filterGrid();
         });
@@ -207,15 +231,17 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
         data: 'myData',
         columnDefs:
             [
-
-                { field: 'category', displayName: 'Category', width: "*" },
                 { field: 'code', displayName: 'Code', width: "*", resizable: false},
                 { field: 'product', displayName: 'Product', width: "***" },
-                { field: 'unit', displayName: 'Unit', width : "*"},
-                { field: 'openingBalance', displayName: 'B. Balance', width : "*"},
-                { field: 'quantityReceived', displayName: 'Received', width : "*"},
-                { field: 'actualDispensedQuantity', displayName: 'Dispensed', width : "*"},
-                { field: 'balanceOnHand', displayName: 'Balance On Hand', width : "*"}
+                { field: 'openingBalance', displayName: 'Opening Balance', width : "*"},
+                { field: 'receipts', displayName: 'Receipts', width : "*"},
+                { field: 'issues', displayName: 'Issues', width : "*"},
+                { field: 'adjustments', displayName: 'Adjustments', width : "*"},
+                { field: 'closingBalance', displayName: 'Closing Balance', width : "*"},
+                { field: 'monthsofstock', displayName: 'Months of Stock', width : "*"},
+                { field: 'averagemonthlyconsumption', displayName: 'AMC', width : "*"},
+                { field: 'maximumstock', displayName: 'Maximum Stock', width : "*"},
+                { field: 'reorderamount', displayName: 'Re-order Amount', width : "*"}
             ],
         enablePaging: true,
         enableSorting :true,

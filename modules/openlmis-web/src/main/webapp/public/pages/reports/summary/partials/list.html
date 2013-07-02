@@ -18,11 +18,22 @@
                                     <label class="labels">Zone</label>
 
                                     <div class="form-field">
-                                        <select  ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone.value" ng-change="filterGrid()" ng-options="option.id as option.name for option in zones">
+                                        <select  ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone.value"  ng-options="option.id as option.name for option in zones">
 
                                         </select>
                                     </div>
                                 </div>
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Program</label>
+
+                                    <div class="form-fields">
+                                        <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="program" ng-options="option.id as option.name for option in programs">
+
+                                        </select>
+                                    </div>
+                                </div>
+
 
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Product</label>
@@ -45,16 +56,6 @@
                                 </div>
 
                                 <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Program</label>
-
-                                    <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="program" ng-change="filterGrid()" ng-model="program" ng-options="option.id as option.name for option in programs">
-
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-cell horizontalFilters" >
                                     <label class="labels">Schedule</label>
 
                                     <div class="form-fields">
@@ -68,7 +69,7 @@
                                     <label class="labels">Period</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true" ng-change="filterGrid()" name="period" ng-model="period" ng-options="option.id as option.name for option in periods">
+                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="period" ng-options="option.id as option.name for option in periods">
 
                                         </select>
                                     </div>

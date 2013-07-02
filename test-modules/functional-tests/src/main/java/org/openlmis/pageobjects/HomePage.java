@@ -186,7 +186,7 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
   private static WebElement errorMsg;
 
-  @FindBy(how = ID, using = "program")
+  @FindBy(how = How.ID, using = "program")
   private static WebElement selectProgramSelectBox;
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Product Reports')]")
   private static WebElement ProductReportsMenuItem;
@@ -448,8 +448,8 @@ public class HomePage extends Page {
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
     testWebDriver.keyPress(TemplateConfigTab);
-    testWebDriver.waitForElementToAppear(programProductISAMenuItem);
-    testWebDriver.keyPress(programProductISAMenuItem);
+    //testWebDriver.waitForElementToAppear(programProductISAMenuItem);
+    //testWebDriver.keyPress(programProductISAMenuItem);
     testWebDriver.waitForElementToAppear(selectProgramSelectBox);
     return new ProgramProductISAPage(testWebDriver);
   }
