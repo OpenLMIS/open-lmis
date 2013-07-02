@@ -17,25 +17,25 @@
     </div>
 
   </div>
-  <div class = "rnr-table" tab-scroll bottom-offset="180">
+
+  <div class="rnr-table" tab-scroll bottom-offset="180" custom-horizontal-scroll>
     <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="label.no.products"></div>
-    <table id = "fullSupplyTable" fixed-table-header class = "table table-bordered" >
+    <table id = "fullSupplyTable" fixed-table-header class="table table-bordered scrollable">
       <thead >
-        <tr ng-show="pageLineItems.length">
-          <th class = "col-{{programRnrColumn.name}}" ng-repeat = "programRnrColumn in visibleColumns"
-              ng-hide = "programRnrColumn.name == 'quantityApproved'" ng-bind = "programRnrColumn.label" ></th >
-        </tr >
+      <tr ng-show="pageLineItems.length">
+        <th class = "col-{{programRnrColumn.name}}" ng-repeat = "programRnrColumn in visibleColumns"
+            ng-hide = "programRnrColumn.name == 'quantityApproved'" ng-bind = "programRnrColumn.label"></th >
+      </tr >
       </thead >
-      <tbody ng-show = "visibleColumns && (rnr.fullSupplyLineItems.length > 0)"
-             ng-repeat = "rnrLineItem in pageLineItems" >
-        <tr >
-          <td class = "productCategory" colspan = "{{visibleColumns.length}}" ng-show = "showCategory($index)"
-              ng-bind = "rnrLineItem.productCategory" ></td >
-        </tr >
-        <tr ng-class = "getRowErrorClass(rnrLineItem)" >
-          <td class = "cell-input" ng-repeat = "column in visibleColumns"
-              ng-hide = "column.name == 'quantityApproved'" >
-            <ng-switch on = "column.source.name" >
+      <tbody ng-show = "visibleColumns && (rnr.fullSupplyLineItems.length > 0)" ng-repeat = "rnrLineItem in pageLineItems" >
+      <tr >
+        <td class = "productCategory" colspan = "{{visibleColumns.length}}" ng-show = "showCategory($index)"
+            ng-bind = "rnrLineItem.productCategory" ></td >
+      </tr >
+      <tr ng-class = "getRowErrorClass(rnrLineItem)" >
+        <td class = "cell-input" ng-repeat = "column in visibleColumns"
+            ng-hide = "column.name == 'quantityApproved'" >
+          <ng-switch on = "column.source.name" >
               <span ng-switch-when = "USER_INPUT" >
                 <ng-switch on = "column.name" >
                   <span ng-switch-when = "beginningBalance"
@@ -219,13 +219,12 @@
                   <span ng-switch-default ng-bind = "rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"  class = "cell-text" ></span >
                 </ng-switch >
               </span >
-            </ng-switch >
-          </td >
-        </tr >
+          </ng-switch >
+        </td >
+      </tr >
       </tbody >
-    </table >
-  </div >
-
+      </table >
+  </div>
   <div id = "lossesAndAdjustments" modal = "lossesAndAdjustmentsModal"
        options = "{'backdrop':'static', 'escape':false}" >
     <div class = "modal-header" ><h3 openlmis-message="label.losses.adjustments"> </h3 ></div >

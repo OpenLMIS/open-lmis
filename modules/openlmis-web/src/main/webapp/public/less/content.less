@@ -1540,6 +1540,7 @@ input[placeholder].placeholder{
   }
 }
 .content .pagination {
+  margin-bottom: 30px;
   ul {
     box-shadow: none;
   }
@@ -1859,4 +1860,24 @@ input[placeholder].placeholder{
 
 #searchProduct.search-query {
   margin-bottom: 8px;
+}
+
+.scrollbar {
+  position: fixed;
+  bottom: 92px; z-index: 12;
+  background-color: rgba(0,0,0,0.6);
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.8);
+  height: 12px;
+  padding: 0 1px;
+  .scroll-handle {
+    position: absolute;
+    height: 10px;
+    background: #a3a3a3;
+    left: 0;
+    top: 1px;
+    cursor: pointer;
+    &:hover {
+      background: #bbb;
+    }
+  }
 }
