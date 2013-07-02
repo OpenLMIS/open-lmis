@@ -75,6 +75,9 @@ public class RolesPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Cancel')]")
   private static WebElement cancelButton;
 
+  @FindBy(how = How.ID, using = "button_Cancel")
+  private static WebElement cancelButtonOnModal;
+
   @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
   private static WebElement saveSuccessMsgDiv;
 
@@ -99,6 +102,10 @@ public class RolesPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//h2/span[contains(text(),'Roles')]")
   private static WebElement rolesHeader;
+
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Add new role')]")
+  private static WebElement addNewRoleHeader;
+
 
   public RolesPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -297,5 +304,11 @@ public class RolesPage extends Page {
     testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();
     testWebDriver.waitForElementToAppear(rolesHeader);
+  }
+
+  public void clickCancelButtonOnModal() {
+    testWebDriver.waitForElementToAppear(cancelButtonOnModal);
+    cancelButtonOnModal.click();
+    testWebDriver.waitForElementToAppear(addNewRoleHeader);
   }
 }

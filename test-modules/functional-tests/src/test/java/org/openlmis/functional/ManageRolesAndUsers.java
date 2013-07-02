@@ -51,7 +51,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   }
 
   @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testVerifyRightsDisabledUponSwitch(String user, String program, String[] credentials) throws Exception {
+  public void testVerifyRightsUponOK(String user, String program, String[] credentials) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
@@ -65,6 +65,20 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertEquals(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled(), false);
     assertEquals(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).isEnabled(), false);
     assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), true);
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testVerifyRightsUponCancel(String user, String program, String[] credentials) throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    RolesPage rolesPage = homePage.navigateRoleAssignments();
+    rolesPage.getCreateNewRoleButton().click();
+    testWebDriver.waitForElementToAppear(rolesPage.getAllocationRoleType());
+    rolesPage.getAllocationRoleType().click();
+    rolesPage.clickCancelButtonOnModal();
+    assertEquals(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled(), false);
+    assertEquals(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).isEnabled(), true);
+    assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), false);
   }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
