@@ -117,7 +117,11 @@ services.factory('Supplyline', function ($resource) {
     return $resource('/supplylines/:id.json', {}, {update:{method:'PUT'}});
 });
 
+//Parameters are passed for searching geographic zones.
 services.factory('GeographicZoneList', function ($resource) {
     return $resource('/geographicZones.json', {}, {});
 });
 
+services.factory('GeographicZoneCompleteList', function ($resource) {
+    return $resource('/geographicZone/getList.json', {}, {});
+});
