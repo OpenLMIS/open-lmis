@@ -7,7 +7,6 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
@@ -39,6 +38,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public static final String VIEW_ORDER_REQUISITION = "View Orders Requisition";
   public static final String MANAGE_DISTRIBUTION = "Manage Distribution";
   public static final String LMU = "lmu";
+  public static final String ADMIN = "admin";
   public static final String geoZone = "Ngorongoro";
   public static final String facilityType = "Lvl3 Hospital";
   public static final String operatedBy = "MoH";
@@ -83,6 +83,17 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertEquals(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled(), false);
     assertEquals(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).isEnabled(), true);
     assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), false);
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testVerifyDuplicateRoleName(String user, String program, String[] credentials) throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    RolesPage rolesPage = homePage.navigateRoleAssignments();
+    List<String> userRoleList = new ArrayList<String>();
+    userRoleList.add(CONVERT_TO_ORDER_REQUISITION);
+    rolesPage.createRole(ADMIN, ADMIN,userRoleList, false);
+    assertEquals(rolesPage.getSaveErrorMsgDiv().getText().trim(),"Duplicate Role found");
   }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
@@ -147,7 +158,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   private void createRoleAndAssignRights(HomePage homePage, List<String> userRoleList, String roleName, String roleDescription, boolean programDependent) throws IOException {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
-    rolesPage.createRole(roleName, roleDescription, userRoleList, programDependent);
+    rolesPage.createRoleWithSuccessMessageExpected(roleName, roleDescription, userRoleList, programDependent);
   }
 
   private void verifyPUSHProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles(UserPage userPage) throws IOException, SQLException {

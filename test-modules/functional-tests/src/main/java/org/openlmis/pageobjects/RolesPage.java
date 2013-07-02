@@ -224,8 +224,7 @@ public class RolesPage extends Page {
   }
 
 
-  public void createRole(String roleName, String roleDesc, List<String> rights, boolean programDependant) {
-
+  public void createRoleWithSuccessMessageExpected(String roleName, String roleDesc, List<String> rights, boolean programDependant) {
     testWebDriver.waitForElementToAppear(createNewRoleButton);
     createNewRoleButton.click();
     if (programDependant) {
@@ -238,7 +237,6 @@ public class RolesPage extends Page {
       testWebDriver.sleep(500);
       webElementMap.get(right).click();
     }
-
     for (String right : rights) {
       if (!webElementMap.get(right).isSelected())
         testWebDriver.click(webElementMap.get(right));
@@ -248,7 +246,29 @@ public class RolesPage extends Page {
     saveButton.click();
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
     assertEquals(saveSuccessMsgDiv.getText().trim(), "'" + roleName + "' created successfully");
+  }
 
+  public void createRole(String roleName, String roleDesc, List<String> rights, boolean programDependant) {
+    testWebDriver.waitForElementToAppear(createNewRoleButton);
+    createNewRoleButton.click();
+    if (programDependant) {
+      clickProgramRole();
+      clickContinueButton();
+    }
+    testWebDriver.sleep(1000);
+    testWebDriver.handleScrollByPixels(0, 2000);
+    for (String right : rights) {
+      testWebDriver.sleep(500);
+      webElementMap.get(right).click();
+    }
+    for (String right : rights) {
+      if (!webElementMap.get(right).isSelected())
+        testWebDriver.click(webElementMap.get(right));
+    }
+    roleNameField.sendKeys(roleName);
+    roleDescription.sendKeys(roleDesc);
+    saveButton.click();
+    testWebDriver.sleep(1000);
   }
 
   public void clickARole(String roleName) {
