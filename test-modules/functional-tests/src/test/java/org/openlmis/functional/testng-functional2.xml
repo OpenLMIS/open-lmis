@@ -20,10 +20,10 @@
       </class>
       <class name="org.openlmis.functional.ManageRolesAndUsers">
       </class>
-      <class name="org.openlmis.functional.ConfigureRegimenProgramTemplate">
-      </class>
-      <class name="org.openlmis.functional.ManageReport">
-      </class>
+      <!--<class name="org.openlmis.functional.ConfigureRegimenProgramTemplate">-->
+      <!--</class>-->
+      <!--<class name="org.openlmis.functional.ManageReport">-->
+      <!--</class>-->
       <class name="org.openlmis.functional.ForgotPassword">
       </class>
     </classes>
