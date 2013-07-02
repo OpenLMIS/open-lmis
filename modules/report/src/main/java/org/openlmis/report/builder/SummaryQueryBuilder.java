@@ -15,7 +15,7 @@ public class SummaryQueryBuilder {
 
         String query = "select li.productcode code,li.productcategory as category, li.product,SUM(li.beginningBalance) openingBalance, SUM(li.quantityreceived) receipts, SUM(li.quantitydispensed) issues, SUM(li.totallossesandadjustments) adjustments,\n" +
                 "                  (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) closingBalance, SUM(li.maxmonthsofstock) monthsOfStock, SUM(li.amc) averageMonthlyConsumption     \n" +
-                "                  ,SUM(li.maxstockquantity) maximumStock, SUM(li.maxstockquantity) reorderAmount     \n" +
+                "                  ,SUM(li.amc) * 3 maximumStock, (SUM(li.amc) * 3) - (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) reorderAmount      \n" +
                 "                  from facilities      \n" +
                 "                  inner join facility_types ON facilities.typeid = facility_types.id     \n" +
                 "                  inner join geographic_zones on geographic_zones.id = facilities.geographiczoneid     \n" +
