@@ -19,13 +19,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static org.openlmis.web.response.OpenLmisResponse.error;
-import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.openlmis.web.response.OpenLmisResponse.*;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
 @NoArgsConstructor
@@ -36,14 +35,14 @@ public class ProcessingPeriodController extends BaseController {
   @Autowired
   private ProcessingScheduleService processingScheduleService;
 
-  @RequestMapping(value = "/schedules/{scheduleId}/periods", method = RequestMethod.GET, headers = "Accept=application/json")
+  @RequestMapping(value = "/schedules/{scheduleId}/periods", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
   public ResponseEntity<OpenLmisResponse> getAll(@PathVariable("scheduleId") Long scheduleId) {
     List<ProcessingPeriod> periodList = processingScheduleService.getAllPeriods(scheduleId);
     return OpenLmisResponse.response(PERIODS, periodList);
   }
 
-  @RequestMapping(value = "/schedules/{scheduleId}/periods", method = RequestMethod.POST, headers = "Accept=application/json")
+  @RequestMapping(value = "/schedules/{scheduleId}/periods", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
   public ResponseEntity<OpenLmisResponse> save(@PathVariable("scheduleId") Long scheduleId, @RequestBody ProcessingPeriod processingPeriod, HttpServletRequest request) {
     processingPeriod.setScheduleId(scheduleId);
@@ -58,7 +57,7 @@ public class ProcessingPeriodController extends BaseController {
     return successResponse;
   }
 
-  @RequestMapping(value = "/periods/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+  @RequestMapping(value = "/periods/{id}", method = DELETE, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
   public ResponseEntity<OpenLmisResponse> delete(@PathVariable("id") Long id) {
     try {
@@ -68,4 +67,13 @@ public class ProcessingPeriodController extends BaseController {
     }
     return success(messageService.message("message.period.deleted.success"));
   }
+
+  @RequestMapping(value = "/periods/{id}", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION')")
+  public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Long id) {
+    ProcessingPeriod processingPeriod = processingScheduleService.getPeriodById(id);
+    return response("period", processingPeriod);
+  }
+
+
 }

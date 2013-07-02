@@ -85,8 +85,8 @@ public class ManageDistribution extends TestCaseHelper {
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     verifySelectedOptionFromSelectField(periodDisplayedByDefault, actualSelectFieldElement);
 
-    distributionPage.clickProceed();
-    verifySubOptionsOfProceedButton(distributionPage);
+    distributionPage.clickViewLoadAmount();
+    //verifySubOptionsOfProceedButton(distributionPage);
 
   }
 
@@ -174,8 +174,7 @@ public class ManageDistribution extends TestCaseHelper {
     verifySelectedOptionFromSelectField(programSecond, actualSelectFieldElement);
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     verifySelectedOptionFromSelectField(periodDisplayedByDefault, actualSelectFieldElement);
-    distributionPage.clickProceed();
-    verifySubOptionsOfProceedButton(distributionPage);
+    distributionPage.clickViewLoadAmount();
 
     distributionPage.selectValueFromDeliveryZone(SELECT_DELIVERY_ZONE);
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromProgram();
@@ -191,7 +190,7 @@ public class ManageDistribution extends TestCaseHelper {
     assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.getSelectDeliveryZoneSelectBox().isDisplayed());
     assertTrue("selectProgramSelectBox should be present", distributionPage.getSelectProgramSelectBox().isDisplayed());
     assertTrue("selectPeriodSelectBox should be present", distributionPage.getSelectPeriodSelectBox().isDisplayed());
-    assertTrue("proceedButton should be present", distributionPage.getProceedButton().isDisplayed());
+    assertTrue("proceedButton should be present", distributionPage.getViewLoadAmountButton().isDisplayed());
   }
 
 
@@ -231,13 +230,6 @@ public class ManageDistribution extends TestCaseHelper {
     testWebDriver.waitForElementToAppear(actualSelectFieldElement);
     assertEquals(valuesToBeVerified, actualSelectFieldElement.getText());
   }
-
-
-  private void verifySubOptionsOfProceedButton(DistributionPage distributionPage) {
-    assertTrue("getViewWarehouseLoadAmount Link should be present", distributionPage.getViewWarehouseLoadAmountLink().isDisplayed());
-    assertTrue("getInputFacilityData Link should be present", distributionPage.getInputFacilityDataLink().isDisplayed());
-  }
-
 
   @AfterMethod(groups = {"functional2", "smoke"})
   public void tearDown() throws Exception {

@@ -7,7 +7,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -15,14 +14,8 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
-import static java.lang.Float.parseFloat;
-import static java.lang.Integer.parseInt;
-import static java.math.BigDecimal.ROUND_HALF_UP;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
@@ -39,11 +32,9 @@ public class DistributionPage extends RequisitionPage {
 
   private static WebElement selectPeriodSelectBox;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Proceed')]")
-  private static WebElement proceedButton;
+  @FindBy(how = ID, using = "viewLoadAmounts")
+  private static WebElement viewLoadAmountButton;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'View warehouse load amount')]")
-  private static WebElement viewWarehouseLoadAmountLink;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Input facility data')]")
   private static WebElement inputFacilityDataLink;
@@ -71,10 +62,10 @@ public class DistributionPage extends RequisitionPage {
     testWebDriver.selectByVisibleText(getSelectPeriodSelectBox(), valueToBeSelected);
   }
 
-  public void clickProceed() {
-    testWebDriver.waitForElementToAppear(getProceedButton());
-    getProceedButton().click();
-    testWebDriver.waitForElementToAppear(getViewWarehouseLoadAmountLink());
+  public void clickViewLoadAmount() {
+    testWebDriver.waitForElementToAppear(getViewLoadAmountButton());
+    getViewLoadAmountButton().click();
+
   }
 
   public List<WebElement> getAllSelectOptionsFromDeliveryZone() {
@@ -127,18 +118,13 @@ public class DistributionPage extends RequisitionPage {
   }
 
 
-  public WebElement getProceedButton() {
-    return proceedButton;
+  public WebElement getViewLoadAmountButton() {
+    return viewLoadAmountButton;
   }
 
 
   public static WebElement getInputFacilityDataLink() {
     return inputFacilityDataLink;
-  }
-
-
-  public static WebElement getViewWarehouseLoadAmountLink() {
-    return viewWarehouseLoadAmountLink;
   }
 
 
