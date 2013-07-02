@@ -1,6 +1,7 @@
 package org.openlmis.core.service;
 
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,12 @@ public class ProgramSupportedService {
 
   @Autowired
   ProgramSupportedRepository repository;
+
+  @Autowired
+  ProgramService programService;
+
+  @Autowired
+  FacilityService facilityService;
 
   public List<ProgramSupported> getAllByFacilityId(Long facilityId) {
     return repository.getAllByFacilityId(facilityId);
@@ -36,5 +43,31 @@ public class ProgramSupportedService {
 
   public void updateSupportedProgram(ProgramSupported programSupported) {
     repository.updateSupportedProgram(programSupported);
+  }
+
+  public void uploadSupportedProgram(ProgramSupported programSupported) {
+    programSupported.isValid();
+
+    Facility facility = new Facility();
+    facility.setCode(programSupported.getFacilityCode());
+    facility = facilityService.getByCode(facility);
+    programSupported.setFacilityId(facility.getId());
+    Program program = programService.getByCode(programSupported.getProgram().getCode());
+    programSupported.setProgram(program);
+
+    if (programSupported.getId() == null) {
+      addSupportedProgram(programSupported);
+    } else {
+      updateSupportedProgram(programSupported);
+    }
+  }
+
+  public ProgramSupported getProgramSupported(ProgramSupported programSupported) {
+    Facility facility = new Facility();
+    facility.setCode(programSupported.getFacilityCode());
+    Long facilityId = facilityService.getByCode(facility).getId();
+    Long programId = programService.getByCode(programSupported.getProgram().getCode()).getId();
+
+    return getByFacilityIdAndProgramId(facilityId, programId);
   }
 }

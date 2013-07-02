@@ -8,28 +8,24 @@ package org.openlmis.core.upload;
 
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.ProgramSupported;
-import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProgramSupportedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProgramSupportedPersistenceHandler extends AbstractModelPersistenceHandler {
 
-  private FacilityService facilityService;
-
   @Autowired
-  public ProgramSupportedPersistenceHandler(FacilityService facilityService) {
-    this.facilityService = facilityService;
-  }
+  private ProgramSupportedService service;
 
   @Override
   protected BaseModel getExisting(BaseModel record) {
-    return facilityService.getProgramSupported((ProgramSupported) record);
+    return service.getProgramSupported((ProgramSupported) record);
   }
 
   @Override
   protected void save(BaseModel record) {
-    facilityService.uploadSupportedProgram((ProgramSupported) record);
+    service.uploadSupportedProgram((ProgramSupported) record);
   }
 
   @Override

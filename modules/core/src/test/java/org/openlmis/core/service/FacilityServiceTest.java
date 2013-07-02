@@ -25,14 +25,13 @@ import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.db.categories.UnitTests;
-import org.powermock.api.mockito.PowerMockito;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -82,7 +81,7 @@ public class FacilityServiceTest {
   @Test
   public void shouldGetFacilityById() throws Exception {
     Long facilityId = 1L;
-    List<ProgramSupported> supportedPrograms = Arrays.asList(new ProgramSupported());
+    List<ProgramSupported> supportedPrograms = asList(new ProgramSupported());
     Facility facility = new Facility();
 
     when(programSupportedService.getAllByFacilityId(facilityId)).thenReturn(supportedPrograms);
@@ -114,56 +113,6 @@ public class FacilityServiceTest {
   }
 
   @Test
-  public void shouldNotGiveErrorIfSupportedProgramWithActiveFalseAndDateNotProvided() throws Exception {
-    ProgramSupported programSupported = createSupportedProgram("facility code", "program code", false, null);
-
-    Long facilityId = 222L;
-    Long programId = 111L;
-    when(facilityRepository.getIdForCode("facility code")).thenReturn(facilityId);
-    when(programRepository.getIdByCode("program code")).thenReturn(programId);
-
-    facilityService.uploadSupportedProgram(programSupported);
-
-    assertThat(programSupported.getFacilityId(), is(facilityId));
-    assertThat(programSupported.getProgram().getId(), is(programId));
-    assertThat(programSupported.getActive(), is(false));
-    assertThat(programSupported.getStartDate(), is(nullValue()));
-
-    verify(programSupportedService).addSupportedProgram(programSupported);
-  }
-
-
-  @Test
-  public void shouldGiveErrorIfSupportedProgramWithActiveTrueAndStartDateNotProvided() throws Exception {
-    ProgramSupported program = createSupportedProgram("facility code", "program code", true, null);
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("supported.programs.invalid");
-
-    facilityService.uploadSupportedProgram(program);
-  }
-
-  @Test
-  public void shouldNotGiveErrorIfProgramSupportedIsActiveAndDateProvided() throws Exception {
-    String facilityCode = "some facility";
-    String programCode = "some program";
-    Date startDate = new Date();
-    ProgramSupported program = createSupportedProgram(facilityCode, programCode, true, startDate);
-    Long facilityId = 222L;
-    Long programId = 111L;
-    when(facilityRepository.getIdForCode(facilityCode)).thenReturn(facilityId);
-    when(programRepository.getIdByCode(programCode)).thenReturn(programId);
-
-    facilityService.uploadSupportedProgram(program);
-
-    assertThat(program.getFacilityId(), is(facilityId));
-    assertThat(program.getProgram().getId(), is(programId));
-    assertThat(program.getActive(), is(true));
-    assertThat(program.getStartDate(), is(startDate));
-
-    verify(programSupportedService).addSupportedProgram(program);
-  }
-
-  @Test
   public void shouldReturnUserSupervisedFacilitiesForAProgram() {
     Long userId = 1L;
     Long programId = 1L;
@@ -184,7 +133,7 @@ public class FacilityServiceTest {
 
   @Test
   public void shouldSearchFacilitiesByCodeOrName() throws Exception {
-    List<Facility> facilities = Arrays.asList(new Facility());
+    List<Facility> facilities = asList(new Facility());
     when(facilityRepository.searchFacilitiesByCodeOrName("searchParam")).thenReturn(facilities);
 
     List<Facility> returnedFacilities = facilityService.searchFacilitiesByCodeOrName("searchParam");
@@ -192,17 +141,6 @@ public class FacilityServiceTest {
     assertThat(returnedFacilities, is(facilities));
   }
 
-  @Test
-  public void shouldRaiseErrorWhenFacilityWithGivenCodeDoesNotExistWhileSavingProgramSupported() throws Exception {
-    ProgramSupported programSupported = createSupportedProgram("invalid Code", "valid Code", true, new Date());
-
-    PowerMockito.when(facilityRepository.getIdForCode("invalid Code")).thenThrow(new DataException("error.facility.code.invalid"));
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("error.facility.code.invalid");
-
-    facilityService.uploadSupportedProgram(programSupported);
-  }
 
   @Test
   public void shouldInsertFacility() throws Exception {
@@ -324,76 +262,27 @@ public class FacilityServiceTest {
 
 
   @Test
-  public void shouldInsertProgramSupportedIfDoesNotExist() {
-    ProgramSupported programSupported = new ProgramSupported();
-    programSupported.setFacilityCode("F1");
-    Program program = new Program();
-    program.setCode("P1");
-    programSupported.setProgram(program);
-    programSupported.setModifiedDate(new Date());
-    when(facilityRepository.getIdForCode("F1")).thenReturn(1L);
-    when(programRepository.getIdByCode("P1")).thenReturn(1L);
-    when(programSupportedService.getByFacilityIdAndProgramId(1L, 1L)).thenReturn(null);
-
-    facilityService.uploadSupportedProgram(programSupported);
-
-    verify(programSupportedService).addSupportedProgram(programSupported);
-  }
-
-  @Test
-  public void shouldUpdateProgramSupportedIfItExists() throws Exception {
-    ProgramSupported programSupported = new ProgramSupported();
-    programSupported.setFacilityCode("F1");
-    Program program = new Program();
-    program.setCode("P1");
-    programSupported.setProgram(program);
-    programSupported.setId(1L);
-    when(facilityRepository.getIdForCode("F1")).thenReturn(1L);
-    when(programRepository.getIdByCode("P1")).thenReturn(2L);
-
-    facilityService.uploadSupportedProgram(programSupported);
-
-    assertThat(programSupported.getFacilityId(), is(1L));
-    assertThat(programSupported.getProgram().getId(), is(2L));
-    verify(programSupportedService).updateSupportedProgram(programSupported);
-  }
-
-
-  @Test
   public void shouldGetAllFacilitiesInDeliveryZoneForSupportedProgram() throws Exception {
     List<Facility> memberFacilities = new ArrayList<>();
-    Facility facility = new Facility();
-    facility.setId(1L);
+    Facility facility = new Facility(1L);
+
+    Facility facility2 = new Facility(2L);
+
     memberFacilities.add(facility);
+    memberFacilities.add(facility2);
 
     Long deliveryZoneId = 1l;
     Long programId = 1l;
     when(facilityRepository.getAllInDeliveryZoneFor(deliveryZoneId, programId)).thenReturn(memberFacilities);
     ProgramSupported programSupported = new ProgramSupported();
-    List<ProgramSupported> programsSupported = new ArrayList<>();
-    programsSupported.add(programSupported);
     when(programSupportedService.getByFacilityIdAndProgramId(facility.getId(), programId)).thenReturn(programSupported);
-    List<FacilityProgramProduct> facilityProgramProduct = new ArrayList<>();
-    when(facilityProgramProductService.getByFacilityAndProgram(facility.getId(), programId)).thenReturn(facilityProgramProduct);
+    when(programSupportedService.getByFacilityIdAndProgramId(facility2.getId(), programId)).thenReturn(programSupported);
 
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
 
     assertThat(facilities, is(memberFacilities));
-    assertThat(facilities.get(0).getSupportedPrograms(), is(programsSupported));
-    assertThat(facilities.get(0).getSupportedPrograms().get(0).getProgramProducts(), is(facilityProgramProduct));
-    verify(programSupportedService).getByFacilityIdAndProgramId(facility.getId(), programId);
-    verify(facilityProgramProductService).getByFacilityAndProgram(facility.getId(), programId);
+    assertThat(facilities.get(0).getSupportedPrograms(), is(asList(programSupported)));
+    assertThat(facilities.get(1).getSupportedPrograms(), is(asList(programSupported)));
     verify(facilityRepository).getAllInDeliveryZoneFor(deliveryZoneId, programId);
-  }
-
-  private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {
-    ProgramSupported programSupported = new ProgramSupported();
-    programSupported.setFacilityCode(facilityCode);
-    Program program = new Program();
-    program.setCode(programCode);
-    programSupported.setProgram(program);
-    programSupported.setActive(active);
-    programSupported.setStartDate(startDate);
-    return programSupported;
   }
 }

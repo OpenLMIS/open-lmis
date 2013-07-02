@@ -15,7 +15,6 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.FacilityFeedDTO;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
-import org.openlmis.core.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,9 +31,6 @@ public class FacilityService {
 
   @Autowired
   private ProgramSupportedService programSupportedService;
-
-  @Autowired
-  private ProgramRepository programRepository;
 
   @Autowired
   private RequisitionGroupService requisitionGroupService;
@@ -66,21 +62,6 @@ public class FacilityService {
 
   public List<Facility> getAll() {
     return facilityRepository.getAll();
-  }
-
-  public void uploadSupportedProgram(ProgramSupported programSupported) {
-    programSupported.isValid();
-
-    Long facilityId = facilityRepository.getIdForCode(programSupported.getFacilityCode());
-    programSupported.setFacilityId(facilityId);
-    Long programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
-    programSupported.setProgram(new Program(programId));
-
-    if (programSupported.getId() == null) {
-      programSupportedService.addSupportedProgram(programSupported);
-    } else {
-      programSupportedService.updateSupportedProgram(programSupported);
-    }
   }
 
   public List<FacilityType> getAllTypes() {
@@ -167,21 +148,10 @@ public class FacilityService {
     return facilityRepository.getByCode(facility);
   }
 
-  public ProgramSupported getProgramSupported(ProgramSupported programSupported) {
-    Long facilityId = facilityRepository.getIdForCode(programSupported.getFacilityCode());
-    Long programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
-
-    return programSupportedService.getByFacilityIdAndProgramId(facilityId, programId);
-  }
-
   public List<Facility> getAllForDeliveryZoneAndProgram(Long deliveryZoneId, Long programId) {
     List<Facility> facilities = facilityRepository.getAllInDeliveryZoneFor(deliveryZoneId, programId);
     for(Facility facility : facilities) {
-      ProgramSupported programSupported = programSupportedService.getByFacilityIdAndProgramId(facility.getId(), programId);
-      List<ProgramSupported> programsSupported = new ArrayList<>();
-      programsSupported.add(programSupported);
-      programSupported.setProgramProducts(facilityProgramProductService.getByFacilityAndProgram(facility.getId(), programId));
-      facility.setSupportedPrograms(programsSupported);
+      facility.getSupportedPrograms().add(programSupportedService.getByFacilityIdAndProgramId(facility.getId(), programId));
     }
     return facilities;
   }
