@@ -24,8 +24,8 @@
       <!--</class>-->
       <!--<class name="org.openlmis.functional.ManageReport">-->
       <!--</class>-->
-      <class name="org.openlmis.functional.ForgotPassword">
-      </class>
+      <!--<class name="org.openlmis.functional.ForgotPassword">-->
+      <!--</class>-->
     </classes>
   </test>
 </suite>
