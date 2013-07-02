@@ -40,10 +40,14 @@ public class ProgramSupportedService {
     repository.updateSupportedPrograms(facility, programsForFacility);
   }
 
-  public ProgramSupported getByFacilityIdAndProgramId(Long facilityId, Long programId) {
+  public ProgramSupported getFilledByFacilityIdAndProgramId(Long facilityId, Long programId) {
     ProgramSupported programSupported = repository.getByFacilityIdAndProgramId(facilityId, programId);
     programSupported.setProgramProducts(facilityProgramProductService.getForProgramAndFacility(programId, facilityId));
     return programSupported;
+  }
+
+  public ProgramSupported getByFacilityIdAndProgramId(Long facilityId, Long programId) {
+    return repository.getByFacilityIdAndProgramId(facilityId, programId);
   }
 
   public void updateSupportedProgram(ProgramSupported programSupported) {

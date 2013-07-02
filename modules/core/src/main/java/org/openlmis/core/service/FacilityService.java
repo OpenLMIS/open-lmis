@@ -44,9 +44,6 @@ public class FacilityService {
   @Autowired
   private EventService eventService;
 
-  @Autowired
-  private FacilityProgramProductService facilityProgramProductService;
-
 
   @Transactional
   public void insert(Facility facility) {
@@ -151,7 +148,7 @@ public class FacilityService {
   public List<Facility> getAllForDeliveryZoneAndProgram(Long deliveryZoneId, Long programId) {
     List<Facility> facilities = facilityRepository.getAllInDeliveryZoneFor(deliveryZoneId, programId);
     for(Facility facility : facilities) {
-      facility.getSupportedPrograms().add(programSupportedService.getByFacilityIdAndProgramId(facility.getId(), programId));
+      facility.getSupportedPrograms().add(programSupportedService.getFilledByFacilityIdAndProgramId(facility.getId(), programId));
     }
     return facilities;
   }

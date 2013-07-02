@@ -61,6 +61,7 @@ public class FacilityControllerTest {
 
   @InjectMocks
   private FacilityController facilityController;
+
   private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
 
   @Before

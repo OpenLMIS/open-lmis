@@ -275,8 +275,8 @@ public class FacilityServiceTest {
     Long programId = 1l;
     when(facilityRepository.getAllInDeliveryZoneFor(deliveryZoneId, programId)).thenReturn(memberFacilities);
     ProgramSupported programSupported = new ProgramSupported();
-    when(programSupportedService.getByFacilityIdAndProgramId(facility.getId(), programId)).thenReturn(programSupported);
-    when(programSupportedService.getByFacilityIdAndProgramId(facility2.getId(), programId)).thenReturn(programSupported);
+    when(programSupportedService.getFilledByFacilityIdAndProgramId(facility.getId(), programId)).thenReturn(programSupported);
+    when(programSupportedService.getFilledByFacilityIdAndProgramId(facility2.getId(), programId)).thenReturn(programSupported);
 
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
 

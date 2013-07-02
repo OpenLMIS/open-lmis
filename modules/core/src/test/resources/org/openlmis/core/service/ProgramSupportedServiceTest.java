@@ -32,21 +32,21 @@ public class ProgramSupportedServiceTest {
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 
-  @InjectMocks 
+  @InjectMocks
   ProgramSupportedService service;
-  
+
   @Mock
   FacilityService facilityService;
-  
+
   @Mock
   ProgramService programService;
-  
+
   @Mock
   ProgramSupportedRepository repository;
 
   @Mock
   FacilityProgramProductService facilityProgramProductService;
-  
+
   @Test
   public void shouldNotGiveErrorIfSupportedProgramWithActiveFalseAndDateNotProvided() throws Exception {
     ProgramSupported programSupported = createSupportedProgram("facility code", "program code", false, null);
@@ -114,7 +114,6 @@ public class ProgramSupportedServiceTest {
   }
 
 
-
   @Test
   public void shouldInsertProgramSupportedIfDoesNotExist() {
     ProgramSupported programSupported = new ProgramSupported();
@@ -143,7 +142,7 @@ public class ProgramSupportedServiceTest {
     ProgramSupported expectedProgram = new ProgramSupported();
     when(repository.getByFacilityIdAndProgramId(facilityId, programId)).thenReturn(expectedProgram);
 
-    ProgramSupported returnedProgram = service.getByFacilityIdAndProgramId(facilityId, programId);
+    ProgramSupported returnedProgram = service.getFilledByFacilityIdAndProgramId(facilityId, programId);
 
     verify(facilityProgramProductService).getForProgramAndFacility(programId, facilityId);
 
@@ -168,6 +167,17 @@ public class ProgramSupportedServiceTest {
 
     assertThat(programSupported.getFacilityId(), is(1L));
     assertThat(programSupported.getProgram().getId(), is(2L));
+  }
+
+  @Test
+  public void shouldReturnNullIfProgramNotSupportedByFacility() throws Exception {
+    ProgramSupported expectedProgram = new ProgramSupported();
+    when(repository.getByFacilityIdAndProgramId(1L, 2L)).thenReturn(expectedProgram);
+
+    ProgramSupported programSupported = service.getByFacilityIdAndProgramId(1L, 2L);
+
+    assertThat(programSupported, is(expectedProgram));
+    verify(repository).getByFacilityIdAndProgramId(1L, 2L);
   }
 
   private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {
