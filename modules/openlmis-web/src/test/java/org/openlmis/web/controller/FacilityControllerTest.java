@@ -238,7 +238,6 @@ public class FacilityControllerTest {
 
   @Test
   public void shouldGetFacilitiesForDeliveryZoneAndProgram() throws Exception {
-
     List<Facility> facilities = new ArrayList<>();
     Mockito.when(facilityService.getAllForDeliveryZoneAndProgram(1l, 1l)).thenReturn(facilities);
 

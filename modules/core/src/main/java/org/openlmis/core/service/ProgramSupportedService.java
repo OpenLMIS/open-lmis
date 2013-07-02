@@ -21,6 +21,9 @@ public class ProgramSupportedService {
   @Autowired
   FacilityService facilityService;
 
+  @Autowired
+  FacilityProgramProductService facilityProgramProductService;
+
   public List<ProgramSupported> getAllByFacilityId(Long facilityId) {
     return repository.getAllByFacilityId(facilityId);
   }
@@ -38,7 +41,9 @@ public class ProgramSupportedService {
   }
 
   public ProgramSupported getByFacilityIdAndProgramId(Long facilityId, Long programId) {
-    return repository.getByFacilityIdAndProgramId(facilityId, programId);
+    ProgramSupported programSupported = repository.getByFacilityIdAndProgramId(facilityId, programId);
+    programSupported.setProgramProducts(facilityProgramProductService.getForProgramAndFacility(programId, facilityId));
+    return programSupported;
   }
 
   public void updateSupportedProgram(ProgramSupported programSupported) {

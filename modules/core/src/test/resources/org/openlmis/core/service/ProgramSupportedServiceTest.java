@@ -9,13 +9,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.openlmis.db.categories.UnitTests;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -40,6 +43,9 @@ public class ProgramSupportedServiceTest {
   
   @Mock
   ProgramSupportedRepository repository;
+
+  @Mock
+  FacilityProgramProductService facilityProgramProductService;
   
   @Test
   public void shouldNotGiveErrorIfSupportedProgramWithActiveFalseAndDateNotProvided() throws Exception {
@@ -121,10 +127,28 @@ public class ProgramSupportedServiceTest {
     facility.setCode("F1");
     when(facilityService.getByCode(facility)).thenReturn(new Facility(1L));
     when(programService.getByCode("P1")).thenReturn(new Program(1L));
-    when(service.getByFacilityIdAndProgramId(1L, 1L)).thenReturn(null);
 
     service.uploadSupportedProgram(programSupported);
 
+  }
+
+  @Test
+  public void shouldGetProgramsSupportedFilledWithISAs() throws Exception {
+    Long programId = 2L;
+    Long facilityId = 1L;
+
+    List<FacilityProgramProduct> products = new ArrayList<>();
+
+    when(facilityProgramProductService.getForProgramAndFacility(programId, facilityId)).thenReturn(products);
+    ProgramSupported expectedProgram = new ProgramSupported();
+    when(repository.getByFacilityIdAndProgramId(facilityId, programId)).thenReturn(expectedProgram);
+
+    ProgramSupported returnedProgram = service.getByFacilityIdAndProgramId(facilityId, programId);
+
+    verify(facilityProgramProductService).getForProgramAndFacility(programId, facilityId);
+
+    assertThat(returnedProgram, is(expectedProgram));
+    assertThat(returnedProgram.getProgramProducts(), is(products));
   }
 
   @Test
