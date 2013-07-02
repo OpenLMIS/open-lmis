@@ -1,4 +1,4 @@
-function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportPrograms , Periods , Products ,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
+function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportPrograms , Periods , Products ,ReportFacilityTypes,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
         //to minimize and maximize the filter section
         var section = 1;
 
@@ -35,11 +35,14 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
 
         //filter form data section
         $scope.filterObject =  {
-             facilityType : $scope.period,
+             facilityTypeId : $scope.facilityType,
              programId : $scope.program,
              periodId : $scope.period,
-             zoneId : $scope.zoneId,
-             productId : $scope.productId
+             zoneId : $scope.zone,
+             productId : $scope.productId,
+             scheduleId : $scope.schedule,
+             rgroupId : $scope.rgroup,
+             facilityName : $scope.facilityNameFilter
         };
 
         ReportPrograms.get(function(data){
@@ -50,6 +53,11 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
         RequisitionGroups.get(function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
             $scope.requisitionGroups.push({'name':'All Reporting Groups'});
+        });
+
+        ReportFacilityTypes.get(function(data) {
+            $scope.facilityTypes = data.facilityTypes;
+            $scope.facilityTypes.push({'name': 'All Facility Types', 'id' : 'All'});
         });
 
         ReportSchedules.get(function(data){
@@ -74,6 +82,27 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
             $scope.zones.push({'name': '- All Zones -', 'id' : 'All'});
         });
 
+        $scope.$watch('facilityType', function(selection){
+            if(selection == "All"){
+                $scope.filterObject.facilityTypeId =  -1;
+            }else if(selection != undefined || selection == ""){
+                $scope.filterObject.facilityTypeId =  selection;
+            }else{
+                $scope.filterObject.facilityTypeId =  0;
+            }
+            $scope.filterGrid();
+        });
+
+        $scope.$watch('facilityNameFilter', function(selection){
+            if(selection != undefined || selection == ""){
+                $scope.filterObject.facilityName =  selection;
+
+            }else{
+                $scope.filterObject.facilityName = "";
+            }
+            $scope.filterGrid();
+        });
+
         $scope.$watch('product', function(selection){
             if(selection == "All"){
                 $scope.filterObject.productId =  -1;
@@ -81,6 +110,17 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
                 $scope.filterObject.productId =  selection;
             }else{
                 $scope.filterObject.productId =  0;
+            }
+            $scope.filterGrid();
+        });
+
+        $scope.$watch('rgroup', function(selection){
+            if(selection == "All"){
+                $scope.filterObject.rgroupId =  -1;
+            }else if(selection != undefined || selection == ""){
+                $scope.filterObject.rgroupId =  selection;
+            }else{
+                $scope.filterObject.rgroupId =  0;
             }
             $scope.filterGrid();
         });
@@ -107,7 +147,7 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
             $scope.filterGrid();
         });
 
-        $scope.$watch('zone.value', function(selection){
+        $scope.$watch('zone', function(selection){
             if(selection == "All"){
                 $scope.filterObject.zoneId =  -1;
             }else if(selection != undefined || selection == ""){
@@ -121,8 +161,11 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
         $scope.exportReport   = function (type){
-            var url = '/reports/download/summary/' + type +'?period=' + $scope.period + '&program=' + $scope.program;
-            window.open(url);
+            $scope.filterObject.pdformat =1;
+            var params = jQuery.param($scope.filterObject);
+            var url = '/reports/download/summary/' + type +'?' + params;
+            window.location.href = url;
+
         }
 
         $scope.goToPage = function (page, event) {
@@ -167,7 +210,7 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
                         }
 
                         $.each($scope.filterObject, function(index, value) {
-                            if(value != undefined)
+                            //if(value != undefined)
                                 params[index] = value;
                         });
 
@@ -208,14 +251,18 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
         columnDefs:
             [
 
-                { field: 'category', displayName: 'Category', width: "*" },
                 { field: 'code', displayName: 'Code', width: "*", resizable: false},
                 { field: 'product', displayName: 'Product', width: "***" },
-                { field: 'unit', displayName: 'Unit', width : "*"},
-                { field: 'openingBalance', displayName: 'B. Balance', width : "*"},
-                { field: 'quantityReceived', displayName: 'Received', width : "*"},
-                { field: 'actualDispensedQuantity', displayName: 'Dispensed', width : "*"},
-                { field: 'balanceOnHand', displayName: 'Balance On Hand', width : "*"}
+                { field: 'openingBalance', displayName: 'Opening Balance', width : "*"},
+                { field: 'receipts', displayName: 'Receipts', width : "*"},
+                { field: 'issues', displayName: 'Issues', width : "*"},
+                { field: 'adjustments', displayName: 'Adjustments', width : "*"},
+                { field: 'closingBalance', displayName: 'Closing Balance', width : "*"},
+                { field: 'monthsOfStock', displayName: 'Months of Stock', width : "*"},
+                { field: 'averageMonthlyConsumption', displayName: 'AMC', width : "*"},
+                { field: 'maximumStock', displayName: 'Maximum Stock', width : "*"},
+                { field: 'reorderAmount', displayName: 'Re-order Amount', width : "*"}
+
             ],
         enablePaging: true,
         enableSorting :true,

@@ -18,7 +18,23 @@
                                     <label class="labels">Zone</label>
 
                                     <div class="form-field">
-                                        <select  ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone.value" ng-change="filterGrid()" ng-options="option.id as option.name for option in zones">
+                                        <select  ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone" ng-change="filterGrid()" ng-options="option.id as option.name for option in zones">
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-cell horizontalFilters">
+                                    <label class="labels">Facility Name</label>
+
+                                    <div class="form-field">
+                                        <input id="name" type="text"  ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
+                                    </div>
+                                </div>
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Facility Type</label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
 
                                         </select>
                                     </div>
