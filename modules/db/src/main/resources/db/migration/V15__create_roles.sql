@@ -11,3 +11,5 @@ CREATE TABLE roles (
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE UNIQUE INDEX uc_roles_lower_name ON roles(LOWER(name));
