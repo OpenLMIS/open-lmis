@@ -60,8 +60,10 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), false);
     assertEquals(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).isEnabled(), true);
     assertEquals(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled(), false);
+    rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).click();
     rolesPage.getAllocationRoleType().click();
     rolesPage.clickContinueButton();
+    assertEquals(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).isSelected(), false);
     assertEquals(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled(), false);
     assertEquals(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).isEnabled(), false);
     assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), true);
@@ -74,8 +76,10 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     rolesPage.getCreateNewRoleButton().click();
     testWebDriver.waitForElementToAppear(rolesPage.getAllocationRoleType());
+    rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).click();
     rolesPage.getAllocationRoleType().click();
     rolesPage.clickCancelButtonOnModal();
+    assertEquals(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).isSelected(), true);
     assertEquals(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled(), false);
     assertEquals(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).isEnabled(), true);
     assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), false);
