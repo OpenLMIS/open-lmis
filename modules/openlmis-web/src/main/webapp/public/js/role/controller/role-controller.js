@@ -105,7 +105,8 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights, $d
     }
   };
 
-  $scope.showRoleTypeModal = function () {
+  $scope.showRoleTypeModal = function (selectedRoleType) {
+    $scope.role.type = selectedRoleType;
     $scope.showRightError = false;
     $scope.error = "";
     var options = {

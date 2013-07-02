@@ -39,39 +39,33 @@
       <div class = "form-group clearfix" >
         <h3 openlmis-message="create.role.assignRights"><span class="label-required"> *</span></h3 >
 
-        <label><span class = "roles-note" openlmis-message="create.role.mixed.warning"></span ></label >
+        <label class="role-mixed-warning"><span class = "roles-note" openlmis-message="create.role.mixed.warning"></span ></label >
 
         <div class="row-fluid">
-          <div class="span8">
-            <table id="rightsTable" class = "table table-bordered">
+          <div class="span10">
+            <table id="rightsTable" class = "rights-table table table-bordered">
           <tr>
-            <td class="rights-list-column">
-              <div class = "form-inline" >
-                <input id = "adminRoleType" type = "radio" name = "adminRoleType" value = "ADMIN" ng-checked="role.type=='ADMIN'"
-                       ng-model = "role.type" ng-change = "showRoleTypeModal()"/>
-                <label for = "adminRoleType"><h4 openlmis-message="create.role.adminRights"></h4></label >
+            <td ng-click='showRoleTypeModal("ADMIN")'>
+              <div class = "form-inline" ng-class = "{'is-selected': role.type == 'ADMIN'}">
+                <label id = "adminRoleType"><h4 openlmis-message="create.role.adminRights"></h4></label >
               </div >
             </td>
 
-            <td class="rights-list-column">
-              <div class = "form-inline" >
-                <input id = "allocationRoleType" type = "radio" name = "adminRoleType" value = "ALLOCATION" ng-checked="role.type=='ALLOCATION'"
-                       ng-model = "role.type" ng-change = "showRoleTypeModal()"/>
-                <label for = "allocationRoleType"><h4 openlmis-message="label.allocation.program.rights"></h4></label >
+            <td ng-click='showRoleTypeModal("ALLOCATION")'>
+              <div class = "form-inline" ng-class = "{'is-selected': role.type == 'ALLOCATION'}">
+                <label id = "allocationRoleType"><h4 openlmis-message="label.allocation.program.rights"></h4></label >
               </div >
             </td>
 
-            <td class="rights-list-column">
-              <div class = "form-inline" >
-                <input id = "requisitionRoleType" type = "radio" name = "adminRoleType" value = "REQUISITION" ng-checked="role.type=='REQUISITION'"
-                       ng-model = "role.type" ng-change = "showRoleTypeModal()"/>
-                <label for = "requisitionRoleType"><h4 openlmis-message="label.request.program.rights"></h4></label >
+            <td ng-click='showRoleTypeModal("REQUISITION")'>
+              <div class = "form-inline" ng-class = "{'is-selected': role.type == 'REQUISITION'}">
+                <label id = "requisitionRoleType"><h4 openlmis-message="label.request.program.rights"></h4></label >
               </div >
             </td>
           </tr>
 
           <tr>
-            <td class="rights-list-column" ng-class = "{'is-disabled': role.type != 'ADMIN'}">
+            <td ng-class = "{'is-disabled': role.type != 'ADMIN'}">
               <div>
                 <div id = "rights-{{right.right}}" class = "checkbox-list clearfix" ng-repeat = "right in adminRights" tab-scroll>
                   <input id = "{{right.right}}" type = "checkbox" ng-checked = "contains(right.right)"
@@ -84,7 +78,7 @@
               </span >
             </td>
 
-            <td class="rights-list-column" ng-class = "{'is-disabled': role.type != 'ALLOCATION'}">
+            <td ng-class = "{'is-disabled': role.type != 'ALLOCATION'}">
               <div>
                 <div id = "allocationRights-{{allocationRight.right}}" class = "checkbox-list clearfix"
                    ng-repeat = "allocationRight in allocationRights" tab-scroll>
@@ -98,7 +92,7 @@
               </span >
             </td>
 
-            <td class="rights-list-column" ng-class = "{'is-disabled': role.type != 'REQUISITION'}">
+            <td ng-class = "{'is-disabled': role.type != 'REQUISITION'}">
               <div>
                 <div id = "requisitionRights-{{requisitionRight.right}}" class = "checkbox-list clearfix"
                    ng-repeat = "requisitionRight in requisitionRights" tab-scroll>

@@ -597,6 +597,7 @@ span[class^="tpl-"] {
    position: fixed;
    top: 0px;
    overflow: hidden;
+   z-index: 1;
    table {
      padding: 0px;
      margin: 0px;
@@ -1726,6 +1727,13 @@ input[placeholder].placeholder{
     .field-error {
       font-size: 0.8em;
     }
+    .form-inline {
+      width: 88%;
+      padding-left: 35px;
+      margin: 5px 5px 0;
+      background: url('../images/radio-big-default.png') no-repeat;
+      min-height: 32px;
+    }
     .radio-group {
       font-size: 0.9em;
       background: #FFF;
@@ -1734,9 +1742,6 @@ input[placeholder].placeholder{
       border-radius: 5px;
       padding: 12px 18px;
       margin-top: 10px;
-      .form-inline {
-        margin-bottom: 8px;
-      }
       * {
         vertical-align: middle;
         margin: 0;
@@ -1754,22 +1759,65 @@ input[placeholder].placeholder{
     font-style: italic;
     color: #666;
   }
+  .role-mixed-warning {
+    padding-bottom: 8px;
+    .roles-note {
+      font-style: normal;
+    }
+  }
 }
 
 .is-disabled {
-  background: #EEE;
   color: #999;
 }
 
-.rights-list-column {
-  width: 33.33%;
+.is-selected {
+  background: url('../images/radio-big-checked.png') no-repeat !important;
 }
 
-#rightsTable {
+.rights-table {
   tr {
-    &:last-child {
+    td {
+      background-color: white;
+      width: 33.33%;
+      padding: 20px 9px 20px 20px;
+    }
+    &:first-child {
       td {
-        padding: 20px 9px 20px 20px;
+        padding: 2px;
+        cursor: pointer;
+        &:hover {
+          box-shadow: 0 3px 3px rgba(0,0,0,0.2);
+          position: relative;
+        }
+        label {
+          padding: 2px 3px;
+        }
+        h4 {
+          font-size: 1.2em;
+          color: #666;
+          margin: 4px 0;
+        }
+        * {
+          cursor: pointer;
+        }
+      }
+    }
+    .checkbox-list {
+      label {
+        display: block;
+        width: 80%;
+      }
+    }
+    .is-disabled {
+      * {
+        cursor: default;
+      }
+      background: #f8f8f8;
+      .checkbox-list {
+        &:hover {
+          background: #f8f8f8;
+        }
       }
     }
   }
