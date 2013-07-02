@@ -67,6 +67,7 @@ public class ProductBuilder {
       product.setForm(form);
       ProductGroup productGroup = new ProductGroup();
       productGroup.setCode("PG");
+      productGroup.setName("Product Group 1");
       productGroup.setId(1L);
       product.setProductGroup(productGroup);
 
