@@ -24,7 +24,6 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProgramRepository;
-import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.api.mockito.PowerMockito;
 
@@ -56,7 +55,7 @@ public class FacilityServiceTest {
   @Mock
   private ProgramRepository programRepository;
   @Mock
-  private ProgramSupportedRepository programSupportedRepository;
+  private ProgramSupportedService programSupportedService;
   @Mock
   private SupervisoryNodeService supervisoryNodeService;
   @Mock
@@ -64,7 +63,6 @@ public class FacilityServiceTest {
 
   @Mock
   private GeographicZoneRepository geographicZoneRepository;
-
 
   @Mock
   private EventService eventService;
@@ -87,7 +85,7 @@ public class FacilityServiceTest {
     List<ProgramSupported> supportedPrograms = Arrays.asList(new ProgramSupported());
     Facility facility = new Facility();
 
-    when(programSupportedRepository.getAllByFacilityId(facilityId)).thenReturn(supportedPrograms);
+    when(programSupportedService.getAllByFacilityId(facilityId)).thenReturn(supportedPrograms);
     when(facilityRepository.getById(facilityId)).thenReturn(facility);
 
     Facility returnedFacility = facilityService.getById(facilityId);
@@ -103,7 +101,7 @@ public class FacilityServiceTest {
     List<ProgramSupported> programsSupported = new ArrayList<ProgramSupported>() {{
       add(new ProgramSupported());
     }};
-    when(programSupportedRepository.getAllByFacilityId(facility.getId())).thenReturn(programsSupported);
+    when(programSupportedService.getAllByFacilityId(facility.getId())).thenReturn(programsSupported);
     when(facilityRepository.getById(facility.getId())).thenReturn(facility);
 
     Facility returnedFacility = facilityService.updateDataReportableAndActiveFor(facility);
@@ -111,7 +109,7 @@ public class FacilityServiceTest {
     assertThat(returnedFacility, is(facility));
     assertThat(returnedFacility.getSupportedPrograms(), is(programsSupported));
     verify(facilityRepository).updateDataReportableAndActiveFor(facility);
-    verify(programSupportedRepository).getAllByFacilityId(facility.getId());
+    verify(programSupportedService).getAllByFacilityId(facility.getId());
     verify(facilityRepository).getById(facility.getId());
   }
 
@@ -131,7 +129,7 @@ public class FacilityServiceTest {
     assertThat(programSupported.getActive(), is(false));
     assertThat(programSupported.getStartDate(), is(nullValue()));
 
-    verify(programSupportedRepository).addSupportedProgram(programSupported);
+    verify(programSupportedService).addSupportedProgram(programSupported);
   }
 
 
@@ -162,7 +160,7 @@ public class FacilityServiceTest {
     assertThat(program.getActive(), is(true));
     assertThat(program.getStartDate(), is(startDate));
 
-    verify(programSupportedRepository).addSupportedProgram(program);
+    verify(programSupportedService).addSupportedProgram(program);
   }
 
   @Test
@@ -215,7 +213,7 @@ public class FacilityServiceTest {
     facilityService.insert(facility);
 
     verify(facilityRepository).save(facility);
-    verify(programSupportedRepository).addSupportedProgramsFor(facility);
+    verify(programSupportedService).addSupportedProgramsFor(facility);
     verify(facilityRepository).getById(facility.getId());
     verify(eventService).notify(any(Event.class));
   }
@@ -261,14 +259,14 @@ public class FacilityServiceTest {
       add(make(a(defaultProgramSupported)));
       add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L, "ARV")))));
     }};
-    when(programSupportedRepository.getAllByFacilityId(facility.getId())).thenReturn(programsForFacility);
+    when(programSupportedService.getAllByFacilityId(facility.getId())).thenReturn(programsForFacility);
     whenNew(FacilityFeedDTO.class).withArguments(facility).thenReturn(new FacilityFeedDTO(facility));
     when(facilityRepository.getById(facility.getId())).thenReturn(facility);
 
     facilityService.update(facility);
 
     verify(facilityRepository).save(facility);
-    verify(programSupportedRepository).updateSupportedPrograms(facility, programsForFacility);
+    verify(programSupportedService).updateSupportedPrograms(facility, programsForFacility);
     verify(eventService).notify(any(Event.class));
   }
 
@@ -335,11 +333,11 @@ public class FacilityServiceTest {
     programSupported.setModifiedDate(new Date());
     when(facilityRepository.getIdForCode("F1")).thenReturn(1L);
     when(programRepository.getIdByCode("P1")).thenReturn(1L);
-    when(programSupportedRepository.getByFacilityIdAndProgramId(1L, 1L)).thenReturn(null);
+    when(programSupportedService.getByFacilityIdAndProgramId(1L, 1L)).thenReturn(null);
 
     facilityService.uploadSupportedProgram(programSupported);
 
-    verify(programSupportedRepository).addSupportedProgram(programSupported);
+    verify(programSupportedService).addSupportedProgram(programSupported);
   }
 
   @Test
@@ -357,7 +355,7 @@ public class FacilityServiceTest {
 
     assertThat(programSupported.getFacilityId(), is(1L));
     assertThat(programSupported.getProgram().getId(), is(2L));
-    verify(programSupportedRepository).updateSupportedProgram(programSupported);
+    verify(programSupportedService).updateSupportedProgram(programSupported);
   }
 
 
@@ -374,7 +372,7 @@ public class FacilityServiceTest {
     ProgramSupported programSupported = new ProgramSupported();
     List<ProgramSupported> programsSupported = new ArrayList<>();
     programsSupported.add(programSupported);
-    when(programSupportedRepository.getByFacilityIdAndProgramId(facility.getId(), programId)).thenReturn(programSupported);
+    when(programSupportedService.getByFacilityIdAndProgramId(facility.getId(), programId)).thenReturn(programSupported);
     List<FacilityProgramProduct> facilityProgramProduct = new ArrayList<>();
     when(facilityProgramProductService.getByFacilityAndProgram(facility.getId(), programId)).thenReturn(facilityProgramProduct);
 
@@ -383,7 +381,7 @@ public class FacilityServiceTest {
     assertThat(facilities, is(memberFacilities));
     assertThat(facilities.get(0).getSupportedPrograms(), is(programsSupported));
     assertThat(facilities.get(0).getSupportedPrograms().get(0).getProgramProducts(), is(facilityProgramProduct));
-    verify(programSupportedRepository).getByFacilityIdAndProgramId(facility.getId(), programId);
+    verify(programSupportedService).getByFacilityIdAndProgramId(facility.getId(), programId);
     verify(facilityProgramProductService).getByFacilityAndProgram(facility.getId(), programId);
     verify(facilityRepository).getAllInDeliveryZoneFor(deliveryZoneId, programId);
   }

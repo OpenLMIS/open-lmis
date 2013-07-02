@@ -16,7 +16,6 @@ import org.openlmis.core.dto.FacilityFeedDTO;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProgramRepository;
-import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,44 +27,41 @@ import java.util.*;
 @NoArgsConstructor
 public class FacilityService {
 
+  @Autowired
   private FacilityRepository facilityRepository;
-  private ProgramSupportedRepository programSupportedRepository;
 
+  @Autowired
+  private ProgramSupportedService programSupportedService;
+
+  @Autowired
   private ProgramRepository programRepository;
+
+  @Autowired
   private RequisitionGroupService requisitionGroupService;
+
+  @Autowired
   private GeographicZoneRepository geographicZoneRepository;
+
+  @Autowired
   private SupervisoryNodeService supervisoryNodeService;
 
+  @Autowired
   private EventService eventService;
+
+  @Autowired
   private FacilityProgramProductService facilityProgramProductService;
 
-
-  //TODO : remove constructor autowiring
-  @Autowired
-  public FacilityService(FacilityRepository facilityRepository, ProgramSupportedRepository programSupportedRepository,
-                         ProgramRepository programRepository, SupervisoryNodeService supervisoryNodeService,
-                         RequisitionGroupService requisitionGroupService, GeographicZoneRepository geographicZoneRepository,
-                         EventService eventService, FacilityProgramProductService facilityProgramProductService) {
-    this.facilityRepository = facilityRepository;
-    this.programSupportedRepository = programSupportedRepository;
-    this.programRepository = programRepository;
-    this.supervisoryNodeService = supervisoryNodeService;
-    this.requisitionGroupService = requisitionGroupService;
-    this.geographicZoneRepository = geographicZoneRepository;
-    this.eventService = eventService;
-    this.facilityProgramProductService = facilityProgramProductService;
-  }
 
   @Transactional
   public void insert(Facility facility) {
     save(facility);
-    programSupportedRepository.addSupportedProgramsFor(facility);
+    programSupportedService.addSupportedProgramsFor(facility);
   }
 
   @Transactional
   public void update(Facility facility) {
     save(facility);
-    programSupportedRepository.updateSupportedPrograms(facility, programSupportedRepository.getAllByFacilityId(facility.getId()));
+    programSupportedService.updateSupportedPrograms(facility, programSupportedService.getAllByFacilityId(facility.getId()));
   }
 
   public List<Facility> getAll() {
@@ -81,9 +77,9 @@ public class FacilityService {
     programSupported.setProgram(new Program(programId));
 
     if (programSupported.getId() == null) {
-      programSupportedRepository.addSupportedProgram(programSupported);
+      programSupportedService.addSupportedProgram(programSupported);
     } else {
-      programSupportedRepository.updateSupportedProgram(programSupported);
+      programSupportedService.updateSupportedProgram(programSupported);
     }
   }
 
@@ -105,13 +101,13 @@ public class FacilityService {
 
   public Facility getById(Long id) {
     Facility facility = facilityRepository.getById(id);
-    facility.setSupportedPrograms(programSupportedRepository.getAllByFacilityId(id));
+    facility.setSupportedPrograms(programSupportedService.getAllByFacilityId(id));
     return facility;
   }
 
   public Facility updateDataReportableAndActiveFor(Facility facility) {
     Facility updatedFacility = facilityRepository.updateDataReportableAndActiveFor(facility);
-    updatedFacility.setSupportedPrograms(programSupportedRepository.getAllByFacilityId(facility.getId()));
+    updatedFacility.setSupportedPrograms(programSupportedService.getAllByFacilityId(facility.getId()));
 
     getFacilityAndNotify(facility);
 
@@ -175,13 +171,13 @@ public class FacilityService {
     Long facilityId = facilityRepository.getIdForCode(programSupported.getFacilityCode());
     Long programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
 
-    return programSupportedRepository.getByFacilityIdAndProgramId(facilityId, programId);
+    return programSupportedService.getByFacilityIdAndProgramId(facilityId, programId);
   }
 
   public List<Facility> getAllForDeliveryZoneAndProgram(Long deliveryZoneId, Long programId) {
     List<Facility> facilities = facilityRepository.getAllInDeliveryZoneFor(deliveryZoneId, programId);
     for(Facility facility : facilities) {
-      ProgramSupported programSupported = programSupportedRepository.getByFacilityIdAndProgramId(facility.getId(), programId);
+      ProgramSupported programSupported = programSupportedService.getByFacilityIdAndProgramId(facility.getId(), programId);
       List<ProgramSupported> programsSupported = new ArrayList<>();
       programsSupported.add(programSupported);
       programSupported.setProgramProducts(facilityProgramProductService.getByFacilityAndProgram(facility.getId(), programId));
