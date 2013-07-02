@@ -285,14 +285,7 @@ public class HomePage extends Page {
   }
 
 
-    private void verifySupplylineHeader(String headingToVerify) {
-        testWebDriver.sleep(1000);
-        testWebDriver.waitForElementToAppear(supplylineHeader);
-        SeleneseTestNgHelper.assertEquals(supplylineHeader.getText().trim(), headingToVerify);
-    }
-
-
-  private void verifyTabs() {
+   private void verifyTabs() {
     testWebDriver.waitForElementToAppear(facilitiesTab);
     SeleneseTestNgHelper.assertTrue(facilitiesTab.isDisplayed());
     SeleneseTestNgHelper.assertTrue(rolesTab.isDisplayed());
