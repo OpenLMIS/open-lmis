@@ -3,6 +3,7 @@ package org.openlmis.core.service;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,11 +73,28 @@ public class ProgramSupportedService {
   }
 
   public ProgramSupported getProgramSupported(ProgramSupported programSupported) {
+    Facility facility = getFacility(programSupported);
+
+    Program program = getProgram(programSupported);
+
+    return getByFacilityIdAndProgramId(facility.getId(), program.getId());
+  }
+
+  private Program getProgram(ProgramSupported programSupported) {
+    Program program = programService.getByCode(programSupported.getProgram().getCode());
+
+    if (program == null)
+      throw new DataException("program.code.invalid");
+    return program;
+  }
+
+  private Facility getFacility(ProgramSupported programSupported) {
     Facility facility = new Facility();
     facility.setCode(programSupported.getFacilityCode());
-    Long facilityId = facilityService.getByCode(facility).getId();
-    Long programId = programService.getByCode(programSupported.getProgram().getCode()).getId();
+    facility = facilityService.getByCode(facility);
 
-    return getByFacilityIdAndProgramId(facilityId, programId);
+    if (facility == null)
+      throw new DataException("error.facility.code.invalid");
+    return facility;
   }
 }

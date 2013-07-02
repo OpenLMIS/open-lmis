@@ -180,6 +180,45 @@ public class ProgramSupportedServiceTest {
     verify(repository).getByFacilityIdAndProgramId(1L, 2L);
   }
 
+  @Test
+  public void shouldThrowExceptionIfFacilityDoesNotExistWhileGettingProgramSupported() throws Exception {
+    ProgramSupported programSupported = new ProgramSupported();
+    String fCode = "FCode";
+    String pCode = "PCode";
+    programSupported.setFacilityCode(fCode);
+    Program program = new Program();
+    program.setCode(pCode);
+    programSupported.setProgram(program);
+    Facility facility = new Facility();
+    facility.setCode(fCode);
+    when(facilityService.getByCode(facility)).thenReturn(null);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.facility.code.invalid");
+
+    service.getProgramSupported(programSupported);
+  }
+
+  @Test
+  public void shouldThrowExceptionIfProgramDoesNotExistWhileGettingProgramSupported() throws Exception {
+    ProgramSupported programSupported = new ProgramSupported();
+    String fCode = "FCode";
+    String pCode = "PCode";
+    programSupported.setFacilityCode(fCode);
+    Program program = new Program();
+    program.setCode(pCode);
+    programSupported.setProgram(program);
+    Facility facility = new Facility();
+    facility.setCode(fCode);
+    when(facilityService.getByCode(facility)).thenReturn(facility);
+    when(programService.getByCode(pCode)).thenReturn(null);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("program.code.invalid");
+
+    service.getProgramSupported(programSupported);
+  }
+
   private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {
     ProgramSupported programSupported = new ProgramSupported();
     programSupported.setFacilityCode(facilityCode);
