@@ -174,6 +174,8 @@ public class ManageDistribution extends TestCaseHelper {
     verifySelectedOptionFromSelectField(programSecond, actualSelectFieldElement);
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     verifySelectedOptionFromSelectField(periodDisplayedByDefault, actualSelectFieldElement);
+    distributionPage.clickProceed();
+    verifySubOptionsOfProceedButton(distributionPage);
 
     distributionPage.selectValueFromDeliveryZone(SELECT_DELIVERY_ZONE);
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromProgram();
@@ -181,8 +183,6 @@ public class ManageDistribution extends TestCaseHelper {
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     verifySelectedOptionFromSelectField(defaultPeriodValuesToBeVerified, actualSelectFieldElement);
 
-    distributionPage.clickProceed();
-    verifySubOptionsOfProceedButton(distributionPage);
 
   }
 
