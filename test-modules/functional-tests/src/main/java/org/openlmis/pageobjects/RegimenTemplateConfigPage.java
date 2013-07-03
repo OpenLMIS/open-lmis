@@ -166,9 +166,9 @@ public class RegimenTemplateConfigPage extends Page {
     return remarksTextField.getAttribute("value");
   }
 
-    public void setValueRemarksTextField(String value) {
-        sendKeys(remarksTextField, "Testing column");;
-    }
+  public void setValueRemarksTextField(String value) {
+    sendKeys(remarksTextField, "Testing column");;
+  }
 
   public String getTextNoOfPatientsOnTreatmentDataType() {
     return noOfPatientsOnTreatmentDataType.getText().trim();
@@ -220,8 +220,9 @@ public class RegimenTemplateConfigPage extends Page {
     }
   }
 
-  public WebElement getDoneFailMessage() {
-    return doneFailMessage;
+  public boolean IsDisplayedDoneFailMessage() {
+    testWebDriver.waitForElementToAppear(doneFailMessage);
+    return doneFailMessage.isDisplayed();
   }
 
   public void clickSaveButton() {
@@ -234,16 +235,24 @@ public class RegimenTemplateConfigPage extends Page {
     CancelButton.click();
   }
 
-  public WebElement getChangeLink() {
-    return changeLink;
+  public boolean IsDisplayedSaveSuccessMsgDiv() {
+    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+    return saveSuccessMsgDiv.isDisplayed() ;
   }
 
-  public WebElement getSaveSuccessMsgDiv() {
-    return saveSuccessMsgDiv;
+  public String getSaveSuccessMsgDiv() {
+    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+    return saveSuccessMsgDiv.getText().trim() ;
   }
 
-  public WebElement getSaveErrorMsgDiv() {
-    return saveErrorMsgDiv;
+  public boolean IsDisplayedSaveErrorMsgDiv() {
+    testWebDriver.waitForElementToAppear(saveErrorMsgDiv);
+    return saveErrorMsgDiv.isDisplayed() ;
+  }
+
+  public String getSaveErrorMsgDiv() {
+    testWebDriver.waitForElementToAppear(saveErrorMsgDiv);
+    return saveErrorMsgDiv.getText().trim() ;
   }
 
   public String getNewRegimenCodeTextBoxValue() {

@@ -11,7 +11,6 @@ import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
-import org.openqa.selenium.WebElement;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -211,7 +210,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
     regimenTemplateConfigPage.configureProgram(program);
     regimenTemplateConfigPage.CancelRegime(program);
-    assertTrue("Clicking Cancel button should be redirected to Regimen Template screen", testWebDriver.getElementByXpath("//a[@id='" + program + "']/span").isDisplayed());
+    assertTrue("Clicking Cancel button should be redirected to Regimen Template screen", testWebDriver.getElementById(program).isDisplayed());
   }
 
   private void verifyDefaultRegimenReportingFieldsValues(RegimenTemplateConfigPage regimenTemplateConfigPage) {
@@ -233,13 +232,13 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   }
 
   private void verifyErrorMessage(RegimenTemplateConfigPage regimenTemplateConfigPage, String expectedErrorMessage) {
-    testWebDriver.waitForElementToAppear(regimenTemplateConfigPage.getSaveErrorMsgDiv());
-    assertEquals(expectedErrorMessage, regimenTemplateConfigPage.getSaveErrorMsgDiv().getText().trim());
+    regimenTemplateConfigPage.IsDisplayedSaveErrorMsgDiv();
+    assertEquals(expectedErrorMessage, regimenTemplateConfigPage.getSaveErrorMsgDiv());
   }
 
   private void verifyDoneErrorMessage(RegimenTemplateConfigPage regimenTemplateConfigPage, String expectedErrorMessage) {
-    testWebDriver.waitForElementToAppear(regimenTemplateConfigPage.getDoneFailMessage());
-    assertTrue("Done regimen Error div should show up", regimenTemplateConfigPage.getDoneFailMessage().isDisplayed());
+
+    assertTrue("Done regimen Error div should show up", regimenTemplateConfigPage.IsDisplayedDoneFailMessage());
   }
 
   private void verifyNonEditableRegimenAdded(String code, String name, boolean activeChecboxSelected, int indexOfCodeAdded) {
@@ -284,16 +283,16 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   }
 
   private void verifySuccessMessage(RegimenTemplateConfigPage regimenTemplateConfigPage) {
-    testWebDriver.waitForElementToAppear(regimenTemplateConfigPage.getSaveSuccessMsgDiv());
-    assertTrue("saveSuccessMsgDiv should show up", regimenTemplateConfigPage.getSaveSuccessMsgDiv().isDisplayed());
+
+    assertTrue("saveSuccessMsgDiv should show up", regimenTemplateConfigPage.IsDisplayedSaveSuccessMsgDiv());
     String saveSuccessfullyMessage = "Regimens saved successfully";
-    assertTrue("Message showing '" + saveSuccessfullyMessage + "' should show up", regimenTemplateConfigPage.getSaveSuccessMsgDiv().getText().trim().equals(saveSuccessfullyMessage));
+    assertEquals(saveSuccessfullyMessage, regimenTemplateConfigPage.getSaveSuccessMsgDiv()) ;
 
   }
 
   private void verifyProgramConfigured(String program) {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[@id='" + program + "']"));
-    assertTrue("Program " + program + "should be configured", testWebDriver.getElementByXpath("//a[@id='" + program + "']").getText().trim().equals("Edit"));
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementById(program));
+    assertTrue("Program " + program + "should be configured", testWebDriver.getElementById(program).getText().trim().equals("Edit"));
 
   }
 
