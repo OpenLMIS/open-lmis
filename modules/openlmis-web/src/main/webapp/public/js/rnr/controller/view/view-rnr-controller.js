@@ -23,7 +23,7 @@ function ViewRnrController($scope, requisition, rnrColumns, $location, currency,
   $scope.pageLineItems = [];
 
   function updateSupplyType() {
-    $scope.showNonFullSupply = !!($routeParams.supplyType == NON_FULL_SUPPLY);
+    $scope.visibleTab = !!($routeParams.supplyType == NON_FULL_SUPPLY);
   }
 
   $scope.showCategory = function (index) {
@@ -33,7 +33,7 @@ function ViewRnrController($scope, requisition, rnrColumns, $location, currency,
   $scope.$broadcast('$routeUpdate');
 
   function fillPageData() {
-    var pageLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
+    var pageLineItems = $scope.visibleTab ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
     $scope.numberOfPages = Math.ceil(pageLineItems.length / $scope.pageSize) ? Math.ceil(pageLineItems.length / $scope.pageSize) : 1;
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
     $scope.pageLineItems = pageLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);

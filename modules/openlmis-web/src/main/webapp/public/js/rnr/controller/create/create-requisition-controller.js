@@ -4,8 +4,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function CreateRequisitionController($scope, requisition, currency, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, $location, Requisitions, $routeParams, $rootScope, $dialog, messageService) {
-  $scope.showNonFullSupply = $routeParams.supplyType == 'non-full-supply';
+function CreateRequisitionController($scope, requisition, currency, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenColumnList, $location, Requisitions, $routeParams, $rootScope, $dialog, messageService) {
+  $scope.visibleTab = $routeParams.supplyType;
   $scope.baseUrl = "/create-rnr/" + $routeParams.rnr + '/' + $routeParams.facility + '/' + $routeParams.program;
   $scope.fullSupplyLink = $scope.baseUrl + "?supplyType=full-supply&page=1";
   $scope.nonFullSupplyLink = $scope.baseUrl + "?supplyTpe=non-full-supply&page=1";
@@ -16,6 +16,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.programRnrColumnList = rnrColumns;
   $scope.requisitionRights = requisitionRights;
+  $scope.regimenColumns = regimenColumnList;
   $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
   $scope.errorPages = {fullSupply: [], nonFullSupply: []};
   $scope.fullScreen = false;
@@ -33,7 +34,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   });
 
   $scope.fillPagedGridData = function () {
-    var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
+    var gridLineItems = $scope.visibleTab == 'non-full-supply' ? $scope.rnr.nonFullSupplyLineItems : $scope.visibleTab == 'full-supply' ? $scope.rnr.fullSupplyLineItems : [];
     $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize) ? Math.ceil(gridLineItems.length / $scope.pageSize) : 1;
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
     $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
@@ -51,7 +52,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.currency = currency;
 
   $scope.checkErrorOnPage = function (page) {
-    return $scope.showNonFullSupply ? _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
+    return $scope.visibleTab == 'non-full-supply' ? _.contains($scope.errorPages.nonFullSupply, page) : $scope.visibleTab == 'full-supply' ? _.contains($scope.errorPages.fullSupply, page) : [];
   };
 
   if ($scope.programRnrColumnList && $scope.programRnrColumnList.length > 0) {
@@ -63,7 +64,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
   $scope.switchSupplyType = function (supplyType) {
-    $scope.showNonFullSupply = supplyType == 'non-full-supply';
+    $scope.visibleTab = supplyType;
     $location.search('page', 1);
     $location.search('supplyType', supplyType);
   };
@@ -74,7 +75,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   };
 
   $scope.$on('$routeUpdate', function () {
-    $scope.showNonFullSupply = $routeParams.supplyType == "non-full-supply";
+    $scope.visibleTab = $routeParams.supplyType == "non-full-supply" ? 'non-full-supply' : $routeParams.supplyType == "full-supply" ? 'full-supply' : 'regimen';
     if ($scope.saveRnrForm.$dirty) $scope.saveRnr();
     $scope.fillPagedGridData();
   });
@@ -348,6 +349,16 @@ CreateRequisitionController.resolve = {
     $timeout(function () {
       FacilityProgramRights.get({facilityId: $route.current.params.facility, programId: $route.current.params.program}, function (data) {
         deferred.resolve(data.rights);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  regimenColumnList: function ($q, $timeout, $route, RegimenColumns) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      RegimenColumns.get({programId: $route.current.params.program}, function (data) {
+        deferred.resolve(data.regimen_columns);
       }, {});
     }, 100);
     return deferred.promise;

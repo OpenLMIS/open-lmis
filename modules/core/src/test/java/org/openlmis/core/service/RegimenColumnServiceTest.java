@@ -81,6 +81,8 @@ public class RegimenColumnServiceTest {
 
     service.populateDefaultRegimenColumnsIfNoColumnsExist(programId, userId);
 
+    verify(repository).insert(new RegimenColumn(programId, "name", null, null, true));
+    verify(repository).insert(new RegimenColumn(programId, "code", null, null, true));
     verify(repository).insert(new RegimenColumn(programId, "onTreatment", null, null, true));
     verify(repository).insert(new RegimenColumn(programId, "initiatedTreatment", null, null, true));
     verify(repository).insert(new RegimenColumn(programId, "stoppedTreatment", null, null, true));

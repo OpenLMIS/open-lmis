@@ -5,7 +5,7 @@
  */
 
 describe('CreateRequisitionController', function () {
-  var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns,
+  var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns, regimenColumnList,
     lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService;
 
   beforeEach(module('openlmis.services'));
@@ -43,7 +43,11 @@ describe('CreateRequisitionController', function () {
     rnrColumns = [
       {"testField": "test"}
     ];
-    lossesAndAdjustmentTypes = {"lossAdjustmentTypes": {"name":"damaged"}};
+
+    regimenColumnList = [
+      {"testField": "test"}
+    ];
+    lossesAndAdjustmentTypes = {"lossAdjustmentTypes": {"name": "damaged"}};
 
     var category1 = {"id": 1, "name": "cat1", "code": "cat1Code"};
     var category2 = {"id": 2, "name": "cat2", "code": "cat2Code"};
@@ -65,17 +69,21 @@ describe('CreateRequisitionController', function () {
     facilityApprovedProducts = [facilityApprovedProduct1, facilityApprovedProduct2, facilityApprovedProduct3, facilityApprovedProduct4, facilityApprovedProduct5];
 
     httpBackend.when('GET', '/rnr/1/columns.json').respond(rnrColumns);
+    httpBackend.when('GET', '/programId/1/regimenColumns.json').respond(regimenColumnList);
     httpBackend.when('GET', '/reference-data/currency.json').respond({"currency": "$"});
     httpBackend.when('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond(200, lossesAndAdjustmentTypes);
     httpBackend.when('GET', '/facilityApprovedProducts/facility/1/program/1/nonFullSupply.json').respond(200, {"nonFullSupplyProducts": facilityApprovedProducts});
 
     $rootScope.fixToolBar = function () {
     };
-    rnrLineItem = new RnrLineItem({"fullSupply":true});
+    rnrLineItem = new RnrLineItem({"fullSupply": true});
 
-   requisitionRights = [{right:'CREATE_REQUISITION'},{right:'AUTHORIZE_REQUISITION'}];
+    requisitionRights = [
+      {right: 'CREATE_REQUISITION'},
+      {right: 'AUTHORIZE_REQUISITION'}
+    ];
 
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition, rnrColumns: rnrColumns,
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition, rnrColumns: rnrColumns, regimenColumnList: regimenColumnList,
       currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
   }));
@@ -98,7 +106,9 @@ describe('CreateRequisitionController', function () {
     scope.rnr = {"id": "rnrId"};
     scope.pageLineItems = [rnrLineItem];
     scope.saveRnrForm.$dirty = true;
-    scope.saveRnrForm.$setPristine = function (){scope.saveRnrForm.pristine = true};
+    scope.saveRnrForm.$setPristine = function () {
+      scope.saveRnrForm.pristine = true
+    };
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond({'success': "R&R saved successfully!"});
     scope.saveRnr();
     httpBackend.flush();
@@ -202,10 +212,11 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should submit valid rnr', function () {
-    scope.rnr = new Rnr({"id": "rnrId", "status":'INITIATED', "fullSupplyLineItems": []});
+    scope.rnr = new Rnr({"id": "rnrId", "status": 'INITIATED', "fullSupplyLineItems": []});
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
-    scope.saveRnrForm = {$setPristine: function(){}};
+    scope.saveRnrForm = {$setPristine: function () {
+    }};
     spyOn(scope.saveRnrForm, '$setPristine');
     httpBackend.expect('PUT', '/requisitions/rnrId/submit.json').respond(200, {success: "R&R submitted successfully!"});
 
@@ -227,12 +238,13 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should submit Rnr if ok is clicked on the confirm modal', function () {
-    scope.rnr = new Rnr({"id": "rnrId", "status":"INITIATED", "fullSupplyLineItems": []});
+    scope.rnr = new Rnr({"id": "rnrId", "status": "INITIATED", "fullSupplyLineItems": []});
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
-    scope.saveRnrForm = {$setPristine: function(){}};
+    scope.saveRnrForm = {$setPristine: function () {
+    }};
     spyOn(scope.saveRnrForm, '$setPristine');
-    httpBackend.expect('PUT', '/requisitions/rnrId/submit.json').respond({'success':"R&R submitted successfully!"});
+    httpBackend.expect('PUT', '/requisitions/rnrId/submit.json').respond({'success': "R&R submitted successfully!"});
     scope.dialogCloseCallback(true);
     httpBackend.flush();
     expect(scope.submitMessage).toEqual("R&R submitted successfully!");
@@ -290,8 +302,8 @@ describe('CreateRequisitionController', function () {
 
     var rnr = {id: "rnrId", fullSupplyLineItems: [], status: "INITIATED"};
 
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [],
-      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights : requisitionRights,$routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenColumnList: regimenColumnList,
+      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(scope.formDisabled).toEqual(false);
   });
@@ -299,23 +311,23 @@ describe('CreateRequisitionController', function () {
   it('should not set disable flag if rnr is submitted and user have authorize right', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], status: "SUBMITTED"};
 
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [],
-      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights : requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenColumnList: regimenColumnList,
+      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(scope.formDisabled).toEqual(false);
   });
 
   it('should set disable flag if rnr is not initiated/submitted', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], status: "some random status"};
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [],
-      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights : requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenColumnList: regimenColumnList,
+      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
     expect(scope.formDisabled).toEqual(true);
   });
 
   it('should make rnr in scope as Rnr Instance', function () {
     var spyRnr = spyOn(window, 'Rnr').andCallThrough();
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition, rnrColumns: rnrColumns,
-      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,requisitionRights : requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition, rnrColumns: rnrColumns, regimenColumnList: regimenColumnList,
+      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(scope.rnr instanceof Rnr).toBeTruthy();
     expect(spyRnr).toHaveBeenCalledWith(mockedRequisition, rnrColumns);
@@ -325,7 +337,9 @@ describe('CreateRequisitionController', function () {
     scope.rnr = {"id": "rnrId"};
     scope.pageLineItems = [rnrLineItem];
     scope.saveRnrForm.$dirty = true;
-    scope.saveRnrForm.$setPristine = function (){scope.saveRnrForm.pristine = true};
+    scope.saveRnrForm.$setPristine = function () {
+      scope.saveRnrForm.pristine = true
+    };
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success': "success message"});
     scope.saveRnr(false);
     httpBackend.flush();
@@ -345,37 +359,37 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should calculate pages which have errors on submit', function () {
-    scope.rnr = new Rnr({"id":"1", "fullSupplyLineItems":[
-      {id:1},
-      {id:2},
-      {id:3}
-    ], period:{numberOfMonths:7}}, null);
+    scope.rnr = new Rnr({"id": "1", "fullSupplyLineItems": [
+      {id: 1},
+      {id: 2},
+      {id: 3}
+    ], period: {numberOfMonths: 7}}, null);
 
     scope.pageSize = 5;
-    spyOn(scope.rnr, 'getErrorPages').andReturn({nonFullSupply:[1, 2], fullSupply:[2, 4]});
+    spyOn(scope.rnr, 'getErrorPages').andReturn({nonFullSupply: [1, 2], fullSupply: [2, 4]});
     spyOn(scope.rnr, 'validateFullSupply').andReturn("");
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn("some error");
-    httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200, {'success':"success message"});
+    httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200, {'success': "success message"});
     scope.submitRnr();
 
-    expect(scope.errorPages).toEqual({nonFullSupply:[1, 2], fullSupply:[2, 4]});
+    expect(scope.errorPages).toEqual({nonFullSupply: [1, 2], fullSupply: [2, 4]});
   });
 
   it('should calculate pages which have errors on approve', function () {
-    scope.rnr = new Rnr({"id":"1", "fullSupplyLineItems":[
-      {id:1},
-      {id:2},
-      {id:3}
-    ], period:{numberOfMonths:7}}, null);
+    scope.rnr = new Rnr({"id": "1", "fullSupplyLineItems": [
+      {id: 1},
+      {id: 2},
+      {id: 3}
+    ], period: {numberOfMonths: 7}}, null);
 
     scope.pageSize = 5;
-    spyOn(scope.rnr, 'getErrorPages').andReturn({nonFullSupply:[1, 2], fullSupply:[2, 4]});
+    spyOn(scope.rnr, 'getErrorPages').andReturn({nonFullSupply: [1, 2], fullSupply: [2, 4]});
     spyOn(scope.rnr, 'validateFullSupply').andReturn("");
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn("some error");
-    httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200, {'success':"success message"});
+    httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200, {'success': "success message"});
     scope.authorizeRnr();
 
-    expect(scope.errorPages).toEqual({nonFullSupply:[1, 2], fullSupply:[2, 4]});
+    expect(scope.errorPages).toEqual({nonFullSupply: [1, 2], fullSupply: [2, 4]});
     expect(scope.rnr.getErrorPages).toHaveBeenCalledWith(5);
   });
 
@@ -448,10 +462,11 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should authorize valid rnr', function () {
-    scope.rnr = new Rnr({"id": "rnrId", "status":'SUBMITTED', "fullSupplyLineItems": []});
+    scope.rnr = new Rnr({"id": "rnrId", "status": 'SUBMITTED', "fullSupplyLineItems": []});
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
-    scope.saveRnrForm = {$setPristine: function(){}};
+    scope.saveRnrForm = {$setPristine: function () {
+    }};
     spyOn(scope.saveRnrForm, '$setPristine');
 
     httpBackend.expect('PUT', '/requisitions/rnrId/authorize.json').respond(200, {success: "R&R authorized successfully!"});
@@ -474,13 +489,14 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should authorized Rnr if ok is clicked on the confirm modal', function () {
-    scope.rnr = new Rnr({"id": "rnrId", "status":"SUBMITTED", "fullSupplyLineItems": []});
+    scope.rnr = new Rnr({"id": "rnrId", "status": "SUBMITTED", "fullSupplyLineItems": []});
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
-    scope.saveRnrForm = {$setPristine: function(){}};
+    scope.saveRnrForm = {$setPristine: function () {
+    }};
     spyOn(scope.saveRnrForm, '$setPristine');
 
-    httpBackend.expect('PUT', '/requisitions/rnrId/authorize.json').respond({'success':"R&R authorized successfully!"});
+    httpBackend.expect('PUT', '/requisitions/rnrId/authorize.json').respond({'success': "R&R authorized successfully!"});
     scope.dialogCloseCallback(true);
     httpBackend.flush();
     expect(scope.submitMessage).toEqual("R&R authorized successfully!");
@@ -488,38 +504,41 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should return true if error on full supply page', function () {
-    scope.errorPages = {fullSupply:[1]};
-    scope.showNonFullSupply = false;
+    scope.errorPages = {fullSupply: [1]};
+    scope.visibleTab = 'full-supply';
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeTruthy();
   });
 
   it('should return false if no error on full supply page', function () {
-    scope.errorPages = {fullSupply:[]};
-    scope.showNonFullSupply = false;
+    scope.errorPages = {fullSupply: []};
+    scope.visibleTab = 'full-supply';
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeFalsy();
   });
 
   it('should return true if error on non full supply page', function () {
-    scope.errorPages = {nonFullSupply:[1]};
-    scope.showNonFullSupply = true;
+    scope.errorPages = {nonFullSupply: [1]};
+    scope.visibleTab = 'non-full-supply';
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeTruthy();
   });
 
   it('should return false if no error on non full supply page', function () {
-    scope.errorPages = {nonFullSupply:[]};
-    scope.showNonFullSupply = true;
+    scope.errorPages = {nonFullSupply: []};
+    scope.visibleTab = 'non-full-supply';
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeFalsy();
   });
 
-  it('should set requisition rights in scope', function(){
-    expect(scope.requisitionRights).toEqual([{right:'CREATE_REQUISITION'},{right:'AUTHORIZE_REQUISITION'}])
+  it('should set requisition rights in scope', function () {
+    expect(scope.requisitionRights).toEqual([
+      {right: 'CREATE_REQUISITION'},
+      {right: 'AUTHORIZE_REQUISITION'}
+    ])
   });
 
-  it('should check permission using requisition rights', function(){
+  it('should check permission using requisition rights', function () {
     expect(scope.hasPermission('CREATE_REQUISITION')).toBeTruthy()
   })
 

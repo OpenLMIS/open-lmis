@@ -4,20 +4,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function CreateRegimenLineItemController($scope, regimenColumnList) {
+function CreateRegimenLineItemController($scope) {
 
-  $scope.regimenColumns = regimenColumnList;
-};
+  $scope.showCategory = function (index) {
+    return !((index > 0 ) && ($scope.rnr.regimenLineItems[index].regimen.category.name == $scope.rnr.regimenLineItems[index - 1].regimen.category.name));
+  };
 
-CreateRegimenLineItemController.resolve = {
-
-  regimenColumnList: function ($q, $timeout, $route, RegimenColumns) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      RegimenColumns.get({programId: $route.current.params.program}, function (data) {
-        deferred.resolve(data.regimenColumns);
-      }, {});
-    }, 100);
-    return deferred.promise;
-  }
 };

@@ -83,7 +83,7 @@ public class RegimenController extends BaseController {
   }
 
   @RequestMapping(value = "/programId/{programId}/regimenColumns", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE, CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION, VIEW_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getRegimenColumns(@PathVariable Long programId, HttpServletRequest request) {
     try {
       ResponseEntity<OpenLmisResponse> response;
