@@ -35,6 +35,7 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
     return key;
   });
 
+
   console.log(deliveryZone, period, $scope.facilityMap, $scope.sortedGeoZoneKeys)
 
 }
