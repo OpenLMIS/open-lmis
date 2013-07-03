@@ -14,6 +14,7 @@ public class SummaryReport implements ReportData {
     private String category;
     private String product;
     private String facility;
+    private String facilityType;
     private String supplyingFacility;
     private int openingBalance;
     private int receipts;
