@@ -104,7 +104,7 @@ task smokeTestIE(type: Test) {
         systemProperties['dburl'] = "$dburl"
         systemProperties['baseurl'] = "$baseurl"
 
-        suites 'src/test/java/org/openlmis/functional/testng-smoke-ie.xml'
+        suites 'src/test/java/org/openlmis/functional/testng-smoke.xml'
     }
     options {
         listeners << 'org.uncommons.reportng.HTMLReporter'
@@ -123,7 +123,7 @@ task smokeTestChrome(type: Test) {
         systemProperties['dburl'] = "$dburl"
         systemProperties['baseurl'] = "$baseurl"
 
-        suites 'src/test/java/org/openlmis/functional/testng-smoke-chrome.xml'
+        suites 'src/test/java/org/openlmis/functional/testng-smoke.xml'
     }
     options {
         listeners << 'org.uncommons.reportng.HTMLReporter'
