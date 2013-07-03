@@ -320,10 +320,10 @@ public class RegimenTemplateConfigPage extends Page {
     SaveButton.click();
   }
 
-  public void CancelRegime() {
+  public void CancelRegime(String program) {
     testWebDriver.waitForElementToAppear(CancelButton);
     CancelButton.click();
-    testWebDriver.waitForElementToAppear(regimenTemplateHeader);
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[@id='" + program + "']/span"));
   }
 
 }

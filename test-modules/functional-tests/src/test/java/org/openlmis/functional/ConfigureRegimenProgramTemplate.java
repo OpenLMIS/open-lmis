@@ -210,7 +210,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
     regimenTemplateConfigPage.configureProgram(program);
-    regimenTemplateConfigPage.CancelRegime();
+    regimenTemplateConfigPage.CancelRegime(program);
     assertTrue("Clicking Cancel button should be redirected to Regimen Template screen", testWebDriver.getElementByXpath("//a[@id='" + program + "']/span").isDisplayed());
   }
 
