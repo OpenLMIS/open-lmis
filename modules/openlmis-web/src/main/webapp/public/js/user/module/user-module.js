@@ -9,8 +9,8 @@ angular.module('user', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstra
     config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
       when('/search', {controller:UserSearchController, templateUrl:'partials/search.html'}).
-      when('/create-user', {controller:UserController, templateUrl:'partials/create.html'}).
-      when('/edit/:userId', {controller:UserController, templateUrl:'partials/create.html'}).
+      when('/create-user', {controller:UserController, templateUrl:'partials/create.html', resolve: UserController.resolve}).
+      when('/edit/:userId', {controller:UserController, templateUrl:'partials/create.html', resolve: UserController.resolve}).
     otherwise({redirectTo:'/search'});
 }]).directive('onKeyup', function () {
       return function (scope, elm, attrs) {

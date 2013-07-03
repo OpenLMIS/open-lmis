@@ -53,10 +53,10 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZonePr
 }
 
 DistributionController.resolve = {
-  deliveryZones: function(DeliveryZones, $timeout, $q){
+  deliveryZones: function(UserDeliveryZones, $timeout, $q){
     var deferred = $q.defer();
     $timeout(function () {
-      DeliveryZones.get({}, function (data) {
+      UserDeliveryZones.get({}, function (data) {
         deferred.resolve(data.deliveryZones);
       }, {});
     }, 100);

@@ -57,4 +57,8 @@ public class DeliveryZoneService {
   public DeliveryZone getById(Long id) {
     return repository.getById(id);
   }
+
+  public List<DeliveryZone> getAll() {
+    return repository.getAll();
+  }
 }

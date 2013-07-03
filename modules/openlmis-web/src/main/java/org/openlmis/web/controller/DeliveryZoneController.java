@@ -50,4 +50,11 @@ public class DeliveryZoneController extends BaseController {
   public ResponseEntity<OpenLmisResponse> get(@PathVariable Long id) {
     return response("zone", service.getById(id));
   }
+
+  @RequestMapping(value = "deliveryZones", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
+  public ResponseEntity<OpenLmisResponse> getAll() {
+    return response(DELIVERY_ZONES, service.getAll());
+  }
+
 }

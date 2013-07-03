@@ -82,6 +82,17 @@ public class DeliveryZoneServiceTest {
   }
 
   @Test
+  public void shouldGetAllDeliveryZones() throws Exception {
+    List<DeliveryZone> deliveryZones = new ArrayList<>();
+    when(repository.getAll()).thenReturn(deliveryZones);
+
+    List<DeliveryZone> returnedZones = service.getAll();
+
+    verify(repository).getAll();
+    assertThat(returnedZones, is(deliveryZones));
+  }
+
+  @Test
   public void shouldGetProgramForDeliveryZoneBasedOnUserRights() throws Exception {
     service.getProgramsForDeliveryZone(1l);
 

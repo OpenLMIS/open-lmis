@@ -35,8 +35,8 @@
       <div class="span4">
         <div class="fluid-grid-cell">
           <select ui-select2 ng-model="roleAssignment.roleIds" openlmis-message="placeholder.add.role"
-                  multiple="multiple" name="roles" id="roles">
-            <option ng-repeat="role in nonAdminRoles" value="{{role.id}}" ng-bind="role.name"></option>
+                  multiple="multiple" name="roles" id="roles"
+                  ng-options="role.id as role.name for role in rolesMap.REQUISITION">
           </select>
         <span ng-show="roleAssignment.roleIds.length == 0" class="field-error" openlmis-message="missing.value">
         </span>
@@ -82,8 +82,8 @@
 
       <div class="span4 select2-roles">
         <div id="supervisoryRole" class="fluid-grid-cell">
-          <select ui-select2 ng-model="selectedRoleIdsToSupervise" openlmis-message="placeholder.add.role" multiple="multiple">
-            <option ng-repeat="role in nonAdminRoles" value="{{role.id}}">{{role.name}}</option>
+          <select ui-select2 ng-model="selectedRoleIdsToSupervise" openlmis-message="placeholder.add.role" multiple="multiple"
+                  ng-options="role.id as role.name for role in rolesMap.REQUISITION" >
           </select>
           <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedRoleIdsToSupervise)' class="field-error"
                 openlmis-message="create.user.selectRoles">

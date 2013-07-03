@@ -4,43 +4,24 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function UserController($scope, $routeParams, $location, $dialog, Users, User, AllFacilities, Roles, Facility, PullPrograms, SupervisoryNodes, messageService) {
+function UserController($scope, $location, $dialog, User, Facility, messageService, user, roles, programs, supervisoryNodes) {
+
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
   $scope.showSupervisorRoleMappingError = false;
-  $scope.user = {};
+  $scope.user = user;
+  $scope.programs = programs;
+  $scope.supervisoryNodes = supervisoryNodes;
 
-  if ($routeParams.userId) {
-    User.get({id: $routeParams.userId}, function (data) {
-      $scope.user = data.user;
-      loadUserFacility();
-    }, {});
-  }
+  loadUserFacility();
 
-  if (utils.isNullOrUndefined($scope.allRoles)) {
-    Roles.get({}, function (data) {
-      $scope.allRoles = data.roles;
-      filterRoles();
-    });
-  }
+  $scope.rolesMap = _.groupBy(roles, function (role) {
+    return role.type;
+  });
 
-  PullPrograms.get({}, function (data) {
-    $.each(data.programs, function (index, program) {
+  if ($scope.programs) {
+    $.each($scope.programs, function (index, program) {
       program.status = program.active ? messageService.get("label.active") : messageService.get('label.inactive');
-    });
-    $scope.programs = data.programs;
-  });
-
-  SupervisoryNodes.get({}, function (data) {
-    $scope.supervisoryNodes = data.supervisoryNodes;
-  });
-
-  function filterRoles() {
-    $scope.adminRoles = _.filter($scope.allRoles, function (role) {
-      return role.type == 'ADMIN';
-    });
-    $scope.nonAdminRoles = _.filter($scope.allRoles, function (role) {
-      return role.type != 'ADMIN';
     });
   }
 
@@ -107,7 +88,7 @@ function UserController($scope, $routeParams, $location, $dialog, Users, User, A
     if ($scope.user.id) {
       User.update({id: $scope.user.id}, $scope.user, successHandler, errorHandler);
     } else {
-      Users.save({}, $scope.user, successHandler, errorHandler);
+      User.save({}, $scope.user, successHandler, errorHandler);
     }
     return true;
   };
@@ -122,7 +103,7 @@ function UserController($scope, $routeParams, $location, $dialog, Users, User, A
 
     if (len >= 3) {
       if (len == 3) {
-        AllFacilities.get({searchParam: query}, function (data) {
+        Facility.get({searchParam: query}, function (data) {
           $scope.facilityList = data.facilityList;
           $scope.filteredFacilities = $scope.facilityList;
           $scope.resultCount = $scope.filteredFacilities.length;
@@ -163,7 +144,10 @@ function UserController($scope, $routeParams, $location, $dialog, Users, User, A
     OpenLmisDialog.newDialog(dialogOpts, $scope.clearSelectedFacility, $dialog, messageService);
   };
 
-  var loadUserFacility = function () {
+  function loadUserFacility() {
+
+    if (!$scope.user) return;
+
     if (!utils.isNullOrUndefined($scope.user.facilityId)) {
       if (utils.isNullOrUndefined($scope.allSupportedPrograms)) {
         Facility.get({id: $scope.user.facilityId}, function (data) {
@@ -175,7 +159,7 @@ function UserController($scope, $routeParams, $location, $dialog, Users, User, A
         }, {});
       }
     }
-  };
+  }
 
   var filterFacilitiesByCodeOrName = function () {
     $scope.filteredFacilities = [];
@@ -188,6 +172,60 @@ function UserController($scope, $routeParams, $location, $dialog, Users, User, A
     })
   };
 
-
 }
+
+UserController.resolve = {
+
+  user: function ($q, User, $route, $timeout) {
+    var deferred = $q.defer();
+    var userId = $route.current.params.userId;
+    if (!userId) return undefined;
+    $timeout(function () {
+      User.get({id: userId}, function (data) {
+        deferred.resolve(data.user);
+      }, function () {
+      });
+    }, 100);
+    return deferred.promise;
+  },
+
+  roles: function ($q, Roles, $timeout) {
+    var deferred = $q.defer();
+
+    $timeout(function () {
+      Roles.get({}, function (data) {
+        deferred.resolve(data.roles);
+      }, function () {});
+    }, 100);
+
+    return deferred.promise;
+  },
+
+  programs: function ($q, PullPrograms, $timeout) {
+    var deferred = $q.defer();
+
+    $timeout(function () {
+      PullPrograms.get({}, function (data) {
+        deferred.resolve(data.programs);
+      }, function () {
+      });
+    }, 100);
+
+    return deferred.promise;
+  },
+
+  supervisoryNodes: function ($q, SupervisoryNodes, $timeout) {
+    var deferred = $q.defer();
+
+    $timeout(function () {
+      SupervisoryNodes.get({}, function (data) {
+        deferred.resolve(data.supervisoryNodes);
+      }, function () {
+      });
+    }, 100);
+
+    return deferred.promise;
+  }
+
+};
 

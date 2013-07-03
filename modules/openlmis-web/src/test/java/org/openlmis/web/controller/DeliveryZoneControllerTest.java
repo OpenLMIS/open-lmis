@@ -31,6 +31,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
 import static org.openlmis.web.controller.DeliveryZoneController.DELIVERY_ZONES;
@@ -73,6 +74,17 @@ public class DeliveryZoneControllerTest {
     ResponseEntity<OpenLmisResponse> response = controller.getDeliveryZonesForInitiatingAllocation(request);
 
     assertThat((List<DeliveryZone>) response.getBody().getData().get(DELIVERY_ZONES), is(deliveryZones));
+  }
+
+  @Test
+  public void shouldGetAllDeliveryZones() {
+    List<DeliveryZone> deliveryZones = new ArrayList<>();
+    when(service.getAll()).thenReturn(deliveryZones);
+
+    ResponseEntity<OpenLmisResponse> response = controller.getAll();
+
+    assertThat((List<DeliveryZone>) response.getBody().getData().get(DELIVERY_ZONES), is(deliveryZones));
+    verify(service).getAll();
   }
 
   @Test

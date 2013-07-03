@@ -38,4 +38,7 @@ public interface DeliveryZoneMapper {
 
   @Select({"SELECT programId as id FROM delivery_zone_program_schedules WHERE deliveryZoneId = #{id}"})
   List<Program> getPrograms(long id);
+
+  @Select("SELECT * FROM delivery_zones")
+  List<DeliveryZone> getAll();
 }

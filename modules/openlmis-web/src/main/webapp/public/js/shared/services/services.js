@@ -27,7 +27,7 @@ services.factory('ProgramRnRColumnList', function ($resource) {
 });
 
 services.factory('Facility', function ($resource) {
-  return $resource('/facilities/:id.json', {}, {update: {method: 'PUT'}});
+  return $resource('/facilities/:id.json', {id: '@id'}, {update: {method: 'PUT'}});
 });
 
 services.factory('RestoreFacility', function ($resource) {
@@ -43,7 +43,7 @@ services.factory('Users', function ($resource) {
 });
 
 services.factory('User', function ($resource) {
-  return $resource('/users/:id.json', {}, {update: {method: 'PUT'}});
+  return $resource('/users/:id.json', {id: '@id'}, {update: {method: 'PUT'}});
 });
 
 
@@ -226,12 +226,12 @@ services.factory('AllocationProgramProducts', function ($resource) {
   return $resource('/facility/:facilityId/programProduct/:programProductId.json', {}, {update: {method: 'PUT'}});
 });
 
-services.factory('DeliveryZones', function ($resource) {
+services.factory('UserDeliveryZones', function ($resource) {
   return $resource('/user/deliveryZones.json', {}, {});
 });
 
 services.factory('DeliveryZone', function ($resource) {
-  return $resource('/deliveryZones/:id.json', {}, {});
+  return $resource('/deliveryZones/:id.json', {id: '@id'}, {});
 });
 
 services.factory('DeliveryZonePrograms', function ($resource) {

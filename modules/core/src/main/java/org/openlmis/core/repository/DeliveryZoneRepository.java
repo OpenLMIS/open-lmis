@@ -44,4 +44,8 @@ public class DeliveryZoneRepository {
   public DeliveryZone getById(Long id) {
     return mapper.getById(id);
   }
+
+  public List<DeliveryZone> getAll() {
+    return mapper.getAll();
+  }
 }

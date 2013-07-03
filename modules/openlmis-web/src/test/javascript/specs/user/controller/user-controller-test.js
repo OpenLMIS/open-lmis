@@ -29,36 +29,47 @@ describe("User", function () {
           "id": 2,
           "name": "Store In-Charge",
           "type": "REQUISITION"
+        },
+        {
+          "id": 3,
+          "name": "Medical Officer",
+          "type": "ALLOCATION"
         }
       ];
+
+      var user = {"id": 123, "userName": "User420"};
 
       spyOn(messageService, 'get').andCallFake(function (value) {
         if (value == 'label.active') return "Active"
         if (value == 'label.inactive') return "Inactive"
       })
 
-      $httpBackend.expectGET("/roles.json").respond(200, {"roles": roles});
-      $httpBackend.expectGET("/pull/programs.json").respond(200, {"programs": [
+      $httpBackend.when('GET',"/roles.json").respond(200, {"roles": roles});
+      var programs = [
         {"id": 1, active: false},
         {id: 2, active: true}
-      ]});
-      $httpBackend.expectGET("/supervisory-nodes.json").respond(200, {"supervisoryNodes": []});
-      ctrl = $controller(UserController, {$scope: scope}, $location);
+      ];
+      $httpBackend.when('GET',"/pull/programs.json").respond(200, {"programs": programs});
+      $httpBackend.when('GET',"/supervisory-nodes.json").respond(200, {"supervisoryNodes": []});
+      ctrl = $controller(UserController, {$scope: scope, roles: roles, programs: programs,
+        supervisoryNodes: [], user: user}, $location);
       scope.userForm = {$error: { pattern: "" }};
     }));
 
-    it('should set roles in scope', function () {
-      $httpBackend.flush();
-      expect(scope.allRoles).toEqual(roles);
+    it('should populate role map in scope', function () {
 
-      expect(scope.adminRoles.length).toBe(1);
-      expect(scope.adminRoles[0].name).toBe("Admin");
-      expect(scope.nonAdminRoles.length).toBe(1);
-      expect(scope.nonAdminRoles[0].name).toBe("Store In-Charge");
+      expect(scope.rolesMap.ADMIN.length).toBe(1);
+      expect(scope.rolesMap.REQUISITION.length).toBe(1);
+      expect(scope.rolesMap.ALLOCATION.length).toBe(1);
+      expect(scope.rolesMap.ADMIN[0].id).toBe(1);
+      expect(scope.rolesMap.ADMIN[0].type).toBe("ADMIN");
+      expect(scope.rolesMap.REQUISITION[0].id).toBe(2);
+      expect(scope.rolesMap.REQUISITION[0].type).toBe("REQUISITION");
+      expect(scope.rolesMap.ALLOCATION[0].id).toBe(3);
+      expect(scope.rolesMap.ALLOCATION[0].type).toBe("ALLOCATION");
     });
 
     it('should set programs in scope with added status', function () {
-      $httpBackend.flush();
       expect(scope.programs).toEqual([
         {"id": 1, active: false, status: 'Inactive'},
         {id: 2, active: true, status: 'Active'}
@@ -66,7 +77,6 @@ describe("User", function () {
     });
 
     it('should set supervisory nodes in scope', function () {
-      $httpBackend.flush();
       expect(scope.supervisoryNodes).toEqual([]);
     });
 
@@ -215,8 +225,6 @@ describe("User", function () {
       data.facility = facility;
 
       scope.setSelectedFacility(facility);
-
-      $httpBackend.flush();
 
       expect(scope.facilitySelected).toEqual(facility);
     });

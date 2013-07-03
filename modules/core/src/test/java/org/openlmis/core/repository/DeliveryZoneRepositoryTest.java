@@ -77,6 +77,17 @@ public class DeliveryZoneRepositoryTest {
   }
 
   @Test
+  public void shouldGetAllDeliveryZones() throws Exception {
+    List<DeliveryZone> deliveryZones = new ArrayList<>();
+    when(mapper.getAll()).thenReturn(deliveryZones);
+
+    List<DeliveryZone> returnedZones = repository.getAll();
+
+    verify(mapper).getAll();
+    assertThat(returnedZones, is(deliveryZones));
+  }
+
+  @Test
   public void shouldGetProgramForDeliveryZoneBasedOnUserRights() throws Exception {
     List<Program> programs = new ArrayList<>();
     when(mapper.getPrograms(1l)).thenReturn(programs);
