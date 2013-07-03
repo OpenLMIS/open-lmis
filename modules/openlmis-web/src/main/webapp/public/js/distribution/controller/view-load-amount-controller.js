@@ -6,7 +6,11 @@
 
 function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
 
+  $scope.program = facilities[0].supportedPrograms[0].program;
+  $scope.period = period;
   $scope.deliveryZone = deliveryZone;
+  $scope.geoZoneLevelName = facilities[0].geographicZone.level.name;
+
 
   $(facilities).each(function (i, facility) {
     $(facility.supportedPrograms[0].programProducts).each(function (j, product) {
@@ -21,10 +25,8 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
 
     facility.supportedPrograms[0].sortedProductGroup = _.sortBy(_.keys(facility.supportedPrograms[0].programProductMap), function (key) {
       return key;
-    })
+    });
   });
-
-  $scope.period = period;
 
   $scope.facilityMap = _.groupBy(facilities, function (facility) {
     return facility.geographicZone.name;
@@ -38,10 +40,10 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
 }
 
 ViewLoadAmountController.resolve = {
-  facilities: function (DeliveryZoneFacilities, $route, $timeout, $q) {
+  facilities:function (DeliveryZoneFacilities, $route, $timeout, $q) {
     var deferred = $q.defer();
     $timeout(function () {
-      DeliveryZoneFacilities.get({deliveryZoneId: $route.current.params.deliveryZoneId, programId: $route.current.params.programId}, function (data) {
+      DeliveryZoneFacilities.get({deliveryZoneId:$route.current.params.deliveryZoneId, programId:$route.current.params.programId}, function (data) {
         deferred.resolve(data.facilities);
       }, {});
     }, 100);
@@ -49,10 +51,10 @@ ViewLoadAmountController.resolve = {
     return deferred.promise;
   },
 
-  period: function (Period, $route, $timeout, $q) {
+  period:function (Period, $route, $timeout, $q) {
     var deferred = $q.defer();
     $timeout(function () {
-      Period.get({id: $route.current.params.periodId}, function (data) {
+      Period.get({id:$route.current.params.periodId}, function (data) {
         deferred.resolve(data.period);
       }, {});
     }, 100);
@@ -60,10 +62,10 @@ ViewLoadAmountController.resolve = {
     return deferred.promise;
   },
 
-  deliveryZone: function (DeliveryZone, $route, $timeout, $q) {
+  deliveryZone:function (DeliveryZone, $route, $timeout, $q) {
     var deferred = $q.defer();
     $timeout(function () {
-      DeliveryZone.get({id: $route.current.params.deliveryZoneId}, function (data) {
+      DeliveryZone.get({id:$route.current.params.deliveryZoneId}, function (data) {
         deferred.resolve(data.zone);
       }, {});
     }, 100);
