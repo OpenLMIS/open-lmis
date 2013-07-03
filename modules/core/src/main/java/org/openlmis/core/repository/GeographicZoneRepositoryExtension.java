@@ -35,7 +35,7 @@ public class GeographicZoneRepositoryExtension extends GeographicZoneRepository 
     }
 
     public GeographicZone getById(int id){
-        return mapper.getGeographicZoneById(id);
+        return mapper.getGeographicZoneById_Ext(id);
     }
 
 }
