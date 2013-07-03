@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class RegimenTemplate {
+public class RegimenFormDTO {
 
   List<Regimen> regimens;
 

@@ -16,10 +16,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.isNotNull;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
@@ -82,7 +79,7 @@ public class RegimenColumnServiceTest {
     List<RegimenColumn> emptyList = new ArrayList<>();
     when(repository.getRegimenColumnsByProgramId(programId)).thenReturn(emptyList);
 
-    service.getRegimenColumnsByProgramId(programId, userId);
+    service.populateDefaultRegimenColumnsIfNoColumnsExist(programId, userId);
 
     verify(repository).insert(new RegimenColumn(programId, "onTreatment", null, null, true));
     verify(repository).insert(new RegimenColumn(programId, "initiatedTreatment", null, null, true));
@@ -99,7 +96,7 @@ public class RegimenColumnServiceTest {
 
     when(repository.getRegimenColumnsByProgramId(programId)).thenReturn(Arrays.asList(regimenColumn1, regimenColumn2));
 
-    List<RegimenColumn> resultColumns = service.getRegimenColumnsByProgramId(programId, userId);
+    List<RegimenColumn> resultColumns = service.getRegimenColumnsByProgramId(programId);
 
     verify(repository).getRegimenColumnsByProgramId(programId);
     assertThat(resultColumns.size(), is(2));

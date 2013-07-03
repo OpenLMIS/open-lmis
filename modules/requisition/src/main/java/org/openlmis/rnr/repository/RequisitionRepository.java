@@ -36,6 +36,8 @@ public class RequisitionRepository {
   private CommaSeparator commaSeparator;
   @Autowired
   private RequisitionStatusChangeMapper requisitionStatusChangeMapper;
+  @Autowired
+  private RegimenLineItemMapper regimenLineItemMapper;
 
 
   public void insert(Rnr requisition) {
@@ -43,6 +45,15 @@ public class RequisitionRepository {
     requisitionMapper.insert(requisition);
     insertLineItems(requisition, requisition.getFullSupplyLineItems());
     insertLineItems(requisition, requisition.getNonFullSupplyLineItems());
+    insertRegimenLineItems(requisition, requisition.getRegimenLineItems());
+  }
+
+  private void insertRegimenLineItems(Rnr requisition, List<RegimenLineItem> regimenLineItems) {
+    for (RegimenLineItem regimenLineItem : regimenLineItems) {
+      regimenLineItem.setRnrId(requisition.getId());
+      regimenLineItem.setModifiedBy(requisition.getModifiedBy());
+      regimenLineItemMapper.insert(regimenLineItem);
+    }
   }
 
   private void insertLineItems(Rnr requisition, List<RnrLineItem> lineItems) {

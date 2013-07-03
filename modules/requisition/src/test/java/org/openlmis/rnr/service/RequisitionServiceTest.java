@@ -93,6 +93,10 @@ public class RequisitionServiceTest {
   private FacilityService facilityService;
   @Mock
   private SupplyLineService supplyLineService;
+  @Mock
+  private RegimenService regimenService;
+  @Mock
+  private RegimenColumnService regimenColumnService;
 
   @Mock
   RequisitionEventService requisitionEventService;
@@ -140,10 +144,25 @@ public class RequisitionServiceTest {
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = new ArrayList<>();
     ProgramProduct programProduct = new ProgramProduct(null, make(a(defaultProduct)), 10, true);
     facilityTypeApprovedProducts.add(new FacilityTypeApprovedProduct("warehouse", programProduct, 30));
+
     when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityTypeApprovedProducts);
     when(rnrTemplateService.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(getRnrColumns());
 
-    whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityTypeApprovedProducts, USER_ID).thenReturn(requisition);
+    List<Regimen> regimens = new ArrayList<>();
+    regimens.add(new Regimen("name", "code", 1L, true, new RegimenCategory("code", "name", 1), 1));
+
+    List<RegimenLineItem> regimenLineItems = new ArrayList<>();
+    regimenLineItems.add(new RegimenLineItem(null, regimens.get(0)));
+    requisition.setRegimenLineItems(regimenLineItems);
+
+    when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
+
+    List<RegimenColumn> regimenColumns = new ArrayList<>();
+    regimenColumns.add(new RegimenColumn(PROGRAM.getId(), RegimenColumnService.INITIATED_TREATMENT, "label", RegimenColumnService.TYPE_NUMERIC, true));
+    regimenColumns.add(new RegimenColumn(PROGRAM.getId(), RegimenColumnService.ON_TREATMENT, "label", RegimenColumnService.TYPE_NUMERIC, false));
+    when(regimenColumnService.getRegimenColumnsByProgramId(PROGRAM.getId())).thenReturn(regimenColumns);
+
+    whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(requisition);
 
     RequisitionService spyRequisitionService = spy(requisitionService);
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId());
@@ -154,6 +173,7 @@ public class RequisitionServiceTest {
     verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId());
     verify(requisitionRepository).insert(any(Rnr.class));
     verify(requisitionRepository).logStatusChange(any(Rnr.class));
+    verify(regimenColumnService).getRegimenColumnsByProgramId(PROGRAM.getId());
 
     assertThat(rnr, is(requisition));
     assertThat(requisition.getFullSupplyLineItems().get(0).getQuantityReceived(), is(0));
@@ -161,6 +181,8 @@ public class RequisitionServiceTest {
     assertThat(requisition.getFullSupplyLineItems().get(0).getTotalLossesAndAdjustments(), is(0));
     assertThat(requisition.getFullSupplyLineItems().get(0).getNewPatientCount(), is(0));
     assertThat(requisition.getFullSupplyLineItems().get(0).getStockOutDays(), is(0));
+
+    assertThat(requisition.getRegimenLineItems().get(0).getPatientsToInitiateTreatment(), is(0));
   }
 
   @Test
@@ -178,7 +200,11 @@ public class RequisitionServiceTest {
     rnrColumns.add(make(a(defaultRnrColumn, with(columnName, BEGINNING_BALANCE), with(visible, false))));
     when(rnrTemplateService.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(rnrColumns);
     when(requisitionRepository.getRequisitionWithLineItems(FACILITY, PROGRAM, PERIOD)).thenReturn(requisition);
-    whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityTypeApprovedProducts, USER_ID).thenReturn(requisition);
+
+    List<Regimen> regimens = new ArrayList<>();
+    when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
+
+    whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(requisition);
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1L);
 
@@ -200,8 +226,10 @@ public class RequisitionServiceTest {
     ArrayList<RnrColumn> rnrColumns = getRnrColumns();
     rnrColumns.add(make(a(defaultRnrColumn, with(columnName, BEGINNING_BALANCE), with(visible, true))));
     when(rnrTemplateService.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(rnrColumns);
+    List<Regimen> regimens = new ArrayList<>();
+    when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
 
-    whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityTypeApprovedProducts, USER_ID).thenReturn(requisition);
+    whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(requisition);
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1L);
 
@@ -294,7 +322,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(rnr2);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), processingPeriod2.getId())).
-        thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
+      thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -314,7 +342,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(null);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), null)).
-        thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
+      thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -325,13 +353,13 @@ public class RequisitionServiceTest {
 
   private Rnr createRequisition(Long periodId, RnrStatus status) {
     return make(a(RequisitionBuilder.defaultRnr,
-        with(RequisitionBuilder.periodId, periodId),
-        with(RequisitionBuilder.status, status)));
+      with(RequisitionBuilder.periodId, periodId),
+      with(RequisitionBuilder.status, status)));
   }
 
   private ProcessingPeriod createProcessingPeriod(Long id, DateTime startDate) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-        with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
+      with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
     processingPeriod.setId(id);
     return processingPeriod;
   }
@@ -373,7 +401,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
-        thenReturn(Arrays.asList(validPeriod));
+      thenReturn(Arrays.asList(validPeriod));
   }
 
   private void setupForInitRnr(Rnr requisition) {
@@ -383,7 +411,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
-        thenReturn(asList(PERIOD));
+      thenReturn(asList(PERIOD));
   }
 
   @Test
@@ -750,8 +778,10 @@ public class RequisitionServiceTest {
     when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityTypeApprovedProducts);
     when(processingScheduleService.getImmediatePreviousPeriod(spyRequisition.getPeriod())).thenReturn(previousPeriod);
     when(requisitionRepository.getRequisitionWithLineItems(spyRequisition.getFacility(), spyRequisition.getProgram(), previousPeriod)).thenReturn(previousRnr);
+    List<Regimen> regimens = new ArrayList<>();
+    when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
 
-    whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), period.getId(), facilityTypeApprovedProducts, USER_ID).thenReturn(spyRequisition);
+    whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), period.getId(), facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(spyRequisition);
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), period.getId(), USER_ID);
 
@@ -770,7 +800,11 @@ public class RequisitionServiceTest {
     when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityTypeApprovedProducts);
 
     Rnr spyRequisition = spy(someRequisition);
-    whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityTypeApprovedProducts, USER_ID).thenReturn(spyRequisition);
+
+    List<Regimen> regimens = new ArrayList<>();
+    when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
+
+    whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(spyRequisition);
 
     Long previousPeriodId = PERIOD.getId() - 1L;
     ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, previousPeriodId)));
@@ -805,8 +839,10 @@ public class RequisitionServiceTest {
     when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityTypeApprovedProducts);
     when(processingScheduleService.getImmediatePreviousPeriod(spyRequisition.getPeriod())).thenReturn(previousPeriod);
     when(requisitionRepository.getRequisitionWithLineItems(spyRequisition.getFacility(), spyRequisition.getProgram(), previousPeriod)).thenReturn(previousRnr);
+    List<Regimen> regimens = new ArrayList<>();
+    when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
 
-    whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), period.getId(), facilityTypeApprovedProducts, USER_ID).thenReturn(spyRequisition);
+    whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), period.getId(), facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(spyRequisition);
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), period.getId(), USER_ID);
 

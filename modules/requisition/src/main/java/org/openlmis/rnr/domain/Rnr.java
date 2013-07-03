@@ -42,6 +42,7 @@ public class Rnr extends BaseModel {
 
   private List<RnrLineItem> fullSupplyLineItems = new ArrayList<>();
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
+  private List<RegimenLineItem> regimenLineItems = new ArrayList<>();
 
   @Transient
   @JsonIgnore
@@ -62,9 +63,17 @@ public class Rnr extends BaseModel {
     this.modifiedBy = modifiedBy;
   }
 
-  public Rnr(Long facilityId, Long programId, Long periodId, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts, Long modifiedBy) {
+  public Rnr(Long facilityId, Long programId, Long periodId, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts, List<Regimen> regimens, Long modifiedBy) {
     this(facilityId, programId, periodId, modifiedBy);
     fillLineItems(facilityTypeApprovedProducts);
+    fillRegimenLineItems(regimens);
+  }
+
+  private void fillRegimenLineItems(List<Regimen> regimens) {
+    for (Regimen regimen : regimens) {
+      RegimenLineItem regimenLineItem = new RegimenLineItem(null, regimen);
+      regimenLineItems.add(regimenLineItem);
+    }
   }
 
   public Rnr(Facility facility, Program program, ProcessingPeriod period) {

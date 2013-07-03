@@ -70,6 +70,8 @@ public class RequisitionRepositoryTest {
 
   @Mock
   private RequisitionStatusChangeMapper requisitionStatusChangeMapper;
+  @Mock
+  private RegimenLineItemMapper regimenLineItemMapper;
 
   @InjectMocks
   private RequisitionRepository requisitionRepository;
@@ -78,6 +80,7 @@ public class RequisitionRepositoryTest {
   private RnrLineItem rnrLineItem1;
   private RnrLineItem rnrLineItem2;
   private Rnr rnr;
+  private RegimenLineItem regimenLineItem;
 
   @Before
   public void setUp() throws Exception {
@@ -92,6 +95,11 @@ public class RequisitionRepositoryTest {
     rnr.add(rnrLineItem2, true);
     rnrLineItem1.addLossesAndAdjustments(lossAndAdjustmentForLineItem);
     rnrLineItem2.addLossesAndAdjustments(lossAndAdjustmentForLineItem);
+    regimenLineItem = new RegimenLineItem();
+    regimenLineItem.setId(1L);
+    List<RegimenLineItem> regimenLineItems = new ArrayList<>();
+    regimenLineItems.add(regimenLineItem);
+    rnr.setRegimenLineItems(regimenLineItems);
 
     rnr.setFacility(new Facility(FACILITY_ID));
     rnr.setProgram(new Program(PROGRAM_ID));
@@ -107,8 +115,10 @@ public class RequisitionRepositoryTest {
     verify(requisitionMapper).insert(rnr);
     verify(rnrLineItemMapper, times(2)).insert(any(RnrLineItem.class));
     verify(lossesAndAdjustmentsMapper, never()).insert(any(RnrLineItem.class), any(LossesAndAdjustments.class));
+    verify(regimenLineItemMapper, times(1)).insert(any(RegimenLineItem.class));
     RnrLineItem rnrLineItem = rnr.getFullSupplyLineItems().get(0);
     assertThat(rnrLineItem.getRnrId(), is(1L));
+    assertThat(regimenLineItem.getRnrId(), is(1L));
   }
 
   @Test
@@ -314,7 +324,7 @@ public class RequisitionRepositoryTest {
 
     Rnr requisition = new Rnr();
 
-    when(requisitionMapper.getRequisitionWithoutLineItems(facilityId,programId, periodId)).thenReturn(requisition);
+    when(requisitionMapper.getRequisitionWithoutLineItems(facilityId, programId, periodId)).thenReturn(requisition);
     Rnr receivedRnr = requisitionRepository.getRequisitionWithoutLineItems(facilityId, programId, periodId);
     assertThat(receivedRnr, is(requisition));
   }

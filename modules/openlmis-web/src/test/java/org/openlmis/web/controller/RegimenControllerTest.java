@@ -11,7 +11,7 @@ import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RegimenColumnService;
 import org.openlmis.core.service.RegimenService;
-import org.openlmis.web.form.RegimenTemplate;
+import org.openlmis.web.form.RegimenFormDTO;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -23,7 +23,6 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
@@ -63,9 +62,9 @@ public class RegimenControllerTest {
   public void shouldInsertARegimen() {
     Regimen regimen = new Regimen();
     List<Regimen> regimens = Arrays.asList(regimen);
-    RegimenTemplate regimenTemplate = new RegimenTemplate();
-    regimenTemplate.setRegimens(regimens);
-    controller.save(1L, regimenTemplate, httpServletRequest);
+    RegimenFormDTO regimenFormDTO = new RegimenFormDTO();
+    regimenFormDTO.setRegimens(regimens);
+    controller.save(1L, regimenFormDTO, httpServletRequest);
     verify(regimenService).save(1L, regimens, userId);
   }
 
@@ -77,7 +76,7 @@ public class RegimenControllerTest {
 
     ResponseEntity<OpenLmisResponse> response = controller.getByProgram(programId);
 
-    assertThat((List<Regimen>) response.getBody().getData().get(REGIMENS),is(expectedRegimens));
+    assertThat((List<Regimen>) response.getBody().getData().get(REGIMENS), is(expectedRegimens));
     verify(regimenService).getByProgram(programId);
   }
 
@@ -88,7 +87,7 @@ public class RegimenControllerTest {
 
     ResponseEntity<OpenLmisResponse> response = controller.getAllRegimenCategories();
 
-    assertThat((List<RegimenCategory>) response.getBody().getData().get(REGIMEN_CATEGORIES),is(expectedRegimenCategories));
+    assertThat((List<RegimenCategory>) response.getBody().getData().get(REGIMEN_CATEGORIES), is(expectedRegimenCategories));
     verify(regimenService).getAllRegimenCategories();
   }
 
@@ -96,13 +95,13 @@ public class RegimenControllerTest {
   public void shouldSaveRegimenTemplate() throws Exception {
 
     Long programId = 1L;
-    RegimenTemplate regimenTemplate = new RegimenTemplate();
+    RegimenFormDTO regimenFormDTO = new RegimenFormDTO();
 
-    controller.save(programId, regimenTemplate, httpServletRequest);
+    controller.save(programId, regimenFormDTO, httpServletRequest);
 
-    verify(regimenColumnService).save(regimenTemplate.getColumns(), userId);
+    verify(regimenColumnService).save(regimenFormDTO.getColumns(), userId);
     verify(programService).setRegimenTemplateConfigured(programId);
-    verify(regimenService).save(programId, regimenTemplate.getRegimens(), userId);
+    verify(regimenService).save(programId, regimenFormDTO.getRegimens(), userId);
   }
 
   @Test
@@ -114,6 +113,6 @@ public class RegimenControllerTest {
 
     controller.getRegimenColumns(programId, httpServletRequest);
 
-    verify(regimenColumnService).getRegimenColumnsByProgramId(programId, userId);
+    verify(regimenColumnService).populateDefaultRegimenColumnsIfNoColumnsExist(programId, userId);
   }
 }
