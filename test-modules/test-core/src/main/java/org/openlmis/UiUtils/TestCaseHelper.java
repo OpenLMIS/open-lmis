@@ -7,6 +7,7 @@
 package org.openlmis.UiUtils;
 
 
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
 import java.io.IOException;
@@ -212,4 +213,17 @@ public class TestCaseHelper {
     dbWrapper.updateActiveStatusOfProgram(programCode);
   }
 
+    public void sendKeys(String locator, String value) {
+        int length = testWebDriver.getAttribute(testWebDriver.getElementByXpath(locator), "value").length();
+        for (int i = 0; i < length; i++)
+            testWebDriver.getElementByXpath(locator).sendKeys("\u0008");
+        testWebDriver.getElementByXpath(locator).sendKeys(value);
+    }
+
+    public void sendKeys(WebElement locator, String value) {
+        int length = testWebDriver.getAttribute(locator, "value").length();
+        for (int i = 0; i < length; i++)
+            locator.sendKeys("\u0008");
+        locator.sendKeys(value);
+    }
 }
