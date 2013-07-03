@@ -16,26 +16,32 @@
 	<parameter name="LOGO" class="java.io.InputStream"/>
 	<parameter name="REPORT_OUTPUT_OPTION" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select li.productcode code,li.productcategory as category, li.product,SUM(li.beginningBalance) openingBalance, SUM(li.quantityreceived) receipts, SUM(li.quantitydispensed) issues, SUM(li.totallossesandadjustments) adjustments,
-                                    (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) closingBalance, SUM(li.maxmonthsofstock) monthsOfStock, SUM(li.amc) averageMonthlyConsumption
-                                    ,SUM(li.maxstockquantity) maximumStock, SUM(li.maxstockquantity) reorderAmount
-                                    from facilities
-                                    inner join facility_types ON facilities.typeid = facility_types.id
-                                    inner join geographic_zones on geographic_zones.id = facilities.geographiczoneid
-                                    inner join requisitions r ON  r.facilityid = facilities.id
-                                    inner join requisition_line_items li ON li.rnrid = r.id
-                                    inner join products ON products.code  ::text =   li.productcode  ::text
-                                    inner join program_products ON program_products.productid = products.id
-                                    inner join programs ON  program_products.programid = programs.id   AND  programs.id = r.programid
-                                    inner join programs_supported ON  programs.id = programs_supported.programid   AND   facilities.id = programs_supported.facilityid
-                                    inner join requisition_group_members ON facilities.id = requisition_group_members.facilityid
-                                    inner join requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid
-                                    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programid = programs.id   AND requisition_group_program_schedules.requisitiongroupid = requisition_groups.id
-                                    inner join processing_schedules ON processing_schedules.id = requisition_group_program_schedules.programid
-                                    inner join processing_periods ON processing_periods.scheduleid = processing_schedules.id
-group by li.productcode, li.product, li.productcategory ,requisition_groups.id
-order by li.productcode asc, li.product asc, li.productcategory asc , requisition_groups.id asc]]>
+		<![CDATA[  select MAX(facilities.name) facility,li.productcode code,li.productcategory as category, li.product,SUM(li.beginningBalance) openingBalance, SUM(li.quantityreceived) receipts, SUM(li.quantitydispensed) issues, SUM(li.totallossesandadjustments) adjustments,
+    (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) closingBalance, SUM(li.maxmonthsofstock) monthsOfStock, SUM(li.amc) averageMonthlyConsumption
+    ,(SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) maximumStock,
+				    case when(SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) - (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) > 0 then
+   (SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) - (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) ELSE 0 end	reorderAmount
+   ,MAX(fs.facility_name) supplyingFacility, MAX(li.maxmonthsofstock) MaxMOS, MAX(li.maxmonthsofstock) minMOS
+    from facilities
+    inner join facility_types ON facilities.typeid = facility_types.id
+    inner join geographic_zones on geographic_zones.id = facilities.geographiczoneid
+    inner join requisitions r ON  r.facilityid = facilities.id
+    inner join requisition_line_items li ON li.rnrid = r.id
+    inner join products ON products.code  ::text =   li.productcode  ::text
+    inner join program_products ON program_products.productid = products.id
+    inner join facility_approved_products ON facility_approved_products.facilitytypeid = facility_types.id AND facility_approved_products.programproductid = program_products.id
+    inner join programs ON  program_products.programid = programs.id   AND  programs.id = r.programid
+    inner join programs_supported ON  programs.id = programs_supported.programid   AND   facilities.id = programs_supported.facilityid
+    inner join requisition_group_members ON facilities.id = requisition_group_members.facilityid
+    inner join requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid
+    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programid = programs.id   AND requisition_group_program_schedules.requisitiongroupid = requisition_groups.id
+    inner join processing_schedules ON processing_schedules.id = requisition_group_program_schedules.programid
+    inner join processing_periods ON processing_periods.scheduleid = processing_schedules.id
+    left outer join vw_program_facility_supplier fs ON fs.supervisory_node_id = requisition_groups.supervisorynodeid AND fs.program_id = programs.id
+group by facilities.id, li.productcode, li.product, li.productcategory ,requisition_groups.id
+order by facilities.id asc,li.productcode asc, li.product asc, li.productcategory asc , requisition_groups.id asc]]>
 	</queryString>
+	<field name="facility" class="java.lang.String"/>
 	<field name="code" class="java.lang.String"/>
 	<field name="category" class="java.lang.String"/>
 	<field name="product" class="java.lang.String"/>
@@ -48,20 +54,9 @@ order by li.productcode asc, li.product asc, li.productcategory asc , requisitio
 	<field name="averageMonthlyConsumption" class="java.lang.Long"/>
 	<field name="maximumStock" class="java.lang.Long"/>
 	<field name="reorderAmount" class="java.lang.Long"/>
-	<group name="CategoryGroup">
-		<groupExpression><![CDATA[$F{category}]]></groupExpression>
-		<groupHeader>
-			<band height="41">
-				<textField>
-					<reportElement uuid="ed392be3-e180-4955-9b52-9310c4568dd8" x="0" y="0" width="260" height="41"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="13" isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{category}]]></textFieldExpression>
-				</textField>
-			</band>
-		</groupHeader>
-	</group>
+	<field name="supplyingFacility" class="java.lang.String"/>
+	<field name="maxMOS" class="java.lang.Integer"/>
+	<field name="minMOS" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -203,7 +198,7 @@ order by li.productcode asc, li.product asc, li.productcategory asc , requisitio
 			<staticText>
 				<reportElement uuid="53308b53-498a-41ae-a37a-05fde552be68" x="0" y="0" width="90" height="44"/>
 				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[Category]]></text>
+				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="39c2cbba-f2be-46da-bfba-72058005697c" mode="Transparent" x="620" y="0" width="62" height="44" forecolor="#000000" backcolor="#333333">

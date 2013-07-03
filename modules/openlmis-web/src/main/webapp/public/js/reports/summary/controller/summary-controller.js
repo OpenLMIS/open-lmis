@@ -36,12 +36,14 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
         //filter form data section
         $scope.filterObject =  {
              facilityTypeId : $scope.facilityType,
+             facilityType : "",
              programId : $scope.program,
              periodId : $scope.period,
              zoneId : $scope.zone,
              productId : $scope.productId,
              scheduleId : $scope.schedule,
              rgroupId : $scope.rgroup,
+             rgroup : "",
              facilityName : $scope.facilityNameFilter
         };
 
@@ -52,7 +54,7 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
 
         RequisitionGroups.get(function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.push({'name':'All Reporting Groups'});
+            $scope.requisitionGroups.push({'name':'All Reporting Groups','id':'All'});
         });
 
         ReportFacilityTypes.get(function(data) {
@@ -62,7 +64,7 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
 
         ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
-        $scope.schedules.push({'name':'Select a Schedule'});
+        $scope.schedules.push({'name':'Select a Schedule', 'id':'All'});
     });
 
         Products.get(function(data){
@@ -73,7 +75,7 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
         $scope.ChangeSchedule = function(){
             Periods.get({ scheduleId : $scope.schedule },function(data) {
                 $scope.periods = data.periods;
-                $scope.periods.push({'name': 'Select Period'});
+                $scope.periods.push({'name': 'Select Period', 'id':'All'});
             });
         }
 
@@ -87,6 +89,11 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
                 $scope.filterObject.facilityTypeId =  -1;
             }else if(selection != undefined || selection == ""){
                 $scope.filterObject.facilityTypeId =  selection;
+                $.each( $scope.facilityTypes,function( item,idx){
+                    if(idx.id == selection){
+                        $scope.filterObject.facilityType = idx.name;
+                    }
+                });
             }else{
                 $scope.filterObject.facilityTypeId =  0;
             }
@@ -119,6 +126,11 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
                 $scope.filterObject.rgroupId =  -1;
             }else if(selection != undefined || selection == ""){
                 $scope.filterObject.rgroupId =  selection;
+                $.each( $scope.requisitionGroups,function( item,idx){
+                    if(idx.id == selection){
+                        $scope.filterObject.rgroup = idx.name;
+                    }
+                });
             }else{
                 $scope.filterObject.rgroupId =  0;
             }

@@ -13,6 +13,8 @@ public class SummaryReport implements ReportData {
     private String code;
     private String category;
     private String product;
+    private String facility;
+    private String supplyingFacility;
     private int openingBalance;
     private int receipts;
     private int issues;
@@ -22,5 +24,7 @@ public class SummaryReport implements ReportData {
     private Double averageMonthlyConsumption;
     private Double maximumStock;
     private int reorderAmount;
+    private Integer minMOS;
+    private Integer maxMOS;
 
 }
