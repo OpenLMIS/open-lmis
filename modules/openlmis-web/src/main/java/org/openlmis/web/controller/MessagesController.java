@@ -29,7 +29,6 @@ public class MessagesController {
     ResourceBundle messages = ResourceBundle.getBundle("messages");
     for (String key : messages.keySet()) {
       String value = messages.getString(key);
-      value = new String(value.getBytes("ISO-8859-1"), "UTF-8");  //Like a boss!!
       result.put(key, value);
     }
     return OpenLmisResponse.response(MESSAGES, result);
