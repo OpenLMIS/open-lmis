@@ -6,6 +6,7 @@ import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.GeographicLevelMapper;
 import org.openlmis.core.repository.mapper.GeographicZoneMapper;
+import org.openlmis.core.repository.mapper.GeographicZoneMapperExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -17,11 +18,11 @@ import java.util.List;
 @NoArgsConstructor
 public class GeographicZoneRepository {
 
-  private GeographicZoneMapper mapper;
+  private GeographicZoneMapperExtension mapper;
   private GeographicLevelMapper geographicLevelMapper;
 
   @Autowired
-  public GeographicZoneRepository(GeographicZoneMapper mapper, GeographicLevelMapper geographicLevelMapper) {
+  public GeographicZoneRepository(GeographicZoneMapperExtension mapper, GeographicLevelMapper geographicLevelMapper) {
     this.mapper = mapper;
     this.geographicLevelMapper = geographicLevelMapper;
   }
@@ -59,7 +60,7 @@ public class GeographicZoneRepository {
   }
 
   public List<GeographicZone> getAllGeographicZones() {
-    return mapper.getAllGeographicZones();
+    return mapper.getAllGeographicZones_Ext();
   }
 
   public void insert(GeographicZone zone) {

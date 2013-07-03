@@ -1,18 +1,18 @@
 <div xmlns="http://www.w3.org/1999/html">
-    <h2><span>Search Geographic Zones</span>
+    <h2><span>Geographic Zones List</span>
         <a href="#/create-geographic-zone" class="pull-right btn btn-primary"><span id="geographic-zone-add-new">Add New</span></a>
     </h2>
 
     <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="geographicZoneId">
-        <span ng-bind="message"></span>.&nbsp;&nbsp;<a ng-click="editGeographicUser(geographicZoneId)" openlmis-message="search.viewHere"></a>
+        <span ng-bind="message"></span>.&nbsp;&nbsp;<a ng-click="editGeographicZones(geographicZoneId)" openlmis-message="search.viewHere"></a>
     </div>
 
     <input id="searchGeographicZone" class="search-query input-xlarge" type="text" ng-model="query"
-           on-keyup="showGeographicZonesSearchResults('searchGeographicZone')" placeholder="Enter geographic zone name"/>
+          ng-init="showGeographicZonesSearchResults('searchGeographicZone')" on-keyup="filterGeographicZones('searchGeographicZone')" placeholder="Enter geographic zone name"/>
 
     <div class="form-tip" openlmis-message="search.threeCharacters"></div>
-    <div class="facility-list" ng-show="query.length > 2">
-        <h3>
+    <div class="facility-list">  <!--ng-show="query.length > 2">-->
+        <h3 ng-show="query.length>0">
             <ng-pluralize count="resultCount"
                           when="{ 0: 'No matches found for \'{{query}}\'',
                             1: '1 match found for \'{{query}}\'',
@@ -20,7 +20,7 @@
 
             </ng-pluralize>
         </h3>
-        <a class="close-btn" href="javascript:void(0);" ng-click="clearSearch()"></a>
+
 
         <div class="row-fluid list-row">
             <div class="span3" style="overflow: visible;">Name</a></div>
