@@ -128,13 +128,20 @@ public class DeleteFacilityPage extends Page {
   public void searchFacility(String facilityCodeValue) {
 
     testWebDriver.waitForElementToAppear(searchFacilityTextField);
-    searchFacilityTextField.sendKeys(facilityCodeValue);
+    sendKeys(searchFacilityTextField, facilityCodeValue);
     testWebDriver.sleep(2000);
   }
 
-  public void clickFacilityList() {
-    testWebDriver.waitForElementToAppear(facilityList);
-    facilityList.click();
+  private void sendKeys(WebElement locator, String value) {
+    int length = testWebDriver.getAttribute(locator, "value").length();
+    for (int i = 0; i < length; i++)
+      locator.sendKeys("\u0008");
+    locator.sendKeys(value);
+  }
+
+  public void clickFacilityList(String date_time) {
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(),'"+date_time+"')]"));
+    testWebDriver.getElementByXpath("//a[contains(text(),'"+date_time+"')]").click();
     testWebDriver.waitForElementToAppear(facilityHeader);
   }
 
@@ -279,9 +286,9 @@ public class DeleteFacilityPage extends Page {
     SeleneseTestNgHelper.assertTrue(removeSupportedProgram.isDisplayed());
   }
 
-  public HomePage verifyProgramSupported(java.util.ArrayList<String> programsSupported) throws IOException {
+  public HomePage verifyProgramSupported(java.util.ArrayList<String> programsSupported, String date_time) throws IOException {
     int i = 1;
-    clickFacilityList();
+    clickFacilityList(date_time);
     verifyHeader("Edit facility");
     testWebDriver.waitForElementToAppear(deleteButton);
     testWebDriver.sleep(1500);

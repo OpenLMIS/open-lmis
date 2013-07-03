@@ -137,6 +137,7 @@ public class ViewRequisitionPage extends RequisitionPage {
     viewRnRList.click();
   }
 
+
   public void clickFullSupplyTab() {
     testWebDriver.waitForElementToAppear(fullSupplyTab);
     fullSupplyTab.click();
