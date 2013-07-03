@@ -45,12 +45,12 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public static final String facilityCodePrefix = "FCcode";
   public static final String facilityNamePrefix = "FCname";
 
-  @BeforeMethod(groups = {"smoke","functional2"})
+  @BeforeMethod(groups = {"functional2"})
   public void setUp() throws Exception {
     super.setup();
   }
 
-  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
   public void testVerifyRightsUponOK(String user, String program, String[] credentials) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -168,7 +168,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertFalse(userPage.getAllProgramsToSupervise().contains("VACCINES"));
   }
 
-  @AfterMethod(groups = {"smoke","functional2"})
+  @AfterMethod(groups = {"functional2"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);

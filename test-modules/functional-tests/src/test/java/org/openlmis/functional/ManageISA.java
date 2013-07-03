@@ -109,7 +109,6 @@ public class ManageISA extends TestCaseHelper {
         createFacilityPage.clickIsaDoneButton();
         SaveButton.click();
         createFacilityPage.verifySuccessMessage();
-        //deleteFacilityPage.searchFacility(date_time);
         deleteFacilityPage.clickFacilityList(date_time);
         createFacilityPage.verifyOverriddenIsa("24");
     }

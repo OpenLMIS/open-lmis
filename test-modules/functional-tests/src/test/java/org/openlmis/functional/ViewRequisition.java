@@ -71,6 +71,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.verifyStatus(AUTHORIZED);
     viewRequisitionPage.clickRnRList();
+    viewRequisitionPage.verifyTotalFieldPostAuthorize();
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")

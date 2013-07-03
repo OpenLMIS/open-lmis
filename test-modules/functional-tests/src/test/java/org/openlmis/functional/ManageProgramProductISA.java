@@ -92,7 +92,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
 
-  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testISAFormula(String userSIC, String password, String program) throws Exception {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
     programProductISAPage.fillProgramProductISA("999.999", "999", "999.999", "999.999", "999999", "5", "1000");

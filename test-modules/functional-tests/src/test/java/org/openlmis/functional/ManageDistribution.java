@@ -85,10 +85,7 @@ public class ManageDistribution extends TestCaseHelper {
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     testWebDriver.sleep(100);
     verifySelectedOptionFromSelectField(periodDisplayedByDefault, actualSelectFieldElement);
-
     distributionPage.clickViewLoadAmount();
-    //verifySubOptionsOfProceedButton(distributionPage);
-
   }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
@@ -226,7 +223,7 @@ public class ManageDistribution extends TestCaseHelper {
 
 
   private void verifySelectedOptionFromSelectField(String valuesToBeVerified, WebElement actualSelectFieldElement) {
-    testWebDriver.sleep(500);
+    testWebDriver.sleep(200);
     testWebDriver.waitForElementToAppear(actualSelectFieldElement);
     assertEquals(valuesToBeVerified, actualSelectFieldElement.getText());
   }
