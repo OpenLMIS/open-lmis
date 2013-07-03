@@ -60,6 +60,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), false);
     assertEquals(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).isEnabled(), true);
     assertEquals(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled(), false);
+    testWebDriver.handleScrollByPixels(0,3000);
+    testWebDriver.waitForElementToAppear(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION));
     rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).click();
     rolesPage.getAllocationRoleType().click();
     rolesPage.clickContinueButton();
