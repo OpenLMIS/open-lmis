@@ -46,7 +46,34 @@ public class SummaryReportDataProvider extends ReportDataProvider {
         return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    @Override
+    public ReportData getReportFilterData(Map<String, String[]> params) {
+        String facilityTypeId =  params.get("facilityTypeId")[0];
+        String rgroupId =     params.get("rgroupId")[0];
+        String facilityType =  "";
+        String rgroup = "";
 
+        if(facilityTypeId != null && !facilityTypeId.isEmpty()){
+            if(facilityTypeId.equals("-1"))
+                facilityType = "All Facility Types";
+            else
+                facilityType = params.get("facilityType")[0];
+        }
 
+        if(rgroupId != null && !rgroupId.isEmpty()){
+            if(rgroupId.equals("-1"))
+                rgroup = "All Reporting Groups";
+            else
+                rgroup = params.get("rgroup")[0];
+        }
+        final String finalFacilityType = facilityType;
+        final String finalRgroup = rgroup;
 
+        return new ReportData() {
+           @Override
+           public String toString() {
+               return finalFacilityType +"\n"+ finalRgroup +"\n";
+           }
+       };
+    }
 }
