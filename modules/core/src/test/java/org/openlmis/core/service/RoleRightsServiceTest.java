@@ -69,11 +69,11 @@ public class RoleRightsServiceTest {
       MANAGE_REGIMEN_TEMPLATE,
       MANAGE_ROLE,
       MANAGE_SCHEDULE,
-      MANAGE_USERS,
+      MANAGE_USER,
       UPLOADS,
       MANAGE_DISTRIBUTION,
-      MANAGE_REPORTS,
-      VIEW_REPORTS,
+      MANAGE_REPORT,
+      VIEW_REPORT,
       APPROVE_REQUISITION,
       AUTHORIZE_REQUISITION,
       CONVERT_TO_ORDER,
@@ -89,10 +89,10 @@ public class RoleRightsServiceTest {
     assertEquals(UPLOADS.getType(), RightType.ADMIN);
     assertEquals(MANAGE_FACILITY.getType(), RightType.ADMIN);
     assertEquals(MANAGE_PROGRAM_PRODUCT.getType(), RightType.ADMIN);
-    assertEquals(MANAGE_REPORTS.getType(), RightType.ADMIN);
+    assertEquals(MANAGE_REPORT.getType(), RightType.ADMIN);
     assertEquals(MANAGE_ROLE.getType(), RightType.ADMIN);
     assertEquals(MANAGE_SCHEDULE.getType(), RightType.ADMIN);
-    assertEquals(MANAGE_USERS.getType(), RightType.ADMIN);
+    assertEquals(MANAGE_USER.getType(), RightType.ADMIN);
     assertEquals(CONVERT_TO_ORDER.getType(), RightType.ADMIN);
     assertEquals(VIEW_ORDER.getType(), RightType.ADMIN);
     assertEquals(CONFIGURE_RNR.getType(), RightType.ADMIN);

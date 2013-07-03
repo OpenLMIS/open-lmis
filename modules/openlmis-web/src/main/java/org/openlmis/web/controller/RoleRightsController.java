@@ -62,7 +62,7 @@ public class RoleRightsController extends BaseController {
   }
 
   @RequestMapping(value = "/roles", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE, MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> getAll() {
     OpenLmisResponse response = new OpenLmisResponse(ROLES, roleRightsService.getAllRoles());
     return new ResponseEntity<>(response, HttpStatus.OK);

@@ -33,9 +33,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
-import static org.openlmis.web.controller.BaseController.FORBIDDEN_EXCEPTION;
 import static org.openlmis.web.controller.DeliveryZoneController.DELIVERY_ZONES;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -82,21 +80,9 @@ public class DeliveryZoneControllerTest {
     List<Program> programs = new ArrayList<>();
     when(service.getProgramsForDeliveryZone(1l)).thenReturn(programs);
     when(permissionService.hasPermissionOnZone(USER_ID, 1l)).thenReturn(true);
-    ResponseEntity<OpenLmisResponse> response = controller.getProgramsForDeliveryZone(request, 1l);
+    ResponseEntity<OpenLmisResponse> response = controller.getProgramsForDeliveryZone(1l);
 
     assertThat((List<Program>) response.getBody().getData().get("deliveryZonePrograms"), is(programs));
-  }
-
-  @Test
-  public void shouldThrowErrorIfUserNotAuthorizedForDeliveryZone() throws Exception {
-    List<Program> programs = new ArrayList<>();
-    when(service.getProgramsForDeliveryZone(1l)).thenReturn(programs);
-    when(permissionService.hasPermissionOnZone(USER_ID, 1l)).thenReturn(false);
-
-    ResponseEntity<OpenLmisResponse> response = controller.getProgramsForDeliveryZone(request, 1l);
-
-    assertThat(response.getBody().getErrorMsg(), is(FORBIDDEN_EXCEPTION));
-    assertThat(response.getStatusCode(), is(UNAUTHORIZED));
   }
 
   @Test
@@ -105,7 +91,7 @@ public class DeliveryZoneControllerTest {
     when(service.getById(1l)).thenReturn(zone);
     when(permissionService.hasPermissionOnZone(USER_ID, 1l)).thenReturn(true);
 
-    ResponseEntity<OpenLmisResponse> response = controller.get(request, 1l);
+    ResponseEntity<OpenLmisResponse> response = controller.get(1l);
 
     verify(service).getById(1l);
     assertThat((DeliveryZone) response.getBody().getData().get("zone"), is(zone));

@@ -32,7 +32,7 @@ angular.module('user', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstra
   })
   .run(function($rootScope, AuthorizationService) {
     $rootScope.userSelected = "selected";
-    AuthorizationService.preAuthorize('MANAGE_USERS');
+    AuthorizationService.preAuthorize('MANAGE_USER');
   });
 
 

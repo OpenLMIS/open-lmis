@@ -83,6 +83,7 @@ public class ManageDistribution extends TestCaseHelper {
 
     distributionPage.selectValueFromProgram(programFirst);
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
+    testWebDriver.sleep(100);
     verifySelectedOptionFromSelectField(periodDisplayedByDefault, actualSelectFieldElement);
 
     distributionPage.clickViewLoadAmount();
