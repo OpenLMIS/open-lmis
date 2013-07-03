@@ -16,17 +16,19 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.programRnrColumnList = rnrColumns;
   $scope.requisitionRights = requisitionRights;
-  $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name':'quantityRequested'});
-  $scope.errorPages = {fullSupply:[], nonFullSupply:[]};
+  $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
+  $scope.errorPages = {fullSupply: [], nonFullSupply: []};
   $scope.fullScreen = false;
 
-  $scope.$watch('fullScreen', function() {
+  $scope.$watch('fullScreen', function () {
     angular.element(window).scrollTop(0);
     if (!$.browser.msie) {
-      $scope.fullScreen ? angular.element('.toggleFullScreen').slideUp('slow', function() {}) : angular.element('.toggleFullScreen').slideDown('slow', function() {});
+      $scope.fullScreen ? angular.element('.toggleFullScreen').slideUp('slow', function () {
+      }) : angular.element('.toggleFullScreen').slideDown('slow', function () {
+      });
     }
     else {
-      $scope.fullScreen? angular.element('.toggleFullScreen').hide() : angular.element('.toggleFullScreen').show();
+      $scope.fullScreen ? angular.element('.toggleFullScreen').hide() : angular.element('.toggleFullScreen').show();
     }
   });
 

@@ -8,13 +8,13 @@ function CreateFullSupplyController($scope) {
   $scope.currentRnrLineItem = undefined;
 
   $scope.getId = function (prefix, parent) {
-      return prefix + "_" + parent.$parent.$parent.$index;
-    };
+    return prefix + "_" + parent.$parent.$parent.$index;
+  };
 
   $scope.saveLossesAndAdjustmentsForRnRLineItem = function () {
     $scope.modalError = '';
 
-    if(!$scope.currentRnrLineItem.validateLossesAndAdjustments()){
+    if (!$scope.currentRnrLineItem.validateLossesAndAdjustments()) {
       $scope.modalError = 'Please correct the highlighted fields before submitting';
       return;
     }

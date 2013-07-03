@@ -75,7 +75,7 @@ function CreateNonFullSupplyController($scope, messageService) {
   };
 
   $scope.labelForRnrColumn = function (columnName) {
-    if ($scope.$parent.programRnrColumnList) return _.findWhere($scope.$parent.programRnrColumnList, {'name':columnName}).label + ":";
+    if ($scope.$parent.programRnrColumnList) return _.findWhere($scope.$parent.programRnrColumnList, {'name': columnName}).label + ":";
   };
 
   $scope.shouldDisableAddButton = function () {
@@ -156,7 +156,7 @@ function CreateNonFullSupplyController($scope, messageService) {
     return null;
   };
 
-  $scope.formatNoMatches = function() {
+  $scope.formatNoMatches = function () {
     return messageService.get('msg.no.matches.found');
   };
 
