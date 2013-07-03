@@ -39,6 +39,10 @@ public class ProductController extends BaseController {
     @Autowired
     private ProductServiceExtension productServiceExt;
 
+    @Autowired
+    public ProductController(ProductServiceExtension productServiceExtension) {
+        this.productServiceExt = productServiceExtension;
+    }
 
     // supply line list for view
     @RequestMapping(value = "/productslist", method = RequestMethod.GET, headers = "Accept=application/json")

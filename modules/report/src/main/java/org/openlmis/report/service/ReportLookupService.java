@@ -58,6 +58,9 @@ public class ReportLookupService {
     @Autowired
     private FacilityLookupReportMapper facilityReportMapper;
 
+    @Autowired
+    private ProcessingPeriodReportMapper processingPeriodMapper;
+
     public List<Product> getAllProducts(){
         return productMapper.getAll();
     }
@@ -140,5 +143,9 @@ public class ReportLookupService {
 
     public List<Facility> getAllFacilities(){
         return facilityReportMapper.getAll();
+    }
+
+    public List<ProcessingPeriod> getAllProcessingPeriods(){
+        return processingPeriodMapper.getAll();
     }
 }

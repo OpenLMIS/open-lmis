@@ -87,6 +87,9 @@ public class HomePage extends Page {
   @FindBy(how = How.ID, using = "add-new-facility")
   private static WebElement createFacility;
 
+  @FindBy(how = How.ID, using = "add-new-supplyline")
+  private static WebElement createSupplyline;
+
   @FindBy(how = How.XPATH, using = "//div[@class='ng-scope']/div[@ng-hide='facility.id']/h2")
   private static WebElement facilityHeader;
 
@@ -177,6 +180,13 @@ public class HomePage extends Page {
   private static WebElement usersTab;
 
 
+  @FindBy(how = How.LINK_TEXT, using = "Supply Lines")
+  private static WebElement supplylinesLink;
+
+  @FindBy(how = How.ID, using = "supplyline-tab")
+  private static WebElement supplylinesTab;
+
+
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col1 colt1']/span")
   private static WebElement startDate;
 
@@ -186,7 +196,7 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
   private static WebElement errorMsg;
 
-  @FindBy(how = ID, using = "program")
+  @FindBy(how = How.ID, using = "program")
   private static WebElement selectProgramSelectBox;
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Product Reports')]")
   private static WebElement ProductReportsMenuItem;
@@ -255,11 +265,18 @@ public class HomePage extends Page {
     return new CreateFacilityPage(testWebDriver);
   }
 
-  private void clickCreateFacilityButton() {
+
+   private void clickCreateFacilityButton() {
     testWebDriver.waitForElementToAppear(createFacility);
     testWebDriver.sleep(1000);
     testWebDriver.keyPress(createFacility);
   }
+
+    private void clickCreateSupplylineButton() {
+        testWebDriver.waitForElementToAppear(createSupplyline);
+        testWebDriver.sleep(1000);
+        testWebDriver.keyPress(createSupplyline);
+    }
 
   private void verifyHeader(String headingToVerify) {
     testWebDriver.sleep(1000);
@@ -268,12 +285,13 @@ public class HomePage extends Page {
   }
 
 
-  private void verifyTabs() {
+   private void verifyTabs() {
     testWebDriver.waitForElementToAppear(facilitiesTab);
     SeleneseTestNgHelper.assertTrue(facilitiesTab.isDisplayed());
     SeleneseTestNgHelper.assertTrue(rolesTab.isDisplayed());
     SeleneseTestNgHelper.assertTrue(schedulesTab.isDisplayed());
     SeleneseTestNgHelper.assertTrue(usersTab.isDisplayed());
+    SeleneseTestNgHelper.assertTrue(supplylinesTab.isDisplayed());
   }
 
 
@@ -402,6 +420,19 @@ public class HomePage extends Page {
 
   }
 
+    public ManageSupplylinePage navigateToSupplyline() throws IOException {
+        SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+        testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+        testWebDriver.keyPress(AdministrationMenuItem);
+        testWebDriver.waitForElementToAppear(manageLink);
+        testWebDriver.keyPress(manageLink);
+        testWebDriver.waitForElementToAppear(supplylinesTab);
+        //supplylinesTab.click();
+        verifyTabs();
+        clickCreateSupplylineButton();
+        return new ManageSupplylinePage(testWebDriver);
+   }
+
   public UserPage navigateToUser() throws IOException {
     SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
@@ -448,8 +479,8 @@ public class HomePage extends Page {
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
     testWebDriver.keyPress(TemplateConfigTab);
-    testWebDriver.waitForElementToAppear(programProductISAMenuItem);
-    testWebDriver.keyPress(programProductISAMenuItem);
+    //testWebDriver.waitForElementToAppear(programProductISAMenuItem);
+    //testWebDriver.keyPress(programProductISAMenuItem);
     testWebDriver.waitForElementToAppear(selectProgramSelectBox);
     return new ProgramProductISAPage(testWebDriver);
   }
