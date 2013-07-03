@@ -38,11 +38,40 @@ public class ViewRequisition extends TestCaseHelper {
   public static final String APPROVED = "APPROVED";
   public static final String RELEASED = "RELEASED";
 
-  @BeforeMethod(groups = {"functional"})
+  @BeforeMethod(groups = {"smoke","functional"})
   public void setUp() throws Exception {
     super.setup();
   }
 
+
+  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testViewRequisitionAfterAuthorization(String program, String userSIC, String password) throws Exception {
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("CREATE_REQUISITION");
+    rightsList.add("VIEW_REQUISITION");
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    dbWrapper.assignRight(STORE_IN_CHARGE, APPROVE_REQUISITION);
+    dbWrapper.assignRight(STORE_IN_CHARGE, CONVERT_TO_ORDER);
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateAndInitiateRnr(program);
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    HomePage homePage1 = initiateRnRPage.clickHome();
+
+    ViewRequisitionPage viewRequisitionPage = homePage1.navigateViewRequisition();
+    viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
+    dbWrapper.insertValuesInRequisition();
+    dbWrapper.updateRequisitionStatus(SUBMITTED);
+    viewRequisitionPage.enterViewSearchCriteria();
+    viewRequisitionPage.clickSearch();
+    viewRequisitionPage.verifyNoRequisitionFound();
+    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updateRequisitionStatus(AUTHORIZED);
+    viewRequisitionPage.clickSearch();
+    viewRequisitionPage.verifyStatus(AUTHORIZED);
+    viewRequisitionPage.clickRnRList();
+  }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void testViewRequisition(String program, String userSIC, String password) throws Exception {
@@ -117,7 +146,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageOrdered.verifyApprovedQuantityFieldPresent();
   }
 
-  @AfterMethod(groups = {"functional"})
+  @AfterMethod(groups = {"smoke","functional"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);

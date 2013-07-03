@@ -26,6 +26,8 @@
       </class>
       <class name="org.openlmis.functional.ForgotPassword">
       </class>
+      <class name="org.openlmis.functional.ViewRequisition">
+      </class>
       <class name="org.openlmis.functional.PageAccessAuthentication">
       </class>
     </classes>
