@@ -6,9 +6,11 @@
 
 services.factory('messageService', function (Messages, localStorageService, $rootScope) {
 
+  var version = '@version@';
+
   var populate = function () {
-    var messagesInStorage = localStorageService.get("messagesAvailable");
-    if (!messagesInStorage) {
+    if (localStorageService.get('version') != version) {
+      localStorageService.add('version', version);
       Messages.get({}, function (data) {
         localStorageService.add('messagesAvailable', true);
         for (var attr in data.messages) {
