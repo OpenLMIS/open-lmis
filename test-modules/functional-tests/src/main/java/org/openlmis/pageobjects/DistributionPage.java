@@ -100,6 +100,7 @@ public class DistributionPage extends RequisitionPage {
 
   public WebElement getFirstSelectedOptionFromPeriod() {
     testWebDriver.waitForElementToAppear(getSelectPeriodSelectBox());
+    testWebDriver.sleep(100);
     WebElement option = testWebDriver.getFirstSelectedOption(getSelectPeriodSelectBox());
     return option;
   }
