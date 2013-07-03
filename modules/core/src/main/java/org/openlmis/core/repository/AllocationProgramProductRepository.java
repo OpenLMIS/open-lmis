@@ -13,6 +13,8 @@ import org.openlmis.core.repository.mapper.ProgramProductIsaMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class AllocationProgramProductRepository {
 
@@ -49,5 +51,9 @@ public class AllocationProgramProductRepository {
   public void save(AllocationProgramProduct product) {
     mapper.removeFacilityProgramProductMapping(product.getProgramProductId(), product.getFacilityId());
     mapper.insert(product);
+  }
+
+  public List<AllocationProgramProduct> getByFacilityAndProgram(Long facilityId, Long programId) {
+    return mapper.getByFacilityAndProgram(facilityId, programId);
   }
 }

@@ -52,8 +52,18 @@ public class ReportLookupService {
     @Autowired
     private GeographicLevelReportMapper geographicLevelMapper;
 
+    @Autowired
+    private DosageUnitReportMapper dosageUnitMapper;
+
+    @Autowired
+    private FacilityLookupReportMapper facilityReportMapper;
+
     public List<Product> getAllProducts(){
         return productMapper.getAll();
+    }
+
+    public List<ProductList> getFullProductList(){
+        return productMapper.getFullProductList();
     }
 
     public List<FacilityType> getFacilityTypes(){
@@ -122,5 +132,13 @@ public class ReportLookupService {
 
     public List<GeographicLevel> getAllGeographicLevels() {
         return geographicLevelMapper.getAll();
+    }
+
+    public List<DosageUnit> getDosageUnits(){
+        return dosageUnitMapper.getAll();
+    }
+
+    public List<Facility> getAllFacilities(){
+        return facilityReportMapper.getAll();
     }
 }

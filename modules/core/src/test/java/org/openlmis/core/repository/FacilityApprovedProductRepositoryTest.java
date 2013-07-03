@@ -14,7 +14,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.FacilityApprovedProduct;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
@@ -48,17 +48,17 @@ public class FacilityApprovedProductRepositoryTest {
 
   @Test
   public void shouldInsertAFacilitySupportedProduct() {
-    FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct();
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct();
     ProgramProduct programProduct = new ProgramProduct();
     programProduct.setId(1L);
-    facilityApprovedProduct.setProgramProduct(programProduct);
-    facilityApprovedProduct.setFacilityType(new FacilityType("warehouse"));
+    facilityTypeApprovedProduct.setProgramProduct(programProduct);
+    facilityTypeApprovedProduct.setFacilityType(new FacilityType("warehouse"));
 
     when(facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(1L,
       "warehouse")).thenReturn(null);
 
-    facilityApprovedProductRepository.insert(facilityApprovedProduct);
-    verify(facilityApprovedProductMapper).insert(facilityApprovedProduct);
+    facilityApprovedProductRepository.insert(facilityTypeApprovedProduct);
+    verify(facilityApprovedProductMapper).insert(facilityTypeApprovedProduct);
   }
 
   @Test
@@ -75,8 +75,8 @@ public class FacilityApprovedProductRepositoryTest {
 
   @Test
   public void shouldUpdateFacilityApprovedProductIfExists() throws Exception {
-    FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct();
-    facilityApprovedProductRepository.update(facilityApprovedProduct);
-    verify(facilityApprovedProductMapper).updateFacilityApprovedProduct(facilityApprovedProduct);
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct();
+    facilityApprovedProductRepository.update(facilityTypeApprovedProduct);
+    verify(facilityApprovedProductMapper).updateFacilityApprovedProduct(facilityTypeApprovedProduct);
   }
 }

@@ -122,6 +122,10 @@ services.factory('GeographicZoneList', function ($resource) {
     return $resource('/geographicZones.json', {}, {});
 });
 
+services.factory('ProductList', function ($resource) {
+    return $resource('/productslist.json', {}, {});
+});
+
 services.factory('GeographicZoneCompleteList', function ($resource) {
     return $resource('/geographicZone/getList.json', {}, {});
 });

@@ -31,7 +31,7 @@
         <div>{{role.description}}</div>
       </td>
       <td class="col-role-rights">
-        <div ng-repeat="right in role.rights">{{right.rightName}}</div>
+        <div ng-repeat="right in role.rights"><span openlmis-message="right.rightName"></span></div>
       </td>
     </tr>
     </tbody>

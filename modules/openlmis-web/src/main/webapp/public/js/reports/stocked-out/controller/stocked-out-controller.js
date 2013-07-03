@@ -365,10 +365,10 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
             params.schedule = $scope.schedule;
             params.productCategory = $scope.productCategory;
             params.periodType = $scope.periodType;
-            params.fromYear = $scope.fromYear;
-            params.fromMonth = $scope.fromMonth;
-            params.toYear = $scope.toYear;
-            params.toMonth = $scope.toMonth
+            params.fromYear = $scope.startYear;
+            params.fromMonth = $scope.startMonth;
+            params.toYear = $scope.endYear;
+            params.toMonth = $scope.endMonth
             return params;
         }
 

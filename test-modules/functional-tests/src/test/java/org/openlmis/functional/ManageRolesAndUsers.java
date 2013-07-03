@@ -82,11 +82,12 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     rolesPage.clickARole(LAB_IN_CHARGE);
     rolesPage.verifyAdminRoleRadioNonEditable();
     rolesPage.verifyRoleSelected(userRoleList);
-    rolesPage.clickCancelButton();
+    homePage.navigateRoleAssignments();
+//    rolesPage.clickCancelButton();
     rolesPage.clickARole(LMU);
     rolesPage.verifyProgramRoleRadioNonEditable();
     rolesPage.verifyRoleSelected(userRoleListLmu);
-    rolesPage.clickCancelButton();
+//    rolesPage.clickCancelButton();
     dbWrapper.insertSupervisoryNode(facility_code, "N1", "Node 1", "null");
 
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
@@ -104,13 +105,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.verifyRemoveNotPresent();
     verifyPUSHProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles(userPage);
 
-//    createUserAndAssignRoles(homePage, passwordUsers, "Jake_Doe@openlmis.com", "Jake", "Doe", LMU, facility_code, program, "Node 1", LMU, true);
-//    userPage.clickViewHere();
-//    userPage.removeRole(1, true);
-//    userPage.verifyRoleNotPresent(LMU);
-//    userPage.clickSaveButton();
-//    userPage.clickViewHere();
-//    userPage.verifyRoleNotPresent(LMU);
   }
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, boolean adminRole) throws IOException, SQLException {

@@ -692,7 +692,7 @@ describe('RnrLineItem', function () {
 
     it('should get rnr column source name for the provided indicator', function () {
       var lineItem = new RnrLineItem({"id":15}, null, programRnrColumnList);
-      expect(lineItem.getSource("A")).toEqual("USER_INPUT");
+      expect(lineItem.getSource("beginningBalance")).toEqual("USER_INPUT");
     });
   });
 

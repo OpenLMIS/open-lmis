@@ -70,6 +70,7 @@ public class ManageISA extends TestCaseHelper {
         setupProgramProductISA(program,"P1","1", "2", "3", "100", "100", "1000", "5");
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
         loginPage.loginAs(userSIC, password);
+
         CreateFacilityPage createFacilityPage = new HomePage(testWebDriver).navigateCreateFacility();
 
         String date_time = createFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,
@@ -98,10 +99,19 @@ public class ManageISA extends TestCaseHelper {
         createFacilityPage.verifyCalculatedIsa(100);
         createFacilityPage.clickIsaCancelButton();
 
-        createFacilityPage.editPopulation(valueOf(3000));
-        createFacilityPage.overrideIsa(24);
-        createFacilityPage.verifyCalculatedIsa(100);
+        createFacilityPage.editPopulation(valueOf(3000000));
+        createFacilityPage.overrideIsa(124);
+        createFacilityPage.verifyCalculatedIsa(1000);
         createFacilityPage.clickIsaCancelButton();
+        createFacilityPage.verifyOverriddenIsa("");
+
+        createFacilityPage.overrideIsa(24);
+        createFacilityPage.clickIsaDoneButton();
+        SaveButton.click();
+        createFacilityPage.verifySuccessMessage();
+        //deleteFacilityPage.searchFacility(date_time);
+        deleteFacilityPage.clickFacilityList();
+        createFacilityPage.verifyOverriddenIsa("24");
     }
 
 

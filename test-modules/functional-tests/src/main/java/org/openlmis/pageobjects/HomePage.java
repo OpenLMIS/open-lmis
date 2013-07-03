@@ -24,6 +24,7 @@ public class HomePage extends Page {
   private static WebElement usernameDisplay;
 
   @FindBy(how = How.LINK_TEXT, using = "Logout")
+
   private static WebElement logoutLink;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Requisitions')]")
@@ -223,6 +224,10 @@ public class HomePage extends Page {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
+  }
+
+  public  WebElement getLogoutLink() {
+    return logoutLink;
   }
 
   public LoginPage logout(String baseurl) throws IOException {

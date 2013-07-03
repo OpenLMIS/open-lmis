@@ -17,11 +17,6 @@ describe("Facility Search Controller", function () {
     ctrl = $controller('FacilitySearchController', {$scope:scope, $location:location});
   }));
 
-//  it('should get all facilities',function() {
-//    $httpBackend.flush();
-//    expect(scope.facilityList).toEqual([{"id":1}]);
-//  });
-
   it("should get filtered facility list when three characters are entered for search", function () {
     scope.query = "lok";
     var facilityResponse = {"facilityList":[

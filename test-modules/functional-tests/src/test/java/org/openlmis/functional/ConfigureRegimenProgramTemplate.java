@@ -11,6 +11,7 @@ import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
+import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -30,8 +31,14 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   private static String adultsRegimen = "Adults";
   private static String paediatricsRegimen = "Paediatrics";
-  private static String duplicateErrorMessageSave = "Cannot add duplicate regimen for same program";
-  private static String duplicateErrorMessageAdd = "";
+  private static String duplicateErrorMessageSave = "Cannot add duplicate regimen code for same program";
+  private static String requiredErrorMessageSave = "Please fill required values";
+  private static String errorMessageONSaveBeforeDone = "Mark all regimens as 'Done' before saving the form";
+  private static String baseRegimenDivXpath = "//div[@id='sortable']/div";
+  private static String CODE1 = "Code1";
+  private static String CODE2 = "Code2";
+  private static String NAME1 = "Name1";
+  private static String NAME2 = "Name2";
 
   @BeforeMethod(groups = {"functional2", "smoke"})
   public void setUp() throws Exception {
@@ -49,7 +56,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     List<String> programsList = getProgramsListedOnRegimeScreen();
     verifyProgramsListedOnManageRegimenTemplateScreen(programsList, expectedProgramsString);
     regimenTemplateConfigPage.configureProgram(program);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, "Code1", "Name1", true);
+    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage(regimenTemplateConfigPage);
     verifyProgramConfigured(program);
@@ -62,8 +69,8 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
     regimenTemplateConfigPage.configureProgram(program);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, "Code1", "Name1", true);
-    regimenTemplateConfigPage.AddNewRegimen(paediatricsRegimen, "Code2", "Name1", true);
+    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
+    regimenTemplateConfigPage.AddNewRegimen(paediatricsRegimen, CODE2, NAME1, true);
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage(regimenTemplateConfigPage);
     verifyProgramConfigured(program);
@@ -76,8 +83,8 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
     regimenTemplateConfigPage.configureProgram(program);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, "Code1", "Name1", true);
-    regimenTemplateConfigPage.AddNewRegimen(paediatricsRegimen, "Code1", "Name2", true);
+    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
+    regimenTemplateConfigPage.AddNewRegimen(paediatricsRegimen, CODE1, NAME2, true);
     verifyErrorMessage(regimenTemplateConfigPage, duplicateErrorMessageSave);
   }
 
@@ -89,8 +96,8 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
     regimenTemplateConfigPage.configureProgram(program);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, "Code1", "Name1", true);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, "Code1", "Name2", true);
+    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
+    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME2, true);
     verifyErrorMessage(regimenTemplateConfigPage, duplicateErrorMessageSave);
   }
 
@@ -101,13 +108,13 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
     regimenTemplateConfigPage.configureProgram(program1);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, "Code1", "Name1", true);
+    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage(regimenTemplateConfigPage);
     verifyProgramConfigured(program1);
 
     regimenTemplateConfigPage.configureProgram(program2);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, "Code1", "Name1", true);
+    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage(regimenTemplateConfigPage);
     verifyProgramConfigured(program2);
@@ -120,21 +127,67 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
     regimenTemplateConfigPage.configureProgram(program);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, "Code1", "Name1", true);
+    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, false);
     regimenTemplateConfigPage.SaveRegime();
     regimenTemplateConfigPage.clickEditProgram(program);
-    verifyNonEditableRegimentsAdded("Code1", "Name1", 1);
+    verifyNonEditableRegimentsAdded(CODE1, NAME1, true, 1);
     regimenTemplateConfigPage.clickEditButton();
-    enterCategoriesValuesForEditing("Code2", "Name2", 1);
+    verifyEditableRegimentsAdded(CODE1, NAME1, true, 1);
+    enterCategoriesValuesForEditing(CODE2, NAME2, 1);
     regimenTemplateConfigPage.clickDoneButton();
-    verifyNonEditableRegimentsAdded("Code2", "Name2", 1);
+    verifyNonEditableRegimentsAdded(CODE2, NAME2, true, 1);
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage(regimenTemplateConfigPage);
     regimenTemplateConfigPage.clickEditProgram(program);
-    verifyNonEditableRegimentsAdded("Code2", "Name2", 1);
+    verifyNonEditableRegimentsAdded(CODE2, NAME2, true, 1);
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage(regimenTemplateConfigPage);
     verifyProgramConfigured(program);
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider")
+  public void testVerifyDuplicateCategoryOnDone(String program, String[] credentials) throws Exception {
+    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
+    regimenTemplateConfigPage.configureProgram(program);
+    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, false);
+    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE2, NAME1, true);
+    verifyNonEditableRegimentsAdded(CODE1, NAME1, true, 1);
+    verifyNonEditableRegimentsAdded(CODE2, NAME1, false, 2);
+    regimenTemplateConfigPage.clickEditButton();
+    enterCategoriesValuesForEditing(CODE2, NAME1, 1);
+    regimenTemplateConfigPage.clickDoneButton();
+    verifyErrorMessage(regimenTemplateConfigPage, duplicateErrorMessageSave);
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider")
+  public void testVerifyCategoryErrorOnDone(String program, String[] credentials) throws Exception {
+    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
+    regimenTemplateConfigPage.configureProgram(program);
+    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
+    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE2, NAME1, true);
+    regimenTemplateConfigPage.clickEditButton();
+    regimenTemplateConfigPage.getSaveButton().click();
+    verifyErrorMessage(regimenTemplateConfigPage, errorMessageONSaveBeforeDone);
+    enterCategoriesValuesForEditing("", NAME1, 1);
+    regimenTemplateConfigPage.clickDoneButton();
+    verifyDoneErrorMessage(regimenTemplateConfigPage, requiredErrorMessageSave);
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider")
+  public void testVerifyCancelButtonFunctionality(String program, String[] credentials) throws Exception {
+    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
+    regimenTemplateConfigPage.configureProgram(program);
+    regimenTemplateConfigPage.CancelRegime();
+    assertTrue("Clicking Cancel button should be redirected to Regimen Template screen",testWebDriver.getElementByXpath("//a[@id='" + program + "']/span").isDisplayed());
   }
 
   private void verifyErrorMessage(RegimenTemplateConfigPage regimenTemplateConfigPage, String expectedErrorMessage) {
@@ -142,25 +195,30 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     assertEquals(expectedErrorMessage, regimenTemplateConfigPage.getSaveErrorMsgDiv().getText().trim());
   }
 
-  private void verifyNonEditableRegimentsAdded(String code, String name, int indexOfCodeAdded) {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//div[@id='sortable']/div[" + indexOfCodeAdded + "]/div[2]/div/span"));
-    assertEquals(code, testWebDriver.getElementByXpath("//div[@id='sortable']/div[" + indexOfCodeAdded + "]/div[2]/div/span").getText().trim());
-    assertEquals(name, testWebDriver.getElementByXpath("//div[@id='sortable']/div[" + indexOfCodeAdded + "]/div[3]/div/span").getText().trim());
+  private void verifyDoneErrorMessage(RegimenTemplateConfigPage regimenTemplateConfigPage, String expectedErrorMessage) {
+    testWebDriver.waitForElementToAppear(regimenTemplateConfigPage.getDoneFailMessage());
+    assertTrue("Done regimen Error div should show up", regimenTemplateConfigPage.getDoneFailMessage().isDisplayed());
   }
 
-  private void verifyEditableRegimentsAdded(String code, String name, int indexOfCodeAdded) {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//div[@id='sortable']/div[" + indexOfCodeAdded + "]/div[2]/input"));
-    assertEquals(code, testWebDriver.getAttribute(testWebDriver.getElementByXpath("//div[@id='sortable']/div[" + indexOfCodeAdded + "]/div[2]/input"), "value").trim());
-    assertEquals(name, testWebDriver.getAttribute(testWebDriver.getElementByXpath("//div[@id='sortable']/div[" + indexOfCodeAdded + "]/div[3]/input"), "value").trim());
+  private void verifyNonEditableRegimentsAdded(String code, String name, boolean activeChecboxSelected, int indexOfCodeAdded) {
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span"));
+    assertEquals(code, testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span").getText().trim());
+    assertEquals(name, testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[3]/div/span").getText().trim());
+    assertEquals(activeChecboxSelected, testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[4]/input").isSelected());
+
+  }
+
+  private void verifyEditableRegimentsAdded(String code, String name, boolean activeChecboxSelected, int indexOfCodeAdded) {
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"));
+    assertEquals(code, testWebDriver.getAttribute(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"), "value").trim());
+    assertEquals(name, testWebDriver.getAttribute(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[3]/input"), "value").trim());
+    assertEquals(activeChecboxSelected, testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[4]/input").isSelected());
   }
 
   private void enterCategoriesValuesForEditing(String code, String name, int indexOfCodeAdded) {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//div[@id='sortable']/div[" + indexOfCodeAdded + "]/div[2]/input"));
-    testWebDriver.getElementByXpath("//div[@id='sortable']/div[" + indexOfCodeAdded + "]/div[2]/input").clear();
-    testWebDriver.getElementByXpath("//div[@id='sortable']/div[" + indexOfCodeAdded + "]/div[2]/input").sendKeys(code);
-
-    testWebDriver.getElementByXpath("//div[@id='sortable']/div[" + indexOfCodeAdded + "]/div[3]/input").clear();
-    testWebDriver.getElementByXpath("//div[@id='sortable']/div[" + indexOfCodeAdded + "]/div[3]/input").sendKeys(name);
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"));
+    sendKeys(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input", code);
+    sendKeys(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[3]/input", name);
   }
 
 
@@ -168,6 +226,13 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     for (String program : actualProgramsString)
       SeleneseTestNgHelper.assertTrue("Program " + program + " not present in expected string : " + expectedProgramsString, expectedProgramsString.contains(program));
 
+  }
+
+  private void sendKeys(String locator, String value) {
+    int length = testWebDriver.getAttribute(testWebDriver.getElementByXpath(locator), "value").length();
+    for (int i = 0; i < length; i++)
+      testWebDriver.getElementByXpath(locator).sendKeys("\u0008");
+    testWebDriver.getElementByXpath(locator).sendKeys(value);
   }
 
   private List<String> getProgramsListedOnRegimeScreen() {

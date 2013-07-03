@@ -16,6 +16,7 @@ import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -37,6 +38,8 @@ public class ProgramSupported extends BaseModel implements Importable {
 
   @ImportField(name = "Program Start Date", type = "Date")
   private Date startDate;
+
+  private List<AllocationProgramProduct> programProducts;
 
   public void isValid() {
     if (this.active && this.startDate == null)

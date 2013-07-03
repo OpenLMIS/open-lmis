@@ -68,10 +68,10 @@ public class FacilityApprovedProductMapperIT {
 
     FacilityType facilityType = new FacilityType();
     facilityType.setId(FACILITY_TYPE_ID);
-    FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct(facilityType, programProduct, MAX_MONTHS_OF_STOCK);
-    int insertionCount = facilityApprovedProductMapper.insert(facilityApprovedProduct);
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct(facilityType, programProduct, MAX_MONTHS_OF_STOCK);
+    int insertionCount = facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
 
-    assertThat(facilityApprovedProduct.getId(), is(notNullValue()));
+    assertThat(facilityTypeApprovedProduct.getId(), is(notNullValue()));
     assertThat(insertionCount, is(1));
   }
 
@@ -117,15 +117,15 @@ public class FacilityApprovedProductMapperIT {
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct7);
 
     // Get full supply products
-    List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(
+    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(
       facility.getId(), yellowFeverProgram.getId());
-    assertEquals(3, facilityApprovedProducts.size());
+    assertEquals(3, facilityTypeApprovedProducts.size());
 
-    FacilityApprovedProduct facilityApprovedProduct = facilityApprovedProducts.get(0);
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = facilityTypeApprovedProducts.get(0);
 
-    assertEquals(programProduct6.getId(), facilityApprovedProduct.getProgramProduct().getId());
-    assertEquals(30, facilityApprovedProduct.getProgramProduct().getDosesPerMonth().intValue());
-    Product product = facilityApprovedProduct.getProgramProduct().getProduct();
+    assertEquals(programProduct6.getId(), facilityTypeApprovedProduct.getProgramProduct().getId());
+    assertEquals(30, facilityTypeApprovedProduct.getProgramProduct().getDosesPerMonth().intValue());
+    Product product = facilityTypeApprovedProduct.getProgramProduct().getProduct();
     assertEquals("PRO06", product.getCode());
     assertEquals("Primary Name", product.getPrimaryName());
     assertEquals("strength", product.getStrength());
@@ -139,17 +139,17 @@ public class FacilityApprovedProductMapperIT {
     assertEquals("mg", product.getDosageUnit().getCode());
     assertEquals(10, product.getDosesPerDispensingUnit().intValue());
 
-    assertEquals("PRO05", facilityApprovedProducts.get(1).getProgramProduct().getProduct().getCode());
-    assertEquals("PRO01", facilityApprovedProducts.get(2).getProgramProduct().getProduct().getCode());
+    assertEquals("PRO05", facilityTypeApprovedProducts.get(1).getProgramProduct().getProduct().getCode());
+    assertEquals("PRO01", facilityTypeApprovedProducts.get(2).getProgramProduct().getProduct().getCode());
 
     // Non-full supply products
-    List<FacilityApprovedProduct> nonFullSupplyfacilityApprovedProducts = facilityApprovedProductMapper.getNonFullSupplyProductsByFacilityAndProgram(
+    List<FacilityTypeApprovedProduct> nonFullSupplyfacilityTypeApprovedProducts = facilityApprovedProductMapper.getNonFullSupplyProductsByFacilityAndProgram(
       facility.getId(), yellowFeverProgram.getId());
 
-    assertThat(nonFullSupplyfacilityApprovedProducts.size(), is(1));
-    assertThat(nonFullSupplyfacilityApprovedProducts.get(0).getProgramProduct().getProduct().getCode(), is("PRO03"));
-    assertThat(nonFullSupplyfacilityApprovedProducts.get(0).getProgramProduct().getProduct().getManufacturer(), is(nullValue()));
-    assertThat(nonFullSupplyfacilityApprovedProducts.get(0).getProgramProduct().getProduct().getFlammable(), is(nullValue()));
+    assertThat(nonFullSupplyfacilityTypeApprovedProducts.size(), is(1));
+    assertThat(nonFullSupplyfacilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getCode(), is("PRO03"));
+    assertThat(nonFullSupplyfacilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getManufacturer(), is(nullValue()));
+    assertThat(nonFullSupplyfacilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getFlammable(), is(nullValue()));
   }
 
   private ProductCategory category(String categoryCode, String categoryName, int categoryDisplayOrder) {
@@ -162,13 +162,13 @@ public class FacilityApprovedProductMapperIT {
   }
 
 
-  private FacilityApprovedProduct insertFacilityApprovedProduct(Long facilityTypeId, ProgramProduct programProduct) {
+  private FacilityTypeApprovedProduct insertFacilityApprovedProduct(Long facilityTypeId, ProgramProduct programProduct) {
     FacilityType facilityType = new FacilityType();
     facilityType.setId(facilityTypeId);
 
-    FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct(facilityType, programProduct, MAX_MONTHS_OF_STOCK);
-    facilityApprovedProductMapper.insert(facilityApprovedProduct);
-    return facilityApprovedProduct;
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct(facilityType, programProduct, MAX_MONTHS_OF_STOCK);
+    facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
+    return facilityTypeApprovedProduct;
   }
 
   private Product product(String productCode, boolean isFullSupply, Integer order, ProductCategory productCategory) {
@@ -196,9 +196,9 @@ public class FacilityApprovedProductMapperIT {
 
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct);
 
-    FacilityApprovedProduct facilityApprovedProductsFromDB = facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(programProduct.getId(), "warehouse");
+    FacilityTypeApprovedProduct facilityTypeApprovedProductsFromDB = facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(programProduct.getId(), "warehouse");
 
-    assertNotNull(facilityApprovedProductsFromDB);
-    assertEquals(facilityApprovedProductsFromDB.getMaxMonthsOfStock(),MAX_MONTHS_OF_STOCK );
+    assertNotNull(facilityTypeApprovedProductsFromDB);
+    assertEquals(facilityTypeApprovedProductsFromDB.getMaxMonthsOfStock(),MAX_MONTHS_OF_STOCK );
   }
 }

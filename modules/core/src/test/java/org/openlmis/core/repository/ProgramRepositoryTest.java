@@ -126,4 +126,11 @@ public class ProgramRepositoryTest {
 
     verify(programMapper).setTemplateConfigured(1L);
   }
+
+  @Test
+  public void shouldSetRegimenTemplateConfiguredFlag() throws Exception {
+    programRepository.setRegimenTemplateConfigured(1L);
+
+    verify(programMapper).setRegimenTemplateConfigured(1L);
+  }
 }

@@ -39,7 +39,6 @@ public class RoleRightsService {
     TreeSet<Right> rights = new TreeSet<>(new Right.RightComparator());
     rights.addAll(asList(Right.values()));
     return rights;
-
   }
 
   public void saveRole(Role role) {

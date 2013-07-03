@@ -87,7 +87,7 @@ public class ProgramRepository {
     return mapper.getByCode(code);
   }
 
-  public void setRegimenTemplateConfigured(Long id) {
-    mapper.setRegimenTemplateConfigured(id);
+  public void setRegimenTemplateConfigured(Long programId) {
+    mapper.setRegimenTemplateConfigured(programId);
   }
 }

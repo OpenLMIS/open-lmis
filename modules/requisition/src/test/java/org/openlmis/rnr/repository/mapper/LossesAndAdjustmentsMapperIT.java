@@ -79,7 +79,7 @@ public class LossesAndAdjustmentsMapperIT {
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5"));
     programProductMapper.insert(programProduct);
 
-    FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct("warehouse", programProduct, 3);
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
 
@@ -93,7 +93,7 @@ public class LossesAndAdjustmentsMapperIT {
     requisition.setStatus(INITIATED);
     requisitionMapper.insert(requisition);
 
-    rnrLineItem = new RnrLineItem(requisition.getId(), facilityApprovedProduct, MODIFIED_BY);
+    rnrLineItem = new RnrLineItem(requisition.getId(), facilityTypeApprovedProduct, MODIFIED_BY);
     rnrLineItemMapper.insert(rnrLineItem);
     lossAndAdjustment = new LossesAndAdjustments();
     LossesAndAdjustmentsType lossesAndAdjustmentsType = new LossesAndAdjustmentsType();

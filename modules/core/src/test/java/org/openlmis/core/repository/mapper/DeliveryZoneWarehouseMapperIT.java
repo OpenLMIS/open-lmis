@@ -5,7 +5,6 @@
  */
 package org.openlmis.core.repository.mapper;
 
-import com.natpryce.makeiteasy.MakeItEasy;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,9 +16,6 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.DeliveryZoneWarehouse;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.repository.mapper.DeliveryZoneMapper;
-import org.openlmis.core.repository.mapper.DeliveryZoneWarehouseMapper;
-import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

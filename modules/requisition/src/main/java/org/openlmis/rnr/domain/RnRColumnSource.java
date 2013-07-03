@@ -9,14 +9,13 @@ package org.openlmis.rnr.domain;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-// TODO use annotations for json serialization
 @JsonSerialize(using = RnrColumnSourceSerializer.class)
 @JsonDeserialize(using = RnrColumnSourceDeSerializer.class)
 public enum RnRColumnSource {
 
-    REFERENCE("R", "Reference Data"),
-    USER_INPUT("U", "User Input"),
-    CALCULATED("C", "Calculated");
+    REFERENCE("R", "label.column.source.reference.data"),
+    USER_INPUT("U", "label.column.source.user.input"),
+    CALCULATED("C", "label.column.source.calculated");
 
     private final String code;
 

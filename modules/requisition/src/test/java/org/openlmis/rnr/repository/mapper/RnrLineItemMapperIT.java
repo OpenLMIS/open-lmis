@@ -6,7 +6,6 @@
 
 package org.openlmis.rnr.repository.mapper;
 
-import liquibase.change.core.UpdateDataChange;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -74,7 +73,7 @@ public class RnrLineItemMapperIT {
   @Autowired
   private ProductCategoryMapper categoryMapper;
 
-  private FacilityApprovedProduct facilityApprovedProduct;
+  private FacilityTypeApprovedProduct facilityTypeApprovedProduct;
   private Facility facility;
   private Rnr rnr;
   Program program;
@@ -93,9 +92,9 @@ public class RnrLineItemMapperIT {
     facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
 
-    facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
-    facilityApprovedProduct.setProgramProduct(programProduct);
-    facilityApprovedProductMapper.insert(facilityApprovedProduct);
+    facilityTypeApprovedProduct = make(a(defaultFacilityApprovedProduct));
+    facilityTypeApprovedProduct.setProgramProduct(programProduct);
+    facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
 
     ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
     processingScheduleMapper.insert(processingSchedule);
@@ -110,7 +109,7 @@ public class RnrLineItemMapperIT {
   @Test
   public void shouldReturnRnrLineItemsByRnrId() {
     requisitionMapper.insert(rnr);
-    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
+    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY);
     lineItem.setPacksToShip(20);
     lineItem.setPreviousStockInHandAvailable(true);
     lineItem.setBeginningBalance(5);
@@ -156,7 +155,7 @@ public class RnrLineItemMapperIT {
   @Test
   public void shouldReturnNonFullSupplyLineItemsByRnrId() throws Exception {
     requisitionMapper.insert(rnr);
-    RnrLineItem nonFullSupplyLineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
+    RnrLineItem nonFullSupplyLineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY);
     nonFullSupplyLineItem.setQuantityRequested(20);
     nonFullSupplyLineItem.setReasonForRequestedQuantity("More patients");
     nonFullSupplyLineItem.setFullSupply(false);
@@ -173,7 +172,7 @@ public class RnrLineItemMapperIT {
   @Test
   public void shouldReturnNonFullSupplyLineItemByRnrIdAndProductCode() throws Exception {
     requisitionMapper.insert(rnr);
-    RnrLineItem nonFullSupplyLineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
+    RnrLineItem nonFullSupplyLineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY);
     nonFullSupplyLineItem.setQuantityRequested(20);
     nonFullSupplyLineItem.setReasonForRequestedQuantity("More patients");
     nonFullSupplyLineItem.setFullSupply(false);
@@ -189,7 +188,7 @@ public class RnrLineItemMapperIT {
   @Test
   public void shouldUpdateRnrLineItem() {
     requisitionMapper.insert(rnr);
-    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
+    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY);
     rnrLineItemMapper.insert(lineItem);
     Long anotherModifiedBy = 2L;
     lineItem.setModifiedBy(anotherModifiedBy);
@@ -213,7 +212,7 @@ public class RnrLineItemMapperIT {
   @Test
   public void shouldInsertNonFullSupplyLineItem() {
     requisitionMapper.insert(rnr);
-    RnrLineItem requisitionLineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
+    RnrLineItem requisitionLineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY);
     requisitionLineItem.setFullSupply(false);
     rnrLineItemMapper.insertNonFullSupply(requisitionLineItem);
     assertNotNull(requisitionLineItem.getId());
@@ -274,11 +273,11 @@ public class RnrLineItemMapperIT {
       ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
       programProductMapper.insert(programProduct);
 
-      FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
-      facilityApprovedProduct.setProgramProduct(programProduct);
-      facilityApprovedProductMapper.insert(facilityApprovedProduct);
+      FacilityTypeApprovedProduct facilityTypeApprovedProduct = make(a(defaultFacilityApprovedProduct));
+      facilityTypeApprovedProduct.setProgramProduct(programProduct);
+      facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
 
-      RnrLineItem item = new RnrLineItem(rnr.getId(), facilityApprovedProduct, 1L);
+      RnrLineItem item = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, 1L);
       rnrLineItemMapper.insert(item);
     }
     assertThat(rnrLineItemMapper.getCategoryCount(rnr, fullSupplyFlag), is(10));
@@ -287,7 +286,7 @@ public class RnrLineItemMapperIT {
   @Test
   public void shouldUpdateApprovedQuantityAndRemarks() throws Exception {
     requisitionMapper.insert(rnr);
-    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
+    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY);
     rnrLineItemMapper.insert(lineItem);
     rnr.setStatus(AUTHORIZED);
 
