@@ -12,11 +12,17 @@ import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.security.Principal;
+
+import static org.openlmis.restapi.response.RestResponse.error;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Controller
 @NoArgsConstructor
@@ -73,6 +79,14 @@ public class LookupController {
     @RequestMapping(value = "/rest-api/lookup/processing-periods", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity getProcessingPeriods( Principal principal) {
         return RestResponse.response("processing-periods", lookupService.getAllProcessingPeriods());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<RestResponse> handleException(Exception ex) {
+        if (ex instanceof AccessDeniedException) {
+            return error(FORBIDDEN_EXCEPTION, FORBIDDEN);
+        }
+        return error(UNEXPECTED_EXCEPTION, INTERNAL_SERVER_ERROR);
     }
 
 }
