@@ -32,7 +32,12 @@
         <tr>
           <th></th>
           <th></th>
-          <th rowspan="2"
+          <th ng-repeat="productGroup in facilityMap[geoZoneName][0].supportedPrograms[0].sortedProductGroup"
+              colspan="{{facilityMap[geoZoneName][0].supportedPrograms[0].programProductMap[productGroup].length}}">
+            <span ng-bind="productGroup"></span>
+          </th>
+
+          <!--<th rowspan="2"
               ng-repeat="productGroup in facilityMap[geoZoneName][0].supportedPrograms[0].sortedProductGroup"
               colspan="{{facilityMap[geoZoneName][0].supportedPrograms[0].programProductMap[productGroup].length}}">
             <table>
@@ -49,7 +54,7 @@
                 </td>
               </tr>
             </table>
-          </th>
+          </th>-->
         </tr>
         <tr>
           <th>
@@ -57,6 +62,9 @@
           </th>
           <th>
             <span openlmis-message="label.population"></span>
+          </th>
+          <th ng-repeat="programProduct in getProgramProducts(facilityMap[geoZoneName][0])">
+            <span ng-bind="programProduct.product.primaryName"></span>
           </th>
         </tr>
         </thead>
@@ -69,7 +77,11 @@
             <span ng-bind="facility.catchmentPopulation"></span>
           </td>
 
-          <td ng-repeat="productGroup in facility.supportedPrograms[0].sortedProductGroup"
+          <td ng-repeat="programProduct in getProgramProducts(facilityMap[geoZoneName][0])">
+            <span ng-bind="programProduct.isaAmount"></span>
+          </td>
+
+          <!--<td ng-repeat="productGroup in facility.supportedPrograms[0].sortedProductGroup"
               colspan="{{facility.supportedPrograms[0].programProductMap[productGroup].length}}">
             <table>
               <tr>
@@ -78,7 +90,7 @@
                 </td>
               </tr>
             </table>
-          </td>
+          </td>-->
         </tr>
         </tbody>
       </table>

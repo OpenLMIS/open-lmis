@@ -35,8 +35,15 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
     return key;
   });
 
+  $scope.getProgramProducts = function(facility) {
+    var programProducts = [];
+    $(facility.supportedPrograms[0].sortedProductGroup).each( function (index, sortedProductGroupKey){
+      programProducts =  programProducts.concat(facility.supportedPrograms[0].programProductMap[sortedProductGroupKey]);
+    });
+    return programProducts;
+  }
 
-  console.log(deliveryZone, period, $scope.facilityMap, $scope.sortedGeoZoneKeys)
+//  console.log(deliveryZone, period, $scope.facilityMap, $scope.sortedGeoZoneKeys)
 
 }
 
