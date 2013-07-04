@@ -6,22 +6,23 @@
 
 <div>
   <h2 openlmis-message="label.warehouse.load.amount"></h2>
-
-  <div class="info-box">
-    <div class="row-fluid">
-      <div class="span3">
-        <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span ng-bind="deliveryZone.name"></span>
-      </div>
-      <div class="span3">
-        <strong openlmis-message="label.program"></strong> :&nbsp;<span ng-bind="program.name"></span>
-      </div>
-      <div class="span3">
-        <strong openlmis-message="label.period"> </strong> :&nbsp;<span ng-bind="period.name"></span>
-      </div>
-    </div>
-  </div>
   <div ng-show="message"><span ng-bind="message"></span></div>
   <div ng-show="!message">
+    <div class="info-box">
+      <div class="row-fluid">
+        <div class="span3">
+          <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span ng-bind="deliveryZone.name"></span>
+        </div>
+        <div class="span3">
+          <strong openlmis-message="label.program"></strong> :&nbsp;<span ng-bind="program.name"></span>
+        </div>
+        <div class="span3">
+          <strong openlmis-message="label.period"> </strong> :&nbsp;<span ng-bind="period.name"></span>
+        </div>
+      </div>
+    </div>
+
+
     <div class="geo-zone-facility-list" ng-repeat="geoZoneName in sortedGeoZoneKeys">
       <h3><span ng-bind="geoZoneName"></span></h3>
 
