@@ -58,7 +58,7 @@
             <td>
               <span ng-bind="facility.catchmentPopulation"></span>
             </td>
-            <td ng-repeat="programProduct in getProgramProducts(facilityMap[geoZoneName][0])">
+            <td ng-repeat="programProduct in getProgramProducts(facility)">
               <span ng-bind="programProduct.isaAmount"></span>
             </td>
           </tr>
