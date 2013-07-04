@@ -143,7 +143,7 @@ public interface FacilityMapper {
     "INNER JOIN delivery_zones DZ ON DZ.id = DZM.deliveryZoneId",
     "INNER JOIN delivery_zone_program_schedules DZPS ON DZPS.deliveryZoneId = DZM.deliveryZoneId",
     "WHERE DZPS.programId = #{programId} AND F.active = true",
-    "AND F.id = PS.facilityId AND PS.programId = #{programId} order by F.name"})
+    "AND F.id = PS.facilityId AND PS.programId = #{programId}  AND dzm.deliveryZoneId = #{deliveryZoneId} order by F.name"})
   @Results(value = {
     @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
       one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getGeographicZoneById"))
