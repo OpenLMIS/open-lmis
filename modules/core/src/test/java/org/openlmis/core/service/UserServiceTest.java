@@ -179,19 +179,6 @@ public class UserServiceTest {
     verify(emailService).send(any(EmailMessage.class));
   }
 
-  @Test
-  public void shouldSaveUserWithProgramRoleMapping() throws Exception {
-    User user = new User();
-    RoleAssignment userRoleAssignment = new RoleAssignment(1L, 2L, 3L, null);
-    List<RoleAssignment> homeFacilityRoles = new ArrayList<>();
-    homeFacilityRoles.add(userRoleAssignment);
-    user.setHomeFacilityRoles(homeFacilityRoles);
-
-    userService.create(user, FORGET_PASSWORD_LINK);
-
-    verify(userRepository).create(user);
-    verify(roleAssignmentService).saveHomeFacilityRoles(user);
-  }
 
   @Test
   public void shouldReturnSearchResultsWhenUserExists() throws Exception {
@@ -207,38 +194,6 @@ public class UserServiceTest {
   }
 
   @Test
-  public void shouldSaveUsersSupervisoryRoles() throws Exception {
-    User user = new User();
-    final RoleAssignment roleAssignment = new RoleAssignment(1L, 1L, 1L, new SupervisoryNode(1L));
-    List<RoleAssignment> supervisorRoles = Arrays.asList(roleAssignment);
-    user.setSupervisorRoles(supervisorRoles);
-
-    userService.create(user, FORGET_PASSWORD_LINK);
-
-    verify(userRepository).create(user);
-    verify(roleAssignmentService).saveHomeFacilityRoles(user);
-    verify(roleAssignmentService).saveSupervisoryRoles(user);
-  }
-
-  @Test
-  public void shouldSaveUsersWithAllRoles() throws Exception {
-    User user = new User();
-    final RoleAssignment roleAssignment = new RoleAssignment(1L, 1L, 1L, new SupervisoryNode(1L));
-    List<RoleAssignment> supervisorRoles = Arrays.asList(roleAssignment);
-    RoleAssignment adminRoleAssignment = new RoleAssignment();
-    adminRoleAssignment.setRoleId(1L);
-    user.setAdminRole(adminRoleAssignment);
-    user.setSupervisorRoles(supervisorRoles);
-
-    userService.create(user, FORGET_PASSWORD_LINK);
-
-    verify(userRepository).create(user);
-    verify(roleAssignmentService).saveHomeFacilityRoles(user);
-    verify(roleAssignmentService).saveSupervisoryRoles(user);
-    verify(roleAssignmentService).saveAdminRole(user);
-  }
-
-  @Test
   public void shouldUpdateUser() throws Exception {
     User user = new User();
     final RoleAssignment roleAssignment = new RoleAssignment(1L, 1L, 1L, new SupervisoryNode(1L));
@@ -248,10 +203,7 @@ public class UserServiceTest {
     userService.update(user);
 
     verify(userRepository).update(user);
-    verify(roleAssignmentService).deleteAllRoleAssignmentsForUser(user.getId());
-    verify(roleAssignmentService).saveHomeFacilityRoles(user);
-    verify(roleAssignmentService).saveSupervisoryRoles(user);
-    verify(roleAssignmentService).saveAdminRole(user);
+    verify(roleAssignmentService).saveRolesForUser(user);
   }
 
   @Test
@@ -291,8 +243,16 @@ public class UserServiceTest {
     verify(userRepository).create(user);
     verify(userRepository).insertEmailNotification(emailMessage);
     verify(emailService, never()).send(emailMessage);
-    verify(roleAssignmentService).saveHomeFacilityRoles(user);
-    verify(roleAssignmentService).saveSupervisoryRoles(user);
-    verify(roleAssignmentService).saveAdminRole(user);
+    verify(roleAssignmentService).saveRolesForUser(user);
+  }
+
+  @Test
+  public void shouldInsertUsersWithAllRoles() throws Exception {
+    User user = new User();
+
+    userService.create(user, FORGET_PASSWORD_LINK);
+
+    verify(userRepository).create(user);
+    verify(roleAssignmentService).saveRolesForUser(user);
   }
 }

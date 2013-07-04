@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.builder.DeliveryZoneBuilder;
+import org.openlmis.core.builder.RoleAssignmentBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
@@ -20,6 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -59,6 +62,8 @@ public class RoleAssignmentMapperIT {
   FacilityMapper facilityMapper;
   @Autowired
   SupervisoryNodeMapper supervisoryNodeMapper;
+  @Autowired
+  private DeliveryZoneMapper deliverZoneMapper;
 
   private User user;
   private Facility facility;
@@ -205,6 +210,32 @@ public class RoleAssignmentMapperIT {
         return roleId.equals(adminRole.getId());
       }
     }));
+  }
+
+  @Test
+  public void shouldInsertRolesForUser() throws Exception {
+    Long programId = 1L;
+
+    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    supervisoryNode.setFacility(facility);
+    supervisoryNodeMapper.insert(supervisoryNode);
+
+    DeliveryZone deliveryZone = make(a(DeliveryZoneBuilder.defaultDeliveryZone));
+    deliverZoneMapper.insert(deliveryZone);
+
+    Role adminRole = new Role("r1", ADMIN, "admin role");
+    roleRightsMapper.insertRole(adminRole);
+    Role nonAdminRole = new Role("r2", REQUISITION, "non admin role");
+    roleRightsMapper.insertRole(nonAdminRole);
+
+    mapper.insert(user.getId(), programId, supervisoryNode, null, nonAdminRole.getId());
+    mapper.insert(user.getId(), null, null, null, adminRole.getId());
+
+    RoleAssignment adminRoleAssignment = mapper.getAdminRole(user.getId());
+    List<RoleAssignment> supervisoryRoles = mapper.getSupervisorRoles(user.getId());
+
+    assertThat(adminRoleAssignment.getRoleIds().get(0), is(adminRole.getId()));
+    assertThat(supervisoryRoles.get(0).getRoleIds().get(0), is(nonAdminRole.getId()));
   }
 
   private Program insertProgram(Program program) {

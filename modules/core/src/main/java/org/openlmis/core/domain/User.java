@@ -61,6 +61,8 @@ public class User extends BaseModel implements Importable {
 
   private List<RoleAssignment> supervisorRoles;
   private List<RoleAssignment> homeFacilityRoles;
+  private List<RoleAssignment> allocationRoles;
+
   private RoleAssignment adminRole;
 
   private Long vendorId;
