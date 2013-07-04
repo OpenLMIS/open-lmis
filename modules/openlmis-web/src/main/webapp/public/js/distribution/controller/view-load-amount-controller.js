@@ -53,7 +53,7 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
     }
     console.log(deliveryZone, period, $scope.facilityMap, $scope.sortedGeoZoneKeys)
   } else {
-    $scope.message = "msg.delivery.zone.no.record"
+    $scope.message = "msg.delivery.zone.no.record";
   }
 
 
