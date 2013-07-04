@@ -4,18 +4,20 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $location, currency, $routeParams, $dialog, $rootScope, messageService) {
+function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenColumnList, $location, currency, $routeParams, $dialog, $rootScope, messageService) {
+  $scope.visibleTab = $routeParams.supplyType;
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
+  $scope.regimenColumns = regimenColumnList;
   $scope.currency = currency;
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.error = "";
   $scope.message = "";
+  $scope.regimenCount = $scope.rnr.regimenLineItems.length;
 
   $scope.pageLineItems = [];
   $scope.errorPages = {};
   $scope.shownErrorPages = [];
-  var isConfirmed = false;
 
   $scope.goToPage = function (page, event) {
     angular.element(event.target).parents(".dropdown").click();
@@ -25,10 +27,6 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   $scope.getFullScreen = function () {
     $rootScope.fullScreen = !$rootScope.fullScreen;
     angular.element(window).scrollTop(0);
-  }
-
-  function updateSupplyType() {
-    $scope.visibleTab = !!($routeParams.supplyType == 'non-full-supply');
   }
 
   $scope.highlightRequired = function (value) {
@@ -49,33 +47,33 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
 
   function fillPageData() {
     updateShownErrorPages();
-    var pageLineItems = $scope.visibleTab ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
+    var pageLineItems = $scope.visibleTab == 'non-full-supply' ? $scope.rnr.nonFullSupplyLineItems : $scope.visibleTab == 'full-supply' ? $scope.rnr.fullSupplyLineItems : [];
     $scope.numberOfPages = Math.ceil(pageLineItems.length / $scope.pageSize) ? Math.ceil(pageLineItems.length / $scope.pageSize) : 1;
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
     $scope.pageLineItems = pageLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
   }
 
-  updateSupplyType();
   fillPageData();
 
-
   $scope.$watch("currentPage", function () {
-    if (!$routeParams.supplyType) $location.search('supplyType', 'full-supply');
     $location.search("page", $scope.currentPage);
   });
 
   $scope.switchSupplyType = function (supplyType) {
+    $scope.visibleTab = supplyType;
     $location.search('page', 1);
     $location.search('supplyType', supplyType);
   };
 
   $scope.$on('$routeUpdate', function () {
+    $scope.visibleTab = $routeParams.supplyType == 'non-full-supply' ? 'non-full-supply' : ($routeParams.supplyType == 'regimen' && $scope.regimenCount) ? 'regimen' : 'full-supply';
+    $location.search('supplyType', $scope.visibleTab);
+
     if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
       $location.search('page', 1);
       return;
     }
     if ($scope.approvalForm.$dirty) $scope.saveRnr();
-    updateSupplyType();
     fillPageData();
   });
 
@@ -220,6 +218,16 @@ ApproveRnrController.resolve = {
     $timeout(function () {
       ReferenceData.get({}, function (data) {
         deferred.resolve(data.currency);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  regimenColumnList: function ($q, $timeout, $route, RegimenColumns) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      RegimenColumns.get({programId: $route.current.params.program}, function (data) {
+        deferred.resolve(data.regimen_columns);
       }, {});
     }, 100);
     return deferred.promise;

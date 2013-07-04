@@ -37,7 +37,8 @@ describe('CreateRequisitionController', function () {
       ],
       nonFullSupplyLineItems: [
         {id: 2}
-      ]
+      ],
+      regimenLineItems: []
     };
 
     rnrColumns = [
@@ -300,7 +301,7 @@ describe('CreateRequisitionController', function () {
 
   it('should not set disable flag if rnr is initiated and user has create right', function () {
 
-    var rnr = {id: "rnrId", fullSupplyLineItems: [], status: "INITIATED"};
+    var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "INITIATED"};
 
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenColumnList: regimenColumnList,
       currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
@@ -309,7 +310,7 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should not set disable flag if rnr is submitted and user have authorize right', function () {
-    var rnr = {id: "rnrId", fullSupplyLineItems: [], status: "SUBMITTED"};
+    var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "SUBMITTED"};
 
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenColumnList: regimenColumnList,
       currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
@@ -318,7 +319,7 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should set disable flag if rnr is not initiated/submitted', function () {
-    var rnr = {id: "rnrId", fullSupplyLineItems: [], status: "some random status"};
+    var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "some random status"};
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenColumnList: regimenColumnList,
       currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
     expect(scope.formDisabled).toEqual(true);

@@ -9,13 +9,13 @@
 
   <div class="rnr-tabs clearfix">
     <ul class="clearfix">
-      <li ng-class="{'selected': visibleTab == 'full-supply', 'has-error': fullSupplyTabError}">
+      <li ng-class="{'selected': (visibleTab != 'non-full-supply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
         <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab"
            openlmis-message="label.full.supply.products"></a></li>
       <li ng-class="{'selected': visibleTab == 'non-full-supply', 'has-error': nonFullSupplyTabError}">
         <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab"
            openlmis-message="label.non.full.supply.products"></a></li>
-      <li ng-class="{'selected': visibleTab == 'regimen'}">
+      <li ng-class="{'selected': visibleTab == 'regimen'}" ng-show = "regimenCount">
         <a ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a></li>
     </ul>
     <a class="btn pull-right" ng-click="fullScreen = !fullScreen">
@@ -36,7 +36,7 @@
         <ng-include src="'/public/pages/logistics/rnr/partials/create/rnr-full-supply.html'"></ng-include>
       </span>
     </ng-switch>
-    <div>
+    <div ng-hide="visibleTab == 'regimen'">
       <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"
                            check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
     </div>

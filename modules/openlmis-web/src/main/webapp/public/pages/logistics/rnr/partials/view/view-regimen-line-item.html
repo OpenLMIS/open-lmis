@@ -1,10 +1,9 @@
 <!--
-  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
-  ~
+  ~ Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<div ng-controller="CreateRegimenLineItemController">
+<div ng-controller="ViewRegimenLineItemController">
 
   <div class="rnr-table">
     <table id="regimenTable" fixed-table-header class="table table-bordered scrollable">
@@ -31,8 +30,9 @@
               </span>
               <span ng-switch-default>
                 <input type="text"
-                       ng-model="regimenLineItem[regimenColumn.name]"
-                       rnr-validator="positiveInteger" maxlength="8">
+                       ng-bind="regimenLineItem[regimenColumn.name]"
+                       rnr-validator="positiveInteger" maxlength="8"
+                       ng-disabled="true">
               </span>
           </ng-switch>
         </td>
