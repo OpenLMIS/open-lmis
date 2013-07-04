@@ -70,12 +70,11 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Regimens')]")
   private static WebElement regimenTab;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Reporting fields')]")
+  @FindBy(how = How.XPATH, using = "//*[@id='wrap']/div/div/div/div[2]/ul/li[2]/a")
   private static WebElement reportingFieldsTab;
 
   @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[4]/ng-switch/div/div[1]/input")
   private static WebElement noOfPatientsOnTreatmentCheckBox;
-  //*[@id="reportingFields"]/div[4]/ng-switch/div/div[1]/input
 
   @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/ng-switch/div/div[1]/input")
   private static WebElement noOfPatientsToInitiateTreatmentCheckBox;
