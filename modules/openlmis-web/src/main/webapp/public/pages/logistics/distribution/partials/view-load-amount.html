@@ -22,76 +22,46 @@
   </div>
 
 
-  <div ng-repeat="geoZoneName in sortedGeoZoneKeys">
+  <div class="geo-zone-facility-list" ng-repeat="geoZoneName in sortedGeoZoneKeys">
     <h3><span ng-bind="geoZoneName"></span></h3>
 
 
-    <div>
-      <table class="table table-bordered">
+    <div class="facilities-isa-amount-table">
+      <table class="table table-bordered table-striped">
         <thead ng-model="facilityMap[geoZoneName]">
-        <tr>
-          <th></th>
-          <th></th>
-          <th ng-repeat="productGroup in facilityMap[geoZoneName][0].supportedPrograms[0].sortedProductGroup"
-              colspan="{{facilityMap[geoZoneName][0].supportedPrograms[0].programProductMap[productGroup].length}}">
-            <span ng-bind="productGroup"></span>
-          </th>
-
-          <!--<th rowspan="2"
-              ng-repeat="productGroup in facilityMap[geoZoneName][0].supportedPrograms[0].sortedProductGroup"
-              colspan="{{facilityMap[geoZoneName][0].supportedPrograms[0].programProductMap[productGroup].length}}">
-            <table>
-              <tr>
-                <td
-                  colspan="{{facilityMap[geoZoneName][0].supportedPrograms[0].programProductMap[productGroup].length}}">
-                  <span ng-bind="productGroup"></span>
-                </td>
-              </tr>
-              <tr>
-                <td
-                  ng-repeat="programProduct in facilityMap[geoZoneName][0].supportedPrograms[0].programProductMap[productGroup]">
-                  <span ng-bind="programProduct.product.primaryName"></span>
-                </td>
-              </tr>
-            </table>
-          </th>-->
-        </tr>
-        <tr>
-          <th>
-            <span ng-bind="geoZoneLevelName"></span>
-          </th>
-          <th>
-            <span openlmis-message="label.population"></span>
-          </th>
-          <th ng-repeat="programProduct in getProgramProducts(facilityMap[geoZoneName][0])">
-            <span ng-bind="programProduct.product.primaryName"></span>
-          </th>
-        </tr>
+          <tr>
+            <th></th>
+            <th></th>
+            <th class="main-heading" ng-repeat="productGroup in facilityMap[geoZoneName][0].supportedPrograms[0].sortedProductGroup"
+                colspan="{{facilityMap[geoZoneName][0].supportedPrograms[0].programProductMap[productGroup].length}}">
+              <span ng-bind="productGroup"></span>
+            </th>
+          </tr>
+          <tr>
+            <th>
+              <span ng-bind="geoZoneLevelName"></span>
+            </th>
+            <th>
+              <span openlmis-message="label.population"></span>
+            </th>
+            <th ng-repeat="programProduct in getProgramProducts(facilityMap[geoZoneName][0])">
+              <span ng-bind="programProduct.product.primaryName"></span>
+            </th>
+          </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="facility in facilityMap[geoZoneName]">
-          <td class="span1">
-            <span ng-bind="facility.name"></span> <span ng-bind="facility.code"></span>
-          </td>
-          <td class="span1">
-            <span ng-bind="facility.catchmentPopulation"></span>
-          </td>
-
-          <td ng-repeat="programProduct in getProgramProducts(facilityMap[geoZoneName][0])">
-            <span ng-bind="programProduct.isaAmount"></span>
-          </td>
-
-          <!--<td ng-repeat="productGroup in facility.supportedPrograms[0].sortedProductGroup"
-              colspan="{{facility.supportedPrograms[0].programProductMap[productGroup].length}}">
-            <table>
-              <tr>
-                <td ng-repeat="programProduct in facility.supportedPrograms[0].programProductMap[productGroup]">
-                  <span ng-bind="programProduct.isaAmount"></span>
-                </td>
-              </tr>
-            </table>
-          </td>-->
-        </tr>
+          <tr ng-repeat="facility in facilityMap[geoZoneName]">
+            <td>
+              <span ng-bind="facility.name"></span>
+              <span ng-bind="facility.code"></span>
+            </td>
+            <td>
+              <span ng-bind="facility.catchmentPopulation"></span>
+            </td>
+            <td ng-repeat="programProduct in getProgramProducts(facilityMap[geoZoneName][0])">
+              <span ng-bind="programProduct.isaAmount"></span>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
