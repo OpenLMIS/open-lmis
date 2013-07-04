@@ -19,6 +19,10 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   $scope.errorPages = {};
   $scope.shownErrorPages = [];
 
+  var NON_FULL_SUPPLY = 'non-full-supply';
+  var FULL_SUPPLY = 'full-supply';
+  var REGIMEN = 'regimen';
+
   $scope.goToPage = function (page, event) {
     angular.element(event.target).parents(".dropdown").click();
     $location.search('page', page);
@@ -47,7 +51,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
 
   function fillPageData() {
     updateShownErrorPages();
-    var pageLineItems = $scope.visibleTab == 'non-full-supply' ? $scope.rnr.nonFullSupplyLineItems : $scope.visibleTab == 'full-supply' ? $scope.rnr.fullSupplyLineItems : [];
+    var pageLineItems = $scope.visibleTab == NON_FULL_SUPPLY ? $scope.rnr.nonFullSupplyLineItems : $scope.visibleTab == FULL_SUPPLY ? $scope.rnr.fullSupplyLineItems : [];
     $scope.numberOfPages = Math.ceil(pageLineItems.length / $scope.pageSize) ? Math.ceil(pageLineItems.length / $scope.pageSize) : 1;
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
     $scope.pageLineItems = pageLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
@@ -66,7 +70,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   };
 
   $scope.$on('$routeUpdate', function () {
-    $scope.visibleTab = $routeParams.supplyType == 'non-full-supply' ? 'non-full-supply' : ($routeParams.supplyType == 'regimen' && $scope.regimenCount) ? 'regimen' : 'full-supply';
+    $scope.visibleTab = $routeParams.supplyType == NON_FULL_SUPPLY ? NON_FULL_SUPPLY : ($routeParams.supplyType == REGIMEN && $scope.regimenCount) ? REGIMEN : FULL_SUPPLY;
     $location.search('supplyType', $scope.visibleTab);
 
     if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
@@ -139,7 +143,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   }
 
   $scope.checkErrorOnPage = function (page) {
-    return $scope.visibleTab ? _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
+    return $scope.visibleTab == NON_FULL_SUPPLY ? _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
   };
 
   $scope.dialogCloseCallback = function (result) {

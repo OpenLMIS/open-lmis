@@ -20,6 +20,10 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.fullScreen = false;
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
 
+  var NON_FULL_SUPPLY = 'non-full-supply';
+  var FULL_SUPPLY = 'full-supply';
+  var REGIMEN = 'regimen';
+
   $scope.$watch('fullScreen', function () {
     angular.element(window).scrollTop(0);
     if (!$.browser.msie) {
@@ -33,7 +37,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   });
 
   $scope.fillPagedGridData = function () {
-    var gridLineItems = $scope.visibleTab == 'non-full-supply' ? $scope.rnr.nonFullSupplyLineItems : $scope.visibleTab == 'full-supply' ? $scope.rnr.fullSupplyLineItems : [];
+    var gridLineItems = $scope.visibleTab == NON_FULL_SUPPLY ? $scope.rnr.nonFullSupplyLineItems : $scope.visibleTab == FULL_SUPPLY ? $scope.rnr.fullSupplyLineItems : [];
     $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize) ? Math.ceil(gridLineItems.length / $scope.pageSize) : 1;
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
     $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
@@ -51,7 +55,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.currency = currency;
 
   $scope.checkErrorOnPage = function (page) {
-    return $scope.visibleTab == 'non-full-supply' ? _.contains($scope.errorPages.nonFullSupply, page) : $scope.visibleTab == 'full-supply' ? _.contains($scope.errorPages.fullSupply, page) : [];
+    return $scope.visibleTab == NON_FULL_SUPPLY ? _.contains($scope.errorPages.nonFullSupply, page) : $scope.visibleTab == FULL_SUPPLY ? _.contains($scope.errorPages.fullSupply, page) : [];
   };
 
   if ($scope.programRnrColumnList && $scope.programRnrColumnList.length > 0) {
@@ -74,7 +78,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   };
 
   $scope.$on('$routeUpdate', function () {
-    $scope.visibleTab = $routeParams.supplyType == "non-full-supply" ? 'non-full-supply' : ($routeParams.supplyType == "regimen" && $scope.regimenCount) ? 'regimen' : 'full-supply';
+    $scope.visibleTab = $routeParams.supplyType == NON_FULL_SUPPLY ? NON_FULL_SUPPLY : ($routeParams.supplyType == REGIMEN && $scope.regimenCount) ? REGIMEN : FULL_SUPPLY;
     $location.search('supplyType', $scope.visibleTab);
 
     if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {

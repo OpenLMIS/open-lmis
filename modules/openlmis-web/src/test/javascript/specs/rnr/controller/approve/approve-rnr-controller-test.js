@@ -113,7 +113,7 @@ describe('Approve Requisition controller', function () {
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {"success": "saved successfully"});
     scope.$broadcast("$routeUpdate");
     httpBackend.flush();
-    expect(scope.visibleTab).toBeTruthy();
+    expect(scope.visibleTab).toEqual('non-full-supply');
   });
 
   it('should display confirm modal if approve button is clicked on valid Rnr', function () {
@@ -260,28 +260,28 @@ describe('Approve Requisition controller', function () {
 
   it('should return true if error on full supply page', function () {
     scope.errorPages = {fullSupply: [1]};
-    scope.visibleTab = false;
+    scope.visibleTab = 'full-supply';
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeTruthy();
   });
 
   it('should return false if no error on full supply page', function () {
     scope.errorPages = {fullSupply: []};
-    scope.visibleTab = false;
+    scope.visibleTab = 'full-supply';
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeFalsy();
   });
 
   it('should return true if error on non full supply page', function () {
     scope.errorPages = {nonFullSupply: [1]};
-    scope.visibleTab = true;
+    scope.visibleTab = 'non-full-supply';
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeTruthy();
   });
 
   it('should return false if no error on non full supply page', function () {
     scope.errorPages = {nonFullSupply: []};
-    scope.visibleTab = true;
+    scope.visibleTab = 'non-full-supply';
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeFalsy();
   });
