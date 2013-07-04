@@ -5,7 +5,7 @@
  */
 
 describe('View non full supply controller',function(){
-  var scope
+  var scope;
 
   beforeEach(inject(function($rootScope,$controller){
     scope = $rootScope.$new();
