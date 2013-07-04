@@ -66,13 +66,15 @@ public class Rnr extends BaseModel {
   public Rnr(Long facilityId, Long programId, Long periodId, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts, List<Regimen> regimens, Long modifiedBy) {
     this(facilityId, programId, periodId, modifiedBy);
     fillLineItems(facilityTypeApprovedProducts);
-    fillRegimenLineItems(regimens);
+    fillActiveRegimenLineItems(regimens);
   }
 
-  private void fillRegimenLineItems(List<Regimen> regimens) {
+  private void fillActiveRegimenLineItems(List<Regimen> regimens) {
     for (Regimen regimen : regimens) {
-      RegimenLineItem regimenLineItem = new RegimenLineItem(null, regimen);
-      regimenLineItems.add(regimenLineItem);
+      if (regimen.getActive()) {
+        RegimenLineItem regimenLineItem = new RegimenLineItem(null, regimen);
+        regimenLineItems.add(regimenLineItem);
+      }
     }
   }
 

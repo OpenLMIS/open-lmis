@@ -7,8 +7,6 @@
 function CreateRequisitionController($scope, requisition, currency, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenColumnList, $location, Requisitions, $routeParams, $rootScope, $dialog, messageService) {
   $scope.visibleTab = $routeParams.supplyType;
   $scope.baseUrl = "/create-rnr/" + $routeParams.rnr + '/' + $routeParams.facility + '/' + $routeParams.program;
-  $scope.fullSupplyLink = $scope.baseUrl + "?supplyType=full-supply&page=1";
-  $scope.nonFullSupplyLink = $scope.baseUrl + "?supplyTpe=non-full-supply&page=1";
 
   $scope.rnr = requisition;
   $scope.allTypes = lossesAndAdjustmentsTypes;
@@ -20,6 +18,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
   $scope.errorPages = {fullSupply: [], nonFullSupply: []};
   $scope.fullScreen = false;
+  $scope.regimenCount = $scope.rnr.regimenLineItems.length;
 
   $scope.$watch('fullScreen', function () {
     angular.element(window).scrollTop(0);
@@ -75,7 +74,13 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   };
 
   $scope.$on('$routeUpdate', function () {
-    $scope.visibleTab = $routeParams.supplyType == "non-full-supply" ? 'non-full-supply' : $routeParams.supplyType == "full-supply" ? 'full-supply' : 'regimen';
+    $scope.visibleTab = $routeParams.supplyType == "non-full-supply" ? 'non-full-supply' : ($routeParams.supplyType == "regimen" && $scope.regimenCount) ? 'regimen' : 'full-supply';
+    $location.search('supplyType', $scope.visibleTab);
+
+    if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
+      $location.search('page', 1);
+      return;
+    }
     if ($scope.saveRnrForm.$dirty) $scope.saveRnr();
     $scope.fillPagedGridData();
   });

@@ -107,7 +107,13 @@ public class RnrTest {
   public void shouldPopulateRnrLineItemsAndRegimenLineItems() throws Exception {
 
     List<Regimen> regimens = new ArrayList<>();
-    regimens.add(new Regimen());
+    Regimen regimen1 = new Regimen();
+    regimen1.setActive(true);
+    Regimen regimen2 = new Regimen();
+    regimen2.setActive(false);
+
+    regimens.add(regimen1);
+    regimens.add(regimen2);
 
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = make(a(defaultFacilityApprovedProduct));
     Product product = make(a(ProductBuilder.defaultProduct));

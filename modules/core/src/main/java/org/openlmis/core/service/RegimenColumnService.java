@@ -60,8 +60,8 @@ public class RegimenColumnService {
   public List<RegimenColumn> populateDefaultRegimenColumnsIfNoColumnsExist(Long programId, Long userId) {
     List<RegimenColumn> regimenColumns = getRegimenColumnsByProgramId(programId);
     if (regimenColumns.isEmpty()) {
-      repository.insert(new RegimenColumn(programId, NAME, messageService.message(NAME_LABEL), messageService.message(TYPE_TEXT), true, userId));
       repository.insert(new RegimenColumn(programId, CODE, messageService.message(CODE_LABEL), messageService.message(TYPE_TEXT), true, userId));
+      repository.insert(new RegimenColumn(programId, NAME, messageService.message(NAME_LABEL), messageService.message(TYPE_TEXT), true, userId));
       repository.insert(new RegimenColumn(programId, ON_TREATMENT, messageService.message(NUMBER_OF_PATIENTS_ON_TREATMENT), messageService.message(TYPE_NUMERIC), true, userId));
       repository.insert(new RegimenColumn(programId, INITIATED_TREATMENT, messageService.message(NUMBER_OF_PATIENTS_TO_BE_INITIATED_TREATMENT), messageService.message(TYPE_NUMERIC), true, userId));
       repository.insert(new RegimenColumn(programId, STOPPED_TREATMENT, messageService.message(NUMBER_OF_PATIENTS_STOPPED_TREATMENT), messageService.message(TYPE_NUMERIC), true, userId));

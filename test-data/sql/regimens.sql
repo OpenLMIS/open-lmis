@@ -7,5 +7,7 @@ INSERT INTO regimens (programid, categoryid, code, name, active, displayorder) V
 (2, 1, '001', 'REGIMEN1', TRUE, 1),
 (2, 1, '002', 'REGIMEN2', TRUE, 2),
 (2, 1, '003', 'REGIMEN3', TRUE, 3),
-(2, 2, '004', 'REGIMEN4', TRUE, 4),
-(2, 2, '005', 'REGIMEN5', TRUE, 5);
+(2, 1, '004', 'REGIMEN4', FALSE, 4),
+(2, 2, '005', 'REGIMEN5', TRUE, 5),
+(2, 2, '006', 'REGIMEN6', TRUE, 6),
+(2, 2, '007', 'REGIMEN7', FALSE, 7);
