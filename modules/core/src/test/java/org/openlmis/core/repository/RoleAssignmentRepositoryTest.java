@@ -84,6 +84,15 @@ public class RoleAssignmentRepositoryTest {
   }
 
   @Test
+  public void shouldGetAllocationRoles() throws Exception {
+    List<RoleAssignment> expected = new ArrayList<>();
+    when(mapper.getAllocationRoles(1L)).thenReturn(expected);
+    List<RoleAssignment> allocationRoles = repository.getAllocationRoles(1L);
+    assertThat(allocationRoles, is(expected));
+    verify(mapper).getAllocationRoles(1L);
+  }
+
+  @Test
   public void shouldGetRoleAssignmentsForAGivenUserOnAGivenProgramWithRights() throws Exception {
     Long userId = 1L;
     Long programId = 2L;

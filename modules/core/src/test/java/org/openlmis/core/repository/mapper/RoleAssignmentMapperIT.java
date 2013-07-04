@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.DeliveryZoneBuilder;
-import org.openlmis.core.builder.RoleAssignmentBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
@@ -22,7 +21,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -38,8 +36,7 @@ import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
-import static org.openlmis.core.domain.RoleType.ADMIN;
-import static org.openlmis.core.domain.RoleType.REQUISITION;
+import static org.openlmis.core.domain.RoleType.*;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -236,6 +233,27 @@ public class RoleAssignmentMapperIT {
 
     assertThat(adminRoleAssignment.getRoleIds().get(0), is(adminRole.getId()));
     assertThat(supervisoryRoles.get(0).getRoleIds().get(0), is(nonAdminRole.getId()));
+  }
+
+  @Test
+  public void shouldGetAllocationRolesForUser() throws Exception {
+    Long userId = user.getId();
+
+    final Role allocationRole = new Role("r1", ALLOCATION, "allocation role");
+    roleRightsMapper.insertRole(allocationRole);
+    Role adminRole = new Role("r2", ADMIN, "non admin role");
+    roleRightsMapper.insertRole(adminRole);
+    DeliveryZone deliveryZone = make(a(DeliveryZoneBuilder.defaultDeliveryZone));
+    deliverZoneMapper.insert(deliveryZone);
+
+    mapper.insert(userId, 1L, null, deliveryZone, allocationRole.getId());
+    mapper.insert(userId, null, null, null, adminRole.getId());
+
+    List<RoleAssignment> allocationRoles = mapper.getAllocationRoles(userId);
+
+    assertThat(allocationRoles.size(), is(1));
+    assertThat(allocationRoles.get(0).getRoleIds().size(), is(1));
+    assertThat(allocationRoles.get(0).getRoleIds().get(0), is(allocationRole.getId()));
   }
 
   private Program insertProgram(Program program) {

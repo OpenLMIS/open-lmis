@@ -155,10 +155,12 @@ public class UserServiceTest {
     User user = new User();
     List<RoleAssignment> homeFacilityRoles = Arrays.asList(new RoleAssignment());
     List<RoleAssignment> supervisorRoles = Arrays.asList(new RoleAssignment());
+    List<RoleAssignment> allocationRoles = Arrays.asList(new RoleAssignment());
 
     when(userRepository.getById(1L)).thenReturn(user);
     when(roleAssignmentService.getHomeFacilityRoles(1L)).thenReturn(homeFacilityRoles);
     when(roleAssignmentService.getSupervisorRoles(1L)).thenReturn(supervisorRoles);
+    when(roleAssignmentService.getAllocationRoles(1L)).thenReturn(allocationRoles);
     RoleAssignment adminRole = new RoleAssignment();
     when(roleAssignmentService.getAdminRole(1L)).thenReturn(adminRole);
 
@@ -167,6 +169,7 @@ public class UserServiceTest {
     assertThat(returnedUser, is(user));
     assertThat(returnedUser.getHomeFacilityRoles(), is(homeFacilityRoles));
     assertThat(returnedUser.getSupervisorRoles(), is(supervisorRoles));
+    assertThat(returnedUser.getAllocationRoles(), is(allocationRoles));
     assertThat(returnedUser.getAdminRole(), is(adminRole));
   }
 

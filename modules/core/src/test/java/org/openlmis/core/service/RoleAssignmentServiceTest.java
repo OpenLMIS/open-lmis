@@ -67,6 +67,18 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
     assertThat(actual, is(expected));
   }
+
+  @Test
+  public void shouldGetAllocationRoleAssignments() throws Exception {
+
+    List<RoleAssignment> expected = new ArrayList<>();
+    when(roleAssignmentRepository.getAllocationRoles(1L)).thenReturn(expected);
+    List<RoleAssignment> actual = service.getAllocationRoles(1L);
+
+    assertThat(actual, is(expected));
+    verify(roleAssignmentRepository).getAllocationRoles(1L);
+  }
+
   @Test
   public void shouldGetAdminRoleAssignments() throws Exception {
 

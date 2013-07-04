@@ -67,4 +67,10 @@ public interface RoleAssignmentMapper {
     "(userId, roleId, programId, supervisoryNodeId, deliveryZoneId) VALUES " +
     "(#{userId}, #{roleId}, #{programId}, #{supervisoryNode.id}, #{deliveryZone.id})")
   void insert(@Param("userId") Long userId, @Param("programId") Long programId, @Param("supervisoryNode") SupervisoryNode supervisoryNode, @Param("deliveryZone") DeliveryZone deliveryZone, @Param("roleId") long roleId);
+
+  @Select({"SELECT RA.userId, RA.programId, RA.deliveryZoneId, array_agg(RA.roleId) as roleIdsAsString ",
+    "FROM role_assignments RA INNER JOIN roles R ON RA.roleId = R.id ",
+    "WHERE RA.userId=#{userId} AND RA.programId IS NOT NULL AND R.type = 'ALLOCATION' GROUP BY RA.userId, RA.programId, RA.deliveryZoneId"})
+  @Results(value = {@Result(property = "deliveryZone.id", column = "deliveryZoneId")})
+  List<RoleAssignment> getAllocationRoles(Long userId);
 }

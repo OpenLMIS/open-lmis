@@ -46,14 +46,18 @@ public class RoleAssignmentService {
     return roleAssignmentRepository.getSupervisorRoles(userId);
   }
 
+  public List<RoleAssignment> getAllocationRoles(Long userId) {
+    return roleAssignmentRepository.getAllocationRoles(userId);
+  }
+
   public List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(Long userId, Long programId, Right... rights) {
     return roleAssignmentRepository.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, rights);
   }
 
+
   public List<RoleAssignment> getRoleAssignments(Right right, Long userId) {
     return roleAssignmentRepository.getRoleAssignmentsForUserWithRight(right, userId);
   }
-
 
   public void saveRolesForUser(User user) {
     roleAssignmentRepository.deleteAllRoleAssignmentsForUser(user.getId());

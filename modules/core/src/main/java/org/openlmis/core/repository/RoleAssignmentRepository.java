@@ -70,4 +70,8 @@ public class RoleAssignmentRepository {
       });
     }
   }
+
+  public List<RoleAssignment> getAllocationRoles(Long userId) {
+    return mapper.getAllocationRoles(userId);
+  }
 }
