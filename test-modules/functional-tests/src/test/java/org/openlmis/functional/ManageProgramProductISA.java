@@ -201,30 +201,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
 
-  public String calculateISA(String ratioValue, String dosesPerYearValue, String wastageValue, String bufferPercentageValue, String adjustmentValue,
-                             String minimumValue, String maximumValue, String populationValue) {
-
-    Float calculatedISA;
-    Integer population = Integer.parseInt(populationValue);
-    Float ratio = Float.parseFloat(ratioValue) / 100;
-    Integer dossesPerYear = Integer.parseInt(dosesPerYearValue);
-    Float wastage = (Float.parseFloat(wastageValue) / 100) + 1;
-    Float bufferPercentage = (Float.parseFloat(bufferPercentageValue) / 100) + 1;
-    Float minimum = Float.parseFloat(minimumValue);
-    Float maximum = Float.parseFloat(maximumValue);
-
-    Integer adjustment = Integer.parseInt(adjustmentValue);
-
-    calculatedISA = (((population * ratio * dossesPerYear * wastage) / 12) * bufferPercentage) + adjustment;
-
-    if (calculatedISA <= minimum)
-      return (minimumValue);
-    else if (calculatedISA >= maximum)
-      return (maximumValue);
-    return (new BigDecimal(calculatedISA).setScale(0,BigDecimal.ROUND_CEILING)).toString();
-  }
-
-
   private void verifyAllSelectFieldValues(List<String> valuesToBeVerified, List<WebElement> valuesPresentInDropDown) {
     String collectionOfValuesPresentINDropDown = "";
     int valuesToBeVerifiedCounter = valuesToBeVerified.size();

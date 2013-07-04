@@ -48,85 +48,81 @@ public class DistributionPage extends RequisitionPage {
   }
 
   public void selectValueFromDeliveryZone(String valueToBeSelected) {
-    testWebDriver.waitForElementToAppear(getSelectDeliveryZoneSelectBox());
-    testWebDriver.selectByVisibleText(getSelectDeliveryZoneSelectBox(), valueToBeSelected);
+    testWebDriver.waitForElementToAppear(selectDeliveryZoneSelectBox);
+    testWebDriver.selectByVisibleText(selectDeliveryZoneSelectBox, valueToBeSelected);
   }
 
   public void selectValueFromProgram(String valueToBeSelected) {
-    testWebDriver.waitForElementToAppear(getSelectProgramSelectBox());
-    testWebDriver.selectByVisibleText(getSelectProgramSelectBox(), valueToBeSelected);
+    testWebDriver.waitForElementToAppear(selectProgramSelectBox);
+    testWebDriver.selectByVisibleText(selectProgramSelectBox, valueToBeSelected);
   }
 
   public void selectValueFromPeriod(String valueToBeSelected) {
-    testWebDriver.waitForElementToAppear(getSelectPeriodSelectBox());
-    testWebDriver.selectByVisibleText(getSelectPeriodSelectBox(), valueToBeSelected);
+    testWebDriver.waitForElementToAppear(selectPeriodSelectBox);
+    testWebDriver.selectByVisibleText(selectPeriodSelectBox, valueToBeSelected);
   }
 
   public void clickViewLoadAmount() {
-    testWebDriver.waitForElementToAppear(getViewLoadAmountButton());
-    getViewLoadAmountButton().click();
+    testWebDriver.waitForElementToAppear(viewLoadAmountButton);
+      viewLoadAmountButton.click();
 
   }
 
   public List<WebElement> getAllSelectOptionsFromDeliveryZone() {
-    testWebDriver.waitForElementToAppear(getSelectDeliveryZoneSelectBox());
-    List<WebElement> options = testWebDriver.getOptions(getSelectDeliveryZoneSelectBox());
+    testWebDriver.waitForElementToAppear(selectDeliveryZoneSelectBox);
+    List<WebElement> options = testWebDriver.getOptions(selectDeliveryZoneSelectBox);
     return options;
   }
 
   public List<WebElement> getAllSelectOptionsFromProgram() {
-    testWebDriver.waitForElementToAppear(getSelectProgramSelectBox());
-    List<WebElement> options = testWebDriver.getOptions(getSelectProgramSelectBox());
+    testWebDriver.waitForElementToAppear(selectProgramSelectBox);
+    List<WebElement> options = testWebDriver.getOptions(selectProgramSelectBox);
     return options;
   }
 
   public List<WebElement> getAllSelectOptionsFromPeriod() {
-    testWebDriver.waitForElementToAppear(getSelectPeriodSelectBox());
-    List<WebElement> options = testWebDriver.getOptions(getSelectPeriodSelectBox());
+    testWebDriver.waitForElementToAppear(selectPeriodSelectBox);
+    List<WebElement> options = testWebDriver.getOptions(selectPeriodSelectBox);
     return options;
   }
 
   public WebElement getFirstSelectedOptionFromDeliveryZone() {
-    testWebDriver.waitForElementToAppear(getSelectDeliveryZoneSelectBox());
-    WebElement option = testWebDriver.getFirstSelectedOption(getSelectDeliveryZoneSelectBox());
+    testWebDriver.waitForElementToAppear(selectDeliveryZoneSelectBox);
+    WebElement option = testWebDriver.getFirstSelectedOption(selectDeliveryZoneSelectBox);
     return option;
   }
 
   public WebElement getFirstSelectedOptionFromProgram() {
-    testWebDriver.waitForElementToAppear(getSelectProgramSelectBox());
-    WebElement option = testWebDriver.getFirstSelectedOption(getSelectProgramSelectBox());
+    testWebDriver.waitForElementToAppear(selectProgramSelectBox);
+    WebElement option = testWebDriver.getFirstSelectedOption(selectProgramSelectBox);
     return option;
   }
 
   public WebElement getFirstSelectedOptionFromPeriod() {
-    testWebDriver.waitForElementToAppear(getSelectPeriodSelectBox());
+    testWebDriver.waitForElementToAppear(selectPeriodSelectBox);
     testWebDriver.sleep(100);
-    WebElement option = testWebDriver.getFirstSelectedOption(getSelectPeriodSelectBox());
+    WebElement option = testWebDriver.getFirstSelectedOption(selectPeriodSelectBox);
     return option;
   }
 
-  public WebElement getSelectDeliveryZoneSelectBox() {
-    return selectDeliveryZoneSelectBox;
+  public boolean IsDisplayedSelectDeliveryZoneSelectBox() {
+    return selectDeliveryZoneSelectBox.isDisplayed();
   }
 
-  public WebElement getSelectProgramSelectBox() {
-    return selectProgramSelectBox;
-  }
-
-
-  public WebElement getSelectPeriodSelectBox() {
-    return selectPeriodSelectBox;
+  public boolean IsDisplayedSelectProgramSelectBox() {
+    return selectProgramSelectBox.isDisplayed();
   }
 
 
-  public WebElement getViewLoadAmountButton() {
-    return viewLoadAmountButton;
+  public boolean IsDisplayedSelectPeriodSelectBox() {
+    return selectPeriodSelectBox.isDisplayed();
   }
 
 
-  public static WebElement getInputFacilityDataLink() {
-    return inputFacilityDataLink;
+  public boolean IsDisplayedViewLoadAmountButton() {
+    return viewLoadAmountButton.isDisplayed();
   }
+
 
 
 }

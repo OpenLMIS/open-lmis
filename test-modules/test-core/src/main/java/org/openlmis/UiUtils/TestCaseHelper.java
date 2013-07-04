@@ -7,10 +7,14 @@
 package org.openlmis.UiUtils;
 
 
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -225,5 +229,58 @@ public class TestCaseHelper {
         for (int i = 0; i < length; i++)
             locator.sendKeys("\u0008");
         locator.sendKeys(value);
+    }
+
+    public String IsaProgramProduct(String program, String product, String population) throws IOException, SQLException{
+        String[] isaParams = dbWrapper.getProgramProductISA(program,product);
+        return calculateISA(isaParams[0],isaParams[1],isaParams[2],isaParams[3],isaParams[4],isaParams[5],isaParams[6],population);
+    }
+  public String calculateISA(String ratioValue, String dosesPerYearValue, String wastageValue, String bufferPercentageValue, String adjustmentValue,
+                               String minimumValue, String maximumValue, String populationValue) {
+        Float calculatedISA;
+        Float minimum=0.0F;
+        Float maximum=0.0F;
+
+        Integer population = Integer.parseInt(populationValue);
+        Float ratio = Float.parseFloat(ratioValue) / 100;
+        Integer dossesPerYear = Integer.parseInt(dosesPerYearValue);
+        Float wastage = (Float.parseFloat(wastageValue) / 100) + 1;
+        Float bufferPercentage = (Float.parseFloat(bufferPercentageValue) / 100) + 1;
+
+        if (minimumValue!=null){
+            minimum = Float.parseFloat(minimumValue);}
+        if (maximumValue!=null){
+            maximum = Float.parseFloat(maximumValue);}
+
+        Integer adjustment = Integer.parseInt(adjustmentValue);
+
+        calculatedISA = (((population * ratio * dossesPerYear * wastage) / 12) * bufferPercentage) + adjustment;
+
+        if (calculatedISA <= minimum && minimum!=0.0)
+                return (minimumValue);
+        else if (calculatedISA >= maximum && maximum!=0.0)
+            return (maximumValue);
+        return (new BigDecimal(calculatedISA).setScale(0,BigDecimal.ROUND_CEILING)).toString();
+   }
+
+    public String OpenIndexedDB(String dbName)
+    {
+        WebDriver driver;
+        //String script = "var z= x();function x() {return document.title;};return z;";
+        String script= "window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB;" +
+                       "var dbreq = window.indexedDB.open(\"" + dbName + "\");" +
+                       "dbreq.onsuccess = function (event){var db = dbreq.result; " +
+                       //"db.createObjectStore(\"objects\", \"keyPath\": \"id\");" +
+                       "var dTableNames = db.objectStoreNames;alert(dTableNames[0]);};" +
+                       "dbreq.onerror = function (event) {return \"test.open Error: \" + event.message;};" ;
+                        /*"var dTableNames = db.objectStoreNames;" +
+                        "var strNames;" +
+                        "for (var i = 0; i < dTableNames.length; i++) {strNames = strNames + dTableNames[i];};"+
+                        "return strNames;";*/
+
+        driver= TestWebDriver.getDriver();
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        String element = js.executeScript(script).toString();
+        return element;
     }
 }

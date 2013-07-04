@@ -184,10 +184,10 @@ public class ManageDistribution extends TestCaseHelper {
 
 
   private void verifyElementsPresent(DistributionPage distributionPage) {
-    assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.getSelectDeliveryZoneSelectBox().isDisplayed());
-    assertTrue("selectProgramSelectBox should be present", distributionPage.getSelectProgramSelectBox().isDisplayed());
-    assertTrue("selectPeriodSelectBox should be present", distributionPage.getSelectPeriodSelectBox().isDisplayed());
-    assertTrue("proceedButton should be present", distributionPage.getViewLoadAmountButton().isDisplayed());
+    assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.IsDisplayedSelectDeliveryZoneSelectBox());
+    assertTrue("selectProgramSelectBox should be present", distributionPage.IsDisplayedSelectProgramSelectBox());
+    assertTrue("selectPeriodSelectBox should be present", distributionPage.IsDisplayedSelectPeriodSelectBox());
+    assertTrue("proceedButton should be present", distributionPage.IsDisplayedViewLoadAmountButton());
   }
 
 
