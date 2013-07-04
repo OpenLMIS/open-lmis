@@ -73,40 +73,41 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Reporting fields')]")
   private static WebElement reportingFieldsTab;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[2]/div[1]/input")
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[4]/ng-switch/div/div[1]/input")
   private static WebElement noOfPatientsOnTreatmentCheckBox;
+  //*[@id="reportingFields"]/div[4]/ng-switch/div/div[1]/input
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[3]/div[1]/input")
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/ng-switch/div/div[1]/input")
   private static WebElement noOfPatientsToInitiateTreatmentCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[4]/div[1]/input")
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[6]/ng-switch/div/div[1]/input")
   private static WebElement noOfPatientsStoppedTreatmentCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/div[1]/input")
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[7]/ng-switch/div/div[1]/input")
   private static WebElement remarksCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[2]/div[2]/input")
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[4]/ng-switch/div/div[2]/input")
   private static WebElement noOfPatientsOnTreatmentTextField;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[3]/div[2]/input")
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/ng-switch/div/div[2]/input")
   private static WebElement noOfPatientsToInitiateTreatmentTextField;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[4]/div[2]/input")
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[6]/ng-switch/div/div[2]/input")
   private static WebElement noOfPatientsStoppedTreatmentTextField;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/div[2]/input")
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[7]/ng-switch/div/div[2]/input")
   private static WebElement remarksTextField;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[2]/div[3]/span")
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[4]/ng-switch/div/div[3]/span")
   private static WebElement noOfPatientsOnTreatmentDataType;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[3]/div[3]/span")
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/ng-switch/div/div[3]/span")
   private static WebElement noOfPatientsToInitiateTreatmentDataType;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[4]/div[3]/span")
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[6]/ng-switch/div/div[3]/span")
   private static WebElement noOfPatientsStoppedTreatmentDataType;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/div[3]/span")
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[7]/ng-switch/div/div[3]/span")
   private static WebElement remarksDataType;
 
   @FindBy(how = How.XPATH, using = "//div[1][@class='row-fluid rnr-template-columns ng-scope']/div[2][@class='span2']/div/span[@class='ng-binding']")
