@@ -138,14 +138,17 @@ public class RoleAssignmentMapperIT {
     supervisoryNode.setFacility(facility);
     supervisoryNodeMapper.insert(supervisoryNode);
 
+    DeliveryZone deliveryZone = make(a(DeliveryZoneBuilder.defaultDeliveryZone));
+    deliverZoneMapper.insert(deliveryZone);
 
-    mapper.insertRoleAssignment(user.getId(), 1L, null, r2.getId());
-    mapper.insertRoleAssignment(user.getId(), 1L, null, r1.getId());
+
+    mapper.insert(user.getId(), 1L, null, null, r2.getId());
+    mapper.insert(user.getId(), 2L, null, deliveryZone, r1.getId());
 
     List<RoleAssignment> roleAssignments = mapper.getHomeFacilityRoles(user.getId());
 
     assertThat(roleAssignments.size(), is(1));
-    assertThat(roleAssignments.get(0).getRoleIds().size(), is(2));
+    assertThat(roleAssignments.get(0).getRoleIds().size(), is(1));
 
   }
 

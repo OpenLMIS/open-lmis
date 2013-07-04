@@ -115,9 +115,9 @@ describe("User", function () {
     });
 
     it("should get program name for given id from all programs list", function () {
-      scope.programs = [
+      scope.programsMap = {pull: [
         {"id":1, "name":"hiv"}
-      ];
+      ]};
       expect(scope.getProgramName(1)).toEqual("hiv");
     });
 
@@ -130,17 +130,17 @@ describe("User", function () {
 
     it("should delete home facility roles from the list", function () {
       scope.rowNum = 1;
-      scope.supervisorRole = false;
+      scope.deleteRoleList = "homeFacilityRoles";
       scope.user = {"homeFacilityRoles": [{"roleIds":[1]},{"roleIds":[1,2]},{"roleIds":[3]}]};
-      scope.deleteFacilityRole(true);
+      scope.deleteRole(true);
       expect(scope.user.homeFacilityRoles).toEqual([{"roleIds":[1]},{"roleIds":[3]}])
     });
 
     it("should delete supervisory roles from the list", function () {
       scope.rowNum = 1;
-      scope.supervisorRole = true;
+      scope.deleteRoleList = "supervisorRoles";
       scope.user = {"supervisorRoles": [{"roleIds":[1]},{"roleIds":[1,2]},{"roleIds":[3]}]};
-      scope.deleteFacilityRole(true);
+      scope.deleteRole(true);
       expect(scope.user.supervisorRoles).toEqual([{"roleIds":[1]},{"roleIds":[3]}])
     });
 

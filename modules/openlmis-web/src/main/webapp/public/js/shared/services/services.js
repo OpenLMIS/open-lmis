@@ -152,7 +152,7 @@ services.factory('Period', function ($resource) {
 });
 
 services.factory('Program', function ($resource) {
-  return $resource('/programs/:id.json', {}, {});
+  return $resource('/programs/:id.json', {id: '@id'}, {});
 });
 
 services.factory('SupportedUploads', function ($resource) {

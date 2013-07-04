@@ -15,10 +15,10 @@ INSERT INTO roles
   ('FieldCoordinator', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT id FROM vendors WHERE name = 'openLmis'), (SELECT id FROM facilities WHERE code = 'F10'), 'Field', 'Coordinator','fieldcoordinator@openlmis.com', true);
 
  INSERT INTO role_assignments
-  (userId, roleId, deliveryZoneId) VALUES
-  ((SELECT id FROM USERS WHERE username='FieldCoordinator'), (SELECT id FROM roles WHERE name = 'FieldCoordinator'), (SELECT id FROM delivery_zones WHERE code='Norte')),
-  ((SELECT id FROM USERS WHERE username='FieldCoordinator'), (SELECT id FROM roles WHERE name = 'FieldCoordinator'), (SELECT id FROM delivery_zones WHERE code='Centro')),
-  ((SELECT id FROM USERS WHERE username='FieldCoordinator'), (SELECT id FROM roles WHERE name = 'FieldCoordinator'), (SELECT id FROM delivery_zones WHERE code='Sul')),
-  ((SELECT id FROM USERS WHERE username='FieldCoordinator'), (SELECT id FROM roles WHERE name = 'FieldCoordinator'), (SELECT id FROM delivery_zones WHERE code='DZ1'));
+  (userId, roleId, deliveryZoneId, programId) VALUES
+  ((SELECT id FROM USERS WHERE username='FieldCoordinator'), (SELECT id FROM roles WHERE name = 'FieldCoordinator'), (SELECT id FROM delivery_zones WHERE code='Norte'), (SELECT name FROM programs WHERE name = 'VACCINES')),
+  ((SELECT id FROM USERS WHERE username='FieldCoordinator'), (SELECT id FROM roles WHERE name = 'FieldCoordinator'), (SELECT id FROM delivery_zones WHERE code='Centro'),(SELECT name FROM programs WHERE name = 'VACCINES')),
+  ((SELECT id FROM USERS WHERE username='FieldCoordinator'), (SELECT id FROM roles WHERE name = 'FieldCoordinator'), (SELECT id FROM delivery_zones WHERE code='Sul'), (SELECT name FROM programs WHERE name = 'VACCINES')),
+  ((SELECT id FROM USERS WHERE username='FieldCoordinator'), (SELECT id FROM roles WHERE name = 'FieldCoordinator'), (SELECT id FROM delivery_zones WHERE code='DZ1'), (SELECT name FROM programs WHERE name = 'VACCINES'));
 
 

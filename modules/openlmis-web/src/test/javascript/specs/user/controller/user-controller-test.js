@@ -42,17 +42,20 @@ describe("User", function () {
       spyOn(messageService, 'get').andCallFake(function (value) {
         if (value == 'label.active') return "Active"
         if (value == 'label.inactive') return "Inactive"
-      })
+      });
+
+      var deliveryZones = [{id:1},{id:2},{id:3},{id:4}];
 
       $httpBackend.when('GET',"/roles.json").respond(200, {"roles": roles});
       var programs = [
-        {"id": 1, active: false},
-        {id: 2, active: true}
+        {"id": 1, active: false, push: false},
+        {id: 2, active: true, push: false},
+        {id: 3, active: true, push: true}
       ];
       $httpBackend.when('GET',"/pull/programs.json").respond(200, {"programs": programs});
       $httpBackend.when('GET',"/supervisory-nodes.json").respond(200, {"supervisoryNodes": []});
       ctrl = $controller(UserController, {$scope: scope, roles: roles, programs: programs,
-        supervisoryNodes: [], user: user}, $location);
+        supervisoryNodes: [], user: user, deliveryZones: deliveryZones}, $location);
       scope.userForm = {$error: { pattern: "" }};
     }));
 
@@ -70,10 +73,11 @@ describe("User", function () {
     });
 
     it('should set programs in scope with added status', function () {
-      expect(scope.programs).toEqual([
-        {"id": 1, active: false, status: 'Inactive'},
-        {id: 2, active: true, status: 'Active'}
-      ]);
+      expect(scope.programsMap).toEqual({pull : [
+        {"id": 1, active: false, status: 'Inactive', push: false},
+        {id: 2, active: true, status: 'Active', push: false}
+      ], push: [{"id": 3, active: true, status: 'Active', push: true}
+      ]});
     });
 
     it('should set supervisory nodes in scope', function () {

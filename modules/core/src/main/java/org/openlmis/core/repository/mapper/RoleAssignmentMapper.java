@@ -46,10 +46,10 @@ public interface RoleAssignmentMapper {
   List<RoleAssignment> getSupervisorRoles(Long userId);
 
 
-  @Select("SELECT userId, programId, array_agg(roleId) as roleIdsAsString " +
-    "FROM role_assignments " +
-    "WHERE userId=#{userId} AND programId IS NOT NULL AND supervisoryNodeId IS NULL " +
-    "GROUP BY userId, programId")
+  @Select({"SELECT userId, programId, array_agg(roleId) as roleIdsAsString ",
+    "FROM role_assignments ",
+    "WHERE userId=#{userId} AND programId IS NOT NULL AND supervisoryNodeId IS NULL AND deliveryZoneId IS NULL",
+    "GROUP BY userId, programId"})
   List<RoleAssignment> getHomeFacilityRoles(Long userId);
 
   @Select("SELECT RA.userId, RA.programId, array_agg(RA.roleId) as roleIdsAsString " +

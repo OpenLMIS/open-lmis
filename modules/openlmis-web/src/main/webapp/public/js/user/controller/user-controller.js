@@ -4,26 +4,33 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function UserController($scope, $location, $dialog, User, Facility, messageService, user, roles, programs, supervisoryNodes) {
+function UserController($scope, $location, $dialog, User, Facility, messageService, user, roles, programs, supervisoryNodes, deliveryZones) {
 
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
   $scope.showSupervisorRoleMappingError = false;
-  $scope.user = user;
-  $scope.programs = programs;
+  $scope.user = user || {homeFacilityRoles: []};
   $scope.supervisoryNodes = supervisoryNodes;
+  $scope.deliveryZones = deliveryZones;
 
   loadUserFacility();
+  preparePrograms(programs);
 
   $scope.rolesMap = _.groupBy(roles, function (role) {
     return role.type;
   });
 
-  if ($scope.programs) {
-    $.each($scope.programs, function (index, program) {
-      program.status = program.active ? messageService.get("label.active") : messageService.get('label.inactive');
+  function preparePrograms(programs) {
+    if (programs) {
+      $.each(programs, function (index, program) {
+        program.status = program.active ? messageService.get("label.active") : messageService.get('label.inactive');
+      });
+    }
+    $scope.programsMap = _.groupBy(programs, function (program) {
+      return program.push ? 'push' : 'pull';
     });
   }
+
 
   function validateHomeFacilityRoles(user) {
     if (!user.homeFacilityRoles) {
@@ -201,11 +208,11 @@ UserController.resolve = {
     return deferred.promise;
   },
 
-  programs: function ($q, PullPrograms, $timeout) {
+  programs: function ($q, Program, $timeout) {
     var deferred = $q.defer();
 
     $timeout(function () {
-      PullPrograms.get({}, function (data) {
+      Program.get({}, function (data) {
         deferred.resolve(data.programs);
       }, function () {
       });
@@ -225,7 +232,22 @@ UserController.resolve = {
     }, 100);
 
     return deferred.promise;
+  },
+
+  deliveryZones: function ($q, DeliveryZone, $timeout) {
+    var deferred = $q.defer();
+
+    $timeout(function () {
+      DeliveryZone.get({}, function (data) {
+        deferred.resolve(data.deliveryZones);
+      }, function () {
+      });
+    }, 100);
+
+    return deferred.promise;
   }
+
+
 
 };
 

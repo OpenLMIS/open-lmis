@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="span2">
-        <a class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index, true)"
+        <a class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index, 'supervisorRoles')"
            openlmis-message="button.remove"></a>
       </div>
     </div>
@@ -54,7 +54,7 @@
       <div class="span3">
         <div class="fluid-grid-cell">
           <select
-              ng-options="program.id as program.name group by program.status for program in programs"
+              ng-options="program.id as program.name group by program.status for program in programsMap.pull"
               ng-model="selectedProgramIdToSupervise">
             <option value="" ng-bind="selectSuperviseProgramMessage"></option>
           </select>
