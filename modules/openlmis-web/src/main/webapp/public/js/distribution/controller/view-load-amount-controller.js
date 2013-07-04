@@ -6,52 +6,56 @@
 
 function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
 
-  $scope.program = facilities[0].supportedPrograms[0].program;
-  $scope.period = period;
-  $scope.deliveryZone = deliveryZone;
-  var otherGroupName = "";
+  if (facilities.length > 0) {
+    $scope.message = "";
+    $scope.program = facilities[0].supportedPrograms[0].program;
+    $scope.period = period;
+    $scope.deliveryZone = deliveryZone;
+    var otherGroupName = "";
+    $scope.geoZoneLevelName = facilities[0].geographicZone.level.name;
+
+    $(facilities).each(function (i, facility) {
+
+      $(facility.supportedPrograms[0].programProducts).each(function (j, product) {
+        product.programProductIsa = new ProgramProductISA(product.programProductIsa);
+        product.isaAmount = product.overriddenIsa ? product.overriddenIsa : product.programProductIsa.calculate(facility.catchmentPopulation);
+        product.isaAmount = product.isaAmount ? product.isaAmount * period.numberOfMonths : 0;
+      });
+      facility.supportedPrograms[0].programProductMap = _.groupBy(facility.supportedPrograms[0].programProducts, function (programProduct) {
+        return programProduct.product.productGroup ? programProduct.product.productGroup.name : otherGroupName;
+      });
 
 
-  $scope.geoZoneLevelName = facilities[0].geographicZone.level.name;
-  $(facilities).each(function (i, facility) {
+      facility.supportedPrograms[0].sortedProductGroup = _.sortBy(_.keys(facility.supportedPrograms[0].programProductMap), function (key) {
+        return key;
+      });
 
-    $(facility.supportedPrograms[0].programProducts).each(function (j, product) {
-      product.programProductIsa = new ProgramProductISA(product.programProductIsa);
-      product.isaAmount = product.overriddenIsa ? product.overriddenIsa : product.programProductIsa.calculate(facility.catchmentPopulation);
-      product.isaAmount = product.isaAmount ? product.isaAmount * period.numberOfMonths : 0;
+      if (_.indexOf(facility.supportedPrograms[0].sortedProductGroup, otherGroupName) > -1) {
+        facility.supportedPrograms[0].sortedProductGroup = _.without(facility.supportedPrograms[0].sortedProductGroup, otherGroupName);
+        facility.supportedPrograms[0].sortedProductGroup.push(otherGroupName);
+      }
+
     });
-    facility.supportedPrograms[0].programProductMap = _.groupBy(facility.supportedPrograms[0].programProducts, function (programProduct) {
-      return programProduct.product.productGroup ? programProduct.product.productGroup.name : otherGroupName;
+
+    $scope.facilityMap = _.groupBy(facilities, function (facility) {
+      return facility.geographicZone.name;
     });
-
-
-    facility.supportedPrograms[0].sortedProductGroup = _.sortBy(_.keys(facility.supportedPrograms[0].programProductMap), function (key) {
+    $scope.sortedGeoZoneKeys = _.sortBy(_.keys($scope.facilityMap), function (key) {
       return key;
     });
 
-    if (_.indexOf(facility.supportedPrograms[0].sortedProductGroup, otherGroupName) > -1) {
-      facility.supportedPrograms[0].sortedProductGroup = _.without(facility.supportedPrograms[0].sortedProductGroup,otherGroupName);
-      facility.supportedPrograms[0].sortedProductGroup.push(otherGroupName);
+    $scope.getProgramProducts = function (facility) {
+      var programProducts = [];
+      $(facility.supportedPrograms[0].sortedProductGroup).each(function (index, sortedProductGroupKey) {
+        programProducts = programProducts.concat(facility.supportedPrograms[0].programProductMap[sortedProductGroupKey]);
+      });
+      return programProducts;
     }
-
-  });
-
-  $scope.facilityMap = _.groupBy(facilities, function (facility) {
-    return facility.geographicZone.name;
-  });
-  $scope.sortedGeoZoneKeys = _.sortBy(_.keys($scope.facilityMap), function (key) {
-    return key;
-  });
-
-  $scope.getProgramProducts = function (facility) {
-    var programProducts = [];
-    $(facility.supportedPrograms[0].sortedProductGroup).each(function (index, sortedProductGroupKey) {
-      programProducts = programProducts.concat(facility.supportedPrograms[0].programProductMap[sortedProductGroupKey]);
-    });
-    return programProducts;
+    console.log(deliveryZone, period, $scope.facilityMap, $scope.sortedGeoZoneKeys)
+  } else {
+    $scope.message = "msg.delivery.zone.no.record"
   }
 
-  console.log(deliveryZone, period, $scope.facilityMap, $scope.sortedGeoZoneKeys)
 
 }
 

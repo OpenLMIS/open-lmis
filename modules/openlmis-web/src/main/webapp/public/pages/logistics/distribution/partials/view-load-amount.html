@@ -20,19 +20,20 @@
       </div>
     </div>
   </div>
+  <div ng-show="message"><span ng-bind="message"></span></div>
+  <div ng-show="!message">
+    <div class="geo-zone-facility-list" ng-repeat="geoZoneName in sortedGeoZoneKeys">
+      <h3><span ng-bind="geoZoneName"></span></h3>
 
 
-  <div class="geo-zone-facility-list" ng-repeat="geoZoneName in sortedGeoZoneKeys">
-    <h3><span ng-bind="geoZoneName"></span></h3>
-
-
-    <div class="facilities-isa-amount-table">
-      <table class="table table-bordered table-striped">
-        <thead ng-model="facilityMap[geoZoneName]">
+      <div class="facilities-isa-amount-table">
+        <table class="table table-bordered table-striped">
+          <thead ng-model="facilityMap[geoZoneName]">
           <tr>
             <th></th>
             <th></th>
-            <th class="main-heading" ng-repeat="productGroup in facilityMap[geoZoneName][0].supportedPrograms[0].sortedProductGroup"
+            <th class="main-heading"
+                ng-repeat="productGroup in facilityMap[geoZoneName][0].supportedPrograms[0].sortedProductGroup"
                 colspan="{{facilityMap[geoZoneName][0].supportedPrograms[0].programProductMap[productGroup].length}}">
               <span ng-bind="productGroup"></span>
             </th>
@@ -48,8 +49,8 @@
               <span ng-bind="programProduct.product.primaryName"></span>
             </th>
           </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
           <tr ng-repeat="facility in facilityMap[geoZoneName]">
             <td>
               <span ng-bind="facility.name"></span>
@@ -62,10 +63,11 @@
               <span ng-bind="programProduct.isaAmount"></span>
             </td>
           </tr>
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
+
+
     </div>
-
-
   </div>
 </div>
