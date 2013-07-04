@@ -6,7 +6,9 @@
 
 <div>
   <h2 openlmis-message="label.warehouse.load.amount"></h2>
-  <div ng-show="message"><span ng-bind="message"></span></div>
+
+
+  <div class="alert alert-info" ng-show="message"><span ng-bind="message"></span></div>
   <div ng-show="!message">
     <div class="info-box">
       <div class="row-fluid">
@@ -21,7 +23,6 @@
         </div>
       </div>
     </div>
-
 
     <div class="geo-zone-facility-list" ng-repeat="geoZoneName in sortedGeoZoneKeys">
       <h3><span ng-bind="geoZoneName"></span></h3>
