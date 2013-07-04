@@ -90,6 +90,7 @@ public class UserController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> create(@RequestBody User user, HttpServletRequest request) {
     ResponseEntity<OpenLmisResponse> successResponse;
+    user.setCreatedBy(loggedInUserId(request));
     user.setModifiedBy(loggedInUserId(request));
     try {
       String resetPasswordBaseLink = baseUrl + RESET_PASSWORD_PATH;

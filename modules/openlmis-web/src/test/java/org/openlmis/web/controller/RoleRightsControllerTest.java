@@ -87,7 +87,6 @@ public class RoleRightsControllerTest {
     when(messageService.message("message.role.created.success", "test role")).thenReturn("'test role' created successfully");
     ResponseEntity<OpenLmisResponse> responseEntity = controller.createRole(role, httpServletRequest);
     verify(roleRightsService).saveRole(role);
-    assertThat(role.getModifiedBy(), is(LOGGED_IN_USERID));
     String successMsg = (String) responseEntity.getBody().getData().get(SUCCESS);
     assertThat(successMsg, is("'test role' created successfully"));
   }

@@ -21,7 +21,7 @@ public interface FacilityMapper {
     "geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById," +
     "coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, online," +
     "satellite, satelliteParentId, hasElectricity, hasElectronicScc, hasElectronicDar, active," +
-    "goLiveDate, goDownDate, comment, dataReportable, createdBy, modifiedBy, modifiedDate) " +
+    "goLiveDate, goDownDate, comment, dataReportable, createdDate,createdBy, modifiedBy, modifiedDate) " +
     "values(#{code}, #{name}, #{description}, #{gln}, #{mainPhone}, #{fax}, #{address1}, #{address2}," +
     "#{geographicZone.id}," +
     "#{facilityType.id}," +
@@ -29,7 +29,7 @@ public interface FacilityMapper {
     "#{operatedBy.id}," +
     "#{coldStorageGrossCapacity}, #{coldStorageNetCapacity}, #{suppliesOthers}, #{sdp},#{online}," +
     "#{satellite}, #{satelliteParentId}, #{hasElectricity}, #{hasElectronicScc}, #{hasElectronicDar}, #{active}," +
-    "#{goLiveDate}, #{goDownDate}, #{comment}, #{dataReportable}, #{createdBy}, #{modifiedBy}, " +
+    "#{goLiveDate}, #{goDownDate}, #{comment}, #{dataReportable},COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
     "COALESCE(#{modifiedDate}, NOW()))")
   @Options(useGeneratedKeys = true)
   Integer insert(Facility facility);

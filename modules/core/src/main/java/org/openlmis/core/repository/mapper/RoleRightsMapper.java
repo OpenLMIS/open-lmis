@@ -35,8 +35,9 @@ public interface RoleRightsMapper {
   Set<Right> getAllRightsForRole(Long roleId);
 
   @Insert({"INSERT INTO roles",
-      "(name, type, description, modifiedBy) VALUES",
-      "(#{name}, #{type}, #{description}, #{modifiedBy})"})
+      "(name, type, description, createdBy,modifiedBy,createdDate,modifiedDate) VALUES",
+      "(#{name}, #{type}, #{description}, #{createdBy},#{modifiedBy},COALESCE(#{createdDate}, NOW()) ," +
+        "COALESCE(#{modifiedDate}, NOW()) )"})
   @Options(useGeneratedKeys = true)
   int insertRole(Role role);
 

@@ -109,7 +109,6 @@ public class FacilityControllerTest {
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
     assertThat(response.getSuccessMsg(), is("Facility 'test facility' created successfully"));
     verify(facilityService).insert(facility);
-    assertThat(facility.getModifiedBy(), is(userId));
   }
 
   @Test

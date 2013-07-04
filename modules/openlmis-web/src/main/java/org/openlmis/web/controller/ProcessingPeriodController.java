@@ -46,7 +46,12 @@ public class ProcessingPeriodController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
   public ResponseEntity<OpenLmisResponse> save(@PathVariable("scheduleId") Long scheduleId, @RequestBody ProcessingPeriod processingPeriod, HttpServletRequest request) {
     processingPeriod.setScheduleId(scheduleId);
+
     processingPeriod.setModifiedBy(loggedInUserId(request));
+
+    processingPeriod.setCreatedBy(loggedInUserId(request));
+
+
     try {
       processingScheduleService.savePeriod(processingPeriod);
     } catch (DataException e) {

@@ -94,6 +94,7 @@ public class FacilityController extends BaseController {
   @RequestMapping(value = "/facilities", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
   public ResponseEntity insert(@RequestBody Facility facility, HttpServletRequest request) {
+    facility.setCreatedBy(loggedInUserId(request));
     facility.setModifiedBy(loggedInUserId(request));
     ResponseEntity<OpenLmisResponse> response;
     try {

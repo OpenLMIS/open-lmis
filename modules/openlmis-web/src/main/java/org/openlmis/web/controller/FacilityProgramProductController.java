@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -40,7 +41,9 @@ public class FacilityProgramProductController extends BaseController {
 
   @RequestMapping(value = "/programProducts/{programProductId}/isa", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-  public void insertIsa(@PathVariable Long programProductId, @RequestBody ProgramProductISA programProductISA) {
+  public void insertIsa(@PathVariable Long programProductId, @RequestBody ProgramProductISA programProductISA,HttpServletRequest request) {
+    programProductISA.setCreatedBy(loggedInUserId(request));
+    programProductISA.setModifiedBy(loggedInUserId(request));
     programProductISA.setProgramProductId(programProductId);
     service.insertISA(programProductISA);
   }
@@ -48,9 +51,10 @@ public class FacilityProgramProductController extends BaseController {
 
   @RequestMapping(value = "/programProducts/{programProductId}/isa/{isaId}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-  public void updateIsa(@PathVariable Long isaId, @PathVariable Long programProductId, @RequestBody ProgramProductISA programProductISA) {
+  public void updateIsa(@PathVariable Long isaId, @PathVariable Long programProductId, @RequestBody ProgramProductISA programProductISA,HttpServletRequest request) {
     programProductISA.setId(isaId);
     programProductISA.setProgramProductId(programProductId);
+    programProductISA.setModifiedBy(loggedInUserId(request));
     service.updateISA(programProductISA);
   }
 
