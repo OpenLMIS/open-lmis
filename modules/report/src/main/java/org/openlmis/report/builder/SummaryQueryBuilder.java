@@ -13,11 +13,12 @@ public class SummaryQueryBuilder {
 
     public static String getQuery(Map params){
 
-        String query = "  select li.productcode code,li.productcategory as category, li.product,SUM(li.beginningBalance) openingBalance, SUM(li.quantityreceived) receipts, SUM(li.quantitydispensed) issues, SUM(li.totallossesandadjustments) adjustments,  \n" +
+        String query = "select MAX(facilities.name) facility,MAX(facility_types.name) facilityType,li.productcode code,li.productcategory as category, li.product,SUM(li.beginningBalance) openingBalance, SUM(li.quantityreceived) receipts, SUM(li.quantitydispensed) issues, SUM(li.totallossesandadjustments) adjustments,  \n" +
                 "    (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) closingBalance, SUM(li.maxmonthsofstock) monthsOfStock, SUM(li.amc) averageMonthlyConsumption       \n" +
                 "    ,(SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) maximumStock,\n" +
-                "\t   case when(SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) - (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) > 0 then \n" +
-                "   (SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) - (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) ELSE 0 end\treorderAmount       \n" +
+                "  case when(SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) - (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) > 0 then \n" +
+                "   (SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) - (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) ELSE 0 end  reorderAmount       \n" +
+                "   ,MAX(fs.facility_name) supplyingFacility, MAX(li.maxmonthsofstock) MaxMOS, MAX(li.maxmonthsofstock) minMOS \n" +
                 "    from facilities        \n" +
                 "    inner join facility_types ON facilities.typeid = facility_types.id       \n" +
                 "    inner join geographic_zones on geographic_zones.id = facilities.geographiczoneid       \n" +
@@ -25,19 +26,20 @@ public class SummaryQueryBuilder {
                 "    inner join requisition_line_items li ON li.rnrid = r.id         \n" +
                 "    inner join products ON products.code  ::text =   li.productcode  ::text       \n" +
                 "    inner join program_products ON program_products.productid = products.id \n" +
-                "\tinner join facility_approved_products ON facility_approved_products.facilitytypeid = facility_types.id AND facility_approved_products.programproductid = program_products.id\n" +
+                "    inner join facility_approved_products ON facility_approved_products.facilitytypeid = facility_types.id AND facility_approved_products.programproductid = program_products.id \n" +
                 "    inner join programs ON  program_products.programid = programs.id   AND  programs.id = r.programid       \n" +
                 "    inner join programs_supported ON  programs.id = programs_supported.programid   AND   facilities.id = programs_supported.facilityid         \n" +
                 "    inner join requisition_group_members ON facilities.id = requisition_group_members.facilityid         \n" +
                 "    inner join requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid         \n" +
                 "    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programid = programs.id   AND requisition_group_program_schedules.requisitiongroupid = requisition_groups.id         \n" +
                 "    inner join processing_schedules ON processing_schedules.id = requisition_group_program_schedules.programid         \n" +
-                "    inner join processing_periods ON processing_periods.scheduleid = processing_schedules.id " +
+                "    inner join processing_periods ON processing_periods.scheduleid = processing_schedules.id  \n" +
+                "    left outer join vw_program_facility_supplier fs ON fs.supervisory_node_id = requisition_groups.supervisorynodeid AND fs.program_id = programs.id \n" +
 
                 writePredicates(params)+
 
-                "group by li.productcode, li.product, li.productcategory ,requisition_groups.id" +
-                " order by " + QueryHelpers.getSortOrder(params, "li.productcode asc, li.product asc, li.productcategory asc , requisition_groups.id asc");
+                "group by facilities.name,li.productcode, li.product, li.productcategory ,requisition_groups.id \n" +
+                " order by " + QueryHelpers.getSortOrder(params, "facilities.name asc,li.productcode asc,  li.product asc, li.productcategory asc , requisition_groups.id asc");
             return query;
     }
     private static String writePredicates(Map params){
