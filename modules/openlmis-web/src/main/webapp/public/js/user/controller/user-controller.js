@@ -184,9 +184,9 @@ function UserController($scope, $location, $dialog, User, Facility, messageServi
 UserController.resolve = {
 
   user: function ($q, User, $route, $timeout) {
-    var deferred = $q.defer();
     var userId = $route.current.params.userId;
     if (!userId) return undefined;
+    var deferred = $q.defer();
     $timeout(function () {
       User.get({id: userId}, function (data) {
         deferred.resolve(data.user);

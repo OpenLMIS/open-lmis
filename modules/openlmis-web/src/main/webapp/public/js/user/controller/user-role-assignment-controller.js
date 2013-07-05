@@ -23,13 +23,10 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
   });
 
   $scope.restoreAdminRole = function (result) {
-    if (!result) {
-      if (window.lastAdminRoleRemoved) {
-        $scope.user.adminRole.roleIds.push(window.lastAdminRoleRemoved.id);
-      }
-    }
-    else {
-      return;
+    if (result) return;
+
+    if (window.lastAdminRoleRemoved) {
+      $scope.user.adminRole.roleIds.push(window.lastAdminRoleRemoved.id);
     }
   };
 
@@ -47,7 +44,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
       });
     }, function () {
     });
-  }
+  };
 
   $scope.deleteCurrentRow = function (rowNum, roleList) {
     var dialogOpts = {
@@ -159,6 +156,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
         valid = false;
         return false;
       }
+      return true;
     });
     return valid;
   }
@@ -175,8 +173,8 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     }
 
     $scope.user.allocationRoles.push(angular.copy($scope.deliveryZoneRole));
-    $scope.showAllocationError = $scope.deliveryZoneRole = false;
-  }
+    $scope.showAllocationError = $scope.deliveryZoneRole = undefined;
+  };
 
 
   // WHO WROTE THIS? THIS IS AWESOME!
