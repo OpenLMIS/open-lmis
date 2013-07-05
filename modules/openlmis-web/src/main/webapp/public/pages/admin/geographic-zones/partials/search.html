@@ -10,7 +10,7 @@
     <input id="searchGeographicZone" class="search-query input-xlarge" type="text" ng-model="query"
           ng-init="showGeographicZonesSearchResults('searchGeographicZone')" on-keyup="filterGeographicZones('searchGeographicZone')" placeholder="Enter geographic zone name"/>
 
-    <div class="form-tip" openlmis-message="search.threeCharacters"></div>
+
     <div class="facility-list">  <!--ng-show="query.length > 2">-->
         <h3 ng-show="query.length>0">
             <ng-pluralize count="resultCount"
