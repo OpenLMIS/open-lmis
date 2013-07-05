@@ -5,7 +5,7 @@
  */
 
 'use strict';
-angular.module('createRnRTemplate', ['openlmis']).config(['$routeProvider', function ($routeProvider) {
+angular.module('createRnRTemplate', ['openlmis', 'ui.sortable']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
     when('/select-program', {
       controller:ConfigureRnRTemplateController,
