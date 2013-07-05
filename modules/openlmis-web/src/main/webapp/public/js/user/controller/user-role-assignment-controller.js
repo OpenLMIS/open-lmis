@@ -35,8 +35,8 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
 
   $scope.loadProgramsForDeliveryZone = function () {
 
-    $scope.deliveryZonePrograms = $scope.deliveryZoneRoles = [];
-    $scope.selectedDeliveryZoneProgram = undefined;
+    $scope.deliveryZonePrograms = $scope.deliveryZoneRoles = $scope.deliveryZoneRole.roleIds = [];
+    $scope.deliveryZoneRole.programId = undefined;
 
     if (isUndefined($scope.deliveryZoneRole.deliveryZone.id)) return;
 
@@ -154,8 +154,8 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
 
   function validate() {
     var valid = true;
-    $($scope.user.allocationRoles).each(function(index, role) {
-      if(role.deliveryZone.id == $scope.deliveryZoneRole.deliveryZone.id && role.programId == $scope.deliveryZoneRole.programId){
+    $($scope.user.allocationRoles).each(function (index, role) {
+      if (role.deliveryZone.id == $scope.deliveryZoneRole.deliveryZone.id && role.programId == $scope.deliveryZoneRole.programId) {
         valid = false;
         return false;
       }
@@ -167,9 +167,9 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     $scope.user.allocationRoles = $scope.user.allocationRoles ? $scope.user.allocationRoles : [];
     $scope.showAllocationError = true;
 
-    if(!$scope.deliveryZoneRole.deliveryZone.id || !$scope.deliveryZoneRole.programId || !$scope.deliveryZoneRole.roleIds || !$scope.deliveryZoneRole.roleIds.length) return;
+    if (!$scope.deliveryZoneRole.deliveryZone.id || !$scope.deliveryZoneRole.programId || !$scope.deliveryZoneRole.roleIds || !$scope.deliveryZoneRole.roleIds.length) return;
 
-    if(!validate()) {
+    if (!validate()) {
       $scope.duplicateAllocationRoleError = 'error.delivery.zone.program.combination';
       return;
     }
@@ -184,24 +184,12 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     return _.findWhere(_.flatten($scope.programsMap), {id: programId}).name;
   };
 
-  $scope.getDZProgramName = function(programId) {
-    return _.findWhere($scope.deliveryZonePrograms, {id: programId}).name;
-  };
-
-  $scope.getDeliveryZoneName = function(zoneId) {
+  $scope.getDeliveryZoneName = function (zoneId) {
     return _.findWhere($scope.deliveryZones, {id: zoneId}).name;
   };
 
   $scope.getSupervisoryNodeName = function (supervisoryNodeId) {
-    if (!$scope.supervisoryNodes) return;
-    var supervisoryNodeName = null;
-    $.each($scope.supervisoryNodes, function (index, supervisoryNode) {
-      if (supervisoryNode.id == supervisoryNodeId) {
-        supervisoryNodeName = supervisoryNode.name;
-        return false;
-      }
-    });
-    return supervisoryNodeName;
+    return _.findWhere($scope.supervisoryNodes, {id: supervisoryNodeId}).name;
   };
 
   $scope.hasMappingError = function (mappingErrorFlag, field) {

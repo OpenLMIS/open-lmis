@@ -6,6 +6,8 @@
 
 var services = angular.module('openlmis.services', ['ngResource']);
 
+services.value('version', '@version@');
+
 services.factory('ActivePrograms', function ($resource) {
   return $resource('/active/programs.json', {}, {});
 });

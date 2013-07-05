@@ -57,7 +57,7 @@ tasks.withType(War) {
             fileCopy.filter { String line -> line.replace('.css"', '.css?v=' + currentTime + '"') }
         }
 
-        if (fileCopy.name.equals('message-service.js')) {
+        if (fileCopy.name.equals('services.js')) {
             fileCopy.filter(ReplaceTokens, tokens: [version: currentTime])
         }
     }
