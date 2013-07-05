@@ -65,6 +65,18 @@
               <span ng-bind="programProduct.isaAmount"></span>
             </td>
           </tr>
+          <tr>
+            <td>
+              <span ng-bind="geoZoneLevelName"></span>
+              <span openlmis-message="label.total"></span>
+            </td>
+            <td>
+              <span ng-bind="aggregateMap[geoZoneName]['totalPopulation']"></span>
+            </td>
+            <td ng-repeat="programProduct in getProgramProductsForAggregateRow(geoZoneName)">
+              <span ng-bind="programProduct.isaAmount"></span>
+            </td>
+          </tr>
           </tbody>
         </table>
       </div>
