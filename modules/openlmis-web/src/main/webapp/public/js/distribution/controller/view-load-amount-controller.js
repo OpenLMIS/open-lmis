@@ -43,24 +43,23 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
     $scope.sortedGeoZoneKeys = _.sortBy(_.keys($scope.facilityMap), function (key) {
       return key;
     });
-
-    $scope.getProgramProducts = function (facility) {
-      var programProducts = [];
-      $(facility.supportedPrograms[0].sortedProductGroup).each(function (index, sortedProductGroupKey) {
-        programProducts = programProducts.concat(facility.supportedPrograms[0].programProductMap[sortedProductGroupKey]);
-      });
-      return programProducts;
-    }
-    console.log(deliveryZone, period, $scope.facilityMap, $scope.sortedGeoZoneKeys)
+    console.log($scope.facilityMap);
   } else {
     $scope.message = "msg.delivery.zone.no.record";
   }
 
+  $scope.getProgramProducts = function (facility) {
+    var programProducts = [];
+    $(facility.supportedPrograms[0].sortedProductGroup).each(function (index, sortedProductGroupKey) {
+      programProducts = programProducts.concat(facility.supportedPrograms[0].programProductMap[sortedProductGroupKey]);
+    });
+    return programProducts;
+  }
 
 }
 
 ViewLoadAmountController.resolve = {
-  facilities:function (DeliveryZoneFacilities, $route, $timeout, $q) {
+    facilities:function (DeliveryZoneFacilities, $route, $timeout, $q) {
     var deferred = $q.defer();
     $timeout(function () {
       DeliveryZoneFacilities.get({deliveryZoneId:$route.current.params.deliveryZoneId, programId:$route.current.params.programId}, function (data) {
