@@ -32,6 +32,8 @@
       </class>
       <class name="org.openlmis.functional.ViewWarehouseLoadAmount">
       </class>
+      <class name="org.openlmis.functional.InitiateRnR">
+      </class>
     </classes>
   </test>
 </suite>
