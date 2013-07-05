@@ -25,7 +25,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.openlmis.core.domain.Right.*;
-import static org.openlmis.core.service.RegimenColumnService.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
@@ -84,8 +83,7 @@ public class RequisitionService {
       CREATE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(programId,
-      rnrTemplateService.fetchColumnsForRequisition(programId));
+    ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplate(programId);
 
     RegimenTemplate regimenTemplate = new RegimenTemplate(programId, regimenColumnService.getRegimenColumnsByProgramId(programId));
 
@@ -102,8 +100,7 @@ public class RequisitionService {
 
     Rnr requisition = new Rnr(facilityId, programId, periodId, facilityTypeApprovedProducts, regimens, modifiedBy);
 
-    fillFieldsForInitiatedRequisitionAccordingToTemplate(requisition, rnrTemplate);
-    fillFieldsForRegimenAccordingToTemplateInRequisition(requisition, regimenTemplate);
+    fillFieldsForInitiatedRequisitionAccordingToTemplate(requisition, rnrTemplate, regimenTemplate);
 
     insert(requisition);
 
@@ -239,32 +236,9 @@ public class RequisitionService {
     return requisitions;
   }
 
-  private void fillFieldsForInitiatedRequisitionAccordingToTemplate(Rnr requisition, ProgramRnrTemplate template) {
-    requisition.setBeginningBalances(getPreviousRequisition(requisition), template.columnsVisible(BEGINNING_BALANCE));
-    requisition.setFieldsAccordingToTemplate(template);
-  }
-
-  private void fillFieldsForRegimenAccordingToTemplateInRequisition(Rnr requisition, RegimenTemplate regimenTemplate) {
-    for (RegimenLineItem regimenLineItem : requisition.getRegimenLineItems()) {
-      for (RegimenColumn column : regimenTemplate.getRegimenColumns()) {
-        if (isRegimenColumnVisible(column, ON_TREATMENT)) {
-          regimenLineItem.setPatientsOnTreatment(0);
-        }
-        if (isRegimenColumnVisible(column, INITIATED_TREATMENT)) {
-          regimenLineItem.setPatientsToInitiateTreatment(0);
-        }
-        if (isRegimenColumnVisible(column, STOPPED_TREATMENT)) {
-          regimenLineItem.setPatientsStoppedTreatment(0);
-        }
-        if (isRegimenColumnVisible(column, REMARKS)) {
-          regimenLineItem.setRemarks("");
-        }
-      }
-    }
-  }
-
-  private boolean isRegimenColumnVisible(RegimenColumn regimenColumn, String columnName) {
-    return (regimenColumn.getVisible() && regimenColumn.getName().equalsIgnoreCase(columnName));
+  private void fillFieldsForInitiatedRequisitionAccordingToTemplate(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
+    requisition.setBeginningBalances(getPreviousRequisition(requisition), rnrTemplate.columnsVisible(BEGINNING_BALANCE));
+    requisition.setFieldsAccordingToTemplate(rnrTemplate, regimenTemplate);
   }
 
   private Rnr fillSupportingInfo(Rnr requisition) {

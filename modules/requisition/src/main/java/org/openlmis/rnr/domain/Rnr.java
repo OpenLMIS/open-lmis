@@ -213,9 +213,13 @@ public class Rnr extends BaseModel {
     });
   }
 
-  public void setFieldsAccordingToTemplate(ProgramRnrTemplate template) {
-    for (RnrLineItem lineItem : fullSupplyLineItems) {
+  public void setFieldsAccordingToTemplate(ProgramRnrTemplate template, RegimenTemplate regimenTemplate) {
+    for (RnrLineItem lineItem : this.fullSupplyLineItems) {
       lineItem.setLineItemFieldsAccordingToTemplate(template);
+    }
+    if (regimenTemplate.getRegimenColumns().isEmpty()) return;
+    for (RegimenLineItem regimenLineItem : this.regimenLineItems) {
+      regimenLineItem.setRegimenFieldsAccordingToTemplate(regimenTemplate);
     }
   }
 
@@ -294,5 +298,6 @@ public class Rnr extends BaseModel {
 
     this.modifiedBy = modifiedBy;
   }
+
 }
 

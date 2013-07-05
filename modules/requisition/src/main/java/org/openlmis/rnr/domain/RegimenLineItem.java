@@ -6,8 +6,10 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Regimen;
+import org.openlmis.core.domain.RegimenColumn;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.openlmis.core.service.RegimenColumnService.*;
 
 @Data
 @NoArgsConstructor
@@ -24,5 +26,19 @@ public class RegimenLineItem extends BaseModel {
   public RegimenLineItem(Long rnrId, Regimen regimen) {
     this.rnrId = rnrId;
     this.regimen = regimen;
+  }
+
+  public void setRegimenFieldsAccordingToTemplate(RegimenTemplate regimenTemplate) {
+    if (regimenTemplate.isRegimenColumnVisible(ON_TREATMENT))
+      patientsOnTreatment = 0;
+
+    if (regimenTemplate.isRegimenColumnVisible(INITIATED_TREATMENT))
+      patientsToInitiateTreatment = 0;
+
+    if (regimenTemplate.isRegimenColumnVisible(STOPPED_TREATMENT))
+      patientsStoppedTreatment = 0;
+
+    if (regimenTemplate.isRegimenColumnVisible(REMARKS))
+      remarks = "";
   }
 }
