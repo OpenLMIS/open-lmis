@@ -10,7 +10,6 @@ services.factory('messageService', function (Messages, localStorageService, $roo
     if (localStorageService.get('version') != version) {
       localStorageService.add('version', version);
       Messages.get({}, function (data) {
-        localStorageService.add('messagesAvailable', true);
         for (var attr in data.messages) {
           localStorageService.add('message.' + attr, data.messages[attr]);
         }
