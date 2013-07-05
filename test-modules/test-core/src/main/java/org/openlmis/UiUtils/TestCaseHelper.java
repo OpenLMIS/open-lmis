@@ -168,6 +168,11 @@ public class TestCaseHelper {
     dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com", vendorName);
   }
 
+  public void setupTestRoleRightsData(String roleName, String roleType, String roleRight) throws IOException, SQLException {
+    dbWrapper.insertRole(roleName, roleType, "");
+    dbWrapper.assignRight(roleName, roleRight);
+    }
+
   public void setupDataExternalVendor(boolean isPreviousPeriodRnRRequired) throws IOException, SQLException {
     dbWrapper.insertVendor("commTrack");
     List<String> rightsList = new ArrayList<String>();
@@ -262,6 +267,16 @@ public class TestCaseHelper {
             return (maximumValue);
         return (new BigDecimal(calculatedISA).setScale(0,BigDecimal.ROUND_CEILING)).toString();
    }
+
+    public void SetupDeliveryZoneRolesAndRights(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                                  String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                  String facilityCodeFirst, String facilityCodeSecond,
+                                                  String programFirst, String programSecond, String schedule, String roleNmae) throws IOException, SQLException {
+        dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
+        dbWrapper.insertSchedule(schedule, "Monthly", "Month");
+        setupTestRoleRightsData(roleNmae,"ALLOCATION","MANAGE_DISTRIBUTION");
+        setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
+    }
 
     public String OpenIndexedDB(String dbName)
     {

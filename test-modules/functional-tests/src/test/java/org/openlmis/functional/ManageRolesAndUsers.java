@@ -99,7 +99,10 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testE2EManageRolesAndFacility(String user, String program, String[] credentials) throws Exception {
+  public void testE2EManageRolesAndFacility(String user, String program, String[] credentials, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                            String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                            String facilityCodeFirst, String facilityCodeSecond,
+                                            String programFirst, String programSecond, String schedule, String rolename) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com", "openLmis");
@@ -136,7 +139,15 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     UserPage userPage = new UserPage(testWebDriver);
     createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, "REQUISITION");
+
+    SetupDeliveryZoneRolesAndRights(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule, rolename);
     userPage.clickViewHere();
+    userPage.enterDeliveryZoneData(deliveryZoneNameFirst,programFirst,"");
+    userPage.clickSaveButton();
+    userPage.clickViewHere();
+    assertEquals(deliveryZoneNameFirst,userPage.getAddedDeliveryZoneLabel());
+    assertEquals(programFirst,userPage.getAddedDeliveryZoneProgramLabel());
+
     userPage.removeRole(1, false);
     userPage.verifyRolePresent(LAB_IN_CHARGE);
     userPage.removeRole(1, false);
@@ -154,9 +165,11 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     UserPage userPage = homePage.navigateToUser();
     String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dburlGlobal);
     dbWrapper.updateUser(passwordUsers, userEmail);
+
     userPage.enterMyFacilityAndMySupervisedFacilityData(userFirstName, userLastName, facility, program, supervisoryNode, role, roleType);
     return userID;
   }
+
 
   private void createRoleAndAssignRights(HomePage homePage, List<String> userRoleList, String roleName, String roleDescription, boolean programDependent) throws IOException {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
@@ -179,7 +192,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
+      {"User123", "HIV", new String[]{"Admin123", "Admin123"},"DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
+              "F10", "F11", "VACCINES", "TB", "M","Field Co-Ordinator"}
     };
   }
 }

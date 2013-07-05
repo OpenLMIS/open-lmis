@@ -68,12 +68,21 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//select[@ng-model='selectedSupervisoryNodeIdToSupervise']")
   private static WebElement supervisoryNodeToSupervise;
 
+  @FindBy(how = How.XPATH, using = "//select[@name='selectDeliveryZone']")
+  private static WebElement deliveryZone;
+
+  @FindBy(how = How.XPATH, using = "//select[@name='selectDeliveryZoneProgram']")
+  private static WebElement deliveryZoneProgram;
+
+
   @FindBy(how = How.XPATH, using = "//select[@ng-model='programSelected']")
   private static WebElement programsMyFacility;
 
-
   @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
   private static WebElement rolesSelectFieldMyFacility;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='allocationRole' and @class='fluid-grid-cell']/select[@class='ng-valid select2-offscreen ng-dirty']")
+  private static WebElement rolesSelectFieldDeliveryZone;
 
   @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
   private static WebElement rolesSelectField;
@@ -83,6 +92,9 @@ public class UserPage extends Page {
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[12]")
   private static WebElement rolesInputFieldMyFacility;
+
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[16]")
+  private static WebElement rolesInputFieldMDeliveryZone;
 
   @FindBy(how = How.LINK_TEXT, using = "OK")
   private static WebElement okButton;
@@ -103,6 +115,9 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[@ng-click='addSupervisoryRole()']")
   private static WebElement addButton;
 
+  @FindBy(how = How.XPATH, using = "//a[@ng-click='addAllocationRole()']")
+  private static WebElement addAllocationRoleButton;
+
   @FindBy(how = How.XPATH, using = "//a[@ng-click='addHomeFacilityRole()']")
   private static WebElement addButtonMyFacility;
 
@@ -114,6 +129,11 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Remove')]")
   private static WebElement removeButton;
 
+  @FindBy(how = How.XPATH, using = "//label[@ng-bind='getDeliveryZoneName(roleAssignment.deliveryZone.id)']")
+  private static WebElement addedDeliveryZoneLabel;
+
+  @FindBy(how = How.XPATH, using = "//div/div[4]/div/ng-include/div/div[1]/div[2]/div[2]/div/label")
+  private static WebElement addedDeliveryZoneProgramLabel;
 
   public UserPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -207,7 +227,22 @@ public class UserPage extends Page {
 
   }
 
-  public void removeRole(int indexOfCancelIcon, boolean adminRole) {
+    public void enterDeliveryZoneData(String deliveryZoneCode, String program, String role) {
+        testWebDriver.handleScroll();
+        testWebDriver.waitForElementToAppear(deliveryZone);
+        testWebDriver.selectByVisibleText(deliveryZone, deliveryZoneCode);
+        testWebDriver.sleep(1000);
+        testWebDriver.selectByVisibleText(deliveryZoneProgram, program);
+        testWebDriver.sleep(1000);
+        rolesInputFieldMDeliveryZone.click();
+        rolesInputFieldMDeliveryZone.clear();
+        rolesInputFieldMDeliveryZone.sendKeys(role);
+        rolesInputFieldMDeliveryZone.sendKeys(Keys.RETURN);
+        addAllocationRoleButton.click();
+        testWebDriver.sleep(1000);
+    }
+
+    public void removeRole(int indexOfCancelIcon, boolean adminRole) {
     int counter = 1;
     List<WebElement> closeButtons = testWebDriver.getElementsByXpath("//a[@class='select2-search-choice-close']");
     for (WebElement closeButton : closeButtons) {
@@ -304,5 +339,10 @@ public class UserPage extends Page {
     }
   }
 
-
+  public String getAddedDeliveryZoneLabel(){
+      return addedDeliveryZoneLabel.getText();
+  }
+    public String getAddedDeliveryZoneProgramLabel(){
+        return addedDeliveryZoneProgramLabel.getText();
+    }
 }
