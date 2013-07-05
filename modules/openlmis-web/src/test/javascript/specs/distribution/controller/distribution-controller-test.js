@@ -22,7 +22,7 @@ describe('DistributionController', function () {
     var programs = {deliveryZonePrograms:[
       {id:1}
     ]};
-    httpBackend.expect('GET', '/deliveryZones/1/programs.json').respond(200, programs);
+    httpBackend.expect('GET', '/deliveryZones/1/activePrograms.json').respond(200, programs);
 
     scope.loadPrograms();
     httpBackend.flush();

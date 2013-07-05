@@ -39,10 +39,16 @@ public class DeliveryZoneController extends BaseController {
     return response(DELIVERY_ZONES, service.getByUserForRight(loggedInUserId(request), MANAGE_DISTRIBUTION));
   }
 
+  @RequestMapping(value = "deliveryZones/{id}/activePrograms", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION')")
+  public ResponseEntity<OpenLmisResponse> getActiveProgramsForDeliveryZone(@PathVariable Long id) {
+    return response(DELIVERY_ZONE_PROGRAMS, service.getActiveProgramsForDeliveryZone(id));
+  }
+
   @RequestMapping(value = "deliveryZones/{id}/programs", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER, MANAGE_DISTRIBUTION')")
-  public ResponseEntity<OpenLmisResponse> getProgramsForDeliveryZone(@PathVariable Long id) {
-    return response(DELIVERY_ZONE_PROGRAMS, service.getProgramsForDeliveryZone(id));
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
+  public ResponseEntity<OpenLmisResponse> getAllProgramsForDeliveryZone(@PathVariable Long id) {
+    return response(DELIVERY_ZONE_PROGRAMS, service.getAllProgramsForDeliveryZone(id));
   }
 
   @RequestMapping(value = "deliveryZones/{id}", method = GET, headers = ACCEPT_JSON)

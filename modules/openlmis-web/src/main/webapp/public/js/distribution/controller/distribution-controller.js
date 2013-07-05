@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function DistributionController($scope, $location, deliveryZones, DeliveryZonePrograms, messageService, DeliveryZoneProgramPeriods) {
+function DistributionController($scope, $location, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods) {
 
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
@@ -16,7 +16,7 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZonePr
 
   $scope.loadPrograms = function() {
     $scope.programs = $scope.periods = [];
-    DeliveryZonePrograms.get({zoneId: $scope.selectedZone.id}, function(data) {
+    DeliveryZoneActivePrograms.get({zoneId: $scope.selectedZone.id}, function(data) {
       $scope.programs = data.deliveryZonePrograms;
     }, function(data) {
       $scope.error = data.data.error;

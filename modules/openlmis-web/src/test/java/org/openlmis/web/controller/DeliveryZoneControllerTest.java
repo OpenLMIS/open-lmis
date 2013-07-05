@@ -31,7 +31,6 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
 import static org.openlmis.web.controller.DeliveryZoneController.DELIVERY_ZONES;
@@ -88,11 +87,19 @@ public class DeliveryZoneControllerTest {
   }
 
   @Test
-  public void shouldGetProgramsForADeliveryZone() throws Exception {
+  public void shouldGetActiveProgramsForADeliveryZone() throws Exception {
     List<Program> programs = new ArrayList<>();
-    when(service.getProgramsForDeliveryZone(1l)).thenReturn(programs);
-    when(permissionService.hasPermissionOnZone(USER_ID, 1l)).thenReturn(true);
-    ResponseEntity<OpenLmisResponse> response = controller.getProgramsForDeliveryZone(1l);
+    when(service.getActiveProgramsForDeliveryZone(1l)).thenReturn(programs);
+    ResponseEntity<OpenLmisResponse> response = controller.getActiveProgramsForDeliveryZone(1l);
+
+    assertThat((List<Program>) response.getBody().getData().get("deliveryZonePrograms"), is(programs));
+  }
+
+  @Test
+  public void shouldGetAllProgramsForADeliveryZone() throws Exception {
+    List<Program> programs = new ArrayList<>();
+    when(service.getAllProgramsForDeliveryZone(1l)).thenReturn(programs);
+    ResponseEntity<OpenLmisResponse> response = controller.getAllProgramsForDeliveryZone(1l);
 
     assertThat((List<Program>) response.getBody().getData().get("deliveryZonePrograms"), is(programs));
   }

@@ -236,6 +236,10 @@ services.factory('DeliveryZone', function ($resource) {
   return $resource('/deliveryZones/:id.json', {id: '@id'}, {});
 });
 
+services.factory('DeliveryZoneActivePrograms', function ($resource) {
+  return $resource('/deliveryZones/:zoneId/activePrograms.json', {}, {});
+});
+
 services.factory('DeliveryZonePrograms', function ($resource) {
   return $resource('/deliveryZones/:zoneId/programs.json', {}, {});
 });

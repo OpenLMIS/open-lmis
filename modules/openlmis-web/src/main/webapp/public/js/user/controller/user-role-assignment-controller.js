@@ -32,7 +32,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
 
   $scope.loadProgramsForDeliveryZone = function () {
 
-    $scope.deliveryZonePrograms = $scope.deliveryZoneRoles = $scope.deliveryZoneRole.roleIds = [];
+    $scope.deliveryZonePrograms = $scope.deliveryZoneRoles = [];
     $scope.deliveryZoneRole.programId = undefined;
 
     if (isUndefined($scope.deliveryZoneRole.deliveryZone.id)) return;
@@ -173,7 +173,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     }
 
     $scope.user.allocationRoles.push(angular.copy($scope.deliveryZoneRole));
-    $scope.showAllocationError = $scope.deliveryZoneRole = undefined;
+    $scope.showAllocationError = $scope.deliveryZoneRole = $scope.duplicateAllocationRoleError = undefined;
   };
 
 

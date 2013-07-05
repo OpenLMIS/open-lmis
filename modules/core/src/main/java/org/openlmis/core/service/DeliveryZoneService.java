@@ -40,7 +40,7 @@ public class DeliveryZoneService {
     return repository.getByUserForRight(userId, right);
   }
 
-  public List<Program> getProgramsForDeliveryZone(long zoneId) {
+  public List<Program> getActiveProgramsForDeliveryZone(long zoneId) {
     List<Program> programs = repository.getPrograms(zoneId);
     return fillActivePrograms(programs);
   }
@@ -60,5 +60,14 @@ public class DeliveryZoneService {
 
   public List<DeliveryZone> getAll() {
     return repository.getAll();
+  }
+
+  public List<Program> getAllProgramsForDeliveryZone(Long zoneId) {
+    List<Program> programs = repository.getPrograms(zoneId);
+    List<Program> fullPrograms = new ArrayList<>();
+    for (Program program : programs) {
+      fullPrograms.add(programService.getById(program.getId()));
+    }
+    return fullPrograms;
   }
 }

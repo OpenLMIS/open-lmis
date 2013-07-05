@@ -94,7 +94,7 @@ public class DeliveryZoneServiceTest {
 
   @Test
   public void shouldGetProgramForDeliveryZoneBasedOnUserRights() throws Exception {
-    service.getProgramsForDeliveryZone(1l);
+    service.getActiveProgramsForDeliveryZone(1l);
 
     verify(repository).getPrograms(1l);
   }
@@ -116,10 +116,32 @@ public class DeliveryZoneServiceTest {
     when(programService.getById(1l)).thenReturn(activeProgram);
     when(programService.getById(2l)).thenReturn(inActiveProgram);
 
-    List<Program> returnedPrograms = service.getProgramsForDeliveryZone(1l);
+    List<Program> returnedPrograms = service.getActiveProgramsForDeliveryZone(1l);
 
     assertThat(returnedPrograms, hasItem(activeProgram));
     assertThat(returnedPrograms.size(), is(1));
+  }
+
+  @Test
+  public void shouldGetOnlyAllFilledProgramsForDeliveryZone() throws Exception {
+    final Program program1 = new Program(1l);
+
+    final Program program2 = new Program(2l);
+
+    List<Program> programs = new ArrayList<Program>() {{
+      add(program1);
+      add(program2);
+    }};
+
+    when(repository.getPrograms(1l)).thenReturn(programs);
+    when(programService.getById(1l)).thenReturn(program1);
+    when(programService.getById(2l)).thenReturn(program2);
+
+    List<Program> returnedPrograms = service.getAllProgramsForDeliveryZone(1l);
+
+    assertThat(returnedPrograms, hasItem(program1));
+    assertThat(returnedPrograms, hasItem(program2));
+    assertThat(returnedPrograms.size(), is(2));
   }
 
   @Test
