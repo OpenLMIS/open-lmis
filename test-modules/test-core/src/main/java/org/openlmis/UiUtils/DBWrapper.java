@@ -112,6 +112,7 @@ public class DBWrapper {
     update("delete from users where userName not like('Admin%');");
     update("DELETE FROM requisition_line_item_losses_adjustments;");
     update("DELETE FROM requisition_line_items;");
+    update("DELETE FROM regimen_line_items;");
     update("DELETE FROM requisitions;");
 
     update("delete from program_product_isa;");
@@ -809,6 +810,14 @@ public class DBWrapper {
   public void setRegimenTemplateConfiguredForProgram(boolean flag,String programName) throws SQLException {
     update("update programs set regimentemplateconfigured='"+flag+"' where name='"+programName+"';");
   }
+
+    public void insertRegimenTemplateConfiguredForProgram(String programName, String categoryCode, String code, String name, boolean active) throws SQLException {
+        update("update programs set regimentemplateconfigured='true' where name='"+ programName +"';");
+        update("INSERT INTO regimens\n" +
+                "  (programid, categoryid, code, name, active,displayorder) VALUES\n" +
+                "  ((SELECT id FROM programs WHERE name='"+programName+"'), (SELECT id FROM regimen_categories WHERE code = '"  + categoryCode + "'),\n" +
+                "  '" + code + "','" + name + "','" + active + "',1);");
+    }
 
   public void setRegimenTemplateConfiguredForAllPrograms(boolean flag) throws SQLException {
     update("update programs set regimentemplateconfigured='"+flag+"';");

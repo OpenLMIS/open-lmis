@@ -43,10 +43,15 @@ public class RequisitionPage extends Page {
   private static WebElement nonFullSupplyTab;
   @FindBy(how = ID, using = "fullSupplyTab")
   private static WebElement fullSupplyTab;
+  @FindBy(how = ID, using = "regimenTab")
+  private static WebElement regimenTab;
   @FindBy(how = ID, using = "cost_0")
   private static WebElement totalCost;
   @FindBy(how = XPATH, using = "//input[@value='Add']")
   private static WebElement addNonFullSupplyButtonScreen;
+  @FindBy(how = ID, using = "regimenTable")
+  private static WebElement regimenTable;
+
 
   protected RequisitionPage(TestWebDriver driver) {
     super(driver);
@@ -162,5 +167,32 @@ public class RequisitionPage extends Page {
     nonFullSupplyTab.click();
     testWebDriver.waitForElementToAppear(addNonFullSupplyButtonScreen);
   }
+    public void clickRegimenTab()
+    {
+        testWebDriver.waitForElementToAppear(regimenTab);
+        regimenTab.click();
+        testWebDriver.waitForElementToAppear(regimenTable);
+    }
+
+    public boolean existRegimenTab()
+    {
+        return regimenTab.isDisplayed();
+    }
+
+    public boolean existRegimenCode(String regimentCode, int row)
+    {
+        return testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[1]/ng-switch/span/span").getText().equals(regimentCode);
+    }
+
+    public boolean existRegimenName(String regimentName, int row)
+    {
+        return testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[2]/ng-switch/span/span").getText().equals(regimentName);
+    }
+
+    public boolean existRegimenReportingField(int fieldNumberInTable, int row)
+    {
+        return testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input").isDisplayed();
+    }
+
 
 }
