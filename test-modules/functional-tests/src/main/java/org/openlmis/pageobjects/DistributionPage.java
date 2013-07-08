@@ -35,6 +35,8 @@ public class DistributionPage extends RequisitionPage {
   @FindBy(how = ID, using = "viewLoadAmounts")
   private static WebElement viewLoadAmountButton;
 
+  @FindBy(how = ID, using = "initiateDistribution")
+  private static WebElement initiateDistributionButton;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Input facility data')]")
   private static WebElement inputFacilityDataLink;
@@ -67,7 +69,11 @@ public class DistributionPage extends RequisitionPage {
       viewLoadAmountButton.click();
 
   }
+    public void clickInitiateDistribution() {
+        testWebDriver.waitForElementToAppear(initiateDistributionButton);
+        initiateDistributionButton.click();
 
+    }
   public List<WebElement> getAllSelectOptionsFromDeliveryZone() {
     testWebDriver.waitForElementToAppear(selectDeliveryZoneSelectBox);
     List<WebElement> options = testWebDriver.getOptions(selectDeliveryZoneSelectBox);

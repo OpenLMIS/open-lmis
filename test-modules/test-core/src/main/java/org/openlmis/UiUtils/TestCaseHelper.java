@@ -12,11 +12,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletInputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.CookieManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.System.getProperty;
 
@@ -290,15 +296,16 @@ public class TestCaseHelper {
         setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
     }
 
-    public String OpenIndexedDB(String dbName)
+    public void OpenIndexedDB(String dbName)
     {
         WebDriver driver;
+        String Separator = getProperty("file.separator");
         //String script = "var z= x();function x() {return document.title;};return z;";
-        String script= "window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB;" +
+        String script= "var x;window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB;" +
                        "var dbreq = window.indexedDB.open(\"" + dbName + "\");" +
                        "dbreq.onsuccess = function (event){var db = dbreq.result; " +
                        //"db.createObjectStore(\"objects\", \"keyPath\": \"id\");" +
-                       "var dTableNames = db.objectStoreNames;alert(dTableNames[0]);};" +
+                       "var dTableNames = db.objectStoreNames;document.cookie=dTableNames[0]};" +
                        "dbreq.onerror = function (event) {return \"test.open Error: \" + event.message;};" ;
                         /*"var dTableNames = db.objectStoreNames;" +
                         "var strNames;" +
@@ -307,7 +314,14 @@ public class TestCaseHelper {
 
         driver= TestWebDriver.getDriver();
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        String element = js.executeScript(script).toString();
-        return element;
+        Object x= js.executeScript(script);
+        CookieManager cm=new CookieManager();
+        cm.getCookieStore();
+        //cm.
+
+
+        Object y = js.executeScript(x.toString());
+        System.out.println(x.getClass());
+
     }
 }
