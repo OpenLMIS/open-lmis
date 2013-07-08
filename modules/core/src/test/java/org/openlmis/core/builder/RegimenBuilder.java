@@ -34,12 +34,10 @@ public class RegimenBuilder {
       regimen.setName(lookup.valueOf(regimenName, REGIMEN_NAME));
       regimen.setActive(lookup.valueOf(active, true));
       regimen.setProgramId(lookup.valueOf(programId, 1L));
-      RegimenCategory regimenCategory = new RegimenCategory("ADULTS", "Adults", 1);
+      RegimenCategory regimenCategory = new RegimenCategory("ADULTS", "Adults",1);
       regimenCategory.setId(1l);
       regimen.setCategory(lookup.valueOf(category, regimenCategory));
       regimen.setDisplayOrder(lookup.valueOf(displayOrder, 1));
-      regimen.setCreatedBy(1L);
-      regimen.setModifiedBy(1L);
       return regimen;
     }
   };
