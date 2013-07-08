@@ -96,6 +96,9 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[16]")
   private static WebElement rolesInputFieldMDeliveryZone;
 
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[14]")
+  private static WebElement rolesInputFieldDeliveryZone;
+
   @FindBy(how = How.LINK_TEXT, using = "OK")
   private static WebElement okButton;
 
@@ -241,6 +244,22 @@ public class UserPage extends Page {
         addAllocationRoleButton.click();
         testWebDriver.sleep(1000);
     }
+
+  public void enterDeliveryZoneDataWithoutHomeAndSupervisoryRolesAssigned(String deliveryZoneCode, String program, String role) {
+    testWebDriver.handleScroll();
+    testWebDriver.waitForElementToAppear(deliveryZone);
+    testWebDriver.selectByVisibleText(deliveryZone, deliveryZoneCode);
+    testWebDriver.sleep(1000);
+    testWebDriver.selectByVisibleText(deliveryZoneProgram, program);
+    testWebDriver.sleep(1000);
+    rolesInputFieldDeliveryZone.click();
+    rolesInputFieldDeliveryZone.clear();
+    rolesInputFieldDeliveryZone.sendKeys(role);
+    rolesInputFieldDeliveryZone.sendKeys(Keys.RETURN);
+    addAllocationRoleButton.click();
+    testWebDriver.sleep(1000);
+  }
+
 
     public void removeRole(int indexOfCancelIcon, boolean adminRole) {
     int counter = 1;

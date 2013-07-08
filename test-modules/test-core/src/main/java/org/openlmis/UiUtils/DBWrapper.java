@@ -66,6 +66,28 @@ public class DBWrapper {
     update("update users set password='" + password + "', active=TRUE  where email='" + email + "';");
   }
 
+  public String getDeliveryZoneNameAssignedToUser(String user) throws SQLException, IOException {
+    String deliveryZoneName="";
+    ResultSet rs = query("select name from delivery_zones where id in(select deliveryzoneid from role_assignments where " +
+      "userid=(select id from users where username='"+user+"'));\n");
+
+    if (rs.next()) {
+      deliveryZoneName  = rs.getString("name");
+    }
+    return deliveryZoneName;
+  }
+
+  public String getRoleNameAssignedToUser(String user) throws SQLException, IOException {
+    String userName="";
+    ResultSet rs = query("select name from roles where id in(select roleid from role_assignments where " +
+      "userid=(select id from users where username='"+user+"'));\n");
+
+    if (rs.next()) {
+      userName  = rs.getString("name");
+    }
+    return userName;
+  }
+
 
   public void deleteFacilities() throws IOException, SQLException {
     update("DELETE FROM requisition_line_item_losses_adjustments;");
