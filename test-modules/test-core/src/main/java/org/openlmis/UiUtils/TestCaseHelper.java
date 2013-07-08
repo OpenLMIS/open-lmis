@@ -14,7 +14,6 @@ import org.openqa.selenium.remote.UnreachableBrowserException;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -206,9 +205,22 @@ public class TestCaseHelper {
     dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond, programSecond, schedule);
   }
 
+  public void setupDataForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(String deliveryZoneCodeFirst,
+                                       String deliveryZoneNameFirst,
+                                       String facilityCodeFirst, String facilityCodeSecond,
+                                       String programFirst, String programSecond, String schedule) throws IOException, SQLException {
+    dbWrapper.insertDeliveryZone(deliveryZoneCodeFirst, deliveryZoneNameFirst);
+    dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeFirst);
+    dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeSecond);
+    dbWrapper.insertProcessingPeriodForDistribution(14, schedule);
+    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programFirst, schedule);
+    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programSecond, schedule);
+  }
+
   public void setupTestDataToInitiateRnRForDistribution(boolean configureTemplate, String program, String user, String userId, String vendorName, List<String> rightsList, String programCode) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
-    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.insertGeographicZone("District1","District1","Ngorongoro");
+    dbWrapper.insertFacilitiesWithDifferentGeoZones("F10", "F11","Ngorongoro","District1");
     if (configureTemplate)
       dbWrapper.configureTemplate(program);
 
