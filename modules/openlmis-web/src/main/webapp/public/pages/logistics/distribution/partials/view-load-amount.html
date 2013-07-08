@@ -23,6 +23,54 @@
         </div>
       </div>
     </div>
+    <div class="geo-zone-facility-list">
+      <h3><span ng-bind="geoZoneLevelName"></span>&nbsp;<span openlmis-message="label.total"></span></h3>
+
+      <div>
+
+        <div class="facilities-isa-amount-table" ng-model="sortedGeoZoneKeys[0]">
+          <table class="table table-bordered table-striped">
+            <thead ng-model="facilityMap[sortedGeoZoneKeys[0]]">
+            <tr>
+              <th></th>
+              <th></th>
+              <th class="main-heading"
+                  ng-repeat="productGroup in facilityMap[sortedGeoZoneKeys[0]][0].supportedPrograms[0].sortedProductGroup"
+                  colspan="{{facilityMap[sortedGeoZoneKeys[0]][0].supportedPrograms[0].programProductMap[productGroup].length}}">
+                <span ng-bind="productGroup"></span>
+              </th>
+            </tr>
+            <tr>
+              <th>
+                <span ng-bind="geoZoneLevelName"></span>
+              </th>
+              <th>
+                <span openlmis-message="label.population"></span>
+              </th>
+              <th ng-repeat="programProduct in getProgramProducts(facilityMap[sortedGeoZoneKeys[0]][0])">
+                <span ng-bind="programProduct.product.primaryName"></span>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="geoZoneName in sortedGeoZoneKeys" >
+              <td>
+                <span ng-bind="geoZoneName"></span>
+                <span openlmis-message="label.total"></span>
+              </td>
+              <td>
+                <span ng-bind="aggregateMap[geoZoneName]['totalPopulation']"></span>
+              </td>
+              <td ng-repeat="programProduct in getProgramProductsForAggregateRow(geoZoneName)">
+                <span ng-bind="programProduct.isaAmount"></span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
 
     <div class="geo-zone-facility-list" ng-repeat="geoZoneName in sortedGeoZoneKeys">
       <h3><span ng-bind="geoZoneName"></span></h3>
