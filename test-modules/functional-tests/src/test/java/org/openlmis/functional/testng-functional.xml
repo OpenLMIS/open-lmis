@@ -22,7 +22,7 @@
       </class>
       <class name="org.openlmis.functional.ConfigureProgramTemplate">
       </class>
-      <class name="org.openlmis.functional.RnRPagination">
+`      <class name="org.openlmis.functional.RnRPagination">
       </class>
     </classes>
   </test>

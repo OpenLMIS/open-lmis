@@ -191,7 +191,7 @@ public class RequisitionServiceTest {
 
     ArrayList<RnrColumn> rnrColumns = getRnrColumns();
     rnrColumns.add(make(a(defaultRnrColumn, with(columnName, BEGINNING_BALANCE), with(visible, false))));
-    when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(rnrColumns));
+    when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(rnrColumns));
     when(requisitionRepository.getRequisitionWithLineItems(FACILITY, PROGRAM, PERIOD)).thenReturn(requisition);
 
     List<Regimen> regimens = new ArrayList<>();
@@ -218,7 +218,7 @@ public class RequisitionServiceTest {
 
     ArrayList<RnrColumn> rnrColumns = getRnrColumns();
     rnrColumns.add(make(a(defaultRnrColumn, with(columnName, BEGINNING_BALANCE), with(visible, true))));
-    when(rnrTemplateService.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(rnrColumns);
+    when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(rnrColumns));
     List<Regimen> regimens = new ArrayList<>();
     when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
 
@@ -361,7 +361,7 @@ public class RequisitionServiceTest {
   public void shouldNotInitRequisitionIfTemplateNotDefined() {
     when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
 
-    when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
+    when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.rnr.template.not.defined");
 
@@ -390,7 +390,7 @@ public class RequisitionServiceTest {
 
   private void setupForInitRnr(Date date, Rnr requisition, ProcessingPeriod validPeriod) {
     when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
-    when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(getRnrColumns()));
+    when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(getRnrColumns()));
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
@@ -400,7 +400,7 @@ public class RequisitionServiceTest {
   private void setupForInitRnr(Rnr requisition) {
     Date date = new Date();
     when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
-    when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(getRnrColumns()));
+    when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(getRnrColumns()));
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
@@ -819,7 +819,7 @@ public class RequisitionServiceTest {
     Rnr previousRnr = make(a(defaultRnr));
     ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, period.getId() - 1)));
     setupForInitRnr(date, someRequisition, period);
-    when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(getRnrColumns()));
+    when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(getRnrColumns()));
 
     Rnr spyRequisition = spy(someRequisition);
 

@@ -83,7 +83,7 @@ public class RequisitionService {
       CREATE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplate(programId);
+    ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplateForRequisition(programId);
 
     RegimenTemplate regimenTemplate = new RegimenTemplate(programId, regimenColumnService.getRegimenColumnsByProgramId(programId));
 
