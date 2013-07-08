@@ -62,4 +62,8 @@ public class GeographicZoneRepository {
   public GeographicLevel getGeographicLevelByCode(String code) {
     return mapper.getGeographicLevelByCode(code);
   }
+
+  public GeographicZone getById(Long id) {
+    return mapper.getById(id);
+  }
 }

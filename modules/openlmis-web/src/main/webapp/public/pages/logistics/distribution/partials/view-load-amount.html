@@ -24,12 +24,12 @@
       </div>
     </div>
     <div class="geo-zone-facility-list">
-      <h3><span ng-bind="geoZoneLevelName"></span>&nbsp;<span openlmis-message="label.total"></span></h3>
+      <h3><span ng-bind="geoZone.parent.level.name"></span>&nbsp;<span openlmis-message="label.total"></span></h3>
 
       <div>
 
         <div class="facilities-isa-amount-table" ng-model="sortedGeoZoneKeys[0]">
-          <table class="table table-bordered table-striped">
+          <table class="table table-bordered table-striped aggregate-table">
             <thead ng-model="facilityMap[sortedGeoZoneKeys[0]]">
             <tr>
               <th></th>
@@ -63,6 +63,18 @@
               </td>
               <td ng-repeat="programProduct in getProgramProductsForAggregateRow(geoZoneName)">
                 <span ng-bind="programProduct.isaAmount"></span>
+              </td>
+            </tr>
+            <tr>
+              <td class="total-cell">
+                <span openlmis-message="label.zone"></span>
+                <span openlmis-message="label.total"></span>
+              </td>
+              <td>
+                <span ng-bind="zonesTotal.totalPopulation"></span>
+              </td>
+              <td ng-repeat="productIsa in zonesTotal.totalProgramProductsMap">
+                <span ng-bind="productIsa.total"></span>
               </td>
             </tr>
             </tbody>
@@ -114,7 +126,7 @@
             </td>
           </tr>
           <tr>
-            <td>
+            <td class="total-cell">
               <span ng-bind="geoZoneLevelName"></span>
               <span openlmis-message="label.total"></span>
             </td>

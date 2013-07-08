@@ -4,7 +4,7 @@
  *  If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
+function ViewLoadAmountController($scope, facilities, period, deliveryZone, GeographicZones) {
 
 
   if (facilities.length > 0) {
@@ -14,12 +14,16 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
     $scope.deliveryZone = deliveryZone;
     var otherGroupName = "";
     $scope.geoZoneLevelName = facilities[0].geographicZone.level.name;
+
+
+    getGeographicZone(facilities[0].geographicZone.id);
+
     $scope.aggregateMap = {};
 
     $(facilities).each(function (i, facility) {
       var totalForGeoZone = $scope.aggregateMap[facility.geographicZone.name];
       if (isUndefined(totalForGeoZone)) {
-        totalForGeoZone = {'totalPopulation': 0}
+        totalForGeoZone = {'totalPopulation':0}
         $scope.aggregateMap[facility.geographicZone.name] = totalForGeoZone;
       }
       var totalPopulation = totalForGeoZone['totalPopulation'];
@@ -45,36 +49,21 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
       }
 
       $(facility.supportedPrograms[0].sortedProductGroup).each(function (index, productGroup) {
-        var total = totalForProducts[productGroup] || [];
-        var products = facility.supportedPrograms[0].programProductMap[productGroup];
-        $(products).each(function (index, programProduct) {
-          var existingTotal = _.find(total, function (totalProduct) {
-            return totalProduct.product.code == programProduct.product.code;
-          });
-          if (existingTotal) {
-            existingTotal.isaAmount = existingTotal.isaAmount + programProduct.isaAmount;
-          } else {
-            var aggrProduct = {product: {code: programProduct.product.code}, isaAmount: programProduct.isaAmount};
-            total.push(aggrProduct);
-          }
-        });
-        totalForProducts[productGroup] = total;
+        calculateTotalIsaForEachFacilityGroupedByProductGroup(totalForProducts, productGroup, facility);
       });
+
       $scope.aggregateMap[facility.geographicZone.name]['totalProgramProductsMap'] = totalForProducts;
       pushBlankProductGroupToLast(facility);
+
       $scope.aggregateMap[facility.geographicZone.name].sortedProductGroup = facility.supportedPrograms[0].sortedProductGroup;
-      function pushBlankProductGroupToLast(facility) {
-        if (_.indexOf(facility.supportedPrograms[0].sortedProductGroup, otherGroupName) > -1) {
-          facility.supportedPrograms[0].sortedProductGroup = _.without(facility.supportedPrograms[0].sortedProductGroup, otherGroupName);
-          facility.supportedPrograms[0].sortedProductGroup.push(otherGroupName);
-        }
-      }
 
     });
+
 
     $scope.facilityMap = _.groupBy(facilities, function (facility) {
       return facility.geographicZone.name;
     });
+
     $scope.sortedGeoZoneKeys = _.sortBy(_.keys($scope.facilityMap), function (key) {
       return key;
     });
@@ -85,13 +74,10 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
       var facilities = $scope.facilityMap[geoZoneKey];
       $(facilities).each(function (j, facility) {
         totalPopulation += facility.catchmentPopulation;
-
       });
     });
 
-    console.log($scope.facilityMap);
-    console.log("aggregate");
-    console.log($scope.aggregateMap);
+    calculateTotalForGeoZoneParent();
   } else {
     $scope.message = "msg.delivery.zone.no.record";
   }
@@ -112,13 +98,64 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
     return programProducts;
   }
 
+
+  function getGeographicZone(geographicZoneId) {
+    GeographicZones.get({id:geographicZoneId}, function (data) {
+      $scope.geoZone = data.geoZone;
+    }, {});
+  }
+
+  function calculateTotalForGeoZoneParent() {
+    $scope.zonesTotal = {totalPopulation:0, totalProgramProductsMap:[]};
+    $($scope.sortedGeoZoneKeys).each(function (i, geoZoneKey) {
+      $scope.zonesTotal['totalPopulation'] += $scope.aggregateMap[geoZoneKey]['totalPopulation'];
+      $($scope.aggregateMap[geoZoneKey].sortedProductGroup).each(function (index, sortedProductGroupKey) {
+        $($scope.aggregateMap[geoZoneKey]['totalProgramProductsMap'][sortedProductGroupKey]).each(function (index, aggregateProduct) {
+          var productTotal = _.find($scope.zonesTotal.totalProgramProductsMap, function (totalProduct) {
+            return totalProduct.code == aggregateProduct.product.code;
+          });
+          if (!productTotal) {
+            productTotal = {code : aggregateProduct.product.code, total : 0};
+            $scope.zonesTotal.totalProgramProductsMap.push(productTotal);
+          }
+          productTotal.total += aggregateProduct.isaAmount;
+        });
+      });
+    });
+  }
+
+  function calculateTotalIsaForEachFacilityGroupedByProductGroup(totalForProducts, productGroup, facility) {
+    var total = totalForProducts[productGroup] || [];
+    var products = facility.supportedPrograms[0].programProductMap[productGroup];
+    $(products).each(function (index, programProduct) {
+      var existingTotal = _.find(total, function (totalProduct) {
+        return totalProduct.product.code == programProduct.product.code;
+      });
+      if (existingTotal) {
+        existingTotal.isaAmount = existingTotal.isaAmount + programProduct.isaAmount;
+      } else {
+        var aggrProduct = {product:{code:programProduct.product.code}, isaAmount:programProduct.isaAmount};
+        total.push(aggrProduct);
+      }
+    });
+    totalForProducts[productGroup] = total;
+  }
+
+
+  function pushBlankProductGroupToLast(facility) {
+    if (_.indexOf(facility.supportedPrograms[0].sortedProductGroup, otherGroupName) > -1) {
+      facility.supportedPrograms[0].sortedProductGroup = _.without(facility.supportedPrograms[0].sortedProductGroup, otherGroupName);
+      facility.supportedPrograms[0].sortedProductGroup.push(otherGroupName);
+    }
+  }
+
 }
 
 ViewLoadAmountController.resolve = {
-  facilities: function (DeliveryZoneFacilities, $route, $timeout, $q) {
+  facilities:function (DeliveryZoneFacilities, $route, $timeout, $q) {
     var deferred = $q.defer();
     $timeout(function () {
-      DeliveryZoneFacilities.get({deliveryZoneId: $route.current.params.deliveryZoneId, programId: $route.current.params.programId}, function (data) {
+      DeliveryZoneFacilities.get({deliveryZoneId:$route.current.params.deliveryZoneId, programId:$route.current.params.programId}, function (data) {
         deferred.resolve(data.facilities);
       }, {});
     }, 100);
@@ -126,10 +163,10 @@ ViewLoadAmountController.resolve = {
     return deferred.promise;
   },
 
-  period: function (Period, $route, $timeout, $q) {
+  period:function (Period, $route, $timeout, $q) {
     var deferred = $q.defer();
     $timeout(function () {
-      Period.get({id: $route.current.params.periodId}, function (data) {
+      Period.get({id:$route.current.params.periodId}, function (data) {
         deferred.resolve(data.period);
       }, {});
     }, 100);
@@ -137,10 +174,10 @@ ViewLoadAmountController.resolve = {
     return deferred.promise;
   },
 
-  deliveryZone: function (DeliveryZone, $route, $timeout, $q) {
+  deliveryZone:function (DeliveryZone, $route, $timeout, $q) {
     var deferred = $q.defer();
     $timeout(function () {
-      DeliveryZone.get({id: $route.current.params.deliveryZoneId}, function (data) {
+      DeliveryZone.get({id:$route.current.params.deliveryZoneId}, function (data) {
         deferred.resolve(data.zone);
       }, {});
     }, 100);

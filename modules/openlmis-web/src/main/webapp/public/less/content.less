@@ -1915,6 +1915,24 @@ input[placeholder].placeholder{
           text-align: center;
         }
       }
+      tbody{
+        tr {
+          td {
+            &.total-cell {
+              background: #f9f9f9;
+              background: -moz-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* FF3.6+ */
+              background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f9f9f9), color-stop(100%,#e0e0e0)); /* Chrome,Safari4+ */
+              background: -webkit-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* Chrome10+,Safari5.1+ */
+              background: -o-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* Opera 11.10+ */
+              background: -ms-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* IE10+ */
+              background: linear-gradient(to bottom, #f9f9f9 0%,#e0e0e0 100%); /* W3C */
+              font-size: 0.9em;
+              text-shadow: 0 1px 0 white;
+
+            }
+          }
+        }
+      }
     }
   }
 }

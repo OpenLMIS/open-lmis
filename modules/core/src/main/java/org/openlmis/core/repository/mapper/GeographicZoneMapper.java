@@ -63,7 +63,7 @@ public interface GeographicZoneMapper {
     @Result(property = "parent.level.code", column = "parentLevelCode"),
     @Result(property = "parent.level.name", column = "parentLevel")
   })
-  GeographicZone getGeographicZoneById(Integer geographicZoneId);
+  GeographicZone getById(Long geographicZoneId);
 
   @Update({"UPDATE geographic_zones set code = #{code}, name = #{name}, levelId = #{level.id}, parentId = #{parent.id}, " +
     "catchmentPopulation = #{catchmentPopulation}, longitude = #{longitude}, latitude = #{latitude}, " +

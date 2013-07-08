@@ -269,4 +269,8 @@ services.factory('RegimenColumns', function($resource){
 });
 
 
+services.factory('GeographicZones', function($resource){
+  return $resource('/geographicZones/:id.json', {}, {});
+});
+
 

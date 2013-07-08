@@ -47,4 +47,8 @@ public class GeographicZoneService {
   public GeographicZone getByCode(GeographicZone geographicZone) {
     return repository.getByCode(geographicZone.getCode());
   }
+
+  public GeographicZone getById(long id) {
+    return repository.getById(id);
+  }
 }

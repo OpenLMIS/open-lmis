@@ -110,4 +110,16 @@ public class GeographicZoneRepositoryTest {
     assertThat(actualLevel, is(level));
     verify(mapper).getGeographicLevelByCode("code");
   }
+
+  @Test
+  public void shouldGetGeographicZoneById(){
+    GeographicZone expectedGeographicZone = new GeographicZone();
+    Long geographicZoneId = 1l;
+    when(mapper.getById(geographicZoneId)).thenReturn(expectedGeographicZone);
+
+    GeographicZone actualGeographicZone = repository.getById(geographicZoneId);
+
+    assertThat(actualGeographicZone, is(expectedGeographicZone));
+    verify(mapper).getById(geographicZoneId);
+  }
 }

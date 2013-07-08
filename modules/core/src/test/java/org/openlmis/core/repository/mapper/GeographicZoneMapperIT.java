@@ -83,7 +83,7 @@ public class GeographicZoneMapperIT {
     GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "district", "District",null), null);
     GeographicZone expectedZone = new GeographicZone(5L, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "city", "City", null), parent);
 
-    GeographicZone zone = mapper.getGeographicZoneById(5);
+    GeographicZone zone = mapper.getById(5L);
 
     assertThat(zone, is(expectedZone));
   }
