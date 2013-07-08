@@ -14,9 +14,8 @@ CREATE TABLE regimen_line_items (
   patientsToInitiateTreatment INTEGER,
   patientsStoppedTreatment    INTEGER,
   remarks                     VARCHAR(250),
-  createdBy                   INTEGER,
+  createdBy                   INTEGER NOT NULL REFERENCES users (id),
   createdDate                 TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy                  INTEGER,
-  modifiedDate                TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+  modifiedBy                  INTEGER NOT NULL REFERENCES users (id),
+  modifiedDate                TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 
