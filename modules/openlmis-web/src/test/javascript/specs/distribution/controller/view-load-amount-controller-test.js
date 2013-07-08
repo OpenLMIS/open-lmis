@@ -20,16 +20,17 @@ describe('ViewLoadAmountController', function () {
       {product:{id:3, name:'penta1', productGroup:{name:'penta'}}}
     ];
     facilities = [
-      {id:'F10', name:'Village Dispensary', geographicZone:{id:1, name:'Ngrogoro', level:{name:'City' }},
+      {id:'F10', name:'Village Dispensary', geographicZone:{id:1, name:'Ngrogoro', level:{name:'City' }}, catchmentPopulation: 200,
         supportedPrograms:[
           {program:program1, programProducts:programProducts}
         ]},
-      {id:'F11', name:'Central Hospital', geographicZone:{id:1, name:'District 1', level:{name:'City' }},
+      {id:'F11', name:'Central Hospital', geographicZone:{id:1, name:'District 1', level:{name:'City' }}, catchmentPopulation: 150,
         supportedPrograms:[
           {program:program1, programProducts:programProducts}
         ]}
     ];
     controller(ViewLoadAmountController, {$scope:scope, facilities:facilities, period:{id:1, name:'period 1'}, deliveryZone:{id:1}});
+
   }));
 
   it('should set no records found message if no facilities are found', function () {
@@ -70,7 +71,27 @@ describe('ViewLoadAmountController', function () {
     expect(programProducts[2].product.name).toEqual('polio20');
   });
 
+  it('should get all program products of all product groups in facility in order by product group name as an array', function () {
+    var programProducts = scope.getProgramProducts(facilities[0]);
+    expect(programProducts.length).toEqual(3);
+    expect(programProducts[0].product.name).toEqual('penta1');
+    expect(programProducts[1].product.name).toEqual('polio10');
+    expect(programProducts[2].product.name).toEqual('polio20');
+  });
 
+  it('should  get geographic one by id', function(){
+    httpBackend.expect('GET', '/geographicZones/1.json').respond({id:1, name : 'Ngrogoro', level: {name : 'City'}, parent :{level : {name : 'District'}}});
+    httpBackend.flush();
+  });
+
+  it('should calculate total population of all geo zones', function(){
+    expect(scope.zonesTotal['totalPopulation']).toEqual(350);
+  });
+
+  it('should calculate total population by each geo zone for all geo zones', function(){
+    expect(scope.aggregateMap['Ngrogoro']['totalPopulation']).toEqual(200);
+    expect(scope.aggregateMap['District 1']['totalPopulation']).toEqual(150);
+  });
 });
 
 describe("View load amount resolve", function () {

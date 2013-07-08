@@ -166,7 +166,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   public Object[][] parameterIntTestProviderMultipleGeoZones() {
     return new Object[][]{
       {"fieldcoordinator", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
-        "F10", "F11", "VACCINES", "TB", "M", "P10", "P11", "District1","Ngorongoro"}
+        "F10", "F11", "VACCINES", "TB", "M", "P10", "P11", "City","Total"}
     };
 
   }

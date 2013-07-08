@@ -67,8 +67,7 @@
             </tr>
             <tr>
               <td class="total-cell">
-                <span openlmis-message="label.zone"></span>
-                <span openlmis-message="label.total"></span>
+                <span ng-bind="geoZone.parent.level.name"></span>&nbsp;<span openlmis-message="label.total"></span>
               </td>
               <td>
                 <span ng-bind="zonesTotal.totalPopulation"></span>
