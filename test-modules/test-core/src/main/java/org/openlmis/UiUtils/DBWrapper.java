@@ -876,4 +876,7 @@ public class DBWrapper {
     return programsString;
   }
 
+    public void updateProgramRegimenColumns(String programName, String regimenColumnName, boolean visible) throws SQLException {
+      update("update program_regimen_columns set visible=" + visible + " where name ='" + regimenColumnName + "'and programid=(SELECT id FROM programs WHERE name='" + programName + "');");
+    }
 }

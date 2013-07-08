@@ -8,6 +8,7 @@ package org.openlmis.pageobjects;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -15,6 +16,7 @@ import org.openqa.selenium.support.FindBy;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static org.openqa.selenium.support.How.ID;
@@ -181,7 +183,7 @@ public class RequisitionPage extends Page {
 
     public boolean existRegimenCode(String regimentCode, int row)
     {
-        return testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[1]/ng-switch/span/span").getText().equals(regimentCode);
+        return testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody/tr[" + row + "]/td[1]/ng-switch/span/span").getText().equals(regimentCode);
     }
 
     public boolean existRegimenName(String regimentName, int row)
@@ -194,5 +196,10 @@ public class RequisitionPage extends Page {
         return testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input").isDisplayed();
     }
 
-
+    public int getRegimenTableRowCount()
+    {
+        WebElement table_element = testWebDriver.findElement(By.id("regimenTable"));
+        List<WebElement> tr_collection=table_element.findElements(By.xpath("id('regimenTable')/tbody[1]/tr"));
+        return tr_collection.size();
+    }
 }
