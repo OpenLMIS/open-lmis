@@ -54,16 +54,29 @@ public class RegimenTemplateControllerTest {
   }
 
   @Test
-  public void shouldGetRegimenColumns() throws Exception {
+  public void shouldGetRegimenTemplate() throws Exception {
 
     List<RegimenColumn> expectedRegimens = new ArrayList<>();
     Long programId = 1l;
     RegimenTemplate template = new RegimenTemplate(programId, expectedRegimens);
     when(service.getRegimenTemplate(programId)).thenReturn(template);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getRegimenTemplate(programId);
+    ResponseEntity<OpenLmisResponse> response = controller.getProgramOrMasterRegimenTemplate(programId);
 
     verify(service).getRegimenTemplate(programId);
+    assertThat((RegimenTemplate) response.getBody().getData().get("template"), is(template));
+  }
+
+  @Test
+  public void shouldGetProgramRegimenTemplate() throws Exception {
+    List<RegimenColumn> expectedRegimens = new ArrayList<>();
+    Long programId = 1l;
+    RegimenTemplate template = new RegimenTemplate(programId, expectedRegimens);
+    when(service.getRegimenTemplateByProgramId(programId)).thenReturn(template);
+
+    ResponseEntity<OpenLmisResponse> response = controller.getProgramRegimenTemplate(programId);
+
+    verify(service).getRegimenTemplateByProgramId(programId);
     assertThat((RegimenTemplate) response.getBody().getData().get("template"), is(template));
   }
 }

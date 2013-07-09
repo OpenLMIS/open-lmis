@@ -269,9 +269,12 @@ services.factory('RegimenColumns', function($resource){
 });
 
 services.factory('RegimenTemplate', function($resource){
-  return $resource('/programId/:programId/regimenTemplate.json', {}, {});
+  return $resource('/programId/:programId/configureRegimenTemplate.json', {}, {});
 });
 
+services.factory('ProgramRegimenTemplate', function($resource){
+  return $resource('/programId/:programId/programRegimenTemplate.json', {}, {});
+});
 
 services.factory('GeographicZones', function($resource){
   return $resource('/geographicZones/:id.json', {}, {});

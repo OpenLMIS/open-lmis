@@ -93,16 +93,32 @@ public class RegimenColumnServiceTest {
       add(new RegimenColumn());
     }};
 
-    RegimenTemplate regimenTemplate = new RegimenTemplate(1L, masterRegimenColumns);
-    when(repository.getRegimenColumnsByProgramId(1L)).thenReturn(regimenColumns);
+    Long programId = 1L;
+    RegimenTemplate regimenTemplate = new RegimenTemplate(programId, masterRegimenColumns);
+    when(repository.getRegimenColumnsByProgramId(programId)).thenReturn(regimenColumns);
     when(repository.getMasterRegimenColumnsByProgramId()).thenReturn(masterRegimenColumns);
-    whenNew(RegimenTemplate.class).withArguments(1L, masterRegimenColumns).thenReturn(regimenTemplate);
+    whenNew(RegimenTemplate.class).withArguments(programId, masterRegimenColumns).thenReturn(regimenTemplate);
 
-    RegimenTemplate template = service.getRegimenTemplate(1L);
+    RegimenTemplate template = service.getRegimenTemplate(programId);
 
-    verifyNew(RegimenTemplate.class).withArguments(1L, masterRegimenColumns);
+    verifyNew(RegimenTemplate.class).withArguments(programId, masterRegimenColumns);
     assertThat(template, is(regimenTemplate));
-    verify(repository).getRegimenColumnsByProgramId(1L);
+    verify(repository).getRegimenColumnsByProgramId(programId);
     verify(repository).getMasterRegimenColumnsByProgramId();
+  }
+
+  @Test
+  public void shouldGetProgramRegimenTemplate() throws Exception {
+    List<RegimenColumn> regimenColumns = new ArrayList<>();
+    Long programId = 1L;
+    when(repository.getRegimenColumnsByProgramId(programId)).thenReturn(regimenColumns);
+    RegimenTemplate programRegimenTemplate = new RegimenTemplate();
+    whenNew(RegimenTemplate.class).withArguments(programId, regimenColumns).thenReturn(programRegimenTemplate);
+
+    RegimenTemplate regimenTemplate = service.getRegimenTemplateByProgramId(programId);
+
+    verifyNew(RegimenTemplate.class).withArguments(programId, regimenColumns);
+    assertThat(regimenTemplate, is(programRegimenTemplate));
+    verify(repository).getRegimenColumnsByProgramId(programId);
   }
 }

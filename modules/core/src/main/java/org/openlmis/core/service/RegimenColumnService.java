@@ -40,4 +40,8 @@ public class RegimenColumnService {
     }
     return new RegimenTemplate(programId, regimenColumns);
   }
+
+  public RegimenTemplate getRegimenTemplateByProgramId(Long programId) {
+    return new RegimenTemplate(programId, repository.getRegimenColumnsByProgramId(programId));
+  }
 }
