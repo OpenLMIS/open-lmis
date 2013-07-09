@@ -875,6 +875,16 @@ public class DBWrapper {
     update("update programs set regimentemplateconfigured='" + flag + "' where name='" + programName + "';");
   }
 
+  public void insertRegimenTemplateColumnsForProgram(String programName) throws SQLException {
+    update("INSERT INTO program_regimen_columns(name, programId, label, visible, dataType) values\n" +
+      "('code',(SELECT id FROM programs WHERE name='" + programName + "'), 'Code',true,'regimen.reporting.dataType.text'),\n" +
+      "('name',(SELECT id FROM programs WHERE name='" + programName + "'),'Name',true,'regimen.reporting.dataType.text'),\n" +
+      "('onTreatment',(SELECT id FROM programs WHERE name='" + programName + "'),'Number of patients on treatment',true,'regimen.reporting.dataType.numeric'),\n" +
+      "('initiatedTreatment',(SELECT id FROM programs WHERE name='" + programName + "'),'Number of patients to be initiated treatment',true,'regimen.reporting.dataType.numeric'),\n" +
+      "('stoppedTreatment',(SELECT id FROM programs WHERE name='" + programName + "'),'Number of patients stopped treatment',true,'regimen.reporting.dataType.numeric'),\n" +
+      "('remarks',(SELECT id FROM programs WHERE name='" + programName + "'),'Remarks',true,'regimen.reporting.dataType.text');");
+  }
+
   public void insertRegimenTemplateConfiguredForProgram(String programName, String categoryCode, String code, String name, boolean active) throws SQLException {
     update("update programs set regimentemplateconfigured='true' where name='" + programName + "';");
     update("INSERT INTO regimens\n" +
