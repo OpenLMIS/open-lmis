@@ -66,14 +66,17 @@ public class DistributionPage extends RequisitionPage {
 
   public void clickViewLoadAmount() {
     testWebDriver.waitForElementToAppear(viewLoadAmountButton);
-      viewLoadAmountButton.click();
+    viewLoadAmountButton.click();
+    testWebDriver.sleep(1000);
 
   }
-    public void clickInitiateDistribution() {
-        testWebDriver.waitForElementToAppear(initiateDistributionButton);
-        initiateDistributionButton.click();
 
-    }
+  public void clickInitiateDistribution() {
+    testWebDriver.waitForElementToAppear(initiateDistributionButton);
+    initiateDistributionButton.click();
+
+  }
+
   public List<WebElement> getAllSelectOptionsFromDeliveryZone() {
     testWebDriver.waitForElementToAppear(selectDeliveryZoneSelectBox);
     List<WebElement> options = testWebDriver.getOptions(selectDeliveryZoneSelectBox);
@@ -128,7 +131,6 @@ public class DistributionPage extends RequisitionPage {
   public boolean IsDisplayedViewLoadAmountButton() {
     return viewLoadAmountButton.isDisplayed();
   }
-
 
 
 }

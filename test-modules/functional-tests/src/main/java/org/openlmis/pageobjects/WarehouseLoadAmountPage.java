@@ -62,6 +62,25 @@ public class WarehouseLoadAmountPage extends Page {
     return Product2.getText();
   }
 
+  public String getAggregatePopulation(int rowNumber) {
+    WebElement population = testWebDriver.getElementByXpath("//table[@id='aggregateTable']/tbody/tr["+rowNumber+"]/td[2]/span");
+    testWebDriver.waitForElementToAppear(population);
+    return population.getText();
+  }
+
+  public String getAggregateProduct1Isa(int rowNumber) {
+    WebElement Product1 = testWebDriver.getElementByXpath("//table[@id='aggregateTable']/tbody/tr["+rowNumber+"]/td[3]/span");
+    testWebDriver.waitForElementToAppear(Product1);
+    return Product1.getText();
+  }
+
+  public String getAggregateProduct2Isa(int rowNumber) {
+    WebElement Product2 = testWebDriver.getElementByXpath("//table[@id='aggregateTable']/tbody/tr["+rowNumber+"]/td[4]/span");
+    testWebDriver.waitForElementToAppear(Product2);
+    return Product2.getText();
+  }
+
+
   public String getNoRecordFoundMessage() {
     WebElement noRecordFoundMessage = testWebDriver.getElementByXpath("//div[@class='alert alert-info']/span");
     testWebDriver.waitForElementToAppear(noRecordFoundMessage);

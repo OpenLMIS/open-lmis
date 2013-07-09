@@ -217,10 +217,12 @@ public class TestCaseHelper {
     dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programSecond, schedule);
   }
 
-  public void setupTestDataToInitiateRnRForDistribution(boolean configureTemplate, String program, String user, String userId, String vendorName, List<String> rightsList, String programCode) throws IOException, SQLException {
+  public void setupTestDataToInitiateRnRForDistribution(boolean configureTemplate, String program, String user, String userId,
+                                                        String vendorName, List<String> rightsList, String programCode,
+  String geoLevel1, String geoLevel2, String parentGeoLevel) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
-    dbWrapper.insertGeographicZone("District1","District1","Ngorongoro");
-    dbWrapper.insertFacilitiesWithDifferentGeoZones("F10", "F11","Ngorongoro","District1");
+    dbWrapper.insertGeographicZone(geoLevel1,geoLevel1,parentGeoLevel);
+    dbWrapper.insertFacilitiesWithDifferentGeoZones("F10", "F11",geoLevel2,geoLevel1);
     if (configureTemplate)
       dbWrapper.configureTemplate(program);
 
