@@ -123,13 +123,13 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     assertEquals(warehouseLoadAmountPage.getAggregateProduct1Isa(1),String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct1Isa(1,1))+Integer.parseInt(warehouseLoadAmountPage.getProduct1Isa(2,1))));
     assertEquals(warehouseLoadAmountPage.getAggregateProduct2Isa(1),String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1,1))+Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2,1))));
 
-//    assertEquals(warehouseLoadAmountPage.getAggregateProduct2Isa(1),warehouseLoadAmountPage.getAggregateProduct2Isa(2));
-//    assertEquals(warehouseLoadAmountPage.getAggregateProduct1Isa(1),warehouseLoadAmountPage.getAggregateProduct1Isa(2));
-//    assertEquals(warehouseLoadAmountPage.getAggregatePopulation(1),warehouseLoadAmountPage.getAggregatePopulation(2));
-//
-//    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1,1))+Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2,1))),warehouseLoadAmountPage.getAggregatePopulation(2));
-//    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct1Isa(1,1))+Integer.parseInt(warehouseLoadAmountPage.getProduct1Isa(2,1))),warehouseLoadAmountPage.getAggregateProduct1Isa(2));
-//    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1,1))+Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2,1))),warehouseLoadAmountPage.getAggregateProduct2Isa(2));
+    assertEquals(warehouseLoadAmountPage.getAggregateProduct2Isa(1),warehouseLoadAmountPage.getAggregateProduct2Isa(2));
+    assertEquals(warehouseLoadAmountPage.getAggregateProduct1Isa(1),warehouseLoadAmountPage.getAggregateProduct1Isa(2));
+    assertEquals(warehouseLoadAmountPage.getAggregatePopulation(1),warehouseLoadAmountPage.getAggregatePopulation(2));
+
+    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1,1))+Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2,1))),warehouseLoadAmountPage.getAggregatePopulation(2));
+    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct1Isa(1,1))+Integer.parseInt(warehouseLoadAmountPage.getProduct1Isa(2,1))),warehouseLoadAmountPage.getAggregateProduct1Isa(2));
+    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1,1))+Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2,1))),warehouseLoadAmountPage.getAggregateProduct2Isa(2));
 
 
   }

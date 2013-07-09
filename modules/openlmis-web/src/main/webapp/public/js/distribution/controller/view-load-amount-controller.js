@@ -84,7 +84,10 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, Geog
         totalPopulation += facility.catchmentPopulation;
       });
     });
+    console.log($scope.aggregateMap);
+
     calculateTotalForGeoZoneParent();
+    console.log($scope.zonesTotal);
 
   } else {
     $scope.message = "msg.delivery.zone.no.record";
@@ -100,11 +103,17 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, Geog
     }
   }
 
-  $scope.getProgramProductsForAggregateRow = function (geoZoneName) {
+  $scope.getProgramProductsForAggregateRow = function (geoZoneName, zonesTotal) {
     var programProducts = [];
-    $($scope.aggregateMap[geoZoneName].sortedProductGroup).each(function (index, sortedProductGroupKey) {
-      programProducts = programProducts.concat($scope.aggregateMap[geoZoneName]['totalProgramProductsMap'][sortedProductGroupKey]);
-    });
+    if (!zonesTotal) {
+      $($scope.aggregateMap[geoZoneName].sortedProductGroup).each(function (index, sortedProductGroupKey) {
+        programProducts = programProducts.concat($scope.aggregateMap[geoZoneName]['totalProgramProductsMap'][sortedProductGroupKey]);
+      });
+    } else {
+      $($scope.aggregateMap[$scope.sortedGeoZoneKeys[0]].sortedProductGroup).each(function (index, sortedProductGroupKey) {
+        programProducts = programProducts.concat($scope.zonesTotal['totalProgramProductsMap'][sortedProductGroupKey]);
+      });
+    }
     return programProducts;
   }
 
@@ -134,23 +143,27 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, Geog
   }
 
   function calculateTotalForGeoZoneParent() {
-    $scope.zonesTotal = {totalPopulation:"--", totalProgramProductsMap:[]};
+    $scope.zonesTotal = {totalPopulation:"--", totalProgramProductsMap:{}};
     $($scope.sortedGeoZoneKeys).each(function (i, geoZoneKey) {
       if (!isNaN(parseInt($scope.aggregateMap[geoZoneKey]['totalPopulation']))) {
         var population = calculateTotalForPopulation($scope.aggregateMap[geoZoneKey]['totalPopulation'], $scope.zonesTotal['totalPopulation']);
         $scope.zonesTotal['totalPopulation'] = population;
       }
       $($scope.aggregateMap[geoZoneKey].sortedProductGroup).each(function (index, sortedProductGroupKey) {
+        var totalForGroup = $scope.zonesTotal['totalProgramProductsMap'][sortedProductGroupKey];
+        if (isUndefined(totalForGroup)) {
+          totalForGroup = [];
+        }
         $($scope.aggregateMap[geoZoneKey]['totalProgramProductsMap'][sortedProductGroupKey]).each(function (index, aggregateProduct) {
-          var productTotal = _.find($scope.zonesTotal.totalProgramProductsMap, function (totalProduct) {
+          var productTotal = _.find(totalForGroup, function (totalProduct) {
             return totalProduct.code == aggregateProduct.product.code;
           });
           if (productTotal) {
             calculateProductIsaTotal(aggregateProduct, productTotal);
 
           } else {
-            productTotal = {code:aggregateProduct.product.code, isaAmount:"--"};
-            $scope.zonesTotal.totalProgramProductsMap.push(productTotal);
+            totalForGroup.push({code:aggregateProduct.product.code, isaAmount:aggregateProduct.isaAmount});
+            $scope.zonesTotal['totalProgramProductsMap'][sortedProductGroupKey] = totalForGroup;
           }
         });
       });
