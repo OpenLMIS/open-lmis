@@ -11,3 +11,14 @@ INSERT INTO regimens (programid, categoryid, code, name, active, displayorder) V
 (2, 2, '005', 'REGIMEN5', TRUE, 5),
 (2, 2, '006', 'REGIMEN6', TRUE, 6),
 (2, 2, '007', 'REGIMEN7', FALSE, 7);
+
+
+DELETE FROM program_regimen_columns;
+
+INSERT INTO program_regimen_columns(name, programId, label, visible, dataType) values
+('code',2, 'Code',true,'regimen.reporting.dataType.text'),
+('name',2,'Name',true,'regimen.reporting.dataType.text'),
+('onTreatment',2,'Number of patients on treatment',true,'regimen.reporting.dataType.numeric'),
+('initiatedTreatment',2,'Number of patients to be initiated treatment',true,'regimen.reporting.dataType.numeric'),
+('stoppedTreatment',2,'Number of patients stopped treatment',true,'regimen.reporting.dataType.numeric'),
+('remarks',2,'Remarks',true,'regimen.reporting.dataType.text');

@@ -367,7 +367,7 @@ CreateRequisitionController.resolve = {
     var deferred = $q.defer();
     $timeout(function () {
       RegimenTemplate.get({programId: $route.current.params.program}, function (data) {
-        deferred.resolve(data.regimenTemplate);
+        deferred.resolve(data.template);
       }, {});
     }, 100);
     return deferred.promise;
