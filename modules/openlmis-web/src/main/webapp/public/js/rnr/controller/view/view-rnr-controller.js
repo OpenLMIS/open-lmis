@@ -101,7 +101,7 @@ ViewRnrController.resolve = {
     return deferred.promise;
   },
 
-  regimenColumnList: function ($q, $timeout, $route, RegimenColumns) {
+  regimenTemplate: function ($q, $timeout, $route, RegimenColumns) {
     var deferred = $q.defer();
     $timeout(function () {
       RegimenColumns.get({programId: $route.current.params.program}, function (data) {

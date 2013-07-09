@@ -18,10 +18,6 @@ public class RegimenRepository {
   @Autowired
   RegimenCategoryMapper regimenCategoryMapper;
 
-  public void insert(Regimen regimen) {
-    mapper.insert(regimen);
-  }
-
   public List<Regimen> getByProgram(Long programId) {
     return mapper.getByProgram(programId);
   }
@@ -30,7 +26,15 @@ public class RegimenRepository {
     return regimenCategoryMapper.getAll();
   }
 
-  public void deleteByProgramId(Long programId) {
-    mapper.deleteByProgramId(programId);
+  public void save(List<Regimen> regimens, Long userId) {
+    for (Regimen regimen : regimens) {
+      regimen.setModifiedBy(userId);
+      if (regimen.getId() == null) {
+        regimen.setCreatedBy(userId);
+        mapper.insert(regimen);
+      }
+      mapper.update(regimen);
+    }
   }
+
 }

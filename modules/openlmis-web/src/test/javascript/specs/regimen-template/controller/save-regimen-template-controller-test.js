@@ -24,21 +24,24 @@ describe('Save Regimen Template Controller', function () {
     regimenList1 = [regimen1, regimen3];
     regimenList2 = [regimen2, regimen4];
     program = {id: 1, name: 'HIV'};
-    regimenColumns = [{'name':'column1', 'label':'columnLabel', 'visible':true, 'dataType':'Numeric'}];
+    regimenColumns = [
+      {'name': 'column1', 'label': 'columnLabel', 'visible': true, 'dataType': 'Numeric'}
+    ];
     var regimens = [regimen1, regimen2, regimen3, regimen4];
     var regimenCategories = [
       {'id': 1},
       {'id': 2}
     ];
 
+    var regimenTemplate = {regimenColumns: regimenColumns};
     scope.newRegimenForm = {$error: {}};
 
-    ctrl = $controller(SaveRegimenTemplateController, {$scope: scope, $location: location, program: program, programRegimens: regimens, regimenColumns: regimenColumns, regimenCategories: regimenCategories, newRegimenForm: newRegimenForm});
+    ctrl = $controller(SaveRegimenTemplateController, {$scope: scope, $location: location, program: program, programRegimens: regimens,
+      regimenTemplate: regimenTemplate, regimenCategories: regimenCategories, newRegimenForm: newRegimenForm});
   }));
 
   it('should filter regimen by categories', function () {
     expect(scope.regimensByCategory).toEqual([undefined, regimenList1, regimenList2]);
-    expect(scope.error).toEqual("");
   });
 
   it('should get regimen values by category', function () {
@@ -67,7 +70,6 @@ describe('Save Regimen Template Controller', function () {
 
     expect(messageService.get).toHaveBeenCalledWith('error.duplicate.regimen.code');
     expect(scope.newRegimenError).toEqual("");
-    expect(scope.regimensByCategory.length).toEqual(3);
     expect(scope.regimensByCategory[1].length).toEqual(2);
     expect(scope.regimensByCategory[2].length).toEqual(2);
   });
@@ -78,7 +80,6 @@ describe('Save Regimen Template Controller', function () {
     scope.regimensByCategory[2] = regimenList2;
     scope.addNewRegimen();
 
-    expect(scope.regimensByCategory.length).toEqual(3);
     expect(scope.regimensByCategory[1].length).toEqual(3);
     expect(scope.regimensByCategory[2].length).toEqual(2);
     expect(scope.newRegimen.active).toBeTruthy();
@@ -92,7 +93,6 @@ describe('Save Regimen Template Controller', function () {
     scope.regimensByCategory[2] = regimenList2;
     scope.addNewRegimen();
 
-    expect(scope.regimensByCategory.length).toEqual(4);
     expect(scope.regimensByCategory[1].length).toEqual(2);
     expect(scope.regimensByCategory[2].length).toEqual(2);
     expect(scope.regimensByCategory[3].length).toEqual(1);
@@ -147,10 +147,10 @@ describe('Save Regimen Template Controller', function () {
   it('should not save regimens no reporting field is selected', function () {
     scope.regimensByCategory[1] = regimenList1
     scope.regimensByCategory[2] = regimenList2;
-    scope.regimenColumns = [
-      {'name':'column1', 'label':'columnLabel1', 'visible':false, 'dataType':'Numeric'},
-      {'name':'column2', 'label':'columnLabel2', 'visible':false, 'dataType':'Text'}
-    ];
+    scope.regimenTemplate = {regimenColumns: [
+      {'name': 'column1', 'label': 'columnLabel1', 'visible': false, 'dataType': 'Numeric'},
+      {'name': 'column2', 'label': 'columnLabel2', 'visible': false, 'dataType': 'Text'}
+    ]};
 
     spyOn(messageService, 'get');
 
@@ -162,10 +162,10 @@ describe('Save Regimen Template Controller', function () {
   it('should not save regimens when any label is empty', function () {
     scope.regimensByCategory[1] = regimenList1
     scope.regimensByCategory[2] = regimenList2;
-    scope.regimenColumns = [
-      {'name':'column1', 'label':'', 'visible':true, 'dataType':'Numeric'},
-      {'name':'column2', 'label':'', 'visible':false, 'dataType':'Text'}
-    ];
+    scope.regimenTemplate={regimenColumns : [
+      {'name': 'column1', 'label': '', 'visible': true, 'dataType': 'Numeric'},
+      {'name': 'column2', 'label': '', 'visible': false, 'dataType': 'Text'}
+    ]};
 
     spyOn(messageService, 'get');
 
@@ -178,14 +178,14 @@ describe('Save Regimen Template Controller', function () {
   it('should save regimens', function () {
     scope.regimensByCategory[1] = regimenList1
     scope.regimensByCategory[2] = regimenList2;
-    spyOn(messageService, 'get').andCallFake(function(arg) {
+    spyOn(messageService, 'get').andCallFake(function (arg) {
       return 'success';
     });
     $httpBackend.expectPOST('/programId/1/regimens.json').respond(200);
     scope.save();
     $httpBackend.flush();
 
-    expect(scope.error).toEqual("");
+    expect(scope.error).toBeUndefined();
     expect(scope.$parent.message).toEqual('success');
   });
 

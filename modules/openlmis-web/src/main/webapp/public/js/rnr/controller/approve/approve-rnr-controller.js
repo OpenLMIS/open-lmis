@@ -227,11 +227,11 @@ ApproveRnrController.resolve = {
     return deferred.promise;
   },
 
-  regimenColumnList: function ($q, $timeout, $route, RegimenColumns) {
+  regimenTemplate: function ($q, $timeout, $route, RegimenTemplate) {
     var deferred = $q.defer();
     $timeout(function () {
-      RegimenColumns.get({programId: $route.current.params.program}, function (data) {
-        deferred.resolve(data.regimen_columns);
+      RegimenTemplate.get({programId: $route.current.params.program}, function (data) {
+        deferred.resolve(data.regimenTemplate.regimenColumns);
       }, {});
     }, 100);
     return deferred.promise;

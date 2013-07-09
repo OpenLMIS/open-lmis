@@ -52,6 +52,7 @@ import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
+import static org.openlmis.rnr.domain.RegimenLineItem.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.openlmis.rnr.service.RequisitionService.*;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
@@ -158,8 +159,8 @@ public class RequisitionServiceTest {
     when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
 
     List<RegimenColumn> regimenColumns = new ArrayList<>();
-    regimenColumns.add(new RegimenColumn(PROGRAM.getId(), RegimenColumnService.INITIATED_TREATMENT, "label", RegimenColumnService.TYPE_NUMERIC, true));
-    regimenColumns.add(new RegimenColumn(PROGRAM.getId(), RegimenColumnService.ON_TREATMENT, "label", RegimenColumnService.TYPE_NUMERIC, false));
+    regimenColumns.add(new RegimenColumn(PROGRAM.getId(), INITIATED_TREATMENT, "label", TYPE_NUMERIC, true));
+    regimenColumns.add(new RegimenColumn(PROGRAM.getId(), ON_TREATMENT, "label", TYPE_NUMERIC, false));
     when(regimenColumnService.getRegimenColumnsByProgramId(PROGRAM.getId())).thenReturn(regimenColumns);
 
     whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(spyRequisition);

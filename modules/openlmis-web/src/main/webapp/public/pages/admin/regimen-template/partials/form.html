@@ -9,8 +9,8 @@
 
   <div class="info-box">
     <p><strong openlmis-message="template.programName"></strong>
-        <span ng-bind="program.name"></span>
-        <a ng-href="{{selectProgramUrl}}" openlmis-message="template.change"></a>
+      <span ng-bind="program.name"></span>
+      <a ng-href="{{selectProgramUrl}}" openlmis-message="template.change"></a>
     </p>
   </div>
   <div class="rnr-tabs clearfix">
@@ -24,12 +24,6 @@
     </ul>
   </div>
 
-  <ng-switch on="showReportingFields">
-    <span ng-switch-when="false">
-          <ng-include src="'/public/pages/admin/regimen-template/partials/new-regimen.html'"></ng-include>
-    </span>
-  </ng-switch>
-
   <form name="regimenEditForm" class="regimenForm" ng-submit="save()">
 
     <ng-switch on="showReportingFields">
@@ -37,6 +31,7 @@
         <ng-include src="'/public/pages/admin/regimen-template/partials/reporting-fields.html'"></ng-include>
       </span>
       <span ng-switch-default>
+        <ng-include src="'/public/pages/admin/regimen-template/partials/new-regimen.html'"></ng-include>
         <ng-include src="'/public/pages/admin/regimen-template/partials/edit-regimen-form.html'"></ng-include>
       </span>
     </ng-switch>

@@ -268,6 +268,10 @@ services.factory('RegimenColumns', function($resource){
   return $resource('/programId/:programId/regimenColumns.json', {}, {});
 });
 
+services.factory('RegimenTemplate', function($resource){
+  return $resource('/programId/:programId/regimenTemplate.json', {}, {});
+});
+
 
 services.factory('GeographicZones', function($resource){
   return $resource('/geographicZones/:id.json', {}, {});

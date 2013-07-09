@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function CreateRequisitionController($scope, requisition, currency, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenColumnList, $location, Requisitions, $routeParams, $rootScope, $dialog, messageService) {
+function CreateRequisitionController($scope, requisition, currency, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $rootScope, $dialog, messageService) {
   $scope.visibleTab = $routeParams.supplyType;
   $scope.baseUrl = "/create-rnr/" + $routeParams.rnr + '/' + $routeParams.facility + '/' + $routeParams.program;
 
@@ -14,7 +14,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.programRnrColumnList = rnrColumns;
   $scope.requisitionRights = requisitionRights;
-  $scope.regimenColumns = regimenColumnList;
+  $scope.regimenColumns = regimenTemplate ? regimenTemplate.regimenColumns : [];
   $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
   $scope.errorPages = {fullSupply: [], nonFullSupply: []};
   $scope.fullScreen = false;
@@ -363,11 +363,11 @@ CreateRequisitionController.resolve = {
     return deferred.promise;
   },
 
-  regimenColumnList: function ($q, $timeout, $route, RegimenColumns) {
+  regimenTemplate: function ($q, $timeout, $route, RegimenTemplate) {
     var deferred = $q.defer();
     $timeout(function () {
-      RegimenColumns.get({programId: $route.current.params.program}, function (data) {
-        deferred.resolve(data.regimen_columns);
+      RegimenTemplate.get({programId: $route.current.params.program}, function (data) {
+        deferred.resolve(data.regimenTemplate);
       }, {});
     }, 100);
     return deferred.promise;
