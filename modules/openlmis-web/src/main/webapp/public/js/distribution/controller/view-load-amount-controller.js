@@ -27,7 +27,7 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, Geog
         $scope.aggregateMap[facility.geographicZone.name] = totalForGeoZone;
       }
       var totalPopulation = totalForGeoZone['totalPopulation'];
-      if(!isNaN(parseInt(facility.catchmentPopulation))){
+      if (!isNaN(parseInt(facility.catchmentPopulation))) {
         totalPopulation = calculateTotalForPopulation(facility.catchmentPopulation, totalPopulation);
       } else {
         facility.catchmentPopulation = "--";
@@ -91,11 +91,13 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, Geog
   }
 
   $scope.getProgramProducts = function (facility) {
-    var programProducts = [];
-    $(facility.supportedPrograms[0].sortedProductGroup).each(function (index, sortedProductGroupKey) {
-      programProducts = programProducts.concat(facility.supportedPrograms[0].programProductMap[sortedProductGroupKey]);
-    });
-    return programProducts;
+    if (!isUndefined(facility)) {
+      var programProducts = [];
+      $(facility.supportedPrograms[0].sortedProductGroup).each(function (index, sortedProductGroupKey) {
+        programProducts = programProducts.concat(facility.supportedPrograms[0].programProductMap[sortedProductGroupKey]);
+      });
+      return programProducts;
+    }
   }
 
   $scope.getProgramProductsForAggregateRow = function (geoZoneName) {
@@ -134,7 +136,7 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, Geog
   function calculateTotalForGeoZoneParent() {
     $scope.zonesTotal = {totalPopulation:"--", totalProgramProductsMap:[]};
     $($scope.sortedGeoZoneKeys).each(function (i, geoZoneKey) {
-      if(!isNaN(parseInt($scope.aggregateMap[geoZoneKey]['totalPopulation']))){
+      if (!isNaN(parseInt($scope.aggregateMap[geoZoneKey]['totalPopulation']))) {
         var population = calculateTotalForPopulation($scope.aggregateMap[geoZoneKey]['totalPopulation'], $scope.zonesTotal['totalPopulation']);
         $scope.zonesTotal['totalPopulation'] = population;
       }
@@ -173,13 +175,6 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, Geog
     totalForProducts[productGroup] = total;
   }
 
-  $scope.showPopulation = function (population) {
-    if (isUndefined(population) || isNaN(population)) {
-      return "--";
-    } else {
-      return population;
-    }
-  }
 
   function pushBlankProductGroupToLast(facility) {
     if (_.indexOf(facility.supportedPrograms[0].sortedProductGroup, otherGroupName) > -1) {
