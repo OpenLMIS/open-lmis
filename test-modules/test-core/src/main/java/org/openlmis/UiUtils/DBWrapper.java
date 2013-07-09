@@ -111,6 +111,16 @@ public class DBWrapper {
 
   }
 
+  public void insertFacility(String facilityName, String facilityCode, String facilityType, String geoZone)throws IOException, SQLException {
+
+      update("INSERT INTO facilities\n" +
+              "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, dataReportable) values\n" +
+              "('" +facilityCode + "','" + facilityName + "','IT department','G7646',9876234981,'fax','A','B',"+"(select id from geographic_zones where name = '"+geoZone+"')"+",(select id from facility_types where name = '"+facilityType+"')"+",333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE');\n");
+
+      update("insert into programs_supported(facilityId, programId, startDate, active, modifiedBy) VALUES\n" +
+              "((SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 2, '11/11/12', true, 1);");
+  }
+
   public void insertFacilitiesWithDifferentGeoZones(String facility1, String facility2, String geoZone1, String geoZone2) throws IOException, SQLException {
     update("INSERT INTO facilities\n" +
       "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, dataReportable) values\n" +

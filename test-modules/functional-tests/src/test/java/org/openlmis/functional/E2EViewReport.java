@@ -66,11 +66,11 @@ public class E2EViewReport extends TestCaseHelper {
       facilityMailingListReportPage.verifyHTMLReportOutputOnFacilityMailingListScreen();
       facilityMailingListReportPage.verifyPdfReportOutputOnFacilityMailingListScreen();
       testWebDriver.sleep(500);
-      homePage.goBack();
+      //homePage.goBack();
       facilityMailingListReportPage.verifyMailingReportOutputOnFacilityMailingListScreen();
-      homePage.goBack();
+      //homePage.goBack();
       facilityMailingListReportPage.verifyXlsReportOutputOnFacilityMailingListScreen();
-      homePage.goBack();
+      //homePage.goBack();
 
  }
 
@@ -114,7 +114,7 @@ public class E2EViewReport extends TestCaseHelper {
       summaryReportPage.verifyHTMLReportOutputOnSummaryReportScreen();
       summaryReportPage.verifyPdfReportOutputOnSummaryReportScreen();
       testWebDriver.sleep(500);
-      homePage.goBack();
+      //homePage.goBack();
 
   }
 
@@ -129,7 +129,7 @@ public class E2EViewReport extends TestCaseHelper {
         nonReportingFacilityReportPage.verifyHTMLReportOutput();
         nonReportingFacilityReportPage.verifyPdfReportOutput();
         testWebDriver.sleep(500);
-        homePage.goBack();
+        //homePage.goBack();
     }
 
     @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
@@ -143,7 +143,7 @@ public class E2EViewReport extends TestCaseHelper {
         averageConsumptionReportPage.verifyHTMLReportOutput();
         averageConsumptionReportPage.verifyPdfReportOutput();
         testWebDriver.sleep(500);
-        homePage.goBack();
+        //homePage.goBack();
     }
 
     @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
@@ -157,7 +157,7 @@ public class E2EViewReport extends TestCaseHelper {
         adjustmentSummaryReportPage.verifyHTMLReportOutput();
         adjustmentSummaryReportPage.verifyPdfReportOutput();
         testWebDriver.sleep(500);
-        homePage.goBack();
+        //homePage.goBack();
     }
 
     @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
@@ -170,7 +170,7 @@ public class E2EViewReport extends TestCaseHelper {
         stockedOutReportPage.verifyHTMLReportOutput();
         stockedOutReportPage.verifyPdfReportOutput();
         testWebDriver.sleep(500);
-        homePage.goBack();
+        //homePage.goBack();
     }
 
     private void setupRnRData(String[] credentials) throws IOException, SQLException {
@@ -228,7 +228,7 @@ public class E2EViewReport extends TestCaseHelper {
 
         HomePage homePageApproved = viewRequisitionPageApproved.verifyFieldsPostApproval("25.00", "1");
 
-        dbWrapper.updateRequisition("F10");
+       // dbWrapper.updateRequisition("F10");
         ConvertOrderPage convertOrderPage = homePageApproved.navigateConvertToOrder();
         convertOrderPage.convertToOrder();
         ViewRequisitionPage viewRequisitionPageOrdered = homePageApproved.navigateViewRequisition();

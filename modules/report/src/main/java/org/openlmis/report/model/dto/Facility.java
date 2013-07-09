@@ -17,6 +17,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class Facility {
 
+    private Integer id;
 
     private String code;
 

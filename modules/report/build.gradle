@@ -38,7 +38,7 @@ dependencies {
     }
 
     compileJava.doLast{
-        tasks.compileJasperReport.execute()
+        //tasks.compileJasperReport.execute()
     }
 
     task testJar(type: Jar) {
