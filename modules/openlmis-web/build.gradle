@@ -137,6 +137,7 @@ dependencies {
             project(path: ':modules:core', configuration: 'testFixtures'),
             project(path: ':modules:rest-api', configuration: 'testFixtures'),
             project(path: ':modules:requisition', configuration: 'testFixtures'),
+            project(path: ':modules:distribution', configuration: 'testFixtures'),
             project(path: ':modules:reporting', configuration: 'testFixtures')
 }
 

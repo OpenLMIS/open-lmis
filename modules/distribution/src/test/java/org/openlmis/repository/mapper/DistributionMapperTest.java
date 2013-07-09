@@ -52,7 +52,7 @@ import static org.openlmis.distribution.domain.DistributionStatus.INITIATED;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:test-applicationContext-distribution.xml")
+@ContextConfiguration(locations = "classpath*:test-applicationContext-distribution.xml")
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 @Transactional
 public class DistributionMapperTest {
