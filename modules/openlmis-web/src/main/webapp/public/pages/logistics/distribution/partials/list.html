@@ -6,7 +6,7 @@
 <div ng-controller="DistributionListController">
 
   <a class="btn btn-primary" id="viewLoadAmounts"
-     ng-href="#/view-load-amounts/{{selectedZone.id}}/{{selectedProgram.id}}/{{selectedPeriod.id}}"
+     ng-click="viewLoadAmount()"
      ng-disabled="!selectedPeriod||!selectedProgram||!selectedZone" openlmis-message="button.view.load.amount">
   </a>
   <a class="btn btn-primary" id="initiateDistribution" ng-click="initiateDistribution()"

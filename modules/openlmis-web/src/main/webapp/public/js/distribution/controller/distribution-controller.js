@@ -46,10 +46,9 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
   };
 
 
-  $scope.viewAmounts = function() {
-    $location.path('/viewAmounts/'+$scope.selectedZone.id+"/"+$scope.selectedProgram.id);
-  };
-
+  $scope.viewLoadAmount = function () {
+    $location.path("/view-load-amounts/"+$scope.selectedZone.id +"/" + +$scope.selectedProgram.id + "/" + $scope.selectedPeriod.id);
+  }
 }
 
 DistributionController.resolve = {
