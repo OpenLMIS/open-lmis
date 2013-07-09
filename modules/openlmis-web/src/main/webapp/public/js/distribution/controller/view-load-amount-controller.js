@@ -84,11 +84,8 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, Geog
         totalPopulation += facility.catchmentPopulation;
       });
     });
-    console.log($scope.aggregateMap);
 
     calculateTotalForGeoZoneParent();
-    console.log($scope.zonesTotal);
-
   } else {
     $scope.message = "msg.delivery.zone.no.record";
   }
