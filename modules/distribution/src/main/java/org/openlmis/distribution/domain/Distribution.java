@@ -7,12 +7,16 @@
 package org.openlmis.distribution.domain;
 
 import lombok.Data;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+
 @Data
+@JsonSerialize(include = NON_NULL)
 public class Distribution extends BaseModel {
 
   DeliveryZone deliveryZone;
