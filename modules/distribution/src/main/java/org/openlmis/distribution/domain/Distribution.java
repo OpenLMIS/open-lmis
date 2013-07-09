@@ -4,17 +4,19 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.domain;
+package org.openlmis.distribution.domain;
 
 import lombok.Data;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.domain.DistributionStatus;
+import org.openlmis.core.domain.DeliveryZone;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
 
 @Data
-public class Distribution extends BaseModel{
+public class Distribution extends BaseModel {
 
-  Integer deliveryZoneId;
-  Integer programId;
-  Integer periodId;
+  DeliveryZone deliveryZone;
+  Program program;
+  ProcessingPeriod period;
   DistributionStatus status;
 }

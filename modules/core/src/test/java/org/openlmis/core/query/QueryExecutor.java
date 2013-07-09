@@ -32,6 +32,7 @@ public class QueryExecutor {
     return preparedStatement.executeQuery();
   }
 
+  //TODO release connection
   public ResultSet execute(String query, List params) throws SQLException {
     Connection connection = DataSourceUtils.getConnection(dataSource);
     PreparedStatement preparedStatement = connection.prepareStatement(query);

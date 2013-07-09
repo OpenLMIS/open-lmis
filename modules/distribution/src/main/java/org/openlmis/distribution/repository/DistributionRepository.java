@@ -4,18 +4,18 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.repository;
+package org.openlmis.distribution.repository;
 
-import org.openlmis.domain.Distribution;
-import org.openlmis.mapper.DistributionMapper;
+import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.mapper.DistributionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class DistributionRepository {
 
-   @Autowired
-   DistributionMapper mapper;
+  @Autowired
+  DistributionMapper mapper;
 
 
   public void create(Distribution distribution) {

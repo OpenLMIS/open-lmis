@@ -4,10 +4,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.service;
+package org.openlmis.distribution.service;
 
-import org.openlmis.domain.Distribution;
-import org.openlmis.repository.DistributionRepository;
+import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.repository.DistributionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
