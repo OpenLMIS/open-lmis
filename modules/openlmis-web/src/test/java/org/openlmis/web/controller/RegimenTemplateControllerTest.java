@@ -59,11 +59,11 @@ public class RegimenTemplateControllerTest {
     List<RegimenColumn> expectedRegimens = new ArrayList<>();
     Long programId = 1l;
     RegimenTemplate template = new RegimenTemplate(programId, expectedRegimens);
-    when(service.getRegimenTemplate(programId)).thenReturn(template);
+    when(service.getRegimenTemplateOrMasterTemplate(programId)).thenReturn(template);
 
     ResponseEntity<OpenLmisResponse> response = controller.getProgramOrMasterRegimenTemplate(programId);
 
-    verify(service).getRegimenTemplate(programId);
+    verify(service).getRegimenTemplateOrMasterTemplate(programId);
     assertThat((RegimenTemplate) response.getBody().getData().get("template"), is(template));
   }
 

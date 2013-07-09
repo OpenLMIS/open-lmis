@@ -161,7 +161,7 @@ public class RequisitionServiceTest {
     List<RegimenColumn> regimenColumns = new ArrayList<>();
     regimenColumns.add(new RegimenColumn(PROGRAM.getId(), INITIATED_TREATMENT, "label", TYPE_NUMERIC, true));
     regimenColumns.add(new RegimenColumn(PROGRAM.getId(), ON_TREATMENT, "label", TYPE_NUMERIC, false));
-    when(regimenColumnService.getRegimenColumnsByProgramId(PROGRAM.getId())).thenReturn(regimenColumns);
+    when(regimenColumnService.getRegimenTemplateByProgramId(PROGRAM.getId())).thenReturn(new RegimenTemplate());
 
     whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(spyRequisition);
 
@@ -174,7 +174,7 @@ public class RequisitionServiceTest {
     verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId());
     verify(requisitionRepository).insert(any(Rnr.class));
     verify(requisitionRepository).logStatusChange(any(Rnr.class));
-    verify(regimenColumnService).getRegimenColumnsByProgramId(PROGRAM.getId());
+    verify(regimenColumnService).getRegimenTemplateByProgramId(PROGRAM.getId());
 
     assertThat(rnr, is(spyRequisition));
   }
@@ -182,7 +182,7 @@ public class RequisitionServiceTest {
   @Test
   public void shouldInitRequisitionAndSetBeginningBalanceToZeroIfNotVisibleAndPreviousStockInHandNotAvailable() throws Exception {
     Date date = new Date();
-    Rnr requisition = createRequisition(PERIOD.getId(), null);
+    Rnr requisition = spy(createRequisition(PERIOD.getId(), null));
     setupForInitRnr(date, requisition, PERIOD);
 
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = new ArrayList<>();
@@ -199,6 +199,7 @@ public class RequisitionServiceTest {
     when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
 
     whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(requisition);
+    Mockito.doNothing().when(requisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1L);
 
@@ -208,7 +209,7 @@ public class RequisitionServiceTest {
   @Test
   public void shouldInitRequisitionAndNotSetBeginningBalanceToZeroIfVisibleAndPreviousStockInHandNotAvailable() throws Exception {
     Date date = new Date();
-    Rnr requisition = createRequisition(PERIOD.getId(), null);
+    Rnr requisition = spy(createRequisition(PERIOD.getId(), null));
     requisition.getFullSupplyLineItems().get(0).setBeginningBalance(null);
     setupForInitRnr(date, requisition, PERIOD);
 
@@ -224,6 +225,7 @@ public class RequisitionServiceTest {
     when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
 
     whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(requisition);
+    Mockito.doNothing().when(requisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1L);
 
@@ -776,6 +778,7 @@ public class RequisitionServiceTest {
     when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
 
     whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), period.getId(), facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(spyRequisition);
+    Mockito.doNothing().when(spyRequisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), period.getId(), USER_ID);
 
@@ -799,6 +802,7 @@ public class RequisitionServiceTest {
     when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
 
     whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(spyRequisition);
+    Mockito.doNothing().when(spyRequisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
 
     Long previousPeriodId = PERIOD.getId() - 1L;
     ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, previousPeriodId)));
@@ -837,6 +841,7 @@ public class RequisitionServiceTest {
     when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
 
     whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), period.getId(), facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(spyRequisition);
+    Mockito.doNothing().when(spyRequisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), period.getId(), USER_ID);
 
@@ -977,9 +982,10 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldNotifyStatusChangeEvent() throws Exception {
-    Rnr requisition = createRequisition(PERIOD.getId(), INITIATED);
+    Rnr requisition = spy(createRequisition(PERIOD.getId(), INITIATED));
     setupForInitRnr(requisition);
     whenNew(Rnr.class).withAnyArguments().thenReturn(requisition);
+    Mockito.doNothing().when(requisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1L);
 

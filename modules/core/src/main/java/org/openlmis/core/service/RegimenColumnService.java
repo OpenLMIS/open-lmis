@@ -33,7 +33,7 @@ public class RegimenColumnService {
     return repository.getRegimenColumnsByProgramId(programId);
   }
 
-  public RegimenTemplate getRegimenTemplate(Long programId) {
+  public RegimenTemplate getRegimenTemplateOrMasterTemplate(Long programId) {
     List<RegimenColumn> regimenColumns = repository.getRegimenColumnsByProgramId(programId);
     if (regimenColumns == null || regimenColumns.size() == 0) {
       regimenColumns = repository.getMasterRegimenColumnsByProgramId();

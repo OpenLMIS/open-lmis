@@ -78,7 +78,7 @@ public class RegimenColumnServiceTest {
     when(repository.getRegimenColumnsByProgramId(1L)).thenReturn(regimenColumns);
     whenNew(RegimenTemplate.class).withArguments(1L, regimenColumns).thenReturn(regimenTemplate);
 
-    RegimenTemplate template = service.getRegimenTemplate(1L);
+    RegimenTemplate template = service.getRegimenTemplateOrMasterTemplate(1L);
 
     verifyNew(RegimenTemplate.class).withArguments(1L, regimenColumns);
     assertThat(template, is(regimenTemplate));
@@ -99,7 +99,7 @@ public class RegimenColumnServiceTest {
     when(repository.getMasterRegimenColumnsByProgramId()).thenReturn(masterRegimenColumns);
     whenNew(RegimenTemplate.class).withArguments(programId, masterRegimenColumns).thenReturn(regimenTemplate);
 
-    RegimenTemplate template = service.getRegimenTemplate(programId);
+    RegimenTemplate template = service.getRegimenTemplateOrMasterTemplate(programId);
 
     verifyNew(RegimenTemplate.class).withArguments(programId, masterRegimenColumns);
     assertThat(template, is(regimenTemplate));

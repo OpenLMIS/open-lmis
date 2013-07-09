@@ -85,7 +85,7 @@ public class RequisitionService {
 
     ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplateForRequisition(programId);
 
-    RegimenTemplate regimenTemplate = new RegimenTemplate(programId, regimenColumnService.getRegimenColumnsByProgramId(programId));
+    RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(programId);
 
     if (rnrTemplate.getRnrColumns().size() == 0)
       throw new DataException("error.rnr.template.not.defined");

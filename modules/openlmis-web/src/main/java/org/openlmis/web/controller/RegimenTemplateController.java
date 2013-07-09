@@ -26,7 +26,7 @@ public class RegimenTemplateController extends BaseController {
   @RequestMapping(value = "/programId/{programId}/configureRegimenTemplate", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE, VIEW_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getProgramOrMasterRegimenTemplate(@PathVariable Long programId) {
-    return OpenLmisResponse.response("template", service.getRegimenTemplate(programId));
+    return OpenLmisResponse.response("template", service.getRegimenTemplateOrMasterTemplate(programId));
   }
 
   @RequestMapping(value = "/programId/{programId}/programRegimenTemplate", method = GET, headers = ACCEPT_JSON)
