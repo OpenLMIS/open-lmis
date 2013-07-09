@@ -34,6 +34,10 @@ app.directive('fixedTableHeader', function() {
           fixedHeader.scrollLeft(angular.element(this).scrollLeft());
         });
       });
+
+      $(window).on('resize', function() {
+        fixedHeader.css('width',element.parent().css('width'));
+      });
     }
   };
 });

@@ -1,0 +1,55 @@
+<form name="newRegimenForm" id="newRegimenForm" class="regimenForm">
+  <div class="app-form">
+    <div class="form-group clearfix">
+      <h3 openlmis-message="label.new.regimen"></h3>
+
+      <div class="form-cell">
+        <label for="newRegimenCategory" openlmis-message="label.regimen.category">
+          <span class="label-required"> *</span>
+        </label>
+
+        <div class="form-field">
+          <select id="newRegimenCategory" ng-model="newRegimen.category"
+                  ng-options="regimenCategory as regimenCategory.name for regimenCategory in regimenCategories"
+                  ng-required="true"
+                  ng-class="highlightRequired(newRegimen.category)">
+            <option value="" openlmis-message="placeholder.select.category"></option>
+          </select>
+        </div>
+      </div>
+      <div class="form-cell">
+        <label for="newRegimenCode" openlmis-message="header.code">
+          <span class="label-required"> *</span>
+        </label>
+
+        <div class="form-field">
+          <input type="text" id="newRegimenCode" name="newRegimenCode" ng-model="newRegimen.code" ng-required="true"
+                 ng-class="highlightRequired(newRegimen.code)" maxlength="50" />
+        </div>
+      </div>
+      <div class="form-cell">
+        <label for="newRegimenName" openlmis-message="header.name">
+          <span class="label-required"> *</span>
+        </label>
+
+        <div class="form-field">
+          <input type="text" id="newRegimenName" name="newRegimenName" ng-model="newRegimen.name" ng-required="true"
+                 ng-class="highlightRequired(newRegimen.name)" maxlength="50" />
+        </div>
+      </div>
+      <div class="form-cell">
+        <div class="form-field">
+          <input type="checkbox" id="newRegimenActive" name="newRegimenActive" ng-model="newRegimen.active"
+                 ng-class="highlightRequired(newRegimen.active)"/>
+          <label for="newRegimenActive" openlmis-message="label.active"></label>
+        </div>
+      </div>
+    </div>
+    <div class="alert alert-error" id="addFailMessage" openlmis-message="newRegimenError"
+         ng-show="newRegimenError"></div>
+    <div>
+      <input type="button" class="btn btn-primary" id="addNewRegimen" openlmis-message="button.add"
+             ng-click="addNewRegimen()"/>
+    </div>
+  </div>
+</form>

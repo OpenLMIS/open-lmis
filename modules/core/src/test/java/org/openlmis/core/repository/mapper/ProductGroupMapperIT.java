@@ -12,16 +12,12 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.ProductGroup;
-import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.ResultSet;
-import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -71,6 +67,15 @@ public class ProductGroupMapperIT {
     mapper.insert(productGroup);
 
     ProductGroup returnedProductGroup = mapper.getByCode(productGroup.getCode());
+
+    assertThat(returnedProductGroup.getName(), is("Vaccines"));
+  }
+
+  @Test
+  public void shouldGetProductGroupById() throws Exception {
+    mapper.insert(productGroup);
+
+    ProductGroup returnedProductGroup = mapper.getById(productGroup.getId());
 
     assertThat(returnedProductGroup.getName(), is("Vaccines"));
   }

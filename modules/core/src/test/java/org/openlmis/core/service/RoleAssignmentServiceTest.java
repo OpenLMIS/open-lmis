@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.RoleAssignment;
-import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.repository.RoleAssignmentRepository;
 import org.openlmis.db.categories.UnitTests;
@@ -44,29 +43,6 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
   }
 
   @Test
-  public void shouldSaveRoleAssignments() throws Exception {
-    List<RoleAssignment> roleAssignments = Arrays.asList(new RoleAssignment(1L, 1L, 1L, new SupervisoryNode(1L)));
-    User user = new User();
-    user.setId(1L);
-    user.setSupervisorRoles(roleAssignments);
-    service.saveSupervisoryRoles(user);
-
-    verify(roleAssignmentRepository).insertRoleAssignment(1L, 1L, 1L, 1L);
-  }
-
-  @Test
-  public void shouldSaveAdminRoleAssignment() throws Exception {
-    RoleAssignment adminRoleAssignment = new RoleAssignment();
-    adminRoleAssignment.setRoleId(1L);
-    User user = new User();
-    user.setId(1L);
-    user.setAdminRole(adminRoleAssignment);
-    service.saveAdminRole(user);
-
-    verify(roleAssignmentRepository).insertRoleAssignment(1L, null, null, 1L);
-  }
-
-  @Test
   public void shouldDeleteRoleAssignmentsOfAUser() throws Exception {
     service.deleteAllRoleAssignmentsForUser(1L);
     verify(roleAssignmentRepository).deleteAllRoleAssignmentsForUser(1L);
@@ -91,6 +67,18 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
     assertThat(actual, is(expected));
   }
+
+  @Test
+  public void shouldGetAllocationRoleAssignments() throws Exception {
+
+    List<RoleAssignment> expected = new ArrayList<>();
+    when(roleAssignmentRepository.getAllocationRoles(1L)).thenReturn(expected);
+    List<RoleAssignment> actual = service.getAllocationRoles(1L);
+
+    assertThat(actual, is(expected));
+    verify(roleAssignmentRepository).getAllocationRoles(1L);
+  }
+
   @Test
   public void shouldGetAdminRoleAssignments() throws Exception {
 
@@ -110,5 +98,31 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
     List<RoleAssignment> actual = service.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
 
     assertThat(actual, is(expected));
+  }
+
+  @Test
+  public void shouldSaveUserRoleAssignments() throws Exception {
+    User user = new User();
+    final RoleAssignment homeRoleAssignment = new RoleAssignment();
+    homeRoleAssignment.setProgramId(1L);
+    final RoleAssignment supervisorRoleAssignment = new RoleAssignment();
+    supervisorRoleAssignment.setProgramId(2L);
+    final RoleAssignment allocationRoleAssignment = new RoleAssignment();
+    allocationRoleAssignment.setProgramId(3L);
+    List<RoleAssignment> homeFacilityRoles = new ArrayList<RoleAssignment>(){{add(homeRoleAssignment);}};
+    List<RoleAssignment> supervisorRoles = new ArrayList<RoleAssignment>(){{add(supervisorRoleAssignment);}};;
+    List<RoleAssignment> allocationRoles = new ArrayList<RoleAssignment>(){{add(allocationRoleAssignment);}};
+    user.setHomeFacilityRoles(homeFacilityRoles);
+    user.setSupervisorRoles(supervisorRoles);
+    user.setAllocationRoles(allocationRoles);
+    final RoleAssignment adminRole = new RoleAssignment();
+    user.setAdminRole(adminRole);
+
+    service.saveRolesForUser(user);
+
+    verify(roleAssignmentRepository).insert(homeFacilityRoles, user.getId());
+    verify(roleAssignmentRepository).insert(allocationRoles, user.getId());
+    verify(roleAssignmentRepository).insert(supervisorRoles, user.getId());
+    verify(roleAssignmentRepository).insert(Arrays.asList(adminRole), user.getId());
   }
 }

@@ -4,9 +4,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import org.apache.tools.ant.filters.ReplaceTokens
-
 import com.eriwen.gradle.js.JsMinifier
+import org.apache.tools.ant.filters.ReplaceTokens
 
 apply plugin: 'jetty'
 apply plugin: 'war'
@@ -56,8 +55,12 @@ tasks.withType(War) {
     eachFile { FileCopyDetails fileCopy ->
         if (fileCopy.path.contains('public/pages/') && fileCopy.name.endsWith('.html')) {
 
-            fileCopy.filter {String line -> line.replace('.js"', '.js?v=' + currentTime + '"')}
-            fileCopy.filter {String line -> line.replace('.css"', '.css?v=' + currentTime + '"')}
+            fileCopy.filter { String line -> line.replace('.js"', '.js?v=' + currentTime + '"') }
+            fileCopy.filter { String line -> line.replace('.css"', '.css?v=' + currentTime + '"') }
+        }
+
+        if (fileCopy.name.equals('services.js')) {
+            fileCopy.filter(ReplaceTokens, tokens: [version: currentTime])
         }
     }
 }

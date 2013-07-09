@@ -25,4 +25,7 @@ public interface ProductGroupMapper {
 
   @Update("UPDATE product_groups SET code = #{code}, name = #{name}, modifiedDate = #{modifiedDate}, modifiedBy = #{modifiedBy} WHERE id = #{id}")
   void update(ProductGroup productGroup);
+
+  @Select("SELECT * FROM product_groups WHERE id=#{id}")
+  ProductGroup getById(Long id);
 }

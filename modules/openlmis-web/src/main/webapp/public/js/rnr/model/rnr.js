@@ -6,7 +6,6 @@
 
 var Rnr = function (rnr, programRnrColumns) {
   $.extend(true, this, rnr);
-  this.programRnrColumns = programRnrColumns;
   var thisRnr = this;
 
   var getInvalidLineItemIndexes = function (lineItems) {

@@ -4,16 +4,20 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ViewRnrController($scope, requisition, rnrColumns, $location, currency, $routeParams) {
+function ViewRnrController($scope, requisition, rnrColumns, regimenColumnList, $location, currency, $routeParams) {
+  $scope.visibleTab = $routeParams.supplyType;
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
+  $scope.regimenColumns = regimenColumnList;
   $scope.currency = currency;
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
+  $scope.regimenCount = $scope.rnr.regimenLineItems.length;
 
   var APPROVED = "APPROVED";
   var RELEASED = "RELEASED";
   var NON_FULL_SUPPLY = 'non-full-supply';
   var FULL_SUPPLY = 'full-supply';
+  var REGIMEN = 'regimen';
 
   if (!($scope.rnr.status == APPROVED || $scope.rnr.status == RELEASED))
     $scope.visibleColumns = _.filter($scope.visibleColumns, function (column) {
@@ -22,10 +26,6 @@ function ViewRnrController($scope, requisition, rnrColumns, $location, currency,
 
   $scope.pageLineItems = [];
 
-  function updateSupplyType() {
-    $scope.showNonFullSupply = !!($routeParams.supplyType == NON_FULL_SUPPLY);
-  }
-
   $scope.showCategory = function (index) {
     return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index - 1].productCategory));
   };
@@ -33,45 +33,40 @@ function ViewRnrController($scope, requisition, rnrColumns, $location, currency,
   $scope.$broadcast('$routeUpdate');
 
   function fillPageData() {
-    var pageLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
+    var pageLineItems = $scope.visibleTab == NON_FULL_SUPPLY ? $scope.rnr.nonFullSupplyLineItems : $scope.visibleTab == FULL_SUPPLY ? $scope.rnr.fullSupplyLineItems : [];
     $scope.numberOfPages = Math.ceil(pageLineItems.length / $scope.pageSize) ? Math.ceil(pageLineItems.length / $scope.pageSize) : 1;
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
     $scope.pageLineItems = pageLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
   }
 
-  updateSupplyType();
   fillPageData();
 
+  $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
   $scope.$watch("currentPage", function () {
-    if (!$routeParams.supplyType) {
-      $location.search('supplyType', FULL_SUPPLY);
-    }
     $location.search("page", $scope.currentPage);
   });
 
   $scope.switchSupplyType = function (supplyType) {
+    $scope.visibleTab = supplyType;
     $location.search('page', 1);
     $location.search('supplyType', supplyType);
   };
 
   $scope.$on('$routeUpdate', function () {
-    if ($routeParams.supplyType != 'full-supply' && $routeParams.supplyType != 'non-full-supply') {
-      $location.url("requisition/" + $routeParams.rnr + '/' + $routeParams.program + '?supplyType=full-supply&page=1');
-      return;
-    }
+    $scope.visibleTab = $routeParams.supplyType == NON_FULL_SUPPLY ? NON_FULL_SUPPLY : ($routeParams.supplyType == REGIMEN && $scope.regimenCount) ? REGIMEN : FULL_SUPPLY;
+    $location.search('supplyType', $scope.visibleTab);
+
     if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
       $location.search('page', 1);
       return;
     }
-    updateSupplyType();
     fillPageData();
   });
 
   $scope.getId = function (prefix, parent) {
     return prefix + "_" + parent.$parent.$index;
   };
-
 }
 
 ViewRnrController.resolve = {
@@ -101,6 +96,16 @@ ViewRnrController.resolve = {
     $timeout(function () {
       ReferenceData.get({}, function (data) {
         deferred.resolve(data.currency);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  regimenColumnList: function ($q, $timeout, $route, RegimenColumns) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      RegimenColumns.get({programId: $route.current.params.program}, function (data) {
+        deferred.resolve(data.regimen_columns);
       }, {});
     }, 100);
     return deferred.promise;

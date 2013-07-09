@@ -11,7 +11,6 @@ import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
-import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -60,6 +59,30 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage(regimenTemplateConfigPage);
     verifyProgramConfigured(program);
+  }
+
+  @Test(groups = {"smoke"}, dataProvider = "Data-Provider")
+  public void testVerifyNewRegimenReportingFieldConfiguration(String program, String[] credentials) throws Exception {
+    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
+    regimenTemplateConfigPage.configureProgram(program);
+    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
+    regimenTemplateConfigPage.clickReportingFieldTab();
+    verifyDefaultRegimenReportingFieldsValues(regimenTemplateConfigPage);
+    regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(false);
+    regimenTemplateConfigPage.setValueRemarksTextField("Testing column");
+    regimenTemplateConfigPage.SaveRegime();
+    verifySuccessMessage(regimenTemplateConfigPage);
+    verifyProgramConfigured(program);
+
+    regimenTemplateConfigPage.clickEditProgram(program);
+    verifyProgramDetailsSaved(adultsRegimen, CODE1, NAME1,"Testing column");
+
+    regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(true) ;
+    regimenTemplateConfigPage.SaveRegime();
+    verifySuccessMessage(regimenTemplateConfigPage);
   }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider")
@@ -130,16 +153,16 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, false);
     regimenTemplateConfigPage.SaveRegime();
     regimenTemplateConfigPage.clickEditProgram(program);
-    verifyNonEditableRegimentsAdded(CODE1, NAME1, true, 1);
+    verifyNonEditableRegimenAdded(CODE1, NAME1, true, 1);
     regimenTemplateConfigPage.clickEditButton();
-    verifyEditableRegimentsAdded(CODE1, NAME1, true, 1);
+    verifyEditableRegimenAdded(CODE1, NAME1, true, 1);
     enterCategoriesValuesForEditing(CODE2, NAME2, 1);
     regimenTemplateConfigPage.clickDoneButton();
-    verifyNonEditableRegimentsAdded(CODE2, NAME2, true, 1);
+    verifyNonEditableRegimenAdded(CODE2, NAME2, true, 1);
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage(regimenTemplateConfigPage);
     regimenTemplateConfigPage.clickEditProgram(program);
-    verifyNonEditableRegimentsAdded(CODE2, NAME2, true, 1);
+    verifyNonEditableRegimenAdded(CODE2, NAME2, true, 1);
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage(regimenTemplateConfigPage);
     verifyProgramConfigured(program);
@@ -154,8 +177,8 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     regimenTemplateConfigPage.configureProgram(program);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, false);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE2, NAME1, true);
-    verifyNonEditableRegimentsAdded(CODE1, NAME1, true, 1);
-    verifyNonEditableRegimentsAdded(CODE2, NAME1, false, 2);
+    verifyNonEditableRegimenAdded(CODE1, NAME1, true, 1);
+    verifyNonEditableRegimenAdded(CODE2, NAME1, false, 2);
     regimenTemplateConfigPage.clickEditButton();
     enterCategoriesValuesForEditing(CODE2, NAME1, 1);
     regimenTemplateConfigPage.clickDoneButton();
@@ -172,7 +195,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE2, NAME1, true);
     regimenTemplateConfigPage.clickEditButton();
-    regimenTemplateConfigPage.getSaveButton().click();
+    regimenTemplateConfigPage.clickSaveButton();
     verifyErrorMessage(regimenTemplateConfigPage, errorMessageONSaveBeforeDone);
     enterCategoriesValuesForEditing("", NAME1, 1);
     regimenTemplateConfigPage.clickDoneButton();
@@ -186,33 +209,51 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
     regimenTemplateConfigPage.configureProgram(program);
-    regimenTemplateConfigPage.CancelRegime();
-    assertTrue("Clicking Cancel button should be redirected to Regimen Template screen",testWebDriver.getElementByXpath("//a[@id='" + program + "']/span").isDisplayed());
+    regimenTemplateConfigPage.CancelRegime(program);
+    assertTrue("Clicking Cancel button should be redirected to Regimen Template screen", testWebDriver.getElementById(program).isDisplayed());
+  }
+
+  private void verifyDefaultRegimenReportingFieldsValues(RegimenTemplateConfigPage regimenTemplateConfigPage) {
+    assertTrue("noOfPatientsOnTreatmentCheckBox should be checked", regimenTemplateConfigPage.IsSelectedNoOfPatientsOnTreatmentCheckBox());
+    assertTrue("noOfPatientsToInitiateTreatmentCheckBox should be checked", regimenTemplateConfigPage.IsNoOfPatientsToInitiateTreatmentCheckBoxSelected());
+    assertTrue("noOfPatientsStoppedTreatmentCheckBox should be checked", regimenTemplateConfigPage.IsNoOfPatientsStoppedTreatmentCheckBoxSelected());
+    assertTrue("remarksCheckBox should be checked", regimenTemplateConfigPage.IsRemarksCheckBoxSelected());
+
+    assertEquals("Number of patients on treatment", regimenTemplateConfigPage.getValueNoOfPatientsOnTreatmentTextField());
+    assertEquals("Number of patients to be initiated treatment", regimenTemplateConfigPage.getValueNoOfPatientsToInitiateTreatmentTextField());
+    assertEquals("Number of patients stopped treatment", regimenTemplateConfigPage.getValueNoOfPatientsStoppedTreatmentTextField());
+    assertEquals("Remarks", regimenTemplateConfigPage.getValueRemarksTextField());
+
+    assertEquals("Numeric", regimenTemplateConfigPage.getTextNoOfPatientsOnTreatmentDataType());
+    assertEquals("Numeric", regimenTemplateConfigPage.getTextNoOfPatientsStoppedTreatmentDataType());
+    assertEquals("Numeric", regimenTemplateConfigPage.getTextNoOfPatientsToInitiateTreatmentDataType());
+    assertEquals("Text", regimenTemplateConfigPage.getTextRemarksDataType());
+
   }
 
   private void verifyErrorMessage(RegimenTemplateConfigPage regimenTemplateConfigPage, String expectedErrorMessage) {
-    testWebDriver.waitForElementToAppear(regimenTemplateConfigPage.getSaveErrorMsgDiv());
-    assertEquals(expectedErrorMessage, regimenTemplateConfigPage.getSaveErrorMsgDiv().getText().trim());
+    regimenTemplateConfigPage.IsDisplayedSaveErrorMsgDiv();
+    assertEquals(expectedErrorMessage, regimenTemplateConfigPage.getSaveErrorMsgDiv());
   }
 
   private void verifyDoneErrorMessage(RegimenTemplateConfigPage regimenTemplateConfigPage, String expectedErrorMessage) {
-    testWebDriver.waitForElementToAppear(regimenTemplateConfigPage.getDoneFailMessage());
-    assertTrue("Done regimen Error div should show up", regimenTemplateConfigPage.getDoneFailMessage().isDisplayed());
+
+    assertTrue("Done regimen Error div should show up", regimenTemplateConfigPage.IsDisplayedDoneFailMessage());
   }
 
-  private void verifyNonEditableRegimentsAdded(String code, String name, boolean activeChecboxSelected, int indexOfCodeAdded) {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span"));
-    assertEquals(code, testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span").getText().trim());
-    assertEquals(name, testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[3]/div/span").getText().trim());
-    assertEquals(activeChecboxSelected, testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[4]/input").isSelected());
+  private void verifyNonEditableRegimenAdded(String code, String name, boolean activeChecboxSelected, int indexOfCodeAdded) {
+    RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
+    assertEquals(code, regimenTemplateConfigPage.getNonEditableAddedCode(indexOfCodeAdded));
+    assertEquals(name, regimenTemplateConfigPage.getNonEditableAddedName(indexOfCodeAdded));
+    assertEquals(activeChecboxSelected, regimenTemplateConfigPage.getNonEditableAddedActiveCheckBox(indexOfCodeAdded));
 
   }
 
-  private void verifyEditableRegimentsAdded(String code, String name, boolean activeChecboxSelected, int indexOfCodeAdded) {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"));
-    assertEquals(code, testWebDriver.getAttribute(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"), "value").trim());
-    assertEquals(name, testWebDriver.getAttribute(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[3]/input"), "value").trim());
-    assertEquals(activeChecboxSelected, testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[4]/input").isSelected());
+  private void verifyEditableRegimenAdded(String code, String name, boolean activeChecboxSelected, int indexOfCodeAdded) {
+    RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
+    assertEquals(code, regimenTemplateConfigPage.getEditableAddedCode(indexOfCodeAdded));
+    assertEquals(name, regimenTemplateConfigPage.getEditableAddedName(indexOfCodeAdded));
+    assertEquals(activeChecboxSelected, regimenTemplateConfigPage.getEditableAddedActiveCheckBox(indexOfCodeAdded));
   }
 
   private void enterCategoriesValuesForEditing(String code, String name, int indexOfCodeAdded) {
@@ -228,12 +269,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   }
 
-  private void sendKeys(String locator, String value) {
-    int length = testWebDriver.getAttribute(testWebDriver.getElementByXpath(locator), "value").length();
-    for (int i = 0; i < length; i++)
-      testWebDriver.getElementByXpath(locator).sendKeys("\u0008");
-    testWebDriver.getElementByXpath(locator).sendKeys(value);
-  }
+
 
   private List<String> getProgramsListedOnRegimeScreen() {
     List<String> programsList = new ArrayList<String>();
@@ -247,18 +283,26 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   }
 
   private void verifySuccessMessage(RegimenTemplateConfigPage regimenTemplateConfigPage) {
-    testWebDriver.waitForElementToAppear(regimenTemplateConfigPage.getSaveSuccessMsgDiv());
-    assertTrue("saveSuccessMsgDiv should show up", regimenTemplateConfigPage.getSaveSuccessMsgDiv().isDisplayed());
+
+    assertTrue("saveSuccessMsgDiv should show up", regimenTemplateConfigPage.IsDisplayedSaveSuccessMsgDiv());
     String saveSuccessfullyMessage = "Regimens saved successfully";
-    assertTrue("Message showing '" + saveSuccessfullyMessage + "' should show up", regimenTemplateConfigPage.getSaveSuccessMsgDiv().getText().trim().equals(saveSuccessfullyMessage));
+    assertEquals(saveSuccessfullyMessage, regimenTemplateConfigPage.getSaveSuccessMsgDiv()) ;
 
   }
 
   private void verifyProgramConfigured(String program) {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[@id='" + program + "']"));
-    assertTrue("Program " + program + "should be configured", testWebDriver.getElementByXpath("//a[@id='" + program + "']").getText().trim().equals("Edit"));
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementById(program));
+    assertTrue("Program " + program + "should be configured", testWebDriver.getElementById(program).getText().trim().equals("Edit"));
 
   }
+
+    private void verifyProgramDetailsSaved(String category, String code, String name, String reportingField) {
+        RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
+        verifyNonEditableRegimenAdded(code, name, false, 1);
+
+        regimenTemplateConfigPage.clickReportingFieldTab();
+        assertEquals(reportingField, regimenTemplateConfigPage.getValueRemarksTextField());
+    }
 
   @AfterMethod(groups = {"smoke", "functional2"})
   public void tearDown() throws Exception {

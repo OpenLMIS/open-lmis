@@ -48,6 +48,8 @@ public class ProductMapperIT {
   FacilityMapper facilityMapper;
   @Autowired
   ProgramSupportedMapper programSupportedMapper;
+  @Autowired
+  ProductGroupMapper productGroupMapper;
 
   @Autowired
   ProductMapper productMapper;
@@ -126,10 +128,14 @@ public class ProductMapperIT {
   @Test
   public void shouldGetAProductById(){
     Product product = make(a(ProductBuilder.defaultProduct));
+
     productMapper.insert(product);
-    Product expectedProduct = productMapper.getById(product.getId());
-    assertThat(expectedProduct.getId(), is(product.getId()));
-    assertThat(expectedProduct.getCode(), is(product.getCode()));
-    assertThat(expectedProduct.getPrimaryName(), is(product.getPrimaryName()));
+
+    Product returnedProduct = productMapper.getById(product.getId());
+
+    assertThat(returnedProduct.getId(), is(product.getId()));
+    assertThat(returnedProduct.getCode(), is(product.getCode()));
+    assertThat(returnedProduct.getProductGroup(), is(product.getProductGroup()));
+    assertThat(returnedProduct.getPrimaryName(), is(product.getPrimaryName()));
   }
 }

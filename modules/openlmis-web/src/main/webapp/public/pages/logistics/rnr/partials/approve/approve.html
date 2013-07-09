@@ -7,10 +7,12 @@
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
 <div class="rnr-tabs clearfix">
   <ul class="clearfix">
-    <li ng-class="{'selected': !showNonFullSupply, 'has-error': fullSupplyTabError}">
+    <li ng-class="{'selected': (visibleTab != 'non-full-supply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
       <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab" openlmis-message="label.full.supply.products"></a></li>
-    <li ng-class="{'selected': showNonFullSupply, 'has-error': nonFullSupplyTabError}">
+    <li ng-class="{'selected': visibleTab == 'non-full-supply', 'has-error': nonFullSupplyTabError}">
       <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab" openlmis-message="label.non.full.supply.products"></a></li>
+    <li ng-class="{'selected': visibleTab == 'regimen'}" ng-show = "regimenCount">
+      <a ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a></li>
   </ul>
   <a class="btn pull-right" ng-click="getFullScreen()">
     <i ng-class="{'icon-resize-full': !fullScreen, 'icon-resize-small': fullScreen}"></i>
@@ -31,13 +33,16 @@
 
   </div>
 
-  <ng-switch on="showNonFullSupply">
-        <span ng-switch-when="true">
-          <ng-include src="'/public/pages/logistics/rnr/partials/approve/approve-non-full-supply.html'"></ng-include>
-        </span>
-        <span ng-switch-default>
-          <ng-include src="'/public/pages/logistics/rnr/partials/approve/approve-full-supply.html'"></ng-include>
-        </span>
+  <ng-switch on="visibleTab">
+         <span ng-switch-when="non-full-supply">
+        <ng-include src="'/public/pages/logistics/rnr/partials/approve/approve-non-full-supply.html'"></ng-include>
+      </span>
+      <span ng-switch-when="regimen">
+        <ng-include src="'/public/pages/logistics/rnr/partials/approve/approve-regimen-line-item.html'"></ng-include>
+      </span>
+      <span ng-switch-default>
+        <ng-include src="'/public/pages/logistics/rnr/partials/approve/approve-full-supply.html'"></ng-include>
+      </span>
   </ng-switch>
   <br><br>
 
@@ -55,7 +60,7 @@
     <div class="toolbar-success" id="saveSuccessMsgDiv" ng-show="message" ng-bind="message"></div>
   </div>
 </form>
-<div>
+<div ng-hide="visibleTab == 'regimen'">
   <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"
                        check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
 </div>

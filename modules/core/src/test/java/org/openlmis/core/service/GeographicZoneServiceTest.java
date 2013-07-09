@@ -119,4 +119,15 @@ public class GeographicZoneServiceTest {
     assertThat(geographicZone.getLevel(), is(level));
     assertThat(geographicZone.getParent(), is(parent));
   }
+
+  @Test
+  public void shouldGetGeoZoneById() throws Exception {
+    GeographicZone expected = new GeographicZone(1L, "Root", "Root", null, null);
+    when(repository.getById(1L)).thenReturn(expected);
+
+    GeographicZone actual = service.getById(1L);
+
+    assertThat(actual, is(expected));
+    verify(repository).getById(1L);
+  }
 }

@@ -7,7 +7,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -25,7 +24,8 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.*;
 
 public class RolesPage extends Page {
 
-  Map<String, WebElement> webElementMap = new HashMap();
+
+  private Map<String, WebElement> webElementMap = new HashMap();
 
   @FindBy(how = How.ID, using = "role-add-new")
   private static WebElement createNewRoleButton;
@@ -45,19 +45,22 @@ public class RolesPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='rights-MANAGE_ROLE']/input")
   private static WebElement rightManageRoles;
 
+  @FindBy(how = How.XPATH, using = "//div[@id='allocationRights-MANAGE_DISTRIBUTION']/input")
+  private static WebElement rightManageDistribution;
+
   @FindBy(how = How.XPATH, using = "//div[@id='rights-MANAGE_SCHEDULE']/input")
   private static WebElement rightManageSchedules;
 
   @FindBy(how = How.XPATH, using = "//div[@id='rights-UPLOADS']/input")
   private static WebElement rightUploads;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='nonAdminRights-CREATE_REQUISITION']/input")
+  @FindBy(how = How.XPATH, using = "//div[@id='requisitionRights-CREATE_REQUISITION']/input")
   private static WebElement rightCreateRequisition;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='nonAdminRights-AUTHORIZE_REQUISITION']/input")
+  @FindBy(how = How.XPATH, using = "//div[@id='requisitionRights-AUTHORIZE_REQUISITION']/input")
   private static WebElement rightAuthorizeRequisition;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='nonAdminRights-APPROVE_REQUISITION']/input")
+  @FindBy(how = How.XPATH, using = "//div[@id='requisitionRights-APPROVE_REQUISITION']/input")
   private static WebElement rightApproveRequisition;
 
   @FindBy(how = How.XPATH, using = "//div[@id='rights-CONVERT_TO_ORDER']/input")
@@ -72,19 +75,26 @@ public class RolesPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Cancel')]")
   private static WebElement cancelButton;
 
+  @FindBy(how = How.ID, using = "button_Cancel")
+  private static WebElement cancelButtonOnModal;
+
   @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
   private static WebElement saveSuccessMsgDiv;
 
   @FindBy(how = How.ID, using = "saveFailMessage")
   private static WebElement saveErrorMsgDiv;
 
-  @FindBy(how = How.ID, using = "programRoleType")
-  private static WebElement programRoleType;
+  @FindBy(how = How.ID, using = "requisitionRoleType")
+  private static WebElement requisitionRoleType;
 
   @FindBy(how = How.ID, using = "adminRoleType")
+
   private static WebElement adminRoleType;
 
-  @FindBy(how = How.ID, using = "button_Ok")
+  @FindBy(how = How.ID, using = "allocationRoleType")
+  private static WebElement allocationRoleType;
+
+  @FindBy(how = How.ID, using = "button_OK")
   private static WebElement continueButton;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Edit role')]")
@@ -92,6 +102,10 @@ public class RolesPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//h2/span[contains(text(),'Roles')]")
   private static WebElement rolesHeader;
+
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Add new role')]")
+  private static WebElement addNewRoleHeader;
+
 
   public RolesPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -110,17 +124,112 @@ public class RolesPage extends Page {
     webElementMap.put("Approve Requisition", rightApproveRequisition);
     webElementMap.put("Convert To Order Requisition", rightConvertToOrderRequisition);
     webElementMap.put("View Orders Requisition", rightViewOrders);
+    webElementMap.put("Manage Distribution", rightManageDistribution);
+  }
+
+  public Map<String, WebElement> getWebElementMap() {
+    return webElementMap;
+  }
+
+  public  WebElement getCreateNewRoleButton() {
+    return createNewRoleButton;
+  }
+
+  public  WebElement getRoleNameField() {
+    return roleNameField;
+  }
+
+  public  WebElement getRoleDescription() {
+    return roleDescription;
+  }
+
+  public  WebElement getRightConfigureTemplate() {
+    return rightConfigureTemplate;
+  }
+
+  public  WebElement getRightManageFacilities() {
+    return rightManageFacilities;
+  }
+
+  public  WebElement getRightManageRoles() {
+    return rightManageRoles;
+  }
+
+  public  WebElement getRightManageSchedules() {
+    return rightManageSchedules;
+  }
+
+  public  WebElement getRightUploads() {
+    return rightUploads;
+  }
+
+  public  WebElement getRightCreateRequisition() {
+    return rightCreateRequisition;
+  }
+
+  public  WebElement getRightAuthorizeRequisition() {
+    return rightAuthorizeRequisition;
+  }
+
+  public  WebElement getRightApproveRequisition() {
+    return rightApproveRequisition;
+  }
+
+  public  WebElement getRightConvertToOrderRequisition() {
+    return rightConvertToOrderRequisition;
+  }
+
+  public  WebElement getRightViewOrders() {
+    return rightViewOrders;
+  }
+
+  public  WebElement getSaveButton() {
+    return saveButton;
+  }
+
+  public  WebElement getCancelButton() {
+    return cancelButton;
+  }
+
+  public  WebElement getSaveSuccessMsgDiv() {
+    return saveSuccessMsgDiv;
+  }
+
+  public  WebElement getSaveErrorMsgDiv() {
+    return saveErrorMsgDiv;
+  }
+
+  public  WebElement getContinueButton() {
+    return continueButton;
+  }
+
+  public  WebElement getEditRoleHeader() {
+    return editRoleHeader;
+  }
+
+  public  WebElement getRolesHeader() {
+    return rolesHeader;
+  }
+
+  public  WebElement getRequisitionRoleType() {
+    return requisitionRoleType;
+  }
+
+  public  WebElement getAdminRoleType() {
+    return adminRoleType;
+  }
+
+  public  WebElement getAllocationRoleType() {
+    return allocationRoleType;
   }
 
 
-  public void createRole(String roleName, String roleDesc, List<String> rights, boolean programDependant) {
-
+  public void createRoleWithSuccessMessageExpected(String roleName, String roleDesc, List<String> rights, boolean programDependant) {
     testWebDriver.waitForElementToAppear(createNewRoleButton);
     createNewRoleButton.click();
     if (programDependant) {
       clickProgramRole();
-      testWebDriver.waitForElementToAppear(continueButton);
-      testWebDriver.click(continueButton);
+      clickContinueButton();
     }
     testWebDriver.sleep(1000);
     testWebDriver.handleScrollByPixels(0, 2000);
@@ -128,7 +237,6 @@ public class RolesPage extends Page {
       testWebDriver.sleep(500);
       webElementMap.get(right).click();
     }
-
     for (String right : rights) {
       if (!webElementMap.get(right).isSelected())
         testWebDriver.click(webElementMap.get(right));
@@ -138,7 +246,29 @@ public class RolesPage extends Page {
     saveButton.click();
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
     assertEquals(saveSuccessMsgDiv.getText().trim(), "'" + roleName + "' created successfully");
+  }
 
+  public void createRole(String roleName, String roleDesc, List<String> rights, boolean programDependant) {
+    testWebDriver.waitForElementToAppear(createNewRoleButton);
+    createNewRoleButton.click();
+    if (programDependant) {
+      clickProgramRole();
+      clickContinueButton();
+    }
+    testWebDriver.sleep(1000);
+    testWebDriver.handleScrollByPixels(0, 2000);
+    for (String right : rights) {
+      testWebDriver.sleep(500);
+      webElementMap.get(right).click();
+    }
+    for (String right : rights) {
+      if (!webElementMap.get(right).isSelected())
+        testWebDriver.click(webElementMap.get(right));
+    }
+    roleNameField.sendKeys(roleName);
+    roleDescription.sendKeys(roleDesc);
+    saveButton.click();
+    testWebDriver.sleep(1000);
   }
 
   public void clickARole(String roleName) {
@@ -149,8 +279,8 @@ public class RolesPage extends Page {
   }
 
   public void clickProgramRole() {
-    testWebDriver.waitForElementToAppear(programRoleType);
-    programRoleType.click();
+    testWebDriver.waitForElementToAppear(requisitionRoleType);
+    requisitionRoleType.click();
     testWebDriver.sleep(100);
   }
 
@@ -161,8 +291,8 @@ public class RolesPage extends Page {
   }
 
   public void verifyProgramRoleRadioNonEditable() {
-    testWebDriver.waitForElementToAppear(programRoleType);
-    assertTrue(testWebDriver.getAttribute(programRoleType, "disabled"), true);
+    testWebDriver.waitForElementToAppear(requisitionRoleType);
+    assertTrue(testWebDriver.getAttribute(requisitionRoleType, "disabled"), true);
   }
 
   public void verifyAdminRoleRadioNonEditable() {
@@ -177,6 +307,13 @@ public class RolesPage extends Page {
     }
   }
 
+  public void clickContinueButton()
+  {
+    testWebDriver.waitForElementToAppear(continueButton);
+    testWebDriver.click(continueButton);
+    testWebDriver.sleep(250);
+  }
+
   public void clickSaveButton() {
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
@@ -187,5 +324,11 @@ public class RolesPage extends Page {
     testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();
     testWebDriver.waitForElementToAppear(rolesHeader);
+  }
+
+  public void clickCancelButtonOnModal() {
+    testWebDriver.waitForElementToAppear(cancelButtonOnModal);
+    cancelButtonOnModal.click();
+    testWebDriver.waitForElementToAppear(addNewRoleHeader);
   }
 }

@@ -10,10 +10,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
-import org.openlmis.rnr.domain.Comment;
-import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
-import org.openlmis.rnr.domain.ProgramRnrTemplate;
-import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.search.factory.RequisitionSearchStrategyFactory;
@@ -68,6 +65,10 @@ public class RequisitionService {
   private UserService userService;
   @Autowired
   private RequisitionEventService requisitionEventService;
+  @Autowired
+  private RegimenService regimenService;
+  @Autowired
+  private RegimenColumnService regimenColumnService;
 
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
@@ -79,11 +80,12 @@ public class RequisitionService {
   @Transactional
   public Rnr initiate(Long facilityId, Long programId, Long periodId, Long modifiedBy) {
     if (!requisitionPermissionService.hasPermission(modifiedBy, new Facility(facilityId), new Program(programId),
-        CREATE_REQUISITION))
+      CREATE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(programId,
-        rnrTemplateService.fetchColumnsForRequisition(programId));
+    ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplateForRequisition(programId);
+
+    RegimenTemplate regimenTemplate = new RegimenTemplate(programId, regimenColumnService.getRegimenColumnsByProgramId(programId));
 
     if (rnrTemplate.getRnrColumns().size() == 0)
       throw new DataException("error.rnr.template.not.defined");
@@ -92,11 +94,13 @@ public class RequisitionService {
 
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts;
     facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
-        facilityId, programId);
+      facilityId, programId);
 
-    Rnr requisition = new Rnr(facilityId, programId, periodId, facilityTypeApprovedProducts, modifiedBy);
+    List<Regimen> regimens = regimenService.getByProgram(programId);
 
-    fillFieldsForInitiatedRequisitionAccordingToTemplate(requisition, rnrTemplate);
+    Rnr requisition = new Rnr(facilityId, programId, periodId, facilityTypeApprovedProducts, regimens, modifiedBy);
+
+    fillFieldsForInitiatedRequisitionAccordingToTemplate(requisition, rnrTemplate, regimenTemplate);
 
     insert(requisition);
 
@@ -150,7 +154,7 @@ public class RequisitionService {
     savedRnr.setAuditFieldsForRequisition(rnr.getModifiedBy(), SUBMITTED);
 
     savedRnr.calculate(rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId()),
-        requisitionRepository.getLossesAndAdjustmentsTypes());
+      requisitionRepository.getLossesAndAdjustmentsTypes());
 
     return update(savedRnr);
   }
@@ -167,7 +171,7 @@ public class RequisitionService {
     savedRnr.setSupervisoryNodeId(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram()).getId());
 
     savedRnr.calculate(rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId()),
-        requisitionRepository.getLossesAndAdjustmentsTypes());
+      requisitionRepository.getLossesAndAdjustmentsTypes());
     savedRnr.setDefaultApprovedQuantity();
 
     return update(savedRnr);
@@ -232,11 +236,10 @@ public class RequisitionService {
     return requisitions;
   }
 
-  private void fillFieldsForInitiatedRequisitionAccordingToTemplate(Rnr requisition, ProgramRnrTemplate template) {
-    requisition.setBeginningBalances(getPreviousRequisition(requisition), template.columnsVisible(BEGINNING_BALANCE));
-    requisition.setFieldsAccordingToTemplate(template);
+  private void fillFieldsForInitiatedRequisitionAccordingToTemplate(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
+    requisition.setBeginningBalances(getPreviousRequisition(requisition), rnrTemplate.columnsVisible(BEGINNING_BALANCE));
+    requisition.setFieldsAccordingToTemplate(rnrTemplate, regimenTemplate);
   }
-
 
   private Rnr fillSupportingInfo(Rnr requisition) {
     if (requisition == null) return null;
@@ -262,12 +265,12 @@ public class RequisitionService {
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Long facilityId, Long programId) {
     Date programStartDate = programService.getProgramStartDate(facilityId, programId);
     Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(
-        facilityId, programId);
+      facilityId, programId);
 
     Long periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ?
-        null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
+      null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
     return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate,
-        periodIdOfLastRequisitionToEnterPostSubmitFlow);
+      periodIdOfLastRequisitionToEnterPostSubmitFlow);
   }
 
   public Rnr getRnrForApprovalById(Long id, Long userId) {
@@ -285,11 +288,11 @@ public class RequisitionService {
 
   private Rnr getPreviousRequisition(Rnr requisition) {
     ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(
-        requisition.getPeriod());
+      requisition.getPeriod());
     Rnr previousRequisition = null;
     if (immediatePreviousPeriod != null)
       previousRequisition = requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(),
-          requisition.getProgram(), immediatePreviousPeriod);
+        requisition.getProgram(), immediatePreviousPeriod);
     return previousRequisition;
   }
 
@@ -330,7 +333,7 @@ public class RequisitionService {
     if (lastPeriod == null) return null;
 
     return requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(), requisition.getProgram(),
-        lastPeriod);
+      lastPeriod);
   }
 
 

@@ -6,7 +6,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.AllocationProgramProduct;
+import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.Product;
 import org.springframework.stereotype.Repository;
 
@@ -17,9 +17,9 @@ public interface FacilityProgramProductMapper {
 
 
   @Insert("INSERT INTO facility_program_products(programProductId, facilityId, overriddenIsa) VALUES " +
-    "(#{programProductId}, #{facilityId}, #{overriddenIsa})")
+    "(#{id}, #{facilityId}, #{overriddenIsa})")
   @Options(useGeneratedKeys = true)
-  void insert(AllocationProgramProduct allocationProgramProduct);
+  void insert(FacilityProgramProduct facilityProgramProduct);
 
   @Select({"SELECT overriddenIsa FROM facility_program_products WHERE programProductId = #{programProductId} AND",
     "facilityId = #{facilityId}"})
@@ -29,11 +29,11 @@ public interface FacilityProgramProductMapper {
   void removeFacilityProgramProductMapping(@Param("programProductId") Long programProductId, @Param("facilityId") Long facilityId);
 
   @Select({"SELECT fpp.*, pp.productId as productId FROM facility_program_products fpp, program_products pp,products p WHERE fpp.facilityId = #{facilityId} ",
-    "AND pp.programId=#{programId} AND fpp.programProductId = pp.id ANd pp.productId = p.id ORDER BY ",
+    "AND pp.programId=#{programId} AND fpp.programProductId = pp.id AND pp.productId = p.id ORDER BY ",
     "p.displayOrder NULLS LAST, p.code"})
   @Results(value = {
     @Result(property = "product", column = "productId", javaType = Product.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
   })
-  List<AllocationProgramProduct> getByFacilityAndProgram(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
+  List<FacilityProgramProduct> getByFacilityAndProgram(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 }

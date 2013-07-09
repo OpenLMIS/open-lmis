@@ -13,10 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.DeliveryZone;
-import org.openlmis.core.repository.DeliveryZoneRepository;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.service.DeliveryZoneService;
-import org.openlmis.core.service.ProgramService;
+import org.openlmis.core.repository.DeliveryZoneRepository;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
@@ -84,8 +82,19 @@ public class DeliveryZoneServiceTest {
   }
 
   @Test
+  public void shouldGetAllDeliveryZones() throws Exception {
+    List<DeliveryZone> deliveryZones = new ArrayList<>();
+    when(repository.getAll()).thenReturn(deliveryZones);
+
+    List<DeliveryZone> returnedZones = service.getAll();
+
+    verify(repository).getAll();
+    assertThat(returnedZones, is(deliveryZones));
+  }
+
+  @Test
   public void shouldGetProgramForDeliveryZoneBasedOnUserRights() throws Exception {
-    service.getProgramsForDeliveryZone(1l);
+    service.getActiveProgramsForDeliveryZone(1l);
 
     verify(repository).getPrograms(1l);
   }
@@ -107,9 +116,42 @@ public class DeliveryZoneServiceTest {
     when(programService.getById(1l)).thenReturn(activeProgram);
     when(programService.getById(2l)).thenReturn(inActiveProgram);
 
-    List<Program> returnedPrograms = service.getProgramsForDeliveryZone(1l);
+    List<Program> returnedPrograms = service.getActiveProgramsForDeliveryZone(1l);
 
     assertThat(returnedPrograms, hasItem(activeProgram));
     assertThat(returnedPrograms.size(), is(1));
+  }
+
+  @Test
+  public void shouldGetOnlyAllFilledProgramsForDeliveryZone() throws Exception {
+    final Program program1 = new Program(1l);
+
+    final Program program2 = new Program(2l);
+
+    List<Program> programs = new ArrayList<Program>() {{
+      add(program1);
+      add(program2);
+    }};
+
+    when(repository.getPrograms(1l)).thenReturn(programs);
+    when(programService.getById(1l)).thenReturn(program1);
+    when(programService.getById(2l)).thenReturn(program2);
+
+    List<Program> returnedPrograms = service.getAllProgramsForDeliveryZone(1l);
+
+    assertThat(returnedPrograms, hasItem(program1));
+    assertThat(returnedPrograms, hasItem(program2));
+    assertThat(returnedPrograms.size(), is(2));
+  }
+
+  @Test
+  public void shouldGetDeliveryZoneById() throws Exception {
+    DeliveryZone zone = new DeliveryZone();
+    when(repository.getById(1l)).thenReturn(zone);
+
+    DeliveryZone returnedZone = service.getById(1l);
+
+    verify(repository).getById(1l);
+    assertThat(returnedZone, is(zone));
   }
 }

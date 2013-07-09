@@ -35,11 +35,14 @@ public class UserService {
   @Autowired
   private MessageService messageService;
 
-
-
   public void create(User user, String resetPasswordLink) {
-    validateAndSave(user);
+    save(user);
     sendUserCreationEmail(user, resetPasswordLink);
+  }
+
+  public void createUser(User user, String passwordResetLink) {
+    save(user);
+    prepareForEmailNotification(user, passwordResetLink);
   }
 
   public void sendUserCreationEmail(User user, String resetPasswordLink) {
@@ -47,21 +50,16 @@ public class UserService {
     sendEmail(emailMessage);
   }
 
-  private void validateAndSave(User user) {
+  private void save(User user) {
     user.validate();
     userRepository.create(user);
-    roleAssignmentService.saveHomeFacilityRoles(user);
-    roleAssignmentService.saveSupervisoryRoles(user);
-    roleAssignmentService.saveAdminRole(user);
+    roleAssignmentService.saveRolesForUser(user);
   }
 
   public void update(User user) {
     user.validate();
     userRepository.update(user);
-    roleAssignmentService.deleteAllRoleAssignmentsForUser(user.getId());
-    roleAssignmentService.saveHomeFacilityRoles(user);
-    roleAssignmentService.saveSupervisoryRoles(user);
-    roleAssignmentService.saveAdminRole(user);
+    roleAssignmentService.saveRolesForUser(user);
   }
 
   private void sendEmail(EmailMessage emailMessage) {
@@ -128,6 +126,7 @@ public class UserService {
     user.setHomeFacilityRoles(roleAssignmentService.getHomeFacilityRoles(id));
     user.setSupervisorRoles(roleAssignmentService.getSupervisorRoles(id));
     user.setAdminRole(roleAssignmentService.getAdminRole(id));
+    user.setAllocationRoles(roleAssignmentService.getAllocationRoles(id));
     return user;
   }
 
@@ -153,13 +152,10 @@ public class UserService {
     return userRepository.selectUserByUserNameAndPassword(userName, password);
   }
 
-  public void createUser(User user, String passwordResetLink) {
-    validateAndSave(user);
-    prepareForEmailNotification(user, passwordResetLink);
-  }
 
   private void prepareForEmailNotification(User user, String passwordResetLink) {
     EmailMessage emailMessage = accountCreatedEmailMessage(user, passwordResetLink);
     userRepository.insertEmailNotification(emailMessage);
   }
+
 }

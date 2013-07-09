@@ -52,6 +52,7 @@ public class RoleRightsController extends BaseController {
   @RequestMapping(value = "/roles", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
   public ResponseEntity<OpenLmisResponse> createRole(@RequestBody Role role, HttpServletRequest request) {
+    role.setCreatedBy(loggedInUserId(request));
     role.setModifiedBy(loggedInUserId(request));
     try {
       roleRightsService.saveRole(role);
@@ -62,7 +63,7 @@ public class RoleRightsController extends BaseController {
   }
 
   @RequestMapping(value = "/roles", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE, MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> getAll() {
     OpenLmisResponse response = new OpenLmisResponse(ROLES, roleRightsService.getAllRoles());
     return new ResponseEntity<>(response, HttpStatus.OK);

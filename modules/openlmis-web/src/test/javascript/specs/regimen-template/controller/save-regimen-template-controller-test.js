@@ -6,7 +6,7 @@
 
 describe('Save Regimen Template Controller', function () {
 
-  var scope, ctrl, $httpBackend, location, messageService, regimenList1, regimenList2, program, newRegimenForm;
+  var scope, ctrl, $httpBackend, location, messageService, regimenList1, regimenList2, program, newRegimenForm, regimenColumns;
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
@@ -24,6 +24,7 @@ describe('Save Regimen Template Controller', function () {
     regimenList1 = [regimen1, regimen3];
     regimenList2 = [regimen2, regimen4];
     program = {id: 1, name: 'HIV'};
+    regimenColumns = [{'name':'column1', 'label':'columnLabel', 'visible':true, 'dataType':'Numeric'}];
     var regimens = [regimen1, regimen2, regimen3, regimen4];
     var regimenCategories = [
       {'id': 1},
@@ -32,7 +33,7 @@ describe('Save Regimen Template Controller', function () {
 
     scope.newRegimenForm = {$error: {}};
 
-    ctrl = $controller(SaveRegimenTemplateController, {$scope: scope, $location: location, program: program, regimens: regimens, regimenCategories: regimenCategories, newRegimenForm: newRegimenForm});
+    ctrl = $controller(SaveRegimenTemplateController, {$scope: scope, $location: location, program: program, programRegimens: regimens, regimenColumns: regimenColumns, regimenCategories: regimenCategories, newRegimenForm: newRegimenForm});
   }));
 
   it('should filter regimen by categories', function () {
@@ -58,7 +59,7 @@ describe('Save Regimen Template Controller', function () {
   });
 
   it('should not add regimen if it is duplicate', function () {
-    scope.newRegimen = {'id': 1, 'code': 'REG1', 'category': {'id': 1}, $$hashKey: "abc"};
+    scope.newRegimen = {'id': 1, 'name': 'REGIMEN', 'code': 'REG1', 'category': {'id': 1}, $$hashKey: "abc"};
     spyOn(messageService, 'get');
     scope.regimensByCategory[1] = regimenList1
     scope.regimensByCategory[2] = regimenList2;
@@ -72,7 +73,7 @@ describe('Save Regimen Template Controller', function () {
   });
 
   it('should add regimen in appropriate category', function () {
-    scope.newRegimen = {'code': 'REG5', 'category': {'id': 1}};
+    scope.newRegimen = {'code': 'REG5', 'name': 'REGIMEN', 'category': {'id': 1}};
     scope.regimensByCategory[1] = regimenList1
     scope.regimensByCategory[2] = regimenList2;
     scope.addNewRegimen();
@@ -86,7 +87,7 @@ describe('Save Regimen Template Controller', function () {
   });
 
   it('should add regimen in different category if category id is different', function () {
-    scope.newRegimen = {'code': 'REG5', 'category': {'id': 3}};
+    scope.newRegimen = {'code': 'REG5', 'name': 'REGIMEN', 'category': {'id': 3}};
     scope.regimensByCategory[1] = regimenList1
     scope.regimensByCategory[2] = regimenList2;
     scope.addNewRegimen();
@@ -143,6 +144,37 @@ describe('Save Regimen Template Controller', function () {
     expect(messageService.get).toHaveBeenCalledWith('error.regimens.not.done');
   });
 
+  it('should not save regimens no reporting field is selected', function () {
+    scope.regimensByCategory[1] = regimenList1
+    scope.regimensByCategory[2] = regimenList2;
+    scope.regimenColumns = [
+      {'name':'column1', 'label':'columnLabel1', 'visible':false, 'dataType':'Numeric'},
+      {'name':'column2', 'label':'columnLabel2', 'visible':false, 'dataType':'Text'}
+    ];
+
+    spyOn(messageService, 'get');
+
+    scope.save();
+    expect(messageService.get).toHaveBeenCalledWith('error.regimens.none.selected');
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should not save regimens when any label is empty', function () {
+    scope.regimensByCategory[1] = regimenList1
+    scope.regimensByCategory[2] = regimenList2;
+    scope.regimenColumns = [
+      {'name':'column1', 'label':'', 'visible':true, 'dataType':'Numeric'},
+      {'name':'column2', 'label':'', 'visible':false, 'dataType':'Text'}
+    ];
+
+    spyOn(messageService, 'get');
+
+    scope.save();
+    expect(messageService.get).toHaveBeenCalledWith('error.regimen.null.label');
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+
   it('should save regimens', function () {
     scope.regimensByCategory[1] = regimenList1
     scope.regimensByCategory[2] = regimenList2;
@@ -154,7 +186,6 @@ describe('Save Regimen Template Controller', function () {
     $httpBackend.flush();
 
     expect(scope.error).toEqual("");
-    expect(scope.program.regimenTemplateConfigured).toBeTruthy();
     expect(scope.$parent.message).toEqual('success');
   });
 

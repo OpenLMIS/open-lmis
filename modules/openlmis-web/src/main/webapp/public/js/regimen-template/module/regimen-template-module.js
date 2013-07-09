@@ -5,7 +5,7 @@
  */
 
 'use strict';
-angular.module('regimenTemplate', ['openlmis']).config(['$routeProvider', function ($routeProvider) {
+angular.module('regimenTemplate', ['openlmis', 'ui.sortable']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
     when('/select-program', {
       controller: ConfigureRegimenTemplateController,

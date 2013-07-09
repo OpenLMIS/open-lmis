@@ -159,7 +159,7 @@ public class DeliveryZoneMapperIT {
   }
 
   private void createRoleAssignment(long user, String deliveryZoneCode, String planDistributionRole) throws SQLException {
-    queryExecutor.executeUpdate("INSERT INTO roles (name, adminRole) VALUES (?, 'f')", asList(planDistributionRole));
+    queryExecutor.executeUpdate("INSERT INTO roles (name, type) VALUES (?, 'ALLOCATION')", asList(planDistributionRole));
     queryExecutor.executeUpdate("INSERT INTO role_rights (roleId, rightName) VALUES ((select id from roles where name=?), ?)",
       asList(planDistributionRole, MANAGE_DISTRIBUTION.toString()));
     queryExecutor.executeUpdate("INSERT INTO role_assignments (userId, roleId, deliveryZoneId) " +

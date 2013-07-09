@@ -92,7 +92,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
 
-  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testISAFormula(String userSIC, String password, String program) throws Exception {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
     programProductISAPage.fillProgramProductISA("999.999", "999", "999.999", "999.999", "999999", "5", "1000");
@@ -198,30 +198,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
     return programProductISAPage;
-  }
-
-
-  public String calculateISA(String ratioValue, String dosesPerYearValue, String wastageValue, String bufferPercentageValue, String adjustmentValue,
-                             String minimumValue, String maximumValue, String populationValue) {
-
-    Float calculatedISA;
-    Integer population = Integer.parseInt(populationValue);
-    Float ratio = Float.parseFloat(ratioValue) / 100;
-    Integer dossesPerYear = Integer.parseInt(dosesPerYearValue);
-    Float wastage = (Float.parseFloat(wastageValue) / 100) + 1;
-    Float bufferPercentage = (Float.parseFloat(bufferPercentageValue) / 100) + 1;
-    Float minimum = Float.parseFloat(minimumValue);
-    Float maximum = Float.parseFloat(maximumValue);
-
-    Integer adjustment = Integer.parseInt(adjustmentValue);
-
-    calculatedISA = (((population * ratio * dossesPerYear * wastage) / 12) * bufferPercentage) + adjustment;
-
-    if (calculatedISA <= minimum)
-      return (minimumValue);
-    else if (calculatedISA >= maximum)
-      return (maximumValue);
-    return (new BigDecimal(calculatedISA).setScale(0,BigDecimal.ROUND_CEILING)).toString();
   }
 
 

@@ -9,13 +9,14 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RoleAssignment;
-import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.repository.RoleAssignmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 @Service
 @NoArgsConstructor
@@ -29,19 +30,6 @@ public class RoleAssignmentService {
     this.roleAssignmentRepository = roleAssignmentRepository;
   }
 
-  public void saveHomeFacilityRoles(User user) {
-    List<RoleAssignment> homeFacilityRoles = user.getHomeFacilityRoles();
-    saveRoles(user, homeFacilityRoles);
-  }
-
-  public void saveSupervisoryRoles(User user) {
-    List<RoleAssignment> supervisorRoles = user.getSupervisorRoles();
-    saveRoles(user, supervisorRoles);
-  }
-  public void saveAdminRole(User user) {
-    saveRoles(user, user.getAdminRole());
-  }
-
   public void deleteAllRoleAssignmentsForUser(Long id) {
     roleAssignmentRepository.deleteAllRoleAssignmentsForUser(id);
   }
@@ -50,40 +38,32 @@ public class RoleAssignmentService {
     return roleAssignmentRepository.getHomeFacilityRoles(userId);
   }
 
+  public RoleAssignment getAdminRole(Long userId) {
+    return roleAssignmentRepository.getAdminRole(userId);
+  }
+
   public List<RoleAssignment> getSupervisorRoles(Long userId) {
     return roleAssignmentRepository.getSupervisorRoles(userId);
   }
 
-  private void saveRoles(User user, List<RoleAssignment> roleAssignments) {
-    if (roleAssignments == null) return;
-    for (RoleAssignment roleAssignment : roleAssignments) {
-      for (Long role : roleAssignment.getRoleIds()) {
-        SupervisoryNode node = roleAssignment.getSupervisoryNode();
-        Long supervisoryNodeId = null;
-        if (node != null) supervisoryNodeId = node.getId();
-        roleAssignmentRepository.insertRoleAssignment(user.getId(), roleAssignment.getProgramId(), supervisoryNodeId, role);
-      }
-    }
-  }
-
-  private void saveRoles(User user, RoleAssignment adminRole) {
-    if (adminRole == null) return;
-    for (Long role : adminRole.getRoleIds()) {
-      roleAssignmentRepository.insertRoleAssignment(user.getId(), null, null, role);
-    }
+  public List<RoleAssignment> getAllocationRoles(Long userId) {
+    return roleAssignmentRepository.getAllocationRoles(userId);
   }
 
   public List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(Long userId, Long programId, Right... rights) {
     return roleAssignmentRepository.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, rights);
   }
 
+
   public List<RoleAssignment> getRoleAssignments(Right right, Long userId) {
     return roleAssignmentRepository.getRoleAssignmentsForUserWithRight(right, userId);
   }
 
-  public RoleAssignment getAdminRole(Long userId) {
-    return roleAssignmentRepository.getAdminRole(userId);
+  public void saveRolesForUser(User user) {
+    roleAssignmentRepository.deleteAllRoleAssignmentsForUser(user.getId());
+    roleAssignmentRepository.insert(user.getHomeFacilityRoles(), user.getId());
+    roleAssignmentRepository.insert(user.getSupervisorRoles(), user.getId());
+    roleAssignmentRepository.insert(user.getAllocationRoles(), user.getId());
+    roleAssignmentRepository.insert(asList(user.getAdminRole()), user.getId());
   }
-
-
 }

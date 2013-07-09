@@ -3,7 +3,7 @@
 
 CREATE TABLE roles (
   id SERIAL PRIMARY KEY,
-  adminRole BOOLEAN NOT NULL,
+  type VARCHAR(50) NOT NULL,
   name VARCHAR(50) NOT NULL UNIQUE,
   description VARCHAR(250),
   createdBy INTEGER,
@@ -11,3 +11,5 @@ CREATE TABLE roles (
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE UNIQUE INDEX uc_roles_lower_name ON roles(LOWER(name));

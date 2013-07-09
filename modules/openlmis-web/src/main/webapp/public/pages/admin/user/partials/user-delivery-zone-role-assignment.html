@@ -1,0 +1,110 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div ng-controller="UserRoleAssignmentController">
+  <div class="fluid-grid">
+    <div class="row-fluid fluid-grid-header">
+      <div class="span3">
+        <div class="fluid-grid-cell" openlmis-message="label.zone"></div>
+      </div>
+      <div class="span3">
+        <div class="fluid-grid-cell" openlmis-message="program.header"></div>
+      </div>
+      <div class="span3">
+        <div class="fluid-grid-cell" openlmis-message="create.user.role"></div>
+      </div>
+      <div class="span3">
+        <div class="fluid-grid-cell">&nbsp;</div>
+      </div>
+    </div>
+    <div class="row-fluid" ng-repeat="roleAssignment in user.allocationRoles" tab-scroll>
+      <div class="span3">
+        <div class="fluid-grid-cell">
+          <label ng-bind="getDeliveryZoneName(roleAssignment.deliveryZone.id)"></label>
+        </div>
+      </div>
+      <div class="span3">
+        <div class="fluid-grid-cell">
+          <label ng-bind="getProgramName(roleAssignment.programId)"></label>
+        </div>
+      </div>
+      <div class="span4">
+        <div class="fluid-grid-cell">
+          <select ui-select2 ng-model="roleAssignment.roleIds" openlmis-message="placeholder.add.role"
+                  multiple="multiple" name="roles" id="roles" ng-required="true"
+                  ng-options="role.id as role.name for role in rolesMap.ALLOCATION">
+          </select>
+          <span ng-show="roleAssignment.roleIds.length == 0" class="field-error" openlmis-message="missing.value">
+          </span>
+        </div>
+      </div>
+      <div class="span2">
+        <a class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index, 'allocationRoles')"
+           openlmis-message="button.remove"></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="add-role-row supervisory-roles" tab-scroll>
+    <div class="row-fluid">
+      <div class="span3">
+        <div class="fluid-grid-cell">
+          <select name="selectDeliveryZone"
+              ng-options="deliveryZone.id as deliveryZone.name for deliveryZone in deliveryZones"
+              ng-model="deliveryZoneRole.deliveryZone.id" ng-change="loadProgramsForDeliveryZone()">
+            <option value="" openlmis-message="label.select.zone"></option>
+          </select>
+          <span ng-show='!deliveryZoneRole.deliveryZone.id && showAllocationError' class="field-error"
+                openlmis-message="error.select.delivery.zone">
+          </span>
+          <span ng-show='duplicateAllocationRoleError' openlmis-message="duplicateAllocationRoleError"
+                class="field-error"></span>
+        </div>
+      </div>
+      <div class="span3">
+        <div class="fluid-grid-cell">
+          <select name="selectDeliveryZoneProgram"
+              ng-options="program.id as program.name group by program.status for program in deliveryZonePrograms"
+              ng-model="deliveryZoneRole.programId">
+            <option value="" openlmis-message="label.select.program"></option>
+          </select>
+          <span ng-show='!deliveryZoneRole.programId && showAllocationError' class="field-error"
+                openlmis-message="error.select.program">
+          </span>
+        </div>
+      </div>
+
+      <div class="span4 select2-roles">
+        <div id="allocationRole" class="fluid-grid-cell">
+          <select ui-select2 ng-model="deliveryZoneRole.roleIds" openlmis-message="placeholder.add.role" multiple="multiple"
+                  name="selectAllocationRoles"
+                  ng-options="role.id as role.name for role in rolesMap.ALLOCATION" >
+          </select>
+          <span ng-show='!deliveryZoneRole.roleIds.length && showAllocationError' class="field-error"
+                openlmis-message="error.select.roles">
+          </span>
+        </div>
+      </div>
+
+      <div class="span2">
+        <div class="fluid-grid-cell">
+          <a ng-click="addAllocationRole()" class="btn btn-primary" openlmis-message="button.add"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div tabindex="-1" id="deleteRolesModal" modal="deleteRolesModal" close="deleteRolesModal=false">
+    <div class="modal-header"><h3 openlmis-message="create.user.deleteRoles"></h3></div>
+    <div class="modal-body">
+      <p openlmis-message="create.user.delete.warning"></p>
+    </div>
+    <div class="modal-footer">
+      <a href="" class="btn btn-primary" ng-click="deleteSupervisorRole()" openlmis-message="button.ok"></a>
+      <a href="" class="btn" ng-click="deleteRolesModal=false" openlmis-message="button.cancel"></a>
+    </div>
+  </div>
+</div>

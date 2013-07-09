@@ -22,8 +22,8 @@ public interface ProcessingScheduleMapper {
   Long getIdForCode(String code);
 
   @Insert({"INSERT INTO processing_schedules",
-    "(code, name, description, modifiedBy)",
-    "VALUES(#{code}, #{name}, #{description}, #{modifiedBy})"})
+    "(code, name, description, createdBy,createdDate,modifiedDate,modifiedBy)",
+    "VALUES(#{code}, #{name}, #{description}, #{createdBy},COALESCE(#{createdDate},NOW()),COALESCE(#{modifiedDate},NOW()),#{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   Integer insert(ProcessingSchedule schedule);
 

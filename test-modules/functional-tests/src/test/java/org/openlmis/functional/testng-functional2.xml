@@ -18,6 +18,8 @@
       </class>
       <class name="org.openlmis.functional.ManageDistribution">
       </class>
+      <class name="org.openlmis.functional.ViewWarehouseLoadAmount">
+      </class>
       <class name="org.openlmis.functional.ManageRolesAndUsers">
       </class>
       <class name="org.openlmis.functional.ConfigureRegimenProgramTemplate">

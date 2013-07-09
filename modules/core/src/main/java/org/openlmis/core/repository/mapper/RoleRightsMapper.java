@@ -35,8 +35,9 @@ public interface RoleRightsMapper {
   Set<Right> getAllRightsForRole(Long roleId);
 
   @Insert({"INSERT INTO roles",
-      "(name, adminRole, description, modifiedBy) VALUES",
-      "(#{name}, #{adminRole}, #{description}, #{modifiedBy})"})
+      "(name, type, description, createdBy,modifiedBy,createdDate,modifiedDate) VALUES",
+      "(#{name}, #{type}, #{description}, #{createdBy},#{modifiedBy},COALESCE(#{createdDate}, NOW()) ," +
+        "COALESCE(#{modifiedDate}, NOW()) )"})
   @Options(useGeneratedKeys = true)
   int insertRole(Role role);
 
@@ -56,7 +57,7 @@ public interface RoleRightsMapper {
   })
   List<Role> getAllRoles();
 
-  @Update("UPDATE roles SET name=#{name}, adminRole=#{adminRole}, description=#{description}, modifiedBy=#{modifiedBy}, modifiedDate= DEFAULT WHERE id=#{id}")
+  @Update("UPDATE roles SET name=#{name}, type=#{type}, description=#{description}, modifiedBy=#{modifiedBy}, modifiedDate= DEFAULT WHERE id=#{id}")
   void updateRole(Role role);
 
   @Delete("DELETE FROM role_rights WHERE roleId=#{roleId}")

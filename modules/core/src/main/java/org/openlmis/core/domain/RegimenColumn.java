@@ -6,24 +6,22 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class RegimenColumn extends BaseModel {
+
+  private Long programId;
 
   private String name;
 
   private String label;
 
-  private Boolean visible;
-
   private String dataType;
 
-  private Long programId;
+  private Boolean visible;
 
-  public RegimenColumn (Long programId, String name, String label, String dataType, Boolean visible) {
-    this.programId = programId;
-    this.name = name;
-    this.label = label;
-    this.dataType = dataType;
-    this.visible = visible;
+  public RegimenColumn (Long programId, String name, String label, String dataType, Boolean visible, Long createdBy) {
+    this(programId, name, label, dataType, visible);
+    this.createdBy = createdBy;
   }
 
 }

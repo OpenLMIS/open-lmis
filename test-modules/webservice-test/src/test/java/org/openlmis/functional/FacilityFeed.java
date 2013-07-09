@@ -67,7 +67,7 @@ public class FacilityFeed extends TestCaseHelper {
 
       DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
       deleteFacilityPage.searchFacility(date_time);
-      deleteFacilityPage.clickFacilityList();
+      deleteFacilityPage.clickFacilityList(date_time);
       deleteFacilityPage.deleteFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
       deleteFacilityPage.verifyDeletedFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
       deleteFacilityPage.restoreFacility();

@@ -138,7 +138,6 @@ public class UserControllerTest {
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getBody().getSuccessMsg(), is("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully created, password link has been sent on registered Email address"));
-    assertThat(user.getModifiedBy(), is(userId));
   }
 
   @Test

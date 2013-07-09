@@ -33,7 +33,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -42,6 +41,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.RoleType.REQUISITION;
 import static org.openlmis.core.matchers.Matchers.facilityMatcher;
 import static org.openlmis.core.matchers.Matchers.programMatcher;
 import static org.openlmis.web.controller.RoleRightsController.*;
@@ -70,7 +70,7 @@ public class RoleRightsControllerTest {
     MockHttpSession mockHttpSession = new MockHttpSession();
     httpServletRequest.setSession(mockHttpSession);
     mockHttpSession.setAttribute(USER_ID, LOGGED_IN_USERID);
-    role = new Role("test role", FALSE, "test role description");
+    role = new Role("test role", REQUISITION, "test role description");
   }
 
   @Test
@@ -87,7 +87,6 @@ public class RoleRightsControllerTest {
     when(messageService.message("message.role.created.success", "test role")).thenReturn("'test role' created successfully");
     ResponseEntity<OpenLmisResponse> responseEntity = controller.createRole(role, httpServletRequest);
     verify(roleRightsService).saveRole(role);
-    assertThat(role.getModifiedBy(), is(LOGGED_IN_USERID));
     String successMsg = (String) responseEntity.getBody().getData().get(SUCCESS);
     assertThat(successMsg, is("'test role' created successfully"));
   }
@@ -138,7 +137,7 @@ public class RoleRightsControllerTest {
   @Test
   public void shouldReturnErrorMsgIfUpdateFails() throws Exception {
 
-    Role role = new Role("Role Name", FALSE, "Desc", null);
+    Role role = new Role("Role Name", REQUISITION, "Desc", null);
 
     doThrow(new DataException("Duplicate Role found")).when(roleRightsService).updateRole(role);
 

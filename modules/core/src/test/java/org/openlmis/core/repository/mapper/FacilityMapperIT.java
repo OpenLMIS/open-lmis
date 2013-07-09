@@ -24,8 +24,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
-import static java.lang.Boolean.FALSE;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -346,7 +344,7 @@ public class FacilityMapperIT {
     Facility homeFacility = make(a(defaultFacility));
     mapper.insert(homeFacility);
 
-    Role r1 = new Role("r1", FALSE, "random description");
+    Role r1 = new Role("r1", RoleType.REQUISITION, "random description");
     roleRightsMapper.insertRole(r1);
 
     roleRightsMapper.createRoleRight(r1, CREATE_REQUISITION);
@@ -429,58 +427,41 @@ public class FacilityMapperIT {
     DeliveryZone deliveryZone = make(a(DeliveryZoneBuilder.defaultDeliveryZone));
     deliveryZoneMapper.insert(deliveryZone);
 
-    DeliveryZoneProgramSchedule deliveryZoneProgramSchedule = make(a(DeliveryZoneProgramScheduleBuilder.defaultDZProgramSchedule));
-    deliveryZoneProgramSchedule.setDeliveryZone(deliveryZone);
-    deliveryZoneProgramSchedule.setSchedule(processingSchedule);
-    deliveryZoneProgramSchedule.setProgram(program);
-    deliveryZoneProgramScheduleMapper.insert(deliveryZoneProgramSchedule);
+    deliveryZoneProgramScheduleMapper.insert(new DeliveryZoneProgramSchedule(deliveryZone.getId(),
+      program.getId(), processingSchedule.getId()));
 
-    Facility facility = make(a(FacilityBuilder.defaultFacility, with(code, "F10A"), with(geographicZoneId, 10L)));
+    Facility facility1 = insertMemberFacility(deliveryZone, program, "F10A", "facility1", 10l, true);
+
+    insertMemberFacility(deliveryZone, program, "F10011", "facility2", 9l, true);
+    insertMemberFacility(deliveryZone, program, "F10010", "facility3", 9L, true);
+    insertMemberFacility(deliveryZone, program, "F10012", "facility4", 9L, false);
+
+    Program unsupportedProgram = new Program();
+    unsupportedProgram.setId(2l);
+
+    insertMemberFacility(deliveryZone, unsupportedProgram, "F10013", "facility5", 9L, true);
+
+    List<Facility> memberFacilities = mapper.getAllInDeliveryZoneFor(deliveryZone.getId(), program.getId());
+
+    assertThat(memberFacilities.size(), is(3));
+    assertThat(memberFacilities.get(0).getCode(), is("F10A"));
+    assertThat(memberFacilities.get(0).getId(), is(facility1.getId()));
+    assertThat(memberFacilities.get(0).getGeographicZone().getId(), is(10L));
+    assertThat(memberFacilities.get(1).getCode(), is("F10011"));
+    assertThat(memberFacilities.get(2).getCode(), is("F10010"));
+  }
+
+  private Facility insertMemberFacility(DeliveryZone zone, Program program, String facilityCode, String facilityName,
+                                        Long geoZoneId, Boolean facilityActive) {
+    Facility facility = make(a(FacilityBuilder.defaultFacility, with(code, facilityCode), with(name, facilityName),
+      with(geographicZoneId, geoZoneId), with(active, facilityActive)));
     mapper.insert(facility);
     ProgramSupported programSupported = new ProgramSupported();
     programSupported.setFacilityId(facility.getId());
     programSupported.setProgram(program);
     programSupportedMapper.addSupportedProgram(programSupported);
-    DeliveryZoneMember member1 = new DeliveryZoneMember(deliveryZone, facility);
+    DeliveryZoneMember member1 = new DeliveryZoneMember(zone, facility);
     deliveryZoneMemberMapper.insert(member1);
-
-    Facility facility2 = make(a(defaultFacility, with(code, "F10011"), with(name, "facility2"), with(active, true), with(geographicZoneId, 9L)));
-    mapper.insert(facility2);
-    programSupported.setFacilityId(facility2.getId());
-    programSupportedMapper.addSupportedProgram(programSupported);
-    DeliveryZoneMember member2 = new DeliveryZoneMember(deliveryZone, facility2);
-    deliveryZoneMemberMapper.insert(member2);
-
-    Facility facility3 = make(a(defaultFacility, with(code, "F10010"), with(name, "facility3"), with(active, true), with(geographicZoneId, 9L)));
-    mapper.insert(facility3);
-    DeliveryZoneMember member3 = new DeliveryZoneMember(deliveryZone, facility3);
-    deliveryZoneMemberMapper.insert(member3);
-    programSupported.setFacilityId(facility3.getId());
-    programSupportedMapper.addSupportedProgram(programSupported);
-
-    Facility facility4 = make(a(defaultFacility, with(code, "F10012"), with(name, "facility4"), with(active, false), with(geographicZoneId, 9L)));
-    mapper.insert(facility4);
-    programSupported.setFacilityId(facility4.getId());
-    programSupportedMapper.addSupportedProgram(programSupported);
-    DeliveryZoneMember member4 = new DeliveryZoneMember(deliveryZone, facility4);
-    deliveryZoneMemberMapper.insert(member4);
-
-    Facility facility5 = make(a(defaultFacility, with(code, "F10013"), with(name, "facility4"), with(geographicZoneId, 9L)));
-    mapper.insert(facility5);
-    programSupported.setFacilityId(facility5.getId());
-    Program unsupportedProgram = new Program();
-    unsupportedProgram.setId(2l);
-    programSupported.setProgram(unsupportedProgram);
-    programSupportedMapper.addSupportedProgram(programSupported);
-    DeliveryZoneMember member5 = new DeliveryZoneMember(deliveryZone, facility5);
-    deliveryZoneMemberMapper.insert(member5);
-
-    List<Facility> memberFacilities = mapper.getAllInDeliveryZoneFor(deliveryZone.getId(), program.getId());
-
-
-    assertThat(memberFacilities.size(), is(3));
-    assertThat(memberFacilities.get(0).getCode(), is("F10A"));
-    assertThat(memberFacilities.get(1).getCode(), is("F10011"));
-    assertThat(memberFacilities.get(2).getCode(), is("F10010"));
+    return facility;
   }
 }

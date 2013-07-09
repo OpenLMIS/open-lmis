@@ -4,12 +4,12 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function HeaderController($scope, localStorageService, $rootScope) {
-
- $scope.user = localStorageService.get(localStorageKeys.USERNAME);
+function HeaderController($scope, localStorageService) {
+  $scope.user = localStorageService.get(localStorageKeys.USERNAME);
 
   $scope.logout = function () {
-    localStorageService.clearAll();
+    localStorageService.remove(localStorageKeys.RIGHT);
+    localStorageService.remove(localStorageKeys.USERNAME);
     window.location = "/j_spring_security_logout";
   };
 }

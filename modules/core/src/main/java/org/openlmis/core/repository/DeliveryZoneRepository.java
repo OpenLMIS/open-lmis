@@ -40,4 +40,12 @@ public class DeliveryZoneRepository {
   public List<Program> getPrograms(long id) {
     return mapper.getPrograms(id);
   }
+
+  public DeliveryZone getById(Long id) {
+    return mapper.getById(id);
+  }
+
+  public List<DeliveryZone> getAll() {
+    return mapper.getAll();
+  }
 }

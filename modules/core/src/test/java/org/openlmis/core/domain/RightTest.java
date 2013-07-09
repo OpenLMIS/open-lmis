@@ -36,7 +36,7 @@ public class RightTest {
 
   @Test
   public void shouldReturnEmptyListWhenNoDfaultRightIsAvailable() throws Exception {
-    Right[] rights = {CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_ROLE, MANAGE_SCHEDULE, MANAGE_USERS, UPLOADS, VIEW_REQUISITION};
+    Right[] rights = {CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_ROLE, MANAGE_SCHEDULE, MANAGE_USER, UPLOADS, VIEW_REQUISITION};
 
     for (Right right : rights) {
       assertThat(right.getDefaultRights().size(), is(0));

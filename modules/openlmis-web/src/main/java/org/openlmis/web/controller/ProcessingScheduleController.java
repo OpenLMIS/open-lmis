@@ -48,6 +48,7 @@ public class ProcessingScheduleController extends BaseController {
   @RequestMapping(value = "/schedules", method = RequestMethod.POST, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
   public ResponseEntity<OpenLmisResponse> create(@RequestBody ProcessingSchedule processingSchedule, HttpServletRequest request) {
+    processingSchedule.setCreatedBy(loggedInUserId(request));
     processingSchedule.setModifiedBy(loggedInUserId(request));
     return saveSchedule(processingSchedule, true);
   }
