@@ -70,43 +70,43 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Regimens')]")
   private static WebElement regimenTab;
 
-  @FindBy(how = How.XPATH, using = "//*[@id='wrap']/div/div/div/div[2]/ul/li[2]/a")
+  @FindBy(how = How.XPATH, using = ".//*[@id='wrap']/div/div/div/div[2]/ul/li[1]/a")
   private static WebElement reportingFieldsTab;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[4]/ng-switch/div/div[1]/input")
+  @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[4]/ng-switch/div/div[1]/input")
   private static WebElement noOfPatientsOnTreatmentCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/ng-switch/div/div[1]/input")
+  @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[5]/ng-switch/div/div[1]/input")
   private static WebElement noOfPatientsToInitiateTreatmentCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[6]/ng-switch/div/div[1]/input")
+  @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[6]/ng-switch/div/div[1]/input")
   private static WebElement noOfPatientsStoppedTreatmentCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[7]/ng-switch/div/div[1]/input")
+  @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[7]/ng-switch/div/div[1]/input")
   private static WebElement remarksCheckBox;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[4]/ng-switch/div/div[2]/input")
+  @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[4]/ng-switch/div/div[2]/input")
   private static WebElement noOfPatientsOnTreatmentTextField;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/ng-switch/div/div[2]/input")
+  @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[5]/ng-switch/div/div[2]/input")
   private static WebElement noOfPatientsToInitiateTreatmentTextField;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[6]/ng-switch/div/div[2]/input")
+  @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[6]/ng-switch/div/div[2]/input")
   private static WebElement noOfPatientsStoppedTreatmentTextField;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[7]/ng-switch/div/div[2]/input")
+  @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[7]/ng-switch/div/div[2]/input")
   private static WebElement remarksTextField;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[4]/ng-switch/div/div[3]/span")
+  @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[4]/ng-switch/div/div[3]/span")
   private static WebElement noOfPatientsOnTreatmentDataType;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/ng-switch/div/div[3]/span")
+  @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[5]/ng-switch/div/div[3]/span")
   private static WebElement noOfPatientsToInitiateTreatmentDataType;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[6]/ng-switch/div/div[3]/span")
+  @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[6]/ng-switch/div/div[3]/span")
   private static WebElement noOfPatientsStoppedTreatmentDataType;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[7]/ng-switch/div/div[3]/span")
+  @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[7]/ng-switch/div/div[3]/span")
   private static WebElement remarksDataType;
 
   @FindBy(how = How.XPATH, using = "//div[1][@class='row-fluid rnr-template-columns ng-scope']/div[2][@class='span2']/div/span[@class='ng-binding']")
@@ -306,15 +306,19 @@ public class RegimenTemplateConfigPage extends Page {
     return TEMPLATE_SUCCESS_MESSAGE;
   }
 
-  public void configureProgram(String program) {
+  public void configureProgram(String program) throws InterruptedException {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[@id='" + program + "']/span"));
     testWebDriver.getElementByXpath("//a[@id='" + program + "']/span").click();
+    Thread.sleep(100);
+    testWebDriver.getElementByXpath(".//*[@id='wrap']/div/div/div/div[2]/ul/li[2]/a").click();
     testWebDriver.waitForElementToAppear(addButton);
   }
 
-  public void clickEditProgram(String program) {
+  public void clickEditProgram(String program) throws InterruptedException {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[@id='" + program + "']"));
     testWebDriver.getElementByXpath("//a[@id='" + program + "']").click();
+    Thread.sleep(100);
+    testWebDriver.getElementByXpath(".//*[@id='wrap']/div/div/div/div[2]/ul/li[2]/a").click();
     testWebDriver.waitForElementToAppear(addButton);
   }
 

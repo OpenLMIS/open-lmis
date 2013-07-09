@@ -14,7 +14,7 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
   $scope.regimensByCategory = [];
   $scope.$parent.message = "";
   $scope.newRegimen = {active: true};
-  $scope.showReportingFields = false;
+  $scope.showReportingFields = true;
   $scope.regimensError = false;
   $scope.reportingFieldsError = false;
 
