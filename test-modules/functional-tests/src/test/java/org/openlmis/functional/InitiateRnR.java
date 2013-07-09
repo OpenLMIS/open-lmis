@@ -53,6 +53,7 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", program, "F10");
+    dbWrapper.insertRegimenTemplateColumnsForProgram(program);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
