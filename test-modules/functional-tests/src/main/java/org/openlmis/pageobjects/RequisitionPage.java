@@ -202,4 +202,11 @@ public class RequisitionPage extends Page {
         List<WebElement> tr_collection=table_element.findElements(By.xpath("id('regimenTable')/tbody[1]/tr"));
         return tr_collection.size();
     }
+
+    public int getRegimenTableColumnCount()
+    {
+        WebElement table_element = testWebDriver.findElement(By.id("regimenTable"));
+        List<WebElement> tr_collection=table_element.findElements(By.xpath("id('regimenTable')/tbody[1]/tr/td"));
+        return tr_collection.size();
+    }
 }
