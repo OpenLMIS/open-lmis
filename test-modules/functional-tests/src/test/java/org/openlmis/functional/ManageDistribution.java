@@ -53,7 +53,7 @@ public class ManageDistribution extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRForDistribution(true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1","Ngorongoro","Ngorongoro");
+    setupTestDataToInitiateRnRForDistribution("F10","F11",true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1","Ngorongoro","Ngorongoro");
     setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
@@ -96,7 +96,7 @@ public class ManageDistribution extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRForDistribution(true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond,"District1","Ngorongoro","Ngorongoro");
+    setupTestDataToInitiateRnRForDistribution("F10","F11",true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond,"District1","Ngorongoro","Ngorongoro");
     setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,

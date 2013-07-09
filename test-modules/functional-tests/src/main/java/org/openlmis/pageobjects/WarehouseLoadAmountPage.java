@@ -62,6 +62,12 @@ public class WarehouseLoadAmountPage extends Page {
     return Product2.getText();
   }
 
+  public String getCityName(int rowNumber) {
+    WebElement city = testWebDriver.getElementByXpath("//table[@id='aggregateTable']/tbody/tr["+rowNumber+"]/td[1]/span[1]");
+    testWebDriver.waitForElementToAppear(city);
+    return city.getText();
+  }
+
   public String getAggregatePopulation(int rowNumber) {
     WebElement population = testWebDriver.getElementByXpath("//table[@id='aggregateTable']/tbody/tr["+rowNumber+"]/td[2]/span");
     testWebDriver.waitForElementToAppear(population);

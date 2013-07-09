@@ -139,6 +139,16 @@ public class DBWrapper {
 
   }
 
+  public String getGeoLevelOfGeoZone(String geoZone) throws IOException, SQLException {
+    String geoLevel = null;
+    ResultSet rs = query("select name from geographic_levels where levelnumber = (select levelid from geographic_zones where code='"+geoZone+"');");
+
+    if (rs.next()) {
+      geoLevel = rs.getString("name");
+    }
+    return geoLevel;
+  }
+
 
   public void deleteData() throws SQLException, IOException {
     update("delete from role_rights where roleid not in(1);");

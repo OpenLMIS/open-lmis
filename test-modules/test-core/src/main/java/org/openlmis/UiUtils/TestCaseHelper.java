@@ -217,24 +217,25 @@ public class TestCaseHelper {
     dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programSecond, schedule);
   }
 
-  public void setupTestDataToInitiateRnRForDistribution(boolean configureTemplate, String program, String user, String userId,
+  public void setupTestDataToInitiateRnRForDistribution(String facilityCode1, String facilityCode2,boolean configureTemplate, String program, String user, String userId,
                                                         String vendorName, List<String> rightsList, String programCode,
   String geoLevel1, String geoLevel2, String parentGeoLevel) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertGeographicZone(geoLevel1,geoLevel1,parentGeoLevel);
-    dbWrapper.insertFacilitiesWithDifferentGeoZones("F10", "F11",geoLevel2,geoLevel1);
+    dbWrapper.insertFacilitiesWithDifferentGeoZones(facilityCode1, facilityCode2,geoLevel2,geoLevel1);
     if (configureTemplate)
       dbWrapper.configureTemplate(program);
 
     setupTestUserRoleRightsData(userId, user, vendorName, rightsList);
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+    dbWrapper.insertSupervisoryNode(facilityCode1, "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment(userId, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
-    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
-    dbWrapper.insertSupplyLines("N1", program, "F10");
+    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", facilityCode1, facilityCode2);
+    dbWrapper.insertSupplyLines("N1", program, facilityCode1);
     dbWrapper.updateActiveStatusOfProgram(programCode);
   }
+
 
     public void sendKeys(String locator, String value) {
         int length = testWebDriver.getAttribute(testWebDriver.getElementByXpath(locator), "value").length();
