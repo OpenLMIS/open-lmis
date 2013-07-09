@@ -16,8 +16,11 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.repository.mapper.DistributionMapper;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
+import static org.openlmis.distribution.domain.DistributionStatus.INITIATED;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -33,8 +36,18 @@ public class DistributionRepositoryTest {
   public void itShouldUseMapperToCreateDistribution() throws Exception {
     Distribution distribution = new Distribution();
     doNothing().when(mapper).insert(distribution);
+
     repository.create(distribution);
 
+    assertThat(distribution.getStatus(), is(INITIATED));
     verify(mapper).insert(distribution);
+  }
+
+  @Test
+  public void shouldGetDistributionIfExists() throws Exception {
+    Distribution distribution = new Distribution();
+    repository.get(distribution);
+
+    verify(mapper).get(distribution);
   }
 }

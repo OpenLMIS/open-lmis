@@ -100,14 +100,13 @@ public class DistributionMapperTest {
   }
 
   @Test
-  public void shouldInsertDistribution() throws Exception {
+  public void shouldInsertDistributionInInitiatedState() throws Exception {
 
 
-    Distribution distribution = make(a(defaultDistribution,
+    Distribution distribution = make(a(initiatedDistribution,
       with(deliveryZone, zone),
       with(period, processingPeriod),
       with(program, program1)));
-
 
     mapper.insert(distribution);
 
@@ -145,7 +144,21 @@ public class DistributionMapperTest {
     expectedException.expectMessage("duplicate key value violates unique constraint");
 
     mapper.insert(duplicateDistribution);
+  }
 
+  @Test
+  public void shouldGetExistingDistributionIfExists() throws Exception {
+    Distribution distribution = make(a(defaultDistribution,
+      with(deliveryZone, zone),
+      with(period, processingPeriod),
+      with(program, program1)));
 
+    mapper.insert(distribution);
+
+    Distribution distributionFromDatabase = mapper.get(distribution);
+
+    assertThat(distributionFromDatabase.getProgram().getId(), is(distribution.getProgram().getId()));
+    assertThat(distributionFromDatabase.getPeriod().getId(), is(distribution.getPeriod().getId()));
+    assertThat(distributionFromDatabase.getDeliveryZone().getId(), is(distribution.getDeliveryZone().getId()));
   }
 }

@@ -37,4 +37,11 @@ public class DistributionServiceTest {
 
     verify(repository).create(distribution);
   }
+
+  @Test
+  public void itShouldGetDistributionIfExists() throws Exception {
+    service.get(new Distribution());
+
+    verify(repository).get(new Distribution());
+  }
 }

@@ -14,24 +14,37 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.service.DistributionService;
+import org.openlmis.web.response.OpenLmisResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import java.util.Date;
+import java.util.Map;
+
+import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.openlmis.builder.DistributionBuilder.defaultDistribution;
+import static org.openlmis.builder.DistributionBuilder.*;
+import static org.openlmis.core.builder.UserBuilder.defaultUser;
+import static org.springframework.http.HttpStatus.CREATED;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class DistributionControllerTest {
 
   @Mock
-  DistributionService distributionService;
+  DistributionService service;
+
+  @Mock
+  UserService userService;
 
   public static final Long userId = 1L;
 
@@ -60,14 +73,45 @@ public class DistributionControllerTest {
     session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
     Distribution distribution = make(a(defaultDistribution));
 
-    doNothing().when(distributionService).create(distribution);
+    doNothing().when(service).create(distribution);
+    when(service.get(distribution)).thenReturn(null);
     when(messageService.message("message.distribution.created.success")).thenReturn("Distribution created successfully");
 
-    controller.create(distribution, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = controller.create(distribution, httpServletRequest);
 
-    verify(distributionService).create(distribution);
+    assertThat((Distribution) response.getBody().getData().get("distribution"), is(distribution));
+    assertThat((String) response.getBody().getData().get("success"), is("Distribution created successfully"));
+    assertThat(response.getStatusCode(), is(CREATED));
+    verify(service).get(distribution);
+    verify(service).create(distribution);
 
   }
 
+  @Test
+  public void itShouldReturnExistingDistributionWithWarningIfAlreadyExist() throws Exception {
+    Long createdById = 10L;
+    Date creationTimeStamp = new Date();
+    Distribution distribution = make(a(defaultDistribution));
 
+    Distribution existingDistribution = make(a(defaultDistribution,
+      with(createdBy, createdById),
+      with(createdDate, creationTimeStamp)));
+
+    when(service.get(distribution)).thenReturn(existingDistribution);
+
+    User user = make(a(defaultUser));
+    when(userService.getById(createdById)).thenReturn(user);
+
+    when(messageService.message("message.distribution.already.exists", user.getUserName(), creationTimeStamp)).
+      thenReturn("Distribution already initiated by XYZ at 2013-05-03 12:10");
+
+    ResponseEntity<OpenLmisResponse> response = controller.create(distribution, httpServletRequest);
+    Map<String, Object> responseData = response.getBody().getData();
+
+    assertThat((String) responseData.get("success"),
+      is("Distribution already initiated by XYZ at 2013-05-03 12:10"));
+    assertThat((Distribution) responseData.get("distribution"), is(existingDistribution));
+
+
+  }
 }

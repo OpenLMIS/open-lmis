@@ -13,36 +13,53 @@ import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.distribution.domain.Distribution;
-import org.openlmis.distribution.domain.DistributionStatus;
+
+import java.util.Date;
 
 import static com.natpryce.makeiteasy.Property.newProperty;
+import static org.openlmis.distribution.domain.DistributionStatus.INITIATED;
 
 public class DistributionBuilder {
 
   public static Property<Distribution, DeliveryZone> deliveryZone = newProperty();
   public static Property<Distribution, Program> program = newProperty();
   public static Property<Distribution, ProcessingPeriod> period = newProperty();
-  public static Property<Distribution, DistributionStatus> status = newProperty();
   public static Property<Distribution, Long> modifiedBy = newProperty();
   public static Property<Distribution, Long> createdBy = newProperty();
+  public static Property<Distribution, Date> createdDate = newProperty();
 
-  public static final DistributionStatus DEFAULT_STATUS = DistributionStatus.INITIATED;
   public static final long DEFAULT_MODIFIED_BY = 1l;
   public static final long DEFAULT_CREATED_BY = 1l;
+  public static final Date DEFAULT_CREATED_DATE = new Date();
 
   public static final Instantiator<Distribution> defaultDistribution = new Instantiator<Distribution>() {
 
     @Override
     public Distribution instantiate(PropertyLookup<Distribution> lookup) {
-      Distribution distribution = new Distribution();
-      distribution.setDeliveryZone(lookup.valueOf(deliveryZone, new DeliveryZone()));
-      distribution.setProgram(lookup.valueOf(program, new Program()));
-      distribution.setPeriod(lookup.valueOf(period, new ProcessingPeriod()));
-      distribution.setStatus(lookup.valueOf(status, DEFAULT_STATUS));
-      distribution.setCreatedBy(lookup.valueOf(createdBy, DEFAULT_CREATED_BY));
-      distribution.setModifiedBy(lookup.valueOf(modifiedBy, DEFAULT_MODIFIED_BY));
+      return basicDistribution(lookup);
+    }
+  };
 
+
+  public static final Instantiator<Distribution> initiatedDistribution = new Instantiator<Distribution>() {
+
+    @Override
+    public Distribution instantiate(PropertyLookup<Distribution> lookup) {
+      Distribution distribution = basicDistribution(lookup);
+      distribution.setStatus(INITIATED);
       return distribution;
     }
   };
+
+  private static Distribution basicDistribution(PropertyLookup<Distribution> lookup) {
+    Distribution distribution = new Distribution();
+    distribution.setDeliveryZone(lookup.valueOf(deliveryZone, new DeliveryZone()));
+    distribution.setProgram(lookup.valueOf(program, new Program()));
+    distribution.setPeriod(lookup.valueOf(period, new ProcessingPeriod()));
+    distribution.setCreatedBy(lookup.valueOf(createdBy, DEFAULT_CREATED_BY));
+    distribution.setModifiedBy(lookup.valueOf(modifiedBy, DEFAULT_MODIFIED_BY));
+    distribution.setCreatedDate(lookup.valueOf(createdDate, DEFAULT_CREATED_DATE));
+    return distribution;
+  }
+
 }

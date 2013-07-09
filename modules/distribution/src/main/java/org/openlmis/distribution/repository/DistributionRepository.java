@@ -7,6 +7,7 @@
 package org.openlmis.distribution.repository;
 
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionStatus;
 import org.openlmis.distribution.repository.mapper.DistributionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,6 +20,11 @@ public class DistributionRepository {
 
 
   public void create(Distribution distribution) {
+    distribution.setStatus(DistributionStatus.INITIATED);
     mapper.insert(distribution);
+  }
+
+  public Distribution get(Distribution distribution) {
+    return mapper.get(distribution);
   }
 }

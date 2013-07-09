@@ -20,4 +20,8 @@ public class DistributionService {
   public void create(Distribution distribution) {
     repository.create(distribution);
   }
+
+  public Distribution get(Distribution distribution) {
+    return repository.get(distribution);
+  }
 }
