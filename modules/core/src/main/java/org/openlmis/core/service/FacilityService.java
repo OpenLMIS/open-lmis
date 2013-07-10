@@ -72,6 +72,10 @@ public class FacilityService {
     return facilityRepository.getAll();
   }
 
+  public List<Facility> getAllFacilitiesDetail(){
+      return facilityRepository.getAllFacilitiesDetail();
+  }
+
   public void uploadSupportedProgram(ProgramSupported programSupported) {
     programSupported.isValid();
 
@@ -188,5 +192,9 @@ public class FacilityService {
       facility.setSupportedPrograms(programsSupported);
     }
     return facilities;
+  }
+
+  public List<Facility> getCompleteListInRequisitionGroups(List<RequisitionGroup> requisitionGroups){
+      return facilityRepository.getAllInRequisitionGroups(requisitionGroups);
   }
 }

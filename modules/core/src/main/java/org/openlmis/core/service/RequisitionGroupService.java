@@ -46,4 +46,21 @@ public class RequisitionGroupService {
   public RequisitionGroup getByCode(RequisitionGroup requisitionGroup) {
     return requisitionGroupRepository.getByCode(requisitionGroup);
   }
+
+  public List<RequisitionGroup> getCompleteList(){
+    return requisitionGroupRepository.getCompleteList();
+  }
+
+  public RequisitionGroup loadRequisitionGroupById(Long id){
+      return requisitionGroupRepository.loadRequisitionGroupById(id);
+  }
+
+  public void saveChanges(RequisitionGroup requisitionGroup) {
+      if (requisitionGroup.getId() == null)
+          requisitionGroupRepository.insert(requisitionGroup);
+      else
+          requisitionGroupRepository.update(requisitionGroup);
+  }
+
+
 }

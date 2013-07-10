@@ -1,0 +1,47 @@
+<div xmlns="http://www.w3.org/1999/html">
+    <h2><span>Requisition Groups List</span>
+        <a href="#/create-requisition-group" class="pull-right btn btn-primary"><span id="requisition-group-add-new">Add New</span></a>
+    </h2>
+
+    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="requisitionGroupId">
+        <span ng-bind="message"></span>.<!-- &nbsp;&nbsp;<a ng-click="editRequisitionGroups(requisitionGroupId)" openlmis-message="search.viewHere"></a>-->
+    </div>
+
+    <input id="txtFilterRequisitionGroups" class="search-query input-xlarge" type="text" ng-model="query"
+          ng-init="showRequisitionGroupsList('txtFilterRequisitionGroups')" on-keyup="filterRequisitionGroups('txtFilterRequisitionGroups')" placeholder="Enter requisition group name"/>
+
+
+    <div class="facility-list">
+        <h3 ng-show="query.length>0">
+            <ng-pluralize count="resultCount"
+                          when="{ 0: 'No matches found for \'{{query}}\'',
+                            1: '1 match found for \'{{query}}\'',
+                            other: '{} matches found for \'{{query}}\''}">
+
+            </ng-pluralize>
+        </h3>
+
+
+        <div class="row-fluid list-row">
+            <div class="span2" style="..."><strong>Requisition Group</strong></div>
+            <div class="span2" style="..."><strong>Code</strong></div>
+            <div class="span2" style="..."><strong>Supervisory Node</strong></div>
+            <div class="span2" style="overflow: visible;"><strong>Facilities Count</strong></div>
+            <div class="span2" style="overflow: visible;"><strong>Program Count</strong></div>
+            <div class="span2" style="..."><strong>Action</strong></div>
+        </div>
+        <div ng-repeat="requisitionGroup in filteredRequisitionGroups" class="row-fluid list-row">
+            <div class="span2" style="overflow: visible;"> {{requisitionGroup.name}}</div>
+            <div class="span2" style="..."> {{requisitionGroup.code}}</div>
+            <div class="span2" style="overflow: visible;"> {{requisitionGroup.supervisoryNode.name}}</div>
+            <div class="span2" style="overflow: visible;"> {{requisitionGroup.countOfFacilities}}</div>
+            <div class="span2" style="overflow: visible;"> {{requisitionGroup.countOfPrograms}}</div>
+            <div class="span2" style="...">
+                <a ng-click="editRequisitionGroup(requisitionGroup.id)">Edit</a>
+                <a ng-click="deleteRequisitionGroup(requisitionGroup.id)"> Delete</a>
+            </div>
+        </div>
+
+
+    </div>
+</div>

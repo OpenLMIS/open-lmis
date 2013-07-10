@@ -49,4 +49,9 @@ public class RequisitionGroupMemberRepository {
   public void update(RequisitionGroupMember requisitionGroupMember) {
     mapper.update(requisitionGroupMember);
   }
+
+  public void removeRequisitionGroupMember(RequisitionGroup requisitionGroup, Facility facility)
+  {
+      mapper.removeRequisitionGroupMember(requisitionGroup, facility);
+  }
 }
