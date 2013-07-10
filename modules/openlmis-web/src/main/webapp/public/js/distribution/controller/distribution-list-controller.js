@@ -6,7 +6,7 @@
 function DistributionListController($scope, DeliveryZoneFacilities) {
 
   var db;
-  var request = indexedDB.open("open_lmis", 1);
+  var request = indexedDB.open("open_lmis", 2);
   $scope.distributionList = [];
 
   request.onsuccess = function (event) {
@@ -30,7 +30,7 @@ function DistributionListController($scope, DeliveryZoneFacilities) {
   };
 
   $scope.initiateDistribution = function () {
-    var key = $scope.selectedZone.id.toString() + '_' + $scope.selectedProgram.id.toString() + '_' + $scope.selectedPeriod.id.toString();
+    var key = $scope.selectedZone.id + '_' + $scope.selectedProgram.id + '_' + $scope.selectedPeriod.id;
 //    $scope.distributionList = fetchDistributions();
     var distribution = {"deliveryZone": $scope.selectedZone, "program": $scope.selectedProgram, "period": $scope.selectedPeriod, "status": "Initiated",
       "distributionId": key};
@@ -51,20 +51,6 @@ function DistributionListController($scope, DeliveryZoneFacilities) {
 
   }
 
-//  function fetchDistributions() {
-//    $scope.distributionList = [];
-//    var transaction = db.transaction('distribution', 'readWrite');
-//    var distributionObjectStore = transaction.objectStore('distribution');
-//    var index = distributionObjectStore.index("distributionId");
-//
-//    index.openKeyCursor().onsuccess = function (event) {
-//      var cursor = event.target.result;
-//      if (cursor) {
-//        $scope.distributionList.push(cursor.value);
-//        cursor.continue();
-//      }
-//    };
-//  }
 
   function cacheReferenceData(facilityList, key) {
     var transaction = db.transaction('facilityData', 'readwrite');

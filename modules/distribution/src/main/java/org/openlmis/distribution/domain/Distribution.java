@@ -7,6 +7,7 @@
 package org.openlmis.distribution.domain;
 
 import lombok.Data;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.DeliveryZone;
@@ -17,8 +18,8 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL
 
 @Data
 @JsonSerialize(include = NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Distribution extends BaseModel {
-
   DeliveryZone deliveryZone;
   Program program;
   ProcessingPeriod period;
