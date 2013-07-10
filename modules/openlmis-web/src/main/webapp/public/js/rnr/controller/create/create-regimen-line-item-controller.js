@@ -12,4 +12,9 @@ function CreateRegimenLineItemController($scope) {
     return !((index > 0 ) && ($scope.rnr.regimenLineItems[index].regimen.category.name == $scope.rnr.regimenLineItems[index - 1].regimen.category.name));
   };
 
+  $scope.getId = function (prefix, parent) {
+    return prefix + "_" + parent.$parent.$index;
+  };
+
+
 };

@@ -29,10 +29,18 @@
               <span ng-switch-when="code">
                 <span ng-bind="regimenLineItem.regimen.code" class="cell-text"></span>
               </span>
+              <span ng-switch-when="remarks">
+                <input type="text" ng-model="regimenLineItem[regimenColumn.name]" class="cell-text">
+              </span>
               <span ng-switch-default>
-                <input type="text"
+                <input id="{{getId(regimenColumn.name, $parent)}}"
+                       name="{{regimenColumn.name + $parent.$parent.$index}}"
+                       type="text"
                        ng-model="regimenLineItem[regimenColumn.name]"
                        rnr-validator="positiveInteger" maxlength="8">
+              </span>
+              <span class="rnr-form-error" id="{{regimenColumn.name + $parent.$index}}"
+                    style="display:none;" openlmis-message="error.number.only">
               </span>
           </ng-switch>
         </td>
