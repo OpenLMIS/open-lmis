@@ -4,13 +4,13 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function RoleController($scope, $routeParams, $location, Roles, Role, Rights, $dialog, messageService) {
+function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog, messageService) {
   $scope.$parent.error = "";
   $scope.$parent.message = "";
   $scope.role = {rights: []};
 
   if ($routeParams.id) {
-    Role.get({id: $routeParams.id}, function (data) {
+    Roles.get({id: $routeParams.id}, function (data) {
       $scope.role = data.role;
       $scope.role.type = data.role.type;
       $scope.previousType = $scope.role.type;
@@ -87,7 +87,7 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights, $d
     if (validRole()) {
       var id = $routeParams.id;
       if (id) {
-        Role.update({id: id}, $scope.role, successHandler, errorHandler);
+        Roles.update({id: id}, $scope.role, successHandler, errorHandler);
       } else {
         Roles.save({}, $scope.role, successHandler, errorHandler);
       }

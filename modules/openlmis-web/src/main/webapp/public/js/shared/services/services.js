@@ -63,20 +63,12 @@ services.factory('FacilityReferenceData', function ($resource) {
   return $resource('/facilities/reference-data.json', {}, {});
 });
 
-services.factory('AllFacilities', function ($resource) {
-  return $resource('/facilities.json', {}, {});
-});
-
 services.factory('Rights', function ($resource) {
   return $resource('/rights.json', {}, {});
 });
 
-services.factory('Role', function ($resource) {
-  return $resource('/roles/:id.json', {}, update);
-});
-
 services.factory('Roles', function ($resource) {
-  return $resource('/roles.json', {}, {});
+  return $resource('/roles/:id.json', {id: '@id'}, update);
 });
 
 services.factory('CreateRequisitionProgramList', function ($resource) {
