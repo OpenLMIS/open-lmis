@@ -10,10 +10,10 @@
     <ng-switch on="regimenColumn.name">
       <div ng-switch-when="name">
         <div class="span2">
-          <input type="checkbox" ng-bind="regimenColumn.visible" ng-disabled="true" checked/>
+          <i class="icon-ok"></i>
         </div>
         <div class="span6">
-          <input type="text" ng-model="regimenColumn.label" ng-disabled="true"/>
+          <input type="text" ng-model="regimenColumn.label"/>
         </div>
         <div class="span4">
           <span openlmis-message="regimenColumn.dataType"></span>
@@ -21,10 +21,10 @@
       </div>
       <div ng-switch-when="code">
         <div class="span2">
-          <input type="checkbox" ng-bind="regimenColumn.visible" ng-disabled="true" checked/>
+          <i class="icon-ok"></i>
         </div>
         <div class="span6">
-          <input type="text" ng-model="regimenColumn.label" ng-disabled="true"/>
+          <input type="text" ng-model="regimenColumn.label"/>
         </div>
         <div class="span4">
           <span openlmis-message="regimenColumn.dataType"></span>

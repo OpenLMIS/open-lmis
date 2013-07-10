@@ -148,7 +148,8 @@ describe('Save Regimen Template Controller', function () {
     scope.regimensByCategory[1] = regimenList1
     scope.regimensByCategory[2] = regimenList2;
     scope.regimenTemplate = {regimenColumns: [
-      {'name': 'column1', 'label': 'columnLabel1', 'visible': false, 'dataType': 'Numeric'},
+      {'name': 'column1', 'label': 'columnLabel1', 'visible': true, 'dataType': 'Numeric'},
+      {'name': 'column2', 'label': 'columnLabel2', 'visible': true, 'dataType': 'Text'},
       {'name': 'column2', 'label': 'columnLabel2', 'visible': false, 'dataType': 'Text'}
     ]};
 

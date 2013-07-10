@@ -54,7 +54,7 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
   };
 
   function valid(regimen) {
-    var regimens = _.reject(_.flatten($scope.regimensByCategory),function(regimen1){
+    var regimens = _.reject(_.flatten($scope.regimensByCategory), function (regimen1) {
       return regimen1.$$hashKey == regimen.$$hashKey;
     });
     if (_.findWhere(regimens, {code: regimen.code})) {
@@ -118,27 +118,26 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
 
   function validReportingFields() {
 
-    var valid = true;
-    var countVisible = 0;
-    $($scope.regimenTemplate.regimenColumns).each(function (index, regimenColumn) {
-      if (isUndefined(regimenColumn.label)) {
-        valid = false;
-        $scope.reportingFieldsError = true;
-        $scope.error = messageService.get('error.regimen.null.label')
-        return;
-      }
-      if (regimenColumn.visible) {
-        countVisible++;
-      }
+    var DEFAULT_VISIBLE_COUNT = 2;
+    
+    if (_.find($scope.regimenTemplate.regimenColumns, function (column) {
+      return isUndefined(column.label);
+    })) {
+      $scope.reportingFieldsError = true;
+      $scope.error = messageService.get('error.regimen.null.label')
+      return;
+    }
+
+    var count = _.countBy($scope.regimenTemplate.regimenColumns, function (column) {
+      return column.visible == true ? 'visible' : 'invisible';
     });
 
-    if (valid && countVisible == 0) {
+    if (count.visible == DEFAULT_VISIBLE_COUNT) {
       $scope.reportingFieldsError = true;
       $scope.error = messageService.get('error.regimens.none.selected')
       return;
     }
-
-    return valid;
+    return true;
   }
 
   $scope.save = function () {
