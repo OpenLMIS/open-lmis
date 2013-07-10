@@ -8,16 +8,8 @@ var services = angular.module('openlmis.services', ['ngResource']);
 
 services.value('version', '@version@');
 
-services.factory('ActivePrograms', function ($resource) {
-  return $resource('/active/programs.json', {}, {});
-});
-
-services.factory('PullPrograms', function ($resource) {
-  return $resource('/pull/programs.json', {}, {});
-});
-
 services.factory('Programs', function ($resource) {
-  return $resource('/programs.json', {}, {});
+  return $resource('/programs/:type.json', {type: '@type'}, {});
 });
 
 services.factory('RnRColumnList', function ($resource) {
@@ -133,12 +125,8 @@ services.factory('LossesAndAdjustmentsReferenceData', function ($resource) {
   return $resource('/requisitions/lossAndAdjustments/reference-data.json', {}, {})
 });
 
-services.factory('Schedules', function ($resource) {
-  return $resource('/schedules.json', {});
-});
-
 services.factory('Schedule', function ($resource) {
-  return $resource('/schedules/:id.json', {}, {update: {method: 'PUT'}});
+  return $resource('/schedules/:id.json', {id: '@id'}, {update: {method: 'PUT'}});
 });
 
 services.factory('Periods', function ($resource) {
@@ -207,10 +195,6 @@ services.factory('ReportTemplates', function ($resource) {
 });
 
 //Allocation
-
-services.factory('PushProgram', function ($resource) {
-  return $resource('/push/programs.json', {}, {});
-});
 
 services.factory('ProgramProducts', function ($resource) {
   return $resource('/programProducts/programId/:programId.json', {}, {});

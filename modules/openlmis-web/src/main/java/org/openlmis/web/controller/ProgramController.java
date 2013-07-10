@@ -69,13 +69,13 @@ public class ProgramController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/pull/programs", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/programs/pull", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER, CONFIGURE_RNR')")
   public ResponseEntity<OpenLmisResponse> getAllPullPrograms() {
     return OpenLmisResponse.response(PROGRAMS, programService.getAllPullPrograms());
   }
 
-  @RequestMapping(value = "/push/programs", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/programs/push", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
   public ResponseEntity<OpenLmisResponse> getAllPushPrograms() {
     return OpenLmisResponse.response(PROGRAMS, programService.getAllPushPrograms());
