@@ -36,16 +36,7 @@ services.factory('UserContext', function ($resource) {
 });
 
 services.factory('Users', function ($resource) {
-  return $resource('/users.json', {}, {});
-});
-
-services.factory('User', function ($resource) {
   return $resource('/users/:id.json', {id: '@id'}, update);
-});
-
-
-services.factory('UserById', function ($resource) {
-  return $resource('/admin/user/:id.json', {}, {});
 });
 
 services.factory('UserFacilityList', function ($resource) {
