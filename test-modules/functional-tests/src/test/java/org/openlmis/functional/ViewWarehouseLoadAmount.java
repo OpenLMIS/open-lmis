@@ -36,6 +36,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   public static final String district1 = "District1";
   public static final String district2 = "District2";
   public static final String parentGeoZone = "Dodoma";
+  public static final String parentGeoZone1 = "Arusha";
 
   @BeforeMethod(groups = {"functional2", "smoke"})
   public void setUp() throws Exception {
@@ -51,7 +52,8 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRForDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, district1, parentGeoZone, parentGeoZone);
+    setupTestDataToInitiateRnRForDistribution(facilityCodeFirst, facilityCodeSecond, true,
+      programFirst, userSIC, "200", "openLmis", rightsList, programSecond, district1, district1, parentGeoZone);
     setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
@@ -95,7 +97,8 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRForDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, district1, district1, parentGeoZone);
+    setupTestDataToInitiateRnRForDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst,
+      userSIC, "200", "openLmis", rightsList, programSecond, district1, district1, parentGeoZone);
     setupDataForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(deliveryZoneCodeFirst,
       deliveryZoneNameFirst,
       facilityCodeFirst, facilityCodeSecond,
@@ -145,17 +148,16 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRForDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, district1, district1, parentGeoZone);
+    setupTestDataToInitiateRnRForDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst,
+      userSIC, "200", "openLmis", rightsList, programSecond, district1, district1, parentGeoZone1);
 
     setupDataForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(deliveryZoneCodeFirst,
       deliveryZoneNameFirst,
       facilityCodeFirst, facilityCodeSecond,
       programFirst, programSecond, schedule);
 
-    dbWrapper.insertGeographicZone(district2, district2, parentGeoZone);
-    dbWrapper.insertFacilitiesWithDifferentGeoZones(facilityCodeThird, facilityCodeFourth, district2, district2);
-    dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeThird);
-    dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeFourth);
+    addOnDataSetupForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(deliveryZoneCodeFirst,
+      facilityCodeThird, facilityCodeFourth, district2, district2, parentGeoZone );
 
 
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
@@ -166,6 +168,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     dbWrapper.InsertOverridenIsa(facilityCodeSecond, programFirst, product2, 888888);
     dbWrapper.InsertOverridenIsa(facilityCodeThird, programFirst, product, 111);
     dbWrapper.InsertOverridenIsa(facilityCodeThird, programFirst, product2, 222);
+    dbWrapper.InsertOverridenIsa(facilityCodeFourth, programFirst, product2, 333);
     dbWrapper.updatePopulationOfFacility(facilityCodeFirst, null);
     dbWrapper.updateOverridenIsa(facilityCodeFirst, programFirst, product, null);
     dbWrapper.updateOverridenIsa(facilityCodeSecond, programFirst, product, null);
@@ -189,21 +192,19 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     assertEquals(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 2)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 2)), warehouseLoadAmountPage.getFacilityPopulation(3, 2));
     assertEquals("--", warehouseLoadAmountPage.getProduct1Isa(1, 2));
-    assertEquals("--", warehouseLoadAmountPage.getProduct2Isa(1, 2));
+    assertEquals(dbWrapper.getOverridenIsa(facilityCodeFourth, programFirst, product2), warehouseLoadAmountPage.getProduct2Isa(1, 2));
     assertEquals(warehouseLoadAmountPage.getProduct1Isa(2, 2), warehouseLoadAmountPage.getProduct1Isa(3, 2));
-    assertEquals(warehouseLoadAmountPage.getProduct2Isa(2, 2), warehouseLoadAmountPage.getProduct2Isa(3, 2));
+    assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1, 2))+Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2, 2))), warehouseLoadAmountPage.getProduct2Isa(3, 2));
 
     assertEquals(warehouseLoadAmountPage.getAggregatePopulation(3), String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 2)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 2))));
-    assertEquals(warehouseLoadAmountPage.getAggregateProduct2Isa(3), String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2, 2))));
+    assertEquals(warehouseLoadAmountPage.getAggregateProduct2Isa(3), String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2, 2))+Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1, 2))));
     assertEquals(warehouseLoadAmountPage.getAggregateProduct1Isa(3), warehouseLoadAmountPage.getProduct1Isa(2, 2));
     assertEquals("--", warehouseLoadAmountPage.getAggregateProduct1Isa(1));
 
-    assertEquals(warehouseLoadAmountPage.getCityName(1), testWebDriver.getElementByXpath("//h3/span[contains(text(),'" + district1 + "')]").getText());
-    assertEquals(warehouseLoadAmountPage.getCityName(2), testWebDriver.getElementByXpath("//h3/span[contains(text(),'" + district2 + "')]").getText());
-    assertEquals(dbWrapper.getGeoLevelOfGeoZone(parentGeoZone), testWebDriver.getElementByXpath("//h3/span[contains(text(),\"District\")]").getText());
-
-
+    verifyCaptionsAndLabels(deliveryZoneNameFirst, warehouseLoadAmountPage);
   }
+
+
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Multiple-GeoZones")
   public void testShouldVerifyMultipleGeographicZones(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
@@ -244,14 +245,12 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     assertEquals(dbWrapper.getFacilityPopulation(facilityCodeSecond), warehouseLoadAmountPage.getFacilityPopulation(1, 1));
     assertEquals(dbWrapper.getOverridenIsa(facilityCodeSecond, programFirst, product), warehouseLoadAmountPage.getProduct1Isa(1, 1));
     assertEquals(dbWrapper.getOverridenIsa(facilityCodeSecond, programFirst, product2), warehouseLoadAmountPage.getProduct2Isa(1, 1));
-    assertEquals(geoZone1, warehouseLoadAmountPage.getGeoZoneName(1));
 
     assertEquals(facilityCodeFirst, warehouseLoadAmountPage.getFacilityCode(1, 2));
     assertEquals(dbWrapper.getFacilityName(facilityCodeFirst), warehouseLoadAmountPage.getFacilityName(1, 2));
     assertEquals(dbWrapper.getFacilityPopulation(facilityCodeFirst), warehouseLoadAmountPage.getFacilityPopulation(1, 2));
     assertEquals(dbWrapper.getOverridenIsa(facilityCodeFirst, programFirst, product), warehouseLoadAmountPage.getProduct1Isa(1, 2));
     assertEquals(dbWrapper.getOverridenIsa(facilityCodeFirst, programFirst, product2), warehouseLoadAmountPage.getProduct2Isa(1, 2));
-    assertEquals(geoZone2, warehouseLoadAmountPage.getGeoZoneName(2));
 
     dbWrapper.updatePopulationOfFacility(facilityCodeFirst, null);
     dbWrapper.updateOverridenIsa(facilityCodeFirst, programFirst, product, null);
@@ -266,7 +265,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
 
-  public void verifyWarehouseLoadAmountHeader(String deliverZone, String program, String period) {
+  private void verifyWarehouseLoadAmountHeader(String deliverZone, String program, String period) {
     WebElement deliverZoneElement = testWebDriver.getElementByXpath("(//div[2]/div/div/div/span)[1]");
     WebElement programElement = testWebDriver.getElementByXpath("(//div[2]/div/div/div/span)[2]");
     WebElement periodElement = testWebDriver.getElementByXpath("(//div[2]/div/div/div/span)[3]");
@@ -274,6 +273,18 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     SeleneseTestNgHelper.assertEquals(deliverZoneElement.getText(), deliverZone);
     SeleneseTestNgHelper.assertEquals(programElement.getText(), program);
     SeleneseTestNgHelper.assertEquals(periodElement.getText(), period);
+  }
+
+  private void verifyCaptionsAndLabels(String deliveryZoneNameFirst, WarehouseLoadAmountPage warehouseLoadAmountPage) {
+    assertEquals(warehouseLoadAmountPage.getGeoZoneNameTitle(1), testWebDriver.getElementByXpath("//h3/span[contains(text(),'" + district1 + "')]").getText());
+    assertEquals(warehouseLoadAmountPage.getGeoZoneNameTitle(2), testWebDriver.getElementByXpath("//h3/span[contains(text(),'" + district2 + "')]").getText());
+    assertEquals(deliveryZoneNameFirst, testWebDriver.getElementByXpath("//h3/span[contains(text(),'" + deliveryZoneNameFirst + "')]").getText());
+    assertEquals("Zone Total", warehouseLoadAmountPage.getAggregateTableCaption());
+    assertEquals(district1,warehouseLoadAmountPage.getGeoZoneTotalCaption(1));
+    assertEquals(district2,warehouseLoadAmountPage.getGeoZoneTotalCaption(2));
+    assertEquals(district1,warehouseLoadAmountPage.getCitiesFromAggregatedTable(1));
+    assertEquals(district2,warehouseLoadAmountPage.getCitiesFromAggregatedTable(2));
+
   }
 
 

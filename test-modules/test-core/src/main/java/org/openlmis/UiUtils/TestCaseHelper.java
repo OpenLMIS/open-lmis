@@ -217,6 +217,15 @@ public class TestCaseHelper {
     dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programSecond, schedule);
   }
 
+  public void addOnDataSetupForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(String deliveryZoneCodeFirst,
+                                                                                               String facilityCodeThird,
+                                                                                               String facilityCodeFourth, String geoZone1, String geoZone2, String parentGeoZone) throws IOException, SQLException {
+    dbWrapper.insertGeographicZone(geoZone1, geoZone2, parentGeoZone);
+    dbWrapper.insertFacilitiesWithDifferentGeoZones(facilityCodeThird, facilityCodeFourth, geoZone1, geoZone2);
+    dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeThird);
+    dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeFourth);
+  }
+
   public void setupTestDataToInitiateRnRForDistribution(String facilityCode1, String facilityCode2,boolean configureTemplate, String program, String user, String userId,
                                                         String vendorName, List<String> rightsList, String programCode,
   String geoLevel1, String geoLevel2, String parentGeoLevel) throws IOException, SQLException {
