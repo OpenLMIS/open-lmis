@@ -42,7 +42,8 @@ public enum Right {
   MANAGE_DISTRIBUTION("right.manage.distribution", FALSE, "Permission to manage an distribution", 9),
   MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", TRUE, "Permission to manage a regimen template", 4),
 
-  
+
+  MANAGE_REQUISITION_GROUP("Admin - Manage Requisition Groups", TRUE, "Permission to manage requisition groups",28),
   MANAGE_PRODUCT("Admin - Manage Products", TRUE, "Permission to manage products",29),
   MANAGE_SUPPLYLINE("Admin - Manage Supply Line", TRUE, "Permission to manage supply line",30),
   MANAGE_GEOGRAPHIC_ZONES ("Admin - Manage Geographic Zones", TRUE, "Permission to manage geographic zones.",31),
