@@ -80,15 +80,7 @@ services.factory('ReferenceData', function ($resource) {
 });
 
 services.factory('Requisitions', function ($resource) {
-  return $resource('/requisitions/:id/:operation.json', {}, update);
-});
-
-services.factory('Requisition', function ($resource) {
-  return $resource('/requisitions.json', {}, {});
-});
-
-services.factory('RequisitionById', function ($resource) {
-  return $resource('/requisitions/:id.json', {}, {});
+  return $resource('/requisitions/:id/:operation.json', {id: '@id', operation: '@operation'}, update);
 });
 
 services.factory('RequisitionForApproval', function ($resource) {

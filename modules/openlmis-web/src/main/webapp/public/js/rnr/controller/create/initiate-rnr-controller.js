@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function InitiateRnrController($scope, $location, $rootScope, Requisition, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights, navigateBackService, messageService) {
+function InitiateRnrController($scope, $location, $rootScope, Requisitions, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights, navigateBackService, messageService) {
 
   $rootScope.fullScreen = false;
   var isNavigatedBack;
@@ -194,7 +194,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
         });
       };
 
-      Requisition.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id, periodId: $scope.selectedPeriod.id}, {},
+      Requisitions.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id, periodId: $scope.selectedPeriod.id}, {},
         function (data) {
           if ((data.rnr == null || data.rnr == undefined) && !hasPermission('CREATE_REQUISITION')) {
             $scope.error = messageService.get("error.requisition.not.initiated");
@@ -210,7 +210,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
             $location.url(createRnrPath);
           }
           else {
-            Requisition.save({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id, periodId: $scope.selectedPeriod.id}, {}, function (data) {
+            Requisitions.save({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id, periodId: $scope.selectedPeriod.id}, {}, function (data) {
               $scope.$parent.rnr = data.rnr;
               createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=full-supply&page=1";
               $location.url(createRnrPath);

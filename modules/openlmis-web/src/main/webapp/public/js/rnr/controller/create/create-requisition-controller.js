@@ -306,7 +306,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 }
 
 CreateRequisitionController.resolve = {
-  requisition: function ($q, $timeout, RequisitionById, $route, $rootScope) {
+  requisition: function ($q, $timeout, Requisitions, $route, $rootScope) {
     var deferred = $q.defer();
     $timeout(function () {
       var rnr = $rootScope.rnr;
@@ -315,7 +315,7 @@ CreateRequisitionController.resolve = {
         $rootScope.rnr = undefined;
         return;
       }
-      RequisitionById.get({id: $route.current.params.rnr}, function (data) {
+      Requisitions.get({id: $route.current.params.rnr}, function (data) {
         deferred.resolve(data.rnr);
       }, {});
     }, 100);
