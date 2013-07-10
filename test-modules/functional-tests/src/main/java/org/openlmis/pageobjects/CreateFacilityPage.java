@@ -153,7 +153,7 @@ public class CreateFacilityPage extends Page {
   @FindBy(how = XPATH, using = "(//a[contains(text(),'Modify ISA Values')])[1]")
   private static WebElement modifyIsaValueLink;
 
-  @FindBy(how = ID, using = "override-isa-table")
+  @FindBy(how = ID, using = "overrideIsaTable")
   private static WebElement overrideIsaTable;
 
   @FindBy(how = ID, using = "override-isa0")

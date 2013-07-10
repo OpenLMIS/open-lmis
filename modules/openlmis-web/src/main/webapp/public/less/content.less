@@ -932,12 +932,7 @@ h3 {
 
 //Schedules
 
-.list-header {
-  background: #EEE;
-  font-weight: bold;
-  color: #444;
-  text-shadow: 0 1px 0 #FFF;
-  font-size: 0.9em;
+.list-header-container {
   border: 1px solid #CCC;
   border-radius: 5px 5px 0px 0px;
   background: #f9f9f9; /* Old browsers */
@@ -948,24 +943,42 @@ h3 {
   background: -ms-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* IE10+ */
   background: linear-gradient(to bottom, #f9f9f9 0%,#e0e0e0 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#e0e0e0',GradientType=0 ); /* IE6-9 */
+}
+
+.list-header {
+  font-weight: bold;
+  color: #444;
+  text-shadow: 0 1px 0 #FFF;
+  font-size: 0.9em;
+
   div {
     display: inline-block;
     line-height: 40px;
   }
-  div:first-child {
+  .first-column {
     padding-left: 20px;
+    display: block;
+    white-space: nowrap;
   }
+}
+
+.list-container {
+  border: 1px solid #CCC;
+  border-top: 0;
 }
 
 .list-row {
   padding: 12px 0;
-  border: 1px solid #EEE;
-  border-top: 0;
+  border-bottom: 1px solid #EEE;
   input[type="text"] {
     width: 76%;
   }
-  div:first-child {
+  .first-column {
     padding-left: 20px;
+    display: block;
+    &.checkbox-column {
+      padding-left: 30px;
+    }
   }
   div:last-child input[type="button"] {
     float: right;
@@ -1841,16 +1854,25 @@ input[placeholder].placeholder{
   font-size: 0.9em;
 }
 
-#override-isa-table {
+#overrideIsaTable {
   margin: 5px;
+  input[type="text"] {
+    margin-bottom: 0;
+  }
   div {
     &.has-overridden-isa {
       background-color: #FFFFE7;
     }
-  .list-row:hover {
-    background-color: transparent;
+    .list-row {
+      &:hover {
+        background-color: transparent;
+      }
+    }
   }
 
+  .list-container {
+    height: 300px;
+    overflow: auto;
   }
 
   .use-calculated-isa-column {
