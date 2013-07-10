@@ -51,10 +51,6 @@ services.factory('ProgramsToViewRequisitions', function ($resource) {
   return $resource('/facility/:facilityId/view/requisition/programs.json', {}, {});
 });
 
-services.factory('RequisitionHeader', function ($resource) {
-  return $resource('/logistics/facility/:facilityId/requisition-header.json', {}, {});
-});
-
 services.factory('ProgramSupportedByFacility', function ($resource) {
   return $resource('/facilities/:facilityId/programs.json', {}, {});
 });
