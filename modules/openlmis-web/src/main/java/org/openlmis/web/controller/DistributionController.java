@@ -43,9 +43,9 @@ public class DistributionController extends BaseController {
       distribution.setCreatedBy(loggedInUserId(request));
       distribution.setModifiedBy(loggedInUserId(request));
 
-      distributionService.create(distribution);
+      Distribution initiatedDistribution = distributionService.create(distribution);
 
-      openLmisResponse = new OpenLmisResponse("distribution", distribution);
+      openLmisResponse = new OpenLmisResponse("distribution", initiatedDistribution);
       openLmisResponse.addData(SUCCESS, messageService.message("message.distribution.created.success"));
     } else {
       openLmisResponse = new OpenLmisResponse("distribution", existingDistribution);

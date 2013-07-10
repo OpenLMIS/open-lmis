@@ -19,9 +19,10 @@ public class DistributionRepository {
   DistributionMapper mapper;
 
 
-  public void create(Distribution distribution) {
+  public Distribution create(Distribution distribution) {
     distribution.setStatus(DistributionStatus.INITIATED);
     mapper.insert(distribution);
+    return distribution;
   }
 
   public Distribution get(Distribution distribution) {

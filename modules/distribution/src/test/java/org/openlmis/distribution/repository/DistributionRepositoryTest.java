@@ -33,13 +33,13 @@ public class DistributionRepositoryTest {
   DistributionRepository repository;
 
   @Test
-  public void itShouldUseMapperToCreateDistribution() throws Exception {
+  public void shouldCreateDistributionInInitiatedState() throws Exception {
     Distribution distribution = new Distribution();
     doNothing().when(mapper).insert(distribution);
 
-    repository.create(distribution);
+    Distribution initiatedDistribution = repository.create(distribution);
 
-    assertThat(distribution.getStatus(), is(INITIATED));
+    assertThat(initiatedDistribution.getStatus(), is(INITIATED));
     verify(mapper).insert(distribution);
   }
 

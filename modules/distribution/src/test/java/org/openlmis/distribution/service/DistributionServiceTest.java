@@ -16,8 +16,10 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.repository.DistributionRepository;
 
-import static org.mockito.Mockito.doNothing;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -30,12 +32,16 @@ public class DistributionServiceTest {
   DistributionRepository repository;
 
   @Test
-  public void itShouldUseMapperToCreateDistribution() throws Exception {
+  public void shouldCreateDistribution() throws Exception {
     Distribution distribution = new Distribution();
-    doNothing().when(repository).create(distribution);
-    service.create(distribution);
+    Distribution expectedDistribution = new Distribution();
+    when(repository.create(distribution)).thenReturn(expectedDistribution);
+
+    Distribution initiatedDistribution = service.create(distribution);
 
     verify(repository).create(distribution);
+    assertThat(initiatedDistribution, is(expectedDistribution));
+
   }
 
   @Test

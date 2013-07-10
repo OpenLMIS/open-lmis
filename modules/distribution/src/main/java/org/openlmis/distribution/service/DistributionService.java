@@ -17,8 +17,8 @@ public class DistributionService {
   @Autowired
   DistributionRepository repository;
 
-  public void create(Distribution distribution) {
-    repository.create(distribution);
+  public Distribution create(Distribution distribution) {
+    return repository.create(distribution);
   }
 
   public Distribution get(Distribution distribution) {

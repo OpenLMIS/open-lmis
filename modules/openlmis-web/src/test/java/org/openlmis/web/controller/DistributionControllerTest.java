@@ -31,7 +31,8 @@ import java.util.Map;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.openlmis.builder.DistributionBuilder.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -45,8 +46,6 @@ public class DistributionControllerTest {
 
   @Mock
   UserService userService;
-
-  public static final Long userId = 1L;
 
   @Mock
   MessageService messageService;
@@ -73,13 +72,14 @@ public class DistributionControllerTest {
     session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
     Distribution distribution = make(a(defaultDistribution));
 
-    doNothing().when(service).create(distribution);
+    Distribution expectedDistribution = new Distribution();
+    when(service.create(distribution)).thenReturn(expectedDistribution);
     when(service.get(distribution)).thenReturn(null);
     when(messageService.message("message.distribution.created.success")).thenReturn("Distribution created successfully");
 
     ResponseEntity<OpenLmisResponse> response = controller.create(distribution, httpServletRequest);
 
-    assertThat((Distribution) response.getBody().getData().get("distribution"), is(distribution));
+    assertThat((Distribution) response.getBody().getData().get("distribution"), is(expectedDistribution));
     assertThat((String) response.getBody().getData().get("success"), is("Distribution created successfully"));
     assertThat(response.getStatusCode(), is(CREATED));
     verify(service).get(distribution);
