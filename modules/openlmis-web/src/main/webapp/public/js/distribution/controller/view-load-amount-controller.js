@@ -15,9 +15,6 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, Geog
     var otherGroupName = "";
     $scope.geoZoneLevelName = facilities[0].geographicZone.level.name;
 
-
-    getGeographicZone(facilities[0].geographicZone.id);
-
     $scope.aggregateMap = {};
 
     $(facilities).each(function (i, facility) {
@@ -114,12 +111,6 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, Geog
     return programProducts;
   }
 
-
-  function getGeographicZone(geographicZoneId) {
-    GeographicZones.get({id:geographicZoneId}, function (data) {
-      $scope.geoZone = data.geoZone;
-    }, {});
-  }
 
   function calculateProductIsaTotal(aggregateProduct, productTotal) {
     if (!isNaN(parseInt(aggregateProduct.isaAmount))) {

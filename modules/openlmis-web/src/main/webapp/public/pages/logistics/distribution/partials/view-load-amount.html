@@ -24,7 +24,7 @@
       </div>
     </div>
     <div class="geo-zone-facility-list">
-      <h3><span ng-bind="geoZone.parent.level.name"></span>&nbsp;<span openlmis-message="label.total"></span></h3>
+      <h3><span ng-bind="deliveryZone.name"></span>&nbsp;<span openlmis-message="label.total"></span></h3>
 
       <div>
 
@@ -56,7 +56,6 @@
             <tr ng-repeat="geoZoneName in sortedGeoZoneKeys" >
               <td>
                 <span ng-bind="geoZoneName"></span>
-                <span openlmis-message="label.total"></span>
               </td>
               <td>
                 <span ng-bind="aggregateMap[geoZoneName]['totalPopulation']"></span>
@@ -67,7 +66,7 @@
             </tr>
             <tr>
               <td>
-                <span ng-bind="geoZone.parent.level.name"></span>&nbsp;<span openlmis-message="label.total"></span>
+                <span openlmis-message="label.zone.total"></span>
               </td>
               <td>
                 <span ng-bind="zonesTotal.totalPopulation"></span>
@@ -126,7 +125,7 @@
           </tr>
           <tr>
             <td>
-              <span ng-bind="geoZoneLevelName"></span>
+              <span ng-bind="geoZoneName"></span>
               <span openlmis-message="label.total"></span>
             </td>
             <td>
