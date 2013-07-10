@@ -37,10 +37,14 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   });
 
   $scope.fillPagedGridData = function () {
-    var gridLineItems = $scope.visibleTab == NON_FULL_SUPPLY ? $scope.rnr.nonFullSupplyLineItems : $scope.visibleTab == FULL_SUPPLY ? $scope.rnr.fullSupplyLineItems : [];
-    $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize) ? Math.ceil(gridLineItems.length / $scope.pageSize) : 1;
-    $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
-    $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
+    if ($scope.visibleTab == REGIMEN) {
+      $scope.pageLineItems = $scope.rnr.regimenLineItems;
+    } else {
+      var gridLineItems = $scope.visibleTab == NON_FULL_SUPPLY ? $scope.rnr.nonFullSupplyLineItems : $scope.visibleTab == FULL_SUPPLY ? $scope.rnr.fullSupplyLineItems : [];
+      $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize) ? Math.ceil(gridLineItems.length / $scope.pageSize) : 1;
+      $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
+      $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
+    }
   };
 
 
@@ -146,14 +150,14 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
   var submitValidatedRnr = function () {
     Requisitions.update({id: $scope.rnr.id, operation: "submit"},
-      {}, function (data) {
-        $scope.rnr.status = "SUBMITTED";
-        $scope.formDisabled = !$scope.hasPermission('AUTHORIZE_REQUISITION');
-        $scope.submitMessage = data.success;
-        $scope.saveRnrForm.$setPristine();
-      }, function (data) {
-        $scope.submitError = data.data.error;
-      });
+        {}, function (data) {
+          $scope.rnr.status = "SUBMITTED";
+          $scope.formDisabled = !$scope.hasPermission('AUTHORIZE_REQUISITION');
+          $scope.submitMessage = data.success;
+          $scope.saveRnrForm.$setPristine();
+        }, function (data) {
+          $scope.submitError = data.data.error;
+        });
   };
 
   $scope.dialogCloseCallback = function (result) {
@@ -280,15 +284,20 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   }
 
   function removeExtraDataForPostFromRnr() {
-    var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": []};
+    var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": [],"regimenLineItems":[]};
     if (!$scope.pageLineItems.length) return rnr;
-    if (!$scope.pageLineItems[0].fullSupply) {
+    if ($scope.pageLineItems[0].fullSupply == false) {
       _.each($scope.rnr.nonFullSupplyLineItems, function (lineItem) {
         rnr.nonFullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
       });
-    } else {
+    } else if ($scope.pageLineItems[0].fullSupply == true) {
       _.each($scope.pageLineItems, function (lineItem) {
         rnr.fullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
+      });
+    }
+    else {
+      _.each($scope.pageLineItems, function (regimenLineItem) {
+        rnr.regimenLineItems.push(regimenLineItem);
       });
     }
 

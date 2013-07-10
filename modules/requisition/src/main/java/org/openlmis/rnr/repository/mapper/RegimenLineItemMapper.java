@@ -18,6 +18,12 @@ public interface RegimenLineItemMapper {
   @Select("SELECT * FROM regimen_line_items WHERE rnrId = #{rnrId}")
   @Results(value = {
     @Result(property = "id", column = "id"),
+    @Result(property = "code", column = "code"),
+    @Result(property = "name", column = "name"),
+    @Result(property = "patientsOnTreatment", column = "patientsOnTreatment"),
+    @Result(property = "patientsToInitiateTreatment", column = "patientsToInitiateTreatment"),
+    @Result(property = "remarks", column = "remarks"),
+    @Result(property = "patientsStoppedTreatment", column = "patientsStoppedTreatment"),
     @Result(property = "regimen.code", column = "code"),
     @Result(property = "regimen.name", column = "name"),
     @Result(property = "regimen.displayOrder", column = "regimenDisplayOrder"),
@@ -25,4 +31,8 @@ public interface RegimenLineItemMapper {
     @Result(property = "regimen.category.displayOrder", column = "regimenCategoryDisplayOrder"),
   })
   public List<RegimenLineItem> getRegimenLineItemsByRnrId(Long rnrId);
+
+  @Update("UPDATE regimen_line_items set patientsOnTreatment = #{patientsOnTreatment},patientsToInitiateTreatment = #{patientsToInitiateTreatment}," +
+    "patientsStoppedTreatment = #{patientsStoppedTreatment},remarks = #{remarks} where id=#{id}")
+  void update(RegimenLineItem regimenLineItem);
 }

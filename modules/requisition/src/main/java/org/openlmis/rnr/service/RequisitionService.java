@@ -112,14 +112,15 @@ public class RequisitionService {
 
   public void save(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
-    ProgramRnrTemplate template = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
+    ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
+    RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(savedRnr.getProgram().getId());
 
     if (!requisitionPermissionService.hasPermissionToSave(rnr.getModifiedBy(), savedRnr))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     if (savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL)
-      savedRnr.copyApproverEditableFields(rnr, template);
+      savedRnr.copyApproverEditableFields(rnr, rnrTemplate);
     else
-      savedRnr.copyCreatorEditableFields(rnr, template);
+      savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate);
 
     requisitionRepository.update(savedRnr);
   }

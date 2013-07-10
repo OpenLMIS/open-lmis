@@ -537,16 +537,18 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldSaveRnrIfUserHasAppropriatePermission() {
-    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
+    Rnr savedRnr = spy(getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION));
 
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+    RegimenTemplate regimenTemplate = new RegimenTemplate(savedRnr.getProgram().getId(), new ArrayList<RegimenColumn>());
+    Mockito.when(requisitionRepository.getById(savedRnr.getId())).thenReturn(savedRnr);
     when(rnrTemplateService.fetchProgramTemplate(initiatedRnr.getProgram().getId())).thenReturn(template);
-    doNothing().when(savedRnr).copyCreatorEditableFields(initiatedRnr, template);
-    doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
-
+    Mockito.when(regimenColumnService.getRegimenTemplateByProgramId(initiatedRnr.getProgram().getId())).thenReturn(regimenTemplate);
+    Mockito.doNothing().when(savedRnr).copyCreatorEditableFields(initiatedRnr, template, regimenTemplate);
+    Mockito.doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
     when(requisitionPermissionService.hasPermissionToSave(USER_ID, savedRnr)).thenReturn(true);
-
     initiatedRnr.setModifiedBy(USER_ID);
+
     requisitionService.save(initiatedRnr);
 
     verify(requisitionRepository).update(savedRnr);
@@ -1096,13 +1098,15 @@ public class RequisitionServiceTest {
   public void shouldSaveRnrWithOnlyThoseFieldsWhichAreCreatorEditableBasedOnRnrStatus() throws Exception {
     Rnr savedRequisition = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
+    RegimenTemplate regimenTemplate = new RegimenTemplate(savedRequisition.getProgram().getId(), new ArrayList<RegimenColumn>());
 
-    doNothing().when(savedRequisition).copyCreatorEditableFields(initiatedRnr, template);
+    doNothing().when(savedRequisition).copyCreatorEditableFields(initiatedRnr, template, regimenTemplate);
     when(rnrTemplateService.fetchProgramTemplate(savedRequisition.getProgram().getId())).thenReturn(template);
+    Mockito.when(regimenColumnService.getRegimenTemplateByProgramId(initiatedRnr.getProgram().getId())).thenReturn(regimenTemplate);
 
     requisitionService.save(initiatedRnr);
 
-    verify(savedRequisition).copyCreatorEditableFields(initiatedRnr, template);
+    verify(savedRequisition).copyCreatorEditableFields(initiatedRnr, template, regimenTemplate);
     verify(requisitionRepository).update(savedRequisition);
   }
 

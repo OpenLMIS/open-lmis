@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.builder.RegimenBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
@@ -23,21 +24,25 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.rnr.builder.RegimenLineItemBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.mapper.*;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.openlmis.rnr.builder.RegimenLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
@@ -327,5 +332,23 @@ public class RequisitionRepositoryTest {
     when(requisitionMapper.getRequisitionWithoutLineItems(facilityId, programId, periodId)).thenReturn(requisition);
     Rnr receivedRnr = requisitionRepository.getRequisitionWithoutLineItems(facilityId, programId, periodId);
     assertThat(receivedRnr, is(requisition));
+  }
+
+  @Test
+  public void shouldUpdateRegimenLineItemsOnRequisitionSave() throws Exception {
+    long rnrId = 1L;
+    rnr.setId(rnrId);
+
+    RegimenLineItem regimenLineItem1 = make(a(defaultRegimenLineItem,with(code,"regimen1")));
+    RegimenLineItem regimenLineItem2 = make(a(defaultRegimenLineItem, with(code, "regimen2")));
+    List<RegimenLineItem> listOfRegimenLineItems = Arrays.asList(regimenLineItem1,regimenLineItem2);
+
+    rnr.setRegimenLineItems(listOfRegimenLineItems);
+
+    requisitionRepository.update(rnr);
+
+
+   verify(regimenLineItemMapper).update(regimenLineItem1);
+   verify(regimenLineItemMapper).update(regimenLineItem2);
   }
 }

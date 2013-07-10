@@ -6,7 +6,12 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Regimen;
+import org.openlmis.core.domain.RegimenColumn;
 import org.openlmis.core.domain.RegimenTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 
@@ -16,18 +21,22 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL
 @JsonSerialize(include = NON_NULL)
 public class RegimenLineItem extends BaseModel {
 
-  public static final String ON_TREATMENT = "onTreatment";
-  public static final String INITIATED_TREATMENT = "initiatedTreatment";
-  public static final String STOPPED_TREATMENT = "stoppedTreatment";
+  public static final String ON_TREATMENT = "patientsOnTreatment";
+  public static final String INITIATED_TREATMENT = "patientsToInitiateTreatment";
+  public static final String STOPPED_TREATMENT = "patientsStoppedTreatment";
   public static final String TYPE_NUMERIC = "regimen.reporting.dataType.numeric";
   public static final String REMARKS = "remarks";
 
-  Regimen regimen;
-  Long rnrId;
-  Integer patientsOnTreatment;
-  Integer patientsToInitiateTreatment;
-  Integer patientsStoppedTreatment;
-  String remarks;
+  private Regimen regimen;
+  private Long rnrId;
+  private String code;
+  private String name;
+  private Integer patientsOnTreatment;
+  private Integer patientsToInitiateTreatment;
+  private Integer patientsStoppedTreatment;
+  private String remarks;
+
+  private static Logger logger = LoggerFactory.getLogger(RegimenLineItem.class);
 
   public RegimenLineItem(Long rnrId, Regimen regimen) {
     this.rnrId = rnrId;
@@ -47,4 +56,23 @@ public class RegimenLineItem extends BaseModel {
     if (regimenTemplate.isRegimenColumnVisible(REMARKS))
       remarks = "";
   }
+
+  public void copyCreatorEditableFieldsForRegimen(RegimenLineItem regimenLineItem, RegimenTemplate regimenTemplate) {
+    for (RegimenColumn regimenColumn : regimenTemplate.getRegimenColumns()) {
+      String fieldName = regimenColumn.getName();
+      if (regimenColumn.getVisible())
+        copyColumnData(fieldName, regimenLineItem);
+    }
+
+  }
+
+  private void copyColumnData(String fieldName, RegimenLineItem regimenLineItem) {
+    try {
+      Field field = this.getClass().getDeclaredField(fieldName);
+      field.set(this, field.get(regimenLineItem));
+    } catch (Exception e) {
+      logger.error("Error in reading RnrLineItem's field", e);
+    }
+  }
+
 }

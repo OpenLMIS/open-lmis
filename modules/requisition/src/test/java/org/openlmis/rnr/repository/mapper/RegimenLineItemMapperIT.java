@@ -8,6 +8,7 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
@@ -23,6 +24,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -53,6 +56,8 @@ public class RegimenLineItemMapperIT {
   private ProcessingScheduleMapper processingScheduleMapper;
   @Autowired
   private ProcessingPeriodMapper processingPeriodMapper;
+  @Autowired
+  private QueryExecutor queryExecutor;
 
   RegimenLineItem regimenLineItem;
   Rnr rnr;
@@ -100,5 +105,26 @@ public class RegimenLineItemMapperIT {
     assertThat(returnedRegimenLineItems.get(0).getRegimen().getCategory().getName(), is(regimenLineItem.getRegimen().getCategory().getName()));
     assertThat(returnedRegimenLineItems.get(0).getRegimen().getCategory().getDisplayOrder(), is(regimenLineItem.getRegimen().getCategory().getDisplayOrder()));
     assertThat(returnedRegimenLineItems.get(0).getRegimen().getDisplayOrder(), is(regimenLineItem.getRegimen().getDisplayOrder()));
+  }
+
+  @Test
+  public void shouldUpdateRegimenLineItem() throws Exception {
+    mapper.insert(regimenLineItem);
+
+    regimenLineItem.setPatientsToInitiateTreatment(100);
+    regimenLineItem.setPatientsOnTreatment(1000);
+    regimenLineItem.setPatientsStoppedTreatment(200);
+    regimenLineItem.setRemarks("Remarks");
+
+    mapper.update(regimenLineItem);
+
+    ResultSet resultSet = queryExecutor.execute("SELECT * from regimen_line_items where id=?", Arrays.asList(regimenLineItem.getId()));
+    resultSet.next();
+
+    assertThat(resultSet.getInt("patientsToInitiateTreatment"), is(100));
+    assertThat(resultSet.getInt("patientsOnTreatment"), is(1000));
+    assertThat(resultSet.getInt("patientsStoppedTreatment"), is(200));
+    assertThat(resultSet.getString("remarks"), is("Remarks"));
+
   }
 }

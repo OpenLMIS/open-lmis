@@ -4,7 +4,7 @@
 INSERT INTO master_regimen_columns values
 ('code','Code',true,'regimen.reporting.dataType.text'),
 ('name','Name',true,'regimen.reporting.dataType.text'),
-('onTreatment','Number of patients on treatment',true,'regimen.reporting.dataType.numeric'),
-('initiatedTreatment','Number of patients to be initiated treatment',true,'regimen.reporting.dataType.numeric'),
-('stoppedTreatment','Number of patients stopped treatment',true,'regimen.reporting.dataType.numeric'),
+('patientsOnTreatment','Number of patients on treatment',true,'regimen.reporting.dataType.numeric'),
+('patientsToInitiateTreatment','Number of patients to be initiated treatment',true,'regimen.reporting.dataType.numeric'),
+('patientsStoppedTreatment','Number of patients stopped treatment',true,'regimen.reporting.dataType.numeric'),
 ('remarks','Remarks',true,'regimen.reporting.dataType.text');

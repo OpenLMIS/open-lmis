@@ -204,11 +204,21 @@ public class Rnr extends BaseModel {
   }
 
   private RnrLineItem findCorrespondingLineItem(final RnrLineItem item) {
-    return (RnrLineItem) find(getAllLineItems(), new Predicate() {
+    return (RnrLineItem) find(this.getAllLineItems(), new Predicate() {
       @Override
       public boolean evaluate(Object o) {
         RnrLineItem lineItem = (RnrLineItem) o;
         return lineItem.getProductCode().equalsIgnoreCase(item.getProductCode());
+      }
+    });
+  }
+
+  private RegimenLineItem findCorrespondingRegimenLineItem(final RegimenLineItem regimenLineItem) {
+    return (RegimenLineItem) find(this.regimenLineItems, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        RegimenLineItem regimenLineItem1 = (RegimenLineItem) o;
+        return regimenLineItem1.getCode().equalsIgnoreCase(regimenLineItem.getCode());
       }
     });
   }
@@ -247,10 +257,19 @@ public class Rnr extends BaseModel {
     }
   }
 
-  public void copyCreatorEditableFields(Rnr rnr, ProgramRnrTemplate template) {
+  public void copyCreatorEditableFields(Rnr rnr, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
     this.modifiedBy = rnr.getModifiedBy();
-    copyCreatorEditableFieldsForFullSupply(rnr, template);
-    copyCreatorEditableFieldsForNonFullSupply(rnr, template);
+    copyCreatorEditableFieldsForFullSupply(rnr, rnrTemplate);
+    copyCreatorEditableFieldsForNonFullSupply(rnr, rnrTemplate);
+    copyCreatorEditableFieldsForRegimen(rnr, regimenTemplate);
+  }
+
+  private void copyCreatorEditableFieldsForRegimen(Rnr rnr, RegimenTemplate regimenTemplate) {
+    for (RegimenLineItem regimenLineItem : rnr.regimenLineItems) {
+      RegimenLineItem savedRegimenLineItem = this.findCorrespondingRegimenLineItem(regimenLineItem);
+      if (savedRegimenLineItem != null)
+        savedRegimenLineItem.copyCreatorEditableFieldsForRegimen(regimenLineItem, regimenTemplate);
+    }
   }
 
   private void copyCreatorEditableFieldsForNonFullSupply(Rnr rnr, ProgramRnrTemplate template) {
