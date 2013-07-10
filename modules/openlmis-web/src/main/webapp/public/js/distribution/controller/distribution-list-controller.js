@@ -7,7 +7,7 @@ function DistributionListController($scope, DeliveryZoneFacilities) {
 
   var db;
   var request = indexedDB.open("open_lmis", 1);
-  $scope.distributionList =[];
+  $scope.distributionList = [];
 
   request.onsuccess = function (event) {
     console.log(event.currentTarget);
@@ -17,39 +17,47 @@ function DistributionListController($scope, DeliveryZoneFacilities) {
   request.onupgradeneeded = function (event) {
     db = event.target.result;
     var facilityStore = db.createObjectStore("facilityData", {
-      "keyPath": "programId"
+      "keyPath": "distributionId"
     });
 
     var distributionStore = db.createObjectStore("distribution", {
-      "keyPath": "id"
+      "keyPath": "distributionId"
     });
 
-    distributionStore.createIndex("id", "id", {"unique": true});
+    distributionStore.createIndex("distributionId", "distributionId", {"unique": true});
 
     console.info(db);
   };
 
   $scope.initiateDistribution = function () {
-    var key = $scope.selectedZone.id.toString()+'_'+$scope.selectedProgram.id.toString()+'_'+$scope.selectedPeriod.id.toString();
+    var key = $scope.selectedZone.id.toString() + '_' + $scope.selectedProgram.id.toString() + '_' + $scope.selectedPeriod.id.toString();
 //    $scope.distributionList = fetchDistributions();
+    var distribution = {"deliveryZone": $scope.selectedZone, "program": $scope.selectedProgram, "period": $scope.selectedPeriod, "status": "Initiated",
+      "distributionId": key};
+    if (ifDistributionExists(key)) {
+
+    } else {
+      cacheDistribution(key);
+    }
 
     DeliveryZoneFacilities.get({deliveryZoneId: $scope.selectedZone.id, programId: $scope.selectedProgram.id}, function (data) {
-      cacheFacilityData(data.facilities);
-      var distribution = {"deliveryZone": $scope.selectedZone, "program": $scope.selectedProgram, "period": $scope.selectedPeriod, "status": "Initiated",
-        "id":key};
       $scope.distributionList.push(distribution);
-      cacheDistribution(distribution);
+      cacheReferenceData(data.facilities, key);
     }, {});
 
   };
 
-//  function fetchDistributions(){
-//    $scope.distributionList=[];
+  function ifDistributionExists(key) {
+
+  }
+
+//  function fetchDistributions() {
+//    $scope.distributionList = [];
 //    var transaction = db.transaction('distribution', 'readWrite');
 //    var distributionObjectStore = transaction.objectStore('distribution');
-//    var index = distributionObjectStore.index("id");
+//    var index = distributionObjectStore.index("distributionId");
 //
-//    index.openKeyCursor().onsuccess = function(event) {
+//    index.openKeyCursor().onsuccess = function (event) {
 //      var cursor = event.target.result;
 //      if (cursor) {
 //        $scope.distributionList.push(cursor.value);
@@ -58,11 +66,11 @@ function DistributionListController($scope, DeliveryZoneFacilities) {
 //    };
 //  }
 
-  function cacheFacilityData(facilityList) {
+  function cacheReferenceData(facilityList, key) {
     var transaction = db.transaction('facilityData', 'readwrite');
     var objects = transaction.objectStore('facilityData');
 
-    var cacheObject = {"facilityList": facilityList, "programId": $scope.selectedProgram.id}
+    var cacheObject = {"facilityList": facilityList, "distributionId": key}
 
     objects.put(cacheObject);
 
@@ -72,12 +80,11 @@ function DistributionListController($scope, DeliveryZoneFacilities) {
     }
   }
 
-  function  cacheDistribution(distribution){
+  function cacheDistribution(distribution) {
     var transaction = db.transaction('distribution', 'readwrite');
     var objects = transaction.objectStore('distribution');
 
     objects.put(distribution);
-
 
     transaction.oncomplete = function () {
       console.log('distribution saved successfully');
