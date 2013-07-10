@@ -5,6 +5,7 @@
  */
 
 var services = angular.module('openlmis.services', ['ngResource']);
+var update ={update: {method: 'PUT'}};
 
 services.value('version', '@version@');
 
@@ -21,11 +22,13 @@ services.factory('ProgramRnRColumnList', function ($resource) {
 });
 
 services.factory('Facility', function ($resource) {
-  return $resource('/facilities/:id.json', {id: '@id'}, {update: {method: 'PUT'}});
-});
+  var resource = $resource('/facilities/:id.json', {id: '@id'}, update);
 
-services.factory('RestoreFacility', function ($resource) {
-  return $resource('/facilities/:id/restore.json', {}, {update: {method: 'PUT'}});
+  resource.restore = function (pathParams, success, error) {
+    $resource('/facilities/:id/restore.json', {}, update).update(pathParams, {}, success, error);
+  };
+
+  return resource;
 });
 
 services.factory('UserContext', function ($resource) {
@@ -37,7 +40,7 @@ services.factory('Users', function ($resource) {
 });
 
 services.factory('User', function ($resource) {
-  return $resource('/users/:id.json', {id: '@id'}, {update: {method: 'PUT'}});
+  return $resource('/users/:id.json', {id: '@id'}, update);
 });
 
 
@@ -78,7 +81,7 @@ services.factory('Rights', function ($resource) {
 });
 
 services.factory('Role', function ($resource) {
-  return $resource('/roles/:id.json', {}, {update: {method: 'PUT'}});
+  return $resource('/roles/:id.json', {}, update);
 });
 
 services.factory('Roles', function ($resource) {
@@ -98,7 +101,7 @@ services.factory('ReferenceData', function ($resource) {
 });
 
 services.factory('Requisitions', function ($resource) {
-  return $resource('/requisitions/:id/:operation.json', {}, {update: {method: 'PUT'}});
+  return $resource('/requisitions/:id/:operation.json', {}, update);
 });
 
 services.factory('Requisition', function ($resource) {
@@ -126,7 +129,7 @@ services.factory('LossesAndAdjustmentsReferenceData', function ($resource) {
 });
 
 services.factory('Schedule', function ($resource) {
-  return $resource('/schedules/:id.json', {id: '@id'}, {update: {method: 'PUT'}});
+  return $resource('/schedules/:id.json', {id: '@id'}, update);
 });
 
 services.factory('Periods', function ($resource) {
@@ -162,7 +165,7 @@ services.factory('RequisitionLineItem', function ($resource) {
 });
 
 services.factory('UpdateUserPassword', function ($resource) {
-  return $resource('/user/resetPassword/:token.json', {}, {update: {method: 'PUT'}});
+  return $resource('/user/resetPassword/:token.json', {}, update);
 });
 
 services.factory('ValidatePasswordToken', function ($resource) {
@@ -205,11 +208,11 @@ services.factory('FacilityProgramProducts', function ($resource) {
 });
 
 services.factory('ProgramProductsISA', function ($resource) {
-  return $resource('/programProducts/:programProductId/isa/:isaId.json', {isaId: '@isaId'}, {update: {method: 'PUT'}});
+  return $resource('/programProducts/:programProductId/isa/:isaId.json', {isaId: '@isaId'}, update);
 });
 
 services.factory('AllocationProgramProducts', function ($resource) {
-  return $resource('/facility/:facilityId/programProduct/:programProductId.json', {}, {update: {method: 'PUT'}});
+  return $resource('/facility/:facilityId/programProduct/:programProductId.json', {}, update);
 });
 
 services.factory('UserDeliveryZones', function ($resource) {
@@ -244,23 +247,23 @@ services.factory('RegimenCategories', function ($resource) {
   return $resource('/regimenCategories.json', {}, {});
 });
 
-services.factory('Regimens', function($resource){
+services.factory('Regimens', function ($resource) {
   return $resource('/programId/:programId/regimens.json', {}, {post: {method: 'POST', isArray: true}});
 });
 
-services.factory('RegimenColumns', function($resource){
+services.factory('RegimenColumns', function ($resource) {
   return $resource('/programId/:programId/regimenColumns.json', {}, {});
 });
 
-services.factory('RegimenTemplate', function($resource){
+services.factory('RegimenTemplate', function ($resource) {
   return $resource('/programId/:programId/configureRegimenTemplate.json', {}, {});
 });
 
-services.factory('ProgramRegimenTemplate', function($resource){
+services.factory('ProgramRegimenTemplate', function ($resource) {
   return $resource('/programId/:programId/programRegimenTemplate.json', {}, {});
 });
 
-services.factory('GeographicZones', function($resource){
+services.factory('GeographicZones', function ($resource) {
   return $resource('/geographicZones/:id.json', {}, {});
 });
 

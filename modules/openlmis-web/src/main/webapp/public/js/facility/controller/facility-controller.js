@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, RestoreFacility, $location, FacilityProgramProducts, $q, $dialog, messageService) {
+function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, $location, FacilityProgramProducts, $q, $dialog, messageService) {
   $scope.message = "";
   initialize();
 
@@ -198,7 +198,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   $scope.restoreFacility = function (active) {
     $scope.activeConfirmModal = false;
     $scope.facility.active = active;
-    RestoreFacility.update({id: $scope.facility.id, active: active}, {}, successFunc, errorFunc);
+    Facility.restore({id: $scope.facility.id, active: active}, successFunc, errorFunc);
   };
 
   $scope.deleteFacilityCallBack = function (result) {
