@@ -36,17 +36,6 @@ var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorag
   $httpProvider.responseInterceptors.push(interceptor);
 });
 
-app.directive('a', function() {
-  return {
-    restrict: 'E',
-    link: function(scope, element, attr) {
-      if(!element.attr('href')) {
-        element.attr('href','javascript:void(0)');
-      }
-    }
-  };
-});
-
 app.config(function ($httpProvider) {
   var spinnerFunction = function (data) {
     angular.element('#loader').show();

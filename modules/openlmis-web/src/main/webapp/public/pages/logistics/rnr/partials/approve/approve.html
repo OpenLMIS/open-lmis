@@ -8,13 +8,13 @@
 <div class="rnr-tabs clearfix">
   <ul class="clearfix">
     <li ng-class="{'selected': (visibleTab != 'non-full-supply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
-      <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab" openlmis-message="label.full.supply.products"></a></li>
+      <a href ng-click="switchSupplyType('full-supply')" id="fullSupplyTab" openlmis-message="label.full.supply.products"></a></li>
     <li ng-class="{'selected': visibleTab == 'non-full-supply', 'has-error': nonFullSupplyTabError}">
-      <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab" openlmis-message="label.non.full.supply.products"></a></li>
+      <a href ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab" openlmis-message="label.non.full.supply.products"></a></li>
     <li ng-class="{'selected': visibleTab == 'regimen'}" ng-show = "regimenCount">
-      <a ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a></li>
+      <a href ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a></li>
   </ul>
-  <a class="btn pull-right" ng-click="getFullScreen()">
+  <a href class="btn pull-right" ng-click="getFullScreen()">
     <i ng-class="{'icon-resize-full': !fullScreen, 'icon-resize-small': fullScreen}"></i>
   </a>
 </div>
@@ -22,11 +22,11 @@
 <form name="approvalForm" novalidate>
   <div id="pageErrors" class="rnr-page-errors" ng-show="shownErrorPages">
     <div ng-switch on="shownErrorPages.length" class="dropdown">
-      <a ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
-      <a ng-switch-default class="dropdown-toggle" openlmis-message="error.multiple.pages|errorPagesCount"></a>
+      <a href ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
+      <a href ng-switch-default class="dropdown-toggle" openlmis-message="error.multiple.pages|errorPagesCount"></a>
       <ul class="dropdown-menu">
         <li ng-repeat="page in shownErrorPages">
-          <a ng-click="goToPage(page, $event)">{{page}}</a>
+          <a href ng-click="goToPage(page, $event)">{{page}}</a>
         </li>
       </ul>
     </div>

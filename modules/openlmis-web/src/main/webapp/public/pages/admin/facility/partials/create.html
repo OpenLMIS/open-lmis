@@ -244,12 +244,12 @@
                     </td>
                     <td ng-show="supportedProgram.program.push">
                         <span openlmis-message="label.allocate"></span>
-                        (<a ng-click="showISAEditModal(supportedProgram)" openlmis-message="link.modify.isa"></a>)
+                        (<a href ng-click="showISAEditModal(supportedProgram)" openlmis-message="link.modify.isa"></a>)
                     </td>
                     <td ng-show="!supportedProgram.program.push">
                         <span openlmis-message="label.request"></span>
                     </td>
-                    <td><a class="close" id="remove{{$index}}" ng-click="showRemoveProgramConfirmDialog(supportedProgram)"
+                    <td><a href class="close" id="remove{{$index}}" ng-click="showRemoveProgramConfirmDialog(supportedProgram)"
                            openlmis-message="create.facility.removeProgram"></a></td>
                 </tr>
                 <tr class="add-supported-program-row">

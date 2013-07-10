@@ -29,7 +29,7 @@
     <a class="close-btn" href="javascript:void(0);" ng-click="clearSearch()"></a>
     <ul>
       <li ng-repeat="facility in facilityList">
-        <a ng-click="editFacility(facility.id)">{{facility.code}} - {{facility.name}}</a>
+        <a href ng-click="editFacility(facility.id)">{{facility.code}} - {{facility.name}}</a>
       </li>
     </ul>
   </div>

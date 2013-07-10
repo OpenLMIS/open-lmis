@@ -7,11 +7,11 @@
 <div ng-controller = "CreateFullSupplyController" >
   <div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.fullSupply">
     <div ng-switch on="errorPages.fullSupply.length" class="dropdown">
-      <a ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
-      <a ng-switch-default class="dropdown-toggle" openlmis-message="error.multiple.pages|fullSupplyErrorPagesCount"></a>
+      <a href ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
+      <a href ng-switch-default class="dropdown-toggle" openlmis-message="error.multiple.pages|fullSupplyErrorPagesCount"></a>
       <ul class="dropdown-menu">
         <li ng-repeat="page in errorPages.fullSupply">
-          <a ng-click="goToPage(page, $event)">{{page}}</a>
+          <a href ng-click="goToPage(page, $event)">{{page}}</a>
         </li>
       </ul>
     </div>
@@ -116,7 +116,7 @@
                   <span ng-switch-when = "lossesAndAdjustments" >
                     <div
                       ng-class = "highlightNestedFieldsWithError(rnrLineItem[column.name], 'quantity')" >
-                      <a ng-click = "showLossesAndAdjustments(rnrLineItem)"
+                      <a href ng-click = "showLossesAndAdjustments(rnrLineItem)"
                          class = "rnr-adjustment" >
                         <span class = "adjustment-value" ng-bind = "rnrLineItem.totalLossesAndAdjustments" ></span >
                       </a >
@@ -271,7 +271,7 @@
             <span class = "tpl-adjustment-type"
                   ng-bind = "adjustment.type.description" ></span >
             <span class = "tpl-adjustment-delete" >
-              <a class = "close" ng-show = "!formDisabled"
+              <a href class = "close" ng-show = "!formDisabled"
                  ng-click = "removeLossAndAdjustment(adjustment)" >&times;</a >
             </span >
             <span class = "tpl-adjustment-qty" >
