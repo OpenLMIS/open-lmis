@@ -23,8 +23,8 @@ public interface ReportTemplateMapper {
   @Select("SELECT * from report_templates WHERE id=#{id}")
   ReportTemplate getById(Integer id);
 
-  @Insert("INSERT INTO report_templates (name, data, parameters, createdBy, createdDate) " +
-    "VALUES (#{name}, #{data}, #{parameters}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))")
+  @Insert("INSERT INTO report_templates (name, data, commaSeparatedParameters, createdBy, createdDate) " +
+    "VALUES (#{name}, #{data}, #{commaSeparatedParameters}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))")
   @Options(useGeneratedKeys = true)
   void insert(ReportTemplate reportTemplate);
 
