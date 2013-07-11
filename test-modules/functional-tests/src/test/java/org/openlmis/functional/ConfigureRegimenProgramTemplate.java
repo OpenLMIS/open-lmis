@@ -73,12 +73,13 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     verifyDefaultRegimenReportingFieldsValues(regimenTemplateConfigPage);
     regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(false);
     regimenTemplateConfigPage.setValueRemarksTextField("Testing column");
+    regimenTemplateConfigPage.setValueCodeTextField("Testing code");
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage(regimenTemplateConfigPage);
     verifyProgramConfigured(program);
 
     regimenTemplateConfigPage.clickEditProgram(program);
-    verifyProgramDetailsSaved(adultsRegimen, CODE1, NAME1,"Testing column");
+    verifyProgramDetailsSaved(adultsRegimen, CODE1, NAME1,"Testing column","Testing code");
 
     regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(true) ;
     regimenTemplateConfigPage.SaveRegime();
@@ -218,16 +219,22 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     assertTrue("noOfPatientsToInitiateTreatmentCheckBox should be checked", regimenTemplateConfigPage.IsNoOfPatientsToInitiateTreatmentCheckBoxSelected());
     assertTrue("noOfPatientsStoppedTreatmentCheckBox should be checked", regimenTemplateConfigPage.IsNoOfPatientsStoppedTreatmentCheckBoxSelected());
     assertTrue("remarksCheckBox should be checked", regimenTemplateConfigPage.IsRemarksCheckBoxSelected());
+    assertTrue("Code checkbox should always  be checked", regimenTemplateConfigPage.getCodeOKIcon().isDisplayed());
+    assertTrue("Name checkbox should always  be checked", regimenTemplateConfigPage.getNameOKIcon().isDisplayed());
 
     assertEquals("Number of patients on treatment", regimenTemplateConfigPage.getValueNoOfPatientsOnTreatmentTextField());
     assertEquals("Number of patients to be initiated treatment", regimenTemplateConfigPage.getValueNoOfPatientsToInitiateTreatmentTextField());
     assertEquals("Number of patients stopped treatment", regimenTemplateConfigPage.getValueNoOfPatientsStoppedTreatmentTextField());
     assertEquals("Remarks", regimenTemplateConfigPage.getValueRemarksTextField());
+    assertEquals("Code", regimenTemplateConfigPage.getValueCodeTextField());
+    assertEquals("Name", regimenTemplateConfigPage.getValueNameTextField());
 
     assertEquals("Numeric", regimenTemplateConfigPage.getTextNoOfPatientsOnTreatmentDataType());
     assertEquals("Numeric", regimenTemplateConfigPage.getTextNoOfPatientsStoppedTreatmentDataType());
     assertEquals("Numeric", regimenTemplateConfigPage.getTextNoOfPatientsToInitiateTreatmentDataType());
     assertEquals("Text", regimenTemplateConfigPage.getTextRemarksDataType());
+    assertEquals("Text", regimenTemplateConfigPage.getTextCodeDataType());
+    assertEquals("Text", regimenTemplateConfigPage.getTextNameDataType());
 
   }
 
@@ -296,12 +303,14 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   }
 
-    private void verifyProgramDetailsSaved(String category, String code, String name, String reportingField) {
+    private void verifyProgramDetailsSaved(String category, String code, String name, String reportingField, String codeLabelAltered) {
         RegimenTemplateConfigPage regimenTemplateConfigPage = new RegimenTemplateConfigPage(testWebDriver);
         verifyNonEditableRegimenAdded(code, name, false, 1);
 
         regimenTemplateConfigPage.clickReportingFieldTab();
         assertEquals(reportingField, regimenTemplateConfigPage.getValueRemarksTextField());
+        assertEquals(codeLabelAltered, regimenTemplateConfigPage.getValueCodeTextField());
+
     }
 
   @AfterMethod(groups = {"smoke", "functional2"})

@@ -7,16 +7,12 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
-
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
 
 public class RegimenTemplateConfigPage extends Page {
@@ -94,6 +90,18 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[6]/ng-switch/div/div[2]/input")
   private static WebElement noOfPatientsStoppedTreatmentTextField;
 
+  @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/ng-switch/div/div[2]/input")
+  private static WebElement codeTextField;
+
+  @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[3]/ng-switch/div/div[2]/input")
+  private static WebElement nameTextField;
+
+  @FindBy(how = How.XPATH, using = "//div[@ng-switch-when='code']/div[1]/i")
+  private static WebElement codeOKIcon;
+
+  @FindBy(how = How.XPATH, using = "//div[@ng-switch-when='name']/div[1]/i")
+  private static WebElement nameOKIcon;
+
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[7]/ng-switch/div/div[2]/input")
   private static WebElement remarksTextField;
 
@@ -108,6 +116,12 @@ public class RegimenTemplateConfigPage extends Page {
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[7]/ng-switch/div/div[3]/span")
   private static WebElement remarksDataType;
+
+  @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[3]/ng-switch/div/div[3]/span")
+  private static WebElement codeDataType;
+
+  @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/ng-switch/div/div[3]/span")
+  private static WebElement nameDataType;
 
   @FindBy(how = How.XPATH, using = "//div[1][@class='row-fluid rnr-template-columns ng-scope']/div[2][@class='span2']/div/span[@class='ng-binding']")
   private static WebElement addedCode;
@@ -166,8 +180,28 @@ public class RegimenTemplateConfigPage extends Page {
     return remarksTextField.getAttribute("value");
   }
 
+  public String getValueCodeTextField() {
+    return codeTextField.getAttribute("value");
+  }
+
+  public String getValueNameTextField() {
+    return nameTextField.getAttribute("value");
+  }
+
+  public WebElement getCodeOKIcon() {
+    return codeOKIcon;
+  }
+
+  public WebElement getNameOKIcon() {
+    return nameOKIcon;
+  }
+
   public void setValueRemarksTextField(String value) {
-    sendKeys(remarksTextField, "Testing column");;
+    sendKeys(remarksTextField, value);
+  }
+
+  public void setValueCodeTextField(String value) {
+    sendKeys(codeTextField, value);
   }
 
   public String getTextNoOfPatientsOnTreatmentDataType() {
@@ -184,6 +218,14 @@ public class RegimenTemplateConfigPage extends Page {
 
   public String getTextRemarksDataType() {
     return remarksDataType.getText().trim();
+  }
+
+  public String getTextCodeDataType() {
+    return codeDataType.getText().trim();
+  }
+
+  public String getTextNameDataType() {
+    return nameDataType.getText().trim();
   }
 
   public void AddNewRegimen(String category, String code, String name, Boolean isActive) {
