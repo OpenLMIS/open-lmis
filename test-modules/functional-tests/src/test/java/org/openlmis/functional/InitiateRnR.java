@@ -62,17 +62,9 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
     testWebDriver.sleep(1000);
-    assertTrue("Regimen tab should be displayed.", initiateRnRPage.existRegimenTab());
     initiateRnRPage1.clickRegimenTab();
-    assertEquals(initiateRnRPage1.getRegimenTableRowCount(), 2);
 
-    assertTrue("Regimen Code should be displayed.", initiateRnRPage1.existRegimenCode(regimenCode, 2));
-    assertTrue("Regimen Name should be displayed.", initiateRnRPage1.existRegimenName(regimenName, 2));
-
-    assertTrue("Reporting Field 1 should be displayed.", initiateRnRPage1.existRegimenReportingField(3, 2));
-    assertTrue("Reporting Field 2 should be displayed.", initiateRnRPage1.existRegimenReportingField(4, 2));
-    assertTrue("Reporting Field 3 should be displayed.", initiateRnRPage1.existRegimenReportingField(5, 2));
-    assertTrue("Reporting Field 4 should be displayed.", initiateRnRPage1.existRegimenReportingField(6, 2));
+    verifyRegimenFieldsPresentOnRegimenTab(regimenCode, regimenName, initiateRnRPage, initiateRnRPage1);
 
     initiateRnRPage1.enterValuesOnRegimenScreen(3, 2, 100);
     initiateRnRPage1.enterValuesOnRegimenScreen(4, 2, 200);
@@ -148,6 +140,18 @@ public class InitiateRnR extends TestCaseHelper {
     assertFalse("Regimen tab should not be displayed.", initiateRnRPage.existRegimenTab());
   }
 
+  private void verifyRegimenFieldsPresentOnRegimenTab(String regimenCode, String regimenName, InitiateRnRPage initiateRnRPage, InitiateRnRPage initiateRnRPage1) {
+    assertTrue("Regimen tab should be displayed.", initiateRnRPage.existRegimenTab());
+    assertEquals(initiateRnRPage1.getRegimenTableRowCount(), 2);
+
+    assertTrue("Regimen Code should be displayed.", initiateRnRPage1.existRegimenCode(regimenCode, 2));
+    assertTrue("Regimen Name should be displayed.", initiateRnRPage1.existRegimenName(regimenName, 2));
+
+    assertTrue("Reporting Field 1 should be displayed.", initiateRnRPage1.existRegimenReportingField(3, 2));
+    assertTrue("Reporting Field 2 should be displayed.", initiateRnRPage1.existRegimenReportingField(4, 2));
+    assertTrue("Reporting Field 3 should be displayed.", initiateRnRPage1.existRegimenReportingField(5, 2));
+    assertTrue("Reporting Field 4 should be displayed.", initiateRnRPage1.existRegimenReportingField(6, 2));
+  }
 
   @AfterMethod(groups = {"functional", "smoke"})
   public void tearDown() throws Exception {
