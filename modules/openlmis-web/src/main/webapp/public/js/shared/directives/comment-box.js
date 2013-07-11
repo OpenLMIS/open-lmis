@@ -22,12 +22,20 @@ app.directive('commentBox',function (RequisitionComment, $routeParams) {
         scope.rnrComments = data.comments;
       }, {});
 
-      angular.element(document).keyup(function (e) {
+      var commentEscapeKeyHandler  = function(e) {
         if (e.which == 27) {
           scope.show = false;
           scope.comment = "";
+          scope.$apply();
         }
-        scope.$apply();
+      };
+
+      scope.$watch("show", function () {
+        if (scope.show == true) {
+          angular.element(document).bind("keyup", commentEscapeKeyHandler);
+        } else {
+          angular.element(document).unbind("keyup", commentEscapeKeyHandler);
+        }
       });
 
       scope.$watch("comment", function () {
