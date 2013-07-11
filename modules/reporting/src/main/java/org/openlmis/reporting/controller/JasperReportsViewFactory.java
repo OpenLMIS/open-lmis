@@ -7,7 +7,6 @@
 package org.openlmis.reporting.controller;
 
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperReport;
 import org.openlmis.reporting.model.ReportTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiForm
 
 import javax.sql.DataSource;
 import java.io.*;
-import java.util.HashMap;
 import java.util.Map;
 
 import static java.io.File.createTempFile;
@@ -40,17 +38,16 @@ public class JasperReportsViewFactory {
     WebApplicationContext ctx = getCurrentWebApplicationContext();
 
     jasperView.setJdbcDataSource(replicationDataSource);
-    jasperView.setUrl(getReportURLForReportData(reportTemplate, parameterMap));
+    jasperView.setUrl(getReportURLForReportData(reportTemplate));
 
     if (ctx != null)
       jasperView.setApplicationContext(ctx);
   }
 
-  public String getReportURLForReportData(ReportTemplate reportTemplate, Map<String, Object> parameterMap) throws IOException, ClassNotFoundException, JRException {
+  public String getReportURLForReportData(ReportTemplate reportTemplate) throws IOException, ClassNotFoundException, JRException {
     File tmpFile = createTempFile(reportTemplate.getName(), ".jasper");
     ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(reportTemplate.getData()));
     JasperReport jasperReport  = (JasperReport)inputStream.readObject();
-    JasperFillManager.fillReport(jasperReport, parameterMap);
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
     ObjectOutputStream out = new ObjectOutputStream(bos);
     out.writeObject(jasperReport);

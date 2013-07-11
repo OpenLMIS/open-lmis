@@ -6,7 +6,6 @@
 
 package org.openlmis.reporting.controller;
 
-import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperReport;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +35,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({JasperReportsViewFactory.class, JasperFillManager.class})
+@PrepareForTest({JasperReportsViewFactory.class})
 @Category(UnitTests.class)
 public class JasperReportsViewFactoryTest {
 
@@ -81,7 +80,6 @@ public class JasperReportsViewFactoryTest {
   @Test
   public void shouldGetRequestedViewAndSetDataSourceAndWebContextInJasperView() throws Exception {
     whenNew(JasperReportsMultiFormatView.class).withNoArguments().thenReturn(jasperReportsView);
-    mockStatic(JasperFillManager.class);
     when(objectInputStream.readObject()).thenReturn(jasperReport);
     when(byteArrayOutputStream.toByteArray()).thenReturn(reportByteData);
     Map<String, Object> parameterMap = new HashMap();

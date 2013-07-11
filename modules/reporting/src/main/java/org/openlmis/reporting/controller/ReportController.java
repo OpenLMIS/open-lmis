@@ -24,6 +24,7 @@ import java.util.Map;
 public class ReportController {
   public static final String PDF_VIEW = "pdf";
   public static final String USER_ID = "USER_ID";
+  public static final String USER_ID_PARAM = "userId";
 
   @Autowired
   private JasperReportsViewFactory jasperReportsViewFactory;
@@ -49,6 +50,7 @@ public class ReportController {
 
     Map map = new HashMap();
     map.put("format", viewFormat);
+    map.putAll(parameterMap);
 
     return new ModelAndView(jasperView, map);
   }
@@ -57,7 +59,9 @@ public class ReportController {
     Map<String, Object> parameterMap = new HashMap();
     if (reportTemplate.getParameters() != null) {
       for (String parameter : reportTemplate.getParameters()) {
-        parameterMap.put(parameter, loggedInUserId(request));
+        if (parameter.equalsIgnoreCase(USER_ID_PARAM)) {
+          parameterMap.put(parameter, loggedInUserId(request).intValue());
+        }
       }
     }
     return parameterMap;
