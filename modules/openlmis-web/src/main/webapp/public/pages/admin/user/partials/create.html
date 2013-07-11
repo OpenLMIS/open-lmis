@@ -129,16 +129,16 @@
                 <div class="facility-list" ng-show="query.length > 2">
                   <ul>
                     <li ng-repeat="facility in filteredFacilities">
-                      <a href ng-click="setSelectedFacility(facility)">{{facility.code}} - {{facility.name}}</a>
+                      <a href="" ng-click="setSelectedFacility(facility)">{{facility.code}} - {{facility.name}}</a>
                     </li>
                     <li ng-show="resultCount == 0">
-                      <a href openlmis-message="create.user.noMatches|query"></a>
+                      <a href="" openlmis-message="create.user.noMatches|query"></a>
                     </li>
                   </ul>
                 </div>
                 <div ng-show="facilitySelected">
                   <span ng-bind="facilitySelected.name"></span>
-                  <a href class="clear-search" ng-click="confirmFacilityDelete()" openlmis-message="create.user.clear"></a>
+                  <a href="" class="clear-search" ng-click="confirmFacilityDelete()" openlmis-message="create.user.clear"></a>
                 </div>
               </div>
               <div class="form-tip" openlmis-message="search.threeCharacters"></div>
