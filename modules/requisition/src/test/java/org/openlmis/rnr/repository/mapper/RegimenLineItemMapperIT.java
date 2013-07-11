@@ -14,7 +14,6 @@ import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.RegimenMapper;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.RegimenLineItem;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
@@ -28,10 +27,9 @@ import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
@@ -109,12 +107,17 @@ public class RegimenLineItemMapperIT {
 
   @Test
   public void shouldUpdateRegimenLineItem() throws Exception {
+
     mapper.insert(regimenLineItem);
 
     regimenLineItem.setPatientsToInitiateTreatment(100);
     regimenLineItem.setPatientsOnTreatment(1000);
     regimenLineItem.setPatientsStoppedTreatment(200);
     regimenLineItem.setRemarks("Remarks");
+    regimenLineItem.setModifiedBy(1L);
+
+    ResultSet resultSetBeforeUpdate = queryExecutor.execute("SELECT * from regimen_line_items where id=?", Arrays.asList(regimenLineItem.getId()));
+    resultSetBeforeUpdate.next();
 
     mapper.update(regimenLineItem);
 
@@ -125,6 +128,8 @@ public class RegimenLineItemMapperIT {
     assertThat(resultSet.getInt("patientsOnTreatment"), is(1000));
     assertThat(resultSet.getInt("patientsStoppedTreatment"), is(200));
     assertThat(resultSet.getString("remarks"), is("Remarks"));
+    assertTrue(resultSet.getDate("modifiedDate") != resultSetBeforeUpdate.getDate("modifiedDate"));
+    assertThat(resultSet.getLong("modifiedBy"), is(1L));
 
   }
 }

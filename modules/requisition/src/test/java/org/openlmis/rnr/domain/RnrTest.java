@@ -23,12 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.lang.Enum.valueOf;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.defaultFacilityApprovedProduct;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
@@ -38,7 +38,6 @@ import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.constructorsDeclaredIn;
 
 @Category(UnitTests.class)
 public class RnrTest {
@@ -273,16 +272,18 @@ public class RnrTest {
     RegimenLineItem regimenLineItem1 = make(a(RegimenLineItemBuilder.defaultRegimenLineItem));
     RegimenLineItem spyRegimenLineItem = spy(regimenLineItem);
     RegimenLineItem spyRegimenLineItem1 = spy(regimenLineItem1);
-
-    newRnr.setRegimenLineItems(asList(regimenLineItem,regimenLineItem1));
-    rnr.setRegimenLineItems(asList(spyRegimenLineItem,spyRegimenLineItem1));
+    newRnr.setModifiedBy(1L);
+    newRnr.setRegimenLineItems(asList(regimenLineItem, regimenLineItem1));
+    rnr.setRegimenLineItems(asList(spyRegimenLineItem, spyRegimenLineItem1));
     RegimenTemplate regimenTemplate = new RegimenTemplate(1l, regimenColumns);
     List<RnrColumn> rnrColumns = new ArrayList<>();
 
     rnr.copyCreatorEditableFields(newRnr, new ProgramRnrTemplate(rnrColumns), regimenTemplate);
 
-    verify(spyRegimenLineItem).copyCreatorEditableFieldsForRegimen(regimenLineItem,regimenTemplate);
-    verify(spyRegimenLineItem1).copyCreatorEditableFieldsForRegimen(regimenLineItem1,regimenTemplate);
+    verify(spyRegimenLineItem).copyCreatorEditableFieldsForRegimen(regimenLineItem, regimenTemplate);
+    verify(spyRegimenLineItem1).copyCreatorEditableFieldsForRegimen(regimenLineItem1, regimenTemplate);
+    assertThat(spyRegimenLineItem.getModifiedBy(), is(1L));
+    assertThat(spyRegimenLineItem1.getModifiedBy(), is(1L));
 
 
   }

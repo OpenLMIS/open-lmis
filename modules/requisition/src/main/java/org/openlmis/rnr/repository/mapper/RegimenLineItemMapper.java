@@ -33,6 +33,6 @@ public interface RegimenLineItemMapper {
   public List<RegimenLineItem> getRegimenLineItemsByRnrId(Long rnrId);
 
   @Update("UPDATE regimen_line_items set patientsOnTreatment = #{patientsOnTreatment},patientsToInitiateTreatment = #{patientsToInitiateTreatment}," +
-    "patientsStoppedTreatment = #{patientsStoppedTreatment},remarks = #{remarks} where id=#{id}")
+    "patientsStoppedTreatment = #{patientsStoppedTreatment},remarks = #{remarks},modifiedBy = #{modifiedBy}, modifiedDate = COALESCE(#{modifiedDate},NOW()) where id=#{id}")
   void update(RegimenLineItem regimenLineItem);
 }

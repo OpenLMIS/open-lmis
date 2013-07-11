@@ -269,6 +269,7 @@ public class Rnr extends BaseModel {
       RegimenLineItem savedRegimenLineItem = this.findCorrespondingRegimenLineItem(regimenLineItem);
       if (savedRegimenLineItem != null)
         savedRegimenLineItem.copyCreatorEditableFieldsForRegimen(regimenLineItem, regimenTemplate);
+      savedRegimenLineItem.setModifiedBy(rnr.getModifiedBy());
     }
   }
 
