@@ -141,7 +141,7 @@ public class DBWrapper {
 
   public String getGeoLevelOfGeoZone(String geoZone) throws IOException, SQLException {
     String geoLevel = null;
-    ResultSet rs = query("select name from geographic_levels where levelnumber = (select levelid from geographic_zones where code='"+geoZone+"');");
+    ResultSet rs = query("select name from geographic_levels where levelnumber = (select levelid from geographic_zones where code='" + geoZone + "');");
 
     if (rs.next()) {
       geoLevel = rs.getString("name");
@@ -877,8 +877,8 @@ public class DBWrapper {
 
   public void insertRegimenTemplateColumnsForProgram(String programName) throws SQLException {
     update("INSERT INTO program_regimen_columns(name, programId, label, visible, dataType) values\n" +
-      "('code',(SELECT id FROM programs WHERE name='" + programName + "'), 'Code',true,'regimen.reporting.dataType.text'),\n" +
-      "('name',(SELECT id FROM programs WHERE name='" + programName + "'),'Name',true,'regimen.reporting.dataType.text'),\n" +
+      "('code',(SELECT id FROM programs WHERE name='" + programName + "'), 'header.code',true,'regimen.reporting.dataType.text'),\n" +
+      "('name',(SELECT id FROM programs WHERE name='" + programName + "'),'header.name',true,'regimen.reporting.dataType.text'),\n" +
       "('patientsOnTreatment',(SELECT id FROM programs WHERE name='" + programName + "'),'Number of patients on treatment',true,'regimen.reporting.dataType.numeric'),\n" +
       "('patientsToInitiateTreatment',(SELECT id FROM programs WHERE name='" + programName + "'),'Number of patients to be initiated treatment',true,'regimen.reporting.dataType.numeric'),\n" +
       "('patientsStoppedTreatment',(SELECT id FROM programs WHERE name='" + programName + "'),'Number of patients stopped treatment',true,'regimen.reporting.dataType.numeric'),\n" +

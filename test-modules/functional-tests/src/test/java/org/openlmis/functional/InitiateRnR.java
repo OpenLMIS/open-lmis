@@ -76,6 +76,7 @@ public class InitiateRnR extends TestCaseHelper {
 
     initiateRnRPage1.clickSubmitButton();
     initiateRnRPage1.clickOk();
+    testWebDriver.sleep(2000);
     initiateRnRPage1.verifySubmitSuccessMsg();
 
   }
