@@ -115,7 +115,6 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void testVerifyAlteredRegimensColumnsOnRnRScreen(String program,String adminUser, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     String newRemarksHeading = "Testing column";
-    String newCodeHeading = "Testing code";
 
     dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -125,7 +124,6 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, false);
     regimenTemplateConfigPage.clickReportingFieldTab();
     regimenTemplateConfigPage.setValueRemarksTextField(newRemarksHeading);
-    regimenTemplateConfigPage.setValueCodeTextField(newCodeHeading);
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage(regimenTemplateConfigPage);
     homePage.logout(baseUrlGlobal);
@@ -141,8 +139,12 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     testWebDriver.sleep(500);
     String tableXpathTillTr = "//table[@id='regimenTable']/thead/tr";
     int columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
+    initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, "Code", columns);
+    initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, "Name", columns);
+    initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, "Number of patients on treatment", columns);
+    initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, "Number of patients to be initiated treatment", columns);
+    initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, "Number of patients stopped treatment", columns);
     initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, newRemarksHeading, columns);
-    initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, newCodeHeading, columns);
 
   }
 
