@@ -4,12 +4,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-var IndexedDB = angular.module('IndexedDB', []);
-
-IndexedDB.factory('IndexedDB', function () {
+angular.module('IndexedDB', []).provider('IndexedDB', function () {
 
   var request = indexedDB.open("open_lmis", 1);
-  var indexedDBConnection;
+  var indexedDBConnection = null;
 
   request.onsuccess = function (event) {
     indexedDBConnection = event.currentTarget.result;
@@ -17,19 +15,23 @@ IndexedDB.factory('IndexedDB', function () {
   }
 
   request.onupgradeneeded = function (event) {
+    indexedDBConnection = event.currentTarget.result;
     if (event.oldVersion < 2) {
-      var facilityStore = db.createObjectStore("facilityData", {
-        "keyPath": "distributionId"
-      });
 
-      var distributionStore = db.createObjectStore("distribution", {
+      var distributionStore = indexedDBConnection.createObjectStore("distributions", {
         "keyPath": "id"
       });
 
-      distributionStore.createIndex("index_zpp", ["deliverZone.id", "program.id", "period.id"], {"unique": true});
+      distributionStore.createIndex("index_zpp", "zpp", {"unique": true});
+
+      var referenceData = indexedDBConnection.createObjectStore("distributionReferenceData", {
+        "keyPath": "distributionId"
+      });
 
     }
-  }
+  };
 
-  return indexedDBConnection;
+  this.$get = function () {
+    return indexedDBConnection;
+  };
 });

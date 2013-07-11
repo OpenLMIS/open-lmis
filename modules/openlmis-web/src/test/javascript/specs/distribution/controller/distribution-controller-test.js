@@ -9,18 +9,20 @@ describe('DistributionController', function () {
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('IndexedDB'));
+
   beforeEach(inject(function ($rootScope, $controller, $httpBackend) {
     scope = $rootScope.$new();
     controller = $controller;
     httpBackend = $httpBackend;
 
-    controller(DistributionController, {$scope:scope, deliveryZones:[]});
+    controller(DistributionController, {$scope: scope, deliveryZones: []});
   }));
 
   it('should load programs', function () {
-    scope.selectedZone = {id:1};
-    var programs = {deliveryZonePrograms:[
-      {id:1}
+    scope.selectedZone = {id: 1};
+    var programs = {deliveryZonePrograms: [
+      {id: 1}
     ]};
     httpBackend.expect('GET', '/deliveryZones/1/activePrograms.json').respond(200, programs);
 
@@ -31,10 +33,25 @@ describe('DistributionController', function () {
   });
 
   it('should load periods and set only top 13 periods in scope', function () {
-    scope.selectedProgram = {id:2};
-    scope.selectedZone = {id:1};
-    var periods = {periods:[
-      {id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1}
+    scope.selectedProgram = {id: 2};
+    scope.selectedZone = {id: 1};
+    var periods = {periods: [
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1}
     ]};
     httpBackend.expect('GET', '/deliveryZones/1/programs/2/periods.json').respond(200, periods);
 
@@ -42,6 +59,6 @@ describe('DistributionController', function () {
     httpBackend.flush();
 
     expect(scope.periods.length).toEqual(13);
-    expect(scope.periods).toEqual(periods.periods.slice(0,13));
+    expect(scope.periods).toEqual(periods.periods.slice(0, 13));
   });
 });

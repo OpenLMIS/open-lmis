@@ -5,7 +5,7 @@
  */
 
 var services = angular.module('openlmis.services', ['ngResource']);
-var update ={update: {method: 'PUT'}};
+var update = {update: {method: 'PUT'}};
 
 services.value('version', '@version@');
 
@@ -236,6 +236,10 @@ services.factory('ProgramRegimenTemplate', function ($resource) {
 
 services.factory('GeographicZones', function ($resource) {
   return $resource('/geographicZones/:id.json', {}, {});
+});
+
+services.factory('Distributions', function ($resource) {
+  return $resource('/distributions.json', {}, {});
 });
 
 

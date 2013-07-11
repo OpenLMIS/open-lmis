@@ -4,7 +4,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function DistributionController($scope, $location, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods) {
+function DistributionController($scope, $location, deliveryZones, DeliveryZoneActivePrograms, messageService,
+                                DeliveryZoneProgramPeriods, DeliveryZoneFacilities, Distributions, IndexedDB) {
 
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
@@ -14,21 +15,21 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
 
   $scope.zonePlaceholder = !!$scope.deliveryZones.length ? DELIVERY_ZONE_LABEL : NONE_ASSIGNED_LABEL;
 
-  $scope.loadPrograms = function() {
+  $scope.loadPrograms = function () {
     $scope.programs = $scope.periods = [];
-    DeliveryZoneActivePrograms.get({zoneId: $scope.selectedZone.id}, function(data) {
+    DeliveryZoneActivePrograms.get({zoneId: $scope.selectedZone.id}, function (data) {
       $scope.programs = data.deliveryZonePrograms;
-    }, function(data) {
+    }, function (data) {
       $scope.error = data.data.error;
     });
   };
 
-  $scope.loadPeriods = function() {
+  $scope.loadPeriods = function () {
     $scope.periods = [];
-    DeliveryZoneProgramPeriods.get({zoneId: $scope.selectedZone.id, programId: $scope.selectedProgram.id}, function(data) {
+    DeliveryZoneProgramPeriods.get({zoneId: $scope.selectedZone.id, programId: $scope.selectedProgram.id}, function (data) {
       $scope.periods = data.periods.length ? data.periods.slice(0, 13) : [];
       $scope.selectedPeriod = $scope.periods.length ? $scope.periods[0] : NONE_ASSIGNED_LABEL;
-    }, function(data) {
+    }, function (data) {
       $scope.error = data.data.error;
     });
   };
@@ -41,18 +42,70 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
     return optionMessage($scope.periods, DEFAULT_PERIOD_MESSAGE);
   };
 
+  $scope.initiateDistribution = function () {
+    var distribution = new Distribution($scope.selectedZone.id, $scope.selectedProgram.id, $scope.selectedPeriod.id);
+
+    Distributions.save({}, distribution, onInitSuccess, {});
+
+    function onInitSuccess(data) {
+      var transaction = IndexedDB.transaction(['distributions', 'distributionReferenceData'], 'readwrite');
+      var distributionStore = transaction.objectStore('distributions');
+      distributionStore.put(data.distribution);
+      $scope.message = data.success;
+
+      var distributionReferenceData = transaction.objectStore('distributionReferenceData');
+    }
+
+//    DeliveryZoneFacilities.get({deliveryZoneId: $scope.selectedZone.id, programId: $scope.selectedProgram.id}, function (data) {
+//      $scope.distributionList.push(distribution);
+//      cacheReferenceData(data.facilities, key);
+//    }, {});
+
+  };
+
+  function ifDistributionExists(key) {
+
+  }
+
+
+  function cacheReferenceData(facilityList, key) {
+    var transaction = db.transaction('facilityData', 'readwrite');
+    var objects = transaction.objectStore('facilityData');
+
+    var cacheObject = {"facilityList": facilityList, "distributionId": key}
+
+    objects.put(cacheObject);
+
+
+    transaction.oncomplete = function () {
+      console.log('facility data saved');
+    }
+  }
+
+  function cacheDistribution(distribution) {
+    var transaction = db.transaction('distribution', 'readwrite');
+    var objects = transaction.objectStore('distribution');
+
+    objects.put(distribution);
+
+    transaction.oncomplete = function () {
+      console.log('distribution saved successfully');
+    }
+
+  }
+
   var optionMessage = function (entity, defaultMessage) {
     return entity == null || entity.length == 0 ? NONE_ASSIGNED_LABEL : defaultMessage;
   };
 
 
   $scope.viewLoadAmount = function () {
-    $location.path("/view-load-amounts/"+$scope.selectedZone.id +"/" + +$scope.selectedProgram.id + "/" + $scope.selectedPeriod.id);
+    $location.path("/view-load-amounts/" + $scope.selectedZone.id + "/" + +$scope.selectedProgram.id + "/" + $scope.selectedPeriod.id);
   }
 }
 
 DistributionController.resolve = {
-  deliveryZones: function(UserDeliveryZones, $timeout, $q){
+  deliveryZones: function (UserDeliveryZones, $timeout, $q) {
     var deferred = $q.defer();
     $timeout(function () {
       UserDeliveryZones.get({}, function (data) {

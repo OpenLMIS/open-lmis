@@ -5,14 +5,6 @@
   -->
 <div ng-controller="DistributionListController">
 
-  <a href class="btn btn-primary" id="viewLoadAmounts"
-     ng-click="viewLoadAmount()"
-     ng-disabled="!selectedPeriod||!selectedProgram||!selectedZone" openlmis-message="button.view.load.amount">
-  </a>
-  <a href class="btn btn-primary" id="initiateDistribution" ng-click="initiateDistribution()"
-     ng-disabled="!selectedPeriod||!selectedProgram||!selectedZone" openlmis-message="button.initiate.distribution">
-  </a>
-
   <div ng-show="distributionList.length">
     <br/>
     <br/>

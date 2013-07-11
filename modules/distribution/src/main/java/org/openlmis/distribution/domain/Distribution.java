@@ -24,4 +24,9 @@ public class Distribution extends BaseModel {
   Program program;
   ProcessingPeriod period;
   DistributionStatus status;
+
+  @SuppressWarnings("unused")
+  public String getZpp() {
+    return deliveryZone.getId() + "_" + program.getId() + "_" + period.getId();
+  }
 }
