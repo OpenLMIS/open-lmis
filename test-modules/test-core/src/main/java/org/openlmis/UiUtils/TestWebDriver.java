@@ -64,7 +64,6 @@ public class TestWebDriver {
   }
 
 
-
   public void verifyUrlInvalid() {
     String url = getCurrentUrl();
     assertTrue(url.contains(BASE_URL + "public/pages/loginAs.html?error=true"));
@@ -76,7 +75,7 @@ public class TestWebDriver {
   }
 
   public void getUrl(String url) {
-        driver.get(url);
+    driver.get(url);
   }
 
   public static WebDriver getDriver() {
@@ -137,7 +136,7 @@ public class TestWebDriver {
     });
   }
 
-  public void waitForElementsToAppear(final WebElement element, final WebElement elementSecond, final WebElement elementThird ) {
+  public void waitForElementsToAppear(final WebElement element, final WebElement elementSecond, final WebElement elementThird) {
     (new WebDriverWait(driver, DEFAULT_WAIT_TIME)).until(new ExpectedCondition<Boolean>() {
       public Boolean apply(WebDriver d) {
         return (element.isDisplayed() || elementSecond.isDisplayed() || elementThird.isDisplayed());
@@ -183,8 +182,20 @@ public class TestWebDriver {
     return driver.findElement(By.id(Id));
   }
 
+  public void selectFrame(String frameName) {
+    driver.switchTo().frame(frameName);
+  }
+
+  public WebElement getElementByName(String Name) {
+    return driver.findElement(By.name(Name));
+  }
+
   public WebElement getElementByXpath(String Xpath) {
     return driver.findElement(By.xpath(Xpath));
+  }
+
+  public WebElement getElementByLink(String Link) {
+    return driver.findElement(By.linkText(Link));
   }
 
   public List<WebElement> getElementsByXpath(String Xpath) {
@@ -247,7 +258,6 @@ public class TestWebDriver {
   }
 
 
-
   public void sleep(long timeToSleep) {
     try {
       Thread.sleep(timeToSleep);
@@ -274,7 +284,6 @@ public class TestWebDriver {
     }
 
   }
-
 
 
   public boolean mouseOver(final WebElement element) {
@@ -304,7 +313,6 @@ public class TestWebDriver {
       element.sendKeys(Keys.RETURN);
     }
   }
-
 
 
 }
