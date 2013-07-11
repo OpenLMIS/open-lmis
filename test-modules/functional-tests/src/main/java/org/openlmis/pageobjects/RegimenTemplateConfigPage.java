@@ -7,6 +7,7 @@
 package org.openlmis.pageobjects;
 
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -132,6 +133,7 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[2][@class='ui-sortable ng-scope ng-pristine ng-valid']/div[1][@class='category-name']/div[@class='ng-binding']")
   private static WebElement addedCategory;
 
+
   private static String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
   private static String baseRegimenDivXpath = "//div[@id='sortable']/div";
 
@@ -147,6 +149,28 @@ public class RegimenTemplateConfigPage extends Page {
       else
         unSelectCheckBox(noOfPatientsOnTreatmentCheckBox);
   }
+
+  public void NoOfPatientsToInitiateTreatmentCheckBox(boolean select) {
+    if (select)
+      selectCheckBox(noOfPatientsToInitiateTreatmentCheckBox);
+    else
+      unSelectCheckBox(noOfPatientsToInitiateTreatmentCheckBox);
+  }
+
+  public void NoOfPatientsStoppedTreatmentCheckBox(boolean select) {
+    if (select)
+      selectCheckBox(noOfPatientsStoppedTreatmentCheckBox);
+    else
+      unSelectCheckBox(noOfPatientsStoppedTreatmentCheckBox);
+  }
+
+  public void RemarksCheckBox(boolean select) {
+    if (select)
+      selectCheckBox(remarksCheckBox);
+    else
+      unSelectCheckBox(remarksCheckBox);
+  }
+
 
   public boolean IsSelectedNoOfPatientsOnTreatmentCheckBox() {
     return noOfPatientsOnTreatmentCheckBox.isSelected();
@@ -378,6 +402,12 @@ public class RegimenTemplateConfigPage extends Page {
 
   public void SaveRegime() {
     SaveButton.click();
+  }
+
+  public void verifySaveErrorMessageDiv(String errorMessage)
+  {
+    testWebDriver.waitForElementToAppear(saveErrorMsgDiv);
+    SeleneseTestNgHelper.assertEquals(errorMessage,saveErrorMsgDiv.getText());
   }
 
   public void CancelRegime(String program) {

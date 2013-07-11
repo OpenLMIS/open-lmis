@@ -35,6 +35,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   private static String duplicateErrorMessageSave = "Cannot add duplicate regimen code for same program";
   private static String requiredErrorMessageSave = "Please fill required values";
   private static String errorMessageONSaveBeforeDone = "Mark all regimens as 'Done' before saving the form";
+  private static String oneShouldBeSelectedErrorMessage = "At least one column should be checked";
   private static String baseRegimenDivXpath = "//div[@id='sortable']/div";
   private static String CODE1 = "Code1";
   private static String CODE2 = "Code2";
@@ -89,6 +90,26 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(true);
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage(regimenTemplateConfigPage);
+  }
+
+  @Test(groups = {"functional"}, dataProvider = "Data-Provider")
+  public void testVerifyAtLeastOneColumnChecked(String program, String[] credentials) throws Exception {
+
+    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
+    regimenTemplateConfigPage.configureProgram(program);
+    regimenTemplateConfigPage.clickReportingFieldTab();
+    verifyDefaultRegimenReportingFieldsValues(regimenTemplateConfigPage);
+    regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(false);
+    regimenTemplateConfigPage.NoOfPatientsStoppedTreatmentCheckBox(false);
+    regimenTemplateConfigPage.NoOfPatientsToInitiateTreatmentCheckBox(false);
+    regimenTemplateConfigPage.RemarksCheckBox(false);
+
+    regimenTemplateConfigPage.SaveRegime();
+    regimenTemplateConfigPage.verifySaveErrorMessageDiv(oneShouldBeSelectedErrorMessage);
+
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
