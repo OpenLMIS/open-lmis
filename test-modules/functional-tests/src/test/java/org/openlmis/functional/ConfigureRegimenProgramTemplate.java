@@ -79,7 +79,6 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     verifyDefaultRegimenReportingFieldsValues(regimenTemplateConfigPage);
     regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(false);
     regimenTemplateConfigPage.setValueRemarksTextField(newRemarksHeading);
-    regimenTemplateConfigPage.setValueCodeTextField(newCodeHeading);
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage(regimenTemplateConfigPage);
     verifyProgramConfigured(program);
@@ -282,22 +281,16 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     assertTrue("noOfPatientsToInitiateTreatmentCheckBox should be checked", regimenTemplateConfigPage.IsNoOfPatientsToInitiateTreatmentCheckBoxSelected());
     assertTrue("noOfPatientsStoppedTreatmentCheckBox should be checked", regimenTemplateConfigPage.IsNoOfPatientsStoppedTreatmentCheckBoxSelected());
     assertTrue("remarksCheckBox should be checked", regimenTemplateConfigPage.IsRemarksCheckBoxSelected());
-    assertTrue("Code checkbox should always  be checked", regimenTemplateConfigPage.getCodeOKIcon().isDisplayed());
-    assertTrue("Name checkbox should always  be checked", regimenTemplateConfigPage.getNameOKIcon().isDisplayed());
 
     assertEquals("Number of patients on treatment", regimenTemplateConfigPage.getValueNoOfPatientsOnTreatmentTextField());
     assertEquals("Number of patients to be initiated treatment", regimenTemplateConfigPage.getValueNoOfPatientsToInitiateTreatmentTextField());
     assertEquals("Number of patients stopped treatment", regimenTemplateConfigPage.getValueNoOfPatientsStoppedTreatmentTextField());
     assertEquals("Remarks", regimenTemplateConfigPage.getValueRemarksTextField());
-    assertEquals("Code", regimenTemplateConfigPage.getValueCodeTextField());
-    assertEquals("Name", regimenTemplateConfigPage.getValueNameTextField());
 
     assertEquals("Numeric", regimenTemplateConfigPage.getTextNoOfPatientsOnTreatmentDataType());
     assertEquals("Numeric", regimenTemplateConfigPage.getTextNoOfPatientsStoppedTreatmentDataType());
     assertEquals("Numeric", regimenTemplateConfigPage.getTextNoOfPatientsToInitiateTreatmentDataType());
     assertEquals("Text", regimenTemplateConfigPage.getTextRemarksDataType());
-    assertEquals("Text", regimenTemplateConfigPage.getTextCodeDataType());
-    assertEquals("Text", regimenTemplateConfigPage.getTextNameDataType());
 
   }
 
@@ -371,7 +364,6 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
     regimenTemplateConfigPage.clickReportingFieldTab();
     assertEquals(reportingField, regimenTemplateConfigPage.getValueRemarksTextField());
-    assertEquals(codeLabelAltered, regimenTemplateConfigPage.getValueCodeTextField());
 
   }
 

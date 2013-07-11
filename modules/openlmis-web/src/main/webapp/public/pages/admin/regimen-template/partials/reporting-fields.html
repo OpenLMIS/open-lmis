@@ -12,8 +12,7 @@
   <div class="list-container">
   <div class="row-fluid list-row"
        ng-repeat="regimenColumn in regimenTemplate.regimenColumns">
-  <ng-switch on="regimenColumn.name">
-      <div ng-switch-default>
+      <div>
         <div class="span1">
           <span class="first-column checkbox-column">
             <input type="checkbox" ng-model="regimenColumn.visible"/>
@@ -27,7 +26,6 @@
           <span openlmis-message="regimenColumn.dataType"></span>
         </div>
       </div>
-    </ng-switch>
   </div>
 </div>
 </div>
