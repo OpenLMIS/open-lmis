@@ -7,7 +7,10 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.ProcessingSchedule;
+import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
@@ -79,9 +82,7 @@ public class RegimenLineItemMapperIT {
     requisitionMapper.insert(rnr);
     RegimenCategory category = new RegimenCategory("categoryCode", "categoryName", 1);
     category.setId(1L);
-    Regimen regimen = new Regimen("Name", "code", 2L, true, category, 1);
-    regimenMapper.insert(regimen);
-    regimenLineItem = new RegimenLineItem(rnr.getId(), regimen);
+    regimenLineItem = new RegimenLineItem(rnr.getId(), category);
   }
 
   @Test
@@ -98,11 +99,11 @@ public class RegimenLineItemMapperIT {
     List<RegimenLineItem> returnedRegimenLineItems = mapper.getRegimenLineItemsByRnrId(rnr.getId());
 
     assertThat(returnedRegimenLineItems.get(0).getRnrId(), is(regimenLineItem.getRnrId()));
-    assertThat(returnedRegimenLineItems.get(0).getRegimen().getCode(), is(regimenLineItem.getRegimen().getCode()));
-    assertThat(returnedRegimenLineItems.get(0).getRegimen().getName(), is(regimenLineItem.getRegimen().getName()));
-    assertThat(returnedRegimenLineItems.get(0).getRegimen().getCategory().getName(), is(regimenLineItem.getRegimen().getCategory().getName()));
-    assertThat(returnedRegimenLineItems.get(0).getRegimen().getCategory().getDisplayOrder(), is(regimenLineItem.getRegimen().getCategory().getDisplayOrder()));
-    assertThat(returnedRegimenLineItems.get(0).getRegimen().getDisplayOrder(), is(regimenLineItem.getRegimen().getDisplayOrder()));
+    assertThat(returnedRegimenLineItems.get(0).getCode(), is(regimenLineItem.getCode()));
+    assertThat(returnedRegimenLineItems.get(0).getName(), is(regimenLineItem.getName()));
+    assertThat(returnedRegimenLineItems.get(0).getCategory().getName(), is(regimenLineItem.getCategory().getName()));
+    assertThat(returnedRegimenLineItems.get(0).getCategory().getDisplayOrder(), is(regimenLineItem.getCategory().getDisplayOrder()));
+    assertThat(returnedRegimenLineItems.get(0).getRegimenDisplayOrder(), is(regimenLineItem.getRegimenDisplayOrder()));
   }
 
   @Test

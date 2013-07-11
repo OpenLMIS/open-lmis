@@ -152,7 +152,7 @@ public class RequisitionServiceTest {
     regimens.add(new Regimen("name", "code", 1L, true, new RegimenCategory("code", "name", 1), 1));
 
     List<RegimenLineItem> regimenLineItems = new ArrayList<>();
-    regimenLineItems.add(new RegimenLineItem(null, regimens.get(0)));
+    regimenLineItems.add(new RegimenLineItem(null, null));
     requisition.setRegimenLineItems(regimenLineItems);
     Rnr spyRequisition = spy(requisition);
     Mockito.doNothing().when(spyRequisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));

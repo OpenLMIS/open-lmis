@@ -72,7 +72,9 @@ public class Rnr extends BaseModel {
   private void fillActiveRegimenLineItems(List<Regimen> regimens) {
     for (Regimen regimen : regimens) {
       if (regimen.getActive()) {
-        RegimenLineItem regimenLineItem = new RegimenLineItem(null, regimen);
+        RegimenLineItem regimenLineItem = new RegimenLineItem(regimen.getId(), regimen.getCategory());
+        regimenLineItem.setCode(regimen.getCode());
+        regimenLineItem.setName(regimen.getName());
         regimenLineItems.add(regimenLineItem);
       }
     }

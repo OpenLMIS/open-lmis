@@ -34,10 +34,10 @@
         <td class="cell-input" ng-repeat="regimenColumn in visibleRegimenColumns">
           <ng-switch on="regimenColumn.name">
               <span ng-switch-when="name">
-                <span ng-bind="regimenLineItem.regimen.name" class="cell-text"></span>
+                <span ng-bind="regimenLineItem.name" class="cell-text"></span>
               </span>
               <span ng-switch-when="code">
-                <span ng-bind="regimenLineItem.regimen.code" class="cell-text"></span>
+                <span ng-bind="regimenLineItem.code" class="cell-text"></span>
               </span>
               <span ng-switch-when="remarks">
                 <input type="text" ng-model="regimenLineItem[regimenColumn.name]" class="cell-text">

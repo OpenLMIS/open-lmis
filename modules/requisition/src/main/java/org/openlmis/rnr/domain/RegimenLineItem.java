@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.Regimen;
+import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.domain.RegimenColumn;
 import org.openlmis.core.domain.RegimenTemplate;
 import org.slf4j.Logger;
@@ -27,7 +27,6 @@ public class RegimenLineItem extends BaseModel {
   public static final String TYPE_NUMERIC = "regimen.reporting.dataType.numeric";
   public static final String REMARKS = "remarks";
 
-  private Regimen regimen;
   private Long rnrId;
   private String code;
   private String name;
@@ -35,12 +34,14 @@ public class RegimenLineItem extends BaseModel {
   private Integer patientsToInitiateTreatment;
   private Integer patientsStoppedTreatment;
   private String remarks;
+  private RegimenCategory category;
+  private Integer regimenDisplayOrder;
 
   private static Logger logger = LoggerFactory.getLogger(RegimenLineItem.class);
 
-  public RegimenLineItem(Long rnrId, Regimen regimen) {
+  public RegimenLineItem(Long rnrId, RegimenCategory category) {
     this.rnrId = rnrId;
-    this.regimen = regimen;
+    this.category = category;
   }
 
   public void setRegimenFieldsAccordingToTemplate(RegimenTemplate regimenTemplate) {
