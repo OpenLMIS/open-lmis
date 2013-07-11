@@ -47,10 +47,10 @@
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[WITH RECURSIVE  supervisoryNodesRec AS (
-SELECT * FROM supervisory_nodes WHERE id in (SELECT DISTINCT s.id FROM  supervisory_nodes s INNER JOIN role_assignments ra ON s.id = ra.supervisoryNodeId  INNER JOIN role_rights rr ON ra.roleId = rr.roleId WHERE rr.rightName = 'VIEW_REQUISITION' AND ra.userId = $P{userId}) UNION SELECT sn.* FROM supervisory_nodes sn JOIN supervisoryNodesRec ON sn.parentId = supervisoryNodesRec.id)
-select f.code as facilitycode, f.name as facilityname, ft.name as facilitytypename, fo.text as facilityoperatedbytext, f.sdp as sdp, f.golivedate as golivedate from facilities f, facility_types ft, facility_operators fo where f.active= true and  ft.id=f.typeid and fo.id=f.operatedbyid AND f.id IN (select DISTINCT facilityId from supervisoryNodesRec)]]>
-	</queryString>
+		<![CDATA[(WITH RECURSIVE  supervisoryNodesRec (id,facilityid) AS
+                 (SELECT distinct s.id, rgm.facilityid FROM  requisition_group_members rgm INNER JOIN requisition_groups rg ON rg.id=rgm.requisitiongroupid INNER JOIN supervisory_nodes s ON s.id=rg.supervisorynodeid INNER JOIN role_assignments ra ON s.id = ra.supervisoryNodeId INNER JOIN role_rights rr ON ra.roleId = rr.roleId WHERE rr.rightName = 'VIEW_REQUISITION' AND ra.userId = $P{userId} UNION SELECT sn.id,rgm2.facilityid FROM requisition_group_members rgm2 INNER JOIN requisition_groups rg2 ON rg2.id=rgm2.requisitiongroupid INNER JOIN supervisory_nodes sn ON sn.id=rg2.supervisorynodeid INNER JOIN supervisoryNodesRec ON sn.parentId = supervisoryNodesRec.id)
+                 select f.code as facilitycode, f.name as facilityname, ft.name as facilitytypename, fo.text as facilityoperatedbytext, f.sdp as sdp, f.golivedate as golivedate from facilities f, facility_types ft, facility_operators fo where f.active= true and  ft.id=f.typeid and fo.id=f.operatedbyid AND f.id IN (select facilityId from supervisoryNodesRec)) UNION select f.code as facilitycode, f.name as facilityname, ft.name as facilitytypename, fo.text as facilityoperatedbytext, f.sdp as sdp, f.golivedate as golivedate from facilities f, facility_types ft, facility_operators fo where f.active= true and  ft.id=f.typeid and fo.id=f.operatedbyid AND f.id IN (select facilityId from users where id=$P{userId})]]>
+    </queryString>
 	<field name="facilitycode" class="java.lang.String"/>
 	<field name="facilityname" class="java.lang.String"/>
 	<field name="facilitytypename" class="java.lang.String"/>
