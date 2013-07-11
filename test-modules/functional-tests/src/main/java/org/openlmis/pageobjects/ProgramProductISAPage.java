@@ -29,7 +29,7 @@ public class ProgramProductISAPage extends Page {
   @FindBy(how = ID, using = "program")
   private static WebElement selectProgramSelectBox;
 
-  @FindBy(how = XPATH, using = "//div[contains(text(),'Product name')]")
+  @FindBy(how = XPATH, using = "//span[contains(text(),'Product name')]")
   private static WebElement productNameColumn;
 
   @FindBy(how = ID, using = "searchProduct")
