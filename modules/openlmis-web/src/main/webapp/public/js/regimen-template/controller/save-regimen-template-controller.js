@@ -9,6 +9,9 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
   $scope.program = program;
   $scope.regimens = programRegimens;
   $scope.regimenTemplate = regimenTemplate;
+  $scope.regimenTemplate.regimenColumns = _.reject($scope.regimenTemplate.regimenColumns,function(column){
+    return (column.name == 'name' || column.name == 'code');
+  });
   $scope.regimenCategories = regimenCategories;
   $scope.selectProgramUrl = "/public/pages/admin/regimen-template/index.html#/select-program";
   $scope.regimensByCategory = [];

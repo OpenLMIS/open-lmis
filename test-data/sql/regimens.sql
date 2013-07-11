@@ -16,8 +16,8 @@ INSERT INTO regimens (programid, categoryid, code, name, active, displayorder) V
 DELETE FROM program_regimen_columns;
 
 INSERT INTO program_regimen_columns(name, programId, label, visible, dataType) values
-('code',2, 'Code',true,'regimen.reporting.dataType.text'),
-('name',2,'Name',true,'regimen.reporting.dataType.text'),
+('code',2, 'header.code',true,'regimen.reporting.dataType.text'),
+('name',2,'header.name',true,'regimen.reporting.dataType.text'),
 ('patientsOnTreatment',2,'Number of patients on treatment',true,'regimen.reporting.dataType.numeric'),
 ('patientsToInitiateTreatment',2,'Number of patients to be initiated treatment',true,'regimen.reporting.dataType.numeric'),
 ('patientsStoppedTreatment',2,'Number of patients stopped treatment',true,'regimen.reporting.dataType.numeric'),

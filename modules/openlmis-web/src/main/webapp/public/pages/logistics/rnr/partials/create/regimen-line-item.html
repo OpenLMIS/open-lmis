@@ -10,8 +10,18 @@
     <table id="regimenTable" fixed-table-header class="table table-bordered scrollable">
       <thead>
       <tr>
-        <th ng-repeat="regimenColumn in visibleRegimenColumns"
-            ng-bind="regimenColumn.label">
+        <th ng-repeat="regimenColumn in visibleRegimenColumns">
+          <ng-switch on="regimenColumn.label">
+            <div ng-switch-when="header.name">
+              <div openlmis-message="header.name"></div>
+            </div>
+            <div ng-switch-when="header.code">
+              <span openlmis-message="header.code"></span>
+            </div>
+            <div ng-switch-default>
+              <span ng-bind="regimenColumn.label"/>
+            </div>
+          </ng-switch>
         </th>
       </tr>
       </thead>
@@ -38,9 +48,9 @@
                        type="text"
                        ng-model="regimenLineItem[regimenColumn.name]"
                        rnr-validator="positiveInteger" maxlength="8">
+                <span class="rnr-form-error" id="{{regimenColumn.name + $parent.$parent.$index}}"
+                      style="display:none;" openlmis-message="error.number.only">
               </span>
-              <span class="rnr-form-error" id="{{regimenColumn.name + $parent.$index}}"
-                    style="display:none;" openlmis-message="error.number.only">
               </span>
           </ng-switch>
         </td>
