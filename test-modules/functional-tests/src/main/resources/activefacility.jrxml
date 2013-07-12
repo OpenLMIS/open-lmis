@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="782" pageHeight="555" orientation="Landscape" columnWidth="782" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="a0a4e861-0726-422f-b3d5-54b1aefe96ce">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="782" pageHeight="555" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="782" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="a0a4e861-0726-422f-b3d5-54b1aefe96ce">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -52,7 +52,7 @@
                  (SELECT distinct s.id, rgm.facilityid FROM  requisition_group_members rgm INNER JOIN requisition_groups rg ON rg.id=rgm.requisitiongroupid INNER JOIN supervisory_nodes s ON s.id=rg.supervisorynodeid INNER JOIN role_assignments ra ON s.id = ra.supervisoryNodeId INNER JOIN role_rights rr ON ra.roleId = rr.roleId WHERE rr.rightName = 'VIEW_REQUISITION' AND ra.userId = $P{userId}
                  UNION SELECT sn.id,rgm2.facilityid FROM requisition_group_members rgm2 INNER JOIN requisition_groups rg2 ON rg2.id=rgm2.requisitiongroupid INNER JOIN supervisory_nodes sn ON sn.id=rg2.supervisorynodeid INNER JOIN supervisoryNodesRec ON sn.parentId = supervisoryNodesRec.id) select distinct snr.facilityid from supervisoryNodesRec snr)
                  UNION select distinct u.facilityId from users u where u.id=$P{userId})]]>
-    </queryString>
+	</queryString>
 	<field name="facilitycode" class="java.lang.String"/>
 	<field name="facilityname" class="java.lang.String"/>
 	<field name="facilitytypename" class="java.lang.String"/>
