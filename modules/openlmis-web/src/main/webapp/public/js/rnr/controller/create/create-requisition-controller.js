@@ -126,7 +126,13 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     $scope.fullSupplyTabError = !!fullSupplyError;
     $scope.nonFullSupplyTabError = !!nonFullSupplyError;
 
-    return fullSupplyError || nonFullSupplyError;
+    if ($scope.rnr.regimenLineItems) validateRegimenLineItems();
+    var regimenError;
+    if ($scope.regimenLineItemInValid) {
+      regimenError = messageService.get("error.rnr.validation");
+    }
+
+    return fullSupplyError || nonFullSupplyError || regimenError;
   }
 
   function setErrorPages() {
@@ -146,18 +152,28 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
       return;
     }
     showConfirmModal();
+
   };
+
+  function validateRegimenLineItems() {
+    $.each($scope.rnr.regimenLineItems, function (index, regimenLineItem) {
+      if (isUndefined(regimenLineItem.patientsOnTreatment) || isUndefined(regimenLineItem.patientsStoppedTreatment) || isUndefined(regimenLineItem.patientsToInitiateTreatment)) {
+        $scope.regimenLineItemInValid = true;
+        return;
+      }
+    });
+  }
 
   var submitValidatedRnr = function () {
     Requisitions.update({id: $scope.rnr.id, operation: "submit"},
-        {}, function (data) {
-          $scope.rnr.status = "SUBMITTED";
-          $scope.formDisabled = !$scope.hasPermission('AUTHORIZE_REQUISITION');
-          $scope.submitMessage = data.success;
-          $scope.saveRnrForm.$setPristine();
-        }, function (data) {
-          $scope.submitError = data.data.error;
-        });
+      {}, function (data) {
+        $scope.rnr.status = "SUBMITTED";
+        $scope.formDisabled = !$scope.hasPermission('AUTHORIZE_REQUISITION');
+        $scope.submitMessage = data.success;
+        $scope.saveRnrForm.$setPristine();
+      }, function (data) {
+        $scope.submitError = data.data.error;
+      });
   };
 
   $scope.dialogCloseCallback = function (result) {
@@ -281,10 +297,11 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     $rootScope.submitMessage = "";
     $scope.error = "";
     $scope.message = "";
+    $scope.regimenLineItemInValid = false;
   }
 
   function removeExtraDataForPostFromRnr() {
-    var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": [],"regimenLineItems":[]};
+    var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": [], "regimenLineItems": []};
     if (!$scope.pageLineItems.length) return rnr;
     if ($scope.pageLineItems[0].fullSupply == false) {
       _.each($scope.rnr.nonFullSupplyLineItems, function (lineItem) {

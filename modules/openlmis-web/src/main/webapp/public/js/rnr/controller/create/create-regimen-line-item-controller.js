@@ -16,5 +16,4 @@ function CreateRegimenLineItemController($scope) {
     return prefix + "_" + parent.$parent.$index;
   };
 
-
 };

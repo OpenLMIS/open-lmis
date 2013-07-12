@@ -544,6 +544,48 @@ describe('CreateRequisitionController', function () {
   it('should check permission using requisition rights', function () {
     expect(scope.hasPermission('CREATE_REQUISITION')).toBeTruthy()
   })
+  it('should set regimenLineItemInValid as true if the required fields are missing', function () {
+
+    var regimenLineItems = [
+      {"id": 6, "rnrId": 2, "code": "001", "name": "REGIMEN1", "patientsOnTreatment": 1, "patientsToInitiateTreatment": 7,
+        "category": {"name": "Adults", "displayOrder": 1}},
+      {"id": 7, "rnrId": 2, "code": "002", "name": "REGIMEN2", "patientsOnTreatment": 1, "patientsToInitiateTreatment": 7, "patientsStoppedTreatment": 4,
+        "category": {"name": "Adults", "displayOrder": 1}}
+    ];
+
+    var rnr = new Rnr({"id": "1", "regimenLineItems": regimenLineItems});
+
+    scope.rnr = rnr;
+
+    spyOn(messageService, 'get').andReturn('some message');
+
+    scope.submitRnr();
+
+    expect(scope.regimenLineItemInValid).toBeTruthy();
+    expect(scope.submitError).toEqual('some message');
+  });
+
+  it('should set regimenLineItemInValid as false if the required fields are not missing', function () {
+
+    var regimenLineItems = [
+      {"id": 6, "rnrId": 2, "code": "001", "name": "REGIMEN1", "patientsOnTreatment": 1, "patientsToInitiateTreatment": 7, "patientsStoppedTreatment": 5,
+        "category": {"name": "Adults", "displayOrder": 1}},
+      {"id": 7, "rnrId": 2, "code": "002", "name": "REGIMEN2", "patientsOnTreatment": 1, "patientsToInitiateTreatment": 7, "patientsStoppedTreatment": 4,
+        "category": {"name": "Adults", "displayOrder": 1}}
+    ];
+
+    var rnr = new Rnr({"id": "1", "regimenLineItems": regimenLineItems});
+
+    scope.rnr = rnr;
+
+    spyOn(messageService, 'get').andReturn('some message');
+
+    scope.submitRnr();
+
+    expect(scope.regimenLineItemInValid).toBeFalsy();
+    expect(scope.error).toEqual("");
+  });
+
 
 });
 
