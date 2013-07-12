@@ -55,4 +55,9 @@ public interface SupplyLineMapper {
     @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
   })
   SupplyLine getSupplyLineBySupervisoryNodeProgramAndFacility(SupplyLine supplyLine);
+
+  // mahmed - 07.11.2013 - delete supply line
+  @Delete("DELETE FROM supply_lines where id = #{supplylineId}")
+  void deleteById(Long supplylineId);
+
 }

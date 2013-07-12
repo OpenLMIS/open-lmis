@@ -147,5 +147,26 @@ public class SupplyLineController extends BaseController {
         }
     }
 
+       // mahmed - 07.11.2013  delete
+       @RequestMapping(value = "/supplylineDelete/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+       @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLYLINE')")
+       public ResponseEntity<OpenLmisResponse> delete(@RequestBody SupplyLine supplyLine, @PathVariable("id") Long id, HttpServletRequest request) {
+           supplyLine.setId(id);
+           return deleteSupplyline(supplyLine);
+       }
+
+
+    // delete
+    private ResponseEntity<OpenLmisResponse> deleteSupplyline(SupplyLine supplyLine) {
+        try {
+            supplyLineService.delete(supplyLine);
+            ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("'" + supplyLine.getDescription() + "' "+ " deleted successfully");
+            response.getBody().addData(SUPPLYLINE, supplyLineService.get(supplyLine.getId()));
+            response.getBody().addData(SUPPLYLINELIST, supplyLineListService.getAll());
+            return response;
+        } catch (DataException e) {
+            return error(e, HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }

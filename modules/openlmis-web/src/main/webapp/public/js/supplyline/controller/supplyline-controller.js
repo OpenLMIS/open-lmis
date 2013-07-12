@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function SupplylineController($scope,  ReportPrograms, AllFacilities, SupervisoryNodes, Supplylines, Supplyline, Supplylinelist, $location) {
+function SupplylineController($scope,  ReportPrograms, AllFacilities, SupervisoryNodes, Supplylines, Supplyline, Supplylinelist, $location,$dialog,messageService,SupplylineDelete) {
 
     //$scope.$parent.newSupplylineMode = false;
 
@@ -189,6 +189,29 @@ function SupplylineController($scope,  ReportPrograms, AllFacilities, Supervisor
         supplylineUnderEdit.description = backupSupplylineRow.description;
         $scope.supplylinesBackupMap[supplylineUnderEdit.id].error = '';
         $scope.supplylinesBackupMap[supplylineUnderEdit.id].editFormActive = '';
+    };
+
+
+    $scope.showConfirmSupplylineDeleteWindow = function (supplylineUnderDelete) {
+       // TODO: change delete.facility.header to supplyline
+        var dialogOpts = {
+            id: "deleteSupplylineDialog",
+            header: messageService.get('delete.facility.header'),
+            body: messageService.get('delete.facility.confirm', supplylineUnderDelete.description, supplylineUnderDelete.id)
+        };
+        //alert(JSON.stringify(supplylineUnderDelete.id, null, 4));
+        OpenLmisDialog.newDialog(dialogOpts, $scope.deleteSupplylineCallBack, $dialog, messageService);
+    };
+
+    $scope.deleteSupplylineCallBack = function (result) {
+        if (!result) return;
+        //alert(JSON.stringify(supplylineUnderDelete.id, null, 4));
+        // call supplyline delete function. How?
+
+        SupplylineDelete.get({id:4}, $scope.supplyline, function (data) {
+            alert(JSON.stringify(data, null, 4));
+        });
+
     };
 
 
