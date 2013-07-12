@@ -591,6 +591,48 @@ span[class^="tpl-"] {
       }
     }
   }
+
+  #regimenTable {
+    .col-code {
+      min-width: 60px;
+    }
+    .col-name {
+      min-width: 120px;
+    }
+    .col-remarks {
+      min-width: 280px;
+      max-width: 320px;
+    }
+    th {
+      max-width: 150px;
+      min-width: 100px;
+      .regimen-heading {
+        min-height: 17px;
+        padding-top: 5px;
+      }
+    }
+    tbody {
+      tr {
+        td {
+          input[type="text"] {
+            width: 100%;
+          }
+        }
+
+        &:last-child {
+          td {
+            &:first-child {
+              padding-left: 7px;
+            }
+          }
+          .cell-text {
+            padding: 0;
+            width: 99%;
+          }
+        }
+      }
+    }
+  }
 }
 
 .header-fixed {
