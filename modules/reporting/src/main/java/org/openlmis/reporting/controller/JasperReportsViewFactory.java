@@ -45,7 +45,7 @@ public class JasperReportsViewFactory {
   }
 
   public String getReportURLForReportData(ReportTemplate reportTemplate) throws IOException, ClassNotFoundException, JRException {
-    File tmpFile = createTempFile(reportTemplate.getName(), ".jasper");
+    File tmpFile = createTempFile(reportTemplate.getName()+"_temp", ".jasper");
     ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(reportTemplate.getData()));
     JasperReport jasperReport  = (JasperReport)inputStream.readObject();
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
