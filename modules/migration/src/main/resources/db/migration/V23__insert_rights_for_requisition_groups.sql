@@ -1,4 +1,4 @@
 delete from rights where name = 'MANAGE_REQUISITION_GROUP';
 
-INSERT INTO rights(name, adminRight,description) VALUES
- ('MANAGE_REQUISITION_GROUP',TRUE,'Permission to manage requisition groups.');
+INSERT INTO rights(name, righttype, description) VALUES
+ ('MANAGE_REQUISITION_GROUP','ADMIN','Permission to manage requisition groups.');
