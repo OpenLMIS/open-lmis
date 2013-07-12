@@ -133,3 +133,35 @@ services.factory('ProductList', function ($resource) {
 services.factory('GeographicZoneCompleteList', function ($resource) {
     return $resource('/geographicZone/getList.json', {}, {});
 });
+
+services.factory('RequisitionGroupCompleteList',function($resource){
+    return $resource('/requisitionGroup/getList.json',{},{});
+});
+
+services.factory('SaveRequisitionGroup',function($resource){
+    return $resource('/requisitionGroup/insert.json',{},{});
+});
+
+services.factory('GetRequisitionGroup',function($resource){
+    return $resource('/requisitionGroup/getDetails/:id.json',{},{});
+});
+
+services.factory('RemoveRequisitionGroup',function($resource){
+    return $resource('/requisitionGroup/remove/:id.json',{},{});
+});
+
+services.factory('FacilityCompleteListInRequisitionGroup',function($resource){
+    return $resource('/facilities/getListInRequisitionGroup/:id.json',{},{});
+});
+
+services.factory('GetFacilityCompleteList',function($resource){
+    return $resource('/facilities/getFacilityCompleteList.json',{},{});
+});
+
+services.factory('SaveRequisitionGroupMember',function($resource){
+    return $resource('/requisitionGroupMember/insert.json',{},{});
+});
+
+services.factory('RemoveRequisitionGroupMember',function($resource){
+    return $resource('/requisitionGroupMember/remove.json',{},{});
+});

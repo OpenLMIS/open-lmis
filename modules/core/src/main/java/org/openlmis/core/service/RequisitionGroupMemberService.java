@@ -99,4 +99,8 @@ public class RequisitionGroupMemberService {
     RequisitionGroup requisitionGroup = requisitionGroupRepository.getByCode(record.getRequisitionGroup());
     return requisitionGroupMemberRepository.getRequisitionGroupMemberForRequisitionGroupIdAndFacilityId(requisitionGroup, facility);
   }
+
+  public void removeRequisitionGroupMember(RequisitionGroup requisitionGroup, Facility facility){
+      requisitionGroupMemberRepository.removeRequisitionGroupMember(requisitionGroup, facility);
+  }
 }

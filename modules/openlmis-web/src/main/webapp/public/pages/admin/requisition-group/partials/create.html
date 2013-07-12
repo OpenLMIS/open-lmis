@@ -1,0 +1,160 @@
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+    <div ng-hide="requisitionGroup.id"><h2>Add Requisition Group</h2></div>
+    <div ng-show="requisitionGroup.id">
+        <h2>Edit Requisition Group</h2>
+    </div>
+
+    <form ng-submit="saveRequisitionGroup()" id="create-requisition-group" name="requisitionGroupForm" novalidate
+          select2-blur>
+        <div class="app-form">
+            <div>
+                <div class="form-row clearfix">
+                    <div class="form-cell">
+                        <div>
+                            <label for="code">Code: </label>
+
+                            <div class="form-field">
+                                <input ng-model="requisitionGroup.code" name="code" id="code" type="text" maxlength="30" width="200px"
+                                       ng-required="true"/>
+                              <span class="field-error" ng-show="requisitionGroupForm.name.$error.required && showError"
+                                    openlmis-message="missing.value">
+                              </span>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="name">Name: </label>
+
+                            <div class="form-field">
+                                <input ng-model="requisitionGroup.name" name="name" id="name" type="text" maxlength="30" width ="320px"
+                                       ng-required="true" ng-change="validateRequisitionGroupName()"/>
+                                  <span class="field-error" ng-show="requisitionGroup.name.$error.required && showError"
+                                        openlmis-message="missing.value">
+                                  </span>
+
+                                  <span class="field-error" ng-show="requisitionGroupNameInvalid">
+                                      Invalid requisition group name
+                                  </span>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="supervisoryNode">Supervisory Node: </label>
+
+                            <div class="form-field">
+                                <select style="width:320px" ng-required="true" name="supervisoryNode"
+                                        id="supervisoryNode" ng-model="requisitionGroup.supervisoryNode.id"
+                                        ng-options="option.id as option.name for option in supervisoryNodes">
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="description">Description: </label>
+
+                            <div class="form-field">
+                                <textarea style="width:350px" ng-model="requisitionGroup.description" name="description" id="description"
+                                       type="text" maxlength="200" rows="5"
+                                       ng-required="false"></textarea>
+                            </div>
+                        </div>
+                        <div form-toolbar id="action_buttons" class="action-buttons">
+                            <div class="form-cell button-row">
+                                <input type="submit" class="btn btn-primary save-button" value="Save"/>
+                                <a ng-href="#/list" class="btn btn-cancel cancel-button"><span
+                                        openlmis-message="button.cancel"></span></a>
+                            </div>
+                            <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="requisitionGroupMemberId">
+                    <span ng-bind="message"></span>.
+                </div>
+                <h2><span>Associated Facilities</span>
+                    <a ng-click="addNewMemberFacility()" class="pull-right btn btn-primary"><span id="requisition-group-facility-add-new">Add New</span></a>
+                </h2>
+                <div class="facility-list">
+                    <div class="row-fluid list-row">
+                        <div class="span2" style="..."><strong>Facility Name</strong></div>
+                        <div class="span2" style="..."><strong>Type</strong></div>
+                    </div>
+                    <div ng-repeat="facility in facilities" class="row-fluid list-row">
+                        <div class="span2" style="..."> {{facility.code}} - {{facility.name}}</div>
+                        <div class="span2" style="..."> {{facility.facilityType.name}}</div>
+                        <div class="span2" style="width:30px;">
+                            <a class="close" ng-click="showRemoveRequisitionGroupMemberConfirmDialog(facility)">X</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- -->
+    <div id="requisitionGroupMembersDiv" modal="requisitionGroupMemberModal"
+         options="{'backdrop':'static', 'escape':false}">
+        <div class="modal-header">
+            <h3>
+                <span>Associate a Facility</span>
+            </h3>
+        </div>
+
+        <div class="modal-body">
+            <form name="addRequisitionGroupMembersForm">
+                <div>
+                    <div class="row-fluid">
+                        <div class="span6">
+                            <label for="geographicZoneValue"><span>Geographic Zone</span></label>
+                        </div>
+                        <div class="span4">
+                            <select style="width:200px;"  ng-change="filterFacilityList()" ng-required="true"  name="geographicZoneValue" id="geographicZoneValue" ng-model="geographicZone" ng-options="option as option.name for option in geographicZones">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row-fluid">
+                        <div class="span6">
+                            <label for="facilityTypeValue"><span>Facility Type</span></label>
+                        </div>
+                        <div class="span4">
+                            <select style="width:200px;" ng-change="filterFacilityList()" ng-required="true"  name="facilityTypeValue" id="facilityTypeValue" ng-model="facilityType" ng-options="option as option.name for option in facilityTypes">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row-fluid">
+                        <div class="span6">
+                            <label for="facilityValue"><span>Facility</span></label>
+                        </div>
+                        <div class="span4">
+                            <select style="width:200px;" ng-required="true" size="7"  name="facilityValue" id="facilityValue" ng-model="requisitionGroupMember.facility" ng-options="option as option.code.concat('-').concat.(option.name) for option in allFacilitiesFiltered">
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+            </form>
+            <div class="alert alert-error" id="saveFailMessage" openlmis-message="error" ng-show="error">
+
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <input type="button" class="btn btn-primary save-button"
+                   ng-click="saveRequisitionGroupMember()"
+                   openlmis-message="button.save"/>
+            <input type="button"
+                   ng-click="closeModal();error=''"
+                   class="btn btn-cancel" openlmis-message="button.cancel"/>
+        </div>
+
+    </div>
+
+    <!-- -->
+
+
+
+</div>
+
+

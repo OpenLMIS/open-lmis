@@ -26,4 +26,7 @@ public class RequisitionGroup extends BaseModel implements Importable {
   @ImportField(mandatory = true, nested = "code", name = "Supervisory Node")
   SupervisoryNode supervisoryNode;
 
+  Integer countOfFacilities;
+  Integer countOfPrograms;
+
 }
