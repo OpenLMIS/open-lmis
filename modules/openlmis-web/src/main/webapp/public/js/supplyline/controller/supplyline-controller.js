@@ -199,7 +199,7 @@ function SupplylineController($scope,  ReportPrograms, AllFacilities, Supervisor
             header: messageService.get('delete.facility.header'),
             body: messageService.get('delete.facility.confirm', supplylineUnderDelete.description, supplylineUnderDelete.id)
         };
-        //alert(JSON.stringify(supplylineUnderDelete.id, null, 4));
+        $scope.supplylineUnderDelete = supplylineUnderDelete;
         OpenLmisDialog.newDialog(dialogOpts, $scope.deleteSupplylineCallBack, $dialog, messageService);
     };
 
@@ -208,8 +208,9 @@ function SupplylineController($scope,  ReportPrograms, AllFacilities, Supervisor
         //alert(JSON.stringify(supplylineUnderDelete.id, null, 4));
         // call supplyline delete function. How?
 
-        SupplylineDelete.get({id:4}, $scope.supplyline, function (data) {
-            alert(JSON.stringify(data, null, 4));
+        SupplylineDelete.get({id : $scope.supplylineUnderDelete.id }, $scope.supplyline, function (data) {
+            alert("you have deleted the supply line" + $scope.supplylineUnderDelete.description);
+            alert("please refresh the list now");
         });
 
     };

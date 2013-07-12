@@ -101,9 +101,8 @@ public class SupplyLineService {
   }
 
     //mahmed - 07.11.2013 delete supply line
-    public void delete(SupplyLine supplyLine) {
-        //checkChild(supplyLine);
-        this.supplyLineRepository.deleteById(supplyLine.getId());
+    public void deleteById(Long supplyLineId) {
+        this.supplyLineRepository.deleteById(supplyLineId);
     }
 
 }
