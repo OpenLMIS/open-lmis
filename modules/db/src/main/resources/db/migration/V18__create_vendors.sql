@@ -6,7 +6,7 @@ CREATE EXTENSION "uuid-ossp";
 CREATE TABLE VENDORS (
   id SERIAL PRIMARY KEY,
   name VARCHAR(250) NOT NULL UNIQUE,
-  authToken UUID NOT NULL, --DEFAULT uuid_generate_v4(),
+  authToken UUID NOT NULL DEFAULT uuid_generate_v4(),
   active BOOLEAN,
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
