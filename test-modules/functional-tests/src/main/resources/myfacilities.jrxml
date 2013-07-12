@@ -111,7 +111,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="24" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[Active Facility Report]]></text>
+				<text><![CDATA[My Facilities Report]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement uuid="2dd094dc-e4b5-43c0-89ab-02f2dda79bb5" x="710" y="1" width="72" height="32"/>
