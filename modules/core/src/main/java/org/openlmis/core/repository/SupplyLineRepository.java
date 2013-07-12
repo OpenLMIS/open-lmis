@@ -50,4 +50,11 @@ public class SupplyLineRepository {
   public SupplyLine getSupplyLineBySupervisoryNodeProgramAndFacility(SupplyLine supplyLine) {
     return supplyLineMapper.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine);
   }
+
+
+   // mahmed - 07.11.2013 delete supplyline
+    public void deleteById(Long supplylineId) {
+        supplyLineMapper.deleteById(supplylineId);
+    }
+
 }
