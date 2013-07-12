@@ -190,8 +190,13 @@ task compileLess << {
     }
 }
 
-task JasmineRun(type: Exec) {
+task phantomRun(type: Exec) {
     commandLine 'phantomjs', "${projectDir}/src/test/javascript/lib/run_jasmine_test.coffee", "${projectDir}/src/test/javascript/SpecRunner.html"
+}
+
+task JasmineRun(type: Test) {
+    include '**/org/openlmis/jasmine/*.*'
+    useTestNG()
 }
 
 compileJava.dependsOn compileLess
