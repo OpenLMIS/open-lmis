@@ -36,6 +36,9 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
       if ($scope.contains(right.right)) return;
 
       $scope.role.rights.push(right);
+      if (right.right == 'MANAGE_REPORT') {
+        $scope.updateRights(true, $scope.getRightFromRightList("VIEW_REPORT"));
+      }
       if (right.right == 'CREATE_REQUISITION' || right.right == 'AUTHORIZE_REQUISITION' ||
         right.right == 'APPROVE_REQUISITION') {
         $scope.updateRights(true, $scope.getRightFromRightList("VIEW_REQUISITION"));
@@ -54,10 +57,15 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
   };
 
   $scope.areRelatedFieldsSelected = function (right) {
-    if (right.right != 'VIEW_REQUISITION') return false;
-    return ($scope.contains('CREATE_REQUISITION') ||
-      $scope.contains('AUTHORIZE_REQUISITION') ||
-      $scope.contains('APPROVE_REQUISITION'));
+    if (right.right == 'VIEW_REQUISITION') {
+      return ($scope.contains('CREATE_REQUISITION') ||
+              $scope.contains('AUTHORIZE_REQUISITION') ||
+              $scope.contains('APPROVE_REQUISITION'));
+    }
+
+    if (right.right == 'VIEW_REPORT') {
+      return ($scope.contains('MANAGE_REPORT'));
+    }
   };
 
   $scope.contains = function (right) {
