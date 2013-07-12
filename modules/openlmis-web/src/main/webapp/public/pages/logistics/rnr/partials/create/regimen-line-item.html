@@ -40,7 +40,7 @@
               </span>
               <span ng-switch-when="remarks">
                 <input type="text" ng-model="regimenLineItem[regimenColumn.name]" class="cell-text"
-                       ng-disabled="formDisabled">
+                       ng-disabled="formDisabled" maxlength="255">
               </span>
               <span ng-switch-default>
                 <input ng-required="true"
