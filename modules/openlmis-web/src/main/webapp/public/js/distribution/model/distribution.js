@@ -1,7 +1,7 @@
-function Distribution(deliveryZoneId, programId, periodId) {
-  this.deliveryZone = {id: deliveryZoneId};
-  this.program = {id: programId};
-  this.period = {id: periodId};
+function Distribution(deliveryZone, program, period) {
+  this.deliveryZone = deliveryZone;
+  this.program = program;
+  this.period = period;
 
   return this;
 }

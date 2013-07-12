@@ -5,22 +5,33 @@
   -->
 <div ng-controller="DistributionListController">
 
-  <div ng-show="distributionList.length">
-    <br/>
-    <br/>
+  <!--<div ng-show="distributionList.length">-->
+  <br/>
+  <br/>
 
-    <div openlmis-message="label.initiated.distributions"></div>
-    <div class="row-fluid list-header">
-      <div class="span2" openlmis-message="label.distribution.deliveryZone"></div>
-      <div class="span2" openlmis-message="label.program"></div>
-      <div class="span2" openlmis-message="label.period"></div>
-      <div class="span2" openlmis-message="column.name.status"></div>
+  <div openlmis-message="label.initiated.distributions"></div>
+  <div id="cachedDistributions">
+    <div class="list-header-container">
+      <div class="row-fluid list-header">
+        <div class="span2" openlmis-message="label.delivery.zone"></div>
+        <div class="span2" openlmis-message="label.program"></div>
+        <div class="span2" openlmis-message="label.period"></div>
+        <div class="span2" openlmis-message="label.status"></div>
+        <div class="span2"></div>
+        <div class="span2"></div>
+      </div>
     </div>
-    <div ng-repeat="distribution in distributionList">
-      <div class="span2" ng-bind="distribution.deliveryZone.code"></div>
-      <div class="span2" ng-bind="distribution.program.name"></div>
-      <div class="span2" ng-bind="distribution.period.name"></div>
-      <div class="span2" ng-bind="distribution.status"></div>
+
+    <div class="list-container">
+      <div class="row-fluid list-row" ng-repeat="distribution in distributionList">
+        <div class="span2" ng-bind="distribution.deliveryZone.name"></div>
+        <div class="span2" ng-bind="distribution.program.name"></div>
+        <div class="span2" ng-bind="distribution.period.name"></div>
+        <div class="span2" ng-bind="distribution.status"></div>
+        <div class="span2">Record Data</div>
+        <div class="span2">Sync</div>
+      </div>
     </div>
+    <!--</div>-->
   </div>
 </div>

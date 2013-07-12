@@ -36,6 +36,7 @@ import static org.mockito.Mockito.when;
 import static org.openlmis.builder.DistributionBuilder.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -106,6 +107,7 @@ public class DistributionControllerTest {
       thenReturn("Distribution already initiated by XYZ at 2013-05-03 12:10");
 
     ResponseEntity<OpenLmisResponse> response = controller.create(distribution, httpServletRequest);
+    assertThat(response.getStatusCode(), is(OK));
     Map<String, Object> responseData = response.getBody().getData();
 
     assertThat((String) responseData.get("success"),

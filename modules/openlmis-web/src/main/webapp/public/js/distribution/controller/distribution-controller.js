@@ -42,8 +42,28 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
     return optionMessage($scope.periods, DEFAULT_PERIOD_MESSAGE);
   };
 
+  $scope.loadDistributionsFromCache = function () {
+
+    var transaction = IndexedDB.transaction('distributions');
+    var cursorRequest = transaction.objectStore('distributions').openCursor();
+
+    var aggregate = [];
+    cursorRequest.onsuccess = function (event) {
+      if (event.target.result) {
+        aggregate.push(event.target.result.value);
+        event.target.result['continue']();
+      }
+    };
+
+    transaction.oncomplete = function (e) {
+      $scope.distributionList = aggregate;
+      $scope.$apply();
+    };
+  };
+  $scope.loadDistributionsFromCache();
+
   $scope.initiateDistribution = function () {
-    var distribution = new Distribution($scope.selectedZone.id, $scope.selectedProgram.id, $scope.selectedPeriod.id);
+    var distribution = new Distribution($scope.selectedZone, $scope.selectedProgram, $scope.selectedPeriod);
 
     Distributions.save({}, distribution, onInitSuccess, {});
 
@@ -53,46 +73,13 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
       distributionStore.put(data.distribution);
       $scope.message = data.success;
 
-      var distributionReferenceData = transaction.objectStore('distributionReferenceData');
+      transaction.oncomplete = function (e) {
+        $scope.loadDistributionsFromCache();
+        $scope.$apply();
+      };
     }
-
-//    DeliveryZoneFacilities.get({deliveryZoneId: $scope.selectedZone.id, programId: $scope.selectedProgram.id}, function (data) {
-//      $scope.distributionList.push(distribution);
-//      cacheReferenceData(data.facilities, key);
-//    }, {});
-
   };
 
-  function ifDistributionExists(key) {
-
-  }
-
-
-  function cacheReferenceData(facilityList, key) {
-    var transaction = db.transaction('facilityData', 'readwrite');
-    var objects = transaction.objectStore('facilityData');
-
-    var cacheObject = {"facilityList": facilityList, "distributionId": key}
-
-    objects.put(cacheObject);
-
-
-    transaction.oncomplete = function () {
-      console.log('facility data saved');
-    }
-  }
-
-  function cacheDistribution(distribution) {
-    var transaction = db.transaction('distribution', 'readwrite');
-    var objects = transaction.objectStore('distribution');
-
-    objects.put(distribution);
-
-    transaction.oncomplete = function () {
-      console.log('distribution saved successfully');
-    }
-
-  }
 
   var optionMessage = function (entity, defaultMessage) {
     return entity == null || entity.length == 0 ? NONE_ASSIGNED_LABEL : defaultMessage;

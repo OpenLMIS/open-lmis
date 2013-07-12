@@ -16,18 +16,19 @@ angular.module('IndexedDB', []).provider('IndexedDB', function () {
 
   request.onupgradeneeded = function (event) {
     indexedDBConnection = event.currentTarget.result;
-    if (event.oldVersion < 2) {
 
-      var distributionStore = indexedDBConnection.createObjectStore("distributions", {
-        "keyPath": "id"
-      });
-
+    var createDistributionStore = function () {
+      var distributionStore = indexedDBConnection.createObjectStore("distributions", {"keyPath": "id"});
       distributionStore.createIndex("index_zpp", "zpp", {"unique": true});
+    }
 
-      var referenceData = indexedDBConnection.createObjectStore("distributionReferenceData", {
-        "keyPath": "distributionId"
-      });
+    var createDistributionReferenceData = function () {
+      indexedDBConnection.createObjectStore("distributionReferenceData", {"keyPath": "id"});
+    }
 
+    if (event.oldVersion < 2) {
+      createDistributionStore();
+      createDistributionReferenceData();
     }
   };
 

@@ -7,6 +7,16 @@
 describe('DistributionController', function () {
   var scope, controller, httpBackend;
 
+  var mockedIndexedDB = {
+    transaction: function () {
+      return {
+        objectStore: function () {
+          openCursor: function () {
+          }
+        }
+      };
+    }
+  };
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
   beforeEach(module('IndexedDB'));
@@ -16,7 +26,7 @@ describe('DistributionController', function () {
     controller = $controller;
     httpBackend = $httpBackend;
 
-    controller(DistributionController, {$scope: scope, deliveryZones: []});
+    controller(DistributionController, {$scope: scope, deliveryZones: [], IndexedDB: mockedIndexedDB});
   }));
 
   it('should load programs', function () {
