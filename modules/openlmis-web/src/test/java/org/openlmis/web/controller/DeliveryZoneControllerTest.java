@@ -14,13 +14,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.DeliveryZone;
-import org.openlmis.web.response.AllocationResponse;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.service.AllocationPermissionService;
 import org.openlmis.core.service.DeliveryZoneService;
-import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
-import org.openlmis.core.domain.Program;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
@@ -30,11 +30,10 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
-import static org.openlmis.web.controller.BaseController.FORBIDDEN_EXCEPTION;
 import static org.openlmis.web.controller.DeliveryZoneController.DELIVERY_ZONES;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -71,30 +70,50 @@ public class DeliveryZoneControllerTest {
     List<DeliveryZone> deliveryZones = new ArrayList<>();
     when(service.getByUserForRight(USER_ID, MANAGE_DISTRIBUTION)).thenReturn(deliveryZones);
 
-    ResponseEntity<AllocationResponse> response = controller.getDeliveryZonesForInitiatingAllocation(request);
+    ResponseEntity<OpenLmisResponse> response = controller.getDeliveryZonesForInitiatingAllocation(request);
 
     assertThat((List<DeliveryZone>) response.getBody().getData().get(DELIVERY_ZONES), is(deliveryZones));
   }
 
   @Test
-  public void shouldGetProgramsForADeliveryZone() throws Exception {
+  public void shouldGetAllDeliveryZones() {
+    List<DeliveryZone> deliveryZones = new ArrayList<>();
+    when(service.getAll()).thenReturn(deliveryZones);
+
+    ResponseEntity<OpenLmisResponse> response = controller.getAll();
+
+    assertThat((List<DeliveryZone>) response.getBody().getData().get(DELIVERY_ZONES), is(deliveryZones));
+    verify(service).getAll();
+  }
+
+  @Test
+  public void shouldGetActiveProgramsForADeliveryZone() throws Exception {
     List<Program> programs = new ArrayList<>();
-    when(service.getProgramsForDeliveryZone(1l)).thenReturn(programs);
-    when(permissionService.hasPermissionOnZone(USER_ID, 1l)).thenReturn(true);
-    ResponseEntity<AllocationResponse> response = controller.getProgramsForDeliveryZone(request, 1l);
+    when(service.getActiveProgramsForDeliveryZone(1l)).thenReturn(programs);
+    ResponseEntity<OpenLmisResponse> response = controller.getActiveProgramsForDeliveryZone(1l);
 
     assertThat((List<Program>) response.getBody().getData().get("deliveryZonePrograms"), is(programs));
   }
 
   @Test
-  public void shouldThrowErrorIfUserNotAuthorizedForDeliveryZone() throws Exception {
+  public void shouldGetAllProgramsForADeliveryZone() throws Exception {
     List<Program> programs = new ArrayList<>();
-    when(service.getProgramsForDeliveryZone(1l)).thenReturn(programs);
-    when(permissionService.hasPermissionOnZone(USER_ID, 1l)).thenReturn(false);
+    when(service.getAllProgramsForDeliveryZone(1l)).thenReturn(programs);
+    ResponseEntity<OpenLmisResponse> response = controller.getAllProgramsForDeliveryZone(1l);
 
-    ResponseEntity<AllocationResponse> response = controller.getProgramsForDeliveryZone(request, 1l);
+    assertThat((List<Program>) response.getBody().getData().get("deliveryZonePrograms"), is(programs));
+  }
 
-    assertThat(response.getBody().getErrorMsg(), is(FORBIDDEN_EXCEPTION));
-    assertThat(response.getStatusCode(), is(UNAUTHORIZED));
+  @Test
+  public void shouldGetDeliveryZoneById() throws Exception {
+    DeliveryZone zone = new DeliveryZone();
+    when(service.getById(1l)).thenReturn(zone);
+    when(permissionService.hasPermissionOnZone(USER_ID, 1l)).thenReturn(true);
+
+    ResponseEntity<OpenLmisResponse> response = controller.get(1l);
+
+    verify(service).getById(1l);
+    assertThat((DeliveryZone) response.getBody().getData().get("zone"), is(zone));
+
   }
 }

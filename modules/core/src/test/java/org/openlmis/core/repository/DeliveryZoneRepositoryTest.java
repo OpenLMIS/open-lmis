@@ -13,9 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.DeliveryZone;
-import org.openlmis.core.repository.DeliveryZoneRepository;
-import org.openlmis.core.repository.mapper.DeliveryZoneMapper;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.repository.mapper.DeliveryZoneMapper;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
@@ -78,6 +77,17 @@ public class DeliveryZoneRepositoryTest {
   }
 
   @Test
+  public void shouldGetAllDeliveryZones() throws Exception {
+    List<DeliveryZone> deliveryZones = new ArrayList<>();
+    when(mapper.getAll()).thenReturn(deliveryZones);
+
+    List<DeliveryZone> returnedZones = repository.getAll();
+
+    verify(mapper).getAll();
+    assertThat(returnedZones, is(deliveryZones));
+  }
+
+  @Test
   public void shouldGetProgramForDeliveryZoneBasedOnUserRights() throws Exception {
     List<Program> programs = new ArrayList<>();
     when(mapper.getPrograms(1l)).thenReturn(programs);
@@ -86,5 +96,16 @@ public class DeliveryZoneRepositoryTest {
 
     verify(mapper).getPrograms(1l);
     assertThat(returnedPrograms, is(programs));
+  }
+
+  @Test
+  public void shouldGetDeliveryZoneById() throws Exception {
+    DeliveryZone zone = new DeliveryZone();
+    when(mapper.getById(1l)).thenReturn(zone);
+
+    DeliveryZone returnedZone = repository.getById(1l);
+
+    verify(mapper).getById(1l);
+    assertThat(returnedZone, is(zone));
   }
 }

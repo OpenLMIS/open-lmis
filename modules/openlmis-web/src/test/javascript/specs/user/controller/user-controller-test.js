@@ -23,63 +23,74 @@ describe("User", function () {
         {
           "id": 1,
           "name": "Admin",
-          "adminRole": true
+          "type": "ADMIN"
         },
         {
           "id": 2,
           "name": "Store In-Charge",
-          "adminRole": false
+          "type": "REQUISITION"
+        },
+        {
+          "id": 3,
+          "name": "Medical Officer",
+          "type": "ALLOCATION"
         }
       ];
+
 
       spyOn(messageService, 'get').andCallFake(function (value) {
         if (value == 'label.active') return "Active"
         if (value == 'label.inactive') return "Inactive"
-      })
+      });
 
-      $httpBackend.expectGET("/roles.json").respond(200, {"roles": roles});
-      $httpBackend.expectGET("/pull/programs.json").respond(200, {"programs": [
-        {"id": 1, active: false},
-        {id: 2, active: true}
-      ]});
-      $httpBackend.expectGET("/supervisory-nodes.json").respond(200, {"supervisoryNodes": []});
-      ctrl = $controller(UserController, {$scope: scope}, $location);
+      var deliveryZones = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+        {id: 4}
+      ];
+
+      var programs = [
+        {"id": 1, active: false, push: false},
+        {id: 2, active: true, push: false},
+        {id: 3, active: true, push: true}
+      ];
+
+      var user = {"id": 123, "userName": "User420"};
+
+      ctrl = $controller(UserController, {$scope: scope, roles: roles, programs: programs,
+        supervisoryNodes: [], user: user, deliveryZones: deliveryZones}, $location);
       scope.userForm = {$error: { pattern: "" }};
     }));
 
-    it('should set roles in scope', function () {
-      $httpBackend.flush();
-      expect(scope.allRoles).toEqual(roles);
-      var adminRoles = [
-        {
-          "id": 1,
-          "name": "Admin",
-          "adminRole": true
-        }
-      ];
-      var nonAdminRoles = [
-        {
-          "id": 2,
-          "name": "Store In-Charge",
-          "adminRole": false
-        }
-      ];
-      expect(scope.adminRoles.length).toBe(1);
-      expect(scope.adminRoles[0].name).toBe("Admin");
-      expect(scope.nonAdminRoles.length).toBe(1);
-      expect(scope.nonAdminRoles[0].name).toBe("Store In-Charge");
+    it('should group programs by type', function() {
+      expect(scope.programsMap.pull).toEqual([{"id": 1, active: false, push: false, status : 'Inactive'}, {id: 2, active: true, push: false, status: 'Active'}]);
+      expect(scope.programsMap.push).toEqual([{"id": 3, active: true, push:true, status: 'Active'}]);
+    })
+
+    it('should populate role map in scope', function () {
+
+      expect(scope.rolesMap.ADMIN.length).toBe(1);
+      expect(scope.rolesMap.REQUISITION.length).toBe(1);
+      expect(scope.rolesMap.ALLOCATION.length).toBe(1);
+      expect(scope.rolesMap.ADMIN[0].id).toBe(1);
+      expect(scope.rolesMap.ADMIN[0].type).toBe("ADMIN");
+      expect(scope.rolesMap.REQUISITION[0].id).toBe(2);
+      expect(scope.rolesMap.REQUISITION[0].type).toBe("REQUISITION");
+      expect(scope.rolesMap.ALLOCATION[0].id).toBe(3);
+      expect(scope.rolesMap.ALLOCATION[0].type).toBe("ALLOCATION");
     });
 
     it('should set programs in scope with added status', function () {
-      $httpBackend.flush();
-      expect(scope.programs).toEqual([
-        {"id": 1, active: false, status: 'Inactive'},
-        {id: 2, active: true, status: 'Active'}
-      ]);
+      expect(scope.programsMap).toEqual({pull: [
+        {"id": 1, active: false, status: 'Inactive', push: false},
+        {id: 2, active: true, status: 'Active', push: false}
+      ], push: [
+        {"id": 3, active: true, status: 'Active', push: true}
+      ]});
     });
 
     it('should set supervisory nodes in scope', function () {
-      $httpBackend.flush();
       expect(scope.supervisoryNodes).toEqual([]);
     });
 
@@ -229,8 +240,6 @@ describe("User", function () {
 
       scope.setSelectedFacility(facility);
 
-      $httpBackend.flush();
-
       expect(scope.facilitySelected).toEqual(facility);
     });
 
@@ -245,26 +254,95 @@ describe("User", function () {
 
   });
 
-  describe("User Edit Controller", function () {
+  describe("User controller resolve", function () {
+    var $httpBackend, ctrl, $timeout, $route, $q;
+    var deferredObject;
+    var user = {"id": 123, "userName": "User420"};
 
-    var scope, $httpBackend, ctrl, user;
+    beforeEach(module('openlmis.services'));
 
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams) {
-      scope = $rootScope.$new();
-      routeParams = $routeParams;
-      routeParams.userId = 1;
-      var user = {"id": 1};
+    beforeEach(inject(function (_$httpBackend_, $controller, _$timeout_) {
       $httpBackend = _$httpBackend_;
-      $httpBackend.when('GET', '/users/1.json').respond({"userName": "User420"});
-      ctrl = $controller(UserController, {$scope: scope, $routeParams: routeParams, user: user});
+      deferredObject = {promise: {id: 1}, resolve: function () {
+      }};
+      spyOn(deferredObject, 'resolve');
+
+      $q = {defer: function () {
+      }};
+
+      spyOn($q, 'defer').andCallFake(function () {
+        return deferredObject;
+      });
+
+      $timeout = _$timeout_;
+      ctrl = $controller;
+      $route = {current: {params: {userId: 1}}};
     }));
 
-
-    //TODO scope.user should not be undefined
-    xit('should get user', function () {
-      expect(scope.user).toEqual(user);
+    it('should get user if user id present in route', function () {
+      $httpBackend.expect('GET', "/users/1.json").respond({user: user});
+      ctrl(UserController.resolve.user, {$q: $q, $route: $route});
+      expect($q.defer).toHaveBeenCalled();
+      $timeout.flush();
+      $httpBackend.flush();
+      expect(deferredObject.resolve).toHaveBeenCalledWith(user);
     });
 
-  });
+    it('should not make a call for getting user when user id does not exist in route', function () {
+      $route.current.params.userId = undefined;
+      ctrl(UserController.resolve.user, {$q: $q, $route: $route});
+      expect($q.defer).not.toHaveBeenCalled();
+    });
+
+    it('should get all roles', function () {
+      var roles = [
+        {id: 1}
+      ];
+      $httpBackend.expect('GET', "/roles.json").respond({roles: roles});
+      ctrl(UserController.resolve.roles, {$q: $q});
+      expect($q.defer).toHaveBeenCalled();
+      $timeout.flush();
+      $httpBackend.flush();
+      expect(deferredObject.resolve).toHaveBeenCalledWith(roles);
+    });
+
+    it('should get all programs', function () {
+      var programs = [
+        {id: 3}
+      ];
+      $httpBackend.expect('GET', "/programs.json").respond({programs: programs});
+      ctrl(UserController.resolve.programs, {$q: $q});
+      expect($q.defer).toHaveBeenCalled();
+      $timeout.flush();
+      $httpBackend.flush();
+      expect(deferredObject.resolve).toHaveBeenCalledWith(programs);
+    });
+
+    it('should get all supervisory nodes', function () {
+      var supervisoryNodes = [
+        {id: 5},{id: 7}
+      ];
+      $httpBackend.expect('GET', "/supervisory-nodes.json").respond({supervisoryNodes: supervisoryNodes});
+      ctrl(UserController.resolve.supervisoryNodes, {$q: $q});
+      expect($q.defer).toHaveBeenCalled();
+      $timeout.flush();
+      $httpBackend.flush();
+      expect(deferredObject.resolve).toHaveBeenCalledWith(supervisoryNodes);
+    });
+
+    it('should get all delivery zones', function () {
+      var deliveryZones = [
+        {id: 5},{id: 7}
+      ];
+      $httpBackend.expect('GET', "/deliveryZones.json").respond({deliveryZones: deliveryZones});
+      ctrl(UserController.resolve.deliveryZones, {$q: $q});
+      expect($q.defer).toHaveBeenCalled();
+      $timeout.flush();
+      $httpBackend.flush();
+      expect(deferredObject.resolve).toHaveBeenCalledWith(deliveryZones);
+    });
+
+
+  })
 
 });

@@ -3,7 +3,7 @@
 
 CREATE TABLE rights (
   name VARCHAR(200) PRIMARY KEY,
-  adminRight BOOLEAN NOT NULL,
+  rightType VARCHAR(20) NOT NULL,
   description VARCHAR(200),
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -1,3 +1,146 @@
-<!DOCTYPE html>
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
 
-<div></div>
+<div>
+  <h2 openlmis-message="label.warehouse.load.amount"></h2>
+
+
+  <div class="alert alert-info" ng-show="message"><span ng-bind="message"></span></div>
+  <div ng-show="!message">
+    <div class="info-box">
+      <div class="row-fluid">
+        <div class="span3">
+          <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span ng-bind="deliveryZone.name"></span>
+        </div>
+        <div class="span3">
+          <strong openlmis-message="label.program"></strong> :&nbsp;<span ng-bind="program.name"></span>
+        </div>
+        <div class="span3">
+          <strong openlmis-message="label.period"> </strong> :&nbsp;<span ng-bind="period.name"></span>
+        </div>
+      </div>
+    </div>
+    <div class="geo-zone-facility-list">
+      <h3><span ng-bind="geoZone.parent.level.name"></span>&nbsp;<span openlmis-message="label.total"></span></h3>
+
+      <div>
+
+        <div class="facilities-isa-amount-table" ng-model="sortedGeoZoneKeys[0]">
+          <table class="table table-bordered table-striped aggregate-table">
+            <thead ng-model="facilityMap[sortedGeoZoneKeys[0]]">
+            <tr>
+              <th></th>
+              <th></th>
+              <th class="main-heading"
+                  ng-repeat="productGroup in facilityMap[sortedGeoZoneKeys[0]][0].supportedPrograms[0].sortedProductGroup"
+                  colspan="{{facilityMap[sortedGeoZoneKeys[0]][0].supportedPrograms[0].programProductMap[productGroup].length}}">
+                <span ng-bind="productGroup"></span>
+              </th>
+            </tr>
+            <tr>
+              <th>
+                <span ng-bind="geoZoneLevelName"></span>
+              </th>
+              <th>
+                <span openlmis-message="label.population"></span>
+              </th>
+              <th ng-repeat="programProduct in getProgramProducts(facilityMap[sortedGeoZoneKeys[0]][0])">
+                <span ng-bind="programProduct.product.primaryName"></span>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="geoZoneName in sortedGeoZoneKeys" >
+              <td>
+                <span ng-bind="geoZoneName"></span>
+                <span openlmis-message="label.total"></span>
+              </td>
+              <td>
+                <span ng-bind="aggregateMap[geoZoneName]['totalPopulation']"></span>
+              </td>
+              <td ng-repeat="programProduct in getProgramProductsForAggregateRow(geoZoneName)">
+                <span ng-bind="programProduct.isaAmount"></span>
+              </td>
+            </tr>
+            <tr>
+              <td class="total-cell">
+                <span ng-bind="geoZone.parent.level.name"></span>&nbsp;<span openlmis-message="label.total"></span>
+              </td>
+              <td>
+                <span ng-bind="zonesTotal.totalPopulation"></span>
+              </td>
+              <td ng-repeat="productIsa in zonesTotal.totalProgramProductsMap">
+                <span ng-bind="productIsa.total"></span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="geo-zone-facility-list" ng-repeat="geoZoneName in sortedGeoZoneKeys">
+      <h3><span ng-bind="geoZoneName"></span></h3>
+
+
+      <div class="facilities-isa-amount-table">
+        <table class="table table-bordered table-striped">
+          <thead ng-model="facilityMap[geoZoneName]">
+          <tr>
+            <th></th>
+            <th></th>
+            <th class="main-heading"
+                ng-repeat="productGroup in facilityMap[geoZoneName][0].supportedPrograms[0].sortedProductGroup"
+                colspan="{{facilityMap[geoZoneName][0].supportedPrograms[0].programProductMap[productGroup].length}}">
+              <span ng-bind="productGroup"></span>
+            </th>
+          </tr>
+          <tr>
+            <th>
+              <span openlmis-message="label.facility"></span>
+            </th>
+            <th>
+              <span openlmis-message="label.population"></span>
+            </th>
+            <th ng-repeat="programProduct in getProgramProducts(facilityMap[geoZoneName][0])">
+              <span ng-bind="programProduct.product.primaryName"></span>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="facility in facilityMap[geoZoneName]">
+            <td>
+              <span ng-bind="facility.name"></span>
+              <span ng-bind="facility.code"></span>
+            </td>
+            <td>
+              <span ng-bind="facility.catchmentPopulation"></span>
+            </td>
+            <td ng-repeat="programProduct in getProgramProducts(facility)">
+              <span ng-bind="programProduct.isaAmount"></span>
+            </td>
+          </tr>
+          <tr>
+            <td class="total-cell">
+              <span ng-bind="geoZoneLevelName"></span>
+              <span openlmis-message="label.total"></span>
+            </td>
+            <td>
+              <span ng-bind="aggregateMap[geoZoneName]['totalPopulation']"></span>
+            </td>
+            <td ng-repeat="programProduct in getProgramProductsForAggregateRow(geoZoneName)">
+              <span ng-bind="programProduct.isaAmount"></span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+    </div>
+  </div>
+</div>

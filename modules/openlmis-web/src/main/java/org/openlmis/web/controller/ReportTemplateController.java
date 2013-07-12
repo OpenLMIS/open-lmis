@@ -43,7 +43,7 @@ public class ReportTemplateController extends BaseController {
   }
 
   @RequestMapping(value = "/report-templates", method = POST)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REPORTS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REPORT')")
   public ResponseEntity<OpenLmisResponse> createJasperReportTemplate(HttpServletRequest request, MultipartFile file, String name) {
     try {
       ReportTemplate reportTemplate = new ReportTemplate(name, file, loggedInUserId(request));
@@ -57,7 +57,7 @@ public class ReportTemplateController extends BaseController {
   }
 
   @RequestMapping(value = "/report-templates", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REPORTS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REPORT')")
   public List<ReportTemplate> getAll() {
     return reportTemplateService.getAll();
   }

@@ -14,7 +14,9 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
   $scope.regimensByCategory = [];
   $scope.$parent.message = "";
   $scope.newRegimen = {active: true};
-
+  $scope.showReportingFields = false;
+  $scope.regimensError = false;
+  $scope.reportingFieldsError = false;
 
   function addRegimenByCategory(regimen) {
     regimen.editable = false;
@@ -38,9 +40,10 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
   filterRegimensByCategory($scope.regimens);
 
   $scope.addNewRegimen = function () {
-    if ($scope.newRegimenForm.$error.required) {
+    if (invalidRegimen($scope.newRegimen)) {
       $scope.inputClass = true;
       $scope.newRegimenError = messageService.get('label.missing.values');
+      $scope.regimensError = true;
     } else {
       if (checkDuplicateRegimenError($scope.newRegimen)) {
         return;
@@ -106,7 +109,10 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
   };
 
   function invalidRegimen(regimen) {
-    if (isUndefined(regimen.code) || isUndefined(regimen.name)) return true;
+    if (isUndefined(regimen.category) || isUndefined(regimen.code) || isUndefined(regimen.name)) {
+      $scope.regimensError = true;
+      return true;
+    }
     return false;
   }
 
@@ -116,6 +122,7 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
     $(regimenLists).each(function (index, regimenList) {
       $(regimenList).each(function (index, loopRegimen) {
         if (loopRegimen.editable) {
+          $scope.regimensError = true;
           $scope.error = messageService.get('error.regimens.not.done')
           notDone = true;
           return;
@@ -126,9 +133,34 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
     return notDone;
   }
 
+  function validReportingFields() {
+
+    var valid = true;
+    var countVisible = 0;
+    $($scope.regimenColumns).each(function(index, regimenColumn) {
+      if (isUndefined(regimenColumn.label)) {
+        valid = false;
+        $scope.reportingFieldsError = true;
+        $scope.error = messageService.get('error.regimen.null.label')
+        return;
+      }
+      if (regimenColumn.visible) {
+        countVisible++;
+      }
+    });
+
+    if (valid && countVisible == 0) {
+      $scope.reportingFieldsError = true;
+      $scope.error = messageService.get('error.regimens.none.selected')
+      return;
+    }
+
+    return valid;
+  }
+
   $scope.save = function () {
 
-    if (checkAllRegimensNotDone()) {
+    if (checkAllRegimensNotDone() || !validReportingFields()) {
       return;
     }
 

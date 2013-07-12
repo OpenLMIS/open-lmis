@@ -6,41 +6,38 @@
 
 package org.openlmis.core.upload;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.ProgramSupported;
-import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProgramSupportedService;
 import org.openlmis.db.categories.UnitTests;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.initMocks;
 @Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
 public class ProgramSupportedPersistenceHandlerTest {
 
   @Mock
-  FacilityService facilityService;
+  ProgramSupportedService service;
 
+  @InjectMocks
   private ProgramSupportedPersistenceHandler programSupportedPersistenceHandler;
+
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 
-  @Before
-  public void setUp() throws Exception {
-    initMocks(this);
-    programSupportedPersistenceHandler = new ProgramSupportedPersistenceHandler(facilityService);
-  }
 
   @Test
   public void shouldSaveProgramSupported() {
     ProgramSupported programSupported = new ProgramSupported();
     programSupportedPersistenceHandler.save(programSupported);
-    verify(facilityService).uploadSupportedProgram(programSupported);
+    verify(service).uploadSupportedProgram(programSupported);
   }
 
  }

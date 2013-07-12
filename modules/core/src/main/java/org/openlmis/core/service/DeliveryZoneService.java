@@ -7,10 +7,9 @@
 package org.openlmis.core.service;
 
 import org.openlmis.core.domain.DeliveryZone;
-import org.openlmis.core.repository.DeliveryZoneRepository;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
-import org.openlmis.core.service.ProgramService;
+import org.openlmis.core.repository.DeliveryZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +40,7 @@ public class DeliveryZoneService {
     return repository.getByUserForRight(userId, right);
   }
 
-  public List<Program> getProgramsForDeliveryZone(long zoneId) {
+  public List<Program> getActiveProgramsForDeliveryZone(long zoneId) {
     List<Program> programs = repository.getPrograms(zoneId);
     return fillActivePrograms(programs);
   }
@@ -51,6 +50,23 @@ public class DeliveryZoneService {
     for (Program program : programs) {
       Program savedProgram = programService.getById(program.getId());
       if (savedProgram.getActive()) fullPrograms.add(savedProgram);
+    }
+    return fullPrograms;
+  }
+
+  public DeliveryZone getById(Long id) {
+    return repository.getById(id);
+  }
+
+  public List<DeliveryZone> getAll() {
+    return repository.getAll();
+  }
+
+  public List<Program> getAllProgramsForDeliveryZone(Long zoneId) {
+    List<Program> programs = repository.getPrograms(zoneId);
+    List<Program> fullPrograms = new ArrayList<>();
+    for (Program program : programs) {
+      fullPrograms.add(programService.getById(program.getId()));
     }
     return fullPrograms;
   }

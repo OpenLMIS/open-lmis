@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.lang.Boolean.FALSE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -38,6 +37,7 @@ import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.RoleType.REQUISITION;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -132,10 +132,10 @@ public class SupervisoryNodeMapperIT {
 
     User user = insertUser();
 
-    Role createRole = new Role("create role", FALSE, "random description");
+    Role createRole = new Role("create role", REQUISITION, "random description");
     roleRightsMapper.insertRole(createRole);
 
-    Role configureRnrRole = new Role("configure rnr", FALSE, "random description");
+    Role configureRnrRole = new Role("configure rnr", REQUISITION, "random description");
     roleRightsMapper.insertRole(configureRnrRole);
 
     roleRightsMapper.createRoleRight(createRole, CREATE_REQUISITION);
@@ -171,10 +171,10 @@ public class SupervisoryNodeMapperIT {
 
     User user = insertUser();
 
-    Role createRole = new Role("create role", FALSE, "random description");
+    Role createRole = new Role("create role", REQUISITION, "random description");
     roleRightsMapper.insertRole(createRole);
 
-    Role configureRnrRole = new Role("configure rnr", FALSE, "random description");
+    Role configureRnrRole = new Role("configure rnr", REQUISITION, "random description");
     roleRightsMapper.insertRole(configureRnrRole);
 
     roleRightsMapper.createRoleRight(createRole, CREATE_REQUISITION);

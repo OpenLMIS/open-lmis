@@ -2,8 +2,8 @@
 -- If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 INSERT INTO roles
- (name, adminRole, description) VALUES
- ('Admin',TRUE,'Admin');
+ (name, type, description) VALUES
+ ('Admin','ADMIN','Admin');
 
  INSERT INTO role_rights
   (roleId, rightName) VALUES
@@ -13,9 +13,9 @@ INSERT INTO roles
   ((select id from roles where name = 'Admin'), 'MANAGE_PROGRAM_PRODUCT'),
   ((select id from roles where name = 'Admin'), 'MANAGE_SCHEDULE'),
   ((select id from roles where name = 'Admin'), 'CONFIGURE_RNR'),
-  ((select id from roles where name = 'Admin'), 'MANAGE_USERS'),
-  ((select id from roles where name = 'Admin'), 'VIEW_REPORTS'),
-  ((select id from roles where name = 'Admin'), 'MANAGE_REPORTS'),
+  ((select id from roles where name = 'Admin'), 'MANAGE_USER'),
+  ((select id from roles where name = 'Admin'), 'VIEW_REPORT'),
+  ((select id from roles where name = 'Admin'), 'MANAGE_REPORT'),
   ((select id from roles where name = 'Admin'), 'MANAGE_REGIMEN_TEMPLATE');
 
 INSERT INTO users

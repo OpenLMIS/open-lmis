@@ -2,12 +2,12 @@
 -- If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 INSERT INTO roles
- (name, adminRole, description) VALUES
- ('Store In-Charge', 'f', ''),
- ('LMU', 'f', ''),
- ('LMU In-Charge', 't', ''),
- ('FacilityHead', 'f', ''),
- ('Medical-Officer', 'f', '');
+ (name, type, description) VALUES
+ ('Store In-Charge', 'REQUISITION', ''),
+ ('LMU', 'REQUISITION', ''),
+ ('LMU In-Charge', 'ADMIN', ''),
+ ('FacilityHead', 'REQUISITION', ''),
+ ('Medical-Officer', 'REQUISITION', '');
 
 INSERT INTO role_rights
   (roleId, rightName) VALUES

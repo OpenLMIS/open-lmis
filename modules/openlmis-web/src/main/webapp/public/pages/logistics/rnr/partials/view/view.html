@@ -7,20 +7,25 @@
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
 <div class="rnr-tabs clearfix">
   <ul class="clearfix">
-    <li ng-class="{'selected': !showNonFullSupply}">
+    <li ng-class="{'selected': (visibleTab != 'non-full-supply' && visibleTab != 'regimen')}">
       <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab" openlmis-message="label.full.supply.products"></a></li>
-    <li ng-class="{'selected': showNonFullSupply}">
+    <li ng-class="{'selected': visibleTab == 'non-full-supply'}">
       <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab" openlmis-message="label.non.full.supply.products"></a></li>
+    <li ng-class="{'selected': visibleTab == 'regimen'}" ng-show = "regimenCount">
+      <a ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a></li>
   </ul>
 </div>
 
-<ng-switch on="showNonFullSupply">
-        <span ng-switch-when="true">
-          <ng-include src="'/public/pages/logistics/rnr/partials/view/view-non-full-supply.html'"></ng-include>
-        </span>
-        <span ng-switch-default>
-          <ng-include src="'/public/pages/logistics/rnr/partials/view/view-full-supply.html'"></ng-include>
-        </span>
+<ng-switch on="visibleTab">
+         <span ng-switch-when="non-full-supply">
+        <ng-include src="'/public/pages/logistics/rnr/partials/view/view-non-full-supply.html'"></ng-include>
+      </span>
+      <span ng-switch-when="regimen">
+        <ng-include src="'/public/pages/logistics/rnr/partials/view/view-regimen-line-item.html'"></ng-include>
+      </span>
+      <span ng-switch-default>
+        <ng-include src="'/public/pages/logistics/rnr/partials/view/view-full-supply.html'"></ng-include>
+      </span>
 </ng-switch>
 <br><br>
 
@@ -34,6 +39,6 @@
   </div>
 </div>
 
-<div>
+<div ng-hide="visibleTab == 'regimen'">
   <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"></openlmis-pagination>
 </div>

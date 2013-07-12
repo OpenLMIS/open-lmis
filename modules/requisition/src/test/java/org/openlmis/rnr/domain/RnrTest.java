@@ -11,8 +11,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.openlmis.core.domain.Money;
-import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.builder.ProductBuilder;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RequisitionBuilder;
@@ -28,6 +28,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.core.builder.FacilityApprovedProductBuilder.defaultFacilityApprovedProduct;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.openlmis.rnr.builder.RequisitionBuilder.modifiedBy;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
@@ -102,6 +103,29 @@ public class RnrTest {
     assertThat(previousNormalizedConsumptions.get(0), is(2));
   }
 
+  @Test
+  public void shouldPopulateRnrLineItemsAndRegimenLineItems() throws Exception {
+
+    List<Regimen> regimens = new ArrayList<>();
+    Regimen regimen1 = new Regimen();
+    regimen1.setActive(true);
+    Regimen regimen2 = new Regimen();
+    regimen2.setActive(false);
+
+    regimens.add(regimen1);
+    regimens.add(regimen2);
+
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = make(a(defaultFacilityApprovedProduct));
+    Product product = make(a(ProductBuilder.defaultProduct));
+    facilityTypeApprovedProduct.getProgramProduct().setProduct(product);
+    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = new ArrayList<>();
+    facilityTypeApprovedProducts.add(facilityTypeApprovedProduct);
+
+    Rnr requisition = new Rnr(1L, 2L, 3L, facilityTypeApprovedProducts, regimens, 4L);
+
+    assertThat(requisition.getRegimenLineItems().size(), is(1));
+    assertThat(requisition.getFullSupplyLineItems().size(), is(1));
+  }
 
   @Test
   public void shouldFindLineItemInPreviousRequisitionAndSetBeginningBalance() throws Exception {
@@ -160,11 +184,11 @@ public class RnrTest {
   @Test
   public void testCalculatePacksToShip() throws Exception {
     RnrLineItem lineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem,
-        with(roundToZero, true),
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10),
-        with(roundToZero, false)));
+      with(roundToZero, true),
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10),
+      with(roundToZero, false)));
     rnr.setFullSupplyLineItems(asList(lineItem));
     rnr.setNonFullSupplyLineItems(asList(lineItem));
 

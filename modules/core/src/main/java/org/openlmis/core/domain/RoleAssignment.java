@@ -6,6 +6,7 @@
 
 package org.openlmis.core.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -22,12 +23,14 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_NULL)
 @EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor
 public class RoleAssignment extends BaseModel{
   private Long userId;
   private List<Long> roleIds = new ArrayList<>();
 
   private Long programId;
   private SupervisoryNode supervisoryNode;
+  private DeliveryZone deliveryZone;
 
   public RoleAssignment(Long userId, Long roleId, Long programId, SupervisoryNode supervisoryNode) {
     this.userId = userId;

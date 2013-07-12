@@ -52,6 +52,7 @@ public class RegimenColumnMapperIT {
   public void shouldInsertRegimenColumnsForAProgram() throws Exception {
 
     RegimenColumn regimenColumn = new RegimenColumn(program.getId(), "testName", "testLabel", "numeric", true);
+    regimenColumn.setCreatedBy(1L);
 
     mapper.insert(regimenColumn);
 
@@ -88,6 +89,7 @@ public class RegimenColumnMapperIT {
     regimenColumn.setLabel("newLabel");
     regimenColumn.setVisible(false);
     regimenColumn.setDataType("text");
+    regimenColumn.setModifiedBy(2L);
 
     mapper.update(regimenColumn);
 
@@ -97,6 +99,7 @@ public class RegimenColumnMapperIT {
     assertThat(updatedColumn.getName(), is("testName"));
     assertThat(updatedColumn.getVisible(), is(false));
     assertThat(updatedColumn.getDataType(), is("text"));
+    assertThat(updatedColumn.getModifiedBy(), is(2L));
   }
 
 }

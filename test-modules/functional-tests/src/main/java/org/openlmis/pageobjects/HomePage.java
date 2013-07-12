@@ -523,4 +523,75 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(errorMsg);
     SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "Requisition not initiated yet");
   }
+
+  public FacilityMailingListReportPage navigateViewFacilityMailingListReport() throws IOException {
+    SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(ReportsMenuItem);
+    testWebDriver.keyPress(ReportsMenuItem);
+    testWebDriver.waitForElementToAppear(FacilityMailingListReportMenu);
+    testWebDriver.keyPress(FacilityMailingListReportMenu);
+    testWebDriver.waitForElementToAppear(facilityListingReportPageHeader);
+    return new FacilityMailingListReportPage(testWebDriver);
+  }
+
+  public FacilityListingReportPage navigateViewFacilityListingReport() throws IOException {
+    SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(ReportsMenuItem);
+    testWebDriver.keyPress(ReportsMenuItem);
+    testWebDriver.waitForElementToAppear(FacilityListingReportMenu);
+    testWebDriver.keyPress(FacilityListingReportMenu);
+    return new FacilityListingReportPage(testWebDriver);
+  }
+
+  public SummaryReportPage navigateViewSummaryReport() throws IOException{
+    SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(ReportsMenuItem);
+    testWebDriver.keyPress(ReportsMenuItem);
+    testWebDriver.waitForElementToAppear(SummaryReportMenu);
+    testWebDriver.keyPress(SummaryReportMenu);
+    return new SummaryReportPage(testWebDriver);
+  }
+
+  public NonReportingFacilityReportPage navigateViewNonReportingFacilityReport() throws IOException{
+    SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(ReportsMenuItem);
+    testWebDriver.keyPress(ReportsMenuItem);
+    testWebDriver.waitForElementToAppear(NonReportingFacilityReportMenu);
+    testWebDriver.keyPress(NonReportingFacilityReportMenu);
+    return new NonReportingFacilityReportPage(testWebDriver);
+  }
+
+  public AverageConsumptionReportPage navigateViewAverageConsumptionReport() throws IOException{
+
+    SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(ReportsMenuItem);
+    testWebDriver.keyPress(ReportsMenuItem);
+    testWebDriver.waitForElementToAppear(AverageConsumptionReportMenu);
+    testWebDriver.keyPress(AverageConsumptionReportMenu);
+    return new AverageConsumptionReportPage(testWebDriver);
+  }
+
+  public AdjustmentSummaryReportPage navigateViewAdjustmentSummaryReport() throws IOException{
+
+        SeleneseTestNgHelper.assertTrue(ProductReportsMenuItem.isDisplayed());
+        testWebDriver.waitForElementToAppear(ProductReportsMenuItem);
+        testWebDriver.keyPress(ProductReportsMenuItem);
+        testWebDriver.waitForElementToAppear(AdjustmentSummaryReportMenu);
+        testWebDriver.keyPress(AdjustmentSummaryReportMenu);
+        return new AdjustmentSummaryReportPage(testWebDriver);
+    }
+  public StockedOutReportPage navigateViewStockedOutReport() throws IOException{
+
+        SeleneseTestNgHelper.assertTrue(ProductReportsMenuItem.isDisplayed());
+        testWebDriver.waitForElementToAppear(ProductReportsMenuItem);
+        testWebDriver.keyPress(ProductReportsMenuItem);
+        testWebDriver.waitForElementToAppear(StockedOutReportMenu);
+        testWebDriver.keyPress(StockedOutReportMenu);
+        return new StockedOutReportPage(testWebDriver);
+    }
+  public void goBack(){
+      TestWebDriver.getDriver().navigate().back();
+  }
+
+
 }

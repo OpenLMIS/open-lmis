@@ -42,6 +42,7 @@ public class Rnr extends BaseModel {
 
   private List<RnrLineItem> fullSupplyLineItems = new ArrayList<>();
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
+  private List<RegimenLineItem> regimenLineItems = new ArrayList<>();
 
   @Transient
   @JsonIgnore
@@ -62,9 +63,19 @@ public class Rnr extends BaseModel {
     this.modifiedBy = modifiedBy;
   }
 
-  public Rnr(Long facilityId, Long programId, Long periodId, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts, Long modifiedBy) {
+  public Rnr(Long facilityId, Long programId, Long periodId, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts, List<Regimen> regimens, Long modifiedBy) {
     this(facilityId, programId, periodId, modifiedBy);
     fillLineItems(facilityTypeApprovedProducts);
+    fillActiveRegimenLineItems(regimens);
+  }
+
+  private void fillActiveRegimenLineItems(List<Regimen> regimens) {
+    for (Regimen regimen : regimens) {
+      if (regimen.getActive()) {
+        RegimenLineItem regimenLineItem = new RegimenLineItem(null, regimen);
+        regimenLineItems.add(regimenLineItem);
+      }
+    }
   }
 
   public Rnr(Facility facility, Program program, ProcessingPeriod period) {
@@ -202,9 +213,13 @@ public class Rnr extends BaseModel {
     });
   }
 
-  public void setFieldsAccordingToTemplate(ProgramRnrTemplate template) {
-    for (RnrLineItem lineItem : fullSupplyLineItems) {
+  public void setFieldsAccordingToTemplate(ProgramRnrTemplate template, RegimenTemplate regimenTemplate) {
+    for (RnrLineItem lineItem : this.fullSupplyLineItems) {
       lineItem.setLineItemFieldsAccordingToTemplate(template);
+    }
+    if (regimenTemplate.getRegimenColumns().isEmpty()) return;
+    for (RegimenLineItem regimenLineItem : this.regimenLineItems) {
+      regimenLineItem.setRegimenFieldsAccordingToTemplate(regimenTemplate);
     }
   }
 
@@ -283,5 +298,6 @@ public class Rnr extends BaseModel {
 
     this.modifiedBy = modifiedBy;
   }
+
 }
 

@@ -51,4 +51,8 @@ public class RnrTemplateService {
   public ProgramRnrTemplate fetchProgramTemplate(Long programId) {
     return new ProgramRnrTemplate(programId, fetchAllRnRColumns(programId));
   }
+
+  public ProgramRnrTemplate fetchProgramTemplateForRequisition(Long programId) {
+    return new ProgramRnrTemplate(programId ,fetchColumnsForRequisition(programId));
+  }
 }

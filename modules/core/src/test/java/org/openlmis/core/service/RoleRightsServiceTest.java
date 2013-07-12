@@ -25,14 +25,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RoleType.REQUISITION;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -56,7 +55,7 @@ public class RoleRightsServiceTest {
 
   @Before
   public void setUp() throws Exception {
-    role = new Role("role name", FALSE, "role description");
+    role = new Role("role name", REQUISITION, "role description");
     roleRightsService = new RoleRightsService(roleRightsRepository, supervisoryNodeService, facilityService);
   }
 
@@ -70,42 +69,56 @@ public class RoleRightsServiceTest {
       MANAGE_REGIMEN_TEMPLATE,
       MANAGE_ROLE,
       MANAGE_SCHEDULE,
-      MANAGE_USERS,
+      MANAGE_USER,
       UPLOADS,
       MANAGE_DISTRIBUTION,
-      MANAGE_REPORTS,
-      VIEW_REPORTS,
+      MANAGE_REPORT,
+      VIEW_REPORT,
       APPROVE_REQUISITION,
       AUTHORIZE_REQUISITION,
       CONVERT_TO_ORDER,
       CREATE_REQUISITION,
       VIEW_REQUISITION,
-      VIEW_ORDER);
+      VIEW_ORDER,
+            MANAGE_PRODUCT,
+            MANAGE_SUPPLYLINE,
+            MANAGE_GEOGRAPHIC_ZONES,
+            VIEW_FACILITY_REPORT,
+            VIEW_MAILING_LABEL_REPORT,
+            VIEW_SUMMARY_REPORT,
+            VIEW_CONSUMPTION_REPORT,
+            VIEW_AVERAGE_CONSUMPTION_REPORT,
+            VIEW_REPORTING_RATE_REPORT,
+            VIEW_NON_REPORTING_FACILITIES,
+            VIEW_ADJUSTMENT_SUMMARY_REPORT,
+            VIEW_SUPPLY_STATUS_REPORT, VIEW_STOCKED_OUT_REPORT,
+            VIEW_DISTRICT_CONSUMPTION_REPORT
+    );
 
     assertThat(allRights, is(alphabeticalRights));
   }
 
   @Test
   public void shouldCheckAdminRightHasIsAdminTrue() throws Exception {
-    assertTrue(UPLOADS.getAdminRight());
-    assertTrue(MANAGE_FACILITY.getAdminRight());
-    assertTrue(MANAGE_PROGRAM_PRODUCT.getAdminRight());
-    assertTrue(MANAGE_REPORTS.getAdminRight());
-    assertTrue(MANAGE_ROLE.getAdminRight());
-    assertTrue(MANAGE_SCHEDULE.getAdminRight());
-    assertTrue(MANAGE_USERS.getAdminRight());
-    assertTrue(CONVERT_TO_ORDER.getAdminRight());
-    assertTrue(VIEW_ORDER.getAdminRight());
-    assertTrue(CONFIGURE_RNR.getAdminRight());
+    assertEquals(UPLOADS.getType(), RightType.ADMIN);
+    assertEquals(MANAGE_FACILITY.getType(), RightType.ADMIN);
+    assertEquals(MANAGE_PROGRAM_PRODUCT.getType(), RightType.ADMIN);
+    assertEquals(MANAGE_REPORT.getType(), RightType.ADMIN);
+    assertEquals(MANAGE_ROLE.getType(), RightType.ADMIN);
+    assertEquals(MANAGE_SCHEDULE.getType(), RightType.ADMIN);
+    assertEquals(MANAGE_USER.getType(), RightType.ADMIN);
+    assertEquals(CONVERT_TO_ORDER.getType(), RightType.ADMIN);
+    assertEquals(VIEW_ORDER.getType(), RightType.ADMIN);
+    assertEquals(CONFIGURE_RNR.getType(), RightType.ADMIN);
   }
 
   @Test
   public void shouldCheckTransactionalRightIsNotAdminRight() throws Exception {
-    assertFalse(CREATE_REQUISITION.getAdminRight());
-    assertFalse(AUTHORIZE_REQUISITION.getAdminRight());
-    assertFalse(APPROVE_REQUISITION.getAdminRight());
-    assertFalse(MANAGE_DISTRIBUTION.getAdminRight());
-    assertFalse(VIEW_REQUISITION.getAdminRight());
+    assertEquals(CREATE_REQUISITION.getType(), RightType.REQUISITION);
+    assertEquals(AUTHORIZE_REQUISITION.getType(), RightType.REQUISITION);
+    assertEquals(APPROVE_REQUISITION.getType(), RightType.REQUISITION);
+    assertEquals(MANAGE_DISTRIBUTION.getType(), RightType.ALLOCATION);
+    assertEquals(VIEW_REQUISITION.getType(), RightType.REQUISITION);
   }
 
   @Test

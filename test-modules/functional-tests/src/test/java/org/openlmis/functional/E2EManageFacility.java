@@ -58,14 +58,14 @@ public class E2EManageFacility extends TestCaseHelper {
 
     DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(date_time);
-    deleteFacilityPage.clickFacilityList();
+    deleteFacilityPage.clickFacilityList(date_time);
     deleteFacilityPage.deleteFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
     deleteFacilityPage.verifyDeletedFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
     HomePage homePageRestore = deleteFacilityPage.restoreFacility();
 
     DeleteFacilityPage deleteFacilityPageRestore = homePageRestore.navigateSearchFacility();
     deleteFacilityPageRestore.searchFacility(date_time);
-    deleteFacilityPageRestore.clickFacilityList();
+    deleteFacilityPageRestore.clickFacilityList(date_time);
     HomePage homePageEdit = deleteFacilityPageRestore.editAndVerifyFacility("ESSENTIAL MEDICINES", facilityNamePrefix + date_time);
 
     DeleteFacilityPage deleteFacilityPageEdit = homePageEdit.navigateSearchFacility();
@@ -74,7 +74,7 @@ public class E2EManageFacility extends TestCaseHelper {
     ArrayList<String> programsSupported = new ArrayList<String>();
     programsSupported.add("HIV");
     programsSupported.add("ESSENTIAL MEDICINES");
-    deleteFacilityPageEdit.verifyProgramSupported(programsSupported);
+    deleteFacilityPageEdit.verifyProgramSupported(programsSupported, date_time);
 
 
   }

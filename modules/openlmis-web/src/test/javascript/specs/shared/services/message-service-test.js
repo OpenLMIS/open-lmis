@@ -30,7 +30,7 @@ describe("MessageService", function () {
   });
 
   it("should not get messages if present in local storage", function(){
-    spyOn(localStorageService,'get').andReturn({"key":"message"});
+    spyOn(localStorageService,'get').andReturn("@version@");
     spyOn(localStorageService, 'add');
 
     messageService.populate();

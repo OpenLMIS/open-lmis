@@ -24,10 +24,10 @@ public interface UserMapper {
 
   @Insert({"INSERT INTO users",
     "(userName, facilityId, firstName, lastName, employeeId, jobTitle,",
-    "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, vendorId, createdBy, modifiedBy, modifiedDate)",
+    "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, vendorId, createdBy, modifiedBy, modifiedDate,createdDate)",
     "VALUES",
     "(#{userName}, #{facilityId}, #{firstName}, #{lastName}, #{employeeId}, #{jobTitle},",
-    "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, COALESCE(#{vendorId},(SELECT id FROM vendors WHERE name = 'openLmis')), #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))"})
+    "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, COALESCE(#{vendorId},(SELECT id FROM vendors WHERE name = 'openLmis')), #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()),COALESCE(#{modifiedDate}, NOW()))"})
   @Options(useGeneratedKeys = true)
   Integer insert(User user);
 
@@ -54,7 +54,7 @@ public interface UserMapper {
   List<User> getUserWithSearchedName(String userSearchParam);
 
   @Update("UPDATE users SET userName = #{userName}, firstName = #{firstName}, lastName = #{lastName}, employeeId = #{employeeId},facilityId=#{facilityId}, jobTitle = #{jobTitle}, " +
-    "primaryNotificationMethod = #{primaryNotificationMethod}, officePhone = #{officePhone}, cellPhone = #{cellPhone}, email = #{email}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} where id=#{id}")
+    "primaryNotificationMethod = #{primaryNotificationMethod}, officePhone = #{officePhone}, cellPhone = #{cellPhone}, email = #{email}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) where id=#{id}")
   void update(User user);
 
   @Select("SELECT id, userName, firstName, lastName, employeeId, facilityId, jobTitle, officePhone, primaryNotificationMethod, cellPhone, email FROM users WHERE id=#{id}")

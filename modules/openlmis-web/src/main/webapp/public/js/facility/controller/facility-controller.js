@@ -25,7 +25,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       updateProgramsToDisplay();
       $scope.facility.dataReportable = "true";
     }
-    $scope.allocationProgramProductsList = [];
+    $scope.facilityProgramProductsList = [];
   }
 
   function getFacilityWithDateObjects(facility) {
@@ -51,15 +51,15 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   function saveAllocationProgramProducts() {
     var promises = [];
 
-    var keys = _.keys($scope.allocationProgramProductsList);
+    var keys = _.keys($scope.facilityProgramProductsList);
 
     $(keys).each(function (index, key) {
       var deferred = $q.defer();
       promises.push(deferred.promise);
 
-      var program = $scope.allocationProgramProductsList[key][0].program;
+      var program = $scope.facilityProgramProductsList[key][0].program;
 
-      FacilityProgramProducts.update({facilityId: $scope.facility.id, programId: program.id}, $scope.allocationProgramProductsList[key], function (data) {
+      FacilityProgramProducts.update({facilityId: $scope.facility.id, programId: program.id}, $scope.facilityProgramProductsList[key], function (data) {
         deferred.resolve();
       }, function () {
         deferred.reject({error: "error.facility.allocation.product.save", program: program.name});

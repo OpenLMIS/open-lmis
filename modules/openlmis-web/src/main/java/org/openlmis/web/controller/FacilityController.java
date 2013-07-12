@@ -10,9 +10,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.web.model.FacilityReferenceData;
@@ -34,7 +32,8 @@ import java.util.*;
 import static org.openlmis.core.domain.Facility.createFacilityToBeDeleted;
 import static org.openlmis.core.domain.Facility.createFacilityToBeRestored;
 import static org.openlmis.core.domain.Right.*;
-import static org.openlmis.web.response.OpenLmisResponse.*;
+import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
@@ -98,6 +97,7 @@ public class FacilityController extends BaseController {
   @RequestMapping(value = "/facilities", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
   public ResponseEntity insert(@RequestBody Facility facility, HttpServletRequest request) {
+    facility.setCreatedBy(loggedInUserId(request));
     facility.setModifiedBy(loggedInUserId(request));
     ResponseEntity<OpenLmisResponse> response;
     try {
@@ -158,7 +158,7 @@ public class FacilityController extends BaseController {
     return response;
   }
 
-  @RequestMapping(value = "/deliveryZone/{deliveryZoneId}/program/{programId}/facilities", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/deliveryZones/{deliveryZoneId}/programs/{programId}/facilities", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION')")
   public ResponseEntity<OpenLmisResponse> getFacilitiesForDeliveryZoneAndProgram(@PathVariable("deliveryZoneId") Long deliveryZoneId, @PathVariable("programId") Long programId) {
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);

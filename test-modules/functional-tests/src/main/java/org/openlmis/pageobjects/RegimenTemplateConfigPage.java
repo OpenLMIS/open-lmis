@@ -7,12 +7,16 @@
 package org.openlmis.pageobjects;
 
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
 
 public class RegimenTemplateConfigPage extends Page {
@@ -63,13 +67,123 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Regimen Template')]")
   private static WebElement regimenTemplateHeader;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Regimens')]")
+  private static WebElement regimenTab;
+
+  @FindBy(how = How.XPATH, using = "//*[@id='wrap']/div/div/div/div[2]/ul/li[2]/a")
+  private static WebElement reportingFieldsTab;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[4]/ng-switch/div/div[1]/input")
+  private static WebElement noOfPatientsOnTreatmentCheckBox;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/ng-switch/div/div[1]/input")
+  private static WebElement noOfPatientsToInitiateTreatmentCheckBox;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[6]/ng-switch/div/div[1]/input")
+  private static WebElement noOfPatientsStoppedTreatmentCheckBox;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[7]/ng-switch/div/div[1]/input")
+  private static WebElement remarksCheckBox;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[4]/ng-switch/div/div[2]/input")
+  private static WebElement noOfPatientsOnTreatmentTextField;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/ng-switch/div/div[2]/input")
+  private static WebElement noOfPatientsToInitiateTreatmentTextField;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[6]/ng-switch/div/div[2]/input")
+  private static WebElement noOfPatientsStoppedTreatmentTextField;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[7]/ng-switch/div/div[2]/input")
+  private static WebElement remarksTextField;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[4]/ng-switch/div/div[3]/span")
+  private static WebElement noOfPatientsOnTreatmentDataType;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[5]/ng-switch/div/div[3]/span")
+  private static WebElement noOfPatientsToInitiateTreatmentDataType;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[6]/ng-switch/div/div[3]/span")
+  private static WebElement noOfPatientsStoppedTreatmentDataType;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='reportingFields']/div[7]/ng-switch/div/div[3]/span")
+  private static WebElement remarksDataType;
+
+  @FindBy(how = How.XPATH, using = "//div[1][@class='row-fluid rnr-template-columns ng-scope']/div[2][@class='span2']/div/span[@class='ng-binding']")
+  private static WebElement addedCode;
+
+  @FindBy(how = How.XPATH, using = "//div[1][@class='row-fluid rnr-template-columns ng-scope']/div[3][@class='span4']/div/span[@class='ng-binding']")
+  private static WebElement addedName;
+
+  @FindBy(how = How.XPATH, using = "//div[2][@class='ui-sortable ng-scope ng-pristine ng-valid']/div[1][@class='category-name']/div[@class='ng-binding']")
+  private static WebElement addedCategory;
 
   private static String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
+  private static String baseRegimenDivXpath = "//div[@id='sortable']/div";
 
   public RegimenTemplateConfigPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
+  }
+
+  public void NoOfPatientsOnTreatmentCheckBox(boolean select) {
+      if (select)
+        selectCheckBox(noOfPatientsOnTreatmentCheckBox);
+      else
+        unSelectCheckBox(noOfPatientsOnTreatmentCheckBox);
+  }
+
+  public boolean IsSelectedNoOfPatientsOnTreatmentCheckBox() {
+    return noOfPatientsOnTreatmentCheckBox.isSelected();
+  }
+
+  public boolean IsNoOfPatientsToInitiateTreatmentCheckBoxSelected() {
+    return noOfPatientsToInitiateTreatmentCheckBox.isSelected();
+  }
+
+  public boolean IsNoOfPatientsStoppedTreatmentCheckBoxSelected() {
+    return noOfPatientsStoppedTreatmentCheckBox.isSelected();
+  }
+
+  public boolean IsRemarksCheckBoxSelected() {
+    return remarksCheckBox.isSelected();
+  }
+
+  public String getValueNoOfPatientsOnTreatmentTextField() {
+    return noOfPatientsOnTreatmentTextField.getAttribute("value");
+  }
+
+  public String getValueNoOfPatientsToInitiateTreatmentTextField() {
+    return noOfPatientsToInitiateTreatmentTextField.getAttribute("value");
+  }
+
+  public String getValueNoOfPatientsStoppedTreatmentTextField() {
+    return noOfPatientsStoppedTreatmentTextField.getAttribute("value");
+  }
+
+  public String getValueRemarksTextField() {
+    return remarksTextField.getAttribute("value");
+  }
+
+  public void setValueRemarksTextField(String value) {
+    sendKeys(remarksTextField, "Testing column");;
+  }
+
+  public String getTextNoOfPatientsOnTreatmentDataType() {
+    return noOfPatientsOnTreatmentDataType.getText().trim();
+  }
+
+  public String getTextNoOfPatientsToInitiateTreatmentDataType() {
+    return noOfPatientsToInitiateTreatmentDataType.getText().trim();
+  }
+
+  public String getTextNoOfPatientsStoppedTreatmentDataType() {
+    return noOfPatientsStoppedTreatmentDataType.getText().trim();
+  }
+
+  public String getTextRemarksDataType() {
+    return remarksDataType.getText().trim();
   }
 
   public void AddNewRegimen(String category, String code, String name, Boolean isActive) {
@@ -80,59 +194,113 @@ public class RegimenTemplateConfigPage extends Page {
     if (isActive)
       newRegimenActiveCheckBox.click();
     addButton.click();
+
   }
 
-  public WebElement getLogoutLink() {
-    return logoutLink;
+  public void clickReportingFieldTab()
+  {
+    testWebDriver.waitForElementToAppear(reportingFieldsTab);
+    reportingFieldsTab.click();
+    testWebDriver.waitForElementToAppear(noOfPatientsOnTreatmentCheckBox);
   }
 
-  public WebElement getDoneFailMessage() {
-    return doneFailMessage;
+
+
+  public void selectCheckBox(WebElement locator)
+  {
+   if(!locator.isSelected()){
+     locator.click();
+   }
   }
 
-  public WebElement getSaveButton() {
-    return SaveButton;
+  public void unSelectCheckBox(WebElement locator)
+  {
+    if(locator.isSelected()){
+      locator.click();
+    }
   }
 
-  public WebElement getCancelButton() {
-    return CancelButton;
+  public boolean IsDisplayedDoneFailMessage() {
+    testWebDriver.waitForElementToAppear(doneFailMessage);
+    return doneFailMessage.isDisplayed();
   }
 
-  public WebElement getChangeLink() {
-    return changeLink;
+  public void clickSaveButton() {
+    testWebDriver.waitForElementToAppear(SaveButton);
+    SaveButton.click();
   }
 
-  public WebElement getSaveSuccessMsgDiv() {
-    return saveSuccessMsgDiv;
+  public void clickCancelButton() {
+    testWebDriver.waitForElementToAppear(CancelButton);
+    CancelButton.click();
   }
 
-  public WebElement getSaveErrorMsgDiv() {
-    return saveErrorMsgDiv;
+  public boolean IsDisplayedSaveSuccessMsgDiv() {
+    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+    return saveSuccessMsgDiv.isDisplayed() ;
   }
 
-  public WebElement getNewRegimenCategoryDropDown() {
-    return newRegimenCategoryDropDown;
+  public String getSaveSuccessMsgDiv() {
+    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+    return saveSuccessMsgDiv.getText().trim() ;
   }
 
-  public WebElement getNewRegimenCodeTextBox() {
-    return newRegimenCodeTextBox;
+  public boolean IsDisplayedSaveErrorMsgDiv() {
+    testWebDriver.waitForElementToAppear(saveErrorMsgDiv);
+    return saveErrorMsgDiv.isDisplayed() ;
   }
 
-  public WebElement getNewRegimenNameTextBox() {
-    return newRegimenNameTextBox;
+  public String getSaveErrorMsgDiv() {
+    testWebDriver.waitForElementToAppear(saveErrorMsgDiv);
+    return saveErrorMsgDiv.getText().trim() ;
   }
 
-  public WebElement getNewRegimenActiveCheckBox() {
-    return newRegimenActiveCheckBox;
+  public String getNewRegimenCodeTextBoxValue() {
+    return newRegimenCodeTextBox.getText();
   }
 
-  public WebElement getAddButton() {
-    return addButton;
+  public String getNewRegimenNameTextBoxValue() {
+    return newRegimenNameTextBox.getText();
   }
 
-  public WebElement getEditButton() {
-    return editButton;
+  public boolean IsNewRegimenActiveCheckBoxSelected() {
+    return newRegimenActiveCheckBox.isSelected();
   }
+
+  public String getAddedCategoryValue() {
+     return addedCategory.getAttribute("value");
+  }
+
+  public String getNonEditableAddedCode(int indexOfCodeAdded) {
+      testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span"));
+      return testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span").getText().trim();
+  }
+
+  public String getNonEditableAddedName(int indexOfCodeAdded) {
+      testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span"));
+      return testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[3]/div/span").getText().trim();
+  }
+
+  public boolean getNonEditableAddedActiveCheckBox(int indexOfCodeAdded) {
+      testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span"));
+      return testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[4]/input").isSelected();
+  }
+
+    public String getEditableAddedCode(int indexOfCodeAdded) {
+        testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"));
+        return testWebDriver.getAttribute(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"), "value").trim();
+    }
+
+    public String getEditableAddedName(int indexOfCodeAdded) {
+        testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"));
+        return testWebDriver.getAttribute(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[3]/input"), "value").trim();
+    }
+
+    public boolean getEditableAddedActiveCheckBox(int indexOfCodeAdded) {
+        testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"));
+        return testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[4]/input").isSelected();
+    }
+
 
   public String getTEMPLATE_SUCCESS_MESSAGE() {
     return TEMPLATE_SUCCESS_MESSAGE;
@@ -166,10 +334,16 @@ public class RegimenTemplateConfigPage extends Page {
     SaveButton.click();
   }
 
-  public void CancelRegime() {
+  public void CancelRegime(String program) {
     testWebDriver.waitForElementToAppear(CancelButton);
     CancelButton.click();
-    testWebDriver.waitForElementToAppear(regimenTemplateHeader);
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[@id='" + program + "']/span"));
   }
 
+    private void sendKeys(WebElement locator, String value) {
+        int length = testWebDriver.getAttribute(locator, "value").length();
+        for (int i = 0; i < length; i++)
+            locator.sendKeys("\u0008");
+        locator.sendKeys(value);
+    }
 }

@@ -83,11 +83,9 @@ public class ManageDistribution extends TestCaseHelper {
 
     distributionPage.selectValueFromProgram(programFirst);
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
+    testWebDriver.sleep(100);
     verifySelectedOptionFromSelectField(periodDisplayedByDefault, actualSelectFieldElement);
-
-    distributionPage.clickProceed();
-    verifySubOptionsOfProceedButton(distributionPage);
-
+    distributionPage.clickViewLoadAmount();
   }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
@@ -181,17 +179,15 @@ public class ManageDistribution extends TestCaseHelper {
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     verifySelectedOptionFromSelectField(defaultPeriodValuesToBeVerified, actualSelectFieldElement);
 
-    distributionPage.clickProceed();
-    verifySubOptionsOfProceedButton(distributionPage);
 
   }
 
 
   private void verifyElementsPresent(DistributionPage distributionPage) {
-    assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.getSelectDeliveryZoneSelectBox().isDisplayed());
-    assertTrue("selectProgramSelectBox should be present", distributionPage.getSelectProgramSelectBox().isDisplayed());
-    assertTrue("selectPeriodSelectBox should be present", distributionPage.getSelectPeriodSelectBox().isDisplayed());
-    assertTrue("proceedButton should be present", distributionPage.getProceedButton().isDisplayed());
+    assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.IsDisplayedSelectDeliveryZoneSelectBox());
+    assertTrue("selectProgramSelectBox should be present", distributionPage.IsDisplayedSelectProgramSelectBox());
+    assertTrue("selectPeriodSelectBox should be present", distributionPage.IsDisplayedSelectPeriodSelectBox());
+    assertTrue("proceedButton should be present", distributionPage.IsDisplayedViewLoadAmountButton());
   }
 
 
@@ -227,17 +223,10 @@ public class ManageDistribution extends TestCaseHelper {
 
 
   private void verifySelectedOptionFromSelectField(String valuesToBeVerified, WebElement actualSelectFieldElement) {
-    testWebDriver.sleep(500);
+    testWebDriver.sleep(200);
     testWebDriver.waitForElementToAppear(actualSelectFieldElement);
     assertEquals(valuesToBeVerified, actualSelectFieldElement.getText());
   }
-
-
-  private void verifySubOptionsOfProceedButton(DistributionPage distributionPage) {
-    assertTrue("getViewWarehouseLoadAmount Link should be present", distributionPage.getViewWarehouseLoadAmountLink().isDisplayed());
-    assertTrue("getInputFacilityData Link should be present", distributionPage.getInputFacilityDataLink().isDisplayed());
-  }
-
 
   @AfterMethod(groups = {"functional2", "smoke"})
   public void tearDown() throws Exception {

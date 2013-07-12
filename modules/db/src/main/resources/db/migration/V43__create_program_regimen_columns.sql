@@ -5,11 +5,14 @@ Drop TABLE IF EXISTS program_regimen_columns;
 CREATE TABLE program_regimen_columns (
     id SERIAL PRIMARY KEY,
     programId INTEGER NOT NULL REFERENCES programs(id),
-    name varchar(200) NOT NULL,
-    label varchar(200) NOT NULL,
+    name varchar(100) NOT NULL,
+    label varchar(100) NOT NULL,
     visible boolean NOT NULL,
     dataType varchar(50) NOT NULL,
-    createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    createdBy INTEGER,
+    createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modifiedBy INTEGER,
+    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE UNIQUE INDEX i_program_regimens_name ON program_regimen_columns(programId, name);

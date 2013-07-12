@@ -41,7 +41,7 @@ public class ProgramController extends BaseController {
   }
 
   @RequestMapping(value = "/facilities/{facilityId}/programs", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION, MANAGE_USERS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION, MANAGE_USER')")
   public List<Program> getProgramsForFacility(@PathVariable(value = "facilityId") Long facilityId) {
     return programService.getByFacility(facilityId);
   }
@@ -70,7 +70,7 @@ public class ProgramController extends BaseController {
   }
 
   @RequestMapping(value = "/pull/programs", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USERS, CONFIGURE_RNR')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER, CONFIGURE_RNR')")
   public ResponseEntity<OpenLmisResponse> getAllPullPrograms() {
     return OpenLmisResponse.response(PROGRAMS, programService.getAllPullPrograms());
   }
@@ -88,7 +88,7 @@ public class ProgramController extends BaseController {
   }
 
   @RequestMapping(value = "/programs", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_REGIMEN_TEMPLATE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_REGIMEN_TEMPLATE, MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> getAllPrograms() {
     return OpenLmisResponse.response(PROGRAMS, programService.getAll());
   }

@@ -13,7 +13,6 @@ import org.openlmis.core.domain.FacilityType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Set;
 
 @Repository
 public interface FacilityMapper {
@@ -22,7 +21,7 @@ public interface FacilityMapper {
     "geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById," +
     "coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, online," +
     "satellite, satelliteParentId, hasElectricity, hasElectronicScc, hasElectronicDar, active," +
-    "goLiveDate, goDownDate, comment, dataReportable, createdBy, modifiedBy, modifiedDate) " +
+    "goLiveDate, goDownDate, comment, dataReportable, createdDate,createdBy, modifiedBy, modifiedDate) " +
     "values(#{code}, #{name}, #{description}, #{gln}, #{mainPhone}, #{fax}, #{address1}, #{address2}," +
     "#{geographicZone.id}," +
     "#{facilityType.id}," +
@@ -30,7 +29,7 @@ public interface FacilityMapper {
     "#{operatedBy.id}," +
     "#{coldStorageGrossCapacity}, #{coldStorageNetCapacity}, #{suppliesOthers}, #{sdp},#{online}," +
     "#{satellite}, #{satelliteParentId}, #{hasElectricity}, #{hasElectronicScc}, #{hasElectronicDar}, #{active}," +
-    "#{goLiveDate}, #{goDownDate}, #{comment}, #{dataReportable}, #{createdBy}, #{modifiedBy}, " +
+    "#{goLiveDate}, #{goDownDate}, #{comment}, #{dataReportable},COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
     "COALESCE(#{modifiedDate}, NOW()))")
   @Options(useGeneratedKeys = true)
   Integer insert(Facility facility);
@@ -91,7 +90,7 @@ public interface FacilityMapper {
   @Select("SELECT * FROM facilities WHERE id = #{id}")
   @Results(value = {
     @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getGeographicZoneById")),
+      one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getById")),
     @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
     @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById"))
   })
@@ -164,13 +163,15 @@ public interface FacilityMapper {
   @Select("SELECT * from facilities WHERE code=#{code}")
   Facility getByCode(String code);
 
-  @Select({"SELECT * from facilities f, delivery_zone_members dzm, geographic_zones gz, programs_supported ps ",
-    "WHERE f.id = dzm.facilityId AND",
-    " dzm.deliveryZoneId= #{deliveryZoneId} AND f.active = true ",
-    "AND f.geographiczoneId = gz.id AND f.id=ps.facilityId AND ps.programId = #{programId}  order by gz.name, f.name"})
+  @Select({"SELECT F.geographicZoneId, F.name, F.code, F.id, F.catchmentPopulation FROM facilities F INNER JOIN delivery_zone_members DZM ON F.id = DZM.facilityId",
+    "INNER JOIN programs_supported PS ON PS.facilityId = F.id",
+    "INNER JOIN delivery_zones DZ ON DZ.id = DZM.deliveryZoneId",
+    "INNER JOIN delivery_zone_program_schedules DZPS ON DZPS.deliveryZoneId = DZM.deliveryZoneId",
+    "WHERE DZPS.programId = #{programId} AND F.active = true",
+    "AND PS.programId = #{programId}  AND DZM.deliveryZoneId = #{deliveryZoneId} order by F.name"})
   @Results(value = {
     @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getGeographicZoneById"))
+      one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getById"))
   })
   List<Facility> getAllInDeliveryZoneFor(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
 }

@@ -20,7 +20,6 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode(callSuper = false)
-// TODO : rename to FacilityTypeApprovedProduct
 public class FacilityTypeApprovedProduct extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, name = "Facility Type Code", nested = "code")

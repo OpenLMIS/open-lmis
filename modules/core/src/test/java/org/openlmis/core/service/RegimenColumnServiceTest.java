@@ -16,11 +16,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.isNotNull;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
@@ -29,32 +25,38 @@ public class RegimenColumnServiceTest {
   @Mock
   RegimenColumnRepository repository;
 
+  @Mock
+  MessageService messageService;
+
   RegimenColumnService service;
+
+  Long userId = 1L;
 
   @Before
   public void setUp() throws Exception {
-    initMocks(this);
-    service = new RegimenColumnService(repository);
-  }
-
-  @Test
-  public void shouldCallUpdateWhenRegimenColumnHasId() throws Exception {
-
-    RegimenColumn regimenColumn = new RegimenColumn(1L, "testName", "testLabel", "numeric", true);
-
-    service.save(regimenColumn);
-
-    verify(repository).insert(regimenColumn);
+    service = new RegimenColumnService(repository, messageService);
   }
 
   @Test
   public void shouldCallInsertWhenRegimenColumnDoesNotHaveId() throws Exception {
+
+    RegimenColumn regimenColumn = new RegimenColumn(1L, "testName", "testLabel", "numeric", true);
+
+    service.save(regimenColumn, userId);
+
+    verify(repository).insert(regimenColumn);
+    assertThat(regimenColumn.getCreatedBy(), is(userId));
+  }
+
+  @Test
+  public void shouldCallUpdateWhenRegimenColumnHasId() throws Exception {
     RegimenColumn regimenColumn = new RegimenColumn(1L, "testName", "testLabel", "numeric", true);
     regimenColumn.setId(1L);
 
-    service.save(regimenColumn);
+    service.save(regimenColumn, userId);
 
     verify(repository).update(regimenColumn);
+    assertThat(regimenColumn.getModifiedBy(), is(userId));
   }
 
   @Test
@@ -64,7 +66,7 @@ public class RegimenColumnServiceTest {
     RegimenColumn regimenColumn2 = new RegimenColumn(1L, "testName2", "testLabel2", "numeric", true);
     regimenColumn2.setId(1L);
 
-    service.save(Arrays.asList(regimenColumn1, regimenColumn2));
+    service.save(Arrays.asList(regimenColumn1, regimenColumn2), userId);
 
     verify(repository).insert(regimenColumn1);
     verify(repository).update(regimenColumn2);
@@ -77,12 +79,14 @@ public class RegimenColumnServiceTest {
     List<RegimenColumn> emptyList = new ArrayList<>();
     when(repository.getRegimenColumnsByProgramId(programId)).thenReturn(emptyList);
 
-    service.getRegimenColumnsByProgramId(programId);
+    service.populateDefaultRegimenColumnsIfNoColumnsExist(programId, userId);
 
-    verify(repository).insert(new RegimenColumn(programId, "onTreatment", "Number of patients on treatment", "Numeric", true));
-    verify(repository).insert(new RegimenColumn(programId, "'initiatedTreatment'", "Number of patients to be initiated treatment", "Numeric", true));
-    verify(repository).insert(new RegimenColumn(programId, "'stoppedTreatment'", "Number of patients stopped treatment", "Numeric", true));
-    verify(repository).insert(new RegimenColumn(programId, "'remarks'", "Remarks", "Text", true));
+    verify(repository).insert(new RegimenColumn(programId, "name", null, null, true));
+    verify(repository).insert(new RegimenColumn(programId, "code", null, null, true));
+    verify(repository).insert(new RegimenColumn(programId, "onTreatment", null, null, true));
+    verify(repository).insert(new RegimenColumn(programId, "initiatedTreatment", null, null, true));
+    verify(repository).insert(new RegimenColumn(programId, "stoppedTreatment", null, null, true));
+    verify(repository).insert(new RegimenColumn(programId, "remarks", null, null, true));
     verify(repository, times(2)).getRegimenColumnsByProgramId(programId);
   }
 

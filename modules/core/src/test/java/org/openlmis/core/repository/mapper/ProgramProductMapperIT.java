@@ -47,6 +47,8 @@ public class ProgramProductMapperIT {
   ProgramProductMapper programProductMapper;
   private Product product;
   private Program program;
+  @Autowired
+  private ProgramProductIsaMapper programProductISAMapper;
 
   @Before
   public void setup() {
@@ -119,13 +121,17 @@ public class ProgramProductMapperIT {
   @Test
   public void shouldGetProgramProductsByProgram() {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-
     programProductMapper.insert(programProduct);
+
+    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 1d,2, 3.3, 5.6, 4, 5, 5);
+
+    programProductISAMapper.insert(programProductISA);
 
     List<ProgramProduct> programProducts = programProductMapper.getByProgram(program);
 
     assertThat(programProducts.size(), is(1));
     assertThat(programProducts.get(0).getId(), is(programProduct.getId()));
+    assertThat(programProducts.get(0).getProgramProductIsa(), is(programProductISA));
   }
 
   @Test

@@ -53,17 +53,7 @@
 
     <br/><br/>
 
-    <div class="btn-group">
-      <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#"
-         ng-disabled="!selectedPeriod||!selectedProgram||!selectedZone" openlmis-message="button.proceed ">
-        <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu" ng-show="selectedPeriod && selectedProgram && selectedZone">
-        <li><a openlmis-message="option.distribution.viewLoadAmount" ng-click="viewAmounts()"></a></li>
-        <li><a openlmis-message="option.distribution.inputFacilityData"></a></li>
-      </ul>
-    </div>
-
   </div>
-
+  <div ng-include="'partials/list.html'"></div>
+  </div>
 </div>

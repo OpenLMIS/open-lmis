@@ -1,0 +1,44 @@
+<!--
+  ~ Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div ng-controller="ViewRegimenLineItemController">
+
+  <div class="rnr-table">
+    <table id="regimenTable" fixed-table-header class="table table-bordered scrollable">
+      <thead>
+      <tr>
+        <th ng-repeat="regimenColumn in visibleRegimenColumns"
+            ng-bind="regimenColumn.label">
+        </th>
+      </tr>
+      </thead>
+      <tbody ng-repeat="regimenLineItem in rnr.regimenLineItems">
+      <tr>
+        <td class="productCategory" colspan="{{visibleRegimenColumns.length}}" ng-show="showCategory($index)"
+            ng-bind="regimenLineItem.regimen.category.name"></td>
+      </tr>
+      <tr>
+        <td class="cell-input" ng-repeat="regimenColumn in visibleRegimenColumns">
+          <ng-switch on="regimenColumn.name">
+              <span ng-switch-when="name">
+                <span ng-bind="regimenLineItem.regimen.name" class="cell-text"></span>
+              </span>
+              <span ng-switch-when="code">
+                <span ng-bind="regimenLineItem.regimen.code" class="cell-text"></span>
+              </span>
+              <span ng-switch-default>
+                <input type="text"
+                       ng-bind="regimenLineItem[regimenColumn.name]"
+                       rnr-validator="positiveInteger" maxlength="8"
+                       ng-disabled="true">
+              </span>
+          </ng-switch>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

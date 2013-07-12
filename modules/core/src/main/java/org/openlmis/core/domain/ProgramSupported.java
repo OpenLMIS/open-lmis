@@ -39,7 +39,7 @@ public class ProgramSupported extends BaseModel implements Importable {
   @ImportField(name = "Program Start Date", type = "Date")
   private Date startDate;
 
-  private List<AllocationProgramProduct> programProducts;
+  private List<FacilityProgramProduct> programProducts;
 
   public void isValid() {
     if (this.active && this.startDate == null)

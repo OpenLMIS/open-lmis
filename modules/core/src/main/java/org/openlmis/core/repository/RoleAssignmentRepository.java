@@ -7,6 +7,8 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.Closure;
+import org.apache.commons.collections.CollectionUtils;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.repository.mapper.RoleAssignmentMapper;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static org.apache.commons.collections.CollectionUtils.forAllDo;
 import static org.openlmis.core.domain.Right.commaSeparateRightNames;
 
 @Repository
@@ -30,10 +33,6 @@ public class RoleAssignmentRepository {
 
   public List<RoleAssignment> getRoleAssignmentsForUserWithRight(Right right, Long userId) {
     return mapper.getRoleAssignmentsWithGivenRightForAUser(right, userId);
-  }
-
-  public void insertRoleAssignment(Long userId, Long programId, Long supervisoryNodeId, Long roleId) {
-    mapper.insertRoleAssignment(userId, programId, supervisoryNodeId, roleId);
   }
 
   public void deleteAllRoleAssignmentsForUser(Long id) {
@@ -54,5 +53,25 @@ public class RoleAssignmentRepository {
 
   public RoleAssignment getAdminRole(Long userId) {
     return mapper.getAdminRole(userId);
+  }
+
+  public void insert(List<RoleAssignment> roleAssignments, final Long userId) {
+    if(roleAssignments == null) return;
+
+    for (final RoleAssignment roleAssignment : roleAssignments) {
+      if(roleAssignment == null) continue;
+      forAllDo(roleAssignment.getRoleIds(), new Closure() {
+        @Override
+        public void execute(Object o) {
+          final Long roleId = (Long) o;
+          mapper.insert(userId, roleAssignment.getProgramId(),
+            roleAssignment.getSupervisoryNode(), roleAssignment.getDeliveryZone(), roleId);
+        }
+      });
+    }
+  }
+
+  public List<RoleAssignment> getAllocationRoles(Long userId) {
+    return mapper.getAllocationRoles(userId);
   }
 }

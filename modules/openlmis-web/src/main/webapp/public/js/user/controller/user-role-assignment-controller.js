@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function UserRoleAssignmentController($scope, $dialog, messageService) {
+function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZonePrograms) {
 
   $scope.selectSuperviseProgramMessage = messageService.get('label.select.program');
   $scope.selectSupervisoryNodeMessage = messageService.get('label.select.node');
@@ -12,7 +12,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService) {
   $("#adminRoles").on("change", function (e) {
     if (e.removed) {
       var dialogOpts = {
-        id:"deleteAdminRolesModal",
+        id: "deleteAdminRolesModal",
         header: messageService.get("create.user.deleteAdminRoleHeader"),
         body: messageService.get("create.user.deleteAdminRoles")
       };
@@ -23,35 +23,46 @@ function UserRoleAssignmentController($scope, $dialog, messageService) {
   });
 
   $scope.restoreAdminRole = function (result) {
-    if(!result) {
-      if (window.lastAdminRoleRemoved) {
-        $scope.user.adminRole.roleIds.push(window.lastAdminRoleRemoved.id);
-      }
-    }
-    else {
-      return;
+    if (result) return;
+
+    if (window.lastAdminRoleRemoved) {
+      $scope.user.adminRole.roleIds.push(window.lastAdminRoleRemoved.id);
     }
   };
 
-  $scope.deleteCurrentRow = function (rowNum, supervisoryRole) {
+  $scope.loadProgramsForDeliveryZone = function () {
+
+    $scope.deliveryZonePrograms = $scope.deliveryZoneRoles = [];
+    $scope.deliveryZoneRole.programId = undefined;
+
+    if (isUndefined($scope.deliveryZoneRole.deliveryZone.id)) return;
+
+    DeliveryZonePrograms.get({zoneId: $scope.deliveryZoneRole.deliveryZone.id}, function (data) {
+      $scope.deliveryZonePrograms = data.deliveryZonePrograms;
+      $.each($scope.deliveryZonePrograms, function (index, program) {
+        program.status = program.active ? messageService.get("label.active") : messageService.get('label.inactive');
+      });
+    }, function () {
+    });
+  };
+
+  $scope.deleteCurrentRow = function (rowNum, roleList) {
     var dialogOpts = {
-      id:"deleteRolesModal",
+      id: "deleteRolesModal",
       header: messageService.get("create.user.deleteRoles"),
-      body: messageService.get("create.user.homeRoles.delete.warning")
+      body: roleList == 'allocationRoles' ? messageService.get('msg.roles.delivery.zone.deletion') : messageService.get("create.user.homeRoles.delete.warning")
     };
 
-    OpenLmisDialog.newDialog(dialogOpts, $scope.deleteFacilityRole, $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.deleteRole, $dialog, messageService);
     $scope.rowNum = rowNum;
-    $scope.supervisorRole =  supervisoryRole ? true : false;
+    $scope.deleteRoleList = roleList;
   };
 
-  $scope.deleteFacilityRole = function (result) {
-    if(!result) return;
+  $scope.deleteRole = function (result) {
+    if (!result) return;
 
-    var rolesArray = $scope.supervisorRole? $scope.user.supervisorRoles : $scope.user.homeFacilityRoles;
-
-    rolesArray.splice($scope.rowNum, 1);
-    $scope.rowNum = $scope.supervisorRole = null;
+    $scope.user[$scope.deleteRoleList].splice($scope.rowNum, 1);
+    $scope.rowNum = $scope.deleteRoleList = null;
   };
 
   $scope.availableSupportedProgramsWithStatus = function () {
@@ -67,7 +78,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService) {
       program.program.status = program.program.active ? messageService.get('label.active') : messageService.get('label.inactive');
     });
 
-    $scope.selectedProgramMessage = (programsToDisplay.length) ? messageService.get('label.select.program') : messageService.get('label.noProgramLeft') ;
+    $scope.selectedProgramMessage = (programsToDisplay.length) ? messageService.get('label.select.program') : messageService.get('label.noProgramLeft');
 
     return programsToDisplay;
   };
@@ -78,7 +89,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService) {
 
   $scope.addHomeFacilityRole = function () {
     if (isPresent($scope.programSelected) && isPresent($scope.selectedRoleIds)) {
-      var newRoleAssignment = {programId:$scope.programSelected, roleIds:$scope.selectedRoleIds};
+      var newRoleAssignment = {programId: $scope.programSelected, roleIds: $scope.selectedRoleIds};
       addHomeFacilityRole(newRoleAssignment);
       clearCurrentSelection();
     } else {
@@ -101,7 +112,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService) {
 
   $scope.addSupervisoryRole = function () {
     if (isPresent($scope.selectedProgramIdToSupervise) && isPresent($scope.selectedSupervisoryNodeIdToSupervise) && isPresent($scope.selectedRoleIdsToSupervise)) {
-      var newRoleAssignment = {programId:$scope.selectedProgramIdToSupervise, supervisoryNode:{id:$scope.selectedSupervisoryNodeIdToSupervise}, roleIds:$scope.selectedRoleIdsToSupervise};
+      var newRoleAssignment = {programId: $scope.selectedProgramIdToSupervise, supervisoryNode: {id: $scope.selectedSupervisoryNodeIdToSupervise}, roleIds: $scope.selectedRoleIdsToSupervise};
       if (isDuplicateSupervisoryRole(newRoleAssignment)) {
         $scope.duplicateSupervisorRoleError = messageService.get('error.duplicate.programNode.combination');
         return;
@@ -138,28 +149,45 @@ function UserRoleAssignmentController($scope, $dialog, messageService) {
     }
   }
 
-  $scope.getProgramName = function (programId) {
-    if (!$scope.programs) return;
-    var programName = null;
-    $.each($scope.programs, function (index, program) {
-      if (program.id == programId) {
-        programName = program.name;
+  function validate() {
+    var valid = true;
+    $($scope.user.allocationRoles).each(function (index, role) {
+      if (role.deliveryZone.id == $scope.deliveryZoneRole.deliveryZone.id && role.programId == $scope.deliveryZoneRole.programId) {
+        valid = false;
         return false;
       }
+      return true;
     });
-    return programName;
+    return valid;
+  }
+
+  $scope.addAllocationRole = function () {
+    $scope.user.allocationRoles = $scope.user.allocationRoles ? $scope.user.allocationRoles : [];
+    $scope.showAllocationError = true;
+
+    if (!$scope.deliveryZoneRole.deliveryZone.id || !$scope.deliveryZoneRole.programId || !$scope.deliveryZoneRole.roleIds || !$scope.deliveryZoneRole.roleIds.length) return;
+
+    if (!validate()) {
+      $scope.duplicateAllocationRoleError = 'error.delivery.zone.program.combination';
+      return;
+    }
+
+    $scope.user.allocationRoles.push(angular.copy($scope.deliveryZoneRole));
+    $scope.showAllocationError = $scope.deliveryZoneRole = $scope.duplicateAllocationRoleError = undefined;
+  };
+
+
+  // WHO WROTE THIS? THIS IS AWESOME!
+  $scope.getProgramName = function (programId) {
+    return _.findWhere(_.flatten($scope.programsMap), {id: programId}).name;
+  };
+
+  $scope.getDeliveryZoneName = function (zoneId) {
+    return _.findWhere($scope.deliveryZones, {id: zoneId}).name;
   };
 
   $scope.getSupervisoryNodeName = function (supervisoryNodeId) {
-    if (!$scope.supervisoryNodes) return;
-    var supervisoryNodeName = null;
-    $.each($scope.supervisoryNodes, function (index, supervisoryNode) {
-      if (supervisoryNode.id == supervisoryNodeId) {
-        supervisoryNodeName = supervisoryNode.name;
-        return false;
-      }
-    });
-    return supervisoryNodeName;
+    return _.findWhere($scope.supervisoryNodes, {id: supervisoryNodeId}).name;
   };
 
   $scope.hasMappingError = function (mappingErrorFlag, field) {

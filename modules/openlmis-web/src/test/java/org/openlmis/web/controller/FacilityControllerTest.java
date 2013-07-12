@@ -61,6 +61,7 @@ public class FacilityControllerTest {
 
   @InjectMocks
   private FacilityController facilityController;
+
   private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
 
   @Before
@@ -108,7 +109,6 @@ public class FacilityControllerTest {
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
     assertThat(response.getSuccessMsg(), is("Facility 'test facility' created successfully"));
     verify(facilityService).insert(facility);
-    assertThat(facility.getModifiedBy(), is(userId));
   }
 
   @Test
@@ -238,7 +238,6 @@ public class FacilityControllerTest {
 
   @Test
   public void shouldGetFacilitiesForDeliveryZoneAndProgram() throws Exception {
-
     List<Facility> facilities = new ArrayList<>();
     Mockito.when(facilityService.getAllForDeliveryZoneAndProgram(1l, 1l)).thenReturn(facilities);
 

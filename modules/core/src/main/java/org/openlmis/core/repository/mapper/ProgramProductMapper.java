@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.ProgramProductISA;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,12 +36,16 @@ public interface ProgramProductMapper {
   @Update("UPDATE program_products SET  dosesPerMonth=#{dosesPerMonth}, active=#{active}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE programId=#{program.id} AND productId=#{product.id}")
   void update(ProgramProduct programProduct);
 
-  @Select("SELECT * from program_products where programId = #{id}")
+  @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id WHERE programId = #{id} " ,
+    "ORDER BY p.displayOrder NULLS LAST, p.code"})
   @Results(value = {
+    @Result(property = "id", column = "id"),
     @Result(property = "program", column = "programId", javaType = Program.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
     @Result(property = "product", column = "productId", javaType = Product.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
+    @Result(property = "programProductIsa", column = "id", javaType = ProgramProductISA.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramProductIsaMapper.getIsaByProgramProductId"))
   })
   List<ProgramProduct> getByProgram(Program program);
 

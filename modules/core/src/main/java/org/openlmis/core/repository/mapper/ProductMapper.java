@@ -6,11 +6,9 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductGroup;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -97,5 +95,9 @@ public interface ProductMapper {
   void update(Product product);
 
   @Select("SELECT * FROM products WHERE id=#{id}")
+    @Results({
+      @Result(property = "productGroup", column = "productGroupId", javaType = ProductGroup.class,
+        one = @One(select = "org.openlmis.core.repository.mapper.ProductGroupMapper.getById"))
+    })
   Product getById(Long id);
 }

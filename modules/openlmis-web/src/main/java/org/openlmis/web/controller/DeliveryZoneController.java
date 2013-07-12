@@ -7,20 +7,19 @@ package org.openlmis.web.controller;
 
 
 import org.openlmis.core.service.AllocationPermissionService;
-import org.openlmis.web.response.AllocationResponse;
 import org.openlmis.core.service.DeliveryZoneService;
+import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.openlmis.web.response.AllocationResponse.error;
-import static org.openlmis.web.response.AllocationResponse.response;
 import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
@@ -36,17 +35,32 @@ public class DeliveryZoneController extends BaseController {
   AllocationPermissionService permissionService;
 
   @RequestMapping(value = "user/deliveryZones", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<AllocationResponse> getDeliveryZonesForInitiatingAllocation(HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> getDeliveryZonesForInitiatingAllocation(HttpServletRequest request) {
     return response(DELIVERY_ZONES, service.getByUserForRight(loggedInUserId(request), MANAGE_DISTRIBUTION));
   }
 
-  @RequestMapping(value = "deliveryZones/{zoneId}/programs", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<AllocationResponse> getProgramsForDeliveryZone(HttpServletRequest request, @PathVariable long zoneId) {
-    if (permissionService.hasPermissionOnZone(loggedInUserId(request), zoneId)) {
-      return response(DELIVERY_ZONE_PROGRAMS, service.getProgramsForDeliveryZone(zoneId));
-    } else {
-      return error(FORBIDDEN_EXCEPTION, UNAUTHORIZED);
-    }
+  @RequestMapping(value = "deliveryZones/{id}/activePrograms", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION')")
+  public ResponseEntity<OpenLmisResponse> getActiveProgramsForDeliveryZone(@PathVariable Long id) {
+    return response(DELIVERY_ZONE_PROGRAMS, service.getActiveProgramsForDeliveryZone(id));
+  }
+
+  @RequestMapping(value = "deliveryZones/{id}/programs", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
+  public ResponseEntity<OpenLmisResponse> getAllProgramsForDeliveryZone(@PathVariable Long id) {
+    return response(DELIVERY_ZONE_PROGRAMS, service.getAllProgramsForDeliveryZone(id));
+  }
+
+  @RequestMapping(value = "deliveryZones/{id}", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION')")
+  public ResponseEntity<OpenLmisResponse> get(@PathVariable Long id) {
+    return response("zone", service.getById(id));
+  }
+
+  @RequestMapping(value = "deliveryZones", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
+  public ResponseEntity<OpenLmisResponse> getAll() {
+    return response(DELIVERY_ZONES, service.getAll());
   }
 
 }

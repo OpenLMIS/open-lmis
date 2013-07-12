@@ -1,20 +1,12 @@
-/*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
 package org.openlmis.web.controller;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.GeographicZoneService;
 import org.openlmis.core.service.GeographicZoneServiceExtension;
-import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.report.service.ReportLookupService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,26 +16,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
 
-import static java.lang.Boolean.TRUE;
-import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 
 @Controller
-@NoArgsConstructor
 public class GeographicZoneController extends BaseController {
+
+    @Autowired
+    private GeographicZoneService service;
 
     @Autowired
     private GeographicZoneServiceExtension geographicZoneServiceExt;
 
     @Autowired
     private ReportLookupService reportLookupService;
+
+    @RequestMapping(value = "/geographicZones/{id}", method = GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION')")
+    public ResponseEntity<OpenLmisResponse> get(@PathVariable Long id){
+        return OpenLmisResponse.response("geoZone", service.getById(id));
+    }
+
+
 
     @RequestMapping(value = "/geographicZone/insert", method = POST, headers = "Accept=application/json")
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
@@ -56,7 +54,7 @@ public class GeographicZoneController extends BaseController {
             return error(e, HttpStatus.BAD_REQUEST);
         }
         successResponse = success(String.format("Geographic zone '%s' has been successfully created",
-                geographicZone.getName()));
+                geographicZone.getName()), "");
         successResponse.getBody().addData("geographicZone", geographicZone);
         return successResponse;
     }

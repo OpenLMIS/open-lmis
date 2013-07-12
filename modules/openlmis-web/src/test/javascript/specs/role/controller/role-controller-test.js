@@ -18,10 +18,10 @@ describe("Role", function () {
       $httpBackend = _$httpBackend_;
       messageService = _messageService_;
       rights = [
-        {"right": "CONFIGURE_RNR", "name": "configure rnr", "adminRight": "true"},
-        {"right": "MANAGE_FACILITY", "name": "manage facility", "adminRight": "true"},
-        {"right": "CREATE_REQUISITION", "name": "create requisition", "adminRight": "false"},
-        {"right": "VIEW_REQUISITION", "name": "view requisition", "adminRight": "false"}
+        {"right": "CONFIGURE_RNR", "name": "configure rnr", "type": "ADMIN"},
+        {"right": "MANAGE_FACILITY", "name": "manage facility", "type": "ADMIN"},
+        {"right": "CREATE_REQUISITION", "name": "create requisition", "type": "REQUISITION"},
+        {"right": "VIEW_REQUISITION", "name": "view requisition", "type": "REQUISITION"}
       ];
       $httpBackend.when('GET', '/rights.json').respond(200, {"rights": rights});
       ctrl = $controller(RoleController, {$scope: scope, $dialog: dialog});
@@ -31,12 +31,12 @@ describe("Role", function () {
       $httpBackend.flush();
       expect(scope.rights).toEqual(rights);
       expect(scope.adminRights).toEqual([
-        {"right": "CONFIGURE_RNR", "name": "configure rnr", "adminRight": "true"},
-        {"right": "MANAGE_FACILITY", "name": "manage facility", "adminRight": "true"}
+        {"right": "CONFIGURE_RNR", "name": "configure rnr", "type": "ADMIN"},
+        {"right": "MANAGE_FACILITY", "name": "manage facility", "type": "ADMIN"}
       ]);
-      expect(scope.nonAdminRights).toEqual([
-        {"right": "CREATE_REQUISITION", "name": "create requisition", "adminRight": "false"},
-        {"right": "VIEW_REQUISITION", "name": "view requisition", "adminRight": "false"}
+      expect(scope.requisitionRights).toEqual([
+        {"right": "CREATE_REQUISITION", "name": "create requisition", "type": "REQUISITION"},
+        {"right": "VIEW_REQUISITION", "name": "view requisition", "type": "REQUISITION"}
       ]);
     });
 

@@ -7,8 +7,8 @@
 package org.openlmis.web.controller;
 
 import org.openlmis.core.service.AllocationPermissionService;
-import org.openlmis.web.response.AllocationResponse;
 import org.openlmis.core.service.DeliveryZoneProgramScheduleService;
+import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,12 +32,12 @@ public class DeliveryZoneProgramScheduleController extends BaseController {
   AllocationPermissionService permissionService;
 
   @RequestMapping(value = "deliveryZones/{zoneId}/programs/{programId}/periods", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<AllocationResponse> getPeriodsForProgramInDeliveryZone(HttpServletRequest request, @PathVariable long zoneId,
-                                                                               @PathVariable long programId) {
+  public ResponseEntity<OpenLmisResponse> getPeriodsForProgramInDeliveryZone(HttpServletRequest request, @PathVariable long zoneId,
+                                                                             @PathVariable long programId) {
     if (permissionService.hasPermissionOnZone(loggedInUserId(request), zoneId)) {
-      return AllocationResponse.response(PERIODS, scheduleService.getPeriodsForDeliveryZoneAndProgram(zoneId, programId));
+      return OpenLmisResponse.response(PERIODS, scheduleService.getPeriodsForDeliveryZoneAndProgram(zoneId, programId));
     } else {
-      return AllocationResponse.error(FORBIDDEN_EXCEPTION, HttpStatus.UNAUTHORIZED);
+      return OpenLmisResponse.error(FORBIDDEN_EXCEPTION, HttpStatus.UNAUTHORIZED);
     }
   }
 }
