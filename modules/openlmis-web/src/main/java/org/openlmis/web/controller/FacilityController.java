@@ -8,9 +8,11 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
+import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.web.model.FacilityReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.openlmis.core.domain.Facility.createFacilityToBeDeleted;
 import static org.openlmis.core.domain.Facility.createFacilityToBeRestored;
@@ -45,6 +45,9 @@ public class FacilityController extends BaseController {
 
   @Autowired
   private ProgramService programService;
+
+  @Autowired
+  RequisitionGroupService requisitionGroupService;
 
   @RequestMapping(value = "/facilities", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
@@ -169,5 +172,21 @@ public class FacilityController extends BaseController {
     response.getBody().addData("facility", facility);
     return response;
   }
+
+  @RequestMapping(value="/facilities/getListInRequisitionGroup/{id}",method= GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQUISITION_GROUP')")
+  public ResponseEntity<OpenLmisResponse> getFacilityListInARequisitionGroup(@PathVariable("id") Long id, HttpServletRequest request){
+      RequisitionGroup requisitionGroup = requisitionGroupService.loadRequisitionGroupById(id);
+      List<RequisitionGroup> requisitionGroups= new ArrayList<RequisitionGroup>();
+      requisitionGroups.add(requisitionGroup);
+      return OpenLmisResponse.response("facilities",facilityService.getCompleteListInRequisitionGroups(requisitionGroups));
+  }
+
+  @RequestMapping(value="/facilities/getFacilityCompleteList",method= GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQUISITION_GROUP')")
+  public ResponseEntity<OpenLmisResponse> getAllFacilityDetail(HttpServletRequest request){
+      return OpenLmisResponse.response("facilities",facilityService.getAllFacilitiesDetail());
+  }
+
 
 }

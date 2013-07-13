@@ -152,4 +152,13 @@ public class FacilityService {
     }
     return facilities;
   }
+
+  public List<Facility> getAllFacilitiesDetail(){
+      return facilityRepository.getAllFacilitiesDetail();
+  }
+
+  public List<Facility> getCompleteListInRequisitionGroups(List<RequisitionGroup> requisitionGroups){
+      return facilityRepository.getAllInRequisitionGroups(requisitionGroups);
+  }
+
 }

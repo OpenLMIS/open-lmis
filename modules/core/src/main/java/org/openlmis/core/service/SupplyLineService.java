@@ -65,6 +65,7 @@ public class SupplyLineService {
     this.supplyLineRepository.update(supplyLine);
   }
 
+
 // mahmed - 06.20.2013
     public SupplyLine saveSupplyLine(SupplyLine supplyLine) {
         validateIfSupervisoryNodeIsTopmostNode(supplyLine);
@@ -98,4 +99,10 @@ public class SupplyLineService {
     populateIdsForSupplyLine(supplyLine);
     return supplyLineRepository.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine);
   }
+
+    //mahmed - 07.11.2013 delete supply line
+    public void deleteById(Long supplyLineId) {
+        this.supplyLineRepository.deleteById(supplyLineId);
+    }
+
 }

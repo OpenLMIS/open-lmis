@@ -30,8 +30,10 @@ public enum Right {
   MANAGE_ROLE("right.manage.role", ADMIN, "Permission to create and edit roles in the system", 5),
   MANAGE_SCHEDULE("right.manage.schedule", ADMIN, "Permission to create and edit schedules in the system", 6),
   MANAGE_USER("right.manage.user", ADMIN, "Permission to manage users(crud)", 7),
+  MANAGE_USERS("Admin - Manage Users", ADMIN, "Permission to manage users(crud)", 43),
   UPLOADS("right.upload", ADMIN, "Permission to upload", 8),
   VIEW_REPORT("right.view.report", ADMIN, "Permission to view reports", 11),
+  VIEW_REPORTS("Admin - View Reports", ADMIN, "Permission to view reports", 44),
   MANAGE_REPORT("right.manage.report", ADMIN, "Permission to manage reports", 10, VIEW_REPORT),
   VIEW_REQUISITION("right.view.requisition", REQUISITION, "Permission to view requisitions", 16),
   CREATE_REQUISITION("right.create.requisition", REQUISITION, "Permission to create, edit, submit and recall requisitions", 15, VIEW_REQUISITION),
@@ -43,7 +45,7 @@ public enum Right {
   MANAGE_DISTRIBUTION("right.manage.distribution", ALLOCATION, "Permission to manage an distribution", 9),
   MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", ADMIN, "Permission to manage a regimen template", 4),
 
-  
+  MANAGE_REQUISITION_GROUP("Admin - Manage Requisition Groups", ADMIN, "Permission to manage requisition groups",28),
   MANAGE_PRODUCT("Admin - Manage Products", ADMIN, "Permission to manage products",29),
   MANAGE_SUPPLYLINE("Admin - Manage Supply Line", ADMIN, "Permission to manage supply line",30),
   MANAGE_GEOGRAPHIC_ZONES ("Admin - Manage Geographic Zones", ADMIN, "Permission to manage geographic zones.",31),

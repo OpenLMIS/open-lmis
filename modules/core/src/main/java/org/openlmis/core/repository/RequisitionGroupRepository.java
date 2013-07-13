@@ -53,4 +53,13 @@ public class RequisitionGroupRepository {
   public void update(RequisitionGroup requisitionGroup) {
      mapper.update(requisitionGroup);
   }
+
+  public List<RequisitionGroup> getCompleteList(){
+     return mapper.getCompleteList();
+  }
+
+  public RequisitionGroup loadRequisitionGroupById(Long id)
+  {
+      return mapper.getRequisitionGroupById(id);
+  }
 }

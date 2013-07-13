@@ -1,12 +1,6 @@
 <!doctype html>
-<!--
-  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
-  ~
-  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
-  -->
 
-<html lang="en" ng-app="supplyline">
-
+<html lang="en" ng-app="requisition-group">
 <head>
     <meta charset="utf-8">
     <title openlmis-message="app.title"></title>
@@ -26,6 +20,11 @@
     <script src="/public/lib/angular-ui/ng-grid/ng-grid-2.0.5.min.js"></script>
     <script src="/public/lib/angular-ui/ng-grid-flexible-height.js"></script>
     <script src="/public/lib/select2/select2.js"></script>
+
+    <!-- Style sheet files-->
+    <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
+    <link rel="stylesheet" href="/public/lib/select2/select2.css">
 
     <!-- Services -->
     <script src="/public/js/shared/services/services.js"></script>
@@ -48,10 +47,6 @@
     <script src="/public/js/shared/localStorageKeys.js"></script>
 
 
-    <!-- Style sheet files-->
-    <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
-    <link rel="stylesheet" href="/public/lib/select2/select2.css">
     <link rel="stylesheet" href="/public/css/app.css">
     <link rel="stylesheet" href="/public/css/ng-grid.css">
     <link rel="stylesheet" href="/public/css/report.css">
@@ -62,8 +57,9 @@
     <script src="/public/js/shared/controller/navigation-controller.js"></script>
 
     <!-- Page specific files -->
-    <script src="/public/js/supplyline/module/supplyline-module.js"></script>
-    <script src="/public/js/supplyline/controller/supplyline-controller.js"></script>
+    <script src="/public/js/requisition-group/module/requisition-group-module.js"></script>
+    <script src="/public/js/requisition-group/controller/requisition-group-controller.js"></script>
+    <script src="/public/js/requisition-group/controller/requisition-group-list-controller.js"></script>
 
     <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
     <!--[if IE 9]>
@@ -73,12 +69,12 @@
 </head>
 <body onunload="">
 <div id="wrap">
-    <ng-include src="'/public/pages/header.html'"></ng-include>
-    <ng-include src="'/public/pages/navigation.html'"></ng-include>
-    <div class="content">
-        <ng-include src="'/public/pages/admin/shared/manage-menu.html'"></ng-include>
-        <div ng-view></div>
-    </div>
+  <ng-include src="'/public/pages/header.html'"></ng-include>
+  <ng-include src="'/public/pages/navigation.html'"></ng-include>
+  <div class="content">
+    <ng-include src="'/public/pages/admin/shared/manage-menu.html'"></ng-include>
+    <div ng-view></div>
+  </div>
 </div>
 </body>
 </html>

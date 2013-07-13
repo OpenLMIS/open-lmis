@@ -54,4 +54,31 @@ public interface RequisitionGroupMapper {
     "SET name = #{name}, description =  #{description}, supervisoryNodeId = #{supervisoryNode.id}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} " +
     "WHERE id = #{id}")
   void update(RequisitionGroup requisitionGroup);
+
+
+  @Select("SELECT * " +
+          "FROM   (SELECT rg.*,  " +
+          "               sn.name AS supervisoryNodeName  " +
+          "        FROM   requisition_groups rg  " +
+          "               JOIN supervisory_nodes sn  " +
+          "                 ON rg.supervisorynodeid = sn.id) AS y  " +
+          "       LEFT JOIN (SELECT requisitiongroupid        AS id,  " +
+          "                    Count(DISTINCT programid) programCount  " +
+          "             FROM   requisition_group_program_schedules rgp  " +
+          "             GROUP  BY requisitiongroupid) AS x  " +
+          "         ON y.id = x.id  " +
+          "       LEFT JOIN (SELECT requisitiongroupid         AS id,  " +
+          "                    Count(DISTINCT facilityid) facilityCount  " +
+          "             FROM   requisition_group_members rgm  " +
+          "             GROUP  BY rgm.requisitiongroupid) AS z  " +
+          "         ON z.id = x.id ")
+  @Results(value={
+          @Result(property = "supervisoryNode.id", column = "supervisoryNodeId"),
+          @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
+          @Result(property = "countOfFacilities", column = "facilityCount"),
+          @Result(property = "countOfPrograms", column = "programCount")
+
+  })
+  List<RequisitionGroup> getCompleteList();
+
 }
