@@ -15,6 +15,9 @@ public class OrderSummaryReport implements ReportData {
     private Integer unitSize;
     private Integer unitQuantity;
     private Integer packQuantity;
-    private String descrepancy;
+    private Integer discrepancy;
+    private String facilityName;
+    private String facilityCode;
+
 
 }
