@@ -138,22 +138,7 @@ public class InteractiveReportController  extends BaseController {
         return new Pages(page,totalRecCount,max,averageConsumptionReportList);
     }
 
-    @RequestMapping(value = "/reportdata/viewOrders", method = GET, headers = BaseController.ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ORDER_REPORT')")
-    public Pages getAverageConsumptionData( //@PathVariable(value = "reportKey") String reportKey,
-                                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                            HttpServletRequest request
 
-    ) {
-
-        Report report = reportManager.getReportByKey("order_summary");
-        List<AverageConsumptionReport> averageConsumptionReportList =
-                (List<AverageConsumptionReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());;
-
-        return new Pages(page,totalRecCount,max,averageConsumptionReportList);
-    }
 
 
 
