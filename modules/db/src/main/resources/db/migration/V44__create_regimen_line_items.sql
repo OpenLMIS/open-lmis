@@ -13,7 +13,7 @@ CREATE TABLE regimen_line_items (
   patientsOnTreatment         INTEGER,
   patientsToInitiateTreatment INTEGER,
   patientsStoppedTreatment    INTEGER,
-  remarks                     VARCHAR(250),
+  remarks                     VARCHAR(255),
   createdBy                   INTEGER,
   createdDate                 TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedBy                  INTEGER,

@@ -10,7 +10,10 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
-import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.domain.Comment;
+import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
+import org.openlmis.rnr.domain.ProgramRnrTemplate;
+import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.search.factory.RequisitionSearchStrategyFactory;
@@ -79,6 +82,7 @@ public class RequisitionService {
 
   @Transactional
   public Rnr initiate(Long facilityId, Long programId, Long periodId, Long modifiedBy) {
+    Long createdBy = modifiedBy;
     if (!requisitionPermissionService.hasPermission(modifiedBy, new Facility(facilityId), new Program(programId),
       CREATE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
@@ -98,7 +102,7 @@ public class RequisitionService {
 
     List<Regimen> regimens = regimenService.getByProgram(programId);
 
-    Rnr requisition = new Rnr(facilityId, programId, periodId, facilityTypeApprovedProducts, regimens, modifiedBy);
+    Rnr requisition = new Rnr(facilityId, programId, periodId, facilityTypeApprovedProducts, regimens, modifiedBy, createdBy);
 
     fillFieldsForInitiatedRequisitionAccordingToTemplate(requisition, rnrTemplate, regimenTemplate);
 

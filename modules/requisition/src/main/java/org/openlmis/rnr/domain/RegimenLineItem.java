@@ -39,9 +39,11 @@ public class RegimenLineItem extends BaseModel {
 
   private static Logger logger = LoggerFactory.getLogger(RegimenLineItem.class);
 
-  public RegimenLineItem(Long rnrId, RegimenCategory category) {
+  public RegimenLineItem(Long rnrId, RegimenCategory category, Long createdBy, Long modifiedBy) {
     this.rnrId = rnrId;
     this.category = category;
+    this.createdBy = createdBy;
+    this.modifiedBy = modifiedBy;
   }
 
   public void setRegimenFieldsAccordingToTemplate(RegimenTemplate regimenTemplate) {
