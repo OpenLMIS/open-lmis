@@ -99,9 +99,11 @@ public class InitiateRnR extends TestCaseHelper {
     verifyRegimenFieldsPresentOnRegimenTab(regimenCode, regimenName, initiateRnRPage, initiateRnRPage1);
     initiateRnRPage1.enterValuesOnRegimenScreen(3, 2, 100);
     initiateRnRPage1.enterValuesOnRegimenScreen(4, 2, 200);
-    initiateRnRPage1.enterValuesOnRegimenScreen(5, 2, 300);
     initiateRnRPage1.enterValuesOnRegimenScreen(6, 2, 400);
 
+    initiateRnRPage1.clickSubmitButton();
+    initiateRnRPage1.verifySubmitRnrErrorMsg();
+    initiateRnRPage1.enterValuesOnRegimenScreen(5, 2, 300);
     initiateRnRPage1.clickSubmitButton();
     initiateRnRPage1.clickOk();
     initiateRnRPage1.verifySubmitSuccessMsg();
@@ -110,9 +112,9 @@ public class InitiateRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage2 = homePage.clickProceed();
     initiateRnRPage2.clickRegimenTab();
     verifyValuesOnRegimenScreen(initiateRnRPage2,"100","200","300","400");
-    initiateRnRPage1.clickAuthorizeButton();
-    initiateRnRPage1.clickOk();
-    initiateRnRPage1.verifyAuthorizeRnrSuccessMsg();
+    initiateRnRPage2.clickAuthorizeButton();
+    initiateRnRPage2.clickOk();
+    initiateRnRPage2.verifyAuthorizeRnrSuccessMsg();
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
