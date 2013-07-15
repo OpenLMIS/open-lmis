@@ -58,11 +58,23 @@ public class RequisitionPage extends Page {
   private static WebElement SaveButton;
   @FindBy(how = XPATH, using = "//input[@value='Submit']")
   private static WebElement SubmitButton;
+  @FindBy(how = XPATH, using = "//input[@value='Authorize']")
+  private static WebElement AuthorizeButton;
   @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv' and @openlmis-message='message']")
   private static WebElement saveSuccessMessage;
 
   @FindBy(how = XPATH, using = "//div[@id='submitSuccessMsgDiv' and @openlmis-message='submitMessage']")
   private static WebElement submitSuccessMessage;
+
+  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[3]/ng-switch/span/input")
+  private static WebElement patientsOnTreatmentTextField;
+  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[4]/ng-switch/span/input")
+  private static WebElement patientsToInitiateTreatmentTextField;
+  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[5]/ng-switch/span/input")
+  private static WebElement patientsStoppedTreatmentTextField;
+  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[6]/ng-switch/span/input")
+  private static WebElement remarksTextField;
+
 
 
   protected RequisitionPage(TestWebDriver driver) {
@@ -140,7 +152,7 @@ public class RequisitionPage extends Page {
   public void clickOk() {
     testWebDriver.sleep(250);
     okButton.click();
-    testWebDriver.sleep(250);
+    testWebDriver.sleep(500);
   }
 
   public void clickCancel() {
@@ -204,6 +216,30 @@ public class RequisitionPage extends Page {
     testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input").sendKeys(String.valueOf(value));
   }
 
+  public String getPatientsOnTreatmentValue()
+  {
+    testWebDriver.waitForElementToAppear(patientsOnTreatmentTextField);
+    return testWebDriver.getAttribute(patientsOnTreatmentTextField,"value");
+  }
+
+  public String getPatientsToInitiateTreatmentValue()
+  {
+    testWebDriver.waitForElementToAppear(patientsToInitiateTreatmentTextField);
+    return testWebDriver.getAttribute(patientsToInitiateTreatmentTextField,"value");
+  }
+
+  public String getPatientsStoppedTreatmentValue()
+  {
+    testWebDriver.waitForElementToAppear(patientsStoppedTreatmentTextField);
+    return testWebDriver.getAttribute(patientsStoppedTreatmentTextField,"value");
+  }
+
+  public String getRemarksValue()
+  {
+    testWebDriver.waitForElementToAppear(remarksTextField);
+    return testWebDriver.getAttribute(remarksTextField,"value");
+  }
+
   public void clickSaveButton() {
     testWebDriver.waitForElementToAppear(SaveButton);
     SaveButton.click();
@@ -215,12 +251,21 @@ public class RequisitionPage extends Page {
     SubmitButton.click();
   }
 
+  public void clickAuthorizeButton() {
+    testWebDriver.waitForElementToAppear(AuthorizeButton);
+    AuthorizeButton.click();
+  }
+
   public void verifySubmitSuccessMsg() {
     assertTrue("RnR Submit Success message not displayed", submitSuccessMessage.isDisplayed());
   }
 
   public void verifySaveSuccessMsg() {
     assertTrue("RnR Submit Success message not displayed", saveSuccessMessage.isDisplayed());
+  }
+
+  public void verifyAuthorizeSuccessMsg() {
+    assertTrue("RnR Authorize Success message not displayed", submitSuccessMessage.isDisplayed());
   }
 
   public int getRegimenTableRowCount() {

@@ -571,6 +571,11 @@ public class DBWrapper {
 
   }
 
+  public void insertValuesInRegimenLineItems(String patientsontreatment, String patientstoinitiatetreatment, String patientsstoppedtreatment, String remarks ) throws IOException, SQLException {
+    update("update regimen_line_items set patientsontreatment='"+patientsontreatment+"', patientstoinitiatetreatment='"+patientstoinitiatetreatment+"', patientsstoppedtreatment='"+patientsstoppedtreatment+"',remarks='"+remarks+"';");
+
+  }
+
   public void insertApprovedQuantity(Integer quantity) throws IOException, SQLException {
     update("update requisition_line_items set quantityapproved=" + quantity);
 

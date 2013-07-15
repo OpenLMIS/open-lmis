@@ -56,12 +56,9 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-
-    testWebDriver.sleep(2000);
     dbWrapper.insertValuesInRequisition();
     homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
-    testWebDriver.sleep(1000);
     initiateRnRPage1.clickRegimenTab();
 
     verifyRegimenFieldsPresentOnRegimenTab(regimenCode, regimenName, initiateRnRPage, initiateRnRPage1);
@@ -76,9 +73,57 @@ public class InitiateRnR extends TestCaseHelper {
 
     initiateRnRPage1.clickSubmitButton();
     initiateRnRPage1.clickOk();
-    testWebDriver.sleep(2000);
     initiateRnRPage1.verifySubmitSuccessMsg();
 
+  }
+
+  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testSubmitAndAuthorizeRegimen(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
+    dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 2, false);
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.configureTemplate(program);
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("CREATE_REQUISITION");
+    rightsList.add("AUTHORIZE_REQUISITION");
+    rightsList.add("VIEW_REQUISITION");
+    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+    dbWrapper.insertRoleAssignment("200", "store in-charge");
+    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
+    dbWrapper.insertSchedule("M", "Monthly", "Month");
+    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
+    dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
+    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
+    dbWrapper.insertSupplyLines("N1", program, "F10");
+    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
+    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
+    dbWrapper.insertRegimenTemplateColumnsForProgram(program);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateAndInitiateRnr(program);
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    dbWrapper.insertValuesInRequisition();
+    homePage.navigateAndInitiateRnr(program);
+    InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
+    initiateRnRPage1.clickRegimenTab();
+
+    verifyRegimenFieldsPresentOnRegimenTab(regimenCode, regimenName, initiateRnRPage, initiateRnRPage1);
+    initiateRnRPage1.enterValuesOnRegimenScreen(3, 2, 100);
+    initiateRnRPage1.enterValuesOnRegimenScreen(4, 2, 200);
+    initiateRnRPage1.enterValuesOnRegimenScreen(5, 2, 300);
+    initiateRnRPage1.enterValuesOnRegimenScreen(6, 2, 400);
+
+    initiateRnRPage1.clickSubmitButton();
+    initiateRnRPage1.clickOk();
+    initiateRnRPage1.verifySubmitSuccessMsg();
+
+    homePage.navigateAndInitiateRnr(program);
+    InitiateRnRPage initiateRnRPage2 = homePage.clickProceed();
+    initiateRnRPage2.clickRegimenTab();
+    verifyValuesOnRegimenScreen(initiateRnRPage2,"100","200","300","400");
+    initiateRnRPage1.clickAuthorizeButton();
+    initiateRnRPage1.clickOk();
+    initiateRnRPage1.verifyAuthorizeRnrSuccessMsg();
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
@@ -152,6 +197,14 @@ public class InitiateRnR extends TestCaseHelper {
     assertTrue("Reporting Field 2 should be displayed.", initiateRnRPage1.existRegimenReportingField(4, 2));
     assertTrue("Reporting Field 3 should be displayed.", initiateRnRPage1.existRegimenReportingField(5, 2));
     assertTrue("Reporting Field 4 should be displayed.", initiateRnRPage1.existRegimenReportingField(6, 2));
+  }
+
+  private void verifyValuesOnRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsontreatment, String patientstoinitiatetreatment, String patientsstoppedtreatment, String remarks )
+  {
+    assertEquals(patientsontreatment,initiateRnRPage.getPatientsOnTreatmentValue());
+    assertEquals(patientstoinitiatetreatment,initiateRnRPage.getPatientsToInitiateTreatmentValue());
+    assertEquals(patientsstoppedtreatment,initiateRnRPage.getPatientsStoppedTreatmentValue());
+    assertEquals(remarks,initiateRnRPage.getRemarksValue());
   }
 
   @AfterMethod(groups = {"functional", "smoke"})
