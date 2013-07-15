@@ -32,7 +32,7 @@ public class DistributionPage extends RequisitionPage {
 
   private static WebElement selectPeriodSelectBox;
 
-  @FindBy(how = ID, using = "viewLoadAmounts")
+  @FindBy(how = XPATH, using = "//input[@value='View load amounts']")
   private static WebElement viewLoadAmountButton;
 
   @FindBy(how = ID, using = "initiateDistribution")
