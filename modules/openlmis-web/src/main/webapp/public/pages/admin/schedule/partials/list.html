@@ -5,7 +5,10 @@
   -->
 
 <div>
-  <h2><span openlmis-message="schedules.header"></span><a href="#" id="schedule-add-new" class="pull-right btn btn-primary" ng-click="startAddNewSchedule()" openlmis-message="button.add.new"></a></h2>
+  <h2><span openlmis-message="schedules.header"></span><a href="#" id="schedule-add-new"
+                                                          class="pull-right btn btn-primary"
+                                                          ng-click="startAddNewSchedule()"
+                                                          openlmis-message="button.add.new"></a></h2>
 
 
   <div ng-hide="scheduleLoaded()" openlmis-message="msg.loading"></div>
@@ -16,7 +19,7 @@
         <div class="span1">&nbsp;</div>
         <div class="span2" openlmis-message="header.code"></div>
         <div class="span2" openlmis-message="header.name"></div>
-        <div class="span4" openlmis-message="header.description"></div>
+        <div class="span4" openlmis-message="label.description"></div>
         <div class="span2" openlmis-message="header.lastModified"></div>
         <div class="span1">&nbsp;</div>
       </div>
@@ -33,14 +36,16 @@
                      openlmis-message="placeholder.code"/>
               <span class="label-required">*</span>
             <span class="form-error"
-                  ng-show="createScheduleForm.code.$error.required && showErrorForCreate" openlmis-message="missing.value"></span>
+                  ng-show="createScheduleForm.code.$error.required && showErrorForCreate"
+                  openlmis-message="missing.value"></span>
             </div>
             <div class="span2">
               <input name="name" id="name" type="text" ng-model="newSchedule.name" maxlength="50" ng-required="true"
                      openlmis-message="placeholder.name"/>
               <span class="label-required">*</span>
             <span class="form-error"
-                  ng-show="createScheduleForm.name.$error.required && showErrorForCreate" openlmis-message="missing.value"></span>
+                  ng-show="createScheduleForm.name.$error.required && showErrorForCreate"
+                  openlmis-message="missing.value"></span>
             </div>
             <div class="span4">
               <input name="description" id="description" type="text" ng-model="newSchedule.description"
@@ -54,7 +59,8 @@
             <div class="span1"></div>
             <div class="span2">
               <input type="submit" class="btn btn-primary btn-small" openlmis-message="button.create"/>
-              <input type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel" ng-click="cancelAddNewSchedule()"/>
+              <input type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel"
+                     ng-click="cancelAddNewSchedule()"/>
             </div>
             <div ng-show="creationError" class="span9 form-error" ng-bind="creationError"></div>
           </div>
@@ -81,7 +87,8 @@
                      ng-model="schedule.code" maxlength="50"
                      ng-required="true" openlmis-message="placeholder.code"/>
               <span ng-show="schedulesBackupMap[schedule.id].edit" class="label-required">*</span>
-              <span class="form-error" ng-show="editScheduleForm.code.$error.required && showErrorForEdit" openlmis-message="missing.value"></span>
+              <span class="form-error" ng-show="editScheduleForm.code.$error.required && showErrorForEdit"
+                    openlmis-message="missing.value"></span>
             </div>
 
             <div class="span2">
@@ -90,7 +97,8 @@
                      ng-model="schedule.name" maxlength="50"
                      ng-required="true" openlmis-message="placeholder.name"/>
               <span ng-show="schedulesBackupMap[schedule.id].edit" class="label-required">*</span>
-              <span class="form-error" ng-show="editScheduleForm.name.$error.required && showErrorForEdit" openlmis-message="missing.value"></span>
+              <span class="form-error" ng-show="editScheduleForm.name.$error.required && showErrorForEdit"
+                    openlmis-message="missing.value"></span>
             </div>
 
             <div class="span4">
