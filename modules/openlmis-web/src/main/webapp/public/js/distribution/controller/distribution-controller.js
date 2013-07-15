@@ -5,7 +5,8 @@
  */
 
 function DistributionController($scope, $location, deliveryZones, DeliveryZoneActivePrograms, messageService,
-                                DeliveryZoneProgramPeriods, DeliveryZoneFacilities, Distributions, IndexedDB) {
+                                Distributions, DeliveryZoneProgramPeriods, DeliveryZoneFacilities, IndexedDB,
+                                navigateBackService) {
 
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
@@ -19,6 +20,10 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
     $scope.programs = $scope.periods = [];
     DeliveryZoneActivePrograms.get({zoneId: $scope.selectedZone.id}, function (data) {
       $scope.programs = data.deliveryZonePrograms;
+      if ($scope.selectedProgram) {
+        $scope.selectedProgram = _.where($scope.programs, {id: $scope.selectedProgram.id})[0];
+        $scope.loadPeriods();
+      }
     }, function (data) {
       $scope.error = data.data.error;
     });
@@ -29,6 +34,9 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
     DeliveryZoneProgramPeriods.get({zoneId: $scope.selectedZone.id, programId: $scope.selectedProgram.id}, function (data) {
       $scope.periods = data.periods.length ? data.periods.slice(0, 13) : [];
       $scope.selectedPeriod = $scope.periods.length ? $scope.periods[0] : NONE_ASSIGNED_LABEL;
+      if ($scope.selectedPeriod) {
+        $scope.selectedPeriod = _.where($scope.periods, {id: $scope.selectedPeriod.id})[0];
+      }
     }, function (data) {
       $scope.error = data.data.error;
     });
@@ -64,6 +72,20 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
     $scope.loadDistributionsFromCache();
   });
 
+  $scope.$on('$viewContentLoaded', function () {
+    $scope.distributionList = navigateBackService.distributionList;
+    $scope.selectedZone = navigateBackService.deliveryZone;
+    $scope.selectedProgram = navigateBackService.program;
+    $scope.selectedPeriod = navigateBackService.period;
+
+    $scope.$watch('deliveryZones', function () {
+      if ($scope.deliveryZones && $scope.selectedZone) {
+        $scope.selectedZone = _.where($scope.deliveryZones, {id: $scope.selectedZone.id})[0];
+        $scope.loadPrograms();
+      }
+    });
+  });
+
 
   $scope.initiateDistribution = function () {
     var distribution = new Distribution($scope.selectedZone, $scope.selectedProgram, $scope.selectedPeriod);
@@ -90,6 +112,13 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
 
 
   $scope.viewLoadAmount = function () {
+    var data = {
+      deliveryZone: $scope.selectedZone,
+      program: $scope.selectedProgram,
+      period: $scope.selectedPeriod,
+      distributionList: $scope.distributionList
+    }
+    navigateBackService.setData(data);
     $location.path("/view-load-amounts/" + $scope.selectedZone.id + "/" + +$scope.selectedProgram.id + "/" + $scope.selectedPeriod.id);
   }
 }
