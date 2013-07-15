@@ -14,10 +14,12 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.openlmis.core.builder.ProgramSupportedBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.dto.ProgramSupportedEventDTO;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -35,6 +37,7 @@ import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -174,5 +177,16 @@ public class ProgramSupportedRepositoryTest {
     programSupportedRepository.updateSupportedProgram(programSupported);
 
     verify(programSupportedMapper).updateSupportedProgram(programSupported);
+  }
+
+  @Test
+  public void shouldGetProgramSupportedDTO() throws Exception {
+
+    ProgramSupported programSupported = new ProgramSupported();
+    Mockito.when(programSupportedMapper.getProgramSupportedDTO(programSupported)).thenReturn(new ProgramSupportedEventDTO());
+
+    programSupportedRepository.getProgramSupportedEventDTO(programSupported);
+
+    verify(programSupportedMapper).getProgramSupportedDTO(programSupported);
   }
 }

@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.dto.ProgramSupportedEventDTO;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -130,5 +131,26 @@ public class ProgramSupportedMapperIT {
     ProgramSupported programSupportedFromDb = programSupportedMapper.getBy(programSupported.getFacilityId(),programSupported.getProgram().getId());
 
     assertThat(programSupportedFromDb.getActive(),is(Boolean.FALSE));
+  }
+
+  @Test
+  public void shouldGetProgramSupportedDTO() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+
+    Program program = make(a(defaultProgram, with(programCode, YELLOW_FEVER)));
+    programMapper.insert(program);
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported,
+      with(supportedFacilityId, facility.getId()),
+      with(supportedProgram, program)));
+    programSupportedMapper.addSupportedProgram(programSupported);
+
+    ProgramSupportedEventDTO programSupportedEventDTO = programSupportedMapper.getProgramSupportedDTO(programSupported);
+
+    assertThat(programSupportedEventDTO.getFacilityCode(),is(facility.getCode()));
+    assertThat(programSupportedEventDTO.getProgramCode(),is(program.getCode()));
+    assertThat(programSupportedEventDTO.getProgramName(),is(program.getName()));
+    assertThat(programSupportedEventDTO.getProgramStatus(),is(programSupported.getActive()));
   }
 }

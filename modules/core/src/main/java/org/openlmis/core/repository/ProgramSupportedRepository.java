@@ -9,6 +9,7 @@ package org.openlmis.core.repository;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.dto.ProgramSupportedEventDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,5 +91,10 @@ public class ProgramSupportedRepository {
 
   public void updateSupportedProgram(ProgramSupported programSupported) {
     programSupportedMapper.updateSupportedProgram(programSupported);
+  }
+
+  public ProgramSupportedEventDTO getProgramSupportedEventDTO(ProgramSupported programSupported) {
+    return programSupportedMapper.getProgramSupportedDTO(programSupported);
+
   }
 }

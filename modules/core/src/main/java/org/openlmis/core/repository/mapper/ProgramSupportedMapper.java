@@ -9,6 +9,7 @@ package org.openlmis.core.repository.mapper;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.dto.ProgramSupportedEventDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -41,4 +42,8 @@ public interface ProgramSupportedMapper {
   @Update("UPDATE programs_supported set active=#{active}, startDate=#{startDate}, modifiedDate=#{modifiedDate}, modifiedBy=#{modifiedBy}" +
     "where facilityId=#{facilityId} AND programId=#{program.id}")
   void updateSupportedProgram(ProgramSupported programSupported);
+
+  @Select("SELECT f.code as facilityCode,p.name as programName,p.code as programCode,ps.active as programStatus FROM programs_supported ps, facilities f, programs p" +
+    " WHERE ps.id = #{id} AND f.id=ps.facilityId AND ps.programId=p.id")
+  ProgramSupportedEventDTO getProgramSupportedDTO(ProgramSupported programSupported);
 }
