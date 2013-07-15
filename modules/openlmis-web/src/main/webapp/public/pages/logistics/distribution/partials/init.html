@@ -54,10 +54,10 @@
     <br/><br/>
 
   </div>
-  <input ng-disabled="!(selectedPeriod && selectedProgram && selectedZone)"
+  <input id="viewLoadAmounts" ng-disabled="!(selectedPeriod && selectedProgram && selectedZone)"
          type="button" ng-click="viewLoadAmount()" class="btn btn-primary" openlmis-message="button.view.load.amount"/>
 
-  <input ng-disabled="!(selectedPeriod && selectedProgram && selectedZone)"
+  <input id="initiateDistribution" ng-disabled="!(selectedPeriod && selectedProgram && selectedZone)"
          type="button" ng-click="initiateDistribution()" class="btn btn-primary"
          openlmis-message="button.initiate.distribution"/>
 
