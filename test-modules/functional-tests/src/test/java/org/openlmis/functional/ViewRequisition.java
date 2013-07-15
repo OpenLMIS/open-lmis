@@ -50,12 +50,15 @@ public class ViewRequisition extends TestCaseHelper {
   }
 
 
-  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testViewRequisitionAfterAuthorization(String program, String userSIC, String password) throws Exception {
+  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Including-Regimen")
+  public void testViewRequisitionAndRegimenAfterAuthorization(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
+    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
+    dbWrapper.insertRegimenTemplateColumnsForProgram(program);
     dbWrapper.assignRight(STORE_IN_CHARGE, APPROVE_REQUISITION);
     dbWrapper.assignRight(STORE_IN_CHARGE, CONVERT_TO_ORDER);
 
@@ -68,6 +71,7 @@ public class ViewRequisition extends TestCaseHelper {
     ViewRequisitionPage viewRequisitionPage = homePage1.navigateViewRequisition();
     viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
     dbWrapper.insertValuesInRequisition();
+    dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
     dbWrapper.updateRequisitionStatus(SUBMITTED);
     viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
@@ -78,6 +82,8 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPage.verifyStatus(AUTHORIZED);
     viewRequisitionPage.clickRnRList();
     viewRequisitionPage.verifyTotalFieldPostAuthorize();
+    viewRequisitionPage.clickRegimenTab();
+    verifyValuesOnRegimenScreen(initiateRnRPage, patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Including-Regimen")
@@ -183,14 +189,6 @@ public class ViewRequisition extends TestCaseHelper {
     dbWrapper.closeConnection();
   }
 
-
-  @DataProvider(name = "Data-Provider-Function-Positive")
-  public Object[][] parameterIntTestProviderPositive() {
-    return new Object[][]{
-      {"HIV", "storeincharge", "Admin123"}
-    };
-
-  }
 
   @DataProvider(name = "Data-Provider-Function-Including-Regimen")
   public Object[][] parameterIntTest() {
