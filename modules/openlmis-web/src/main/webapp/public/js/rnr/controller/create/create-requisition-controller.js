@@ -38,6 +38,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
   $scope.fillPagedGridData = function () {
     if ($scope.visibleTab == REGIMEN) {
+      $scope.numberOfPages = 1;
       $scope.pageLineItems = $scope.rnr.regimenLineItems;
     } else {
       var gridLineItems = $scope.visibleTab == NON_FULL_SUPPLY ? $scope.rnr.nonFullSupplyLineItems : $scope.visibleTab == FULL_SUPPLY ? $scope.rnr.fullSupplyLineItems : [];
