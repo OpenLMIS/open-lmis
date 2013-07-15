@@ -90,6 +90,7 @@ public class TestCaseHelper {
 
     setupTestUserRoleRightsData(userId, user, vendorName, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+    dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "Node 2", "N1");
     dbWrapper.insertRoleAssignment(userId, "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");

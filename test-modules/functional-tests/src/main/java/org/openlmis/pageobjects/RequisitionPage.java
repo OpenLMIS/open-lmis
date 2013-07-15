@@ -76,7 +76,6 @@ public class RequisitionPage extends Page {
   private static WebElement remarksTextField;
 
 
-
   protected RequisitionPage(TestWebDriver driver) {
     super(driver);
   }
@@ -216,28 +215,24 @@ public class RequisitionPage extends Page {
     testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input").sendKeys(String.valueOf(value));
   }
 
-  public String getPatientsOnTreatmentValue()
-  {
+  public String getPatientsOnTreatmentValue() {
     testWebDriver.waitForElementToAppear(patientsOnTreatmentTextField);
-    return testWebDriver.getAttribute(patientsOnTreatmentTextField,"value");
+    return testWebDriver.getAttribute(patientsOnTreatmentTextField, "value");
   }
 
-  public String getPatientsToInitiateTreatmentValue()
-  {
+  public String getPatientsToInitiateTreatmentValue() {
     testWebDriver.waitForElementToAppear(patientsToInitiateTreatmentTextField);
-    return testWebDriver.getAttribute(patientsToInitiateTreatmentTextField,"value");
+    return testWebDriver.getAttribute(patientsToInitiateTreatmentTextField, "value");
   }
 
-  public String getPatientsStoppedTreatmentValue()
-  {
+  public String getPatientsStoppedTreatmentValue() {
     testWebDriver.waitForElementToAppear(patientsStoppedTreatmentTextField);
-    return testWebDriver.getAttribute(patientsStoppedTreatmentTextField,"value");
+    return testWebDriver.getAttribute(patientsStoppedTreatmentTextField, "value");
   }
 
-  public String getRemarksValue()
-  {
+  public String getRemarksValue() {
     testWebDriver.waitForElementToAppear(remarksTextField);
-    return testWebDriver.getAttribute(remarksTextField,"value");
+    return testWebDriver.getAttribute(remarksTextField, "value");
   }
 
   public void clickSaveButton() {

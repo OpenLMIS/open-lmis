@@ -9,6 +9,7 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
+import org.openlmis.pageobjects.ApprovePage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.InitiateRnRPage;
 import org.openlmis.pageobjects.LoginPage;
@@ -27,6 +28,16 @@ import static com.thoughtworks.selenium.SeleneseTestBase.*;
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
 public class InitiateRnR extends TestCaseHelper {
+
+  public static final String STORE_IN_CHARGE = "store in-charge";
+  public static final String APPROVE_REQUISITION = "APPROVE_REQUISITION";
+  public static final String CREATE_REQUISITION = "CREATE_REQUISITION";
+  public static final String SUBMITTED = "SUBMITTED";
+  public static final String AUTHORIZED = "AUTHORIZED";
+  public static final String IN_APPROVAL = "IN_APPROVAL";
+  public static final String AUTHORIZE_REQUISITION = "AUTHORIZE_REQUISITION";
+  public static final String VIEW_REQUISITION = "VIEW_REQUISITION";
+
   @BeforeMethod(groups = {"functional", "smoke"})
   public void setUp() throws Exception {
     super.setup();
@@ -34,21 +45,10 @@ public class InitiateRnR extends TestCaseHelper {
 
   @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Positive")
   public void testVerifyRegimensColumnsAndShouldSaveData(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
-    dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 2, false);
-    dbWrapper.insertFacilities("F10", "F11");
-    dbWrapper.configureTemplate(program);
     List<String> rightsList = new ArrayList<String>();
-    rightsList.add("CREATE_REQUISITION");
-    rightsList.add("VIEW_REQUISITION");
-    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment("200", "store in-charge");
-    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
-    dbWrapper.insertSchedule("M", "Monthly", "Month");
-    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
-    dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
-    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
-    dbWrapper.insertSupplyLines("N1", program, "F10");
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -79,22 +79,11 @@ public class InitiateRnR extends TestCaseHelper {
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void testSubmitAndAuthorizeRegimen(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
-    dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 2, false);
-    dbWrapper.insertFacilities("F10", "F11");
-    dbWrapper.configureTemplate(program);
     List<String> rightsList = new ArrayList<String>();
-    rightsList.add("CREATE_REQUISITION");
-    rightsList.add("AUTHORIZE_REQUISITION");
-    rightsList.add("VIEW_REQUISITION");
-    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment("200", "store in-charge");
-    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
-    dbWrapper.insertSchedule("M", "Monthly", "Month");
-    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
-    dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
-    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
-    dbWrapper.insertSupplyLines("N1", program, "F10");
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    rightsList.add(AUTHORIZE_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -127,22 +116,42 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testRnRWithInvisibleProgramRegimenColumn(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
-    dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 2, false);
-    dbWrapper.insertFacilities("F10", "F11");
-    dbWrapper.configureTemplate(program);
+  public void testApproveRegimen(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
-    rightsList.add("CREATE_REQUISITION");
-    rightsList.add("VIEW_REQUISITION");
-    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment("200", "store in-charge");
-    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
-    dbWrapper.insertSchedule("M", "Monthly", "Month");
-    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
-    dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
-    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
-    dbWrapper.insertSupplyLines("N1", program, "F10");
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    rightsList.add(AUTHORIZE_REQUISITION);
+    rightsList.add(APPROVE_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
+    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
+    dbWrapper.insertRegimenTemplateColumnsForProgram(program);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateAndInitiateRnr(program);
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    dbWrapper.insertValuesInRequisition();
+    dbWrapper.insertValuesInRegimenLineItems("100","200","300","testing");
+    dbWrapper.updateRequisitionStatus(SUBMITTED);
+    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updateRequisitionStatus(AUTHORIZED);
+
+    ApprovePage approvePageLowerSNUser = homePage.navigateToApprove();
+    approvePageLowerSNUser.verifyAndClickRequisitionPresentForApproval();
+    approvePageLowerSNUser.clickRegimenTab();
+    verifyValuesOnRegimenScreen(initiateRnRPage,"100","200","300","testing");
+    approvePageLowerSNUser.clickSaveButton();
+    approvePageLowerSNUser.clickApproveButton();
+    approvePageLowerSNUser.clickOk();
+    approvePageLowerSNUser.verifyNoRequisitionPendingMessage();
+  }
+
+  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testRnRWithInvisibleProgramRegimenColumn(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -159,21 +168,10 @@ public class InitiateRnR extends TestCaseHelper {
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void testRnRWithInActiveRegimen(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
-    dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 2, false);
-    dbWrapper.insertFacilities("F10", "F11");
-    dbWrapper.configureTemplate(program);
     List<String> rightsList = new ArrayList<String>();
-    rightsList.add("CREATE_REQUISITION");
-    rightsList.add("VIEW_REQUISITION");
-    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment("200", "store in-charge");
-    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
-    dbWrapper.insertSchedule("M", "Monthly", "Month");
-    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
-    dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
-    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
-    dbWrapper.insertSupplyLines("N1", program, "F10");
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, false);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -206,6 +204,7 @@ public class InitiateRnR extends TestCaseHelper {
     assertEquals(patientsstoppedtreatment,initiateRnRPage.getPatientsStoppedTreatmentValue());
     assertEquals(remarks,initiateRnRPage.getRemarksValue());
   }
+
 
   @AfterMethod(groups = {"functional", "smoke"})
   public void tearDown() throws Exception {
