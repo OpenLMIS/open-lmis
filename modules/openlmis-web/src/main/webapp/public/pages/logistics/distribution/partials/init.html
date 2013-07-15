@@ -19,8 +19,7 @@
     </div>
     <div class="row-fluid">
       <select id="selectDeliveryZone" class="span3" ng-model="selectedZone"
-              ng-options="i as i.name for i in deliveryZones"
-              ng-change="loadPrograms()">
+              ng-options="i as i.name for i in deliveryZones" ng-change="loadPrograms()">
         <option ng-bind="zonePlaceholder"></option>
       </select>
     </div>
@@ -41,7 +40,6 @@
 
     <br/>
 
-
     <div class="row-fluid">
       <div class="span12">
         <label openlmis-message="label.period"></label>
@@ -56,15 +54,12 @@
     <br/><br/>
 
   </div>
-  <a class="btn btn-primary" id="viewLoadAmounts"
-     ng-href="#/view-load-amounts/{{selectedZone.id}}/{{selectedProgram.id}}/{{selectedPeriod.id}}"
-     ng-disabled="!(selectedPeriod && selectedProgram && selectedZone)" openlmis-message="button.view.load.amount">
-  </a>
-  <a class="btn btn-primary" id="initiateDistribution" ng-click="initiateDistribution()"
-     ng-disabled="!(selectedPeriod && selectedProgram && selectedZone)"
-     openlmis-message="button.initiate.distribution">
-  </a>
+  <input ng-disabled="!(selectedPeriod && selectedProgram && selectedZone)"
+         type="button" ng-click="viewLoadAmount()" class="btn btn-primary" openlmis-message="button.view.load.amount"/>
+
+  <input ng-disabled="!(selectedPeriod && selectedProgram && selectedZone)"
+         type="button" ng-click="initiateDistribution()" class="btn btn-primary"
+         openlmis-message="button.initiate.distribution"/>
 
   <div ng-include="'partials/list.html'"></div>
-</div>
 </div>
