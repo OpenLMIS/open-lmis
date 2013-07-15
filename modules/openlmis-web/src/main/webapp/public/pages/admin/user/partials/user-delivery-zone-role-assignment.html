@@ -68,7 +68,7 @@
         <div class="fluid-grid-cell">
           <select name="selectDeliveryZoneProgram"
               ng-options="program.id as program.name group by program.status for program in deliveryZonePrograms"
-              ng-model="deliveryZoneRole.programId">
+              ng-model="deliveryZoneRole.programId" ng-change="checkDeliveryZoneAndProgramDuplicacy()">
             <option value="" openlmis-message="label.select.program"></option>
           </select>
           <span ng-show='!deliveryZoneRole.programId && showAllocationError' class="field-error"

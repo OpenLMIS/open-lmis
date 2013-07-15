@@ -163,10 +163,12 @@ describe("User", function () {
     });
 
     it('should not load programs if delivery zone is undefined', function () {
+      spyOn(scope,'checkDeliveryZoneAndProgramDuplicacy');
       scope.deliveryZoneRole = {deliveryZone: {id: undefined}};
       scope.loadProgramsForDeliveryZone();
       scope.$apply();
       $httpBackend.verifyNoOutstandingRequest();
+      expect(scope.checkDeliveryZoneAndProgramDuplicacy).toHaveBeenCalled();
     });
 
     it('should load programs for delivery zone', function () {
@@ -174,6 +176,7 @@ describe("User", function () {
       var programs = [
         {id: 1, active: false}
       ];
+      spyOn(scope,'checkDeliveryZoneAndProgramDuplicacy');
       $httpBackend.expect('GET', '/deliveryZones/1/programs.json').respond({deliveryZonePrograms: programs});
       scope.loadProgramsForDeliveryZone();
       scope.$apply();
@@ -181,6 +184,7 @@ describe("User", function () {
       expect(scope.deliveryZonePrograms).toEqual([
         {id: 1, active: false, status: 'Inactive'}
       ]);
+      expect(scope.checkDeliveryZoneAndProgramDuplicacy).toHaveBeenCalled();
     });
 
     it('should not add allocation role without program id', function () {
