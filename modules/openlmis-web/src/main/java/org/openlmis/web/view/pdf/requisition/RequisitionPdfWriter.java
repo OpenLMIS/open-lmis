@@ -25,8 +25,9 @@ public class RequisitionPdfWriter extends PdfWriter {
   public static final float BOTTOM_MARGIN = 30;
 
 
-  public RequisitionPdfWriter(PdfDocument document, OutputStream stream) {
+  public RequisitionPdfWriter(PdfDocument document, OutputStream stream) throws DocumentException {
     super(document, stream);
+    document.addWriter(this);
     setDocumentAttributes(document);
     this.setViewerPreferences(getViewerPreferences());
     this.setPageEvent(new PdfPageEventHandler());
