@@ -43,8 +43,7 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
   };
 
   $scope.loadDistributionsFromCache = function () {
-
-    var transaction = IndexedDB.transaction('distributions');
+    var transaction = IndexedDB.getConnection().transaction('distributions');
     var cursorRequest = transaction.objectStore('distributions').openCursor();
 
     var aggregate = [];
@@ -60,7 +59,11 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
       $scope.$apply();
     };
   };
-  $scope.loadDistributionsFromCache();
+
+  $scope.$on('indexedDBReady', function () {
+    $scope.loadDistributionsFromCache();
+  });
+
 
   $scope.initiateDistribution = function () {
     var distribution = new Distribution($scope.selectedZone, $scope.selectedProgram, $scope.selectedPeriod);
@@ -68,7 +71,7 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
     Distributions.save({}, distribution, onInitSuccess, {});
 
     function onInitSuccess(data) {
-      var transaction = IndexedDB.transaction(['distributions', 'distributionReferenceData'], 'readwrite');
+      var transaction = IndexedDB.getConnection().transaction(['distributions', 'distributionReferenceData'], 'readwrite');
       var distributionStore = transaction.objectStore('distributions');
       distributionStore.put(data.distribution);
       $scope.message = data.success;

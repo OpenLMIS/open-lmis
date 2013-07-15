@@ -4,35 +4,44 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-angular.module('IndexedDB', []).provider('IndexedDB', function () {
+angular.module('IndexedDB', []).service('IndexedDB', function ($rootScope) {
 
-  var request = indexedDB.open("open_lmis", 1);
+  var request = indexedDB.open("open_lmis", 2);
   var indexedDBConnection = null;
 
   request.onsuccess = function (event) {
     indexedDBConnection = event.currentTarget.result;
-    console.log('IndexedDB connection open for version: ' + indexedDBConnection.version);
+    $rootScope.$broadcast('indexedDBReady', indexedDBConnection.version);
   }
 
   request.onupgradeneeded = function (event) {
     indexedDBConnection = event.currentTarget.result;
 
-    var createDistributionStore = function () {
-      var distributionStore = indexedDBConnection.createObjectStore("distributions", {"keyPath": "id"});
-      distributionStore.createIndex("index_zpp", "zpp", {"unique": true});
-    }
-
-    var createDistributionReferenceData = function () {
-      indexedDBConnection.createObjectStore("distributionReferenceData", {"keyPath": "id"});
+    var dropIfExist = function (storeName) {
+      if (indexedDBConnection.objectStoreNames.contains(storeName)) {
+        indexedDBConnection.deleteObjectStore(storeName);
+      }
     }
 
     if (event.oldVersion < 2) {
       createDistributionStore();
       createDistributionReferenceData();
     }
+
+    function createDistributionStore() {
+      dropIfExist("distributions");
+      var distributionStore = indexedDBConnection.createObjectStore("distributions", {"keyPath": "id"});
+      distributionStore.createIndex("index_zpp", "zpp", {"unique": true});
+    }
+
+    function createDistributionReferenceData() {
+      dropIfExist("distributionReferenceData");
+      indexedDBConnection.createObjectStore("distributionReferenceData", {"keyPath": "id"});
+    }
   };
 
-  this.$get = function () {
+  this.getConnection = function () {
     return indexedDBConnection;
-  };
+  }
+
 });
