@@ -4,11 +4,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-<<<<<<< HEAD
-function ProductController($scope, $location, $dialog, messageService, Products, CreateProduct, ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct) {
-=======
+
 function ProductController($scope, $location, $dialog, messageService, CreateProduct, ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits) {
->>>>>>> d20ab70043744fcd35087227f3e1da7970533d98
 
     $scope.productsBackupMap = [];
     $scope.newProduct = {};
