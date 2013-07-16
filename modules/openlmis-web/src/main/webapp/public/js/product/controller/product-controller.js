@@ -80,7 +80,7 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
     // delete product
     $scope.deleteProductCallBack = function (result) {
         if (!result) {
-            $scope.productsBackupMap[$scope.productUnderDelete.id].delete = false;
+            $scope.productsBackupMap[$scope.productUnderDelete.id].deleted = false;
             return;
         }
 
@@ -248,6 +248,16 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
     ];
 
 
+    $scope.YesNo = function (tf) {
+        var retval = '';
+        if (tf == true) {
+            retval = 'Yes';
+        } else
+        {
+            retval = 'No';
+        }
+        return retval;
+    };
 
     /*
      // all supply lines   for list
