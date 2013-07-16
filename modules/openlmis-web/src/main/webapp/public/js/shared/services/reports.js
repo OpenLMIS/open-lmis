@@ -174,7 +174,7 @@ services.factory('RemoveRequisitionGroupMember',function($resource){
 
 // mahmed 07.13.2013
 services.factory('CreateProduct', function ($resource) {
-    return $resource('/createProduct.json', {});
+    return $resource('/createProduct.json', {}, {post:{method:'POST'}});
 });
 
 // mahmed 07.13.2013
