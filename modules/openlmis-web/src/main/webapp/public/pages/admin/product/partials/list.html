@@ -147,12 +147,12 @@
 
 <!-- Dosage Units-->
 <div class="form-cell">
-    <label for="dosageUnit">DosageUnit</label>
+    <label for="dosageUnit">Dosage Unit</label>
 
     <div class="form-field" style="width: 30%;">
 
-        <select ui-select2 style="width:200px;" name="dosageUnit" id="dosageUnit" ng-model="product.dosageUnits.id"
-                ng-options="option.id as option.name for option in dosageUnits">
+        <select ui-select2 style="width:200px;" name="dosageUnit" id="dosageUnit" ng-model="product.dosageUnit"
+                ng-options="option as option.code for option in dosageUnits">
 
         </select>
                                        <span class="field-error"
@@ -182,8 +182,8 @@
 
     <div class="form-field" style="width: 30%;">
 
-        <select ui-select2 style="width:200px;" name="formid" id="formid" ng-model="product.formid"
-                ng-options="option.id as option.name for option in productForms">
+        <select ui-select2 style="width:200px;" name="formid" id="formid" ng-model="product.form"
+                ng-options="option as option.name for option in productForms">
 
         </select>
                                        <span class="field-error"
@@ -200,8 +200,8 @@
 
     <div class="form-field" style="width: 30%;">
 
-        <select ui-select2 style="width:200px;" name="categoryid" id="categoryid" ng-model="product.productCategory"
-                ng-options="option.id as option.name for option in productCategories">
+        <select ui-select2 style="width:200px;" name="categoryid" id="categoryid" ng-model="product.category"
+                ng-options="option as option.name for option in productCategories">
 
         </select>
                                        <span class="field-error"
