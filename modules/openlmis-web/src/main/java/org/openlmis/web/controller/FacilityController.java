@@ -56,7 +56,7 @@ public class FacilityController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "logistics/user/facilities", method = GET)
+  @RequestMapping(value = "/user/facilities", method = GET)
   public List<Facility> getHomeFacility(HttpServletRequest httpServletRequest) {
     return Arrays.asList(facilityService.getHomeFacility(loggedInUserId(httpServletRequest)));
   }
