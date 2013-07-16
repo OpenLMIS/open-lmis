@@ -7,6 +7,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.dto.ProgramSupportedEventDTO;
@@ -17,8 +18,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+
+import static org.apache.commons.collections.CollectionUtils.subtract;
 
 @NoArgsConstructor
 @Repository
@@ -64,20 +69,17 @@ public class ProgramSupportedRepository {
 
   private void deleteObsoleteProgramMappings(Facility facility, List<ProgramSupported> previouslySupportedPrograms) {
     List<ProgramSupported> supportedPrograms = facility.getSupportedPrograms();
-    for (ProgramSupported previouslySupportedProgram : previouslySupportedPrograms) {
-      if (!(supportedPrograms.contains(previouslySupportedProgram))) {
-        deleteSupportedPrograms(facility.getId(), previouslySupportedProgram.getProgram().getId());
-      }
+    for (ProgramSupported programSupported : (Collection<ProgramSupported>) subtract(previouslySupportedPrograms, supportedPrograms)) {
+      deleteSupportedPrograms(facility.getId(), programSupported.getProgram().getId());
     }
   }
 
   private void addUpdatableProgramMappings(Facility facility, List<ProgramSupported> previouslySupportedPrograms) {
-    for (ProgramSupported supportedProgram : facility.getSupportedPrograms()) {
-      if (!(previouslySupportedPrograms).contains(supportedProgram)) {
-        supportedProgram.setFacilityId(facility.getId());
-        supportedProgram.setModifiedBy(facility.getModifiedBy());
-        addSupportedProgram(supportedProgram);
-      }
+    List<ProgramSupported> supportedPrograms = facility.getSupportedPrograms();
+    for (ProgramSupported programSupported : (Collection<ProgramSupported>) subtract(supportedPrograms, previouslySupportedPrograms)) {
+      programSupported.setFacilityId(facility.getId());
+      programSupported.setModifiedBy(facility.getModifiedBy());
+      addSupportedProgram(programSupported);
     }
   }
 
