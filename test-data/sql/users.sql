@@ -7,7 +7,8 @@ INSERT INTO roles
  ('LMU', 'REQUISITION', ''),
  ('LMU In-Charge', 'ADMIN', ''),
  ('FacilityHead', 'REQUISITION', ''),
- ('Medical-Officer', 'REQUISITION', '');
+ ('Medical-Officer', 'REQUISITION', ''),
+ ('View-Report', 'ADMIN', '');
 
 INSERT INTO role_rights
   (roleId, rightName) VALUES
@@ -20,7 +21,8 @@ INSERT INTO role_rights
   ((select id from roles where name='LMU'), 'VIEW_REQUISITION'),
   ((select id from roles where name='LMU'), 'APPROVE_REQUISITION'),
   ((select id from roles where name='LMU In-Charge'), 'CONVERT_TO_ORDER'),
-  ((select id from roles where name='LMU In-Charge'), 'VIEW_ORDER');
+  ((select id from roles where name='LMU In-Charge'), 'VIEW_ORDER'),
+  ((select id from roles where name='View-Report'), 'VIEW_REPORT');
 
 INSERT INTO VENDORS (name, active) VALUES ('commTrack', true);
 

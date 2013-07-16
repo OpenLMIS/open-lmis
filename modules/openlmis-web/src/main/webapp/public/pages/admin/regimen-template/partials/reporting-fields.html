@@ -1,47 +1,31 @@
 <div id="reportingFields">
-  <div class="row-fluid list-header">
-    <div class="span2" openlmis-message="label.visible"></div>
-    <div class="span6" openlmis-message="label.column.label"><span class="label-required"> *</span></div>
-    <div class="span4" openlmis-message="label.data.type"></div>
+  <div class="list-header-container">
+    <div class="row-fluid list-header">
+      <div class="span1">
+        <span class="first-column" openlmis-message="label.visible"></span>
+      </div>
+      <div class="span6" openlmis-message="label.column.label"><span class="label-required"> *</span></div>
+      <div class="span4" openlmis-message="label.data.type"></div>
+    </div>
   </div>
 
+  <div class="list-container">
   <div class="row-fluid list-row"
-       ng-repeat="regimenColumn in regimenColumns">
-    <ng-switch on="regimenColumn.name">
-      <div ng-switch-when="name">
-        <div class="span2">
-          <input type="checkbox" ng-bind="regimenColumn.visible" ng-disabled="true" checked/>
-        </div>
-        <div class="span6">
-          <input type="text" ng-model="regimenColumn.label" ng-disabled="true"/>
-        </div>
-        <div class="span4">
-          <span ng-bind="regimenColumn.dataType"></span>
-        </div>
-      </div>
-      <div ng-switch-when="code">
-        <div class="span2">
-          <input type="checkbox" ng-bind="regimenColumn.visible" ng-disabled="true" checked/>
-        </div>
-        <div class="span6">
-          <input type="text" ng-model="regimenColumn.label" ng-disabled="true"/>
-        </div>
-        <div class="span4">
-          <span ng-bind="regimenColumn.dataType"></span>
-        </div>
-      </div>
-      <div ng-switch-default>
-        <div class="span2">
-          <input type="checkbox" ng-model="regimenColumn.visible"/>
+       ng-repeat="regimenColumn in regimenTemplate.regimenColumns">
+      <div>
+        <div class="span1">
+          <span class="first-column checkbox-column">
+            <input type="checkbox" ng-model="regimenColumn.visible"/>
+          </span>
         </div>
         <div class="span6">
           <input type="text" ng-model="regimenColumn.label" ng-class="{'required-error':!regimenColumn.label}"
                  maxlength="100"/>
         </div>
         <div class="span4">
-          <span ng-bind="regimenColumn.dataType"></span>
+          <span openlmis-message="regimenColumn.dataType"></span>
         </div>
       </div>
-    </ng-switch>
   </div>
+</div>
 </div>

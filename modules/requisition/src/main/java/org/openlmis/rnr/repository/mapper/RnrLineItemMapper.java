@@ -21,13 +21,13 @@ public interface RnrLineItemMapper {
     "quantityReceived, quantityDispensed, dispensingUnit,dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock,",
     "totalLossesAndAdjustments, packsToShip, packSize, price, roundToZero, packRoundingThreshold, fullSupply,",
     "previousStockInHandAvailable, newPatientCount, stockOutDays,",
-    "modifiedBy, modifiedDate)",
+    "modifiedBy, modifiedDate, createdBy)",
     "VALUES (",
     "#{rnrId}, #{productCode}, #{product}, #{productDisplayOrder}, #{productCategory}, #{productCategoryDisplayOrder}, #{beginningBalance},",
     "#{quantityReceived}, #{quantityDispensed}, #{dispensingUnit},#{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock},",
     "#{totalLossesAndAdjustments}, #{packsToShip}, #{packSize}, #{price},#{roundToZero}, #{packRoundingThreshold}, #{fullSupply},",
     "#{previousStockInHandAvailable}, #{newPatientCount}, #{stockOutDays},",
-    "#{modifiedBy}, #{modifiedDate})"})
+    "#{modifiedBy}, #{modifiedDate}, #{createdBy})"})
   @Options(useGeneratedKeys = true)
   public Integer insert(RnrLineItem rnrLineItem);
 
@@ -95,8 +95,8 @@ public interface RnrLineItemMapper {
     "SET quantityApproved = #{quantityApproved}, " +
     " packsToShip = #{packsToShip}, " +
     " remarks = #{remarks}, " +
-    " modifiedBy = #{modifiedBy}, "+
-    " modifiedDate = CURRENT_TIMESTAMP "+
+    " modifiedBy = #{modifiedBy}, " +
+    " modifiedDate = CURRENT_TIMESTAMP " +
     " WHERE id = #{id}"
   )
   void updateOnApproval(RnrLineItem lineItem);

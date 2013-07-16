@@ -9,16 +9,17 @@
 
   <div class="rnr-tabs clearfix">
     <ul class="clearfix">
-      <li ng-class="{'selected': (visibleTab != 'non-full-supply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
-        <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab"
+      <li
+        ng-class="{'selected': (visibleTab != 'non-full-supply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
+        <a href="" ng-click="switchSupplyType('full-supply')" id="fullSupplyTab"
            openlmis-message="label.full.supply.products"></a></li>
       <li ng-class="{'selected': visibleTab == 'non-full-supply', 'has-error': nonFullSupplyTabError}">
-        <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab"
+        <a href="" ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab"
            openlmis-message="label.non.full.supply.products"></a></li>
-      <li ng-class="{'selected': visibleTab == 'regimen'}" ng-show = "regimenCount">
-        <a ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a></li>
+      <li ng-class="{'selected': visibleTab == 'regimen', 'has-error': regimenLineItemInValid}" ng-show="regimenCount">
+        <a href="" ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a></li>
     </ul>
-    <a class="btn pull-right" ng-click="fullScreen = !fullScreen">
+    <a href="" class="btn pull-right" ng-click="fullScreen = !fullScreen">
       <i ng-class="{'icon-resize-full': !fullScreen, 'icon-resize-small': fullScreen}"></i>
     </a>
   </div>

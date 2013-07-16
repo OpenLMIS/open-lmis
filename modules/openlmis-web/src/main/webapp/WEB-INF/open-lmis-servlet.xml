@@ -20,7 +20,7 @@
 
         <property name="defaultViews">
             <list>
-                <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
+                <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView"/>
             </list>
         </property>
         <property name="ignoreAcceptHeader" value="true"/>
@@ -29,7 +29,7 @@
     <bean class="org.springframework.web.servlet.view.XmlViewResolver">
         <property name="order" value="0"/>
         <property name="location">
-            <value>/WEB-INF/spring-pdf-views.xml</value>
+            <value>/WEB-INF/openlmis-print-views.xml</value>
         </property>
     </bean>
 

@@ -62,6 +62,49 @@ public class WarehouseLoadAmountPage extends Page {
     return Product2.getText();
   }
 
+  public String getGeoZoneNameTitle(int rowNumber) {
+    WebElement city = testWebDriver.getElementByXpath("//table[@id='aggregateTable']/tbody/tr["+rowNumber+"]/td[1]/span[1]");
+    testWebDriver.waitForElementToAppear(city);
+    return city.getText();
+  }
+
+  public String getGeoZoneTotalCaption(int tableNumber) {
+    WebElement geoZone = testWebDriver.getElementByXpath("(//table[@class='table table-bordered table-striped']/tbody/tr[3]/td[1]/span[1])["+tableNumber+"]");
+    testWebDriver.waitForElementToAppear(geoZone);
+    return geoZone.getText();
+  }
+
+  public String getCitiesFromAggregatedTable(int rowNumber) {
+    WebElement cities = testWebDriver.getElementByXpath("//table[@id='aggregateTable']/tbody/tr["+rowNumber+"]/td[1]/span");
+    testWebDriver.waitForElementToAppear(cities);
+    return cities.getText();
+  }
+
+  public String getAggregateTableCaption() {
+    WebElement caption = testWebDriver.getElementByXpath("//table[@id='aggregateTable']/tbody/tr[3]/td[1]/span");
+    testWebDriver.waitForElementToAppear(caption);
+    return caption.getText();
+  }
+
+  public String getAggregatePopulation(int rowNumber) {
+    WebElement population = testWebDriver.getElementByXpath("//table[@id='aggregateTable']/tbody/tr["+rowNumber+"]/td[2]/span");
+    testWebDriver.waitForElementToAppear(population);
+    return population.getText();
+  }
+
+  public String getAggregateProduct1Isa(int rowNumber) {
+    WebElement Product1 = testWebDriver.getElementByXpath("//table[@id='aggregateTable']/tbody/tr["+rowNumber+"]/td[3]/span");
+    testWebDriver.waitForElementToAppear(Product1);
+    return Product1.getText();
+  }
+
+  public String getAggregateProduct2Isa(int rowNumber) {
+    WebElement Product2 = testWebDriver.getElementByXpath("//table[@id='aggregateTable']/tbody/tr["+rowNumber+"]/td[4]/span");
+    testWebDriver.waitForElementToAppear(Product2);
+    return Product2.getText();
+  }
+
+
   public String getNoRecordFoundMessage() {
     WebElement noRecordFoundMessage = testWebDriver.getElementByXpath("//div[@class='alert alert-info']/span");
     testWebDriver.waitForElementToAppear(noRecordFoundMessage);

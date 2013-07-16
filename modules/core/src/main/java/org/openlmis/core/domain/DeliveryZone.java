@@ -9,13 +9,16 @@ package org.openlmis.core.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
 @NoArgsConstructor
+@JsonSerialize(include = NON_NULL)
 public class DeliveryZone extends BaseModel implements Importable {
 
   @ImportField(name = "Delivery zone code", mandatory = true)

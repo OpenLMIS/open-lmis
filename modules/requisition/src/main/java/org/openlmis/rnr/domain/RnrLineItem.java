@@ -91,7 +91,7 @@ public class RnrLineItem extends BaseModel {
 
   private static Logger logger = LoggerFactory.getLogger(RnrLineItem.class);
 
-  public RnrLineItem(Long rnrId, FacilityTypeApprovedProduct facilityTypeApprovedProduct, Long modifiedBy) {
+  public RnrLineItem(Long rnrId, FacilityTypeApprovedProduct facilityTypeApprovedProduct, Long modifiedBy, Long createdBy) {
     this.rnrId = rnrId;
 
     this.maxMonthsOfStock = facilityTypeApprovedProduct.getMaxMonthsOfStock();
@@ -103,6 +103,7 @@ public class RnrLineItem extends BaseModel {
     this.populateFromProduct(programProduct.getProduct());
     this.dosesPerMonth = programProduct.getDosesPerMonth();
     this.modifiedBy = modifiedBy;
+    this.createdBy = createdBy;
   }
 
   private void populateFromProduct(Product product) {

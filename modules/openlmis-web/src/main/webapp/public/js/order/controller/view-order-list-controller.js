@@ -11,17 +11,17 @@ function ViewOrderListController($scope, orders, messageService) {
     showFooter: false,
     showColumnMenu: false,
     showFilter: false,
-    enableColumnResize:true,
+    enableColumnResize: true,
     enableSorting: false,
     columnDefs: [
-      {field: 'rnr.id', displayName: messageService.get("column.name.order.no")},
-      {field: 'facilityCode', displayName: messageService.get("column.name.facility.code.name"), cellTemplate:"<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.facilityCode}} - {{row.entity.rnr.facilityName}}</span></div>"},
+      {field: 'rnr.id', displayName: messageService.get("label.order.no")},
+      {field: 'facilityCode', displayName: messageService.get("label.facility.code.name"), cellTemplate: "<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.facilityCode}} - {{row.entity.rnr.facilityName}}</span></div>"},
       {field: 'rnr.programName', displayName: messageService.get("label.program")},
-      {field: 'periodName', displayName: messageService.get("label.period"), cellTemplate:"<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.periodName}} ({{row.entity.rnr.periodStartDate | date: 'dd/MM/yyyy'}} - {{row.entity.rnr.periodEndDate | date: 'dd/MM/yyyy'}})</span></div>"},
-      {field: 'rnr.supplyingDepot', displayName: messageService.get("column.name.supplying.depot")},
-      {field: 'createdDate', displayName: messageService.get("column.name.order.date.time"), cellFilter: "date:'dd/MM/yyyy hh:mm:ss'"},
-      {field: 'status', displayName: messageService.get("column.label.order.status"),
-        cellTemplate:"<div class='ngCellText'><span ng-cell-text><div id=\"orderStatus\">{{row.entity.status}} <span ng-show='row.entity.shipmentError' openlmis-message='error.shipment.file'></span></div> "},
+      {field: 'periodName', displayName: messageService.get("label.period"), cellTemplate: "<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.periodName}} ({{row.entity.rnr.periodStartDate | date: 'dd/MM/yyyy'}} - {{row.entity.rnr.periodEndDate | date: 'dd/MM/yyyy'}})</span></div>"},
+      {field: 'rnr.supplyingDepot', displayName: messageService.get("label.supplying.depot")},
+      {field: 'createdDate', displayName: messageService.get("label.order.date.time"), cellFilter: "date:'dd/MM/yyyy hh:mm:ss'"},
+      {field: 'status', displayName: messageService.get("label.order.status"),
+        cellTemplate: "<div class='ngCellText'><span ng-cell-text><div id=\"orderStatus\">{{row.entity.status}} <span ng-show='row.entity.shipmentError' openlmis-message='error.shipment.file'></span></div> "},
       {cellTemplate: "<div class='ngCellText'><a ng-show=\"row.entity.productsOrdered\" ng-href='/orders/{{row.entity.id}}/download.csv' openlmis-message='link.download.csv'></a>" +
         "<span ng-show=\"!row.entity.productsOrdered\" openlmis-message='msg.no.product.in.order' ng-cell-text></span></div>"}
     ]

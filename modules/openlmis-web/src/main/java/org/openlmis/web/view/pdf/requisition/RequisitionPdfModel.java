@@ -15,6 +15,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Money;
+import org.openlmis.core.domain.RegimenColumn;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.web.controller.RequisitionController;
 import org.openlmis.web.model.PrintRnrLineItem;
@@ -38,6 +39,7 @@ public class RequisitionPdfModel {
   public static final int TABLE_SPACING = 25;
 
   private List<RnrColumn> rnrColumnList;
+  private List<RegimenColumn> regimenColumnList;
   private Rnr requisition;
   private String currency;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
@@ -45,6 +47,7 @@ public class RequisitionPdfModel {
   public RequisitionPdfModel(Map<String, Object> model) {
     this.model = model;
     this.rnrColumnList = (List<RnrColumn>) model.get(RequisitionController.RNR_TEMPLATE);
+    this.regimenColumnList = (List<RegimenColumn>) model.get(RequisitionController.REGIMEN_TEMPLATE);
     this.requisition = (Rnr) model.get(RequisitionController.RNR);
     this.currency = (String) model.get(RequisitionController.CURRENCY);
     this.lossesAndAdjustmentsTypes = (List<LossesAndAdjustmentsType>) model.get(RequisitionController.LOSSES_AND_ADJUSTMENT_TYPES);
@@ -161,8 +164,8 @@ public class RequisitionPdfModel {
 
   private void addHeading(PdfPTable table) throws DocumentException {
     Chunk chunk = new Chunk(String.format("Report and Requisition for: %s (%s)",
-        this.requisition.getProgram().getName(),
-        this.requisition.getFacility().getFacilityType().getName()), H1_FONT);
+      this.requisition.getProgram().getName(),
+      this.requisition.getFacility().getFacilityType().getName()), H1_FONT);
 
     PdfPCell cell = new PdfPCell(new Phrase(chunk));
     cell.setColspan(4);
@@ -202,7 +205,7 @@ public class RequisitionPdfModel {
     insertCell(table, builder.toString(), 1);
     builder = new StringBuilder();
     builder.append("Reporting Period: ").append(DATE_FORMAT.format(requisition.getPeriod().getStartDate())).append(" - ").
-        append(DATE_FORMAT.format(requisition.getPeriod().getEndDate()));
+      append(DATE_FORMAT.format(requisition.getPeriod().getEndDate()));
     insertCell(table, builder.toString(), 2);
   }
 

@@ -4,7 +4,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ConvertToOrderListController($scope, requisitionList, Orders, RequisitionForConvertToOrder, $dialog, messageService) {
+function ConvertToOrderListController($scope, requisitionList, Orders, RequisitionForConvertToOrder, $dialog,
+                                      messageService) {
   $scope.requisitions = requisitionList;
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];
@@ -17,17 +18,17 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
     showFooter: false,
     showSelectionCheckbox: true,
     showColumnMenu: false,
-    sortInfo:{ fields: ['submittedDate'], directions: ['asc'] },
+    sortInfo: { fields: ['submittedDate'], directions: ['asc'] },
     showFilter: false,
     columnDefs: [
       {field: 'programName', displayName: messageService.get("program.header") },
       {field: 'facilityCode', displayName: messageService.get("option.value.facility.code")},
       {field: 'facilityName', displayName: messageService.get("option.value.facility.name")},
-      {field: 'periodStartDate', displayName: messageService.get("column.name.period.start.date"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'periodEndDate', displayName: messageService.get("column.name.period.end.date"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'submittedDate', displayName: messageService.get("column.name.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'modifiedDate', displayName: messageService.get("column.name.date.modified"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'supplyingDepot', displayName: messageService.get("column.name.supplying.depot")}
+      {field: 'periodStartDate', displayName: messageService.get("label.period.start.date"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'periodEndDate', displayName: messageService.get("label.period.end.date"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'submittedDate', displayName: messageService.get("label.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'modifiedDate', displayName: messageService.get("label.date.modified"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'supplyingDepot', displayName: messageService.get("label.supplying.depot")}
     ]
   };
 
@@ -44,7 +45,7 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
   };
 
   $scope.dialogCloseCallback = function (result) {
-    if(result) {
+    if (result) {
       convert();
     }
   };
@@ -52,8 +53,8 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
   showConfirmModal = function () {
     var options = {
       id: "confirmDialog",
-      header:messageService.get("label.confirm.action"),
-      body:messageService.get("msg.question.confirmation")
+      header: messageService.get("label.confirm.action"),
+      body: messageService.get("msg.question.confirmation")
     };
     OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog, messageService);
   };

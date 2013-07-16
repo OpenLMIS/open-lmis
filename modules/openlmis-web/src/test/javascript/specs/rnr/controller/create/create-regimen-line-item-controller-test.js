@@ -9,8 +9,8 @@ describe('CreateRegimenLineItemController', function () {
   beforeEach(inject(function ($rootScope, $controller) {
     scope = $rootScope.$new();
     scope.rnr = {regimenLineItems: [
-      {regimen: {category: {name: "cName"}}},
-      {regimen: {category: {name: "cName"}}}
+      {category: {name: "cName"}},
+      {category: {name: "cName"}}
     ]};
     scope.regimenColumns = [
       {name: 'name', visible: true},
@@ -30,7 +30,7 @@ describe('CreateRegimenLineItemController', function () {
   });
 
   it('should return true if category are different', function () {
-    scope.rnr.regimenLineItems[0].regimen.category.name = 'bName';
+    scope.rnr.regimenLineItems[0].category.name = 'bName';
     expect(scope.showCategory(1)).toBeTruthy();
   });
 });

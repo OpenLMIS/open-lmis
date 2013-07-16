@@ -244,12 +244,12 @@
                     </td>
                     <td ng-show="supportedProgram.program.push">
                         <span openlmis-message="label.allocate"></span>
-                        (<a ng-click="showISAEditModal(supportedProgram)" openlmis-message="link.modify.isa"></a>)
+                        (<a href="" ng-click="showISAEditModal(supportedProgram)" openlmis-message="link.modify.isa"></a>)
                     </td>
                     <td ng-show="!supportedProgram.program.push">
                         <span openlmis-message="label.request"></span>
                     </td>
-                    <td><a class="close" id="remove{{$index}}" ng-click="showRemoveProgramConfirmDialog(supportedProgram)"
+                    <td><a href="" class="close" id="remove{{$index}}" ng-click="showRemoveProgramConfirmDialog(supportedProgram)"
                            openlmis-message="create.facility.removeProgram"></a></td>
                 </tr>
                 <tr class="add-supported-program-row">
@@ -286,64 +286,72 @@
 
 <div id="programProductISA" modal="programProductsISAModal" options="{'backdrop':'static', 'escape':false}"
      ng-controller="IsaModalController">
-    <form name="IsaProductListForm">
-        <div class="modal-header">
-            <h3>
-                <span openlmis-message="label.isa.header"></span>
-                <span ng-bind="currentProgram.name"></span>
-            </h3>
+  <form name="IsaProductListForm">
+    <div class="modal-header">
+      <h3>
+        <span openlmis-message="label.isa.header"></span>
+        <span ng-bind="currentProgram.name"></span>
+      </h3>
+    </div>
+
+    <div class="modal-body">
+      <div ng-hide="currentProgramProducts.length > 0" openlmis-message="message.no.products.mapped" class="alert alert-info"></div>
+      <div ng-show="currentProgramProducts.length > 0" >
+        <div class="row-fluid">
+          <div class="pull-right">
+            <input id="searchProduct" class="search-query" type="text" ng-model="query" ng-change="updateCurrentProgramProducts()"
+                   openlmis-message="placeholder.filter.products" />
+          </div>
         </div>
-        <div class="modal-body">
-            <div ng-hide="currentProgramProducts.length > 0" openlmis-message="message.no.products.mapped" class="alert alert-info"></div>
-            <div ng-show="currentProgramProducts.length > 0" >
-                <div class="row-fluid">
-                    <div class="pull-right">
-                        <input id="searchProduct" class="search-query" type="text" ng-model="query" ng-change="updateCurrentProgramProducts()"
-                               openlmis-message="placeholder.filter.products" />
-                    </div>
-                </div>
-                <div id="override-isa-table">
-                    <div class="row-fluid list-header">
-                        <div class="span4" openlmis-message="label.product"></div>
-                        <div class="span2" openlmis-message="label.calculated.isa"></div>
-                        <div class="span3" openlmis-message="label.overridden.isa"></div>
-                        <div class="span3"></div>
-                    </div>
-
-                    <div ng-class="{'has-overridden-isa': programProduct.overriddenIsa != null || programProduct.overriddenIsa != undefined}"
-                         ng-repeat="programProduct in filteredProducts">
-                        <div class="row-fluid list-row">
-                            <div class="span4">
-                                <span id="product-name{{$index}}" ng-bind="programProduct.product.primaryName"></span>
-                            </div>
-                            <div class="span2">
-                                <span id="calculated-isa{{$index}}"ng-bind="programProduct.calculatedIsa"></span>
-                            </div>
-                            <div class="span3" ng-form="overrideForm">
-                                <input id="override-isa{{$index}}" name="overrideISA{{$index}}" type="text" ng-model="programProduct.overriddenIsa"
-                                       numeric-validator="numericValue" maxlength="6"/>
-
-                                <span id="overrideISA{{$index}}" class="form-error" ng-show="overrideForm.overriddenISA.$error.numeric"
-                                      openlmis-message="error.enter.numeric.value" style="display:none;"></span>
-                            </div>
-                            <div class="span3 use-calculated-isa-column">
-                                <input ng-show="programProduct.overriddenIsa != null || programProduct.overriddenIsa != undefined"
-                                       class="btn" id="use-calculated-button{{$index}}" ng-click="programProduct.overriddenIsa = null" type="button"
-                                       openlmis-message="button.use.calculated"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div id="overrideIsaTable">
+          <div class="list-header-container">
+            <div class="row-fluid list-header">
+              <div class="span4">
+                <span class="first-column" openlmis-message="label.product"></span>
+              </div>
+              <div class="span2" openlmis-message="label.calculated.isa"></div>
+              <div class="span3" openlmis-message="label.overridden.isa"></div>
+              <div class="span3"></div>
             </div>
-        </div>
+          </div>
 
-        <div class="modal-footer">
-            <input type="button" class="btn btn-primary" openlmis-message="button.done" ng-click="updateISA()"/>
-            <input type="button" class="btn btn-cancel" openlmis-message="button.cancel" ng-click="resetISAModal()"/>
-            <input type="button" ng-show="currentProgramProducts.length > 0" class="btn btn-warning pull-right"
-                   openlmis-message="button.use.all.calculated" ng-click="resetAllToCalculatedIsa()"/>
+          <div class="list-container">
+            <div ng-class="{'has-overridden-isa': programProduct.overriddenIsa != null || programProduct.overriddenIsa != undefined}"
+                 ng-repeat="programProduct in filteredProducts">
+              <div class="row-fluid list-row">
+                <div class="span4">
+                  <span class="first-column" id="product-name{{$index}}" ng-bind="programProduct.product.primaryName"></span>
+                </div>
+                <div class="span2">
+                  <span id="calculated-isa{{$index}}"ng-bind="programProduct.calculatedIsa"></span>
+                </div>
+                <div class="span3" ng-form="overrideForm">
+                  <input id="override-isa{{$index}}" name="overrideISA{{$index}}" type="text" ng-model="programProduct.overriddenIsa"
+                         numeric-validator="numericValue" maxlength="6"/>
+
+                  <span id="overrideISA{{$index}}" class="form-error" ng-show="overrideForm.overriddenISA.$error.numeric"
+                        openlmis-message="error.enter.numeric.value" style="display:none;"></span>
+                </div>
+                <div class="span3 use-calculated-isa-column">
+                  <input ng-show="programProduct.overriddenIsa != null || programProduct.overriddenIsa != undefined"
+                         class="btn" id="use-calculated-button{{$index}}" ng-click="programProduct.overriddenIsa = null" type="button"
+                         openlmis-message="button.use.calculated"/>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-    </form>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <input type="button" class="btn btn-primary" openlmis-message="button.done" ng-click="updateISA()"/>
+      <input type="button" class="btn btn-cancel" openlmis-message="button.cancel" ng-click="resetISAModal()"/>
+      <input type="button" ng-show="currentProgramProducts.length > 0" class="btn btn-warning pull-right"
+             openlmis-message="button.use.all.calculated" ng-click="resetAllToCalculatedIsa()"/>
+    </div>
+
+  </form>
 </div>
 
 <!-- /form-group -->

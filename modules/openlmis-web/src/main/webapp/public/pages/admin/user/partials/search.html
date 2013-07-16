@@ -10,7 +10,7 @@
     </h2>
 
     <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="userId">
-        <span ng-bind="message"></span>.&nbsp;&nbsp;<a ng-click="editUser(userId)" openlmis-message="search.viewHere"></a>
+        <span ng-bind="message"></span>.&nbsp;&nbsp;<a href="" ng-click="editUser(userId)" openlmis-message="search.viewHere"></a>
     </div>
 
     <input id="searchUser" class="search-query input-xlarge" type="text" ng-model="query"
@@ -23,10 +23,10 @@
         <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
         <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
       </div>
-        <a class="close-btn" href="javascript:void(0);" ng-click="clearSearch()"></a>
+        <a class="close-btn" href="" ng-click="clearSearch()"></a>
         <ul>
             <li ng-repeat="user in filteredUsers">
-                <a ng-click="editUser(user.id)">{{user.firstName}} {{user.lastName}} - {{user.email}}</a>
+                <a href="" ng-click="editUser(user.id)">{{user.firstName}} {{user.lastName}} - {{user.email}}</a>
             </li>
         </ul>
     </div>

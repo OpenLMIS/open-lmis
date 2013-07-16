@@ -591,6 +591,36 @@ span[class^="tpl-"] {
       }
     }
   }
+
+  #regimenTable {
+    .col-code {
+      min-width: 100px;
+    }
+    .col-name {
+      min-width: 190px;
+    }
+    .col-remarks {
+      min-width: 460px;
+    }
+    th {
+      width: 90px;
+    }
+    tbody {
+      tr {
+        &:last-child {
+          td {
+            &:first-child {
+              padding-left: 7px;
+            }
+          }
+          .cell-text {
+            padding: 0;
+            width: 99%;
+          }
+        }
+      }
+    }
+  }
 }
 
 .header-fixed {
@@ -932,12 +962,7 @@ h3 {
 
 //Schedules
 
-.list-header {
-  background: #EEE;
-  font-weight: bold;
-  color: #444;
-  text-shadow: 0 1px 0 #FFF;
-  font-size: 0.9em;
+.list-header-container {
   border: 1px solid #CCC;
   border-radius: 5px 5px 0px 0px;
   background: #f9f9f9; /* Old browsers */
@@ -948,24 +973,42 @@ h3 {
   background: -ms-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* IE10+ */
   background: linear-gradient(to bottom, #f9f9f9 0%,#e0e0e0 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#e0e0e0',GradientType=0 ); /* IE6-9 */
+}
+
+.list-header {
+  font-weight: bold;
+  color: #444;
+  text-shadow: 0 1px 0 #FFF;
+  font-size: 0.9em;
+
   div {
     display: inline-block;
     line-height: 40px;
   }
-  div:first-child {
+  .first-column {
     padding-left: 20px;
+    display: block;
+    white-space: nowrap;
   }
+}
+
+.list-container {
+  border: 1px solid #CCC;
+  border-top: 0;
 }
 
 .list-row {
   padding: 12px 0;
-  border: 1px solid #EEE;
-  border-top: 0;
+  border-bottom: 1px solid #EEE;
   input[type="text"] {
     width: 76%;
   }
-  div:first-child {
+  .first-column {
     padding-left: 20px;
+    display: block;
+    &.checkbox-column {
+      padding-left: 30px;
+    }
   }
   div:last-child input[type="button"] {
     float: right;
@@ -1066,10 +1109,6 @@ select:focus:required:invalid:focus.ng-pristine {
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23, 136, 143, 0.6);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23, 136, 143, 0.6);
   color: #555;
-}
-
-input:focus:required:invalid:focus {
-  font-size: 18px;
 }
 
 @-webkit-keyframes highlight {
@@ -1778,13 +1817,13 @@ input[placeholder].placeholder{
 
 .rights-table {
   tr {
-    td {
+    th,td {
       background-color: white;
       width: 33.33%;
       padding: 20px 9px 20px 20px;
     }
     &:first-child {
-      td {
+      th {
         padding: 2px;
         cursor: pointer;
         &:hover {
@@ -1841,16 +1880,25 @@ input[placeholder].placeholder{
   font-size: 0.9em;
 }
 
-#override-isa-table {
+#overrideIsaTable {
   margin: 5px;
+  input[type="text"] {
+    margin-bottom: 0;
+  }
   div {
     &.has-overridden-isa {
       background-color: #FFFFE7;
     }
-  .list-row:hover {
-    background-color: transparent;
+    .list-row {
+      &:hover {
+        background-color: transparent;
+      }
+    }
   }
 
+  .list-container {
+    height: 300px;
+    overflow: auto;
   }
 
   .use-calculated-isa-column {
@@ -1883,7 +1931,7 @@ input[placeholder].placeholder{
 }
 .geo-zone-facility-list {
   h3 {
-    color: rgb(72,136,143);
+    color: #48888f;
     font-weight: normal;
     margin: 3px 0;
   }
@@ -1905,9 +1953,12 @@ input[placeholder].placeholder{
           }
           &:last-child {
             th {
-              border-top: 1px solid rgb(236, 236, 236);
-              border-left: 1px solid rgb(236, 236, 236);
-              background: rgb(224, 224, 224);
+              border-top: 1px solid #ececec;
+              border-left: 1px solid #ececec;
+              background: #e0e0e0;
+              &:first-child {
+                border-left: 1px solid #ddd;
+              }
             }
           }
         }
@@ -1915,20 +1966,12 @@ input[placeholder].placeholder{
           text-align: center;
         }
       }
-      tbody{
+      tbody {
         tr {
-          td {
-            &.total-cell {
-              background: #f9f9f9;
-              background: -moz-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* FF3.6+ */
-              background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f9f9f9), color-stop(100%,#e0e0e0)); /* Chrome,Safari4+ */
-              background: -webkit-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* Chrome10+,Safari5.1+ */
-              background: -o-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* Opera 11.10+ */
-              background: -ms-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* IE10+ */
-              background: linear-gradient(to bottom, #f9f9f9 0%,#e0e0e0 100%); /* W3C */
-              font-size: 0.9em;
-              text-shadow: 0 1px 0 white;
-
+          &:last-child {
+            td {
+              background: #d6f5f8;
+              font-weight: bold;
             }
           }
         }

@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
+import org.openlmis.core.domain.RegimenTemplate;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RegimenColumnService;
 import org.openlmis.core.service.RegimenService;
@@ -18,7 +19,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -58,15 +58,6 @@ public class RegimenControllerTest {
     mockHttpSession.setAttribute(USER_ID, userId);
   }
 
-  @Test
-  public void shouldInsertARegimen() {
-    Regimen regimen = new Regimen();
-    List<Regimen> regimens = Arrays.asList(regimen);
-    RegimenFormDTO regimenFormDTO = new RegimenFormDTO();
-    regimenFormDTO.setRegimens(regimens);
-    controller.save(1L, regimenFormDTO, httpServletRequest);
-    verify(regimenService).save(1L, regimens, userId);
-  }
 
   @Test
   public void shouldGetRegimenByProgram() {
@@ -93,26 +84,16 @@ public class RegimenControllerTest {
 
   @Test
   public void shouldSaveRegimenTemplate() throws Exception {
-
     Long programId = 1L;
-    RegimenFormDTO regimenFormDTO = new RegimenFormDTO();
+    List<Regimen> regimens = new ArrayList<>();
+    RegimenTemplate regimenTemplate = new RegimenTemplate();
+    RegimenFormDTO regimenFormDTO = new RegimenFormDTO(regimens, regimenTemplate);
 
     controller.save(programId, regimenFormDTO, httpServletRequest);
 
-    verify(regimenColumnService).save(regimenFormDTO.getColumns(), userId);
-    verify(programService).setRegimenTemplateConfigured(programId);
-    verify(regimenService).save(programId, regimenFormDTO.getRegimens(), userId);
+    verify(regimenColumnService).save(regimenTemplate, userId);
+    verify(regimenService).save(regimens, userId);
+    assertThat(regimenTemplate.getProgramId(), is(programId));
   }
 
-  @Test
-  public void shouldGetRegimenColumns() throws Exception {
-
-    List<Regimen> expectedRegimens = new ArrayList<>();
-    Long programId = 1l;
-    when(regimenService.getByProgram(programId)).thenReturn(expectedRegimens);
-
-    controller.getRegimenColumns(programId, httpServletRequest);
-
-    verify(regimenColumnService).populateDefaultRegimenColumnsIfNoColumnsExist(programId, userId);
-  }
 }

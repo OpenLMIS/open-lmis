@@ -9,7 +9,6 @@ package org.openlmis.web.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Right;
@@ -61,7 +60,6 @@ public class UserControllerTest {
   @Mock
   private MessageService messageService;
 
-  @InjectMocks
   private UserController userController;
 
   private String baseUrl = "http://localhost:9091/";
@@ -87,8 +85,9 @@ public class UserControllerTest {
 
   @Test
   public void shouldNotReturnUserInfoWhenNotLoggedIn() {
-    session.setAttribute(UserAuthenticationSuccessHandler.USER, null);
     when(messageService.message("user.login.error")).thenReturn("The username or password you entered is incorrect. Please try again.");
+    session.setAttribute(UserAuthenticationSuccessHandler.USER, null);
+
 
     ResponseEntity<OpenLmisResponse> response = userController.user(httpServletRequest);
     assertThat(response.getBody().getErrorMsg(), is("The username or password you entered is incorrect. Please try again."));

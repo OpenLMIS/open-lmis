@@ -9,30 +9,32 @@ function ApproveRnrListController($scope, requisitionList, $location, messageSer
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];
 
-  $scope.gridOptions = { data:'filteredRequisitions',
-    multiSelect:false,
+  $scope.gridOptions = { data: 'filteredRequisitions',
+    multiSelect: false,
     selectedItems: $scope.selectedItems,
-    afterSelectionChange: function(rowItem, event){$scope.openRnr()},
-    showFooter:false,
-    showSelectionCheckbox:false,
+    afterSelectionChange: function (rowItem, event) {
+      $scope.openRnr()
+    },
+    showFooter: false,
+    showSelectionCheckbox: false,
     enableColumnResize: true,
-    showColumnMenu:false,
-    sortInfo:{ fields: ['submittedDate'], directions: ['asc'] },
-    showFilter:false,
-    columnDefs:[
+    showColumnMenu: false,
+    sortInfo: { fields: ['submittedDate'], directions: ['asc'] },
+    showFilter: false,
+    columnDefs: [
       {field: 'programName', displayName: messageService.get("program.header") },
       {field: 'facilityCode', displayName: messageService.get("option.value.facility.code")},
       {field: 'facilityName', displayName: messageService.get("option.value.facility.name")},
-      {field: 'periodStartDate', displayName: messageService.get("column.name.period.start.date"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'periodEndDate', displayName: messageService.get("column.name.period.end.date"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'submittedDate', displayName: messageService.get("column.name.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'modifiedDate', displayName: messageService.get("column.name.date.modified"), cellFilter: "date:'dd/MM/yyyy'"}
+      {field: 'periodStartDate', displayName: messageService.get("label.period.start.date"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'periodEndDate', displayName: messageService.get("label.period.end.date"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'submittedDate', displayName: messageService.get("label.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'modifiedDate', displayName: messageService.get("label.date.modified"), cellFilter: "date:'dd/MM/yyyy'"}
     ]
   };
 
   $scope.openRnr = function () {
-    $scope.$parent.period = {'startDate':$scope.selectedItems[0].periodStartDate,'endDate':$scope.selectedItems[0].periodEndDate};
-    $location.url("rnr-for-approval/"+$scope.selectedItems[0].id+'/'+$scope.selectedItems[0].programId+'?supplyType=full-supply&page=1');
+    $scope.$parent.period = {'startDate': $scope.selectedItems[0].periodStartDate, 'endDate': $scope.selectedItems[0].periodEndDate};
+    $location.url("rnr-for-approval/" + $scope.selectedItems[0].id + '/' + $scope.selectedItems[0].programId + '?supplyType=full-supply&page=1');
   };
 
   $scope.filterRequisitions = function () {
@@ -58,7 +60,7 @@ function ApproveRnrListController($scope, requisitionList, $location, messageSer
 }
 
 ApproveRnrListController.resolve = {
-  requisitionList:function ($q, $timeout, RequisitionForApproval) {
+  requisitionList: function ($q, $timeout, RequisitionForApproval) {
     var deferred = $q.defer();
     $timeout(function () {
       RequisitionForApproval.get({}, function (data) {

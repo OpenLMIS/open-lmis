@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
@@ -53,6 +54,26 @@ public class RequisitionPage extends Page {
   private static WebElement addNonFullSupplyButtonScreen;
   @FindBy(how = ID, using = "regimenTable")
   private static WebElement regimenTable;
+  @FindBy(how = XPATH, using = "//input[@value='Save']")
+  private static WebElement SaveButton;
+  @FindBy(how = XPATH, using = "//input[@value='Submit']")
+  private static WebElement SubmitButton;
+  @FindBy(how = XPATH, using = "//input[@value='Authorize']")
+  private static WebElement AuthorizeButton;
+  @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv' and @openlmis-message='message']")
+  private static WebElement saveSuccessMessage;
+
+  @FindBy(how = XPATH, using = "//div[@id='submitSuccessMsgDiv' and @openlmis-message='submitMessage']")
+  private static WebElement submitSuccessMessage;
+
+  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[3]/ng-switch/span/input")
+  private static WebElement patientsOnTreatmentTextField;
+  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[4]/ng-switch/span/input")
+  private static WebElement patientsToInitiateTreatmentTextField;
+  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[5]/ng-switch/span/input")
+  private static WebElement patientsStoppedTreatmentTextField;
+  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[6]/ng-switch/span/input")
+  private static WebElement remarksTextField;
 
 
   protected RequisitionPage(TestWebDriver driver) {
@@ -130,7 +151,7 @@ public class RequisitionPage extends Page {
   public void clickOk() {
     testWebDriver.sleep(250);
     okButton.click();
-    testWebDriver.sleep(250);
+    testWebDriver.sleep(500);
   }
 
   public void clickCancel() {
@@ -138,68 +159,119 @@ public class RequisitionPage extends Page {
     cancelButton.click();
   }
 
-  public void verifyTotalField()
-  {
+  public void verifyTotalField() {
     testWebDriver.waitForElementToAppear(total);
     String totalValue = total.getText();
     String beginningBalanceValue = testWebDriver.getAttribute(beginningBalance, "value");
     String quantityReceivedValue = testWebDriver.getAttribute(quantityReceived, "value");
-    SeleneseTestNgHelper.assertEquals(totalValue,String.valueOf(Integer.parseInt(beginningBalanceValue)+Integer.parseInt(quantityReceivedValue)));
+    SeleneseTestNgHelper.assertEquals(totalValue, String.valueOf(Integer.parseInt(beginningBalanceValue) + Integer.parseInt(quantityReceivedValue)));
   }
 
-  public void verifyTotalFieldPostAuthorize()
-  {
+  public void verifyTotalFieldPostAuthorize() {
     testWebDriver.waitForElementToAppear(total);
     String totalValue = total.getText();
     String beginningBalanceValue = beginningBalance.getText();
     String quantityReceivedValue = quantityReceived.getText();
-    SeleneseTestNgHelper.assertEquals(totalValue,String.valueOf(Integer.parseInt(beginningBalanceValue)+Integer.parseInt(quantityReceivedValue)));
+    SeleneseTestNgHelper.assertEquals(totalValue, String.valueOf(Integer.parseInt(beginningBalanceValue) + Integer.parseInt(quantityReceivedValue)));
   }
 
-  public void clickFullSupplyTab()
-  {
+  public void clickFullSupplyTab() {
     testWebDriver.waitForElementToAppear(fullSupplyTab);
     fullSupplyTab.click();
     testWebDriver.waitForElementToAppear(totalCost);
   }
 
-  public void clickNonFullSupplyTab()
-  {
+  public void clickNonFullSupplyTab() {
     testWebDriver.waitForElementToAppear(nonFullSupplyTab);
     nonFullSupplyTab.click();
     testWebDriver.waitForElementToAppear(addNonFullSupplyButtonScreen);
   }
-    public void clickRegimenTab()
-    {
-        testWebDriver.waitForElementToAppear(regimenTab);
-        regimenTab.click();
-        testWebDriver.waitForElementToAppear(regimenTable);
-    }
 
-    public boolean existRegimenTab()
-    {
-        return regimenTab.isDisplayed();
-    }
+  public void clickRegimenTab() {
+    testWebDriver.waitForElementToAppear(regimenTab);
+    regimenTab.click();
+    testWebDriver.waitForElementToAppear(regimenTable);
+  }
 
-    public boolean existRegimenCode(String regimentCode, int row)
-    {
-        return testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody/tr[" + row + "]/td[1]/ng-switch/span/span").getText().equals(regimentCode);
-    }
+  public boolean existRegimenTab() {
+    return regimenTab.isDisplayed();
+  }
 
-    public boolean existRegimenName(String regimentName, int row)
-    {
-        return testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[2]/ng-switch/span/span").getText().equals(regimentName);
-    }
+  public boolean existRegimenCode(String regimentCode, int row) {
+    return testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody/tr[" + row + "]/td[1]/ng-switch/span/span").getText().equals(regimentCode);
+  }
 
-    public boolean existRegimenReportingField(int fieldNumberInTable, int row)
-    {
-        return testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input").isDisplayed();
-    }
+  public boolean existRegimenName(String regimentName, int row) {
+    return testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[2]/ng-switch/span/span").getText().equals(regimentName);
+  }
 
-    public int getRegimenTableRowCount()
-    {
-        WebElement table_element = testWebDriver.findElement(By.id("regimenTable"));
-        List<WebElement> tr_collection=table_element.findElements(By.xpath("id('regimenTable')/tbody[1]/tr"));
-        return tr_collection.size();
-    }
+  public boolean existRegimenReportingField(int fieldNumberInTable, int row) {
+    return testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input").isDisplayed();
+  }
+
+  public void enterValuesOnRegimenScreen(int fieldNumberInTable, int row, int value) {
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input"));
+    testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input").clear();
+    testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input").sendKeys(String.valueOf(value));
+  }
+
+  public String getPatientsOnTreatmentValue() {
+    testWebDriver.waitForElementToAppear(patientsOnTreatmentTextField);
+    return testWebDriver.getAttribute(patientsOnTreatmentTextField, "value");
+  }
+
+  public String getPatientsToInitiateTreatmentValue() {
+    testWebDriver.waitForElementToAppear(patientsToInitiateTreatmentTextField);
+    return testWebDriver.getAttribute(patientsToInitiateTreatmentTextField, "value");
+  }
+
+  public String getPatientsStoppedTreatmentValue() {
+    testWebDriver.waitForElementToAppear(patientsStoppedTreatmentTextField);
+    return testWebDriver.getAttribute(patientsStoppedTreatmentTextField, "value");
+  }
+
+  public String getRemarksValue() {
+    testWebDriver.waitForElementToAppear(remarksTextField);
+    return testWebDriver.getAttribute(remarksTextField, "value");
+  }
+
+  public void clickSaveButton() {
+    testWebDriver.waitForElementToAppear(SaveButton);
+    SaveButton.click();
+    testWebDriver.waitForElementToAppear(saveSuccessMessage);
+  }
+
+  public void clickSubmitButton() {
+    testWebDriver.waitForElementToAppear(SubmitButton);
+    SubmitButton.click();
+  }
+
+  public void clickAuthorizeButton() {
+    testWebDriver.waitForElementToAppear(AuthorizeButton);
+    AuthorizeButton.click();
+  }
+
+  public void verifySubmitSuccessMsg() {
+    assertTrue("RnR Submit Success message not displayed", submitSuccessMessage.isDisplayed());
+  }
+
+  public void verifySaveSuccessMsg() {
+    assertTrue("RnR Submit Success message not displayed", saveSuccessMessage.isDisplayed());
+  }
+
+  public void verifyAuthorizeSuccessMsg() {
+    assertTrue("RnR Authorize Success message not displayed", submitSuccessMessage.isDisplayed());
+  }
+
+  public int getRegimenTableRowCount() {
+    WebElement table_element = testWebDriver.findElement(By.id("regimenTable"));
+    List<WebElement> tr_collection = table_element.findElements(By.xpath("id('regimenTable')/tbody[1]/tr"));
+    return tr_collection.size();
+  }
+
+  public int getRegimenTableColumnCount() {
+    WebElement table_element = testWebDriver.findElement(By.id("regimenTable"));
+    List<WebElement> tr_collection = table_element.findElements(By.xpath("id('regimenTable')/tbody[1]/tr/td"));
+    return tr_collection.size();
+  }
 }

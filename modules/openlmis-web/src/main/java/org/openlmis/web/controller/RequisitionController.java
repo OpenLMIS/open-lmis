@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.RegimenColumnService;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -54,6 +55,7 @@ public class RequisitionController extends BaseController {
   public static final String CURRENCY = "currency";
 
   public static final String COMMENTS = "comments";
+  public static final String REGIMEN_TEMPLATE = "regimen_template";
 
   private RequisitionService requisitionService;
   private RnrTemplateService rnrTemplateService;
@@ -61,12 +63,14 @@ public class RequisitionController extends BaseController {
   public static final String LOSSES_AND_ADJUSTMENT_TYPES = "lossesAndAdjustmentTypes";
 
   private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
+  private RegimenColumnService regimenColumnService;
 
   @Autowired
-  public RequisitionController(RequisitionService requisitionService, RnrTemplateService rnrTemplateService, StaticReferenceDataReader staticReferenceDataReader) {
+  public RequisitionController(RequisitionService requisitionService, RnrTemplateService rnrTemplateService, StaticReferenceDataReader staticReferenceDataReader, RegimenColumnService regimenColumnService) {
     this.requisitionService = requisitionService;
     this.rnrTemplateService = rnrTemplateService;
     this.staticReferenceDataReader = staticReferenceDataReader;
+    this.regimenColumnService = regimenColumnService;
   }
 
   @RequestMapping(value = "/requisitions", method = POST, headers = ACCEPT_JSON)
@@ -180,8 +184,8 @@ public class RequisitionController extends BaseController {
   @RequestMapping(value = "/logistics/facility/{facilityId}/program/{programId}/periods", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(
-      @PathVariable("facilityId") Long facilityId,
-      @PathVariable("programId") Long programId) {
+    @PathVariable("facilityId") Long facilityId,
+    @PathVariable("programId") Long programId) {
     try {
       List<ProcessingPeriod> periodList = requisitionService.getAllPeriodsForInitiatingRequisition(facilityId, programId);
       Rnr currentRequisition = getRequisitionForCurrentPeriod(facilityId, programId, periodList);
@@ -197,7 +201,7 @@ public class RequisitionController extends BaseController {
     if (periodList == null || periodList.isEmpty()) return null;
     boolean withoutLineItems = true;
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId,
-        periodList.get(0).getId(), withoutLineItems);
+      periodList.get(0).getId(), withoutLineItems);
     List<Rnr> rnrList = requisitionService.get(criteria);
     return (rnrList == null || rnrList.isEmpty()) ? null : rnrList.get(0);
   }
@@ -219,7 +223,9 @@ public class RequisitionController extends BaseController {
     Rnr requisition = requisitionService.getFullRequisitionById(id);
     modelAndView.addObject(RNR, requisition);
     modelAndView.addObject(LOSSES_AND_ADJUSTMENT_TYPES, requisitionService.getLossesAndAdjustmentsTypes());
-    modelAndView.addObject(RNR_TEMPLATE, rnrTemplateService.fetchColumnsForRequisition(requisition.getProgram().getId()));
+    Long programId = requisition.getProgram().getId();
+    modelAndView.addObject(RNR_TEMPLATE, rnrTemplateService.fetchColumnsForRequisition(programId));
+    modelAndView.addObject(REGIMEN_TEMPLATE, regimenColumnService.getRegimenColumnsByProgramId(programId));
     modelAndView.addObject(CURRENCY, staticReferenceDataReader.getCurrency());
     return modelAndView;
   }

@@ -53,7 +53,7 @@ public class Rnr extends BaseModel {
   private Date submittedDate;
   private List<Comment> comments = new ArrayList<>();
 
-  public Rnr(Long facilityId, Long programId, Long periodId, Long modifiedBy) {
+  public Rnr(Long facilityId, Long programId, Long periodId, Long modifiedBy, Long createdBy) {
     facility = new Facility();
     facility.setId(facilityId);
     program = new Program();
@@ -61,10 +61,12 @@ public class Rnr extends BaseModel {
     period = new ProcessingPeriod();
     period.setId(periodId);
     this.modifiedBy = modifiedBy;
+    this.createdBy = createdBy;
   }
 
-  public Rnr(Long facilityId, Long programId, Long periodId, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts, List<Regimen> regimens, Long modifiedBy) {
-    this(facilityId, programId, periodId, modifiedBy);
+  public Rnr(Long facilityId, Long programId, Long periodId, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts,
+             List<Regimen> regimens, Long modifiedBy, Long createdBy) {
+    this(facilityId, programId, periodId, modifiedBy, createdBy);
     fillLineItems(facilityTypeApprovedProducts);
     fillActiveRegimenLineItems(regimens);
   }
@@ -72,7 +74,9 @@ public class Rnr extends BaseModel {
   private void fillActiveRegimenLineItems(List<Regimen> regimens) {
     for (Regimen regimen : regimens) {
       if (regimen.getActive()) {
-        RegimenLineItem regimenLineItem = new RegimenLineItem(null, regimen);
+        RegimenLineItem regimenLineItem = new RegimenLineItem(regimen.getId(), regimen.getCategory(), createdBy, modifiedBy);
+        regimenLineItem.setCode(regimen.getCode());
+        regimenLineItem.setName(regimen.getName());
         regimenLineItems.add(regimenLineItem);
       }
     }
@@ -141,7 +145,7 @@ public class Rnr extends BaseModel {
 
   public void fillLineItems(List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts) {
     for (FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts) {
-      RnrLineItem requisitionLineItem = new RnrLineItem(null, facilityTypeApprovedProduct, modifiedBy);
+      RnrLineItem requisitionLineItem = new RnrLineItem(null, facilityTypeApprovedProduct, modifiedBy, createdBy);
       add(requisitionLineItem, true);
     }
   }
@@ -204,11 +208,21 @@ public class Rnr extends BaseModel {
   }
 
   private RnrLineItem findCorrespondingLineItem(final RnrLineItem item) {
-    return (RnrLineItem) find(getAllLineItems(), new Predicate() {
+    return (RnrLineItem) find(this.getAllLineItems(), new Predicate() {
       @Override
       public boolean evaluate(Object o) {
         RnrLineItem lineItem = (RnrLineItem) o;
         return lineItem.getProductCode().equalsIgnoreCase(item.getProductCode());
+      }
+    });
+  }
+
+  private RegimenLineItem findCorrespondingRegimenLineItem(final RegimenLineItem regimenLineItem) {
+    return (RegimenLineItem) find(this.regimenLineItems, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        RegimenLineItem regimenLineItem1 = (RegimenLineItem) o;
+        return regimenLineItem1.getCode().equalsIgnoreCase(regimenLineItem.getCode());
       }
     });
   }
@@ -247,10 +261,20 @@ public class Rnr extends BaseModel {
     }
   }
 
-  public void copyCreatorEditableFields(Rnr rnr, ProgramRnrTemplate template) {
+  public void copyCreatorEditableFields(Rnr rnr, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
     this.modifiedBy = rnr.getModifiedBy();
-    copyCreatorEditableFieldsForFullSupply(rnr, template);
-    copyCreatorEditableFieldsForNonFullSupply(rnr, template);
+    copyCreatorEditableFieldsForFullSupply(rnr, rnrTemplate);
+    copyCreatorEditableFieldsForNonFullSupply(rnr, rnrTemplate);
+    copyCreatorEditableFieldsForRegimen(rnr, regimenTemplate);
+  }
+
+  private void copyCreatorEditableFieldsForRegimen(Rnr rnr, RegimenTemplate regimenTemplate) {
+    for (RegimenLineItem regimenLineItem : rnr.regimenLineItems) {
+      RegimenLineItem savedRegimenLineItem = this.findCorrespondingRegimenLineItem(regimenLineItem);
+      if (savedRegimenLineItem != null)
+        savedRegimenLineItem.copyCreatorEditableFieldsForRegimen(regimenLineItem, regimenTemplate);
+      savedRegimenLineItem.setModifiedBy(rnr.getModifiedBy());
+    }
   }
 
   private void copyCreatorEditableFieldsForNonFullSupply(Rnr rnr, ProgramRnrTemplate template) {

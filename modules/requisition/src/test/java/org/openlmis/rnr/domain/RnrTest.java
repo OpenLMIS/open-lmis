@@ -15,6 +15,7 @@ import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.rnr.builder.RegimenLineItemBuilder;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 
@@ -26,7 +27,8 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.defaultFacilityApprovedProduct;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
@@ -34,6 +36,7 @@ import static org.openlmis.rnr.builder.RequisitionBuilder.modifiedBy;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
+import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
@@ -121,7 +124,7 @@ public class RnrTest {
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = new ArrayList<>();
     facilityTypeApprovedProducts.add(facilityTypeApprovedProduct);
 
-    Rnr requisition = new Rnr(1L, 2L, 3L, facilityTypeApprovedProducts, regimens, 4L);
+    Rnr requisition = new Rnr(1L, 2L, 3L, facilityTypeApprovedProducts, regimens, 4L, 1L);
 
     assertThat(requisition.getRegimenLineItems().size(), is(1));
     assertThat(requisition.getFullSupplyLineItems().size(), is(1));
@@ -231,6 +234,7 @@ public class RnrTest {
     long userId = 5L;
     Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
+    RegimenTemplate regimenTemplate = new RegimenTemplate(rnr.getProgram().getId(), new ArrayList<RegimenColumn>());
 
     RnrLineItem lineItem1 = make(a(defaultRnrLineItem, with(beginningBalance, 24), with(productCode, "P1")));
     RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(beginningBalance, 25), with(productCode, "P2")));
@@ -248,7 +252,7 @@ public class RnrTest {
     rnr.setFullSupplyLineItems(asList(spyLineItem1, spyLineItem2));
     rnr.setNonFullSupplyLineItems(asList(spyLineItem3, spyLineItem4));
 
-    rnr.copyCreatorEditableFields(newRnr, template);
+    rnr.copyCreatorEditableFields(newRnr, template, regimenTemplate);
 
     verify(spyLineItem1).copyCreatorEditableFieldsForFullSupply(lineItem1, template);
     verify(spyLineItem2).copyCreatorEditableFieldsForFullSupply(lineItem2, template);
@@ -256,6 +260,32 @@ public class RnrTest {
     verify(spyLineItem4).copyCreatorEditableFieldsForNonFullSupply(lineItem4, template);
     assertThat(rnr.getModifiedBy(), is(newRnr.getModifiedBy()));
     assertModifiedBy(userId);
+  }
+
+  @Test
+  public void shouldCopyRegimenLineItems() throws Exception {
+
+    Rnr newRnr = make(a(defaultRnr));
+    List<RegimenColumn> regimenColumns = new ArrayList<>();
+    RegimenLineItem regimenLineItem = make(a(RegimenLineItemBuilder.defaultRegimenLineItem));
+    regimenLineItem.setCode("R02");
+    RegimenLineItem regimenLineItem1 = make(a(RegimenLineItemBuilder.defaultRegimenLineItem));
+    RegimenLineItem spyRegimenLineItem = spy(regimenLineItem);
+    RegimenLineItem spyRegimenLineItem1 = spy(regimenLineItem1);
+    newRnr.setModifiedBy(1L);
+    newRnr.setRegimenLineItems(asList(regimenLineItem, regimenLineItem1));
+    rnr.setRegimenLineItems(asList(spyRegimenLineItem, spyRegimenLineItem1));
+    RegimenTemplate regimenTemplate = new RegimenTemplate(1l, regimenColumns);
+    List<RnrColumn> rnrColumns = new ArrayList<>();
+
+    rnr.copyCreatorEditableFields(newRnr, new ProgramRnrTemplate(rnrColumns), regimenTemplate);
+
+    verify(spyRegimenLineItem).copyCreatorEditableFieldsForRegimen(regimenLineItem, regimenTemplate);
+    verify(spyRegimenLineItem1).copyCreatorEditableFieldsForRegimen(regimenLineItem1, regimenTemplate);
+    assertThat(spyRegimenLineItem.getModifiedBy(), is(1L));
+    assertThat(spyRegimenLineItem1.getModifiedBy(), is(1L));
+
+
   }
 
   private void assertModifiedBy(long userId) {
@@ -273,6 +303,7 @@ public class RnrTest {
     long userId = 5L;
     Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
+    RegimenTemplate regimenTemplate = new RegimenTemplate(rnr.getProgram().getId(), new ArrayList<RegimenColumn>());
 
     RnrLineItem lineItem1 = make(a(defaultRnrLineItem, with(beginningBalance, 24), with(productCode, "P1")));
     RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(beginningBalance, 25), with(productCode, "P2")));
@@ -285,7 +316,7 @@ public class RnrTest {
     exception.expect(DataException.class);
     exception.expectMessage("product.code.invalid");
 
-    rnr.copyCreatorEditableFields(newRnr, template);
+    rnr.copyCreatorEditableFields(newRnr, template, regimenTemplate);
   }
 
   @Test
@@ -293,6 +324,7 @@ public class RnrTest {
     long userId = 5L;
     Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
+    RegimenTemplate regimenTemplate = new RegimenTemplate(rnr.getProgram().getId(), new ArrayList<RegimenColumn>());
 
     RnrLineItem lineItem1 = make(a(defaultRnrLineItem, with(beginningBalance, 24), with(productCode, "P1")));
     RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(beginningBalance, 25), with(productCode, "P2")));
@@ -314,6 +346,7 @@ public class RnrTest {
     long userId = 5L;
     Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
+    RegimenTemplate regimenTemplate = new RegimenTemplate(rnr.getProgram().getId(), new ArrayList<RegimenColumn>());
 
     RnrLineItem lineItem1 = make(a(defaultRnrLineItem, with(beginningBalance, 24), with(productCode, "P1")));
     RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(beginningBalance, 25), with(productCode, "P2")));
@@ -327,7 +360,7 @@ public class RnrTest {
     rnr.setNonFullSupplyLineItems(new ArrayList<RnrLineItem>());
     rnr.getNonFullSupplyLineItems().add(spyLineItem1);
 
-    rnr.copyCreatorEditableFields(newRnr, template);
+    rnr.copyCreatorEditableFields(newRnr, template, regimenTemplate);
 
     assertThat(rnr.getNonFullSupplyLineItems(), hasItem(lineItem2));
   }

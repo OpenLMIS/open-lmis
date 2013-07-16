@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="span2">
-        <a class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index, 'supervisorRoles')"
+        <a href="" class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index, 'supervisorRoles')"
            openlmis-message="button.remove"></a>
       </div>
     </div>
@@ -55,7 +55,7 @@
         <div class="fluid-grid-cell">
           <select
               ng-options="program.id as program.name group by program.status for program in programsMap.pull"
-              ng-model="selectedProgramIdToSupervise">
+              ng-model="selectedProgramIdToSupervise" ng-change="checkSupervisoryRolesDuplicacy()">
             <option value="" ng-bind="selectSuperviseProgramMessage"></option>
           </select>
           <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedProgramIdToSupervise)'
@@ -70,7 +70,7 @@
         <div class="fluid-grid-cell">
           <select
               ng-options="supervisoryNode.id as supervisoryNode.name for supervisoryNode in supervisoryNodes"
-              ng-model="selectedSupervisoryNodeIdToSupervise">
+              ng-model="selectedSupervisoryNodeIdToSupervise" ng-change="checkSupervisoryRolesDuplicacy()">
             <option value="" ng-bind="selectSupervisoryNodeMessage"></option>
           </select>
           <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedSupervisoryNodeIdToSupervise)'
@@ -93,7 +93,7 @@
 
       <div class="span2">
         <div class="fluid-grid-cell">
-          <a ng-click="addSupervisoryRole()" class="btn btn-primary" openlmis-message="button.add"></a>
+          <a href="" ng-click="addSupervisoryRole()" class="btn btn-primary" openlmis-message="button.add"></a>
         </div>
       </div>
 

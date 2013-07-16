@@ -68,6 +68,13 @@ public class RequisitionRepository {
     requisitionMapper.update(rnr);
     updateFullSupplyLineItems(rnr);
     updateNonFullSupplyLineItems(rnr);
+    updateRegimenLineItems(rnr);
+  }
+
+  private void updateRegimenLineItems(Rnr rnr) {
+    for(RegimenLineItem regimenLineItem : rnr.getRegimenLineItems()){
+      regimenLineItemMapper.update(regimenLineItem);
+    }
   }
 
   public void approve(Rnr rnr) {

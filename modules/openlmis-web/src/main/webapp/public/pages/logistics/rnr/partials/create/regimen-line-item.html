@@ -5,34 +5,54 @@
   -->
 
 <div ng-controller="CreateRegimenLineItemController">
-
-  <div class="rnr-table">
+  <div class="rnr-table" tab-scroll bottom-offset="180">
     <table id="regimenTable" fixed-table-header class="table table-bordered scrollable">
       <thead>
       <tr>
-        <th ng-repeat="regimenColumn in visibleRegimenColumns"
-            ng-bind="regimenColumn.label">
+        <th class="col-{{regimenColumn.name}}" ng-repeat="regimenColumn in visibleRegimenColumns">
+          <ng-switch on="regimenColumn.label">
+            <div ng-switch-when="header.name">
+              <div class="regimen-heading" openlmis-message="header.name"></div>
+            </div>
+            <div class="regimen-heading" ng-switch-when="header.code">
+              <span openlmis-message="header.code"></span>
+            </div>
+            <div class="regimen-heading" ng-switch-default>
+              <span ng-bind="regimenColumn.label"/>
+            </div>
+          </ng-switch>
         </th>
       </tr>
       </thead>
-      <tbody ng-repeat="regimenLineItem in rnr.regimenLineItems">
+      <tbody ng-repeat="regimenLineItem in pageLineItems">
       <tr>
         <td class="productCategory" colspan="{{visibleRegimenColumns.length}}" ng-show="showCategory($index)"
-            ng-bind="regimenLineItem.regimen.category.name"></td>
+            ng-bind="regimenLineItem.category.name"></td>
       </tr>
       <tr>
         <td class="cell-input" ng-repeat="regimenColumn in visibleRegimenColumns">
           <ng-switch on="regimenColumn.name">
               <span ng-switch-when="name">
-                <span ng-bind="regimenLineItem.regimen.name" class="cell-text"></span>
+                <span ng-bind="regimenLineItem.name" class="cell-text"></span>
               </span>
               <span ng-switch-when="code">
-                <span ng-bind="regimenLineItem.regimen.code" class="cell-text"></span>
+                <span ng-bind="regimenLineItem.code" class="cell-text"></span>
+              </span>
+              <span ng-switch-when="remarks">
+                <input type="text" ng-model="regimenLineItem[regimenColumn.name]" class="cell-text"
+                       ng-disabled="formDisabled" maxlength="255">
               </span>
               <span ng-switch-default>
-                <input type="text"
+                <input ng-required="true"
+                       ng-class="{'required-error':!regimenLineItem[regimenColumn.name] && $parent.regimenLineItemInValid}"
+                       id="{{getId(regimenColumn.name, $parent)}}"
+                       name="{{regimenColumn.name + $parent.$parent.$index}}"
+                       type="text"
                        ng-model="regimenLineItem[regimenColumn.name]"
-                       rnr-validator="positiveInteger" maxlength="8">
+                       rnr-validator="positiveInteger" maxlength="8" ng-disabled="formDisabled">
+                <span class="rnr-form-error" id="{{regimenColumn.name + $parent.$parent.$index}}"
+                      style="display:none;" openlmis-message="error.number.only">
+              </span>
               </span>
           </ng-switch>
         </td>
@@ -40,5 +60,4 @@
       </tbody>
     </table>
   </div>
-
 </div>

@@ -5,19 +5,12 @@
  */
 
 var services = angular.module('openlmis.services', ['ngResource']);
+var update = {update: {method: 'PUT'}};
 
 services.value('version', '@version@');
 
-services.factory('ActivePrograms', function ($resource) {
-  return $resource('/active/programs.json', {}, {});
-});
-
-services.factory('PullPrograms', function ($resource) {
-  return $resource('/pull/programs.json', {}, {});
-});
-
 services.factory('Programs', function ($resource) {
-  return $resource('/programs.json', {}, {});
+  return $resource('/programs/:type.json', {type: '@type'}, {});
 });
 
 services.factory('RnRColumnList', function ($resource) {
@@ -29,11 +22,13 @@ services.factory('ProgramRnRColumnList', function ($resource) {
 });
 
 services.factory('Facility', function ($resource) {
-  return $resource('/facilities/:id.json', {id: '@id'}, {update: {method: 'PUT'}});
-});
+  var resource = $resource('/facilities/:id.json', {id: '@id'}, update);
 
-services.factory('RestoreFacility', function ($resource) {
-  return $resource('/facilities/:id/restore.json', {}, {update: {method: 'PUT'}});
+  resource.restore = function (pathParams, success, error) {
+    $resource('/facilities/:id/restore.json', {}, update).update(pathParams, {}, success, error);
+  };
+
+  return resource;
 });
 
 services.factory('UserContext', function ($resource) {
@@ -41,16 +36,7 @@ services.factory('UserContext', function ($resource) {
 });
 
 services.factory('Users', function ($resource) {
-  return $resource('/users.json', {}, {});
-});
-
-services.factory('User', function ($resource) {
-  return $resource('/users/:id.json', {id: '@id'}, {update: {method: 'PUT'}});
-});
-
-
-services.factory('UserById', function ($resource) {
-  return $resource('/admin/user/:id.json', {}, {});
+  return $resource('/users/:id.json', {id: '@id'}, update);
 });
 
 services.factory('UserFacilityList', function ($resource) {
@@ -65,10 +51,6 @@ services.factory('ProgramsToViewRequisitions', function ($resource) {
   return $resource('/facility/:facilityId/view/requisition/programs.json', {}, {});
 });
 
-services.factory('RequisitionHeader', function ($resource) {
-  return $resource('/logistics/facility/:facilityId/requisition-header.json', {}, {});
-});
-
 services.factory('ProgramSupportedByFacility', function ($resource) {
   return $resource('/facilities/:facilityId/programs.json', {}, {});
 });
@@ -77,20 +59,12 @@ services.factory('FacilityReferenceData', function ($resource) {
   return $resource('/facilities/reference-data.json', {}, {});
 });
 
-services.factory('AllFacilities', function ($resource) {
-  return $resource('/facilities.json', {}, {});
-});
-
 services.factory('Rights', function ($resource) {
   return $resource('/rights.json', {}, {});
 });
 
-services.factory('Role', function ($resource) {
-  return $resource('/roles/:id.json', {}, {update: {method: 'PUT'}});
-});
-
 services.factory('Roles', function ($resource) {
-  return $resource('/roles.json', {}, {});
+  return $resource('/roles/:id.json', {id: '@id'}, update);
 });
 
 services.factory('CreateRequisitionProgramList', function ($resource) {
@@ -106,15 +80,7 @@ services.factory('ReferenceData', function ($resource) {
 });
 
 services.factory('Requisitions', function ($resource) {
-  return $resource('/requisitions/:id/:operation.json', {}, {update: {method: 'PUT'}});
-});
-
-services.factory('Requisition', function ($resource) {
-  return $resource('/requisitions.json', {}, {});
-});
-
-services.factory('RequisitionById', function ($resource) {
-  return $resource('/requisitions/:id.json', {}, {});
+  return $resource('/requisitions/:id/:operation.json', {id: '@id', operation: '@operation'}, update);
 });
 
 services.factory('RequisitionForApproval', function ($resource) {
@@ -133,12 +99,8 @@ services.factory('LossesAndAdjustmentsReferenceData', function ($resource) {
   return $resource('/requisitions/lossAndAdjustments/reference-data.json', {}, {})
 });
 
-services.factory('Schedules', function ($resource) {
-  return $resource('/schedules.json', {});
-});
-
 services.factory('Schedule', function ($resource) {
-  return $resource('/schedules/:id.json', {}, {update: {method: 'PUT'}});
+  return $resource('/schedules/:id.json', {id: '@id'}, update);
 });
 
 services.factory('Periods', function ($resource) {
@@ -174,7 +136,7 @@ services.factory('RequisitionLineItem', function ($resource) {
 });
 
 services.factory('UpdateUserPassword', function ($resource) {
-  return $resource('/user/resetPassword/:token.json', {}, {update: {method: 'PUT'}});
+  return $resource('/user/resetPassword/:token.json', {}, update);
 });
 
 services.factory('ValidatePasswordToken', function ($resource) {
@@ -208,10 +170,6 @@ services.factory('ReportTemplates', function ($resource) {
 
 //Allocation
 
-services.factory('PushProgram', function ($resource) {
-  return $resource('/push/programs.json', {}, {});
-});
-
 services.factory('ProgramProducts', function ($resource) {
   return $resource('/programProducts/programId/:programId.json', {}, {});
 });
@@ -221,11 +179,11 @@ services.factory('FacilityProgramProducts', function ($resource) {
 });
 
 services.factory('ProgramProductsISA', function ($resource) {
-  return $resource('/programProducts/:programProductId/isa/:isaId.json', {isaId: '@isaId'}, {update: {method: 'PUT'}});
+  return $resource('/programProducts/:programProductId/isa/:isaId.json', {isaId: '@isaId'}, update);
 });
 
 services.factory('AllocationProgramProducts', function ($resource) {
-  return $resource('/facility/:facilityId/programProduct/:programProductId.json', {}, {update: {method: 'PUT'}});
+  return $resource('/facility/:facilityId/programProduct/:programProductId.json', {}, update);
 });
 
 services.factory('UserDeliveryZones', function ($resource) {
@@ -260,17 +218,28 @@ services.factory('RegimenCategories', function ($resource) {
   return $resource('/regimenCategories.json', {}, {});
 });
 
-services.factory('Regimens', function($resource){
+services.factory('Regimens', function ($resource) {
   return $resource('/programId/:programId/regimens.json', {}, {post: {method: 'POST', isArray: true}});
 });
 
-services.factory('RegimenColumns', function($resource){
+services.factory('RegimenColumns', function ($resource) {
   return $resource('/programId/:programId/regimenColumns.json', {}, {});
 });
 
+services.factory('RegimenTemplate', function ($resource) {
+  return $resource('/programId/:programId/configureRegimenTemplate.json', {}, {});
+});
 
-services.factory('GeographicZones', function($resource){
+services.factory('ProgramRegimenTemplate', function ($resource) {
+  return $resource('/programId/:programId/programRegimenTemplate.json', {}, {});
+});
+
+services.factory('GeographicZones', function ($resource) {
   return $resource('/geographicZones/:id.json', {}, {});
+});
+
+services.factory('Distributions', function ($resource) {
+  return $resource('/distributions.json', {}, {});
 });
 
 

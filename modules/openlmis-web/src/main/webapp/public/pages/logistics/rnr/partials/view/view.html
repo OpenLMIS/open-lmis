@@ -8,11 +8,11 @@
 <div class="rnr-tabs clearfix">
   <ul class="clearfix">
     <li ng-class="{'selected': (visibleTab != 'non-full-supply' && visibleTab != 'regimen')}">
-      <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab" openlmis-message="label.full.supply.products"></a></li>
+      <a href="" ng-click="switchSupplyType('full-supply')" id="fullSupplyTab" openlmis-message="label.full.supply.products"></a></li>
     <li ng-class="{'selected': visibleTab == 'non-full-supply'}">
-      <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab" openlmis-message="label.non.full.supply.products"></a></li>
+      <a href="" ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab" openlmis-message="label.non.full.supply.products"></a></li>
     <li ng-class="{'selected': visibleTab == 'regimen'}" ng-show = "regimenCount">
-      <a ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a></li>
+      <a href="" ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a></li>
   </ul>
 </div>
 

@@ -46,3 +46,16 @@ Running App on embedded Jetty server
  - ```run``` is to start the embedded jetty server.
 
 Once run, you can access the home page at http://localhost:9091/
+
+Tech Stack
+---------------------------------
+
+ - Java 1.7
+ - Gradle
+ - Postgres
+ - Spring
+ - Mybatis
+ - Angularjs
+ - Jasmine
+
+
