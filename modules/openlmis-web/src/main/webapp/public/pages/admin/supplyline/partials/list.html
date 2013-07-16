@@ -201,11 +201,11 @@
            </div>
 
             <div class="span1" style="float: left; width: 40px;">
-                <input type="button" ng-hide="supplylinesBackupMap[sl.id].delete"
+                <input type="button" ng-hide="supplylinesBackupMap[sl.id].deleted"
                        id="lstDeleteBtn_{{$index}}"
                        class="btn btn-mini pull-right"
                        value="Delete"
-                       ng-click="showConfirmSupplylineDeleteWindow(sl); supplylinesBackupMap[sl.id].delete=true;"/>
+                       ng-click="showConfirmSupplylineDeleteWindow(sl); supplylinesBackupMap[sl.id].deleted=true;"/>
 
             </div>
 

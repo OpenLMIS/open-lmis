@@ -80,7 +80,7 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
     // delete product
     $scope.deleteProductCallBack = function (result) {
         if (!result) {
-            $scope.productsBackupMap[$scope.productUnderDelete.id].delete = false;
+            $scope.productsBackupMap[$scope.productUnderDelete.id].deleted = false;
             return;
         }
 
