@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ProductController($scope, $location, $dialog, messageService, CreateProduct, ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct) {
+function ProductController($scope, $location, $dialog, messageService, Products, CreateProduct, ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct) {
 
     $scope.productsBackupMap = [];
     $scope.newProduct = {};
@@ -22,14 +22,26 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
 
      // all products list
     ProductList.get({}, function (data) {
+
         $scope.productsList = data.productList;
         $scope.filteredProducts = $scope.productsList;
-        //alert(JSON.stringify($scope.productsList, null, 4));
+
+  /*
+        $scope.initialProducts = angular.copy(data.productList, $scope.initialProducts);
+        $scope.products = $scope.productsList;
+        for(var productIndex in data.productList){
+            var product = data.productList[productIndex];
+            $scope.productsBackupMap[product.id] =  $scope.getBackupProduct(product);
+        }
+  */
+        //alert(JSON.stringify($scope.products, null, 4));
     }, function (data) {
         $location.path($scope.$parent.sourceUrl);
     });
 
-    // show search results
+
+
+     // show search results
     $scope.showProductsSearchResults = function (id) {
         var query = document.getElementById(id).value;
         query = parseInt(query) + 1;
@@ -258,6 +270,31 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
         }
         return retval;
     };
+
+
+
+    // all supply lines
+    Products.get({}, function (data) {
+        $scope.initialProducts = angular.copy(data.products, $scope.initialProducts);
+         $scope.products = data.products;
+        for(var productIndex in data.products){
+            var product = data.products[productIndex];
+            $scope.productsBackupMap[product.id] =  $scope.getBackupProduct(product);
+        }
+        alert(JSON.stringify($scope.productsBackupMap, null, 4));
+    }, function (data) {
+        $location.path($scope.$parent.sourceUrl);
+    });
+
+
+    $scope.startProductEdit = function (productUnderEdit) {
+        alert(JSON.stringify($scope.productsBackupMap, null, 4));
+
+         $scope.productsBackupMap[productUnderEdit.id].editFormActive = "product-form-active";
+    };
+
+
+
 
     /*
      // all supply lines   for list

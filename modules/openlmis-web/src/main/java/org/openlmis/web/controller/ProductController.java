@@ -34,8 +34,8 @@ import static org.openlmis.web.response.OpenLmisResponse.error;
 @NoArgsConstructor
 public class ProductController extends BaseController {
 
-    public static final String PRODUCTS= "manageProducts";
-    public static final String PRODUCT= "manageProduct";
+    public static final String PRODUCTS= "Products";
+    public static final String PRODUCT= "Product";
     public static final String PRODUCTLIST= "productList";
     public static final String DOSAGEUNITS= "dosageUnits";
 
@@ -50,6 +50,24 @@ public class ProductController extends BaseController {
         this.productService = productService;
     }
 
+
+    // product for add/update
+    @RequestMapping(value = "/products", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> getAllProducts() {
+        return OpenLmisResponse.response(PRODUCTS, productService.getProductsList());
+    }
+
+    @RequestMapping(value = "/products/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Long id) {
+        try{
+            Product product = productService.get(id);
+            return OpenLmisResponse.response(PRODUCT, product);
+        } catch (DataException e){
+            return error(e, HttpStatus.NOT_FOUND);
+        }
+    }
 
     // supply line list for view
     @RequestMapping(value = "/productslist", method = RequestMethod.GET, headers = "Accept=application/json")
