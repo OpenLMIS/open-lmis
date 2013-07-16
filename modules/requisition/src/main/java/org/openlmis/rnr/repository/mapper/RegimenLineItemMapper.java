@@ -10,19 +10,27 @@ import java.util.List;
 @Repository
 public interface RegimenLineItemMapper {
 
-  @Insert({"INSERT INTO regimen_line_items(code, name, regimenDisplayOrder, regimenCategory, regimenCategoryDisplayOrder, rnrId) values " +
-    "(#{regimen.code}, #{regimen.name}, #{regimen.displayOrder}, #{regimen.category.name}, #{regimen.category.displayOrder}, #{rnrId})"})
+  @Insert({"INSERT INTO regimen_line_items(code, name, regimenDisplayOrder, regimenCategory, regimenCategoryDisplayOrder, rnrId, modifiedBy, createdBy) values " +
+    "(#{code}, #{name}, #{regimenDisplayOrder}, #{category.name}, #{category.displayOrder}, #{rnrId}, #{modifiedBy}, #{createdBy})"})
   @Options(useGeneratedKeys = true)
   public void insert(RegimenLineItem regimenLineItem);
 
-  @Select("SELECT * FROM regimen_line_items WHERE rnrId = #{rnrId}")
+  @Select("SELECT * FROM regimen_line_items WHERE rnrId = #{rnrId} ORDER BY regimenDisplayOrder")
   @Results(value = {
     @Result(property = "id", column = "id"),
-    @Result(property = "regimen.code", column = "code"),
-    @Result(property = "regimen.name", column = "name"),
-    @Result(property = "regimen.displayOrder", column = "regimenDisplayOrder"),
-    @Result(property = "regimen.category.name", column = "regimenCategory"),
-    @Result(property = "regimen.category.displayOrder", column = "regimenCategoryDisplayOrder"),
+    @Result(property = "code", column = "code"),
+    @Result(property = "name", column = "name"),
+    @Result(property = "patientsOnTreatment", column = "patientsOnTreatment"),
+    @Result(property = "patientsToInitiateTreatment", column = "patientsToInitiateTreatment"),
+    @Result(property = "remarks", column = "remarks"),
+    @Result(property = "patientsStoppedTreatment", column = "patientsStoppedTreatment"),
+    @Result(property = "regimenDisplayOrder", column = "regimenDisplayOrder"),
+    @Result(property = "category.name", column = "regimenCategory"),
+    @Result(property = "category.displayOrder", column = "regimenCategoryDisplayOrder"),
   })
   public List<RegimenLineItem> getRegimenLineItemsByRnrId(Long rnrId);
+
+  @Update("UPDATE regimen_line_items set patientsOnTreatment = #{patientsOnTreatment},patientsToInitiateTreatment = #{patientsToInitiateTreatment}," +
+    "patientsStoppedTreatment = #{patientsStoppedTreatment},remarks = #{remarks},modifiedBy = #{modifiedBy}, modifiedDate =CURRENT_TIMESTAMP where id=#{id}")
+  void update(RegimenLineItem regimenLineItem);
 }

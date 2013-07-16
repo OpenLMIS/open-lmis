@@ -126,6 +126,7 @@ dependencies {
             project(':modules:shipment'),
             project(':modules:rest-api'),
             project(':modules:reporting'),
+            project(':modules:distribution'),
             project(':modules:report')
 
 
@@ -140,9 +141,9 @@ dependencies {
             project(path: ':modules:core', configuration: 'testFixtures'),
             project(path: ':modules:rest-api', configuration: 'testFixtures'),
             project(path: ':modules:requisition', configuration: 'testFixtures'),
+            project(path: ':modules:distribution', configuration: 'testFixtures'),
             project(path: ':modules:reporting', configuration: 'testFixtures'),
             project(path :':modules:report',configuration: 'testFixtures')
-            
 }
 
 task jettyRunWarDaemon(dependsOn: war)
@@ -194,8 +195,13 @@ task compileLess << {
     }
 }
 
-task JasmineRun(type: Exec) {
+task phantomRun(type: Exec) {
     commandLine 'phantomjs', "${projectDir}/src/test/javascript/lib/run_jasmine_test.coffee", "${projectDir}/src/test/javascript/SpecRunner.html"
+}
+
+task JasmineRun(type: Test) {
+    include '**/org/openlmis/jasmine/*.*'
+    useTestNG()
 }
 
 compileJava.dependsOn compileLess

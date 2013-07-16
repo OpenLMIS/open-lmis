@@ -38,9 +38,38 @@ public class RegimenRepositoryTest {
 
   @Test
   public void shouldInsertARegimen() {
-    Regimen regimen = new Regimen();
-    repository.insert(regimen);
+    final Regimen regimen = new Regimen();
+    final Regimen regimen2 = new Regimen();
+    regimen2.setName("regimen");
+    List<Regimen> regimens = new ArrayList<Regimen>() {{
+      add(regimen);
+      add(regimen2);
+    }};
+
+    repository.save(regimens, 1L);
+
+    assertThat(regimen.getCreatedBy(), is(1L));
+    assertThat(regimen.getModifiedBy(), is(1L));
     verify(mapper).insert(regimen);
+    verify(mapper).insert(regimen2);
+  }
+
+  @Test
+  public void shouldInsertARegimenIfIdIsSet() {
+    final Regimen regimen = new Regimen();
+    final Regimen regimen2 = new Regimen();
+    regimen2.setName("regimen");
+    regimen.setId(1L);
+    List<Regimen> regimens = new ArrayList<Regimen>() {{
+      add(regimen);
+      add(regimen2);
+    }};
+
+    repository.save(regimens, 1L);
+
+    assertThat(regimen.getModifiedBy(), is(1L));
+    verify(mapper).update(regimen);
+    verify(mapper).insert(regimen2);
   }
 
   @Test
@@ -51,12 +80,12 @@ public class RegimenRepositoryTest {
 
     List<Regimen> regimens = repository.getByProgram(programId);
 
-    assertThat(regimens,is(expectedRegimens));
+    assertThat(regimens, is(expectedRegimens));
     verify(mapper).getByProgram(programId);
   }
 
   @Test
-  public void shouldGetAllRegimenCategories(){
+  public void shouldGetAllRegimenCategories() {
     List<RegimenCategory> expectedRegimenCategories = new ArrayList<>();
     when(regimenCategoryMapper.getAll()).thenReturn(expectedRegimenCategories);
 

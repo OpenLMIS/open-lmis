@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function FacilitySearchController($scope, AllFacilities, $location, navigateBackService) {
+function FacilitySearchController($scope, Facility, $location, navigateBackService) {
 
   $scope.$on('$viewContentLoaded', function() {
     $scope.query = navigateBackService.query;
@@ -46,7 +46,7 @@ function FacilitySearchController($scope, AllFacilities, $location, navigateBack
     var queryLength = $scope.query.length;
     if (queryLength >= 3) {
       if (compareQuery()) {
-        AllFacilities.get({"searchParam":$scope.query.substring(0, 3)}, function (data) {
+        Facility.get({"searchParam":$scope.query.substring(0, 3)}, function (data) {
           $scope.filteredFacilities = data.facilityList;
           $scope.facilityList = $scope.filteredFacilities;
           $scope.previousQuery = $scope.query;

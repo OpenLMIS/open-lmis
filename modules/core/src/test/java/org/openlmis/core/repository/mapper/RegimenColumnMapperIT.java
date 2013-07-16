@@ -9,6 +9,7 @@ package org.openlmis.core.repository.mapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.matchers.JUnitMatchers;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Program;
@@ -26,6 +27,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItem;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -51,27 +53,29 @@ public class RegimenColumnMapperIT {
   @Test
   public void shouldInsertRegimenColumnsForAProgram() throws Exception {
 
-    RegimenColumn regimenColumn = new RegimenColumn(program.getId(), "testName", "testLabel", "numeric", true);
+    RegimenColumn regimenColumn = new RegimenColumn(1L, "testName", "testLabel", "numeric", true);
     regimenColumn.setCreatedBy(1L);
 
-    mapper.insert(regimenColumn);
+    mapper.insert(regimenColumn, 1L);
 
-    RegimenColumn resultColumn = mapper.getRegimenColumnByNameAndProgramId("testName", program.getId());
+    List<RegimenColumn> columnsByProgramId = mapper.getAllRegimenColumnsByProgramId(1L);
 
-    assertThat(resultColumn, is(regimenColumn));
+    assertThat(columnsByProgramId, hasItem(regimenColumn));
+    assertThat(columnsByProgramId.size(), is(1));
   }
 
   @Test
   public void shouldGetAllRegimenColumnsByProgram() throws Exception {
 
-    RegimenColumn regimenColumn1 = new RegimenColumn(program.getId(), "testName1", "testLabel1", "numeric", true);
-    RegimenColumn regimenColumn2 = new RegimenColumn(program.getId(), "testName2", "testLabel2", "text", false);
+    Long programId = 1L;
+    RegimenColumn regimenColumn1 = new RegimenColumn(programId, "testName1", "testLabel1", "numeric", true);
+    RegimenColumn regimenColumn2 = new RegimenColumn(programId, "testName2", "testLabel2", "text", false);
 
-    mapper.insert(regimenColumn1);
+    mapper.insert(regimenColumn1, programId);
 
-    mapper.insert(regimenColumn2);
+    mapper.insert(regimenColumn2, programId);
 
-    List<RegimenColumn> resultColumns = mapper.getAllRegimenColumnsByProgramId(program.getId());
+    List<RegimenColumn> resultColumns = mapper.getAllRegimenColumnsByProgramId(programId);
 
     assertThat(resultColumns.get(0), is(regimenColumn1));
     assertThat(resultColumns.get(1), is(regimenColumn2));
@@ -82,9 +86,9 @@ public class RegimenColumnMapperIT {
 
     RegimenColumn regimenColumn = new RegimenColumn(program.getId(), "testName", "testLabel", "numeric", true);
 
-    mapper.insert(regimenColumn);
+    mapper.insert(regimenColumn,program.getId());
 
-    regimenColumn = mapper.getRegimenColumnByNameAndProgramId("testName", program.getId());
+    regimenColumn = mapper.getAllRegimenColumnsByProgramId(program.getId()).get(0);
 
     regimenColumn.setLabel("newLabel");
     regimenColumn.setVisible(false);
@@ -93,7 +97,7 @@ public class RegimenColumnMapperIT {
 
     mapper.update(regimenColumn);
 
-    RegimenColumn updatedColumn = mapper.getRegimenColumnByNameAndProgramId("testName", program.getId());
+    RegimenColumn updatedColumn = mapper.getAllRegimenColumnsByProgramId(program.getId()).get(0);
 
     assertThat(updatedColumn.getLabel(), is("newLabel"));
     assertThat(updatedColumn.getName(), is("testName"));
@@ -102,4 +106,11 @@ public class RegimenColumnMapperIT {
     assertThat(updatedColumn.getModifiedBy(), is(2L));
   }
 
+  @Test
+  public void shouldGetMasterRegimenColumns() throws Exception {
+
+    List<RegimenColumn> regimenColumns = mapper.getMasterRegimenColumns();
+
+    assertThat(regimenColumns.size(), is(6));
+  }
 }

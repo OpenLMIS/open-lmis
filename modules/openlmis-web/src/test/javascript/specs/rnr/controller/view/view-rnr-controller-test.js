@@ -15,6 +15,7 @@ describe('ViewRnrController', function () {
     {"id": 7, "name": "lossesAndAdjustments", "position": 7, "source": {"description": "User Input", "name": "USER_INPUT", "code": "U"}, "sourceConfigurable": false, "label": "Total Losses / Adjustments", "formula": "D1 + D2+D3...DN", "indicator": "D", "used": true, "visible": true, "mandatory": false, "description": "All kind of looses/adjustments made at the facility", "formulaValidationRequired": true}
   ];
   var regimenColumns = [];
+  var regimenTemplate = {regimenColumns: regimenColumns};
 
   beforeEach(module('openlmis.services'));
   beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location) {
@@ -32,21 +33,21 @@ describe('ViewRnrController', function () {
   it('should include approved quantity column if status approved', function () {
     columns.push({'name': 'quantityApproved', 'label': 'Approved Quantity', id: '99', visible: true});
     requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], status: 'APPROVED'};
-    controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: requisition, currency: {}, rnrColumns: columns, regimenColumnList: regimenColumns});
+    controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: requisition, currency: {}, rnrColumns: columns, regimenTemplate: regimenTemplate});
 
     expect(scope.visibleColumns.length).toEqual(5);
   });
 
   it('should include approved quantity column if status  ordered', function () {
     requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], status: 'RELEASED'};
-    controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: requisition, currency: {}, rnrColumns: columns, regimenColumnList: regimenColumns});
+    controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: requisition, currency: {}, rnrColumns: columns, regimenTemplate: regimenTemplate});
 
     expect(scope.visibleColumns.length).toEqual(5);
   });
 
   it('should not include approved quantity column if status not approved nor ordered', function () {
     requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], status: 'INITIATED'};
-    controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: requisition, currency: {}, rnrColumns: columns, regimenColumnList: regimenColumns});
+    controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: requisition, currency: {}, rnrColumns: columns, regimenTemplate: regimenTemplate});
 
     expect(scope.visibleColumns.length).toEqual(4);
   });
@@ -56,7 +57,7 @@ describe('ViewRnrController', function () {
     var rnr = {fullSupplyLineItems: [
       {'id': 1}
     ], nonFullSupplyLineItems: [], regimenLineItems: [], period: {numberOfMonths: 5}, status: 'INITIATED'};
-    controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: rnr, currency: {}, rnrColumns: columns, regimenColumnList: regimenColumns});
+    controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: rnr, currency: {}, rnrColumns: columns, regimenTemplate: regimenTemplate});
     expect(rnr.fullSupplyLineItems.length).toEqual(scope.pageLineItems.length);
   });
 
@@ -65,7 +66,7 @@ describe('ViewRnrController', function () {
     var rnr = {fullSupplyLineItems: [], nonFullSupplyLineItems: [
       {'id': 1}
     ], regimenLineItems: [], period: {numberOfMonths: 5}, status: 'INITIATED'};
-    controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: rnr, currency: {}, rnrColumns: columns, regimenColumnList: regimenColumns});
+    controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: rnr, currency: {}, rnrColumns: columns, regimenTemplate: regimenTemplate});
     expect(rnr.nonFullSupplyLineItems.length).toEqual(scope.pageLineItems.length);
   });
 
@@ -76,7 +77,7 @@ describe('ViewRnrController', function () {
       {'id': 3},
       {'id': 4}
     ];
-    controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', $location: location, $routeParams: routeParams, regimenColumnList: regimenColumns});
+    controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
 
     expect(2).toEqual(scope.numberOfPages);
   });
@@ -89,7 +90,7 @@ describe('ViewRnrController', function () {
       {'id': 3},
       {'id': 4}
     ];
-    controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', $location: location, $routeParams: routeParams, regimenColumnList: regimenColumns});
+    controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
 
     expect(2).toEqual(scope.numberOfPages);
   });
@@ -101,7 +102,7 @@ describe('ViewRnrController', function () {
       {'id': 3},
       {'id': 4}
     ];
-    controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', $location: location, $routeParams: routeParams, regimenColumnList: regimenColumns});
+    controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
 
     expect(scope.pageLineItems[0].id).toEqual(1);
     expect(scope.pageLineItems[1].id).toEqual(2);
@@ -116,7 +117,7 @@ describe('ViewRnrController', function () {
       {'id': 3},
       {'id': 4}
     ];
-    controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', $location: location, $routeParams: routeParams, regimenColumnList: regimenColumns});
+    controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
 
     expect(scope.pageLineItems[0].id).toEqual(3);
     expect(scope.pageLineItems[1].id).toEqual(4);
@@ -131,7 +132,7 @@ describe('ViewRnrController', function () {
       {'id': 3},
       {'id': 4}
     ];
-    controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', $location: location, $routeParams: routeParams, regimenColumnList: regimenColumns});
+    controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
 
     routeParams.page = 2;
     scope.$broadcast('$routeUpdate');
@@ -149,7 +150,7 @@ describe('ViewRnrController', function () {
       {'id': 3},
       {'id': 4}
     ];
-    controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', $location: location, $routeParams: routeParams, regimenColumnList: regimenColumns});
+    controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
     spyOn(location, 'search').andCallThrough();
     scope.currentPage = 2;
     scope.$digest();
@@ -167,7 +168,7 @@ describe('ViewRnrController', function () {
     ];
     spyOn(location, 'search').andCallThrough();
 
-    controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', $location: location, $routeParams: routeParams, regimenColumnList: regimenColumns});
+    controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
     scope.$digest();
     expect(location.search).toHaveBeenCalledWith('page', 1);
   });
@@ -183,7 +184,7 @@ describe('ViewRnrController', function () {
     ];
     spyOn(location, 'search').andCallThrough();
 
-    controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', $location: location, $routeParams: routeParams, regimenColumnList: regimenColumns});
+    controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
     scope.$broadcast('$routeUpdate');
     expect(location.search).toHaveBeenCalledWith('supplyType', 'full-supply');
   });

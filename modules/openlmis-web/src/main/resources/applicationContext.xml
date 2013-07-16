@@ -71,6 +71,7 @@
     <import resource="classpath:/applicationContext-restapi.xml"/>
     <import resource="classpath:/applicationContext-shipment.xml"/>
     <import resource="classpath:/applicationContext-reporting.xml"/>
+    <import resource="classpath:/applicationContext-distribution.xml"/>
 
     <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>
 
@@ -106,7 +107,7 @@
                             <value type="java.lang.Class">org.openlmis.core.domain.Product</value>
                         </property>
                         <property name="recordHandler" ref="productPersistenceHandler"/>
-                        <property name="tableName" value="products" />
+                        <property name="tableName" value="products"/>
                     </bean>
                 </entry>
                 <entry key="facility">

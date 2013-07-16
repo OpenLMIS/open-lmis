@@ -120,11 +120,11 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
 }
 
 ProgramProductController.resolve = {
-  programs: function ($q, PushProgram, $location, $route, $timeout) {
+  programs: function ($q, Programs, $location, $route, $timeout) {
     var deferred = $q.defer();
 
     $timeout(function () {
-      PushProgram.get({}, function (data) {
+      Programs.get({type: 'push'}, function (data) {
         deferred.resolve(data.programs);
       }, function () {
         location.path('/');

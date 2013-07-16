@@ -140,6 +140,8 @@ public class InteractiveReportController  extends BaseController {
 
 
 
+
+
     @RequestMapping(value = "/summary", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_SUMMARY_REPORT')")
     public Pages getSummaryData( //@PathVariable(value = "reportKey") String reportKey,

@@ -10,7 +10,10 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
-import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.domain.Comment;
+import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
+import org.openlmis.rnr.domain.ProgramRnrTemplate;
+import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.search.factory.RequisitionSearchStrategyFactory;
@@ -79,13 +82,14 @@ public class RequisitionService {
 
   @Transactional
   public Rnr initiate(Long facilityId, Long programId, Long periodId, Long modifiedBy) {
+    Long createdBy = modifiedBy;
     if (!requisitionPermissionService.hasPermission(modifiedBy, new Facility(facilityId), new Program(programId),
       CREATE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
     ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplateForRequisition(programId);
 
-    RegimenTemplate regimenTemplate = new RegimenTemplate(programId, regimenColumnService.getRegimenColumnsByProgramId(programId));
+    RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(programId);
 
     if (rnrTemplate.getRnrColumns().size() == 0)
       throw new DataException("error.rnr.template.not.defined");
@@ -98,7 +102,7 @@ public class RequisitionService {
 
     List<Regimen> regimens = regimenService.getByProgram(programId);
 
-    Rnr requisition = new Rnr(facilityId, programId, periodId, facilityTypeApprovedProducts, regimens, modifiedBy);
+    Rnr requisition = new Rnr(facilityId, programId, periodId, facilityTypeApprovedProducts, regimens, modifiedBy, createdBy);
 
     fillFieldsForInitiatedRequisitionAccordingToTemplate(requisition, rnrTemplate, regimenTemplate);
 
@@ -112,14 +116,15 @@ public class RequisitionService {
 
   public void save(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
-    ProgramRnrTemplate template = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
+    ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
+    RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(savedRnr.getProgram().getId());
 
     if (!requisitionPermissionService.hasPermissionToSave(rnr.getModifiedBy(), savedRnr))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     if (savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL)
-      savedRnr.copyApproverEditableFields(rnr, template);
+      savedRnr.copyApproverEditableFields(rnr, rnrTemplate);
     else
-      savedRnr.copyCreatorEditableFields(rnr, template);
+      savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate);
 
     requisitionRepository.update(savedRnr);
   }

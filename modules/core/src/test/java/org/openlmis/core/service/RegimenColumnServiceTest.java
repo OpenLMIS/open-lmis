@@ -1,24 +1,29 @@
 package org.openlmis.core.service;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.RegimenColumn;
+import org.openlmis.core.domain.RegimenTemplate;
 import org.openlmis.core.repository.RegimenColumnRepository;
 import org.openlmis.db.categories.UnitTests;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.powermock.api.mockito.PowerMockito.verifyNew;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(RegimenColumnService.class)
 @Category(UnitTests.class)
 public class RegimenColumnServiceTest {
 
@@ -28,66 +33,24 @@ public class RegimenColumnServiceTest {
   @Mock
   MessageService messageService;
 
+  @Mock
+  ProgramService programService;
+
+  @InjectMocks
   RegimenColumnService service;
 
   Long userId = 1L;
 
-  @Before
-  public void setUp() throws Exception {
-    service = new RegimenColumnService(repository, messageService);
-  }
-
   @Test
-  public void shouldCallInsertWhenRegimenColumnDoesNotHaveId() throws Exception {
-
-    RegimenColumn regimenColumn = new RegimenColumn(1L, "testName", "testLabel", "numeric", true);
-
-    service.save(regimenColumn, userId);
-
-    verify(repository).insert(regimenColumn);
-    assertThat(regimenColumn.getCreatedBy(), is(userId));
-  }
-
-  @Test
-  public void shouldCallUpdateWhenRegimenColumnHasId() throws Exception {
-    RegimenColumn regimenColumn = new RegimenColumn(1L, "testName", "testLabel", "numeric", true);
-    regimenColumn.setId(1L);
-
-    service.save(regimenColumn, userId);
-
-    verify(repository).update(regimenColumn);
-    assertThat(regimenColumn.getModifiedBy(), is(userId));
-  }
-
-  @Test
-  public void shouldSaveRegimenColumnList() throws Exception {
-
-    RegimenColumn regimenColumn1 = new RegimenColumn(1L, "testName1", "testLabel1", "numeric", true);
-    RegimenColumn regimenColumn2 = new RegimenColumn(1L, "testName2", "testLabel2", "numeric", true);
-    regimenColumn2.setId(1L);
-
-    service.save(Arrays.asList(regimenColumn1, regimenColumn2), userId);
-
-    verify(repository).insert(regimenColumn1);
-    verify(repository).update(regimenColumn2);
-  }
-
-  @Test
-  public void shouldGetDefaultRegimenColumnsByProgramIdWhenNotPresentAlready() throws Exception {
+  public void shouldCallSaveAndSetRegimenTemplateConfigured() throws Exception {
 
     Long programId = 1L;
-    List<RegimenColumn> emptyList = new ArrayList<>();
-    when(repository.getRegimenColumnsByProgramId(programId)).thenReturn(emptyList);
+    RegimenTemplate regimenTemplate = new RegimenTemplate(programId, new ArrayList<RegimenColumn>());
 
-    service.populateDefaultRegimenColumnsIfNoColumnsExist(programId, userId);
+    service.save(regimenTemplate, userId);
 
-    verify(repository).insert(new RegimenColumn(programId, "name", null, null, true));
-    verify(repository).insert(new RegimenColumn(programId, "code", null, null, true));
-    verify(repository).insert(new RegimenColumn(programId, "onTreatment", null, null, true));
-    verify(repository).insert(new RegimenColumn(programId, "initiatedTreatment", null, null, true));
-    verify(repository).insert(new RegimenColumn(programId, "stoppedTreatment", null, null, true));
-    verify(repository).insert(new RegimenColumn(programId, "remarks", null, null, true));
-    verify(repository, times(2)).getRegimenColumnsByProgramId(programId);
+    verify(repository).save(regimenTemplate, userId);
+    verify(programService).setRegimenTemplateConfigured(programId);
   }
 
   @Test
@@ -96,7 +59,7 @@ public class RegimenColumnServiceTest {
     RegimenColumn regimenColumn1 = new RegimenColumn(programId, "testName1", "testLabel1", "numeric", true);
     RegimenColumn regimenColumn2 = new RegimenColumn(programId, "testName2", "testLabel2", "numeric", true);
 
-    when(repository.getRegimenColumnsByProgramId(programId)).thenReturn(Arrays.asList(regimenColumn1, regimenColumn2));
+    when(repository.getRegimenColumnsByProgramId(programId)).thenReturn(asList(regimenColumn1, regimenColumn2));
 
     List<RegimenColumn> resultColumns = service.getRegimenColumnsByProgramId(programId);
 
@@ -106,4 +69,56 @@ public class RegimenColumnServiceTest {
     assertThat(resultColumns.get(1), is(regimenColumn2));
   }
 
+  @Test
+  public void shouldGetRegimenTemplateForProgram() throws Exception {
+    ArrayList<RegimenColumn> regimenColumns = new ArrayList<RegimenColumn>() {{
+      add(new RegimenColumn());
+    }};
+    RegimenTemplate regimenTemplate = new RegimenTemplate(1L, regimenColumns);
+    when(repository.getRegimenColumnsByProgramId(1L)).thenReturn(regimenColumns);
+    whenNew(RegimenTemplate.class).withArguments(1L, regimenColumns).thenReturn(regimenTemplate);
+
+    RegimenTemplate template = service.getRegimenTemplateOrMasterTemplate(1L);
+
+    verifyNew(RegimenTemplate.class).withArguments(1L, regimenColumns);
+    assertThat(template, is(regimenTemplate));
+    verify(repository).getRegimenColumnsByProgramId(1L);
+  }
+
+
+  @Test
+  public void shouldGetMasterRegimenTemplateForProgramIfRegimenTemplateNotConfigured() throws Exception {
+    ArrayList<RegimenColumn> regimenColumns = new ArrayList<>();
+    ArrayList<RegimenColumn> masterRegimenColumns = new ArrayList<RegimenColumn>() {{
+      add(new RegimenColumn());
+    }};
+
+    Long programId = 1L;
+    RegimenTemplate regimenTemplate = new RegimenTemplate(programId, masterRegimenColumns);
+    when(repository.getRegimenColumnsByProgramId(programId)).thenReturn(regimenColumns);
+    when(repository.getMasterRegimenColumnsByProgramId()).thenReturn(masterRegimenColumns);
+    whenNew(RegimenTemplate.class).withArguments(programId, masterRegimenColumns).thenReturn(regimenTemplate);
+
+    RegimenTemplate template = service.getRegimenTemplateOrMasterTemplate(programId);
+
+    verifyNew(RegimenTemplate.class).withArguments(programId, masterRegimenColumns);
+    assertThat(template, is(regimenTemplate));
+    verify(repository).getRegimenColumnsByProgramId(programId);
+    verify(repository).getMasterRegimenColumnsByProgramId();
+  }
+
+  @Test
+  public void shouldGetProgramRegimenTemplate() throws Exception {
+    List<RegimenColumn> regimenColumns = new ArrayList<>();
+    Long programId = 1L;
+    when(repository.getRegimenColumnsByProgramId(programId)).thenReturn(regimenColumns);
+    RegimenTemplate programRegimenTemplate = new RegimenTemplate();
+    whenNew(RegimenTemplate.class).withArguments(programId, regimenColumns).thenReturn(programRegimenTemplate);
+
+    RegimenTemplate regimenTemplate = service.getRegimenTemplateByProgramId(programId);
+
+    verifyNew(RegimenTemplate.class).withArguments(programId, regimenColumns);
+    assertThat(regimenTemplate, is(programRegimenTemplate));
+    verify(repository).getRegimenColumnsByProgramId(programId);
+  }
 }

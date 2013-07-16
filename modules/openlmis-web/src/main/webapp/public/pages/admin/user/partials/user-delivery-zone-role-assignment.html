@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="span2">
-        <a class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index, 'allocationRoles')"
+        <a href="" class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index, 'allocationRoles')"
            openlmis-message="button.remove"></a>
       </div>
     </div>
@@ -68,7 +68,7 @@
         <div class="fluid-grid-cell">
           <select name="selectDeliveryZoneProgram"
               ng-options="program.id as program.name group by program.status for program in deliveryZonePrograms"
-              ng-model="deliveryZoneRole.programId">
+              ng-model="deliveryZoneRole.programId" ng-change="checkDeliveryZoneAndProgramDuplicacy()">
             <option value="" openlmis-message="label.select.program"></option>
           </select>
           <span ng-show='!deliveryZoneRole.programId && showAllocationError' class="field-error"
@@ -91,7 +91,7 @@
 
       <div class="span2">
         <div class="fluid-grid-cell">
-          <a ng-click="addAllocationRole()" class="btn btn-primary" openlmis-message="button.add"></a>
+          <a href="" ng-click="addAllocationRole()" class="btn btn-primary" openlmis-message="button.add"></a>
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ScheduleController($scope, Schedules, Schedule, $location, messageService) {
+function ScheduleController($scope, Schedule, $location, messageService) {
   $scope.schedulesBackupMap = [];
   $scope.newSchedule = {};
   $scope.schedules = {};
@@ -19,7 +19,7 @@ function ScheduleController($scope, Schedules, Schedule, $location, messageServi
     };
   };
 
-  Schedules.get({}, function (data) {
+  Schedule.get({}, function (data) {
     $scope.initialSchedules = angular.copy(data.schedules, $scope.initialSchedules);
     $scope.schedules = data.schedules;
     for(var scheduleIndex in data.schedules){
@@ -37,7 +37,7 @@ function ScheduleController($scope, Schedules, Schedule, $location, messageServi
       return;
     }
     $scope.showErrorForCreate = false;
-    Schedules.save({}, $scope.newSchedule, function (data) {
+    Schedule.save({}, $scope.newSchedule, function (data) {
       $scope.schedules.unshift(data.schedule);
       $scope.completeAddNewSchedule(data.schedule);
       $scope.message = data.success;

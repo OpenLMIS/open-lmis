@@ -5,7 +5,7 @@
  */
 
 apply plugin: 'jetty'
-
+apply plugin: 'java'
 
 dependencies {
     compile 'org.seleniumhq.selenium:selenium-java:2.33.0',
@@ -30,6 +30,16 @@ dependencies {
     testCompile 'net.sf.json-lib:json-lib:0.9'
     testCompile 'postgresql:postgresql:9.0-801.jdbc4'
     testCompile project(':test-modules:test-core')
+
+    testCompile 'info.cukes:cucumber-core:1.1.2'
+    testCompile 'info.cukes:cucumber-java:1.1.2'
+    testCompile 'info.cukes:cucumber-html:0.2.3'
+    testCompile 'info.cukes:cucumber-junit:1.1.2'
+    testCompile 'info.cukes:cucumber-jvm:1.1.2'
+    testCompile 'info.cukes:cucumber-jvm-deps:1.0.3'
+    testCompile 'info.cukes:gherkin:2.12.0'
+    testCompile 'junit:junit:4.10'
+    testCompile 'postgresql:postgresql:9.0-801.jdbc4'
 }
 
 test {
@@ -59,6 +69,34 @@ task smokeTest(type: Test) {
 smokeTest.doFirst() {
     buildOpenLmis.execute()
 }
+
+task cucumberFunctional(type: Test) {
+    dependsOn assemble, compileTestJava
+    doLast {
+        htmlformat = "html:${buildDir}/reports/tests/bddTest-report-functional"
+        jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
+        javaexec {
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['-f',htmlformat, '-f',jsonformat,'--glue', 'org.openlmis.functional','--tags','@smoke', 'src/test/resources']
+        }
+    }
+}
+
+cucumberFunctional.doFirst() {
+    buildOpenLmis.execute()
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testRuntime
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
 
 task functionalTest(type: Test) {
     useTestNG() {

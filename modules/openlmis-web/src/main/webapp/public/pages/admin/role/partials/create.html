@@ -44,89 +44,91 @@
         <div class="row-fluid">
           <div class="span10">
             <table id="rightsTable" class = "rights-table table table-bordered">
-          <tr>
-            <td ng-click='showRoleTypeModal("ADMIN")'>
-              <div class = "form-inline" ng-class = "{'is-selected': role.type == 'ADMIN'}">
-                <label id = "adminRoleType"><h4 openlmis-message="create.role.adminRights"></h4></label >
-              </div >
-            </td>
+              <thead>
+                <tr>
+                  <th ng-click='showRoleTypeModal("ADMIN")'>
+                    <div class = "form-inline" ng-class = "{'is-selected': role.type == 'ADMIN'}">
+                      <label id = "adminRoleType"><h4 openlmis-message="create.role.adminRights"></h4></label >
+                    </div >
+                  </th>
 
-            <td ng-click='showRoleTypeModal("ALLOCATION")'>
-              <div class = "form-inline" ng-class = "{'is-selected': role.type == 'ALLOCATION'}">
-                <label id = "allocationRoleType"><h4 openlmis-message="label.allocation.program.rights"></h4></label >
-              </div >
-            </td>
+                  <th ng-click='showRoleTypeModal("ALLOCATION")'>
+                    <div class = "form-inline" ng-class = "{'is-selected': role.type == 'ALLOCATION'}">
+                      <label id = "allocationRoleType"><h4 openlmis-message="label.allocation.program.rights"></h4></label >
+                    </div >
+                  </th>
 
-            <td ng-click='showRoleTypeModal("REQUISITION")'>
-              <div class = "form-inline" ng-class = "{'is-selected': role.type == 'REQUISITION'}">
-                <label id = "requisitionRoleType"><h4 openlmis-message="label.request.program.rights"></h4></label >
-              </div >
-            </td>
-          <td ng-click='showRoleTypeModal("REPORT")'>
-              <div class = "form-inline" ng-class = "{'is-selected': role.type == 'REPORT'}">
-                  <label id = "reportRoleType"><h4 openlmis-message="label.report.rights"></h4></label >
-              </div >
-          </td>
-          </tr>
+                  <th ng-click='showRoleTypeModal("REQUISITION")'>
+                    <div class = "form-inline" ng-class = "{'is-selected': role.type == 'REQUISITION'}">
+                      <label id = "requisitionRoleType"><h4 openlmis-message="label.request.program.rights"></h4></label >
+                    </div >
+                  </th>
+                    <th ng-click='showRoleTypeModal("REPORT")'>
+                        <div class = "form-inline" ng-class = "{'is-selected': role.type == 'REPORT'}">
+                            <label id = "reportRoleType"><h4 openlmis-message="label.report.rights"></h4></label >
+                        </div >
+                    </th>  
+                    
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td ng-class = "{'is-disabled': role.type != 'ADMIN'}">
+                    <div>
+                      <div id = "rights-{{right.right}}" class = "checkbox-list clearfix" ng-repeat = "right in adminRights" tab-scroll>
+                        <input id = "{{right.right}}" type = "checkbox" ng-checked = "contains(right.right)"
+                               ng-click = "updateRights(checked,right)" ng-model = "checked"
+                               ng-disabled = "areRelatedFieldsSelected(right) || role.type != 'ADMIN'" />
+                        <label for = "{{right.right}}" ><span openlmis-message="right.rightName"></span></label >
+                      </div >
+                    </div >
+                    <span class = "field-error" ng-show = "showRightError && role.type=='ADMIN'" openlmis-message="create.role.selectRightWarning">
+                    </span >
+                  </td>
 
-          <tr>
-            <td ng-class = "{'is-disabled': role.type != 'ADMIN'}">
-              <div>
-                <div id = "rights-{{right.right}}" class = "checkbox-list clearfix" ng-repeat = "right in adminRights" tab-scroll>
-                  <input id = "{{right.right}}" type = "checkbox" ng-checked = "contains(right.right)"
-                         ng-click = "updateRights(checked,right)" ng-model = "checked"
-                         ng-disabled = "areRelatedFieldsSelected(right) || role.type != 'ADMIN'" />
-                  <label for = "{{right.right}}" ><span openlmis-message="right.rightName"></span></label >
-                </div >
-              </div >
-              <span class = "field-error" ng-show = "showRightError && role.type=='ADMIN'" openlmis-message="create.role.selectRightWarning">
-              </span >
-            </td>
+                  <td ng-class = "{'is-disabled': role.type != 'ALLOCATION'}">
+                    <div>
+                      <div id = "allocationRights-{{allocationRight.right}}" class = "checkbox-list clearfix"
+                         ng-repeat = "allocationRight in allocationRights" tab-scroll>
+                      <input id = "{{allocationRight.right}}" type = "checkbox" ng-checked = "contains(allocationRight.right)"
+                             ng-click = "updateRights(checked,allocationRight)" ng-model = "checked"
+                             ng-disabled = "areRelatedFieldsSelected(allocationRight) || role.type != 'ALLOCATION'" />
+                      <label for = "{{allocationRight.right}}" ><span openlmis-message="allocationRight.rightName"></span></label >
+                    </div >
+                    </div>
+                    <span class = "field-error" ng-show = "showRightError && role.type=='ALLOCATION'" openlmis-message="create.role.selectRightWarning">
+                    </span >
+                  </td>
 
-            <td ng-class = "{'is-disabled': role.type != 'ALLOCATION'}">
-              <div>
-                <div id = "allocationRights-{{allocationRight.right}}" class = "checkbox-list clearfix"
-                   ng-repeat = "allocationRight in allocationRights" tab-scroll>
-                <input id = "{{allocationRight.right}}" type = "checkbox" ng-checked = "contains(allocationRight.right)"
-                       ng-click = "updateRights(checked,allocationRight)" ng-model = "checked"
-                       ng-disabled = "areRelatedFieldsSelected(allocationRight) || role.type != 'ALLOCATION'" />
-                <label for = "{{allocationRight.right}}" ><span openlmis-message="allocationRight.rightName"></span></label >
-              </div >
-              </div>
-              <span class = "field-error" ng-show = "showRightError && role.type=='ALLOCATION'" openlmis-message="create.role.selectRightWarning">
-              </span >
-            </td>
-
-            <td ng-class = "{'is-disabled': role.type != 'REQUISITION'}">
-              <div>
-                <div id = "requisitionRights-{{requisitionRight.right}}" class = "checkbox-list clearfix"
-                   ng-repeat = "requisitionRight in requisitionRights" tab-scroll>
-                <input id = "{{requisitionRight.right}}" type = "checkbox" ng-checked = "contains(requisitionRight.right)"
-                       ng-click = "updateRights(checked,requisitionRight)" ng-model = "checked"
-                       ng-disabled = "areRelatedFieldsSelected(requisitionRight) || role.type != 'REQUISITION'" />
-                <label for = "{{requisitionRight.right}}" ><span openlmis-message="requisitionRight.rightName"></span></label >
-              </div >
-              </div>
-              <span class = "field-error" ng-show = "showRightError && role.type=='REQUISITION'" openlmis-message="create.role.selectRightWarning">
-              </span >
-            </td>
-
-          <td ng-class = "{'is-disabled': role.type != 'REPORT'}">
-              <div>
-                  <div id = "reportRights-{{reportRight.right}}" class = "checkbox-list clearfix"
-                       ng-repeat = "reportRight in reportRights" tab-scroll>
-                      <input id = "{{reportRight.right}}" type = "checkbox" ng-checked = "contains(reportRight.right)"
-                             ng-click = "updateRights(checked,reportRight)" ng-model = "checked"
-                             ng-disabled = "areRelatedFieldsSelected(reportRight) || role.type != 'REPORT'" />
-                      <label for = "{{reportRight.right}}" ><span openlmis-message="reportRight.rightName"></span></label >
-                  </div >
-              </div>
-          <span class = "field-error" ng-show = "showRightError && role.type=='REPORT'" openlmis-message="create.role.selectRightWarning">
-          </span >
-          </td>
-
-          </tr>
-        </table>
+                  <td ng-class = "{'is-disabled': role.type != 'REQUISITION'}">
+                    <div>
+                      <div id = "requisitionRights-{{requisitionRight.right}}" class = "checkbox-list clearfix"
+                         ng-repeat = "requisitionRight in requisitionRights" tab-scroll>
+                      <input id = "{{requisitionRight.right}}" type = "checkbox" ng-checked = "contains(requisitionRight.right)"
+                             ng-click = "updateRights(checked,requisitionRight)" ng-model = "checked"
+                             ng-disabled = "areRelatedFieldsSelected(requisitionRight) || role.type != 'REQUISITION'" />
+                      <label for = "{{requisitionRight.right}}" ><span openlmis-message="requisitionRight.rightName"></span></label >
+                    </div >
+                    </div>
+                    <span class = "field-error" ng-show = "showRightError && role.type=='REQUISITION'" openlmis-message="create.role.selectRightWarning">
+                    </span >
+                  </td>
+                    <td ng-class = "{'is-disabled': role.type != 'REPORT'}">
+                        <div>
+                            <div id = "reportRights-{{reportRight.right}}" class = "checkbox-list clearfix"
+                                 ng-repeat = "reportRight in reportRights" tab-scroll>
+                                <input id = "{{reportRight.right}}" type = "checkbox" ng-checked = "contains(reportRight.right)"
+                                       ng-click = "updateRights(checked,reportRight)" ng-model = "checked"
+                                       ng-disabled = "areRelatedFieldsSelected(reportRight) || role.type != 'REPORT'" />
+                                <label for = "{{reportRight.right}}" ><span openlmis-message="reportRight.rightName"></span></label >
+                            </div >
+                        </div>
+                        <span class = "field-error" ng-show = "showRightError && role.type=='REPORT'" openlmis-message="create.role.selectRightWarning">
+                        </span >
+                    </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 

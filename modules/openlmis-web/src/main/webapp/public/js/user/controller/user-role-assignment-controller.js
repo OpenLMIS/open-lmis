@@ -34,6 +34,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
 
     $scope.deliveryZonePrograms = $scope.deliveryZoneRoles = [];
     $scope.deliveryZoneRole.programId = undefined;
+    $scope.checkDeliveryZoneAndProgramDuplicacy();
 
     if (isUndefined($scope.deliveryZoneRole.deliveryZone.id)) return;
 
@@ -110,11 +111,23 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     }
   };
 
+  $scope.checkSupervisoryRolesDuplicacy = function() {
+    var result = _.find($scope.user.supervisorRoles, function (roleAssignment) {
+      return (roleAssignment.programId == $scope.selectedProgramIdToSupervise && roleAssignment.supervisoryNode.id == $scope.selectedSupervisoryNodeIdToSupervise)
+    });
+
+    if (result) {
+      $scope.duplicateSupervisorRoleError = messageService.get('error.duplicate.programNode.combination');
+      return true;
+    }
+    $scope.duplicateSupervisorRoleError = undefined;
+    return false;
+  };
+
   $scope.addSupervisoryRole = function () {
     if (isPresent($scope.selectedProgramIdToSupervise) && isPresent($scope.selectedSupervisoryNodeIdToSupervise) && isPresent($scope.selectedRoleIdsToSupervise)) {
       var newRoleAssignment = {programId: $scope.selectedProgramIdToSupervise, supervisoryNode: {id: $scope.selectedSupervisoryNodeIdToSupervise}, roleIds: $scope.selectedRoleIdsToSupervise};
-      if (isDuplicateSupervisoryRole(newRoleAssignment)) {
-        $scope.duplicateSupervisorRoleError = messageService.get('error.duplicate.programNode.combination');
+      if ($scope.checkSupervisoryRolesDuplicacy()) {
         return;
       }
       addSupervisoryRole(newRoleAssignment);
@@ -129,16 +142,6 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
       $scope.selectedRoleIdsToSupervise = null;
       $scope.$parent.showSupervisorRoleMappingError = false;
       $scope.duplicateSupervisorRoleError = undefined;
-    }
-
-    function isDuplicateSupervisoryRole(newRoleAssignment) {
-      var result = _.find($scope.user.supervisorRoles, function (roleAssignment) {
-        return (roleAssignment.programId == newRoleAssignment.programId && roleAssignment.supervisoryNode.id == newRoleAssignment.supervisoryNode.id)
-      });
-
-      if (result)return true;
-
-      return false;
     }
 
     function addSupervisoryRole(newRoleAssignment) {
@@ -161,14 +164,22 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     return valid;
   }
 
+  $scope.checkDeliveryZoneAndProgramDuplicacy = function() {
+    if (!validate()) {
+      $scope.duplicateAllocationRoleError = 'error.delivery.zone.program.combination';
+      return true;
+    }
+    $scope.duplicateAllocationRoleError = undefined;
+    return false;
+  };
+
   $scope.addAllocationRole = function () {
     $scope.user.allocationRoles = $scope.user.allocationRoles ? $scope.user.allocationRoles : [];
     $scope.showAllocationError = true;
 
     if (!$scope.deliveryZoneRole.deliveryZone.id || !$scope.deliveryZoneRole.programId || !$scope.deliveryZoneRole.roleIds || !$scope.deliveryZoneRole.roleIds.length) return;
 
-    if (!validate()) {
-      $scope.duplicateAllocationRoleError = 'error.delivery.zone.program.combination';
+    if ($scope.checkDeliveryZoneAndProgramDuplicacy()) {
       return;
     }
 

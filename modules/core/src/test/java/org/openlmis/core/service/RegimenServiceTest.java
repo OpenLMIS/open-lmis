@@ -9,8 +9,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.repository.RegimenRepository;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,28 +41,11 @@ public class RegimenServiceTest {
     }};
   }
 
+  @Test
   public void shouldSaveARegimens() {
-    service.save(1L, regimens,1L );
-    verify(repository).insert(regimen);
-    verify(repository).deleteByProgramId(1L);
-    verify(programService).setRegimenTemplateConfigured(1L);
+    service.save(regimens, 1L);
+    verify(repository).save(regimens, 1L);
   }
-
-  @Test
-  public void shouldSetRegimenTemplateConfiguredOnSave() {
-    regimen.setProgramId(1L);
-    service.save(null, regimens, 1L);
-    verify(programService).setRegimenTemplateConfigured(1L);
-  }
-
-  @Test
-  public void shouldSetRegimenTemplateConfiguredOnSaveEvenOnNoRegimens() {
-    regimen.setProgramId(1L);
-    service.save(null, new ArrayList<Regimen>(), 1L);
-    verify(programService).setRegimenTemplateConfigured(1L);
-  }
-
-
 
   @Test
   public void shouldGetRegimensByProgram() {
@@ -79,7 +60,7 @@ public class RegimenServiceTest {
   }
 
   @Test
-  public void shouldGetAllRegimenCategories(){
+  public void shouldGetAllRegimenCategories() {
     List<RegimenCategory> expectedRegimenCategories = new ArrayList<>();
     when(repository.getAllRegimenCategories()).thenReturn(expectedRegimenCategories);
 

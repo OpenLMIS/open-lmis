@@ -240,8 +240,8 @@ public class RequisitionMapperIT {
     DateTime date2 = date1.plusMonths(1);
 
     ProcessingPeriod processingPeriod4 = make(a(defaultProcessingPeriod,
-        with(scheduleId, processingSchedule.getId()),
-        with(ProcessingPeriodBuilder.name, "Period4")));
+      with(scheduleId, processingSchedule.getId()),
+      with(ProcessingPeriodBuilder.name, "Period4")));
     processingPeriod4.setStartDate(new Date());
 
     processingPeriodMapper.insert(processingPeriod4);
@@ -309,7 +309,7 @@ public class RequisitionMapperIT {
   }
 
   private Rnr insertRequisition(ProcessingPeriod period, RnrStatus status) {
-    Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, period.getId(), MODIFIED_BY);
+    Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, period.getId(), MODIFIED_BY, 1L);
     rnr.setStatus(status);
     rnr.setModifiedDate(new Date());
     rnr.setSubmittedDate(new Date(111111L));
@@ -318,7 +318,7 @@ public class RequisitionMapperIT {
   }
 
   private RnrLineItem insertRnrLineItem(Rnr rnr, FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
-    RnrLineItem item = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, 1L);
+    RnrLineItem item = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, 1L, 1L);
     lineItemMapper.insert(item);
     return item;
   }
@@ -350,8 +350,8 @@ public class RequisitionMapperIT {
 
   private ProcessingPeriod insertPeriod(String name) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-        with(scheduleId, processingSchedule.getId()),
-        with(ProcessingPeriodBuilder.name, name)));
+      with(scheduleId, processingSchedule.getId()),
+      with(ProcessingPeriodBuilder.name, name)));
 
     processingPeriodMapper.insert(processingPeriod);
 

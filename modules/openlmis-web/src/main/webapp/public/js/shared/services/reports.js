@@ -48,6 +48,10 @@ services.factory('AdjustmentSummaryReport', function ($resource) {
     return $resource('/reports/reportdata/adjustmentSummary.json', {}, {});
 });
 
+services.factory('OrderReport', function ($resource) {
+    return $resource('/reports/reportdata/viewOrders.json', {}, {});
+});
+
 services.factory('AdjustmentTypes', function($resource){
     return $resource('/reports/adjustmentTypes.json', {}, {});
 });

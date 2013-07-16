@@ -6,7 +6,7 @@
 
 describe('CreateRequisitionController', function () {
   var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns, regimenColumnList,
-    lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService;
+    lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate;
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
@@ -48,6 +48,8 @@ describe('CreateRequisitionController', function () {
     regimenColumnList = [
       {"testField": "test"}
     ];
+    regimenTemplate = {regimenColumns: regimenColumnList};
+
     lossesAndAdjustmentTypes = {"lossAdjustmentTypes": {"name": "damaged"}};
 
     var category1 = {"id": 1, "name": "cat1", "code": "cat1Code"};
@@ -84,7 +86,7 @@ describe('CreateRequisitionController', function () {
       {right: 'AUTHORIZE_REQUISITION'}
     ];
 
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition, rnrColumns: rnrColumns, regimenColumnList: regimenColumnList,
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition, rnrColumns: rnrColumns, regimenTemplate: regimenTemplate,
       currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
   }));
@@ -303,7 +305,7 @@ describe('CreateRequisitionController', function () {
 
     var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "INITIATED"};
 
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenColumnList: regimenColumnList,
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenTemplate: regimenTemplate,
       currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(scope.formDisabled).toEqual(false);
@@ -312,7 +314,7 @@ describe('CreateRequisitionController', function () {
   it('should not set disable flag if rnr is submitted and user have authorize right', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "SUBMITTED"};
 
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenColumnList: regimenColumnList,
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenTemplate: regimenTemplate,
       currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(scope.formDisabled).toEqual(false);
@@ -320,14 +322,14 @@ describe('CreateRequisitionController', function () {
 
   it('should set disable flag if rnr is not initiated/submitted', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "some random status"};
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenColumnList: regimenColumnList,
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenTemplate: regimenTemplate,
       currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
     expect(scope.formDisabled).toEqual(true);
   });
 
   it('should make rnr in scope as Rnr Instance', function () {
     var spyRnr = spyOn(window, 'Rnr').andCallThrough();
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition, rnrColumns: rnrColumns, regimenColumnList: regimenColumnList,
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition, rnrColumns: rnrColumns, regimenTemplate: regimenTemplate,
       currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(scope.rnr instanceof Rnr).toBeTruthy();
@@ -542,6 +544,48 @@ describe('CreateRequisitionController', function () {
   it('should check permission using requisition rights', function () {
     expect(scope.hasPermission('CREATE_REQUISITION')).toBeTruthy()
   })
+  it('should set regimenLineItemInValid as true if the required fields are missing', function () {
+
+    var regimenLineItems = [
+      {"id": 6, "rnrId": 2, "code": "001", "name": "REGIMEN1", "patientsOnTreatment": 1, "patientsToInitiateTreatment": 7,
+        "category": {"name": "Adults", "displayOrder": 1}},
+      {"id": 7, "rnrId": 2, "code": "002", "name": "REGIMEN2", "patientsOnTreatment": 1, "patientsToInitiateTreatment": 7, "patientsStoppedTreatment": 4,
+        "category": {"name": "Adults", "displayOrder": 1}}
+    ];
+
+    var rnr = new Rnr({"id": "1", "regimenLineItems": regimenLineItems});
+
+    scope.rnr = rnr;
+
+    spyOn(messageService, 'get').andReturn('some message');
+
+    scope.submitRnr();
+
+    expect(scope.regimenLineItemInValid).toBeTruthy();
+    expect(scope.submitError).toEqual('some message');
+  });
+
+  it('should set regimenLineItemInValid as false if the required fields are not missing', function () {
+
+    var regimenLineItems = [
+      {"id": 6, "rnrId": 2, "code": "001", "name": "REGIMEN1", "patientsOnTreatment": 1, "patientsToInitiateTreatment": 7, "patientsStoppedTreatment": 5,
+        "category": {"name": "Adults", "displayOrder": 1}},
+      {"id": 7, "rnrId": 2, "code": "002", "name": "REGIMEN2", "patientsOnTreatment": 1, "patientsToInitiateTreatment": 7, "patientsStoppedTreatment": 4,
+        "category": {"name": "Adults", "displayOrder": 1}}
+    ];
+
+    var rnr = new Rnr({"id": "1", "regimenLineItems": regimenLineItems});
+
+    scope.rnr = rnr;
+
+    spyOn(messageService, 'get').andReturn('some message');
+
+    scope.submitRnr();
+
+    expect(scope.regimenLineItemInValid).toBeFalsy();
+    expect(scope.error).toEqual("");
+  });
+
 
 });
 

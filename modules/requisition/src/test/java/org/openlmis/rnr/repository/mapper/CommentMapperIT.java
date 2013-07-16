@@ -19,12 +19,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -89,7 +86,7 @@ public class CommentMapperIT {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, processingSchedule.getId())));
     processingPeriodMapper.insert(processingPeriod);
 
-    requisition = new Rnr(facility.getId(), HIV, processingPeriod.getId(), MODIFIED_BY);
+    requisition = new Rnr(facility.getId(), HIV, processingPeriod.getId(), MODIFIED_BY, 1L);
     requisition.setStatus(INITIATED);
     requisitionMapper.insert(requisition);
 
@@ -107,14 +104,14 @@ public class CommentMapperIT {
 
   @Test
   public void shouldGetAllCommentsForARnR() throws Exception {
-    mapper.insert(new Comment(requisition.getId(), user, "A new Comment1",null));
+    mapper.insert(new Comment(requisition.getId(), user, "A new Comment1", null));
 
     List<Comment> listOfComments = mapper.getByRnrId(requisition.getId());
 
     Comment comment = listOfComments.get(0);
-    assertThat(listOfComments.size(),is(1));
+    assertThat(listOfComments.size(), is(1));
     assertThat(comment.getCommentText(), is("A new Comment1"));
     assertThat(comment.getAuthor().getId(), is(user.getId()));
-    assertThat(comment.getCreatedDate(),is(notNullValue()));
+    assertThat(comment.getCreatedDate(), is(notNullValue()));
   }
 }

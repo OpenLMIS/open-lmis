@@ -20,9 +20,11 @@ import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.RegimenColumn;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.core.service.RegimenColumnService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
@@ -34,7 +36,6 @@ import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.configurationReader.StaticReferenceDataReader;
 import org.openlmis.web.response.OpenLmisResponse;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
@@ -54,14 +55,12 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.openlmis.rnr.service.RequisitionService.RNR_SUBMITTED_SUCCESSFULLY;
 import static org.openlmis.web.controller.RequisitionController.*;
-import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
@@ -83,12 +82,16 @@ public class RequisitionControllerTest {
   @Mock
   private MessageService messageService;
 
+  @Mock
+  private RegimenColumnService regimenColumnService;
+
   private MockHttpServletRequest request;
 
   @InjectMocks
   private RequisitionController controller;
 
   private Rnr rnr;
+
 
   @Before
   public void setUp() throws Exception {
@@ -307,7 +310,7 @@ public class RequisitionControllerTest {
     whenNew(Program.class).withArguments(2L).thenReturn(program);
     boolean withoutLineItems = true;
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facility.getId(), program.getId(),
-        processingPeriod.getId(), withoutLineItems);
+      processingPeriod.getId(), withoutLineItems);
     when(requisitionService.get(criteria)).thenReturn(asList(rnr));
 
     when(requisitionService.getAllPeriodsForInitiatingRequisition(1L, 2L)).thenReturn(periodList);
@@ -377,6 +380,8 @@ public class RequisitionControllerTest {
     when(requisitionService.getLossesAndAdjustmentsTypes()).thenReturn(lossesAndAdjustmentTypes);
     when(rnrTemplateService.fetchColumnsForRequisition(programId)).thenReturn(rnrTemplate);
     when(staticReferenceDataReader.getCurrency()).thenReturn("$");
+    List<RegimenColumn> regimenTemplate = new ArrayList<>();
+    when(regimenColumnService.getRegimenColumnsByProgramId(programId)).thenReturn(regimenTemplate);
     ModelAndView modelAndView = controller.printRequisition(rnrId);
 
     assertThat((Rnr) modelAndView.getModel().get(RNR), is(rnr));
@@ -435,7 +440,7 @@ public class RequisitionControllerTest {
       public boolean matches(Object argument) {
         RequisitionSearchCriteria searchCriteria = (RequisitionSearchCriteria) argument;
         return searchCriteria.getFacilityId().equals(facilityId) && searchCriteria.getProgramId().equals(programId) && searchCriteria.getPeriodId().equals(
-            periodId);
+          periodId);
       }
     };
   }

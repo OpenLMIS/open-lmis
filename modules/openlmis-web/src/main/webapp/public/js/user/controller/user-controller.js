@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function UserController($scope, $location, $dialog, User, Facility, messageService, user, roles, programs, supervisoryNodes, deliveryZones) {
+function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles, programs, supervisoryNodes, deliveryZones) {
 
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
@@ -93,9 +93,9 @@ function UserController($scope, $location, $dialog, User, Facility, messageServi
     if (!requiredFieldsPresent($scope.user))  return false;
 
     if ($scope.user.id) {
-      User.update({id: $scope.user.id}, $scope.user, successHandler, errorHandler);
+      Users.update({id: $scope.user.id}, $scope.user, successHandler, errorHandler);
     } else {
-      User.save({}, $scope.user, successHandler, errorHandler);
+      Users.save({}, $scope.user, successHandler, errorHandler);
     }
     return true;
   };
@@ -183,12 +183,12 @@ function UserController($scope, $location, $dialog, User, Facility, messageServi
 
 UserController.resolve = {
 
-  user: function ($q, User, $route, $timeout) {
+  user: function ($q, Users, $route, $timeout) {
     var userId = $route.current.params.userId;
     if (!userId) return undefined;
     var deferred = $q.defer();
     $timeout(function () {
-      User.get({id: userId}, function (data) {
+      Users.get({id: userId}, function (data) {
         deferred.resolve(data.user);
       }, function () {
       });

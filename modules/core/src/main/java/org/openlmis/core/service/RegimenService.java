@@ -17,13 +17,8 @@ public class RegimenService {
   @Autowired
   ProgramService programService;
 
-  public void save(Long programId, List<Regimen> regimens, Long userId) {
-    repository.deleteByProgramId(programId);
-    for (Regimen regimen : regimens) {
-      regimen.setCreatedBy(userId);
-      repository.insert(regimen);
-    }
-    programService.setRegimenTemplateConfigured(programId);
+  public void save(List<Regimen> regimens, Long userId) {
+    repository.save(regimens, userId);
   }
 
   public List<Regimen> getByProgram(Long programId) {
