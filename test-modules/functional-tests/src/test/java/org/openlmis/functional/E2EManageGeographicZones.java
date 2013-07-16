@@ -28,11 +28,20 @@ public class E2EManageGeographicZones extends TestCaseHelper {
     }
 
     @Test(groups = {"functional2"},dataProvider = "Data-Provider-Function-Positive")
-    public void testE2EManageGeographicZones (String [] credentials ) throws IOException{
+    public void testE2EManageGeographicZonesAddFunctionality (String [] credentials ) throws IOException{
         LoginPage loginPage = new LoginPage(testWebDriver,baseUrlGlobal);
         HomePage homePage = loginPage.loginAs(credentials[0],credentials[1]);
         ManageGeographicZonesPage manageGeographicZonesPage = homePage.navigateToGeographicZone();
         manageGeographicZonesPage.EnterAndVerifyNewGeographicZone("Code123","Test123","1","2");
+    }
+
+    @Test(groups = {"functional2"},dataProvider = "Data-Provider-Function-Positive")
+    public void testE2EManageGeographicZonesAddAndEditFunctionality (String [] credentials ) throws IOException{
+        LoginPage loginPage = new LoginPage(testWebDriver,baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[0],credentials[1]);
+        ManageGeographicZonesPage manageGeographicZonesPage = homePage.navigateToGeographicZone();
+        manageGeographicZonesPage.EnterAndVerifyNewGeographicZone("Code123","Test123","1","2");
+        manageGeographicZonesPage.EnterAGeographicZoneAndConfirmEditWorks("Code123","Test123","Test123_Edited","1","2");
     }
 
     @AfterMethod
