@@ -165,10 +165,10 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     $scope.approvedQuantityRequiredFlag = true;
     resetFlags();
     resetErrorPages();
-    $scope.saveRnr(true);
     var error = validateAndSetErrorClass();
     if (error) {
       setErrorPages();
+      $scope.saveRnr(true);
       $scope.error = error;
       $scope.message = '';
       return;
