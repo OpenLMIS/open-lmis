@@ -9,8 +9,18 @@
     <table id="regimenTable" fixed-table-header class="table table-bordered scrollable">
       <thead>
       <tr>
-        <th ng-repeat="regimenColumn in visibleRegimenColumns"
-            ng-bind="regimenColumn.label">
+        <th class="col-{{regimenColumn.name}}" ng-repeat="regimenColumn in visibleRegimenColumns">
+          <ng-switch on="regimenColumn.label">
+            <div ng-switch-when="header.name">
+              <div class="regimen-heading" openlmis-message="header.name"></div>
+            </div>
+            <div class="regimen-heading" ng-switch-when="header.code">
+              <span openlmis-message="header.code"></span>
+            </div>
+            <div class="regimen-heading" ng-switch-default>
+              <span ng-bind="regimenColumn.label"/>
+            </div>
+          </ng-switch>
         </th>
       </tr>
       </thead>
