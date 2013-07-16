@@ -272,8 +272,8 @@ public class TestCaseHelper {
 
         Integer population = Integer.parseInt(populationValue);
         Float ratio = Float.parseFloat(ratioValue) / 100;
-        Integer dossesPerYear = Integer.parseInt(dosesPerYearValue);
-        Float wastage = (Float.parseFloat(wastageValue) / 100) + 1;
+        Integer dosesPerYear = Integer.parseInt(dosesPerYearValue);
+        Float wastage = Float.parseFloat(wastageValue);
         Float bufferPercentage = (Float.parseFloat(bufferPercentageValue) / 100) + 1;
 
         if (minimumValue!=null){
@@ -283,7 +283,7 @@ public class TestCaseHelper {
 
         Integer adjustment = Integer.parseInt(adjustmentValue);
 
-        calculatedISA = (((population * ratio * dossesPerYear * wastage) / 12) * bufferPercentage) + adjustment;
+        calculatedISA = (((population * ratio * dosesPerYear * wastage) / 12) * bufferPercentage) + adjustment;
 
         if (calculatedISA <= minimum && minimum!=0.0)
                 return (minimumValue);
