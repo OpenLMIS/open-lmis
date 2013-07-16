@@ -44,7 +44,7 @@ public class ViewRequisition extends TestCaseHelper {
   public static final String patientsStoppedTreatment = "300";
   public static final String remarks = "testing";
 
-  @BeforeMethod(groups = {"smoke","functional"})
+  @BeforeMethod(groups = {"smoke", "functional"})
   public void setUp() throws Exception {
     super.setup();
   }
@@ -87,7 +87,7 @@ public class ViewRequisition extends TestCaseHelper {
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Including-Regimen")
-  public void testViewRequisitionAndRegimen(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2)  throws Exception {
+  public void testViewRequisitionAndRegimen(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
@@ -173,15 +173,14 @@ public class ViewRequisition extends TestCaseHelper {
     verifyValuesOnRegimenScreen(initiateRnRPage, patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
   }
 
-  private void verifyValuesOnRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsontreatment, String patientstoinitiatetreatment, String patientsstoppedtreatment, String remarks )
-  {
-    assertEquals(patientsontreatment,initiateRnRPage.getPatientsOnTreatmentValue());
-    assertEquals(patientstoinitiatetreatment,initiateRnRPage.getPatientsToInitiateTreatmentValue());
-    assertEquals(patientsstoppedtreatment,initiateRnRPage.getPatientsStoppedTreatmentValue());
-    assertEquals(remarks,initiateRnRPage.getRemarksValue());
+  private void verifyValuesOnRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsontreatment, String patientstoinitiatetreatment, String patientsstoppedtreatment, String remarks) {
+    assertEquals(patientsontreatment, initiateRnRPage.getPatientsOnTreatmentValue());
+    assertEquals(patientstoinitiatetreatment, initiateRnRPage.getPatientsToInitiateTreatmentValue());
+    assertEquals(patientsstoppedtreatment, initiateRnRPage.getPatientsStoppedTreatmentValue());
+    assertEquals(remarks, initiateRnRPage.getRemarksValue());
   }
 
-  @AfterMethod(groups = {"smoke","functional"})
+  @AfterMethod(groups = {"smoke", "functional"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);

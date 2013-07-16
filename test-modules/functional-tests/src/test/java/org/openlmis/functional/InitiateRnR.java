@@ -111,7 +111,7 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage2 = homePage.clickProceed();
     initiateRnRPage2.clickRegimenTab();
-    verifyValuesOnRegimenScreen(initiateRnRPage2,"100","200","300","400");
+    verifyValuesOnAuthorizeRegimenScreen(initiateRnRPage2,"100","200","300","400");
     initiateRnRPage2.clickAuthorizeButton();
     initiateRnRPage2.clickOk();
     initiateRnRPage2.verifyAuthorizeRnrSuccessMsg();
@@ -205,6 +205,14 @@ public class InitiateRnR extends TestCaseHelper {
     assertEquals(patientstoinitiatetreatment,initiateRnRPage.getPatientsToInitiateTreatmentValue());
     assertEquals(patientsstoppedtreatment,initiateRnRPage.getPatientsStoppedTreatmentValue());
     assertEquals(remarks,initiateRnRPage.getRemarksValue());
+  }
+
+  private void verifyValuesOnAuthorizeRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsontreatment, String patientstoinitiatetreatment, String patientsstoppedtreatment, String remarks )
+  {
+    assertEquals(patientsontreatment,initiateRnRPage.getPatientsOnTreatmentInputValue());
+    assertEquals(patientstoinitiatetreatment,initiateRnRPage.getPatientsToInitiateTreatmentInputValue());
+    assertEquals(patientsstoppedtreatment,initiateRnRPage.getPatientsStoppedTreatmentInputValue());
+    assertEquals(remarks,initiateRnRPage.getRemarksInputValue());
   }
 
 

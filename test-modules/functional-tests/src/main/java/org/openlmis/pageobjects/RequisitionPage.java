@@ -66,14 +66,23 @@ public class RequisitionPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='submitSuccessMsgDiv' and @openlmis-message='submitMessage']")
   private static WebElement submitSuccessMessage;
 
-  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[3]/ng-switch/span/input")
+  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[3]/ng-switch/span/span")
   private static WebElement patientsOnTreatmentTextField;
-  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[4]/ng-switch/span/input")
+  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[4]/ng-switch/span/span")
   private static WebElement patientsToInitiateTreatmentTextField;
-  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[5]/ng-switch/span/input")
+  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[5]/ng-switch/span/span")
   private static WebElement patientsStoppedTreatmentTextField;
-  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[6]/ng-switch/span/input")
+  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[6]/ng-switch/span/span")
   private static WebElement remarksTextField;
+
+  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[3]/ng-switch/span/input")
+  private static WebElement patientsOnTreatmentInputField;
+  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[4]/ng-switch/span/input")
+  private static WebElement patientsToInitiateTreatmentInputField;
+  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[5]/ng-switch/span/input")
+  private static WebElement patientsStoppedTreatmentInputField;
+  @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[6]/ng-switch/span/input")
+  private static WebElement remarksInputField;
 
 
   protected RequisitionPage(TestWebDriver driver) {
@@ -217,22 +226,42 @@ public class RequisitionPage extends Page {
 
   public String getPatientsOnTreatmentValue() {
     testWebDriver.waitForElementToAppear(patientsOnTreatmentTextField);
-    return testWebDriver.getAttribute(patientsOnTreatmentTextField, "value");
+    return testWebDriver.getText(patientsOnTreatmentTextField);
   }
 
   public String getPatientsToInitiateTreatmentValue() {
     testWebDriver.waitForElementToAppear(patientsToInitiateTreatmentTextField);
-    return testWebDriver.getAttribute(patientsToInitiateTreatmentTextField, "value");
+    return testWebDriver.getText(patientsToInitiateTreatmentTextField);
   }
 
   public String getPatientsStoppedTreatmentValue() {
     testWebDriver.waitForElementToAppear(patientsStoppedTreatmentTextField);
-    return testWebDriver.getAttribute(patientsStoppedTreatmentTextField, "value");
+    return testWebDriver.getText(patientsStoppedTreatmentTextField);
   }
 
   public String getRemarksValue() {
     testWebDriver.waitForElementToAppear(remarksTextField);
-    return testWebDriver.getAttribute(remarksTextField, "value");
+    return testWebDriver.getText(remarksTextField);
+  }
+
+  public String getPatientsOnTreatmentInputValue() {
+    testWebDriver.waitForElementToAppear(patientsOnTreatmentInputField);
+    return testWebDriver.getAttribute(patientsOnTreatmentInputField, "value");
+  }
+
+  public String getPatientsToInitiateTreatmentInputValue() {
+    testWebDriver.waitForElementToAppear(patientsToInitiateTreatmentInputField);
+    return testWebDriver.getAttribute(patientsToInitiateTreatmentInputField, "value");
+  }
+
+  public String getPatientsStoppedTreatmentInputValue() {
+    testWebDriver.waitForElementToAppear(patientsStoppedTreatmentInputField);
+    return testWebDriver.getAttribute(patientsStoppedTreatmentInputField, "value");
+  }
+
+  public String getRemarksInputValue() {
+    testWebDriver.waitForElementToAppear(remarksInputField);
+    return testWebDriver.getAttribute(remarksInputField, "value");
   }
 
   public void clickSaveButton() {
