@@ -37,8 +37,8 @@ public class ProgramSupportedService {
     repository.addSupportedProgramsFor(facility);
   }
 
-  public void updateSupportedPrograms(Facility facility, List<ProgramSupported> programsForFacility) {
-    repository.updateSupportedPrograms(facility, programsForFacility);
+  public void updateSupportedPrograms(Facility facility) {
+    repository.updateSupportedPrograms(facility);
   }
 
   public ProgramSupported getFilledByFacilityIdAndProgramId(Long facilityId, Long programId) {

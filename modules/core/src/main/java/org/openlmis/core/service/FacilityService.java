@@ -8,6 +8,7 @@ package org.openlmis.core.service;
 
 
 import lombok.NoArgsConstructor;
+import org.apache.log4j.Logger;
 import org.ict4h.atomfeed.server.service.Event;
 import org.ict4h.atomfeed.server.service.EventService;
 import org.joda.time.DateTime;
@@ -45,6 +46,8 @@ public class FacilityService {
   private EventService eventService;
 
 
+  private static final Logger logger = Logger.getLogger(FacilityService.class);
+
   @Transactional
   public void insert(Facility facility) {
     save(facility);
@@ -54,7 +57,7 @@ public class FacilityService {
   @Transactional
   public void update(Facility facility) {
     save(facility);
-    programSupportedService.updateSupportedPrograms(facility, programSupportedService.getAllByFacilityId(facility.getId()));
+    programSupportedService.updateSupportedPrograms(facility);
   }
 
   public List<Facility> getAll() {
@@ -83,13 +86,10 @@ public class FacilityService {
     return facility;
   }
 
-  public Facility updateDataReportableAndActiveFor(Facility facility) {
-    Facility updatedFacility = facilityRepository.updateDataReportableAndActiveFor(facility);
-    updatedFacility.setSupportedPrograms(programSupportedService.getAllByFacilityId(facility.getId()));
+  public void updateDataReportableAndActiveFor(Facility facility) {
+    facilityRepository.updateDataReportableAndActiveFor(facility);
 
     getFacilityAndNotify(facility);
-
-    return updatedFacility;
   }
 
   private void getFacilityAndNotify(Facility facility) {
@@ -119,9 +119,10 @@ public class FacilityService {
   private void notifyFacilityFeed(Facility facility) {
     try {
       FacilityFeedDTO facilityFeedDTO = new FacilityFeedDTO(facility);
-      eventService.notify(new Event(UUID.randomUUID().toString(), "Facility", DateTime.now(), "", facilityFeedDTO.getSerializedContents(), "facility"));
+      eventService.notify(new Event(UUID.randomUUID().toString(), "Facility", DateTime.now(), "",
+        facilityFeedDTO.getSerializedContents(), "facility"));
     } catch (URISyntaxException e) {
-      e.printStackTrace();
+      logger.error("Unable to generate facility event", e);
     }
   }
 
@@ -147,7 +148,7 @@ public class FacilityService {
 
   public List<Facility> getAllForDeliveryZoneAndProgram(Long deliveryZoneId, Long programId) {
     List<Facility> facilities = facilityRepository.getAllInDeliveryZoneFor(deliveryZoneId, programId);
-    for(Facility facility : facilities) {
+    for (Facility facility : facilities) {
       facility.getSupportedPrograms().add(programSupportedService.getFilledByFacilityIdAndProgramId(facility.getId(), programId));
     }
     return facilities;

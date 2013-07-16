@@ -7,13 +7,16 @@
 package org.openlmis.core.service;
 
 
+import org.hamcrest.Matcher;
 import org.ict4h.atomfeed.server.service.Event;
 import org.ict4h.atomfeed.server.service.EventService;
+import org.joda.time.DateTime;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -25,26 +28,34 @@ import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.db.categories.UnitTests;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({DateTime.class, UUID.class})
 public class FacilityServiceTest {
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
@@ -94,22 +105,38 @@ public class FacilityServiceTest {
   }
 
   @Test
-  public void shouldUpdateDataReportableAndActiveFor() {
+  public void shouldUpdateDataReportableAndActiveFor() throws Exception {
     Facility facility = make(a(defaultFacility));
+    FacilityFeedDTO facilityFeedDTO = new FacilityFeedDTO(facility);
+
     when(facilityRepository.updateDataReportableAndActiveFor(facility)).thenReturn(facility);
-    List<ProgramSupported> programsSupported = new ArrayList<ProgramSupported>() {{
-      add(new ProgramSupported());
-    }};
-    when(programSupportedService.getAllByFacilityId(facility.getId())).thenReturn(programsSupported);
+
     when(facilityRepository.getById(facility.getId())).thenReturn(facility);
 
-    Facility returnedFacility = facilityService.updateDataReportableAndActiveFor(facility);
+    DateTime dateTime = new DateTime();
+    mockStatic(DateTime.class);
+    when(DateTime.now()).thenReturn(dateTime);
 
-    assertThat(returnedFacility, is(facility));
-    assertThat(returnedFacility.getSupportedPrograms(), is(programsSupported));
+    facilityService.updateDataReportableAndActiveFor(facility);
+
     verify(facilityRepository).updateDataReportableAndActiveFor(facility);
-    verify(programSupportedService).getAllByFacilityId(facility.getId());
     verify(facilityRepository).getById(facility.getId());
+    verify(eventService).notify(argThat(eventMatcher("Facility", dateTime, "",
+      facilityFeedDTO.getSerializedContents(), "facility")));
+
+  }
+
+  private static Matcher<Event> eventMatcher(final String title, final DateTime timestamp,
+                                            final String uri, final String content, final String category) {
+    return new ArgumentMatcher<Event>() {
+      @Override
+      public boolean matches(Object argument) {
+        Event event = (Event) argument;
+        //TODO compare UUID as well
+        return event.getTitle().equals(title) && event.getTimeStamp().equals(timestamp) &&
+          event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
+      }
+    };
   }
 
   @Test
@@ -146,8 +173,8 @@ public class FacilityServiceTest {
   public void shouldInsertFacility() throws Exception {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
 
-    whenNew(FacilityFeedDTO.class).withArguments(facility).thenReturn(new FacilityFeedDTO(facility));
     when(facilityRepository.getById(facility.getId())).thenReturn(facility);
+
     facilityService.insert(facility);
 
     verify(facilityRepository).save(facility);
@@ -198,13 +225,12 @@ public class FacilityServiceTest {
       add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L, "ARV")))));
     }};
     when(programSupportedService.getAllByFacilityId(facility.getId())).thenReturn(programsForFacility);
-    whenNew(FacilityFeedDTO.class).withArguments(facility).thenReturn(new FacilityFeedDTO(facility));
     when(facilityRepository.getById(facility.getId())).thenReturn(facility);
 
     facilityService.update(facility);
 
     verify(facilityRepository).save(facility);
-    verify(programSupportedService).updateSupportedPrograms(facility, programsForFacility);
+    verify(programSupportedService).updateSupportedPrograms(facility);
     verify(eventService).notify(any(Event.class));
   }
 

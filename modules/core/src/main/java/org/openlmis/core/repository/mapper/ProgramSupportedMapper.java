@@ -9,7 +9,6 @@ package org.openlmis.core.repository.mapper;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
-import org.openlmis.core.dto.ProgramSupportedEventDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

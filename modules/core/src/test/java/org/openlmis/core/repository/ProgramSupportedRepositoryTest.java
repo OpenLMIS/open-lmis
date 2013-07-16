@@ -138,8 +138,8 @@ public class ProgramSupportedRepositoryTest {
       add(make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()))));
       add(arvProgram);
     }};
-
-    programSupportedRepository.updateSupportedPrograms(facility, previouslySupportedProgramsForFacility);
+    when(programSupportedRepository.getAllByFacilityId(facility.getId())).thenReturn(previouslySupportedProgramsForFacility);
+    programSupportedRepository.updateSupportedPrograms(facility);
 
     verify(programSupportedMapper).delete(facility.getId(), 2L);
     verify(programSupportedMapper).addSupportedProgram(hivProgram);

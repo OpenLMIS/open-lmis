@@ -62,7 +62,8 @@ public class ProgramSupportedRepository {
     }
   }
 
-  public void updateSupportedPrograms(Facility facility, List<ProgramSupported> previouslySupportedPrograms) {
+  public void updateSupportedPrograms(Facility facility) {
+    List<ProgramSupported> previouslySupportedPrograms = programSupportedMapper.getAllByFacilityId(facility.getId());
     deleteObsoleteProgramMappings(facility, previouslySupportedPrograms);
     addUpdatableProgramMappings(facility, previouslySupportedPrograms);
   }

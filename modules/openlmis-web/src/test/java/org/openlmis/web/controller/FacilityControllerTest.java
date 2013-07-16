@@ -203,12 +203,13 @@ public class FacilityControllerTest {
   @Test
   public void shouldSoftDeleteFacility() throws Exception {
     Facility facility = new Facility();
+    facility.setId(1L);
     facility.setName("Test Facility");
     facility.setCode("Test Code");
     mockStatic(Facility.class);
     when(Facility.createFacilityToBeDeleted(1L, 1L)).thenReturn(facility);
 
-    when(facilityService.updateDataReportableAndActiveFor(facility)).thenReturn(facility);
+    when(facilityService.getById(facility.getId())).thenReturn(facility);
     when(messageService.message("delete.facility.success", facility.getName(), facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" deleted successfully");
 
     ResponseEntity<OpenLmisResponse> responseEntity = facilityController.softDelete(httpServletRequest, 1L);
@@ -221,12 +222,12 @@ public class FacilityControllerTest {
   @Test
   public void shouldRestoreFacilityAndSetActiveToTrue() throws Exception {
     Facility facility = new Facility();
+    facility.setId(1L);
     facility.setName("Test Facility");
     facility.setCode("Test Code");
     mockStatic(Facility.class);
     when(Facility.createFacilityToBeRestored(1L, 1L, true)).thenReturn(facility);
-
-    when(facilityService.updateDataReportableAndActiveFor(facility)).thenReturn(facility);
+    when(facilityService.getById(facility.getId())).thenReturn(facility);
     when(messageService.message("restore.facility.success", facility.getName(), facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" restored successfully");
 
     ResponseEntity<OpenLmisResponse> responseEntity = facilityController.restore(httpServletRequest, 1L, true);
