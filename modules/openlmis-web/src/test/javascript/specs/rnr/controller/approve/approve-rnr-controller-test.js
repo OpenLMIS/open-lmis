@@ -120,6 +120,7 @@ describe('Approve Requisition controller', function () {
 
   it('should display confirm modal if approve button is clicked on valid Rnr', function () {
     scope.rnr = new Rnr({"id": "rnrId"}, []);
+    scope.pageLineItems = [rnrLineItem];
     spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn('');
     spyOn(OpenLmisDialog, 'newDialog');
