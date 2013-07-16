@@ -10,6 +10,7 @@ public enum RoleType {
 
   ADMIN,
   ALLOCATION,
-  REQUISITION
+  REQUISITION,
+  REPORT
 
 };

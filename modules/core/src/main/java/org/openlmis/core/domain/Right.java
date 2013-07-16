@@ -61,7 +61,7 @@ public enum Right {
   VIEW_SUPPLY_STATUS_REPORT("Report - Supply Status by Facility",REPORT, "Permission to view Supply Status by Facility Report",40),
   VIEW_STOCKED_OUT_REPORT("Report - Stocked Out Report", REPORT, "Permission to view stocked out product report",41),
   VIEW_DISTRICT_CONSUMPTION_REPORT("Report - District Consumption Comparison", REPORT, "Permission to view district consumption comparison report",42),
-  VIEW_ORDER_REPORT("Report - Order Report", REPORT, "Permission to view Order Report",43);
+  VIEW_ORDER_REPORT("Report - Order Report", REPORT, "Permission to view Order Report",45);
 
     @Getter
   private final String rightName;
