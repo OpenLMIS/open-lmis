@@ -76,7 +76,8 @@ public class DistributionControllerTest {
     Distribution expectedDistribution = new Distribution();
     when(service.create(distribution)).thenReturn(expectedDistribution);
     when(service.get(distribution)).thenReturn(null);
-    when(messageService.message("message.distribution.created.success")).thenReturn("Distribution created successfully");
+    when(messageService.message("message.distribution.created.success", null, null, null)
+    ).thenReturn("Distribution created successfully");
 
     ResponseEntity<OpenLmisResponse> response = controller.create(distribution, httpServletRequest);
 

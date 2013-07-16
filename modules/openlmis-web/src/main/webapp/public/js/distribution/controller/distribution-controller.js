@@ -33,9 +33,10 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
     $scope.periods = [];
     DeliveryZoneProgramPeriods.get({zoneId: $scope.selectedZone.id, programId: $scope.selectedProgram.id}, function (data) {
       $scope.periods = data.periods.length ? data.periods.slice(0, 13) : [];
-      $scope.selectedPeriod = $scope.periods.length ? $scope.periods[0] : NONE_ASSIGNED_LABEL;
       if ($scope.selectedPeriod) {
         $scope.selectedPeriod = _.where($scope.periods, {id: $scope.selectedPeriod.id})[0];
+      } else {
+        $scope.selectedPeriod = $scope.periods.length ? $scope.periods[0] : NONE_ASSIGNED_LABEL;
       }
     }, function (data) {
       $scope.error = data.data.error;
@@ -88,6 +89,21 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
 
 
   $scope.initiateDistribution = function () {
+
+    function isCached() {
+      return _.find($scope.distributionList, function (distribution) {
+        return distribution.deliveryZone.id == $scope.selectedZone.id &&
+          distribution.program.id == $scope.selectedProgram.id &&
+          distribution.period.id == $scope.selectedPeriod.id;
+      });
+    }
+
+    if (isCached()) {
+      $scope.message = messageService.get("message.distribution.already.cached",
+        $scope.selectedZone.name, $scope.selectedProgram.name, $scope.selectedPeriod.name);
+      return;
+    }
+
     var distribution = new Distribution($scope.selectedZone, $scope.selectedProgram, $scope.selectedPeriod);
 
     Distributions.save({}, distribution, onInitSuccess, {});
