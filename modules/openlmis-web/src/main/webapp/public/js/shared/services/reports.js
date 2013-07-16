@@ -18,9 +18,11 @@ services.factory('AverageConsumptionReport', function ($resource) {
     return $resource('/reports/reportdata/averageConsumption.json', {}, {});
 });
 
+/*
 services.factory('Products', function($resource){
     return $resource('/reports/products.json', {}, {});
 }) ;
+*/
 
 services.factory('ProductCategories', function($resource){
     return $resource('/reports/productCategories.json', {}, {});
@@ -165,3 +167,25 @@ services.factory('SaveRequisitionGroupMember',function($resource){
 services.factory('RemoveRequisitionGroupMember',function($resource){
     return $resource('/requisitionGroupMember/remove.json',{},{});
 });
+
+// mahmed 07.13.2013
+services.factory('CreateProduct', function ($resource) {
+    return $resource('/createProduct.json', {});
+});
+
+// mahmed 07.13.2013
+services.factory('RemoveProduct', function ($resource) {
+    return $resource('/removeProduct/:id.json', {}, {update:{method:'PUT'}});
+});
+
+// mahmed 07.13.2013
+services.factory('RestoreProduct', function ($resource) {
+    return $resource('/restoreProduct/:id.json', {}, {update:{method:'PUT'}});
+});
+
+// mahmed 07.13.2013
+services.factory('DosageUnits', function ($resource) {
+    return $resource('/dosageUnits.json', {});
+});
+
+

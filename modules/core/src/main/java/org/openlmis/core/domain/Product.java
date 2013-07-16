@@ -167,4 +167,11 @@ public class Product extends BaseModel implements Importable {
 
   @ImportField(type = "boolean", name = "Has Been Archived")
   private Boolean archived;
+
+  @ImportField(name = "Program Name")
+  private String programName;
+
+  @ImportField(name = "Program Id")
+  private String programId;
+
 }

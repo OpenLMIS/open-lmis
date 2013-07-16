@@ -23,6 +23,7 @@ public class ProductList {
     private Integer dosageunitid ;
     private Integer formid;
     private String  fullname;
+    private String  programname;
     private Boolean fullsupply;
     private Integer packsize;
     private String strength;

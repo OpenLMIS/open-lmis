@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.ProductGroup;
+import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductGroupRepository;
 import org.openlmis.core.repository.ProductRepository;
@@ -43,6 +44,7 @@ public class ProductService {
     repository.update(product);
   }
 
+
   private void setReferenceDataForProduct(Product product) {
     if (product.getForm() != null) {
       product.getForm().setId(repository.getProductFormIdForCode(product.getForm().getCode()));
@@ -79,4 +81,28 @@ public class ProductService {
     return repository.getByCode(code);
   }
 
-}
+   // mahmed 07.11.2013 full product list
+    public List<Product> getProductsList() {
+        return repository.getProductList();
+    }
+
+    //mahmed - 07.11.2013 delete product
+    public void deleteById(Long productId) {
+
+        this.repository.deleteById(productId);
+    }
+
+    //mahmed - 07.11.2013 delete product
+    public void restoreById(Long productId) {
+
+        this.repository.restoreById(productId);
+    }
+    //mahmed - 07.11.2013 delete product
+    public Product get(Long id) {
+        Product product = repository.get(id);
+        if (product == null) {
+            throw new DataException("error.supplyline.not.found");
+        }
+        return product;
+    }
+ }
