@@ -111,7 +111,7 @@
 
           <div class="row-fluid">
             <div class="span6">
-              <label for="wastage-rate"><span openlmis-message="label.average.wastage.rate"></span><span
+              <label for="wastage-factor"><span openlmis-message="label.average.wastage.rate"></span><span
                   class="label-required"> *</span></label>
             </div>
             <div class="span4">
@@ -121,7 +121,6 @@
                      maxlength="7"
                      numeric-validator="numericValue,3,3"
                      ng-class="highlightRequired(currentProgramProduct.programProductIsa.wastageFactor)"/>
-              <span>%</span>
 
               <div id="wastageFactor" class="form-error" openlmis-message="error.enter.numeric.value"></div>
             </div>

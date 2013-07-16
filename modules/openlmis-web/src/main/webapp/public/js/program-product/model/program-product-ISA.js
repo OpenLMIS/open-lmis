@@ -5,7 +5,7 @@ var ProgramProductISA = function (isa) {
   this.adjustmentValue = this.adjustmentValue || 0;
   this.whoRatio = this.whoRatio || 0;
   this.dosesPerYear = this.dosesPerYear || 0;
-  this.wastageFactor = this.wastagefactor || 0;
+  this.wastageFactor = this.wastageFactor || 0;
   this.bufferPercentage = this.bufferPercentage || 0;
 
   ProgramProductISA.prototype.init = function (programProductIsa) {
@@ -41,7 +41,7 @@ var ProgramProductISA = function (isa) {
     return "(population) * " +
         (this.whoRatio / 100).toFixed(5) +
         " * " + utils.parseIntWithBaseTen(this.dosesPerYear) +
-        " * " + (1 + this.wastageFactor / 100).toFixed(5) +
+        " * " + parseFloat(this.wastageFactor).toFixed(3) +
         " / 12 * " + (1 + this.bufferPercentage / 100).toFixed(5) +
         " + " + adjustmentVal;
   }
@@ -52,7 +52,7 @@ var ProgramProductISA = function (isa) {
       isaValue = Math.ceil(parseInt(population, 10) *
           (parseFloat(this.whoRatio) / 100) *
           (utils.parseIntWithBaseTen(this.dosesPerYear)) *
-          (1 + parseFloat(this.wastageFactor) / 100) / 12 *
+          (parseFloat(this.wastageFactor) / 12) *
           (1 + parseFloat(this.bufferPercentage) / 100) +
           (utils.parseIntWithBaseTen(this.adjustmentValue)));
 
