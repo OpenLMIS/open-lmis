@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.text.SimpleDateFormat;
+
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -34,6 +36,7 @@ public class DistributionController extends BaseController {
 
   @Autowired
   UserService userService;
+  public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 
   @RequestMapping(value = "/distributions", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> create(@RequestBody Distribution distribution, HttpServletRequest request) {
@@ -62,7 +65,7 @@ public class DistributionController extends BaseController {
     OpenLmisResponse openLmisResponse = new OpenLmisResponse("distribution", existingDistribution);
     User createdByUser = userService.getById(existingDistribution.getCreatedBy());
     openLmisResponse.addData(SUCCESS, messageService.message("message.distribution.already.exists",
-      createdByUser.getUserName(), existingDistribution.getCreatedDate()));
+      createdByUser.getUserName(), DATE_FORMAT.format(existingDistribution.getCreatedDate())));
     return openLmisResponse.response(OK);
   }
 
