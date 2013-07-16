@@ -19,11 +19,10 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.domain.RnrStatus;
 
+import java.util.Arrays;
 import java.util.Date;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static com.natpryce.makeiteasy.Property.newProperty;
 
 public class RequisitionBuilder {
@@ -40,25 +39,39 @@ public class RequisitionBuilder {
   public static final Program PROGRAM = make(a(ProgramBuilder.defaultProgram, with(ProgramBuilder.programId, 3L)));
   public static final Long ID = 1L;
   public static final Instantiator<Rnr> defaultRnr = new Instantiator<Rnr>() {
-
     @Override
     public Rnr instantiate(PropertyLookup<Rnr> lookup) {
-      Rnr rnr = new Rnr();
-      rnr.setId(lookup.valueOf(id, ID));
-      Facility defaultFacility = make(a(FacilityBuilder.defaultFacility));
-      defaultFacility.setId(3L);
-      rnr.setFacility(lookup.valueOf(facility, defaultFacility));
-      rnr.setProgram(lookup.valueOf(program, PROGRAM));
-      rnr.setPeriod(make(a(ProcessingPeriodBuilder.defaultProcessingPeriod)));
-      rnr.getPeriod().setId(lookup.valueOf(periodId, 3L));
-      rnr.setStatus(lookup.valueOf(status, RnrStatus.INITIATED));
-      rnr.setSubmittedDate(lookup.valueOf(submittedDate, SUBMITTED_DATE));
-      rnr.setSupplyingFacility(make(a(FacilityBuilder.defaultFacility)));
-      rnr.getSupplyingFacility().setId(5L);
-      RnrLineItem rnrLineItemCost48 = make(a(RnrLineItemBuilder.defaultRnrLineItem));
-      rnr.add(rnrLineItemCost48, true);
-      rnr.setModifiedBy(lookup.valueOf(modifiedBy, 1L));
+      Rnr rnr = getDefaultRnr(lookup);
       return rnr;
     }
   };
+
+  private static Rnr getDefaultRnr(PropertyLookup<Rnr> lookup) {
+    Rnr rnr = new Rnr();
+    rnr.setId(lookup.valueOf(id, ID));
+    Facility defaultFacility = make(a(FacilityBuilder.defaultFacility));
+    defaultFacility.setId(3L);
+    rnr.setFacility(lookup.valueOf(facility, defaultFacility));
+    rnr.setProgram(lookup.valueOf(program, PROGRAM));
+    rnr.setPeriod(make(a(ProcessingPeriodBuilder.defaultProcessingPeriod)));
+    rnr.getPeriod().setId(lookup.valueOf(periodId, 3L));
+    rnr.setStatus(lookup.valueOf(status, RnrStatus.INITIATED));
+    rnr.setSubmittedDate(lookup.valueOf(submittedDate, SUBMITTED_DATE));
+    rnr.setSupplyingFacility(make(a(FacilityBuilder.defaultFacility)));
+    rnr.getSupplyingFacility().setId(5L);
+    RnrLineItem rnrLineItemCost48 = make(a(RnrLineItemBuilder.defaultRnrLineItem));
+    rnr.add(rnrLineItemCost48, true);
+    rnr.setModifiedBy(lookup.valueOf(modifiedBy, 1L));
+    return rnr;
+  }
+
+  public static final Instantiator<Rnr> rnrWithRegimens = new Instantiator<Rnr>() {
+    @Override
+    public Rnr instantiate(PropertyLookup<Rnr> lookup) {
+      Rnr rnr = getDefaultRnr(lookup);
+      rnr.setRegimenLineItems(Arrays.asList(make(a(RegimenLineItemBuilder.defaultRegimenLineItem))));
+      return rnr;
+    }
+  };
+
 }

@@ -9,30 +9,40 @@ package org.openlmis.rnr.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class RnrColumn extends BaseModel{
+@EqualsAndHashCode(callSuper = true)
+public class RnrColumn extends Column {
 
-    private String name;
-    private int position;
-    private RnRColumnSource source;
-    private Boolean sourceConfigurable;
-    private String label;
-    private String formula;
-    private String indicator;
-    private boolean used;
-    private boolean visible;
-    private boolean mandatory;
-    private String description;
-    private boolean formulaValidationRequired = true;
-    private Long createdBy;
+  private int position;
+  private RnRColumnSource source;
+  private Boolean sourceConfigurable;
+  private String formula;
+  private String indicator;
+  private boolean used;
+  private boolean mandatory;
+  private String description;
+  private boolean formulaValidationRequired = true;
+  private Long createdBy;
 
-    @SuppressWarnings(value = "unused")
-    public void setSourceString(String sourceString) {
-        this.source = RnRColumnSource.getValueOf(sourceString);
+  @SuppressWarnings(value = "unused")
+  public void setSourceString(String sourceString) {
+    this.source = RnRColumnSource.getValueOf(sourceString);
+  }
+
+  @Override
+  public Integer getColumnWidth() {
+    if (this.name.equals("product")) {
+      return 125;
     }
+    if (this.name.equals("remarks")) {
+      return 100;
+    }
+    if (this.name.equals("reasonForRequestedQuantity")) {
+      return 100;
+    }
+    return 40;
+  }
 
 }

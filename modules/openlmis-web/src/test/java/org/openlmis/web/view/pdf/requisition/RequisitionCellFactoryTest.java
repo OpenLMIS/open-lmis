@@ -9,10 +9,9 @@ package org.openlmis.web.view.pdf.requisition;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.pdf.PdfPCell;
 import org.junit.Test;
-import org.openlmis.rnr.domain.RnrColumn;
+import org.openlmis.rnr.domain.Column;
 import org.openlmis.rnr.domain.RnrLineItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.itextpdf.text.Element.ALIGN_LEFT;
@@ -85,7 +84,7 @@ public class RequisitionCellFactoryTest {
   @Test
   public void shouldSetBackgroundPaddingAndColumnSpanInCategoryRowCells() throws Exception {
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
-    PdfPCell cell = categoryRow(new ArrayList<RnrColumn>(), lineItem);
+    PdfPCell cell = categoryRow(0, lineItem);
     assertThat(cell.getBackgroundColor(), is(HEADER_BACKGROUND));
     assertThat(cell.getPaddingLeft(), is(CELL_PADDING));
     assertThat(cell.getColspan(), is(0));
@@ -93,7 +92,7 @@ public class RequisitionCellFactoryTest {
 
   @Test
   public void shouldGetLossesAndAdjustmentCell() throws Exception {
-    List<RnrColumn> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, LOSSES_AND_ADJUSTMENTS))));
+    List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, LOSSES_AND_ADJUSTMENTS))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
     List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
     assertThat(cells.get(0).getPhrase().getContent(), is(lineItem.getTotalLossesAndAdjustments().toString()));
@@ -103,7 +102,7 @@ public class RequisitionCellFactoryTest {
 
   @Test
   public void shouldGetCostCell() throws Exception {
-    List<RnrColumn> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, COST))));
+    List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, COST))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
     List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
     assertThat(cells.get(0).getPhrase().getContent(), is("$" + lineItem.calculateCost().toString()));
@@ -112,7 +111,7 @@ public class RequisitionCellFactoryTest {
 
   @Test
   public void shouldGetPriceCell() throws Exception {
-    List<RnrColumn> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, PRICE))));
+    List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, PRICE))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
     List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
     assertThat(cells.get(0).getPhrase().getContent(), is("$" + lineItem.getPrice().toString()));
@@ -121,7 +120,7 @@ public class RequisitionCellFactoryTest {
 
   @Test
   public void shouldGetTotalCell() throws Exception {
-    List<RnrColumn> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, TOTAL))));
+    List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, TOTAL))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
     List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
     assertThat(cells.get(0).getPhrase().getContent(), is("13"));
@@ -130,7 +129,7 @@ public class RequisitionCellFactoryTest {
 
   @Test
   public void shouldGetProductCell() throws Exception {
-    List<RnrColumn> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, PRODUCT))));
+    List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, PRODUCT))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
     List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
     assertThat(cells.get(0).getPhrase().getContent(), is(""));
@@ -139,7 +138,7 @@ public class RequisitionCellFactoryTest {
 
   @Test
   public void shouldGetBeginningBalance() throws Exception {
-    List<RnrColumn> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, BEGINNING_BALANCE))));
+    List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, BEGINNING_BALANCE))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
     List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
     assertThat(cells.get(0).getPhrase().getContent(), is(lineItem.getBeginningBalance().toString()));
