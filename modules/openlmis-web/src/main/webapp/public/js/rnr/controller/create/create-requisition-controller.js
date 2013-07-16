@@ -103,6 +103,12 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
       return;
     }
     resetFlags();
+    resetErrorPages();
+
+    var errorMessage = validateAndSetErrorClass();
+    if (errorMessage) {
+      setErrorPages();
+    }
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "save"}, rnr, function (data) {
       if (preventMessage) return;
@@ -157,12 +163,15 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   };
 
   function validateRegimenLineItems() {
+    var setError = false;
     $.each($scope.rnr.regimenLineItems, function (index, regimenLineItem) {
       if (isUndefined(regimenLineItem.patientsOnTreatment) || isUndefined(regimenLineItem.patientsStoppedTreatment) || isUndefined(regimenLineItem.patientsToInitiateTreatment)) {
+        setError = true;
         $scope.regimenLineItemInValid = true;
         return;
       }
     });
+    if(!setError) $scope.regimenLineItemInValid = false;
   }
 
   var submitValidatedRnr = function () {
@@ -298,7 +307,6 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     $rootScope.submitMessage = "";
     $scope.error = "";
     $scope.message = "";
-    $scope.regimenLineItemInValid = false;
   }
 
   function removeExtraDataForPostFromRnr() {
