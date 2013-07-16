@@ -4,7 +4,11 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+<<<<<<< HEAD
 function ProductController($scope, $location, $dialog, messageService, Products, CreateProduct, ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct) {
+=======
+function ProductController($scope, $location, $dialog, messageService, CreateProduct, ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits) {
+>>>>>>> d20ab70043744fcd35087227f3e1da7970533d98
 
     $scope.productsBackupMap = [];
     $scope.newProduct = {};
@@ -231,24 +235,12 @@ function ProductController($scope, $location, $dialog, messageService, Products,
         //alert(JSON.stringify( $scope.productCategories, null, 4));
     });
 
- /*
+
   // drop down lists
     DosageUnits.get(function (data) {
         $scope.dosageUnits = data.dosageUnits;
-        $scope.dosageUnits.push({'name':'mg'});
-        $scope.dosageUnits.push({'name':'ml'});
-        $scope.dosageUnits.push({'name':'each'});
-
     });
 
-*/
-    $scope.dosageUnits         = [
-        {'name':'mg','value':'8'},
-        {'name':'ml','value':'9'},
-        {'name':'each','value':'10'},
-        {'name':'cc','value':'11'},
-        {'name':'Select dosage unit','value':'0'}
-    ];
 
 
     $scope.productForms         = [

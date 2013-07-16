@@ -117,6 +117,11 @@ public class ProductController extends BaseController {
     @RequestMapping(value = "/createProduct", method = RequestMethod.POST ,  headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> save(@RequestBody Product product, HttpServletRequest request) {
+       // set default values for some columns
+       // this is a querk until all fields have UI fields
+
+        product.setDosesPerDispensingUnit(1);
+
         product.setModifiedBy(loggedInUserId(request));
         product.setCreatedBy(loggedInUserId(request));
         product.setCreatedDate(new Date());
