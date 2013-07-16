@@ -4,22 +4,20 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<div>
 <h2><span>{{title}}</span>
     <a href="#" id="product-add-new"
        class="pull-right btn btn-primary"
        ng-disable="newProductMode"
        ng-click="startAddNewProduct()">Add New</a></h2>
 
-<div>
 <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
 
 
 <div class="box-content" ng-hide="newProductMode">
     <div class="app-form" style="padding: 5px;">
+
         <form ng-submit="" name="filterForm" novalidate>
             <div class="clearfix ">
-
                 <div class="form-cell horizontalFilters">
                     <label class="labels">Program</label>
 
@@ -44,6 +42,7 @@
 <form ng-submit="createProduct()" id="createProductForm" name="createProductForm"
       ng-show="newProductMode"
       novalidate select2-blur>
+
 <div ng-class="app-form">
 <div ng-class="formActive">
 <div class="form-group">
@@ -152,7 +151,7 @@
 
     <div class="form-field" style="width: 30%;">
 
-        <select ui-select2 style="width:200px;" name="dosageUnit" id="dosageUnit"  ng-model="product.dosageUnits.id"
+        <select ui-select2 style="width:200px;" name="dosageUnit" id="dosageUnit" ng-model="product.dosageUnits.id"
                 ng-options="option.id as option.name for option in dosageUnits">
 
         </select>
@@ -166,6 +165,7 @@
 <!-- Product Display Order-->
 <div class="form-cell">
     <label for="displayOrder">Display Order</label>
+
     <div class="form-field" style="width: 30%;">
         <input ng-model="product.displayOrder" name="displayOrder" id="displayOrder" type="text"
                maxlength="20"/>
@@ -218,7 +218,8 @@
             class="label-required"> *</span></label>
 
     <div class="form-field" style="width: 30%;">
-        <input ng-model="product.packRoundingThreshold" name="packRoundingThreshold" id="packRoundingThreshold" type="text"
+        <input ng-model="product.packRoundingThreshold" name="packRoundingThreshold" id="packRoundingThreshold"
+               type="text"
                maxlength="20"
                ng-required="true"/>
                                         <span class="field-error"
@@ -277,40 +278,47 @@
 </div>
 
 
-
-
 </div>
-</div> <!--basic information-->
+</div>
+<!--basic information-->
 
 <div class="form-group">
     <h3>Program Association</h3>
 
-    <div class="form-cell">
-            <div id = "program-{{program.id}}" class = "checkbox-list clearfix" ng-repeat = "program in programs" tab-scroll>
-                 <span style="width: 100px;"><input id = "{{program.id}}" type = "checkbox" ng-checked = "contains(program.id)" ng-model = "checked"  /></span>
-                <label for = "{{program.id}}">
-                    <span openlmis-message="program.name"></span>
-                </label >
-
-            </div >
-    </div>
-</div> <!--program association-->
-
-    <div class="row-fluid product-button-row">
-        <div class="span1"></div>
-        <div class="span2">
-            <input type="submit" class="btn btn-primary btn-small" openlmis-message="button.create"/>
-            <input type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel"
-                   ng-click="cancelAddNewProduct()"/>
-        </div>
-        <div ng-show="creationError" class="span9 form-error" ng-bind="creationError"></div>
-    </div>
-
+    <table border="0">
+        <th></th>
+        <th colspan="2">Program</th>
+        <th>Price</th>
+        <tr ng-repeat="program in programs" tab-scroll>
+            <td style="width: 200px;">&nbsp;</td>
+            <td><span class="span1" openlmis-message="program.name"></span></td>
+            <td><span class="span1"><input id="{{program.id}}" type="checkbox" ng-checked="contains(program.id)"
+                                           ng-model="checked"/></span></td>
+            <td><span class="span1"><input id="price{{program.id}}" type="text"/></span></td>
+        </tr>
+    </table>
 </div>
+<!--program association-->
+
+
+<div class="row-fluid product-button-row">
+    <div class="span1"></div>
+    <div class="span2">
+        <input type="submit" class="btn btn-primary btn-small" openlmis-message="button.create"/>
+        <input type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel"
+               ng-click="cancelAddNewProduct()"/>
+    </div>
+    <div ng-show="creationError" class="span9 form-error" ng-bind="creationError"></div>
+</div>
+
 </div>
 </div>
 </form>
 
+</div>
+</div>
+
+<!---->
 
 <div ng-hide="newProductMode">
     <!-- column headers-->
@@ -319,8 +327,8 @@
         <div class="span1" style="float: left; width: 40px;"></div>
         <div class="span1">Code</div>
         <div class="span3">Name</div>
-        <div class="span1">Strength</div>
         <div class="span1">Program</div>
+        <div class="span1">Strength</div>
         <div class="span2">Unit of Measure</div>
         <div class="span1">Active</div>
         <div class="span1">Full Supply</div>
@@ -356,16 +364,16 @@
         <div class="span1" style="overflow: visible;"> {{pr.code}}</div>
         <!-- name-->
         <div class="span3" style="..."> {{pr.fullName}}</div>
-        <!-- Strenght-->
-        <div class="span1" style="overflow: visible;"> {{pr.strength}}</div>
         <!-- Program-->
         <div class="span1" style="..."> {{pr.programName}}</div>
+        <!-- Strenght-->
+        <div class="span1" style="overflow: visible;"> {{pr.strength}}</div>
         <!-- UOM-->
         <div class="span2" style="..."> {{pr.dispensingUnit}}</div>
         <!-- Active-->
-        <div class="span1" style="..."> {{pr.active}}</div>
+        <div class="span1" style="..."> {{YesNo(pr.active)}}</div>
         <!-- Active-->
-        <div class="span1" style="..."> {{pr.fullSupply}}</div>
+        <div class="span1" style="..."> {{YesNo(pr.fullSupply)}}</div>
 
 
         <!--list-->                     </div>

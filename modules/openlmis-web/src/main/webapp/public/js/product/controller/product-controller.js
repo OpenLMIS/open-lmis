@@ -249,6 +249,16 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
     ];
 
 
+    $scope.YesNo = function (tf) {
+        var retval = '';
+        if (tf == true) {
+            retval = 'Yes';
+        } else
+        {
+            retval = 'No';
+        }
+        return retval;
+    };
 
     /*
      // all supply lines   for list
