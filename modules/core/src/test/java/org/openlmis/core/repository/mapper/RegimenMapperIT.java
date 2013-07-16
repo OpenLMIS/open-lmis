@@ -21,6 +21,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.openlmis.core.builder.RegimenBuilder.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -70,6 +71,21 @@ public class RegimenMapperIT {
     assertThat(regimens.get(1).getCode(), is("CODE_2"));
     assertThat(regimens.get(2).getCode(), is("CODE_4"));
     assertThat(regimens.get(3).getCode(), is("CODE_3"));
+  }
+
+  @Test
+  public void shouldUpdateRegimen() throws Exception {
+    mapper.insert(regimen);
+    regimen.setName("Regimen");
+    Regimen regimen2 = make(a(defaultRegimen, with(regimenCode, "new regimen code")));
+    mapper.insert(regimen2);
+
+    mapper.update(regimen);
+
+    List<Regimen> updatedRegimens = mapper.getByProgram(regimen.getProgramId());
+
+    assertThat(updatedRegimens, hasItem(regimen));
+    assertThat(updatedRegimens, hasItem(regimen2));
   }
 
   @Test

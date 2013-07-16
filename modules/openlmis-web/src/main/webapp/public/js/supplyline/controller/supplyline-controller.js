@@ -74,8 +74,7 @@ function SupplylineController($scope,  ReportPrograms, AllFacilities, Supervisor
         }
         $scope.showErrorForCreate = false;
         Supplylines.save({}, $scope.newSupplyline, function (data) {
-
-            $scope.supplylines.unshift(data.supplyline);
+             $scope.supplylines.unshift(data.supplyline);
             $scope.completeAddNewSupplyline(data.supplyline);
             $scope.message = data.success;
             setTimeout(function() {
@@ -193,10 +192,9 @@ function SupplylineController($scope,  ReportPrograms, AllFacilities, Supervisor
 
 
     $scope.showConfirmSupplylineDeleteWindow = function (supplylineUnderDelete) {
-       // TODO: change delete.facility.header to supplyline
         var dialogOpts = {
             id: "deleteSupplylineDialog",
-            header: messageService.get('delete.facility.header'),
+            header: messageService.get('Delete supplyline'),
             body: messageService.get('delete.facility.confirm', supplylineUnderDelete.description, supplylineUnderDelete.id)
         };
         $scope.supplylineUnderDelete = supplylineUnderDelete;
@@ -204,14 +202,27 @@ function SupplylineController($scope,  ReportPrograms, AllFacilities, Supervisor
     };
 
     $scope.deleteSupplylineCallBack = function (result) {
-        if (!result) return;
-        //alert(JSON.stringify(supplylineUnderDelete.id, null, 4));
-        // call supplyline delete function. How?
+        if (!result)
+        {
+            $scope.supplylinesBackupMap[$scope.supplylineUnderDelete.id].delete = false;
+            return;
+        }
 
-        SupplylineDelete.get({id : $scope.supplylineUnderDelete.id }, $scope.supplyline, function (data) {
-            alert("you have deleted the supply line" + $scope.supplylineUnderDelete.description);
-            alert("please refresh the list now");
-        });
+          SupplylineDelete.get({id : $scope.supplylineUnderDelete.id }, $scope.supplyline, function (data) {
+
+            $scope.message = data.success;
+            setTimeout(function() {
+                $scope.$apply(function() {
+                    // refresh list
+                    $scope.supplylineslist = data.supplyLineList;
+                    $scope.message = "";
+                });
+            }, 4000);
+            $scope.error = "";
+            $scope.newSupplyline = {};
+            $scope.editSupplyline = {};
+
+         });
 
     };
 

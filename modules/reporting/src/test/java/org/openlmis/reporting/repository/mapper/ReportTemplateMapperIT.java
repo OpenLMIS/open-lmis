@@ -21,6 +21,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,14 +44,17 @@ public class ReportTemplateMapperIT {
 
     ReportTemplate returnedTemplate = reportTemplateMapper.getByName("Sample Report");
 
-    Assert.assertThat(returnedTemplate, is(reportTemplate));
+    Assert.assertThat(returnedTemplate.getName(), is(reportTemplate.getName()));
+    Assert.assertThat(returnedTemplate.getData(), is(reportTemplate.getData()));
   }
 
   private ReportTemplate createReportTemplate(String name) {
     ReportTemplate reportTemplate = new ReportTemplate();
     reportTemplate.setName(name);
     reportTemplate.setData(new byte[1]);
-    reportTemplate.setParameters("SampleParameters");
+    List<String> parameterList = new ArrayList<>();
+    parameterList.add("rnrId");
+    reportTemplate.setParameters(parameterList);
     reportTemplate.setModifiedBy(1L);
     Date currentTimeStamp = new Date();
     reportTemplate.setModifiedDate(currentTimeStamp);
@@ -63,7 +67,9 @@ public class ReportTemplateMapperIT {
 
     ReportTemplate reportTemplate = new ReportTemplate();
     reportTemplate.setName("Requisition reportTemplate");
-    reportTemplate.setParameters("<rnrId, Integer>");
+    List<String> parameters = new ArrayList<>();
+    parameters.add("rnrId");
+    reportTemplate.setParameters(parameters);
     File file = new ClassPathResource("report1.jrxml").getFile();
 
     reportTemplate.setData(readFileToByteArray(file));

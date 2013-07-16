@@ -23,10 +23,10 @@
           <ng-switch on="program.regimenTemplateConfigured">
             <span ng-switch-when="true">
               <i class="icon-ok"></i> <span openlmis-message="template.configured"></span>
-              (<a id="{{program.name}}" ng-click="configure(program.id)" openlmis-message="link.edit"></a>)
+              (<a href="" id="{{program.name}}" ng-click="configure(program.id)" openlmis-message="link.edit"></a>)
             </span>
             <span ng-switch-default>
-              <a id="{{program.name}}" ng-click="configure(program.id)" class="btn btn-primary">
+              <a href="" id="{{program.name}}" ng-click="configure(program.id)" class="btn btn-primary">
                 <i class="icon-cog"></i> &nbsp;<span openlmis-message="template.configure"></span>
               </a>
             </span>

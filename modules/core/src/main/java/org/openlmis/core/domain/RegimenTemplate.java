@@ -1,10 +1,9 @@
-package org.openlmis.rnr.domain;
+package org.openlmis.core.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
-import org.openlmis.core.domain.RegimenColumn;
 
 import java.util.List;
 

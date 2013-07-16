@@ -6,6 +6,7 @@
 
 package org.openlmis.reporting.model;
 
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
 import org.junit.Rule;
@@ -79,6 +80,9 @@ public class ReportTemplateTest {
     JasperReport report = mock(JasperReport.class);
     InputStream inputStream = mock(InputStream.class);
     when(file.getInputStream()).thenReturn(inputStream);
+    JRParameter param1 = mock(JRParameter.class);
+    JRParameter param2 = mock(JRParameter.class);
+    when(report.getParameters()).thenReturn(new JRParameter[] {param1, param2});
     when(JasperCompileManager.compileReport(inputStream)).thenReturn(report);
 
     ByteArrayOutputStream byteOutputStream = mock(ByteArrayOutputStream.class);
@@ -92,6 +96,6 @@ public class ReportTemplateTest {
     ReportTemplate reportTemplate = new ReportTemplate("report", file, 1L);
 
     assertThat(reportTemplate.getData(), is(byteData));
-
+    assertThat(reportTemplate.getParameters().size(), is(2));
   }
 }

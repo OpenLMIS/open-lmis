@@ -4,7 +4,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ViewRnrListController($scope, facilities, RequisitionsForViewing, ProgramsToViewRequisitions, $location, messageService) {
+function ViewRnrListController($scope, facilities, RequisitionsForViewing, ProgramsToViewRequisitions, $location,
+                               messageService) {
   $scope.facilities = facilities;
   $scope.facilityLabel = (!$scope.facilities.length) ? messageService.get("label.none.assigned") : messageService.get("label.select.facility");
   $scope.programLabel = messageService.get("label.none.assigned");
@@ -15,27 +16,27 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
     $scope.openRequisition()
   };
 
-  $scope.rnrListGrid = { data:'filteredRequisitions',
-    displayFooter:false,
-    multiSelect:false,
-    selectedItems:$scope.selectedItems,
-    afterSelectionChange:selectionFunc,
-    displaySelectionCheckbox:false,
-    enableColumnResize:true,
-    showColumnMenu:false,
-    showFilter:false,
-    rowHeight:44,
-    enableSorting:true,
-    sortInfo:{ fields: ['submittedDate'], directions: ['asc'] },
+  $scope.rnrListGrid = { data: 'filteredRequisitions',
+    displayFooter: false,
+    multiSelect: false,
+    selectedItems: $scope.selectedItems,
+    afterSelectionChange: selectionFunc,
+    displaySelectionCheckbox: false,
+    enableColumnResize: true,
+    showColumnMenu: false,
+    showFilter: false,
+    rowHeight: 44,
+    enableSorting: true,
+    sortInfo: { fields: ['submittedDate'], directions: ['asc'] },
     columnDefs: [
       {field: 'programName', displayName: messageService.get("program.header") },
       {field: 'facilityCode', displayName: messageService.get("option.value.facility.code")},
       {field: 'facilityName', displayName: messageService.get("option.value.facility.name")},
-      {field: 'periodStartDate', displayName: messageService.get("column.name.period.start.date"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'periodEndDate', displayName: messageService.get("column.name.period.end.date"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'submittedDate', displayName: messageService.get("column.name.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'modifiedDate', displayName: messageService.get("column.name.date.modified"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field:'status', displayName:messageService.get("column.name.status")}
+      {field: 'periodStartDate', displayName: messageService.get("label.period.start.date"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'periodEndDate', displayName: messageService.get("label.period.end.date"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'submittedDate', displayName: messageService.get("label.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'modifiedDate', displayName: messageService.get("label.date.modified"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'status', displayName: messageService.get("label.status")}
     ]
   };
 
@@ -51,7 +52,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
   }
 
   $scope.loadProgramsForFacility = function () {
-    ProgramsToViewRequisitions.get({facilityId:$scope.selectedFacilityId},
+    ProgramsToViewRequisitions.get({facilityId: $scope.selectedFacilityId},
       function (data) {
         $scope.programs = data.programList;
         setProgramsLabel();
@@ -85,9 +86,9 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
       return;
     }
     var requisitionQueryParameters = {
-      facilityId:$scope.selectedFacilityId,
-      dateRangeStart:$scope.startDate.toUTCString(),
-      dateRangeEnd:$scope.endDate.toUTCString()
+      facilityId: $scope.selectedFacilityId,
+      dateRangeStart: $scope.startDate.toUTCString(),
+      dateRangeEnd: $scope.endDate.toUTCString()
     };
 
     if ($scope.selectedProgramId) requisitionQueryParameters.programId = $scope.selectedProgramId;
@@ -112,11 +113,11 @@ var oneDay = 1000 * 60 * 60 * 24;
 
 ViewRnrListController.resolve = {
 
-  preAuthorize:function (AuthorizationService) {
+  preAuthorize: function (AuthorizationService) {
     AuthorizationService.preAuthorize('VIEW_REQUISITION');
   },
 
-  facilities:function ($q, $timeout, UserFacilityWithViewRequisition) {
+  facilities: function ($q, $timeout, UserFacilityWithViewRequisition) {
     var deferred = $q.defer();
     $timeout(function () {
       UserFacilityWithViewRequisition.get({}, function (data) {

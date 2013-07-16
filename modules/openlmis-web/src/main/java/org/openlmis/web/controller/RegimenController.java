@@ -3,6 +3,7 @@ package org.openlmis.web.controller;
 import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.domain.RegimenColumn;
+import org.openlmis.core.domain.RegimenTemplate;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RegimenColumnService;
@@ -41,19 +42,15 @@ public class RegimenController extends BaseController {
 
   public static final String REGIMENS = "regimens";
   public static final String REGIMEN_CATEGORIES = "regimen_categories";
-  public static final String REGIMEN_COLUMNS = "regimen_columns";
 
   @RequestMapping(value = "/programId/{programId}/regimens", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE')")
   public ResponseEntity<OpenLmisResponse> save(@PathVariable Long programId, @RequestBody RegimenFormDTO regimenFormDTO, HttpServletRequest request) {
-    try {
-      regimenService.save(programId, regimenFormDTO.getRegimens(), loggedInUserId(request));
-      regimenColumnService.save(regimenFormDTO.getColumns(), loggedInUserId(request));
-      programService.setRegimenTemplateConfigured(programId);
+      regimenService.save(regimenFormDTO.getRegimens(), loggedInUserId(request));
+      RegimenTemplate regimenTemplate = regimenFormDTO.getRegimenTemplate();
+      regimenTemplate.setProgramId(programId);
+      regimenColumnService.save(regimenTemplate, loggedInUserId(request));
       return success(REGIMENS_SAVED_SUCCESSFULLY);
-    } catch (Exception e) {
-      return error(UNEXPECTED_EXCEPTION, HttpStatus.BAD_REQUEST);
-    }
   }
 
   @RequestMapping(value = "/programId/{programId}/regimens", method = GET, headers = ACCEPT_JSON)
@@ -81,19 +78,5 @@ public class RegimenController extends BaseController {
       return error(UNEXPECTED_EXCEPTION, HttpStatus.BAD_REQUEST);
     }
   }
-
-  @RequestMapping(value = "/programId/{programId}/regimenColumns", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE, CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION, VIEW_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getRegimenColumns(@PathVariable Long programId, HttpServletRequest request) {
-    try {
-      ResponseEntity<OpenLmisResponse> response;
-      List<RegimenColumn> regimenColumns = regimenColumnService.populateDefaultRegimenColumnsIfNoColumnsExist(programId, loggedInUserId(request));
-      response = response(REGIMEN_COLUMNS, regimenColumns);
-      return response;
-    } catch (Exception e) {
-      return error(UNEXPECTED_EXCEPTION, HttpStatus.BAD_REQUEST);
-    }
-  }
-
 
 }

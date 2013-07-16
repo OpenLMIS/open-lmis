@@ -7,52 +7,55 @@
 
 <html lang="en" ng-app="distribution">
 <head>
-    <meta charset="utf-8">
-    <title openlmis-message="app.title"></title>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+  <meta charset="utf-8">
+  <title openlmis-message="app.title"></title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
 
-    <!-- library files-->
-    <script src="/public/lib/jquery/jquery-1.8.2.min.js"></script>
-    <script src="/public/lib/angular/angular.min.js"></script>
-    <script src="/public/lib/angular/angular-resource.min.js"></script>
-    <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
-    <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
-    <script src="/public/lib/underscore/underscore-min.js"></script>
-    <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
+  <!-- library files-->
+  <script src="/public/lib/jquery/jquery-1.8.2.min.js"></script>
+  <script src="/public/lib/angular/angular.min.js"></script>
+  <script src="/public/lib/angular/angular-resource.min.js"></script>
+  <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
+  <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
+  <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
+  <script src="/public/lib/underscore/underscore-min.js"></script>
+  <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
 
 
-    <!-- open-lmis shared files -->
-    <script src="/public/js/shared/util.js"></script>
-    <script src="/public/js/shared/services/services.js"></script>
-    <script src="/public/js/shared/services/message-service.js"></script>
-    <script src="/public/js/shared/services/authorization-service.js"></script>
-    <script src="/public/js/shared/controller/header-controller.js"></script>
-    <script src="/public/js/shared/controller/login-controller.js"></script>
-    <script src="/public/js/shared/controller/navigation-controller.js"></script>
-    <script src="/public/js/shared/app.js"></script>
+  <!-- open-lmis shared files -->
+  <script src="/public/js/shared/util.js"></script>
+  <script src="/public/js/shared/services/services.js"></script>
+  <script src="/public/js/shared/services/message-service.js"></script>
+  <script src="/public/js/shared/services/indexed-db.js"></script>
+  <script src="/public/js/shared/services/authorization-service.js"></script>
+  <script src="/public/js/shared/services/navigate-back-service.js"></script>
+  <script src="/public/js/shared/controller/header-controller.js"></script>
+  <script src="/public/js/shared/controller/login-controller.js"></script>
+  <script src="/public/js/shared/controller/navigation-controller.js"></script>
+  <script src="/public/js/shared/app.js"></script>
 
-    <!--App directives-->
-    <script src="/public/js/shared/directives/openlmis-message.js"></script>
-    <script src="/public/js/shared/directives/ui-nav.js"></script>
+  <!--App directives-->
+  <script src="/public/js/shared/directives/openlmis-message.js"></script>
+  <script src="/public/js/shared/directives/ui-nav.js"></script>
 
-    <script src="/public/lib/localstorage/localStorage.js"></script>
-    <script src="/public/js/shared/localStorageKeys.js"></script>
+  <script src="/public/lib/localstorage/localStorage.js"></script>
+  <script src="/public/js/shared/localStorageKeys.js"></script>
 
-    <!-- page specific libaries/files -->
-    <script src="/public/js/distribution/module/distribution-module.js"></script>
-    <script src="/public/js/distribution/controller/distribution-controller.js"></script>
-    <script src="/public/js/distribution/controller/distribution-list-controller.js"></script>
-    <script src="/public/js/distribution/controller/view-load-amount-controller.js"></script>
-    <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
+  <!-- page specific libaries/files -->
+  <script src="/public/js/distribution/module/distribution-module.js"></script>
+  <script src="/public/js/distribution/model/distribution.js"></script>
+  <script src="/public/js/distribution/controller/distribution-controller.js"></script>
+  <script src="/public/js/distribution/controller/distribution-list-controller.js"></script>
+  <script src="/public/js/distribution/controller/view-load-amount-controller.js"></script>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
 
-    <script src="/public/js/program-product/model/program-product-ISA.js"></script>
+  <script src="/public/js/program-product/model/program-product-ISA.js"></script>
 
-    <!--[if IE 9]>
-    <link rel="stylesheet" href="/public/css/ie9.css"/>
-    <![endif]-->
+  <!--[if IE 9]>
+  <link rel="stylesheet" href="/public/css/ie9.css"/>
+  <![endif]-->
 
 </head>
 <!-- TODO: onunload clears cache for safari. It is a hack. Find better alternative -->
@@ -61,7 +64,7 @@
 <ng-include src="'/public/pages/navigation.html'"></ng-include>
 
 <div class="content">
-    <div ng-view></div>
+  <div ng-view></div>
 </div>
 </body>
 </html>

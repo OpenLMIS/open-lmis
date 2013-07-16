@@ -11,6 +11,8 @@ import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductGroup;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ProductMapper {
 
@@ -100,4 +102,39 @@ public interface ProductMapper {
         one = @One(select = "org.openlmis.core.repository.mapper.ProductGroupMapper.getById"))
     })
   Product getById(Long id);
-}
+
+    // mahmed 07.11.2013 full product list
+  @Select(value = "SELECT\n" +
+          "products.id,\n" +
+          "products.code,\n" +
+          "products.fullname,\n" +
+          "product_categories.name AS type,\n" +
+          "products.strength,\n" +
+          "products.dispensingunit AS dispensingUnit,\n" +
+          "product_forms.code,\n" +
+          "dosage_units.code,\n" +
+          "product_forms.code,\n" +
+          //"(CASE WHEN products.fullsupply = true THEN 'Yes' WHEN products.fullsupply = false THEN 'No' ELSE '' END) AS fullSupply,\n" +
+          //"(CASE WHEN products.active = true THEN 'Yes' WHEN products.active = false THEN 'No' ELSE '' END) AS active,\n" +
+          "products.fullsupply AS fullSupply,\n" +
+          "products.active AS active,\n" +
+          "products.displayorder AS displayOrder,\n" +
+          "programs.id AS programId, \n" +
+          "programs.name AS programName\n" +
+          "FROM\n" +
+          "products\n" +
+          "INNER JOIN product_forms ON product_forms.id = products.formid\n" +
+          "INNER JOIN dosage_units ON dosage_units.id = products.dosageunitid\n" +
+          "INNER JOIN product_categories ON product_categories.id = products.categoryid\n" +
+          "INNER JOIN program_products ON products.id = program_products.productid\n" +
+          "INNER JOIN programs ON programs.id = program_products.programid")
+  List<Product> getList();
+
+    // mahmed - 07.11.2013 - delete supply line
+    @Update("UPDATE products SET  active=false where id = #{productId}")
+    int deleteById(Long productId);
+
+    // mahmed - 07.11.2013 - delete supply line
+    @Update("UPDATE products SET  active=true where id = #{productId}")
+    int restoreById(Long productId);
+ }

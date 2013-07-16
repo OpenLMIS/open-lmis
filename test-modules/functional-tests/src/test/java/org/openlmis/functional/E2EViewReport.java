@@ -55,7 +55,7 @@ public class E2EViewReport extends TestCaseHelper {
               "yyyyMMdd-hhmmss");
       String date_time = formatter_date_time.format(dObj);
 
-      dbWrapper.insertFacility(facilityNamePrefix + date_time, facilityCodePrefix + date_time, facilityType, geoZone);
+      //dbWrapper.insertFacility(facilityNamePrefix + date_time, facilityCodePrefix + date_time, facilityType, geoZone);
 
       LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
@@ -89,7 +89,7 @@ public class E2EViewReport extends TestCaseHelper {
                "yyyyMMdd-hhmmss");
        String date_time = formatter_date_time.format(dObj);
 
-       dbWrapper.insertFacility(facilityNamePrefix + date_time, facilityCodePrefix + date_time, facilityType, geoZone);
+       //dbWrapper.insertFacilities(facilityNamePrefix + date_time, facilityCodePrefix + date_time, facilityType, geoZone);
 
        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 

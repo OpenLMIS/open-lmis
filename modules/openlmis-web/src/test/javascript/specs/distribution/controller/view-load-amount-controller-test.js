@@ -79,11 +79,6 @@ describe('ViewLoadAmountController', function () {
     expect(programProducts[2].product.name).toEqual('polio20');
   });
 
-  it('should  get geographic one by id', function(){
-    httpBackend.expect('GET', '/geographicZones/1.json').respond({id:1, name : 'Ngrogoro', level: {name : 'City'}, parent :{level : {name : 'District'}}});
-    httpBackend.flush();
-  });
-
   it('should calculate total population of all geo zones', function(){
     expect(scope.zonesTotal['totalPopulation']).toEqual(350);
   });

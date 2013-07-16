@@ -23,6 +23,8 @@ import java.util.Map;
 @Controller
 public class ReportController {
   public static final String PDF_VIEW = "pdf";
+  public static final String USER_ID = "USER_ID";
+  public static final String USER_ID_PARAM = "userId";
 
   @Autowired
   private JasperReportsViewFactory jasperReportsViewFactory;
@@ -30,20 +32,39 @@ public class ReportController {
   @Autowired
   private ReportTemplateMapper reportTemplateMapper;
 
+  private Long loggedInUserId(HttpServletRequest request) {
+    return (Long) request.getSession().getAttribute(USER_ID);
+  }
+
+
   @RequestMapping(method = RequestMethod.GET, value = "/reports/{id}/{format}")
   public ModelAndView generateReport(HttpServletRequest request, @PathVariable("id") Integer id
-      , @PathVariable("format") String format) throws Exception {
+    , @PathVariable("format") String format) throws Exception {
 
     String viewFormat = format == null ? PDF_VIEW : format;
 
     ReportTemplate reportTemplate = reportTemplateMapper.getById(id);
+    Map<String, Object> parameterMap = getParameterMap(request, reportTemplate);
 
-    JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(reportTemplate);
+    JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(reportTemplate, parameterMap);
 
     Map map = new HashMap();
     map.put("format", viewFormat);
+    map.putAll(parameterMap);
 
     return new ModelAndView(jasperView, map);
+  }
+
+  private Map<String, Object> getParameterMap(HttpServletRequest request, ReportTemplate reportTemplate) {
+    Map<String, Object> parameterMap = new HashMap();
+    if (reportTemplate.getParameters() != null) {
+      for (String parameter : reportTemplate.getParameters()) {
+        if (parameter.equalsIgnoreCase(USER_ID_PARAM)) {
+          parameterMap.put(parameter, loggedInUserId(request).intValue());
+        }
+      }
+    }
+    return parameterMap;
   }
 
 }

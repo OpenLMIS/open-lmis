@@ -7,12 +7,12 @@
 <div ng-controller="CreateNonFullSupplyController" xmlns="http://www.w3.org/1999/html">
 <div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.nonFullSupply">
   <div ng-switch on="errorPages.nonFullSupply.length" class="dropdown">
-    <a ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
-    <a ng-switch-default class="dropdown-toggle" openlmis-message="error.multiple.pages|nonFullSupplyErrorPagesCount">
+    <a href="" ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
+    <a href="" ng-switch-default class="dropdown-toggle" openlmis-message="error.multiple.pages|nonFullSupplyErrorPagesCount">
     </a>
     <ul class="dropdown-menu">
       <li ng-repeat="page in errorPages.nonFullSupply">
-        <a ng-click="goToPage(page, $event)">{{page}}</a>
+        <a href="" ng-click="goToPage(page, $event)">{{page}}</a>
       </li>
     </ul>
   </div>
@@ -186,7 +186,7 @@
 
           <div class="span1">
             <div class="fluid-grid-cell delete-role">
-              <a class="close" value="delete"
+              <a href="" class="close" value="delete"
                  ng-click="deleteCurrentNonFullSupplyLineItem($index)">&times;</a>
             </div>
           </div>

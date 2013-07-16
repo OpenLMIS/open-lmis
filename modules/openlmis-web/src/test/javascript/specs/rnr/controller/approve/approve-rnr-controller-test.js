@@ -6,7 +6,7 @@
 
 describe('Approve Requisition controller', function () {
 
-  var scope, ctrl, httpBackend, location, routeParams, controller, requisition, messageService,
+  var scope, ctrl, httpBackend, location, routeParams, controller, requisition, messageService, regimenTemplate,
     programRnrColumnList, nonFullSupplyLineItems, lineItems, regimenLineItems, dialog, rnrLineItem, regimenColumns;
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
@@ -33,14 +33,16 @@ describe('Approve Requisition controller', function () {
     regimenColumns = [
       {"test": "test"}
     ];
+
+    regimenTemplate = {regimenColumns: regimenColumns};
     rnrLineItem = new RnrLineItem({"fullSupply": true});
-    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, regimenColumnList: regimenColumns,
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, regimenTemplate: regimenTemplate,
       currency: '$', $location: location, $routeParams: routeParams});
   }));
 
   it('should set rnr in scope', function () {
     var spyOnRnr = spyOn(window, 'Rnr').andCallThrough();
-    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, regimenColumnList: regimenColumns,
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, regimenTemplate: regimenTemplate,
       currency: '$', $location: location, $routeParams: routeParams});
     expect(spyOnRnr).toHaveBeenCalledWith(requisition, programRnrColumnList);
   });
@@ -147,7 +149,7 @@ describe('Approve Requisition controller', function () {
       {'id': 4}
     ];
     ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$',
-      regimenColumnList: regimenColumns, $location: location, $routeParams: routeParams});
+      regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams});
 
     expect(2).toEqual(scope.numberOfPages);
   });
@@ -161,7 +163,7 @@ describe('Approve Requisition controller', function () {
       {'id': 4}
     ];
     ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$',
-      regimenColumnList: regimenColumns, $location: location, $routeParams: routeParams});
+      regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams});
 
     expect(2).toEqual(scope.numberOfPages);
   });
@@ -174,7 +176,7 @@ describe('Approve Requisition controller', function () {
       {'id': 4}
     ];
     ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$',
-      regimenColumnList: regimenColumns, $location: location, $routeParams: routeParams});
+      regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams});
 
     expect(scope.pageLineItems[0].id).toEqual(1);
     expect(scope.pageLineItems[1].id).toEqual(2);
@@ -190,7 +192,7 @@ describe('Approve Requisition controller', function () {
       {'id': 4}
     ];
     ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$',
-      regimenColumnList: regimenColumns, $location: location, $routeParams: routeParams});
+      regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams});
 
     expect(scope.pageLineItems[0].id).toEqual(3);
     expect(scope.pageLineItems[1].id).toEqual(4);
@@ -204,7 +206,7 @@ describe('Approve Requisition controller', function () {
   it('should set current page to 1 if page not within valid range', function () {
     routeParams.page = -95;
     ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$',
-      regimenColumnList: regimenColumns, $location: location, $routeParams: routeParams});
+      regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams});
 
     expect(scope.currentPage).toEqual(1);
   });

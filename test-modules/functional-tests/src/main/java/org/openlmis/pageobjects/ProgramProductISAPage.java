@@ -29,13 +29,13 @@ public class ProgramProductISAPage extends Page {
   @FindBy(how = ID, using = "program")
   private static WebElement selectProgramSelectBox;
 
-  @FindBy(how = XPATH, using = "//div[contains(text(),'Product name')]")
+  @FindBy(how = XPATH, using = "//span[contains(text(),'Product name')]")
   private static WebElement productNameColumn;
 
   @FindBy(how = ID, using = "searchProduct")
   private static WebElement searchProductTextBox;
 
-  @FindBy(how = XPATH, using = "//div[@id='wrap']/div[@class='content']/div/div[@class='ng-scope']/div[2]/div[5][@class='row-fluid list-row ng-scope']/div[3][@class='span2 offset2']/input[@class='btn btn-small btn-primary']")
+  @FindBy(how = XPATH, using = "//div[@id='wrap']/div[@class='content']/div/div[@class='ng-scope']/div[2]/div[5][@class='list-container']/div[1][@class='row-fluid list-row ng-scope']/div[3][@class='span2 offset2']/input[@class='btn btn-small btn-primary']")
   private static WebElement editFormulaButton;
 
   @FindBy(how = ID, using = "who-ratio")

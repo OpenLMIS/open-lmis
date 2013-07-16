@@ -5,26 +5,372 @@
   -->
 
 <div>
-    <h2><span>Supply Lines</span>
-        <a href="#" id="supplyline-add-new"
-           class="pull-right btn btn-primary"
-           ng-click="startAddNewSupplyline()">Add New</a></h2>
+<h2><span>{{title}}</span>
+    <a href="#" id="product-add-new"
+       class="pull-right btn btn-primary"
+       ng-disable="newProductMode"
+       ng-click="startAddNewProduct()">Add New</a></h2>
+
+<div>
+<div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
 
 
-        <div ng-repeat="pr in productslist" class="row-fluid list-row">
-            <div class="span1" style="float: left">
-                <input type="button"
-                       class="btn btn-mini pull-right"
-                       value="Edit"
-                       ng-click=""/>
+<div class="box-content" ng-hide="newProductMode">
+    <div class="app-form" style="padding: 5px;">
+        <form ng-submit="" name="filterForm" novalidate>
+            <div class="clearfix ">
+
+                <div class="form-cell horizontalFilters">
+                    <label class="labels">Program</label>
+
+                    <div class="form-fields">
+                        <select ui-select2 style="width:200px;" class="large-input" name="program" id="program"
+                                ng-change="showProductsSearchResults('program')"
+                                ng-model="program" ng-options="option.id as option.name for option in programs">
+                            <option style="display:none" value="">All Programs</option>
+
+                        </select>
+                    </div>
+                </div>
+
             </div>
-
-            <div class="span3" style="overflow: visible;"> {{pr.code}}</div>
-            <div class="span3" style="overflow: visible;"> {{pr.fullname}}</div>
-            <div class="span3" style="overflow: visible;"> {{pr.description}}</div>
-            <div class="span2" style="overflow: visible;"> {{pr.packsize}}</div>
-        </div>
+        </form>
     </div>
+</div>
+
+
+<!-- Add Product -->
+
+<form ng-submit="createProduct()" id="createProductForm" name="createProductForm"
+      ng-show="newProductMode"
+      novalidate select2-blur>
+<div ng-class="app-form">
+<div ng-class="formActive">
+<div class="form-group">
+<h3>Basic Information</h3>
+
+<div class="form-row clearfix">
+<div class="form-cell">
+    <label for="code">Code<span
+            class="label-required"> *</span></label>
+
+    <div class="form-field" style="width: 30%;">
+
+        <input ng-model="product.code" name="code" id="code" type="text"
+               maxlength="20"
+               ng-required="true"/>
+                                        <span class="field-error"
+                                              ng-show="createProductForm.code.$error.required && showErrorForCreate"
+                                              openlmis-message="missing.value">
+                                        </span>
+    </div>
+</div>
+
+<!-- Product Pack Size-->
+<div class="form-cell">
+    <label for="packSize">Pack Size<span
+            class="label-required"> *</span></label>
+
+    <div class="form-field" style="width: 30%;">
+        <input ng-model="product.packSize" name="packSize" id="packSize" type="text"
+               maxlength="20"
+               ng-required="true"/>
+                                        <span class="field-error"
+                                              ng-show="createProductForm.packSize.$error.required && showErrorForCreate"
+                                              openlmis-message="missing.value">
+                                        </span>
+    </div>
+</div>
+
+<!-- product name-->
+<div class="form-cell">
+    <label for="primaryName">Product Name<span
+            class="label-required"> *</span></label>
+
+    <div class="form-field" style="width: 30%;">
+        <input ng-model="product.primaryName" name="primaryName" id="primaryName" type="text"
+               maxlength="20"
+               ng-required="true"/>
+                                        <span class="field-error"
+                                              ng-show="createProductForm.primaryName.$error.required && showErrorForCreate"
+                                              openlmis-message="missing.value">
+                                        </span>
+    </div>
+</div>
+
+<!-- Dispensing Units-->
+<div class="form-cell">
+    <label for="dispensingUnit">Dispensing Unit<span
+            class="label-required"> *</span></label>
+
+    <div class="form-field" style="width: 30%;">
+        <input ng-model="product.dispensingUnit" name="dispensingUnit" id="dispensingUnit"
+               type="text"
+               maxlength="20"
+               ng-required="true"/>
+                                        <span class="field-error"
+                                              ng-show="createProductForm.dispensingUnit.$error.required && showErrorForCreate"
+                                              openlmis-message="missing.value">
+                                        </span>
+
+    </div>
+</div>
+
+
+<!-- product strength-->
+<div class="form-cell">
+    <label for="strength">Strength</label>
+
+    <div class="form-field" style="width: 30%;">
+        <input ng-model="product.strength" name="strength" id="strength" type="text"
+               maxlength="20"/>
+                                        <span class="field-error"
+                                              ng-show="createProductForm.strength.$error.required && showErrorForCreate"
+                                              openlmis-message="missing.value">
+                                        </span>
+    </div>
+</div>
+
+
+<!-- Type-->
+<div class="form-cell">
+    <label for="type">Type</label>
+
+    <div class="form-field" style="width: 30%;">
+        <input ng-model="product.type" name="type" id="type" type="text"
+               maxlength="20"/>
+                                        <span class="field-error"
+                                              ng-show="createProductForm.type.$error.required && showErrorForCreate"
+                                              openlmis-message="missing.value">
+                                        </span>
+    </div>
+</div>
+
+<!-- Dosage Units-->
+<div class="form-cell">
+    <label for="dosageUnit">DosageUnit</label>
+
+    <div class="form-field" style="width: 30%;">
+
+        <select ui-select2 style="width:200px;" name="dosageUnit" id="dosageUnit"  ng-model="product.dosageUnits.id"
+                ng-options="option.id as option.name for option in dosageUnits">
+
+        </select>
+                                       <span class="field-error"
+                                             ng-show="createProductForm.dosageUnit.$error.required && showErrorForCreate"
+                                             openlmis-message="missing.value">
+                                        </span>
+    </div>
+</div>
+
+<!-- Product Display Order-->
+<div class="form-cell">
+    <label for="displayOrder">Display Order</label>
+    <div class="form-field" style="width: 30%;">
+        <input ng-model="product.displayOrder" name="displayOrder" id="displayOrder" type="text"
+               maxlength="20"/>
+                                        <span class="field-error"
+                                              ng-show="createProductForm.displayOrder.$error.required && showErrorForCreate"
+                                              openlmis-message="missing.value">
+                                        </span>
+    </div>
+</div>
+
+<!-- Product Form-->
+<div class="form-cell">
+    <label for="formid">Product Form</label>
+
+    <div class="form-field" style="width: 30%;">
+
+        <select ui-select2 style="width:200px;" name="formid" id="formid" ng-model="product.formid"
+                ng-options="option.id as option.name for option in productForms">
+
+        </select>
+                                       <span class="field-error"
+                                             ng-show="createProductForm.productForm.$error.required && showErrorForCreate"
+                                             openlmis-message="missing.value">
+                                        </span>
+    </div>
+</div>
+
+
+<!-- Product Categories-->
+<div class="form-cell">
+    <label for="categoryid">Category</label>
+
+    <div class="form-field" style="width: 30%;">
+
+        <select ui-select2 style="width:200px;" name="categoryid" id="categoryid" ng-model="product.productCategory"
+                ng-options="option.id as option.name for option in productCategories">
+
+        </select>
+                                       <span class="field-error"
+                                             ng-show="createProductForm.productDisplayOrder.$error.required && showErrorForCreate"
+                                             openlmis-message="missing.value">
+                                        </span>
+    </div>
+</div>
+
+
+<!-- Thresh hold-->
+<div class="form-cell">
+    <label for="packRoundingThreshold">Threshold<span
+            class="label-required"> *</span></label>
+
+    <div class="form-field" style="width: 30%;">
+        <input ng-model="product.packRoundingThreshold" name="packRoundingThreshold" id="packRoundingThreshold" type="text"
+               maxlength="20"
+               ng-required="true"/>
+                                        <span class="field-error"
+                                              ng-show="createProductForm.packRoundingThreshold.$error.required && showErrorForCreate"
+                                              openlmis-message="missing.value">
+                                        </span>
+    </div>
+</div>
+
+<div class="form-cell"></div>
+
+
+<!-- Product Full Supply-->
+<div class="form-cell">
+    <div class="form-field" style="width: 30%;">
+        <table>
+            <tr>
+                <td><input ng-model="product.fullSupply" name="fullSupply" id="fullSupply"
+                           type="checkbox"
+                           ng-required="false"/>
+                </td>
+                <td>&nbsp;</td>
+                </td>
+                <td>Full Supply</td>
+            </tr>
+            <tr>
+                <td>
+                    <input ng-model="product.tracer" name="tracer" id="tracer" type="checkbox"
+                           ng-required="false"/>
+                </td>
+                <td>&nbsp;</td>
+                </td>
+                <td>Tracer</td>
+            </tr>
+            <tr>
+                <td>
+                    <input ng-model="product.active" name="active" id="active" type="checkbox" ng-required="false"/>
+                </td>
+                <td>&nbsp;</td>
+                </td>
+                <td>Active</td>
+            </tr>
+            <tr>
+                <td>
+                    <input ng-model="product.roundToZero" name="roundToZero" id="roundToZero" type="checkbox"
+                           ng-required="false"/>
+                </td>
+                <td>&nbsp;</td>
+                </td>
+                <td>Round to Zero</td>
+            </tr>
+
+
+        </table>
+    </div>
+</div>
+
+
+
+
+</div>
+</div> <!--basic information-->
+
+<div class="form-group">
+    <h3>Program Association</h3>
+
+    <div class="form-cell">
+            <div id = "program-{{program.id}}" class = "checkbox-list clearfix" ng-repeat = "program in programs" tab-scroll>
+                 <span style="width: 100px;"><input id = "{{program.id}}" type = "checkbox" ng-checked = "contains(program.id)" ng-model = "checked"  /></span>
+                <label for = "{{program.id}}">
+                    <span openlmis-message="program.name"></span>
+                </label >
+
+            </div >
+    </div>
+</div> <!--program association-->
+
+    <div class="row-fluid product-button-row">
+        <div class="span1"></div>
+        <div class="span2">
+            <input type="submit" class="btn btn-primary btn-small" openlmis-message="button.create"/>
+            <input type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel"
+                   ng-click="cancelAddNewProduct()"/>
+        </div>
+        <div ng-show="creationError" class="span9 form-error" ng-bind="creationError"></div>
+    </div>
+
+</div>
+</div>
+</div>
+</form>
+
+
+<div ng-hide="newProductMode">
+    <!-- column headers-->
+    <div class="row-fluid list-header">
+        <div class="span1" style="float: left; width: 40px;"></div>
+        <div class="span1" style="float: left; width: 40px;"></div>
+        <div class="span1">Code</div>
+        <div class="span3">Name</div>
+        <div class="span1">Strength</div>
+        <div class="span1">Program</div>
+        <div class="span2">Unit of Measure</div>
+        <div class="span1">Active</div>
+        <div class="span1">Full Supply</div>
+
+    </div>
+
+    <!--repeat-->
+    <div ng-repeat="pr in filteredProducts | orderBy:'-fullName':true" class="row-fluid list-row">
+        <div class="span1" style="float: left; width: 40px;">
+            <!-- Edit button-->
+            <input type="button"
+                   class="btn btn-mini pull-right"
+                   value="Edit"
+                   ng-click=""/>
+        </div>
+        <!-- Delete button-->
+        <div class="span1" style="float: left; width: 40px;">
+            <input type="button"
+                   class="btn btn-mini pull-right"
+                   value="Delete"
+                   ng-show="pr.active==true"
+                   ng-click="showConfirmProductDeleteWindow(pr); productsBackupMap[pr.id].delete=true;"/>
+            <input type="button"
+                   class="btn btn-mini pull-right"
+                   value="Restore"
+                   ng-show="pr.active==false"
+                   ng-click="showConfirmProductRestoreWindow(pr); productsBackupMap[pr.id].restore=true;"/>
+
+        </div>
+
+
+        <!-- Code-->
+        <div class="span1" style="overflow: visible;"> {{pr.code}}</div>
+        <!-- name-->
+        <div class="span3" style="..."> {{pr.fullName}}</div>
+        <!-- Strenght-->
+        <div class="span1" style="overflow: visible;"> {{pr.strength}}</div>
+        <!-- Program-->
+        <div class="span1" style="..."> {{pr.programName}}</div>
+        <!-- UOM-->
+        <div class="span2" style="..."> {{pr.dispensingUnit}}</div>
+        <!-- Active-->
+        <div class="span1" style="..."> {{pr.active}}</div>
+        <!-- Active-->
+        <div class="span1" style="..."> {{pr.fullSupply}}</div>
+
+
+        <!--list-->                     </div>
+    <!--list-->    </div>
+</div>
 </div>
 
 

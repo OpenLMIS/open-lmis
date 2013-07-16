@@ -21,11 +21,8 @@ public interface RegimenColumnMapper {
 
   @Insert({"INSERT INTO program_regimen_columns",
     "(programId, name, label, visible, dataType, createdBy)",
-    "VALUES (#{programId}, #{name}, #{label}, #{visible}, #{dataType}, #{createdBy})"})
-  public void insert(RegimenColumn regimenColumn);
-
-  @Select("SELECT * FROM program_regimen_columns WHERE name = #{name} AND programId = #{programId}")
-  RegimenColumn getRegimenColumnByNameAndProgramId(@Param("name") String name, @Param("programId") Long programId);
+    "VALUES (#{programId}, #{regimenColumn.name}, #{regimenColumn.label}, #{regimenColumn.visible}, #{regimenColumn.dataType}, #{regimenColumn.createdBy})"})
+  public void insert(@Param("regimenColumn")RegimenColumn regimenColumn, @Param("programId")Long programId);
 
   @Select("SELECT * FROM program_regimen_columns WHERE programId = #{programId} ORDER BY id")
   List<RegimenColumn> getAllRegimenColumnsByProgramId(Long programId);
@@ -33,4 +30,7 @@ public interface RegimenColumnMapper {
   @Update("UPDATE program_regimen_columns SET label = #{label}, visible = #{visible}, dataType = #{dataType}, " +
     "modifiedBy = #{modifiedBy}, modifiedDate = CURRENT_TIMESTAMP WHERE id = #{id}")
   void update(RegimenColumn regimenColumn);
+
+  @Select("SELECT * from master_regimen_columns")
+  List<RegimenColumn> getMasterRegimenColumns();
 }

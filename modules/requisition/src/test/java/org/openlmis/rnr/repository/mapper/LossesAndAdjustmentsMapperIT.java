@@ -89,11 +89,11 @@ public class LossesAndAdjustmentsMapperIT {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, processingSchedule.getId())));
     processingPeriodMapper.insert(processingPeriod);
 
-    Rnr requisition = new Rnr(facility.getId(), HIV, processingPeriod.getId(), MODIFIED_BY);
+    Rnr requisition = new Rnr(facility.getId(), HIV, processingPeriod.getId(), MODIFIED_BY, 1L);
     requisition.setStatus(INITIATED);
     requisitionMapper.insert(requisition);
 
-    rnrLineItem = new RnrLineItem(requisition.getId(), facilityTypeApprovedProduct, MODIFIED_BY);
+    rnrLineItem = new RnrLineItem(requisition.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
     rnrLineItemMapper.insert(rnrLineItem);
     lossAndAdjustment = new LossesAndAdjustments();
     LossesAndAdjustmentsType lossesAndAdjustmentsType = new LossesAndAdjustmentsType();

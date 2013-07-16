@@ -364,7 +364,7 @@ public class HomePage extends Page {
   public InitiateRnRPage clickProceed() throws IOException {
     testWebDriver.waitForElementToAppear(proceedButton);
     proceedButton.click();
-
+    testWebDriver.sleep(1000);
     return new InitiateRnRPage(testWebDriver);
   }
 

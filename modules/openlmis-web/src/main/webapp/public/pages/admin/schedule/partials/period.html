@@ -17,19 +17,22 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label >
+            <label>
               <span openlmis-message="period.header.name"></span>
               <span class="label-required">*</span>
             </label>
+
             <div class="form-field">
               <input name="name" id="name" type="text" ng-model="newPeriod.name" maxlength="50" ng-required="true"/>
-              <span class="field-error" ng-show="createPeriodForm.name.$error.required && showErrorForCreate" openlmis-message="missing.value"></span>
+              <span class="field-error" ng-show="createPeriodForm.name.$error.required && showErrorForCreate"
+                    openlmis-message="missing.value"></span>
             </div>
           </div>
           <div class="form-cell">
-            <label >
-              <span openlmis-message="period.header.description"></span>
+            <label>
+              <span openlmis-message="label.description"></span>
             </label>
+
             <div class="form-field">
               <input name="description" id="description" type="text" ng-model="newPeriod.description"
                      maxlength="250"/>
@@ -40,26 +43,36 @@
           <div class="form-cell">
             <label>
 
-            <span openlmis-message="period.start.date"></span>
-            <span class="label-required">*</span>
+              <span openlmis-message="period.start.date"></span>
+              <span class="label-required">*</span>
             </label>
-            <div class="form-field">
-              <input name="startDate" id="startDate" type="text" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}" readonly ng-model="newPeriod.startDate"
-                     value="{{newPeriod.startDate | date:'dd/MM/yyyy'}}" ng-required="true" ng-change="blurDateFields();refreshEndDateOffset(newPeriod.startDate.getTime())" ng-disabled="periodList.length>0" />
 
-              <span class="field-error" ng-show="createPeriodForm.startDate.$error.required && showErrorForCreate" openlmis-message="missing.value"></span>
+            <div class="form-field">
+              <input name="startDate" id="startDate" type="text" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+                     readonly ng-model="newPeriod.startDate"
+                     value="{{newPeriod.startDate | date:'dd/MM/yyyy'}}" ng-required="true"
+                     ng-change="blurDateFields();refreshEndDateOffset(newPeriod.startDate.getTime())"
+                     ng-disabled="periodList.length>0"/>
+
+              <span class="field-error" ng-show="createPeriodForm.startDate.$error.required && showErrorForCreate"
+                    openlmis-message="missing.value"></span>
             </div>
           </div>
           <div class="form-cell">
             <label>
-            <span openlmis-message="period.end.date"></span>
-            <span class="label-required">*</span>
+              <span openlmis-message="period.end.date"></span>
+              <span class="label-required">*</span>
             </label>
-            <div class="form-field">
-              <input name="endDate" id="endDate" type="text" ui-date="{minDate:endDateOffset, dateFormat: 'dd/mm/yy', changeYear: true}" readonly ng-model="newPeriod.endDate"
-                     value="{{newPeriod.endDate | date:'dd/MM/yyyy'}}" ng-required="true" ng-change="blurDateFields()" ng-disabled="!newPeriod.startDate"/>
 
-              <span class="field-error" ng-show="createPeriodForm.endDate.$error.required && showErrorForCreate" openlmis-message="missing.value"></span>
+            <div class="form-field">
+              <input name="endDate" id="endDate" type="text"
+                     ui-date="{minDate:endDateOffset, dateFormat: 'dd/mm/yy', changeYear: true}" readonly
+                     ng-model="newPeriod.endDate"
+                     value="{{newPeriod.endDate | date:'dd/MM/yyyy'}}" ng-required="true" ng-change="blurDateFields()"
+                     ng-disabled="!newPeriod.startDate"/>
+
+              <span class="field-error" ng-show="createPeriodForm.endDate.$error.required && showErrorForCreate"
+                    openlmis-message="missing.value"></span>
             </div>
           </div>
         </div>
@@ -67,7 +80,7 @@
           <div class="form-cell"><span openlmis-message="period.total.days">:</span>
             <span class="cell-text" ng-show="calculateDays(newPeriod.startDate, newPeriod.endDate)+1">{{calculateDays(newPeriod.startDate, newPeriod.endDate)}}</span>
           </div>
-          <div class="form-cell" >
+          <div class="form-cell">
             <span openlmis-message="period.number.of.months"></span>
             <span class="cell-text" ng-show="calculateMonths()" ng-model="newPeriod.numberOfMonths">{{calculateMonths()}}</span>
           </div>
@@ -80,32 +93,38 @@
   </form>
 
   <span>
-    <div class="alert alert-error" id="saveFailMessage"  ng-bind="error" ng-show="error"/>
+    <div class="alert alert-error" id="saveFailMessage" ng-bind="error" ng-show="error"/>
     <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
   </span>
 
   <div>
     <h2 openlmis-message="periods.header"></h2>
-    <div class="row-fluid list-header">
-      <div class="span1">&nbsp;</div>
-      <div class="span1"><span openlmis-message="header.name"></span></div>
-      <div class="span2"><span openlmis-message="header.description"></span></div>
-      <div class="span2"><span openlmis-message="period.header.startDate"></span></div>
-      <div class="span2"><span openlmis-message="period.header.endDate"></span></div>
-      <div class="span1"><span openlmis-message="period.header.totalDays"></span></div>
-      <div class="span2"><span openlmis-message="period.header.numOfMonths"></span></div>
-      <div class="span1">&nbsp;</div>
+
+    <div class="list-header-container">
+      <div class="row-fluid list-header">
+        <div class="span1">&nbsp;</div>
+        <div class="span1"><span openlmis-message="header.name"></span></div>
+        <div class="span2"><span openlmis-message="label.description"></span></div>
+        <div class="span2"><span openlmis-message="period.header.startDate"></span></div>
+        <div class="span2"><span openlmis-message="period.header.endDate"></span></div>
+        <div class="span1"><span openlmis-message="period.header.totalDays"></span></div>
+        <div class="span2"><span openlmis-message="period.header.numOfMonths"></span></div>
+        <div class="span1">&nbsp;</div>
+      </div>
     </div>
-    <div ng-repeat="period in periodList" class="row-fluid list-row">
-      <div class="span1">&nbsp;</div>
-      <div class="span1">{{period.name}}</div>
-      <div class="span2">{{period.description}}</div>
-      <div class="span2">{{period.startDate | date:'dd/MM/yyyy'}}</div>
-      <div class="span2">{{period.endDate | date:'dd/MM/yyyy'}}</div>
-      <div class="span1">{{calculateDays(period.startDate, period.endDate)}}</div>
-      <div class="span2">{{period.numberOfMonths}}</div>
-      <div class="span1">
-        <input ng-show="showDeleteButton($index)" type="button" ng-click="deletePeriod(period.id)" class="btn btn-danger btn btn-mini" value="Delete"/>
+    <div class="list-container">
+      <div ng-repeat="period in periodList" class="row-fluid list-row">
+        <div class="span1">&nbsp;</div>
+        <div class="span1">{{period.name}}</div>
+        <div class="span2">{{period.description}}</div>
+        <div class="span2">{{period.startDate | date:'dd/MM/yyyy'}}</div>
+        <div class="span2">{{period.endDate | date:'dd/MM/yyyy'}}</div>
+        <div class="span1">{{calculateDays(period.startDate, period.endDate)}}</div>
+        <div class="span2">{{period.numberOfMonths}}</div>
+        <div class="span1">
+          <input ng-show="showDeleteButton($index)" type="button" ng-click="deletePeriod(period.id)"
+                 class="btn btn-danger btn btn-mini" value="Delete"/>
+        </div>
       </div>
     </div>
 

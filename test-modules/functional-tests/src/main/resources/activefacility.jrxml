@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="java" pageWidth="782" pageHeight="555" orientation="Landscape" columnWidth="782" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="a0a4e861-0726-422f-b3d5-54b1aefe96ce">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="782" pageHeight="555" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="782" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="a0a4e861-0726-422f-b3d5-54b1aefe96ce">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -43,30 +43,15 @@
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<subDataset name="New Dataset 1" uuid="4c4995cc-f05b-4ad4-86a4-dbb4f6a6eedd">
-		<queryString language="SQL">
-			<![CDATA[select * from users]]>
-		</queryString>
-		<field name="id" class="java.lang.Integer"/>
-		<field name="username" class="java.lang.String"/>
-		<field name="password" class="java.lang.String"/>
-		<field name="firstname" class="java.lang.String"/>
-		<field name="lastname" class="java.lang.String"/>
-		<field name="employeeid" class="java.lang.String"/>
-		<field name="jobtitle" class="java.lang.String"/>
-		<field name="primarynotificationmethod" class="java.lang.String"/>
-		<field name="officephone" class="java.lang.String"/>
-		<field name="cellphone" class="java.lang.String"/>
-		<field name="email" class="java.lang.String"/>
-		<field name="supervisorid" class="java.lang.Integer"/>
-		<field name="facilityid" class="java.lang.Integer"/>
-		<field name="active" class="java.lang.Boolean"/>
-		<group name="username">
-			<groupExpression><![CDATA[$F{username}]]></groupExpression>
-		</group>
-	</subDataset>
+	<parameter name="userId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[select f.code as facilitycode, f.name as facilityname, ft.name as facilitytypename, fo.text as facilityoperatedbytext, f.sdp as sdp, f.golivedate as golivedate from facilities f, facility_types ft, facility_operators fo where f.active= true and  ft.id=f.typeid and fo.id=f.operatedbyid]]>
+		<![CDATA[select f.code as facilitycode, f.name as facilityname, ft.name as facilitytypename, fo.text as facilityoperatedbytext, f.sdp as sdp, f.golivedate as golivedate from facilities f, facility_types ft, facility_operators fo where f.active= true and  ft.id=f.typeid and fo.id=f.operatedbyid AND f.id IN
+		((WITH RECURSIVE  supervisoryNodesRec (id,facilityid) AS
+                 (SELECT distinct s.id, rgm.facilityid FROM  requisition_group_members rgm INNER JOIN requisition_groups rg ON rg.id=rgm.requisitiongroupid INNER JOIN supervisory_nodes s ON s.id=rg.supervisorynodeid INNER JOIN role_assignments ra ON s.id = ra.supervisoryNodeId INNER JOIN role_rights rr ON ra.roleId = rr.roleId WHERE rr.rightName = 'VIEW_REQUISITION' AND ra.userId = $P{userId}
+                 UNION SELECT sn.id,rgm2.facilityid FROM requisition_group_members rgm2 INNER JOIN requisition_groups rg2 ON rg2.id=rgm2.requisitiongroupid INNER JOIN supervisory_nodes sn ON sn.id=rg2.supervisorynodeid INNER JOIN supervisoryNodesRec ON sn.parentId = supervisoryNodesRec.id) select distinct snr.facilityid from supervisoryNodesRec snr)
+                 UNION select distinct u.facilityId from users u where u.id=$P{userId}) order by f.code asc]]>
 	</queryString>
 	<field name="facilitycode" class="java.lang.String"/>
 	<field name="facilityname" class="java.lang.String"/>

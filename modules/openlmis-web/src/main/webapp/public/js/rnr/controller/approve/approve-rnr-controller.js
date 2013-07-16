@@ -4,11 +4,11 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenColumnList, $location, currency, $routeParams, $dialog, $rootScope, messageService) {
+function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, currency, $routeParams, $dialog, $rootScope, messageService) {
   $scope.visibleTab = $routeParams.supplyType;
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
-  $scope.regimenColumns = regimenColumnList;
+  $scope.regimenColumns = regimenTemplate ? regimenTemplate.regimenColumns: [];
   $scope.currency = currency;
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.error = "";
@@ -197,10 +197,10 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
 
 ApproveRnrController.resolve = {
 
-  requisition: function ($q, $timeout, RequisitionById, $route) {
+  requisition: function ($q, $timeout, Requisitions, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      RequisitionById.get({id: $route.current.params.rnr}, function (data) {
+      Requisitions.get({id: $route.current.params.rnr}, function (data) {
         deferred.resolve(data.rnr);
       }, {});
     }, 100);
@@ -227,11 +227,11 @@ ApproveRnrController.resolve = {
     return deferred.promise;
   },
 
-  regimenColumnList: function ($q, $timeout, $route, RegimenColumns) {
+  regimenTemplate: function ($q, $timeout, $route, ProgramRegimenTemplate) {
     var deferred = $q.defer();
     $timeout(function () {
-      RegimenColumns.get({programId: $route.current.params.program}, function (data) {
-        deferred.resolve(data.regimen_columns);
+      ProgramRegimenTemplate.get({programId: $route.current.params.program}, function (data) {
+        deferred.resolve(data.template);
       }, {});
     }, 100);
     return deferred.promise;

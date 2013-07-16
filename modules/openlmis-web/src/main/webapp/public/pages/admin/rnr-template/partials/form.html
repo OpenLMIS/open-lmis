@@ -41,7 +41,7 @@
             </span>
             <span ng-hide="rnrColumn.sourceConfigurable" openlmis-message="rnrColumn.source.description"></span>
             <br/>
-            <a class="rnr-column-formula" href="javascript:void(0);" ng-show="rnrColumn.formula" openlmis-message="rnrColumn.formula"></a>
+            <a class="rnr-column-formula" href="" ng-show="rnrColumn.formula" openlmis-message="rnrColumn.formula"></a>
           </span>
           <span class="tpl-error" ng-show="errorMap[rnrColumn.name]">
             <div class="alert alert-error" ng-bind="errorMap[rnrColumn.name]"></div>
@@ -58,7 +58,7 @@
             <span ng-show="arithmeticValidationMessage" openlmis-message="arithmeticValidationMessage"></span>
         </div>
         <div class="span3">
-          <a href="javascript:void(0);" class="btn btn-primary btn-mini pull-right"
+          <a href="" class="btn btn-primary btn-mini pull-right"
              ng-click="toggleValidateFormulaFlag()" openlmis-message="message.arithmeticValidation.toggle|arithmeticValidationToggleLabel"></a>
         </div>
       </div>
