@@ -106,7 +106,7 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should save work in progress for rnr', function () {
-    scope.rnr = new Rnr({"id": "rnrId"});
+    scope.rnr = {"id": "rnrId"};
     scope.pageLineItems = [rnrLineItem];
     scope.saveRnrForm.$dirty = true;
     scope.saveRnrForm.$setPristine = function () {
@@ -114,14 +114,10 @@ describe('CreateRequisitionController', function () {
     };
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond({'success': "R&R saved successfully!"});
 
-    spyOn(scope.rnr, 'validateFullSupply').andReturn('');
-    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
     scope.saveRnr();
     httpBackend.flush();
     expect(scope.message).toEqual("R&R saved successfully!");
     expect(scope.saveRnrForm.pristine).toBeTruthy();
-    expect(scope.rnr.validateFullSupply).toHaveBeenCalled();
-    expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(1);
   });
 
 
@@ -160,7 +156,7 @@ describe('CreateRequisitionController', function () {
     httpBackend.flush();
 
     expect(scope.rnr.validateFullSupply).toHaveBeenCalled();
-    expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(2);
+    expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(1);
     expect(scope.submitError).toEqual("");
   });
 
@@ -177,7 +173,7 @@ describe('CreateRequisitionController', function () {
     httpBackend.flush();
 
     expect(scope.rnr.validateFullSupply).toHaveBeenCalled();
-    expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(2);
+    expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(1);
     expect(scope.submitError).toEqual("error.rnr.required.fields.missing");
   });
 
@@ -342,38 +338,28 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should set message while saving if set message flag true', function () {
-    scope.rnr = new Rnr({"id": "rnrId"});
+    scope.rnr = {"id": "rnrId"};
     scope.pageLineItems = [rnrLineItem];
     scope.saveRnrForm.$dirty = true;
     scope.saveRnrForm.$setPristine = function () {
       scope.saveRnrForm.pristine = true
     };
-
-    spyOn(scope.rnr, 'validateFullSupply').andReturn('');
-    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success': "success message"});
     scope.saveRnr(false);
     httpBackend.flush();
     expect(scope.message).toEqual('success message');
     expect(scope.saveRnrForm.pristine).toBeTruthy();
-    expect(scope.rnr.validateFullSupply).toHaveBeenCalled();
-    expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(1);
 
   });
 
   it('should not set message while saving if set message flag false', function () {
-    scope.rnr = new Rnr({"id": "rnrId"});
+    scope.rnr = {"id": "rnrId"};
     scope.pageLineItems = [rnrLineItem];
     scope.saveRnrForm.$dirty = true;
-
-    spyOn(scope.rnr, 'validateFullSupply').andReturn('');
-    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success': "success message"});
     scope.saveRnr(true);
     httpBackend.flush();
     expect(scope.message).toEqual('');
-    expect(scope.rnr.validateFullSupply).toHaveBeenCalled();
-    expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(1);
   });
 
   it('should calculate pages which have errors on submit', function () {
@@ -442,7 +428,7 @@ describe('CreateRequisitionController', function () {
     httpBackend.flush();
 
     expect(scope.rnr.validateFullSupply).toHaveBeenCalled();
-    expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(2);
+    expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(1);
     expect(scope.submitError).toEqual("");
   });
 
@@ -459,7 +445,7 @@ describe('CreateRequisitionController', function () {
     httpBackend.flush();
 
     expect(scope.rnr.validateFullSupply).toHaveBeenCalled();
-    expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(2);
+    expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(1);
     expect(scope.submitError).toEqual("error.rnr.required.fields.missing");
   });
 

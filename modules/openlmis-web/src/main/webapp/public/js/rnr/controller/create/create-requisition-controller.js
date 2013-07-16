@@ -103,12 +103,6 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
       return;
     }
     resetFlags();
-    resetErrorPages();
-
-    var errorMessage = validateAndSetErrorClass();
-    if (errorMessage) {
-      setErrorPages();
-    }
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "save"}, rnr, function (data) {
       if (preventMessage) return;
