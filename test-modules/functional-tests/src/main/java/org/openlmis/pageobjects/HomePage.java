@@ -160,6 +160,9 @@ public class HomePage extends Page {
   @FindBy(how = How.LINK_TEXT, using = "Geographic Zones")
   private static WebElement geographicZonesLink;
 
+  @FindBy(how=How.LINK_TEXT, using = "Requisition Groups")
+  private static WebElement requisitionGroupsLink;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Upload')]")
   private static WebElement uploadLink;
 
@@ -184,6 +187,9 @@ public class HomePage extends Page {
 
   @FindBy(how=How.ID, using="geographic-zones-tab")
   private static WebElement geographicZonesTab;
+
+  @FindBy(how=How.ID,using="requisition-group-tab")
+  private static WebElement requisitionGroupsTab;
 
   @FindBy(how = How.LINK_TEXT, using = "Supply Lines")
   private static WebElement supplylinesLink;
@@ -459,6 +465,17 @@ public class HomePage extends Page {
       testWebDriver.waitForElementToAppear(geographicZonesTab);
       geographicZonesTab.click();
       return new ManageGeographicZonesPage(testWebDriver);
+  }
+
+  public ManageRequisitionGroupsPage navigateToRequisitionGroup() throws IOException {
+      SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+      testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+      testWebDriver.keyPress(AdministrationMenuItem);
+      testWebDriver.waitForElementToAppear(manageLink);
+      testWebDriver.keyPress(manageLink);
+      testWebDriver.waitForElementToAppear(requisitionGroupsTab);
+      requisitionGroupsTab.click();
+      return new ManageRequisitionGroupsPage(testWebDriver);
   }
 
   public ApprovePage navigateToApprove() throws IOException {

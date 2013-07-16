@@ -69,7 +69,43 @@ public class ManageGeographicZonesPage extends Page {
         testWebDriver.waitForElementToAppear(viewHereLink);
 
         SeleneseTestNgHelper.assertTrue("Geographic zone '" + name + "' has been successfully created message is not showing up.",saveSuccessMessage.isDisplayed());
+    }
+
+    public void EnterAGeographicZoneAndConfirmEditWorks(String code, String name, String name_Changed, String levelID, String parentID){
+        testWebDriver.waitForElementToAppear(addGeographicZoneButton);
+        addGeographicZoneButton.click();
+        testWebDriver.waitForElementToAppear(geographicZoneCodeField);
+
+        geographicZoneCodeField.clear();
+        geographicZoneCodeField.sendKeys(code);
+        geographicZoneNameField.clear();
+        geographicZoneNameField.sendKeys(name);
+        testWebDriver.selectByValue(geographicZoneLevelField, levelID);
+        testWebDriver.selectByValue(geographicZoneParentField, parentID);
+
+        testWebDriver.waitForElementToAppear(saveButton);
+        saveButton.click();
+
+        testWebDriver.sleep(1500);
+        testWebDriver.waitForElementToAppear(viewHereLink);
+
         viewHereLink.click();
+
+
+        testWebDriver.waitForElementToAppear(geographicZoneNameField);
+        geographicZoneNameField.clear();
+        geographicZoneNameField.sendKeys(name_Changed);
+        testWebDriver.waitForElementToAppear(saveButton);
+        saveButton.click();
+
+        testWebDriver.sleep(1500);
+        testWebDriver.waitForElementToAppear(viewHereLink);
+
+        viewHereLink.click();
+
+        testWebDriver.waitForElementToAppear(geographicZoneNameField);
+        SeleneseTestNgHelper.assertTrue("Editing the geographic zone isn't working.", geographicZoneNameField.getText().equals(name_Changed));
+
     }
 
 

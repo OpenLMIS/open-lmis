@@ -32,6 +32,8 @@
       </class>
       <class name="org.openlmis.functional.E2EManageGeographicZones">
       </class>
+      <class name="org.openlmis.functional.E2EManageRequisitionGroups">
+      </class>
     </classes>
   </test>
 </suite>
