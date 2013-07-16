@@ -179,7 +179,8 @@ function ProductController($scope, $location, $dialog, messageService, Products,
             return;
         }
         $scope.showErrorForCreate = false;
-        CreateProduct.save({}, $scope.newProduct, function (data) {
+
+        CreateProduct.post( $scope.product, function (data) {
             alert(JSON.stringify( $scope.newProduct, null, 4));
             $scope.products.unshift(data.product);
             $scope.completeAddNewProduct(data.product);

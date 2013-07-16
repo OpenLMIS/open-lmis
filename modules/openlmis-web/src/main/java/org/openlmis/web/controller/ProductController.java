@@ -114,7 +114,7 @@ public class ProductController extends BaseController {
     }
 
       // create product
-    @RequestMapping(value = "/createProduct", method = { RequestMethod.POST },  headers = "Accept=application/json")
+    @RequestMapping(value = "/createProduct", method = RequestMethod.POST ,  headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> save(@RequestBody Product product, HttpServletRequest request) {
         product.setModifiedBy(loggedInUserId(request));
