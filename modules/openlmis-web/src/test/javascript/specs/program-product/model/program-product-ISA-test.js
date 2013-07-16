@@ -12,7 +12,7 @@ describe('ProgramProductIsa', function () {
       whoRatio: 1,
       adjustmentValue: 33,
       dosesPerYear: 45,
-      wastageRate: 1,
+      wastageFactor: 1,
       bufferPercentage: 7,
       minimumValue: 3
     }
@@ -25,7 +25,7 @@ describe('ProgramProductIsa', function () {
     expect(programProductIsa.whoRatio).toEqual(0);
     expect(programProductIsa.adjustmentValue).toEqual(0);
     expect(programProductIsa.dosesPerYear).toEqual(0);
-    expect(programProductIsa.wastageRate).toEqual(0);
+    expect(programProductIsa.wastageFactor).toEqual(0);
     expect(programProductIsa.bufferPercentage).toEqual(0);
     expect(programProductIsa.minimumValue).toEqual(undefined);
     expect(programProductIsa.maximumValue).toEqual(undefined);
@@ -39,7 +39,7 @@ describe('ProgramProductIsa', function () {
     expect(programProductIsa.whoRatio).toEqual(1);
     expect(programProductIsa.adjustmentValue).toEqual(33);
     expect(programProductIsa.dosesPerYear).toEqual(45);
-    expect(programProductIsa.wastageRate).toEqual(1);
+    expect(programProductIsa.wastageFactor).toEqual(1);
     expect(programProductIsa.bufferPercentage).toEqual(7);
     expect(programProductIsa.minimumValue).toEqual(3);
     expect(programProductIsa.maximumValue).toEqual(undefined);

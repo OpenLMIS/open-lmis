@@ -3,22 +3,22 @@
 
 DROP TABLE IF EXISTS program_product_isa;
 CREATE TABLE program_product_isa (
-    id SERIAL PRIMARY KEY,
-    whoRatio NUMERIC(6,3) NOT NULL,
-    dosesPerYear INTEGER NOT NULL,
-    wastageRate NUMERIC(6,3) NOT NULL,
-    programProductId INTEGER REFERENCES program_products(id) NOT NULL,
-    bufferPercentage NUMERIC(6,3) NOT NULL,
-    minimumValue INTEGER,
-    maximumValue INTEGER,
-    adjustmentValue INTEGER NOT NULL,
-    createdBy INTEGER,
-    createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modifiedBy INTEGER,
-    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  id               SERIAL PRIMARY KEY,
+  whoRatio         NUMERIC(6, 3)                            NOT NULL,
+  dosesPerYear     INTEGER                                  NOT NULL,
+  wastageFactor    NUMERIC(6, 3)                            NOT NULL,
+  programProductId INTEGER REFERENCES program_products (id) NOT NULL,
+  bufferPercentage NUMERIC(6, 3)                            NOT NULL,
+  minimumValue     INTEGER,
+  maximumValue     INTEGER,
+  adjustmentValue  INTEGER                                  NOT NULL,
+  createdBy        INTEGER,
+  createdDate      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy       INTEGER,
+  modifiedDate     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE UNIQUE INDEX i_program_product_isa_programProductId ON program_product_isa(programProductId);
+CREATE UNIQUE INDEX i_program_product_isa_programProductId ON program_product_isa (programProductId);
 
 
 

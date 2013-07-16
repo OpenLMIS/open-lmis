@@ -94,7 +94,7 @@ describe("ISA Controller", function () {
         {programProductId: 1, facilityId: 1, overriddenIsa: 34, programProductIsa: {
           whoRatio: 10,
           dosesPerYear: 10,
-          wastageRate: 10,
+          wastageFactor: 10,
           bufferPercentage: 50,
           minimumValue: 10,
           adjustmentValue: 15
@@ -102,7 +102,7 @@ describe("ISA Controller", function () {
         {programProductId: 2, facilityId: 1, overriddenIsa: 45, programProductIsa: {
           whoRatio: 1,
           dosesPerYear: 1,
-          wastageRate: 1,
+          wastageFactor: 1,
           bufferPercentage: 5,
           minimumValue: 1,
           adjustmentValue: 5

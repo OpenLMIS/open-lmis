@@ -148,8 +148,8 @@ public class TestCaseHelper {
     dbWrapper.insertProgramProductsWithCategory(product, program);
   }
 
-  public void setupProgramProductISA(String program, String product, String whoratio, String dosesperyear, String wastagerate, String bufferpercentage, String minimumvalue, String maximumvalue, String adjustmentvalue) throws IOException, SQLException {
-    dbWrapper.insertProgramProductISA(program, product, whoratio, dosesperyear, wastagerate, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue);
+  public void setupProgramProductISA(String program, String product, String whoratio, String dosesperyear, String wastageFactor, String bufferpercentage, String minimumvalue, String maximumvalue, String adjustmentvalue) throws IOException, SQLException {
+    dbWrapper.insertProgramProductISA(program, product, whoratio, dosesperyear, wastageFactor, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue);
   }
 
   public void setupRequisitionGroupData(String RGCode1, String RGCode2, String SupervisoryNodeCode1, String SupervisoryNodeCode2, String Facility1, String Facility2) throws IOException, SQLException {

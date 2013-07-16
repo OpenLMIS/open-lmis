@@ -361,9 +361,9 @@ public class DBWrapper {
       "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product + "'), 30, 12.5, true);");
   }
 
-  public void insertProgramProductISA(String program, String product, String whoratio, String dosesperyear, String wastagerate, String bufferpercentage, String minimumvalue, String maximumvalue, String adjustmentvalue) throws SQLException, IOException {
-    update("INSERT INTO program_product_isa(programproductid, whoratio, dosesperyear, wastagerate, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue) VALUES\n" +
-      "((SELECT ID from program_products where programid=(SELECT ID from programs where code='" + program + "') and productid= (SELECT id from products WHERE code = '" + product + "'))," + whoratio + "," + dosesperyear + "," + wastagerate + "," + bufferpercentage + "," + minimumvalue + "," + maximumvalue + "," + adjustmentvalue + ");");
+  public void insertProgramProductISA(String program, String product, String whoratio, String dosesperyear, String wastageFactor, String bufferpercentage, String minimumvalue, String maximumvalue, String adjustmentvalue) throws SQLException, IOException {
+    update("INSERT INTO program_product_isa(programproductid, whoratio, dosesperyear, wastageFactor, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue) VALUES\n" +
+      "((SELECT ID from program_products where programid=(SELECT ID from programs where code='" + program + "') and productid= (SELECT id from products WHERE code = '" + product + "'))," + whoratio + "," + dosesperyear + "," + wastageFactor + "," + bufferpercentage + "," + minimumvalue + "," + maximumvalue + "," + adjustmentvalue + ");");
   }
 
   public void insertFacilityApprovedProducts(String product1, String product2, String program, String facilityType) throws SQLException, IOException {
@@ -505,7 +505,7 @@ public class DBWrapper {
     if (rs.next()) {
       isaParams[0] = rs.getString("whoratio");
       isaParams[1] = rs.getString("dosesperyear");
-      isaParams[2] = rs.getString("wastagerate");
+      isaParams[2] = rs.getString("wastageFactor");
       isaParams[3] = rs.getString("bufferpercentage");
       isaParams[4] = rs.getString("adjustmentvalue");
       isaParams[5] = rs.getString("minimumvalue");

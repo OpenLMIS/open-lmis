@@ -115,15 +115,15 @@
                   class="label-required"> *</span></label>
             </div>
             <div class="span4">
-              <input id="wastage-rate" name="wastageRate" type="text" ng-required="true"
-                     ng-model="currentProgramProduct.programProductIsa.wastageRate"
+              <input id="wastage-factor" name="wastageFactor" type="text" ng-required="true"
+                     ng-model="currentProgramProduct.programProductIsa.wastageFactor"
                      ng-change="error=''"
                      maxlength="7"
                      numeric-validator="numericValue,3,3"
-                     ng-class="highlightRequired(currentProgramProduct.programProductIsa.wastageRate)"/>
+                     ng-class="highlightRequired(currentProgramProduct.programProductIsa.wastageFactor)"/>
               <span>%</span>
 
-              <div id="wastageRate" class="form-error" openlmis-message="error.enter.numeric.value"></div>
+              <div id="wastageFactor" class="form-error" openlmis-message="error.enter.numeric.value"></div>
             </div>
           </div>
 
