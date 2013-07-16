@@ -17,14 +17,11 @@ public class ProgramSupportedEventService {
   @Autowired
   private EventService eventService;
 
-  @Autowired
-  private ProgramSupportedRepository programSupportedRepository;
-
   public void notify(List<ProgramSupported> programSupportedList) {
 
     try {
       ProgramSupportedEventDTO programSupportedEventDTO = new ProgramSupportedEventDTO(
-        programSupportedRepository.getAllByFacilityId(programSupportedList.get(0).getFacilityId()));
+        programSupportedList.get(0).getFacilityCode(), programSupportedList);
       eventService.notify(new ProgramSupportedEvent(programSupportedEventDTO));
     } catch (URISyntaxException e) {
       e.printStackTrace();

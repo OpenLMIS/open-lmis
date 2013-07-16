@@ -25,7 +25,8 @@ public interface ProgramSupportedMapper {
   @Select("SELECT * FROM programs_supported " +
     "WHERE facilityId = #{facilityId} AND programId = #{programId} LIMIT 1")
   @Results({
-    @Result(property = "program", javaType = Program.class, column = "programId", one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+    @Result(property = "program", javaType = Program.class, column = "programId",
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
   })
   ProgramSupported getBy(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
@@ -43,7 +44,4 @@ public interface ProgramSupportedMapper {
     "where facilityId=#{facilityId} AND programId=#{program.id}")
   void updateSupportedProgram(ProgramSupported programSupported);
 
-  @Select("SELECT f.code as facilityCode,p.name as programName,p.code as programCode,ps.active as programStatus FROM programs_supported ps, facilities f, programs p" +
-    " WHERE ps.id = #{id} AND f.id=ps.facilityId AND ps.programId=p.id")
-  ProgramSupportedEventDTO getProgramSupportedDTO(ProgramSupported programSupported);
 }

@@ -94,9 +94,4 @@ public class ProgramSupportedRepository {
   public void updateSupportedProgram(ProgramSupported programSupported) {
     programSupportedMapper.updateSupportedProgram(programSupported);
   }
-
-  public ProgramSupportedEventDTO getProgramSupportedEventDTO(ProgramSupported programSupported) {
-    return programSupportedMapper.getProgramSupportedDTO(programSupported);
-
-  }
 }

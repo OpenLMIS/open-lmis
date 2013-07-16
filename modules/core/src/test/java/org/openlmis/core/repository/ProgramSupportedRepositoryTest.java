@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -93,7 +94,7 @@ public class ProgramSupportedRepositoryTest {
     programSupported.setProgram(program);
 
     doThrow(new DuplicateKeyException("Facility has already been mapped to the program")).when(
-        programSupportedMapper).addSupportedProgram(programSupported);
+      programSupportedMapper).addSupportedProgram(programSupported);
 
     expectedEx.expect(dataExceptionMatcher("error.facility.program.mapping.exists"));
 
@@ -122,7 +123,7 @@ public class ProgramSupportedRepositoryTest {
     facility.setId(1L);
 
     final ProgramSupported hivProgram = make(a(defaultProgramSupported, with(supportedProgram, new Program(1L, "HIV")),
-        with(supportedFacilityId, facility.getId())));
+      with(supportedFacilityId, facility.getId())));
 
     List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()))));
@@ -131,7 +132,7 @@ public class ProgramSupportedRepositoryTest {
 
     facility.setSupportedPrograms(programs);
     final ProgramSupported arvProgram = make(a(defaultProgramSupported, with(supportedProgram, new Program(2L, "ARV")),
-        with(supportedFacilityId, facility.getId())));
+      with(supportedFacilityId, facility.getId())));
 
     List<ProgramSupported> previouslySupportedProgramsForFacility = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()))));
@@ -150,7 +151,7 @@ public class ProgramSupportedRepositoryTest {
     facility.setId(1L);
 
     final ProgramSupported hivProgram = make(a(defaultProgramSupported, with(supportedProgram, new Program(1L, "HIV")),
-        with(supportedFacilityId, facility.getId())));
+      with(supportedFacilityId, facility.getId())));
     List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()))));
       add(hivProgram);
@@ -179,14 +180,4 @@ public class ProgramSupportedRepositoryTest {
     verify(programSupportedMapper).updateSupportedProgram(programSupported);
   }
 
-  @Test
-  public void shouldGetProgramSupportedDTO() throws Exception {
-
-    ProgramSupported programSupported = new ProgramSupported();
-    Mockito.when(programSupportedMapper.getProgramSupportedDTO(programSupported)).thenReturn(new ProgramSupportedEventDTO());
-
-    programSupportedRepository.getProgramSupportedEventDTO(programSupported);
-
-    verify(programSupportedMapper).getProgramSupportedDTO(programSupported);
-  }
 }

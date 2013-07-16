@@ -10,12 +10,16 @@ import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.dto.ProgramSupportedEventDTO;
 import org.openlmis.core.event.ProgramSupportedEvent;
 import org.openlmis.core.repository.ProgramSupportedRepository;
+import org.openlmis.core.service.event.ProgramSupportedEventService;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
@@ -37,29 +41,16 @@ public class ProgramSupportedEventServiceTest {
   public void shouldNotifyEventWithProgramSupportedEvent() throws Exception {
 
     ProgramSupported programSupported = new ProgramSupported();
-    ProgramSupportedEventDTO programSupportedEventDTO = new ProgramSupportedEventDTO();
+    List<ProgramSupported> programSupportedList = new ArrayList<>();
+    programSupportedList.add(programSupported);
+    ProgramSupportedEventDTO programSupportedEventDTO = new ProgramSupportedEventDTO(
+      programSupportedList.get(0).getFacilityCode(),programSupportedList);
     ProgramSupportedEvent programSupportedEvent = mock(ProgramSupportedEvent.class);
-    when(programSupportedRepository.getProgramSupportedEventDTO(programSupported)).thenReturn(programSupportedEventDTO);
     whenNew(ProgramSupportedEvent.class).withArguments(programSupportedEventDTO).thenReturn(programSupportedEvent);
 
-    service.notify(programSupported);
+    service.notify(asList(programSupported));
 
     verify(eventService).notify(programSupportedEvent);
   }
 
-  @Test
-  public void shouldGetProgramSupportedEventDTO() throws Exception {
-
-    ProgramSupported programSupported = new ProgramSupported();
-    ProgramSupportedEventDTO programSupportedEventDTO = new ProgramSupportedEventDTO();
-    ProgramSupportedEvent programSupportedEvent = mock(ProgramSupportedEvent.class);
-
-    when(programSupportedRepository.getProgramSupportedEventDTO(programSupported)).thenReturn(programSupportedEventDTO);
-    whenNew(ProgramSupportedEvent.class).withArguments(programSupportedEventDTO).thenReturn(programSupportedEvent);
-
-    service.notify(programSupported);
-
-    verify(programSupportedRepository).getProgramSupportedEventDTO(programSupported);
-
-  }
 }
