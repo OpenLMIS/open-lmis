@@ -6,6 +6,7 @@
 
 package org.openlmis.web.controller;
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -163,7 +164,12 @@ public class FacilityControllerTest {
   @Test
   public void shouldGetFacilityById() throws Exception {
     Long id = 1L;
-    facilityController.getFacility(id);
+    Facility facility = new Facility();
+    when(facilityService.getById(id)).thenReturn(facility);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.getFacility(id);
+
+    assertThat((Facility) responseEntity.getBody().getData().get("facility"), is(facility));
     verify(facilityService).getById(id);
   }
 

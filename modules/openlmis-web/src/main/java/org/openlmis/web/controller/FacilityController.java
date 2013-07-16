@@ -33,6 +33,7 @@ import static org.openlmis.core.domain.Facility.createFacilityToBeDeleted;
 import static org.openlmis.core.domain.Facility.createFacilityToBeRestored;
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -72,11 +73,9 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "/facilities/{id}", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public ResponseEntity<ModelMap> getFacility(@PathVariable(value = "id") Long id) {
-    ModelMap modelMap = new ModelMap();
-    modelMap.put("facility", facilityService.getById(id));
-    return new ResponseEntity<>(modelMap, HttpStatus.OK);
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_FACILITY')")
+  public ResponseEntity<OpenLmisResponse> getFacility(@PathVariable(value = "id") Long id) {
+    return response("facility", facilityService.getById(id));
   }
 
 
@@ -124,7 +123,7 @@ public class FacilityController extends BaseController {
 
   @RequestMapping(value = "/user/facilities/view", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> listForViewing(HttpServletRequest request) {
-    return OpenLmisResponse.response("facilities",
+    return response("facilities",
       facilityService.getForUserAndRights(loggedInUserId(request), VIEW_REQUISITION));
   }
 
@@ -164,7 +163,7 @@ public class FacilityController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getFacilitiesForDeliveryZoneAndProgram(@PathVariable("deliveryZoneId") Long deliveryZoneId, @PathVariable("programId") Long programId) {
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
 
-    return OpenLmisResponse.response("facilities", facilities);
+    return response("facilities", facilities);
   }
 
   private ResponseEntity<OpenLmisResponse> createErrorResponse(Facility facility, DataException exception) {
