@@ -201,11 +201,3 @@ services.factory('RestoreProduct', function ($resource) {
 services.factory('DosageUnits', function ($resource) {
     return $resource('/dosageUnits.json', {});
 });
-// mahmed 07.13.2013
-services.factory('Products', function ($resource) {
-    return $resource('/products.json', {});
-});
-// mahmed 07.13.2013
-services.factory('Product', function ($resource) {
-    return $resource('/products/:id.json', {}, {update:{method:'PUT'}});
-});
