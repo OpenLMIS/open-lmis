@@ -8,6 +8,7 @@ package org.openlmis.functional;
 
 
 import cucumber.api.DataTable;
+import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -363,6 +364,7 @@ public class InitiateRnR extends TestCaseHelper {
 
 
   @AfterMethod(groups = {"functional", "smoke"})
+  @After
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
