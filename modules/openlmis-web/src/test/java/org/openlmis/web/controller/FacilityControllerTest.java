@@ -6,7 +6,6 @@
 
 package org.openlmis.web.controller;
 
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -102,14 +101,15 @@ public class FacilityControllerTest {
   public void shouldInsertFacilityAndTagWithModifiedBy() throws Exception {
     Facility facility = new Facility();
     facility.setName("test facility");
-
-    when(messageService.message("message.facility.created.success", facility.getName())).thenReturn("Facility 'test facility' created successfully");
+    when(messageService.message("message.facility.created.success",
+      facility.getName())).thenReturn("Facility 'test facility' created successfully");
 
     ResponseEntity responseEntity = facilityController.insert(facility, httpServletRequest);
+
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
     assertThat(response.getSuccessMsg(), is("Facility 'test facility' created successfully"));
-    verify(facilityService).insert(facility);
+    verify(facilityService).update(facility);
   }
 
   @Test
@@ -129,7 +129,7 @@ public class FacilityControllerTest {
   @Test
   public void shouldReturnErrorMessageIfInsertFails() throws Exception {
     Facility facility = new Facility();
-    doThrow(new DataException("error message")).when(facilityService).insert(facility);
+    doThrow(new DataException("error message")).when(facilityService).update(facility);
     ResponseEntity responseEntity = facilityController.insert(facility, httpServletRequest);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();

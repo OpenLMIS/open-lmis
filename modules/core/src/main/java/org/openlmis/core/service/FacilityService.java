@@ -48,12 +48,6 @@ public class FacilityService {
 
   private static final Logger logger = Logger.getLogger(FacilityService.class);
 
-  @Transactional
-  public void insert(Facility facility) {
-    save(facility);
-    //TODO reuse API used in update() API for manipulating ProgramSupported
-    programSupportedService.addSupportedProgramsFor(facility);
-  }
 
   @Transactional
   public void update(Facility facility) {

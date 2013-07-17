@@ -32,9 +32,7 @@ import java.util.Map;
 import static org.openlmis.core.domain.Facility.createFacilityToBeDeleted;
 import static org.openlmis.core.domain.Facility.createFacilityToBeRestored;
 import static org.openlmis.core.domain.Right.*;
-import static org.openlmis.web.response.OpenLmisResponse.error;
-import static org.openlmis.web.response.OpenLmisResponse.response;
-import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
@@ -97,7 +95,7 @@ public class FacilityController extends BaseController {
     facility.setModifiedBy(loggedInUserId(request));
     ResponseEntity<OpenLmisResponse> response;
     try {
-      facilityService.insert(facility);
+      facilityService.update(facility);
     } catch (DataException exception) {
       return createErrorResponse(facility, exception);
     }

@@ -49,14 +49,6 @@ public class ProgramSupportedRepository {
     }
   }
 
-  public void addSupportedProgramsFor(Facility facility) {
-    for (ProgramSupported supportedProgram : facility.getSupportedPrograms()) {
-      supportedProgram.setModifiedBy(facility.getModifiedBy());
-      supportedProgram.setFacilityId(facility.getId());
-      addSupportedProgram(supportedProgram);
-    }
-  }
-
   //TODO simplify
   public void updateSupportedPrograms(Facility facility) {
     List<ProgramSupported> previouslySupportedPrograms = programSupportedMapper.getAllByFacilityId(facility.getId());

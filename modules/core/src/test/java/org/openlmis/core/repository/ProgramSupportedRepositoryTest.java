@@ -16,7 +16,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
-import org.openlmis.core.builder.ProgramSupportedBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
@@ -102,22 +101,6 @@ public class ProgramSupportedRepositoryTest {
     expectedEx.expect(dataExceptionMatcher("error.facility.program.mapping.exists"));
 
     programSupportedRepository.addSupportedProgram(programSupported);
-  }
-
-  @Test
-  public void shouldAddSupportedProgramsForFacility() throws Exception {
-    Facility facility = new Facility();
-    ArrayList<ProgramSupported> supportedPrograms = new ArrayList<>();
-    ProgramSupported firstProgramSupported = make(a(ProgramSupportedBuilder.defaultProgramSupported));
-    ProgramSupported secondProgramSupported = new ProgramSupported();
-    supportedPrograms.add(firstProgramSupported);
-    supportedPrograms.add(secondProgramSupported);
-    facility.setSupportedPrograms(supportedPrograms);
-
-    programSupportedRepository.addSupportedProgramsFor(facility);
-
-    verify(programSupportedMapper).add(firstProgramSupported);
-    verify(programSupportedMapper).add(secondProgramSupported);
   }
 
   @Test
@@ -224,7 +207,9 @@ public class ProgramSupportedRepositoryTest {
   }
 
 
-  private static Matcher<ProgramSupported> programSupportedMatcher(final Long facilityId, final Boolean active, final Date startDate, final Long modifiedBy, final Long createdBy) {
+  private static Matcher<ProgramSupported> programSupportedMatcher(final Long facilityId, final Boolean active,
+                                                                   final Date startDate, final Long modifiedBy,
+                                                                   final Long createdBy) {
     return new ArgumentMatcher<ProgramSupported>() {
       @Override
       public boolean matches(Object argument) {

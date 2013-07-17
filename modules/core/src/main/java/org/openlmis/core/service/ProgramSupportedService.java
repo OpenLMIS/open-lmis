@@ -33,10 +33,6 @@ public class ProgramSupportedService {
     repository.addSupportedProgram(programSupported);
   }
 
-  public void addSupportedProgramsFor(Facility facility) {
-    repository.addSupportedProgramsFor(facility);
-  }
-
   public void updateSupportedPrograms(Facility facility) {
     repository.updateSupportedPrograms(facility);
   }

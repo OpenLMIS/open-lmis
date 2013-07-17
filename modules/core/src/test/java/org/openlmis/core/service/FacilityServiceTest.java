@@ -169,37 +169,6 @@ public class FacilityServiceTest {
 
 
   @Test
-  public void shouldInsertFacility() throws Exception {
-    Facility facility = make(a(FacilityBuilder.defaultFacility));
-
-    when(facilityRepository.getById(facility.getId())).thenReturn(facility);
-
-    facilityService.insert(facility);
-
-    verify(facilityRepository).save(facility);
-    verify(programSupportedService).addSupportedProgramsFor(facility);
-    verify(facilityRepository).getById(facility.getId());
-    verify(eventService).notify(any(Event.class));
-  }
-
-  @Test
-  public void shouldThrowExceptionIfProgramsSupportedInvalidWhileInserting() throws Exception {
-    Facility facility = new Facility();
-    final Date nullDate = null;
-    List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
-      add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(1L, "HIV")), with(isActive, true), with(startDate, nullDate))));
-    }};
-
-    facility.setSupportedPrograms(programs);
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("supported.programs.invalid");
-
-    facilityService.insert(facility);
-  }
-
-  @Test
   public void shouldThrowExceptionIfProgramsSupportedInvalidWhileUpdating() throws Exception {
     Facility facility = new Facility();
     final Date nullDate = null;
