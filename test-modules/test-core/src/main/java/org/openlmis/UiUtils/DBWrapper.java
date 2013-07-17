@@ -601,12 +601,12 @@ public class DBWrapper {
   }
 
   public String getUserID(String userName) throws IOException, SQLException {
-    String facilityID = null;
+    String usetID = null;
     ResultSet rs = query("select id from users where username='" + userName + "'");
     if (rs.next()) {
-      facilityID = rs.getString("id");
+        usetID = rs.getString("id");
     }
-    return facilityID;
+    return usetID;
 
   }
 
