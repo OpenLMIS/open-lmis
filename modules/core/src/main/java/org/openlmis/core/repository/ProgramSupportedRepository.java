@@ -57,6 +57,7 @@ public class ProgramSupportedRepository {
     }
   }
 
+  //TODO simplify
   public void updateSupportedPrograms(Facility facility) {
     List<ProgramSupported> previouslySupportedPrograms = programSupportedMapper.getAllByFacilityId(facility.getId());
     Iterator<ProgramSupported> previousPSIterator = previouslySupportedPrograms.iterator();
@@ -77,6 +78,9 @@ public class ProgramSupportedRepository {
     }
 
     for (ProgramSupported ps : facility.getSupportedPrograms()) {
+      ps.setFacilityId(facility.getId());
+      ps.setModifiedBy(facility.getModifiedBy());
+      ps.setCreatedBy(facility.getModifiedBy());
       programSupportedMapper.add(ps);
     }
     for (ProgramSupported ps : previouslySupportedPrograms) {

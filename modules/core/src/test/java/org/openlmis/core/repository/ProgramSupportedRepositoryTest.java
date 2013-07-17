@@ -6,6 +6,7 @@
 
 package org.openlmis.core.repository;
 
+import org.hamcrest.Matcher;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,6 +14,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.openlmis.core.builder.ProgramSupportedBuilder;
 import org.openlmis.core.domain.Facility;
@@ -121,10 +123,11 @@ public class ProgramSupportedRepositoryTest {
   @Test
   public void shouldInsertIfDoestNotExist() throws Exception {
 
-    ProgramSupported programSupported = make(a(defaultProgramSupported));
-
-    Facility facility = make(a(defaultFacility, with(programSupportedList, asList(programSupported))));
     Long facilityId = 100L;
+    Long programId = 123L;
+    Date date = new Date();
+    ProgramSupported programSupported = new ProgramSupported(programId, false, date);
+    Facility facility = make(a(defaultFacility, with(programSupportedList, asList(programSupported))));
 
     facility.setId(facilityId);
     List<ProgramSupported> previouslyProgramSupportedList = new ArrayList<>();
@@ -134,8 +137,8 @@ public class ProgramSupportedRepositoryTest {
     programSupportedRepository.updateSupportedPrograms(facility);
 
     verify(programSupportedMapper).getAllByFacilityId(facilityId);
-    verify(programSupportedMapper).add(programSupported);
-
+    verify(programSupportedMapper).add(argThat(programSupportedMatcher(facilityId, programSupported.getActive(),
+      programSupported.getStartDate(), facility.getModifiedBy(), facility.getModifiedBy())));
   }
 
   @Test
@@ -180,8 +183,8 @@ public class ProgramSupportedRepositoryTest {
     verify(programSupportedMapper, never()).delete(anyLong(), anyLong());
     verify(programSupportedMapper, never()).add(any(ProgramSupported.class));
 
-    ProgramSupported savedProgramSupported = programSupportedSentToMapper(facilityId, editedProgramSupported, facility);
-    verify(programSupportedMapper).update(savedProgramSupported);
+    verify(programSupportedMapper).update(argThat(programSupportedMatcher(facilityId, editedProgramSupported.getActive(),
+      editedProgramSupported.getStartDate(), facility.getModifiedBy(), null)));
   }
 
 
@@ -221,12 +224,14 @@ public class ProgramSupportedRepositoryTest {
   }
 
 
-  private ProgramSupported programSupportedSentToMapper(Long facilityId, ProgramSupported editedProgramSupported, Facility facility) {
-    ProgramSupported savedProgramSupported = new ProgramSupported(editedProgramSupported.getProgram().getId(),
-      editedProgramSupported.getActive(), editedProgramSupported.getStartDate());
-    savedProgramSupported.setFacilityId(facilityId);
-    savedProgramSupported.setModifiedBy(facility.getModifiedBy());
-    return savedProgramSupported;
+  private static Matcher<ProgramSupported> programSupportedMatcher(final Long facilityId, final Boolean active, final Date startDate, final Long modifiedBy, final Long createdBy) {
+    return new ArgumentMatcher<ProgramSupported>() {
+      @Override
+      public boolean matches(Object argument) {
+        ProgramSupported ps = (ProgramSupported) argument;
+        return ps.getFacilityId() == facilityId && ps.getModifiedBy() == modifiedBy &&
+          ps.getStartDate().equals(startDate) && ps.getActive().equals(active) && ps.getCreatedBy() == createdBy;
+      }
+    };
   }
-
 }
