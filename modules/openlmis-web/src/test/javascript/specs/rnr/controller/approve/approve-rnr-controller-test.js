@@ -55,9 +55,14 @@ describe('Approve Requisition controller', function () {
     scope.rnr = new Rnr({"id": "rnrId"});
     scope.pageLineItems = [rnrLineItem];
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success': "R&R saved successfully!"});
+    scope.approvalForm.$dirty = true;
+    scope.approvalForm.$setPristine = function () {
+      scope.approvalForm.pristine = true
+    };
     scope.saveRnr();
     httpBackend.flush();
     expect(scope.message).toEqual("R&R saved successfully!");
+    expect(scope.approvalForm.pristine).toBeTruthy();
   });
 
   it('should not approve and set error class if any full supply line item has empty approved quantity but should save', function () {
@@ -94,6 +99,9 @@ describe('Approve Requisition controller', function () {
   it('should set Error pages according to tab', function () {
     scope.numberOfPages = 5;
     scope.approvalForm.$dirty = true;
+    scope.approvalForm.$setPristine = function () {
+      scope.approvalForm.pristine = true
+    };
     scope.errorPages = {fullSupply: [5], nonFullSupply: [7]};
     scope.rnr.id = "rnrId";
     routeParams.page = 1;
@@ -108,6 +116,9 @@ describe('Approve Requisition controller', function () {
   it('should set showNonFullSupply flag if supply type is non-full-supply', function () {
     scope.numberOfPages = 5;
     scope.approvalForm.$dirty = true;
+    scope.approvalForm.$setPristine = function () {
+      scope.approvalForm.pristine = true
+    };
     scope.rnr.id = "rnrId";
     routeParams.page = 1;
     routeParams.supplyType = 'non-full-supply';
@@ -133,9 +144,11 @@ describe('Approve Requisition controller', function () {
     scope.rnr = new Rnr({"id": "rnrId"}, []);
     scope.pageLineItems = [rnrLineItem];
     scope.approvalForm.$dirty = true;
+    scope.approvalForm.$setPristine = function () {
+      scope.approvalForm.pristine = true
+    };
     spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn('');
-    httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success': "success message"});
     httpBackend.expect('PUT', '/requisitions/rnrId/approve.json').respond({'success': "R&R approved successfully!"});
     scope.dialogCloseCallback(true);
     httpBackend.flush();
@@ -215,6 +228,9 @@ describe('Approve Requisition controller', function () {
   it('should save rnr on page change only if dirty', function () {
     scope.numberOfPages = 5;
     scope.approvalForm.$dirty = true;
+    scope.approvalForm.$setPristine = function () {
+      scope.approvalForm.pristine = true
+    };
     routeParams.page = 2;
     scope.rnr.id = "rnrId";
     scope.pageLineItems = [rnrLineItem];
@@ -228,6 +244,10 @@ describe('Approve Requisition controller', function () {
     scope.rnr = new Rnr({"id": "rnrId"});
     scope.pageLineItems = [rnrLineItem];
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success': "success message"});
+    scope.approvalForm.$dirty = true;
+    scope.approvalForm.$setPristine = function () {
+      scope.approvalForm.pristine = true
+    };
     scope.saveRnr(false);
     httpBackend.flush();
     expect(scope.message).toEqual('success message');
@@ -237,6 +257,10 @@ describe('Approve Requisition controller', function () {
     scope.rnr = new Rnr({"id": "rnrId"});
     scope.pageLineItems = [rnrLineItem];
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success': "success message"});
+    scope.approvalForm.$dirty = true;
+    scope.approvalForm.$setPristine = function () {
+      scope.approvalForm.pristine = true
+    };
     scope.saveRnr(true);
     httpBackend.flush();
     expect(scope.message).toEqual('');

@@ -8,7 +8,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   $scope.visibleTab = $routeParams.supplyType;
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
-  $scope.regimenColumns = regimenTemplate ? regimenTemplate.regimenColumns: [];
+  $scope.regimenColumns = regimenTemplate ? regimenTemplate.regimenColumns : [];
   $scope.currency = currency;
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.error = "";
@@ -87,16 +87,17 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
 
   function removeExtraDataForPostFromRnr() {
     var rnr = _.pick(this, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
-    if (!$scope.pageLineItems[0].fullSupply) {
-      rnr.nonFullSupplyLineItems = _.map($scope.pageLineItems, function (rnrLineItem) {
-        return rnrLineItem.reduceForApproval()
-      });
-    } else {
-      rnr.fullSupplyLineItems = _.map($scope.pageLineItems, function (rnrLineItem) {
-        return rnrLineItem.reduceForApproval()
-      });
+    if ($scope.visibleTab != REGIMEN) {
+      if (!$scope.pageLineItems[0].fullSupply) {
+        rnr.nonFullSupplyLineItems = _.map($scope.pageLineItems, function (rnrLineItem) {
+          return rnrLineItem.reduceForApproval()
+        });
+      } else {
+        rnr.fullSupplyLineItems = _.map($scope.pageLineItems, function (rnrLineItem) {
+          return rnrLineItem.reduceForApproval()
+        });
+      }
     }
-
     return rnr;
   }
 
@@ -109,6 +110,10 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   };
 
   $scope.saveRnr = function (preventMessage) {
+    if (!$scope.approvalForm.$dirty) {
+      return;
+    }
+    resetFlags();
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "save"},
       rnr, function (data) {
@@ -120,7 +125,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
         $scope.error = data.error;
         $scope.message = "";
       });
-    $scope.approvalForm.$dirty = false;
+    $scope.approvalForm.$setPristine();
   };
 
   function validateAndSetErrorClass() {
@@ -165,10 +170,10 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     $scope.approvedQuantityRequiredFlag = true;
     resetFlags();
     resetErrorPages();
+    $scope.saveRnr(true);
     var error = validateAndSetErrorClass();
     if (error) {
       setErrorPages();
-      $scope.saveRnr(true);
       $scope.error = error;
       $scope.message = '';
       return;
@@ -182,7 +187,6 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   }
 
   var approveValidatedRnr = function () {
-    if ($scope.approvalForm.$dirty) $scope.saveRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "approve"}, {}, function (data) {
       $scope.$parent.message = data.success;
       $scope.error = "";
