@@ -114,6 +114,9 @@ public interface ProductMapper {
           "product_forms.code,\n" +
           "dosage_units.code,\n" +
           "product_forms.code,\n" +
+          "products.packSize,\n" +
+          "products.packroundingthreshold AS packRoundingThreshold,\n" +
+          "products.dosesperdispensingunit AS dosesPerDispensingUnit,\n" +
           //"(CASE WHEN products.fullsupply = true THEN 'Yes' WHEN products.fullsupply = false THEN 'No' ELSE '' END) AS fullSupply,\n" +
           //"(CASE WHEN products.active = true THEN 'Yes' WHEN products.active = false THEN 'No' ELSE '' END) AS active,\n" +
           "products.fullsupply AS fullSupply,\n" +

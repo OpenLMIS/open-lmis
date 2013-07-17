@@ -307,18 +307,17 @@
 </form>
 
 
-
-
 <!-- Edit Product -->
-
-<form class="edit-product-form" id="editProductForm" name="editProductForm"
+<form id="editProductForm" name="editProductForm"   ng-repeat="product in product"
       ng-submit="updateProduct(product, editProductForm);"
       ng-show="products && (products.length > 0)" novalidate select2-blur>
       <input type="hidden" ng-model="backupProductRow"/>
       <div ng-class="productsBackupMap[product.id].editFormActive">
-      <div class="row-fluid list-row" ng-show="productsBackupMap[product.id].edit">
+      <div class="row-fluid list-row"
+      ng-show="productsBackupMap[product.id].edit">
 
 <div ng-class="app-form">
+<div ng-class="formActive">
 <div class="form-group">
 <h3>Basic Information</h3>
 
@@ -362,17 +361,17 @@
 
 <!-- product name-->
 <div class="form-cell">
-    <label for="primaryName">Product Name
+    <label for="fullName_{{$index}}">Product Name
         <span ng-show="productsBackupMap[product.id].edit" class="label-required">*</span>
     </label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="product.primaryName" name="primaryName" id="primaryName_{{$index}}" type="text"
+        <input ng-model="product.fullName" name="fullName" id="fullName_{{$index}}" type="text"
                ng-show="productsBackupMap[product.id].edit"
                maxlength="20"
                ng-required="true"/>
                                         <span class="field-error"
-                                              ng-show="createProductForm.primaryName.$error.required && showErrorForCreate"
+                                              ng-show="createProductForm.fullName.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
     </div>
@@ -613,7 +612,7 @@
 </div>
 
 </div>
-
+</div>
 </form>
 
 <!---->
