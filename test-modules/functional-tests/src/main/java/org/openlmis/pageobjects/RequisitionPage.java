@@ -218,10 +218,10 @@ public class RequisitionPage extends Page {
     return testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input").isDisplayed();
   }
 
-  public void enterValuesOnRegimenScreen(int fieldNumberInTable, int row, int value) {
+  public void enterValuesOnRegimenScreen(int fieldNumberInTable, int row, String value) {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input"));
     testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input").clear();
-    testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input").sendKeys(String.valueOf(value));
+    testWebDriver.getElementByXpath("//table[@id='regimenTable']/tbody[1]/tr[" + row + "]/td[" + fieldNumberInTable + "]/ng-switch/span/input").sendKeys(value);
   }
 
   public String getPatientsOnTreatmentValue() {
