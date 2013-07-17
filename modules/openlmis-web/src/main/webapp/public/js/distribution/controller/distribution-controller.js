@@ -19,7 +19,7 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
     $scope.programs = $scope.periods = [];
     DeliveryZoneActivePrograms.get({zoneId:$scope.selectedZone.id}, function (data) {
       $scope.programs = data.deliveryZonePrograms;
-      if ($scope.selectedProgram) {
+      if ($scope.selectedProgram &&  $scope.fromBackNavigation) {
         $scope.selectedProgram = _.where($scope.programs, {id:$scope.selectedProgram.id})[0];
         $scope.loadPeriods();
       }
@@ -32,7 +32,8 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
     $scope.periods = [];
     DeliveryZoneProgramPeriods.get({zoneId:$scope.selectedZone.id, programId:$scope.selectedProgram.id}, function (data) {
       $scope.periods = data.periods.length ? data.periods.slice(0, 13) : [];
-      if ($scope.selectedPeriod) {
+      if ($scope.selectedPeriod &&  $scope.fromBackNavigation) {
+        $scope.fromBackNavigation = false;
         $scope.selectedPeriod = _.where($scope.periods, {id:$scope.selectedPeriod.id})[0];
       } else {
         $scope.selectedPeriod = $scope.periods.length ? $scope.periods[0] : NONE_ASSIGNED_LABEL;
@@ -78,6 +79,12 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
     $scope.selectedProgram = navigateBackService.program;
     $scope.selectedPeriod = navigateBackService.period;
 
+    if($scope.selectedZone) {
+      $scope.fromBackNavigation = true;
+    } else {
+      $scope.fromBackNavigation = false;
+
+    }
     $scope.$watch('deliveryZones', function () {
       if ($scope.deliveryZones && $scope.selectedZone) {
         $scope.selectedZone = _.where($scope.deliveryZones, {id:$scope.selectedZone.id})[0];
