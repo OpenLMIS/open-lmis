@@ -18,11 +18,9 @@ services.factory('AverageConsumptionReport', function ($resource) {
     return $resource('/reports/reportdata/averageConsumption.json', {}, {});
 });
 
-/*
 services.factory('Products', function($resource){
     return $resource('/reports/products.json', {}, {});
 }) ;
-*/
 
 services.factory('ProductCategories', function($resource){
     return $resource('/reports/productCategories.json', {}, {});

@@ -2,15 +2,8 @@ package org.openlmis.report.builder;
 
 import java.util.Map;
 
-import static org.apache.ibatis.jdbc.SelectBuilder.*;
-import static org.apache.ibatis.jdbc.SqlBuilder.SELECT;
 
-/**
- * User: Elias
- * Date: 4/11/13
- * Time: 11:34 AM
- */
-public class SummaryQueryBuilder {
+public class SupplyStatusQueryBuilder {
 
     public static String getQuery(Map params){
 

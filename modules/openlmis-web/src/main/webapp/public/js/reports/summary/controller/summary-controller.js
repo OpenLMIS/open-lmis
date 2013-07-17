@@ -159,6 +159,15 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
             $scope.filterGrid();
         });
 
+    $scope.$watch('schedule', function(selection){
+         if(selection != undefined || selection == ""){
+            $scope.filterObject.scheduleId =  selection;
+        }else{
+            $scope.filterObject.scheduleId =  0;
+        }
+        $scope.filterGrid();
+    });
+
         $scope.$watch('zone', function(selection){
             if(selection == "All"){
                 $scope.filterObject.zoneId =  -1;
@@ -176,7 +185,7 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
             $scope.filterObject.pdformat =1;
             var params = jQuery.param($scope.filterObject);
             var url = '/reports/download/summary/' + type +'?' + params;
-            window.location.href = url;
+            window.open(url);
 
         }
 
@@ -235,7 +244,7 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
                         });
 
                         SummaryReport.get(params, function(data) {
-                        $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
+                           $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
                         });
 
         };
