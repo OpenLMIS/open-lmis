@@ -149,6 +149,37 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testApproveRegimenWithoutSave(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    rightsList.add(AUTHORIZE_REQUISITION);
+    rightsList.add(APPROVE_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
+    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
+    dbWrapper.insertRegimenTemplateColumnsForProgram(program);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateAndInitiateRnr(program);
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    dbWrapper.insertValuesInRequisition();
+    dbWrapper.insertValuesInRegimenLineItems("100","200","300","testing");
+    dbWrapper.updateRequisitionStatus(SUBMITTED);
+    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updateRequisitionStatus(AUTHORIZED);
+
+    ApprovePage approvePageLowerSNUser = homePage.navigateToApprove();
+    approvePageLowerSNUser.verifyAndClickRequisitionPresentForApproval();
+    approvePageLowerSNUser.editApproveQuantity("");
+    approvePageLowerSNUser.clickApproveButton();
+    approvePageLowerSNUser.editApproveQuantity("100");
+    approvePageLowerSNUser.clickApproveButton();
+    approvePageLowerSNUser.clickOk();
+    approvePageLowerSNUser.verifyNoRequisitionPendingMessage();
+  }
+
+  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void testRnRWithInvisibleProgramRegimenColumn(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(CREATE_REQUISITION);

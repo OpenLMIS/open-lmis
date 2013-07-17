@@ -7,7 +7,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -167,12 +166,7 @@ public class ApprovePage extends RequisitionPage {
   }
 
   public void editApproveQuantityAndVerifyTotalCost(String approvedQuantity) {
-    testWebDriver.waitForElementToAppear(fullSupplyTab);
-    fullSupplyTab.click();
-    testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(quantityApproved);
-    quantityApproved.clear();
-    quantityApproved.sendKeys(approvedQuantity);
+    editApproveQuantity(approvedQuantity);
     remarks.click();
     assertEquals(packsToShip.getText().trim(), parseInt(approvedQuantity) / 10);
 
@@ -207,6 +201,19 @@ public class ApprovePage extends RequisitionPage {
     assertEquals(new BigDecimal(totalRnrCost.getText().trim().substring(1)).setScale(2, ROUND_HALF_UP), totalOverAllCost);
   }
 
+  public void editApproveQuantity(String approvedQuantity) {
+    testWebDriver.waitForElementToAppear(fullSupplyTab);
+    fullSupplyTab.click();
+    testWebDriver.sleep(1000);
+
+    testWebDriver.waitForElementToAppear(quantityApproved);
+    int length = testWebDriver.getAttribute(quantityApproved, "value").length();
+    for (int i = 0; i < length; i++)
+      quantityApproved.sendKeys("\u0008");
+    quantityApproved.sendKeys(approvedQuantity);
+
+  }
+
   public void approveRequisition() {
     clickSaveButton();
     clickApproveButton();
@@ -225,12 +232,7 @@ public class ApprovePage extends RequisitionPage {
   }
 
   public void editApproveQuantityAndVerifyTotalCostViewRequisition(String approvedQuantity) {
-    testWebDriver.waitForElementToAppear(fullSupplyTab);
-    fullSupplyTab.click();
-    testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(quantityApproved);
-    quantityApproved.clear();
-    quantityApproved.sendKeys(approvedQuantity);
+    editApproveQuantity(approvedQuantity);
     remarks.click();
     assertEquals(packsToShip.getText().trim(), parseInt(approvedQuantity) / 10);
 

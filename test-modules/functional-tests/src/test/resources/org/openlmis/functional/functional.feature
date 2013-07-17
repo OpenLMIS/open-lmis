@@ -1,10 +1,9 @@
 Feature: Gradle-Cucumber integration
-
   @smoke
   Scenario: results are shown
-    Given Data setup done
-    And User is on forgot password screen
-    When Enter email="John_Doe@openlmis.com" and username="Admin123"
-    And Click submit button
-    Then Verify email send successfully
+    Given I am on forgot password screen
+    When I type email "John_Doe@openlmis.com"
+    And I type and username "Admin123"
+    When I click submit button
+    Then I should see email send successfully
 
