@@ -1,180 +1,289 @@
-function SupplyStatusController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, StockedOutFacilities, ReportSchedules, ReportFacilityTypes , Periods, ProductCategories , ReportPrograms, $http, $routeParams,$location) {
-        //to minimize and maximize the filter section
-        var section = 1;
+function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, ReportPrograms , Periods , Products ,ReportFacilityTypes,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
+    //to minimize and maximize the filter section
+    var section = 1;
 
-        $scope.section = function (id) {
-            section = id;
-        };
+    $scope.section = function (id) {
+        section = id;
+    };
 
-        $scope.show = function (id) {
-            return section == id;
-        };
-        // lookups and references
+    $scope.show = function (id) {
+        return section == id;
+    };
+    // lookups and references
 
-        $scope.pagingOptions = {
-            pageSizes: [5, 10, 20, 40, 50, 100],
-            pageSize: 10,
-            totalServerItems: 0,
-            currentPage: 1
-        };
-
-
-
-        $scope.filterGrid = function (){
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-        };
-
-        //filter form data section
-        $scope.filterOptions = {
-            period: $scope.period,
-            ftype: $scope.facilityType,
-            rgroup: $scope.rgroup,
-            filterText: "",
-            useExternalFilter: false
-        };
+    $scope.pagingOptions = {
+        pageSizes: [ 20, 40, 50, 100],
+        pageSize: 20,
+        totalServerItems: 0,
+        currentPage: 1
+    };
 
 
 
-        //filter form data section
-        $scope.filterObject =  {
-             facilityType : $scope.period
+    $scope.filterGrid = function (){
+        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+    };
 
-        };
+    //filter form data section
+    $scope.filterOptions = {
+        period:$scope.period,
+        filterText: "",
+        useExternalFilter: false
+    };
 
-        ReportPrograms.get(function(data){
-            $scope.programs = data.programs;
-            $scope.programs.push({'name':'Select a Program'});
-        })
 
-        ReportSchedules.get(function(data){
-            $scope.schedules = data.schedules;
-            $scope.schedules.push({'name':'Select a Schedule'});
-        })
 
-        ReportFacilityTypes.get(function(data) {
-            $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.push({'name': 'All facility types'});
+    //filter form data section
+    $scope.filterObject =  {
+        facilityTypeId : $scope.facilityType,
+        facilityType : "",
+        programId : $scope.program,
+        periodId : $scope.period,
+        zoneId : $scope.zone,
+        productId : $scope.productId,
+        scheduleId : $scope.schedule,
+        rgroupId : $scope.rgroup,
+        rgroup : "",
+        facilityName : $scope.facilityNameFilter
+    };
+
+    ReportPrograms.get(function(data){
+        $scope.programs = data.programs;
+        $scope.programs.push({'name':'Select a Program'});
+    });
+
+    RequisitionGroups.get(function(data){
+        $scope.requisitionGroups = data.requisitionGroupList;
+        $scope.requisitionGroups.push({'name':'All Reporting Groups','id':'All'});
+    });
+
+    ReportFacilityTypes.get(function(data) {
+        $scope.facilityTypes = data.facilityTypes;
+        $scope.facilityTypes.push({'name': 'All Facility Types', 'id' : 'All'});
+    });
+
+    ReportSchedules.get(function(data){
+        $scope.schedules = data.schedules;
+        $scope.schedules.push({'name':'Select a Schedule', 'id':'All'});
+    });
+
+    Products.get(function(data){
+        $scope.products = data.productList;
+        $scope.products.push({'name': 'All Products','id':'All'});
+    });
+
+    $scope.ChangeSchedule = function(){
+        Periods.get({ scheduleId : $scope.schedule },function(data) {
+            $scope.periods = data.periods;
+            $scope.periods.push({'name': 'Select Period', 'id':'All'});
         });
+    }
 
-        ProductCategories.get(function(data){
-            $scope.productCategories = data.productCategoryList;
-            $scope.productCategories.push({'name':"All categories"})
-        })
+    GeographicZones.get(function(data) {
+        $scope.zones = data.zones;
+        $scope.zones.push({'name': '- All Zones -', 'id' : 'All'});
+    });
 
-        $scope.ChangeSchedule = function(){
-            Periods.get({ scheduleId : $scope.schedule },function(data) {
-                $scope.periods = data.periods;
-                $scope.periods.push({'name': 'Select Period'});
-            });
-
-            RequisitionGroupsByProgramSchedule.get({program: $scope.program, schedule:$scope.schedule}, function(data){
-                $scope.requisitionGroups = data.requisitionGroupList;
-                $scope.requisitionGroups.push({'name':'All requsition groups'});
-            });
-        }
-
-
-
-        $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
-
-        $scope.exportReport   = function (type){
-
-            var param = $scope.getParams(1, 1);
-            var paramString = jQuery.param(param);
-            var url = '/reports/download/stocked_out/' + type + '?' + paramString;
-            window.open(url);
-        }
-
-        $scope.goToPage = function (page, event) {
-            angular.element(event.target).parents(".dropdown").click();
-            $location.search('page', page);
-        };
-
-        $scope.$watch("currentPage", function () {  //good watch no problem
-
-            if($scope.currentPage != undefined && $scope.currentPage != 1){
-               //when clicked using the links they have done updated the paging info no problem here
-               $location.search("page", $scope.currentPage);
-            }
-        });
-
-        $scope.$on('$routeUpdate', function () {
-            if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
-                $location.search('page', 1);
-                return;
-            }
-        });
-
-
-        $scope.sortInfo = { fields:["code","facilityType"], directions: ["ASC"]};
-
-        $scope.setPagingData = function(data, page, pageSize, total){
-            $scope.myData = data;
-            $scope.pagingOptions.totalServerItems = total;
-            $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
-
-        };
-
-
-        $scope.getParams = function(pageSize, page){
-            var params  = {};
-            if(pageSize != undefined && page != undefined ){
-                var params =  {
-                    "max" : pageSize,
-                    "page" : page
-                };
-            }
-
-            $.each($scope.sortInfo.fields, function(index, value) {
-                if(value != undefined) {
-                    params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+    $scope.$watch('facilityType', function(selection){
+        if(selection == "All"){
+            $scope.filterObject.facilityTypeId =  -1;
+        }else if(selection != undefined || selection == ""){
+            $scope.filterObject.facilityTypeId =  selection;
+            $.each( $scope.facilityTypes,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.facilityType = idx.name;
                 }
             });
+        }else{
+            $scope.filterObject.facilityTypeId =  0;
+        }
+        $scope.filterGrid();
+    });
 
-            params.period   = $scope.period;
-            params.rgroup   = $scope.rgroup;
-            params.ftype    = $scope.facilityType;
-            params.program  = $scope.program;
-            params.schedule = $scope.schedule;
-            params.productCategory = $scope.productCategory;
-            return params;
+    $scope.$watch('facilityNameFilter', function(selection){
+        if(selection != undefined || selection == ""){
+            $scope.filterObject.facilityName =  selection;
+
+        }else{
+            $scope.filterObject.facilityName = "";
+        }
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('product', function(selection){
+        if(selection == "All"){
+            $scope.filterObject.productId =  -1;
+        }else if(selection != undefined || selection == ""){
+            $scope.filterObject.productId =  selection;
+        }else{
+            $scope.filterObject.productId =  0;
+        }
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('rgroup', function(selection){
+        if(selection == "All"){
+            $scope.filterObject.rgroupId =  -1;
+        }else if(selection != undefined || selection == ""){
+            $scope.filterObject.rgroupId =  selection;
+            $.each( $scope.requisitionGroups,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.rgroup = idx.name;
+                }
+            });
+        }else{
+            $scope.filterObject.rgroupId =  0;
+        }
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('period', function(selection){
+        if(selection == "All"){
+            $scope.filterObject.periodId =  -1;
+        }else if(selection != undefined || selection == ""){
+            $scope.filterObject.periodId =  selection;
+        }else{
+            $scope.filterObject.periodId =  0;
+        }
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('program', function(selection){
+        if(selection == "All"){
+            $scope.filterObject.programId =  -1;
+        }else if(selection != undefined || selection == ""){
+            $scope.filterObject.programId =  selection;
+        }else{
+            $scope.filterObject.programId =  0;
+        }
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('schedule', function(selection){
+        if(selection != undefined || selection == ""){
+            $scope.filterObject.scheduleId =  selection;
+        }else{
+            $scope.filterObject.scheduleId =  0;
+        }
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('zone', function(selection){
+        if(selection == "All"){
+            $scope.filterObject.zoneId =  -1;
+        }else if(selection != undefined || selection == ""){
+            $scope.filterObject.zoneId =  selection;
+        }else{
+            $scope.filterObject.zoneId =  0;
+        }
+        $scope.filterGrid();
+    });
+
+    $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
+
+    $scope.exportReport   = function (type){
+        $scope.filterObject.pdformat =1;
+        var params = jQuery.param($scope.filterObject);
+        var url = '/reports/download/supply_status/' + type +'?' + params;
+        window.open(url);
+
+    }
+
+    $scope.goToPage = function (page, event) {
+        angular.element(event.target).parents(".dropdown").click();
+        $location.search('page', page);
+    };
+
+    $scope.$watch("currentPage", function () {  //good watch no problem
+
+        if($scope.currentPage != undefined && $scope.currentPage != 1){
+            //when clicked using the links they have done updated the paging info no problem here
+            //or using the url page param
+            //$scope.pagingOptions.currentPage = $scope.currentPage;
+            $location.search("page", $scope.currentPage);
+        }
+    });
+
+    $scope.$on('$routeUpdate', function () {
+        if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
+            $location.search('page', 1);
+            return;
+        }
+    });
+
+
+    $scope.sortInfo = { fields:["code","facilityType"], directions: ["ASC"]};
+
+    $scope.setPagingData = function(data, page, pageSize, total){
+        $scope.myData = data;
+        $scope.pagingOptions.totalServerItems = total;
+        $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
+
+    };
+
+    $scope.getPagedDataAsync = function (pageSize, page) {
+        var params  = {};
+        if(pageSize != undefined && page != undefined ){
+            var params =  {
+                "max" : pageSize,
+                "page" : page
+            };
         }
 
-        $scope.getPagedDataAsync = function (pageSize, page) {
-                        var params = $scope.getParams(pageSize, page);
-                         StockedOutFacilities.get(params, function(data) {
-                            $scope.setPagingData(data.pages.rows[0].details,page,pageSize,data.pages.total);
-                            $scope.summaries    =  data.pages.rows[0].summary;
-                        });
+        $.each($scope.filterObject, function(index, value) {
+            //if(value != undefined)
+            params[index] = value;
+        });
 
-        };
 
-        $scope.$watch('pagingOptions.currentPage', function () {
-            $scope.currentPage = $scope.pagingOptions.currentPage;
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-        }, true);
+        // put out the sort order
+        $.each($scope.sortInfo.fields, function(index, value) {
+            if(value != undefined) {
+                params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+            }
+        });
 
-        $scope.$watch('pagingOptions.pageSize', function () {
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-        }, true);
+        SupplyStatusReport.get(params, function(data) {
+            $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
+        });
 
-        $scope.$watch('sortInfo', function () {
+    };
 
-            $.each($scope.sortInfo.fields, function(index, value) {
-                if(value != undefined)
-                    $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-            });
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-        }, true);
+    $scope.$watch('pagingOptions.currentPage', function () {
+        $scope.currentPage = $scope.pagingOptions.currentPage;
+        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+    }, true);
+
+    $scope.$watch('pagingOptions.pageSize', function () {
+        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+    }, true);
+
+    $scope.$watch('sortInfo', function () {
+
+        $.each($scope.sortInfo.fields, function(index, value) {
+            if(value != undefined)
+                $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+        });
+        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+    }, true);
 
     $scope.gridOptions = {
         data: 'myData',
         columnDefs:
             [
-                { field: 'code', displayName: 'Code', width: "*" },
-                { field: 'name', displayName: 'Facility Name', width: "***", resizable: false},
-                { field: 'facilityType', displayName: 'Facility Type', width: "*", resizable: false},
-                { field: 'location', displayName: 'Location', width: "*" }
+
+                { field: 'code', displayName: 'Code', width: "*", resizable: false},
+                { field: 'product', displayName: 'Product', width: "***" },
+                { field: 'openingBalance', displayName: 'Opening Balance', width : "*"},
+                { field: 'receipts', displayName: 'Receipts', width : "*"},
+                { field: 'issues', displayName: 'Issues', width : "*"},
+                { field: 'adjustments', displayName: 'Adjustments', width : "*"},
+                { field: 'closingBalance', displayName: 'Closing Balance', width : "*"},
+                { field: 'monthsOfStock', displayName: 'Months of Stock', width : "*"},
+                { field: 'averageMonthlyConsumption', displayName: 'AMC', width : "*"},
+                { field: 'maximumStock', displayName: 'Maximum Stock', width : "*"},
+                { field: 'reorderAmount', displayName: 'Re-order Amount', width : "*"}
+
             ],
         enablePaging: true,
         enableSorting :true,

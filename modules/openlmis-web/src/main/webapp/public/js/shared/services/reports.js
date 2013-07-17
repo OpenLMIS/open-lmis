@@ -18,11 +18,9 @@ services.factory('AverageConsumptionReport', function ($resource) {
     return $resource('/reports/reportdata/averageConsumption.json', {}, {});
 });
 
-/*
 services.factory('Products', function($resource){
     return $resource('/reports/products.json', {}, {});
 }) ;
-*/
 
 services.factory('ProductCategories', function($resource){
     return $resource('/reports/productCategories.json', {}, {});
@@ -31,6 +29,10 @@ services.factory('ProductCategories', function($resource){
 services.factory('SummaryReport', function($resource){
     return $resource('/reports/summary.json', {}, {});
 }) ;
+services.factory('SupplyStatusReport', function($resource){
+    return $resource('/reports/reportdata/supply_status.json', {}, {});
+}) ;
+
 
 services.factory('NonReportingFacilities', function($resource){
     return $resource('/reports/non_reporting.json', {}, {});
@@ -172,9 +174,17 @@ services.factory('RemoveRequisitionGroupMember',function($resource){
     return $resource('/requisitionGroupMember/remove.json',{},{});
 });
 
+services.factory("ProductForms",function($resource)  {
+    return   $resource('/reports/productForms.json', {}, {});
+});
+
+services.factory("ProductGroups",function($resource)  {
+    return   $resource('/reports/productGroups.json', {}, {});
+});
+
 // mahmed 07.13.2013
 services.factory('CreateProduct', function ($resource) {
-    return $resource('/createProduct.json', {});
+    return $resource('/createProduct.json', {}, {post:{method:'POST'}});
 });
 
 // mahmed 07.13.2013
@@ -191,5 +201,11 @@ services.factory('RestoreProduct', function ($resource) {
 services.factory('DosageUnits', function ($resource) {
     return $resource('/dosageUnits.json', {});
 });
-
-
+// mahmed 07.13.2013
+services.factory('Products', function ($resource) {
+    return $resource('/products.json', {});
+});
+// mahmed 07.13.2013
+services.factory('Product', function ($resource) {
+    return $resource('/products/:id.json', {}, {update:{method:'PUT'}});
+});

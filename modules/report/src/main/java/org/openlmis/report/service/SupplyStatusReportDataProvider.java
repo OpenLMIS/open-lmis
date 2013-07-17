@@ -3,24 +3,26 @@ package org.openlmis.report.service;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.SummaryReportMapper;
+import org.openlmis.report.mapper.SupplyStatusReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  */
 @Component
 @NoArgsConstructor
-public class SummaryReportDataProvider extends ReportDataProvider {
+public class SupplyStatusReportDataProvider extends ReportDataProvider {
 
 
-    private SummaryReportMapper reportMapper;
+    private SupplyStatusReportMapper reportMapper;
 
 
     @Autowired
-    public SummaryReportDataProvider(SummaryReportMapper mapper) {
+    public SupplyStatusReportDataProvider(SupplyStatusReportMapper mapper) {
         this.reportMapper = mapper;
     }
 

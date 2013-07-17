@@ -34,8 +34,8 @@ import static org.openlmis.web.response.OpenLmisResponse.error;
 @NoArgsConstructor
 public class ProductController extends BaseController {
 
-    public static final String PRODUCTS= "manageProducts";
-    public static final String PRODUCT= "manageProduct";
+    public static final String PRODUCTS= "Products";
+    public static final String PRODUCT= "Product";
     public static final String PRODUCTLIST= "productList";
     public static final String DOSAGEUNITS= "dosageUnits";
 
@@ -50,6 +50,24 @@ public class ProductController extends BaseController {
         this.productService = productService;
     }
 
+
+    // product for add/update
+    @RequestMapping(value = "/products", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> getAllProducts() {
+        return OpenLmisResponse.response(PRODUCTS, productService.getProductsList());
+    }
+
+    @RequestMapping(value = "/products/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Long id) {
+        try{
+            Product product = productService.get(id);
+            return OpenLmisResponse.response(PRODUCT, product);
+        } catch (DataException e){
+            return error(e, HttpStatus.NOT_FOUND);
+        }
+    }
 
     // supply line list for view
     @RequestMapping(value = "/productslist", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -96,9 +114,14 @@ public class ProductController extends BaseController {
     }
 
       // create product
-    @RequestMapping(value = "/createProduct", method = { RequestMethod.POST },  headers = "Accept=application/json")
+    @RequestMapping(value = "/createProduct", method = RequestMethod.POST ,  headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> save(@RequestBody Product product, HttpServletRequest request) {
+       // set default values for some columns
+       // this is a querk until all fields have UI fields
+
+        product.setDosesPerDispensingUnit(1);
+
         product.setModifiedBy(loggedInUserId(request));
         product.setCreatedBy(loggedInUserId(request));
         product.setCreatedDate(new Date());

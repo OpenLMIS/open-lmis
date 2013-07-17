@@ -204,7 +204,7 @@ function SupplylineController($scope,  ReportPrograms, AllFacilities, Supervisor
     $scope.deleteSupplylineCallBack = function (result) {
         if (!result)
         {
-            $scope.supplylinesBackupMap[$scope.supplylineUnderDelete.id].delete = false;
+            $scope.supplylinesBackupMap[$scope.supplylineUnderDelete.id].deleted = false;
             return;
         }
 
