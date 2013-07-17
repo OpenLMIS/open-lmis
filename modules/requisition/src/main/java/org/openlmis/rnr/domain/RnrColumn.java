@@ -32,7 +32,7 @@ public class RnrColumn extends Column {
   }
 
   @Override
-  public Integer getColumnWidth() {
+  public Integer columnWidth() {
     if (this.name.equals("product")) {
       return 125;
     }

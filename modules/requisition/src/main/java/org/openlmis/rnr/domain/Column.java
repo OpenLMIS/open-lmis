@@ -18,5 +18,5 @@ public abstract class Column extends BaseModel {
   protected String label;
   protected boolean visible;
 
-  public abstract Integer getColumnWidth();
+  public abstract Integer columnWidth();
 }

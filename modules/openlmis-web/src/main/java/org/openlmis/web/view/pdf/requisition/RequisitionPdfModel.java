@@ -103,7 +103,7 @@ public class RequisitionPdfModel {
   private PdfPTable prepareRnrLineItemsTable(List<? extends Column> visibleColumns) throws DocumentException {
     java.util.List<Integer> widths = new ArrayList<>();
     for (Column column : visibleColumns) {
-      widths.add(column.getColumnWidth());
+      widths.add(column.columnWidth());
     }
     PdfPTable table = new PdfPTable(widths.size());
 
