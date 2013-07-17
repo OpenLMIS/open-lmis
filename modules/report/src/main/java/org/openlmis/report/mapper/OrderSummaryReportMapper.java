@@ -29,9 +29,6 @@ public interface OrderSummaryReportMapper {
     );
 
     @SelectProvider(type=OrderSummaryQueryBuilder.class, method="SelectFilteredSortedPagedRecordsCount")
-    public Integer getFilteredSortedPagedOrderSummaryReportCount(Map params);
-
-    @SelectProvider(type=OrderSummaryQueryBuilder.class, method="SelectFilteredSortedPagedRecordsCount")
-    public Integer SelectFilteredSummaryReportCount(Map params);
+    public Integer SelectFilteredOrderSummaryReportCount(@Param("filterCriteria") Map<String, String[]> filterCriteria);
 
 }

@@ -116,8 +116,8 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
         $scope.exportReport   = function (type){
             $scope.filterObject.pdformat =1;
             var params = jQuery.param($scope.filterObject);
-            var url = '/reports/download/order/' + type +'?' + params;
-            window.location.href = url;
+            var url = '/reports/download/order_summary/' + type +'?' + params;
+            window.open(url);
 
         }
 
@@ -206,6 +206,7 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
 
                 { field: 'productCode', displayName: 'Product Code', width: "*", resizable: false},
                 { field: 'description', displayName: 'Description', width: "***" },
+                { field: 'facilityName', displayName: 'Facility', width: "**" },
                 { field: 'unitSize', displayName: 'Unit Size', width : "*"},
                 { field: 'unitQuantity', displayName: 'Unit Quantity', width : "*"},
                 { field: 'packQuantity', displayName: 'Pack Quantity', width : "*"},

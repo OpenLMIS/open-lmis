@@ -18,6 +18,7 @@ public class OrderSummaryReport implements ReportData {
     private Integer discrepancy;
     private String facilityName;
     private String facilityCode;
+    private String region;
 
 
 }
