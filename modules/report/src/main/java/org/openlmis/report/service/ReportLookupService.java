@@ -2,6 +2,8 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.GeographicLevel;
+import org.openlmis.core.domain.ProductGroup;
+import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.service.ConfigurationService;
 import org.openlmis.report.mapper.lookup.AdjustmentTypeReportMapper;
 import org.openlmis.report.mapper.lookup.*;
@@ -60,6 +62,13 @@ public class ReportLookupService {
 
     @Autowired
     private ProcessingPeriodReportMapper processingPeriodMapper;
+
+    @Autowired
+    private ProductGroupReportMapper productGroupReportMapper;
+
+    @Autowired
+    private ProductFormReportMapper productFormReportMapper;
+
 
     public List<Product> getAllProducts(){
         return productMapper.getAll();
@@ -147,5 +156,13 @@ public class ReportLookupService {
 
     public List<ProcessingPeriod> getAllProcessingPeriods(){
         return processingPeriodMapper.getAll();
+    }
+
+    public List<ProductGroup> getAllProductGroups(){
+        return productGroupReportMapper.getAll();
+    }
+
+    public List<ProductForm> getAllProductForm(){
+        return productFormReportMapper.getAll();
     }
 }

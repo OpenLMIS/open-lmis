@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ProductController($scope, $location, $dialog, messageService, CreateProduct, ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct) {
+function ProductController($scope, $location, $dialog, messageService, CreateProduct, ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits, ProductForms) {
 
     $scope.productsBackupMap = [];
     $scope.newProduct = {};
@@ -24,12 +24,23 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
     ProductList.get({}, function (data) {
         $scope.productsList = data.productList;
         $scope.filteredProducts = $scope.productsList;
-        //alert(JSON.stringify($scope.productsList, null, 4));
+
+  /*
+        $scope.initialProducts = angular.copy(data.productList, $scope.initialProducts);
+        $scope.products = $scope.productsList;
+        for(var productIndex in data.productList){
+            var product = data.productList[productIndex];
+            $scope.productsBackupMap[product.id] =  $scope.getBackupProduct(product);
+        }
+  */
+        //alert(JSON.stringify($scope.products, null, 4));
     }, function (data) {
         $location.path($scope.$parent.sourceUrl);
     });
 
-    // show search results
+
+
+     // show search results
     $scope.showProductsSearchResults = function (id) {
         var query = document.getElementById(id).value;
         query = parseInt(query) + 1;
@@ -219,35 +230,16 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
         //alert(JSON.stringify( $scope.productCategories, null, 4));
     });
 
- /*
+
   // drop down lists
     DosageUnits.get(function (data) {
         $scope.dosageUnits = data.dosageUnits;
-        $scope.dosageUnits.push({'name':'mg'});
-        $scope.dosageUnits.push({'name':'ml'});
-        $scope.dosageUnits.push({'name':'each'});
-
     });
 
-*/
-    $scope.dosageUnits         = [
-        {'name':'mg','value':'8'},
-        {'name':'ml','value':'9'},
-        {'name':'each','value':'10'},
-        {'name':'cc','value':'11'},
-        {'name':'Select dosage unit','value':'0'}
-    ];
 
-
-    $scope.productForms         = [
-
-        {'name':'Tablet','value':'1'},
-        {'name':'Bottle','value':'2'},
-        {'name':'Vial','value':'3'},
-        {'name':'Capsule','value':'4'},
-        {'name':'Select product form','value':'0'}
-    ];
-
+    ProductForms.get(function (data) {
+        $scope.productForms = data.productForms;
+    });
 
     $scope.YesNo = function (tf) {
         var retval = '';
@@ -259,6 +251,31 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
         }
         return retval;
     };
+
+
+
+    // all supply lines
+    Products.get({}, function (data) {
+        $scope.initialProducts = angular.copy(data.products, $scope.initialProducts);
+         $scope.products = data.products;
+        for(var productIndex in data.products){
+            var product = data.products[productIndex];
+            $scope.productsBackupMap[product.id] =  $scope.getBackupProduct(product);
+        }
+        alert(JSON.stringify($scope.productsBackupMap, null, 4));
+    }, function (data) {
+        $location.path($scope.$parent.sourceUrl);
+    });
+
+
+    $scope.startProductEdit = function (productUnderEdit) {
+        alert(JSON.stringify($scope.productsBackupMap, null, 4));
+
+         $scope.productsBackupMap[productUnderEdit.id].editFormActive = "product-form-active";
+    };
+
+
+
 
     /*
      // all supply lines   for list

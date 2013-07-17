@@ -174,6 +174,14 @@ services.factory('RemoveRequisitionGroupMember',function($resource){
     return $resource('/requisitionGroupMember/remove.json',{},{});
 });
 
+services.factory("ProductForms",function($resource)  {
+    return   $resource('/reports/productForms.json', {}, {});
+});
+
+services.factory("ProductGroups",function($resource)  {
+    return   $resource('/reports/productGroups.json', {}, {});
+});
+
 // mahmed 07.13.2013
 services.factory('CreateProduct', function ($resource) {
     return $resource('/createProduct.json', {}, {post:{method:'POST'}});
@@ -193,5 +201,11 @@ services.factory('RestoreProduct', function ($resource) {
 services.factory('DosageUnits', function ($resource) {
     return $resource('/dosageUnits.json', {});
 });
-
-
+// mahmed 07.13.2013
+services.factory('Products', function ($resource) {
+    return $resource('/products.json', {});
+});
+// mahmed 07.13.2013
+services.factory('Product', function ($resource) {
+    return $resource('/products/:id.json', {}, {update:{method:'PUT'}});
+});

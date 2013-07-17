@@ -26,6 +26,7 @@ function ScheduleController($scope, Schedule, $location, messageService) {
       var schedule = data.schedules[scheduleIndex];
       $scope.schedulesBackupMap[schedule.id] =  $scope.getBackupSchedule(schedule);
     }
+      alert(JSON.stringify($scope.schedulesBackupMap, null, 4));
   }, function (data) {
     $location.path($scope.$parent.sourceUrl);
   });
