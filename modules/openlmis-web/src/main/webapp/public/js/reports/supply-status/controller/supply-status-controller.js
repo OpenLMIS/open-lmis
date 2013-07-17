@@ -1,4 +1,4 @@
-function SupplyStatusController($scope, SummaryReport, ReportSchedules, ReportPrograms , Periods , Products ,ReportFacilityTypes,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
+function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, ReportPrograms , Periods , Products ,ReportFacilityTypes,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
     //to minimize and maximize the filter section
     var section = 1;
 
@@ -243,7 +243,7 @@ function SupplyStatusController($scope, SummaryReport, ReportSchedules, ReportPr
             }
         });
 
-        SummaryReport.get(params, function(data) {
+        SupplyStatusReport.get(params, function(data) {
             $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
         });
 
