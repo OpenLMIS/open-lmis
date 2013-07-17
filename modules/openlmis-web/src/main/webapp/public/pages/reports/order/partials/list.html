@@ -50,45 +50,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Reporting Groups</label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:250px;" name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
-
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Program</label>
-
-                                    <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="program" ng-change="filterGrid()" ng-model="program" ng-options="option.id as option.name for option in programs">
-
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Schedule</label>
-
-                                    <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="schedule" ng-options="option.id as option.name for option in schedules">
-
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-cell horizontalFilters">
-                                    <label class="labels">Period</label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true" ng-change="filterGrid()" name="period" ng-model="period" ng-options="option.id as option.name for option in periods">
-
-                                        </select>
-                                    </div>
-                                </div>
                             </div>
                          </form>
                 </div>

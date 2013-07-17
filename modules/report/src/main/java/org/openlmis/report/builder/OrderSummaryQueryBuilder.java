@@ -23,6 +23,7 @@ public class OrderSummaryQueryBuilder {
         INNER_JOIN("products on products.code::text = requisition_line_items.productcode::text");
         LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments on requisition_line_item_losses_adjustments.requisitionlineitemid = requisition_line_items.id");
         LEFT_OUTER_JOIN("geographic_zones  on geographic_zones.id = facilities.geographiczoneid");
+        writePredicates(params);
         return SQL();
     }
 
@@ -37,6 +38,7 @@ public class OrderSummaryQueryBuilder {
         INNER_JOIN("products on products.code::text = requisition_line_items.productcode::text");
         LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments on requisition_line_item_losses_adjustments.requisitionlineitemid = requisition_line_items.id");
         LEFT_OUTER_JOIN("geographic_zones  on geographic_zones.id = facilities.geographiczoneid");
+        writePredicates(params);
         String subQuery = SQL().toString();
 
         BEGIN();
@@ -46,6 +48,39 @@ public class OrderSummaryQueryBuilder {
     }
 
     private static void writePredicates(Map params){
+        Map<String, String []> filter = (Map<String, String[]>) params.get("filterCriteria");
+
+        String facilityTypeId =  filter.get("facilityTypeId") == null ? null : filter.get("facilityTypeId")[0];
+        String facilityName = filter.get("facilityName") == null ? null : filter.get("facilityName")[0];
+        String product =   filter.get("productId") == null ? null : filter.get("productId")[0];
+        String zone =     filter.get("zoneId") == null ? null : filter.get("zoneId")[0];
+
+        /*
+        if (zone != null &&  !zone.equals("undefined") && !zone.isEmpty() && !zone.equals("0")  && !zone.equals("-1")) {
+            WHERE("facilities.geographiczoneid");
+            predicate += " and facilities.geographiczoneid = "+ zone;
+        }
+        if (product != null &&  !product.equals("undefined") && !product.isEmpty() && !product.equals("0") &&  !product.equals("-1")) {
+
+            predicate += " and program_products.productid = "+ product;
+        }
+        if (schedule != null &&  !schedule.equals("undefined") && !schedule.isEmpty() && !schedule.equals("0") &&  !schedule.equals("-1")) {
+
+            predicate += " and processing_schedules.id = "+ schedule;
+        }
+        if (rgroup != null &&  !rgroup.equals("undefined") && !rgroup.isEmpty() && !rgroup.equals("0") &&  !rgroup.equals("-1")) {
+
+            predicate += " and requisition_groups.id = "+ rgroup;
+        }
+        if (facilityTypeId != null &&  !facilityTypeId.equals("undefined") && !facilityTypeId.isEmpty() && !facilityTypeId.equals("0") &&  !facilityTypeId.equals("-1")) {
+
+            predicate += " and facility_types.id = "+ facilityTypeId;
+        }
+        if (facilityName != null &&  !facilityName.equals("undefined") && !facilityName.isEmpty() ) {
+
+            predicate += " and facilities.name = '"+ facilityName +"'";
+        }
+*/
 
     }
 }
