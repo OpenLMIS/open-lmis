@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Mockito;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.FacilityFeedDTO;
@@ -41,7 +41,6 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
@@ -49,13 +48,11 @@ import static org.mockito.Mockito.when;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
-import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({DateTime.class, UUID.class})
+@PrepareForTest({DateTime.class, FacilityService.class, FacilityServiceTest.class})
 public class FacilityServiceTest {
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
@@ -116,24 +113,26 @@ public class FacilityServiceTest {
     DateTime dateTime = new DateTime();
     mockStatic(DateTime.class);
     when(DateTime.now()).thenReturn(dateTime);
+    UUID uuid = UUID.randomUUID();
+    mockStatic(UUID.class);
+    Mockito.when(UUID.randomUUID()).thenReturn(uuid);
 
     facilityService.updateDataReportableAndActiveFor(facility);
 
     verify(facilityRepository).updateDataReportableAndActiveFor(facility);
     verify(facilityRepository).getById(facility.getId());
-    verify(eventService).notify(argThat(eventMatcher("Facility", dateTime, "",
+    verify(eventService).notify(argThat(eventMatcher(uuid, "Facility", dateTime, "",
       facilityFeedDTO.getSerializedContents(), "facility")));
 
   }
 
-  private static Matcher<Event> eventMatcher(final String title, final DateTime timestamp,
-                                            final String uri, final String content, final String category) {
+  private static Matcher<Event> eventMatcher(final UUID uuid, final String title, final DateTime timestamp,
+                                             final String uri, final String content, final String category) {
     return new ArgumentMatcher<Event>() {
       @Override
       public boolean matches(Object argument) {
         Event event = (Event) argument;
-        //TODO compare UUID as well
-        return event.getTitle().equals(title) && event.getTimeStamp().equals(timestamp) &&
+        return event.getUuid().equals(uuid.toString()) && event.getTitle().equals(title) && event.getTimeStamp().equals(timestamp) &&
           event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
       }
     };
