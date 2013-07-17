@@ -19,10 +19,13 @@ public class OrderSummaryQueryBuilder {
         FROM("orders");
         INNER_JOIN("requisitions on requisitions.id = orders.rnrid ");
         INNER_JOIN("facilities on facilities.id = requisitions.facilityid");
+        INNER_JOIN("facility_types on facility_types.id = facilities.typeid ");
         INNER_JOIN("requisition_line_items on requisition_line_items.rnrid = requisitions.id");
         INNER_JOIN("products on products.code::text = requisition_line_items.productcode::text");
         LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments on requisition_line_item_losses_adjustments.requisitionlineitemid = requisition_line_items.id");
         LEFT_OUTER_JOIN("geographic_zones  on geographic_zones.id = facilities.geographiczoneid");
+        writePredicates(params);
+        ORDER_BY("facilities.name asc");
         return SQL();
     }
 
@@ -33,10 +36,12 @@ public class OrderSummaryQueryBuilder {
         FROM("orders");
         INNER_JOIN("requisitions on requisitions.id = orders.rnrid ");
         INNER_JOIN("facilities on facilities.id = requisitions.facilityid");
+        INNER_JOIN("facility_types on facility_types.id = facilities.typeid ");
         INNER_JOIN("requisition_line_items on requisition_line_items.rnrid = requisitions.id");
         INNER_JOIN("products on products.code::text = requisition_line_items.productcode::text");
         LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments on requisition_line_item_losses_adjustments.requisitionlineitemid = requisition_line_items.id");
         LEFT_OUTER_JOIN("geographic_zones  on geographic_zones.id = facilities.geographiczoneid");
+        writePredicates(params);
         String subQuery = SQL().toString();
 
         BEGIN();
@@ -46,6 +51,26 @@ public class OrderSummaryQueryBuilder {
     }
 
     private static void writePredicates(Map params){
+        Map<String, String []> filter = (Map<String, String[]>) params.get("filterCriteria");
+
+        String facilityTypeId =  filter.get("facilityTypeId") == null ? null : filter.get("facilityTypeId")[0];
+        String facilityName = filter.get("facilityName") == null ? null : filter.get("facilityName")[0];
+        String product =   filter.get("productId") == null ? null : filter.get("productId")[0];
+        String zone =     filter.get("zoneId") == null ? null : filter.get("zoneId")[0];
+
+        if (zone != null &&  !zone.equals("undefined") && !zone.isEmpty() && !zone.equals("0")  && !zone.equals("-1")) {
+            WHERE("facilities.geographiczoneid = "+zone);
+        }
+        if (product != null &&  !product.equals("undefined") && !product.isEmpty() && !product.equals("0") &&  !product.equals("-1")) {
+            WHERE("products.id ="+ product);
+        }
+
+        if (facilityTypeId != null &&  !facilityTypeId.equals("undefined") && !facilityTypeId.isEmpty() && !facilityTypeId.equals("0") &&  !facilityTypeId.equals("-1")) {
+            WHERE("facility_types.id = "+ facilityTypeId);
+        }
+        if (facilityName != null &&  !facilityName.equals("undefined") && !facilityName.isEmpty() ) {
+            WHERE("facilities.name = '"+ facilityName +"'");
+        }
 
     }
 }

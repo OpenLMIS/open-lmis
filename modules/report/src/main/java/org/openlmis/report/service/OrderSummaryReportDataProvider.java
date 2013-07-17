@@ -48,7 +48,7 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
 
     @Override
     public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
-        return reportMapper.SelectFilteredSummaryReportCount(filterCriteria);
+        return reportMapper.SelectFilteredOrderSummaryReportCount(filterCriteria);
     }
 
 }

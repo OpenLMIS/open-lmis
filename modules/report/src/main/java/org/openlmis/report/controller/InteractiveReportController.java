@@ -157,7 +157,7 @@ public class InteractiveReportController  extends BaseController {
         Report report = reportManager.getReportByKey("summary");
         List<SummaryReport> reportList =
                 (List<SummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),null,page,max);
-        int totalRecCount = 0;
+        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
 
         return new Pages(page,totalRecCount,max,reportList);
     }
@@ -233,6 +233,44 @@ public class InteractiveReportController  extends BaseController {
         int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
 
         return new Pages(page,totalRecCount,max,districtConsumptionReportList);
+    }
+
+    @RequestMapping(value = "/reportdata/viewOrders", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ORDER_REPORT')")
+    public Pages getOrderSummaryData( //@PathVariable(value = "reportKey") String reportKey,
+                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                     @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                     HttpServletRequest request
+
+    ) {
+
+
+
+        Report report = reportManager.getReportByKey("order_summary");
+        List<OrderSummaryReport> orderReportList =
+                (List<OrderSummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
+        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());;
+
+        return new Pages(page,totalRecCount,max,orderReportList);
+    }
+
+    @RequestMapping(value = "/reportdata/supply_status", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_SUPPLY_STATUS_REPORT')")
+    public Pages getSupplyStatusData( //@PathVariable(value = "reportKey") String reportKey,
+                                      @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                      @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                      HttpServletRequest request
+
+    ) {
+
+
+
+        Report report = reportManager.getReportByKey("supply_status");
+        List<SupplyStatusReport> orderReportList =
+                (List<SupplyStatusReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
+        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());;
+
+        return new Pages(page,totalRecCount,max,orderReportList);
     }
 
 

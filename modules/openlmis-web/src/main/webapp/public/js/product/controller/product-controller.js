@@ -4,8 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-
-function ProductController($scope, $location, $dialog, messageService, CreateProduct, ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits) {
+function ProductController($scope, $location, $dialog, messageService, CreateProduct, ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits, ProductForms) {
 
     $scope.productsBackupMap = [];
     $scope.newProduct = {};
@@ -23,7 +22,6 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
 
      // all products list
     ProductList.get({}, function (data) {
-
         $scope.productsList = data.productList;
         $scope.filteredProducts = $scope.productsList;
 
@@ -250,16 +248,9 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
     });
 
 
-
-    $scope.productForms         = [
-
-        {'name':'Tablet','value':'1'},
-        {'name':'Bottle','value':'2'},
-        {'name':'Vial','value':'3'},
-        {'name':'Capsule','value':'4'},
-        {'name':'Select product form','value':'0'}
-    ];
-
+    ProductForms.get(function (data) {
+        $scope.productForms = data.productForms;
+    });
 
     $scope.YesNo = function (tf) {
         var retval = '';

@@ -119,7 +119,16 @@
                     <property name="reportDataProvider" ref="orderSummaryReportDataProvider"/>
                     <property name="id" value="RP-View_Orders"/>
                     <property name="name" value="View Orders"/>
-                    <property name="title" value="View Orders"/>
+                    <property name="title" value="Issue Voucher for Medical Supplies (PH81-N/E)"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="supply_status"/>
+                    <property name="template" value="supply-status-report.jasper"/>
+                    <property name="reportDataProvider" ref="supplyStatusReportDataProvider"/>
+                    <property name="id" value="RP-Supply-Status"/>
+                    <property name="name" value="Supply Status Report"/>
+                    <property name="title" value="Supply Status by Facility Report"/>
                     <property name="version" value="1.0"/>
                 </bean>
 

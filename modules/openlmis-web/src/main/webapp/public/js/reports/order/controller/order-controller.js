@@ -1,4 +1,4 @@
-function OrderReportController($scope, OrderReport, ReportSchedules, ReportPrograms , Periods , Products ,ReportFacilityTypes,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
+function OrderReportController($scope, OrderReport, Products ,ReportFacilityTypes,GeographicZones, $http, $routeParams,$location) {
         //to minimize and maximize the filter section
         var section = 1;
 
@@ -47,37 +47,15 @@ function OrderReportController($scope, OrderReport, ReportSchedules, ReportProgr
              facilityName : $scope.facilityNameFilter
         };
 
-        ReportPrograms.get(function(data){
-            $scope.programs = data.programs;
-            $scope.programs.push({'name':'Select a Program'});
-        });
-
-        RequisitionGroups.get(function(data){
-            $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.push({'name':'All Reporting Groups','id':'All'});
-        });
-
         ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
             $scope.facilityTypes.push({'name': 'All Facility Types', 'id' : 'All'});
         });
 
-        ReportSchedules.get(function(data){
-        $scope.schedules = data.schedules;
-        $scope.schedules.push({'name':'Select a Schedule', 'id':'All'});
-    });
-
         Products.get(function(data){
             $scope.products = data.productList;
             $scope.products.push({'name': 'All Products','id':'All'});
         });
-
-        $scope.ChangeSchedule = function(){
-            Periods.get({ scheduleId : $scope.schedule },function(data) {
-                $scope.periods = data.periods;
-                $scope.periods.push({'name': 'Select Period', 'id':'All'});
-            });
-        }
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
@@ -121,43 +99,6 @@ function OrderReportController($scope, OrderReport, ReportSchedules, ReportProgr
             $scope.filterGrid();
         });
 
-        $scope.$watch('rgroup', function(selection){
-            if(selection == "All"){
-                $scope.filterObject.rgroupId =  -1;
-            }else if(selection != undefined || selection == ""){
-                $scope.filterObject.rgroupId =  selection;
-                $.each( $scope.requisitionGroups,function( item,idx){
-                    if(idx.id == selection){
-                        $scope.filterObject.rgroup = idx.name;
-                    }
-                });
-            }else{
-                $scope.filterObject.rgroupId =  0;
-            }
-            $scope.filterGrid();
-        });
-
-        $scope.$watch('period', function(selection){
-            if(selection == "All"){
-                $scope.filterObject.periodId =  -1;
-            }else if(selection != undefined || selection == ""){
-                $scope.filterObject.periodId =  selection;
-            }else{
-                $scope.filterObject.periodId =  0;
-            }
-            $scope.filterGrid();
-        });
-
-        $scope.$watch('program', function(selection){
-            if(selection == "All"){
-                $scope.filterObject.programId =  -1;
-            }else if(selection != undefined || selection == ""){
-                $scope.filterObject.programId =  selection;
-            }else{
-                $scope.filterObject.programId =  0;
-            }
-            $scope.filterGrid();
-        });
 
         $scope.$watch('zone', function(selection){
             if(selection == "All"){
@@ -175,8 +116,8 @@ function OrderReportController($scope, OrderReport, ReportSchedules, ReportProgr
         $scope.exportReport   = function (type){
             $scope.filterObject.pdformat =1;
             var params = jQuery.param($scope.filterObject);
-            var url = '/reports/download/order/' + type +'?' + params;
-            window.location.href = url;
+            var url = '/reports/download/order_summary/' + type +'?' + params;
+            window.open(url);
 
         }
 
@@ -265,6 +206,7 @@ function OrderReportController($scope, OrderReport, ReportSchedules, ReportProgr
 
                 { field: 'productCode', displayName: 'Product Code', width: "*", resizable: false},
                 { field: 'description', displayName: 'Description', width: "***" },
+                { field: 'facilityName', displayName: 'Facility', width: "**" },
                 { field: 'unitSize', displayName: 'Unit Size', width : "*"},
                 { field: 'unitQuantity', displayName: 'Unit Quantity', width : "*"},
                 { field: 'packQuantity', displayName: 'Pack Quantity', width : "*"},
