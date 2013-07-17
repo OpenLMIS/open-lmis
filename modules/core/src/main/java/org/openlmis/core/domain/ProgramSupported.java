@@ -49,4 +49,12 @@ public class ProgramSupported extends BaseModel implements Importable {
     if (this.active && this.startDate == null)
       throw new DataException("supported.programs.invalid");
   }
+
+  public ProgramSupported(Long programId, Boolean active, Date startDate) {
+
+    this.program = new Program(programId);
+    this.active = active;
+    this.startDate = startDate;
+  }
+
 }

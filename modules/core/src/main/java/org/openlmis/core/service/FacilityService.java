@@ -51,6 +51,7 @@ public class FacilityService {
   @Transactional
   public void insert(Facility facility) {
     save(facility);
+    //TODO reuse API used in update() API for manipulating ProgramSupported
     programSupportedService.addSupportedProgramsFor(facility);
   }
 

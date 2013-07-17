@@ -14,12 +14,10 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.openlmis.core.builder.ProgramSupportedBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
-import org.openlmis.core.dto.ProgramSupportedEventDTO;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -27,6 +25,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -35,6 +35,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.openlmis.core.builder.FacilityBuilder.programSupportedList;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -82,7 +83,7 @@ public class ProgramSupportedRepositoryTest {
 
     programSupportedRepository.addSupportedProgram(programSupported);
 
-    verify(programSupportedMapper).addSupportedProgram(programSupported);
+    verify(programSupportedMapper).add(programSupported);
   }
 
   @Test
@@ -94,7 +95,7 @@ public class ProgramSupportedRepositoryTest {
     programSupported.setProgram(program);
 
     doThrow(new DuplicateKeyException("Facility has already been mapped to the program")).when(
-      programSupportedMapper).addSupportedProgram(programSupported);
+      programSupportedMapper).add(programSupported);
 
     expectedEx.expect(dataExceptionMatcher("error.facility.program.mapping.exists"));
 
@@ -113,37 +114,76 @@ public class ProgramSupportedRepositoryTest {
 
     programSupportedRepository.addSupportedProgramsFor(facility);
 
-    verify(programSupportedMapper).addSupportedProgram(firstProgramSupported);
-    verify(programSupportedMapper).addSupportedProgram(secondProgramSupported);
+    verify(programSupportedMapper).add(firstProgramSupported);
+    verify(programSupportedMapper).add(secondProgramSupported);
   }
 
   @Test
-  public void shouldUpdateSupportedProgramsForFacilityIfIdIsDefined() throws Exception {
-    final Facility facility = make(a(defaultFacility));
-    facility.setId(1L);
+  public void shouldInsertIfDoestNotExist() throws Exception {
 
-    final ProgramSupported hivProgram = make(a(defaultProgramSupported, with(supportedProgram, new Program(1L, "HIV")),
-      with(supportedFacilityId, facility.getId())));
+    ProgramSupported programSupported = make(a(defaultProgramSupported));
 
-    List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
-      add(make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()))));
-      add(hivProgram);
-    }};
+    Facility facility = make(a(defaultFacility, with(programSupportedList, asList(programSupported))));
+    Long facilityId = 100L;
 
-    facility.setSupportedPrograms(programs);
-    final ProgramSupported arvProgram = make(a(defaultProgramSupported, with(supportedProgram, new Program(2L, "ARV")),
-      with(supportedFacilityId, facility.getId())));
+    facility.setId(facilityId);
+    List<ProgramSupported> previouslyProgramSupportedList = new ArrayList<>();
+    when(programSupportedMapper.getAllByFacilityId(facilityId)).thenReturn(previouslyProgramSupportedList);
 
-    List<ProgramSupported> previouslySupportedProgramsForFacility = new ArrayList<ProgramSupported>() {{
-      add(make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()))));
-      add(arvProgram);
-    }};
-    when(programSupportedRepository.getAllByFacilityId(facility.getId())).thenReturn(previouslySupportedProgramsForFacility);
+
     programSupportedRepository.updateSupportedPrograms(facility);
 
-    verify(programSupportedMapper).delete(facility.getId(), 2L);
-    verify(programSupportedMapper).addSupportedProgram(hivProgram);
+    verify(programSupportedMapper).getAllByFacilityId(facilityId);
+    verify(programSupportedMapper).add(programSupported);
+
   }
+
+  @Test
+  public void shouldDeleteIfNotSendInUpdate() throws Exception {
+    Long facilityId = 100L;
+    Program program = new Program(1232L, "random");
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedProgram, program)));
+    Facility facility = make(a(defaultFacility));
+    facility.setId(facilityId);
+
+    List<ProgramSupported> previouslyProgramSupportedList = asList(programSupported);
+    when(programSupportedMapper.getAllByFacilityId(facilityId)).thenReturn(previouslyProgramSupportedList);
+
+    programSupportedRepository.updateSupportedPrograms(facility);
+
+    verify(programSupportedMapper).getAllByFacilityId(facilityId);
+    verify(programSupportedMapper).delete(facilityId, program.getId());
+    verify(programSupportedMapper, never()).add(any(ProgramSupported.class));
+  }
+
+  @Test
+  public void shouldUpdateIfExist() throws Exception {
+    Long facilityId = 100L;
+    Program program = new Program(1232L, "random");
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedProgram, program)));
+    Date date = new Date();
+    ProgramSupported editedProgramSupported = new ProgramSupported(program.getId(), false, date);
+
+    Facility facility = make(a(defaultFacility, with(programSupportedList, new LinkedList<>(asList(editedProgramSupported)))));
+    facility.setId(facilityId);
+
+    List<ProgramSupported> previouslyProgramSupportedList = new LinkedList<>(asList(programSupported));
+    when(programSupportedMapper.getAllByFacilityId(facilityId)).thenReturn(previouslyProgramSupportedList);
+
+
+    programSupportedRepository.updateSupportedPrograms(facility);
+
+
+    verify(programSupportedMapper).getAllByFacilityId(facilityId);
+    verify(programSupportedMapper, never()).delete(anyLong(), anyLong());
+    verify(programSupportedMapper, never()).add(any(ProgramSupported.class));
+
+    ProgramSupported savedProgramSupported = programSupportedSentToMapper(facilityId, editedProgramSupported, facility);
+    verify(programSupportedMapper).update(savedProgramSupported);
+  }
+
 
   @Test
   public void shouldGetAllSupportedProgramsForFacility() throws Exception {
@@ -174,10 +214,19 @@ public class ProgramSupportedRepositoryTest {
   @Test
   public void shouldUpdateProgramSupported() throws Exception {
     ProgramSupported programSupported = new ProgramSupported();
-    doNothing().when(programSupportedMapper).updateSupportedProgram(programSupported);
+    doNothing().when(programSupportedMapper).update(programSupported);
     programSupportedRepository.updateSupportedProgram(programSupported);
 
-    verify(programSupportedMapper).updateSupportedProgram(programSupported);
+    verify(programSupportedMapper).update(programSupported);
+  }
+
+
+  private ProgramSupported programSupportedSentToMapper(Long facilityId, ProgramSupported editedProgramSupported, Facility facility) {
+    ProgramSupported savedProgramSupported = new ProgramSupported(editedProgramSupported.getProgram().getId(),
+      editedProgramSupported.getActive(), editedProgramSupported.getStartDate());
+    savedProgramSupported.setFacilityId(facilityId);
+    savedProgramSupported.setModifiedBy(facility.getModifiedBy());
+    return savedProgramSupported;
   }
 
 }

@@ -7,10 +7,8 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections.CollectionUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProgramSupported;
-import org.openlmis.core.dto.ProgramSupportedEventDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +16,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
-import static org.apache.commons.collections.CollectionUtils.subtract;
 
 @NoArgsConstructor
 @Repository
@@ -46,7 +41,7 @@ public class ProgramSupportedRepository {
 
   public void addSupportedProgram(ProgramSupported programSupported) {
     try {
-      programSupportedMapper.addSupportedProgram(programSupported);
+      programSupportedMapper.add(programSupported);
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("error.facility.program.mapping.exists");
     } catch (DataIntegrityViolationException integrityViolationException) {
@@ -64,24 +59,30 @@ public class ProgramSupportedRepository {
 
   public void updateSupportedPrograms(Facility facility) {
     List<ProgramSupported> previouslySupportedPrograms = programSupportedMapper.getAllByFacilityId(facility.getId());
-    deleteObsoleteProgramMappings(facility, previouslySupportedPrograms);
-    addUpdatableProgramMappings(facility, previouslySupportedPrograms);
-  }
-
-  private void deleteObsoleteProgramMappings(Facility facility, List<ProgramSupported> previouslySupportedPrograms) {
-    List<ProgramSupported> supportedPrograms = facility.getSupportedPrograms();
-    for (ProgramSupported programSupported : (Collection<ProgramSupported>) subtract(previouslySupportedPrograms, supportedPrograms)) {
-      deleteSupportedPrograms(facility.getId(), programSupported.getProgram().getId());
+    Iterator<ProgramSupported> previousPSIterator = previouslySupportedPrograms.iterator();
+    while (previousPSIterator.hasNext()) {
+      ProgramSupported previousProgramSupported = previousPSIterator.next();
+      Iterator<ProgramSupported> newPSIterator = facility.getSupportedPrograms().iterator();
+      while (newPSIterator.hasNext()) {
+        ProgramSupported newProgramSupported = newPSIterator.next();
+        if (previousProgramSupported.getProgram().getId().equals(newProgramSupported.getProgram().getId())) {
+          newProgramSupported.setFacilityId(facility.getId());
+          newProgramSupported.setModifiedBy(facility.getModifiedBy());
+          programSupportedMapper.update(newProgramSupported);
+          newPSIterator.remove();
+          previousPSIterator.remove();
+          break;
+        }
+      }
     }
-  }
 
-  private void addUpdatableProgramMappings(Facility facility, List<ProgramSupported> previouslySupportedPrograms) {
-    List<ProgramSupported> supportedPrograms = facility.getSupportedPrograms();
-    for (ProgramSupported programSupported : (Collection<ProgramSupported>) subtract(supportedPrograms, previouslySupportedPrograms)) {
-      programSupported.setFacilityId(facility.getId());
-      programSupported.setModifiedBy(facility.getModifiedBy());
-      addSupportedProgram(programSupported);
+    for (ProgramSupported ps : facility.getSupportedPrograms()) {
+      programSupportedMapper.add(ps);
     }
+    for (ProgramSupported ps : previouslySupportedPrograms) {
+      programSupportedMapper.delete(facility.getId(), ps.getProgram().getId());
+    }
+
   }
 
   public List<ProgramSupported> getAllByFacilityId(Long facilityId) {
@@ -93,6 +94,6 @@ public class ProgramSupportedRepository {
   }
 
   public void updateSupportedProgram(ProgramSupported programSupported) {
-    programSupportedMapper.updateSupportedProgram(programSupported);
+    programSupportedMapper.update(programSupported);
   }
 }

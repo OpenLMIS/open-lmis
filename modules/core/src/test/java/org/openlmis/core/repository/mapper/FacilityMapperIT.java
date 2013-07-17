@@ -303,11 +303,11 @@ public class FacilityMapperIT {
     programMapper.insert(make(a(defaultProgram, with(programCode, "Random"))));
 
 
-    programSupportedMapper.addSupportedProgram(make(a(defaultProgramSupported,
+    programSupportedMapper.add(make(a(defaultProgramSupported,
       with(supportedFacilityId, facilitySupportingProgramInRG1.getId()),
       with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))))));
 
-    programSupportedMapper.addSupportedProgram(make(a(defaultProgramSupported,
+    programSupportedMapper.add(make(a(defaultProgramSupported,
       with(supportedFacilityId, facilitySupportingProgramNotInAnyRG.getId()),
       with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))))));
 
@@ -459,7 +459,7 @@ public class FacilityMapperIT {
     ProgramSupported programSupported = new ProgramSupported();
     programSupported.setFacilityId(facility.getId());
     programSupported.setProgram(program);
-    programSupportedMapper.addSupportedProgram(programSupported);
+    programSupportedMapper.add(programSupported);
     DeliveryZoneMember member1 = new DeliveryZoneMember(zone, facility);
     deliveryZoneMemberMapper.insert(member1);
     return facility;
