@@ -87,16 +87,14 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
 
   function removeExtraDataForPostFromRnr() {
     var rnr = _.pick(this, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
-    if ($scope.visibleTab != REGIMEN) {
-      if (!$scope.pageLineItems[0].fullSupply) {
-        rnr.nonFullSupplyLineItems = _.map($scope.pageLineItems, function (rnrLineItem) {
-          return rnrLineItem.reduceForApproval()
-        });
-      } else {
-        rnr.fullSupplyLineItems = _.map($scope.pageLineItems, function (rnrLineItem) {
-          return rnrLineItem.reduceForApproval()
-        });
-      }
+    if (!$scope.pageLineItems[0].fullSupply) {
+      rnr.nonFullSupplyLineItems = _.map($scope.pageLineItems, function (rnrLineItem) {
+        return rnrLineItem.reduceForApproval()
+      });
+    } else if ($scope.pageLineItems[0].fullSupply) {
+      rnr.fullSupplyLineItems = _.map($scope.pageLineItems, function (rnrLineItem) {
+        return rnrLineItem.reduceForApproval()
+      });
     }
     return rnr;
   }
