@@ -8,6 +8,7 @@ package org.openlmis.functional;
 
 
 import cucumber.api.DataTable;
+import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -97,7 +98,7 @@ public class ViewRequisition extends TestCaseHelper {
   }
 
   @Given("^I have the following data including regimen configured:$")
-  public void theFollowingDataExist(DataTable data) {
+  public void theFollowingDataExist(DataTable data) throws Exception {
     List<String> dataString = data.flatten();
     program = dataString.get(0);
     userSIC = dataString.get(1);
@@ -136,7 +137,8 @@ public class ViewRequisition extends TestCaseHelper {
 
   @When("^I access home page")
   public void accessHomePage() throws IOException, SQLException {
-    homePage = initiateRnRPage.clickHome();
+    InitiateRnRPage initiateRnRPage=new InitiateRnRPage(testWebDriver);
+    HomePage homePage = initiateRnRPage.clickHome();
   }
 
   @When("^I access view RnR screen$")
@@ -295,11 +297,14 @@ public class ViewRequisition extends TestCaseHelper {
   }
 
   @AfterMethod(groups = {"smoke", "functional"})
+  @After
   public void tearDown() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout(baseUrlGlobal);
-    dbWrapper.deleteData();
-    dbWrapper.closeConnection();
+    if(!testWebDriver.getElementById("username").isDisplayed()) {
+      HomePage homePage = new HomePage(testWebDriver);
+      homePage.logout(baseUrlGlobal);
+      dbWrapper.deleteData();
+      dbWrapper.closeConnection();
+    }
   }
 
 

@@ -19,7 +19,10 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -52,7 +55,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     public String userSICUserName = "storeincharge";
 
 
-    @BeforeMethod(groups = {"smoke"})
+  @BeforeMethod(groups = {"smoke"})
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -396,10 +399,12 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @AfterMethod(groups = {"smoke"})
   @After
   public void tearDown() throws Exception {
+    if(!testWebDriver.getElementById("username").isDisplayed()) {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
+    }
   }
 
 }

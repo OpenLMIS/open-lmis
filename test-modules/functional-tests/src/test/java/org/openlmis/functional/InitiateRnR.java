@@ -93,7 +93,7 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @Given("^I have the following data:$")
-  public void theFollowingDataExist(DataTable data) {
+  public void theFollowingDataExist(DataTable data) throws Exception {
     List<String> dataString = data.flatten();
     program = dataString.get(0);
     userSIC = dataString.get(1);
@@ -366,10 +366,12 @@ public class InitiateRnR extends TestCaseHelper {
   @AfterMethod(groups = {"functional", "smoke"})
   @After
   public void tearDown() throws Exception {
+    if(!testWebDriver.getElementById("username").isDisplayed()) {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
+    }
   }
 
   @DataProvider(name = "Data-Provider-Function-Positive")

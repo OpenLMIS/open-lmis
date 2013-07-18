@@ -7,18 +7,24 @@
 package org.openlmis.functional;
 
 
+import cucumber.api.DataTable;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.ProgramProductISAPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.ProgramProductISAPage;
 import org.openqa.selenium.WebElement;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
 import java.io.IOException;
-import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,24 +38,25 @@ import static com.thoughtworks.selenium.SeleneseTestBase.*;
 
 public class ManageProgramProductISA extends TestCaseHelper {
 
-  @BeforeMethod(groups = {"smoke","functional2"})
+  public String program, userSIC, password;
+  public ProgramProductISAPage programProductISAPage;
+
+
+  @BeforeMethod(groups = {"smoke", "functional2"})
+  @Before
   public void setUp() throws Exception {
     super.setup();
-    setupProgramProductTestDataWithCategories("P1", "antibiotic1", "C1", "VACCINES");
-    setupProgramProductTestDataWithCategories("P2", "antibiotic2", "C2", "VACCINES");
-    setupProgramProductTestDataWithCategories("P3", "antibiotic3", "C3", "TB");
-    setupProgramProductTestDataWithCategories("P4", "antibiotic4", "C4", "TB");
-    dbWrapper.updateProgramToAPushType("TB", false);
   }
 
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testMinimumProgramProductISA(String userSIC, String password, String program) throws Exception {
+    setUpTestDataForProgramProductISA();
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
     programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "5", "10", "1000");
     String actualISA = programProductISAPage.fillPopulation("1");
-    String expectedISA = calculateISA("1", "2", "3", "4", "5", "10", "1000","1");
-    assertEquals(expectedISA,actualISA);
+    String expectedISA = calculateISA("1", "2", "3", "4", "5", "10", "1000", "1");
+    assertEquals(expectedISA, actualISA);
     programProductISAPage.cancelISA();
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
@@ -57,11 +64,12 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testMaximumProgramProductISA(String userSIC, String password, String program) throws Exception {
+    setUpTestDataForProgramProductISA();
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
     programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "55", "10", "50");
     String actualISA = programProductISAPage.fillPopulation("1");
-    String expectedISA = calculateISA("1", "2", "3", "4", "55", "10", "50","1");
-    assertEquals(expectedISA,actualISA);
+    String expectedISA = calculateISA("1", "2", "3", "4", "55", "10", "50", "1");
+    assertEquals(expectedISA, actualISA);
     programProductISAPage.cancelISA();
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
@@ -69,11 +77,12 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testProgramProductISA(String userSIC, String password, String program) throws Exception {
+    setUpTestDataForProgramProductISA();
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
     programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "5", "5", "1000");
     String actualISA = programProductISAPage.fillPopulation("1");
-    String expectedISA = calculateISA("1", "2", "3", "4", "5", "5", "1000","1");
-    assertEquals(expectedISA,actualISA);
+    String expectedISA = calculateISA("1", "2", "3", "4", "5", "5", "1000", "1");
+    assertEquals(expectedISA, actualISA);
     programProductISAPage.cancelISA();
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
@@ -81,19 +90,53 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function")
   public void testProgramProductISADecimal(String userSIC, String password, String program) throws Exception {
+    setUpTestDataForProgramProductISA();
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
     programProductISAPage.fillProgramProductISA("3.9", "3", "10", "25", "0", "10", "1000");
     String actualISA = programProductISAPage.fillPopulation("1000");
     String expectedISA = calculateISA("3.9", "3", "10", "25", "0", "10", "1000", "1000");
-    assertEquals(expectedISA,actualISA);
+    assertEquals(expectedISA, actualISA);
     programProductISAPage.cancelISA();
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
   }
 
+  @Given("^I have the following data for ISA:$")
+  public void theFollowingDataExist(DataTable data) throws Exception {
+    setUpTestDataForProgramProductISA();
+    List<String> dataString = data.flatten();
+    userSIC = dataString.get(0);
+    password = dataString.get(1);
+    program = dataString.get(2);
+  }
+
+  @Given("^I access program product ISA page$")
+  public void accessProgramProductISAPage() throws IOException {
+    programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
+  }
+
+  @When("^I type ratio \"([^\"]*)\" dosesPerYear \"([^\"]*)\" wastage \"([^\"]*)\" bufferPercentage \"([^\"]*)\" adjustmentValue \"([^\"]*)\" minimumValue \"([^\"]*)\" maximumValue \"([^\"]*)\"$")
+  public void fillProgramProductISA(String ratio, String dosesPerYear, String wastage, String bufferPercentage,
+                                    String adjustmentValue, String minimumValue, String maximumValue) throws IOException {
+    programProductISAPage.fillProgramProductISA(ratio, dosesPerYear, wastage, bufferPercentage, adjustmentValue, minimumValue, maximumValue);
+  }
+
+  @Then("^I verify calculated ISA value having population \"([^\"]*)\" ratio \"([^\"]*)\" dosesPerYear \"([^\"]*)\" wastage \"([^\"]*)\" bufferPercentage \"([^\"]*)\" adjustmentValue \"([^\"]*)\" minimumValue \"([^\"]*)\" maximumValue \"([^\"]*)\"$")
+  public void verifyCalculatedISA(String population,String ratio, String dosesPerYear, String wastage, String bufferPercentage,
+                                  String adjustmentValue, String minimumValue, String maximumValue) throws IOException {
+    String actualISA = programProductISAPage.fillPopulation(population);
+    String expectedISA = calculateISA(ratio, dosesPerYear, wastage, bufferPercentage, adjustmentValue, minimumValue, maximumValue,population);
+    assertEquals(expectedISA, actualISA);
+  }
+
+  @Then("^I click cancel$")
+  public void clickCancel() throws IOException {
+    programProductISAPage.cancelISA();
+  }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testISAFormula(String userSIC, String password, String program) throws Exception {
+    setUpTestDataForProgramProductISA();
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
     programProductISAPage.fillProgramProductISA("999.999", "999", "999.999", "999.999", "999999", "5", "1000");
     programProductISAPage.fillPopulation("1");
@@ -109,6 +152,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Search")
   public void testSearchBox(String userSIC, String password, String program, String productName) throws Exception {
+    setUpTestDataForProgramProductISA();
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage(userSIC, password);
     programProductISAPage.selectProgram(program);
     programProductISAPage.searchProduct(productName);
@@ -119,6 +163,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Verify-Push-Type-Program")
   public void testPushTypeProgramsInDropDown(String userSIC, String password, String program1, String program2) throws Exception {
+    setUpTestDataForProgramProductISA();
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage(userSIC, password);
 
     List<WebElement> valuesPresentInDropDown = programProductISAPage.getAllSelectOptionsFromProgramDropDown();
@@ -143,6 +188,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   public void testProgramProductsMappings(String userSIC, String password, String program1, String program2,
                                           String product1, String product2,
                                           String product3, String product4) throws Exception {
+    setUpTestDataForProgramProductISA();
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage(userSIC, password);
 
     programProductISAPage.selectValueFromProgramDropDown(program1);
@@ -164,6 +210,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testVerifyMandatoryFields(String userSIC, String password, String program) throws Exception {
+    setUpTestDataForProgramProductISA();
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
     programProductISAPage.fillProgramProductISA("", "1", "2", "3", "4", "10", "10");
     programProductISAPage.verifyFieldsOnISAModalWindow();
@@ -175,6 +222,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testVerifyMonthlyRestockAmountFieldAvailability(String userSIC, String password, String program) throws Exception {
+    setUpTestDataForProgramProductISA();
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
     programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "0", "10", "10");
     programProductISAPage.verifyMonthlyRestockAmountPresent();
@@ -219,12 +267,23 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   }
 
-  @AfterMethod(groups = {"smoke","functional2"})
+  private void setUpTestDataForProgramProductISA() throws IOException, SQLException {
+    setupProgramProductTestDataWithCategories("P1", "antibiotic1", "C1", "VACCINES");
+    setupProgramProductTestDataWithCategories("P2", "antibiotic2", "C2", "VACCINES");
+    setupProgramProductTestDataWithCategories("P3", "antibiotic3", "C3", "TB");
+    setupProgramProductTestDataWithCategories("P4", "antibiotic4", "C4", "TB");
+    dbWrapper.updateProgramToAPushType("TB", false);
+  }
+
+  @AfterMethod(groups = {"smoke", "functional2"})
+  @After
   public void tearDown() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout(baseUrlGlobal);
-    dbWrapper.deleteData();
-    dbWrapper.closeConnection();
+    if(!testWebDriver.getElementById("username").isDisplayed()) {
+      HomePage homePage = new HomePage(testWebDriver);
+      homePage.logout(baseUrlGlobal);
+      dbWrapper.deleteData();
+      dbWrapper.closeConnection();
+    }
   }
 
 

@@ -7,6 +7,7 @@
 package org.openlmis.functional;
 
 
+import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -14,6 +15,7 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ForgotPasswordPage;
+import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -147,6 +149,14 @@ public class ForgotPassword extends TestCaseHelper {
     verifyEmailSendSuccessfullyMessage(forgotPasswordPage);
   }
 
+//  @Then("^I am login using user$")
+//    public void login()
+//  {
+//    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+//    loginPage.loginAs("Admin123", "Admin123");
+//  }
+
+
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testVerifyBlankEmailAndUserName(String userName, String email) throws Exception {
@@ -184,9 +194,14 @@ public class ForgotPassword extends TestCaseHelper {
 
 
   @AfterMethod(groups = {"smoke", "functional2"})
+  @After
   public void tearDown() throws Exception {
-    dbWrapper.deleteData();
-    dbWrapper.closeConnection();
+    if(!testWebDriver.getElementById("username").isDisplayed()) {
+      HomePage homePage = new HomePage(testWebDriver);
+      homePage.logout(baseUrlGlobal);
+      dbWrapper.deleteData();
+      dbWrapper.closeConnection();
+    }
   }
 
 

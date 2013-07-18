@@ -44,10 +44,21 @@ Feature: Smoke Tests
     When I access regimen tab for view requisition
     Then I verify values on regimen page as patientsOnTreatment "100" patientsToInitiateTreatment "200" patientsStoppedTreatment "300" remarks "Regimens data filled"
 
-#  @smoke
-#  Scenario: Verifying Forgot Password functionality
-#    Given I am on forgot password screen
-#    When I type email "John_Doe@openlmis.com"
-#    And I type and username "Admin123"
-#    When I click submit button
-#    Then I should see email send successfully
+  @smoke
+  Scenario: Should configure program product ISA
+    Given I have the following data for ISA:
+      | Admin123 | Admin123 | VACCINES |
+    And I access program product ISA page
+    When I type ratio "3.9" dosesPerYear "3" wastage "10" bufferPercentage "25" adjustmentValue "0" minimumValue "10" maximumValue "1000"
+    Then I verify calculated ISA value having population "1000" ratio "3.9" dosesPerYear "3" wastage "10" bufferPercentage "25" adjustmentValue "0" minimumValue "10" maximumValue "1000"
+    And I click cancel
+    And I access home page
+
+  @smoke
+  Scenario: Verifying Forgot Password functionality
+    Given I am on forgot password screen
+    When I type email "John_Doe@openlmis.com"
+    And I type and username "Admin123"
+    When I click submit button
+    Then I should see email send successfully
+    And I am logged in as Admin
