@@ -100,6 +100,11 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     return true;
   };
 
+  $scope.cancel = function() {
+    $scope.$parent.userId = null;
+    $location.path('');
+  }
+
   $scope.validateUserName = function () {
     $scope.userNameInvalid = $scope.user.userName != null && $scope.user.userName.trim().indexOf(' ') >= 0;
   };
