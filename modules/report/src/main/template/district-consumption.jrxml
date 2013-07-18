@@ -61,7 +61,7 @@
 					</textElement>
 					<text><![CDATA[Line#]]></text>
 				</staticText>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement uuid="987dfd20-2622-443c-9f95-62413810cbef" x="45" y="0" width="307" height="20"/>
 					<textElement>
 						<font isBold="true"/>
@@ -104,7 +104,7 @@
 					</textElement>
 					<text><![CDATA[Total :]]></text>
 				</staticText>
-				<textField pattern="" isBlankWhenNull="false">
+				<textField pattern="" isBlankWhenNull="true">
 					<reportElement uuid="a4c069eb-7ead-42ce-8dfb-3239eb46942a" mode="Transparent" x="241" y="0" width="136" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
@@ -177,7 +177,7 @@
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement uuid="5342fab3-58d3-42c9-b212-7e577dc21e8c" mode="Transparent" x="45" y="0" width="140" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
@@ -193,7 +193,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{consumption} == null? "0" : $F{consumption}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement uuid="029c088b-bf88-4d50-bbe1-7a98dc98ce36" mode="Transparent" x="442" y="0" width="136" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
