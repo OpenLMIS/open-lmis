@@ -17,9 +17,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
+import org.openlmis.rnr.domain.Column;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.web.controller.RequisitionController;
 
@@ -33,8 +33,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.openlmis.rnr.builder.RequisitionBuilder.facility;
+import static org.openlmis.rnr.builder.RequisitionBuilder.rnrWithRegimens;
 import static org.openlmis.rnr.builder.RnrTemplateBuilder.defaultRnrTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -48,11 +48,11 @@ public class RequisitionPdfModelTest {
   @Before
   public void setUp() throws Exception {
     Facility f1 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.name, "F1")));
-    requisition = spy(make(a(defaultRnr, with(facility, f1))));
+    requisition = spy(make(a(rnrWithRegimens, with(facility, f1))));
     model = new HashMap<>();
     model.put(RequisitionController.CURRENCY, "$");
     model.put(RequisitionController.RNR, requisition);
-    List<RnrColumn> rnrTemplate = make(a(defaultRnrTemplate)).getRnrColumns();
+    List<? extends Column> rnrTemplate = make(a(defaultRnrTemplate)).getRnrColumns();
     model.put(RequisitionController.RNR_TEMPLATE, rnrTemplate);
     LossesAndAdjustmentsType additive1 = new LossesAndAdjustmentsType("TRANSFER_IN", "TRANSFER IN", true, 1);
     lossesAndAdjustmentsList = asList(additive1);
@@ -100,6 +100,11 @@ public class RequisitionPdfModelTest {
     assertThat(nonFullSupplyHeader.getContent(), is("Non-Full supply products"));
   }
 
+  @Test
+  public void shouldGetRegimenHeader() throws Exception {
+    Paragraph regimenHeader = requisitionPdfModel.getRegimenHeader();
+    assertThat(regimenHeader.getContent(), is("Regimen(s)"));
+  }
 
   @Test
   public void shouldGetFullSupplyLineItems() throws Exception {
@@ -124,6 +129,15 @@ public class RequisitionPdfModelTest {
     assertRowValues(nonFullSupplyTable.getRow(3), "6");
 
     assertThat(nonFullSupplyTable.getRows().size(), is(requisition.getNonFullSupplyLineItems().size() + 3));
+  }
+
+  @Test
+  public void shouldGetRegimenLineItems() throws Exception {
+    PdfPTable regimenTable = requisitionPdfModel.getRegimenTable();
+    assertRowValues(regimenTable.getRow(0), "name", "code", "onTreatment", "initiatedTreatment", "stoppedTreatment", "remarks");
+    assertRowValues(regimenTable.getRow(1), "");
+    assertRowValues(regimenTable.getRow(2), "C1");
+    assertRowValues(regimenTable.getRow(3), "Regimen", "R01", "3", "3", "3", "remarks");
   }
 
   private void assertRowValues(PdfPRow row, String... cellTexts) {

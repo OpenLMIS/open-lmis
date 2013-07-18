@@ -17,6 +17,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @NoArgsConstructor
@@ -40,7 +41,7 @@ public class ProgramSupportedRepository {
 
   public void addSupportedProgram(ProgramSupported programSupported) {
     try {
-      programSupportedMapper.addSupportedProgram(programSupported);
+      programSupportedMapper.add(programSupported);
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("error.facility.program.mapping.exists");
     } catch (DataIntegrityViolationException integrityViolationException) {
@@ -48,36 +49,36 @@ public class ProgramSupportedRepository {
     }
   }
 
-  public void addSupportedProgramsFor(Facility facility) {
-    for (ProgramSupported supportedProgram : facility.getSupportedPrograms()) {
-      supportedProgram.setModifiedBy(facility.getModifiedBy());
-      supportedProgram.setFacilityId(facility.getId());
-      addSupportedProgram(supportedProgram);
-    }
-  }
-
-  public void updateSupportedPrograms(Facility facility, List<ProgramSupported> previouslySupportedPrograms) {
-    deleteObsoleteProgramMappings(facility, previouslySupportedPrograms);
-    addUpdatableProgramMappings(facility, previouslySupportedPrograms);
-  }
-
-  private void deleteObsoleteProgramMappings(Facility facility, List<ProgramSupported> previouslySupportedPrograms) {
-    List<ProgramSupported> supportedPrograms = facility.getSupportedPrograms();
-    for (ProgramSupported previouslySupportedProgram : previouslySupportedPrograms) {
-      if (!(supportedPrograms.contains(previouslySupportedProgram))) {
-        deleteSupportedPrograms(facility.getId(), previouslySupportedProgram.getProgram().getId());
+  //TODO simplify
+  public void updateSupportedPrograms(Facility facility) {
+    List<ProgramSupported> previouslySupportedPrograms = programSupportedMapper.getAllByFacilityId(facility.getId());
+    Iterator<ProgramSupported> previousPSIterator = previouslySupportedPrograms.iterator();
+    while (previousPSIterator.hasNext()) {
+      ProgramSupported previousProgramSupported = previousPSIterator.next();
+      Iterator<ProgramSupported> newPSIterator = facility.getSupportedPrograms().iterator();
+      while (newPSIterator.hasNext()) {
+        ProgramSupported newProgramSupported = newPSIterator.next();
+        if (previousProgramSupported.getProgram().getId().equals(newProgramSupported.getProgram().getId())) {
+          newProgramSupported.setFacilityId(facility.getId());
+          newProgramSupported.setModifiedBy(facility.getModifiedBy());
+          programSupportedMapper.update(newProgramSupported);
+          newPSIterator.remove();
+          previousPSIterator.remove();
+          break;
+        }
       }
     }
-  }
 
-  private void addUpdatableProgramMappings(Facility facility, List<ProgramSupported> previouslySupportedPrograms) {
-    for (ProgramSupported supportedProgram : facility.getSupportedPrograms()) {
-      if (!(previouslySupportedPrograms).contains(supportedProgram)) {
-        supportedProgram.setFacilityId(facility.getId());
-        supportedProgram.setModifiedBy(facility.getModifiedBy());
-        addSupportedProgram(supportedProgram);
-      }
+    for (ProgramSupported ps : facility.getSupportedPrograms()) {
+      ps.setFacilityId(facility.getId());
+      ps.setModifiedBy(facility.getModifiedBy());
+      ps.setCreatedBy(facility.getModifiedBy());
+      programSupportedMapper.add(ps);
     }
+    for (ProgramSupported ps : previouslySupportedPrograms) {
+      programSupportedMapper.delete(facility.getId(), ps.getProgram().getId());
+    }
+
   }
 
   public List<ProgramSupported> getAllByFacilityId(Long facilityId) {
@@ -89,6 +90,6 @@ public class ProgramSupportedRepository {
   }
 
   public void updateSupportedProgram(ProgramSupported programSupported) {
-    programSupportedMapper.updateSupportedProgram(programSupported);
+    programSupportedMapper.update(programSupported);
   }
 }

@@ -74,14 +74,14 @@ public class GeographicZoneMapperIT {
 
     assertThat(geographicZone.getCode(), is("Ngorongoro"));
     assertThat(geographicZone.getName(), is("Ngorongoro"));
-    assertThat(geographicZone.getLevel().getName(), is("City"));
+    assertThat(geographicZone.getLevel().getName(), is("District"));
     assertThat(geographicZone.getLevel().getLevelNumber(), is(4));
   }
 
   @Test
   public void shouldGetGeographicZoneWithParent() throws Exception {
-    GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "district", "District",null), null);
-    GeographicZone expectedZone = new GeographicZone(5L, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "city", "City", null), parent);
+    GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "province", "Province",null), null);
+    GeographicZone expectedZone = new GeographicZone(5L, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "district", "District", null), parent);
 
     GeographicZone zone = mapper.getById(5L);
 

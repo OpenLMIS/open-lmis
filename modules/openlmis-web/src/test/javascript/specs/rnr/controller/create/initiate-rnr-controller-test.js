@@ -75,7 +75,7 @@ describe('InitiateRnrController', function () {
       {"code":"HIV", "id":1}
     ]};
 
-    $httpBackend.when('GET', '/logistics/user/facilities.json').respond(UserFacilityListResponse);
+    $httpBackend.when('GET', '/user/facilities.json').respond(UserFacilityListResponse);
     $httpBackend.when('GET', '/create/requisition/programs.json?facilityId=1').respond(RequisitionResponse);
     scope.loadFacilityData(selectedType);
     $httpBackend.flush();
@@ -91,7 +91,7 @@ describe('InitiateRnrController', function () {
     spyOn(messageService, 'get').andCallFake(function (arg) {
       return "--none assigned--";
     });
-    $httpBackend.when('GET', '/logistics/user/facilities.json').respond(UserFacilityListResponse);
+    $httpBackend.when('GET', '/user/facilities.json').respond(UserFacilityListResponse);
     scope.loadFacilityData(selectedType);
     $httpBackend.flush();
     expect(scope.facilityDisplayName).toEqual('--none assigned--');

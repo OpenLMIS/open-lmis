@@ -54,6 +54,13 @@ public class RequisitionPdfWriter extends PdfWriter {
       document.add(nonFullSupplyTable);
     }
 
+    PdfPTable regimenTable = requisitionPdfModel.getRegimenTable();
+    if (regimenTable != null) {
+      document.newPage();
+      document.add(requisitionPdfModel.getRegimenHeader());
+      document.add(regimenTable);
+    }
+
     document.newPage();
     document.add(requisitionPdfModel.getSummary());
     document.close();

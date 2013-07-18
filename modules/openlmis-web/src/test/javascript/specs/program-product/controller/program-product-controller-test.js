@@ -140,7 +140,7 @@ describe('program product controller', function () {
 
 
   it("should return calculated value based on formula if form is valid",function(){
-    var programProductIsa = {"whoRatio": 2, "dosesPerYear": 1, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6, "minimumValue":2};
+    var programProductIsa = {"whoRatio": 2, "dosesPerYear": 1, "wastageFactor": 47, "bufferPercentage": 45, "adjustmentValue": 6, "minimumValue":2};
     var productIsa = new ProgramProductISA();
     productIsa.init(programProductIsa);
     scope.population = 2;
@@ -153,7 +153,7 @@ describe('program product controller', function () {
   });
 
   it("should not calculate isa value and show error if form is not valid",function(){
-    var programProductIsa = {"whoRatio": 2, "dosesPerYear": 1, "wastageRate": 47, "bufferPercentage": 45, "adjustmentValue": 6, "minimumValue":22, "maximumValue":3};
+    var programProductIsa = {"whoRatio": 2, "dosesPerYear": 1, "wastageFactor": 47, "bufferPercentage": 45, "adjustmentValue": 6, "minimumValue":22, "maximumValue":3};
     var productIsa = new ProgramProductISA();
     productIsa.init(programProductIsa);
     scope.population = 2;

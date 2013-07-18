@@ -113,6 +113,7 @@ describe('CreateRequisitionController', function () {
       scope.saveRnrForm.pristine = true
     };
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond({'success': "R&R saved successfully!"});
+
     scope.saveRnr();
     httpBackend.flush();
     expect(scope.message).toEqual("R&R saved successfully!");

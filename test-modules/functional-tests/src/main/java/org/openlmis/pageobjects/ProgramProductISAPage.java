@@ -44,7 +44,7 @@ public class ProgramProductISAPage extends Page {
   @FindBy(how = ID, using = "doses-per-year")
   private static WebElement dosesPerYearTextBox;
 
-  @FindBy(how = ID, using = "wastage-rate")
+  @FindBy(how = ID, using = "wastage-factor")
   private static WebElement wastageRateTextBox;
 
   @FindBy(how = ID, using = "buffer-percentage")

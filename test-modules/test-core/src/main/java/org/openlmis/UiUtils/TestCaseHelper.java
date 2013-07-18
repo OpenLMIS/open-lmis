@@ -148,8 +148,8 @@ public class TestCaseHelper {
     dbWrapper.insertProgramProductsWithCategory(product, program);
   }
 
-  public void setupProgramProductISA(String program, String product, String whoratio, String dosesperyear, String wastagerate, String bufferpercentage, String minimumvalue, String maximumvalue, String adjustmentvalue) throws IOException, SQLException {
-    dbWrapper.insertProgramProductISA(program, product, whoratio, dosesperyear, wastagerate, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue);
+  public void setupProgramProductISA(String program, String product, String whoratio, String dosesperyear, String wastageFactor, String bufferpercentage, String minimumvalue, String maximumvalue, String adjustmentvalue) throws IOException, SQLException {
+    dbWrapper.insertProgramProductISA(program, product, whoratio, dosesperyear, wastageFactor, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue);
   }
 
   public void setupRequisitionGroupData(String RGCode1, String RGCode2, String SupervisoryNodeCode1, String SupervisoryNodeCode2, String Facility1, String Facility2) throws IOException, SQLException {
@@ -272,8 +272,8 @@ public class TestCaseHelper {
 
         Integer population = Integer.parseInt(populationValue);
         Float ratio = Float.parseFloat(ratioValue) / 100;
-        Integer dossesPerYear = Integer.parseInt(dosesPerYearValue);
-        Float wastage = (Float.parseFloat(wastageValue) / 100) + 1;
+        Integer dosesPerYear = Integer.parseInt(dosesPerYearValue);
+        Float wastage = Float.parseFloat(wastageValue);
         Float bufferPercentage = (Float.parseFloat(bufferPercentageValue) / 100) + 1;
 
         if (minimumValue!=null){
@@ -283,7 +283,7 @@ public class TestCaseHelper {
 
         Integer adjustment = Integer.parseInt(adjustmentValue);
 
-        calculatedISA = (((population * ratio * dossesPerYear * wastage) / 12) * bufferPercentage) + adjustment;
+        calculatedISA = (((population * ratio * dosesPerYear * wastage) / 12) * bufferPercentage) + adjustment;
 
         if (calculatedISA <= minimum && minimum!=0.0)
                 return (minimumValue);

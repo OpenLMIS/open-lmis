@@ -19,12 +19,13 @@ public interface ProgramSupportedMapper {
     "(facilityId, programId, active, startDate, createdBy, modifiedBy, modifiedDate) VALUES (" +
     "#{facilityId}, #{program.id}, #{active}, #{startDate}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
   @Options(flushCache = true, useGeneratedKeys = true)
-  void addSupportedProgram(ProgramSupported programSupported);
+  void add(ProgramSupported programSupported);
 
   @Select("SELECT * FROM programs_supported " +
     "WHERE facilityId = #{facilityId} AND programId = #{programId} LIMIT 1")
   @Results({
-    @Result(property = "program", javaType = Program.class, column = "programId", one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+    @Result(property = "program", javaType = Program.class, column = "programId",
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
   })
   ProgramSupported getBy(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
@@ -40,5 +41,7 @@ public interface ProgramSupportedMapper {
 
   @Update("UPDATE programs_supported set active=#{active}, startDate=#{startDate}, modifiedDate=#{modifiedDate}, modifiedBy=#{modifiedBy}" +
     "where facilityId=#{facilityId} AND programId=#{program.id}")
-  void updateSupportedProgram(ProgramSupported programSupported);
+    //TODO use COALESCE for modifiedDate
+  void update(ProgramSupported programSupported);
+
 }

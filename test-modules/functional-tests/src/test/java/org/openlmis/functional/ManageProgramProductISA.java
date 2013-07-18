@@ -82,9 +82,9 @@ public class ManageProgramProductISA extends TestCaseHelper {
   @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function")
   public void testProgramProductISADecimal(String userSIC, String password, String program) throws Exception {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
-    programProductISAPage.fillProgramProductISA("3.9", "3", "10", "25", "0", "", "");
+    programProductISAPage.fillProgramProductISA("3.9", "3", "10", "25", "0", "10", "1000");
     String actualISA = programProductISAPage.fillPopulation("1000");
-    String expectedISA = calculateISA("3.9", "3", "10", "25", "0", "0", "20","1000");
+    String expectedISA = calculateISA("3.9", "3", "10", "25", "0", "10", "1000", "1000");
     assertEquals(expectedISA,actualISA);
     programProductISAPage.cancelISA();
     HomePage homePage = new HomePage(testWebDriver);
@@ -98,7 +98,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     programProductISAPage.fillProgramProductISA("999.999", "999", "999.999", "999.999", "999999", "5", "1000");
     programProductISAPage.fillPopulation("1");
     String isaFormula = programProductISAPage.getISAFormulaFromISAFormulaModal();
-    String expectedISAFormula = "(population) * 9.99999 * 999 * 10.99999 / 12 * 10.99999 + 999999";
+    String expectedISAFormula = "(population) * 9.99999 * 999 * 999.999 / 12 * 10.99999 + 999999";
     assertEquals(expectedISAFormula, isaFormula);
     programProductISAPage.saveISA();
     programProductISAPage.verifyISAFormula(isaFormula);
