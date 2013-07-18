@@ -55,7 +55,7 @@ public class ViewRequisition extends TestCaseHelper {
   public InitiateRnRPage initiateRnRPage;
   ViewRequisitionPage viewRequisitionPage;
 
-  @BeforeMethod(groups = {"smoke", "functional"})
+  @BeforeMethod(groups = "functional")
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -261,7 +261,7 @@ public class ViewRequisition extends TestCaseHelper {
     assertEquals(remarks, initiateRnRPage.getRemarksValue());
   }
 
-  @AfterMethod(groups = {"smoke", "functional"})
+  @AfterMethod(groups = "functional")
   @After
   public void tearDown() throws Exception {
     if(!testWebDriver.getElementById("username").isDisplayed()) {

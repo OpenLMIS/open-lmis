@@ -162,6 +162,7 @@ public class DBWrapper {
 
     update("delete from user_password_reset_tokens ;");
     update("delete from comments;");
+    update("delete from distributions ;");
     update("delete from users where userName not like('Admin%');");
     update("DELETE FROM requisition_line_item_losses_adjustments;");
     update("DELETE FROM requisition_line_items;");
@@ -196,6 +197,7 @@ public class DBWrapper {
     update("delete from atomfeed.event_records;");
     update("delete from regimens;");
     update("delete from program_regimen_columns;");
+
   }
 
 

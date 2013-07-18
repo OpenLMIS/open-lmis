@@ -12,27 +12,15 @@
       </run>
     </groups>
     <classes>
-      <class name="org.openlmis.functional.E2EInitiateRnR">
-      </class>
       <class name="org.openlmis.functional.ConfigureRegimenProgramTemplate">
       </class>
       <class name="org.openlmis.functional.ManageDistribution">
       </class>
       <class name="org.openlmis.functional.ManageISA">
       </class>
-      <class name="org.openlmis.functional.ManageProgramProductISA">
-      </class>
-      <class name="org.openlmis.functional.ManageRolesAndUsers">
-      </class>
-      <class name="org.openlmis.functional.ForgotPassword">
-      </class>
-      <class name="org.openlmis.functional.ViewRequisition">
-      </class>
       <class name="org.openlmis.functional.PageAccessAuthentication">
       </class>
       <class name="org.openlmis.functional.ViewWarehouseLoadAmount">
-      </class>
-      <class name="org.openlmis.functional.InitiateRnR">
       </class>
     </classes>
   </test>

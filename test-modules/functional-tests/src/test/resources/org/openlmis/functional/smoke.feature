@@ -55,6 +55,19 @@ Feature: Smoke Tests
     And I access home page
 
   @smoke
+  Scenario: Should initiate distribution
+    Given I have the following data for distribution:
+      | userSIC       | password | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeincharge | Admin123 | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I access plan my distribution page
+    When I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period14"
+    And I initiate distribution
+    Then I should see data download successfully
+    And I should see delivery zone "Delivery Zone First" program "VACCINES" period "Period14" in table
+
+  @smoke
   Scenario: Verifying Forgot Password functionality
     Given I am on forgot password screen
     When I type email "John_Doe@openlmis.com"
