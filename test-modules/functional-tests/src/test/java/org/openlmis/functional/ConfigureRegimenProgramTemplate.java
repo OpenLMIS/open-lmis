@@ -9,6 +9,7 @@ package org.openlmis.functional;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import cucumber.api.DataTable;
+import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -436,11 +437,14 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   }
 
   @AfterMethod(groups = {"smoke", "functional2"})
+  @After
   public void tearDown() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout(baseUrlGlobal);
-    dbWrapper.deleteData();
-    dbWrapper.closeConnection();
+      if (!testWebDriver.getElementById("username").isDisplayed()) {
+          HomePage homePage = new HomePage(testWebDriver);
+          homePage.logout(baseUrlGlobal);
+          dbWrapper.deleteData();
+          dbWrapper.closeConnection();
+      }
   }
 
   @DataProvider(name = "Data-Provider")

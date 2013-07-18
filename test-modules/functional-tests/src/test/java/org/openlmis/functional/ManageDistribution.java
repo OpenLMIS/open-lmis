@@ -62,7 +62,6 @@ public class ManageDistribution extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data) {
       userSIC = map.get("userSIC").toString();
-      password = map.get("password").toString();
       deliveryZoneCodeFirst = map.get("deliveryZoneCodeFirst").toString();
       deliveryZoneCodeSecond = map.get("deliveryZoneCodeSecond").toString();
       deliveryZoneNameFirst = map.get("deliveryZoneNameFirst").toString();
@@ -76,7 +75,7 @@ public class ManageDistribution extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRForDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
     setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
@@ -138,7 +137,7 @@ public class ManageDistribution extends TestCaseHelper {
   @When("^I select delivery zone \"([^\"]*)\"$")
   public void selectDeliveryZone(String deliveryZone) throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
-    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromDeliveryZone(deliveryZone);
   }
 
   @And("^I select program \"([^\"]*)\"$")
@@ -204,7 +203,7 @@ public class ManageDistribution extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRForDistribution("F10","F11",true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond,"District1","Ngorongoro","Ngorongoro");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
     setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,

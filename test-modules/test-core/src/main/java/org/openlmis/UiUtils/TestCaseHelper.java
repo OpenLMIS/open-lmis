@@ -99,6 +99,14 @@ public class TestCaseHelper {
     dbWrapper.insertSupplyLines("N1", program, "F10");
   }
 
+    public void setupTestUserRoleRightsData(String userId, String userSIC, String vendorName, List<String> rightsList) throws IOException, SQLException {
+        dbWrapper.insertRole("store in-charge", "REQUISITION", "");
+        dbWrapper.insertRole("district pharmacist", "REQUISITION", "");
+        for (String rights : rightsList)
+            dbWrapper.assignRight("store in-charge", rights);
+        String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+        dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com", vendorName);
+    }
 
   public void setupRnRTestDataRnRForCommTrack(boolean configureGenericTemplate, String program, String user, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
@@ -156,15 +164,6 @@ public class TestCaseHelper {
     dbWrapper.insertRequisitionGroups(RGCode1, RGCode2, SupervisoryNodeCode1, SupervisoryNodeCode2);
     dbWrapper.insertRequisitionGroupMembers(Facility1, Facility2);
     dbWrapper.insertRequisitionGroupProgramSchedule();
-  }
-
-  public void setupTestUserRoleRightsData(String userId, String userSIC, String vendorName, List<String> rightsList) throws IOException, SQLException {
-    dbWrapper.insertRole("store in-charge", "REQUISITION", "");
-    dbWrapper.insertRole("district pharmacist", "REQUISITION", "");
-    for (String rights : rightsList)
-      dbWrapper.assignRight("store in-charge", rights);
-    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com", vendorName);
   }
 
   public void setupTestRoleRightsData(String roleName, String roleType, String roleRight) throws IOException, SQLException {
@@ -226,9 +225,9 @@ public class TestCaseHelper {
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeFourth);
   }
 
-  public void setupTestDataToInitiateRnRForDistribution(String facilityCode1, String facilityCode2,boolean configureTemplate, String program, String user, String userId,
+  public void setupTestDataToInitiateRnRAndDistribution(String facilityCode1, String facilityCode2, boolean configureTemplate, String program, String user, String userId,
                                                         String vendorName, List<String> rightsList, String programCode,
-  String geoLevel1, String geoLevel2, String parentGeoLevel) throws IOException, SQLException {
+                                                        String geoLevel1, String geoLevel2, String parentGeoLevel) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertGeographicZone(geoLevel1,geoLevel1,parentGeoLevel);
     dbWrapper.insertFacilitiesWithDifferentGeoZones(facilityCode1, facilityCode2,geoLevel2,geoLevel1);

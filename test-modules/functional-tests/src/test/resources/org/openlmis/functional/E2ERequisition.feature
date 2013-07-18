@@ -21,7 +21,7 @@ Feature: End to end requisition flow
     And I configure "HIV" template
     And I logout
     And I am logged in as "storeincharge"
-    And I initiate RnR
+    And I initiate and submit requisition
     And I add comments
     And I update & verify ordered quantities
     And I update & verify requested quantities

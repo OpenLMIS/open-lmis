@@ -12,8 +12,6 @@
       </run>
     </groups>
     <classes>
-      <class name="org.openlmis.functional.PageAccessAuthentication">
-      </class>
       <class name="org.openlmis.functional.ViewWarehouseLoadAmount">
       </class>
     </classes>

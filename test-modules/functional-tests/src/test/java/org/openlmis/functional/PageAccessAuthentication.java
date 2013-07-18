@@ -7,6 +7,11 @@
 package org.openlmis.functional;
 
 
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
@@ -30,57 +35,38 @@ import static org.openlmis.pageobjects.CreateFacilityPage.SaveButton;
 
 public class PageAccessAuthentication extends TestCaseHelper {
 
-  @BeforeMethod(groups = {"smoke"})
+  @Before
   public void setUp() throws Exception {
     super.setup();
   }
 
+    @When("^I access initiate requisition page through URL$")
+    public void accessInitiateRequisitionPageThroughURL() throws Exception {
+        testWebDriver.waitForElementToAppear(new HomePage(testWebDriver).getLogoutLink());
+        testWebDriver.getUrl(baseUrlGlobal + "public/pages/logistics/rnr/index.html#/init-rnr");
+        testWebDriver.sleep(2000);
+    }
 
-  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-AdminUser")
-  public void shouldNotAccessRequisitionPageByAdminUser(String userSIC, String password) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    loginPage.loginAs(userSIC, password);
-    testWebDriver.waitForElementToAppear(new HomePage(testWebDriver).getLogoutLink());
-    testWebDriver.getUrl(baseUrlGlobal + "public/pages/logistics/rnr/index.html#/init-rnr");
-    testWebDriver.sleep(2000);
-    assertEquals("You are not authorized to view the requested page.", new AccessDeniedPage(testWebDriver).getAccessDeniedText());
-  }
+    @When("^I access create facility page through URL$")
+    public void accessCreateFacilityPageThroughURL() throws Exception {
+        testWebDriver.waitForElementToAppear(new HomePage(testWebDriver).getLogoutLink());
+        testWebDriver.getUrl(baseUrlGlobal + "public/pages/admin/facility/index.html#/create-facility");
+        testWebDriver.sleep(2000);
+    }
 
-  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-StoreInchargeUserUser")
-  public void shouldNotAccessAdminPageByRequisitionUser(String userSIC, String password) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
-    rightsList.add("CREATE_REQUISITION");
-    rightsList.add("VIEW_REQUISITION");
-    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
+    @Then("^I should see unauthorized access message$")
+    public void verifyUnauthorizedAccessPage() throws Exception {
+        assertEquals("You are not authorized to view the requested page.", new AccessDeniedPage(testWebDriver).getAccessDeniedText());
+    }
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    loginPage.loginAs(userSIC, password);
-    testWebDriver.waitForElementToAppear(new HomePage(testWebDriver).getLogoutLink());
-    testWebDriver.getUrl(baseUrlGlobal + "public/pages/admin/facility/index.html#/create-facility");
-    testWebDriver.sleep(2000);
-    assertEquals("You are not authorized to view the requested page.", new AccessDeniedPage(testWebDriver).getAccessDeniedText());
-  }
-
-  @AfterMethod(groups = {"smoke"})
+  @After
   public void tearDown() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout(baseUrlGlobal);
-    dbWrapper.closeConnection();
-  }
-
-
-  @DataProvider(name = "Data-Provider-Function-AdminUser")
-  public Object[][] parameterIntTestProviderAdminUser() {
-    return new Object[][]{
-      {"Admin123", "Admin123"}
-    };
-  }
-
-  @DataProvider(name = "Data-Provider-Function-StoreInchargeUserUser")
-  public Object[][] parameterIntTestProviderStoreInchargeUserUser() {
-    return new Object[][]{
-      {"storeincharge", "Admin123"}
-    };
+      if (!testWebDriver.getElementById("username").isDisplayed()) {
+          HomePage homePage = new HomePage(testWebDriver);
+          homePage.logout(baseUrlGlobal);
+          dbWrapper.deleteData();
+          dbWrapper.closeConnection();
+      }
   }
 
 }

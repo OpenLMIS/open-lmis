@@ -170,7 +170,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         loginPage.loginAs(username, "Admin123");
     }
 
-    @And("^I initiate RnR$")
+    @And("^I initiate and submit requisition$")
     public void initiateRnR() throws Exception {
         HomePage homePage = new HomePage(testWebDriver);
 

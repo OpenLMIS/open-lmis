@@ -46,7 +46,7 @@ public class InitiateRnR extends TestCaseHelper {
   public static final String AUTHORIZE_REQUISITION = "AUTHORIZE_REQUISITION";
   public static final String VIEW_REQUISITION = "VIEW_REQUISITION";
   public String program, userSIC, categoryCode, password, regimenCode, regimenName, regimenCode2, regimenName2;
-  public HomePage homePage;
+
   public LoginPage loginPage;
   public InitiateRnRPage initiateRnRPage;
 
@@ -63,29 +63,44 @@ public class InitiateRnR extends TestCaseHelper {
     program = dataString.get(0);
     userSIC = dataString.get(1);
     categoryCode = dataString.get(2);
-    password = dataString.get(3);
-    regimenCode = dataString.get(4);
-    regimenName = dataString.get(5);
-    regimenCode2 = dataString.get(6);
-    regimenName2 = dataString.get(7);
+    regimenCode = dataString.get(3);
+    regimenName = dataString.get(4);
+    regimenCode2 = dataString.get(5);
+    regimenName2 = dataString.get(6);
   }
+    @Given("^I have regimen template configured$")
+    public void configureRegimenTemplate() throws IOException, SQLException {
+        dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
+        dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
+        dbWrapper.insertRegimenTemplateColumnsForProgram(program);
+    }
 
-  @Given("^I access Initiate RnR page")
+  @Given("^I access initiate requisition page$")
   public void onInitiateRnRScreen() throws IOException, SQLException {
-    List<String> rightsList = new ArrayList<String>();
-    rightsList.add(CREATE_REQUISITION);
-    rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
-    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
-    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
-    dbWrapper.insertRegimenTemplateColumnsForProgram(program);
-    loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    homePage = loginPage.loginAs(userSIC, password);
+    HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateAndInitiateRnr(program);
   }
+    @Given("I have \"([^\"]*)\" user with \"([^\"]*)\" rights$")
+    public void setupUserWithRights(String user, String rights) throws IOException, SQLException {
+        String[] rightList=rights.split(",");
+        List<String> rightsList = new ArrayList<String>();
+        for(int i=0;i<rightList.length;i++)
+            rightsList.add(rightList[i]);
+        setupTestUserRoleRightsData("200", user, "openLmis", rightsList);
+    }
+
+    @Given("I have \"([^\"]*)\" user with \"([^\"]*)\" rights and data to initiate requisition$")
+    public void setupUserWithRightsAndInitiateRequisitionData(String user, String rights) throws IOException, SQLException {
+        String[] rightList=rights.split(",");
+        List<String> rightsList = new ArrayList<String>();
+        for(int i=0;i<rightList.length;i++)
+            rightsList.add(rightList[i]);
+        setupTestDataToInitiateRnR(true, program, user, "200", "openLmis", rightsList);
+    }
 
   @When("^I click proceed$")
   public void clickOnProceed() throws IOException {
+    HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateAndInitiateRnr(program);
     initiateRnRPage = homePage.clickProceed();
   }
