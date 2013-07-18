@@ -17,6 +17,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ForgotPasswordPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openqa.selenium.NoSuchElementException;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -175,12 +176,14 @@ public class ForgotPassword extends TestCaseHelper {
   @AfterMethod(groups = {"smoke", "functional2"})
   @After
   public void tearDown() throws Exception {
+    try{
     if(!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
+    }
+    }catch(NoSuchElementException e){}
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
-    }
   }
 
 
