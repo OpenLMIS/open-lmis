@@ -12,6 +12,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   $scope.user = user || {homeFacilityRoles: []};
   $scope.supervisoryNodes = supervisoryNodes;
   $scope.deliveryZones = deliveryZones;
+  $scope.$parent.userId = null;
 
   loadUserFacility();
   preparePrograms(programs);
@@ -99,11 +100,6 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     }
     return true;
   };
-
-  $scope.cancel = function() {
-    $scope.$parent.userId = null;
-    $location.path('');
-  }
 
   $scope.validateUserName = function () {
     $scope.userNameInvalid = $scope.user.userName != null && $scope.user.userName.trim().indexOf(' ') >= 0;

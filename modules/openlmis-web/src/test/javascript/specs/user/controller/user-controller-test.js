@@ -120,16 +120,6 @@ describe("User", function () {
       expect(location.path()).toBe(path);
     });
 
-    it('should redirect to manage user when a user is not updated ', function() {
-      scope.user = {"id": 123, "userName": "User420"};
-      scope.$parent.userId = scope.user.id;
-
-      scope.cancel();
-
-      expect(scope.$parent.userId).toEqual(null);
-      expect(location.path()).toBe('/');
-    });
-
     it("should throw error when username contains space", function () {
       scope.user = {"userName": "User 420"};
       scope.validateUserName();
