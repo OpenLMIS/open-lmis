@@ -14,8 +14,6 @@
     <classes>
       <class name="org.openlmis.functional.ConfigureRegimenProgramTemplate">
       </class>
-      <class name="org.openlmis.functional.ManageDistribution">
-      </class>
       <class name="org.openlmis.functional.ManageISA">
       </class>
       <class name="org.openlmis.functional.PageAccessAuthentication">

@@ -59,6 +59,8 @@ Feature: Smoke Tests
     Given I have the following data for distribution:
       | userSIC       | password | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
       | storeincharge | Admin123 | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
+    And I login as user "storeincharge" having password "Admin123"
     And I access plan my distribution page
     When I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
@@ -66,6 +68,24 @@ Feature: Smoke Tests
     And I initiate distribution
     Then I should see data download successfully
     And I should see delivery zone "Delivery Zone First" program "VACCINES" period "Period14" in table
+
+  @smoke
+  Scenario: Should fetch program period on manage distribution screen
+    Given I have the following data for distribution:
+      | userSIC       | password | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeincharge | Admin123 | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I login as user "storeincharge" having password "Admin123"
+    And I access plan my distribution page
+    Then I verify fields
+    And I should see deliveryZone "--None Assigned--"
+    When I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
+    And I access plan my distribution page
+    And I select delivery zone "Delivery Zone First"
+    Then I should see program "VACCINES"
+    And I select program "VACCINES"
+    Then I should see period "Period14"
+    And I click view load amount
+
 
   @smoke
   Scenario: Verifying Forgot Password functionality
