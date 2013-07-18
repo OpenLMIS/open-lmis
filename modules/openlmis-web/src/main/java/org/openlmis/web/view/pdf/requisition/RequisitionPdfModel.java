@@ -51,11 +51,11 @@ public class RequisitionPdfModel {
   }
 
   public Paragraph getFullSupplyHeader() {
-    return new Paragraph("Full supply products", H2_FONT);
+    return new Paragraph("Full supply product(s)", H2_FONT);
   }
 
   public Paragraph getNonFullSupplyHeader() {
-    return new Paragraph("Non-Full supply products", H2_FONT);
+    return new Paragraph("Non-Full supply product(s)", H2_FONT);
   }
 
   public PdfPTable getFullSupplyTable() throws DocumentException, NoSuchFieldException, IllegalAccessException {

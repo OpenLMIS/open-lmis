@@ -6,7 +6,7 @@
 
 describe('CreateRequisitionController', function () {
   var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns, regimenColumnList,
-    lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate;
+      lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate;
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
@@ -46,7 +46,9 @@ describe('CreateRequisitionController', function () {
     ];
 
     regimenColumnList = [
-      {"testField": "test"}
+      {name: "patientsOnTreatment", visible: true},
+      {name: "patientsToInitiateTreatment", visible: false},
+      {name: "patientsStoppedTreatment", visible: true}
     ];
     regimenTemplate = {regimenColumns: regimenColumnList};
 
@@ -103,6 +105,13 @@ describe('CreateRequisitionController', function () {
 
   it('should get facility approved products', function () {
     expect(facilityApprovedProducts).toEqual(scope.facilityApprovedProducts);
+  });
+
+  it('should set visible columns for regimen', function () {
+    expect(scope.visibleRegimenColumns).toEqual([
+      {name: "patientsOnTreatment", visible: true},
+      {name: "patientsStoppedTreatment", visible: true}
+    ])
   });
 
   it('should save work in progress for rnr', function () {

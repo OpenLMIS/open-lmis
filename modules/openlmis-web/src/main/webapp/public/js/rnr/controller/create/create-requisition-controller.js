@@ -15,6 +15,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.programRnrColumnList = rnrColumns;
   $scope.requisitionRights = requisitionRights;
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.regimenColumns : [];
+  $scope.visibleRegimenColumns = _.where($scope.regimenColumns, {'visible': true});
   $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
   $scope.errorPages = {fullSupply: [], nonFullSupply: []};
   $scope.fullScreen = false;
@@ -159,25 +160,27 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   function validateRegimenLineItems() {
     var setError = false;
     $.each($scope.rnr.regimenLineItems, function (index, regimenLineItem) {
-      if (isUndefined(regimenLineItem.patientsOnTreatment) || isUndefined(regimenLineItem.patientsStoppedTreatment) || isUndefined(regimenLineItem.patientsToInitiateTreatment)) {
-        setError = true;
-        $scope.regimenLineItemInValid = true;
-        return;
-      }
+      $.each($scope.visibleRegimenColumns, function (index, regimenColumn) {
+        if (regimenColumn.name != "remarks" && isUndefined(regimenLineItem[regimenColumn.name])) {
+          setError = true;
+          $scope.regimenLineItemInValid = true;
+          return;
+        }
+      });
     });
-    if(!setError) $scope.regimenLineItemInValid = false;
+    if (!setError) $scope.regimenLineItemInValid = false;
   }
 
   var submitValidatedRnr = function () {
     Requisitions.update({id: $scope.rnr.id, operation: "submit"},
-      {}, function (data) {
-        $scope.rnr.status = "SUBMITTED";
-        $scope.formDisabled = !$scope.hasPermission('AUTHORIZE_REQUISITION');
-        $scope.submitMessage = data.success;
-        $scope.saveRnrForm.$setPristine();
-      }, function (data) {
-        $scope.submitError = data.data.error;
-      });
+        {}, function (data) {
+          $scope.rnr.status = "SUBMITTED";
+          $scope.formDisabled = !$scope.hasPermission('AUTHORIZE_REQUISITION');
+          $scope.submitMessage = data.success;
+          $scope.saveRnrForm.$setPristine();
+        }, function (data) {
+          $scope.submitError = data.data.error;
+        });
   };
 
   $scope.dialogCloseCallback = function (result) {

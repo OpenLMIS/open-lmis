@@ -19,12 +19,6 @@ describe('CreateRegimenLineItemController', function () {
     $controller(CreateRegimenLineItemController, {$scope: scope});
   }));
 
-  it('should set visible columns for regimen', function () {
-    expect(scope.visibleRegimenColumns).toEqual([
-      {name: 'name', visible: true}
-    ]);
-  });
-
   it('should return false if category are same', function () {
     expect(scope.showCategory(1)).toBeFalsy();
   });

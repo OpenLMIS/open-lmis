@@ -9,7 +9,7 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
   $scope.program = program;
   $scope.regimens = programRegimens;
   $scope.regimenTemplate = regimenTemplate;
-  $scope.regimenTemplate.regimenColumns = _.reject($scope.regimenTemplate.regimenColumns,function(column){
+  $scope.regimenTemplate.regimenColumns = _.reject($scope.regimenTemplate.regimenColumns, function (column) {
     return (column.name == 'name' || column.name == 'code');
   });
   $scope.regimenCategories = regimenCategories;
@@ -121,8 +121,8 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
 
   function validReportingFields() {
 
-    var DEFAULT_VISIBLE_COUNT = 2;
-    
+    var DEFAULT_VISIBLE_COUNT = 0;
+
     if (_.find($scope.regimenTemplate.regimenColumns, function (column) {
       return isUndefined(column.label);
     })) {
@@ -135,7 +135,7 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
       return column.visible == true ? 'visible' : 'invisible';
     });
 
-    if (count.visible == DEFAULT_VISIBLE_COUNT) {
+    if (count.visible == undefined || count.visible == DEFAULT_VISIBLE_COUNT) {
       $scope.reportingFieldsError = true;
       $scope.error = messageService.get('error.regimens.none.selected')
       return;
