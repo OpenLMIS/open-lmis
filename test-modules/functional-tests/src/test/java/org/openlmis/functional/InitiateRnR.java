@@ -57,41 +57,6 @@ public class InitiateRnR extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testVerifyRegimensColumnsAndShouldSaveData(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
-    rightsList.add(CREATE_REQUISITION);
-    rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
-    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
-    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
-    dbWrapper.insertRegimenTemplateColumnsForProgram(program);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
-    homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    dbWrapper.insertValuesInRequisition();
-    homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
-
-    initiateRnRPage1.clickRegimenTab();
-
-    verifyRegimenFieldsPresentOnRegimenTab(regimenCode, regimenName, initiateRnRPage);
-
-    initiateRnRPage1.enterValuesOnRegimenScreen(3, 2, "100");
-    initiateRnRPage1.enterValuesOnRegimenScreen(4, 2, "200");
-    initiateRnRPage1.enterValuesOnRegimenScreen(5, 2, "300");
-    initiateRnRPage1.enterValuesOnRegimenScreen(6, 2, "400");
-
-    initiateRnRPage1.clickSaveButton();
-    initiateRnRPage1.verifySaveSuccessMsg();
-
-    initiateRnRPage1.clickSubmitButton();
-    initiateRnRPage1.clickOk();
-    initiateRnRPage1.verifySubmitSuccessMsg();
-
-  }
-
   @Given("^I have the following data:$")
   public void theFollowingDataExist(DataTable data) throws Exception {
     List<String> dataString = data.flatten();

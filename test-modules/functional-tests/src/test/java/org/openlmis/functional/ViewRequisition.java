@@ -62,41 +62,6 @@ public class ViewRequisition extends TestCaseHelper {
   }
 
 
-  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Including-Regimen")
-  public void testViewRequisitionAndRegimenAfterAuthorization(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
-    rightsList.add(CREATE_REQUISITION);
-    rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
-    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
-    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
-    dbWrapper.insertRegimenTemplateColumnsForProgram(program);
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
-    homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    dbWrapper.insertValuesInRequisition();
-    dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
-    HomePage homePage1 = initiateRnRPage.clickHome();
-
-    ViewRequisitionPage viewRequisitionPage = homePage1.navigateViewRequisition();
-    viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
-
-    dbWrapper.updateRequisitionStatus(SUBMITTED);
-    viewRequisitionPage.enterViewSearchCriteria();
-    viewRequisitionPage.clickSearch();
-    viewRequisitionPage.verifyNoRequisitionFound();
-    dbWrapper.insertApprovedQuantity(10);
-    dbWrapper.updateRequisitionStatus(AUTHORIZED);
-    viewRequisitionPage.clickSearch();
-    viewRequisitionPage.verifyStatus(AUTHORIZED);
-    viewRequisitionPage.clickRnRList();
-    viewRequisitionPage.verifyTotalFieldPostAuthorize();
-    viewRequisitionPage.clickRegimenTab();
-    verifyValuesOnRegimenScreen(initiateRnRPage, patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
-  }
-
   @Given("^I have the following data including regimen configured:$")
   public void theFollowingDataExist(DataTable data) throws Exception {
     List<String> dataString = data.flatten();

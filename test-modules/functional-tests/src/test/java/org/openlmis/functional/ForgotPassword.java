@@ -110,18 +110,6 @@ public class ForgotPassword extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyValidUserNameValidEmail(String userName,  String email) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
-    verifyElementsOnForgotPasswordScreen(forgotPasswordPage);
-    forgotPasswordPage.enterEmail(email);
-    forgotPasswordPage.enterUserName(userName);
-    forgotPasswordPage.clickSubmit();
-    verifyEmailSendSuccessfullyMessage(forgotPasswordPage);
-
-  }
-
   @Given("^I am on forgot password screen$")
   public void onForgotPageAndVerifyElements() throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -148,15 +136,6 @@ public class ForgotPassword extends TestCaseHelper {
   public void verifyEmailSendMessage() throws Exception {
     verifyEmailSendSuccessfullyMessage(forgotPasswordPage);
   }
-
-//  @Then("^I am login using user$")
-//    public void login()
-//  {
-//    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-//    loginPage.loginAs("Admin123", "Admin123");
-//  }
-
-
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testVerifyBlankEmailAndUserName(String userName, String email) throws Exception {

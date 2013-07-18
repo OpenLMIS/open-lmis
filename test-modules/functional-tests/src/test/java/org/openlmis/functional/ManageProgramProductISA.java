@@ -88,19 +88,6 @@ public class ManageProgramProductISA extends TestCaseHelper {
     homePage.navigateHomePage();
   }
 
-  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function")
-  public void testProgramProductISADecimal(String userSIC, String password, String program) throws Exception {
-    setUpTestDataForProgramProductISA();
-    ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(userSIC, password, program);
-    programProductISAPage.fillProgramProductISA("3.9", "3", "10", "25", "0", "10", "1000");
-    String actualISA = programProductISAPage.fillPopulation("1000");
-    String expectedISA = calculateISA("3.9", "3", "10", "25", "0", "10", "1000", "1000");
-    assertEquals(expectedISA, actualISA);
-    programProductISAPage.cancelISA();
-    HomePage homePage = new HomePage(testWebDriver);
-    homePage.navigateHomePage();
-  }
-
   @Given("^I have the following data for ISA:$")
   public void theFollowingDataExist(DataTable data) throws Exception {
     setUpTestDataForProgramProductISA();
