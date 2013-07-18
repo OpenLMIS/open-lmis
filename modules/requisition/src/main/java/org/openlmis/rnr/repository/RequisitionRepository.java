@@ -19,7 +19,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
+import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
 
 @Repository
 public class RequisitionRepository {
@@ -68,7 +70,9 @@ public class RequisitionRepository {
     requisitionMapper.update(rnr);
     updateFullSupplyLineItems(rnr);
     updateNonFullSupplyLineItems(rnr);
-    updateRegimenLineItems(rnr);
+    if (!(rnr.getStatus() == AUTHORIZED || rnr.getStatus() == IN_APPROVAL)) {
+      updateRegimenLineItems(rnr);
+    }
   }
 
   private void updateRegimenLineItems(Rnr rnr) {

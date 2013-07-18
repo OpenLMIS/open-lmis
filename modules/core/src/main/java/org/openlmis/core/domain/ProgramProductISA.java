@@ -21,7 +21,7 @@ public class ProgramProductISA extends BaseModel {
   Long programProductId;
   Double whoRatio;
   Integer dosesPerYear;
-  Double wastageRate;
+  Double wastageFactor;
   Double bufferPercentage;
   Integer minimumValue;
   Integer maximumValue;

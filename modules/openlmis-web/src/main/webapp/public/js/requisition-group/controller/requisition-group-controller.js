@@ -118,7 +118,9 @@ function RequisitionGroupController($scope, ReportFacilityTypes, $routeParams, $
         }
     };
 
-    $scope.showRemoveRequisitionGroupMemberConfirmDialog = function (memberFacility) {
+    $scope.showRemoveRequisitionGroupMemberConfirmDialog = function (index) {
+        var memberFacility = $scope.facilities[index];
+        $scope.index = index;
         $scope.selectedFacility = memberFacility;
         var options = {
             id: "removeRequisitionGroupMemberConfirmDialog",
@@ -130,7 +132,8 @@ function RequisitionGroupController($scope, ReportFacilityTypes, $routeParams, $
 
     $scope.removeRequisitionGroupMemberConfirm = function (result) {
         if (result) {
-            $scope.removeMemberFacility()
+            $scope.facilities.splice($scope.index,1);
+            $scope.removeMemberFacility();
         }
         $scope.selectedFacility = undefined;
     };

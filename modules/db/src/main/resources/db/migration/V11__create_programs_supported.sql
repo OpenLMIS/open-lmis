@@ -3,8 +3,8 @@
 
 CREATE TABLE programs_supported (
   id           SERIAL PRIMARY KEY,
-  facilityId   INTEGER REFERENCES facilities (id),
-  programId    INTEGER REFERENCES programs (id),
+  facilityId   INTEGER NOT NULL REFERENCES facilities (id),
+  programId    INTEGER NOT NULL REFERENCES programs (id),
   startDate    TIMESTAMP,
   active       BOOLEAN NOT NULL,
   createdBy INTEGER,

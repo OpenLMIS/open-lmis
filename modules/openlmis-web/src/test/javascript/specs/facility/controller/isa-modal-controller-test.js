@@ -94,7 +94,7 @@ describe("ISA Controller", function () {
         {programProductId: 1, facilityId: 1, overriddenIsa: 34, programProductIsa: {
           whoRatio: 10,
           dosesPerYear: 10,
-          wastageRate: 10,
+          wastageFactor: 10,
           bufferPercentage: 50,
           minimumValue: 10,
           adjustmentValue: 15
@@ -102,7 +102,7 @@ describe("ISA Controller", function () {
         {programProductId: 2, facilityId: 1, overriddenIsa: 45, programProductIsa: {
           whoRatio: 1,
           dosesPerYear: 1,
-          wastageRate: 1,
+          wastageFactor: 1,
           bufferPercentage: 5,
           minimumValue: 1,
           adjustmentValue: 5
@@ -116,7 +116,7 @@ describe("ISA Controller", function () {
       httpBackend.expectGET('/facility/1/program/1/isa.json').respond(programProductList, 200);
       scope.$apply();
       httpBackend.flush();
-      expect(scope.$parent.facilityProgramProductsList[scope.currentProgram.id][0].calculatedIsa).toEqual(153);
+      expect(scope.$parent.facilityProgramProductsList[scope.currentProgram.id][0].calculatedIsa).toEqual(1265);
       expect(scope.$parent.facilityProgramProductsList[scope.currentProgram.id][1].calculatedIsa).toEqual(6);
       expect(scope.currentProgramProducts).toEqual(scope.$parent.facilityProgramProductsList[scope.currentProgram.id]);
     });

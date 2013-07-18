@@ -71,7 +71,7 @@ public class
     Program program = make(a(defaultProgram, with(programId, 1L)));
     programMapper.insert(program);
     ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()), with(supportedProgram, program)));
-    programSupportedMapper.addSupportedProgram(programSupported);
+    programSupportedMapper.add(programSupported);
 
     List<Program> programs = programMapper.getActiveByFacility(facility.getId());
 
@@ -108,7 +108,7 @@ public class
     programMapper.insert(program);
     ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program)));
-    programSupportedMapper.addSupportedProgram(programSupported);
+    programSupportedMapper.add(programSupported);
     List<Program> supportedPrograms = programMapper.getByFacilityId(facility.getId());
     assertThat(supportedPrograms.get(0).getCode(), is(ProgramBuilder.PROGRAM_CODE));
   }
@@ -314,7 +314,7 @@ public class
       with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program),
       with(ProgramSupportedBuilder.isActive, isActive)));
-    programSupportedMapper.addSupportedProgram(defaultProgram);
+    programSupportedMapper.add(defaultProgram);
   }
 
   private Facility insertFacility(Facility facility) {

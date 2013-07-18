@@ -8,13 +8,12 @@ package org.openlmis.web.view.pdf.requisition;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
-import org.openlmis.rnr.domain.RnrColumn;
+import org.openlmis.rnr.domain.Column;
 import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 public class RequisitionCellFactory {
@@ -45,9 +44,9 @@ public class RequisitionCellFactory {
     return cell;
   }
 
-  public static List<PdfPCell> getCells(List<RnrColumn> visibleColumns, RnrLineItem lineItem, String currency) throws NoSuchFieldException, IllegalAccessException {
+  public static List<PdfPCell> getCells(List<? extends Column> visibleColumns, RnrLineItem lineItem, String currency) throws NoSuchFieldException, IllegalAccessException {
     List<PdfPCell> result = new ArrayList<>();
-    for (RnrColumn rnrColumn : visibleColumns) {
+    for (Column rnrColumn : visibleColumns) {
       if (rnrColumn.getName().equals("lossesAndAdjustments")) {
         result.add(numberCell(lineItem.getTotalLossesAndAdjustments().toString()));
         continue;
@@ -80,10 +79,10 @@ public class RequisitionCellFactory {
     return result;
   }
 
-  public static PdfPCell categoryRow(List<RnrColumn> visibleColumns, RnrLineItem lineItem) {
+  public static PdfPCell categoryRow(Integer visibleColumnsSize, RnrLineItem lineItem) {
     Chunk chunk = new Chunk(lineItem.getProductCategory(), FontFactory.getFont(FontFactory.HELVETICA_BOLD));
     PdfPCell cell = new PdfPCell(new Phrase(chunk));
-    cell.setColspan(visibleColumns.size());
+    cell.setColspan(visibleColumnsSize);
     cell.setBackgroundColor(HEADER_BACKGROUND);
     cell.setPadding(CELL_PADDING);
     return cell;

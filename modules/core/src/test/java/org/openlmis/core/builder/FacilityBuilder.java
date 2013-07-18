@@ -12,7 +12,9 @@ import com.natpryce.makeiteasy.PropertyLookup;
 import org.joda.time.LocalDate;
 import org.openlmis.core.domain.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.Property.newProperty;
 
@@ -31,6 +33,7 @@ public class FacilityBuilder {
   public static Property<Facility, Long> typeId = newProperty();
   private static Property<Facility, Long> operatedById = newProperty();
   public static final Property<Facility, Boolean> dataReportable = newProperty();
+  public static final Property<Facility, List<ProgramSupported>> programSupportedList = newProperty();
 
   public static final String FACILITY_CODE = "F10010";
   public static final String FACILITY_TYPE_CODE = "warehouse";
@@ -38,6 +41,7 @@ public class FacilityBuilder {
   public static final Long GEOGRAPHIC_ZONE_ID = 3L;
 
   public static final String GEOGRAPHIC_ZONE_CODE = "GEOGRAPHIC_ZONE_CODE";
+  public static final List<ProgramSupported> EMPTY_LIST = new ArrayList<>();
   public static final Instantiator<Facility> defaultFacility = new Instantiator<Facility>() {
 
     @Override
@@ -75,6 +79,7 @@ public class FacilityBuilder {
       operatedBy.setText("MOH");
       facility.setOperatedBy(operatedBy);
       facility.setGoLiveDate(lookup.valueOf(goLiveDate, new LocalDate(2013, 10, 10).toDate()));
+      facility.setSupportedPrograms(lookup.valueOf(programSupportedList, EMPTY_LIST));
       facility.setModifiedBy(1L);
       return facility;
     }

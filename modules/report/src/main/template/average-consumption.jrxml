@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version last-->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="average-consumption" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -115,7 +114,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 					</textElement>
 					<text><![CDATA[Type]]></text>
 				</staticText>
-				<textField pattern="" isBlankWhenNull="false">
+				<textField pattern="" isBlankWhenNull="true">
 					<reportElement uuid="f807daed-1465-4ff3-8bfc-d67ccc26a1d7" mode="Transparent" x="45" y="25" width="317" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
@@ -163,7 +162,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 					</textElement>
 					<textFieldExpression><![CDATA[$F{supplyingFacility} == null?"-":$F{supplyingFacility}]]></textFieldExpression>
 				</textField>
-				<textField pattern="" isBlankWhenNull="false">
+				<textField pattern="" isBlankWhenNull="true">
 					<reportElement uuid="b0080e04-9a4b-4bc3-b229-92ce1614d8fd" mode="Transparent" x="589" y="5" width="118" height="20" forecolor="#000000" backcolor="#FFFFFF">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
@@ -173,7 +172,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 					</textElement>
 					<textFieldExpression><![CDATA[$F{maxMOS}]]></textFieldExpression>
 				</textField>
-				<textField pattern="" isBlankWhenNull="false">
+				<textField pattern="" isBlankWhenNull="true">
 					<reportElement uuid="f3d6687b-e85e-4b5f-bdb4-10a4cb4a9f8a" mode="Transparent" x="589" y="25" width="118" height="20" forecolor="#000000" backcolor="#FFFFFF">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
@@ -258,7 +257,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement uuid="a720b2eb-4c11-4820-9617-aefbdc467bac" mode="Transparent" x="540" y="0" width="120" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
@@ -266,7 +265,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 				</textElement>
 				<textFieldExpression><![CDATA[$F{average}.toString().toUpperCase()== "NULL"?" " :$F{average}.toString()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement uuid="1ac27f1d-893c-4baf-9d67-bcc50c886b8d" mode="Transparent" x="130" y="0" width="140" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
@@ -282,7 +281,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 				</textElement>
 				<textFieldExpression><![CDATA[($F{product}=="NULL"?" ":$F{product})]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement uuid="9e0e38a1-655b-45c6-a4f5-0e1f456c568a" mode="Transparent" x="45" y="0" width="85" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
