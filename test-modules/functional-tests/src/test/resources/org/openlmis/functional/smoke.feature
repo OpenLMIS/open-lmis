@@ -110,3 +110,41 @@ Feature: Smoke Tests
     When I click submit button
     Then I should see email send successfully
     And I am logged in as Admin
+
+  @smoke
+  Scenario: Verify New Regimen Created
+    Given I have data available for programs configured
+    And I am logged in as Admin
+    When I access regimen configuration page
+    Then I should see configured program list
+    When I configure program "ESSENTIAL MEDICINES" for regimen template
+    And I add new regimen:
+    |Category|Code  |Name |Active|
+    |Adults  |Code1 |Name1|true  |
+    And I save regimen
+    Then I should see regimen created message
+
+  @smoke
+  Scenario: Verify New Regimen Reporting Field Configuration
+    Given I have data available for programs configured
+    And I am logged in as Admin
+    When I access regimen configuration page
+    Then I should see configured program list
+    When I configure program "ESSENTIAL MEDICINES" for regimen template
+    And I add new regimen:
+      |Category|Code  |Name |Active|
+      |Adults  |Code1 |Name1|true  |
+    And I access regimen reporting fields tab
+    Then I should see regimen reporting fields
+    When I add new regimen reporting field:
+      |NoOfPatientsOnTreatment |Remarks         |
+      |false                   |Testing column  |
+    And I save regimen
+    Then I should see regimen created message
+    When I edit program "ESSENTIAL MEDICINES" for regimen template
+    Then I should see created regimen and reporting fields:
+      |Code  |Name |Remarks         |
+      |Code1 |Name1|Testing column  |
+    When I activate Number Of Patients On Treatment
+    And I save regimen
+    Then I should see regimen created message
