@@ -177,5 +177,9 @@ public class RequisitionRepository {
     RequisitionStatusChange statusChange = new RequisitionStatusChange(requisition);
     requisitionStatusChangeMapper.insert(statusChange);
   }
+
+  public Rnr getLWById(Long rnrId) {
+    return requisitionMapper.getLWById(rnrId);
+  }
 }
 

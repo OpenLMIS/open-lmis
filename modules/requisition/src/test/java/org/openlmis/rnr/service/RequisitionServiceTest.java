@@ -1137,6 +1137,14 @@ public class RequisitionServiceTest {
     verify(requisitionRepository).update(savedRequisition);
   }
 
+  @Test
+  public void shouldGetLWRnrById() throws Exception {
+    Rnr expectedRnr = new Rnr();
+    Long rnrId = 1L;
+    Mockito.when(requisitionRepository.getLWById(rnrId)).thenReturn(expectedRnr);
+    Rnr returnedRnr = requisitionService.getLWById(rnrId);
+    assertThat(returnedRnr, is(expectedRnr));
+  }
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {
     Rnr savedRnr = spy(rnr);
     when(requisitionPermissionService.hasPermissionToSave(USER_ID, savedRnr)).thenReturn(true);

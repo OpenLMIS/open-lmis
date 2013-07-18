@@ -412,5 +412,9 @@ public class RequisitionService {
     }
     return comments;
   }
+
+  public Rnr getLWById(Long rnrId) {
+    return requisitionRepository.getLWById(rnrId);
+  }
 }
 

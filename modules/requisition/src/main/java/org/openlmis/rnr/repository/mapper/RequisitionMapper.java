@@ -127,4 +127,17 @@ public interface RequisitionMapper {
   Rnr getRequisitionWithoutLineItems(@Param("facilityId") Long facilityId,
                                      @Param("programId") Long programId,
                                      @Param("periodId") Long periodId);
+
+
+
+  @Select("SELECT * FROM requisitions WHERE id = #{rnrId}")
+  @Results(value = {
+    @Result(property = "id", column = "id"),
+    @Result(property = "program.id", column = "programId"),
+    @Result(property = "facility.id", column = "facilityId"),
+    @Result(property = "period.id", column = "periodId"),
+    @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
+  })
+  Rnr getLWById(Long rnrId);
+
 }
