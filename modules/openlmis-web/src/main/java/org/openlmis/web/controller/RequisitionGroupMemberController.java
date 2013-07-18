@@ -1,5 +1,7 @@
 package org.openlmis.web.controller;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroupMember;
@@ -53,6 +55,7 @@ public class RequisitionGroupMemberController extends BaseController {
         return successResponse;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     @RequestMapping(value="/requisitionGroupMember/remove",method = POST,headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQUISITION_GROUP')")
     public ResponseEntity<OpenLmisResponse> remove(@RequestBody RequisitionGroup requisitionGroup, @RequestBody Facility facility, HttpServletRequest request){
