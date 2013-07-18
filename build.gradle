@@ -5,6 +5,8 @@
  */
 
 apply plugin: 'idea'
+apply plugin: 'versions'
+
 
 idea {
     project {
@@ -20,6 +22,8 @@ buildscript {
     }
     dependencies {
         classpath "net.saliman:gradle-cobertura-plugin:1.1.2"
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.3'
+
     }
 }
 subprojects {
@@ -46,6 +50,7 @@ subprojects {
     dependencies {
         compile 'org.projectlombok:lombok:0.10.8',
                 'commons-io:commons-io:2.4'
+
 
         testCompile 'junit:junit:4.8.2',
                 'org.mockito:mockito-all:1.9.5',
@@ -76,7 +81,7 @@ subprojects {
 
 }
 
-configure(subprojects.findAll {it.name != 'db'}) {
+configure(subprojects.findAll { it.name != 'db' }) {
     dependencies {
         testCompile project(path: ':modules:db', configuration: 'testFixtures')
     }
