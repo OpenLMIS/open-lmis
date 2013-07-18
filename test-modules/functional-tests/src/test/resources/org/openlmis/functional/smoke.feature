@@ -86,6 +86,21 @@ Feature: Smoke Tests
     Then I should see period "Period14"
     And I click view load amount
 
+  @smoke
+  Scenario: Should override ISA
+    Given I have the following data for override ISA:
+      | user | password | program | product | productName | category | whoratio | dosesperyear | wastageFactor | bufferpercentage | minimumvalue | maximumvalue | adjustmentvalue |
+      | Admin123 | Admin123 | VACCINES | P1 | antibiotic1 | C1       | 1        | 2            | 3             | 4                | null         | null         | 5               |
+    And I login as user "Admin123" having password "Admin123"
+    And I access create facility page
+    When I create facility
+    And I override ISA "24"
+    Then I should see calculated ISA "7"
+    When I click ISA done
+    And I save facility
+    Then I should see save successfully
+    When I search facility
+    Then I should see overridden ISA "24"
 
   @smoke
   Scenario: Verifying Forgot Password functionality

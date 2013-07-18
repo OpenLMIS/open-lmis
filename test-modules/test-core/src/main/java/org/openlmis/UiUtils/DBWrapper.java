@@ -560,7 +560,6 @@ public class DBWrapper {
   public void insertSupplyLines(String supervisoryNode, String programCode, String facilityCode) throws IOException, SQLException {
     update("insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId) values\n" +
       "('supplying node for HIV', (select id from supervisory_nodes where code = '" + supervisoryNode + "'), (select id from programs where code='" + programCode + "'),(select id from facilities where code = '" + facilityCode + "'));\n");
-
   }
 
   public void updateSupplyingFacilityForRequisition(String facilityCode) throws IOException, SQLException {
