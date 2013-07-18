@@ -4,19 +4,24 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.rnr.domain;
+package org.openlmis.core.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.openlmis.core.domain.BaseModel;
+import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor
+@NoArgsConstructor
 public abstract class Column extends BaseModel {
 
   protected String name;
   protected String label;
-  protected boolean visible;
+  protected Boolean visible;
 
-  public abstract Integer columnWidth();
+  @JsonIgnore
+  public abstract Integer getColumnWidth();
 }

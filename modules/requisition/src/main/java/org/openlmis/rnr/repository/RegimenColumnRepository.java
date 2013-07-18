@@ -1,8 +1,8 @@
-package org.openlmis.core.repository;
+package org.openlmis.rnr.repository;
 
 import org.openlmis.core.domain.RegimenColumn;
 import org.openlmis.core.domain.RegimenTemplate;
-import org.openlmis.core.repository.mapper.RegimenColumnMapper;
+import org.openlmis.rnr.repository.mapper.RegimenColumnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

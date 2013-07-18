@@ -159,8 +159,8 @@ public class RequisitionServiceTest {
     when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
 
     List<RegimenColumn> regimenColumns = new ArrayList<>();
-    regimenColumns.add(new RegimenColumn(PROGRAM.getId(), INITIATED_TREATMENT, "label", TYPE_NUMERIC, true));
-    regimenColumns.add(new RegimenColumn(PROGRAM.getId(), ON_TREATMENT, "label", TYPE_NUMERIC, false));
+    regimenColumns.add(new RegimenColumn(PROGRAM.getId(), INITIATED_TREATMENT, "label", TYPE_NUMERIC, Boolean.TRUE, 1L));
+    regimenColumns.add(new RegimenColumn(PROGRAM.getId(), ON_TREATMENT, "label", TYPE_NUMERIC, Boolean.FALSE, 1L));
     when(regimenColumnService.getRegimenTemplateByProgramId(PROGRAM.getId())).thenReturn(new RegimenTemplate());
 
     whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityTypeApprovedProducts, regimens, USER_ID, USER_ID).thenReturn(spyRequisition);

@@ -6,7 +6,7 @@
 
 package org.openlmis.web.controller;
 
-import org.openlmis.core.service.RegimenColumnService;
+import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +32,7 @@ public class RegimenTemplateController extends BaseController {
   @RequestMapping(value = "/programId/{programId}/programRegimenTemplate", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getProgramRegimenTemplate(@PathVariable Long programId) {
-    return OpenLmisResponse.response("template",service.getRegimenTemplateByProgramId(programId));
+    return OpenLmisResponse.response("template", service.getRegimenTemplateByProgramId(programId));
 
   }
 }

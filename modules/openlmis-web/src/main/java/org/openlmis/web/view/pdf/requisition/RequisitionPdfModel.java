@@ -12,10 +12,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang.ArrayUtils;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.core.domain.Money;
-import org.openlmis.core.domain.RegimenColumn;
+import org.openlmis.core.domain.*;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.web.controller.RequisitionController;
 import org.openlmis.web.model.PrintRnrLineItem;
@@ -69,7 +66,7 @@ public class RequisitionPdfModel {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumnList);
     List<? extends Column> visibleColumns = template.getPrintableColumns(fullSupply);
 
-    PdfPTable table = prepareRnrLineItemsTable(visibleColumns);
+    PdfPTable table = prepareTable(visibleColumns);
 
     boolean odd = true;
 
@@ -100,10 +97,10 @@ public class RequisitionPdfModel {
     }
   }
 
-  private PdfPTable prepareRnrLineItemsTable(List<? extends Column> visibleColumns) throws DocumentException {
+  private PdfPTable prepareTable(List<? extends Column> visibleColumns) throws DocumentException {
     java.util.List<Integer> widths = new ArrayList<>();
     for (Column column : visibleColumns) {
-      widths.add(column.columnWidth());
+      widths.add(column.getColumnWidth());
     }
     PdfPTable table = new PdfPTable(widths.size());
 
@@ -252,10 +249,35 @@ public class RequisitionPdfModel {
     return new Money(new BigDecimal(requisition.getFullSupplyItemsSubmittedCost().getValue().floatValue() + requisition.getNonFullSupplyItemsSubmittedCost().getValue().floatValue()));
   }
 
-  public PdfPTable getRegimenTable() {
+  public PdfPTable getRegimenTable() throws DocumentException, NoSuchFieldException, IllegalAccessException {
     List<RegimenLineItem> regimenLineItems = requisition.getRegimenLineItems();
     if (regimenLineItems.size() == 0) return null;
-    return null;
+
+    RegimenTemplate template = new RegimenTemplate();
+    template.setRegimenColumns(regimenColumnList);
+    List<? extends Column> visibleColumns = template.filterPrintableColumns();
+
+    PdfPTable table = prepareTable(visibleColumns);
+
+    boolean odd = true;
+
+    RegimenLineItem previousLineItem = null;
+    for (RegimenLineItem lineItem : regimenLineItems) {
+      if (previousLineItem == null || !lineItem.getCategory().getName().equals(previousLineItem.getCategory().getName())) {
+        table.addCell(categoryRowForRegimen(visibleColumns.size(), lineItem));
+        previousLineItem = lineItem;
+      }
+
+
+      List<PdfPCell> cells = getCellsForRegimen(visibleColumns, lineItem);
+      odd = !odd;
+
+      for (PdfPCell cell : cells) {
+        cell.setBackgroundColor(odd ? BaseColor.WHITE : ROW_GREY_BACKGROUND);
+        table.addCell(cell);
+      }
+    }
+    return table;
   }
 
   public Paragraph getRegimenHeader() {

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
@@ -29,5 +30,16 @@ public class RegimenTemplate {
     });
 
     return ((RegimenColumn) column).getVisible();
+  }
+
+  public List<? extends Column> filterPrintableColumns() {
+    List<RegimenColumn> printableRegimenColumns = new ArrayList<>();
+
+    for (RegimenColumn regimenColumn : regimenColumns) {
+      if (regimenColumn.getVisible()) {
+        printableRegimenColumns.add(regimenColumn);
+      }
+    }
+    return printableRegimenColumns;
   }
 }

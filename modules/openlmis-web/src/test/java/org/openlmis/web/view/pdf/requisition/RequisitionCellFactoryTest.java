@@ -9,7 +9,7 @@ package org.openlmis.web.view.pdf.requisition;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.pdf.PdfPCell;
 import org.junit.Test;
-import org.openlmis.rnr.domain.Column;
+import org.openlmis.core.domain.Column;
 import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.util.List;

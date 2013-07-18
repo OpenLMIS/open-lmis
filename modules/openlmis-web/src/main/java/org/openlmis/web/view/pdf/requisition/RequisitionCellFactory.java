@@ -8,7 +8,8 @@ package org.openlmis.web.view.pdf.requisition;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
-import org.openlmis.rnr.domain.Column;
+import org.openlmis.core.domain.Column;
+import org.openlmis.rnr.domain.RegimenLineItem;
 import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.lang.reflect.Field;
@@ -79,8 +80,34 @@ public class RequisitionCellFactory {
     return result;
   }
 
+  public static List<PdfPCell> getCellsForRegimen(List<? extends Column> visibleColumns, RegimenLineItem lineItem) throws NoSuchFieldException, IllegalAccessException {
+    List<PdfPCell> result = new ArrayList<>();
+    for (Column regimenColumn : visibleColumns) {
+
+      Field field = RegimenLineItem.class.getDeclaredField(regimenColumn.getName());
+      field.setAccessible(true);
+      Object fieldValue = field.get(lineItem);
+      String cellValue = (fieldValue == null) ? "" : fieldValue.toString();
+      if (regimenColumn.getName().equals("code") || regimenColumn.getName().equals("name") || regimenColumn.getName().equals("remarks")) {
+        result.add(textCell(cellValue));
+      } else {
+        result.add(numberCell(cellValue));
+      }
+    }
+    return result;
+  }
+
   public static PdfPCell categoryRow(Integer visibleColumnsSize, RnrLineItem lineItem) {
     Chunk chunk = new Chunk(lineItem.getProductCategory(), FontFactory.getFont(FontFactory.HELVETICA_BOLD));
+    PdfPCell cell = new PdfPCell(new Phrase(chunk));
+    cell.setColspan(visibleColumnsSize);
+    cell.setBackgroundColor(HEADER_BACKGROUND);
+    cell.setPadding(CELL_PADDING);
+    return cell;
+  }
+
+  public static PdfPCell categoryRowForRegimen(Integer visibleColumnsSize, RegimenLineItem lineItem) {
+    Chunk chunk = new Chunk(lineItem.getCategory().getName(), FontFactory.getFont(FontFactory.HELVETICA_BOLD));
     PdfPCell cell = new PdfPCell(new Phrase(chunk));
     cell.setColspan(visibleColumnsSize);
     cell.setBackgroundColor(HEADER_BACKGROUND);

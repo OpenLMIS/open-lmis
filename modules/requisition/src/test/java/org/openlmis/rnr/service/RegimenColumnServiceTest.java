@@ -1,4 +1,4 @@
-package org.openlmis.core.service;
+package org.openlmis.rnr.service;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -7,18 +7,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.RegimenColumn;
 import org.openlmis.core.domain.RegimenTemplate;
-import org.openlmis.core.repository.RegimenColumnRepository;
+import org.openlmis.core.service.MessageService;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.rnr.repository.RegimenColumnRepository;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.rnr.builder.RegimenColumnBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -56,8 +60,8 @@ public class RegimenColumnServiceTest {
   @Test
   public void shouldGetRegimenColumnsByProgramId() throws Exception {
     Long programId = 1L;
-    RegimenColumn regimenColumn1 = new RegimenColumn(programId, "testName1", "testLabel1", "numeric", true);
-    RegimenColumn regimenColumn2 = new RegimenColumn(programId, "testName2", "testLabel2", "numeric", true);
+    RegimenColumn regimenColumn1 = new RegimenColumn(programId, "testName1", "testLabel1", "numeric", Boolean.TRUE, 1L);
+    RegimenColumn regimenColumn2 = new RegimenColumn(programId, "testName2", "testLabel2", "numeric", Boolean.TRUE, 1L);
 
     when(repository.getRegimenColumnsByProgramId(programId)).thenReturn(asList(regimenColumn1, regimenColumn2));
 
@@ -121,4 +125,28 @@ public class RegimenColumnServiceTest {
     assertThat(regimenTemplate, is(programRegimenTemplate));
     verify(repository).getRegimenColumnsByProgramId(programId);
   }
+
+  @Test
+  public void shouldGetProgramRegimenColumnsForPrint() throws Exception {
+
+    Long programId = 1L;
+    RegimenColumn regimenColumn = make(a(defaultRegimenColumn, with(name, "name"), with(label, "header.name")));
+    RegimenColumn regimenColumn1 = make(a(defaultRegimenColumn, with(name, "code"), with(label, "header.code")));
+    RegimenColumn regimenColumn2 = make(a(defaultRegimenColumn));
+    List<RegimenColumn> regimenColumnList = asList(regimenColumn, regimenColumn1, regimenColumn2);
+    when(repository.getRegimenColumnsByProgramId(programId)).thenReturn(regimenColumnList);
+    when(messageService.message("header.name")).thenReturn("Name");
+    when(messageService.message("header.code")).thenReturn("Code");
+
+    List<RegimenColumn> regimenColumnsForPrintByProgramId = service.getRegimenColumnsForPrintByProgramId(programId);
+
+    verify(repository).getRegimenColumnsByProgramId(programId);
+    verify(messageService, never()).message("patients on treatment");
+    assertThat(regimenColumnsForPrintByProgramId.get(0).getLabel(), is("Name"));
+    assertThat(regimenColumnsForPrintByProgramId.get(1).getLabel(), is("Code"));
+    assertThat(regimenColumnsForPrintByProgramId.get(2).getLabel(), is("patients on treatment"));
+
+  }
+
+
 }

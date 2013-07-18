@@ -4,16 +4,16 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.core.repository.mapper;
+package org.openlmis.rnr.repository.mapper;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.junit.matchers.JUnitMatchers;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RegimenColumn;
+import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -53,7 +53,7 @@ public class RegimenColumnMapperIT {
   @Test
   public void shouldInsertRegimenColumnsForAProgram() throws Exception {
 
-    RegimenColumn regimenColumn = new RegimenColumn(1L, "testName", "testLabel", "numeric", true);
+    RegimenColumn regimenColumn = new RegimenColumn(1L, "testName", "testLabel", "numeric", Boolean.TRUE, 1L);
     regimenColumn.setCreatedBy(1L);
 
     mapper.insert(regimenColumn, 1L);
@@ -68,8 +68,8 @@ public class RegimenColumnMapperIT {
   public void shouldGetAllRegimenColumnsByProgram() throws Exception {
 
     Long programId = 1L;
-    RegimenColumn regimenColumn1 = new RegimenColumn(programId, "testName1", "testLabel1", "numeric", true);
-    RegimenColumn regimenColumn2 = new RegimenColumn(programId, "testName2", "testLabel2", "text", false);
+    RegimenColumn regimenColumn1 = new RegimenColumn(programId, "testName1", "testLabel1", "numeric", Boolean.TRUE, 1L);
+    RegimenColumn regimenColumn2 = new RegimenColumn(programId, "testName2", "testLabel2", "text", Boolean.FALSE, 1L);
 
     mapper.insert(regimenColumn1, programId);
 
@@ -84,9 +84,9 @@ public class RegimenColumnMapperIT {
   @Test
   public void shouldUpdateAllRegimenColumnsByProgram() throws Exception {
 
-    RegimenColumn regimenColumn = new RegimenColumn(program.getId(), "testName", "testLabel", "numeric", true);
+    RegimenColumn regimenColumn = new RegimenColumn(program.getId(), "testName", "testLabel", "numeric", Boolean.TRUE, 1L);
 
-    mapper.insert(regimenColumn,program.getId());
+    mapper.insert(regimenColumn, program.getId());
 
     regimenColumn = mapper.getAllRegimenColumnsByProgramId(program.getId()).get(0);
 

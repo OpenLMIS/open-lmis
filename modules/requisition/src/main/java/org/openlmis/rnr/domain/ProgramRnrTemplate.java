@@ -81,7 +81,7 @@ public class ProgramRnrTemplate {
   public boolean columnsVisible(String... rnrColumnNames) {
     boolean visible = true;
     for (String rnrColumnName : rnrColumnNames) {
-      visible = (rnrColumnsMap.get(rnrColumnName) != null) && visible && rnrColumnsMap.get(rnrColumnName).isVisible();
+      visible = (rnrColumnsMap.get(rnrColumnName) != null) && visible && rnrColumnsMap.get(rnrColumnName).getVisible();
     }
     return visible;
   }
@@ -138,8 +138,8 @@ public class ProgramRnrTemplate {
   private void validateQuantityDispensedAndStockInHandCannotBeCalculatedAtSameTime() {
     if (columnsCalculated(QUANTITY_DISPENSED) && columnsCalculated(STOCK_IN_HAND)) {
       OpenLmisMessage errorMessage = new OpenLmisMessage(INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED,
-          getRnrColumnLabelFor(QUANTITY_DISPENSED),
-          getRnrColumnLabelFor(STOCK_IN_HAND));
+        getRnrColumnLabelFor(QUANTITY_DISPENSED),
+        getRnrColumnLabelFor(STOCK_IN_HAND));
       errorMap.put(QUANTITY_DISPENSED, errorMessage);
       errorMap.put(STOCK_IN_HAND, errorMessage);
     }
@@ -157,12 +157,12 @@ public class ProgramRnrTemplate {
 
       if (columnsVisible(QUANTITY_REQUESTED)) {
         errorMap.put(QUANTITY_REQUESTED, new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON,
-            getRnrColumnLabelFor(QUANTITY_REQUESTED),
-            getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY)));
+          getRnrColumnLabelFor(QUANTITY_REQUESTED),
+          getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY)));
       } else {
         errorMap.put(REASON_FOR_REQUESTED_QUANTITY, new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON,
-            getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY),
-            getRnrColumnLabelFor(QUANTITY_REQUESTED)));
+          getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY),
+          getRnrColumnLabelFor(QUANTITY_REQUESTED)));
       }
     }
   }
@@ -171,7 +171,7 @@ public class ProgramRnrTemplate {
     List<RnrColumn> printableRnrColumns = new ArrayList<>();
 
     for (RnrColumn rnrColumn : rnrColumns) {
-      if (rnrColumn.isVisible()) {
+      if (rnrColumn.getVisible()) {
         if (fullSupply && !nonPrintableFullSupplyColumnNames.contains(rnrColumn.getName())) {
           printableRnrColumns.add(rnrColumn);
         } else if (!fullSupply && printableNonFullSupplyColumnNames.contains(rnrColumn.getName())) {

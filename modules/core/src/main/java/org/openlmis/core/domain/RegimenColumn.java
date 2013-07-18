@@ -1,27 +1,28 @@
 package org.openlmis.core.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class RegimenColumn extends BaseModel {
+public class RegimenColumn extends Column {
 
   private Long programId;
 
-  private String name;
-
-  private String label;
-
   private String dataType;
 
-  private Boolean visible;
-
-  public RegimenColumn (Long programId, String name, String label, String dataType, Boolean visible, Long createdBy) {
-    this(programId, name, label, dataType, visible);
+  public RegimenColumn(Long programId, String name, String label, String dataType, Boolean visible, Long createdBy) {
+    super(name, label, visible);
+    this.programId = programId;
+    this.dataType = dataType;
     this.createdBy = createdBy;
   }
 
+  @Override
+  public Integer getColumnWidth() {
+    if (this.name.equals("remarks")) {
+      return 80;
+    }
+    return 40;
+  }
 }

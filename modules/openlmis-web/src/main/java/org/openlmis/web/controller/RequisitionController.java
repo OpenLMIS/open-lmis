@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.RegimenColumnService;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
+import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.configurationReader.StaticReferenceDataReader;
@@ -225,7 +225,7 @@ public class RequisitionController extends BaseController {
     modelAndView.addObject(LOSSES_AND_ADJUSTMENT_TYPES, requisitionService.getLossesAndAdjustmentsTypes());
     Long programId = requisition.getProgram().getId();
     modelAndView.addObject(RNR_TEMPLATE, rnrTemplateService.fetchColumnsForRequisition(programId));
-    modelAndView.addObject(REGIMEN_TEMPLATE, regimenColumnService.getRegimenColumnsByProgramId(programId));
+    modelAndView.addObject(REGIMEN_TEMPLATE, regimenColumnService.getRegimenColumnsForPrintByProgramId(programId));
     modelAndView.addObject(CURRENCY, staticReferenceDataReader.getCurrency());
     return modelAndView;
   }
