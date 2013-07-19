@@ -304,11 +304,11 @@ public class FacilityMapperIT {
     programMapper.insert(make(a(defaultProgram, with(programCode, "Random"))));
 
 
-    programSupportedMapper.add(make(a(defaultProgramSupported,
+    programSupportedMapper.insert(make(a(defaultProgramSupported,
       with(supportedFacilityId, facilitySupportingProgramInRG1.getId()),
       with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))))));
 
-    programSupportedMapper.add(make(a(defaultProgramSupported,
+    programSupportedMapper.insert(make(a(defaultProgramSupported,
       with(supportedFacilityId, facilitySupportingProgramNotInAnyRG.getId()),
       with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))))));
 
@@ -457,30 +457,41 @@ public class FacilityMapperIT {
 
     String facilityCode1 = "fc1";
     String facilityCode2 = "fc2";
-    String facilityCode3 = "fc3";
     Date date1 = new Date();
     Date date2 = new Date(date1.getTime() + 123123);
 
     Facility facility1 = make(a(defaultFacility, with(code, facilityCode1), with(modifiedDate, date1)));
     Facility facility2 = make(a(defaultFacility, with(code, facilityCode2), with(modifiedDate, date1)));
-    Facility facility3 = make(a(defaultFacility, with(code, facilityCode3), with(modifiedDate, date2)));
+
     mapper.insert(facility1);
     mapper.insert(facility2);
-    mapper.insert(facility3);
-    Program program = new Program(1L);
-    ProgramSupported programSupported = make(a(defaultProgramSupported,
-      with(supportedProgram, program),
-      with(supportedFacilityId, facility1.getId())));
+    Program program1 = new Program(1L);
+    Program program2 = new Program(2L);
 
-    programSupportedMapper.add(programSupported);
+    ProgramSupported programSupported1 = make(a(defaultProgramSupported,
+      with(supportedProgram, program1),
+      with(supportedFacilityId, facility1.getId()),
+      with(dateModified, date1)));
+    programSupportedMapper.insert(programSupported1);
 
-    List<Facility> allByDateModified = mapper.getAllByDateModified(date1);
+    ProgramSupported programSupported2 = make(a(defaultProgramSupported,
+      with(supportedProgram, program1),
+      with(supportedFacilityId, facility2.getId()),
+      with(dateModified, date2)));
+    programSupportedMapper.insert(programSupported2);
 
-    assertThat(allByDateModified.size(), is(2));
+    ProgramSupported programSupported3 = make(a(defaultProgramSupported,
+      with(supportedProgram, program2),
+      with(supportedFacilityId, facility1.getId()),
+      with(dateModified, date2)));
+    programSupportedMapper.insert(programSupported3);
+
+
+    List<Facility> allByDateModified = mapper.getAllByProgramSupportedModifiedDate(date1);
+
+    assertThat(allByDateModified.size(), is(1));
     assertThat(allByDateModified.get(0).getCode(), is(facilityCode1));
-    assertThat(allByDateModified.get(1).getCode(), is(facilityCode2));
-    assertThat(allByDateModified.get(0).getSupportedPrograms().size(), is(1));
-    assertThat(allByDateModified.get(1).getSupportedPrograms().size(), is(0));
+    assertThat(allByDateModified.get(0).getSupportedPrograms().size(), is(2));
   }
 
   private Facility insertMemberFacility(DeliveryZone zone, Program program, String facilityCode, String facilityName,
@@ -491,7 +502,7 @@ public class FacilityMapperIT {
     ProgramSupported programSupported = new ProgramSupported();
     programSupported.setFacilityId(facility.getId());
     programSupported.setProgram(program);
-    programSupportedMapper.add(programSupported);
+    programSupportedMapper.insert(programSupported);
     DeliveryZoneMember member1 = new DeliveryZoneMember(zone, facility);
     deliveryZoneMemberMapper.insert(member1);
     return facility;

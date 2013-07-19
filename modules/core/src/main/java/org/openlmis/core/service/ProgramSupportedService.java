@@ -41,10 +41,6 @@ public class ProgramSupportedService {
     return repository.getAllByFacilityId(facilityId);
   }
 
-  public void addSupportedProgram(ProgramSupported programSupported) {
-    repository.addSupportedProgram(programSupported);
-  }
-
   public void updateSupportedPrograms(Facility facility) {
     repository.updateSupportedPrograms(facility);
     notifyProgramSupportedUpdated(facility);
@@ -60,24 +56,22 @@ public class ProgramSupportedService {
     return repository.getByFacilityIdAndProgramId(facilityId, programId);
   }
 
-  public void updateSupportedProgram(ProgramSupported programSupported) {
-    repository.updateSupportedProgram(programSupported);
-  }
-
   public void uploadSupportedProgram(ProgramSupported programSupported) {
     programSupported.isValid();
 
     Facility facility = new Facility();
     facility.setCode(programSupported.getFacilityCode());
+
     facility = facilityService.getByCode(facility);
     programSupported.setFacilityId(facility.getId());
+
     Program program = programService.getByCode(programSupported.getProgram().getCode());
     programSupported.setProgram(program);
 
     if (programSupported.getId() == null) {
-      addSupportedProgram(programSupported);
+      repository.addSupportedProgram(programSupported);
     } else {
-      updateSupportedProgram(programSupported);
+      repository.updateSupportedProgram(programSupported);
     }
   }
 

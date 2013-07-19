@@ -60,7 +60,7 @@ public class ProgramSupportedMapperIT {
       with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program)));
 
-    programSupportedMapper.add(programSupported);
+    programSupportedMapper.insert(programSupported);
 
     ProgramSupported result = programSupportedMapper.getBy(facility.getId(), program.getId());
     assertThat(result.getFacilityId(), is(facility.getId()));
@@ -79,7 +79,7 @@ public class ProgramSupportedMapperIT {
     ProgramSupported programSupported = make(a(defaultProgramSupported,
       with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program)));
-    programSupportedMapper.add(programSupported);
+    programSupportedMapper.insert(programSupported);
 
     programSupportedMapper.delete(facility.getId(), program.getId());
 
@@ -98,7 +98,7 @@ public class ProgramSupportedMapperIT {
     ProgramSupported programSupported = make(a(defaultProgramSupported,
       with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program)));
-    programSupportedMapper.add(programSupported);
+    programSupportedMapper.insert(programSupported);
 
     List<ProgramSupported> programsSupported = programSupportedMapper.getAllByFacilityId(facility.getId());
     assertThat(programsSupported.size(), is(1));
@@ -121,7 +121,7 @@ public class ProgramSupportedMapperIT {
     ProgramSupported programSupported = make(a(defaultProgramSupported,
       with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program)));
-    programSupportedMapper.add(programSupported);
+    programSupportedMapper.insert(programSupported);
 
     programSupported.setActive(Boolean.FALSE);
 

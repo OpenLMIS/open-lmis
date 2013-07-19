@@ -28,6 +28,7 @@ import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.db.categories.UnitTests;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -278,5 +279,18 @@ public class FacilityServiceTest {
     assertThat(facilities.get(0).getSupportedPrograms(), is(asList(programSupported)));
     assertThat(facilities.get(1).getSupportedPrograms(), is(asList(programSupported)));
     verify(facilityRepository).getAllInDeliveryZoneFor(deliveryZoneId, programId);
+  }
+
+  @Test
+  public void shouldGetAllFacilitiesByModifiedDate() throws Exception {
+    List<Facility> expectedFacilities = new ArrayList<>();
+    Date dateModified = new Date();
+    PowerMockito.when(facilityRepository.getAllByProgramSupportedModifiedDate(dateModified)).thenReturn(expectedFacilities);
+
+    List<Facility> facilities = facilityService.getAllByProgramSupportedModifiedDate(dateModified);
+
+    assertThat(facilities, is(expectedFacilities));
+    verify(facilityRepository).getAllByProgramSupportedModifiedDate(dateModified);
+
   }
 }

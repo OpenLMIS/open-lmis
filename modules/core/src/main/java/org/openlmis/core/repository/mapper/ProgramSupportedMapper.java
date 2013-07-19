@@ -19,7 +19,7 @@ public interface ProgramSupportedMapper {
     "(facilityId, programId, active, startDate, createdBy, modifiedBy, modifiedDate) VALUES (" +
     "#{facilityId}, #{program.id}, #{active}, #{startDate}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
   @Options(flushCache = true, useGeneratedKeys = true)
-  void add(ProgramSupported programSupported);
+  void insert(ProgramSupported programSupported);
 
   @Select("SELECT * FROM programs_supported " +
     "WHERE facilityId = #{facilityId} AND programId = #{programId} LIMIT 1")

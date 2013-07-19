@@ -148,4 +148,8 @@ public class FacilityService {
     }
     return facilities;
   }
+
+  public List<Facility> getAllByProgramSupportedModifiedDate(Date dateModified) {
+    return facilityRepository.getAllByProgramSupportedModifiedDate(dateModified);
+  }
 }

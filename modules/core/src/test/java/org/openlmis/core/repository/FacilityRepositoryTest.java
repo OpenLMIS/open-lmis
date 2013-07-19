@@ -27,6 +27,7 @@ import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -304,5 +305,18 @@ public class FacilityRepositoryTest {
 
     assertThat(facilities, is(memberFacilities));
     verify(mapper).getAllInDeliveryZoneFor(deliveryZoneId, programId);
+  }
+
+  @Test
+  public void shouldGetAllFacilitiesByModifiedDate() throws Exception {
+    List<Facility> expectedFacilities = new ArrayList<>();
+    Date dateModified = new Date();
+    when(mapper.getAllByProgramSupportedModifiedDate(dateModified)).thenReturn(expectedFacilities);
+
+    List<Facility> facilities = repository.getAllByProgramSupportedModifiedDate(dateModified);
+
+    assertThat(facilities, is(expectedFacilities));
+    verify(mapper).getAllByProgramSupportedModifiedDate(dateModified);
+
   }
 }

@@ -16,6 +16,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.openlmis.core.domain.Right.commaSeparateRightNames;
@@ -155,11 +156,16 @@ public class FacilityRepository {
     return mapper.getFacilityTypeForCode(facilityType.getCode());
   }
 
+  //TODO send only code
   public Facility getByCode(Facility facility) {
     return mapper.getByCode(facility.getCode());
   }
 
   public List<Facility> getAllInDeliveryZoneFor(Long deliveryZoneId, Long programId) {
     return mapper.getAllInDeliveryZoneFor(deliveryZoneId, programId);
+  }
+
+  public List<Facility> getAllByProgramSupportedModifiedDate(Date dateModified) {
+    return mapper.getAllByProgramSupportedModifiedDate(dateModified);
   }
 }
