@@ -106,7 +106,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
         distributionPage.clickViewLoadAmount();
     }
 
-    @Then("^I should see aggregate ISA values as per mutiple facilities in one delivery zone$")
+    @Then("^I should see aggregate ISA values as per multiple facilities in one delivery zone$")
     public void verifyISAAndOverrideISAValuesAggregatedForMutipleFacilities() throws Exception {
         WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
         assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 1))), warehouseLoadAmountPage.getFacilityPopulation(3, 1));

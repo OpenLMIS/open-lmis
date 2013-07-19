@@ -99,7 +99,7 @@ Feature: Smoke Tests
       | Admin123 | Admin123 | VACCINES  | P1      | antibiotic1 | C1       | 1        | 2            | 3             | 4                | null         | null         | 5               |
     And I am logged in as Admin
     And I access create facility page
-    When I create facility
+    When I create facilities
     And I override ISA "24"
     Then I should see calculated ISA "7"
     When I click ISA done
@@ -194,4 +194,4 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I click load amount
-    Then I should see aggregate ISA values as per mutiple facilities in one delivery zone
+    Then I should see aggregate ISA values as per multiple facilities in one delivery zone

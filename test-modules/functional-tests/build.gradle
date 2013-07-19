@@ -51,28 +51,17 @@ task buildOpenLmis(type: GradleBuild) {
     tasks = ['jettyRunWarDaemon']
 }
 
+
+
+
 task smokeTest(type: Test) {
-    useTestNG() {
+    dependsOn assemble, compileTestJava
+
+    doLast {
         systemProperties['browser'] = 'firefox'
         systemProperties['dburl'] = "$dburl"
         systemProperties['baseurl'] = "$baseurl"
 
-        suites 'src/test/java/org/openlmis/functional/testng-smoke.xml'
-    }
-    options {
-        listeners << 'org.uncommons.reportng.HTMLReporter'
-        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
-    }
-    workingDir = 'build/'
-}
-
-smokeTest.doFirst() {
-    buildOpenLmis.execute()
-}
-
-task cucumberFunctional(type: Test) {
-    dependsOn assemble, compileTestJava
-    doLast {
         htmlformat = "html:${buildDir}/reports/tests/bddTest-report-functional"
         jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
         javaexec {
@@ -83,7 +72,29 @@ task cucumberFunctional(type: Test) {
     }
 }
 
-cucumberFunctional.doFirst() {
+smokeTest.doFirst() {
+    buildOpenLmis.execute()
+}
+
+task smokeTestChrome(type: Test) {
+    dependsOn assemble, compileTestJava
+
+    doLast {
+        systemProperties['browser'] = 'chrome'
+        systemProperties['dburl'] = "$dburl"
+        systemProperties['baseurl'] = "$baseurl"
+
+        htmlformat = "html:${buildDir}/reports/tests/bddTest-report-functional"
+        jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
+        javaexec {
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['-f',htmlformat, '-f',jsonformat,'--glue', 'org.openlmis.functional','--tags','@smoke', 'src/test/resources']
+        }
+    }
+}
+
+smokeTestChrome.doFirst() {
     buildOpenLmis.execute()
 }
 
@@ -155,22 +166,5 @@ smokeTestIE.doFirst() {
     buildOpenLmis.execute()
 }
 
-task smokeTestChrome(type: Test) {
-    useTestNG() {
-        systemProperties['browser'] = 'chrome'
-        systemProperties['dburl'] = "$dburl"
-        systemProperties['baseurl'] = "$baseurl"
 
-        suites 'src/test/java/org/openlmis/functional/testng-smoke.xml'
-    }
-    options {
-        listeners << 'org.uncommons.reportng.HTMLReporter'
-        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
-    }
-    workingDir = 'build/'
-}
-
-smokeTestChrome.doFirst() {
-    buildOpenLmis.execute()
-}
 
