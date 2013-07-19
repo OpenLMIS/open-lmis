@@ -12,6 +12,7 @@ import org.openlmis.core.domain.FacilityOperator;
 import org.openlmis.core.domain.FacilityType;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -149,4 +150,11 @@ public interface FacilityMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getById"))
   })
   List<Facility> getAllInDeliveryZoneFor(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
+
+  @Select({"SELECT id, code FROM facilities WHERE modifiedDate = #{modifiedDate}"})
+  @Results(value =
+    {@Result(property = "supportedPrograms", column = "id", javaType = List.class,
+      many = @Many(select = "org.openlmis.core.repository.mapper.ProgramSupportedMapper.getAllByFacilityId"))})
+  List<Facility> getAllByDateModified(Date modifiedDate);
+
 }

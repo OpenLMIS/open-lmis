@@ -34,6 +34,7 @@ public class FacilityBuilder {
   private static Property<Facility, Long> operatedById = newProperty();
   public static final Property<Facility, Boolean> dataReportable = newProperty();
   public static final Property<Facility, List<ProgramSupported>> programSupportedList = newProperty();
+  public static final Property<Facility, Date> modifiedDate = newProperty();
 
   public static final String FACILITY_CODE = "F10010";
   public static final String FACILITY_TYPE_CODE = "warehouse";
@@ -81,6 +82,7 @@ public class FacilityBuilder {
       facility.setGoLiveDate(lookup.valueOf(goLiveDate, new LocalDate(2013, 10, 10).toDate()));
       facility.setSupportedPrograms(lookup.valueOf(programSupportedList, EMPTY_LIST));
       facility.setModifiedBy(1L);
+      facility.setModifiedDate(lookup.valueOf(modifiedDate, new Date()));
       return facility;
     }
   };

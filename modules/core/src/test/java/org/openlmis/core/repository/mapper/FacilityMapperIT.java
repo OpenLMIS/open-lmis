@@ -21,6 +21,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -449,6 +450,37 @@ public class FacilityMapperIT {
     assertThat(memberFacilities.get(0).getGeographicZone().getId(), is(10L));
     assertThat(memberFacilities.get(1).getCode(), is("F10011"));
     assertThat(memberFacilities.get(2).getCode(), is("F10010"));
+  }
+
+  @Test
+  public void shouldReturnAllFacilitiesMatchingModifiedDate() throws Exception {
+
+    String facilityCode1 = "fc1";
+    String facilityCode2 = "fc2";
+    String facilityCode3 = "fc3";
+    Date date1 = new Date();
+    Date date2 = new Date(date1.getTime() + 123123);
+
+    Facility facility1 = make(a(defaultFacility, with(code, facilityCode1), with(modifiedDate, date1)));
+    Facility facility2 = make(a(defaultFacility, with(code, facilityCode2), with(modifiedDate, date1)));
+    Facility facility3 = make(a(defaultFacility, with(code, facilityCode3), with(modifiedDate, date2)));
+    mapper.insert(facility1);
+    mapper.insert(facility2);
+    mapper.insert(facility3);
+    Program program = new Program(1L);
+    ProgramSupported programSupported = make(a(defaultProgramSupported,
+      with(supportedProgram, program),
+      with(supportedFacilityId, facility1.getId())));
+
+    programSupportedMapper.add(programSupported);
+
+    List<Facility> allByDateModified = mapper.getAllByDateModified(date1);
+
+    assertThat(allByDateModified.size(), is(2));
+    assertThat(allByDateModified.get(0).getCode(), is(facilityCode1));
+    assertThat(allByDateModified.get(1).getCode(), is(facilityCode2));
+    assertThat(allByDateModified.get(0).getSupportedPrograms().size(), is(1));
+    assertThat(allByDateModified.get(1).getSupportedPrograms().size(), is(0));
   }
 
   private Facility insertMemberFacility(DeliveryZone zone, Program program, String facilityCode, String facilityName,
