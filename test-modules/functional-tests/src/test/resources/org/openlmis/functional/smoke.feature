@@ -99,7 +99,7 @@ Feature: Smoke Tests
       | Admin123 |  VACCINES  | P1      | antibiotic1 | C1       | 1        | 2            | 3             | 4                | null         | null         | 5               |
     And I am logged in as Admin
     And I access create facility page
-    When I create facilities
+    When I create facility
     And I override ISA "24"
     Then I should see calculated ISA "7"
     When I click ISA done

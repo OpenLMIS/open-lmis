@@ -4,7 +4,7 @@ Feature: End to end requisition flow
   Scenario: Requisition initiate, authorize, approve & convert to oder.
     Given I am logged in as Admin
     And I access create facility page
-    When I create facility supporting "HIV"
+    When I create "HIV" program supported facility
     Then I should see message for successfully created facility
     When I setup supervisory node data
     And I create "Store-in-charge" role having "Requisition" based "Create Requisition,Authorize Requisition,Approve Requisition" rights

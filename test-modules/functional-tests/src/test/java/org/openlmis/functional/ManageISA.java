@@ -76,7 +76,7 @@ public class ManageISA extends TestCaseHelper {
     }
   }
 
-  @When("^I create facilities$")
+  @When("^I create facility$")
   public void createFacility() throws Exception {
     CreateFacilityPage createFacilityPage = new CreateFacilityPage(testWebDriver);
     date_time = createFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,

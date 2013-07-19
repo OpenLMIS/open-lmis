@@ -72,8 +72,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
         homePage.navigateCreateFacility();
     }
 
-    @When("^I create facility supporting \"([^\"]*)\"$")
-    public void createFacility(String program) throws Exception {
+    @When("^I create \"([^\"]*)\" program supported facility$")
+    public void createFacilityForProgram(String program) throws Exception {
         CreateFacilityPage createFacilityPage = new CreateFacilityPage(testWebDriver);
 
         date_time = createFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
