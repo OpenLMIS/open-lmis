@@ -1,7 +1,7 @@
 Feature: Smoke Tests
 
   @smoke
-  Scenario: Should save and submit regimen data
+  Scenario: User should be able to save and submit regimen data
     Given I have the following data:
       | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
     And I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
@@ -24,11 +24,14 @@ Feature: Smoke Tests
     Then I should see submit successfully
 
   @smoke
-  Scenario: Should view requisition and regimen after authorization
-    Given I have the following data including regimen configured:
-      | HIV | storeincharge | ADULTS | Admin123 | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
-    And I access Initiate RnR page having regimen data
-    When I click proceed for view requisition
+  Scenario: User should view requisition and regimen after authorization
+    Given I have the following data:
+      | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
+    And I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
+    And I have regimen template configured
+    And I am logged in as "storeincharge"
+    And I access initiate requisition page
+    When I click proceed
     And I populate RnR data
     And I populate Regimen data as patientsOnTreatment "100" patientsToInitiateTreatment "200" patientsStoppedTreatment "300" remarks "Regimens data filled"
     And I access home page
@@ -48,17 +51,17 @@ Feature: Smoke Tests
     Then I verify values on regimen page as patientsOnTreatment "100" patientsToInitiateTreatment "200" patientsStoppedTreatment "300" remarks "Regimens data filled"
 
   @smoke
-  Scenario: Should configure program product ISA
-    Given I have the following data for ISA:
-      | Admin123 | Admin123 | VACCINES |
-    And I access program product ISA page
-    When I type ratio "3.9" dosesPerYear "3" wastage "10" bufferPercentage "25" adjustmentValue "0" minimumValue "10" maximumValue "1000"
+  Scenario: User should able to configure program product ISA
+    Given I have data available for program product ISA
+    And I am logged in as Admin
+    When I access program product ISA page for "VACCINES"
+    And I type ratio "3.9" dosesPerYear "3" wastage "10" bufferPercentage "25" adjustmentValue "0" minimumValue "10" maximumValue "1000"
     Then I verify calculated ISA value having population "1000" ratio "3.9" dosesPerYear "3" wastage "10" bufferPercentage "25" adjustmentValue "0" minimumValue "10" maximumValue "1000"
     And I click cancel
     And I access home page
 
   @smoke
-  Scenario: Should initiate distribution
+  Scenario: User should able to initiate distribution
     Given I have the following data for distribution:
       | userSIC        | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
       | storeincharge  | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
@@ -73,7 +76,7 @@ Feature: Smoke Tests
     And I should see delivery zone "Delivery Zone First" program "VACCINES" period "Period14" in table
 
   @smoke
-  Scenario: Should fetch program period on manage distribution screen
+  Scenario: User should able to fetch program period on manage distribution screen
     Given I have the following data for distribution:
       | userSIC        | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
       | storeincharge  | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |

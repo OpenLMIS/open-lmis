@@ -38,8 +38,6 @@ public class ViewRequisition extends TestCaseHelper {
   public static final String STORE_IN_CHARGE = "store in-charge";
   public static final String APPROVE_REQUISITION = "APPROVE_REQUISITION";
   public static final String CONVERT_TO_ORDER = "CONVERT_TO_ORDER";
-  public static final String CREATE_REQUISITION = "CREATE_REQUISITION";
-  public static final String VIEW_REQUISITION = "VIEW_REQUISITION";
   public static final String SUBMITTED = "SUBMITTED";
   public static final String AUTHORIZED = "AUTHORIZED";
   public static final String IN_APPROVAL = "IN_APPROVAL";
@@ -49,50 +47,13 @@ public class ViewRequisition extends TestCaseHelper {
   public static final String patientsToInitiateTreatment = "200";
   public static final String patientsStoppedTreatment = "300";
   public static final String remarks = "testing";
-  public String program, userSIC, categoryCode, password, regimenCode, regimenName, regimenCode2, regimenName2;
-  public HomePage homePage;
-  public LoginPage loginPage;
-  public InitiateRnRPage initiateRnRPage;
-  ViewRequisitionPage viewRequisitionPage;
+  public String program, userSIC, password;
+
 
   @BeforeMethod(groups = "functional")
   @Before
   public void setUp() throws Exception {
     super.setup();
-  }
-
-
-  @Given("^I have the following data including regimen configured:$")
-  public void theFollowingDataExist(DataTable data) throws Exception {
-    List<String> dataString = data.flatten();
-    program = dataString.get(0);
-    userSIC = dataString.get(1);
-    categoryCode = dataString.get(2);
-    password = dataString.get(3);
-    regimenCode = dataString.get(4);
-    regimenName = dataString.get(5);
-    regimenCode2 = dataString.get(6);
-    regimenName2 = dataString.get(7);
-  }
-
-  @Given("^I access Initiate RnR page having regimen data")
-  public void onInitiateRnRScreen() throws IOException, SQLException {
-    List<String> rightsList = new ArrayList<String>();
-    rightsList.add(CREATE_REQUISITION);
-    rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
-    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
-    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
-    dbWrapper.insertRegimenTemplateColumnsForProgram(program);
-    loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    homePage = loginPage.loginAs(userSIC, password);
-    homePage.navigateAndInitiateRnr(program);
-  }
-
-  @When("^I click proceed for view requisition$")
-  public void clickOnProceed() throws IOException {
-    homePage.navigateAndInitiateRnr(program);
-    initiateRnRPage = homePage.clickProceed();
   }
 
   @When("^I populate Regimen data as patientsOnTreatment \"([^\"]*)\" patientsToInitiateTreatment \"([^\"]*)\" patientsStoppedTreatment \"([^\"]*)\" remarks \"([^\"]*)\"$")
@@ -103,16 +64,18 @@ public class ViewRequisition extends TestCaseHelper {
   @When("^I access home page")
   public void accessHomePage() throws IOException, SQLException {
     InitiateRnRPage initiateRnRPage=new InitiateRnRPage(testWebDriver);
-    HomePage homePage = initiateRnRPage.clickHome();
+    initiateRnRPage.clickHome();
   }
 
   @When("^I access view RnR screen$")
   public void accessViewRnRScreen() throws IOException {
-    viewRequisitionPage = homePage.navigateViewRequisition();
+    HomePage homePage = new HomePage(testWebDriver);
+    homePage.navigateViewRequisition();
   }
 
   @Then("^I should see elements on view requisition page$")
   public void shouldSeeElementsOnViewRequisitionPage() throws IOException {
+    ViewRequisitionPage viewRequisitionPage = new ViewRequisitionPage(testWebDriver);
     viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
   }
 
@@ -123,21 +86,25 @@ public class ViewRequisition extends TestCaseHelper {
 
   @When("^I type view search criteria$")
   public void typeViewResultCriteria() throws IOException, SQLException {
+    ViewRequisitionPage viewRequisitionPage = new ViewRequisitionPage(testWebDriver);
     viewRequisitionPage.enterViewSearchCriteria();
   }
 
   @When("^I click search$")
   public void clickSearch() throws IOException, SQLException {
+    ViewRequisitionPage viewRequisitionPage = new ViewRequisitionPage(testWebDriver);
     viewRequisitionPage.clickSearch();
   }
 
   @When("^I access regimen tab for view requisition$")
   public void clickRegimenTab() throws IOException, SQLException {
+    ViewRequisitionPage viewRequisitionPage = new ViewRequisitionPage(testWebDriver);
     viewRequisitionPage.clickRegimenTab();
   }
 
   @Then("^I should see no requisition found message$")
   public void shouldSeeNoRequisitionMessage() throws IOException, SQLException {
+    ViewRequisitionPage viewRequisitionPage = new ViewRequisitionPage(testWebDriver);
     viewRequisitionPage.verifyNoRequisitionFound();
   }
 
@@ -148,23 +115,26 @@ public class ViewRequisition extends TestCaseHelper {
 
   @Then("^I should see requisition status as \"([^\"]*)\"$")
   public void verifyRequisitionStatus(String status) throws IOException, SQLException {
+    ViewRequisitionPage viewRequisitionPage = new ViewRequisitionPage(testWebDriver);
     viewRequisitionPage.verifyStatus(status);
   }
 
   @When("^I click RnR List$")
   public void clickRnRList() throws IOException, SQLException {
+    ViewRequisitionPage viewRequisitionPage = new ViewRequisitionPage(testWebDriver);
     viewRequisitionPage.clickRnRList();
   }
 
   @Then("^I verify total field$")
   public void verifyTotalField() throws IOException, SQLException {
+    ViewRequisitionPage viewRequisitionPage = new ViewRequisitionPage(testWebDriver);
     viewRequisitionPage.verifyTotalFieldPostAuthorize();
   }
 
   @Then("^I verify values on regimen page as patientsOnTreatment \"([^\"]*)\" patientsToInitiateTreatment \"([^\"]*)\" patientsStoppedTreatment \"([^\"]*)\" remarks \"([^\"]*)\"$")
-  public void verifyValuesONRegimenPage(String patientsOnTreatment, String patientsToInitiateTreatment, String patientsStoppedTreatment, String remarks)
-  {
-  verifyValuesOnRegimenScreen(initiateRnRPage, patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
+  public void verifyValuesONRegimenPage(String patientsOnTreatment, String patientsToInitiateTreatment, String patientsStoppedTreatment, String remarks) throws IOException {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    verifyValuesOnRegimenScreen(initiateRnRPage, patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Including-Regimen")
