@@ -2,7 +2,7 @@ Feature: Smoke Tests
 
   @smoke
   Scenario: User should be able to save and submit regimen data
-    Given I have the following data:
+    Given I have the following data for regimen:
       | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
     And I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
     And I have regimen template configured
@@ -25,7 +25,7 @@ Feature: Smoke Tests
 
   @smoke
   Scenario: User should view requisition and regimen after authorization
-    Given I have the following data:
+    Given I have the following data for regimen:
       | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
     And I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
     And I have regimen template configured
@@ -93,10 +93,10 @@ Feature: Smoke Tests
     And I click view load amount
 
   @smoke
-  Scenario: Should override ISA
+  Scenario: User should able to override ISA
     Given I have the following data for override ISA:
-      | user     | password | program   | product | productName | category | whoratio | dosesperyear | wastageFactor | bufferpercentage | minimumvalue | maximumvalue | adjustmentvalue |
-      | Admin123 | Admin123 | VACCINES  | P1      | antibiotic1 | C1       | 1        | 2            | 3             | 4                | null         | null         | 5               |
+      | user     |  program   | product | productName | category | whoratio | dosesperyear | wastageFactor | bufferpercentage | minimumvalue | maximumvalue | adjustmentvalue |
+      | Admin123 |  VACCINES  | P1      | antibiotic1 | C1       | 1        | 2            | 3             | 4                | null         | null         | 5               |
     And I am logged in as Admin
     And I access create facility page
     When I create facilities

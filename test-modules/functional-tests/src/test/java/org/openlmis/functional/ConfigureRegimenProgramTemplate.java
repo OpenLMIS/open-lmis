@@ -63,7 +63,6 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
         dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
         expectedProgramsString = dbWrapper.getAllActivePrograms();
     }
-
     @When("^I access regimen configuration page$")
     public void navigatesToRegimenConfigurationPage() throws Exception {
         HomePage homePage = new HomePage(testWebDriver);

@@ -66,12 +66,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
     return new Object[][]{};
   }
 
-    @Given("^I am logged in as Admin$")
-    public void adminLogin() throws Exception {
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        loginPage.loginAs("Admin123", "Admin123");
-    }
-
     @And("^I access create facility page$")
     public void nevigateCreateFacilityPage() throws Exception {
         HomePage homePage = new HomePage(testWebDriver);
@@ -156,18 +150,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
         templateConfigPage.configureTemplate();
 
         dbWrapper.insertSupplyLines("N1", program, facilityCodePrefix + date_time);
-    }
-
-    @And("^I logout$")
-    public void logout() throws Exception {
-        HomePage homePage = new HomePage(testWebDriver);
-        homePage.logout(baseUrlGlobal);
-    }
-
-    @And("^I am logged in as \"([^\"]*)\"$")
-    public void login(String username) throws Exception {
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        loginPage.loginAs(username, "Admin123");
     }
 
     @And("^I initiate and submit requisition$")

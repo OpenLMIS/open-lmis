@@ -57,8 +57,8 @@ public class InitiateRnR extends TestCaseHelper {
 
   }
 
-  @Given("^I have the following data:$")
-  public void theFollowingDataExist(DataTable data) throws Exception {
+  @Given("^I have the following data for regimen:$")
+  public void theFollowingDataExistForRegimen(DataTable data) throws Exception {
     List<String> dataString = data.flatten();
     program = dataString.get(0);
     userSIC = dataString.get(1);
@@ -80,14 +80,6 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateAndInitiateRnr(program);
   }
-    @Given("I have \"([^\"]*)\" user with \"([^\"]*)\" rights$")
-    public void setupUserWithRights(String user, String rights) throws IOException, SQLException {
-        String[] rightList=rights.split(",");
-        List<String> rightsList = new ArrayList<String>();
-        for(int i=0;i<rightList.length;i++)
-            rightsList.add(rightList[i]);
-        setupTestUserRoleRightsData("200", user, "openLmis", rightsList);
-    }
 
     @Given("I have \"([^\"]*)\" user with \"([^\"]*)\" rights and data to initiate requisition$")
     public void setupUserWithRightsAndInitiateRequisitionData(String user, String rights) throws IOException, SQLException {

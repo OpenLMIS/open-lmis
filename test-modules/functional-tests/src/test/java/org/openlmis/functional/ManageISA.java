@@ -43,7 +43,7 @@ public class ManageISA extends TestCaseHelper {
   private static String operatedBy = "MoH";
   private static String facilityCodePrefix = "FCcode";
   private static String facilityNamePrefix = "FCname";
-  public String user, password, program, product, productName, category, whoratio, dosesperyear, wastageFactor,
+  public String user, program, product, productName, category, whoratio, dosesperyear, wastageFactor,
     bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue, date_time;
 
   @BeforeMethod(groups = "functional2")
@@ -58,7 +58,6 @@ public class ManageISA extends TestCaseHelper {
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data) {
       user = map.get("user").toString();
-      password = map.get("password").toString();
       program = map.get("program").toString();
       product = map.get("product").toString();
       productName = map.get("productName").toString();
