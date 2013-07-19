@@ -50,7 +50,7 @@ public class ProductController extends BaseController {
         this.productService = productService;
     }
 
-
+/*
     // product for add/update
     @RequestMapping(value = "/products", method = RequestMethod.GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
@@ -69,6 +69,7 @@ public class ProductController extends BaseController {
         }
     }
 
+*/
     // supply line list for view
     @RequestMapping(value = "/productslist", method = RequestMethod.GET, headers = "Accept=application/json")
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
@@ -76,16 +77,19 @@ public class ProductController extends BaseController {
         return OpenLmisResponse.response(PRODUCTLIST, productService.getProductsList());
     }
 
-       // dosage units
+
+ /*
+    // dosage units
     @RequestMapping(value = "/dosageUnits", method = RequestMethod.GET, headers = "Accept=application/json")
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> getDosageUnits() {
         return OpenLmisResponse.response(DOSAGEUNITS, reportLookupService.getDosageUnits());
     }
 
+ */
     // mahmed - 07.11.2013  delete
     @RequestMapping(value = "/removeProduct/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLYLINE')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> delete(@PathVariable("id") Long id, HttpServletRequest request) {
         try{
             productService.deleteById(id);
@@ -100,7 +104,7 @@ public class ProductController extends BaseController {
 
     // mahmed - 07.11.2013  delete
     @RequestMapping(value = "/restoreProduct/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLYLINE')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> restore(@PathVariable("id") Long id, HttpServletRequest request) {
         try{
             productService.restoreById(id);
@@ -121,11 +125,9 @@ public class ProductController extends BaseController {
        // this is a querk until all fields have UI fields
 
         product.setDosesPerDispensingUnit(1);
-
         product.setModifiedBy(loggedInUserId(request));
         product.setCreatedBy(loggedInUserId(request));
         product.setCreatedDate(new Date());
-        //product.setDosesPerDispensingUnit(1);
         product.setModifiedDate(new Date());
         return saveProduct(product, true);
     }

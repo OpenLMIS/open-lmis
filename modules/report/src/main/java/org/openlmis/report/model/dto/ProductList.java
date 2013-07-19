@@ -3,6 +3,8 @@ package org.openlmis.report.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.ProductCategory;
 
 /**
  * e-lmis
@@ -30,5 +32,7 @@ public class ProductList {
     private Boolean tracer;
     private String  type;
     private Integer packroundingthreshold;
+    private String formcode;
+    private String dosageunitcode;
 
 }

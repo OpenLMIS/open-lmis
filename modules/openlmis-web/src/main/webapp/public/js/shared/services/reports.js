@@ -178,6 +178,10 @@ services.factory("ProductForms",function($resource)  {
     return   $resource('/reports/productForms.json', {}, {});
 });
 
+services.factory("DosageUnits",function($resource)  {
+    return   $resource('/reports/dosageUnits.json', {}, {});
+});
+
 services.factory("ProductGroups",function($resource)  {
     return   $resource('/reports/productGroups.json', {}, {});
 });
@@ -197,7 +201,3 @@ services.factory('RestoreProduct', function ($resource) {
     return $resource('/restoreProduct/:id.json', {}, {update:{method:'PUT'}});
 });
 
-// mahmed 07.13.2013
-services.factory('DosageUnits', function ($resource) {
-    return $resource('/dosageUnits.json', {});
-});

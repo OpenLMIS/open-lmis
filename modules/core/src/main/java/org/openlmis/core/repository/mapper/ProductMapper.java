@@ -111,17 +111,19 @@ public interface ProductMapper {
           "product_categories.name AS type,\n" +
           "products.strength,\n" +
           "products.dispensingunit AS dispensingUnit,\n" +
-          "product_forms.code,\n" +
           "dosage_units.code,\n" +
           "product_forms.code,\n" +
           "products.packSize,\n" +
           "products.packroundingthreshold AS packRoundingThreshold,\n" +
           "products.dosesperdispensingunit AS dosesPerDispensingUnit,\n" +
-          //"(CASE WHEN products.fullsupply = true THEN 'Yes' WHEN products.fullsupply = false THEN 'No' ELSE '' END) AS fullSupply,\n" +
-          //"(CASE WHEN products.active = true THEN 'Yes' WHEN products.active = false THEN 'No' ELSE '' END) AS active,\n" +
           "products.fullsupply AS fullSupply,\n" +
           "products.active AS active,\n" +
           "products.displayorder AS displayOrder,\n" +
+          "dosage_units.id AS dosageUnitId,\n" +
+          "dosage_units.code AS dosageUnitCode,\n" +
+          "product_categories.id AS categoryId,\n" +
+          "product_forms.id AS formId,\n" +
+          "product_forms.code AS formCode,\n" +
           "programs.id AS programId, \n" +
           "programs.name AS programName\n" +
           "FROM\n" +

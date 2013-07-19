@@ -116,6 +116,11 @@ public class ReportLookupController extends BaseController {
         return OpenLmisResponse.response("productForms", reportLookupService.getAllProductForm());
     }
 
+    @RequestMapping(value = "/dosageUnits", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getDosageUnits(HttpServletRequest request) {
+        return OpenLmisResponse.response("dosageUnits", reportLookupService.getDosageUnits());
+    }
+
     @RequestMapping(value = "/productGroups", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getAllProductGroups(HttpServletRequest request) {
         return OpenLmisResponse.response("productGroups", reportLookupService.getAllProductGroups());

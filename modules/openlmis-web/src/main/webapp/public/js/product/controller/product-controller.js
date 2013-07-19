@@ -12,6 +12,19 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
     $scope.editProduct = {};
     $scope.creationError = '';
     $scope.title='Products';
+    $scope.demoproducts = {};
+    $scope.$parent.editProductMode = false;
+    $scope.AddEditMode = '';
+
+    if (($scope.$parent.newProductMode) || ($scope.$parent.editProductMode)) {
+         $scope.AddEditMode = true;
+         $scope.title = ($scope.$parent.newProductMode) ? $scope.title='Add Product' : $scope.title='Edit Product';
+
+     } else
+    {
+        $scope.AddEditMode = false;
+        $scope.title='Products';
+    }
 
     // Programs list
     ReportPrograms.get(function (data) {
@@ -27,15 +40,18 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
 
         $scope.initialProducts = angular.copy(data.productList, $scope.initialProducts);
         $scope.products = $scope.productsList;
+
+        //alert(JSON.stringify($scope.products, null, 4));
         for(var productIndex in data.productList){
             var product = data.productList[productIndex];
             $scope.productsBackupMap[product.id] =  $scope.getBackupProduct(product);
         }
 
-        //alert(JSON.stringify($scope.products, null, 4));
+    //alert(JSON.stringify($scope.products, null, 4));
     }, function (data) {
-        $location.path($scope.$parent.sourceUrl);
-    });
+          $location.path($scope.$parent.sourceUrl);
+
+     });
 
 
 
@@ -190,7 +206,7 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
         }
         $scope.showErrorForCreate = false;
 
-        CreateProduct.post( $scope.product, function (data) {
+        CreateProduct.save( $scope.product, function (data) {
             //alert(JSON.stringify( $scope.newProduct, null, 4));
             $scope.products.unshift(data.product);
             $scope.completeAddNewProduct(data.product);
@@ -210,10 +226,11 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
 
 //  switch to new mode
     $scope.startAddNewProduct = function () {
+        if ($scope.AddEditMode) return false;
         $scope.title='Add product';
+        $scope.AddEditMode = true;
         $scope.$parent.newProductMode = true;
         $scope.$parent.formActive = "product-form-active";
-
     };
 
     //  backup record
@@ -245,11 +262,14 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
   // drop down lists
     DosageUnits.get(function (data) {
         $scope.dosageUnits = data.dosageUnits;
+
     });
 
 
     ProductForms.get(function (data) {
         $scope.productForms = data.productForms;
+        //alert(JSON.stringify( $scope.productCategories, null, 4));
+
     });
 
     $scope.YesNo = function (tf) {
@@ -264,18 +284,43 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
     };
 
 
-
       $scope.startProductEdit = function (productUnderEdit) {
+          $scope.$parent.editProductMode = true;
+          //$scope.$parent.editProductMode = false;
+          $scope.AddEditMode = true;
+          $scope.editProduct = productUnderEdit;
+          $scope.productsBackupMap[productUnderEdit.id].editFormActive = "product-form-active";
+          $('html, body').animate({ scrollTop: 0 }, 'fast');
+        };
 
-         $scope.productsBackupMap[productUnderEdit.id].editFormActive = "product-form-active";
-         //$scope.product = productUnderEdit;
-          alert(JSON.stringify($scope.productsBackupMap[productUnderEdit.id], null, 4));
-    };
+
+    $scope.cancelProductEdit = function (productUnderEdit) {
+        var backupProductRow = $scope.productsBackupMap[productUnderEdit.id];
+
+        productUnderEdit.active = 	        backupProductRow.active;
+        productUnderEdit.code =		        backupProductRow.code;
+        productUnderEdit.dispensingUnit =	backupProductRow.dispensingUnit;
+        productUnderEdit.fullName =	        backupProductRow.fullName;
+        productUnderEdit.fullSupply =	    backupProductRow.fullSupply;
+        productUnderEdit.programId =	    backupProductRow.programId;
+        productUnderEdit.programName =	    backupProductRow.programName;
+        productUnderEdit.strength =	        backupProductRow.strength;
+        productUnderEdit.type =		        backupProductRow.type;
+        productUnderEdit.packSize =		    backupProductRow.packSize;
+
+        $scope.productsBackupMap[productUnderEdit.id].error = '';
+        $scope.productsBackupMap[productUnderEdit.id].editFormActive = '';
+
+        $scope.$parent.editProductMode = false;
+        $scope.AddEditMode = false;
+
+        $('html, body').animate({ scrollTop: 0 }, 'fast');
+
+     };
 
 
 
-
-    /*
+      /*
      // all supply lines   for list
      ProductList.get({}, function (data) {
      $scope.productslist = data.productList;
