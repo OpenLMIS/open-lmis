@@ -15,6 +15,7 @@ import static org.junit.Assert.assertThat;
 public class FacilityFeedDTOTest {
 
   @Test
+  //TODO write separate test for boolean fields
   public void shouldFillDTOFromGivenFacility() throws Exception {
 
     Facility facility = make(a(FacilityBuilder.defaultFacility));
@@ -39,19 +40,19 @@ public class FacilityFeedDTOTest {
     assertThat(facilityFeedDTO.getOperatedBy(), is(facility.getOperatedBy().getText()));
     assertThat(facilityFeedDTO.getColdStorageGrossCapacity(), is(facility.getColdStorageGrossCapacity()));
     assertThat(facilityFeedDTO.getColdStorageNetCapacity(), is(facility.getColdStorageNetCapacity()));
-    assertThat(facilityFeedDTO.isSuppliesOthers(), is((facility.getSuppliesOthers() != null)?facility.getSuppliesOthers():false));
+    assertThat(facilityFeedDTO.isSuppliesOthers(), is((facility.getSuppliesOthers() != null) ? facility.getSuppliesOthers() : false));
     assertThat(facilityFeedDTO.isSDP(), is(facility.getSdp()));
-    assertThat(facilityFeedDTO.isHasElectricity(), is((facility.getHasElectricity() != null)?facility.getHasElectricity():false));
-    assertThat(facilityFeedDTO.isOnline(), is((facility.getOnline() != null)?facility.getOnline():false));
-    assertThat(facilityFeedDTO.isHasElectronicSCC(), is((facility.getHasElectronicScc() != null)?facility.getHasElectronicScc():false));
-    assertThat(facilityFeedDTO.isHasElectronicDAR(), is((facility.getHasElectronicDar() != null)?facility.getHasElectronicDar():false));
+    assertThat(facilityFeedDTO.isHasElectricity(), is((facility.getHasElectricity() != null) ? facility.getHasElectricity() : false));
+    assertThat(facilityFeedDTO.isOnline(), is((facility.getOnline() != null) ? facility.getOnline() : false));
+    assertThat(facilityFeedDTO.isHasElectronicSCC(), is((facility.getHasElectronicScc() != null) ? facility.getHasElectronicScc() : false));
+    assertThat(facilityFeedDTO.isHasElectronicDAR(), is((facility.getHasElectronicDar() != null) ? facility.getHasElectronicDar() : false));
     assertThat(facilityFeedDTO.isActive(), is(facility.getActive()));
     assertThat(facilityFeedDTO.getGoLiveDate(), is(facility.getGoLiveDate()));
     assertThat(facilityFeedDTO.getGoDownDate(), is(facility.getGoDownDate()));
-    assertThat(facilityFeedDTO.isSatelliteFacility(), is((facility.getSatellite() != null)?facility.getSatellite():false));
+    assertThat(facilityFeedDTO.isSatelliteFacility(), is((facility.getSatellite() != null) ? facility.getSatellite() : false));
     assertThat(facilityFeedDTO.getSatelliteParentID(), is(facility.getSatelliteParentId()));
     assertThat(facilityFeedDTO.getComments(), is(facility.getComment()));
-    assertThat(facilityFeedDTO.isDoNotDisplay(), is(false));
+    assertThat(facilityFeedDTO.isDoNotDisplay(), is(true));
     assertThat(facilityFeedDTO.getModifiedDate(), is(facility.getModifiedDate()));
   }
 }
