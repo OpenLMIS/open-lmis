@@ -35,6 +35,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     else {
       $scope.fullScreen ? angular.element('.toggleFullScreen').hide() : angular.element('.toggleFullScreen').show();
     }
+    $scope.fullScreen ? angular.element('.print-button').css('opacity','1.0') : angular.element('.print-button').css('opacity','0');
   });
 
   $scope.fillPagedGridData = function () {
