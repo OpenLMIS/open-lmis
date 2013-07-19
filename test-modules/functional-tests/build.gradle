@@ -58,16 +58,15 @@ task smokeTest(type: Test) {
     dependsOn assemble, compileTestJava
 
     doLast {
-        systemProperties['browser'] = 'firefox'
-        systemProperties['dburl'] = "$dburl"
-        systemProperties['baseurl'] = "$baseurl"
 
         htmlformat = "html:${buildDir}/reports/tests/bddTest-report-functional"
         jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
         javaexec {
+            System.properties.get('browser', 'firefox')
+            systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f',htmlformat, '-f',jsonformat,'--glue', 'org.openlmis.functional','--tags','@smoke', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smoke', 'src/test/resources']
         }
     }
 }
@@ -80,16 +79,14 @@ task smokeTestChrome(type: Test) {
     dependsOn assemble, compileTestJava
 
     doLast {
-        systemProperties['browser'] = 'chrome'
-        systemProperties['dburl'] = "$dburl"
-        systemProperties['baseurl'] = "$baseurl"
-
         htmlformat = "html:${buildDir}/reports/tests/bddTest-report-functional"
         jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
         javaexec {
+            System.properties.get('browser', 'chrome')
+            systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f',htmlformat, '-f',jsonformat,'--glue', 'org.openlmis.functional','--tags','@smoke', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smoke', 'src/test/resources']
         }
     }
 }

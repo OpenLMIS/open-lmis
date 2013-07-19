@@ -35,10 +35,9 @@ public class DriverFactory {
   public WebDriver loadDriver(String browser) throws InterruptedException {
     Separator = getProperty("file.separator");
     File parentDir = new File(getProperty("user.dir")).getParentFile();
-    OUTPUT_FOLDER = parentDir.getParent() + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
+    OUTPUT_FOLDER = parentDir.getPath() + Separator+"open-lmis"+ Separator + "test-modules" + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     INPUT_ZIP_FILE_IEDRIVER = OUTPUT_FOLDER + "IEDriverServer_Win32_2.33.0.zip";
     INPUT_ZIP_FILE_CHROMEDRIVER = OUTPUT_FOLDER + "chromedriver.zip";
-
 
     return loadDriver(true, browser);
   }

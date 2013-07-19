@@ -38,7 +38,6 @@ public class TestCaseHelper {
     baseUrlGlobal = getProperty("baseurl", DEFAULT_BASE_URL);
     dburlGlobal = getProperty("dburl", DEFAULT_DB_URL);
 
-
     dbWrapper = new DBWrapper(baseUrlGlobal, dburlGlobal);
     dbWrapper.deleteData();
 
@@ -79,6 +78,7 @@ public class TestCaseHelper {
 
 
   protected void loadDriver(String browser) throws InterruptedException {
+
     testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
   }
 
