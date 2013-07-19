@@ -1,13 +1,18 @@
 package org.openlmis.core.service;
 
+import org.apache.log4j.Logger;
+import org.ict4h.atomfeed.server.service.EventService;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.dto.ProgramSupportedEventDTO;
+import org.openlmis.core.event.ProgramSupportedEvent;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 @Service
@@ -23,7 +28,14 @@ public class ProgramSupportedService {
   FacilityService facilityService;
 
   @Autowired
+  EventService eventService;
+
+
+  @Autowired
   FacilityProgramProductService facilityProgramProductService;
+
+  Logger logger = Logger.getLogger(ProgramSupportedService.class);
+
 
   public List<ProgramSupported> getAllByFacilityId(Long facilityId) {
     return repository.getAllByFacilityId(facilityId);
@@ -35,6 +47,7 @@ public class ProgramSupportedService {
 
   public void updateSupportedPrograms(Facility facility) {
     repository.updateSupportedPrograms(facility);
+    notifyProgramSupportedUpdated(facility);
   }
 
   public ProgramSupported getFilledByFacilityIdAndProgramId(Long facilityId, Long programId) {
@@ -92,5 +105,15 @@ public class ProgramSupportedService {
     if (facility == null)
       throw new DataException("error.facility.code.invalid");
     return facility;
+  }
+
+  public void notifyProgramSupportedUpdated(Facility facility) {
+    try {
+      ProgramSupportedEventDTO programSupportedEventDTO = new ProgramSupportedEventDTO(
+        facility.getCode(), facility.getSupportedPrograms());
+      eventService.notify(new ProgramSupportedEvent(programSupportedEventDTO));
+    } catch (URISyntaxException e) {
+      logger.error("Failed to generate program supported event feed", e);
+    }
   }
 }
