@@ -15,16 +15,16 @@ import java.util.List;
 
 public class DummyRecordHandler implements RecordHandler<DummyImportable> {
 
-    @Getter
-    private List<Importable> importedObjects = new ArrayList<Importable>();
-
-    @Override
-    public void execute(DummyImportable importable, int rowNumber, AuditFields auditFields) {
-        this.importedObjects.add(importable);
-    }
+  @Getter
+  private List<Importable> importedObjects = new ArrayList<Importable>();
 
   @Override
-  public void postProcess() {
+  public void execute(DummyImportable importable, int rowNumber, AuditFields auditFields) {
+    this.importedObjects.add(importable);
+  }
+
+  @Override
+  public void postProcess(AuditFields auditFields) {
     //To change body of implemented methods use File | Settings | File Templates.
   }
 }

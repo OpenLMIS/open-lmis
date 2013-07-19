@@ -60,9 +60,9 @@ public class CSVParserTest {
   @Test
   public void shouldTrimSpacesFromParsedRecords() throws Exception {
     String csvInput =
-        "mandatory string field   , mandatoryIntField\n" +
-            " Random1               , 23\n" +
-            " Random2                , 25\n";
+      "mandatory string field   , mandatoryIntField\n" +
+        " Random1               , 23\n" +
+        " Random2                , 25\n";
 
     InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
@@ -80,10 +80,10 @@ public class CSVParserTest {
   @Test
   public void shouldUseHeadersFromCSVToReportMissingMandatoryData() throws Exception {
     String csvInput =
-        "Mandatory String Field,mandatoryIntField\n" +
-            "RandomString1,2533\n" +
-            ",234\n" +
-            "RandomString3,2566\n";
+      "Mandatory String Field,mandatoryIntField\n" +
+        "RandomString1,2533\n" +
+        ",234\n" +
+        "RandomString3,2566\n";
 
     InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
@@ -96,9 +96,9 @@ public class CSVParserTest {
   @Test
   public void shouldUseHeadersFromCSVToReportIncorrectDataTypeError() throws Exception {
     String csvInput =
-        "mandatory string field, mandatoryIntField, OPTIONAL INT FIELD\n" +
-            "RandomString1, 2533, \n" +
-            "RandomString2, 123, random\n";
+      "mandatory string field, mandatoryIntField, OPTIONAL INT FIELD\n" +
+        "RandomString1, 2533, \n" +
+        "RandomString2, 123, random\n";
 
     InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
@@ -110,13 +110,13 @@ public class CSVParserTest {
   @Test
   public void shouldReportMissingHeaders() throws IOException {
     String csvInput =
-        "mandatory string field,\n" +
-            "RandomString1,2533\n" +
-            "RandomString2,abc123\n";
+      "mandatory string field,\n" +
+        "RandomString1,2533\n" +
+        "RandomString2,abc123\n";
 
     InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
-    expectedEx.expect(uploadExceptionMatcher("error.upload.header.missing","2"));
+    expectedEx.expect(uploadExceptionMatcher("error.upload.header.missing", "2"));
 
     csvParser.process(inputStream, dummyImportableClass, recordHandler, auditFields);
   }
@@ -124,8 +124,8 @@ public class CSVParserTest {
   @Test
   public void shouldReportFewerOrMoreColumnData() throws IOException {
     String csvInput =
-        "Mandatory String Field,mandatoryIntField,optionalStringField,OPTIONAL INT FIELD\n" +
-            "a,1,,,\n";
+      "Mandatory String Field,mandatoryIntField,optionalStringField,OPTIONAL INT FIELD\n" +
+        "a,1,,,\n";
 
     InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
@@ -138,8 +138,8 @@ public class CSVParserTest {
   @Test
   public void shouldThrowErrorIfDateFormatIncorrect() throws IOException {
     String csvInput = "mandatory string field   , mandatoryIntField, OPTIONAL DATE FIELD\n" +
-        " Random1               , 23, 99/99/99\n" +
-        " Random2                , 25, 19/12/2012\n";
+      " Random1               , 23, 99/99/99\n" +
+      " Random2                , 25, 19/12/2012\n";
 
     InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
@@ -151,8 +151,8 @@ public class CSVParserTest {
   @Test
   public void shouldUseUserSpecifiedFieldMapping() throws IOException {
     String csvInput = "mandatory string field   , mandatoryIntField, OPTIONAL NESTED FIELD, OPTIONAL DATE FIELD\n" +
-        " Random1               , 23, code1, 19/1/1990\n" +
-        " Random2                , 25, code2,\n";
+      " Random1               , 23, code1, 19/1/1990\n" +
+      " Random2                , 25, code2,\n";
 
     InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
@@ -165,8 +165,8 @@ public class CSVParserTest {
   @Test
   public void shouldSetMultipleNestedValues() throws IOException {
     String csvInput = "mandatory string field   , mandatoryIntField, entity 1 code, entity 2 code\n" +
-        " Random1               , 23, code1-1, code1-2\n" +
-        " Random2                , 25, code2-1, code2-2\n";
+      " Random1               , 23, code1-1, code1-2\n" +
+      " Random2                , 25, code2-1, code2-2\n";
 
     InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
@@ -180,8 +180,8 @@ public class CSVParserTest {
   @Test
   public void shouldPostProcessRecordsAfterSuccessfulUpload() throws UnsupportedEncodingException {
     String csvInput = "mandatory string field   , mandatoryIntField, entity 1 code, entity 2 code\n" +
-        " Random1               , 23, code1-1, code1-2\n" +
-        " Random2                , 25, code2-1, code2-2\n";
+      " Random1               , 23, code1-1, code1-2\n" +
+      " Random2                , 25, code2-1, code2-2\n";
 
     InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
@@ -191,7 +191,7 @@ public class CSVParserTest {
     DummyImportable dummyImportable = (DummyImportable) spyRecordHandler.getImportedObjects().get(0);
     assertThat(dummyImportable.getMultipleNestedFields().getEntityCode1(), is("code1-1"));
     assertThat(dummyImportable.getMultipleNestedFields().getEntityCode2(), is("code1-2"));
-    verify(spyRecordHandler).postProcess();
+    verify(spyRecordHandler).postProcess(auditFields);
   }
 
 }

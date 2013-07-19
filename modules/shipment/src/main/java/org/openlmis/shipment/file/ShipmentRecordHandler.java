@@ -52,7 +52,7 @@ public class ShipmentRecordHandler implements RecordHandler {
   }
 
   @Override
-  public void postProcess() {
+  public void postProcess(AuditFields auditFields) {
     //File processed successfully.
   }
 }
