@@ -61,9 +61,9 @@ public class OrderSummaryQueryBuilder {
         if (zone != null &&  !zone.equals("undefined") && !zone.isEmpty() && !zone.equals("0")  && !zone.equals("-1")) {
             WHERE("facilities.geographiczoneid = "+zone);
         }
-        if (product != null &&  !product.equals("undefined") && !product.isEmpty() && !product.equals("0") &&  !product.equals("-1")) {
+       // if (product != null &&  !product.equals("undefined") && !product.isEmpty() && !product.equals("0") &&  !product.equals("-1")) {
             WHERE("products.id ="+ product);
-        }
+       // }
 
         if (facilityTypeId != null &&  !facilityTypeId.equals("undefined") && !facilityTypeId.isEmpty() && !facilityTypeId.equals("0") &&  !facilityTypeId.equals("-1")) {
             WHERE("facility_types.id = "+ facilityTypeId);
