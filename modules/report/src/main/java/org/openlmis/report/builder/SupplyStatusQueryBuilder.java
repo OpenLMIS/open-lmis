@@ -49,13 +49,12 @@ public class SupplyStatusQueryBuilder {
         String rgroup =     params.get("rgroupId") == null ? null : ((String[])params.get("rgroupId"))[0];
         String schedule = params.get("scheduleId") == null ? null : ((String[])params.get("scheduleId"))[0];
 
-        if (period != null &&  !period.equals("undefined") && !period.isEmpty() && !period.equals("0")  && !period.equals("-1")){
-            predicate += " and r.periodid = "+ period;
-        }
-        if (program != null &&  !program.equals("undefined") && !program.isEmpty() && !program.equals("0")  && !program.equals("-1")) {
+        predicate += " and processing_periods.id = "+ period;
 
-            predicate += " and r.programid = "+ program;
-        }
+        predicate += " and programs.id = "+ program;
+
+        predicate += " and processing_schedules.id = "+ schedule;
+
         if (zone != null &&  !zone.equals("undefined") && !zone.isEmpty() && !zone.equals("0")  && !zone.equals("-1")) {
 
             predicate += " and facilities.geographiczoneid = "+ zone;
@@ -64,10 +63,7 @@ public class SupplyStatusQueryBuilder {
 
             predicate += " and program_products.productid = "+ product;
         }
-        if (schedule != null &&  !schedule.equals("undefined") && !schedule.isEmpty() && !schedule.equals("0") &&  !schedule.equals("-1")) {
 
-            predicate += " and processing_schedules.id = "+ schedule;
-        }
         if (rgroup != null &&  !rgroup.equals("undefined") && !rgroup.isEmpty() && !rgroup.equals("0") &&  !rgroup.equals("-1")) {
 
             predicate += " and requisition_groups.id = "+ rgroup;
