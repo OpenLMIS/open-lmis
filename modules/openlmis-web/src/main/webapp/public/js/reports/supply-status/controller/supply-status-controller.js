@@ -98,6 +98,7 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
             $scope.filterObject.facilityTypeId =  0;
         }
         $scope.filterGrid();
+
     });
 
     $scope.$watch('facilityNameFilter', function(selection){
