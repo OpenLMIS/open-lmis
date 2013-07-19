@@ -10,10 +10,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
-import org.openlmis.rnr.domain.Comment;
-import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
-import org.openlmis.rnr.domain.ProgramRnrTemplate;
-import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.search.factory.RequisitionSearchStrategyFactory;
@@ -91,7 +88,7 @@ public class RequisitionService {
 
     RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(programId);
 
-    if (rnrTemplate.getRnrColumns().size() == 0)
+    if (rnrTemplate.getColumns().size() == 0)
       throw new DataException("error.rnr.template.not.defined");
 
     validateIfRnrCanBeInitiatedFor(facilityId, programId, periodId);

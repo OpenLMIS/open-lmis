@@ -2,10 +2,11 @@ package org.openlmis.rnr.service;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.RegimenColumn;
-import org.openlmis.core.domain.RegimenTemplate;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProgramService;
+import org.openlmis.rnr.domain.Column;
+import org.openlmis.rnr.domain.RegimenColumn;
+import org.openlmis.rnr.domain.RegimenTemplate;
 import org.openlmis.rnr.repository.RegimenColumnRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class RegimenColumnService {
   }
 
   public RegimenTemplate getRegimenTemplateOrMasterTemplate(Long programId) {
-    List<RegimenColumn> regimenColumns = repository.getRegimenColumnsByProgramId(programId);
+    List<? extends Column> regimenColumns = repository.getRegimenColumnsByProgramId(programId);
     if (regimenColumns == null || regimenColumns.size() == 0) {
       regimenColumns = repository.getMasterRegimenColumnsByProgramId();
     }

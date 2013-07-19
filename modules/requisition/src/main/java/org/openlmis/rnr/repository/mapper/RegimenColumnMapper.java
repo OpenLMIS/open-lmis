@@ -1,4 +1,3 @@
-
 /*
  * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
@@ -11,7 +10,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.openlmis.core.domain.RegimenColumn;
+import org.openlmis.rnr.domain.RegimenColumn;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

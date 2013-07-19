@@ -2,10 +2,10 @@ package org.openlmis.web.controller;
 
 import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
-import org.openlmis.core.domain.RegimenTemplate;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RegimenService;
+import org.openlmis.rnr.domain.RegimenTemplate;
 import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.web.form.RegimenFormDTO;
 import org.openlmis.web.response.OpenLmisResponse;

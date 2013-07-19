@@ -1,8 +1,8 @@
-package org.openlmis.core.domain;
+package org.openlmis.rnr.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
@@ -11,17 +11,17 @@ import java.util.List;
 import static org.apache.commons.collections.CollectionUtils.find;
 
 @Data
-@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
-public class RegimenTemplate {
+public class RegimenTemplate extends Template {
 
-  Long programId;
-
-  List<RegimenColumn> regimenColumns;
+  public RegimenTemplate(Long programId, List<? extends Column> listOfColumns) {
+    super(programId, listOfColumns);
+  }
 
   public boolean isRegimenColumnVisible(final String columnName) {
 
-    Object column = find(this.regimenColumns, new Predicate() {
+    Object column = find(this.columns, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
         RegimenColumn column = (RegimenColumn) o;
@@ -32,14 +32,15 @@ public class RegimenTemplate {
     return ((RegimenColumn) column).getVisible();
   }
 
-  public List<? extends Column> filterPrintableColumns() {
-    List<RegimenColumn> printableRegimenColumns = new ArrayList<>();
+  public List<? extends Column> getPrintableColumns(boolean fullsupply) {
+    List<Column> printableRegimenColumns = new ArrayList<>();
 
-    for (RegimenColumn regimenColumn : regimenColumns) {
+    for (Column regimenColumn : columns) {
       if (regimenColumn.getVisible()) {
         printableRegimenColumns.add(regimenColumn);
       }
     }
     return printableRegimenColumns;
   }
+
 }

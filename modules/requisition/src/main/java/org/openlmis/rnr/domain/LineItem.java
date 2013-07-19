@@ -4,24 +4,22 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.core.domain;
+package org.openlmis.rnr.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.domain.BaseModel;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
 @NoArgsConstructor
-public abstract class Column extends BaseModel {
+@JsonSerialize(include = NON_EMPTY)
+@EqualsAndHashCode(callSuper = false)
+public class LineItem extends BaseModel {
 
-  protected String name;
-  protected String label;
-  protected Boolean visible;
+  protected Long rnrId;
 
-  @JsonIgnore
-  public abstract Integer getColumnWidth();
 }

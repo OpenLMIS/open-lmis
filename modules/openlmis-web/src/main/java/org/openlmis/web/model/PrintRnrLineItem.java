@@ -8,9 +8,9 @@ package org.openlmis.web.model;
 
 import lombok.Data;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.rnr.domain.Column;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
-import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class PrintRnrLineItem {
   }
 
 
-  public void calculate(ProcessingPeriod period, List<RnrColumn> rnrColumns, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+  public void calculate(ProcessingPeriod period, List<? extends Column> rnrColumns, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
     if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
     if (template.columnsCalculated(QUANTITY_DISPENSED)) rnrLineItem.calculateQuantityDispensed();

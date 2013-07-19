@@ -12,9 +12,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.RegimenColumn;
-import org.openlmis.core.domain.RegimenTemplate;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.rnr.domain.RegimenColumn;
+import org.openlmis.rnr.domain.RegimenTemplate;
 import org.openlmis.rnr.repository.mapper.RegimenColumnMapper;
 
 import java.util.ArrayList;

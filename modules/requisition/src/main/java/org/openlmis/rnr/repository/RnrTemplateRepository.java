@@ -7,6 +7,7 @@
 package org.openlmis.rnr.repository;
 
 import org.openlmis.core.domain.Program;
+import org.openlmis.rnr.domain.Column;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper;
@@ -30,17 +31,17 @@ public class RnrTemplateRepository {
   }
 
   private void insertAllProgramRnRColumns(ProgramRnrTemplate programRnrTemplate) {
-    for (RnrColumn rnrColumn : programRnrTemplate.getRnrColumns()) {
+    for (Column rnrColumn : programRnrTemplate.getColumns()) {
       rnrColumn.setCreatedBy(programRnrTemplate.getModifiedBy());
       rnrColumn.setModifiedBy(programRnrTemplate.getModifiedBy());
-      programRnrColumnMapper.insert(programRnrTemplate.getProgramId(), rnrColumn);
+      programRnrColumnMapper.insert(programRnrTemplate.getProgramId(), (RnrColumn) rnrColumn);
     }
   }
 
   private void updateAllProgramRnRColumns(ProgramRnrTemplate programRnrTemplate) {
-    for (RnrColumn rnrColumn : programRnrTemplate.getRnrColumns()) {
+    for (Column rnrColumn : programRnrTemplate.getColumns()) {
       rnrColumn.setModifiedBy(programRnrTemplate.getModifiedBy());
-      programRnrColumnMapper.update(programRnrTemplate.getProgramId(), rnrColumn);
+      programRnrColumnMapper.update(programRnrTemplate.getProgramId(), (RnrColumn) rnrColumn);
     }
   }
 

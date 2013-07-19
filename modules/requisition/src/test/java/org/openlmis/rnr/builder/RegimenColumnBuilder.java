@@ -9,7 +9,7 @@ package org.openlmis.rnr.builder;
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
-import org.openlmis.core.domain.RegimenColumn;
+import org.openlmis.rnr.domain.RegimenColumn;
 
 import static com.natpryce.makeiteasy.Property.newProperty;
 

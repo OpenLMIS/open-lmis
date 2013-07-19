@@ -9,7 +9,6 @@ package org.openlmis.rnr.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Column;
 
 @Data
 @NoArgsConstructor

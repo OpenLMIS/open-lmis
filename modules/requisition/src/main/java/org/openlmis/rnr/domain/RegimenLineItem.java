@@ -4,10 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.RegimenCategory;
-import org.openlmis.core.domain.RegimenColumn;
-import org.openlmis.core.domain.RegimenTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +16,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_NULL)
-public class RegimenLineItem extends BaseModel {
+public class RegimenLineItem extends LineItem {
 
   public static final String ON_TREATMENT = "patientsOnTreatment";
   public static final String INITIATED_TREATMENT = "patientsToInitiateTreatment";
@@ -27,7 +24,6 @@ public class RegimenLineItem extends BaseModel {
   public static final String TYPE_NUMERIC = "regimen.reporting.dataType.numeric";
   public static final String REMARKS = "remarks";
 
-  private Long rnrId;
   private String code;
   private String name;
   private Integer patientsOnTreatment;
@@ -61,7 +57,7 @@ public class RegimenLineItem extends BaseModel {
   }
 
   public void copyCreatorEditableFieldsForRegimen(RegimenLineItem regimenLineItem, RegimenTemplate regimenTemplate) {
-    for (RegimenColumn regimenColumn : regimenTemplate.getRegimenColumns()) {
+    for (Column regimenColumn : regimenTemplate.getColumns()) {
       String fieldName = regimenColumn.getName();
       if (regimenColumn.getVisible())
         copyColumnData(fieldName, regimenLineItem);

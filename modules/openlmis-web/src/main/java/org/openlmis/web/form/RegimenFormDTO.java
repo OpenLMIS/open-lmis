@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Regimen;
-import org.openlmis.core.domain.RegimenTemplate;
+import org.openlmis.rnr.domain.RegimenTemplate;
 
 import java.util.List;
 

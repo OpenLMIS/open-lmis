@@ -231,7 +231,7 @@ public class Rnr extends BaseModel {
     for (RnrLineItem lineItem : this.fullSupplyLineItems) {
       lineItem.setLineItemFieldsAccordingToTemplate(template);
     }
-    if (regimenTemplate.getRegimenColumns().isEmpty()) return;
+    if (regimenTemplate.getColumns().isEmpty()) return;
     for (RegimenLineItem regimenLineItem : this.regimenLineItems) {
       regimenLineItem.setRegimenFieldsAccordingToTemplate(regimenTemplate);
     }

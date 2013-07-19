@@ -12,7 +12,9 @@ import com.itextpdf.text.pdf.PdfPTable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang.ArrayUtils;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.Money;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.web.controller.RequisitionController;
 import org.openlmis.web.model.PrintRnrLineItem;
@@ -35,8 +37,8 @@ public class RequisitionPdfModel {
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
   public static final int TABLE_SPACING = 25;
 
-  private List<RnrColumn> rnrColumnList;
-  private List<RegimenColumn> regimenColumnList;
+  private List<? extends Column> rnrColumnList;
+  private List<? extends Column> regimenColumnList;
   private Rnr requisition;
   private String currency;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
@@ -254,8 +256,8 @@ public class RequisitionPdfModel {
     if (regimenLineItems.size() == 0) return null;
 
     RegimenTemplate template = new RegimenTemplate();
-    template.setRegimenColumns(regimenColumnList);
-    List<? extends Column> visibleColumns = template.filterPrintableColumns();
+    template.setColumns(regimenColumnList);
+    List<? extends Column> visibleColumns = template.getPrintableColumns(true);
 
     PdfPTable table = prepareTable(visibleColumns);
 

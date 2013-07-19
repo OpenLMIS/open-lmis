@@ -17,7 +17,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 
-public class ProgramRnrTemplate {
+public class ProgramRnrTemplate extends Template {
 
   public static final String STOCK_IN_HAND = "stockInHand";
   public static final String REMARKS = "remarks";
@@ -53,28 +53,22 @@ public class ProgramRnrTemplate {
   private Map<String, OpenLmisMessage> errorMap = new HashMap<>();
 
   @Getter
-  private Long programId;
-
-  @Getter
-  private List<RnrColumn> rnrColumns;
-
-  @Getter
   @Setter
   private Long modifiedBy;
 
-  public ProgramRnrTemplate(Long programId, List<RnrColumn> rnrColumns) {
+  public ProgramRnrTemplate(Long programId, List<? extends Column> rnrColumns) {
     this.programId = programId;
-    this.rnrColumns = rnrColumns;
+    this.columns = rnrColumns;
 
-    for (RnrColumn rnrColumn : rnrColumns) {
-      rnrColumnsMap.put(rnrColumn.getName(), rnrColumn);
+    for (Column rnrColumn : rnrColumns) {
+      rnrColumnsMap.put(rnrColumn.getName(), (RnrColumn) rnrColumn);
     }
   }
 
-  public ProgramRnrTemplate(List<RnrColumn> programRnrColumns) {
-    this.rnrColumns = programRnrColumns;
-    for (RnrColumn rnrColumn : rnrColumns) {
-      rnrColumnsMap.put(rnrColumn.getName(), rnrColumn);
+  public ProgramRnrTemplate(List<? extends Column> programRnrColumns) {
+    this.columns = programRnrColumns;
+    for (Column rnrColumn : columns) {
+      rnrColumnsMap.put(rnrColumn.getName(), (RnrColumn) rnrColumn);
     }
   }
 
@@ -167,15 +161,15 @@ public class ProgramRnrTemplate {
     }
   }
 
-  public List<RnrColumn> getPrintableColumns(boolean fullSupply) {
+  public List<? extends Column> getPrintableColumns(boolean fullSupply) {
     List<RnrColumn> printableRnrColumns = new ArrayList<>();
 
-    for (RnrColumn rnrColumn : rnrColumns) {
+    for (Column rnrColumn : columns) {
       if (rnrColumn.getVisible()) {
         if (fullSupply && !nonPrintableFullSupplyColumnNames.contains(rnrColumn.getName())) {
-          printableRnrColumns.add(rnrColumn);
+          printableRnrColumns.add((RnrColumn) rnrColumn);
         } else if (!fullSupply && printableNonFullSupplyColumnNames.contains(rnrColumn.getName())) {
-          printableRnrColumns.add(rnrColumn);
+          printableRnrColumns.add((RnrColumn) rnrColumn);
         }
       }
     }
