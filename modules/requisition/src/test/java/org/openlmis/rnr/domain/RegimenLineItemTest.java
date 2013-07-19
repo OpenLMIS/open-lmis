@@ -11,16 +11,15 @@ import org.junit.experimental.categories.Category;
 import org.openlmis.core.domain.RegimenColumn;
 import org.openlmis.core.domain.RegimenTemplate;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.rnr.builder.RegimenColumnBuilder;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.rnr.builder.RegimenColumnBuilder.*;
+import static org.openlmis.rnr.builder.RegimenColumnBuilder.defaultRegimenColumn;
 import static org.openlmis.rnr.builder.RegimenLineItemBuilder.*;
 
 @Category(UnitTests.class)
@@ -32,10 +31,10 @@ public class RegimenLineItemTest {
     final RegimenLineItem savedRegimenLineItem = make(a(defaultRegimenLineItem));
     final RegimenLineItem regimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10),
       with(patientsStoppedTreatment, 10), with(patientsToInitiateTreatment, 20)));
-    final RegimenColumn patientsOnTreatment = make(a(defaultRegimenColumn, with(name, "patientsOnTreatment")));
-    final RegimenColumn patientsStoppedTreatment = make(a(defaultRegimenColumn, with(name, "patientsStoppedTreatment")));
-    RegimenColumn patientsToInitiateTreatment = make(a(defaultRegimenColumn, with(name, "patientsToInitiateTreatment")));
-    RegimenColumn remarks = make(a(defaultRegimenColumn, with(name, "remarks")));
+    final RegimenColumn patientsOnTreatment = make(a(defaultRegimenColumn, with(RegimenColumnBuilder.name, "patientsOnTreatment")));
+    final RegimenColumn patientsStoppedTreatment = make(a(defaultRegimenColumn, with(RegimenColumnBuilder.name, "patientsStoppedTreatment")));
+    RegimenColumn patientsToInitiateTreatment = make(a(defaultRegimenColumn, with(RegimenColumnBuilder.name, "patientsToInitiateTreatment")));
+    RegimenColumn remarks = make(a(defaultRegimenColumn, with(RegimenColumnBuilder.name, "remarks")));
     List<RegimenColumn> regimenColumns = Arrays.asList(patientsOnTreatment, patientsStoppedTreatment, patientsToInitiateTreatment, remarks);
 
     savedRegimenLineItem.copyCreatorEditableFieldsForRegimen(regimenLineItem, new RegimenTemplate(1L, regimenColumns));

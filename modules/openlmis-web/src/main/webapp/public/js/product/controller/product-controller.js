@@ -25,14 +25,13 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
         $scope.productsList = data.productList;
         $scope.filteredProducts = $scope.productsList;
 
-  /*
         $scope.initialProducts = angular.copy(data.productList, $scope.initialProducts);
         $scope.products = $scope.productsList;
         for(var productIndex in data.productList){
             var product = data.productList[productIndex];
             $scope.productsBackupMap[product.id] =  $scope.getBackupProduct(product);
         }
-  */
+
         //alert(JSON.stringify($scope.products, null, 4));
     }, function (data) {
         $location.path($scope.$parent.sourceUrl);
@@ -157,6 +156,18 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
     //  given product
     $scope.getBackupProduct = function (product) {
         return {
+            active: 	    product.active,
+            code:		    product.code,
+            dispensingUnit:	product.dispensingUnit,
+            fullName:	    product.fullName,
+            fullSupply:	    product.fullSupply,
+            id:		        product.id,
+            programId:	    product.programId,
+            programName:	product.programName,
+            strength:	    product.strength,
+            type:		    product.type,
+            packSize:		product.packSize
+
             // TODO: add product fields
             //programid: supplyline.programid,
             //supplyingfacilityid: supplyline.supplyingfacilityid,
@@ -180,7 +191,7 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
         $scope.showErrorForCreate = false;
 
         CreateProduct.post( $scope.product, function (data) {
-            alert(JSON.stringify( $scope.newProduct, null, 4));
+            //alert(JSON.stringify( $scope.newProduct, null, 4));
             $scope.products.unshift(data.product);
             $scope.completeAddNewProduct(data.product);
             $scope.message = data.success;
@@ -254,24 +265,11 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
 
 
 
-    // all supply lines
-    Products.get({}, function (data) {
-        $scope.initialProducts = angular.copy(data.products, $scope.initialProducts);
-         $scope.products = data.products;
-        for(var productIndex in data.products){
-            var product = data.products[productIndex];
-            $scope.productsBackupMap[product.id] =  $scope.getBackupProduct(product);
-        }
-        alert(JSON.stringify($scope.productsBackupMap, null, 4));
-    }, function (data) {
-        $location.path($scope.$parent.sourceUrl);
-    });
-
-
-    $scope.startProductEdit = function (productUnderEdit) {
-        alert(JSON.stringify($scope.productsBackupMap, null, 4));
+      $scope.startProductEdit = function (productUnderEdit) {
 
          $scope.productsBackupMap[productUnderEdit.id].editFormActive = "product-form-active";
+         //$scope.product = productUnderEdit;
+          alert(JSON.stringify($scope.productsBackupMap[productUnderEdit.id], null, 4));
     };
 
 

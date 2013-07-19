@@ -76,7 +76,8 @@ public class DistributionControllerTest {
     Distribution expectedDistribution = new Distribution();
     when(service.create(distribution)).thenReturn(expectedDistribution);
     when(service.get(distribution)).thenReturn(null);
-    when(messageService.message("message.distribution.created.success")).thenReturn("Distribution created successfully");
+    when(messageService.message("message.distribution.created.success", null, null, null)
+    ).thenReturn("Distribution created successfully");
 
     ResponseEntity<OpenLmisResponse> response = controller.create(distribution, httpServletRequest);
 
@@ -89,7 +90,7 @@ public class DistributionControllerTest {
   }
 
   @Test
-  public void itShouldReturnExistingDistributionWithWarningIfAlreadyExist() throws Exception {
+  public void shouldReturnExistingDistributionWithWarningIfAlreadyExist() throws Exception {
     Long createdById = 10L;
     Date creationTimeStamp = new Date();
     Distribution distribution = make(a(defaultDistribution));
@@ -103,7 +104,7 @@ public class DistributionControllerTest {
     User user = make(a(defaultUser));
     when(userService.getById(createdById)).thenReturn(user);
 
-    when(messageService.message("message.distribution.already.exists", user.getUserName(), creationTimeStamp)).
+    when(messageService.message("message.distribution.already.exists", user.getUserName(), DistributionController.DATE_FORMAT.format(creationTimeStamp))).
       thenReturn("Distribution already initiated by XYZ at 2013-05-03 12:10");
 
     ResponseEntity<OpenLmisResponse> response = controller.create(distribution, httpServletRequest);

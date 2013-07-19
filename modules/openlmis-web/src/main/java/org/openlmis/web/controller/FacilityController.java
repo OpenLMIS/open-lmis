@@ -32,8 +32,7 @@ import java.util.*;
 import static org.openlmis.core.domain.Facility.createFacilityToBeDeleted;
 import static org.openlmis.core.domain.Facility.createFacilityToBeRestored;
 import static org.openlmis.core.domain.Right.*;
-import static org.openlmis.web.response.OpenLmisResponse.error;
-import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
@@ -59,7 +58,7 @@ public class FacilityController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "logistics/user/facilities", method = GET)
+  @RequestMapping(value = "/user/facilities", method = GET)
   public List<Facility> getHomeFacility(HttpServletRequest httpServletRequest) {
     return Arrays.asList(facilityService.getHomeFacility(loggedInUserId(httpServletRequest)));
   }
@@ -75,11 +74,9 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "/facilities/{id}", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public ResponseEntity<ModelMap> getFacility(@PathVariable(value = "id") Long id) {
-    ModelMap modelMap = new ModelMap();
-    modelMap.put("facility", facilityService.getById(id));
-    return new ResponseEntity<>(modelMap, HttpStatus.OK);
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_FACILITY')")
+  public ResponseEntity<OpenLmisResponse> getFacility(@PathVariable(value = "id") Long id) {
+    return response("facility", facilityService.getById(id));
   }
 
 
@@ -101,7 +98,7 @@ public class FacilityController extends BaseController {
     facility.setModifiedBy(loggedInUserId(request));
     ResponseEntity<OpenLmisResponse> response;
     try {
-      facilityService.insert(facility);
+      facilityService.update(facility);
     } catch (DataException exception) {
       return createErrorResponse(facility, exception);
     }
@@ -127,7 +124,7 @@ public class FacilityController extends BaseController {
 
   @RequestMapping(value = "/user/facilities/view", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> listForViewing(HttpServletRequest request) {
-    return OpenLmisResponse.response("facilities",
+    return response("facilities",
       facilityService.getForUserAndRights(loggedInUserId(request), VIEW_REQUISITION));
   }
 
@@ -136,7 +133,8 @@ public class FacilityController extends BaseController {
   public ResponseEntity softDelete(HttpServletRequest httpServletRequest, @PathVariable Long facilityId) {
     ResponseEntity<OpenLmisResponse> response;
     Facility facilityToBeDeleted = createFacilityToBeDeleted(facilityId, loggedInUserId(httpServletRequest));
-    Facility deletedFacility = facilityService.updateDataReportableAndActiveFor(facilityToBeDeleted);
+    facilityService.updateDataReportableAndActiveFor(facilityToBeDeleted);
+    Facility deletedFacility = facilityService.getById(facilityId);
 
     response = success(messageService.message("delete.facility.success", deletedFacility.getName(),
       deletedFacility.getCode()));
@@ -150,7 +148,10 @@ public class FacilityController extends BaseController {
   public ResponseEntity<OpenLmisResponse> restore(HttpServletRequest request, @PathVariable("id") long facilityId, @RequestParam boolean active) {
     ResponseEntity<OpenLmisResponse> response;
     Facility facilityToBeDeleted = createFacilityToBeRestored(facilityId, loggedInUserId(request), active);
-    Facility restoredFacility = facilityService.updateDataReportableAndActiveFor(facilityToBeDeleted);
+
+    facilityService.updateDataReportableAndActiveFor(facilityToBeDeleted);
+
+    Facility restoredFacility = facilityService.getById(facilityId);
 
     response = success(messageService.message("restore.facility.success", restoredFacility.getName(),
       restoredFacility.getCode()));
@@ -163,7 +164,7 @@ public class FacilityController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getFacilitiesForDeliveryZoneAndProgram(@PathVariable("deliveryZoneId") Long deliveryZoneId, @PathVariable("programId") Long programId) {
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
 
-    return OpenLmisResponse.response("facilities", facilities);
+    return response("facilities", facilities);
   }
 
   private ResponseEntity<OpenLmisResponse> createErrorResponse(Facility facility, DataException exception) {

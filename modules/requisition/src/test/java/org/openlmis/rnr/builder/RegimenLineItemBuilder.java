@@ -17,6 +17,7 @@ public class RegimenLineItemBuilder {
 
 
   public static final Property<RegimenLineItem, String> code = newProperty();
+  public static final Property<RegimenLineItem, String> name = newProperty();
   public static final Property<RegimenLineItem, String> remarks = newProperty();
   public static final Property<RegimenLineItem, Integer> patientsOnTreatment = newProperty();
   public static final Property<RegimenLineItem, Integer> patientsToInitiateTreatment = newProperty();
@@ -26,6 +27,7 @@ public class RegimenLineItemBuilder {
   public static final Integer PATIENTS_TO_INITIATE_TREATMENT = 3;
   public static final Integer PATIENTS_STOPPED_TREATMENT = 3;
   private static final String CODE = "R01";
+  private static final String NAME = "Regimen";
   private static final String REMARKS = "remarks";
   public static final Instantiator<RegimenLineItem> defaultRegimenLineItem = new Instantiator<RegimenLineItem>() {
 
@@ -33,6 +35,7 @@ public class RegimenLineItemBuilder {
     public RegimenLineItem instantiate(PropertyLookup<RegimenLineItem> lookup) {
       RegimenLineItem regimenLineItem = new RegimenLineItem();
       regimenLineItem.setCode(lookup.valueOf(code, CODE));
+      regimenLineItem.setName(lookup.valueOf(name, NAME));
       regimenLineItem.setPatientsOnTreatment(lookup.valueOf(patientsOnTreatment, PATIENTS_ON_TREATMENT));
       regimenLineItem.setPatientsToInitiateTreatment(lookup.valueOf(patientsToInitiateTreatment, PATIENTS_TO_INITIATE_TREATMENT));
       regimenLineItem.setPatientsStoppedTreatment(lookup.valueOf(patientsStoppedTreatment, PATIENTS_STOPPED_TREATMENT));

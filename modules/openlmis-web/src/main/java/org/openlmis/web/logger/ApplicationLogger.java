@@ -27,20 +27,6 @@ public class ApplicationLogger {
         logException(message, e);
     }
 
-//    @Before("execution(* org.openlmis..*(..))")
-//    public void logMethodEntry(JoinPoint joinPoint) {
-//        Signature signature = joinPoint.getSignature();
-//
-//        logMessage(LogLevel.INFO, String.format("%s | %s.%s(%s) | Enter", LmisThreadLocal.get(), signature.getDeclaringTypeName(), signature.getName(), joinPoint.getArgs()==null?"": joinPoint.getArgs()));
-//    }
-//
-//    @After("execution(* org.openlmis..*(..))")
-//    public void logMethodExit(JoinPoint joinPoint) {
-//        Signature signature = joinPoint.getSignature();
-//        logMessage(LogLevel.INFO, String.format("%s | %s.%s(%s) | Exit", LmisThreadLocal.get(), signature.getDeclaringTypeName(), signature.getName(), joinPoint.getArgs()==null?"": joinPoint.getArgs()));
-//    }
-
-
     private void logMessage(LogLevel logLevel, String message) {
         switch (logLevel) {
             case ERROR:

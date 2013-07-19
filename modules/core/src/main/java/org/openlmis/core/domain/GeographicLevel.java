@@ -10,17 +10,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class GeographicLevel extends BaseModel{
+@JsonSerialize(include = NON_EMPTY)
+public class GeographicLevel extends BaseModel {
   String code;
   String name;
   Integer levelNumber;
 
-  public GeographicLevel(Long id, String code, String name, Integer levelNumber){
+  public GeographicLevel(Long id, String code, String name, Integer levelNumber) {
     this(code, name, levelNumber);
     this.id = id;
   }

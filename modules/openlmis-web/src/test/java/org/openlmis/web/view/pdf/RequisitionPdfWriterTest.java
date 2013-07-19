@@ -51,6 +51,8 @@ public class RequisitionPdfWriterTest {
     PdfPTable fullSupplyTable = new PdfPTable(2);
     Paragraph nonFullSupplyHeader = new Paragraph("Non Full Supply");
     PdfPTable nonFullSupplyTable = new PdfPTable(3);
+    Paragraph regimenHeader = new Paragraph("Regimen");
+    PdfPTable regimenTable = new PdfPTable(3);
     PdfPTable summary = new PdfPTable(4);
 
     whenNew(RequisitionPdfModel.class).withArguments(model).thenReturn(requisitionPdfModel);
@@ -60,6 +62,8 @@ public class RequisitionPdfWriterTest {
     when(requisitionPdfModel.getFullSupplyTable()).thenReturn(fullSupplyTable);
     when(requisitionPdfModel.getNonFullSupplyTable()).thenReturn(nonFullSupplyTable);
     when(requisitionPdfModel.getNonFullSupplyHeader()).thenReturn(nonFullSupplyHeader);
+    when(requisitionPdfModel.getRegimenHeader()).thenReturn(regimenHeader);
+    when(requisitionPdfModel.getRegimenTable()).thenReturn(regimenTable);
     when(requisitionPdfModel.getSummary()).thenReturn(summary);
 
     writer.buildWith(model);
@@ -79,6 +83,12 @@ public class RequisitionPdfWriterTest {
 
     verify(document).add(nonFullSupplyTable);
     verify(requisitionPdfModel).getNonFullSupplyTable();
+
+    verify(document).add(regimenHeader);
+    verify(requisitionPdfModel).getRegimenHeader();
+
+    verify(document).add(regimenTable);
+    verify(requisitionPdfModel).getRegimenTable();
 
     verify(document).add(summary);
     verify(requisitionPdfModel).getSummary();

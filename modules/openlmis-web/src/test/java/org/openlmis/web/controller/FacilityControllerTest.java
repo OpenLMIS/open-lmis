@@ -101,14 +101,15 @@ public class FacilityControllerTest {
   public void shouldInsertFacilityAndTagWithModifiedBy() throws Exception {
     Facility facility = new Facility();
     facility.setName("test facility");
-
-    when(messageService.message("message.facility.created.success", facility.getName())).thenReturn("Facility 'test facility' created successfully");
+    when(messageService.message("message.facility.created.success",
+      facility.getName())).thenReturn("Facility 'test facility' created successfully");
 
     ResponseEntity responseEntity = facilityController.insert(facility, httpServletRequest);
+
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
     assertThat(response.getSuccessMsg(), is("Facility 'test facility' created successfully"));
-    verify(facilityService).insert(facility);
+    verify(facilityService).update(facility);
   }
 
   @Test
@@ -128,7 +129,7 @@ public class FacilityControllerTest {
   @Test
   public void shouldReturnErrorMessageIfInsertFails() throws Exception {
     Facility facility = new Facility();
-    doThrow(new DataException("error message")).when(facilityService).insert(facility);
+    doThrow(new DataException("error message")).when(facilityService).update(facility);
     ResponseEntity responseEntity = facilityController.insert(facility, httpServletRequest);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
@@ -163,7 +164,12 @@ public class FacilityControllerTest {
   @Test
   public void shouldGetFacilityById() throws Exception {
     Long id = 1L;
-    facilityController.getFacility(id);
+    Facility facility = new Facility();
+    when(facilityService.getById(id)).thenReturn(facility);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.getFacility(id);
+
+    assertThat((Facility) responseEntity.getBody().getData().get("facility"), is(facility));
     verify(facilityService).getById(id);
   }
 
@@ -203,12 +209,13 @@ public class FacilityControllerTest {
   @Test
   public void shouldSoftDeleteFacility() throws Exception {
     Facility facility = new Facility();
+    facility.setId(1L);
     facility.setName("Test Facility");
     facility.setCode("Test Code");
     mockStatic(Facility.class);
     when(Facility.createFacilityToBeDeleted(1L, 1L)).thenReturn(facility);
 
-    when(facilityService.updateDataReportableAndActiveFor(facility)).thenReturn(facility);
+    when(facilityService.getById(facility.getId())).thenReturn(facility);
     when(messageService.message("delete.facility.success", facility.getName(), facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" deleted successfully");
 
     ResponseEntity<OpenLmisResponse> responseEntity = facilityController.softDelete(httpServletRequest, 1L);
@@ -221,12 +228,12 @@ public class FacilityControllerTest {
   @Test
   public void shouldRestoreFacilityAndSetActiveToTrue() throws Exception {
     Facility facility = new Facility();
+    facility.setId(1L);
     facility.setName("Test Facility");
     facility.setCode("Test Code");
     mockStatic(Facility.class);
     when(Facility.createFacilityToBeRestored(1L, 1L, true)).thenReturn(facility);
-
-    when(facilityService.updateDataReportableAndActiveFor(facility)).thenReturn(facility);
+    when(facilityService.getById(facility.getId())).thenReturn(facility);
     when(messageService.message("restore.facility.success", facility.getName(), facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" restored successfully");
 
     ResponseEntity<OpenLmisResponse> responseEntity = facilityController.restore(httpServletRequest, 1L, true);
