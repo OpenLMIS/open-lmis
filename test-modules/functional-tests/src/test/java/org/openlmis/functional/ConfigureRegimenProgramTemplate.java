@@ -441,9 +441,9 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
       if (!testWebDriver.getElementById("username").isDisplayed()) {
           HomePage homePage = new HomePage(testWebDriver);
           homePage.logout(baseUrlGlobal);
+      }
           dbWrapper.deleteData();
           dbWrapper.closeConnection();
-      }
   }
 
   @DataProvider(name = "Data-Provider")

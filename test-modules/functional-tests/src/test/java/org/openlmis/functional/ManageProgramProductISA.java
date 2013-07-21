@@ -7,7 +7,6 @@
 package org.openlmis.functional;
 
 
-import cucumber.api.DataTable;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -16,7 +15,6 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.InitiateRnRPage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ProgramProductISAPage;
 import org.openqa.selenium.WebElement;
@@ -43,7 +41,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   public ProgramProductISAPage programProductISAPage;
 
 
-  @BeforeMethod(groups = {"smoke", "functional2"})
+  @BeforeMethod(groups = "functional2")
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -267,15 +265,15 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   }
 
-  @AfterMethod(groups = {"smoke", "functional2"})
+  @AfterMethod(groups = "functional2")
   @After
   public void tearDown() throws Exception {
     if(!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
+    }
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
-    }
   }
 
 

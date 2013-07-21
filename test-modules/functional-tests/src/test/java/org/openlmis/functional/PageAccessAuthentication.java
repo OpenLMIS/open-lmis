@@ -9,23 +9,17 @@ package org.openlmis.functional;
 
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
-import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.*;
+import org.openlmis.pageobjects.AccessDeniedPage;
+import org.openlmis.pageobjects.HomePage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.testng.annotations.Listeners;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
-import static java.lang.String.valueOf;
-import static org.openlmis.pageobjects.CreateFacilityPage.SaveButton;
 
 
 @TransactionConfiguration(defaultRollback = true)
@@ -64,9 +58,9 @@ public class PageAccessAuthentication extends TestCaseHelper {
       if (!testWebDriver.getElementById("username").isDisplayed()) {
           HomePage homePage = new HomePage(testWebDriver);
           homePage.logout(baseUrlGlobal);
+      }
           dbWrapper.deleteData();
           dbWrapper.closeConnection();
-      }
   }
 
 }
