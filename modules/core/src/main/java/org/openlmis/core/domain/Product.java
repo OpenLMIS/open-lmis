@@ -168,26 +168,4 @@ public class Product extends BaseModel implements Importable {
   @ImportField(type = "boolean", name = "Has Been Archived")
   private Boolean archived;
 
-  //mahmed: 07/16/2013
-  @ImportField(name = "Program Name")
-  private String programName;
-
-  @ImportField(name = "Program Id")
-  private String programId;
-
-  @ImportField(name = "Category Id")
-  private String categoryId;
-
- @ImportField(name = "Form Id")
- private String formId;
-
- @ImportField(name = "Dosage Unit Id")
- private String dosageUnitId;
-
- @ImportField(name = "Form Code")
- private String formCode;
-
-@ImportField(name = "Dosage Unit Code")
-private String dosageUnitCode;
-
 }

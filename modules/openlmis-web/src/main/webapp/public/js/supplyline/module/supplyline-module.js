@@ -4,5 +4,5 @@ angular.module('supplyline', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bo
                 otherwise({redirectTo: '/list'});
         }]).run(function ($rootScope, AuthorizationService) {
             $rootScope.supplylineSelected = "selected";
-           // AuthorizationService.preAuthorize('MANAGE_SUPPLYLINE');
+            AuthorizationService.preAuthorize('MANAGE_SUPPLYLINE');
         });

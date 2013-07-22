@@ -117,25 +117,6 @@ public class ProductRepository {
   public Long getProductFormIdForCode(String code) {
     return mapper.getProductFormIdForCode(code);
   }
-    // mahmed 07.11.2013 full product list
-    public List<Product> getProductList() {
-        return mapper.getList();
-    }
-
-    // mahmed - 07.11.2013 delete supplyline
-    public void deleteById(Long productId) {
-        mapper.deleteById(productId);
-    }
-
-    // mahmed - 07.11.2013 delete supplyline
-    public void restoreById(Long productId) {
-        mapper.restoreById(productId);
-    }
-
-    // mahmed - 07.11.2013 delete supplyline
-    public Product get(Long id) {
-        return mapper.getById(id);
-    }
 
 
 }

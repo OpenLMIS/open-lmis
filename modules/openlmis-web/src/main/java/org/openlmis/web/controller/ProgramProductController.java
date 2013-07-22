@@ -30,13 +30,4 @@ public class ProgramProductController {
         List<ProgramProduct> programProductsByProgram = service.getByProgram(new Program(programId));
         return OpenLmisResponse.response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
     }
- /*
-    @RequestMapping(value = "/programProducts/programProductId/{programPorductId}", method = GET, headers = BaseController.ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-    public ResponseEntity<OpenLmisResponse> getProgramsProductPrices(@PathVariable Long programProductId) {
-        List<ProgramProductPrice> programsProductPrice = service.getProgramProductPrice(new ProgramProduct(programProductId));
-        return OpenLmisResponse.response(PROGRAM_PRODUCT_PRICE_LIST, programsProductPrice);
-    }
-   */
-
 }

@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ProductController($scope, $location, $dialog, messageService, CreateProduct, ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits, ProductForms) {
+function ProductController($scope, $location, $dialog, messageService, AllProductCost, CreateProduct, ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits, ProductForms) {
 
     $scope.productsBackupMap = [];
     $scope.newProduct = {};
@@ -13,12 +13,13 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
     $scope.creationError = '';
     $scope.title='Products';
     $scope.demoproducts = {};
-    $scope.$parent.editProductMode = false;
     $scope.AddEditMode = '';
+    $scope.programProductsCost = [];
+    //$scope.edit_id =0;
 
-    if (($scope.$parent.newProductMode) || ($scope.$parent.editProductMode)) {
+    if ($scope.$parent.newProductMode || $scope.$parent.editProductMode) {
          $scope.AddEditMode = true;
-         $scope.title = ($scope.$parent.newProductMode) ? $scope.title='Add Product' : $scope.title='Edit Product';
+          $scope.title = ($scope.$parent.newProductMode) ? $scope.title='Add Product' : $scope.title='Edit Product';
 
      } else
     {
@@ -32,6 +33,15 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
         $scope.programs = data.programs;
         //alert(JSON.stringify( $scope.programs, null, 4));
     })
+
+ /*
+    // Programs list
+    ProgramPricesList.get(function (data) {
+        $scope.prices = data.programPrices;
+        alert(JSON.stringify( $scope.prices, null, 4));
+    })
+
+*/
 
      // all products list
     ProductList.get({}, function (data) {
@@ -55,7 +65,7 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
 
 
 
-     // show search results
+    // show search results
     $scope.showProductsSearchResults = function (id) {
         var query = document.getElementById(id).value;
         query = parseInt(query) + 1;
@@ -121,7 +131,7 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
                     $scope.filteredProducts = data.productList;
                     $scope.message = "";
                 });
-            }, 4000);
+            }, 2000);
             $scope.error = "";
             $scope.newProduct = {};
             $scope.editProduct = {};
@@ -160,7 +170,7 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
                     $scope.filteredProducts = data.productList;
                     $scope.message = "";
                 });
-            }, 4000);
+            }, 2000);
             $scope.error = "";
             $scope.newProduct = {};
             $scope.editProduct = {};
@@ -243,6 +253,7 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
 // cancel record
     $scope.cancelAddNewProduct = function (product) {
         $scope.$parent.newProductMode = false;
+        $scope.AddEditMode = false;
         $scope.showErrorForCreate = false;
     };
 
@@ -286,12 +297,34 @@ function ProductController($scope, $location, $dialog, messageService, CreatePro
 
       $scope.startProductEdit = function (productUnderEdit) {
           $scope.$parent.editProductMode = true;
-          //$scope.$parent.editProductMode = false;
+          $scope.title='Edit product';
           $scope.AddEditMode = true;
           $scope.editProduct = productUnderEdit;
           $scope.productsBackupMap[productUnderEdit.id].editFormActive = "product-form-active";
           $('html, body').animate({ scrollTop: 0 }, 'fast');
-        };
+          $scope.edit_id = productUnderEdit.id;
+
+          AllProductCost.get({}, function (data) {
+              $scope.productCost = data.allProductCost;
+              $scope.selectedProductCost = _.where($scope.productCost, {productid: $scope.edit_id});
+
+              //alert(JSON.stringify($scope.products, null, 4));
+              var tmp = 0;
+              for(var programIndex in $scope.selectedProductCost){
+                  var program = $scope.selectedProductCost[programIndex];
+                  if (program.progamid !== tmp) {
+                      $scope.programProductsCost[program.programid] =  program;
+                  }
+                  tmp = program.programid;
+              }
+              $scope.programProductsCost = $scope.programProductsCost.filter(function(e){return e});
+              //$scope.selectedProductCost = $scope.selectedProductCost[0];
+              //alert(JSON.stringify($scope.selectedProductCost, null, 4));
+              //alert(JSON.stringify($scope.programProductsCost, null, 4));
+          }, {});
+
+
+      };
 
 
     $scope.cancelProductEdit = function (productUnderEdit) {

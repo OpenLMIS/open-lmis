@@ -23,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.openlmis.report.service.ReportLookupService;
+import org.openlmis.report.model.dto.ProgramProductPriceList;
+import org.openlmis.report.service.ProgramProductPriceListDataProvider;
+import org.openlmis.report.service.ProductListDataProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -38,9 +41,17 @@ public class ProductController extends BaseController {
     public static final String PRODUCT= "Product";
     public static final String PRODUCTLIST= "productList";
     public static final String DOSAGEUNITS= "dosageUnits";
+    public static final String PRODUCTCOST= "productCost";
+    public static final String ALLPRODUCTCOST= "allProductCost";
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ProductListDataProvider productListService;
+
+    @Autowired
+    private ProgramProductPriceListDataProvider programPriceService;
 
     @Autowired
     private ReportLookupService reportLookupService;
@@ -50,51 +61,36 @@ public class ProductController extends BaseController {
         this.productService = productService;
     }
 
-/*
-    // product for add/update
-    @RequestMapping(value = "/products", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-    public ResponseEntity<OpenLmisResponse> getAllProducts() {
-        return OpenLmisResponse.response(PRODUCTS, productService.getProductsList());
-    }
-
-    @RequestMapping(value = "/products/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-    public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Long id) {
-        try{
-            Product product = productService.get(id);
-            return OpenLmisResponse.response(PRODUCT, product);
-        } catch (DataException e){
-            return error(e, HttpStatus.NOT_FOUND);
-        }
-    }
-
-*/
     // supply line list for view
     @RequestMapping(value = "/productslist", method = RequestMethod.GET, headers = "Accept=application/json")
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> getProductsList() {
-        return OpenLmisResponse.response(PRODUCTLIST, productService.getProductsList());
+        return OpenLmisResponse.response(PRODUCTLIST, productListService.getProductList());
     }
 
 
- /*
-    // dosage units
-    @RequestMapping(value = "/dosageUnits", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/programs/{productId}/productcost", method = RequestMethod.GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-    public ResponseEntity<OpenLmisResponse> getDosageUnits() {
-        return OpenLmisResponse.response(DOSAGEUNITS, reportLookupService.getDosageUnits());
+    public ResponseEntity<OpenLmisResponse> getByProductId(@PathVariable("productId") Long productId) {
+        return OpenLmisResponse.response(PRODUCTCOST, programPriceService.getByProductId(productId));
     }
 
- */
+    // All product cost
+    @RequestMapping(value = "/allproductcost", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> getAllPrices() {
+        return OpenLmisResponse.response(ALLPRODUCTCOST, programPriceService.getAllPrices());
+    }
+
+
     // mahmed - 07.11.2013  delete
     @RequestMapping(value = "/removeProduct/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> delete(@PathVariable("id") Long id, HttpServletRequest request) {
         try{
-            productService.deleteById(id);
+            productListService.deleteById(id);
             ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("Product deactivated successfully");
-            response.getBody().addData(PRODUCTLIST, productService.getProductsList());
+            response.getBody().addData(PRODUCTLIST, productListService.getProductList());
             return response;
         }
         catch (DataException e) {
@@ -107,9 +103,9 @@ public class ProductController extends BaseController {
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> restore(@PathVariable("id") Long id, HttpServletRequest request) {
         try{
-            productService.restoreById(id);
+            productListService.restoreById(id);
             ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("Product restored successfully");
-            response.getBody().addData(PRODUCTLIST, productService.getProductsList());
+            response.getBody().addData(PRODUCTLIST, productListService.getProductList());
             return response;
         }
         catch (DataException e) {
@@ -137,8 +133,8 @@ public class ProductController extends BaseController {
         try {
             productService.save(product);
             ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("'" + product.getPrimaryName() + "' "+ (createOperation?"created":"updated") +" successfully");
-            response.getBody().addData(PRODUCT, productService.get(product.getId()));
-            response.getBody().addData(PRODUCTLIST, productService.getProductsList());
+            response.getBody().addData(PRODUCT, productListService.get(product.getId()));
+            response.getBody().addData(PRODUCTLIST, productListService.getProductList());
             return response;
         } catch (DataException e) {
             return error(e, HttpStatus.BAD_REQUEST);

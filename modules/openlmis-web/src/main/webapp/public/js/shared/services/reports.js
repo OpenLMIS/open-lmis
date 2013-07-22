@@ -201,3 +201,14 @@ services.factory('RestoreProduct', function ($resource) {
     return $resource('/restoreProduct/:id.json', {}, {update:{method:'PUT'}});
 });
 
+services.factory('ProductCost', function ($resource) {
+    return $resource('/programs/:productId/productcost.json', {}, {});
+});
+
+services.factory('AllProductCost', function ($resource) {
+    return $resource('/allproductcost.json', {}, {});
+});
+
+services.factory("AllFacilites",function($resource)  {
+    return   $resource('/reports/allFacilities.json', {}, {});
+});

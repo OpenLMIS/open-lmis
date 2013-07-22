@@ -70,19 +70,19 @@ public class SupplyLineController extends BaseController {
 
     // supply line list for view
     @RequestMapping(value = "/supplylineslist", method = RequestMethod.GET, headers = "Accept=application/json")
-    //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLYLINE')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLYLINE')")
     public ResponseEntity<OpenLmisResponse> getAll() {
         return OpenLmisResponse.response(SUPPLYLINELIST, supplyLineListService.getAll());
     }
 
     // supply line for add/update
-    @RequestMapping(value = "/supplylines", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/supplylines", method = RequestMethod.GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLYLINE')")
     public ResponseEntity<OpenLmisResponse> getAllSupplyLine() {
         return OpenLmisResponse.response(SUPPLYLINES, supplyLineService.getAllSupplyLine());
     }
 
-    @RequestMapping(value = "/supplylines/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/supplylines/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLYLINE')")
     public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Long id) {
         try{
@@ -94,7 +94,7 @@ public class SupplyLineController extends BaseController {
     }
 
     // create
-    @RequestMapping(value = "/supplylines", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/supplylines", method = RequestMethod.POST, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLYLINE')")
     public ResponseEntity<OpenLmisResponse> create(@RequestBody SupplyLine supplyLine, HttpServletRequest request) {
         supplyLine.setModifiedBy(loggedInUserId(request));
@@ -117,7 +117,7 @@ public class SupplyLineController extends BaseController {
     }
 
     // update
-    @RequestMapping(value = "/supplylines/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
+    @RequestMapping(value = "/supplylines/{id}", method = RequestMethod.PUT, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLYLINE')")
     public ResponseEntity<OpenLmisResponse> update(@RequestBody SupplyLine supplyLine, @PathVariable("id") Long id, HttpServletRequest request) {
         supplyLine.setId(id);

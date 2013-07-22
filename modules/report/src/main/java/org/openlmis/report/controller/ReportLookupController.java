@@ -126,4 +126,8 @@ public class ReportLookupController extends BaseController {
         return OpenLmisResponse.response("productGroups", reportLookupService.getAllProductGroups());
     }
 
+    @RequestMapping(value = "/allFacilities", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllFacilities(HttpServletRequest request) {
+        return OpenLmisResponse.response("allFacilities", reportLookupService.getAllFacilities());
+    }
 }
