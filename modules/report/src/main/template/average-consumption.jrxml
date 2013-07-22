@@ -18,6 +18,7 @@
 	<parameter name="OPERATOR_LOGO" class="java.io.InputStream"/>
 	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
 	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
+	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select avg(quantitydispensed) average, product, productcategory category, ft.name facilityType, f.name facilityName, MAX(s.name) supplyingFacility, MAX(li.maxmonthsofstock) MaxMOS, MAX(li.maxmonthsofstock) minMOS
         from requisition_line_items li
@@ -232,6 +233,15 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 		<band height="20" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement uuid="0f6933a0-3253-4e45-96ec-80f3c6aab11b" x="45" y="0" width="757" height="20" forecolor="#006666">
+					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
+			</textField>
 			<staticText>
 				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="0" y="0" width="660" height="20" backcolor="#F4F4F4">
 					<property name="local_mesure_unitx" value="pixel"/>

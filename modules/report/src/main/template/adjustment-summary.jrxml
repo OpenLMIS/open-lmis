@@ -17,6 +17,7 @@
 	<parameter name="OPERATOR_LOGO" class="java.io.InputStream"/>
 	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
 	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
+	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select product productDescription, product_category_name category, facility_type_name facilityType,facility_name facilityName, adjustment_type adjustmentType,SUM(totallossesandadjustments) adjustment,supplying_facility_name supplyingFacility
 from vw_requisition_adjustment
@@ -172,6 +173,15 @@ order by product, adjustment_type]]>
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="54991b2a-fa3b-4df1-ba28-1f1b59080053" x="45" y="0" width="759" height="20" forecolor="#006666">
+					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
+			</textField>
 			<staticText>
 				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F4F4F4">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
