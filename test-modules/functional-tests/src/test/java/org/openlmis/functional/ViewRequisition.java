@@ -232,6 +232,7 @@ public class ViewRequisition extends TestCaseHelper {
   @AfterMethod(groups = "functional")
   @After
   public void tearDown() throws Exception {
+    testWebDriver.sleep(500);
     if(!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
