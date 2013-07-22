@@ -15,11 +15,26 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class Template {
+public class Template {
 
   protected Long programId;
 
   protected List<? extends Column> columns;
 
-  public abstract List<? extends Column> getPrintableColumns(boolean fullSupply);
+  public List<? extends Column> getPrintableColumns(Boolean fullSupply) {
+    return null;
+  }
+
+  public static Template getInstance(List<? extends Column> columnList) {
+    Column column = columnList.get(0);
+    Template template;
+    if (column instanceof RegimenColumn) {
+      template = new RegimenTemplate();
+    } else {
+      template = new ProgramRnrTemplate();
+    }
+    template.setColumns(columnList);
+    return template;
+  }
+
 }

@@ -32,7 +32,7 @@ public class RegimenTemplate extends Template {
     return ((RegimenColumn) column).getVisible();
   }
 
-  public List<? extends Column> getPrintableColumns(boolean fullsupply) {
+  public List<? extends Column> getPrintableColumns(Boolean fullSupply) {
     List<Column> printableRegimenColumns = new ArrayList<>();
 
     for (Column regimenColumn : columns) {

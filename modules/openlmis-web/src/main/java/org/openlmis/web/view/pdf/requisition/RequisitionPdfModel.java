@@ -61,26 +61,35 @@ public class RequisitionPdfModel {
   }
 
   public PdfPTable getFullSupplyTable() throws DocumentException, NoSuchFieldException, IllegalAccessException {
-    return getTableFor(requisition.getFullSupplyLineItems(), true);
+    return getTableFor(requisition.getFullSupplyLineItems(), true, rnrColumnList);
   }
 
-  private PdfPTable getTableFor(List<RnrLineItem> lineItems, boolean fullSupply) throws DocumentException, NoSuchFieldException, IllegalAccessException {
-    ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumnList);
+  public PdfPTable getRegimenTable() throws DocumentException, NoSuchFieldException, IllegalAccessException {
+    List<RegimenLineItem> regimenLineItems = requisition.getRegimenLineItems();
+    if (regimenLineItems.size() == 0) return null;
+
+    return getTableFor(regimenLineItems, null, regimenColumnList);
+  }
+
+  private PdfPTable getTableFor(List<? extends LineItem> lineItems, Boolean fullSupply, List<? extends Column> columnList) throws DocumentException, NoSuchFieldException, IllegalAccessException {
+    Template template = Template.getInstance(columnList);
     List<? extends Column> visibleColumns = template.getPrintableColumns(fullSupply);
 
     PdfPTable table = prepareTable(visibleColumns);
 
     boolean odd = true;
 
-    RnrLineItem previousLineItem = null;
-    for (RnrLineItem lineItem : lineItems) {
-      if (previousLineItem == null || !lineItem.getProductCategory().equals(previousLineItem.getProductCategory())) {
+    LineItem previousLineItem = null;
+    for (LineItem lineItem : lineItems) {
+      if (previousLineItem == null || !lineItem.compareCategory(previousLineItem)) {
         table.addCell(categoryRow(visibleColumns.size(), lineItem));
         previousLineItem = lineItem;
       }
 
-      PrintRnrLineItem printRnrLineItem = new PrintRnrLineItem(lineItem);
-      printRnrLineItem.calculate(requisition.getPeriod(), rnrColumnList, lossesAndAdjustmentsTypes);
+      if (lineItem.isRnrLineItem()) {
+        PrintRnrLineItem printRnrLineItem = new PrintRnrLineItem(lineItem);
+        printRnrLineItem.calculate(requisition.getPeriod(), rnrColumnList, lossesAndAdjustmentsTypes);
+      }
 
       List<PdfPCell> cells = getCells(visibleColumns, lineItem, currency);
       odd = !odd;
@@ -130,7 +139,8 @@ public class RequisitionPdfModel {
   public PdfPTable getNonFullSupplyTable() throws DocumentException, NoSuchFieldException, IllegalAccessException {
     List<RnrLineItem> nonFullSupplyLineItems = requisition.getNonFullSupplyLineItems();
     if (nonFullSupplyLineItems.size() == 0) return null;
-    return getTableFor(nonFullSupplyLineItems, false);
+
+    return getTableFor(nonFullSupplyLineItems, false, rnrColumnList);
   }
 
   public PdfPTable getRequisitionHeader() throws DocumentException {
@@ -251,36 +261,6 @@ public class RequisitionPdfModel {
     return new Money(new BigDecimal(requisition.getFullSupplyItemsSubmittedCost().getValue().floatValue() + requisition.getNonFullSupplyItemsSubmittedCost().getValue().floatValue()));
   }
 
-  public PdfPTable getRegimenTable() throws DocumentException, NoSuchFieldException, IllegalAccessException {
-    List<RegimenLineItem> regimenLineItems = requisition.getRegimenLineItems();
-    if (regimenLineItems.size() == 0) return null;
-
-    RegimenTemplate template = new RegimenTemplate();
-    template.setColumns(regimenColumnList);
-    List<? extends Column> visibleColumns = template.getPrintableColumns(true);
-
-    PdfPTable table = prepareTable(visibleColumns);
-
-    boolean odd = true;
-
-    RegimenLineItem previousLineItem = null;
-    for (RegimenLineItem lineItem : regimenLineItems) {
-      if (previousLineItem == null || !lineItem.getCategory().getName().equals(previousLineItem.getCategory().getName())) {
-        table.addCell(categoryRowForRegimen(visibleColumns.size(), lineItem));
-        previousLineItem = lineItem;
-      }
-
-
-      List<PdfPCell> cells = getCellsForRegimen(visibleColumns, lineItem);
-      odd = !odd;
-
-      for (PdfPCell cell : cells) {
-        cell.setBackgroundColor(odd ? BaseColor.WHITE : ROW_GREY_BACKGROUND);
-        table.addCell(cell);
-      }
-    }
-    return table;
-  }
 
   public Paragraph getRegimenHeader() {
     return new Paragraph("Regimen(s)", H2_FONT);

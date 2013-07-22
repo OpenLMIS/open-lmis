@@ -7,6 +7,7 @@
 package org.openlmis.rnr.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.core.message.OpenLmisMessage;
 
@@ -17,6 +18,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 
+@NoArgsConstructor
 public class ProgramRnrTemplate extends Template {
 
   public static final String STOCK_IN_HAND = "stockInHand";
@@ -161,7 +163,7 @@ public class ProgramRnrTemplate extends Template {
     }
   }
 
-  public List<? extends Column> getPrintableColumns(boolean fullSupply) {
+  public List<? extends Column> getPrintableColumns(Boolean fullSupply) {
     List<RnrColumn> printableRnrColumns = new ArrayList<>();
 
     for (Column rnrColumn : columns) {

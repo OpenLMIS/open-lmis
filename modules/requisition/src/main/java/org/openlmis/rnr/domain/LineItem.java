@@ -9,6 +9,7 @@ package org.openlmis.rnr.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 
@@ -18,8 +19,19 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode(callSuper = false)
-public class LineItem extends BaseModel {
+public abstract class LineItem extends BaseModel {
 
   protected Long rnrId;
+
+  abstract public boolean compareCategory(LineItem lineItem);
+
+  @JsonIgnore
+  abstract public String getCategoryName();
+
+  @JsonIgnore
+  abstract public String getValue(String columnName) throws NoSuchFieldException, IllegalAccessException;
+
+  @JsonIgnore
+  public abstract boolean isRnrLineItem();
 
 }

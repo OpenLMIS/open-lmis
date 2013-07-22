@@ -46,6 +46,18 @@ public class RnrColumn extends Column {
   }
 
   @Override
+  public ColumnType getColumnType() {
+    if (this.getName().equals("price") || this.getName().equals("cost")) {
+      return ColumnType.CURRENCY;
+    }
+    if (this.getName().equals("product") || this.getName().equals("dispensingUnit") || this.getName().equals("productCode")) {
+      return ColumnType.TEXT;
+    }
+    return ColumnType.NUMERIC;
+  }
+
+
+  @Override
   public boolean equals(Object o) {
     if (o == null) return false;
     if (!(o instanceof RnrColumn)) return false;

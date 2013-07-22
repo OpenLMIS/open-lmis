@@ -31,4 +31,14 @@ public class RegimenColumn extends Column {
     }
     return 40;
   }
+
+  @Override
+  public ColumnType getColumnType() {
+    if (this.getName().equals("name") || this.getName().equals("code") || this.getName().equals("remarks")) {
+      return ColumnType.TEXT;
+    } else {
+      return ColumnType.NUMERIC;
+    }
+  }
+
 }

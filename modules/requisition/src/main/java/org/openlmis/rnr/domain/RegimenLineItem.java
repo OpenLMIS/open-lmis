@@ -14,7 +14,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @JsonSerialize(include = NON_NULL)
 public class RegimenLineItem extends LineItem {
 
@@ -72,6 +72,31 @@ public class RegimenLineItem extends LineItem {
     } catch (Exception e) {
       logger.error("Error in reading RnrLineItem's field", e);
     }
+  }
+
+  @Override
+  public boolean compareCategory(LineItem lineItem) {
+    if (this.category.getName().equals(((RegimenLineItem) lineItem).getCategory().getName())) return true;
+    return false;
+  }
+
+  @Override
+  public String getCategoryName() {
+    return this.category.getName();
+  }
+
+  @Override
+  public String getValue(String columnName) throws NoSuchFieldException, IllegalAccessException {
+    Field field = RegimenLineItem.class.getDeclaredField(columnName);
+    field.setAccessible(true);
+    Object fieldValue = field.get(this);
+    String value = (fieldValue == null) ? "" : fieldValue.toString();
+    return value;
+  }
+
+  @Override
+  public boolean isRnrLineItem() {
+    return false;
   }
 
 }

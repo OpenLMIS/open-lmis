@@ -14,7 +14,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.programRnrColumnList = rnrColumns;
   $scope.requisitionRights = requisitionRights;
-  $scope.regimenColumns = regimenTemplate ? regimenTemplate.regimenColumns : [];
+  $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
   $scope.visibleRegimenColumns = _.where($scope.regimenColumns, {'visible': true});
   $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
   $scope.errorPages = {fullSupply: [], nonFullSupply: []};
@@ -174,14 +174,14 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
   var submitValidatedRnr = function () {
     Requisitions.update({id: $scope.rnr.id, operation: "submit"},
-        {}, function (data) {
-          $scope.rnr.status = "SUBMITTED";
-          $scope.formDisabled = !$scope.hasPermission('AUTHORIZE_REQUISITION');
-          $scope.submitMessage = data.success;
-          $scope.saveRnrForm.$setPristine();
-        }, function (data) {
-          $scope.submitError = data.data.error;
-        });
+      {}, function (data) {
+        $scope.rnr.status = "SUBMITTED";
+        $scope.formDisabled = !$scope.hasPermission('AUTHORIZE_REQUISITION');
+        $scope.submitMessage = data.success;
+        $scope.saveRnrForm.$setPristine();
+      }, function (data) {
+        $scope.submitError = data.data.error;
+      });
   };
 
   $scope.dialogCloseCallback = function (result) {

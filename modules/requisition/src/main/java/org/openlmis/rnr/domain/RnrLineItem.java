@@ -389,4 +389,42 @@ public class RnrLineItem extends LineItem {
     return false;
   }
 
+  @Override
+  public boolean compareCategory(LineItem lineItem) {
+    if (this.getProductCategory().equals(((RnrLineItem) lineItem).getProductCategory())) return true;
+    return false;
+  }
+
+  @Override
+  public String getCategoryName() {
+    return this.productCategory;
+  }
+
+  @Override
+  public String getValue(String columnName) throws NoSuchFieldException, IllegalAccessException {
+    if (columnName.equals("lossesAndAdjustments")) {
+      return this.getTotalLossesAndAdjustments().toString();
+    }
+    if (columnName.equals("cost")) {
+      return this.calculateCost().toString();
+    }
+    if (columnName.equals("price")) {
+      return this.getPrice().toString();
+    }
+
+    if (columnName.equals("total") && this.getBeginningBalance() != null && this.getQuantityReceived() != null) {
+      return String.valueOf((this.getBeginningBalance() + this.getQuantityReceived()));
+    }
+
+    Field field = RnrLineItem.class.getDeclaredField(columnName);
+    field.setAccessible(true);
+    Object fieldValue = field.get(this);
+    String value = (fieldValue == null) ? "" : fieldValue.toString();
+    return value;
+  }
+
+  @Override
+  public boolean isRnrLineItem() {
+    return true;
+  }
 }

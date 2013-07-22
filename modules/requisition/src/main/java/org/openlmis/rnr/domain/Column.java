@@ -25,4 +25,7 @@ public abstract class Column extends BaseModel {
 
   @JsonIgnore
   public abstract Integer getColumnWidth();
+
+  @JsonIgnore
+  public abstract ColumnType getColumnType();
 }
