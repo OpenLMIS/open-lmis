@@ -46,8 +46,7 @@ public class RegimenController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE')")
   public ResponseEntity<OpenLmisResponse> save(@PathVariable Long programId, @RequestBody RegimenFormDTO regimenFormDTO, HttpServletRequest request) {
     regimenService.save(regimenFormDTO.getRegimens(), loggedInUserId(request));
-    RegimenTemplate regimenTemplate = regimenFormDTO.getRegimenTemplate();
-    regimenTemplate.setProgramId(programId);
+    RegimenTemplate regimenTemplate = new RegimenTemplate(programId, regimenFormDTO.getRegimenColumnList());
     regimenColumnService.save(regimenTemplate, loggedInUserId(request));
     return success(REGIMENS_SAVED_SUCCESSFULLY);
   }

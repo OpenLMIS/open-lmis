@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Regimen;
-import org.openlmis.rnr.domain.RegimenTemplate;
+import org.openlmis.rnr.domain.RegimenColumn;
 
 import java.util.List;
 
@@ -17,6 +17,6 @@ public class RegimenFormDTO {
 
   List<Regimen> regimens;
 
-  RegimenTemplate regimenTemplate;
+  List<RegimenColumn> regimenColumnList;
 
 }

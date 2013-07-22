@@ -9,6 +9,7 @@ package org.openlmis.rnr.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.util.List;
 
@@ -21,10 +22,12 @@ public class Template {
 
   protected List<? extends Column> columns;
 
+  @JsonIgnore
   public List<? extends Column> getPrintableColumns(Boolean fullSupply) {
     return null;
   }
 
+  @JsonIgnore
   public static Template getInstance(List<? extends Column> columnList) {
     Column column = columnList.get(0);
     Template template;

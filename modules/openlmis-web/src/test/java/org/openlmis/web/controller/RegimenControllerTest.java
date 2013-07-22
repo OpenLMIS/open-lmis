@@ -10,6 +10,7 @@ import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RegimenService;
+import org.openlmis.rnr.domain.RegimenColumn;
 import org.openlmis.rnr.domain.RegimenTemplate;
 import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.web.form.RegimenFormDTO;
@@ -85,9 +86,10 @@ public class RegimenControllerTest {
   @Test
   public void shouldSaveRegimenTemplate() throws Exception {
     Long programId = 1L;
+    List<RegimenColumn> columns = new ArrayList<>();
     List<Regimen> regimens = new ArrayList<>();
-    RegimenTemplate regimenTemplate = new RegimenTemplate();
-    RegimenFormDTO regimenFormDTO = new RegimenFormDTO(regimens, regimenTemplate);
+    RegimenTemplate regimenTemplate = new RegimenTemplate(programId, columns);
+    RegimenFormDTO regimenFormDTO = new RegimenFormDTO(regimens, columns);
 
     controller.save(programId, regimenFormDTO, httpServletRequest);
 
