@@ -23,6 +23,7 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
@@ -51,6 +52,7 @@ public class Rnr extends BaseModel {
   private Facility supplyingFacility;
   private Long supervisoryNodeId;
   private Date submittedDate;
+  private Date authorizedDate;
   private List<Comment> comments = new ArrayList<>();
 
   public Rnr(Long facilityId, Long programId, Long periodId, Long modifiedBy, Long createdBy) {
@@ -319,6 +321,7 @@ public class Rnr extends BaseModel {
     Date operationDate = new Date();
 
     if (status.equals(SUBMITTED)) setSubmittedDate(operationDate);
+    if (status.equals(AUTHORIZED)) setAuthorizedDate(operationDate);
 
     this.modifiedBy = modifiedBy;
   }

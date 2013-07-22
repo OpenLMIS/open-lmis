@@ -8,7 +8,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   $scope.visibleTab = $routeParams.supplyType;
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
-  $scope.regimenColumns = regimenTemplate ? regimenTemplate.regimenColumns : [];
+  $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
   $scope.currency = currency;
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.error = "";

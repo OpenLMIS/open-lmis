@@ -243,11 +243,12 @@ public class RequisitionPdfModel {
     summaryTable.addCell(summaryCell(textCell(" ")));
 
     String submittedDate = requisition.getSubmittedDate() != null ? DATE_FORMAT.format(requisition.getSubmittedDate()) : "";
+    String authorizedDate = requisition.getAuthorizedDate() != null ? DATE_FORMAT.format(requisition.getAuthorizedDate()) : "";
 
     summaryTable.addCell(summaryCell(textCell("Submitted By: ")));
     summaryTable.addCell(summaryCell(textCell("Date: " + submittedDate)));
     summaryTable.addCell(summaryCell(textCell("Authorized By: ")));
-    summaryTable.addCell(summaryCell(textCell("Date: ")));
+    summaryTable.addCell(summaryCell(textCell("Date: " + authorizedDate)));
     return summaryTable;
   }
 

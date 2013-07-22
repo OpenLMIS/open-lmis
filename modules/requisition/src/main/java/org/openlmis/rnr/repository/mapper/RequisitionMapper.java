@@ -29,6 +29,7 @@ public interface RequisitionMapper {
     "status = #{status},",
     "modifiedDate = CURRENT_TIMESTAMP,",
     "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
+    "authorizedDate = #{authorizedDate},",
     "submittedDate = #{submittedDate},",
     "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost},",
     "supervisoryNodeId = #{supervisoryNodeId},",

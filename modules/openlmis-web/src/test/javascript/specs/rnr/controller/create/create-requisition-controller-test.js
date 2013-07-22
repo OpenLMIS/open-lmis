@@ -50,7 +50,7 @@ describe('CreateRequisitionController', function () {
       {name: "patientsToInitiateTreatment", visible: false},
       {name: "patientsStoppedTreatment", visible: true}
     ];
-    regimenTemplate = {regimenColumns: regimenColumnList};
+    regimenTemplate = {columns: regimenColumnList};
 
     lossesAndAdjustmentTypes = {"lossAdjustmentTypes": {"name": "damaged"}};
 
