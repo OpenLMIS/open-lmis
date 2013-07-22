@@ -21,7 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
+import org.springframework.integration.MessageChannel;
 import org.springframework.integration.annotation.MessageEndpoint;
+import org.springframework.integration.support.MessageBuilder;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,6 +44,10 @@ public class ShipmentFileProcessor {
   @Autowired
   private DbService dbService;
 
+  @Autowired
+  private MessageChannel ftpArchiveOutputChannel;
+
+
   public void process(Message message) throws IOException {
     File shipmentFile = (File) message.getPayload();
     boolean processingError = false;
@@ -58,10 +64,17 @@ public class ShipmentFileProcessor {
       logger.info("Starting post processing file " + shipmentFile.getName());
       shipmentFilePostProcessHandler.process(shipmentFile, processingError);
       logger.info("Updated order statuses for file " + shipmentFile.getName());
+      sendArchiveToFtp(shipmentFile);
       boolean deleteStatus = FileUtils.deleteQuietly(shipmentFile);
       if (deleteStatus)
         logger.info("Successfully deleted file " + shipmentFile.getName());
     }
+  }
+
+  private void sendArchiveToFtp(File file) {
+    Message<File> message = MessageBuilder.withPayload(file).build();
+    ftpArchiveOutputChannel.send(message);
+    logger.info("Sent archive file to FTP " + file.getName());
   }
 
 }
