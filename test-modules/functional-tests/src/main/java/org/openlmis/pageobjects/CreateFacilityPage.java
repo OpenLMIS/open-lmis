@@ -116,6 +116,12 @@ public class CreateFacilityPage extends Page {
   @FindBy(how = ID, using = "supported-program-active")
   private static WebElement programsSupportedActiveFlag;
 
+  @FindBy(how = XPATH, using = "//form[@id='create-facility']/div/div[3]/div/div/table/tbody/tr[1][@class='ng-scope']/td[2]/input")
+  private static WebElement programsSupportedFirstActiveFlag;
+
+  @FindBy(how = XPATH, using = "//form/div/div[3]/div/div/table/tbody/tr[1]/td[3]/input")
+  private static WebElement programsSupportedFirstStartDate;
+
   @FindBy(how = ID, using = "supported-program-start-date")
   private static WebElement programsSupportedStartDate;
 
@@ -279,21 +285,14 @@ public class CreateFacilityPage extends Page {
     addSupportedProgram.click();
   }
 
-    public void editProgram(String program, boolean push, boolean active) {
-        testWebDriver.selectByVisibleText(programsSupported, program);
-        if (!push) {
-            if (active)
-                programsSupportedActiveFlag.click();
-            else
-                programsSupportedActiveFlag.clear();
-            testWebDriver.sleep(500);
-            programsSupportedStartDate.click();
-            startDateCalender.click();
-            testWebDriver.sleep(500);
-            okAlert.click();
-            testWebDriver.sleep(500);
-        }
-        addSupportedProgram.click();
+    public void activeInactiveFirstProgram() {
+        programsSupportedFirstActiveFlag.click();
+        testWebDriver.sleep(500);
+        programsSupportedStartDate.click();
+        programsSupportedFirstStartDate.click();
+        testWebDriver.handleScrollByPixels(0,1000);
+        startDateCalender.click();
+        testWebDriver.sleep(500);
     }
 
     public void removeFirstProgram() {

@@ -26,6 +26,7 @@ import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertFalse;
 
 
 public class FacilityProgramSupportedFeed extends TestCaseHelper {
@@ -85,7 +86,7 @@ public class FacilityProgramSupportedFeed extends TestCaseHelper {
       responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
 
       List<String> feedJSONList=XmlUtils.getNodeValues(responseEntity.getResponse(),"content");
-      assertTrue(feedJSONList.get(0).contains("\"active\":true"));
+      assertTrue(feedJSONList.get(1).contains("\"active\":true"));
       assertTrue(feedJSONList.get(1).contains("\"active\":false"));
 
       deleteFacilityPage = homePage.navigateSearchFacility();
@@ -98,8 +99,21 @@ public class FacilityProgramSupportedFeed extends TestCaseHelper {
       responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
 
       feedJSONList=XmlUtils.getNodeValues(responseEntity.getResponse(),"content");
-      assertTrue(feedJSONList.get(1).contains("\"active\":false"));
-      assertEquals(feedJSONList.size(),1);
+      assertTrue(feedJSONList.get(2).contains("\"active\":false"));
+      assertFalse(feedJSONList.get(2).contains("\"active\":true"));
+
+      deleteFacilityPage = homePage.navigateSearchFacility();
+      deleteFacilityPage.searchFacility(date_time);
+      deleteFacilityPage.clickFacilityList(date_time);
+      createFacilityPage.activeInactiveFirstProgram();
+      createFacilityPage.saveFacility();
+
+      Thread.sleep(5000);
+      responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
+
+      feedJSONList=XmlUtils.getNodeValues(responseEntity.getResponse(),"content");
+      assertTrue(feedJSONList.get(3).contains("\"active\":true"));
+      assertFalse(feedJSONList.get(3).contains("\"active\":false"));
 
   }
     @DataProvider(name = "Data-Provider-Function-Positive")
