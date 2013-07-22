@@ -376,7 +376,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @After
   public void tearDown() throws Exception {
-    testWebDriver.sleep(1000);
+    testWebDriver.sleep(500);
     if(!testWebDriver.getElementById("username").isDisplayed()) {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);

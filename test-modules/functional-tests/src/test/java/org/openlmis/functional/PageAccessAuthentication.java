@@ -55,7 +55,6 @@ public class PageAccessAuthentication extends TestCaseHelper {
 
   @After
   public void tearDown() throws Exception {
-    testWebDriver.sleep(1000);
       if (!testWebDriver.getElementById("username").isDisplayed()) {
           HomePage homePage = new HomePage(testWebDriver);
           homePage.logout(baseUrlGlobal);

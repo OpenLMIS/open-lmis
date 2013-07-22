@@ -338,7 +338,7 @@ public class InitiateRnR extends TestCaseHelper {
   @AfterMethod(groups = "functional")
   @After
   public void tearDown() throws Exception {
-    testWebDriver.sleep(1000);
+    testWebDriver.sleep(500);
     if(!testWebDriver.getElementById("username").isDisplayed()) {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
