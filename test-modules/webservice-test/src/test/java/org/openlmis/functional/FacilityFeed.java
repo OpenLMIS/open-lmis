@@ -9,17 +9,15 @@ package org.openlmis.functional;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.restapi.domain.Report;
+import org.openlmis.pageobjects.CreateFacilityPage;
+import org.openlmis.pageobjects.DeleteFacilityPage;
+import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.LoginPage;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import org.openlmis.pageobjects.CreateFacilityPage;
-import org.openlmis.pageobjects.DeleteFacilityPage;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.LoginPage;
 
 import java.util.List;
 
@@ -37,52 +35,55 @@ public class FacilityFeed extends TestCaseHelper {
 
   @AfterMethod(groups = {"webservice"})
   public void tearDown() throws Exception {
-      dbWrapper.deleteData();
-      dbWrapper.closeConnection();
+    HomePage homePage = new HomePage(testWebDriver);
+    homePage.logout(baseUrlGlobal);
+    dbWrapper.deleteData();
+    dbWrapper.closeConnection();
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
   public void testFacilityFeed(String user, String program, String[] credentials) throws Exception {
-      HttpClient client = new HttpClient();
-      client.createContext();
+    HttpClient client = new HttpClient();
+    client.createContext();
 
-      LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
-      dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com", "openLmis");
+    dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com", "openLmis");
 
-      HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-      CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
-      String geoZone = "Ngorongoro";
-      String facilityType = "Lvl3 Hospital";
-      String operatedBy = "MoH";
-      String facilityCodePrefix = "FCcode";
-      String facilityNamePrefix = "FCname";
+    CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
+    String geoZone = "Ngorongoro";
+    String facilityType = "Lvl3 Hospital";
+    String operatedBy = "MoH";
+    String facilityCodePrefix = "FCcode";
+    String facilityNamePrefix = "FCname";
 
-      String date_time = createFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy, "");
-      createFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
+    String date_time = createFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy, "");
+    createFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
 
-      ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
-      assertTrue(responseEntity.getResponse().contains("\"code\":\"" + facilityCodePrefix + date_time + "\",\"name\":\"" + facilityNamePrefix + date_time + "\""));
+    ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
+    assertTrue(responseEntity.getResponse().contains("\"code\":\"" + facilityCodePrefix + date_time + "\",\"name\":\"" + facilityNamePrefix + date_time + "\""));
 
-      DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
-      deleteFacilityPage.searchFacility(date_time);
-      deleteFacilityPage.clickFacilityList(date_time);
-      deleteFacilityPage.deleteFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-      deleteFacilityPage.verifyDeletedFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-      deleteFacilityPage.restoreFacility();
-      responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
+    DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
+    deleteFacilityPage.searchFacility(date_time);
+    deleteFacilityPage.clickFacilityList(date_time);
+    deleteFacilityPage.deleteFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    deleteFacilityPage.verifyDeletedFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    deleteFacilityPage.restoreFacility();
+    responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
 
-      List<String> feedJSONList=XmlUtils.getNodeValues(responseEntity.getResponse(),"content");
-      assertTrue(feedJSONList.get(0).contains("\"active\":true"));
-      assertTrue(feedJSONList.get(1).contains("\"active\":false"));
-      //assertTrue(feedJSONList.get(2).contains("\"active\":true"));
+    List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
+    assertTrue(feedJSONList.get(0).contains("\"active\":true"));
+    assertTrue(feedJSONList.get(1).contains("\"active\":false"));
+    //assertTrue(feedJSONList.get(2).contains("\"active\":true"));
   }
-    @DataProvider(name = "Data-Provider-Function-Positive")
-    public Object[][] parameterIntTestProviderPositive() {
-        return new Object[][]{
-                {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
-        };
-    }
+
+  @DataProvider(name = "Data-Provider-Function-Positive")
+  public Object[][] parameterIntTestProviderPositive() {
+    return new Object[][]{
+      {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
+    };
+  }
 }
 
