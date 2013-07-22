@@ -376,7 +376,7 @@ Edit Product
                maxlength="20"
                ng-required="true"/>
                                         <span class="field-error"
-                                              ng-show="createProductForm.packSize.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.packSize.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
     </div>
@@ -394,7 +394,7 @@ Edit Product
                maxlength="20"
                ng-required="true"/>
                                         <span class="field-error"
-                                              ng-show="createProductForm.fullName.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.fullName.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
     </div>
@@ -413,7 +413,7 @@ Edit Product
                maxlength="20"
                ng-required="true"/>
                                         <span class="field-error"
-                                              ng-show="createProductForm.dispensingUnit.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.dispensingUnit.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
 
@@ -433,7 +433,7 @@ Edit Product
                maxlength="20"
                ng-required="true"/>
                                         <span class="field-error"
-                                              ng-show="createProductForm.dosesPerDispensingUnit.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.dosesPerDispensingUnit.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
 
@@ -453,7 +453,7 @@ Edit Product
                maxlength="20"
                ng-required="true"/>
                                         <span class="field-error"
-                                              ng-show="createProductForm.packRoundingThreshold.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.packRoundingThreshold.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
     </div>
@@ -468,7 +468,7 @@ Edit Product
                ng-show="editProduct"
                maxlength="20"/>
                                         <span class="field-error"
-                                              ng-show="createProductForm.strength.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.strength.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
     </div>
@@ -484,7 +484,7 @@ Edit Product
                ng-show="editProduct"
                maxlength="20"/>
                                         <span class="field-error"
-                                              ng-show="createProductForm.type.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.type.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
     </div>
@@ -502,7 +502,7 @@ Edit Product
 
         </select>
                                        <span class="field-error"
-                                             ng-show="createProductForm.dosageUnitId.$error.required && showErrorForCreate"
+                                             ng-show="editProductForm.dosageUnitId.$error.required && showErrorForCreate"
                                              openlmis-message="missing.value">
                                         </span>
     </div>
@@ -520,7 +520,7 @@ Edit Product
                ng-show="editProduct"
                maxlength="20"/>
                                         <span class="field-error"
-                                              ng-show="createProductForm.displayOrder.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.displayOrder.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
     </div>
@@ -539,7 +539,7 @@ Edit Product
 
         </select>
                                        <span class="field-error"
-                                             ng-show="createProductForm.productForm.$error.required && showErrorForCreate"
+                                             ng-show="editProductForm.productForm.$error.required && showErrorForCreate"
                                              openlmis-message="missing.value">
                                         </span>
     </div>
@@ -558,7 +558,7 @@ Edit Product
 
         </select>
                                        <span class="field-error"
-                                             ng-show="createProductForm.productDisplayOrder.$error.required && showErrorForCreate"
+                                             ng-show="editProductForm.productDisplayOrder.$error.required && showErrorForCreate"
                                              openlmis-message="missing.value">
                                         </span>
     </div>
@@ -635,11 +635,11 @@ Edit Product
         <tr ng-repeat="program in programs" tab-scroll>
             <td  style="width: 200px;">&nbsp;</td>
             <td><span class="span1" openlmis-message="program.name"></span></td>
-            <td><span class="span1"><input id="program_{{program.id}}_edt" type="checkbox" ng-checked="contains(selectedProductCost.programname)"
-                                           ng-model="checked"/></span></td>
+            <td><span class="span1"><input id="program_{{program.id}}_edt" type="checkbox" ng-checked="programProductsCost[program.id].id"
+                                           ng-model="programProductsCost[program.id].id"/></span></td>
             <td  style="width: 100px;">&nbsp;</td>
-            <td><span class="span1"><input id="price_{{program.id}}_edt" type="text"/></span></td>
-            <td><span class="span1"><input id="priceperdosage_{{program.id}}_edt" type="text"/></span></td>
+            <td><span class="span1"><input id="price_{{program.id}}_edt" type="text" value="{{programProductsCost[program.id].priceperpack}}"/></span></td>
+            <td><span class="span1"><input id="priceperdosage_{{program.id}}_edt" type="text" value="{{programProductsCost[program.id].priceperdosage}}"/></span></td>
         </tr>
     </table>
 </div>

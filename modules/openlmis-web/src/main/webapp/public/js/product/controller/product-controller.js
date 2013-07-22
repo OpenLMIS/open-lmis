@@ -15,7 +15,7 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
     $scope.demoproducts = {};
     $scope.AddEditMode = '';
     $scope.programProductsCost = [];
-    //$scope.edit_id =0;
+
 
     if ($scope.$parent.newProductMode || $scope.$parent.editProductMode) {
          $scope.AddEditMode = true;
@@ -273,7 +273,6 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
   // drop down lists
     DosageUnits.get(function (data) {
         $scope.dosageUnits = data.dosageUnits;
-
     });
 
 
@@ -304,6 +303,8 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
           $('html, body').animate({ scrollTop: 0 }, 'fast');
           $scope.edit_id = productUnderEdit.id;
 
+          //alert(JSON.stringify($scope.editProduct, null, 4));
+
           AllProductCost.get({}, function (data) {
               $scope.productCost = data.allProductCost;
               $scope.selectedProductCost = _.where($scope.productCost, {productid: $scope.edit_id});
@@ -317,7 +318,7 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
                   }
                   tmp = program.programid;
               }
-              $scope.programProductsCost = $scope.programProductsCost.filter(function(e){return e});
+              //$scope.programProductsCost = $scope.programProductsCost.filter(function(e){return e});
               //$scope.selectedProductCost = $scope.selectedProductCost[0];
               //alert(JSON.stringify($scope.selectedProductCost, null, 4));
               //alert(JSON.stringify($scope.programProductsCost, null, 4));
