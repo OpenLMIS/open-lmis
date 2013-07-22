@@ -15,7 +15,6 @@ import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSu
 public class ProgramSupportedEventDTOTest {
   @Test
   public void shouldCreateProgramSupportedEventDTO() throws Exception {
-
     ProgramSupported programSupported = make(a(defaultProgramSupported));
     List<ProgramSupported> programSupportedList = asList(programSupported);
 
@@ -28,5 +27,7 @@ public class ProgramSupportedEventDTOTest {
     assertThat(programSupportedDTO.getName(), is(programSupported.getProgram().getName()));
     assertThat(programSupportedDTO.getCode(), is(programSupported.getProgram().getCode()));
     assertThat(programSupportedDTO.getStartDate(), is(programSupported.getStartDate()));
+
   }
+
 }

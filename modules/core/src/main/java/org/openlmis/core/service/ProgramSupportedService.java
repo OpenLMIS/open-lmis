@@ -104,7 +104,7 @@ public class ProgramSupportedService {
   public void notifyProgramSupportedUpdated(Facility facility) {
     try {
       ProgramSupportedEventDTO programSupportedEventDTO = new ProgramSupportedEventDTO(
-        facility.getCode(), facility.getSupportedPrograms());
+        facility.getCode(), getAllByFacilityId(facility.getId()));
       eventService.notify(new ProgramSupportedEvent(programSupportedEventDTO));
     } catch (URISyntaxException e) {
       logger.error("Failed to generate program supported event feed", e);
