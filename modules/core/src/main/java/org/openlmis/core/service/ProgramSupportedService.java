@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,8 +43,20 @@ public class ProgramSupportedService {
   }
 
   public void updateSupportedPrograms(Facility facility) {
+    Facility facilityForNotification = cloneFacility(facility);
     repository.updateSupportedPrograms(facility);
-    notifyProgramSupportedUpdated(facility);
+    notifyProgramSupportedUpdated(facilityForNotification);
+  }
+
+  private Facility cloneFacility(Facility facility) {
+    Facility facilityForNotification = new Facility();
+    facilityForNotification.setCode(facility.getCode());
+    ArrayList<ProgramSupported> supportedPrograms = new ArrayList<>();
+    for (ProgramSupported programSupported : facility.getSupportedPrograms()) {
+      supportedPrograms.add(programSupported);
+    }
+    facilityForNotification.setSupportedPrograms(supportedPrograms);
+    return facilityForNotification;
   }
 
   public ProgramSupported getFilledByFacilityIdAndProgramId(Long facilityId, Long programId) {
@@ -104,7 +117,7 @@ public class ProgramSupportedService {
   public void notifyProgramSupportedUpdated(Facility facility) {
     try {
       ProgramSupportedEventDTO programSupportedEventDTO = new ProgramSupportedEventDTO(
-        facility.getCode(), getAllByFacilityId(facility.getId()));
+        facility.getCode(), facility.getSupportedPrograms());
       eventService.notify(new ProgramSupportedEvent(programSupportedEventDTO));
     } catch (URISyntaxException e) {
       logger.error("Failed to generate program supported event feed", e);
