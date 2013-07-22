@@ -353,7 +353,7 @@ public class RnrLineItem extends LineItem {
 
   private Integer round(Double packsToShip, Integer orderQuantity) {
     Integer remainderQuantity = orderQuantity % packSize;
-    if (remainderQuantity >= packRoundingThreshold && packsToShip != 0) {
+    if (remainderQuantity >= packRoundingThreshold) {
       packsToShip += 1;
     }
 
