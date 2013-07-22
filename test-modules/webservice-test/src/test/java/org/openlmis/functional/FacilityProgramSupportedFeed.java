@@ -9,10 +9,7 @@ package org.openlmis.functional;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.CreateFacilityPage;
-import org.openlmis.pageobjects.DeleteFacilityPage;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.*;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -21,6 +18,7 @@ import org.testng.annotations.Test;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -118,11 +116,40 @@ public class FacilityProgramSupportedFeed extends TestCaseHelper {
 
   }
 
-  @DataProvider(name = "Data-Provider-Function-Positive")
-  public Object[][] parameterIntTestProviderPositive() {
-    return new Object[][]{
-      {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
-    };
-  }
+
+    @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
+    public void testFacilityProgramSupportedFeed_Upload(String user, String program, String[] credentials) throws Exception {
+        HttpClient client = new HttpClient();
+        client.createContext();
+
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+        UploadPage uploadPage = homePage.navigateUploads();
+        uploadPage.uploadProgramSupportedByFacilities("QA_program_supported.csv");
+        Thread.sleep(5000);
+        ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
+        String expected =  "\"facilityCode\":\"F10\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":1296585000000}";
+        assertTrue(responseEntity.getResponse().contains(expected));
+
+        uploadPage.uploadProgramSupportedByFacilities("QA_program_supported_Subsequent.csv");
+        Thread.sleep(5000);
+        responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
+
+        List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
+        expected =  "\"facilityCode\":\"F10\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":false,\"startDate\":1296585000000}";
+        String expected1 =  "\"facilityCode\":\"F11\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":1304533800000}";
+
+        assertTrue(feedJSONList.get(1).contains(expected));
+        assertTrue(feedJSONList.get(2).contains(expected1));
+    }
+
+        @DataProvider(name = "Data-Provider-Function-Positive")
+    public Object[][] parameterIntTestProviderPositive() {
+        return new Object[][]{
+                {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
+        };
+    }
+
 }
 
