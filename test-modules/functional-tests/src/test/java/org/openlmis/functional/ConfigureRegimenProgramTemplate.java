@@ -52,7 +52,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   public String expectedProgramsString;
 
-  @BeforeMethod(groups = {"functional2", "smoke"})
+  @BeforeMethod(groups = "functional2")
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -435,7 +435,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     dbWrapper.insertSupplyLines("N1", program, "F10");
   }
 
-  @AfterMethod(groups = {"smoke", "functional2"})
+  @AfterMethod(groups = "functional2")
   @After
   public void tearDown() throws Exception {
       if (!testWebDriver.getElementById("username").isDisplayed()) {

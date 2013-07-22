@@ -83,9 +83,19 @@ public class DistributionPage extends RequisitionPage {
 
   public void verifyDownloadSuccessFullMessage(String deliveryZone, String program, String period)
   {
+    testWebDriver.sleep(200);
     SeleneseTestNgHelper.assertTrue("Data download successful message should show up",saveSuccessMessageDiv.getText().equals("Data for the selected "+deliveryZone+", "+program+", "+period+" has been downloaded"));
 
   }
+
+  public void verifyDataAlreadyCachedMessage(String deliveryZone, String program, String period)
+  {
+    testWebDriver.sleep(200);
+    SeleneseTestNgHelper.assertTrue("Data already cached  message should show up",saveSuccessMessageDiv.getText().equals("The data for the selected "+deliveryZone+", "+program+", "+period+" is already cached"));
+
+  }
+
+
 
   public List<WebElement> getAllSelectOptionsFromDeliveryZone() {
     testWebDriver.waitForElementToAppear(selectDeliveryZoneSelectBox);

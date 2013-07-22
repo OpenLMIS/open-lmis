@@ -34,7 +34,7 @@ public class ForgotPassword extends TestCaseHelper {
 
   ForgotPasswordPage forgotPasswordPage;
 
-  @BeforeMethod(groups = {"smoke", "functional2"})
+  @BeforeMethod(groups = "functional2")
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -173,7 +173,7 @@ public class ForgotPassword extends TestCaseHelper {
   }
 
 
-  @AfterMethod(groups = {"smoke", "functional2"})
+  @AfterMethod(groups = "functional2")
   @After
   public void tearDown() throws Exception {
     try{

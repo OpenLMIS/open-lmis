@@ -50,7 +50,7 @@ public class InitiateRnR extends TestCaseHelper {
   public LoginPage loginPage;
   public InitiateRnRPage initiateRnRPage;
 
-  @BeforeMethod(groups = {"functional", "smoke"})
+  @BeforeMethod(groups = "functional")
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -335,7 +335,7 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
 
-  @AfterMethod(groups = {"functional", "smoke"})
+  @AfterMethod(groups = "functional")
   @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(1000);
