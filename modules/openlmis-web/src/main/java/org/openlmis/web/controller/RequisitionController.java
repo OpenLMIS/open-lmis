@@ -17,7 +17,6 @@ import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.configurationReader.StaticReferenceDataReader;
-import org.openlmis.web.model.RnrReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,13 +33,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
 
 import static org.openlmis.rnr.dto.RnrDTO.prepareForListApproval;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForView;
 import static org.openlmis.web.response.OpenLmisResponse.*;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
@@ -56,6 +53,7 @@ public class RequisitionController extends BaseController {
 
   public static final String COMMENTS = "comments";
   public static final String REGIMEN_TEMPLATE = "regimen_template";
+  public static final String LOSS_ADJUSTMENT_TYPES = "lossAdjustmentTypes";
 
   private RequisitionService requisitionService;
   private RnrTemplateService rnrTemplateService;
@@ -64,6 +62,7 @@ public class RequisitionController extends BaseController {
 
   private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
   private RegimenColumnService regimenColumnService;
+
 
   @Autowired
   public RequisitionController(RequisitionService requisitionService, RnrTemplateService rnrTemplateService, StaticReferenceDataReader staticReferenceDataReader, RegimenColumnService regimenColumnService) {
@@ -134,9 +133,10 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/requisitions/lossAndAdjustments/reference-data", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
-  public Map getReferenceData() {
-    RnrReferenceData referenceData = new RnrReferenceData();
-    return referenceData.addLossesAndAdjustmentsTypes(requisitionService.getLossesAndAdjustmentsTypes()).get();
+  public ResponseEntity<OpenLmisResponse> getReferenceData() {
+    OpenLmisResponse referenceData = new OpenLmisResponse();
+    referenceData.addData(LOSS_ADJUSTMENT_TYPES, requisitionService.getLossesAndAdjustmentsTypes());
+    return referenceData.response(OK);
   }
 
   @RequestMapping(value = "/requisitions/{id}/authorize", method = PUT, headers = ACCEPT_JSON)

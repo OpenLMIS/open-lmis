@@ -414,6 +414,19 @@ public class RequisitionControllerTest {
     assertThat(comments, is(response.getBody().getData().get(COMMENTS)));
   }
 
+  @Test
+  public void shouldGetReferenceDataForRnr() throws Exception {
+    List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes = new ArrayList<>();
+    when(requisitionService.getLossesAndAdjustmentsTypes()).thenReturn(lossesAndAdjustmentsTypes);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.getReferenceData();
+
+    verify(requisitionService).getLossesAndAdjustmentsTypes();
+    assertThat((String) responseEntity.getBody().getData().get("pageSize"), is("1"));
+    assertThat((List<LossesAndAdjustmentsType>) responseEntity.getBody().getData().get("lossAdjustmentTypes"), is(lossesAndAdjustmentsTypes));
+
+  }
+
   private Rnr createRequisition() {
     Rnr requisition = new Rnr();
     final Facility facility = new Facility();
