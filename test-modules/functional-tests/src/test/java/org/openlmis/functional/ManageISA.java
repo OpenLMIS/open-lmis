@@ -176,8 +176,11 @@ public class ManageISA extends TestCaseHelper {
 
   @AfterMethod(groups = "functional2")
   public void tearDown() throws Exception {
+    testWebDriver.sleep(1000);
+    if(!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
+    }
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
   }
