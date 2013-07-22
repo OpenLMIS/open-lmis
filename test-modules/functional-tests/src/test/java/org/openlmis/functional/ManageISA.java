@@ -8,7 +8,6 @@ package org.openlmis.functional;
 
 
 import cucumber.api.DataTable;
-import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -176,12 +175,9 @@ public class ManageISA extends TestCaseHelper {
 
 
   @AfterMethod(groups = "functional2")
-  @After
   public void tearDown() throws Exception {
-    if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
-    }
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
   }
