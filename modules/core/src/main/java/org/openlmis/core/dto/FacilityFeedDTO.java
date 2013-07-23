@@ -74,7 +74,7 @@ public class FacilityFeedDTO extends BaseFeedDTO {
 
   private boolean virtualFacility;
 
-  private Integer parentFacilityId;
+  private Long parentFacilityId;
 
   private String comments;
 

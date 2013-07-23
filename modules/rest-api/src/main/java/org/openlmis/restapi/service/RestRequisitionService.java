@@ -24,7 +24,7 @@ import static java.util.Arrays.asList;
 
 @Service
 @NoArgsConstructor
-public class RestService {
+public class RestRequisitionService {
 
   @Autowired
   private UserService userService;
