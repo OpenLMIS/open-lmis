@@ -51,8 +51,10 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
     public ReportData getReportFilterData(Map<String, String[]> params) {
         String facilityTypeId =  params.get("facilityTypeId")[0];
         String rgroupId =     params.get("rgroupId")[0];
+        String periodId = params.get("periodId")[0];
         String facilityType =  "";
         String rgroup = "";
+        String period = "";
 
         if(facilityTypeId != null && !facilityTypeId.isEmpty()){
             if(facilityTypeId.equals("-1") || facilityTypeId.equals("0"))
@@ -67,13 +69,21 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
             else
                 rgroup = "Reporting Groups : " +params.get("rgroup")[0];
         }
+
+        if(periodId != null && !periodId.isEmpty()){
+            period = (periodId.equals("-1") || periodId.equals("0") )? "All Reporting Periods" : "Reporting Period : " + params.get("period")[0];
+
+        }
         final String finalFacilityType = facilityType;
         final String finalRgroup = rgroup;
+        final String finalPeriod = period;
 
         return new ReportData() {
            @Override
            public String toString() {
-               return finalFacilityType +"\n"+ finalRgroup +"\n";
+               StringBuffer reportingFilter = new StringBuffer("");
+               reportingFilter.append(finalPeriod).append("\n").append(finalFacilityType).append("\n").append(finalRgroup).append("\n");
+               return reportingFilter.toString();
            }
        };
     }

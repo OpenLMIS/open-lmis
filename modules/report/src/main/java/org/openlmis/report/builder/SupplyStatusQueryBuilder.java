@@ -14,7 +14,7 @@ public class SupplyStatusQueryBuilder {
                 "    ,(SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) maximumStock,\n" +
                 "  case when(SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) - (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) > 0 then \n" +
                 "   (SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) - (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) ELSE 0 end  reorderAmount       \n" +
-                "   ,MAX(fs.facility_name) supplyingFacility, MAX(li.maxmonthsofstock) MaxMOS, MAX(li.maxmonthsofstock) minMOS \n" +
+                "   ,MAX(fs.facility_name) supplyingFacility,round(cast(MAX(li.maxmonthsofstock) as numeric),1) MaxMOS, round(cast(MAX(li.maxmonthsofstock) as numeric),1) minMOS  \n" +
                 "    from facilities        \n" +
                 "    inner join facility_types ON facilities.typeid = facility_types.id       \n" +
                 "    inner join geographic_zones on geographic_zones.id = facilities.geographiczoneid       \n" +
