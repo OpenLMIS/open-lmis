@@ -422,7 +422,6 @@ public class RequisitionControllerTest {
     ResponseEntity<OpenLmisResponse> responseEntity = controller.getReferenceData();
 
     verify(requisitionService).getLossesAndAdjustmentsTypes();
-    assertThat((String) responseEntity.getBody().getData().get("pageSize"), is("1"));
     assertThat((List<LossesAndAdjustmentsType>) responseEntity.getBody().getData().get("lossAdjustmentTypes"), is(lossesAndAdjustmentsTypes));
 
   }
