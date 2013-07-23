@@ -36,7 +36,7 @@ angular.module('IndexedDB', []).service('IndexedDB', function ($rootScope) {
 
     function createDistributionReferenceData() {
       dropIfExist("distributionReferenceData");
-      indexedDBConnection.createObjectStore("distributionReferenceData", {"keyPath": "id"});
+      indexedDBConnection.createObjectStore("distributionReferenceData", {"keyPath": "zpp"});
     }
   };
 

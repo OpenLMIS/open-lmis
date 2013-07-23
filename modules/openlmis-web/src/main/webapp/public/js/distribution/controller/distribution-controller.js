@@ -5,7 +5,7 @@
  */
 
 
-function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, IndexedDB, navigateBackService, $http, $dialog, $scope, $location) {
+function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, IndexedDB, navigateBackService, $http, $dialog, $scope) {
 
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
@@ -117,7 +117,9 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
 
       var distributionReferenceDataTransaction = IndexedDB.getConnection().transaction('distributionReferenceData', 'readwrite');
       var distributionReferenceDataStore = distributionReferenceDataTransaction.objectStore('distributionReferenceData');
-      distributionReferenceDataStore.put(data.facilities[0]);
+      var zpp = $scope.selectedZone.id + '_' + $scope.selectedProgram.id + '_' + $scope.selectedPeriod.id;
+      var referenceData = {zpp: zpp, facilities: data.facilities}
+      distributionReferenceDataStore.put(referenceData);
       distributionReferenceDataTransaction.oncomplete = function () {
         cacheDistribution();
         $scope.$apply();
@@ -125,9 +127,7 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
     }
 
     function cacheDistribution() {
-
       var distribution = new Distribution($scope.selectedZone, $scope.selectedProgram, $scope.selectedPeriod);
-
       $http.post('/distributions.json', distribution).success(onInitSuccess);
 
       function onInitSuccess(data, status) {
