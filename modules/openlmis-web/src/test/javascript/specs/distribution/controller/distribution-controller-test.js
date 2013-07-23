@@ -8,13 +8,13 @@ describe('DistributionController', function () {
   var scope, controller, httpBackend, messageService;
 
   var mockedIndexedDB = {
-    getConnection:function () {
+    getConnection: function () {
       return {
-        transaction:function () {
+        transaction: function () {
           return {
             objectStore: function () {
               return {
-                put : function (){
+                put: function () {
                 }
               }
             }
@@ -33,13 +33,13 @@ describe('DistributionController', function () {
     controller = $controller;
     httpBackend = $httpBackend;
 
-    controller(DistributionController, {$scope:scope, deliveryZones:[], IndexedDB:mockedIndexedDB, $dialog:{}, messageService:messageService});
+    controller(DistributionController, {$scope: scope, deliveryZones: [], IndexedDB: mockedIndexedDB, $dialog: {}, messageService: messageService});
   }));
 
   it('should load programs', function () {
-    scope.selectedZone = {id:1};
-    var programs = {deliveryZonePrograms:[
-      {id:1}
+    scope.selectedZone = {id: 1};
+    var programs = {deliveryZonePrograms: [
+      {id: 1}
     ]};
     httpBackend.expect('GET', '/deliveryZones/1/activePrograms.json').respond(200, programs);
 
@@ -50,25 +50,25 @@ describe('DistributionController', function () {
   });
 
   it('should load periods and set only top 13 periods in scope', function () {
-    scope.selectedProgram = {id:2};
-    scope.selectedZone = {id:1};
-    var periods = {periods:[
-      {id:1},
-      {id:1},
-      {id:1},
-      {id:1},
-      {id:1},
-      {id:1},
-      {id:1},
-      {id:1},
-      {id:1},
-      {id:1},
-      {id:1},
-      {id:1},
-      {id:1},
-      {id:1},
-      {id:1},
-      {id:1}
+    scope.selectedProgram = {id: 2};
+    scope.selectedZone = {id: 1};
+    var periods = {periods: [
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1},
+      {id: 1}
     ]};
     httpBackend.expect('GET', '/deliveryZones/1/programs/2/periods.json').respond(200, periods);
 
@@ -82,41 +82,45 @@ describe('DistributionController', function () {
   it('should not initiate the distribution if already cached', function () {
     spyOn(messageService, 'get');
     scope.distributionList = [
-      {deliveryZone:{id:1, name:'zone1'}, program:{id:1, name:'program1'}, period:{id:1, name:'period1'}},
-      {deliveryZone:{id:2}, program:{id:2}, period:{id:2}}
+      {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}},
+      {deliveryZone: {id: 2}, program: {id: 2}, period: {id: 2}}
     ];
-    scope.selectedZone = {id:1, name:'zone1'};
-    scope.selectedProgram = {id:1, name:'program1'};
-    scope.selectedPeriod = {id:1, name:'period1'};
+    scope.selectedZone = {id: 1, name: 'zone1'};
+    scope.selectedProgram = {id: 1, name: 'program1'};
+    scope.selectedPeriod = {id: 1, name: 'period1'};
     scope.initiateDistribution();
     expect(messageService.get).toHaveBeenCalledWith("message.distribution.already.cached", 'zone1', 'program1', 'period1');
   });
 
-  it('should initiate the distribution if not already cached and initiated', function () {
+  it('should get reference data for a distribution if distribution not initiated', function () {
     scope.distributionList = [];
-    scope.selectedZone = {id:1, name:'zone1'};
-    scope.selectedProgram = {id:1, name:'program1'};
-    scope.selectedPeriod = {id:1, name:'period1'};
-    var distribution = {deliveryZone:{id:1, name:'zone1'}, program:{id:1, name:'program1'}};
-    var responseData = {success : "Distribution created successfully", distribution : distribution};
-    httpBackend.expect('POST', '/distributions.json').respond(201, responseData);
+    scope.selectedZone = {id: 1, name: 'zone1'};
+    scope.selectedProgram = {id: 1, name: 'program1'};
+    scope.selectedPeriod = {id: 1, name: 'period1'};
+    var facilities = [
+      {id: 2, name: "F1"}
+    ];
+    httpBackend.expect('GET', '/deliveryZones/1/programs/1/facilities.json').respond(200, {"facilities": [
+      {'id': '23'}
+    ]});
+
     scope.initiateDistribution();
+
     httpBackend.flush();
-    expect(scope.message).toEqual("Distribution created successfully");
   });
 
   it('should not initiate the distribution already initiated', function () {
     spyOn(OpenLmisDialog, 'newDialog')
     scope.distributionList = [];
-    scope.selectedZone = {id:1, name:'zone1'};
-    scope.selectedProgram = {id:1, name:'program1'};
-    scope.selectedPeriod = {id:1, name:'period1'};
-    var distribution = {deliveryZone:{id:1, name:'zone1'}, program:{id:1, name:'program1'}};
-    var responseData = {success : "Distribution already created by user1", distribution : distribution};
-    httpBackend.expect('POST', '/distributions.json').respond(200, responseData);
+    scope.selectedZone = {id: 1, name: 'zone1'};
+    scope.selectedProgram = {id: 1, name: 'program1'};
+    scope.selectedPeriod = {id: 1, name: 'period1'};
+
+    httpBackend.expect('GET', '/deliveryZones/1/programs/1/facilities.json').respond(200, {"facilities": [
+      {'id': '23'}
+    ]});
+
     scope.initiateDistribution();
     httpBackend.flush();
-    expect(OpenLmisDialog.newDialog).toHaveBeenCalled();
-
   });
 });
