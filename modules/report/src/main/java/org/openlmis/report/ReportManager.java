@@ -81,10 +81,23 @@ public class ReportManager {
        User currentUser = userService.getById(Long.parseLong(String.valueOf(userId)));
        List<? extends ReportData> dataSource = report.getReportDataProvider().getReportDataByFilterCriteria(params, DataSourceType.BEAN_COLLECTION_DATA_SOURCE);
 
+
+
        // Read the report template from file.
        InputStream reportInputStream =  this.getClass().getClassLoader().getResourceAsStream(report.getTemplate()) ;
        HashMap<String, Object> extraParams = getReportExtraParams(report, currentUser.getUserName(), outputOption.name(), params ) ;
-       reportExporter.exportReport(reportInputStream,extraParams, dataSource, outputOption, response);
+
+        //Setup message for a report when there is no data found
+        if(dataSource != null && dataSource.size() == 0){
+
+            if(extraParams != null){
+                extraParams.put(Constants.REPORT_MESSAGE_WHEN_NO_DATA, configurationService.getByKey(Constants.REPORT_MESSAGE_WHEN_NO_DATA).getValue());
+            }else {
+                 extraParams = new HashMap<String, Object>();
+                 extraParams.put(Constants.REPORT_MESSAGE_WHEN_NO_DATA, configurationService.getByKey(Constants.REPORT_MESSAGE_WHEN_NO_DATA).getValue());
+            }
+        }
+        reportExporter.exportReport(reportInputStream,extraParams, dataSource, outputOption, response);
 
     }
     /**

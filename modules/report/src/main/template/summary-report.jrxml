@@ -17,6 +17,7 @@
 	<parameter name="OPERATOR_LOGO" class="java.io.InputStream"/>
 	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
 	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
+	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select MAX(facilities.name) facility,MAX(facility_types.name) facilityType,li.productcode code,li.productcategory as category, li.product,SUM(li.beginningBalance) openingBalance, SUM(li.quantityreceived) receipts, SUM(li.quantitydispensed) issues, SUM(li.totallossesandadjustments) adjustments,
     (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) closingBalance, SUM(li.maxmonthsofstock) monthsOfStock, SUM(li.amc) averageMonthlyConsumption
@@ -356,6 +357,15 @@ order by facilities.name asc,li.productcode asc,  li.product asc, li.productcate
 	</title>
 	<detail>
 		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement uuid="e0231363-bcba-40f6-8a6b-7e3b8020aac2" x="43" y="0" width="759" height="20" forecolor="#006666">
+					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
+			</textField>
 			<staticText>
 				<reportElement uuid="fb1b77a0-4d61-465c-9e55-2aa5da7933ea" mode="Opaque" x="2" y="1" width="799" height="20" backcolor="#F4F4F4">
 					<property name="local_mesure_unitx" value="pixel"/>

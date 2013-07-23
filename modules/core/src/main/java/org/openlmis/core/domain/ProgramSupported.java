@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
@@ -18,10 +19,13 @@ import org.openlmis.upload.annotation.ImportField;
 import java.util.Date;
 import java.util.List;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProgramSupported extends BaseModel implements Importable {
 
@@ -45,4 +49,12 @@ public class ProgramSupported extends BaseModel implements Importable {
     if (this.active && this.startDate == null)
       throw new DataException("supported.programs.invalid");
   }
+
+  public ProgramSupported(Long programId, Boolean active, Date startDate) {
+
+    this.program = new Program(programId);
+    this.active = active;
+    this.startDate = startDate;
+  }
+
 }

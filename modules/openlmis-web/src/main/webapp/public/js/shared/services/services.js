@@ -40,7 +40,7 @@ services.factory('Users', function ($resource) {
 });
 
 services.factory('UserFacilityList', function ($resource) {
-  return $resource('/logistics/user/facilities.json', {}, {});
+  return $resource('/user/facilities.json', {}, {});
 });
 
 services.factory('UserFacilityWithViewRequisition', function ($resource) {

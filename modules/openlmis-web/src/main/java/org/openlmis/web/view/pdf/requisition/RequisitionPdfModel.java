@@ -67,7 +67,7 @@ public class RequisitionPdfModel {
 
   private PdfPTable getTableFor(List<RnrLineItem> lineItems, boolean fullSupply) throws DocumentException, NoSuchFieldException, IllegalAccessException {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumnList);
-    List<RnrColumn> visibleColumns = template.getPrintableColumns(fullSupply);
+    List<? extends Column> visibleColumns = template.getPrintableColumns(fullSupply);
 
     PdfPTable table = prepareRnrLineItemsTable(visibleColumns);
 
@@ -76,7 +76,7 @@ public class RequisitionPdfModel {
     RnrLineItem previousLineItem = null;
     for (RnrLineItem lineItem : lineItems) {
       if (previousLineItem == null || !lineItem.getProductCategory().equals(previousLineItem.getProductCategory())) {
-        table.addCell(categoryRow(visibleColumns, lineItem));
+        table.addCell(categoryRow(visibleColumns.size(), lineItem));
         previousLineItem = lineItem;
       }
 
@@ -94,17 +94,20 @@ public class RequisitionPdfModel {
     return table;
   }
 
-  private void setTableHeader(PdfPTable table, List<RnrColumn> visibleColumns) {
-    for (RnrColumn rnrColumn : visibleColumns) {
-      table.addCell(rnrColumn.getLabel());
+  private void setTableHeader(PdfPTable table, List<? extends Column> visibleColumns) {
+    for (Column column : visibleColumns) {
+      table.addCell(column.getLabel());
     }
   }
 
-  private PdfPTable prepareRnrLineItemsTable(List<RnrColumn> visibleColumns) throws DocumentException {
-    int[] widths = getColumnWidths(visibleColumns);
-    PdfPTable table = new PdfPTable(widths.length);
+  private PdfPTable prepareRnrLineItemsTable(List<? extends Column> visibleColumns) throws DocumentException {
+    java.util.List<Integer> widths = new ArrayList<>();
+    for (Column column : visibleColumns) {
+      widths.add(column.columnWidth());
+    }
+    PdfPTable table = new PdfPTable(widths.size());
 
-    table.setWidths(widths);
+    table.setWidths(ArrayUtils.toPrimitive(widths.toArray(new Integer[widths.size()])));
     table.getDefaultCell().setBackgroundColor(HEADER_BACKGROUND);
     table.getDefaultCell().setPadding(CELL_PADDING);
     table.setWidthPercentage(WIDTH_PERCENTAGE);
@@ -112,37 +115,18 @@ public class RequisitionPdfModel {
     table.setHeaderRows(2);
     table.setFooterRows(1);
     setTableHeader(table, visibleColumns);
-    setBlankFooter(table, visibleColumns);
+    setBlankFooter(table, visibleColumns.size());
     return table;
   }
 
-  private void setBlankFooter(PdfPTable table, List<RnrColumn> visibleColumns) {
+  private void setBlankFooter(PdfPTable table, Integer visibleColumnsSize) {
     PdfPCell cell = new PdfPCell(new Phrase(" "));
     cell.setBorder(0);
-    cell.setColspan(visibleColumns.size());
+    cell.setColspan(visibleColumnsSize);
     cell.setBackgroundColor(BaseColor.WHITE);
     table.addCell(cell);
   }
 
-  private int[] getColumnWidths(List<RnrColumn> rnrColumns) {
-
-    java.util.List<Integer> widths = new ArrayList<>();
-    for (RnrColumn rnrColumn : rnrColumns) {
-
-      if (rnrColumn.getName().equals("product")) {
-        widths.add(125);
-        continue;
-      }
-      if (rnrColumn.getName().equals("remarks")) {
-        widths.add(100);
-      }
-      if (rnrColumn.getName().equals("reasonForRequestedQuantity")) {
-        widths.add(100);
-      }
-      widths.add(40);
-    }
-    return ArrayUtils.toPrimitive(widths.toArray(new Integer[widths.size()]));
-  }
 
   public PdfPTable getNonFullSupplyTable() throws DocumentException, NoSuchFieldException, IllegalAccessException {
     List<RnrLineItem> nonFullSupplyLineItems = requisition.getNonFullSupplyLineItems();
@@ -266,5 +250,15 @@ public class RequisitionPdfModel {
 
   public Money getTotalCost(Rnr requisition) {
     return new Money(new BigDecimal(requisition.getFullSupplyItemsSubmittedCost().getValue().floatValue() + requisition.getNonFullSupplyItemsSubmittedCost().getValue().floatValue()));
+  }
+
+  public PdfPTable getRegimenTable() {
+    List<RegimenLineItem> regimenLineItems = requisition.getRegimenLineItems();
+    if (regimenLineItems.size() == 0) return null;
+    return null;
+  }
+
+  public Paragraph getRegimenHeader() {
+    return new Paragraph("Regimen(s)", H2_FONT);
   }
 }

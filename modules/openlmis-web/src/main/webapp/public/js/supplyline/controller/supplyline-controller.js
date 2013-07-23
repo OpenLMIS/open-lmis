@@ -23,8 +23,9 @@ function SupplylineController($scope,  ReportPrograms, AllFacilities, Supervisor
     });
 
     AllFacilities.get(function(data){
-        $scope.facilities = data.facilityList;
+        $scope.facilities = data.allFacilities;
     });
+
 
     SupervisoryNodes.get(function(data){
         $scope.supervisoryNodes = data.supervisoryNodes;

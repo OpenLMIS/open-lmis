@@ -98,6 +98,7 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
             $scope.filterObject.facilityTypeId =  0;
         }
         $scope.filterGrid();
+
     });
 
     $scope.$watch('facilityNameFilter', function(selection){
@@ -259,7 +260,6 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
     }, true);
 
     $scope.$watch('sortInfo', function () {
-
         $.each($scope.sortInfo.fields, function(index, value) {
             if(value != undefined)
                 $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
@@ -271,9 +271,9 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         data: 'myData',
         columnDefs:
             [
-
+                { field: 'facility', displayName: 'Facility', width: "*", resizable: false},
                 { field: 'code', displayName: 'Code', width: "*", resizable: false},
-                { field: 'product', displayName: 'Product', width: "***" },
+                { field: 'product', displayName: 'Product', width: "*" },
                 { field: 'openingBalance', displayName: 'Opening Balance', width : "*"},
                 { field: 'receipts', displayName: 'Receipts', width : "*"},
                 { field: 'issues', displayName: 'Issues', width : "*"},

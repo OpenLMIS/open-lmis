@@ -12,7 +12,7 @@ describe('ProgramProductIsa', function () {
       whoRatio: 1,
       adjustmentValue: 33,
       dosesPerYear: 45,
-      wastageRate: 1,
+      wastageFactor: 1,
       bufferPercentage: 7,
       minimumValue: 3
     }
@@ -25,7 +25,7 @@ describe('ProgramProductIsa', function () {
     expect(programProductIsa.whoRatio).toEqual(0);
     expect(programProductIsa.adjustmentValue).toEqual(0);
     expect(programProductIsa.dosesPerYear).toEqual(0);
-    expect(programProductIsa.wastageRate).toEqual(0);
+    expect(programProductIsa.wastageFactor).toEqual(0);
     expect(programProductIsa.bufferPercentage).toEqual(0);
     expect(programProductIsa.minimumValue).toEqual(undefined);
     expect(programProductIsa.maximumValue).toEqual(undefined);
@@ -39,7 +39,7 @@ describe('ProgramProductIsa', function () {
     expect(programProductIsa.whoRatio).toEqual(1);
     expect(programProductIsa.adjustmentValue).toEqual(33);
     expect(programProductIsa.dosesPerYear).toEqual(45);
-    expect(programProductIsa.wastageRate).toEqual(1);
+    expect(programProductIsa.wastageFactor).toEqual(1);
     expect(programProductIsa.bufferPercentage).toEqual(7);
     expect(programProductIsa.minimumValue).toEqual(3);
     expect(programProductIsa.maximumValue).toEqual(undefined);
@@ -125,17 +125,19 @@ describe('ProgramProductIsa', function () {
   });
 
   it('should return isa formula for adjustment value less than or equal to zero', function () {
-    programProductIsa.adjustmentValue = -10;
+    isa.adjustmentValue = -10;
+    programProductIsa.init(isa);
     var isaFormula = programProductIsa.getIsaFormula();
 
-    expect(isaFormula).toEqual("(population) * 0.00000 * 0 * 1.00000 / 12 * 1.00000 + (-10)")
+    expect(isaFormula).toEqual("(population) * 0.01000 * 45 * 1.000 / 12 * 1.07000 + (-10)")
   });
 
   it('should return isa formula for adjustment value greater than zero', function () {
-    programProductIsa.adjustmentValue = 4;
+    isa.adjustmentValue = 4;
+    programProductIsa.init(isa);
     var isaFormula = programProductIsa.getIsaFormula();
 
-    expect(isaFormula).toEqual("(population) * 0.00000 * 0 * 1.00000 / 12 * 1.00000 + 4")
+    expect(isaFormula).toEqual("(population) * 0.01000 * 45 * 1.000 / 12 * 1.07000 + 4")
   });
 
 })

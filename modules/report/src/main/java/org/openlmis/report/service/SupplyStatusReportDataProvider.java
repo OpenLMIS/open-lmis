@@ -2,7 +2,6 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.report.mapper.SummaryReportMapper;
 import org.openlmis.report.mapper.SupplyStatusReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,17 +55,17 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
         String rgroup = "";
 
         if(facilityTypeId != null && !facilityTypeId.isEmpty()){
-            if(facilityTypeId.equals("-1"))
+            if(facilityTypeId.equals("-1") || facilityTypeId.equals("0"))
                 facilityType = "All Facility Types";
             else
-                facilityType = params.get("facilityType")[0];
+                facilityType = "Facility Type : " +params.get("facilityType")[0];
         }
 
         if(rgroupId != null && !rgroupId.isEmpty()){
-            if(rgroupId.equals("-1"))
+            if(rgroupId.equals("-1") || rgroupId.equals("0"))
                 rgroup = "All Reporting Groups";
             else
-                rgroup = params.get("rgroup")[0];
+                rgroup = "Reporting Groups : " +params.get("rgroup")[0];
         }
         final String finalFacilityType = facilityType;
         final String finalRgroup = rgroup;

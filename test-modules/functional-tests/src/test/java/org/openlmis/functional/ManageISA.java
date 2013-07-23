@@ -53,7 +53,7 @@ public class ManageISA extends TestCaseHelper {
       program, geoZone, facilityType, operatedBy, valueOf(333), true);
 
     createFacilityPage.overrideIsa(24);
-    createFacilityPage.verifyCalculatedIsa(6);
+    createFacilityPage.verifyCalculatedIsa(7);
     createFacilityPage.clickIsaDoneButton();
     SaveButton.click();
 

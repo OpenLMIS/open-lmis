@@ -38,8 +38,18 @@ public class JasperReportExporter implements ReportExporter {
             if(reportExtraParams != null && (outputOption != null && !outputOption.equals(ReportOutputOption.PDF))){
                 reportExtraParams.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
             }
+            JasperPrint jasperPrint = null;
 
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, reportExtraParams , new JRBeanCollectionDataSource(reportData,false));
+            //Check for empty report data. Fill empty datasource when there is no data to fill
+            if(reportData.size() == 0){
+
+                  jasperPrint = JasperFillManager.fillReport(jasperReport, reportExtraParams , new JREmptyDataSource());
+
+            } else{
+
+               jasperPrint =  JasperFillManager.fillReport(jasperReport, reportExtraParams , new JRBeanCollectionDataSource(reportData,false));
+
+            }
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 

@@ -7,6 +7,7 @@
 package org.openlmis.functional;
 
 
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -31,7 +32,7 @@ public class ForgotPassword extends TestCaseHelper {
   ForgotPasswordPage forgotPasswordPage;
 
   @BeforeMethod(groups = {"smoke", "functional2"})
-  @Given("^Data setup done$")
+  @Before
   public void setUp() throws Exception {
     super.setup();
   }
@@ -119,25 +120,29 @@ public class ForgotPassword extends TestCaseHelper {
 
   }
 
-  @Given("^User is on forgot password screen$")
+  @Given("^I am on forgot password screen$")
   public void onForgotPageAndVerifyElements() throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     forgotPasswordPage = loginPage.clickForgotPasswordLink();
     verifyElementsOnForgotPasswordScreen(forgotPasswordPage);
   }
 
-  @When("^Enter email=\"([^\"]*)\" and username=\"([^\"]*)\"$")
-  public void enterEmailAndPassword(String email, String userName) throws Exception {
+  @When("^I type email \"([^\"]*)\"$")
+  public void enterEmail(String email) throws Exception {
     forgotPasswordPage.enterEmail(email);
+  }
+
+  @When("^I type and username \"([^\"]*)\"$")
+  public void enterPassword(String userName) throws Exception {
     forgotPasswordPage.enterUserName(userName);
   }
 
-  @When("^Click submit button$")
+  @When("^I click submit button$")
   public void clickSubmit() throws Exception {
     forgotPasswordPage.clickSubmit();
   }
 
-  @Then("^Verify email send successfully$")
+  @Then("^I should see email send successfully$")
   public void verifyEmailSendMessage() throws Exception {
     verifyEmailSendSuccessfullyMessage(forgotPasswordPage);
   }

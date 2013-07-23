@@ -130,6 +130,7 @@ public class FacilityRepository {
 
   public Facility updateDataReportableAndActiveFor(Facility facility) {
     mapper.updateDataReportableAndActiveFor(facility);
+    //TODO is this required??
     return mapper.getById(facility.getId());
   }
 

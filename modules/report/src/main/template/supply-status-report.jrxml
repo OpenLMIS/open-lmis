@@ -17,9 +17,11 @@
 	<parameter name="OPERATOR_LOGO" class="java.io.InputStream"/>
 	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
 	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
+	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select MAX(facilities.name) facility,MAX(facility_types.name) facilityType,li.productcode code,li.productcategory as category, li.product,SUM(li.beginningBalance) openingBalance, SUM(li.quantityreceived) receipts, SUM(li.quantitydispensed) issues, SUM(li.totallossesandadjustments) adjustments,
-    (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) closingBalance, SUM(li.maxmonthsofstock) monthsOfStock, SUM(li.amc) averageMonthlyConsumption
+    (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) closingBalance,50/9::float monthsOfStock,
+    SUM(li.amc) averageMonthlyConsumption
     ,(SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) maximumStock,
 				    case when(SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) - (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) > 0 then
    (SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) - (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) ELSE 0 end	reorderAmount
@@ -53,7 +55,7 @@ order by facilities.name asc,li.productcode asc,  li.product asc, li.productcate
 	<field name="issues" class="java.lang.Long"/>
 	<field name="adjustments" class="java.lang.Long"/>
 	<field name="closingBalance" class="java.lang.Long"/>
-	<field name="monthsOfStock" class="java.lang.Long"/>
+	<field name="monthsOfStock" class="java.lang.Double"/>
 	<field name="averageMonthlyConsumption" class="java.lang.Long"/>
 	<field name="maximumStock" class="java.lang.Long"/>
 	<field name="reorderAmount" class="java.lang.Long"/>
@@ -73,7 +75,7 @@ order by facilities.name asc,li.productcode asc,  li.product asc, li.productcate
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{facilityType}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{facilityType}==null?"-":$F{facilityType}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement uuid="c7ca5f38-4051-4932-ba3e-f3a74b9788ff" mode="Transparent" x="6" y="20" width="45" height="20" forecolor="#000000" backcolor="#333333"/>
@@ -84,17 +86,17 @@ order by facilities.name asc,li.productcode asc,  li.product asc, li.productcate
 					<text><![CDATA[Type]]></text>
 				</staticText>
 				<textField pattern="" isBlankWhenNull="false">
-					<reportElement uuid="3da376e3-6c8d-48f1-abbe-c21d6f4cc5c8" mode="Transparent" x="595" y="20" width="118" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement uuid="3da376e3-6c8d-48f1-abbe-c21d6f4cc5c8" mode="Transparent" x="771" y="20" width="30" height="20" forecolor="#000000" backcolor="#FFFFFF">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" leftIndent="5"/>
+						<paragraph lineSpacing="Single" rightIndent="5"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{minMOS}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement uuid="dcf92d69-3886-4afa-8eea-8e88363f5288" mode="Transparent" x="426" y="20" width="169" height="20" forecolor="#000000" backcolor="#333333">
+					<reportElement uuid="dcf92d69-3886-4afa-8eea-8e88363f5288" mode="Transparent" x="602" y="20" width="169" height="20" forecolor="#000000" backcolor="#333333">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
@@ -129,7 +131,7 @@ order by facilities.name asc,li.productcode asc,  li.product asc, li.productcate
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<textFieldExpression><![CDATA[($F{facility}=="NULL"?" ":$F{facility})]]></textFieldExpression>
+					<textFieldExpression><![CDATA[($F{facility}== null?" - ":$F{facility})]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement uuid="5e56693b-481c-44dc-9d99-5285eee730c3" mode="Transparent" x="6" y="0" width="45" height="20" forecolor="#000000" backcolor="#333333"/>
@@ -140,17 +142,17 @@ order by facilities.name asc,li.productcode asc,  li.product asc, li.productcate
 					<text><![CDATA[Facility]]></text>
 				</staticText>
 				<textField pattern="" isBlankWhenNull="false">
-					<reportElement uuid="226bb1e2-dd45-4d64-93ba-268b1a5af64d" mode="Transparent" x="595" y="0" width="118" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement uuid="226bb1e2-dd45-4d64-93ba-268b1a5af64d" mode="Transparent" x="771" y="0" width="30" height="20" forecolor="#000000" backcolor="#FFFFFF">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" leftIndent="5"/>
+						<paragraph lineSpacing="Single" rightIndent="5"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{maxMOS}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement uuid="79a80b3c-4591-4072-9284-30d89c86735c" mode="Transparent" x="426" y="0" width="169" height="20" forecolor="#000000" backcolor="#333333">
+					<reportElement uuid="79a80b3c-4591-4072-9284-30d89c86735c" mode="Transparent" x="602" y="0" width="169" height="20" forecolor="#000000" backcolor="#333333">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
@@ -356,6 +358,15 @@ order by facilities.name asc,li.productcode asc,  li.product asc, li.productcate
 	</title>
 	<detail>
 		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement uuid="6d1fb982-14d5-4ec9-babe-3f491ad3ee2f" x="40" y="1" width="759" height="20" forecolor="#006666">
+					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
+			</textField>
 			<staticText>
 				<reportElement uuid="fb1b77a0-4d61-465c-9e55-2aa5da7933ea" mode="Opaque" x="2" y="1" width="799" height="20" backcolor="#F4F4F4">
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -385,7 +396,7 @@ order by facilities.name asc,li.productcode asc,  li.product asc, li.productcate
 				</textElement>
 				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField evaluationTime="Report" isBlankWhenNull="true">
 				<reportElement uuid="8ddba84e-d6c3-4439-b31d-f8ec92c2d972" x="92" y="0" width="137" height="20">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -451,7 +462,7 @@ order by facilities.name asc,li.productcode asc,  li.product asc, li.productcate
 				</textElement>
 				<textFieldExpression><![CDATA[$F{closingBalance}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
+			<textField pattern="#,###.#" isBlankWhenNull="true">
 				<reportElement uuid="35797324-690c-468d-aeba-de3ee937d41b" x="554" y="0" width="67" height="20">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>

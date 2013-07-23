@@ -3,45 +3,46 @@
   ~
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
-
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
 <h2><span>{{title}}</span>
     <a href="#" id="product-add-new"
        class="pull-right btn btn-primary"
-       ng-disable="newProductMode"
+       ng-disabled="AddEditMode"
        ng-click="startAddNewProduct()">Add New</a></h2>
 
 <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
-<div class="box-content" ng-hide="newProductMode">
+<div class="box-content" ng-hide="AddEditMode">
 
-        <form ng-submit="" name="filterForm" novalidate>
-            <div class="clearfix ">
-                <div class="form-cell horizontalFilters">
-                    <label class="labels">Program</label>
+    <form ng-submit="" name="filterForm" novalidate>
+        <div class="clearfix ">
+            <div class="form-cell horizontalFilters">
+                <label class="labels">Program</label>
 
-                    <div class="form-fields">
-                        <select ui-select2 style="width:200px;" class="large-input" name="program" id="program"
-                                ng-change="showProductsSearchResults('program')"
-                                ng-model="program" ng-options="option.id as option.name for option in programs">
-                            <option style="display:none" value="">All Programs</option>
+                <div class="form-fields">
+                    <select ui-select2 style="width:200px;" class="large-input" name="program" id="program"
+                            ng-change="showProductsSearchResults('program')"
+                            ng-model="program" ng-options="option.id as option.name for option in programs">
+                        <option style="display:none" value="">All Programs</option>
 
-                        </select>
-                    </div>
+                    </select>
                 </div>
-
             </div>
-        </form>
+
+        </div>
+    </form>
 </div>
+
 <!-- Add Product -->
 <form ng-submit="createProduct()" id="createProductForm" name="createProductForm"
       ng-show="newProductMode"
       novalidate select2-blur>
 
-<div ng-class="app-form">
-<div ng-class="formActive">
+<div class="app-form">
 <div class="form-group">
 <h3>Basic Information</h3>
 
 <div class="form-row clearfix">
+
 <div class="form-cell">
     <label for="code">Code<span
             class="label-required"> *</span></label>
@@ -109,6 +110,40 @@
 </div>
 
 
+<!-- Doses Per Dispensing Units-->
+<div class="form-cell">
+    <label for="dosesPerDispensingUnit">Doses Dispensing Unit<span
+            class="label-required"> *</span></label>
+
+    <div class="form-field" style="width: 40%;">
+        <input ng-model="product.dispensingUnit" name="dosesPerDispensingUnit" id="dosesPerDispensingUnit"
+               type="text"
+               maxlength="20"
+               ng-required="true"/>
+                                        <span class="field-error"
+                                              ng-show="createProductForm.dosesPerDispensingUnit.$error.required && showErrorForCreate"
+                                              openlmis-message="missing.value">
+                                        </span>
+
+    </div>
+</div>
+
+<!-- Thresh hold-->
+<div class="form-cell">
+    <label for="packRoundingThreshold">Threshold<span
+            class="label-required"> *</span></label>
+
+    <div class="form-field" style="width: 40%;">
+        <input ng-model="product.packRoundingThreshold" name="packRoundingThreshold" id="packRoundingThreshold"
+               type="text"
+               maxlength="20"
+               ng-required="true"/>
+                                        <span class="field-error"
+                                              ng-show="createProductForm.packRoundingThreshold.$error.required && showErrorForCreate"
+                                              openlmis-message="missing.value">
+                                        </span>
+    </div>
+</div>
 <!-- product strength-->
 <div class="form-cell">
     <label for="strength">Strength</label>
@@ -205,22 +240,6 @@
 </div>
 
 
-<!-- Thresh hold-->
-<div class="form-cell">
-    <label for="packRoundingThreshold">Threshold<span
-            class="label-required"> *</span></label>
-
-    <div class="form-field" style="width: 40%;">
-        <input ng-model="product.packRoundingThreshold" name="packRoundingThreshold" id="packRoundingThreshold"
-               type="text"
-               maxlength="20"
-               ng-required="true"/>
-                                        <span class="field-error"
-                                              ng-show="createProductForm.packRoundingThreshold.$error.required && showErrorForCreate"
-                                              openlmis-message="missing.value">
-                                        </span>
-    </div>
-</div>
 
 <div class="form-cell"></div>
 
@@ -281,15 +300,20 @@
     <table border="0">
         <th></th>
         <th colspan="2">Program</th>
-        <th>Price</th>
+        <th></th>
+        <th style="text-align: left">Price Per Pack</th>
+        <th style="text-align: left">Price Per Dose</th>
         <tr ng-repeat="program in programs" tab-scroll>
-            <td style="width: 200px;">&nbsp;</td>
+            <td  style="width: 200px;">&nbsp;</td>
             <td><span class="span1" openlmis-message="program.name"></span></td>
-            <td><span class="span1"><input id="program{{program.id}}" type="checkbox" ng-checked="contains(program.id)"
+            <td><span class="span1"><input id="program_{{program.id}}" type="checkbox" ng-checked="contains(program.id)"
                                            ng-model="checked"/></span></td>
-            <td><span class="span1"><input id="price{{program.id}}" type="text"/></span></td>
+            <td  style="width: 100px;">&nbsp;</td>
+            <td><span class="span1"><input id="price_{{program.id}}" type="text"/></span></td>
+            <td><span class="span1"><input id="priceperdosage_{{program.id}}" type="text"/></span></td>
         </tr>
     </table>
+
 </div>
 <!--program association-->
 <div class="row-fluid product-button-row">
@@ -303,40 +327,38 @@
 </div>
 
 </div>
-</div>
 </form>
 
 
-
-
-<!-- Edit Product -->
-
-<form class="edit-product-form" id="editProductForm" name="editProductForm"
+<!-------------------------------------------------------------------------------------------------------------
+Edit Product
+ -------------------------------------------------------------------------------------------------------------->
+<form id="editProductForm" name="editProductForm"   ng-model="editProduct"
       ng-submit="updateProduct(product, editProductForm);"
-      ng-show="products && (products.length > 0)" novalidate select2-blur>
-      <input type="hidden" ng-model="backupProductRow"/>
-      <div ng-class="productsBackupMap[product.id].editFormActive">
-      <div class="row-fluid list-row" ng-show="productsBackupMap[product.id].edit">
+      ng-show="editProduct" novalidate select2-blur>
+<input type="hidden" ng-model="backupProductRow"/>
+<div ng-class="editProductMode">
+<div class="row-fluid list-row" ng-show="editProductMode">
 
-<div ng-class="app-form">
+<div class="app-form">
 <div class="form-group">
 <h3>Basic Information</h3>
 
 <div class="form-row clearfix">
 <div class="form-cell">
     <label for="code">Code
-        <span ng-show="productsBackupMap[product.id].edit" class="label-required">*</span>
+        <span ng-show="editProduct" class="label-required">*</span>
     </label>
 
 
     <div class="form-field" style="width: 40%;">
 
-        <input ng-model="product.code" name="code" id="code_{{$index}}" type="text"
-               ng-show="productsBackupMap[product.id].edit"
+        <input ng-model="editProduct.code" name="code" id="code_edt" type="text"
+               ng-show="editProduct"
                maxlength="20"
                ng-required="true"/>
                                         <span class="field-error"
-                                              ng-show="createProductForm.code.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.code.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
     </div>
@@ -345,16 +367,16 @@
 <!-- Product Pack Size-->
 <div class="form-cell">
     <label for="packSize">Pack Size
-        <span ng-show="productsBackupMap[product.id].edit" class="label-required">*</span>
+        <span ng-show="editProduct" class="label-required">*</span>
     </label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="product.packSize" name="packSize" id="packSize_{{$index}}" type="text"
-               ng-show="productsBackupMap[product.id].edit"
+        <input ng-model="editProduct.packSize" name="packSize" id="packSize_edt" type="text"
+               ng-show="editProduct"
                maxlength="20"
                ng-required="true"/>
                                         <span class="field-error"
-                                              ng-show="createProductForm.packSize.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.packSize.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
     </div>
@@ -362,17 +384,17 @@
 
 <!-- product name-->
 <div class="form-cell">
-    <label for="primaryName">Product Name
-        <span ng-show="productsBackupMap[product.id].edit" class="label-required">*</span>
+    <label for="fullName_edt">Product Name
+        <span ng-show="editProduct" class="label-required">*</span>
     </label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="product.primaryName" name="primaryName" id="primaryName_{{$index}}" type="text"
-               ng-show="productsBackupMap[product.id].edit"
+        <input ng-model="editProduct.fullName" name="fullName" id="fullName_edt" type="text"
+               ng-show="editProduct"
                maxlength="20"
                ng-required="true"/>
                                         <span class="field-error"
-                                              ng-show="createProductForm.primaryName.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.fullName.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
     </div>
@@ -381,34 +403,72 @@
 <!-- Dispensing Units-->
 <div class="form-cell">
     <label for="dispensingUnit">Dispensing Unit
-        <span ng-show="productsBackupMap[product.id].edit" class="label-required">*</span>
+        <span ng-show="editProduct" class="label-required">*</span>
     </label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="product.dispensingUnit" name="dispensingUnit" id="dispensingUnit_{{$index}}"
+        <input ng-model="editProduct.dispensingUnit" name="dispensingUnit" id="dispensingUnit_edt"
                type="text"
-               ng-show="productsBackupMap[product.id].edit"
+               ng-show="editProduct"
                maxlength="20"
                ng-required="true"/>
                                         <span class="field-error"
-                                              ng-show="createProductForm.dispensingUnit.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.dispensingUnit.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
 
     </div>
 </div>
 
+<!-- Dosage Per Dispensing Units-->
+<div class="form-cell">
+    <label for="dispensingUnit">Doses Per Dispensing Unit
+        <span ng-show="editProduct" class="label-required">*</span>
+    </label>
+
+    <div class="form-field" style="width: 40%;">
+        <input ng-model="editProduct.dosesPerDispensingUnit" name="dispensingUnit" id="dosesPerDispensingUnit_edt"
+               type="text"
+               ng-show="editProduct"
+               maxlength="20"
+               ng-required="true"/>
+                                        <span class="field-error"
+                                              ng-show="editProductForm.dosesPerDispensingUnit.$error.required && showErrorForCreate"
+                                              openlmis-message="missing.value">
+                                        </span>
+
+    </div>
+</div>
+
+<!-- Thresh hold-->
+<div class="form-cell">
+    <label for="packRoundingThreshold">Threshold
+        <span ng-show="editProduct" class="label-required">*</span>
+    </label>
+
+    <div class="form-field" style="width: 40%;">
+        <input ng-model="editProduct.packRoundingThreshold" name="packRoundingThreshold" id="packRoundingThreshold_edt"
+               type="text"
+               ng-show="editProduct"
+               maxlength="20"
+               ng-required="true"/>
+                                        <span class="field-error"
+                                              ng-show="editProductForm.packRoundingThreshold.$error.required && showErrorForCreate"
+                                              openlmis-message="missing.value">
+                                        </span>
+    </div>
+</div>
 
 <!-- product strength-->
 <div class="form-cell">
     <label for="strength">Strength</label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="product.strength" name="strength" id="strength_{{$index}}" type="text"
-               ng-show="productsBackupMap[product.id].edit"
+        <input ng-model="editProduct.strength" name="strength" id="strength_edt" type="text"
+               ng-show="editProduct"
                maxlength="20"/>
                                         <span class="field-error"
-                                              ng-show="createProductForm.strength.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.strength.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
     </div>
@@ -420,11 +480,11 @@
     <label for="type">Type</label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="product.type" name="type" id="type_{{$index}}" type="text"
-               ng-show="productsBackupMap[product.id].edit"
+        <input ng-model="editProduct.type" name="type" id="type_edt" type="text"
+               ng-show="editProduct"
                maxlength="20"/>
                                         <span class="field-error"
-                                              ng-show="createProductForm.type.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.type.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
     </div>
@@ -436,29 +496,31 @@
 
     <div class="form-field" style="width: 40%;">
 
-        <select ui-select2 style="width:200px;" name="dosageUnit" id="dosageUnit_{{$index}}"
-                ng-show="productsBackupMap[product.id].edit"
-                ng-model="product.dosageUnits.id"
-                ng-options="option.id as option.name for option in dosageUnits">
+        <select ui-select2 style="width:200px;" name="dosageUnitId" id="dosageUnitId_edt"  ng-model="editProduct.dosageUnitId"
+                ng-show="editProduct"
+                ng-options="option.id as option.code for option in dosageUnits">
 
         </select>
                                        <span class="field-error"
-                                             ng-show="createProductForm.dosageUnit.$error.required && showErrorForCreate"
+                                             ng-show="editProductForm.dosageUnitId.$error.required && showErrorForCreate"
                                              openlmis-message="missing.value">
                                         </span>
     </div>
 </div>
+
+
+
 
 <!-- Product Display Order-->
 <div class="form-cell">
     <label for="displayOrder">Display Order</label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="product.displayOrder" name="displayOrder" id="displayOrder_{{$index}}" type="text"
-               ng-show="productsBackupMap[product.id].edit"
+        <input ng-model="editProduct.displayOrder" name="displayOrder" id="displayOrder_edt" type="text"
+               ng-show="editProduct"
                maxlength="20"/>
                                         <span class="field-error"
-                                              ng-show="createProductForm.displayOrder.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.displayOrder.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
     </div>
@@ -470,14 +532,14 @@
 
     <div class="form-field" style="width: 40%;">
 
-        <select ui-select2 style="width:200px;" name="formid" id="formid_{{$index}}"
-                ng-model="product.formid"
-                ng-show="productsBackupMap[product.id].edit"
-                ng-options="option.id as option.name for option in productForms">
+        <select ui-select2 style="width:200px;" name="formId" id="formid_edt"
+                ng-model="editProduct.formId"
+                ng-show="editProduct"
+                ng-options="option.id as option.code for option in productForms">
 
         </select>
                                        <span class="field-error"
-                                             ng-show="createProductForm.productForm.$error.required && showErrorForCreate"
+                                             ng-show="editProductForm.productForm.$error.required && showErrorForCreate"
                                              openlmis-message="missing.value">
                                         </span>
     </div>
@@ -490,38 +552,18 @@
 
     <div class="form-field" style="width: 40%;">
 
-        <select ui-select2 style="width:200px;" name="categoryid" id="categoryid_{{$index}}"
-                ng-show="productsBackupMap[product.id].edit"
-                ng-model="product.productCategory"
+        <select ui-select2 style="width:200px;" name="categoryid" id="categoryid_edt" ng-model="editProduct.categoryId"
+                ng-show="editProduct"
                 ng-options="option.id as option.name for option in productCategories">
 
         </select>
                                        <span class="field-error"
-                                             ng-show="createProductForm.productDisplayOrder.$error.required && showErrorForCreate"
+                                             ng-show="editProductForm.productDisplayOrder.$error.required && showErrorForCreate"
                                              openlmis-message="missing.value">
                                         </span>
     </div>
 </div>
 
-
-<!-- Thresh hold-->
-<div class="form-cell">
-    <label for="packRoundingThreshold">Threshold
-        <span ng-show="productsBackupMap[product.id].edit" class="label-required">*</span>
-    </label>
-
-    <div class="form-field" style="width: 40%;">
-        <input ng-model="product.packRoundingThreshold" name="packRoundingThreshold" id="packRoundingThreshold_{{$index}}"
-               type="text"
-               ng-show="productsBackupMap[product.id].edit"
-               maxlength="20"
-               ng-required="true"/>
-                                        <span class="field-error"
-                                              ng-show="createProductForm.packRoundingThreshold.$error.required && showErrorForCreate"
-                                              openlmis-message="missing.value">
-                                        </span>
-    </div>
-</div>
 
 <div class="form-cell"></div>
 
@@ -531,9 +573,9 @@
     <div class="form-field" style="width: 40%;">
         <table>
             <tr>
-                <td><input ng-model="product.fullSupply" name="fullSupply" id="fullSupply_{{$index}}"
+                <td><input ng-model="editProduct.fullSupply" name="fullSupply" id="fullSupply_edt"
                            type="checkbox"
-                           ng-show="productsBackupMap[product.id].edit"
+                           ng-show="editProduct"
                            ng-required="false"/>
                 </td>
                 <td>&nbsp;</td>
@@ -542,8 +584,8 @@
             </tr>
             <tr>
                 <td>
-                    <input ng-model="product.tracer" name="tracer" id="tracer_{{$index}}" type="checkbox"
-                           ng-show="productsBackupMap[product.id].edit"
+                    <input ng-model="editProduct.tracer" name="tracer" id="tracer_edt" type="checkbox"
+                           ng-show="editProduct"
                            ng-required="false"/>
                 </td>
                 <td>&nbsp;</td>
@@ -552,8 +594,8 @@
             </tr>
             <tr>
                 <td>
-                    <input ng-model="product.active" name="active" id="active_{{$index}}" type="checkbox"
-                           ng-show="productsBackupMap[product.id].edit"
+                    <input ng-model="editProduct.active" name="active" id="active_edt" type="checkbox"
+                           ng-show="editProduct"
                            ng-required="false"/>
                 </td>
                 <td>&nbsp;</td>
@@ -562,8 +604,8 @@
             </tr>
             <tr>
                 <td>
-                    <input ng-model="product.roundToZero" name="roundToZero" id="roundToZero_{{$index}}" type="checkbox"
-                           ng-show="productsBackupMap[product.id].edit"
+                    <input ng-model="editProduct.roundToZero" name="roundToZero" id="roundToZero_edt" type="checkbox"
+                           ng-show="editProduct"
                            ng-required="false"/>
                 </td>
                 <td>&nbsp;</td>
@@ -587,13 +629,17 @@
     <table border="0">
         <th></th>
         <th colspan="2">Program</th>
-        <th>Price</th>
+        <th></th>
+        <th style="text-align: left">Price Per Pack</th>
+        <th style="text-align: left">Price Per Dose</th>
         <tr ng-repeat="program in programs" tab-scroll>
-            <td style="width: 200px;">&nbsp;</td>
+            <td  style="width: 200px;">&nbsp;</td>
             <td><span class="span1" openlmis-message="program.name"></span></td>
-            <td><span class="span1"><input id="program{{program.id}}__{{$index}}" type="checkbox" ng-checked="contains(program.id)"
-                                           ng-model="checked"/></span></td>
-            <td><span class="span1"><input id="price{{program.id}}__{{$index}}" type="text"/></span></td>
+            <td><span class="span1"><input id="program_{{program.id}}_edt" type="checkbox" ng-checked="programProductsCost[program.id].id"
+                                           ng-model="programProductsCost[program.id].id"/></span></td>
+            <td  style="width: 100px;">&nbsp;</td>
+            <td><span class="span1"><input id="price_{{program.id}}_edt" type="text" value="{{programProductsCost[program.id].priceperpack}}"/></span></td>
+            <td><span class="span1"><input id="priceperdosage_{{program.id}}_edt" type="text" value="{{programProductsCost[program.id].priceperdosage}}"/></span></td>
         </tr>
     </table>
 </div>
@@ -602,86 +648,122 @@
 
 
 <!--program association-->
-<div class="row-fluid product-button-row" ng-show="productsBackupMap[product.id].edit">
+<div class="row-fluid product-button-row" ng-show="editProductMode">
     <div class="span1"></div>
     <div class="span2">
-        <input type="submit" class="btn btn-primary btn-small" openlmis-message="button.create"/>
-        <input type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel"
-               ng-click="cancelAddNewProduct()"/>
+        <input type="submit" class="btn btn-primary btn-small" value="Save"/>
+        <input type="button" class="btn btn-cancel btn-small" value="Cancel"
+               ng-click="cancelProductEdit(editProduct, backupProductRow); editProduct=false"/>
     </div>
     <div ng-show="creationError" class="span9 form-error" ng-bind="creationError"></div>
 </div>
 
 </div>
-
 </form>
 
 <!---->
 
-<div ng-hide="newProductMode">
+<div ng-hide="AddEditMode">
     <!-- column headers-->
     <div class="list-header-container">
-    <div class="row-fluid list-header">
-        <div class="span1" style="float: left; width: 40px;"></div>
-        <div class="span1" style="float: left; width: 40px;"></div>
-        <div class="span1">Code</div>
-        <div class="span3">Name</div>
-        <div class="span1">Program</div>
-        <div class="span1">Strength</div>
-        <div class="span2">Unit of Measure</div>
-        <div class="span1">Active</div>
-        <div class="span1">Full Supply</div>
+        <div class="row-fluid list-header">
+            <div class="span1" style="float: left; width: 40px;"></div>
+            <div class="span1" style="float: left; width: 40px;"></div>
+            <div class="span1">Code</div>
+            <div class="span3">Name</div>
+            <div class="span1">Program</div>
+            <div class="span1">Strength</div>
+            <div class="span2">Unit of Measure</div>
+            <div class="span1">Active</div>
+            <div class="span1">Full Supply</div>
 
+        </div>
     </div>
-   </div>
     <div class="list-container">
-    <!--repeat-->
-    <div ng-repeat="pr in filteredProducts | orderBy:'-fullName':true" class="row-fluid list-row">
-        <div class="span1" style="float: left; width: 40px;">
-            <!-- Edit button-->
-            <input type="button"
-                   class="btn btn-mini pull-right"
-                   value="Edit"
-                   ng-click="startProductEdit(pr, backupProductRow); productsBackupMap[pr.id].edit=true;"/>
-        </div>
-        <!-- Delete button-->
-        <div class="span1" style="float: left; width: 40px;">
-            <input type="button"
-                   class="btn btn-mini pull-right"
-                   value="Delete"
-                   ng-show="pr.active==true"
-                   ng-click="showConfirmProductDeleteWindow(pr); productsBackupMap[pr.id].deleted=true;"/>
+        <!--repeat-->
+        <div ng-repeat="pr in filteredProducts | orderBy:'-fullName':true" class="row-fluid list-row">
+            <div class="span1" style="float: left; width: 40px;">
+                <!-- Edit button-->
+                <input type="button"
+                       class="btn btn-mini pull-right"
+                       value="Edit"
+                       ng-click="startProductEdit(pr, backupProductRow); productsBackupMap[pr.id].edit=true;"/>
+            </div>
+            <!-- Delete button-->
+            <div class="span1" style="float: left; width: 40px;">
+                <input type="button"
+                       class="btn btn-mini pull-right"
+                       value="Deactivate"
+                       ng-show="pr.active==true"
+                       ng-click="showConfirmProductDeleteWindow(pr); productsBackupMap[pr.id].deleted=true;"/>
 
-            <input type="button"
-                   class="btn btn-mini pull-right"
-                   value="Restore"
-                   ng-show="pr.active==false"
-                   ng-click="showConfirmProductRestoreWindow(pr); productsBackupMap[pr.id].restore=true;"/>
+                <input type="button"
+                       class="btn btn-mini pull-right"
+                       value="Restore"
+                       ng-show="pr.active==false"
+                       ng-click="showConfirmProductRestoreWindow(pr); productsBackupMap[pr.id].restore=true;"/>
 
-        </div>
-
-
-        <!-- Code-->
-        <div class="span1" style="overflow: visible;"> {{pr.code}}</div>
-        <!-- name-->
-        <div class="span3" style="..."> {{pr.fullName}}</div>
-        <!-- Program-->
-        <div class="span1" style="..."> {{pr.programName}}</div>
-        <!-- Strenght-->
-        <div class="span1" style="overflow: visible;"> {{pr.strength}}</div>
-        <!-- UOM-->
-        <div class="span2" style="..."> {{pr.dispensingUnit}}</div>
-        <!-- Active-->
-        <div class="span1" style="..."> {{YesNo(pr.active)}}</div>
-        <!-- Active-->
-        <div class="span1" style="..."> {{YesNo(pr.fullSupply)}}</div>
+            </div>
 
 
-        <!--list-->                     </div>
-    <!--list-->    </div>
+            <!-- Code-->
+            <div class="span1" style="overflow: visible;"> {{pr.code}}</div>
+            <!-- name-->
+            <div class="span3" style="..."> {{pr.fullName}}</div>
+            <!-- Program-->
+            <div class="span1" style="..."> {{pr.programName}}</div>
+            <!-- Strenght-->
+            <div class="span1" style="overflow: visible;"> {{pr.strength}}</div>
+            <!-- UOM-->
+            <div class="span2" style="..."> {{pr.dispensingUnit}}</div>
+            <!-- Active-->
+            <div class="span1" style="..."> {{YesNo(pr.active)}}</div>
+            <!-- Active-->
+            <div class="span1" style="..."> {{YesNo(pr.fullSupply)}}</div>
+
+
+            <!--list-->                     </div>
+        <!--list-->    </div>
 </div>
 
+<div ng-show="editProductMode">
+    <h2><span>Price History</span></h2>
+    <!-- column headers-->
+    <div class="list-header-container">
+        <div class="row-fluid list-header">
+            <div class="span1" style="float: left; width: 40px;"></div>
+            <div class="span1">Program</div>
+            <div class="span2">Price Per Pack</div>
+            <div class="span2">Price Per Dosage</div>
+            <div class="span1">Source</div>
+            <div class="span2">Start Date</div>
+            <div class="span1">End Date</div>
+        </div>
+    </div>
+    <div class="list-container">
+        <!--repeat-->
+        <div ng-repeat="cost in selectedProductCost | orderBy:'-programname':true" class="row-fluid list-row">
+            <div class="span1" style="float: left; width: 40px;"></div>
+            <!-- program-->
+            <div class="span1" style="overflow: visible;"> {{cost.programname}}</div>
+            <!-- Price per pack-->
+            <div class="span2" style="..."> {{cost.priceperpack}}</div>
+            <!-- price per dosage-->
+            <div class="span2" style="..."> {{cost.priceperdosage}}</div>
+            <!-- source-->
+            <div class="span1" style="..."> {{cost.source}}</div>
+             <!-- start date-->
+            <div class="span2" style="..."> {{cost.startdate | date:'dd/MM/yyyy'}}</div>
+            <!-- end date-->
+            <div class="span2" style="..."> {{cost.enddate | date:'dd/MM/yyyy'}}</div>
 
+
+
+            <!--list-->                     </div>
+        <!--list-->    </div>
+</div>
+
+</div>
 
 
 

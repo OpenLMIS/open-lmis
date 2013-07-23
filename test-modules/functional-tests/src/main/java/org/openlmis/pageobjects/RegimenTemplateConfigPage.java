@@ -64,7 +64,7 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Regimen Template')]")
   private static WebElement regimenTemplateHeader;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Regimens')]")
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Regimen(s)')]")
   private static WebElement regimenTab;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='wrap']/div/div/div/div[2]/ul/li[1]/a")

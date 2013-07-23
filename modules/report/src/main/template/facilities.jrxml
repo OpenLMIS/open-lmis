@@ -13,6 +13,7 @@
 	<parameter name="REPORT_ID" class="java.lang.String"/>
 	<parameter name="REPORT_TITLE" class="java.lang.String"/>
 	<parameter name="LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT
   facilities.code,

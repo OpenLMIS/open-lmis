@@ -80,29 +80,4 @@ public class ProductService {
   public Product getByCode(String code) {
     return repository.getByCode(code);
   }
-
-   // mahmed 07.11.2013 full product list
-    public List<Product> getProductsList() {
-        return repository.getProductList();
-    }
-
-    //mahmed - 07.11.2013 delete product
-    public void deleteById(Long productId) {
-
-        this.repository.deleteById(productId);
-    }
-
-    //mahmed - 07.11.2013 delete product
-    public void restoreById(Long productId) {
-
-        this.repository.restoreById(productId);
-    }
-    //mahmed - 07.11.2013 delete product
-    public Product get(Long id) {
-        Product product = repository.get(id);
-        if (product == null) {
-            throw new DataException("error.supplyline.not.found");
-        }
-        return product;
-    }
  }
