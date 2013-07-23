@@ -112,7 +112,7 @@ public class FacilityFeedDTO extends BaseFeedDTO {
     this.goLiveDate = facility.getGoLiveDate();
     this.goDownDate = facility.getGoDownDate();
     this.parentFacilityId = facility.getParentFacilityId();
-    this.virtualFacility = facility.getVirtualFacility();
+    this.virtualFacility = (facility.getVirtualFacility() != null) ? facility.getVirtualFacility() : false;
     this.comments = facility.getComment();
     this.doNotDisplay = facility.getDataReportable();
     this.modifiedDate = facility.getModifiedDate();
