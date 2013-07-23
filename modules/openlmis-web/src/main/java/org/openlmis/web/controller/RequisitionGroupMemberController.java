@@ -7,6 +7,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroupMember;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.RequisitionGroupMemberService;
 import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -40,6 +41,12 @@ public class RequisitionGroupMemberController extends BaseController {
     @Autowired
     RequisitionGroupMemberService requisitionGroupMemberService;
 
+    @Autowired
+    FacilityService facility;
+
+    @Autowired
+    RequisitionGroupService requisitionGroupService;
+
     @RequestMapping(value="/requisitionGroupMember/insert",method=POST,headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQUISITION_GROUP')")
     public ResponseEntity<OpenLmisResponse> insert(@RequestBody RequisitionGroupMember requisitionGroupMember, HttpServletRequest request){
@@ -55,13 +62,14 @@ public class RequisitionGroupMemberController extends BaseController {
         return successResponse;
     }
 
+
     @JsonIgnoreProperties(ignoreUnknown = true)
-    @RequestMapping(value="/requisitionGroupMember/remove",method = POST,headers = ACCEPT_JSON)
+    @RequestMapping(value="/requisitionGroupMember/remove/{rgId}/{facId}",method = GET,headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQUISITION_GROUP')")
-    public ResponseEntity<OpenLmisResponse> remove(@RequestBody RequisitionGroup requisitionGroup, @RequestBody Facility facility, HttpServletRequest request){
+    public ResponseEntity<OpenLmisResponse> remove(@PathVariable(value="rgId") Long requisitionGroupId, @PathVariable(value="facId") Long facilityID, HttpServletRequest request){
         ResponseEntity<OpenLmisResponse> successResponse;
         try {
-            requisitionGroupMemberService.removeRequisitionGroupMember(requisitionGroup,facility);
+            requisitionGroupMemberService.removeRequisitionGroupMember(requisitionGroupService.loadRequisitionGroupById(requisitionGroupId),facility.getById(facilityID));
         } catch (DataException e) {
             return error(e, HttpStatus.BAD_REQUEST);
         }

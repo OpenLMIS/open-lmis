@@ -171,7 +171,7 @@ services.factory('SaveRequisitionGroupMember',function($resource){
 });
 
 services.factory('RemoveRequisitionGroupMember',function($resource){
-    return $resource('/requisitionGroupMember/remove.json',{},{});
+    return $resource('/requisitionGroupMember/remove/:rgId/:facId.json',{},{});
 });
 
 services.factory("ProductForms",function($resource)  {
