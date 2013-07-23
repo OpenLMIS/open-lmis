@@ -18,7 +18,6 @@ import org.testng.annotations.Test;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,32 +42,32 @@ public class FacilityProgramSupportedFeed extends TestCaseHelper {
     dbWrapper.closeConnection();
   }
 
-    @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-    public void testFacilityProgramSupportedFeed_Upload(String user, String program, String[] credentials) throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
+  @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testFacilityProgramSupportedFeed_Upload(String user, String program, String[] credentials) throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
 
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
-        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-        UploadPage uploadPage = homePage.navigateUploads();
-        uploadPage.uploadProgramSupportedByFacilities("QA_program_supported.csv");
-        Thread.sleep(5000);
-        ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
-        String expected =  "\"facilityCode\":\"F10\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":1296585000000}";
-        assertTrue(responseEntity.getResponse().contains(expected));
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    UploadPage uploadPage = homePage.navigateUploads();
+    uploadPage.uploadProgramSupportedByFacilities("QA_program_supported_WebService.csv");
+    Thread.sleep(5000);
+    ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
+    String expected = "\"facilityCode\":\"F10\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":1296585000000}";
+    assertTrue(responseEntity.getResponse().contains(expected));
 
-        uploadPage.uploadProgramSupportedByFacilities("QA_program_supported_Subsequent.csv");
-        Thread.sleep(5000);
-        responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
+    uploadPage.uploadProgramSupportedByFacilities("QA_program_supported_Subsequent_WebService.csv");
+    Thread.sleep(5000);
+    responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
 
-        List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-        expected =  "\"facilityCode\":\"F10\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":false,\"startDate\":1296585000000}";
-        String expected1 =  "\"facilityCode\":\"F11\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":1304533800000}";
+    List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
+    expected = "\"facilityCode\":\"F10\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":false,\"startDate\":1296585000000}";
+    String expected1 = "\"facilityCode\":\"F11\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":1304533800000}";
 
-        assertTrue(feedJSONList.get(1).contains(expected));
-        assertTrue(feedJSONList.get(2).contains(expected1));
-    }
+    assertTrue(feedJSONList.get(1).contains(expected));
+    assertTrue(feedJSONList.get(2).contains(expected1));
+  }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
   public void testFacilityProgramSupportedFeed(String user, String program, String[] credentials) throws Exception {
@@ -142,12 +141,13 @@ public class FacilityProgramSupportedFeed extends TestCaseHelper {
     assertFalse(feedJSONList.get(3).contains("\"active\":false"));
 
   }
-        @DataProvider(name = "Data-Provider-Function-Positive")
-    public Object[][] parameterIntTestProviderPositive() {
-        return new Object[][]{
-                {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
-        };
-    }
+
+  @DataProvider(name = "Data-Provider-Function-Positive")
+  public Object[][] parameterIntTestProviderPositive() {
+    return new Object[][]{
+      {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
+    };
+  }
 
 }
 
