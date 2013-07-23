@@ -79,6 +79,7 @@ public class Rnr extends BaseModel {
         RegimenLineItem regimenLineItem = new RegimenLineItem(regimen.getId(), regimen.getCategory(), createdBy, modifiedBy);
         regimenLineItem.setCode(regimen.getCode());
         regimenLineItem.setName(regimen.getName());
+        regimenLineItem.setRegimenDisplayOrder(regimen.getDisplayOrder());
         regimenLineItems.add(regimenLineItem);
       }
     }
