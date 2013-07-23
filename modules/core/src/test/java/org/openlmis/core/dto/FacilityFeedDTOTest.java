@@ -50,7 +50,8 @@ public class FacilityFeedDTOTest {
     assertThat(facilityFeedDTO.getGoLiveDate(), is(facility.getGoLiveDate()));
     assertThat(facilityFeedDTO.getGoDownDate(), is(facility.getGoDownDate()));
     assertThat(facilityFeedDTO.isSatelliteFacility(), is((facility.getSatellite() != null) ? facility.getSatellite() : false));
-    assertThat(facilityFeedDTO.getSatelliteParentID(), is(facility.getSatelliteParentId()));
+    assertThat(facilityFeedDTO.isVirtualFacility(), is((facility.getVirtualFacility() != null) ? facility.getVirtualFacility() : false));
+    assertThat(facilityFeedDTO.getParentFacilityId(), is(facility.getParentFacilityId()));
     assertThat(facilityFeedDTO.getComments(), is(facility.getComment()));
     assertThat(facilityFeedDTO.isDoNotDisplay(), is(true));
     assertThat(facilityFeedDTO.getModifiedDate(), is(facility.getModifiedDate()));

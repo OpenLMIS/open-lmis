@@ -21,16 +21,16 @@ public interface FacilityMapper {
   @Insert("Insert into facilities(code, name, description, gln, mainPhone, fax, address1, address2, " +
     "geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById," +
     "coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, online," +
-    "satellite, satelliteParentId, hasElectricity, hasElectronicScc, hasElectronicDar, active," +
-    "goLiveDate, goDownDate, comment, dataReportable, createdDate,createdBy, modifiedBy, modifiedDate) " +
+    "satellite, parentFacilityId, hasElectricity, hasElectronicScc, hasElectronicDar, active," +
+    "goLiveDate, goDownDate, comment, virtualFacility, dataReportable, createdDate,createdBy, modifiedBy, modifiedDate) " +
     "values(#{code}, #{name}, #{description}, #{gln}, #{mainPhone}, #{fax}, #{address1}, #{address2}," +
     "#{geographicZone.id}," +
     "#{facilityType.id}," +
     "#{catchmentPopulation}, #{latitude}, #{longitude}, #{altitude}," +
     "#{operatedBy.id}," +
     "#{coldStorageGrossCapacity}, #{coldStorageNetCapacity}, #{suppliesOthers}, #{sdp},#{online}," +
-    "#{satellite}, #{satelliteParentId}, #{hasElectricity}, #{hasElectronicScc}, #{hasElectronicDar}, #{active}," +
-    "#{goLiveDate}, #{goDownDate}, #{comment}, #{dataReportable},COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
+    "#{satellite}, #{parentFacilityId}, #{hasElectricity}, #{hasElectronicScc}, #{hasElectronicDar}, #{active}," +
+    "#{goLiveDate}, #{goDownDate}, #{comment}, #{virtualFacility}, #{dataReportable},COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
     "COALESCE(#{modifiedDate}, NOW()))")
   @Options(useGeneratedKeys = true)
   Integer insert(Facility facility);
@@ -79,8 +79,9 @@ public interface FacilityMapper {
     "longitude = #{longitude}, altitude = #{altitude}," +
     "operatedById = #{operatedBy.id}," +
     "coldStorageGrossCapacity = #{coldStorageGrossCapacity}, coldStorageNetCapacity = #{coldStorageNetCapacity}," +
-    "suppliesOthers = #{suppliesOthers}, sdp = #{sdp}, online = #{online}, satellite = #{satellite}, satelliteParentId = #{satelliteParentId}," +
-    "hasElectricity = #{hasElectricity}, hasElectronicScc = #{hasElectronicScc}, hasElectronicDar = #{hasElectronicDar}, active = #{active}," +
+    "suppliesOthers = #{suppliesOthers}, sdp = #{sdp}, online = #{online}, satellite = #{satellite}, parentFacilityId = #{parentFacilityId}," +
+    "hasElectricity = #{hasElectricity}, hasElectronicScc = #{hasElectronicScc}, " +
+    "hasElectronicDar = #{hasElectronicDar}, active = #{active}, virtualFacility = #{virtualFacility}, " +
     "goLiveDate = #{goLiveDate}, goDownDate = #{goDownDate}," +
     "comment = #{comment}, dataReportable = #{dataReportable}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(Facility facility);

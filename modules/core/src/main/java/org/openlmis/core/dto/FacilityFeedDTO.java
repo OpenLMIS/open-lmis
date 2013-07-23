@@ -72,7 +72,9 @@ public class FacilityFeedDTO extends BaseFeedDTO {
 
   private boolean satelliteFacility;
 
-  private Integer satelliteParentID;
+  private boolean virtualFacility;
+
+  private Integer parentFacilityId;
 
   private String comments;
 
@@ -109,7 +111,8 @@ public class FacilityFeedDTO extends BaseFeedDTO {
     this.active = facility.getActive();
     this.goLiveDate = facility.getGoLiveDate();
     this.goDownDate = facility.getGoDownDate();
-    this.satelliteParentID = facility.getSatelliteParentId();
+    this.parentFacilityId = facility.getParentFacilityId();
+    this.virtualFacility = facility.getVirtualFacility();
     this.comments = facility.getComment();
     this.doNotDisplay = facility.getDataReportable();
     this.modifiedDate = facility.getModifiedDate();

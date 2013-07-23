@@ -70,6 +70,7 @@ public class FacilityBuilder {
       parentGeographicZone.setName("Zambia");
       geographicZone.setParent(parentGeographicZone);
       facility.setGeographicZone(lookup.valueOf(FacilityBuilder.geographicZone, geographicZone));
+      facility.setVirtualFacility(false);
 
       facility.setSdp(lookup.valueOf(sdp, true));
       facility.setActive(lookup.valueOf(active, true));
