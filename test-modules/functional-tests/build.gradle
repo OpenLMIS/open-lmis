@@ -95,6 +95,27 @@ smokeTestChrome.doFirst() {
     buildOpenLmis.execute()
 }
 
+
+task smokeTestIE(type: Test) {
+    dependsOn assemble, compileTestJava
+
+    doLast {
+        htmlformat = "html:${buildDir}/reports/tests/bddTest-report-functional"
+        jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
+        javaexec {
+            System.properties.get('browser', 'ie')
+            systemProperties System.properties
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smoke', 'src/test/resources']
+        }
+    }
+}
+
+smokeTestIE.doFirst() {
+    buildOpenLmis.execute()
+}
+
 configurations {
     cucumberRuntime {
         extendsFrom testRuntime
@@ -144,24 +165,7 @@ functionalTest2.doFirst() {
     buildOpenLmis.execute()
 }
 
-task smokeTestIE(type: Test) {
-    useTestNG() {
-        systemProperties['browser'] = 'ie'
-        systemProperties['dburl'] = "$dburl"
-        systemProperties['baseurl'] = "$baseurl"
 
-        suites 'src/test/java/org/openlmis/functional/testng-smoke.xml'
-    }
-    options {
-        listeners << 'org.uncommons.reportng.HTMLReporter'
-        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
-    }
-    workingDir = 'build/'
-}
-
-smokeTestIE.doFirst() {
-    buildOpenLmis.execute()
-}
 
 
 
