@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @NoArgsConstructor
-@PropertySource("classpath:${environmentName}/app.properties")
+@PropertySource({"classpath:/default.properties", "classpath:${environmentName}/app.properties"})
 public class StaticReferenceDataController extends BaseController {
 
   public static final String CURRENCY = "currency";
