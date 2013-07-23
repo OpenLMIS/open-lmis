@@ -57,6 +57,7 @@ public class ShipmentFileProcessor {
       Date currentTimestamp = dbService.getCurrentTimestamp();
       csvParser.process(inputStream, modelClass, shipmentRecordHandler, new AuditFields(currentTimestamp));
       logger.info("Successfully processed file " + shipmentFile.getName());
+      sendArchiveToFtp(shipmentFile);
     } catch (DataException | UploadException e) {
       logger.info("Error processing file " + shipmentFile.getName() + " with error " + e.getMessage());
       processingError = true;
@@ -64,7 +65,6 @@ public class ShipmentFileProcessor {
       logger.info("Starting post processing file " + shipmentFile.getName());
       shipmentFilePostProcessHandler.process(shipmentFile, processingError);
       logger.info("Updated order statuses for file " + shipmentFile.getName());
-      sendArchiveToFtp(shipmentFile);
       boolean deleteStatus = FileUtils.deleteQuietly(shipmentFile);
       if (deleteStatus)
         logger.info("Successfully deleted file " + shipmentFile.getName());
