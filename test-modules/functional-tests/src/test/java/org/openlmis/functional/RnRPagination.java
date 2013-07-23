@@ -13,6 +13,7 @@ import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.InitiateRnRPage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ViewRequisitionPage;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -32,6 +33,7 @@ public class RnRPagination extends TestCaseHelper {
   @BeforeMethod(groups = {"functional"})
   public void setUp() throws Exception {
     super.setup();
+      //UpdateProperty("classpath:ci/app.properties","rnr.lineitem.page.size","5");
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
