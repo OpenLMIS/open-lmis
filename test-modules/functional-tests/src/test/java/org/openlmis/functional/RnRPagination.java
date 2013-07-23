@@ -33,12 +33,11 @@ public class RnRPagination extends TestCaseHelper {
   @BeforeMethod(groups = {"functional"})
   public void setUp() throws Exception {
     super.setup();
-      //UpdateProperty("classpath:ci/app.properties","rnr.lineitem.page.size","5");
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void testRnRPaginationAndSpecificDisplayOrder(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
-    dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 21, false);
+    dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, false);
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
     List<String> rightsList = new ArrayList<String>();
@@ -60,20 +59,20 @@ public class RnRPagination extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     testWebDriver.sleep(2000);
-    verifyNumberOfPageLinks(21, 20);
+    verifyNumberOfPageLinks(11, 10);
     verifyNextAndLastLinksEnabled();
     verifyPreviousAndFirstLinksDisabled();
-    verifyDisplayOrderFullSupply(20);
+    verifyDisplayOrderFullSupply(10);
 
-    initiateRnRPage.PopulateMandatoryFullSupplyDetails(21, 20);
+    initiateRnRPage.PopulateMandatoryFullSupplyDetails(11, 10);
 
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
     assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[1]/tr[1]/td").getText(), "Antibiotics");
     verifyPageLinksFromLastPage();
 
-    initiateRnRPage.addMultipleNonFullSupplyLineItems(21, false);
-    verifyDisplayOrderNonFullSupply(20);
-    verifyNumberOfPageLinks(21, 20);
+    initiateRnRPage.addMultipleNonFullSupplyLineItems(11, false);
+    verifyDisplayOrderNonFullSupply(10);
+    verifyNumberOfPageLinks(11, 10);
     verifyPreviousAndFirstLinksDisabled();
     verifyNextAndLastLinksEnabled();
 
@@ -89,10 +88,10 @@ public class RnRPagination extends TestCaseHelper {
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.clickRnRList();
 
-    verifyNumberOfPageLinks(21, 20);
+    verifyNumberOfPageLinks(11, 10);
     verifyNextAndLastLinksEnabled();
     verifyPreviousAndFirstLinksDisabled();
-    verifyDisplayOrderFullSupplyOnViewRequisition(11);
+    verifyDisplayOrderFullSupplyOnViewRequisition(10);
 
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
     assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[1]/tr[1]/td").getText(), "Antibiotics");
@@ -100,9 +99,9 @@ public class RnRPagination extends TestCaseHelper {
 
     viewRequisitionPage.clickNonFullSupplyTab();
 
-    verifyDisplayOrderNonFullSupplyOnViewRequisition(11);
+    verifyDisplayOrderNonFullSupplyOnViewRequisition(10);
 
-    verifyNumberOfPageLinks(21, 20);
+    verifyNumberOfPageLinks(11, 10);
     verifyPreviousAndFirstLinksDisabled();
     verifyNextAndLastLinksEnabled();
 
@@ -169,43 +168,43 @@ public class RnRPagination extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     testWebDriver.sleep(2000);
-    verifyCategoryDisplayOrderFullSupply(11);
+    verifyCategoryDisplayOrderFullSupply(10);
 
 
     initiateRnRPage.addMultipleNonFullSupplyLineItems(11, true);
-    verifyCategoryDisplayOrderNonFullSupply(11);
+    verifyCategoryDisplayOrderNonFullSupply(10);
   }
 
-//  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-//  public void testCategoryDefaultDisplayOrder(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
-//    dbWrapper.setupMultipleCategoryProducts(program, "Lvl3 Hospital", 11, true);
-//    dbWrapper.insertFacilities("F10", "F11");
-//    dbWrapper.configureTemplate(program);
-//    List<String> rightsList = new ArrayList<String>();
-//    rightsList.add("CREATE_REQUISITION");
-//    rightsList.add("VIEW_REQUISITION");
-//    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
-//    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-//    dbWrapper.insertRoleAssignment("200", "store in-charge");
-//    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
-//    dbWrapper.insertSchedule("M", "Monthly", "Month");
-//    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
-//    dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
-//    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
-//    dbWrapper.insertSupplyLines("N1", program, "F10");
-//
-//    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-//    HomePage homePage = loginPage.loginAs(userSIC, password);
-//    String periodDetails = homePage.navigateAndInitiateRnr(program);
-//    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-//
-//    testWebDriver.sleep(2000);
-//    verifyCategoryDefaultDisplayOrderFullSupply();
-//
-//
-//    initiateRnRPage.addMultipleNonFullSupplyLineItems(11, true);
-//    verifyCategoryDefaultDisplayOrderNonFullSupply();
-//  }
+  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testCategoryDefaultDisplayOrder(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
+    dbWrapper.setupMultipleCategoryProducts(program, "Lvl3 Hospital", 11, true);
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.configureTemplate(program);
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("CREATE_REQUISITION");
+    rightsList.add("VIEW_REQUISITION");
+    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+    dbWrapper.insertRoleAssignment("200", "store in-charge");
+    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
+    dbWrapper.insertSchedule("M", "Monthly", "Month");
+    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
+    dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
+    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
+    dbWrapper.insertSupplyLines("N1", program, "F10");
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    String periodDetails = homePage.navigateAndInitiateRnr(program);
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+
+    testWebDriver.sleep(2000);
+    verifyCategoryDefaultDisplayOrderFullSupply();
+
+
+    initiateRnRPage.addMultipleNonFullSupplyLineItems(11, true);
+    verifyCategoryDefaultDisplayOrderNonFullSupply();
+  }
 
   public void verifyPageLinksFromLastPage() throws Exception {
     verifyNextAndLastLinksDisabled();

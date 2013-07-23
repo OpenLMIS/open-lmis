@@ -12,10 +12,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.net.CookieManager;
 import java.sql.SQLException;
@@ -302,17 +299,6 @@ public class TestCaseHelper {
         dbWrapper.insertSchedule(schedule, "Monthly", "Month");
         setupTestRoleRightsData(roleNmae,"ALLOCATION","MANAGE_DISTRIBUTION");
         setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
-    }
-    public void UpdateProperty(String propertyFilePath, String property, String value) throws IOException {
-        FileInputStream in = new FileInputStream(propertyFilePath);
-        Properties props = new Properties();
-        props.load(in);
-        in.close();
-
-        FileOutputStream out = new FileOutputStream(propertyFilePath);
-        props.setProperty(property, value);
-        props.store(out, null);
-        out.close();
     }
 
     public void OpenIndexedDB(String dbName)
