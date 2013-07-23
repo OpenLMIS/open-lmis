@@ -38,4 +38,14 @@ public class GeographicZoneRepositoryExtension extends GeographicZoneRepository 
         return mapper.getGeographicZoneById_Ext(id);
     }
 
+    public void insert_Ext(GeographicZone geographicZone)
+    {
+        try {
+            mapper.insert_Ext(geographicZone);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DataException("error.incorrect.length");
+        }
+    }
+
 }

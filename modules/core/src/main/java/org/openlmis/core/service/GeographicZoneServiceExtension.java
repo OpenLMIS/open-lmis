@@ -31,7 +31,7 @@ public class GeographicZoneServiceExtension extends GeographicZoneService {
     }
 
     public void saveNew(GeographicZone geographicZone) {
-        repository.insert(geographicZone);
+        repository.insert_Ext(geographicZone);
     }
 
     public void update(GeographicZone geographicZone) {

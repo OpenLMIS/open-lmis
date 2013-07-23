@@ -23,10 +23,10 @@
 
 
         <div class="row-fluid list-row">
-            <div class="span3" style="overflow: visible;">Name</a></div>
-            <div class="span3" style="overflow: visible;">Code</div>
-            <div class="span3" style="overflow: visible;">Level</div>
-            <div class="span2" style="overflow: visible;">Parent</div>
+            <div class="span3" style="overflow: visible;"><strong>Name</strong></a></div>
+            <div class="span3" style="overflow: visible;"><strong>Code</strong></div>
+            <div class="span3" style="overflow: visible;"><strong>Level</strong></div>
+            <div class="span2" style="overflow: visible;"><strong>Parent</strong></div>
         </div>
         <div ng-repeat="geographicZone in filteredGeographicZones" class="row-fluid list-row">
             <div class="span3" style="overflow: visible;"><a ng-click="editGeographicZones(geographicZone.id)">{{geographicZone.name}}</a></div>
