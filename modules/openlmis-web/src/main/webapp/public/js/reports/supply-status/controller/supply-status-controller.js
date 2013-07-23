@@ -39,6 +39,7 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         facilityType : "",
         programId : $scope.program,
         periodId : $scope.period,
+        period : "",
         zoneId : $scope.zone,
         productId : $scope.productId,
         scheduleId : $scope.schedule,
@@ -143,6 +144,12 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
             $scope.filterObject.periodId =  -1;
         }else if(selection != undefined || selection == ""){
             $scope.filterObject.periodId =  selection;
+            $.each( $scope.periods,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.period = idx.name;
+                }
+            });
+
         }else{
             $scope.filterObject.periodId =  0;
         }
@@ -274,15 +281,15 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
                 { field: 'facility', displayName: 'Facility', width: "*", resizable: false},
                 { field: 'code', displayName: 'Code', width: "*", resizable: false},
                 { field: 'product', displayName: 'Product', width: "*" },
-                { field: 'openingBalance', displayName: 'Opening Balance', width : "*"},
-                { field: 'receipts', displayName: 'Receipts', width : "*"},
-                { field: 'issues', displayName: 'Issues', width : "*"},
-                { field: 'adjustments', displayName: 'Adjustments', width : "*"},
-                { field: 'closingBalance', displayName: 'Closing Balance', width : "*"},
-                { field: 'monthsOfStock', displayName: 'Months of Stock', width : "*"},
-                { field: 'averageMonthlyConsumption', displayName: 'AMC', width : "*"},
-                { field: 'maximumStock', displayName: 'Maximum Stock', width : "*"},
-                { field: 'reorderAmount', displayName: 'Re-order Amount', width : "*"}
+                { field: 'openingBalance', displayName: 'Opening Balance', width : "*", cellClass : 'numeric'},
+                { field: 'receipts', displayName: 'Receipts', width : "*", cellClass : 'numeric'},
+                { field: 'issues', displayName: 'Issues', width : "*", cellClass : 'numeric'},
+                { field: 'adjustments', displayName: 'Adjustments', width : "*", cellClass : 'numeric'},
+                { field: 'closingBalance', displayName: 'Closing Balance', width : "*", cellClass : 'numeric'},
+                { field: 'monthsOfStock', displayName: 'Months of Stock', width : "*", cellClass : 'numeric'},
+                { field: 'averageMonthlyConsumption', displayName: 'AMC', width : "*", cellClass : 'numeric'},
+                { field: 'maximumStock', displayName: 'Maximum Stock', width : "*", cellClass : 'numeric'},
+                { field: 'reorderAmount', displayName: 'Re-order Amount', width : "*", cellClass : 'numeric'}
 
             ],
         enablePaging: true,
