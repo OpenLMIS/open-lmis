@@ -115,15 +115,20 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
 
     function onReferenceDataSuccess(data) {
 
-      var distributionReferenceDataTransaction = IndexedDB.getConnection().transaction('distributionReferenceData', 'readwrite');
-      var distributionReferenceDataStore = distributionReferenceDataTransaction.objectStore('distributionReferenceData');
-      var zpp = $scope.selectedZone.id + '_' + $scope.selectedProgram.id + '_' + $scope.selectedPeriod.id;
-      var referenceData = {zpp: zpp, facilities: data.facilities}
-      distributionReferenceDataStore.put(referenceData);
-      distributionReferenceDataTransaction.oncomplete = function () {
-        cacheDistribution();
-        $scope.$apply();
-      };
+      if (data.facilities.length > 0) {
+        var distributionReferenceDataTransaction = IndexedDB.getConnection().transaction('distributionReferenceData', 'readwrite');
+        var distributionReferenceDataStore = distributionReferenceDataTransaction.objectStore('distributionReferenceData');
+        var zpp = $scope.selectedZone.id + '_' + $scope.selectedProgram.id + '_' + $scope.selectedPeriod.id;
+        var referenceData = {zpp: zpp, facilities: data.facilities}
+        distributionReferenceDataStore.put(referenceData);
+        distributionReferenceDataTransaction.oncomplete = function () {
+          cacheDistribution();
+          $scope.$apply();
+        };
+      } else {
+        $scope.message = messageService.get("message.no.facility.available", $scope.selectedProgram.name,
+            $scope.selectedZone.name);
+      }
     }
 
     function cacheDistribution() {
@@ -149,10 +154,10 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
             addDistributionToStore($scope.distribution);
           }
 
-          $scope.distribution = null;
         }
       }
     }
+
   };
   function addDistributionToStore(distribution) {
     var transaction = IndexedDB.getConnection().transaction(['distributions', 'distributionReferenceData'], 'readwrite');
