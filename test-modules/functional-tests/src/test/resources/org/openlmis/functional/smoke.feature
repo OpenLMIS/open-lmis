@@ -72,7 +72,7 @@ Feature: Smoke Tests
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
       | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
-    And I have data available for "Multiple" facilities attached to delivery zones with role assignment required "False"
+    And I have data available for "Multiple" facilities attached to delivery zones
     And I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
     And I am logged in as "storeincharge"
     And I access plan my distribution page
@@ -90,7 +90,7 @@ Feature: Smoke Tests
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
       | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
-    And I have data available for "Multiple" facilities attached to delivery zones with role assignment required "False"
+    And I have data available for "Multiple" facilities attached to delivery zones
     And I am logged in as "storeincharge"
     And I access plan my distribution page
     Then I verify fields
@@ -196,7 +196,14 @@ Feature: Smoke Tests
 
   Scenario: Distribution user should view ISA, Override ISA and NoRecords for different delivery zone, program & period combination
     Given I have data available for distribution load amount
-    And I have data available for "Multiple" facilities attached to delivery zones with role assignment required "True"
+    And I have data available for "Multiple" facilities attached to delivery zones
+    And I have following ISA values:
+      | Program | Product  | whoratio  | dosesperyear |wastageFactor|bufferpercentage|minimumvalue|maximumvalue|adjustmentvalue|
+      | VACCINES | P10      | 10|10                   |10           |10              |null            |null            |0              |
+    And I have following override ISA values:
+      | Facility Code | Program  | Product  | ISA |
+      | F11           | VACCINES | P11      | 1000|
+    And I have role assigned to delivery zones
     When I am logged in as "fieldcoordinator"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
@@ -216,7 +223,14 @@ Feature: Smoke Tests
 
   Scenario: Distribution user should view aggregate ISA for delivery zone
     Given I have data available for distribution load amount
-    And I have data available for "Single" facilities attached to delivery zones with role assignment required "True"
+    And I have data available for "Single" facility attached to delivery zones
+    And I have following override ISA values:
+      | Facility Code | Program  | Product  | ISA |
+      | F10           | VACCINES | P10      | 1000|
+      | F10           | VACCINES | P11      | 2000|
+      | F11           | VACCINES | P10      | 3000|
+      | F11           | VACCINES | P11      | 4000|
+    And I have role assigned to delivery zones
     When I am logged in as "fieldcoordinator"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
