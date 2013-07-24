@@ -1,6 +1,7 @@
 Feature: End to end requisition flow
 
   @smoke
+    @ie1
   Scenario: Requisition initiate, authorize, approve & convert to oder.
     Given I am logged in as Admin
     And I access create facility page

@@ -1,6 +1,7 @@
 Feature: Smoke Tests
 
   @smoke
+  @ie2
   Scenario: User should be able to save and submit regimen data
     Given I have the following data for regimen:
       | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
@@ -24,6 +25,7 @@ Feature: Smoke Tests
     Then I should see submit successfully
 
   @smoke
+  @ie2
   Scenario: User should view requisition and regimen after authorization
     Given I have the following data for regimen:
       | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
@@ -51,6 +53,7 @@ Feature: Smoke Tests
     Then I verify values on regimen page as patientsOnTreatment "100" patientsToInitiateTreatment "200" patientsStoppedTreatment "300" remarks "Regimens data filled"
 
   @smoke
+  @ie2
   Scenario: User should able to configure program product ISA
     Given I have data available for program product ISA
     And I am logged in as Admin
@@ -61,6 +64,7 @@ Feature: Smoke Tests
     And I access home page
 
   @smoke
+  @ie2
   Scenario: User should able to initiate distribution
     Given I have the following data for distribution:
       | userSIC        | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
@@ -76,6 +80,7 @@ Feature: Smoke Tests
     And I should see delivery zone "Delivery Zone First" program "VACCINES" period "Period14" in table
 
   @smoke
+  @ie2
   Scenario: User should able to fetch program period on manage distribution screen
     Given I have the following data for distribution:
       | userSIC        | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
@@ -93,6 +98,7 @@ Feature: Smoke Tests
     And I click view load amount
 
   @smoke
+  @ie2
   Scenario: User should able to override ISA
     Given I have the following data for override ISA:
       | user     |  program   | product | productName | category | whoratio | dosesperyear | wastageFactor | bufferpercentage | minimumvalue | maximumvalue | adjustmentvalue |
@@ -109,6 +115,7 @@ Feature: Smoke Tests
     Then I should see overridden ISA "24"
 
   @smoke
+  @ie2
   Scenario: Verifying Forgot Password functionality
     Given I am on forgot password screen
     When I type email "John_Doe@openlmis.com"
@@ -118,6 +125,7 @@ Feature: Smoke Tests
     And I am logged in as Admin
 
   @smoke
+  @ie2
   Scenario: Verify New Regimen Created
     Given I have data available for programs configured
     And I am logged in as Admin
@@ -131,6 +139,7 @@ Feature: Smoke Tests
     Then I should see regimen created message
 
   @smoke
+  @ie2
   Scenario: Verify New Regimen Reporting Field Configuration
     Given I have data available for programs configured
     And I am logged in as Admin
@@ -156,12 +165,14 @@ Feature: Smoke Tests
     Then I should see regimen created message
 
   @smoke
+  @ie2
   Scenario: Admin user should not access requisition page
     Given I am logged in as Admin
     When I access initiate requisition page through URL
     Then I should see unauthorized access message
 
   @smoke
+  @ie2
   Scenario: Requisition user should not access admin Page
     Given I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights
     And I am logged in as "storeincharge"
@@ -169,6 +180,7 @@ Feature: Smoke Tests
     Then I should see unauthorized access message
 
   @smoke
+  @ie2
   Scenario: Distribution user should view ISA, Override ISA and NoRecords for different delivery zone, program & period combination
     Given I have data available for distribution load amount
     When I am logged in as "fieldcoordinator"
@@ -186,6 +198,7 @@ Feature: Smoke Tests
     Then I should see message "No records found"
 
   @smoke
+  @ie2
   Scenario: Distribution user should view aggregate ISA for delivery zone
     Given I have data available for multiple facilities in a delivery zone for distribution load amount
     When I am logged in as "fieldcoordinator"
