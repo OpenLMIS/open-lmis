@@ -36,12 +36,12 @@ public class TestWebDriver {
 
 
   public TestWebDriver(WebDriver driver) {
-
     this.driver = driver;
     maximizeBrowser();
   }
 
   public void setBaseURL(String BASE_URL) {
+    driver.manage().deleteAllCookies();
     this.BASE_URL = BASE_URL;
     get();
   }

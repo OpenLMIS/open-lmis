@@ -77,7 +77,7 @@ public class TestCaseHelper {
   }
 
 
-  protected void loadDriver(String browser) throws InterruptedException {
+  protected void loadDriver(String browser) throws InterruptedException, IOException {
 
     testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
   }
