@@ -5,7 +5,7 @@
  */
 
 
-function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, IndexedDB, navigateBackService, $http, $dialog, $scope) {
+function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, IndexedDB, navigateBackService, $http, $dialog, $scope, $location) {
 
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
@@ -99,14 +99,14 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
     function isCached() {
       return _.find($scope.distributionList, function (distribution) {
         return distribution.deliveryZone.id == $scope.selectedZone.id &&
-          distribution.program.id == $scope.selectedProgram.id &&
-          distribution.period.id == $scope.selectedPeriod.id;
+            distribution.program.id == $scope.selectedProgram.id &&
+            distribution.period.id == $scope.selectedPeriod.id;
       });
     }
 
     if (isCached()) {
       $scope.message = messageService.get("message.distribution.already.cached",
-        $scope.selectedZone.name, $scope.selectedProgram.name, $scope.selectedPeriod.name);
+          $scope.selectedZone.name, $scope.selectedProgram.name, $scope.selectedPeriod.name);
       return;
     }
 
