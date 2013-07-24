@@ -150,7 +150,6 @@ public class RequisitionMapperIT {
     assertThat(updatedRequisition.getId(), is(requisition.getId()));
     assertThat(updatedRequisition.getSupervisoryNodeId(), is(requisition.getSupervisoryNodeId()));
     assertThat(updatedRequisition.getModifiedBy(), is(equalTo(USER_ID)));
-    assertThat(updatedRequisition.getSubmittedDate(), is(submittedDate));
     assertThat(updatedRequisition.getSupplyingFacility().getId(), is(supplyingFacility.getId()));
   }
 
@@ -231,7 +230,6 @@ public class RequisitionMapperIT {
     assertThat(rnr.getPeriod().getId(), is(processingPeriod1.getId()));
     assertThat(rnr.getId(), is(requisition.getId()));
     assertThat(rnr.getModifiedDate(), is(notNullValue()));
-    assertThat(rnr.getSubmittedDate(), is(requisition.getSubmittedDate()));
   }
 
   @Test
@@ -280,7 +278,6 @@ public class RequisitionMapperIT {
     assertThat(rnr.getId(), is(requisition.getId()));
     assertThat(rnr.getSupplyingFacility().getId(), is(supplyingFacility.getId()));
     assertThat(rnr.getModifiedDate(), is(notNullValue()));
-    assertThat(rnr.getSubmittedDate(), is(requisition.getSubmittedDate()));
   }
 
   @Test

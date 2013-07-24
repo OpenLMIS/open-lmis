@@ -17,6 +17,7 @@ import org.openlmis.rnr.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
@@ -176,6 +177,10 @@ public class RequisitionRepository {
   public void logStatusChange(Rnr requisition) {
     RequisitionStatusChange statusChange = new RequisitionStatusChange(requisition);
     requisitionStatusChangeMapper.insert(statusChange);
+  }
+
+  public Date getOperationDateFor(Long rnrId, String status) {
+    return requisitionStatusChangeMapper.getOperationDateFor(rnrId, status);
   }
 
   public Rnr getLWById(Long rnrId) {

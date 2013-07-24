@@ -1,5 +1,7 @@
 package org.openlmis.rnr.repository.mapper;
 
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -21,6 +23,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -28,6 +32,7 @@ import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
+import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -58,9 +63,11 @@ public class RequisitionStatusChangeMapperIT {
   private Facility facility;
   private ProcessingPeriod processingPeriod;
   private SupervisoryNode supervisoryNode;
+  private RequisitionStatusChange statusChange;
+  private Rnr requisition;
 
-  @Test
-  public void shouldLogStatusChangesToRequisition() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
 
@@ -72,13 +79,15 @@ public class RequisitionStatusChangeMapperIT {
     Program program = new Program();
     program.setId(1L);
 
-    Rnr requisition = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.periodId, processingPeriod.getId()),
+    requisition = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.periodId, processingPeriod.getId()),
       with(RequisitionBuilder.facility, facility), with(RequisitionBuilder.program, program)));
     requisitionMapper.insert(requisition);
 
+    statusChange = new RequisitionStatusChange(requisition);
+  }
 
-    RequisitionStatusChange statusChange = new RequisitionStatusChange(requisition);
-
+  @Test
+  public void shouldLogStatusChangesToRequisition() throws Exception {
     mapper.insert(statusChange);
 
     RequisitionStatusChange change = mapper.getById(statusChange.getId());
@@ -86,6 +95,14 @@ public class RequisitionStatusChangeMapperIT {
     change.setCreatedDate(null);
 
     assertThat(change, is(statusChange));
+  }
+
+  @Test @Ignore
+  public void shouldGetOperationDateForRequisitionForStatus() throws Exception {
+    mapper.insert(statusChange);
+
+    Date initiatedDate = mapper.getOperationDateFor(requisition.getId(), INITIATED.toString());
+    assertThat(statusChange.getCreatedDate(), is(initiatedDate));
   }
 
   private ProcessingPeriod insertPeriod(String name) {
