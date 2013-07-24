@@ -111,7 +111,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
     if (len >= 3) {
       if (len == 3) {
-        Facility.get({searchParam: query}, function (data) {
+        Facility.get({searchParam: query, virtualFacility : false}, function (data) {
           $scope.facilityList = data.facilityList;
           $scope.filteredFacilities = $scope.facilityList;
           $scope.resultCount = $scope.filteredFacilities.length;

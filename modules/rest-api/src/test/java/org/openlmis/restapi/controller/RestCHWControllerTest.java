@@ -36,7 +36,7 @@ public class RestCHWControllerTest {
     CHW chw = mock(CHW.class);
     mockStatic(RestResponse.class);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(), HttpStatus.OK);
-    when(RestResponse.success("CHW created successfully")).thenReturn(expectResponse);
+    when(RestResponse.success("message.success.chw.created")).thenReturn(expectResponse);
 
     ResponseEntity<RestResponse> response = restCHWController.createCHW(chw);
 

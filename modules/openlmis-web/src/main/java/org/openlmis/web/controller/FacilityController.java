@@ -47,9 +47,10 @@ public class FacilityController extends BaseController {
 
   @RequestMapping(value = "/facilities", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public List<Facility> get(@RequestParam(value = "searchParam", required = false) String searchParam) {
+  public List<Facility> get(@RequestParam(value = "searchParam", required = false) String searchParam,
+                            @RequestParam(value = "virtualFacility", required = false)Boolean virtualFacility) {
     if (searchParam != null) {
-      return facilityService.searchFacilitiesByCodeOrName(searchParam);
+      return facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(searchParam, virtualFacility);
     } else {
       return facilityService.getAll();
     }

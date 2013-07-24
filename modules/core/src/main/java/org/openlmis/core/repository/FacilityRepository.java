@@ -168,4 +168,8 @@ public class FacilityRepository {
   public List<Facility> getAllByProgramSupportedModifiedDate(Date dateModified) {
     return mapper.getAllByProgramSupportedModifiedDate(dateModified);
   }
+
+  public List<Facility> searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(String query, Boolean virtualFacility) {
+    return mapper.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(query, virtualFacility);
+  }
 }

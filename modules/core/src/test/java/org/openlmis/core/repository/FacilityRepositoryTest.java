@@ -243,6 +243,16 @@ public class FacilityRepositoryTest {
   }
 
   @Test
+  public void shouldSearchFacilitiesByCodeOrNameAndVirtualFacilityFlag() throws Exception {
+    List<Facility> facilityList = Arrays.asList(new Facility());
+    when(mapper.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", true)).thenReturn(facilityList);
+
+    List<Facility> returnedFacilities = repository.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", true);
+
+    assertThat(returnedFacilities, is(facilityList));
+  }
+
+  @Test
   public void shouldSetGeographicZoneFromCodeAfterValidation() throws Exception {
     Facility facility = make(a(defaultFacility));
     GeographicZone existingZone = new GeographicZone();

@@ -27,6 +27,7 @@ public class FacilityBuilder {
   public static final Property<Facility, String> geographicZoneCode = newProperty();
   public static final Property<Facility, Boolean> sdp = newProperty();
   public static final Property<Facility, Boolean> active = newProperty();
+  public static final Property<Facility, Boolean> virtualFacility = newProperty();
   public static final Property<Facility, Date> goLiveDate = newProperty();
   public static final Property<Facility, String> operatedByCode = newProperty();
   public static final Property<Facility, GeographicZone> geographicZone = newProperty();
@@ -70,7 +71,7 @@ public class FacilityBuilder {
       parentGeographicZone.setName("Zambia");
       geographicZone.setParent(parentGeographicZone);
       facility.setGeographicZone(lookup.valueOf(FacilityBuilder.geographicZone, geographicZone));
-      facility.setVirtualFacility(false);
+      facility.setVirtualFacility(lookup.valueOf(virtualFacility, false));
 
       facility.setSdp(lookup.valueOf(sdp, true));
       facility.setActive(lookup.valueOf(active, true));

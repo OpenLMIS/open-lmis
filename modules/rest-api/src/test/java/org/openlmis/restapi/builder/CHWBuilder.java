@@ -23,7 +23,7 @@ public class CHWBuilder {
       CHW chw = new CHW();
       chw.setAgentCode(lookup.valueOf(agentCode, "A1"));
       chw.setAgentName(lookup.valueOf(agentName, "AgentVinod"));
-      chw.setBaseFacilityCode(lookup.valueOf(baseFacilityCode, "F10"));
+      chw.setParentFacilityCode(lookup.valueOf(baseFacilityCode, "F10"));
       chw.setPhoneNumber(lookup.valueOf(phoneNumber, "007"));
       chw.setActive(lookup.valueOf(active, true));
       return chw;

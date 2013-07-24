@@ -118,7 +118,7 @@ public class Facility extends BaseModel implements Importable {
   @ImportField(type = "boolean", mandatory = true, name = "Data Reportable")
   private Boolean dataReportable;
 
-  private Boolean virtualFacility;
+  private Boolean virtualFacility = false;
 
   //TODO : change supportedPrograms to programsSupported
   List<ProgramSupported> supportedPrograms = new ArrayList<>();

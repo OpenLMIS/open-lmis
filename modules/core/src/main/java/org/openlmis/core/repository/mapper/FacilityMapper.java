@@ -110,9 +110,14 @@ public interface FacilityMapper {
   })
   List<Facility> getFacilitiesBy(@Param(value = "programId") Long programId, @Param(value = "requisitionGroupIds") String requisitionGroupIds);
 
+  @Select("SELECT id, code, name FROM facilities WHERE virtualFacility = #{virtualFacility} AND " +
+    "(LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%' " +
+    "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%')")
+  List<Facility> searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(@Param("searchParam") String searchParam, @Param("virtualFacility") Boolean includeVirtualFacility);
+
   @Select("SELECT id, code, name FROM facilities WHERE " +
-    "LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%' " +
-    "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%'")
+    "(LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%' " +
+    "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%')")
   List<Facility> searchFacilitiesByCodeOrName(String searchParam);
 
 

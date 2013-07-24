@@ -319,24 +319,76 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldSearchFacilitiesByCodeOrName() throws Exception {
+  public void shouldSearchAllFacilitiesByCodeOrName() throws Exception {
     Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "FF110"), with(name, "D1100")));
     Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "D00"), with(name, "F110")));
     Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1100"), with(name, "F1100")));
     Facility facility4 = make(a(FacilityBuilder.defaultFacility, with(code, "FF130")));
+    Facility facility5 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1101"), with(virtualFacility, true)));
 
     mapper.insert(facility1);
     mapper.insert(facility2);
     mapper.insert(facility3);
     mapper.insert(facility4);
+    mapper.insert(facility5);
 
     List<Facility> returnedFacilityList = mapper.searchFacilitiesByCodeOrName("f11");
+
+    assertThat(returnedFacilityList.size(), is(4));
+
+    for (Facility facility : returnedFacilityList) {
+      assertThat(facility.getCode().equals(facility1.getCode())
+        || facility.getCode().equals(facility2.getCode())
+        || facility.getCode().equals(facility3.getCode())
+        || facility.getCode().equals(facility5.getCode()), is(true));
+    }
+  }
+
+  @Test
+  public void shouldSearchVirtualFacilitiesByCodeOrName() throws Exception {
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "FF110"), with(name, "D1100")));
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "D00"), with(name, "F110")));
+    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1100"), with(name, "F1100")));
+    Facility facility4 = make(a(FacilityBuilder.defaultFacility, with(code, "FF130")));
+    Facility facility5 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1101"), with(virtualFacility, true)));
+
+    mapper.insert(facility1);
+    mapper.insert(facility2);
+    mapper.insert(facility3);
+    mapper.insert(facility4);
+    mapper.insert(facility5);
+
+    List<Facility> returnedFacilityList = mapper.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("f11", true);
+
+    assertThat(returnedFacilityList.size(), is(1));
+    assertThat(returnedFacilityList.get(0).getCode(), is("FF1101"));
+
+  }
+
+  @Test
+  public void shouldSearchNonVirtualFacilitiesByCodeOrName() throws Exception {
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "FF110"), with(name, "D1100")));
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "D00"), with(name, "F110")));
+    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1100"), with(name, "F1100")));
+    Facility facility4 = make(a(FacilityBuilder.defaultFacility, with(code, "FF130")));
+    Facility facility5 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1101"), with(virtualFacility, true)));
+
+    mapper.insert(facility1);
+    mapper.insert(facility2);
+    mapper.insert(facility3);
+    mapper.insert(facility4);
+    mapper.insert(facility5);
+
+    List<Facility> returnedFacilityList = mapper.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("f11", false);
 
     assertThat(returnedFacilityList.size(), is(3));
 
     for (Facility facility : returnedFacilityList) {
-      assertThat(facility.getCode().equals(facility1.getCode()) || facility.getCode().equals(facility2.getCode()) || facility.getCode().equals(facility3.getCode()), is(true));
+      assertThat(facility.getCode().equals(facility1.getCode())
+        || facility.getCode().equals(facility2.getCode())
+        || facility.getCode().equals(facility3.getCode()), is(true));
     }
+
   }
 
   @Test
