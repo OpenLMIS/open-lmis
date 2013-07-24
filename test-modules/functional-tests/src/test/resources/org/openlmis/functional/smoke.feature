@@ -26,6 +26,7 @@ Feature: Smoke Tests
 
   @smoke
   @ie2
+
   Scenario: User should view requisition and regimen after authorization
     Given I have the following data for regimen:
       | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
@@ -54,6 +55,7 @@ Feature: Smoke Tests
 
   @smoke
   @ie2
+
   Scenario: User should able to configure program product ISA
     Given I have data available for program product ISA
     And I am logged in as Admin
@@ -65,10 +67,12 @@ Feature: Smoke Tests
 
   @smoke
   @ie2
+
   Scenario: User should able to initiate distribution
     Given I have the following data for distribution:
-      | userSIC        | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeincharge  | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I have data available for "Multiple" facilities attached to delivery zones with role assignment required "False"
     And I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
     And I am logged in as "storeincharge"
     And I access plan my distribution page
@@ -81,10 +85,12 @@ Feature: Smoke Tests
 
   @smoke
   @ie2
+
   Scenario: User should able to fetch program period on manage distribution screen
     Given I have the following data for distribution:
-      | userSIC        | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeincharge  | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I have data available for "Multiple" facilities attached to delivery zones with role assignment required "False"
     And I am logged in as "storeincharge"
     And I access plan my distribution page
     Then I verify fields
@@ -92,17 +98,18 @@ Feature: Smoke Tests
     When I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
-    Then I should see program "VACCINES"
+    Then I should see program "VACCINES,TB"
     And I select program "VACCINES"
     Then I should see period "Period14"
     And I click view load amount
 
   @smoke
   @ie2
+
   Scenario: User should able to override ISA
     Given I have the following data for override ISA:
-      | user     |  program   | product | productName | category | whoratio | dosesperyear | wastageFactor | bufferpercentage | minimumvalue | maximumvalue | adjustmentvalue |
-      | Admin123 |  VACCINES  | P1      | antibiotic1 | C1       | 1        | 2            | 3             | 4                | null         | null         | 5               |
+      | user     | program  | product | productName | category | whoratio | dosesperyear | wastageFactor | bufferpercentage | minimumvalue | maximumvalue | adjustmentvalue |
+      | Admin123 | VACCINES | P1      | antibiotic1 | C1       | 1        | 2            | 3             | 4                | null         | null         | 5               |
     And I am logged in as Admin
     And I access create facility page
     When I create facility
@@ -116,6 +123,7 @@ Feature: Smoke Tests
 
   @smoke
   @ie2
+
   Scenario: Verifying Forgot Password functionality
     Given I am on forgot password screen
     When I type email "John_Doe@openlmis.com"
@@ -126,6 +134,7 @@ Feature: Smoke Tests
 
   @smoke
   @ie2
+
   Scenario: Verify New Regimen Created
     Given I have data available for programs configured
     And I am logged in as Admin
@@ -133,13 +142,14 @@ Feature: Smoke Tests
     Then I should see configured program list
     When I configure program "ESSENTIAL MEDICINES" for regimen template
     And I add new regimen:
-    |Category|Code  |Name |Active|
-    |Adults  |Code1 |Name1|true  |
+      | Category | Code  | Name  | Active |
+      | Adults   | Code1 | Name1 | true   |
     And I save regimen
     Then I should see regimen created message
 
   @smoke
   @ie2
+
   Scenario: Verify New Regimen Reporting Field Configuration
     Given I have data available for programs configured
     And I am logged in as Admin
@@ -147,25 +157,26 @@ Feature: Smoke Tests
     Then I should see configured program list
     When I configure program "ESSENTIAL MEDICINES" for regimen template
     And I add new regimen:
-      |Category|Code  |Name |Active|
-      |Adults  |Code1 |Name1|true  |
+      | Category | Code  | Name  | Active |
+      | Adults   | Code1 | Name1 | true   |
     And I access regimen reporting fields tab
     Then I should see regimen reporting fields
     When I add new regimen reporting field:
-      |NoOfPatientsOnTreatment |Remarks         |
-      |false                   |Testing column  |
+      | NoOfPatientsOnTreatment | Remarks        |
+      | false                   | Testing column |
     And I save regimen
     Then I should see regimen created message
     When I edit program "ESSENTIAL MEDICINES" for regimen template
     Then I should see created regimen and reporting fields:
-      |Code  |Name |Remarks         |
-      |Code1 |Name1|Testing column  |
+      | Code  | Name  | Remarks        |
+      | Code1 | Name1 | Testing column |
     When I activate Number Of Patients On Treatment
     And I save regimen
     Then I should see regimen created message
 
   @smoke
   @ie2
+
   Scenario: Admin user should not access requisition page
     Given I am logged in as Admin
     When I access initiate requisition page through URL
@@ -173,6 +184,7 @@ Feature: Smoke Tests
 
   @smoke
   @ie2
+
   Scenario: Requisition user should not access admin Page
     Given I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights
     And I am logged in as "storeincharge"
@@ -181,8 +193,10 @@ Feature: Smoke Tests
 
   @smoke
   @ie2
+
   Scenario: Distribution user should view ISA, Override ISA and NoRecords for different delivery zone, program & period combination
     Given I have data available for distribution load amount
+    And I have data available for "Multiple" facilities attached to delivery zones with role assignment required "True"
     When I am logged in as "fieldcoordinator"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
@@ -199,8 +213,10 @@ Feature: Smoke Tests
 
   @smoke
   @ie2
+
   Scenario: Distribution user should view aggregate ISA for delivery zone
-    Given I have data available for multiple facilities in a delivery zone for distribution load amount
+    Given I have data available for distribution load amount
+    And I have data available for "Single" facilities attached to delivery zones with role assignment required "True"
     When I am logged in as "fieldcoordinator"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"

@@ -37,7 +37,7 @@ public class CommonSteps extends TestCaseHelper {
         loginPage.loginAs("Admin123", "Admin123");
     }
 
-    @Given("I have \"([^\"]*)\" user with \"([^\"]*)\" rights$")
+    @Given("^I have \"([^\"]*)\" user with \"([^\"]*)\" rights$")
     public void setupUserWithRights(String user, String rights) throws IOException, SQLException {
         String[] rightList=rights.split(",");
         List<String> rightsList = new ArrayList<String>();

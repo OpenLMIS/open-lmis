@@ -104,6 +104,7 @@ public class DistributionPage extends RequisitionPage {
   }
 
   public List<WebElement> getAllSelectOptionsFromProgram() {
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(selectProgramSelectBox);
     List<WebElement> options = testWebDriver.getOptions(selectProgramSelectBox);
     return options;

@@ -75,11 +75,9 @@ public class ManageDistribution extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
-    setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond,
-      deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond,
-      programFirst, programSecond, schedule);
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true,
+      programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+
   }
 
   @Then("^I should see program \"([^\"]*)\"$")
@@ -87,9 +85,9 @@ public class ManageDistribution extends TestCaseHelper {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
     List<String> firstProgramValuesToBeVerified = new ArrayList<String>();
 
-    String [] program = programs.split(",");
-    for (int i=0; i<program.length;i++)
-    firstProgramValuesToBeVerified.add(program[i]);
+    String[] program = programs.split(",");
+    for (int i = 0; i < program.length; i++)
+      firstProgramValuesToBeVerified.add(program[i]);
 
     List<WebElement> valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromProgram();
     verifyAllSelectFieldValues(firstProgramValuesToBeVerified, valuesPresentInDropDown);
@@ -97,7 +95,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I verify fields$")
   public void verifyFieldsOnScreen() throws IOException, SQLException {
-    DistributionPage distributionPage=new DistributionPage(testWebDriver);
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
     verifyElementsPresent(distributionPage);
   }
 
@@ -197,14 +195,14 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testVerifyAlreadyCachedDistribution(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                     String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                     String facilityCodeFirst, String facilityCodeSecond,
-                                     String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                                  String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                  String facilityCodeFirst, String facilityCodeSecond,
+                                                  String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
-    setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
       programFirst, programSecond, schedule);
@@ -225,14 +223,14 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testManageDistribution(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                      String facilityCodeFirst, String facilityCodeSecond,
-                                      String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                     String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                     String facilityCodeFirst, String facilityCodeSecond,
+                                     String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
-    setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
       programFirst, programSecond, schedule);
@@ -271,6 +269,7 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     List<String> firstProgramValuesToBeVerified = new ArrayList<String>();
     firstProgramValuesToBeVerified.add(programFirst);
+    firstProgramValuesToBeVerified.add(programSecond);
     valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromProgram();
     verifyAllSelectFieldValues(firstProgramValuesToBeVerified, valuesPresentInDropDown);
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
@@ -364,12 +363,13 @@ public class ManageDistribution extends TestCaseHelper {
   @AfterMethod(groups = "functional2")
   @After
   public void tearDown() throws Exception {
+    testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
     }
-      dbWrapper.deleteData();
-      dbWrapper.closeConnection();
+    dbWrapper.deleteData();
+    dbWrapper.closeConnection();
   }
 
 
