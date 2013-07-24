@@ -192,6 +192,11 @@ services.factory('CreateProduct', function ($resource) {
 });
 
 // mahmed 07.13.2013
+services.factory('UpdateProduct', function ($resource) {
+    return $resource('/updateProduct/:id.json', {}, {update:{method:'PUT'}});
+});
+
+// mahmed 07.13.2013
 services.factory('RemoveProduct', function ($resource) {
     return $resource('/removeProduct/:id.json', {}, {update:{method:'PUT'}});
 });
