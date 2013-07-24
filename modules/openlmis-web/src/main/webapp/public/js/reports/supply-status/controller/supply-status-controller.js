@@ -274,6 +274,11 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
     }, true);
 
+    $scope.formatNumber = function(arg){
+        var numericObject = new Number(arg);
+        return numericObject.format('0,0.00');
+    }
+
     $scope.gridOptions = {
         data: 'myData',
         columnDefs:
@@ -281,15 +286,15 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
                 { field: 'facility', displayName: 'Facility', width: "*", resizable: false},
                 { field: 'code', displayName: 'Code', width: "*", resizable: false},
                 { field: 'product', displayName: 'Product', width: "*" },
-                { field: 'openingBalance', displayName: 'Opening Balance', width : "*", cellClass : 'numeric'},
-                { field: 'receipts', displayName: 'Receipts', width : "*", cellClass : 'numeric'},
-                { field: 'issues', displayName: 'Issues', width : "*", cellClass : 'numeric'},
-                { field: 'adjustments', displayName: 'Adjustments', width : "*", cellClass : 'numeric'},
-                { field: 'closingBalance', displayName: 'Closing Balance', width : "*", cellClass : 'numeric'},
-                { field: 'monthsOfStock', displayName: 'Months of Stock', width : "*", cellClass : 'numeric'},
-                { field: 'averageMonthlyConsumption', displayName: 'AMC', width : "*", cellClass : 'numeric'},
-                { field: 'maximumStock', displayName: 'Maximum Stock', width : "*", cellClass : 'numeric'},
-                { field: 'reorderAmount', displayName: 'Re-order Amount', width : "*", cellClass : 'numeric'}
+                { field: 'openingBalance', displayName: 'Opening Balance', width : "*", cellClass : 'numeric',cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'receipts', displayName: 'Receipts', width : "*", cellClass : 'numeric',cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'issues', displayName: 'Issues', width : "*", cellClass : 'numeric',cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'adjustments', displayName: 'Adjustments', width : "*", cellClass : 'numeric',cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'closingBalance', displayName: 'Closing Balance', width : "*", cellClass : 'numeric',cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'monthsOfStock', displayName: 'Months of Stock', width : "*", cellClass : 'numeric',cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'averageMonthlyConsumption', displayName: 'AMC', width : "*", cellClass : 'numeric',cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'maximumStock', displayName: 'Maximum Stock', width : "*", cellClass : 'numeric',cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'reorderAmount', displayName: 'Re-order Amount', width : "*", cellClass : 'numeric', cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'}
 
             ],
         enablePaging: true,
@@ -306,5 +311,6 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         plugins: [new ngGridFlexibleHeightPlugin()]
 
     };
+
 
 }

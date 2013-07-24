@@ -266,7 +266,6 @@ function SummaryReportController($scope, SummaryReport, ReportSchedules, ReportP
             });
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
         }, true);
-
     $scope.gridOptions = {
         data: 'myData',
         columnDefs:
