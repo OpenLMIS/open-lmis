@@ -95,6 +95,7 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateAndInitiateRnr(program);
     initiateRnRPage = homePage.clickProceed();
+    testWebDriver.sleep(2000);
   }
 
   @When("^I populate RnR data$")
