@@ -9,6 +9,7 @@ package org.openlmis.pageobjects;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
@@ -369,8 +370,12 @@ public class RegimenTemplateConfigPage extends Page {
 
   private void sendKeys(WebElement locator, String value) {
     int length = testWebDriver.getAttribute(locator, "value").length();
-    for (int i = 0; i < length; i++)
+    for (int i = 0; i < length; i++){
+      locator.sendKeys(Keys.ARROW_RIGHT);
+    }
+    for (int i = 0; i < length; i++){
       locator.sendKeys("\u0008");
+    }
     locator.sendKeys(value);
   }
 }

@@ -165,6 +165,7 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I should see data download successfully$")
   public void seeDownloadSuccessfully() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    testWebDriver.sleep(1500);
     distributionPage.verifyDownloadSuccessFullMessage(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
   }
 
