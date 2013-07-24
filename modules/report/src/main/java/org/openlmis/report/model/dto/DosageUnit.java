@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class DosageUnit {
 
     private Integer id;
-    private Integer displayorder;
+    private Integer displayOrder;
     private String code;
 
 }
