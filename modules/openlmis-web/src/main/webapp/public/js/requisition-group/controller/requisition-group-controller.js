@@ -141,7 +141,7 @@ function RequisitionGroupController($scope, ReportFacilityTypes, $routeParams, $
     $scope.removeMemberFacility = function(){
         /*$scope.requisitionGroupMember.facility = facility;
          $scope.requisitionGroupMember.requisitionGroup = $scope.requisitionGroup;*/
-        RemoveRequisitionGroupMember.save($scope.requisitionGroup, $scope.selectedFacility);
+        RemoveRequisitionGroupMember.get({rgId: $scope.requisitionGroup.id, facId: $scope.selectedFacility.id});
     };
 
 }

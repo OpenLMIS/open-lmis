@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 import static org.openlmis.web.response.OpenLmisResponse.*;
@@ -47,7 +48,10 @@ public class GeographicZoneController extends BaseController {
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
     public ResponseEntity<OpenLmisResponse> insert(@RequestBody GeographicZone geographicZone, HttpServletRequest request) {
         ResponseEntity<OpenLmisResponse> successResponse;
+        geographicZone.setCreatedBy(loggedInUserId(request));
         geographicZone.setModifiedBy(loggedInUserId(request));
+        geographicZone.setModifiedDate(new Date());
+
         try {
             geographicZoneServiceExt.saveNew(geographicZone);
         } catch (DataException e) {

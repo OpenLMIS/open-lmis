@@ -41,7 +41,7 @@ function GeographicZonesController($scope, $routeParams, $location, GeographicZo
     };
 
     $scope.validateGeographicZoneName = function () {
-        $scope.geographicZoneNameInvalid = $scope.geographicZone.name != null && $scope.geographicZone.name.trim().indexOf(' ') >= 0;
+        $scope.geographicZoneNameInvalid = $scope.geographicZone.name != null;
     };
 
 
