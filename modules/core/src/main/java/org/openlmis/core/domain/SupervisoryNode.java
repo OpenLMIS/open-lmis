@@ -32,6 +32,8 @@ public class SupervisoryNode extends BaseModel implements Importable {
   @ImportField(name = "Facility Code", mandatory = true, nested = "code")
   private Facility facility;
 
+  public Integer supervisorCount;
+
   public SupervisoryNode(Long id) {
     this.id = id;
   }
