@@ -1,5 +1,6 @@
 package org.openlmis.restapi.service;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -18,6 +19,7 @@ import org.openlmis.restapi.domain.CHW;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.security.Principal;
 import java.util.Date;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -40,6 +42,14 @@ public class RestCHWServiceTest {
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
+  Principal principal;
+
+  @Before
+  public void setUp() throws Exception {
+    principal = mock(Principal.class);
+    when(principal.getName()).thenReturn("vendor name");
+  }
+
   @Test
   public void shouldCreateFacilityForCHW() throws Exception {
     CHW chw = make(a(defaultCHW));
@@ -52,7 +62,7 @@ public class RestCHWServiceTest {
     Date currentTimeStamp = mock(Date.class);
     whenNew(Date.class).withNoArguments().thenReturn(currentTimeStamp);
 
-    restCHWService.create(chw);
+    restCHWService.create(chw, principal.getName());
 
     verify(facility, times(2)).setCode(chw.getAgentCode());
     verify(facility).setParentFacilityId(baseFacility.getId());
@@ -84,7 +94,7 @@ public class RestCHWServiceTest {
     whenNew(Facility.class).withNoArguments().thenReturn(chwFacility);
     when(facilityService.getByCode(chwFacility)).thenReturn(chwFacility);
 
-    restCHWService.update(chw);
+    restCHWService.update(chw, principal.getName());
 
     verify(chwFacility).setName(chw.getAgentName());
     verify(chwFacility).setMainPhone(chw.getPhoneNumber());
@@ -105,7 +115,7 @@ public class RestCHWServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.restapi.mandatory.missing");
 
-    restCHWService.create(chw);
+    restCHWService.create(chw, principal.getName());
   }
 
   @Test
@@ -117,7 +127,7 @@ public class RestCHWServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.restapi.mandatory.missing");
 
-    restCHWService.create(chw);
+    restCHWService.create(chw, principal.getName());
   }
 
   @Test
@@ -129,7 +139,7 @@ public class RestCHWServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.restapi.mandatory.missing");
 
-    restCHWService.create(chw);
+    restCHWService.create(chw, principal.getName());
   }
 
   @Test
@@ -143,7 +153,7 @@ public class RestCHWServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.reference.data.parent.facility.virtual");
 
-    restCHWService.create(chw);
+    restCHWService.create(chw, principal.getName());
   }
 
   @Test
@@ -157,7 +167,7 @@ public class RestCHWServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.chw.already.registered");
 
-    restCHWService.create(chw);
+    restCHWService.create(chw, principal.getName());
   }
 
   @Test
@@ -168,7 +178,7 @@ public class RestCHWServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.restapi.mandatory.missing");
 
-    restCHWService.update(chw);
+    restCHWService.update(chw, principal.getName());
   }
 
   @Test
@@ -183,7 +193,7 @@ public class RestCHWServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.chw.not.virtual");
 
-    restCHWService.update(chw);
+    restCHWService.update(chw, principal.getName());
   }
 
   @Test
@@ -196,7 +206,7 @@ public class RestCHWServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.invalid.agent.code");
 
-    restCHWService.update(chw);
+    restCHWService.update(chw, principal.getName());
   }
 
   private Facility getBaseFacility(CHW chw) {

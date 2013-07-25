@@ -19,6 +19,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
+
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
@@ -31,9 +33,9 @@ public class RestCHWController extends BaseController {
   private RestCHWService restCHWService;
 
   @RequestMapping(value = "/rest-api/chw", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> createCHW(@RequestBody CHW chw) {
+  public ResponseEntity<RestResponse> createCHW(@RequestBody CHW chw, Principal principal) {
     try {
-      restCHWService.create(chw);
+      restCHWService.create(chw, principal.getName());
     } catch (DataException e) {
       return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
@@ -41,9 +43,9 @@ public class RestCHWController extends BaseController {
   }
 
   @RequestMapping(value = "/rest-api/chw/update", method = PUT, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> updateCHW(@RequestBody CHW chw) {
+  public ResponseEntity<RestResponse> updateCHW(@RequestBody CHW chw, Principal principal) {
     try {
-      restCHWService.update(chw);
+      restCHWService.update(chw, principal.getName());
     } catch (DataException e) {
       return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
     }

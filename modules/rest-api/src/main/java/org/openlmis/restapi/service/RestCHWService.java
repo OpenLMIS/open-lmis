@@ -8,6 +8,7 @@ package org.openlmis.restapi.service;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.VendorService;
 import org.openlmis.restapi.domain.CHW;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,17 @@ public class RestCHWService {
   @Autowired
   FacilityService facilityService;
 
+  @Autowired
+  VendorService vendorService;
 
-  public void create(CHW chw) {
+  public void create(CHW chw, String userName) {
     chw.validate();
     if(getExistingFacilityForCode(chw.getAgentCode()) != null) {
       throw new DataException("error.chw.already.registered");
     }
     Facility facility = getFacilityForCHW(chw);
+    facility.setCreatedBy(vendorService.getByName(userName).getId());
+    facility.setModifiedBy(facility.getCreatedBy());
     facilityService.save(facility);
   }
 
@@ -66,7 +71,7 @@ public class RestCHWService {
     return baseFacility;
   }
 
-  public void update(CHW chw) {
+  public void update(CHW chw, String userName) {
     if (chw.getActive() == null) {
       throw new DataException("error.restapi.mandatory.missing");
     }
@@ -85,6 +90,7 @@ public class RestCHWService {
     chwFacility.setActive(Boolean.parseBoolean(chw.getActive()));
     fillBaseFacility(chw, chwFacility);
     chwFacility.setModifiedDate(new Date());
+    chwFacility.setModifiedBy(vendorService.getByName(userName).getId());
     facilityService.update(chwFacility);
   }
 }
