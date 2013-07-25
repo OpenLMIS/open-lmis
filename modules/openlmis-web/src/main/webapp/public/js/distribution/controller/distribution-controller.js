@@ -69,10 +69,14 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
     };
   };
 
-  $scope.$on('indexedDBReady', function () {
+  if (IndexedDB.getConnection() == null) {
+    $scope.$on('indexedDBReady', function () {
+      $scope.loadDistributionsFromCache();
+    });
+  }
+  else {
     $scope.loadDistributionsFromCache();
-  });
-
+  }
   $scope.$on('$viewContentLoaded', function () {
     $scope.distributionList = navigateBackService.distributionList;
     $scope.selectedZone = navigateBackService.deliveryZone;

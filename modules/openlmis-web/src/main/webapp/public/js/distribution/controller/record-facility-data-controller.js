@@ -34,9 +34,14 @@ function RecordFacilityDataController(IndexedDB, $scope, $route) {
     }
   }
 
-  $scope.$on('indexedDBReady', function () {
+  if (IndexedDB.getConnection() == null) {
+    $scope.$on('indexedDBReady', function () {
+      fetchReferenceData();
+    });
+  } else {
     fetchReferenceData();
-  })
+  }
+
 };
 
 
