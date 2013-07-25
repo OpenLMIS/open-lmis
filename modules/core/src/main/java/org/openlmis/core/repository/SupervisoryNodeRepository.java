@@ -81,4 +81,14 @@ public class SupervisoryNodeRepository {
   public void update(SupervisoryNode supervisoryNode) {
     supervisoryNodeMapper.update(supervisoryNode);
   }
+
+  public List<SupervisoryNode> getCompleteList(){
+      return supervisoryNodeMapper.getCompleteList();
+  }
+
+  public SupervisoryNode loadSupervisoryNodeById(Long id)
+  {
+      return supervisoryNodeMapper.getSupervisoryNodeById(id);
+  }
+
 }

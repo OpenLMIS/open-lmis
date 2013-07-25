@@ -102,4 +102,21 @@ public class SupervisoryNodeService {
   public SupervisoryNode getByCode(SupervisoryNode supervisoryNode) {
     return supervisoryNodeRepository.getByCode(supervisoryNode);
   }
+
+  public List<SupervisoryNode> getCompleteList(){
+      return supervisoryNodeRepository.getCompleteList();
+  }
+
+  public SupervisoryNode loadSupervisoryNodeById(Long id){
+      return supervisoryNodeRepository.loadSupervisoryNodeById(id);
+  }
+
+  public void save_Ext(SupervisoryNode supervisoryNode) {
+      if (supervisoryNode.getId() == null)
+          supervisoryNodeRepository.insert(supervisoryNode);
+      else
+          supervisoryNodeRepository.update(supervisoryNode);
+  }
+
+
 }
