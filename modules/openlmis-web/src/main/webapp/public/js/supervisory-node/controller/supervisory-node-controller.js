@@ -1,4 +1,4 @@
-function SupervisoryNodeController($scope, ReportFacilityTypes, $routeParams, $location, SupervisoryNodeCompleteList, SaveSupervisoryNode, GetSupervisoryNode, GeographicZoneCompleteList, GetFacilityCompleteList, $dialog, messageService) {
+function SupervisoryNodeController($scope, ReportFacilityTypes, $routeParams, $location, SupervisoryNodeCompleteList, SaveSupervisoryNode, GetSupervisoryNode, GeographicZoneCompleteList, GetFacilityCompleteList) {
     $scope.geographicZoneNameInvalid = false;
     $scope.supervisoryNode = {};
     $scope.facilities = {};

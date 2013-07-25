@@ -1,4 +1,4 @@
-function SupervisoryNodeListController($scope, $location, navigateBackService, SupervisoryNodeCompleteList) {
+function SupervisoryNodeListController($scope, $location, navigateBackService, SupervisoryNodeCompleteList, $dialog, messageService, RemoveSupervisoryNode) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.showSupervisoryNodesList('txtFilterSupervisoryNodes');
@@ -24,7 +24,6 @@ function SupervisoryNodeListController($scope, $location, navigateBackService, S
         navigateBackService.setData(data);
         $location.path('edit/' + id);
     };
-
 
     $scope.clearSearch = function () {
         $scope.query = "";
@@ -54,5 +53,30 @@ function SupervisoryNodeListController($scope, $location, navigateBackService, S
         var query = document.getElementById(id).value;
         $scope.query = query;
         filterSupervisoryNodesByName(query);
+    };
+
+    $scope.showRemoveSupervisoryNodeMemberConfirmDialog = function (index) {
+        var supervisoryNode = $scope.filteredSupervisoryNodes[index];
+        $scope.index = index;
+        $scope.selectedSupervisoryNode = supervisoryNode;
+        var options = {
+            id: "removeSupervisoryNodeMemberConfirmDialog",
+            header: "Confirmation",
+            body: "Are you sure you want to remove the selected supervisory node"
+        };
+        OpenLmisDialog.newDialog(options, $scope.removeSupervisoryNodeMemberConfirm, $dialog, messageService);
+    };
+
+    $scope.removeSupervisoryNodeMemberConfirm = function (result) {
+        if (result) {
+            $scope.filteredSupervisoryNodes.splice($scope.index,1);
+            $scope.removeSupervisoryNode($scope.selectedSupervisoryNode.id);
+            $scope.showSupervisoryNodesList('txtFilterSupervisoryNodes');
+        }
+        $scope.selectedSupervisoryNode = undefined;
+    };
+
+    $scope.removeSupervisoryNode = function(id){
+        RemoveSupervisoryNode.get({id: id});
     };
 }
