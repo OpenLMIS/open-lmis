@@ -129,7 +129,38 @@ public class ChwFeed extends TestCaseHelper {
   }
 
   @Test(groups = {"webservice"})
-  public void testChwFeedWithParentFacilityCodeAsVirtualFacility() throws Exception {
+  public void testUpdateStatusOfAgentCode() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
+    chwJson.setAgentCode("ABCD");
+    chwJson.setAgentName("AgentVinod");
+    chwJson.setParentFacilityCode("F10");
+    chwJson.setPhoneNumber("0099887766");
+    chwJson.setActive("true");
+
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
+      "http://localhost:9091/rest-api/chw.json",
+      POST,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+
+    chwJson.setActive("false");
+
+    ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
+      "http://localhost:9091/rest-api/chw/update.json",
+      PUT,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+
+    assertEquals("f", dbWrapper.getActivePropertyOfFacility("ABCD"));
+
+  }
+
+  @Test(groups = {"webservice"})
+  public void testCreateChwFeedWithParentFacilityCodeAsVirtualFacility() throws Exception {
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
     HttpClient client = new HttpClient();
     client.createContext();
@@ -146,6 +177,34 @@ public class ChwFeed extends TestCaseHelper {
       "commTrack",
       dbWrapper.getAuthToken("commTrack"));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Parent facility can not be virtual facility\"}"));
+
+  }
+
+  @Test(groups = {"webservice"})
+  public void testUpdateChwFeedWithParentFacilityCodeAsVirtualFacility() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
+    chwJson.setAgentCode("A2");
+    chwJson.setAgentName("AgentVinod");
+    chwJson.setParentFacilityCode("F10");
+    chwJson.setPhoneNumber("0099887766");
+    chwJson.setActive("true");
+
+    client.SendJSON(getJsonStringFor(chwJson),
+      "http://localhost:9091/rest-api/chw.json",
+      POST,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+
+    ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
+      "http://localhost:9091/rest-api/chw/update.json",
+      PUT,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"error\":\"Parent facility can not be virtual facility\"}"));
   }
 
 
@@ -174,8 +233,9 @@ public class ChwFeed extends TestCaseHelper {
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Agent already registered\"}"));
   }
 
+
   @Test(groups = {"webservice"})
-  public void testShouldVerifyAgentIsNotAVirtualFacility() throws Exception {
+  public void testUpdateShouldVerifyAgentIsNotAVirtualFacility() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
@@ -194,7 +254,7 @@ public class ChwFeed extends TestCaseHelper {
   }
 
   @Test(groups = {"webservice"})
-  public void testChwFeedWithInvalidParentFacilityCode() throws Exception {
+  public void testCreateChwFeedWithInvalidParentFacilityCode() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
@@ -210,6 +270,32 @@ public class ChwFeed extends TestCaseHelper {
       "commTrack",
       dbWrapper.getAuthToken("commTrack"));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Invalid Facility code\"}"));
+  }
+
+  @Test(groups = {"webservice"})
+  public void testUpdateChwFeedWithInvalidParentFacilityCode() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
+    chwJson.setAgentCode("A2");
+    chwJson.setAgentName("AgentVinod");
+    chwJson.setParentFacilityCode("F10");
+    chwJson.setPhoneNumber("0099887766");
+    chwJson.setActive("true");
+
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
+      "http://localhost:9091/rest-api/chw.json",
+      POST,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+
+    chwJson.setParentFacilityCode("A10");
+    ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
+      "http://localhost:9091/rest-api/chw/update.json",
+      PUT,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"error\":\"Invalid Facility code\"}"));
   }
 
   @Test(groups = {"webservice"})
@@ -322,15 +408,14 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setParentFacilityCode("F10");
     chwJson.setPhoneNumber("0099887766");
     chwJson.setActive("true");
-    String modifiedString = getJsonStringFor(chwJson).replaceFirst(", \"active\":\"true\"", " ");
 
 
-    ResponseEntity responseEntity = client.SendJSON(modifiedString,
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       "http://localhost:9091/rest-api/chw/update.json",
       PUT,
       "commTrack",
       dbWrapper.getAuthToken("commTrack"));
-    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Invalid agent code\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + getJsonStringFor(chwJson), responseEntity.getResponse().contains("{\"error\":\"Invalid agent code\"}"));
 
   }
 
@@ -404,7 +489,7 @@ public class ChwFeed extends TestCaseHelper {
       POST,
       "commTrack",
       dbWrapper.getAuthToken("commTrack"));
-    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Active should be True/False\"}"));
 
   }
 
@@ -434,7 +519,7 @@ public class ChwFeed extends TestCaseHelper {
       PUT,
       "commTrack",
       dbWrapper.getAuthToken("commTrack"));
-    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Active should be True/False\"}"));
 
   }
 
@@ -537,7 +622,7 @@ public class ChwFeed extends TestCaseHelper {
   }
 
   @Test(groups = {"webservice"})
-  public void testInvalidAuthenticationToken() throws Exception {
+  public void testCreateInvalidAuthenticationToken() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
@@ -558,7 +643,28 @@ public class ChwFeed extends TestCaseHelper {
   }
 
   @Test(groups = {"webservice"})
-  public void testInvalidUserName() throws Exception {
+  public void testUpdateInvalidAuthenticationToken() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
+    chwJson.setAgentCode("A2");
+    chwJson.setAgentName("AgentVinod");
+    chwJson.setParentFacilityCode("F10");
+    chwJson.setPhoneNumber("0099887766");
+    chwJson.setActive("true");
+
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
+      "http://localhost:9091/rest-api/chw/update.json",
+      PUT,
+      "commTrack",
+      "Testing");
+    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
+
+
+  }
+
+  @Test(groups = {"webservice"})
+  public void testCreateInvalidUserName() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
@@ -571,6 +677,26 @@ public class ChwFeed extends TestCaseHelper {
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       "http://localhost:9091/rest-api/chw.json",
       POST,
+      "Testing",
+      dbWrapper.getAuthToken("commTrack"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
+
+  }
+
+  @Test(groups = {"webservice"})
+  public void testUpdateInvalidUserName() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
+    chwJson.setAgentCode("A2");
+    chwJson.setAgentName("AgentVinod");
+    chwJson.setParentFacilityCode("F10");
+    chwJson.setPhoneNumber("0099887766");
+    chwJson.setActive("true");
+
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
+      "http://localhost:9091/rest-api/chw/update.json",
+      PUT,
       "Testing",
       dbWrapper.getAuthToken("commTrack"));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));

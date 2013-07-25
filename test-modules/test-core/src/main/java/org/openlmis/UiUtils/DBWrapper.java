@@ -75,6 +75,16 @@ public class DBWrapper {
     return flag;
   }
 
+  public String getActivePropertyOfFacility(String facilityCode) throws SQLException, IOException {
+    String flag = "";
+    ResultSet rs = query("select active from facilities where code='"+facilityCode+"';");
+
+    if (rs.next()) {
+      flag = rs.getString("active");
+    }
+    return flag;
+  }
+
   public void updateUser(String password, String email) throws SQLException, IOException {
     update("DELETE FROM user_password_reset_tokens;");
     update("update users set password='" + password + "', active=TRUE  where email='" + email + "';");
