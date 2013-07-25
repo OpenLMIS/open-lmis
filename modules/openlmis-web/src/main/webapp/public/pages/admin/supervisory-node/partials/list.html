@@ -1,0 +1,47 @@
+<div xmlns="http://www.w3.org/1999/html">
+    <h2><span>Supervisory Nodes List</span>
+        <a href="#/create-supervisory-node" class="pull-right btn btn-primary"><span id="supervisory-node-add-new">Add New</span></a>
+    </h2>
+
+    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="supervisoryNodeId">
+        <span ng-bind="message"></span>.
+    </div>
+
+    <input id="txtFilterSupervisoryNodes" class="search-query input-xlarge" type="text" ng-model="query"
+          ng-init="showSupervisoryNodeList('txtFilterSupervisoryNodes')" on-keyup="filterSupervisoryNodes('txtFilterSupervisoryNodes')" placeholder="Enter supervisory node name"/>
+
+
+    <div class="facility-list">
+        <h3 ng-show="query.length>0">
+            <ng-pluralize count="resultCount"
+                          when="{ 0: 'No matches found for \'{{query}}\'',
+                            1: '1 match found for \'{{query}}\'',
+                            other: '{} matches found for \'{{query}}\''}">
+
+            </ng-pluralize>
+        </h3>
+
+
+        <div class="row-fluid list-row">
+            <div class="span2" style="..."><strong>Supervisory Node Name</strong></div>
+            <div class="span2" style="..."><strong>Code</strong></div>
+            <div class="span2" style="..."><strong>Facility</strong></div>
+            <div class="span2" style="overflow: visible;"><strong>Parent</strong></div>
+            <div class="span2" style="..."><strong>Supervisors Count</strong></div>
+            <div class="span2" style="..."><strong>Action</strong></div>
+        </div>
+        <div ng-repeat="supervisoryNode in filteredSupervisoryNodes" class="row-fluid list-row">
+            <div class="span2" style="overflow: visible;"> {{supervisoryNode.name}}</div>
+            <div class="span2" style="..."> {{supervisoryNode.code}}</div>
+            <div class="span2" style="overflow: visible;"> {{supervisoryNode.facility.name}}</div>
+            <div class="span2" style="overflow: visible;"> {{supervisoryNode.parent.name}}</div>
+            <div class="span2" style="overflow: visible;"> {{supervisoryNode.supervisorCount}}</div>
+            <div class="span2" style="...">
+                <a ng-click="editSupervisoryNode(supervisoryNode.id)">Edit</a>
+                <a ng-click="deleteSupervisoryNode(supervisoryNode.id)"> Delete</a>
+            </div>
+        </div>
+
+
+    </div>
+</div>
