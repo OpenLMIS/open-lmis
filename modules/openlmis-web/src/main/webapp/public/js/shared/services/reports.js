@@ -212,3 +212,15 @@ services.factory('AllProductCost', function ($resource) {
 services.factory("AllFacilites",function($resource)  {
     return   $resource('/reports/allFacilities.json', {}, {});
 });
+
+services.factory('SupervisoryNodeCompleteList',function($resource){
+    return $resource('/supervisoryNode/getList.json',{},{});
+});
+
+services.factory('SaveSupervisoryNode',function($resource){
+    return $resource('/supervisoryNode/insert.json',{},{});
+});
+
+services.factory('GetSupervisoryNode',function($resource){
+    return $resource('/supervisoryNode/getDetails/:id.json',{},{});
+});
