@@ -25,14 +25,15 @@ public class CHW {
     if (StringUtils.isEmpty(agentCode) || StringUtils.isEmpty(agentName) || StringUtils.isEmpty(parentFacilityCode)) {
       throw new DataException("error.restapi.mandatory.missing");
     }
-    active = StringUtils.isEmpty(active) ? "true" : active;
-    if (!validateActive(active)) {
+    if (active != null && !validateActive(active)) {
       throw new DataException("error.active.invalid");
     }
+    active = StringUtils.isEmpty(active) ? "true" : active;
   }
 
   private boolean validateActive(String active) {
     if (active.trim().equalsIgnoreCase("true") || active.trim().equalsIgnoreCase("false")) {
+      this.active = active.trim();
       return true;
     }
     return false;

@@ -8,12 +8,10 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.FacilityOperator;
-import org.openlmis.core.domain.FacilityType;
-import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.VendorService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.CHW;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -39,6 +37,9 @@ public class RestCHWServiceTest {
   @InjectMocks
   RestCHWService restCHWService;
 
+  @Mock
+  private VendorService vendorService;
+
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
@@ -59,6 +60,7 @@ public class RestCHWServiceTest {
     Facility facility = mock(Facility.class);
     when(facilityService.getFacilityWithReferenceDataForCode(chw.getParentFacilityCode())).thenReturn(baseFacility);
     whenNew(Facility.class).withNoArguments().thenReturn(facility);
+    when(vendorService.getByName(principal.getName())).thenReturn(new Vendor());
     Date currentTimeStamp = mock(Date.class);
     whenNew(Date.class).withNoArguments().thenReturn(currentTimeStamp);
 
@@ -93,6 +95,7 @@ public class RestCHWServiceTest {
     chwFacility.setVirtualFacility(true);
     whenNew(Facility.class).withNoArguments().thenReturn(chwFacility);
     when(facilityService.getByCode(chwFacility)).thenReturn(chwFacility);
+    when(vendorService.getByName(principal.getName())).thenReturn(new Vendor());
 
     restCHWService.update(chw, principal.getName());
 
