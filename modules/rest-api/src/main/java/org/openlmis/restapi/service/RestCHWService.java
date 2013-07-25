@@ -23,17 +23,17 @@ public class RestCHWService {
 
   public void create(CHW chw) {
     chw.validate();
-    if(exists(chw.getAgentCode())) {
+    if(getExistingFacilityForCode(chw.getAgentCode()) != null) {
       throw new DataException("error.chw.already.registered");
     }
     Facility facility = getFacilityForCHW(chw);
     facilityService.save(facility);
   }
 
-  private boolean exists(String agentCode) {
-    Facility facility  = new Facility();
+  private Facility getExistingFacilityForCode(String agentCode) {
+    Facility facility = new Facility();
     facility.setCode(agentCode);
-    return facilityService.getByCode(facility) != null;
+    return facilityService.getByCode(facility);
   }
 
   private Facility getFacilityForCHW(CHW chw) {
@@ -45,14 +45,17 @@ public class RestCHWService {
     facility.setVirtualFacility(true);
     facility.setSdp(true);
     facility.setDataReportable(true);
+    fillBaseFacility(chw, facility);
+    facility.setGoLiveDate(new Date());
+    return facility;
+  }
+
+  private void fillBaseFacility(CHW chw, Facility facility) {
     Facility baseFacility = getValidatedBaseFacility(chw);
     facility.setParentFacilityId(baseFacility.getId());
     facility.setFacilityType(baseFacility.getFacilityType());
     facility.setGeographicZone(baseFacility.getGeographicZone());
     facility.setOperatedBy(baseFacility.getOperatedBy());
-    facility.setGoLiveDate(new Date());
-    return facility;
-
   }
 
   private Facility getValidatedBaseFacility(CHW chw) {
@@ -61,5 +64,26 @@ public class RestCHWService {
       throw new DataException("error.reference.data.parent.facility.virtual");
     }
     return baseFacility;
+  }
+
+  public void update(CHW chw) {
+    chw.validate();
+    if (chw.getActive() == null) {
+      throw new DataException("error.restapi.mandatory.missing");
+    }
+
+    Facility chwFacility = getExistingFacilityForCode(chw.getAgentCode());
+    if (chwFacility == null) {
+      throw new DataException("error.invalid.agent.code");
+    }
+
+    if(!chwFacility.getVirtualFacility()) {
+      throw new DataException("error.chw.not.virtual");
+    }
+    chwFacility.setName(chw.getAgentName());
+    chwFacility.setMainPhone(chw.getPhoneNumber() == null ? chwFacility.getMainPhone() : chw.getPhoneNumber());
+    chwFacility.setActive(chw.getActive());
+    fillBaseFacility(chw, chwFacility);
+    facilityService.update(chwFacility);
   }
 }

@@ -43,4 +43,18 @@ public class RestCHWControllerTest {
     verify(restCHWService).create(chw);
     assertThat(response, is(expectResponse));
   }
+
+  @Test
+  public void shouldUpdateCHW() throws Exception {
+    CHW chw = mock(CHW.class);
+    mockStatic(RestResponse.class);
+    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(), HttpStatus.OK);
+    when(RestResponse.success("message.success.chw.updated")).thenReturn(expectResponse);
+
+    ResponseEntity<RestResponse> response = restCHWController.updateCHW(chw);
+
+    verify(restCHWService).update(chw);
+    assertThat(response, is(expectResponse));
+  }
+
 }

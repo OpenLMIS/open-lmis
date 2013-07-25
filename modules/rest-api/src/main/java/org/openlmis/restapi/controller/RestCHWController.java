@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @Controller
 @NoArgsConstructor
@@ -37,5 +38,15 @@ public class RestCHWController extends BaseController {
       return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
     return RestResponse.success("message.success.chw.created");
+  }
+
+  @RequestMapping(value = "/rest-api/chw/update", method = PUT, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> updateCHW(@RequestBody CHW chw) {
+    try {
+      restCHWService.update(chw);
+    } catch (DataException e) {
+      return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
+    }
+    return RestResponse.success("message.success.chw.updated");
   }
 }

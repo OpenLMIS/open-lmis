@@ -69,6 +69,32 @@ public class RestCHWServiceTest {
     verify(facilityService).save(facility);
   }
 
+  @Test
+  public void shouldUpdateACHWFacility() throws Exception {
+    CHW chw = make(a(defaultCHW));
+
+    Facility baseFacility = getBaseFacility(chw);
+
+    when(facilityService.getFacilityWithReferenceDataForCode(chw.getParentFacilityCode())).thenReturn(baseFacility);
+    Date currentTimeStamp = mock(Date.class);
+    whenNew(Date.class).withNoArguments().thenReturn(currentTimeStamp);
+
+    Facility chwFacility = spy(new Facility());
+    chwFacility.setVirtualFacility(true);
+    whenNew(Facility.class).withNoArguments().thenReturn(chwFacility);
+    when(facilityService.getByCode(chwFacility)).thenReturn(chwFacility);
+
+    restCHWService.update(chw);
+
+    verify(chwFacility).setName(chw.getAgentName());
+    verify(chwFacility).setMainPhone(chw.getPhoneNumber());
+    verify(chwFacility).setActive(chw.getActive());
+    verify(chwFacility).setParentFacilityId(baseFacility.getId());
+    verify(chwFacility).setGeographicZone(baseFacility.getGeographicZone());
+    verify(chwFacility).setFacilityType(baseFacility.getFacilityType());
+    verify(chwFacility).setOperatedBy(baseFacility.getOperatedBy());
+    verify(facilityService).update(chwFacility);
+  }
 
   @Test
   public void shouldThrowExceptionIfAgentCodeIsMissing() throws Exception {
@@ -132,7 +158,45 @@ public class RestCHWServiceTest {
     expectedException.expectMessage("error.chw.already.registered");
 
     restCHWService.create(chw);
+  }
 
+  @Test
+  public void shouldThrowExceptionIfActiveFieldIsNullOnUpdate() throws Exception {
+    CHW chw = make(a(defaultCHW));
+    chw.setActive(null);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.restapi.mandatory.missing");
+
+    restCHWService.update(chw);
+  }
+
+  @Test
+  public void shouldThrowExceptionIfCHWIsNotVirtualOnUpdate() throws Exception {
+    CHW chw = make(a(defaultCHW));
+
+    Facility nonVirtualFacility = new Facility();
+    nonVirtualFacility.setVirtualFacility(false);
+    nonVirtualFacility.setCode(chw.getAgentCode());
+    when(facilityService.getByCode(nonVirtualFacility)).thenReturn(nonVirtualFacility);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.chw.not.virtual");
+
+    restCHWService.update(chw);
+  }
+
+  @Test
+  public void shouldThrowExceptionIfInvalidAgentCodeOnUpdate() throws Exception {
+    CHW chw = make(a(defaultCHW));
+
+    Facility facility = mock(Facility.class);
+    when(facilityService.getByCode(facility)).thenReturn(null);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.invalid.agent.code");
+
+    restCHWService.update(chw);
   }
 
   private Facility getBaseFacility(CHW chw) {
