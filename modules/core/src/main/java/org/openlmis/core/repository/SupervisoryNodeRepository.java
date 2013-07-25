@@ -91,4 +91,9 @@ public class SupervisoryNodeRepository {
       return supervisoryNodeMapper.getSupervisoryNodeById(id);
   }
 
+  public void removeSupervisoryNode(Long id){
+      supervisoryNodeMapper.removeSupervisoryNode(id);
+  }
+
+
 }

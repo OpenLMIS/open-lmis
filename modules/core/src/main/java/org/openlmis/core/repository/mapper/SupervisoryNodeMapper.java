@@ -168,4 +168,8 @@ public interface SupervisoryNodeMapper {
   })
   SupervisoryNode getSupervisoryNodeById(@Param(value="id") Long id);
 
+
+  @Delete("DELETE FROM supervisory_nodes WHERE ID = #{id}")
+  void removeSupervisoryNode(@Param(value="id") Long id);
+
 }

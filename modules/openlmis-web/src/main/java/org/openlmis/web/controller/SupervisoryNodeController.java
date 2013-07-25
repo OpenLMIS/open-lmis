@@ -66,9 +66,22 @@ public class SupervisoryNodeController extends BaseController {
 
 
   @RequestMapping(value="/supervisoryNode/getDetails/{id}",method = RequestMethod.GET,headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQUISITION_GROUP')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE')")
   public ResponseEntity<OpenLmisResponse> getDetailsForSupervisoryNode(@PathVariable(value="id") Long id){
       return OpenLmisResponse.response("supervisoryNode", supervisoryNodeService.loadSupervisoryNodeById(id));
+  }
+
+  @RequestMapping(value="/supervisoryNode/remove/{id}",method = RequestMethod.GET,headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE')")
+  public ResponseEntity<OpenLmisResponse> remove(@PathVariable(value="id") Long supervisoryNodeId, HttpServletRequest request){
+      ResponseEntity<OpenLmisResponse> successResponse;
+      try {
+          supervisoryNodeService.removeSupervisoryNode(supervisoryNodeId);
+      } catch (DataException e) {
+          return error(e, HttpStatus.BAD_REQUEST);
+      }
+      successResponse = success(String.format("Supervisory node has been successfully removed"));
+      return successResponse;
   }
 
 

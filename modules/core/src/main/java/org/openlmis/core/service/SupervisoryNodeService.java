@@ -118,5 +118,9 @@ public class SupervisoryNodeService {
           supervisoryNodeRepository.update(supervisoryNode);
   }
 
+  public void removeSupervisoryNode(long id){
+      supervisoryNodeRepository.removeSupervisoryNode(id);
+  }
+
 
 }
