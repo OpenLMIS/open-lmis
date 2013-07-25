@@ -38,7 +38,7 @@
             <div class="span2" style="overflow: visible;"> {{supervisoryNode.supervisorCount}}</div>
             <div class="span2" style="...">
                 <a ng-click="editSupervisoryNode(supervisoryNode.id)">Edit</a>
-                <a ng-click="deleteSupervisoryNode(supervisoryNode.id)"> Delete</a>
+                <a ng-click="showRemoveSupervisoryNodeMemberConfirmDialog($index)"> Delete</a>
             </div>
         </div>
 
