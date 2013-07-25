@@ -51,4 +51,14 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
         return reportMapper.SelectFilteredOrderSummaryReportCount(filterCriteria);
     }
 
+    @Override
+    public ReportData getReportFilterData(Map<String, String[]> params) {
+        final String orderType =  params.get("orderType")[0];
+
+        return new ReportData() {
+            @Override
+            public String toString() {
+                return orderType == null || orderType.isEmpty() ? "Order Type : Regular" : "Order Type : "+orderType;
+            }
+        };    }
 }

@@ -37,8 +37,8 @@ import static org.openlmis.web.response.OpenLmisResponse.error;
 @NoArgsConstructor
 public class ProductController extends BaseController {
 
-    public static final String PRODUCTS= "Products";
-    public static final String PRODUCT= "Product";
+    public static final String PRODUCTS= "products";
+    public static final String PRODUCT= "product";
     public static final String PRODUCTLIST= "productList";
     public static final String DOSAGEUNITS= "dosageUnits";
     public static final String PRODUCTCOST= "productCost";
@@ -113,14 +113,25 @@ public class ProductController extends BaseController {
         }
     }
 
-      // create product
+    // mahmed - 07.11.2013  update
+    @RequestMapping(value = "/updateProduct/{id}", method = RequestMethod.PUT, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> update( @RequestBody Product product,
+                                                    HttpServletRequest request) {
+        //product.setId(id);
+        product.setModifiedBy(loggedInUserId(request));
+        product.setCreatedBy(loggedInUserId(request));
+        product.setCreatedDate(new Date());
+        product.setModifiedDate(new Date());
+        return saveProduct(product, true);
+    }
+    // create product
     @RequestMapping(value = "/createProduct", method = RequestMethod.POST ,  headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> save(@RequestBody Product product, HttpServletRequest request) {
        // set default values for some columns
        // this is a querk until all fields have UI fields
 
-        product.setDosesPerDispensingUnit(1);
         product.setModifiedBy(loggedInUserId(request));
         product.setCreatedBy(loggedInUserId(request));
         product.setCreatedDate(new Date());
@@ -128,10 +139,17 @@ public class ProductController extends BaseController {
         return saveProduct(product, true);
     }
 
+
+
    // save/update
     private ResponseEntity<OpenLmisResponse> saveProduct(Product product, boolean createOperation) {
         try {
             productService.save(product);
+
+            //if (product.getId() == null)  {
+
+           // }
+
             ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("'" + product.getPrimaryName() + "' "+ (createOperation?"created":"updated") +" successfully");
             response.getBody().addData(PRODUCT, productListService.get(product.getId()));
             response.getBody().addData(PRODUCTLIST, productListService.getProductList());

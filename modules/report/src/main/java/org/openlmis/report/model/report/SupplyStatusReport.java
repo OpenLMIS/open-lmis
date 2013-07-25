@@ -25,7 +25,7 @@ public class SupplyStatusReport implements ReportData {
     private Double averageMonthlyConsumption;
     private Double maximumStock;
     private int reorderAmount;
-    private Integer minMOS;
-    private Integer maxMOS;
+    private Double minMOS;
+    private Double maxMOS;
 
 }

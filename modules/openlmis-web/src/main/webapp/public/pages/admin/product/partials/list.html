@@ -65,7 +65,7 @@
             class="label-required"> *</span></label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="packSize" name="packSize" id="packSize" type="text"
+        <input ng-model="product.packSize" name="packSize" id="packSize" type="text"
                maxlength="20"
                ng-required="true"/>
                                         <span class="field-error"
@@ -116,7 +116,7 @@
             class="label-required"> *</span></label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="product.dispensingUnit" name="dosesPerDispensingUnit" id="dosesPerDispensingUnit"
+        <input ng-model="product.dosesPerDispensingUnit" name="dosesPerDispensingUnit" id="dosesPerDispensingUnit"
                type="text"
                maxlength="20"
                ng-required="true"/>
@@ -306,24 +306,22 @@
         <tr ng-repeat="program in programs" tab-scroll>
             <td  style="width: 200px;">&nbsp;</td>
             <td><span class="span1" openlmis-message="program.name"></span></td>
-            <td><span class="span1"><input id="program_{{program.id}}" type="checkbox" ng-checked="contains(program.id)"
+            <td><span class="span1"><input name="programid" id="program_{{program.id}}" type="checkbox" ng-checked="contains(program.id)"
                                            ng-model="checked"/></span></td>
             <td  style="width: 100px;">&nbsp;</td>
-            <td><span class="span1"><input id="price_{{program.id}}" type="text"/></span></td>
-            <td><span class="span1"><input id="priceperdosage_{{program.id}}" type="text"/></span></td>
+            <td><span class="span1"><input ng-model="product.priceperpack"   name="priceperpack"   id="price_{{program.id}}" type="text"/></span></td>
+            <td><span class="span1"><input ng-model="product.priceperdosage" name="priceperdosage" id="priceperdosage_{{program.id}}" type="text"/></span></td>
         </tr>
     </table>
 
 </div>
-<!--program association-->
-<div class="row-fluid product-button-row">
-    <div class="span1"></div>
-    <div class="span2">
-        <input type="submit" class="btn btn-primary btn-small" openlmis-message="button.create"/>
-        <input type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel"
-               ng-click="cancelAddNewProduct()"/>
+
+<div form-toolbar id="action_buttons" class="action-buttons" ng-show="newProductMode">
+    <div class="form-cell button-row">
+        <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
+        <a ng-click="cancelAddNewProduct()" class="btn btn-cancel cancel-button"><span openlmis-message="button.cancel"></span></a>
     </div>
-    <div ng-show="creationError" class="span9 form-error" ng-bind="creationError"></div>
+    <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>
 </div>
 
 </div>
@@ -334,7 +332,7 @@
 Edit Product
  -------------------------------------------------------------------------------------------------------------->
 <form id="editProductForm" name="editProductForm"   ng-model="editProduct"
-      ng-submit="updateProduct(product, editProductForm);"
+      ng-submit="updateProduct(editProduct, editProductForm);"
       ng-show="editProduct" novalidate select2-blur>
 <input type="hidden" ng-model="backupProductRow"/>
 <div ng-class="editProductMode">
@@ -636,7 +634,7 @@ Edit Product
             <td  style="width: 200px;">&nbsp;</td>
             <td><span class="span1" openlmis-message="program.name"></span></td>
             <td><span class="span1"><input id="program_{{program.id}}_edt" type="checkbox" ng-checked="programProductsCost[program.id].id"
-                                           ng-model="programProductsCost[program.id].id"/></span></td>
+                                           ng-model="Checked"/></span></td>
             <td  style="width: 100px;">&nbsp;</td>
             <td><span class="span1"><input id="price_{{program.id}}_edt" type="text" value="{{programProductsCost[program.id].priceperpack}}"/></span></td>
             <td><span class="span1"><input id="priceperdosage_{{program.id}}_edt" type="text" value="{{programProductsCost[program.id].priceperdosage}}"/></span></td>
@@ -647,15 +645,13 @@ Edit Product
 </div>
 
 
-<!--program association-->
-<div class="row-fluid product-button-row" ng-show="editProductMode">
-    <div class="span1"></div>
-    <div class="span2">
-        <input type="submit" class="btn btn-primary btn-small" value="Save"/>
-        <input type="button" class="btn btn-cancel btn-small" value="Cancel"
-               ng-click="cancelProductEdit(editProduct, backupProductRow); editProduct=false"/>
+
+<div form-toolbar id="action_buttons_edit" class="action-buttons" ng-show="editProductMode">
+    <div class="form-cell button-row">
+        <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
+        <a ng-click="cancelProductEdit(editProduct, backupProductRow); editProduct=false;" class="btn btn-cancel cancel-button"><span openlmis-message="button.cancel"></span></a>
     </div>
-    <div ng-show="creationError" class="span9 form-error" ng-bind="creationError"></div>
+    <div class="toolbar-error" id="ediErrorMsgDiv" openlmis-message="error" ng-show="error"/>
 </div>
 
 </div>
@@ -709,7 +705,7 @@ Edit Product
             <!-- Code-->
             <div class="span1" style="overflow: visible;"> {{pr.code}}</div>
             <!-- name-->
-            <div class="span3" style="..."> {{pr.fullName}}</div>
+            <div class="span3" style="..."> {{pr.primaryName}}</div>
             <!-- Program-->
             <div class="span1" style="..."> {{pr.programName}}</div>
             <!-- Strenght-->
