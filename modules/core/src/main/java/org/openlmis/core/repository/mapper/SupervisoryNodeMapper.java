@@ -112,4 +112,60 @@ public interface SupervisoryNodeMapper {
     "description = #{description}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} " +
     "WHERE id = #{id}")
   void update(SupervisoryNode supervisoryNode);
+
+  @Select("SELECT * " +
+          "          FROM   (SELECT sn.*,  " +
+          "                         snParent.name AS supervisoryNodeParentName," +
+          "                         concat(f.code,' - ',f.name) AS facilityName," +
+          "                         ft.name AS facilityTypeName " +
+          "                  FROM   supervisory_nodes sn  " +
+          "                         LEFT JOIN supervisory_nodes snParent  " +
+          "                           ON sn.parentId = snParent.id" +
+          "                         LEFT JOIN facilities f" +
+          "                           ON sn.facilityId=f.ID" +
+          "                         LEFT JOIN facility_types ft " +
+          "                           ON f.typeid=ft.id) AS y  " +
+          "                 LEFT JOIN (SELECT supervisorynodeid        AS id,  " +
+          "                              Count(DISTINCT userId) supervisorCount  " +
+          "                       FROM   role_assignments ra  " +
+          "                       GROUP  BY supervisorynodeid) AS x  " +
+          "                   ON y.id = x.id")
+  @Results(value={
+          @Result(property = "parent.name", column = "supervisoryNodeParentName"),
+          @Result(property = "parent.id", column = "parentid"),
+          @Result(property = "facility.id",column="facilityid"),
+          @Result(property = "facility.name",column="facilityName"),
+          @Result(property = "facility.facilityType.name",column = "facilityTypeName"),
+          @Result(property = "supervisorCount", column = "supervisorCount")
+  })
+  List<SupervisoryNode> getCompleteList();
+
+  @Select("SELECT * " +
+          "          FROM   (SELECT sn.*,  " +
+          "                         snParent.name AS supervisoryNodeParentName," +
+          "                         concat(f.code,' - ',f.name) AS facilityName," +
+          "                         ft.name AS facilityTypeName " +
+          "                  FROM   supervisory_nodes sn  " +
+          "                         LEFT JOIN supervisory_nodes snParent  " +
+          "                           ON sn.parentId = snParent.id" +
+          "                         LEFT JOIN facilities f" +
+          "                           ON sn.facilityId=f.ID" +
+          "                         LEFT JOIN facility_types ft " +
+          "                           ON f.typeid=ft.id  " +
+          "                   WHERE sn.ID = #{id}) AS y  " +
+          "                 LEFT JOIN (SELECT supervisorynodeid        AS id,  " +
+          "                              Count(DISTINCT userId) supervisorCount  " +
+          "                       FROM   role_assignments ra " +
+          "                       GROUP  BY supervisorynodeid) AS x  " +
+          "                   ON y.id = x.id")
+  @Results(value={
+          @Result(property = "parent.name", column = "supervisoryNodeParentName"),
+          @Result(property = "parent.id", column = "parentid"),
+          @Result(property = "facility.id",column="facilityid"),
+          @Result(property = "facility.name",column="facilityName"),
+          @Result(property = "facility.facilityType.name",column = "facilityTypeName"),
+          @Result(property = "supervisorCount", column = "supervisorCount")
+  })
+  SupervisoryNode getSupervisoryNodeById(@Param(value="id") Long id);
+
 }
