@@ -23,6 +23,8 @@ import org.testng.annotations.DataProvider;
 
 import java.util.ArrayList;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 
@@ -55,6 +57,7 @@ public class E2EManageFacility extends TestCaseHelper {
     String date_time = createFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
       geoZone, facilityType, operatedBy, "500000");
     createFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
+    assertEquals("f", dbWrapper.getVirtualPropertyOfFacility(facilityCodePrefix+date_time));
 
     DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(date_time);

@@ -61,6 +61,20 @@ public class DBWrapper {
 
   }
 
+  public void updateVirtualPropertyOfFacility(String facilityCode, String flag) throws SQLException, IOException {
+    update("update facilities set virtualfacility='"+flag+"' where code='"+facilityCode+"';");
+  }
+
+  public String getVirtualPropertyOfFacility(String facilityCode) throws SQLException, IOException {
+    String flag = "";
+    ResultSet rs = query("select virtualfacility from facilities where code='"+facilityCode+"';");
+
+    if (rs.next()) {
+      flag = rs.getString("virtualfacility");
+    }
+    return flag;
+  }
+
   public void updateUser(String password, String email) throws SQLException, IOException {
     update("DELETE FROM user_password_reset_tokens;");
     update("update users set password='" + password + "', active=TRUE  where email='" + email + "';");
