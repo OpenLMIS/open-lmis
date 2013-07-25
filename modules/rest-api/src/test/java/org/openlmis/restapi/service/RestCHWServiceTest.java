@@ -60,7 +60,7 @@ public class RestCHWServiceTest {
     verify(facility).setFacilityType(baseFacility.getFacilityType());
     verify(facility).setMainPhone(chw.getPhoneNumber());
     verify(facility).setGeographicZone(baseFacility.getGeographicZone());
-    verify(facility).setActive(chw.getActive());
+    verify(facility).setActive(Boolean.parseBoolean(chw.getActive()));
     verify(facility).setVirtualFacility(true);
     verify(facility).setSdp(true);
     verify(facility).setDataReportable(true);
@@ -88,7 +88,7 @@ public class RestCHWServiceTest {
 
     verify(chwFacility).setName(chw.getAgentName());
     verify(chwFacility).setMainPhone(chw.getPhoneNumber());
-    verify(chwFacility).setActive(chw.getActive());
+    verify(chwFacility).setActive(Boolean.parseBoolean(chw.getActive()));
     verify(chwFacility).setParentFacilityId(baseFacility.getId());
     verify(chwFacility).setGeographicZone(baseFacility.getGeographicZone());
     verify(chwFacility).setFacilityType(baseFacility.getFacilityType());

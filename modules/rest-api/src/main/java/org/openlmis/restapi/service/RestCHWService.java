@@ -41,7 +41,7 @@ public class RestCHWService {
     facility.setCode(chw.getAgentCode());
     facility.setName(chw.getAgentName());
     facility.setMainPhone(chw.getPhoneNumber());
-    facility.setActive(chw.getActive() != null ? chw.getActive() : true);
+    facility.setActive(Boolean.parseBoolean(chw.getActive()));
     facility.setVirtualFacility(true);
     facility.setSdp(true);
     facility.setDataReportable(true);
@@ -67,10 +67,10 @@ public class RestCHWService {
   }
 
   public void update(CHW chw) {
-    chw.validate();
     if (chw.getActive() == null) {
       throw new DataException("error.restapi.mandatory.missing");
     }
+    chw.validate();
 
     Facility chwFacility = getExistingFacilityForCode(chw.getAgentCode());
     if (chwFacility == null) {
@@ -82,8 +82,9 @@ public class RestCHWService {
     }
     chwFacility.setName(chw.getAgentName());
     chwFacility.setMainPhone(chw.getPhoneNumber() == null ? chwFacility.getMainPhone() : chw.getPhoneNumber());
-    chwFacility.setActive(chw.getActive());
+    chwFacility.setActive(Boolean.parseBoolean(chw.getActive()));
     fillBaseFacility(chw, chwFacility);
+    chwFacility.setModifiedDate(new Date());
     facilityService.update(chwFacility);
   }
 }

@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Vendor;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.VendorService;
 import org.openlmis.db.categories.UnitTests;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -36,6 +37,9 @@ public class RestApiAuthenticationProviderTest {
   @Mock
   VendorService vendorService;
 
+  @Mock
+  MessageService messageService;
+
   @InjectMocks
   RestApiAuthenticationProvider restApiAuthenticationProvider;
 
@@ -50,9 +54,10 @@ public class RestApiAuthenticationProviderTest {
     vendor.setName(externalSystem);
     vendor.setAuthToken("invalid token");
     when(vendorService.authenticate(vendor)).thenReturn(false);
+    when(messageService.message("error.authentication.failed")).thenReturn("message");
 
     expectedException.expect(BadCredentialsException.class);
-    expectedException.expectMessage("Could not authenticate Vendor");
+    expectedException.expectMessage("message");
 
     restApiAuthenticationProvider.authenticate(authentication);
 

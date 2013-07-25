@@ -8,7 +8,7 @@ package org.openlmis.restapi.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.apache.commons.lang3.StringUtils;
 import org.openlmis.core.exception.DataException;
 
 @Data
@@ -19,12 +19,23 @@ public class CHW {
   private String agentName;
   private String parentFacilityCode;
   private String phoneNumber;
-  private Boolean active;
+  private String active;
 
   public void validate() {
-    if (agentCode == null || agentName == null || parentFacilityCode == null) {
+    if (StringUtils.isEmpty(agentCode) || StringUtils.isEmpty(agentName) || StringUtils.isEmpty(parentFacilityCode)) {
       throw new DataException("error.restapi.mandatory.missing");
     }
+    active = StringUtils.isEmpty(active) ? "true" : active;
+    if (!validateActive(active)) {
+      throw new DataException("error.active.invalid");
+    }
+  }
+
+  private boolean validateActive(String active) {
+    if (active.trim().equalsIgnoreCase("true") || active.trim().equalsIgnoreCase("false")) {
+      return true;
+    }
+    return false;
   }
 
 }

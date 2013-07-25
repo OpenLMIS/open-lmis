@@ -15,7 +15,7 @@ public class CHWBuilder {
   public static final Property<CHW, String> agentName = newProperty();
   public static final Property<CHW, String> baseFacilityCode = newProperty();
   public static final Property<CHW, String> phoneNumber = newProperty();
-  public static final Property<CHW, Boolean> active = newProperty();
+  public static final Property<CHW, String> active = newProperty();
 
   public static final Instantiator<CHW> defaultCHW = new Instantiator<CHW>() {
     @Override
@@ -25,7 +25,7 @@ public class CHWBuilder {
       chw.setAgentName(lookup.valueOf(agentName, "AgentVinod"));
       chw.setParentFacilityCode(lookup.valueOf(baseFacilityCode, "F10"));
       chw.setPhoneNumber(lookup.valueOf(phoneNumber, "007"));
-      chw.setActive(lookup.valueOf(active, true));
+      chw.setActive(lookup.valueOf(active, "true"));
       return chw;
     }
   };
