@@ -1,21 +1,19 @@
-<div>
+<div class="record-facility-data">
   <span ng-bind="facilityName"></span>
 
   <div class="info-box">
     <div class="row-fluid">
-      <div class="span3">
-        <select ng-model=facilitySelected
-                ng-options="facility as facility.name group by facility.geographicZone.code for facility in facilityList">
-          <option value="" openlmis-message="label.select.facility"></option>
-        </select>
-      </div>
-      <div class="span3">
+      <select ui-select2="{formatResult: format}" id="selectFacility" class="span3" ng-model=facilitySelected
+              ng-options="facility as facility.name group by facility.geographicZone.code for facility in facilityList">
+        <option value="" openlmis-message="label.select.facility"></option>
+      </select>
+      <div class="span3 offset1 info-box-labels">
         <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span ng-bind="deliveryZoneName"></span>
       </div>
-      <div class="span3">
+      <div class="span3 info-box-labels">
         <strong openlmis-message="label.program"></strong> :&nbsp;<span ng-bind="programName"></span>
       </div>
-      <div class="span3">
+      <div class="span2 info-box-labels">
         <strong openlmis-message="label.period"> </strong> :&nbsp;<span ng-bind="periodName"></span>
       </div>
     </div>

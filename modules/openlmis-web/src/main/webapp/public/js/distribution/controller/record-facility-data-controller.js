@@ -6,6 +6,14 @@
 
 function RecordFacilityDataController(IndexedDB, $scope, $route) {
 
+  $scope.format = function(facility) {
+    if(facility.id) {
+      return "<span class='red-state'></span>" + facility.text;
+    } else {
+      return facility.text;
+    }
+  }
+
   function fetchReferenceData() {
     var zpp = $route.current.params.zpp;
     var connection = IndexedDB.getConnection();
