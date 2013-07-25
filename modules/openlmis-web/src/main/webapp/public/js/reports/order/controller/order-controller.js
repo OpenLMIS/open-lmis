@@ -18,7 +18,13 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             currentPage: 1
         };
 
+        $scope.orderTypes = [
+            {'name':'Regular', 'value':'Regular'},
+            {'name':'Emergency', 'value':'Emergency'}
+         ];
 
+        //Order type defaults to Regular
+        $scope.orderType = 'Regular'
 
         $scope.filterGrid = function (){
            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
@@ -44,7 +50,8 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
              scheduleId : $scope.schedule,
              rgroupId : $scope.rgroup,
              rgroup : "",
-             facilityName : $scope.facilityNameFilter
+             facilityName : $scope.facilityNameFilter,
+             orderType: ""
         };
 
         ReportFacilityTypes.get(function(data) {
@@ -74,6 +81,16 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
                 });
             }else{
                 $scope.filterObject.facilityTypeId =  0;
+            }
+            $scope.filterGrid();
+        });
+
+        $scope.$watch('orderType', function(selection){
+            if(selection != undefined || selection == ""){
+                $scope.filterObject.orderType =  selection;
+
+            }else{
+                $scope.filterObject.orderType = "";
             }
             $scope.filterGrid();
         });
@@ -198,7 +215,10 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             });
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
         }, true);
-
+    $scope.formatNumber = function(arg){
+        var numericObject = new Number(arg);
+        return numericObject.format('0,0.00');
+    }
     $scope.gridOptions = {
         data: 'myData',
         columnDefs:
@@ -207,9 +227,9 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
                 { field: 'productCode', displayName: 'Product Code', width: "*", resizable: false},
                 { field: 'description', displayName: 'Description', width: "***" },
                 { field: 'facilityName', displayName: 'Facility', width: "**" },
-                { field: 'unitSize', displayName: 'Unit Size', width : "*"},
-                { field: 'unitQuantity', displayName: 'Unit Quantity', width : "*"},
-                { field: 'packQuantity', displayName: 'Pack Quantity', width : "*"},
+                { field: 'unitSize', displayName: 'Unit Size', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'unitQuantity', displayName: 'Unit Quantity', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'packQuantity', displayName: 'Pack Quantity', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
                 { field: 'discrepancy', displayName: 'Discrepancy or Damages', width : "*"}
 
 
