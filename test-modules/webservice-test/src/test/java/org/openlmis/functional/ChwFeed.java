@@ -317,7 +317,15 @@ public class ChwFeed extends TestCaseHelper {
       dbWrapper.getAuthToken("commTrack"));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("BAD_REQUEST"));
 
+    ResponseEntity responseEntityUpdated = client.SendJSON(modifiedJson,
+      "http://localhost:9091/rest-api/chw/update.json",
+      PUT,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+//    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("BAD_REQUEST"));
+
   }
+
 
   @Test(groups = {"webservice"})
   public void testBlankJson() throws Exception {
@@ -509,7 +517,7 @@ public class ChwFeed extends TestCaseHelper {
   }
 
   @Test(groups = {"webservice"})
-  public void testMissingMandatoryFieldsWhenFieldValueIsNotPresent() throws Exception {
+  public void testCreateMissingMandatoryFieldsWhenFieldValueIsNotPresent() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
@@ -527,6 +535,35 @@ public class ChwFeed extends TestCaseHelper {
       "commTrack",
       dbWrapper.getAuthToken("commTrack"));
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+
+  }
+
+  @Test(groups = {"webservice"})
+  public void testUpdateMissingMandatoryFieldsWhenFieldValueIsNotPresent() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
+    chwJson.setAgentCode("A2");
+    chwJson.setAgentName("AgentVinod");
+    chwJson.setParentFacilityCode("F10");
+    chwJson.setPhoneNumber("0099887766");
+    chwJson.setActive("true");
+
+    client.SendJSON(getJsonStringFor(chwJson),
+      "http://localhost:9091/rest-api/chw.json",
+      POST,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+
+    String modifiedString = getJsonStringFor(chwJson).replaceFirst("AgentVinod", "");
+
+    ResponseEntity responseEntityUpdated = client.SendJSON(modifiedString,
+      "http://localhost:9091/rest-api/chw/update.json",
+      PUT,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " modifiedString : " + modifiedString, responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -656,6 +693,13 @@ public class ChwFeed extends TestCaseHelper {
       "commTrack",
       dbWrapper.getAuthToken("commTrack"));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("BAD_REQUEST"));
+
+    ResponseEntity responseEntityUpdated = client.SendJSON(modifiedString,
+      "http://localhost:9091/rest-api/chw/update.json",
+      PUT,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+//    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("BAD_REQUEST"));
 
   }
 
