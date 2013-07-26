@@ -29,10 +29,10 @@ public class ChwFeed extends TestCaseHelper {
   public static final String POST = "POST";
   public static final String PUT = "PUT";
   public static final String FULL_JSON_TXT_FILE_NAME = "CHWValid.txt";
-  public String userEmail = "Fatim_Doe@openlmis.com";
-  public static String CREATE_URL = "http://localhost:9091/rest-api/chw.json";
-  public static String UPDATE_URL = "http://localhost:9091/rest-api/chw/update.json";
-  public static String commTrackUser = "commTrack";
+  public static final String userEmail = "Fatim_Doe@openlmis.com";
+  public static final String CREATE_URL = "http://localhost:9091/rest-api/chw.json";
+  public static final String UPDATE_URL = "http://localhost:9091/rest-api/chw/update.json";
+  public static final String commTrackUser = "commTrack";
 
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
@@ -78,8 +78,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("ABC");
-    chwJson.setAgentName("AgentVinod");
+    String vendorCode = "ABC";
+    String vendorName = "AgentVinod";
+
+    chwJson.setAgentCode(vendorCode);
+    chwJson.setAgentName(vendorName);
     chwJson.setParentFacilityCode("F10");
     chwJson.setPhoneNumber("0099887766");
     chwJson.setActive("true");
@@ -93,19 +96,19 @@ public class ChwFeed extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
-    deleteFacilityPage.searchFacility("ABC");
-    deleteFacilityPage.clickFacilityList("ABC");
-    deleteFacilityPage.deleteFacility("ABC", "AgentVinod");
+    deleteFacilityPage.searchFacility(vendorCode);
+    deleteFacilityPage.clickFacilityList(vendorCode);
+    deleteFacilityPage.deleteFacility(vendorCode, vendorName);
 
-    deleteFacilityPage.verifyDeletedFacility("ABC", "AgentVinod");
+    deleteFacilityPage.verifyDeletedFacility(vendorCode, vendorName);
     HomePage homePageRestore = deleteFacilityPage.restoreFacility();
 
     DeleteFacilityPage deleteFacilityPageRestore = homePageRestore.navigateSearchFacility();
-    deleteFacilityPageRestore.searchFacility("ABC");
-    deleteFacilityPageRestore.clickFacilityList("ABC");
+    deleteFacilityPageRestore.searchFacility(vendorCode);
+    deleteFacilityPageRestore.clickFacilityList(vendorCode);
     deleteFacilityPage.saveFacility();
-    deleteFacilityPage.verifyMessageOnFacilityScreen("AgentVinod", "updated");
-    assertEquals("t", dbWrapper.getVirtualPropertyOfFacility("ABC"));
+    deleteFacilityPage.verifyMessageOnFacilityScreen(vendorName, "updated");
+    assertEquals("t", dbWrapper.getVirtualPropertyOfFacility(vendorCode));
     homePage.logout(baseUrlGlobal);
 
   }
@@ -167,8 +170,6 @@ public class ChwFeed extends TestCaseHelper {
       dbWrapper.getAuthToken(commTrackUser));
 
 //    assertTrue("Showing response as : " + responseEntityDataReportableFalse.getResponse(), responseEntityDataReportableFalse.getResponse().contains("{\"error\":\"Invalid agent code\"}"));
-
-
   }
 
   @Test(groups = {"webservice"})
@@ -247,7 +248,6 @@ public class ChwFeed extends TestCaseHelper {
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
     assertEquals("f", dbWrapper.getActivePropertyOfFacility("ABCD"));
-
   }
 
   @Test(groups = {"webservice"})
@@ -294,7 +294,6 @@ public class ChwFeed extends TestCaseHelper {
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographiczoneid, updateParentFacility), dbWrapper.getFacilityFieldBYCode(geographiczoneid, vendorCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(id, updateParentFacility), dbWrapper.getFacilityFieldBYCode(parentfacilityid, vendorCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(operatedbyid, updateParentFacility), dbWrapper.getFacilityFieldBYCode(operatedbyid, vendorCode));
-
   }
 
   @Test(groups = {"webservice"})
@@ -314,6 +313,10 @@ public class ChwFeed extends TestCaseHelper {
     String mainphone = "mainphone";
     String phoneNumber = "0099887766";
     String phoneNumberUpdated = "12345678";
+    String active = "active";
+    String virtualfacility = "virtualfacility";
+    String sdp = "sdp";
+    String datareportable = "datareportable";
 
 
     HttpClient client = new HttpClient();
@@ -339,10 +342,11 @@ public class ChwFeed extends TestCaseHelper {
     assertEquals(vendorCode, dbWrapper.getFacilityFieldBYCode(code, vendorCode));
     assertEquals(vendorName, dbWrapper.getFacilityFieldBYCode(name, vendorCode));
     assertEquals(phoneNumber, dbWrapper.getFacilityFieldBYCode(mainphone, vendorCode));
-    assertEquals("t", dbWrapper.getFacilityFieldBYCode("active", vendorCode));
-    assertEquals("t", dbWrapper.getFacilityFieldBYCode("virtualfacility", vendorCode));
-    assertEquals("t", dbWrapper.getFacilityFieldBYCode("sdp", vendorCode));
-    assertEquals("t", dbWrapper.getFacilityFieldBYCode("datareportable", vendorCode));
+
+    assertEquals("t", dbWrapper.getFacilityFieldBYCode(active, vendorCode));
+    assertEquals("t", dbWrapper.getFacilityFieldBYCode(virtualfacility, vendorCode));
+    assertEquals("t", dbWrapper.getFacilityFieldBYCode(sdp, vendorCode));
+    assertEquals("t", dbWrapper.getFacilityFieldBYCode(datareportable, vendorCode));
 
     chwJson.setAgentName(vendorNameUpdated);
     chwJson.setParentFacilityCode(firstParentFacilityUpdated);
@@ -362,10 +366,10 @@ public class ChwFeed extends TestCaseHelper {
     assertEquals(vendorCode, dbWrapper.getFacilityFieldBYCode(code, vendorCode));
     assertEquals(vendorNameUpdated, dbWrapper.getFacilityFieldBYCode(name, vendorCode));
     assertEquals(phoneNumberUpdated, dbWrapper.getFacilityFieldBYCode(mainphone, vendorCode));
-    assertEquals("f", dbWrapper.getFacilityFieldBYCode("active", vendorCode));
-    assertEquals("t", dbWrapper.getFacilityFieldBYCode("virtualfacility", vendorCode));
-    assertEquals("t", dbWrapper.getFacilityFieldBYCode("sdp", vendorCode));
-    assertEquals("t", dbWrapper.getFacilityFieldBYCode("datareportable", vendorCode));
+    assertEquals("f", dbWrapper.getFacilityFieldBYCode(active, vendorCode));
+    assertEquals("t", dbWrapper.getFacilityFieldBYCode(virtualfacility, vendorCode));
+    assertEquals("t", dbWrapper.getFacilityFieldBYCode(sdp, vendorCode));
+    assertEquals("t", dbWrapper.getFacilityFieldBYCode(datareportable, vendorCode));
   }
 
     @Test(groups = {"webservice"})
@@ -386,17 +390,18 @@ public class ChwFeed extends TestCaseHelper {
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Parent facility can not be virtual facility\"}"));
-
   }
 
   @Test(groups = {"webservice"})
   public void testUpdateChwFeedWithParentFacilityCodeAsVirtualFacility() throws Exception {
+    String facilityCode = "F10";
+
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
     chwJson.setAgentCode("A2");
     chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
+    chwJson.setParentFacilityCode(facilityCode);
     chwJson.setPhoneNumber("0099887766");
     chwJson.setActive("true");
 
@@ -406,7 +411,7 @@ public class ChwFeed extends TestCaseHelper {
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
 
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateVirtualPropertyOfFacility(facilityCode, "true");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
       UPDATE_URL,
@@ -492,7 +497,7 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setPhoneNumber("0099887766");
     chwJson.setActive("true");
 
-    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
+    client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
       POST,
       commTrackUser,
@@ -582,7 +587,7 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setPhoneNumber("0099887766");
     chwJson.setActive("true");
 
-    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
+    client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
       POST,
       commTrackUser,
@@ -633,7 +638,7 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
 
-    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
+    client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
       POST,
       commTrackUser,
