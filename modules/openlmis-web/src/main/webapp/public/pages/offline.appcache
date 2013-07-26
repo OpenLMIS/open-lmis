@@ -10,7 +10,9 @@ CACHE MANIFEST
 /public/lib/angular-ui/angular-ui.min.css
 
 /public/js/shared/app.js
-
+/public/lib/select2/select2.js
+/public/js/shared/select2-ext.js
+/public/lib/select2/select2.css
 /public/js/shared/directives/comment-box.js
 /public/js/shared/directives/form-toolbar.js
 /public/js/shared/directives/openlmis-message.js
@@ -29,6 +31,7 @@ CACHE MANIFEST
 
 /public/pages/index-offline.html
 /public/pages/navigation-offline.html
+/public/pages/header-offline.html
 
 
 /public/pages/logistics/distribution/index-offline.html
@@ -60,6 +63,8 @@ CACHE MANIFEST
 /public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js
 /public/lib/underscore/underscore-min.js
 /public/js/shared/util.js
+
+/public/images/logo.png
 
 
 FALLBACK:
