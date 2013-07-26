@@ -8,11 +8,29 @@ describe('DistributionListController', function () {
 
   var scope, location;
 
+  var mockedIndexedDB = {
+    getConnection: function () {
+      return {
+        transaction: function () {
+          return {
+            objectStore: function () {
+              return {
+                openCursor: function () {
+                  return {}
+                }
+              }
+            }
+          };
+        }
+      }
+    }
+  };
+
   beforeEach(inject(function ($rootScope, $location, $controller) {
     scope = $rootScope.$new();
     location = $location;
     var controller = $controller;
-    controller(DistributionListController, {$scope: scope, $location: location})
+    controller(DistributionListController, {$scope: scope, $location: location, IndexedDB: mockedIndexedDB })
   }));
 
   it('should set location path', function () {
