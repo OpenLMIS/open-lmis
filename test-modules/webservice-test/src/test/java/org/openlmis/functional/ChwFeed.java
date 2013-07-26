@@ -29,8 +29,10 @@ public class ChwFeed extends TestCaseHelper {
   public static final String POST = "POST";
   public static final String PUT = "PUT";
   public static final String FULL_JSON_TXT_FILE_NAME = "CHWValid.txt";
-  public String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
   public String userEmail = "Fatim_Doe@openlmis.com";
+  public static String CREATE_URL = "http://localhost:9091/rest-api/chw.json";
+  public static String UPDATE_URL = "http://localhost:9091/rest-api/chw/update.json";
+  public static String commTrackUser = "commTrack";
 
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
@@ -82,10 +84,10 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setPhoneNumber("0099887766");
     chwJson.setActive("true");
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
@@ -121,10 +123,10 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
   }
 
@@ -140,22 +142,68 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
     chwJson.setActive("false");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
     assertEquals("f", dbWrapper.getActivePropertyOfFacility("ABCD"));
+
+  }
+
+  @Test(groups = {"webservice"})
+  public void testVerifyFieldsAfterChangeInParentFacilityCode() throws Exception {
+    String typeid = "typeid";
+    String geographiczoneid = "geographiczoneid";
+    String operatedbyid = "operatedbyid";
+    String parentfacilityid = "parentfacilityid";
+    String vendorCode = "ABCDE";
+    String firstParentFacility = "F10";
+    String updateParentFacility = "F11";
+
+    HttpClient client = new HttpClient();
+    client.createContext();
+    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
+    chwJson.setAgentCode(vendorCode);
+    chwJson.setAgentName("AgentVinod");
+    chwJson.setParentFacilityCode(firstParentFacility);
+    chwJson.setPhoneNumber("0099887766");
+    chwJson.setActive("true");
+
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
+    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+
+    assertEquals(dbWrapper.getFacilityFieldBYCode(typeid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(typeid, vendorCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(geographiczoneid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(geographiczoneid, vendorCode));
+    String id = "id";
+    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacility),dbWrapper.getFacilityFieldBYCode(parentfacilityid, vendorCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(operatedbyid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(operatedbyid, vendorCode));
+    chwJson.setParentFacilityCode(updateParentFacility);
+
+    ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
+      UPDATE_URL,
+      PUT,
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(typeid, updateParentFacility), dbWrapper.getFacilityFieldBYCode(typeid, vendorCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(geographiczoneid, updateParentFacility), dbWrapper.getFacilityFieldBYCode(geographiczoneid, vendorCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(id, updateParentFacility), dbWrapper.getFacilityFieldBYCode(parentfacilityid, vendorCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(operatedbyid, updateParentFacility), dbWrapper.getFacilityFieldBYCode(operatedbyid, vendorCode));
 
   }
 
@@ -172,10 +220,10 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Parent facility can not be virtual facility\"}"));
 
   }
@@ -192,18 +240,18 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"error\":\"Parent facility can not be virtual facility\"}"));
   }
 
@@ -220,16 +268,16 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Agent already registered\"}"));
   }
 
@@ -246,10 +294,10 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Agent is not a virtual facility\"}"));
   }
 
@@ -265,10 +313,10 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Invalid Facility code\"}"));
   }
 
@@ -284,17 +332,17 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 
     chwJson.setParentFacilityCode("A10");
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"error\":\"Invalid Facility code\"}"));
   }
 
@@ -311,17 +359,17 @@ public class ChwFeed extends TestCaseHelper {
     String modifiedJson = getJsonStringFor(chwJson).replace(':', ';');
 
     ResponseEntity responseEntity = client.SendJSON(modifiedJson,
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("BAD_REQUEST"));
 
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedJson,
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 //    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("BAD_REQUEST"));
 
   }
@@ -332,10 +380,10 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     ResponseEntity responseEntity = client.SendJSON("{}",
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
@@ -354,10 +402,10 @@ public class ChwFeed extends TestCaseHelper {
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
@@ -374,17 +422,17 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     String modifiedString = getJsonStringFor(chwJson).replaceFirst("\"agentName\":\"AgentVinod\",", " ");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedString,
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " modifiedString : " + modifiedString, responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
@@ -404,10 +452,10 @@ public class ChwFeed extends TestCaseHelper {
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
@@ -425,18 +473,18 @@ public class ChwFeed extends TestCaseHelper {
 
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 
     String modifiedString = getJsonStringFor(chwJson).replaceFirst("\"agentName\":\"AgentVinod\",", " ");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedString,
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " modifiedString : " + modifiedString, responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
@@ -457,10 +505,10 @@ public class ChwFeed extends TestCaseHelper {
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
   }
@@ -478,10 +526,10 @@ public class ChwFeed extends TestCaseHelper {
 
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + getJsonStringFor(chwJson), responseEntity.getResponse().contains("{\"error\":\"Invalid agent code\"}"));
 
   }
@@ -498,20 +546,20 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 
 
     String modifiedString = getJsonStringFor(chwJson).replaceFirst(",\"active\":\"true\"", " ");
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
@@ -530,10 +578,10 @@ public class ChwFeed extends TestCaseHelper {
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
@@ -550,18 +598,18 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 
     String modifiedString = getJsonStringFor(chwJson).replaceFirst("AgentVinod", "");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedString,
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " modifiedString : " + modifiedString, responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
@@ -581,10 +629,10 @@ public class ChwFeed extends TestCaseHelper {
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Active should be True/False\"}"));
 
   }
@@ -601,20 +649,20 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 
 
     String modifiedString = getJsonStringFor(chwJson).replaceFirst("true", "");
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Active should be True/False\"}"));
 
   }
@@ -631,20 +679,20 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 
 
     String modifiedString = getJsonStringFor(chwJson).replaceFirst("true", " ");
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("Active should be True/False"));
 
   }
@@ -661,16 +709,16 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
   }
@@ -688,17 +736,17 @@ public class ChwFeed extends TestCaseHelper {
     String modifiedString = getJsonStringFor(chwJson).replaceFirst("phoneNumber", "phonenumber");
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("BAD_REQUEST"));
 
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedString,
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 //    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("BAD_REQUEST"));
 
   }
@@ -715,19 +763,19 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
     chwJson.setAgentCode("CASESENSITIVE");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 //    assertTrue("Showing response as : " + responseEntityUpdated.getResponse()+ " updated json : "+getJsonStringFor(chwJson), responseEntityUpdated.getResponse().contains("{\"error\":\"Agent already registered\"}"));
 
   }
@@ -744,19 +792,20 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
     chwJson.setAgentCode("CASESENSITIVE");
 
+
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
 //    assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " updated json : "+getJsonStringFor(chwJson), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
   }
@@ -774,10 +823,10 @@ public class ChwFeed extends TestCaseHelper {
     String modifiedString = getJsonStringFor(chwJson).replaceFirst("true", "truefalse");
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("Active should be True/False"));
 
   }
@@ -794,9 +843,9 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
-      "commTrack",
+      commTrackUser,
       "Testing");
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
 
@@ -815,9 +864,9 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
-      "commTrack",
+      commTrackUser,
       "Testing");
     //Its a feedback. Needs to uncomment the line as soon as feedback is incorporated
 //    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
@@ -837,10 +886,10 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw.json",
+      CREATE_URL,
       POST,
       "Testing",
-      dbWrapper.getAuthToken("commTrack"));
+      dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
 
   }
@@ -857,10 +906,10 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("true");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      "http://localhost:9091/rest-api/chw/update.json",
+      UPDATE_URL,
       PUT,
       "Testing",
-      dbWrapper.getAuthToken("commTrack"));
+      dbWrapper.getAuthToken(commTrackUser));
     //Its a feedback. Needs to uncomment the line as soon as feedback is incorporated
 //    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
 

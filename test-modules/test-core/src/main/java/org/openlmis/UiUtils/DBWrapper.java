@@ -85,6 +85,7 @@ public class DBWrapper {
     return flag;
   }
 
+
   public void updateUser(String password, String email) throws SQLException, IOException {
     update("DELETE FROM user_password_reset_tokens;");
     update("update users set password='" + password + "', active=TRUE  where email='" + email + "';");
@@ -574,6 +575,16 @@ public class DBWrapper {
   public String getFacilityFieldBYID(String field, String id) throws IOException, SQLException {
     String facilityField = null;
     ResultSet rs = query("select " + field + " from facilities where id=" + id + ";");
+
+    if (rs.next()) {
+      facilityField = rs.getString(1);
+    }
+    return facilityField;
+  }
+
+  public String getFacilityFieldBYCode(String field, String code) throws IOException, SQLException {
+    String facilityField = null;
+    ResultSet rs = query("select " + field + " from facilities where code='" + code + "';");
 
     if (rs.next()) {
       facilityField = rs.getString(1);
