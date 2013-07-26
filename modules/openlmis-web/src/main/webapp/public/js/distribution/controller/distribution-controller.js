@@ -51,32 +51,7 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
     return optionMessage($scope.periods, DEFAULT_PERIOD_MESSAGE);
   };
 
-  $scope.loadDistributionsFromCache = function () {
-    var transaction = IndexedDB.getConnection().transaction('distributions');
-    var cursorRequest = transaction.objectStore('distributions').openCursor();
 
-    var aggregate = [];
-    cursorRequest.onsuccess = function (event) {
-      if (event.target.result) {
-        aggregate.push(event.target.result.value);
-        event.target.result['continue']();
-      }
-    };
-
-    transaction.oncomplete = function (e) {
-      $scope.distributionList = aggregate;
-      $scope.$apply();
-    };
-  };
-
-  if (IndexedDB.getConnection() == null) {
-    $scope.$on('indexedDBReady', function () {
-      $scope.loadDistributionsFromCache();
-    });
-  }
-  else {
-    $scope.loadDistributionsFromCache();
-  }
   $scope.$on('$viewContentLoaded', function () {
     $scope.distributionList = navigateBackService.distributionList;
     $scope.selectedZone = navigateBackService.deliveryZone;
@@ -168,8 +143,7 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
     var distributionStore = transaction.objectStore('distributions');
     distributionStore.put(distribution);
     transaction.oncomplete = function () {
-      $scope.loadDistributionsFromCache();
-      $scope.$apply();
+      $scope.$broadcast('distributionAdded');
     };
   }
 
