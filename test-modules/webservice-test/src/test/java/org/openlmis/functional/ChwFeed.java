@@ -131,6 +131,47 @@ public class ChwFeed extends TestCaseHelper {
   }
 
   @Test(groups = {"webservice"})
+  public void testUpdateChwFeedForDataReportableScenarios() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
+    chwJson.setAgentCode("A2");
+    chwJson.setAgentName("AgentVinod");
+    chwJson.setParentFacilityCode("F10");
+    chwJson.setPhoneNumber("0099887766");
+    chwJson.setActive("true");
+
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
+
+    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+
+    chwJson.setActive("false");
+    ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
+      UPDATE_URL,
+      PUT,
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
+
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+
+    dbWrapper.updateFacilityFieldBYCode("datareportable","false","A2");
+
+    ResponseEntity responseEntityDataReportableFalse = client.SendJSON(getJsonStringFor(chwJson),
+      UPDATE_URL,
+      PUT,
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
+
+//    assertTrue("Showing response as : " + responseEntityDataReportableFalse.getResponse(), responseEntityDataReportableFalse.getResponse().contains("{\"error\":\"Invalid agent code\"}"));
+
+
+  }
+
+  @Test(groups = {"webservice"})
   public void testChwFeedCreateWithInvalidDataLength() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
