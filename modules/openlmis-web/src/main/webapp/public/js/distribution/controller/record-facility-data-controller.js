@@ -8,7 +8,9 @@ function RecordFacilityDataController(IndexedDB, $scope, $route) {
 
   $scope.format = function(facility) {
     if(facility.id) {
-      return "<span class='red-state'></span>" + facility.text;
+      return "<div class='is-complete'>" +
+                "<span class='status-icon'></span>" + facility.text +
+              "</div>";
     } else {
       return facility.text;
     }
