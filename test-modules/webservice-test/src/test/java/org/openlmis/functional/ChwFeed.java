@@ -264,12 +264,15 @@ public class ChwFeed extends TestCaseHelper {
     String parentfacilityid = "parentfacilityid";
     String vendorCode = "commtrk";
     String vendorName = "AgentVinod";
+    String vendorNameUpdated = "AgentJyot";
     String firstParentFacility = "F10";
+    String firstParentFacilityUpdated = "F11";
     String code = "code";
     String name = "name";
     String id = "id";
     String mainphone = "mainphone";
     String phoneNumber = "0099887766";
+    String phoneNumberUpdated = "12345678";
 
 
     HttpClient client = new HttpClient();
@@ -296,6 +299,29 @@ public class ChwFeed extends TestCaseHelper {
     assertEquals(vendorName, dbWrapper.getFacilityFieldBYCode(name, vendorCode));
     assertEquals(phoneNumber, dbWrapper.getFacilityFieldBYCode(mainphone, vendorCode));
     assertEquals("t", dbWrapper.getFacilityFieldBYCode("active", vendorCode));
+    assertEquals("t", dbWrapper.getFacilityFieldBYCode("virtualfacility", vendorCode));
+    assertEquals("t", dbWrapper.getFacilityFieldBYCode("sdp", vendorCode));
+    assertEquals("t", dbWrapper.getFacilityFieldBYCode("datareportable", vendorCode));
+
+    chwJson.setAgentName(vendorNameUpdated);
+    chwJson.setParentFacilityCode(firstParentFacilityUpdated);
+    chwJson.setPhoneNumber(phoneNumberUpdated);
+    chwJson.setActive("false");
+
+    ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
+      UPDATE_URL,
+      PUT,
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(typeid, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(typeid, vendorCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(geographiczoneid, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(geographiczoneid, vendorCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacilityUpdated),dbWrapper.getFacilityFieldBYCode(parentfacilityid, vendorCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(operatedbyid, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(operatedbyid, vendorCode));
+    assertEquals(vendorCode, dbWrapper.getFacilityFieldBYCode(code, vendorCode));
+    assertEquals(vendorNameUpdated, dbWrapper.getFacilityFieldBYCode(name, vendorCode));
+    assertEquals(phoneNumberUpdated, dbWrapper.getFacilityFieldBYCode(mainphone, vendorCode));
+    assertEquals("f", dbWrapper.getFacilityFieldBYCode("active", vendorCode));
     assertEquals("t", dbWrapper.getFacilityFieldBYCode("virtualfacility", vendorCode));
     assertEquals("t", dbWrapper.getFacilityFieldBYCode("sdp", vendorCode));
     assertEquals("t", dbWrapper.getFacilityFieldBYCode("datareportable", vendorCode));
