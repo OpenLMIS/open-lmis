@@ -18,7 +18,7 @@ function DistributionListController($scope, $location, IndexedDB) {
     };
 
     transaction.oncomplete = function (e) {
-      $scope.distributionList = aggregate;
+      $scope.$parent.distributionList = aggregate;
       $scope.$apply();
     };
   };
