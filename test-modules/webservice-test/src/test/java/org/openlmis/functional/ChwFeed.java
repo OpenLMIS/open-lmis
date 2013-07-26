@@ -704,6 +704,64 @@ public class ChwFeed extends TestCaseHelper {
   }
 
   @Test(groups = {"webservice"})
+  public void testCaseSensitiveCheckForCreateCHW() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
+    chwJson.setAgentCode("casesensitive");
+    chwJson.setAgentName("AgentVinod");
+    chwJson.setParentFacilityCode("F10");
+    chwJson.setPhoneNumber("0099887766");
+    chwJson.setActive("true");
+
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
+      "http://localhost:9091/rest-api/chw.json",
+      POST,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+
+    chwJson.setAgentCode("CASESENSITIVE");
+
+    ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
+      "http://localhost:9091/rest-api/chw.json",
+      POST,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+//    assertTrue("Showing response as : " + responseEntityUpdated.getResponse()+ " updated json : "+getJsonStringFor(chwJson), responseEntityUpdated.getResponse().contains("{\"error\":\"Agent already registered\"}"));
+
+  }
+
+  @Test(groups = {"webservice"})
+  public void testCaseSensitiveCheckForUpdateCHW() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
+    chwJson.setAgentCode("casesensitive");
+    chwJson.setAgentName("AgentVinod");
+    chwJson.setParentFacilityCode("F10");
+    chwJson.setPhoneNumber("0099887766");
+    chwJson.setActive("true");
+
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
+      "http://localhost:9091/rest-api/chw.json",
+      POST,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+
+    chwJson.setAgentCode("CASESENSITIVE");
+
+    ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
+      "http://localhost:9091/rest-api/chw/update.json",
+      PUT,
+      "commTrack",
+      dbWrapper.getAuthToken("commTrack"));
+//    assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " updated json : "+getJsonStringFor(chwJson), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+
+  }
+
+  @Test(groups = {"webservice"})
   public void testInvalidActiveFieldOption() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
