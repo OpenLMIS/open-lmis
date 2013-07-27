@@ -273,5 +273,22 @@ public class InteractiveReportController  extends BaseController {
         return new Pages(page,totalRecCount,max,orderReportList);
     }
 
+    @RequestMapping(value = "/reportdata/stockImbalance", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_STOCK_IMBALANCE_REPORT')")
+    public Pages getStockImbalanceData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                      @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                      HttpServletRequest request
+
+    ) {
+
+
+
+        Report report = reportManager.getReportByKey("stock_imbalance");
+        List<StockImbalanceReport> stockImbalanceReportList =
+                (List<StockImbalanceReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
+        int totalRecCount =  stockImbalanceReportList.size();
+
+        return new Pages(page,totalRecCount,max,stockImbalanceReportList);
+    }
 
 }

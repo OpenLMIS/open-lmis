@@ -54,6 +54,10 @@ services.factory('OrderReport', function ($resource) {
     return $resource('/reports/reportdata/viewOrders.json', {}, {});
 });
 
+services.factory('StockImbalanceReport', function ($resource) {
+    return $resource('/reports/reportdata/stockImbalance.json', {}, {});
+});
+
 services.factory('AdjustmentTypes', function($resource){
     return $resource('/reports/adjustmentTypes.json', {}, {});
 });
