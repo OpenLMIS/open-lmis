@@ -142,7 +142,7 @@ public interface FacilityMapper {
   })
   List<Facility> getAllInRequisitionGroups(@Param("requisitionGroupIds") String requisitionGroupIds);
 
-  @Select("SELECT * from facilities WHERE code=#{code}")
+  @Select("SELECT * from facilities WHERE LOWER(code)=LOWER(#{code})")
   Facility getByCode(String code);
 
   @Select({"SELECT F.geographicZoneId, F.name, F.code, F.id, F.catchmentPopulation FROM facilities F INNER JOIN delivery_zone_members DZM ON F.id = DZM.facilityId",

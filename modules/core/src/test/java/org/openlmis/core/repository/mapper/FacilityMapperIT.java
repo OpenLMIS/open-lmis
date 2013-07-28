@@ -468,6 +468,18 @@ public class FacilityMapperIT {
     assert (facilityFromDatabase.getName()).equals(facility.getName());
   }
 
+  @Test
+  public void shouldGetFacilityByCodeIgnoringCase() throws Exception {
+    Facility facility = make(a(defaultFacility));
+
+    mapper.insert(facility);
+
+    Facility facilityFromDatabase = mapper.getByCode(facility.getCode().toLowerCase());
+
+    assert (facilityFromDatabase.getId()).equals(facility.getId());
+    assert (facilityFromDatabase.getCode()).equals(facility.getCode());
+    assert (facilityFromDatabase.getName()).equals(facility.getName());
+  }
 
   @Test
   public void shouldGetAllInDeliveryZoneAndOrderByGeographicZoneParentAndFacilityName() {

@@ -78,13 +78,8 @@ public class RestCHWService {
     chw.validate();
 
     Facility chwFacility = getExistingFacilityForCode(chw.getAgentCode());
-    if (chwFacility == null) {
-      throw new DataException("error.invalid.agent.code");
-    }
+    validateCHWForUpdate(chwFacility);
 
-    if(!chwFacility.getVirtualFacility()) {
-      throw new DataException("error.chw.not.virtual");
-    }
     chwFacility.setName(chw.getAgentName());
     chwFacility.setMainPhone(chw.getPhoneNumber() == null ? chwFacility.getMainPhone() : chw.getPhoneNumber());
     chwFacility.setActive(Boolean.parseBoolean(chw.getActive()));
@@ -92,5 +87,19 @@ public class RestCHWService {
     chwFacility.setModifiedDate(new Date());
     chwFacility.setModifiedBy(vendorService.getByName(userName).getId());
     facilityService.update(chwFacility);
+  }
+
+  private void validateCHWForUpdate(Facility chwFacility) {
+    if (chwFacility == null) {
+      throw new DataException("error.invalid.agent.code");
+    }
+
+    if(!chwFacility.getVirtualFacility()) {
+      throw new DataException("error.chw.not.virtual");
+    }
+
+    if(!chwFacility.getDataReportable()) {
+      throw new DataException("error.chw.deleted");
+    }
   }
 }

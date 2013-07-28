@@ -93,6 +93,7 @@ public class RestCHWServiceTest {
 
     Facility chwFacility = spy(new Facility());
     chwFacility.setVirtualFacility(true);
+    chwFacility.setDataReportable(true);
     whenNew(Facility.class).withNoArguments().thenReturn(chwFacility);
     when(facilityService.getByCode(chwFacility)).thenReturn(chwFacility);
     when(vendorService.getByName(principal.getName())).thenReturn(new Vendor());
@@ -210,6 +211,23 @@ public class RestCHWServiceTest {
     expectedException.expectMessage("error.invalid.agent.code");
 
     restCHWService.update(chw, principal.getName());
+  }
+
+  @Test
+  public void shouldThrowExceptionIfCHWBeingUpdatedIsDeleted() throws Exception {
+    CHW chw = make(a(defaultCHW));
+    Facility facility = new Facility();
+    facility.setVirtualFacility(true);
+    facility.setDataReportable(false);
+    Facility chwFacility = new Facility();
+    whenNew(Facility.class).withNoArguments().thenReturn(chwFacility);
+    when(facilityService.getByCode(chwFacility)).thenReturn(facility);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.chw.deleted");
+
+    restCHWService.update(chw, principal.getName());
+
   }
 
   private Facility getBaseFacility(CHW chw) {
