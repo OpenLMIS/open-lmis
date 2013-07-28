@@ -1,0 +1,1 @@
+DROP FUNCTION fn_get_supplying_facility_name(integer);
