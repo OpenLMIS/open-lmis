@@ -1,5 +1,6 @@
 package org.openlmis.report.service;
 
+import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.StockImbalanceReportMapper;
 import org.openlmis.report.model.ReportData;
@@ -15,6 +16,7 @@ import java.util.Map;
  * Time: 4:45 PM
  */
 @Service
+@NoArgsConstructor
 public class StockImbalanceReportDataProvider extends ReportDataProvider {
 
     private StockImbalanceReportMapper reportMapper;
