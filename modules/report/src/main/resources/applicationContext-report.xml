@@ -131,6 +131,15 @@
                     <property name="title" value="Supply Status by Facility Report"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="stock_imbalance"/>
+                    <property name="template" value="stock-imbalance-report.jasper"/>
+                    <property name="reportDataProvider" ref="stockImbalanceReportDataProvider"/>
+                    <property name="id" value="RP-Stock-Imbalance"/>
+                    <property name="name" value="Stock Imbalances by Facility Report"/>
+                    <property name="title" value="Stock Imbalances by Facility"/>
+                    <property name="version" value="1.0"/>
+                </bean>
 
             </list>
         </constructor-arg>

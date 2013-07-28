@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stock_imbalance_report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\Issa\\JSI_Projects\\bitbucket\\open-lmis\\modules\\report\\src\\main\\template\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REPORT_NAME" class="java.lang.String"/>
+	<parameter name="REPORT_TITLE" class="java.lang.String"/>
+	<parameter name="COUNTRY_NAME" class="java.lang.String"/>
+	<parameter name="GENERATED_BY" class="java.lang.String"/>
+	<parameter name="REPORT_VERSION" class="java.lang.String"/>
+	<parameter name="REPORT_ID" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_OUTPUT_OPTION" class="java.lang.String"/>
+	<parameter name="OPERATOR_LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
+	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
+	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT distinct
+ facilities.name AS Facility,
+facilities.name AS SupplyingFacility,
+ requisition_line_items.product AS Product,
+ requisition_line_items.stockinhand physicalCount,
+ requisition_line_items.amc,
+ CASE WHEN coalesce(requisition_line_items.AMC,0) = 0 THEN 0 ELSE round(requisition_line_items.stockinhand/requisition_line_items.AMC,1) END AS months,
+ coalesce(CASE WHEN (requisition_line_items.stockinhand - coalesce(amc,0) * fn_get_max_mos (programs.id, facilities.id, products.code)) < 0 THEN 0 ELSE (requisition_line_items.stockinhand - coalesce(amc,0) * fn_get_max_mos (programs.id, facilities.id, products.code)) END ,0) AS orderQuantity,
+ CASE WHEN requisition_line_items.stockinhand = 0 THEN 'Stockedout' ELSE
+  CASE WHEN requisition_line_items.stockinhand > 0 AND requisition_line_items.stockinhand  < coalesce(amc,0) * fn_get_max_mos (programs.id, facilities.id, products.code) THEN 'Understocked' ELSE
+		CASE WHEN requisition_line_items.stockinhand  > coalesce(amc,0) * fn_get_max_mos (programs.id, facilities.id, products.code) THEN 'Understocked' ELSE '' END
+  END
+ END AS Status
+
+
+FROM
+ facilities
+INNER JOIN  facility_types ON  facilities.typeid =  facility_types.id
+INNER JOIN  requisitions ON  requisitions.facilityid =  facilities.id
+INNER JOIN  requisition_line_items ON  requisition_line_items.rnrid =  requisitions.id
+INNER JOIN  products ON  products.code =  requisition_line_items.productcode
+INNER JOIN  program_products ON  program_products.productid =  products.id
+INNER JOIN  programs ON  program_products.programid =  programs.id AND  programs.id =  requisitions.programid
+INNER JOIN  programs_supported ON  programs.id =  programs_supported.programid AND  facilities.id =  programs_supported.facilityid
+INNER JOIN  requisition_group_members ON  facilities.id =  requisition_group_members.facilityid
+INNER JOIN  requisition_groups ON  requisition_groups.id =  requisition_group_members.requisitiongroupid
+INNER JOIN  requisition_group_program_schedules ON  requisition_group_program_schedules.programid =  programs.id AND  requisition_group_program_schedules.requisitiongroupid =  requisition_groups.id
+INNER JOIN  processing_schedules ON  processing_schedules.id =  requisition_group_program_schedules.programid
+INNER JOIN  processing_periods ON  processing_periods.scheduleid =  processing_schedules.id
+where requisition_line_items.stockinhand is not null]]>
+	</queryString>
+	<field name="facility" class="java.lang.String"/>
+	<field name="supplyingFacility" class="java.lang.String"/>
+	<field name="product" class="java.lang.String"/>
+	<field name="physicalCount" class="java.lang.Integer"/>
+	<field name="amc" class="java.lang.Integer"/>
+	<field name="months" class="java.math.BigDecimal"/>
+	<field name="orderQuantity" class="java.lang.Integer"/>
+	<field name="status" class="java.lang.String"/>
+	<variable name="TOTAL_PAGES" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="PAGE_NO">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_TITLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="LOGO">
+					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_SUB_TITLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_SUB_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_NAME">
+					<subreportParameterExpression><![CDATA[$P{REPORT_NAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_FILTER_PARAM_VALUES">
+					<subreportParameterExpression><![CDATA[$P{REPORT_FILTER_PARAM_VALUES}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_LOGO">
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
+				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="1" width="802" height="19" forecolor="#FFFFFF" backcolor="#3D9297">
+					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="55" y="0" width="144" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Facility]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6f22b5e8-59ea-4512-b209-ce093fe70dbe" mode="Transparent" x="387" y="1" width="87" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Physical Count]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1138c634-4150-46c6-a83e-b93243223977" mode="Transparent" x="199" y="1" width="188" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Product]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b" mode="Transparent" x="0" y="0" width="55" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Line#]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="81e85722-5d3c-4cf4-9cbf-e1312d5c6e21" mode="Transparent" x="474" y="1" width="65" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[AMC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bc10494a-a227-4f9a-8ae2-c3257bc15012" mode="Transparent" x="539" y="0" width="100" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Months]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5da33df0-700b-4566-bedd-edb87201ed94" mode="Transparent" x="639" y="0" width="86" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Order Quantity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a9c96049-0eeb-4429-a8a9-616cacb9aa38" mode="Transparent" x="929" y="-259" width="65" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[AMC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3c5ad69b-31ac-47f0-b88f-9032a51224cc" mode="Transparent" x="725" y="1" width="76" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Status]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="497dba92-6949-4bb2-9beb-1f85a98456e5" x="72" y="0" width="759" height="20" forecolor="#006666">
+					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F4F4F4">
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60" x="0" y="0" width="55" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7" x="0" y="19" width="801" height="1" forecolor="#3D9297"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement uuid="64daefd6-8763-4b2c-9be1-ab301f986a5a" x="57" y="0" width="142" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{facility}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="873de690-e086-4f26-8f34-63807934ed39" x="474" y="0" width="65" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{amc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ad6bdf5e-6728-45a7-94aa-c0a1cf580105" x="639" y="0" width="86" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{orderQuantity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="bf911ea9-6984-4e09-a671-6c7f68ca77e7" x="725" y="0" width="77" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ed08043f-f542-478d-8ced-736a103e45bb" x="539" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{months}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c0437e6c-491e-46ed-8439-313cc762e462" x="387" y="0" width="87" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{physicalCount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="92e8a139-6275-4458-bf93-b5900a9100d8" x="199" y="0" width="188" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
