@@ -7,32 +7,34 @@
 
   <div ng-show="distributionList.length">
     <h2 openlmis-message="label.initiated.distributions"></h2>
-      <div id="cachedDistributions">
-        <div class="list-header-container">
-          <div class="row-fluid list-header">
-            <div class="span2">
-              <div class="delivery-zone" openlmis-message="label.delivery.zone"></div>
-            </div>
-            <div class="span2" openlmis-message="label.program"></div>
-            <div class="span2" openlmis-message="label.period"></div>
-            <div class="span2" openlmis-message="label.status"></div>
-            <div class="span2"></div>
-            <div class="span2"></div>
-          </div>
-        </div>
 
-        <div class="list-container">
-          <div class="row-fluid list-row" ng-repeat="distribution in distributionList">
-            <div class="span2">
-              <div class="delivery-zone" ng-bind="distribution.deliveryZone.name"></div>
-            </div>
-            <div class="span2" ng-bind="distribution.program.name"></div>
-            <div class="span2" ng-bind="distribution.period.name"></div>
-            <div class="span2" ng-bind="distribution.status"></div>
-            <div class="span2"><a href="" openlmis-message="label.record.data"></a></div>
-            <div class="span2"><a href="" openlmis-message="label.sync"></a></div>
+    <div id="cachedDistributions">
+      <div class="list-header-container">
+        <div class="row-fluid list-header">
+          <div class="span2">
+            <div class="delivery-zone" openlmis-message="label.delivery.zone"></div>
           </div>
+          <div class="span2" openlmis-message="label.program"></div>
+          <div class="span2" openlmis-message="label.period"></div>
+          <div class="span2" openlmis-message="label.status"></div>
+          <div class="span2"></div>
+          <div class="span2"></div>
         </div>
       </div>
+
+      <div class="list-container">
+        <div class="row-fluid list-row" ng-repeat="distribution in distributionList">
+          <div class="span2">
+            <div class="delivery-zone" ng-bind="distribution.deliveryZone.name"></div>
+          </div>
+          <div class="span2" ng-bind="distribution.program.name"></div>
+          <div class="span2" ng-bind="distribution.period.name"></div>
+          <div class="span2" ng-bind="distribution.status"></div>
+          <div class="span2"><a href="" openlmis-message="label.record.data"
+                                ng-click="recordFacilityData(distribution.zpp)"></a></div>
+          <div class="span2"><a href="" openlmis-message="label.sync"></a></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

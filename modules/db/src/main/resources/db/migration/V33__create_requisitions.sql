@@ -10,9 +10,8 @@ CREATE TABLE requisitions (
   status                          VARCHAR(20) NOT NULL,
   fullSupplyItemsSubmittedCost    NUMERIC(15, 4),
   nonFullSupplyItemsSubmittedCost NUMERIC(15, 4),
-  supervisoryNodeId               INTEGER     REFERENCES supervisory_nodes (id),
-  supplyingFacilityId             INTEGER REFERENCES facilities(id),
-  submittedDate                   TIMESTAMP,
+  supervisoryNodeId               INTEGER REFERENCES supervisory_nodes (id),
+  supplyingFacilityId             INTEGER REFERENCES facilities (id),
   createdBy                       INTEGER,
   createdDate                     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedBy                      INTEGER,
@@ -20,5 +19,5 @@ CREATE TABLE requisitions (
   UNIQUE (facilityId, programId, periodId)
 );
 
-CREATE INDEX i_requisitions_status ON requisitions(LOWER(status));
-CREATE INDEX i_requisitions_programId_supervisoryNodeId ON requisitions(programId, supervisoryNodeId);
+CREATE INDEX i_requisitions_status ON requisitions (LOWER(status));
+CREATE INDEX i_requisitions_programId_supervisoryNodeId ON requisitions (programId, supervisoryNodeId);

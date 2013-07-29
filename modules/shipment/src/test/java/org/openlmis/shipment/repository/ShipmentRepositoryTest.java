@@ -53,27 +53,6 @@ public class ShipmentRepositoryTest {
     verify(shipmentMapper).insertShipmentFileInfo(shipmentFileInfo);
   }
 
-  @Test
-  public void shouldThrowExceptionIfShipmentFileHasIncorrectOrderNumber() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem();
-    shippedLineItem.setRnrId(1L);
-    doThrow(new DataIntegrityViolationException("violates foreign key constraint \"shipped_line_items_rnrid_fkey\"")).when(shipmentMapper).insertShippedLineItem(shippedLineItem);
-
-    expectedException.expect(dataExceptionMatcher("error.unknown.order"));
-
-    shipmentRepository.insertShippedLineItem(shippedLineItem);
-  }
-
-  @Test
-  public void shouldThrowExceptionIfShipmentFileHasIncorrectProductCode() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem();
-    shippedLineItem.setProductCode("R10");
-    doThrow(new DataIntegrityViolationException("violates foreign key constraint \"shipped_line_items_productcode_fkey\"")).when(shipmentMapper).insertShippedLineItem(shippedLineItem);
-
-    expectedException.expect(dataExceptionMatcher("error.unknown.product"));
-
-    shipmentRepository.insertShippedLineItem(shippedLineItem);
-  }
 
   @Test
   public void shouldThrowExceptionIfShipmentFileHasIncorrectDataLength() throws Exception {

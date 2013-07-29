@@ -124,6 +124,11 @@ public class DeleteFacilityPage extends Page {
 
   }
 
+  public void saveFacility(){
+    testWebDriver.waitForElementToAppear(SaveButton);
+    SaveButton.click();
+  }
+
 
   public void searchFacility(String facilityCodeValue) {
 

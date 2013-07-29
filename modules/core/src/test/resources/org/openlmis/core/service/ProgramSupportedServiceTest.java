@@ -1,5 +1,6 @@
 package org.openlmis.core.service;
 
+import org.ict4h.atomfeed.server.service.EventService;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -7,26 +8,36 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.dto.ProgramSupportedEventDTO;
+import org.openlmis.core.event.ProgramSupportedEvent;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.openlmis.db.categories.UnitTests;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.openlmis.core.builder.FacilityBuilder.programSupportedList;
+import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(ProgramSupportedService.class)
 public class ProgramSupportedServiceTest {
 
   @Rule
@@ -44,8 +55,13 @@ public class ProgramSupportedServiceTest {
   @Mock
   ProgramSupportedRepository repository;
 
+
   @Mock
   FacilityProgramProductService facilityProgramProductService;
+
+  @Mock
+  private EventService eventService;
+
 
   @Test
   public void shouldNotGiveErrorIfSupportedProgramWithActiveFalseAndDateNotProvided() throws Exception {
@@ -217,6 +233,22 @@ public class ProgramSupportedServiceTest {
     expectedEx.expectMessage("program.code.invalid");
 
     service.getProgramSupported(programSupported);
+  }
+
+  @Test
+  public void shouldUpdateSupportedPrograms() throws Exception {
+    List<ProgramSupported> programsSupported = asList(make(a(defaultProgramSupported)));
+    Facility facility = make(a(defaultFacility, with(programSupportedList, programsSupported)));
+
+    ProgramSupportedEventDTO programSupportedEventDTO = mock(ProgramSupportedEventDTO.class);
+    ProgramSupportedEvent programSupportedEvent = mock(ProgramSupportedEvent.class);
+
+    whenNew(ProgramSupportedEventDTO.class).withArguments(facility.getCode(), programsSupported).thenReturn(programSupportedEventDTO);
+    whenNew(ProgramSupportedEvent.class).withArguments(programSupportedEventDTO).thenReturn(programSupportedEvent);
+    service.updateSupportedPrograms(facility);
+
+    verify(repository).updateSupportedPrograms(facility);
+    verify(eventService).notify(programSupportedEvent);
   }
 
   private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {

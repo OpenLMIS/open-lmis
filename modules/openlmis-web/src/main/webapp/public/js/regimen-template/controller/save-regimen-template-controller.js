@@ -9,7 +9,7 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
   $scope.program = program;
   $scope.regimens = programRegimens;
   $scope.regimenTemplate = regimenTemplate;
-  $scope.regimenTemplate.regimenColumns = _.reject($scope.regimenTemplate.regimenColumns,function(column){
+  $scope.regimenTemplate.columns = _.reject($scope.regimenTemplate.columns, function (column) {
     return (column.name == 'name' || column.name == 'code');
   });
   $scope.regimenCategories = regimenCategories;
@@ -121,9 +121,9 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
 
   function validReportingFields() {
 
-    var DEFAULT_VISIBLE_COUNT = 2;
-    
-    if (_.find($scope.regimenTemplate.regimenColumns, function (column) {
+    var DEFAULT_VISIBLE_COUNT = 0;
+
+    if (_.find($scope.regimenTemplate.columns, function (column) {
       return isUndefined(column.label);
     })) {
       $scope.reportingFieldsError = true;
@@ -131,11 +131,11 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
       return;
     }
 
-    var count = _.countBy($scope.regimenTemplate.regimenColumns, function (column) {
+    var count = _.countBy($scope.regimenTemplate.columns, function (column) {
       return column.visible == true ? 'visible' : 'invisible';
     });
 
-    if (count.visible == DEFAULT_VISIBLE_COUNT) {
+    if (count.visible == undefined || count.visible == DEFAULT_VISIBLE_COUNT) {
       $scope.reportingFieldsError = true;
       $scope.error = messageService.get('error.regimens.none.selected')
       return;
@@ -157,7 +157,7 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
       regimenListToSave.push(regimen);
     });
     regimenForm.regimens = regimenListToSave;
-    regimenForm.regimenTemplate = $scope.regimenTemplate;
+    regimenForm.regimenColumnList = $scope.regimenTemplate.columns;
     Regimens.save({programId: $scope.program.id}, regimenForm, function () {
       $scope.$parent.message = messageService.get('regimens.saved.successfully');
       $location.path('select-program');

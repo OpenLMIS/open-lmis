@@ -19,9 +19,14 @@
       <li ng-class="{'selected': visibleTab == 'regimen', 'has-error': regimenLineItemInValid}" ng-show="regimenCount">
         <a href="" ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a></li>
     </ul>
-    <a href="" class="btn pull-right" ng-click="fullScreen = !fullScreen">
-      <i ng-class="{'icon-resize-full': !fullScreen, 'icon-resize-small': fullScreen}"></i>
-    </a>
+    <span class="pull-right">
+      <a href="" class="btn" ng-click="fullScreen = !fullScreen">
+        <i ng-class="{'icon-resize-full': !fullScreen, 'icon-resize-small': fullScreen}"></i>
+      </a>
+    </span>
+    <span class="pull-right print-button">
+      <a class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf" ng-show="fullScreen" openlmis-message="button.print" target="_blank"></a>
+    </span>
   </div>
 
   <div ng-hide="programRnrColumnList" openlmis-message="msg.loading"></div>

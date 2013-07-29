@@ -11,7 +11,7 @@ import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.restapi.response.RestResponse;
-import org.openlmis.restapi.service.RestService;
+import org.openlmis.restapi.service.RestRequisitionService;
 import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,22 +31,19 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @Controller
 @NoArgsConstructor
-public class RestController {
+public class RestRequisitionController extends BaseController {
 
-  public static final String ACCEPT_JSON = "Accept=application/json";
-  public static final String UNEXPECTED_EXCEPTION = "unexpected.exception";
-  public static final String FORBIDDEN_EXCEPTION = "forbidden.exception";
   public static final String RNR = "R&R";
 
   @Autowired
-  private RestService restService;
+  private RestRequisitionService restRequisitionService;
 
   @RequestMapping(value = "/rest-api/requisitions", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity submitRequisition(@RequestBody Report report, Principal principal) {
     report.setVendor(new Vendor(principal.getName()));
     Rnr requisition;
     try {
-      requisition = restService.submitReport(report);
+      requisition = restRequisitionService.submitReport(report);
     } catch (DataException e) {
       return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
@@ -67,7 +64,7 @@ public class RestController {
     report.setRequisitionId(id);
     report.setVendor(new Vendor(principal.getName()));
     try {
-      Rnr approveRnr = restService.approve(report);
+      Rnr approveRnr = restRequisitionService.approve(report);
       return RestResponse.response(RNR, approveRnr.getId());
     } catch (DataException e) {
       return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);

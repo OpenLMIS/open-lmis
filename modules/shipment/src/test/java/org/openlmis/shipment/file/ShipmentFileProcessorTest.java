@@ -23,6 +23,8 @@ import org.openlmis.upload.parser.CSVParser;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.integration.Message;
+import org.springframework.integration.MessageChannel;
+import org.springframework.integration.support.MessageBuilder;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,12 +32,15 @@ import java.util.Date;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.*;
+
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ShipmentFileProcessor.class)
+@PrepareForTest({ShipmentFileProcessor.class, MessageBuilder.class})
 public class ShipmentFileProcessorTest {
   @Mock
   private CSVParser csvParser;
@@ -45,12 +50,15 @@ public class ShipmentFileProcessorTest {
   private ShipmentFilePostProcessHandler shipmentFilePostProcessHandler;
   @Mock
   private DbService dbService;
+  @Mock
+  MessageChannel ftpArchiveOutputChannel;
   @InjectMocks
   private ShipmentFileProcessor shipmentFileProcessor;
 
   @Test
   public void shouldProcessCsvFileFromMessage() throws Exception {
     Message message = mock(Message.class);
+    mockStatic(MessageBuilder.class);
     File shipmentFile = mock(File.class);
     FileInputStream shipmentInputStream = mock(FileInputStream.class);
     ModelClass shipmentModelClass = new ModelClass(ShippedLineItem.class, true);
@@ -58,6 +66,9 @@ public class ShipmentFileProcessorTest {
     Date currentTimeStamp = new Date();
 
     when(message.getPayload()).thenReturn(shipmentFile);
+    MessageBuilder<File> messageBuilder = mock(MessageBuilder.class);
+    when(MessageBuilder.withPayload(shipmentFile)).thenReturn(messageBuilder);
+    when(messageBuilder.build()).thenReturn(message);
     when(dbService.getCurrentTimestamp()).thenReturn(currentTimeStamp);
     whenNew(FileInputStream.class).withArguments(shipmentFile).thenReturn(shipmentInputStream);
     whenNew(ModelClass.class).withArguments(ShippedLineItem.class, true).thenReturn(shipmentModelClass);
@@ -66,6 +77,7 @@ public class ShipmentFileProcessorTest {
 
     verify(csvParser).process(shipmentInputStream, shipmentModelClass, shipmentRecordHandler, auditFields);
     verify(shipmentFilePostProcessHandler).process(shipmentFile, false);
+    verify(ftpArchiveOutputChannel).send(message);
   }
 
   @Test
@@ -79,7 +91,7 @@ public class ShipmentFileProcessorTest {
     whenNew(FileInputStream.class).withArguments(shipmentFile).thenReturn(shipmentInputStream);
     whenNew(ModelClass.class).withArguments(ShippedLineItem.class, true).thenReturn(shipmentModelClass);
     doThrow(new UploadException("message")).when(csvParser).
-        process(eq(shipmentInputStream), eq(shipmentModelClass), eq(shipmentRecordHandler), any(AuditFields.class));
+      process(eq(shipmentInputStream), eq(shipmentModelClass), eq(shipmentRecordHandler), any(AuditFields.class));
 
     shipmentFileProcessor.process(message);
 
@@ -97,7 +109,7 @@ public class ShipmentFileProcessorTest {
     whenNew(FileInputStream.class).withArguments(shipmentFile).thenReturn(shipmentInputStream);
     whenNew(ModelClass.class).withArguments(ShippedLineItem.class, true).thenReturn(shipmentModelClass);
     doThrow(new DataException("message")).when(csvParser).
-        process(eq(shipmentInputStream), eq(shipmentModelClass), eq(shipmentRecordHandler), any(AuditFields.class));
+      process(eq(shipmentInputStream), eq(shipmentModelClass), eq(shipmentRecordHandler), any(AuditFields.class));
 
     shipmentFileProcessor.process(message);
 

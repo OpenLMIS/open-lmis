@@ -4,7 +4,7 @@
  *  If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.core.repository;
+package org.openlmis.rnr.repository;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -12,10 +12,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.RegimenColumn;
-import org.openlmis.core.domain.RegimenTemplate;
-import org.openlmis.core.repository.mapper.RegimenColumnMapper;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.rnr.domain.RegimenColumn;
+import org.openlmis.rnr.domain.RegimenTemplate;
+import org.openlmis.rnr.repository.mapper.RegimenColumnMapper;
 
 import java.util.ArrayList;
 import java.util.List;

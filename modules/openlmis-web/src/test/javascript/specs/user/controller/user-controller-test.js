@@ -130,7 +130,7 @@ describe("User", function () {
       var facilityResponse = {"facilityList": [
         {"code": "F101"}
       ]};
-      $httpBackend.expectGET('/facilities.json?searchParam=F10').respond(facilityResponse);
+      $httpBackend.expectGET('/facilities.json?searchParam=F10&virtualFacility=false').respond(facilityResponse);
 
       scope.query = "F10";
       scope.showFacilitySearchResults();

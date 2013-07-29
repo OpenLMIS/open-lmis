@@ -7,24 +7,31 @@
 package org.openlmis.functional;
 
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
+import cucumber.api.DataTable;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.*;
+import org.openlmis.pageobjects.DistributionPage;
+import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.LoginPage;
 import org.openqa.selenium.WebElement;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.Test;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.DataProvider;
+import org.testng.annotations.*;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static com.thoughtworks.selenium.SeleneseTestBase.fail;
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 
 
 @TransactionConfiguration(defaultRollback = true)
@@ -38,66 +45,193 @@ public class ManageDistribution extends TestCaseHelper {
   public static final String SELECT_DELIVERY_ZONE = "--Select Delivery Zone--";
   public static final String periodDisplayedByDefault = "Period14";
   public static final String periodNotToBeDisplayedInDropDown = "Period1";
+  public String userSIC, password, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+    deliveryZoneNameFirst, deliveryZoneNameSecond,
+    facilityCodeFirst, facilityCodeSecond,
+    programFirst, programSecond, schedule;
 
-  @BeforeMethod(groups = {"functional2", "smoke"})
+  @BeforeMethod(groups = "functional2")
+  @Before
   public void setUp() throws Exception {
     super.setup();
   }
 
 
-  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function")
-  public void testShouldFetchProgramPeriod(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                           String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                           String facilityCodeFirst, String facilityCodeSecond,
-                                           String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+  @Given("^I have the following data for distribution:$")
+  public void theFollowingDataExist(DataTable tableData) throws Exception {
+    List<Map<String, String>> data = tableData.asMaps();
+    for (Map map : data) {
+      userSIC = map.get("userSIC").toString();
+      deliveryZoneCodeFirst = map.get("deliveryZoneCodeFirst").toString();
+      deliveryZoneCodeSecond = map.get("deliveryZoneCodeSecond").toString();
+      deliveryZoneNameFirst = map.get("deliveryZoneNameFirst").toString();
+      deliveryZoneNameSecond = map.get("deliveryZoneNameSecond").toString();
+      facilityCodeFirst = map.get("facilityCodeFirst").toString();
+      facilityCodeSecond = map.get("facilityCodeSecond").toString();
+      programFirst = map.get("programFirst").toString();
+      programSecond = map.get("programSecond").toString();
+      schedule = map.get("schedule").toString();
+    }
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRForDistribution("F10","F11",true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1","Ngorongoro","Ngorongoro");
-    setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true,
+      programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+
+  }
+
+  @Then("^I should see program \"([^\"]*)\"$")
+  public void verifyProgram(String programs) throws IOException, SQLException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    List<String> firstProgramValuesToBeVerified = new ArrayList<String>();
+
+    String[] program = programs.split(",");
+    for (int i = 0; i < program.length; i++)
+      firstProgramValuesToBeVerified.add(program[i]);
+
+    List<WebElement> valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromProgram();
+    verifyAllSelectFieldValues(firstProgramValuesToBeVerified, valuesPresentInDropDown);
+  }
+
+  @Then("^I verify fields$")
+  public void verifyFieldsOnScreen() throws IOException, SQLException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    verifyElementsPresent(distributionPage);
+  }
+
+  @Then("^I should see period \"([^\"]*)\"$")
+  public void verifyPeriod(String period) throws IOException, SQLException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    WebElement actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
+    testWebDriver.sleep(100);
+    verifySelectedOptionFromSelectField(period, actualSelectFieldElement);
+  }
+
+  @Then("^I should see deliveryZone \"([^\"]*)\"$")
+  public void verifyDeliveryZone(String deliveryZone) throws IOException, SQLException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    WebElement actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromDeliveryZone();
+    verifySelectedOptionFromSelectField(deliveryZone, actualSelectFieldElement);
+  }
+
+  @Given("^I login as user \"([^\"]*)\" having password \"([^\"]*)\"$")
+  public void login(String user, String password) throws IOException, SQLException {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    loginPage.loginAs(user, password);
+  }
+
+  @And("^I access plan my distribution page$")
+  public void accessDistributionPage() throws IOException, SQLException {
+    HomePage homePage = new HomePage(testWebDriver);
+    homePage.navigateHomePage();
+    homePage.navigatePlanDistribution();
+  }
+
+  @When("^I assign delivery zone \"([^\"]*)\" to user \"([^\"]*)\" having role \"([^\"]*)\"$")
+  public void assignDeliveryZone(String deliveryZone, String user, String role) throws IOException, SQLException {
+    dbWrapper.insertRoleAssignmentForDistribution(user, role, deliveryZone);
+  }
+
+  @When("^I select delivery zone \"([^\"]*)\"$")
+  public void selectDeliveryZone(String deliveryZone) throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.selectValueFromDeliveryZone(deliveryZone);
+  }
+
+  @And("^I select program \"([^\"]*)\"$")
+  public void selectProgram(String program) throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.selectValueFromProgram(program);
+  }
+
+  @And("^I select period \"([^\"]*)\"$")
+  public void selectPeriod(String period) throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.selectValueFromPeriod(period);
+  }
+
+  @And("^I initiate distribution$")
+  public void initiateDistribution() throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.clickInitiateDistribution();
+  }
+
+  @And("^I click view load amount$")
+  public void clickViewLoadAmount() throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.clickViewLoadAmount();
+  }
+
+  @Then("^I should see data download successfully$")
+  public void seeDownloadSuccessfully() throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    testWebDriver.sleep(1500);
+    distributionPage.verifyDownloadSuccessFullMessage(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
+  }
+
+  @And("^I should see delivery zone \"([^\"]*)\" program \"([^\"]*)\" period \"([^\"]*)\" in table$")
+  public void verifyTableValue(String deliveryZoneNameFirst, String programFirst, String periodDisplayedByDefault) throws IOException {
+    verifyElementsInTable(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
+  }
+
+  private void verifyElementsInTable(String deliveryZoneNameFirst, String programFirst, String periodDisplayedByDefault) {
+    SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]/" +
+      "div[1]/div[1]/div").getText(), deliveryZoneNameFirst);
+
+    SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]" +
+      "/div[1]/div[2]").getText(), programFirst);
+
+    SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]" +
+      "/div[1]/div[3]").getText(), periodDisplayedByDefault);
+
+    SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]" +
+      "/div[1]/div[4]").getText(), "INITIATED");
+
+    SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]" +
+      "/div[1]/div[5]/a").getText(), "Record Data");
+
+    SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]" +
+      "/div[1]/div[6]/a").getText(), "Sync");
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyAlreadyCachedDistribution(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                                  String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                  String facilityCodeFirst, String facilityCodeSecond,
+                                                  String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("MANAGE_DISTRIBUTION");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
       programFirst, programSecond, schedule);
-
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
-    verifyElementsPresent(distributionPage);
-
-    String defaultDistributionZoneValuesToBeVerified = NONE_ASSIGNED;
-    WebElement actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromDeliveryZone();
-    verifySelectedOptionFromSelectField(defaultDistributionZoneValuesToBeVerified, actualSelectFieldElement);
-
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-
-    homePage.navigateHomePage();
-    homePage.navigatePlanDistribution();
-
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
-    List<String> firstProgramValuesToBeVerified = new ArrayList<String>();
-    firstProgramValuesToBeVerified.add(programFirst);
-    List<WebElement> valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromProgram();
-    verifyAllSelectFieldValues(firstProgramValuesToBeVerified, valuesPresentInDropDown);
-
-
     distributionPage.selectValueFromProgram(programFirst);
-    actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
-    testWebDriver.sleep(100);
-    verifySelectedOptionFromSelectField(periodDisplayedByDefault, actualSelectFieldElement);
-    distributionPage.clickViewLoadAmount();
+    distributionPage.clickInitiateDistribution();
+    distributionPage.verifyDownloadSuccessFullMessage(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
+    distributionPage.clickInitiateDistribution();
+    distributionPage.verifyDataAlreadyCachedMessage(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
   }
+
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testManageDistribution(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                      String facilityCodeFirst, String facilityCodeSecond,
-                                      String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                     String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                     String facilityCodeFirst, String facilityCodeSecond,
+                                     String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRForDistribution("F10","F11",true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond,"District1","Ngorongoro","Ngorongoro");
-    setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
       programFirst, programSecond, schedule);
@@ -136,6 +270,7 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     List<String> firstProgramValuesToBeVerified = new ArrayList<String>();
     firstProgramValuesToBeVerified.add(programFirst);
+    firstProgramValuesToBeVerified.add(programSecond);
     valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromProgram();
     verifyAllSelectFieldValues(firstProgramValuesToBeVerified, valuesPresentInDropDown);
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
@@ -178,8 +313,6 @@ public class ManageDistribution extends TestCaseHelper {
     verifySelectedOptionFromSelectField(defaultProgramValuesToBeVerified, actualSelectFieldElement);
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     verifySelectedOptionFromSelectField(defaultPeriodValuesToBeVerified, actualSelectFieldElement);
-
-
   }
 
 
@@ -228,10 +361,14 @@ public class ManageDistribution extends TestCaseHelper {
     assertEquals(valuesToBeVerified, actualSelectFieldElement.getText());
   }
 
-  @AfterMethod(groups = {"functional2", "smoke"})
+  @AfterMethod(groups = "functional2")
+  @After
   public void tearDown() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout(baseUrlGlobal);
+    testWebDriver.sleep(500);
+    if (!testWebDriver.getElementById("username").isDisplayed()) {
+      HomePage homePage = new HomePage(testWebDriver);
+      homePage.logout(baseUrlGlobal);
+    }
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }

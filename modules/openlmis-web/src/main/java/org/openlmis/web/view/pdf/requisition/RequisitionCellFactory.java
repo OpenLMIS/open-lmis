@@ -9,9 +9,9 @@ package org.openlmis.web.view.pdf.requisition;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import org.openlmis.rnr.domain.Column;
-import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.ColumnType;
+import org.openlmis.rnr.domain.LineItem;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,15 +23,19 @@ public class RequisitionCellFactory {
   public static final int WIDTH_PERCENTAGE = 100;
 
   public static PdfPCell numberCell(String value) {
-    PdfPCell cell = new PdfPCell(new Phrase(value));
-    cell.setPadding(CELL_PADDING);
+    PdfPCell cell = getPdfPCell(value);
     cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
     return cell;
   }
 
-  public static PdfPCell textCell(String value) {
+  private static PdfPCell getPdfPCell(String value) {
     PdfPCell cell = new PdfPCell(new Phrase(value));
     cell.setPadding(CELL_PADDING);
+    return cell;
+  }
+
+  public static PdfPCell textCell(String value) {
+    PdfPCell cell = getPdfPCell(value);
     cell.setHorizontalAlignment(Element.ALIGN_LEFT);
     return cell;
   }
@@ -44,47 +48,35 @@ public class RequisitionCellFactory {
     return cell;
   }
 
-  public static List<PdfPCell> getCells(List<? extends Column> visibleColumns, RnrLineItem lineItem, String currency) throws NoSuchFieldException, IllegalAccessException {
+  public static List<PdfPCell> getCells(List<? extends Column> visibleColumns, LineItem lineItem, String currency) throws NoSuchFieldException, IllegalAccessException {
     List<PdfPCell> result = new ArrayList<>();
-    for (Column rnrColumn : visibleColumns) {
-      if (rnrColumn.getName().equals("lossesAndAdjustments")) {
-        result.add(numberCell(lineItem.getTotalLossesAndAdjustments().toString()));
-        continue;
-      }
-      if (rnrColumn.getName().equals("cost")) {
-        result.add(numberCell(currency + lineItem.calculateCost()));
-        continue;
-      }
-      if (rnrColumn.getName().equals("price")) {
-        result.add(numberCell(currency + lineItem.getPrice()));
-        continue;
-      }
-
-      if (rnrColumn.getName().equals("total") && lineItem.getQuantityReceived() != null && lineItem.getBeginningBalance() != null) {
-        Integer total = lineItem.getBeginningBalance() + lineItem.getQuantityReceived();
-        result.add(numberCell(total.toString()));
-        continue;
-      }
-
-      Field field = RnrLineItem.class.getDeclaredField(rnrColumn.getName());
-      field.setAccessible(true);
-      Object fieldValue = field.get(lineItem);
-      String cellValue = (fieldValue == null) ? "" : fieldValue.toString();
-      if (rnrColumn.getName().equals("product") || rnrColumn.getName().equals("dispensingUnit") || rnrColumn.getName().equals("productCode")) {
-        result.add(textCell(cellValue));
-      } else {
-        result.add(numberCell(cellValue));
-      }
+    for (Column column : visibleColumns) {
+      ColumnType columnType = column.getColumnType();
+      String value = lineItem.getValue(column.getName());
+      createCell(result, columnType, value, currency);
     }
     return result;
   }
 
-  public static PdfPCell categoryRow(Integer visibleColumnsSize, RnrLineItem lineItem) {
-    Chunk chunk = new Chunk(lineItem.getProductCategory(), FontFactory.getFont(FontFactory.HELVETICA_BOLD));
+  private static void createCell(List<PdfPCell> result, ColumnType columnType, String value, String currency) {
+    if (columnType.equals(ColumnType.TEXT)) {
+      result.add(textCell(value));
+    }
+    if (columnType.equals(ColumnType.NUMERIC)) {
+      result.add(numberCell(value));
+    }
+    if (columnType.equals(ColumnType.CURRENCY)) {
+      result.add(numberCell(currency + value));
+    }
+  }
+
+  public static PdfPCell categoryRow(Integer visibleColumnsSize, LineItem lineItem) {
+    Chunk chunk = new Chunk(lineItem.getCategoryName(), FontFactory.getFont(FontFactory.HELVETICA_BOLD));
     PdfPCell cell = new PdfPCell(new Phrase(chunk));
     cell.setColspan(visibleColumnsSize);
     cell.setBackgroundColor(HEADER_BACKGROUND);
     cell.setPadding(CELL_PADDING);
     return cell;
   }
+
 }

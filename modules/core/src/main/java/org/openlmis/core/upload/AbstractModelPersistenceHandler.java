@@ -57,7 +57,8 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
     }
   }
 
-  public void postProcess() {
+  @Override
+  public void postProcess(AuditFields auditFields) {
     // File is processed successfully
   }
 

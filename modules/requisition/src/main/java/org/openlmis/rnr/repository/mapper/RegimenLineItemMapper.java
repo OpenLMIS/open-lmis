@@ -15,7 +15,7 @@ public interface RegimenLineItemMapper {
   @Options(useGeneratedKeys = true)
   public void insert(RegimenLineItem regimenLineItem);
 
-  @Select("SELECT * FROM regimen_line_items WHERE rnrId = #{rnrId} ORDER BY regimenDisplayOrder")
+  @Select("SELECT * FROM regimen_line_items WHERE rnrId = #{rnrId} ORDER BY regimenCategoryDisplayOrder, regimenDisplayOrder")
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "code", column = "code"),

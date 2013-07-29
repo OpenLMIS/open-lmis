@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.db.service.DbService;
+import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.AuditFields;
 import org.openlmis.upload.model.ModelClass;
@@ -75,8 +76,11 @@ public class UploadController extends BaseController {
       int initialRecordCount = dbService.getCount(uploadBeansMap.get(model).getTableName());
       Date currentTimestamp = dbService.getCurrentTimestamp();
 
-      int recordsToBeUploaded = csvParser.process(csvFile.getInputStream(), new ModelClass(uploadBeansMap.get(model).getImportableClass()),
-          uploadBeansMap.get(model).getRecordHandler(), new AuditFields(loggedInUserId(request), currentTimestamp));
+      RecordHandler recordHandler = uploadBeansMap.get(model).getRecordHandler();
+      ModelClass modelClass = new ModelClass(uploadBeansMap.get(model).getImportableClass());
+      AuditFields auditFields = new AuditFields(loggedInUserId(request), currentTimestamp);
+
+      int recordsToBeUploaded = csvParser.process(csvFile.getInputStream(), modelClass, recordHandler, auditFields);
 
       return successResponse(model, initialRecordCount, recordsToBeUploaded);
     } catch (DataException dataException) {

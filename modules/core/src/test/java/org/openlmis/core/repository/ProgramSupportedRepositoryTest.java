@@ -84,7 +84,7 @@ public class ProgramSupportedRepositoryTest {
 
     programSupportedRepository.addSupportedProgram(programSupported);
 
-    verify(programSupportedMapper).add(programSupported);
+    verify(programSupportedMapper).insert(programSupported);
   }
 
   @Test
@@ -96,7 +96,7 @@ public class ProgramSupportedRepositoryTest {
     programSupported.setProgram(program);
 
     doThrow(new DuplicateKeyException("Facility has already been mapped to the program")).when(
-      programSupportedMapper).add(programSupported);
+      programSupportedMapper).insert(programSupported);
 
     expectedEx.expect(dataExceptionMatcher("error.facility.program.mapping.exists"));
 
@@ -120,7 +120,7 @@ public class ProgramSupportedRepositoryTest {
     programSupportedRepository.updateSupportedPrograms(facility);
 
     verify(programSupportedMapper).getAllByFacilityId(facilityId);
-    verify(programSupportedMapper).add(argThat(programSupportedMatcher(facilityId, programSupported.getActive(),
+    verify(programSupportedMapper).insert(argThat(programSupportedMatcher(facilityId, programSupported.getActive(),
       programSupported.getStartDate(), facility.getModifiedBy(), facility.getModifiedBy())));
   }
 
@@ -140,7 +140,7 @@ public class ProgramSupportedRepositoryTest {
 
     verify(programSupportedMapper).getAllByFacilityId(facilityId);
     verify(programSupportedMapper).delete(facilityId, program.getId());
-    verify(programSupportedMapper, never()).add(any(ProgramSupported.class));
+    verify(programSupportedMapper, never()).insert(any(ProgramSupported.class));
   }
 
   @Test
@@ -164,7 +164,7 @@ public class ProgramSupportedRepositoryTest {
 
     verify(programSupportedMapper).getAllByFacilityId(facilityId);
     verify(programSupportedMapper, never()).delete(anyLong(), anyLong());
-    verify(programSupportedMapper, never()).add(any(ProgramSupported.class));
+    verify(programSupportedMapper, never()).insert(any(ProgramSupported.class));
 
     verify(programSupportedMapper).update(argThat(programSupportedMatcher(facilityId, editedProgramSupported.getActive(),
       editedProgramSupported.getStartDate(), facility.getModifiedBy(), null)));

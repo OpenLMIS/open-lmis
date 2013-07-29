@@ -150,7 +150,6 @@ public class RequisitionMapperIT {
     assertThat(updatedRequisition.getId(), is(requisition.getId()));
     assertThat(updatedRequisition.getSupervisoryNodeId(), is(requisition.getSupervisoryNodeId()));
     assertThat(updatedRequisition.getModifiedBy(), is(equalTo(USER_ID)));
-    assertThat(updatedRequisition.getSubmittedDate(), is(submittedDate));
     assertThat(updatedRequisition.getSupplyingFacility().getId(), is(supplyingFacility.getId()));
   }
 
@@ -231,7 +230,6 @@ public class RequisitionMapperIT {
     assertThat(rnr.getPeriod().getId(), is(processingPeriod1.getId()));
     assertThat(rnr.getId(), is(requisition.getId()));
     assertThat(rnr.getModifiedDate(), is(notNullValue()));
-    assertThat(rnr.getSubmittedDate(), is(requisition.getSubmittedDate()));
   }
 
   @Test
@@ -280,7 +278,6 @@ public class RequisitionMapperIT {
     assertThat(rnr.getId(), is(requisition.getId()));
     assertThat(rnr.getSupplyingFacility().getId(), is(supplyingFacility.getId()));
     assertThat(rnr.getModifiedDate(), is(notNullValue()));
-    assertThat(rnr.getSubmittedDate(), is(requisition.getSubmittedDate()));
   }
 
   @Test
@@ -364,5 +361,34 @@ public class RequisitionMapperIT {
 
     supervisoryNodeMapper.insert(supervisoryNode);
     return supervisoryNode;
+  }
+
+  @Test
+  public void shouldGetLWRequisitionById() {
+    Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
+    Product product = insertProduct(true, "P1");
+    RnrLineItem fullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, true), with(productCode, product.getCode())));
+    RnrLineItem nonFullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, false), with(productCode, product.getCode())));
+    fullSupplyLineItem.setRnrId(requisition.getId());
+    nonFullSupplyLineItem.setRnrId(requisition.getId());
+    lineItemMapper.insert(fullSupplyLineItem);
+    lineItemMapper.insert(nonFullSupplyLineItem);
+
+    User author = new User();
+    author.setId(1L);
+    Comment comment = new Comment(requisition.getId(), author, "A comment", null);
+    commentMapper.insert(comment);
+
+    Rnr fetchedRequisition = mapper.getLWById(requisition.getId());
+
+    assertThat(fetchedRequisition.getId(), is(requisition.getId()));
+    assertThat(fetchedRequisition.getProgram().getId(), is(equalTo(PROGRAM_ID)));
+    assertThat(fetchedRequisition.getFacility().getId(), is(equalTo(facility.getId())));
+    assertThat(fetchedRequisition.getPeriod().getId(), is(equalTo(processingPeriod1.getId())));
+    assertThat(fetchedRequisition.getModifiedBy(), is(equalTo(MODIFIED_BY)));
+    assertThat(fetchedRequisition.getStatus(), is(equalTo(INITIATED)));
+    assertThat(fetchedRequisition.getFullSupplyLineItems().size(), is(0));
+    assertThat(fetchedRequisition.getNonFullSupplyLineItems().size(), is(0));
+    assertThat(fetchedRequisition.getRegimenLineItems().size(), is(0));
   }
 }

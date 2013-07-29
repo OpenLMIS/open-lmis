@@ -7,7 +7,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -16,12 +15,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 public class ForgotPasswordPage extends Page {
 
@@ -80,8 +73,8 @@ public class ForgotPasswordPage extends Page {
   public ForgotPasswordPage(TestWebDriver driver) throws IOException {
     super(driver);
 
-    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
-    testWebDriver.setImplicitWait(10);
+    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
+    testWebDriver.setImplicitWait(1);
   }
 
 

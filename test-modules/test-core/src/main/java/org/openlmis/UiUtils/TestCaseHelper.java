@@ -12,7 +12,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.net.CookieManager;
 import java.sql.SQLException;
@@ -37,7 +37,6 @@ public class TestCaseHelper {
     String browser = getProperty("browser", DEFAULT_BROWSER);
     baseUrlGlobal = getProperty("baseurl", DEFAULT_BASE_URL);
     dburlGlobal = getProperty("dburl", DEFAULT_DB_URL);
-
 
     dbWrapper = new DBWrapper(baseUrlGlobal, dburlGlobal);
     dbWrapper.deleteData();
@@ -78,7 +77,8 @@ public class TestCaseHelper {
   }
 
 
-  protected void loadDriver(String browser) throws InterruptedException {
+  protected void loadDriver(String browser) throws InterruptedException, IOException {
+
     testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
   }
 
@@ -99,6 +99,14 @@ public class TestCaseHelper {
     dbWrapper.insertSupplyLines("N1", program, "F10");
   }
 
+    public void setupTestUserRoleRightsData(String userId, String userSIC, String vendorName, List<String> rightsList) throws IOException, SQLException {
+        dbWrapper.insertRole("store in-charge", "REQUISITION", "");
+        dbWrapper.insertRole("district pharmacist", "REQUISITION", "");
+        for (String rights : rightsList)
+            dbWrapper.assignRight("store in-charge", rights);
+        String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+        dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com", vendorName);
+    }
 
   public void setupRnRTestDataRnRForCommTrack(boolean configureGenericTemplate, String program, String user, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
@@ -158,15 +166,6 @@ public class TestCaseHelper {
     dbWrapper.insertRequisitionGroupProgramSchedule();
   }
 
-  public void setupTestUserRoleRightsData(String userId, String userSIC, String vendorName, List<String> rightsList) throws IOException, SQLException {
-    dbWrapper.insertRole("store in-charge", "REQUISITION", "");
-    dbWrapper.insertRole("district pharmacist", "REQUISITION", "");
-    for (String rights : rightsList)
-      dbWrapper.assignRight("store in-charge", rights);
-    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com", vendorName);
-  }
-
   public void setupTestRoleRightsData(String roleName, String roleType, String roleRight) throws IOException, SQLException {
     dbWrapper.insertRole(roleName, roleType, "");
     dbWrapper.assignRight(roleName, roleRight);
@@ -192,30 +191,24 @@ public class TestCaseHelper {
     setupTestDataToApproveRnR("commTrack1", "701", "commTrack", rightsList);
   }
 
-  public void setupDataForDeliveryZone(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+  public void setupDataForDeliveryZone(boolean multipleFacilityInstances, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                        String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                        String facilityCodeFirst, String facilityCodeSecond,
                                        String programFirst, String programSecond, String schedule) throws IOException, SQLException {
     dbWrapper.insertDeliveryZone(deliveryZoneCodeFirst, deliveryZoneNameFirst);
+    if(multipleFacilityInstances)
     dbWrapper.insertDeliveryZone(deliveryZoneCodeSecond, deliveryZoneNameSecond);
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeFirst);
+    dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeSecond);
+    if(multipleFacilityInstances)
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeSecond, facilityCodeSecond);
     dbWrapper.insertProcessingPeriodForDistribution(14, schedule);
     dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programFirst, schedule);
+    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programSecond, schedule);
+    if(multipleFacilityInstances)
     dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond, programSecond, schedule);
   }
 
-  public void setupDataForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(String deliveryZoneCodeFirst,
-                                       String deliveryZoneNameFirst,
-                                       String facilityCodeFirst, String facilityCodeSecond,
-                                       String programFirst, String programSecond, String schedule) throws IOException, SQLException {
-    dbWrapper.insertDeliveryZone(deliveryZoneCodeFirst, deliveryZoneNameFirst);
-    dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeFirst);
-    dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeSecond);
-    dbWrapper.insertProcessingPeriodForDistribution(14, schedule);
-    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programFirst, schedule);
-    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programSecond, schedule);
-  }
 
   public void addOnDataSetupForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(String deliveryZoneCodeFirst,
                                                                                                String facilityCodeThird,
@@ -226,9 +219,9 @@ public class TestCaseHelper {
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeFourth);
   }
 
-  public void setupTestDataToInitiateRnRForDistribution(String facilityCode1, String facilityCode2,boolean configureTemplate, String program, String user, String userId,
+  public void setupTestDataToInitiateRnRAndDistribution(String facilityCode1, String facilityCode2, boolean configureTemplate, String program, String user, String userId,
                                                         String vendorName, List<String> rightsList, String programCode,
-  String geoLevel1, String geoLevel2, String parentGeoLevel) throws IOException, SQLException {
+                                                        String geoLevel1, String geoLevel2, String parentGeoLevel) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertGeographicZone(geoLevel1,geoLevel1,parentGeoLevel);
     dbWrapper.insertFacilitiesWithDifferentGeoZones(facilityCode1, facilityCode2,geoLevel2,geoLevel1);
@@ -299,7 +292,7 @@ public class TestCaseHelper {
         dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
         dbWrapper.insertSchedule(schedule, "Monthly", "Month");
         setupTestRoleRightsData(roleNmae,"ALLOCATION","MANAGE_DISTRIBUTION");
-        setupDataForDeliveryZone(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
+        setupDataForDeliveryZone(true,deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
     }
 
     public void OpenIndexedDB(String dbName)

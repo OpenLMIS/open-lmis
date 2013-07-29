@@ -12,5 +12,5 @@ public interface RecordHandler<I extends Importable> {
 
   public void execute(I importable, int rowNumber, AuditFields auditFields);
 
-  public void postProcess();
+  public void postProcess(AuditFields auditFields);
 }

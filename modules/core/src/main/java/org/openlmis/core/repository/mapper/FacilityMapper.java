@@ -12,6 +12,7 @@ import org.openlmis.core.domain.FacilityOperator;
 import org.openlmis.core.domain.FacilityType;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -20,16 +21,16 @@ public interface FacilityMapper {
   @Insert("Insert into facilities(code, name, description, gln, mainPhone, fax, address1, address2, " +
     "geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById," +
     "coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, online," +
-    "satellite, satelliteParentId, hasElectricity, hasElectronicScc, hasElectronicDar, active," +
-    "goLiveDate, goDownDate, comment, dataReportable, createdDate,createdBy, modifiedBy, modifiedDate) " +
+    "satellite, parentFacilityId, hasElectricity, hasElectronicScc, hasElectronicDar, active," +
+    "goLiveDate, goDownDate, comment, virtualFacility, dataReportable, createdDate,createdBy, modifiedBy, modifiedDate) " +
     "values(#{code}, #{name}, #{description}, #{gln}, #{mainPhone}, #{fax}, #{address1}, #{address2}," +
     "#{geographicZone.id}," +
     "#{facilityType.id}," +
     "#{catchmentPopulation}, #{latitude}, #{longitude}, #{altitude}," +
     "#{operatedBy.id}," +
     "#{coldStorageGrossCapacity}, #{coldStorageNetCapacity}, #{suppliesOthers}, #{sdp},#{online}," +
-    "#{satellite}, #{satelliteParentId}, #{hasElectricity}, #{hasElectronicScc}, #{hasElectronicDar}, #{active}," +
-    "#{goLiveDate}, #{goDownDate}, #{comment}, #{dataReportable},COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
+    "#{satellite}, #{parentFacilityId}, #{hasElectricity}, #{hasElectronicScc}, #{hasElectronicDar}, #{active}," +
+    "#{goLiveDate}, #{goDownDate}, #{comment}, #{virtualFacility}, #{dataReportable},COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
     "COALESCE(#{modifiedDate}, NOW()))")
   @Options(useGeneratedKeys = true)
   Integer insert(Facility facility);
@@ -103,8 +104,9 @@ public interface FacilityMapper {
     "longitude = #{longitude}, altitude = #{altitude}," +
     "operatedById = #{operatedBy.id}," +
     "coldStorageGrossCapacity = #{coldStorageGrossCapacity}, coldStorageNetCapacity = #{coldStorageNetCapacity}," +
-    "suppliesOthers = #{suppliesOthers}, sdp = #{sdp}, online = #{online}, satellite = #{satellite}, satelliteParentId = #{satelliteParentId}," +
-    "hasElectricity = #{hasElectricity}, hasElectronicScc = #{hasElectronicScc}, hasElectronicDar = #{hasElectronicDar}, active = #{active}," +
+    "suppliesOthers = #{suppliesOthers}, sdp = #{sdp}, online = #{online}, satellite = #{satellite}, parentFacilityId = #{parentFacilityId}," +
+    "hasElectricity = #{hasElectricity}, hasElectronicScc = #{hasElectronicScc}, " +
+    "hasElectronicDar = #{hasElectronicDar}, active = #{active}, virtualFacility = #{virtualFacility}, " +
     "goLiveDate = #{goLiveDate}, goDownDate = #{goDownDate}," +
     "comment = #{comment}, dataReportable = #{dataReportable}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(Facility facility);
@@ -133,9 +135,14 @@ public interface FacilityMapper {
   })
   List<Facility> getFacilitiesBy(@Param(value = "programId") Long programId, @Param(value = "requisitionGroupIds") String requisitionGroupIds);
 
+  @Select("SELECT id, code, name FROM facilities WHERE virtualFacility = #{virtualFacility} AND " +
+    "(LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%' " +
+    "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%')")
+  List<Facility> searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(@Param("searchParam") String searchParam, @Param("virtualFacility") Boolean includeVirtualFacility);
+
   @Select("SELECT id, code, name FROM facilities WHERE " +
-    "LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%' " +
-    "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%'")
+    "(LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%' " +
+    "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%')")
   List<Facility> searchFacilitiesByCodeOrName(String searchParam);
 
 
@@ -160,7 +167,7 @@ public interface FacilityMapper {
   })
   List<Facility> getAllInRequisitionGroups(@Param("requisitionGroupIds") String requisitionGroupIds);
 
-  @Select("SELECT * from facilities WHERE code=#{code}")
+  @Select("SELECT * from facilities WHERE LOWER(code)=LOWER(#{code})")
   Facility getByCode(String code);
 
   @Select({"SELECT F.geographicZoneId, F.name, F.code, F.id, F.catchmentPopulation FROM facilities F INNER JOIN delivery_zone_members DZM ON F.id = DZM.facilityId",
@@ -174,4 +181,12 @@ public interface FacilityMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getById"))
   })
   List<Facility> getAllInDeliveryZoneFor(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
+
+  @Select({"SELECT f.id as id, f.code as code FROM facilities f INNER JOIN programs_supported ps ON " +
+    "f.id = ps.facilityId WHERE ps.modifiedDate = #{modifiedDate}"})
+  @Results(value =
+    {@Result(property = "supportedPrograms", column = "id", javaType = List.class,
+      many = @Many(select = "org.openlmis.core.repository.mapper.ProgramSupportedMapper.getAllByFacilityId"))})
+  List<Facility> getAllByProgramSupportedModifiedDate(Date modifiedDate);
+
 }

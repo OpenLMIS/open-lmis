@@ -257,7 +257,6 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(homeMenuItem);
     testWebDriver.keyPress(homeMenuItem);
-
     return new HomePage(testWebDriver);
   }
 
@@ -456,7 +455,10 @@ public class InitiateRnRPage extends RequisitionPage {
     String totalCostNonFullSupplyFooterValue = testWebDriver.getText(totalCostNonFullSupplyFooter);
     BigDecimal actualTotalCost = new BigDecimal(parseFloat(totalCostFullSupplyFooterValue.trim().substring(1)) + parseFloat(totalCostNonFullSupplyFooterValue.trim().substring(1))).setScale(2, BigDecimal.ROUND_HALF_UP);
     assertEquals(actualTotalCost.toString(), totalCostFooter.getText().trim().substring(1));
-    //assertEquals(totalCostFooter.getText().trim().substring(1), new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+    fullSupplyTab.click();
+    testWebDriver.sleep(500);
+    actualTotalCostFullSupply = calculateTotalCost();
+    assertEquals(totalCostFooter.getText().trim().substring(1), new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
     testWebDriver.sleep(500);
   }
 

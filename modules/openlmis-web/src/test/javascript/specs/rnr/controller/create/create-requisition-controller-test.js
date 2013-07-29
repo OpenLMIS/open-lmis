@@ -6,7 +6,7 @@
 
 describe('CreateRequisitionController', function () {
   var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns, regimenColumnList,
-    lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate;
+      lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate;
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
@@ -46,9 +46,11 @@ describe('CreateRequisitionController', function () {
     ];
 
     regimenColumnList = [
-      {"testField": "test"}
+      {name: "patientsOnTreatment", visible: true},
+      {name: "patientsToInitiateTreatment", visible: false},
+      {name: "patientsStoppedTreatment", visible: true}
     ];
-    regimenTemplate = {regimenColumns: regimenColumnList};
+    regimenTemplate = {columns: regimenColumnList};
 
     lossesAndAdjustmentTypes = {"lossAdjustmentTypes": {"name": "damaged"}};
 
@@ -86,8 +88,11 @@ describe('CreateRequisitionController', function () {
       {right: 'AUTHORIZE_REQUISITION'}
     ];
 
-    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition, rnrColumns: rnrColumns, regimenTemplate: regimenTemplate,
-      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
+    var pageSize = "2";
+    ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition,
+      rnrColumns: rnrColumns, regimenTemplate: regimenTemplate, currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes,
+      facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams,
+      $rootScope: rootScope, localStorageService: localStorageService, pageSize: pageSize});
 
   }));
 
@@ -103,6 +108,13 @@ describe('CreateRequisitionController', function () {
 
   it('should get facility approved products', function () {
     expect(facilityApprovedProducts).toEqual(scope.facilityApprovedProducts);
+  });
+
+  it('should set visible columns for regimen', function () {
+    expect(scope.visibleRegimenColumns).toEqual([
+      {name: "patientsOnTreatment", visible: true},
+      {name: "patientsStoppedTreatment", visible: true}
+    ])
   });
 
   it('should save work in progress for rnr', function () {
@@ -307,7 +319,8 @@ describe('CreateRequisitionController', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "INITIATED"};
 
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenTemplate: regimenTemplate,
-      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
+      currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,
+      requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(scope.formDisabled).toEqual(false);
   });
@@ -316,7 +329,8 @@ describe('CreateRequisitionController', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "SUBMITTED"};
 
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenTemplate: regimenTemplate,
-      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
+      currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,
+      requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(scope.formDisabled).toEqual(false);
   });
@@ -324,14 +338,16 @@ describe('CreateRequisitionController', function () {
   it('should set disable flag if rnr is not initiated/submitted', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "some random status"};
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenTemplate: regimenTemplate,
-      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
+      currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,
+      requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
     expect(scope.formDisabled).toEqual(true);
   });
 
   it('should make rnr in scope as Rnr Instance', function () {
     var spyRnr = spyOn(window, 'Rnr').andCallThrough();
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition, rnrColumns: rnrColumns, regimenTemplate: regimenTemplate,
-      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
+      currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,
+      requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(scope.rnr instanceof Rnr).toBeTruthy();
     expect(spyRnr).toHaveBeenCalledWith(mockedRequisition, rnrColumns);

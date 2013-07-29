@@ -7,16 +7,23 @@
 package org.openlmis.shipment.service;
 
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.ProductService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
+import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.repository.mapper.RequisitionMapper;
+import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
@@ -38,17 +45,54 @@ public class ShipmentServiceTest {
   private ShipmentRepository shipmentRepository;
   @Mock
   private OrderService orderService;
+  @Mock
+  private RequisitionService requisitionService;
+  @Mock
+  private ProductService productService;
   @InjectMocks
   private ShipmentService shipmentService;
 
+  @Rule
+  public ExpectedException exException = ExpectedException.none();
+
   @Test
   public void shouldInsertShipment() throws Exception {
-    ShippedLineItem shippedLineItem = mock(ShippedLineItem.class);
+    ShippedLineItem shippedLineItem = spy(new ShippedLineItem(1l, "P10", 500));
+    when(requisitionService.getLWById(1l)).thenReturn(new Rnr());
+    when(productService.getIdForCode("P10")).thenReturn(1l);
 
     shipmentService.insertShippedLineItem(shippedLineItem);
 
     verify(shippedLineItem).validateForSave();
+    verify(requisitionService).getLWById(1l);
+    verify(productService).getIdForCode("P10");
     verify(shipmentRepository).insertShippedLineItem(shippedLineItem);
+  }
+
+  @Test
+  public void shouldNotInsertShipmentIfRnrIdIsNotValid() throws Exception {
+    ShippedLineItem shippedLineItem = new ShippedLineItem(1l, "P10", 500);
+    when(requisitionService.getLWById(1l)).thenReturn(null);
+    when(productService.getIdForCode("P10")).thenReturn(1l);
+
+
+    exException.expect(DataException.class);
+    exException.expectMessage("error.unknown.order");
+
+    shipmentService.insertShippedLineItem(shippedLineItem);
+  }
+
+  @Test
+  public void shouldNotInsertShipmentIfProductCodeIsNotValid() throws Exception {
+    ShippedLineItem shippedLineItem = new ShippedLineItem(1l, "P10", 500);
+    when(requisitionService.getLWById(1l)).thenReturn(new Rnr());
+    when(productService.getIdForCode("P10")).thenReturn(null);
+
+
+    exException.expect(DataException.class);
+    exException.expectMessage("error.unknown.product");
+
+    shipmentService.insertShippedLineItem(shippedLineItem);
   }
 
   @Test

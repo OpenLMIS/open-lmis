@@ -4,17 +4,18 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function CreateRequisitionController($scope, requisition, currency, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $rootScope, $dialog, messageService) {
+function CreateRequisitionController($scope, requisition, currency, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $rootScope, $dialog, messageService) {
   $scope.visibleTab = $routeParams.supplyType;
   $scope.baseUrl = "/create-rnr/" + $routeParams.rnr + '/' + $routeParams.facility + '/' + $routeParams.program;
-
+  $scope.pageSize = pageSize;
   $scope.rnr = requisition;
   $scope.allTypes = lossesAndAdjustmentsTypes;
   $scope.facilityApprovedProducts = facilityApprovedProducts;
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.programRnrColumnList = rnrColumns;
   $scope.requisitionRights = requisitionRights;
-  $scope.regimenColumns = regimenTemplate ? regimenTemplate.regimenColumns : [];
+  $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
+  $scope.visibleRegimenColumns = _.where($scope.regimenColumns, {'visible': true});
   $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
   $scope.errorPages = {fullSupply: [], nonFullSupply: []};
   $scope.fullScreen = false;
@@ -34,6 +35,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     else {
       $scope.fullScreen ? angular.element('.toggleFullScreen').hide() : angular.element('.toggleFullScreen').show();
     }
+    $scope.fullScreen ? angular.element('.print-button').css('opacity', '1.0') : angular.element('.print-button').css('opacity', '0');
   });
 
   $scope.fillPagedGridData = function () {
@@ -159,13 +161,15 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   function validateRegimenLineItems() {
     var setError = false;
     $.each($scope.rnr.regimenLineItems, function (index, regimenLineItem) {
-      if (isUndefined(regimenLineItem.patientsOnTreatment) || isUndefined(regimenLineItem.patientsStoppedTreatment) || isUndefined(regimenLineItem.patientsToInitiateTreatment)) {
-        setError = true;
-        $scope.regimenLineItemInValid = true;
-        return;
-      }
+      $.each($scope.visibleRegimenColumns, function (index, regimenColumn) {
+        if (regimenColumn.name != "remarks" && isUndefined(regimenLineItem[regimenColumn.name])) {
+          setError = true;
+          $scope.regimenLineItemInValid = true;
+          return;
+        }
+      });
     });
-    if(!setError) $scope.regimenLineItemInValid = false;
+    if (!setError) $scope.regimenLineItemInValid = false;
   }
 
   var submitValidatedRnr = function () {
@@ -357,6 +361,16 @@ CreateRequisitionController.resolve = {
     $timeout(function () {
       ReferenceData.get({}, function (data) {
         deferred.resolve(data.currency);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  pageSize: function ($q, $timeout, LineItemPageSize) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      LineItemPageSize.get({}, function (data) {
+        deferred.resolve(data.pageSize);
       }, {});
     }, 100);
     return deferred.promise;

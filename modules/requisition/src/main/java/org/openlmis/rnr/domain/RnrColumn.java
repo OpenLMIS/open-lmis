@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 public class RnrColumn extends Column {
 
   private int position;
@@ -32,7 +32,7 @@ public class RnrColumn extends Column {
   }
 
   @Override
-  public Integer columnWidth() {
+  public Integer getColumnWidth() {
     if (this.name.equals("product")) {
       return 125;
     }
@@ -43,6 +43,26 @@ public class RnrColumn extends Column {
       return 100;
     }
     return 40;
+  }
+
+  @Override
+  public ColumnType getColumnType() {
+    if (this.getName().equals("price") || this.getName().equals("cost")) {
+      return ColumnType.CURRENCY;
+    }
+    if (this.getName().equals("product") || this.getName().equals("dispensingUnit") || this.getName().equals("productCode")) {
+      return ColumnType.TEXT;
+    }
+    return ColumnType.NUMERIC;
+  }
+
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null) return false;
+    if (!(o instanceof RnrColumn)) return false;
+    RnrColumn rnrColumn = (RnrColumn) o;
+    return (this.name.equals(rnrColumn.getName()));
   }
 
 }

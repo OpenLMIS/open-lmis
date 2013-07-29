@@ -2,12 +2,11 @@ package org.openlmis.web.controller;
 
 import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
-import org.openlmis.core.domain.RegimenColumn;
-import org.openlmis.core.domain.RegimenTemplate;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProgramService;
-import org.openlmis.core.service.RegimenColumnService;
 import org.openlmis.core.service.RegimenService;
+import org.openlmis.rnr.domain.RegimenTemplate;
+import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.web.form.RegimenFormDTO;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,11 +45,10 @@ public class RegimenController extends BaseController {
   @RequestMapping(value = "/programId/{programId}/regimens", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REGIMEN_TEMPLATE')")
   public ResponseEntity<OpenLmisResponse> save(@PathVariable Long programId, @RequestBody RegimenFormDTO regimenFormDTO, HttpServletRequest request) {
-      regimenService.save(regimenFormDTO.getRegimens(), loggedInUserId(request));
-      RegimenTemplate regimenTemplate = regimenFormDTO.getRegimenTemplate();
-      regimenTemplate.setProgramId(programId);
-      regimenColumnService.save(regimenTemplate, loggedInUserId(request));
-      return success(REGIMENS_SAVED_SUCCESSFULLY);
+    regimenService.save(regimenFormDTO.getRegimens(), loggedInUserId(request));
+    RegimenTemplate regimenTemplate = new RegimenTemplate(programId, regimenFormDTO.getRegimenColumnList());
+    regimenColumnService.save(regimenTemplate, loggedInUserId(request));
+    return success(REGIMENS_SAVED_SUCCESSFULLY);
   }
 
   @RequestMapping(value = "/programId/{programId}/regimens", method = GET, headers = ACCEPT_JSON)

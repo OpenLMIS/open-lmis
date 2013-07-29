@@ -1,8 +1,9 @@
-package org.openlmis.core.repository;
+package org.openlmis.rnr.repository;
 
-import org.openlmis.core.domain.RegimenColumn;
-import org.openlmis.core.domain.RegimenTemplate;
-import org.openlmis.core.repository.mapper.RegimenColumnMapper;
+import org.openlmis.rnr.domain.Column;
+import org.openlmis.rnr.domain.RegimenColumn;
+import org.openlmis.rnr.domain.RegimenTemplate;
+import org.openlmis.rnr.repository.mapper.RegimenColumnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -23,13 +24,13 @@ public class RegimenColumnRepository {
   }
 
   public void save(RegimenTemplate regimenTemplate, Long userId) {
-    for (RegimenColumn regimenColumn : regimenTemplate.getRegimenColumns()) {
+    for (Column regimenColumn : regimenTemplate.getColumns()) {
       regimenColumn.setModifiedBy(userId);
       if (regimenColumn.getId() == null) {
         regimenColumn.setCreatedBy(userId);
-        mapper.insert(regimenColumn, regimenTemplate.getProgramId());
+        mapper.insert((RegimenColumn) regimenColumn, regimenTemplate.getProgramId());
       }
-      mapper.update(regimenColumn);
+      mapper.update((RegimenColumn) regimenColumn);
     }
   }
 }

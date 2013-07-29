@@ -138,6 +138,9 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//div/div[4]/div/ng-include/div/div[1]/div[2]/div[2]/div/label")
   private static WebElement addedDeliveryZoneProgramLabel;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'No matches found for')]")
+  private static WebElement noMatchFoundLink;
+
   public UserPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -172,20 +175,29 @@ public class UserPage extends Page {
 
   }
 
+  public void enterUserHomeFacility(String facilityCode)
+  {
+    searchFacility.clear();
+    testWebDriver.handleScrollByPixels(0, 5000);
+    searchFacility.sendKeys(facilityCode);
+    for (int i = 0; i < facilityCode.length(); i++) {
+      searchFacility.sendKeys(Keys.ARROW_LEFT);
+      searchFacility.sendKeys(Keys.DELETE);
+    }
+    searchFacility.sendKeys(facilityCode);
+    testWebDriver.sleep(1000);
+  }
+
+  public void verifyNoMatchedFoundMessage()
+  {
+    SeleneseTestNgHelper.assertTrue("No match found link should show up",noMatchFoundLink.isDisplayed());
+  }
+
   public void enterMyFacilityAndMySupervisedFacilityData(String firstName, String lastName, String facilityCode, String program1, String node, String role, String roleType) {
     testWebDriver.waitForElementToAppear(searchFacility);
     if (!roleType.equals("ADMIN")) {
-      searchFacility.clear();
-      testWebDriver.handleScrollByPixels(0, 5000);
-      searchFacility.sendKeys(facilityCode);
-      for (int i = 0; i < facilityCode.length(); i++) {
-        searchFacility.sendKeys(Keys.ARROW_LEFT);
-        searchFacility.sendKeys(Keys.DELETE);
-      }
-      searchFacility.sendKeys(facilityCode);
-      testWebDriver.sleep(1000);
+      enterUserHomeFacility(facilityCode);
       selectFacility.click();
-
 
       testWebDriver.selectByVisibleText(programsMyFacility, program1);
       rolesInputFieldMyFacility.click();

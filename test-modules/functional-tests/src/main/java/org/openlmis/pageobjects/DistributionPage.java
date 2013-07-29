@@ -7,6 +7,7 @@
 package org.openlmis.pageobjects;
 
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -41,6 +42,9 @@ public class DistributionPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//a[contains(text(),'Input facility data')]")
   private static WebElement inputFacilityDataLink;
 
+  @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']")
+  private static WebElement saveSuccessMessageDiv;
+
 
   public DistributionPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -74,8 +78,24 @@ public class DistributionPage extends RequisitionPage {
   public void clickInitiateDistribution() {
     testWebDriver.waitForElementToAppear(initiateDistributionButton);
     initiateDistributionButton.click();
+     testWebDriver.sleep(200);
+  }
+
+  public void verifyDownloadSuccessFullMessage(String deliveryZone, String program, String period)
+  {
+    testWebDriver.sleep(200);
+    SeleneseTestNgHelper.assertTrue("Data download successful message should show up",saveSuccessMessageDiv.getText().equals("Data for the selected "+deliveryZone+", "+program+", "+period+" has been downloaded"));
 
   }
+
+  public void verifyDataAlreadyCachedMessage(String deliveryZone, String program, String period)
+  {
+    testWebDriver.sleep(200);
+    SeleneseTestNgHelper.assertTrue("Data already cached  message should show up",saveSuccessMessageDiv.getText().equals("The data for the selected "+deliveryZone+", "+program+", "+period+" is already cached"));
+
+  }
+
+
 
   public List<WebElement> getAllSelectOptionsFromDeliveryZone() {
     testWebDriver.waitForElementToAppear(selectDeliveryZoneSelectBox);
@@ -84,6 +104,7 @@ public class DistributionPage extends RequisitionPage {
   }
 
   public List<WebElement> getAllSelectOptionsFromProgram() {
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(selectProgramSelectBox);
     List<WebElement> options = testWebDriver.getOptions(selectProgramSelectBox);
     return options;

@@ -43,8 +43,8 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(RestService.class)
-public class RestServiceTest {
+@PrepareForTest(RestRequisitionService.class)
+public class RestRequisitionServiceTest {
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -59,7 +59,7 @@ public class RestServiceTest {
   private OrderService orderService;
 
   @InjectMocks
-  RestService service;
+  RestRequisitionService service;
   Rnr requisition;
   Report report;
   User user;

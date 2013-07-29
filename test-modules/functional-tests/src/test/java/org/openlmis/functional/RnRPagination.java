@@ -13,6 +13,7 @@ import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.InitiateRnRPage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ViewRequisitionPage;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -36,7 +37,7 @@ public class RnRPagination extends TestCaseHelper {
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void testRnRPaginationAndSpecificDisplayOrder(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
-    dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 21, false);
+    dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, false);
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
     List<String> rightsList = new ArrayList<String>();
@@ -58,20 +59,20 @@ public class RnRPagination extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     testWebDriver.sleep(2000);
-    verifyNumberOfPageLinks(21, 20);
+    verifyNumberOfPageLinks(11, 10);
     verifyNextAndLastLinksEnabled();
     verifyPreviousAndFirstLinksDisabled();
-    verifyDisplayOrderFullSupply(20);
+    verifyDisplayOrderFullSupply(10);
 
-    initiateRnRPage.PopulateMandatoryFullSupplyDetails(21, 20);
+    initiateRnRPage.PopulateMandatoryFullSupplyDetails(11, 10);
 
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
     assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[1]/tr[1]/td").getText(), "Antibiotics");
     verifyPageLinksFromLastPage();
 
-    initiateRnRPage.addMultipleNonFullSupplyLineItems(21, false);
-    verifyDisplayOrderNonFullSupply(20);
-    verifyNumberOfPageLinks(21, 20);
+    initiateRnRPage.addMultipleNonFullSupplyLineItems(11, false);
+    verifyDisplayOrderNonFullSupply(10);
+    verifyNumberOfPageLinks(11, 10);
     verifyPreviousAndFirstLinksDisabled();
     verifyNextAndLastLinksEnabled();
 
@@ -87,10 +88,10 @@ public class RnRPagination extends TestCaseHelper {
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.clickRnRList();
 
-    verifyNumberOfPageLinks(21, 20);
+    verifyNumberOfPageLinks(11, 10);
     verifyNextAndLastLinksEnabled();
     verifyPreviousAndFirstLinksDisabled();
-    verifyDisplayOrderFullSupplyOnViewRequisition(11);
+    verifyDisplayOrderFullSupplyOnViewRequisition(10);
 
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
     assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[1]/tr[1]/td").getText(), "Antibiotics");
@@ -98,9 +99,9 @@ public class RnRPagination extends TestCaseHelper {
 
     viewRequisitionPage.clickNonFullSupplyTab();
 
-    verifyDisplayOrderNonFullSupplyOnViewRequisition(11);
+    verifyDisplayOrderNonFullSupplyOnViewRequisition(10);
 
-    verifyNumberOfPageLinks(21, 20);
+    verifyNumberOfPageLinks(11, 10);
     verifyPreviousAndFirstLinksDisabled();
     verifyNextAndLastLinksEnabled();
 
@@ -167,11 +168,11 @@ public class RnRPagination extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     testWebDriver.sleep(2000);
-    verifyCategoryDisplayOrderFullSupply(11);
+    verifyCategoryDisplayOrderFullSupply(10);
 
 
     initiateRnRPage.addMultipleNonFullSupplyLineItems(11, true);
-    verifyCategoryDisplayOrderNonFullSupply(11);
+    verifyCategoryDisplayOrderNonFullSupply(10);
   }
 
 //  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")

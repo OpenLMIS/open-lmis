@@ -41,7 +41,7 @@ public class ProgramSupportedRepository {
 
   public void addSupportedProgram(ProgramSupported programSupported) {
     try {
-      programSupportedMapper.add(programSupported);
+      programSupportedMapper.insert(programSupported);
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("error.facility.program.mapping.exists");
     } catch (DataIntegrityViolationException integrityViolationException) {
@@ -73,7 +73,7 @@ public class ProgramSupportedRepository {
       ps.setFacilityId(facility.getId());
       ps.setModifiedBy(facility.getModifiedBy());
       ps.setCreatedBy(facility.getModifiedBy());
-      programSupportedMapper.add(ps);
+      programSupportedMapper.insert(ps);
     }
     for (ProgramSupported ps : previouslySupportedPrograms) {
       programSupportedMapper.delete(facility.getId(), ps.getProgram().getId());

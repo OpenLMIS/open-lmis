@@ -7,6 +7,7 @@
 package org.openlmis.functional;
 
 
+import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -14,7 +15,9 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ForgotPasswordPage;
+import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openqa.selenium.NoSuchElementException;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -31,7 +34,7 @@ public class ForgotPassword extends TestCaseHelper {
 
   ForgotPasswordPage forgotPasswordPage;
 
-  @BeforeMethod(groups = {"smoke", "functional2"})
+  @BeforeMethod(groups = "functional2")
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -108,18 +111,6 @@ public class ForgotPassword extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyValidUserNameValidEmail(String userName,  String email) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
-    verifyElementsOnForgotPasswordScreen(forgotPasswordPage);
-    forgotPasswordPage.enterEmail(email);
-    forgotPasswordPage.enterUserName(userName);
-    forgotPasswordPage.clickSubmit();
-    verifyEmailSendSuccessfullyMessage(forgotPasswordPage);
-
-  }
-
   @Given("^I am on forgot password screen$")
   public void onForgotPageAndVerifyElements() throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -146,7 +137,6 @@ public class ForgotPassword extends TestCaseHelper {
   public void verifyEmailSendMessage() throws Exception {
     verifyEmailSendSuccessfullyMessage(forgotPasswordPage);
   }
-
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testVerifyBlankEmailAndUserName(String userName, String email) throws Exception {
@@ -183,10 +173,17 @@ public class ForgotPassword extends TestCaseHelper {
   }
 
 
-  @AfterMethod(groups = {"smoke", "functional2"})
+  @AfterMethod(groups = "functional2")
+  @After
   public void tearDown() throws Exception {
-    dbWrapper.deleteData();
-    dbWrapper.closeConnection();
+    try{
+    if(!testWebDriver.getElementById("username").isDisplayed()) {
+      HomePage homePage = new HomePage(testWebDriver);
+      homePage.logout(baseUrlGlobal);
+    }
+    }catch(NoSuchElementException e){}
+      dbWrapper.deleteData();
+      dbWrapper.closeConnection();
   }
 
 

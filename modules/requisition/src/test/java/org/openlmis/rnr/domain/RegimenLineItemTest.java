@@ -8,8 +8,6 @@ package org.openlmis.rnr.domain;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.openlmis.core.domain.RegimenColumn;
-import org.openlmis.core.domain.RegimenTemplate;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RegimenColumnBuilder;
 

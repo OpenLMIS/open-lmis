@@ -1,13 +1,19 @@
 package org.openlmis.core.service;
 
+import org.apache.log4j.Logger;
+import org.ict4h.atomfeed.server.service.EventService;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.dto.ProgramSupportedEventDTO;
+import org.openlmis.core.event.ProgramSupportedEvent;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,18 +29,34 @@ public class ProgramSupportedService {
   FacilityService facilityService;
 
   @Autowired
+  EventService eventService;
+
+
+  @Autowired
   FacilityProgramProductService facilityProgramProductService;
+
+  Logger logger = Logger.getLogger(ProgramSupportedService.class);
+
 
   public List<ProgramSupported> getAllByFacilityId(Long facilityId) {
     return repository.getAllByFacilityId(facilityId);
   }
 
-  public void addSupportedProgram(ProgramSupported programSupported) {
-    repository.addSupportedProgram(programSupported);
+  public void updateSupportedPrograms(Facility facility) {
+    Facility facilityForNotification = cloneFacility(facility);
+    repository.updateSupportedPrograms(facility);
+    notifyProgramSupportedUpdated(facilityForNotification);
   }
 
-  public void updateSupportedPrograms(Facility facility) {
-    repository.updateSupportedPrograms(facility);
+  private Facility cloneFacility(Facility facility) {
+    Facility facilityForNotification = new Facility();
+    facilityForNotification.setCode(facility.getCode());
+    ArrayList<ProgramSupported> supportedPrograms = new ArrayList<>();
+    for (ProgramSupported programSupported : facility.getSupportedPrograms()) {
+      supportedPrograms.add(programSupported);
+    }
+    facilityForNotification.setSupportedPrograms(supportedPrograms);
+    return facilityForNotification;
   }
 
   public ProgramSupported getFilledByFacilityIdAndProgramId(Long facilityId, Long programId) {
@@ -47,24 +69,22 @@ public class ProgramSupportedService {
     return repository.getByFacilityIdAndProgramId(facilityId, programId);
   }
 
-  public void updateSupportedProgram(ProgramSupported programSupported) {
-    repository.updateSupportedProgram(programSupported);
-  }
-
   public void uploadSupportedProgram(ProgramSupported programSupported) {
     programSupported.isValid();
 
     Facility facility = new Facility();
     facility.setCode(programSupported.getFacilityCode());
+
     facility = facilityService.getByCode(facility);
     programSupported.setFacilityId(facility.getId());
+
     Program program = programService.getByCode(programSupported.getProgram().getCode());
     programSupported.setProgram(program);
 
     if (programSupported.getId() == null) {
-      addSupportedProgram(programSupported);
+      repository.addSupportedProgram(programSupported);
     } else {
-      updateSupportedProgram(programSupported);
+      repository.updateSupportedProgram(programSupported);
     }
   }
 
@@ -92,5 +112,15 @@ public class ProgramSupportedService {
     if (facility == null)
       throw new DataException("error.facility.code.invalid");
     return facility;
+  }
+
+  public void notifyProgramSupportedUpdated(Facility facility) {
+    try {
+      ProgramSupportedEventDTO programSupportedEventDTO = new ProgramSupportedEventDTO(
+        facility.getCode(), facility.getSupportedPrograms());
+      eventService.notify(new ProgramSupportedEvent(programSupportedEventDTO));
+    } catch (URISyntaxException e) {
+      logger.error("Failed to generate program supported event feed", e);
+    }
   }
 }

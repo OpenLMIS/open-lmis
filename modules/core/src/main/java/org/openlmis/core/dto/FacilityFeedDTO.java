@@ -5,13 +5,15 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Vendor;
 
 import java.util.Date;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@JsonSerialize(include = NON_EMPTY)
 public class FacilityFeedDTO extends BaseFeedDTO {
 
   private Long id;
@@ -70,7 +72,9 @@ public class FacilityFeedDTO extends BaseFeedDTO {
 
   private boolean satelliteFacility;
 
-  private Integer satelliteParentID;
+  private boolean virtualFacility;
+
+  private Long parentFacilityId;
 
   private String comments;
 
@@ -96,22 +100,23 @@ public class FacilityFeedDTO extends BaseFeedDTO {
     this.latitude = facility.getLatitude();
     this.longitude = facility.getLongitude();
     this.altitude = facility.getAltitude();
-    this.operatedBy = (facility.getOperatedBy() != null) ? facility.getOperatedBy().getText() : "";
+    this.operatedBy = (facility.getOperatedBy() != null) ? facility.getOperatedBy().getText() : null;
     this.coldStorageGrossCapacity = facility.getColdStorageGrossCapacity();
     this.coldStorageNetCapacity = facility.getColdStorageNetCapacity();
-    this.suppliesOthers = (facility.getSuppliesOthers() != null)?facility.getSuppliesOthers():false;
     this.isSDP = facility.getSdp();
-    this.hasElectricity = (facility.getHasElectricity() != null)?facility.getHasElectricity():false;
-    this.isOnline = (facility.getOnline() != null)?facility.getOnline():false;
-    this.hasElectronicSCC = (facility.getHasElectronicScc() != null)?facility.getHasElectronicScc():false;
-    this.hasElectronicDAR = (facility.getHasElectronicDar() != null)?facility.getHasElectronicDar():false;
+    this.isOnline = (facility.getOnline() != null) ? facility.getOnline() : false;
+    this.suppliesOthers = (facility.getSuppliesOthers() != null) ? facility.getSuppliesOthers() : false;
+    this.hasElectricity = (facility.getHasElectricity() != null) ? facility.getHasElectricity() : false;
+    this.hasElectronicSCC = (facility.getHasElectronicScc() != null) ? facility.getHasElectronicScc() : false;
+    this.hasElectronicDAR = (facility.getHasElectronicDar() != null) ? facility.getHasElectronicDar() : false;
+    this.satelliteFacility = (facility.getSatellite() != null) ? facility.getSatellite() : false;
     this.active = facility.getActive();
     this.goLiveDate = facility.getGoLiveDate();
     this.goDownDate = facility.getGoDownDate();
-    this.satelliteFacility = (facility.getSatellite() != null)?facility.getSatellite():false;
-    this.satelliteParentID = facility.getSatelliteParentId();
+    this.parentFacilityId = facility.getParentFacilityId();
+    this.virtualFacility = (facility.getVirtualFacility() != null) ? facility.getVirtualFacility() : false;
     this.comments = facility.getComment();
-    this.doNotDisplay = false; // TODO : fill this
+    this.doNotDisplay = facility.getDataReportable();
     this.modifiedDate = facility.getModifiedDate();
   }
 

@@ -17,7 +17,8 @@ public class ProgramSupportedEvent extends Event {
 
   }
 
-  public ProgramSupportedEvent(String uuid, String title, DateTime timeStamp, String uriString, String serializedContents, String category) throws URISyntaxException {
+  public ProgramSupportedEvent(String uuid, String title, DateTime timeStamp, String uriString,
+                               String serializedContents, String category) throws URISyntaxException {
     super(uuid, title, timeStamp, uriString, serializedContents, category);
   }
 }

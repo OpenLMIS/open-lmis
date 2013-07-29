@@ -17,7 +17,7 @@ import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.restapi.response.RestResponse;
-import org.openlmis.restapi.service.RestService;
+import org.openlmis.restapi.service.RestRequisitionService;
 import org.openlmis.rnr.domain.Rnr;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -29,21 +29,21 @@ import java.security.Principal;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.openlmis.restapi.controller.RestController.RNR;
-import static org.openlmis.restapi.controller.RestController.UNEXPECTED_EXCEPTION;
+import static org.openlmis.restapi.controller.RestRequisitionController.RNR;
+import static org.openlmis.restapi.controller.RestRequisitionController.UNEXPECTED_EXCEPTION;
 import static org.openlmis.restapi.response.RestResponse.ERROR;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(RestResponse.class)
-public class RestControllerTest {
+public class RestRequisitionControllerTest {
 
   @Mock
-  RestService service;
+  RestRequisitionService service;
 
   @InjectMocks
-  RestController controller;
+  RestRequisitionController controller;
 
   @Mock
   MessageService messageService;
@@ -151,4 +151,5 @@ public class RestControllerTest {
     final RestResponse body = response.getBody();
     assertThat((String) body.getData().get(ERROR), is(errorMessage));
   }
+
 }

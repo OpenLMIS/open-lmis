@@ -52,7 +52,7 @@ public class RequisitionPdfModelTest {
     model = new HashMap<>();
     model.put(RequisitionController.CURRENCY, "$");
     model.put(RequisitionController.RNR, requisition);
-    List<? extends Column> rnrTemplate = make(a(defaultRnrTemplate)).getRnrColumns();
+    List<? extends Column> rnrTemplate = make(a(defaultRnrTemplate)).getColumns();
     model.put(RequisitionController.RNR_TEMPLATE, rnrTemplate);
     LossesAndAdjustmentsType additive1 = new LossesAndAdjustmentsType("TRANSFER_IN", "TRANSFER IN", true, 1);
     lossesAndAdjustmentsList = asList(additive1);

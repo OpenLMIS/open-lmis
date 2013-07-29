@@ -11,7 +11,6 @@ import cucumber.api.DataTable;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
@@ -19,7 +18,8 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.*;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -52,7 +52,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
     public String userSICUserName = "storeincharge";
 
 
-    @BeforeMethod(groups = {"smoke"})
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -63,20 +62,14 @@ public class E2EInitiateRnR extends TestCaseHelper {
     return new Object[][]{};
   }
 
-    @Given("^I am logged in as Admin$")
-    public void adminLogin() throws Exception {
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        loginPage.loginAs("Admin123", "Admin123");
-    }
-
     @And("^I access create facility page$")
     public void nevigateCreateFacilityPage() throws Exception {
         HomePage homePage = new HomePage(testWebDriver);
         homePage.navigateCreateFacility();
     }
 
-    @When("^I create facility supporting \"([^\"]*)\"$")
-    public void createFacility(String program) throws Exception {
+    @When("^I create \"([^\"]*)\" program supported facility$")
+    public void createFacilityForProgram(String program) throws Exception {
         CreateFacilityPage createFacilityPage = new CreateFacilityPage(testWebDriver);
 
         date_time = createFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
@@ -155,19 +148,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         dbWrapper.insertSupplyLines("N1", program, facilityCodePrefix + date_time);
     }
 
-    @And("^I logout$")
-    public void logout() throws Exception {
-        HomePage homePage = new HomePage(testWebDriver);
-        homePage.logout(baseUrlGlobal);
-    }
-
-    @And("^I am logged in as \"([^\"]*)\"$")
-    public void login(String username) throws Exception {
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        loginPage.loginAs(username, "Admin123");
-    }
-
-    @And("^I initiate RnR$")
+    @And("^I initiate and submit requisition$")
     public void initiateRnR() throws Exception {
         HomePage homePage = new HomePage(testWebDriver);
 
@@ -393,11 +374,13 @@ public class E2EInitiateRnR extends TestCaseHelper {
     rolesPage.createRoleWithSuccessMessageExpected(roleName, roleDescription, userRoleList, programDependent);
   }
 
-  @AfterMethod(groups = {"smoke"})
   @After
   public void tearDown() throws Exception {
+    testWebDriver.sleep(500);
+    if(!testWebDriver.getElementById("username").isDisplayed()) {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
+    }
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
