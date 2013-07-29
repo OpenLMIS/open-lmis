@@ -41,27 +41,11 @@ var utils = {
     return (value == null || value == undefined || value.toString().trim().length == 0);
   },
 
-  stripNonNumeric: function ( str ){
+ formatNumber : function(value, format){
+    var numericObject = new Number(value);
+    return numericObject.format(format);
+}
 
-    str += '';
-
-    var rgx = /^\d|\.|-$/;
-    var out = '';
-    for( var i = 0; i < str.length; i++ )
-    {
-        if( rgx.test( str.charAt(i) ) ){
-
-            if( !( ( str.charAt(i) == '.' && out.indexOf( '.' ) != -1 ) ||
-
-                ( str.charAt(i) == '-' && out.length != 0 ) ) ){
-
-                out += str.charAt(i);
-
-            }
-        }
-    }
-    return out;
-    }
 };
 
 String.prototype.format = function() {
@@ -94,12 +78,32 @@ String.prototype.format = function() {
 Number.prototype.format = function(format) {
 
     // if (! isType(format, 'string')) {return ;} // sanity check
+    stripNonNumeric = function ( str ){
 
+        str += '';
+
+        var rgx = /^\d|\.|-$/;
+        var out = '';
+        for( var i = 0; i < str.length; i++ )
+        {
+            if( rgx.test( str.charAt(i) ) ){
+
+                if( !( ( str.charAt(i) == '.' && out.indexOf( '.' ) != -1 ) ||
+
+                    ( str.charAt(i) == '-' && out.length != 0 ) ) ){
+
+                    out += str.charAt(i);
+
+                }
+            }
+        }
+        return out;
+    }
 
 
     var hasComma = -1 < format.indexOf(','),
 
-        psplit = utils.stripNonNumeric(format).split('.'),
+        psplit = stripNonNumeric(format).split('.'),
 
         that = this;
 

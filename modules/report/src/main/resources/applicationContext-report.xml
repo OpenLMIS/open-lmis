@@ -133,7 +133,7 @@
                 </bean>
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="stock_imbalance"/>
-                    <property name="template" value="stock-imbalance-report.jasper"/>
+                    <property name="template" value="stock_imbalance_report.jasper"/>
                     <property name="reportDataProvider" ref="stockImbalanceReportDataProvider"/>
                     <property name="id" value="RP-Stock-Imbalance"/>
                     <property name="name" value="Stock Imbalances by Facility Report"/>

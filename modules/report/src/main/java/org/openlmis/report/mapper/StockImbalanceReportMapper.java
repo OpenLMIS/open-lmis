@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.StockImbalanceQueryBuilder;
+import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.report.StockImbalanceReport;
 import org.springframework.stereotype.Repository;
 
@@ -22,6 +23,8 @@ public interface StockImbalanceReportMapper {
 
     @SelectProvider(type=StockImbalanceQueryBuilder.class, method="getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<StockImbalanceReport> getReport(Map params, @Param("RowBounds") RowBounds rowBounds);
+    public List<StockImbalanceReport> getReport( @Param("filterCriteria") ReportData filterCriteria,
+                                                 @Param("SortCriteria") Map<String, String[]> SortCriteria ,
+                                                 @Param("RowBounds")RowBounds rowBounds);
 
 }
