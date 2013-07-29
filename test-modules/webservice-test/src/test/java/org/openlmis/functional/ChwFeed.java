@@ -31,7 +31,7 @@ public class ChwFeed extends TestCaseHelper {
   public static final String FULL_JSON_TXT_FILE_NAME = "CHWValid.txt";
   public static final String userEmail = "Fatim_Doe@openlmis.com";
   public static final String CREATE_URL = "http://localhost:9091/rest-api/chw.json";
-  public static final String UPDATE_URL = "http://localhost:9091/rest-api/chw/update.json";
+  public static final String UPDATE_URL = "http://localhost:9091/rest-api/chw/";
   public static final String commTrackUser = "commTrack";
   public static final String PHONE_NUMBER = "0099887766";
   public static final String DEFAULT_AGENT_NAME = "AgentVinod";
@@ -40,6 +40,7 @@ public class ChwFeed extends TestCaseHelper {
   public static final String DEFAULT_AGENT_CODE = "A2";
   public static final String FALSE_FLAG = "f";
   public static final String TRUE_FLAG = "t";
+  public static final String JSON_EXTENSION = ".json";
   public static final int AUTH_FAILED_STATUS_CODE = 401;
   public static final int BAD_REQUEST_STATUS_CODE = 400;
 
@@ -164,7 +165,7 @@ public class ChwFeed extends TestCaseHelper {
 
     chwJson.setActive("false");
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -174,7 +175,7 @@ public class ChwFeed extends TestCaseHelper {
     dbWrapper.updateFacilityFieldBYCode("datareportable", "false", DEFAULT_AGENT_CODE);
 
     ResponseEntity responseEntityDataReportableFalse = client.SendJSON(getJsonStringFor(chwJson),
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -222,7 +223,7 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setPhoneNumber("0099887766759785759859757757887");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -233,10 +234,11 @@ public class ChwFeed extends TestCaseHelper {
 
   @Test(groups = {"webservice"})
   public void testUpdateStatusOfAgentCode() throws Exception {
+    String AGENT_CODE = "ABCD";
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("ABCD");
+    chwJson.setAgentCode(AGENT_CODE);
     chwJson.setAgentName(DEFAULT_AGENT_NAME);
     chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
     chwJson.setPhoneNumber(PHONE_NUMBER);
@@ -252,13 +254,13 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("false");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
-      UPDATE_URL,
+      UPDATE_URL+AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
-    assertEquals(FALSE_FLAG, dbWrapper.getActivePropertyOfFacility("ABCD"));
+    assertEquals(FALSE_FLAG, dbWrapper.getActivePropertyOfFacility(AGENT_CODE));
   }
 
   @Test(groups = {"webservice"})
@@ -296,7 +298,7 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setParentFacilityCode(updateParentFacility);
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
-      UPDATE_URL,
+      UPDATE_URL+vendorCode+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -365,7 +367,7 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive("false");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
-      UPDATE_URL,
+      UPDATE_URL+vendorCode+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -425,7 +427,7 @@ public class ChwFeed extends TestCaseHelper {
     dbWrapper.updateVirtualPropertyOfFacility(facilityCode, ACTIVE_STATUS);
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -461,17 +463,18 @@ public class ChwFeed extends TestCaseHelper {
 
   @Test(groups = {"webservice"})
   public void testUpdateShouldVerifyAgentIsNotAVirtualFacility() throws Exception {
+    String Agent_code = "F11";
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("F11");
+    chwJson.setAgentCode(Agent_code);
     chwJson.setAgentName(DEFAULT_AGENT_NAME);
     chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
     chwJson.setPhoneNumber(PHONE_NUMBER);
     chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      UPDATE_URL,
+      UPDATE_URL+ Agent_code +JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -516,7 +519,7 @@ public class ChwFeed extends TestCaseHelper {
 
     chwJson.setParentFacilityCode("A10");
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -543,7 +546,7 @@ public class ChwFeed extends TestCaseHelper {
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("BAD_REQUEST"));
 
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedJson,
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -606,7 +609,7 @@ public class ChwFeed extends TestCaseHelper {
     String modifiedString = getJsonStringFor(chwJson).replaceFirst("\"agentName\":\"AgentVinod\",", " ");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedString,
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -658,7 +661,7 @@ public class ChwFeed extends TestCaseHelper {
     String modifiedString = getJsonStringFor(chwJson).replaceFirst("\"agentName\":\"AgentVinod\",", " ");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedString,
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -703,7 +706,7 @@ public class ChwFeed extends TestCaseHelper {
 
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -733,7 +736,7 @@ public class ChwFeed extends TestCaseHelper {
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -783,7 +786,7 @@ public class ChwFeed extends TestCaseHelper {
     String modifiedString = getJsonStringFor(chwJson).replaceFirst(DEFAULT_AGENT_NAME, "");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedString,
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -836,7 +839,7 @@ public class ChwFeed extends TestCaseHelper {
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -866,7 +869,7 @@ public class ChwFeed extends TestCaseHelper {
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -892,7 +895,7 @@ public class ChwFeed extends TestCaseHelper {
       dbWrapper.getAuthToken(commTrackUser));
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -920,7 +923,7 @@ public class ChwFeed extends TestCaseHelper {
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("BAD_REQUEST"));
 
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedString,
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -961,7 +964,8 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("casesensitive");
+    String agent_code = "casesensitive";
+    chwJson.setAgentCode(agent_code);
     chwJson.setAgentName(DEFAULT_AGENT_NAME);
     chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
     chwJson.setPhoneNumber(PHONE_NUMBER);
@@ -974,11 +978,12 @@ public class ChwFeed extends TestCaseHelper {
       dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
-    chwJson.setAgentCode("CASESENSITIVE");
+    String agent_code_updated = "CASESENSITIVE";
+    chwJson.setAgentCode(agent_code_updated);
 
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
-      UPDATE_URL,
+      UPDATE_URL+ agent_code_updated +JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -999,7 +1004,7 @@ public class ChwFeed extends TestCaseHelper {
     String modifiedString = getJsonStringFor(chwJson).replaceFirst(ACTIVE_STATUS, "truefalse");
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
@@ -1040,7 +1045,7 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       commTrackUser,
       "Testing");
@@ -1079,7 +1084,7 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
-      UPDATE_URL,
+      UPDATE_URL+DEFAULT_AGENT_CODE+JSON_EXTENSION,
       PUT,
       "Testing",
       dbWrapper.getAuthToken(commTrackUser));
