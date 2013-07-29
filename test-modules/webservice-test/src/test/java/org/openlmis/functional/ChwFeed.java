@@ -169,7 +169,8 @@ public class ChwFeed extends TestCaseHelper {
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
 
-//    assertTrue("Showing response as : " + responseEntityDataReportableFalse.getResponse(), responseEntityDataReportableFalse.getResponse().contains("{\"error\":\"Invalid agent code\"}"));
+    assertTrue("Showing response as : " + responseEntityDataReportableFalse.getResponse(), responseEntityDataReportableFalse.getResponse().contains("{\"error\":\"CHW cannot be updated as it has been deleted\"}"));
+
   }
 
   @Test(groups = {"webservice"})
