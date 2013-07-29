@@ -83,8 +83,6 @@ task smokeTestChrome(type: Test) {
         jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
         javaexec {
             System.properties.get('browser', 'chrome')
-            System.properties.get('dburl', "$dburl")
-            System.properties.get('baseurl', "$baseurl")
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
@@ -106,8 +104,6 @@ task smokeTestIE1(type: Test) {
         jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
         javaexec {
             System.properties.get('browser', 'ie')
-            System.properties.get('dburl', "$dburl")
-            System.properties.get('baseurl', "$baseurl")
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
@@ -128,8 +124,6 @@ task smokeTestIE2(type: Test) {
         jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
         javaexec {
             System.properties.get('browser', 'ie')
-            System.properties.get('dburl', "$dburl")
-            System.properties.get('baseurl', "$baseurl")
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
