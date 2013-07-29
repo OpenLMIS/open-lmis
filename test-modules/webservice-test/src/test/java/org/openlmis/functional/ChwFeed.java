@@ -33,6 +33,17 @@ public class ChwFeed extends TestCaseHelper {
   public static final String CREATE_URL = "http://localhost:9091/rest-api/chw.json";
   public static final String UPDATE_URL = "http://localhost:9091/rest-api/chw/update.json";
   public static final String commTrackUser = "commTrack";
+  public static final String PHONE_NUMBER = "0099887766";
+  public static final String DEFAULT_AGENT_NAME = "AgentVinod";
+  public static final String DEFAULT_PARENT_FACILITY_CODE = "F10";
+  public static final String ACTIVE_STATUS = "true";
+  public static final String DEFAULT_AGENT_CODE = "A2";
+  public static final String FALSE_FLAG = "f";
+  public static final String TRUE_FLAG = "t";
+  public static final int AUTH_FAILED_STATUS_CODE = 401;
+  public static final int BAD_REQUEST_STATUS_CODE = 400;
+
+
 
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
@@ -48,13 +59,13 @@ public class ChwFeed extends TestCaseHelper {
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldNotShowSatelliteFacilityOnManageUserScreen(String user, String program, String[] credentials) throws Exception {
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateVirtualPropertyOfFacility(DEFAULT_PARENT_FACILITY_CODE, ACTIVE_STATUS);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UserPage userPage = homePage.navigateToUser();
     userPage.enterAndVerifyUserDetails("storeincharge", userEmail, "Fatim", "Doe", DEFAULT_BASE_URL, DEFAULT_DB_URL);
-    userPage.enterUserHomeFacility("F10");
+    userPage.enterUserHomeFacility(DEFAULT_PARENT_FACILITY_CODE);
     userPage.verifyNoMatchedFoundMessage();
     homePage.logout(baseUrlGlobal);
   }
@@ -69,7 +80,7 @@ public class ChwFeed extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadFacilities("QA_facilities_WebService.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-    assertEquals("f", dbWrapper.getVirtualPropertyOfFacility("facilityf10"));
+    assertEquals(FALSE_FLAG, dbWrapper.getVirtualPropertyOfFacility("facilityf10"));
     homePage.logout(baseUrlGlobal);
   }
 
@@ -79,14 +90,13 @@ public class ChwFeed extends TestCaseHelper {
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
     String vendorCode = "ABC";
-    String vendorName = "AgentVinod";
 
     chwJson.setAgentCode(vendorCode);
-    chwJson.setAgentName(vendorName);
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
-    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
+    client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
       POST,
       commTrackUser,
@@ -98,17 +108,17 @@ public class ChwFeed extends TestCaseHelper {
     DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(vendorCode);
     deleteFacilityPage.clickFacilityList(vendorCode);
-    deleteFacilityPage.deleteFacility(vendorCode, vendorName);
+    deleteFacilityPage.deleteFacility(vendorCode, DEFAULT_AGENT_NAME);
 
-    deleteFacilityPage.verifyDeletedFacility(vendorCode, vendorName);
+    deleteFacilityPage.verifyDeletedFacility(vendorCode, DEFAULT_AGENT_NAME);
     HomePage homePageRestore = deleteFacilityPage.restoreFacility();
 
     DeleteFacilityPage deleteFacilityPageRestore = homePageRestore.navigateSearchFacility();
     deleteFacilityPageRestore.searchFacility(vendorCode);
     deleteFacilityPageRestore.clickFacilityList(vendorCode);
     deleteFacilityPage.saveFacility();
-    deleteFacilityPage.verifyMessageOnFacilityScreen(vendorName, "updated");
-    assertEquals("t", dbWrapper.getVirtualPropertyOfFacility(vendorCode));
+    deleteFacilityPage.verifyMessageOnFacilityScreen(DEFAULT_AGENT_NAME, "updated");
+    assertEquals(TRUE_FLAG, dbWrapper.getVirtualPropertyOfFacility(vendorCode));
     homePage.logout(baseUrlGlobal);
 
   }
@@ -119,11 +129,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -138,11 +148,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -161,7 +171,7 @@ public class ChwFeed extends TestCaseHelper {
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
-    dbWrapper.updateFacilityFieldBYCode("datareportable","false","A2");
+    dbWrapper.updateFacilityFieldBYCode("datareportable", "false", DEFAULT_AGENT_CODE);
 
     ResponseEntity responseEntityDataReportableFalse = client.SendJSON(getJsonStringFor(chwJson),
       UPDATE_URL,
@@ -178,11 +188,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
     chwJson.setPhoneNumber("0099887766759785759859757757887");
-    chwJson.setActive("true");
+    chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -197,11 +207,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
     chwJson.setPhoneNumber("0099887");
-    chwJson.setActive("true");
+    chwJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -227,10 +237,10 @@ public class ChwFeed extends TestCaseHelper {
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
     chwJson.setAgentCode("ABCD");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -248,7 +258,7 @@ public class ChwFeed extends TestCaseHelper {
       dbWrapper.getAuthToken(commTrackUser));
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
-    assertEquals("f", dbWrapper.getActivePropertyOfFacility("ABCD"));
+    assertEquals(FALSE_FLAG, dbWrapper.getActivePropertyOfFacility("ABCD"));
   }
 
   @Test(groups = {"webservice"})
@@ -258,7 +268,7 @@ public class ChwFeed extends TestCaseHelper {
     String operatedbyid = "operatedbyid";
     String parentfacilityid = "parentfacilityid";
     String vendorCode = "ABCDE";
-    String firstParentFacility = "F10";
+    String firstParentFacility = DEFAULT_PARENT_FACILITY_CODE;
     String updateParentFacility = "F11";
     String id = "id";
 
@@ -267,10 +277,10 @@ public class ChwFeed extends TestCaseHelper {
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
     chwJson.setAgentCode(vendorCode);
-    chwJson.setAgentName("AgentVinod");
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
     chwJson.setParentFacilityCode(firstParentFacility);
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -281,7 +291,7 @@ public class ChwFeed extends TestCaseHelper {
 
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(typeid, vendorCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographiczoneid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(geographiczoneid, vendorCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacility),dbWrapper.getFacilityFieldBYCode(parentfacilityid, vendorCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacility), dbWrapper.getFacilityFieldBYCode(parentfacilityid, vendorCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(operatedbyid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(operatedbyid, vendorCode));
     chwJson.setParentFacilityCode(updateParentFacility);
 
@@ -304,15 +314,15 @@ public class ChwFeed extends TestCaseHelper {
     String operatedbyid = "operatedbyid";
     String parentfacilityid = "parentfacilityid";
     String vendorCode = "commtrk";
-    String vendorName = "AgentVinod";
+    String vendorName = DEFAULT_AGENT_NAME;
     String vendorNameUpdated = "AgentJyot";
-    String firstParentFacility = "F10";
+    String firstParentFacility = DEFAULT_PARENT_FACILITY_CODE;
     String firstParentFacilityUpdated = "F11";
     String code = "code";
     String name = "name";
     String id = "id";
     String mainphone = "mainphone";
-    String phoneNumber = "0099887766";
+    String phoneNumber = PHONE_NUMBER;
     String phoneNumberUpdated = "12345678";
     String active = "active";
     String virtualfacility = "virtualfacility";
@@ -327,7 +337,7 @@ public class ChwFeed extends TestCaseHelper {
     chwJson.setAgentName(vendorName);
     chwJson.setParentFacilityCode(firstParentFacility);
     chwJson.setPhoneNumber(phoneNumber);
-    chwJson.setActive("true");
+    chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -338,16 +348,16 @@ public class ChwFeed extends TestCaseHelper {
 
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(typeid, vendorCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographiczoneid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(geographiczoneid, vendorCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacility),dbWrapper.getFacilityFieldBYCode(parentfacilityid, vendorCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacility), dbWrapper.getFacilityFieldBYCode(parentfacilityid, vendorCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(operatedbyid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(operatedbyid, vendorCode));
     assertEquals(vendorCode, dbWrapper.getFacilityFieldBYCode(code, vendorCode));
     assertEquals(vendorName, dbWrapper.getFacilityFieldBYCode(name, vendorCode));
     assertEquals(phoneNumber, dbWrapper.getFacilityFieldBYCode(mainphone, vendorCode));
 
-    assertEquals("t", dbWrapper.getFacilityFieldBYCode(active, vendorCode));
-    assertEquals("t", dbWrapper.getFacilityFieldBYCode(virtualfacility, vendorCode));
-    assertEquals("t", dbWrapper.getFacilityFieldBYCode(sdp, vendorCode));
-    assertEquals("t", dbWrapper.getFacilityFieldBYCode(datareportable, vendorCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(active, vendorCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(virtualfacility, vendorCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(sdp, vendorCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(datareportable, vendorCode));
 
     chwJson.setAgentName(vendorNameUpdated);
     chwJson.setParentFacilityCode(firstParentFacilityUpdated);
@@ -362,28 +372,28 @@ public class ChwFeed extends TestCaseHelper {
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeid, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(typeid, vendorCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographiczoneid, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(geographiczoneid, vendorCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacilityUpdated),dbWrapper.getFacilityFieldBYCode(parentfacilityid, vendorCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(parentfacilityid, vendorCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(operatedbyid, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(operatedbyid, vendorCode));
     assertEquals(vendorCode, dbWrapper.getFacilityFieldBYCode(code, vendorCode));
     assertEquals(vendorNameUpdated, dbWrapper.getFacilityFieldBYCode(name, vendorCode));
     assertEquals(phoneNumberUpdated, dbWrapper.getFacilityFieldBYCode(mainphone, vendorCode));
-    assertEquals("f", dbWrapper.getFacilityFieldBYCode(active, vendorCode));
-    assertEquals("t", dbWrapper.getFacilityFieldBYCode(virtualfacility, vendorCode));
-    assertEquals("t", dbWrapper.getFacilityFieldBYCode(sdp, vendorCode));
-    assertEquals("t", dbWrapper.getFacilityFieldBYCode(datareportable, vendorCode));
+    assertEquals(FALSE_FLAG, dbWrapper.getFacilityFieldBYCode(active, vendorCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(virtualfacility, vendorCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(sdp, vendorCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(datareportable, vendorCode));
   }
 
-    @Test(groups = {"webservice"})
+  @Test(groups = {"webservice"})
   public void testCreateChwFeedWithParentFacilityCodeAsVirtualFacility() throws Exception {
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.updateVirtualPropertyOfFacility(DEFAULT_PARENT_FACILITY_CODE, ACTIVE_STATUS);
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -395,16 +405,16 @@ public class ChwFeed extends TestCaseHelper {
 
   @Test(groups = {"webservice"})
   public void testUpdateChwFeedWithParentFacilityCodeAsVirtualFacility() throws Exception {
-    String facilityCode = "F10";
+    String facilityCode = DEFAULT_PARENT_FACILITY_CODE;
 
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
     chwJson.setParentFacilityCode(facilityCode);
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -412,7 +422,7 @@ public class ChwFeed extends TestCaseHelper {
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
 
-    dbWrapper.updateVirtualPropertyOfFacility(facilityCode, "true");
+    dbWrapper.updateVirtualPropertyOfFacility(facilityCode, ACTIVE_STATUS);
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(chwJson),
       UPDATE_URL,
@@ -428,11 +438,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -455,10 +465,10 @@ public class ChwFeed extends TestCaseHelper {
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
     chwJson.setAgentCode("F11");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       UPDATE_URL,
@@ -473,11 +483,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
     chwJson.setParentFacilityCode("A10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -492,11 +502,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -518,11 +528,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
     String modifiedJson = getJsonStringFor(chwJson).replace(':', ';');
 
     ResponseEntity responseEntity = client.SendJSON(modifiedJson,
@@ -537,7 +547,7 @@ public class ChwFeed extends TestCaseHelper {
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-//    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("BAD_REQUEST"));
+    assertEquals(responseEntityUpdated.getStatus(), BAD_REQUEST_STATUS_CODE);
 
   }
 
@@ -560,11 +570,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
     String modifiedString = getJsonStringFor(chwJson).replaceFirst("\"agentName\":\"AgentVinod\",", " ");
 
 
@@ -582,11 +592,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -610,11 +620,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
     String modifiedString = getJsonStringFor(chwJson).replaceFirst("\"agentName\":\"AgentVinod\",", " ");
 
 
@@ -632,11 +642,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
 
     client.SendJSON(getJsonStringFor(chwJson),
@@ -663,11 +673,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
     String modifiedString = getJsonStringFor(chwJson).replaceFirst(", \"active\":\"true\"", " ");
 
 
@@ -685,11 +695,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
@@ -706,11 +716,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -736,12 +746,12 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
-    String modifiedString = getJsonStringFor(chwJson).replaceFirst("AgentVinod", "");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
+    String modifiedString = getJsonStringFor(chwJson).replaceFirst(DEFAULT_AGENT_NAME, "");
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
@@ -758,11 +768,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -770,7 +780,7 @@ public class ChwFeed extends TestCaseHelper {
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
 
-    String modifiedString = getJsonStringFor(chwJson).replaceFirst("AgentVinod", "");
+    String modifiedString = getJsonStringFor(chwJson).replaceFirst(DEFAULT_AGENT_NAME, "");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedString,
       UPDATE_URL,
@@ -787,12 +797,12 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
-    String modifiedString = getJsonStringFor(chwJson).replaceFirst("true", "");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
+    String modifiedString = getJsonStringFor(chwJson).replaceFirst(ACTIVE_STATUS, "");
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
@@ -809,11 +819,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -822,7 +832,7 @@ public class ChwFeed extends TestCaseHelper {
       dbWrapper.getAuthToken(commTrackUser));
 
 
-    String modifiedString = getJsonStringFor(chwJson).replaceFirst("true", "");
+    String modifiedString = getJsonStringFor(chwJson).replaceFirst(ACTIVE_STATUS, "");
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
@@ -839,11 +849,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -852,7 +862,7 @@ public class ChwFeed extends TestCaseHelper {
       dbWrapper.getAuthToken(commTrackUser));
 
 
-    String modifiedString = getJsonStringFor(chwJson).replaceFirst("true", " ");
+    String modifiedString = getJsonStringFor(chwJson).replaceFirst(ACTIVE_STATUS, " ");
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
@@ -869,11 +879,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -895,11 +905,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
     String modifiedString = getJsonStringFor(chwJson).replaceFirst("phoneNumber", "phonenumber");
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
@@ -914,8 +924,7 @@ public class ChwFeed extends TestCaseHelper {
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-//    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("BAD_REQUEST"));
-
+    assertEquals(responseEntityUpdated.getStatus(), BAD_REQUEST_STATUS_CODE);
   }
 
   @Test(groups = {"webservice"})
@@ -924,10 +933,10 @@ public class ChwFeed extends TestCaseHelper {
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
     chwJson.setAgentCode("casesensitive");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -943,7 +952,7 @@ public class ChwFeed extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntityUpdated.getResponse()+ " updated json : "+getJsonStringFor(chwJson), responseEntityUpdated.getResponse().contains("{\"error\":\"Agent already registered\"}"));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " updated json : " + getJsonStringFor(chwJson), responseEntityUpdated.getResponse().contains("{\"error\":\"Agent already registered\"}"));
 
   }
 
@@ -953,10 +962,10 @@ public class ChwFeed extends TestCaseHelper {
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
     chwJson.setAgentCode("casesensitive");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -973,7 +982,7 @@ public class ChwFeed extends TestCaseHelper {
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " updated json : "+getJsonStringFor(chwJson), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " updated json : " + getJsonStringFor(chwJson), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
   }
 
@@ -982,12 +991,12 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
-    String modifiedString = getJsonStringFor(chwJson).replaceFirst("true", "truefalse");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
+    String modifiedString = getJsonStringFor(chwJson).replaceFirst(ACTIVE_STATUS, "truefalse");
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
       UPDATE_URL,
@@ -1003,11 +1012,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -1024,21 +1033,18 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       UPDATE_URL,
       PUT,
       commTrackUser,
       "Testing");
-    //Its a feedback. Needs to uncomment the line as soon as feedback is incorporated
-//    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
-
-
+    assertEquals(responseEntity.getStatus(), AUTH_FAILED_STATUS_CODE);
   }
 
   @Test(groups = {"webservice"})
@@ -1046,11 +1052,11 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       CREATE_URL,
@@ -1066,20 +1072,18 @@ public class ChwFeed extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode("A2");
-    chwJson.setAgentName("AgentVinod");
-    chwJson.setParentFacilityCode("F10");
-    chwJson.setPhoneNumber("0099887766");
-    chwJson.setActive("true");
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(chwJson),
       UPDATE_URL,
       PUT,
       "Testing",
       dbWrapper.getAuthToken(commTrackUser));
-    //Its a feedback. Needs to uncomment the line as soon as feedback is incorporated
-//    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
-
+    assertEquals(responseEntity.getStatus(), AUTH_FAILED_STATUS_CODE);
   }
 
   @DataProvider(name = "Data-Provider-Function-Positive")
