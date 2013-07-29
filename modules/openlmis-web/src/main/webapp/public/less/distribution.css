@@ -1,0 +1,82 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+.record-facility-data .info-box {
+  padding-bottom: 8px;
+}
+.record-facility-data .info-box .info-box-labels {
+  padding-top: 5px;
+}
+.facility-info {
+  min-height: 535px;
+  margin-left: 270px;
+  background: #fff;
+  border-left: 1px solid #d2d2d2;
+}
+.facility-container {
+  background: #f2f2f2;
+  border: 1px solid #d2d2d2;
+  position: relative;
+}
+.left-navigation {
+  position: absolute;
+  width: 270px;
+}
+.left-navigation ul {
+  list-style-type: none;
+  margin-left: 0;
+}
+.left-navigation ul li {
+  border-bottom: 1px solid #d2d2d2;
+}
+.left-navigation ul li a {
+  display: block;
+  text-decoration: none;
+  padding: 15px 13px;
+  color: #808080;
+  font-size: 1.1em;
+}
+.left-navigation ul li:hover {
+  background: #f5f5f5;
+}
+.left-navigation ul li.selected {
+  background: white;
+  border-right: 1px solid white;
+  width: 100%;
+  position: relative;
+}
+.left-navigation ul li.selected a {
+  color: #17888f;
+}
+.select2-results ul.select2-result-sub > li .select2-result-label {
+  padding-left: 12px;
+}
+.select2-results .select2-highlighted .status-icon {
+  background: #FFF !important;
+}
+.status-icon {
+  height: 10px;
+  width: 10px;
+  border-radius: 5px;
+  margin-right: 6px;
+  display: inline-block;
+}
+.is-incomplete .status-icon {
+  background: #f0a513;
+}
+.is-complete .status-icon {
+  background: #52a81e;
+}
+.is-empty .status-icon {
+  background: #cb4040;
+}
+.facility-toolbar {
+  min-height: 41px;
+  border-top: 1px solid #d2d2d2;
+}
+.facility-toolbar a {
+  padding: 11px 11px 9px;
+  text-decoration: none;
+}
