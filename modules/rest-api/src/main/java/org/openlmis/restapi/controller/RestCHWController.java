@@ -16,6 +16,7 @@ import org.openlmis.restapi.service.RestCHWService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -42,9 +43,10 @@ public class RestCHWController extends BaseController {
     return RestResponse.success("message.success.chw.created");
   }
 
-  @RequestMapping(value = "/rest-api/chw/update", method = PUT, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> updateCHW(@RequestBody CHW chw, Principal principal) {
+  @RequestMapping(value = "/rest-api/chw/{agentCode}", method = PUT, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> updateCHW(@RequestBody CHW chw, @PathVariable String agentCode, Principal principal) {
     try {
+      chw.setAgentCode(agentCode);
       restCHWService.update(chw, principal.getName());
     } catch (DataException e) {
       return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
