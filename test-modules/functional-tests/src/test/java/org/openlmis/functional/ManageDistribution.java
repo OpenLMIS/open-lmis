@@ -178,6 +178,12 @@ public class ManageDistribution extends TestCaseHelper {
     verifyFacilityList(activeFlag, program, deliveryZone);
   }
 
+  @When("^I choose facility \"([^\"]*)\"$")
+  public void selectFacility(String facilityCode) throws IOException {
+    FacilityListPage facilityListPage=new FacilityListPage(testWebDriver);
+    facilityListPage.selectFacility(facilityCode);
+  }
+
   @And("^I should see Delivery Zone \"([^\"]*)\", Program \"([^\"]*)\" and Period \"([^\"]*)\" in the header$")
   public void shouldVerifyHeaderElements(String deliveryZone, String program, String period) throws IOException, SQLException {
     FacilityListPage facilityListPage=new FacilityListPage(testWebDriver);
@@ -196,6 +202,12 @@ public class ManageDistribution extends TestCaseHelper {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
     testWebDriver.sleep(1500);
     distributionPage.verifyDownloadSuccessFullMessage(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
+  }
+
+  @Then("^I should see \"([^\"]*)\" in the header$")
+  public void verifyFacilityNameInHeader(String facilityName) throws IOException {
+    FacilityListPage facilityListPage=new FacilityListPage(testWebDriver);
+    facilityListPage.verifyFacilityNameInHeader(facilityName);
   }
 
   @And("^I should see delivery zone \"([^\"]*)\" program \"([^\"]*)\" period \"([^\"]*)\" in table$")

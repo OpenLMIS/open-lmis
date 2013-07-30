@@ -258,4 +258,6 @@ Feature: Smoke Tests
     Then I should see Delivery Zone "Delivery Zone First", Program "VACCINES" and Period "Period14" in the header
     And I should see No facility selected
     And I should see "active" facilities that support the program "VACCINES" and delivery zone "Delivery Zone First"
+    When I choose facility "F10"
+    Then I should see "Village Dispensary" in the header
 
