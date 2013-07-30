@@ -56,8 +56,7 @@ CACHE:
 /public/js/shared/controller/header-controller.js
 /public/js/shared/controller/login-controller.js
 /public/js/shared/open-lmis-dialog.js
-
-
+/public/js/program-product/model/program-product-ISA.js
 
 /public/lib/jquery/jquery-ui-1.9.2.custom.min.js
 /public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js
