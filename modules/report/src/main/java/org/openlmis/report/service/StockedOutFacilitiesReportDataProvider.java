@@ -62,7 +62,8 @@ public class StockedOutFacilitiesReportDataProvider extends ReportDataProvider {
         String facilityType     = params.get("ftype")[0] ;
         String program          = params.get("program")[0];
         String schedule         = params.get("schedule")[0];
-        String productCategory   = params.get("productCategory")[0];
+        String productCategory  = params.get("productCategory")[0];
+
 
         String periodType = params.get("periodType")[0];
         String fromYear =  params.get("fromYear")[0];
@@ -110,9 +111,6 @@ public class StockedOutFacilitiesReportDataProvider extends ReportDataProvider {
     public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
         return reportMapper.getStockedOutTotalFacilities(getReportFilterData(filterCriteria)).get(0);
     }
-
-
-
 
     @Override
     public HashMap<String, String> getAdditionalReportData(Map params){
