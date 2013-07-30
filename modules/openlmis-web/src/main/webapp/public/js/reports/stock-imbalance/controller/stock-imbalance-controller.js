@@ -131,7 +131,7 @@ function StockImbalanceController($scope, StockImbalanceReport, Products , Produ
 
     ProductCategories.get(function(data){
         $scope.productCategories = data.productCategoryList;
-        $scope.productCategories.push({'name': 'All Product Categories'});
+        $scope.productCategories.push({'name': 'All Product Categories', 'id' : 'All'});
     });
 
 
@@ -158,6 +158,17 @@ function StockImbalanceController($scope, StockImbalanceReport, Products , Produ
 
         }else{
             $scope.filterObject.facilityName = "";
+        }
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('productCategory', function(selection){
+        if(selection == "All"){
+            $scope.filterObject.productCategoryId =  -1;
+        }else if(selection != undefined || selection == ""){
+            $scope.filterObject.productCategoryId =  selection;
+        }else{
+            $scope.filterObject.productCategoryId =  0;
         }
         $scope.filterGrid();
     });
@@ -432,6 +443,7 @@ function StockImbalanceController($scope, StockImbalanceReport, Products , Produ
         toQuarter: $scope.toQuarter,
         toSemiAnnual:$scope.endHalf,
         productId : $scope.productId,
+        productCategoryId : $scope.productCategoryId,
         rgroupId : $scope.rgroup,
         rgroup : "",
         facility : $scope.facilityNameFilter
@@ -458,7 +470,7 @@ function StockImbalanceController($scope, StockImbalanceReport, Products , Produ
                 params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
             }
         });
-
+        //alert(JSON.stringify(params))
         StockImbalanceReport.get(params, function(data) {
             $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
         });

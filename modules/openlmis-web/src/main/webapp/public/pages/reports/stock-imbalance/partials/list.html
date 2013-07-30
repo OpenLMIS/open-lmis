@@ -86,7 +86,7 @@
                                     <label class="labels">Product Categories</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="productCategoryElement"  ng-change="filterGrid()" ng-model="productCategory" ng-options="option.id as option.name for option in productCategories">
+                                        <select ui-select2 style="width:200px;" name="productCategoryElement"   ng-model="productCategory" ng-options="option.id as option.name for option in productCategories">
 
                                         </select>
                                     </div>
@@ -104,23 +104,23 @@
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="facilityTypeElement"  ng-change="filterGrid()" ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
+                                        <select ui-select2 style="width:200px;" name="facilityTypeElement"   ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
 
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-cell horizontalFilters">
+                                <!--<div class="form-cell horizontalFilters">
                                     <label class="labels">Facility Name</label>
 
                                     <div class="form-field">
                                         <input id="name" type="text"  ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
                                     </div>
-                                </div>
+                                </div>-->
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Requisition Groups</label>
 
                                     <div class="form-fields">
-                                        <select ui-select2 style="width:300px;" class="extra-large-input" ng-change="filterGrid()" name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
+                                        <select ui-select2 style="width:300px;" class="extra-large-input"  name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
 
                                         </select>
                                     </div>
