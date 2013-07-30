@@ -51,7 +51,6 @@ tasks.withType(War) {
     def now = new Date()
     String currentTime = now.getTime() + "";
     eachFile { FileCopyDetails fileCopy ->
-    println(fileCopy)
         if (fileCopy.name.equals('services.js') || fileCopy.name.equals('offline.appcache')) {
             fileCopy.filter(ReplaceTokens, tokens: [version: currentTime])
         }

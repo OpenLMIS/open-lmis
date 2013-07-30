@@ -5,7 +5,8 @@
  */
 
 
-function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, IndexedDB, navigateBackService, $http, $dialog, $scope, $location, SharedDistributions) {
+function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZoneActivePrograms, messageService,
+                                DeliveryZoneProgramPeriods, IndexedDB, navigateBackService, $http, $dialog, $scope, $location, SharedDistributions) {
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
   var NONE_ASSIGNED_LABEL = messageService.get('label.noneAssigned');
