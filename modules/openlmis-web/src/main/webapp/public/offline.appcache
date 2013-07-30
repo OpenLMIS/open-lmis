@@ -1,5 +1,7 @@
 CACHE MANIFEST
 #version @version@
+
+CACHE:
 /favicon.ico
 /public/lib/jquery/jquery-1.8.2.min.js
 /public/lib/angular/angular.min.js
