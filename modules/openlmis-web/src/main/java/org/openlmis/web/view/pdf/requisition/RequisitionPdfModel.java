@@ -15,7 +15,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Money;
-import org.openlmis.core.domain.RegimenColumn;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.web.controller.RequisitionController;
 import org.openlmis.web.model.PrintRnrLineItem;
@@ -38,8 +37,8 @@ public class RequisitionPdfModel {
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
   public static final int TABLE_SPACING = 25;
 
-  private List<RnrColumn> rnrColumnList;
-  private List<RegimenColumn> regimenColumnList;
+  private List<? extends Column> rnrColumnList;
+  private List<? extends Column> regimenColumnList;
   private Rnr requisition;
   private String currency;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
@@ -54,34 +53,43 @@ public class RequisitionPdfModel {
   }
 
   public Paragraph getFullSupplyHeader() {
-    return new Paragraph("Full supply products", H2_FONT);
+    return new Paragraph("Full supply product(s)", H2_FONT);
   }
 
   public Paragraph getNonFullSupplyHeader() {
-    return new Paragraph("Non-Full supply products", H2_FONT);
+    return new Paragraph("Non-Full supply product(s)", H2_FONT);
   }
 
   public PdfPTable getFullSupplyTable() throws DocumentException, NoSuchFieldException, IllegalAccessException {
-    return getTableFor(requisition.getFullSupplyLineItems(), true);
+    return getTableFor(requisition.getFullSupplyLineItems(), true, rnrColumnList);
   }
 
-  private PdfPTable getTableFor(List<RnrLineItem> lineItems, boolean fullSupply) throws DocumentException, NoSuchFieldException, IllegalAccessException {
-    ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumnList);
+  public PdfPTable getRegimenTable() throws DocumentException, NoSuchFieldException, IllegalAccessException {
+    List<RegimenLineItem> regimenLineItems = requisition.getRegimenLineItems();
+    if (regimenLineItems.size() == 0) return null;
+
+    return getTableFor(regimenLineItems, null, regimenColumnList);
+  }
+
+  private PdfPTable getTableFor(List<? extends LineItem> lineItems, Boolean fullSupply, List<? extends Column> columnList) throws DocumentException, NoSuchFieldException, IllegalAccessException {
+    Template template = Template.getInstance(columnList);
     List<? extends Column> visibleColumns = template.getPrintableColumns(fullSupply);
 
-    PdfPTable table = prepareRnrLineItemsTable(visibleColumns);
+    PdfPTable table = prepareTable(visibleColumns);
 
     boolean odd = true;
 
-    RnrLineItem previousLineItem = null;
-    for (RnrLineItem lineItem : lineItems) {
-      if (previousLineItem == null || !lineItem.getProductCategory().equals(previousLineItem.getProductCategory())) {
+    LineItem previousLineItem = null;
+    for (LineItem lineItem : lineItems) {
+      if (previousLineItem == null || !lineItem.compareCategory(previousLineItem)) {
         table.addCell(categoryRow(visibleColumns.size(), lineItem));
         previousLineItem = lineItem;
       }
 
-      PrintRnrLineItem printRnrLineItem = new PrintRnrLineItem(lineItem);
-      printRnrLineItem.calculate(requisition.getPeriod(), rnrColumnList, lossesAndAdjustmentsTypes);
+      if (lineItem.isRnrLineItem()) {
+        PrintRnrLineItem printRnrLineItem = new PrintRnrLineItem(lineItem);
+        printRnrLineItem.calculate(requisition.getPeriod(), rnrColumnList, lossesAndAdjustmentsTypes);
+      }
 
       List<PdfPCell> cells = getCells(visibleColumns, lineItem, currency);
       odd = !odd;
@@ -100,10 +108,10 @@ public class RequisitionPdfModel {
     }
   }
 
-  private PdfPTable prepareRnrLineItemsTable(List<? extends Column> visibleColumns) throws DocumentException {
+  private PdfPTable prepareTable(List<? extends Column> visibleColumns) throws DocumentException {
     java.util.List<Integer> widths = new ArrayList<>();
     for (Column column : visibleColumns) {
-      widths.add(column.columnWidth());
+      widths.add(column.getColumnWidth());
     }
     PdfPTable table = new PdfPTable(widths.size());
 
@@ -131,7 +139,8 @@ public class RequisitionPdfModel {
   public PdfPTable getNonFullSupplyTable() throws DocumentException, NoSuchFieldException, IllegalAccessException {
     List<RnrLineItem> nonFullSupplyLineItems = requisition.getNonFullSupplyLineItems();
     if (nonFullSupplyLineItems.size() == 0) return null;
-    return getTableFor(nonFullSupplyLineItems, false);
+
+    return getTableFor(nonFullSupplyLineItems, false, rnrColumnList);
   }
 
   public PdfPTable getRequisitionHeader() throws DocumentException {
@@ -234,11 +243,12 @@ public class RequisitionPdfModel {
     summaryTable.addCell(summaryCell(textCell(" ")));
 
     String submittedDate = requisition.getSubmittedDate() != null ? DATE_FORMAT.format(requisition.getSubmittedDate()) : "";
+    String authorizedDate = requisition.getAuthorizedDate() != null ? DATE_FORMAT.format(requisition.getAuthorizedDate()) : "";
 
     summaryTable.addCell(summaryCell(textCell("Submitted By: ")));
     summaryTable.addCell(summaryCell(textCell("Date: " + submittedDate)));
     summaryTable.addCell(summaryCell(textCell("Authorized By: ")));
-    summaryTable.addCell(summaryCell(textCell("Date: ")));
+    summaryTable.addCell(summaryCell(textCell("Date: " + authorizedDate)));
     return summaryTable;
   }
 
@@ -252,11 +262,6 @@ public class RequisitionPdfModel {
     return new Money(new BigDecimal(requisition.getFullSupplyItemsSubmittedCost().getValue().floatValue() + requisition.getNonFullSupplyItemsSubmittedCost().getValue().floatValue()));
   }
 
-  public PdfPTable getRegimenTable() {
-    List<RegimenLineItem> regimenLineItems = requisition.getRegimenLineItems();
-    if (regimenLineItems.size() == 0) return null;
-    return null;
-  }
 
   public Paragraph getRegimenHeader() {
     return new Paragraph("Regimen(s)", H2_FONT);

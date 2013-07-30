@@ -15,11 +15,11 @@ angular.module('IndexedDB', []).service('IndexedDB', function ($rootScope) {
   }
 
   request.onupgradeneeded = function (event) {
-    indexedDBConnection = event.currentTarget.result;
+    var connection = event.currentTarget.result;
 
     var dropIfExist = function (storeName) {
-      if (indexedDBConnection.objectStoreNames.contains(storeName)) {
-        indexedDBConnection.deleteObjectStore(storeName);
+      if (connection.objectStoreNames.contains(storeName)) {
+        connection.deleteObjectStore(storeName);
       }
     }
 
@@ -30,13 +30,14 @@ angular.module('IndexedDB', []).service('IndexedDB', function ($rootScope) {
 
     function createDistributionStore() {
       dropIfExist("distributions");
-      var distributionStore = indexedDBConnection.createObjectStore("distributions", {"keyPath": "id"});
+      var distributionStore = connection.createObjectStore("distributions", {"keyPath": "id"});
       distributionStore.createIndex("index_zpp", "zpp", {"unique": true});
     }
 
     function createDistributionReferenceData() {
       dropIfExist("distributionReferenceData");
-      indexedDBConnection.createObjectStore("distributionReferenceData", {"keyPath": "id"});
+      var distributionReferenceDataStore = connection.createObjectStore("distributionReferenceData", {"keyPath": "zpp"});
+      distributionReferenceDataStore.createIndex("index_reference_data", "zpp", {"unique": true});
     }
   };
 

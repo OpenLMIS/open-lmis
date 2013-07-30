@@ -46,83 +46,56 @@ public class InitiateRnR extends TestCaseHelper {
   public static final String AUTHORIZE_REQUISITION = "AUTHORIZE_REQUISITION";
   public static final String VIEW_REQUISITION = "VIEW_REQUISITION";
   public String program, userSIC, categoryCode, password, regimenCode, regimenName, regimenCode2, regimenName2;
-  public HomePage homePage;
+
   public LoginPage loginPage;
   public InitiateRnRPage initiateRnRPage;
 
-  @BeforeMethod(groups = {"functional", "smoke"})
+  @BeforeMethod(groups = "functional")
   @Before
   public void setUp() throws Exception {
     super.setup();
 
   }
 
-  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testVerifyRegimensColumnsAndShouldSaveData(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
-    rightsList.add(CREATE_REQUISITION);
-    rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
-    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
-    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
-    dbWrapper.insertRegimenTemplateColumnsForProgram(program);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
-    homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    dbWrapper.insertValuesInRequisition();
-    homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
-
-    initiateRnRPage1.clickRegimenTab();
-
-    verifyRegimenFieldsPresentOnRegimenTab(regimenCode, regimenName, initiateRnRPage);
-
-    initiateRnRPage1.enterValuesOnRegimenScreen(3, 2, "100");
-    initiateRnRPage1.enterValuesOnRegimenScreen(4, 2, "200");
-    initiateRnRPage1.enterValuesOnRegimenScreen(5, 2, "300");
-    initiateRnRPage1.enterValuesOnRegimenScreen(6, 2, "400");
-
-    initiateRnRPage1.clickSaveButton();
-    initiateRnRPage1.verifySaveSuccessMsg();
-
-    initiateRnRPage1.clickSubmitButton();
-    initiateRnRPage1.clickOk();
-    initiateRnRPage1.verifySubmitSuccessMsg();
-
-  }
-
-  @Given("^I have the following data:$")
-  public void theFollowingDataExist(DataTable data) {
+  @Given("^I have the following data for regimen:$")
+  public void theFollowingDataExistForRegimen(DataTable data) throws Exception {
     List<String> dataString = data.flatten();
     program = dataString.get(0);
     userSIC = dataString.get(1);
     categoryCode = dataString.get(2);
-    password = dataString.get(3);
-    regimenCode = dataString.get(4);
-    regimenName = dataString.get(5);
-    regimenCode2 = dataString.get(6);
-    regimenName2 = dataString.get(7);
+    regimenCode = dataString.get(3);
+    regimenName = dataString.get(4);
+    regimenCode2 = dataString.get(5);
+    regimenName2 = dataString.get(6);
   }
+    @Given("^I have regimen template configured$")
+    public void configureRegimenTemplate() throws IOException, SQLException {
+        dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
+        dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
+        dbWrapper.insertRegimenTemplateColumnsForProgram(program);
+    }
 
-  @Given("^I access Initiate RnR page")
+  @Given("^I access initiate requisition page$")
   public void onInitiateRnRScreen() throws IOException, SQLException {
-    List<String> rightsList = new ArrayList<String>();
-    rightsList.add(CREATE_REQUISITION);
-    rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
-    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
-    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
-    dbWrapper.insertRegimenTemplateColumnsForProgram(program);
-    loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    homePage = loginPage.loginAs(userSIC, password);
+    HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateAndInitiateRnr(program);
   }
+
+    @Given("I have \"([^\"]*)\" user with \"([^\"]*)\" rights and data to initiate requisition$")
+    public void setupUserWithRightsAndInitiateRequisitionData(String user, String rights) throws IOException, SQLException {
+        String[] rightList=rights.split(",");
+        List<String> rightsList = new ArrayList<String>();
+        for(int i=0;i<rightList.length;i++)
+            rightsList.add(rightList[i]);
+        setupTestDataToInitiateRnR(true, program, user, "200", "openLmis", rightsList);
+    }
 
   @When("^I click proceed$")
   public void clickOnProceed() throws IOException {
+    HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateAndInitiateRnr(program);
     initiateRnRPage = homePage.clickProceed();
+    testWebDriver.sleep(2000);
   }
 
   @When("^I populate RnR data$")
@@ -181,12 +154,15 @@ public class InitiateRnR extends TestCaseHelper {
   public void clickSubmit()
   {
     initiateRnRPage.clickSubmitButton();
+    testWebDriver.sleep(250);
   }
 
   @When("^I click ok$")
   public void clickOk()
   {
+    testWebDriver.sleep(250);
     initiateRnRPage.clickOk();
+
   }
 
   @When("^I should see submit successfully$")
@@ -363,11 +339,14 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
 
-  @AfterMethod(groups = {"functional", "smoke"})
+  @AfterMethod(groups = "functional")
   @After
   public void tearDown() throws Exception {
+    testWebDriver.sleep(500);
+    if(!testWebDriver.getElementById("username").isDisplayed()) {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
+    }
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }

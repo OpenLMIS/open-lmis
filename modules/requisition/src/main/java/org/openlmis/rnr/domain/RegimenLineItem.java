@@ -4,10 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.RegimenCategory;
-import org.openlmis.core.domain.RegimenColumn;
-import org.openlmis.core.domain.RegimenTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +14,9 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @JsonSerialize(include = NON_NULL)
-public class RegimenLineItem extends BaseModel {
+public class RegimenLineItem extends LineItem {
 
   public static final String ON_TREATMENT = "patientsOnTreatment";
   public static final String INITIATED_TREATMENT = "patientsToInitiateTreatment";
@@ -27,7 +24,6 @@ public class RegimenLineItem extends BaseModel {
   public static final String TYPE_NUMERIC = "regimen.reporting.dataType.numeric";
   public static final String REMARKS = "remarks";
 
-  private Long rnrId;
   private String code;
   private String name;
   private Integer patientsOnTreatment;
@@ -61,7 +57,7 @@ public class RegimenLineItem extends BaseModel {
   }
 
   public void copyCreatorEditableFieldsForRegimen(RegimenLineItem regimenLineItem, RegimenTemplate regimenTemplate) {
-    for (RegimenColumn regimenColumn : regimenTemplate.getRegimenColumns()) {
+    for (Column regimenColumn : regimenTemplate.getColumns()) {
       String fieldName = regimenColumn.getName();
       if (regimenColumn.getVisible())
         copyColumnData(fieldName, regimenLineItem);
@@ -76,6 +72,31 @@ public class RegimenLineItem extends BaseModel {
     } catch (Exception e) {
       logger.error("Error in reading RnrLineItem's field", e);
     }
+  }
+
+  @Override
+  public boolean compareCategory(LineItem lineItem) {
+    if (this.category.getName().equals(((RegimenLineItem) lineItem).getCategory().getName())) return true;
+    return false;
+  }
+
+  @Override
+  public String getCategoryName() {
+    return this.category.getName();
+  }
+
+  @Override
+  public String getValue(String columnName) throws NoSuchFieldException, IllegalAccessException {
+    Field field = RegimenLineItem.class.getDeclaredField(columnName);
+    field.setAccessible(true);
+    Object fieldValue = field.get(this);
+    String value = (fieldValue == null) ? "" : fieldValue.toString();
+    return value;
+  }
+
+  @Override
+  public boolean isRnrLineItem() {
+    return false;
   }
 
 }

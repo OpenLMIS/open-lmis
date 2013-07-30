@@ -116,6 +116,12 @@ public class CreateFacilityPage extends Page {
   @FindBy(how = ID, using = "supported-program-active")
   private static WebElement programsSupportedActiveFlag;
 
+  @FindBy(how = XPATH, using = "//form[@id='create-facility']/div/div[3]/div/div/table/tbody/tr[1][@class='ng-scope']/td[2]/input")
+  private static WebElement programsSupportedFirstActiveFlag;
+
+  @FindBy(how = XPATH, using = "//form/div/div[3]/div/div/table/tbody/tr[1]/td[3]/input")
+  private static WebElement programsSupportedFirstStartDate;
+
   @FindBy(how = ID, using = "supported-program-start-date")
   private static WebElement programsSupportedStartDate;
 
@@ -123,7 +129,7 @@ public class CreateFacilityPage extends Page {
   private static WebElement startDateCalender;
 
   @FindBy(how = ID, using = "button_OK")
-  private static WebElement startDateAlert;
+  private static WebElement okAlert;
 
   @FindBy(how = ID, using = "supported-program-add")
   private static WebElement addSupportedProgram;
@@ -171,6 +177,10 @@ public class CreateFacilityPage extends Page {
   @FindBy(how = XPATH, using = "//input[@value='Cancel']")
   private static WebElement cancelIsaButton;
 
+    @FindBy(how = XPATH, using = "//a[@id='remove0']")
+    private static WebElement removeFirstProgramSupportedLink;
+
+
   public CreateFacilityPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -192,6 +202,11 @@ public class CreateFacilityPage extends Page {
 
     return date_time;
   }
+
+    public void saveFacility(){
+        SaveButton.click();
+
+    }
 
   public String enterValuesInFacility(String facilityCodePrefix, String facilityNamePrefix, String program,
                                       String geoZone, String facilityTypeValue, String operatedByValue,
@@ -256,7 +271,7 @@ public class CreateFacilityPage extends Page {
     return date_time;
   }
 
-  private void addProgram(String program, boolean push) {
+  public void addProgram(String program, boolean push) {
     testWebDriver.selectByVisibleText(programsSupported, program);
     if (!push) {
       programsSupportedActiveFlag.click();
@@ -264,11 +279,26 @@ public class CreateFacilityPage extends Page {
       programsSupportedStartDate.click();
       startDateCalender.click();
       testWebDriver.sleep(500);
-      startDateAlert.click();
+      okAlert.click();
       testWebDriver.sleep(500);
     }
     addSupportedProgram.click();
   }
+
+    public void activeInactiveFirstProgram() {
+        programsSupportedFirstActiveFlag.click();
+        testWebDriver.sleep(500);
+        programsSupportedStartDate.click();
+        programsSupportedFirstStartDate.click();
+        testWebDriver.handleScrollByPixels(0,1000);
+        startDateCalender.click();
+        testWebDriver.sleep(500);
+    }
+
+    public void removeFirstProgram() {
+        removeFirstProgramSupportedLink.click();
+        okAlert.click();
+    }
 
   public void verifyMessageOnFacilityScreen(String facilityName, String status) {
     String message = null;

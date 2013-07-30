@@ -274,9 +274,8 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
     }, true);
 
-    $scope.formatNumber = function(arg){
-        var numericObject = new Number(arg);
-        return numericObject.format('0,0.00');
+    $scope.formatNumber = function(value){
+        return utils.formatNumber(value,'0,0.00');
     }
 
     $scope.gridOptions = {

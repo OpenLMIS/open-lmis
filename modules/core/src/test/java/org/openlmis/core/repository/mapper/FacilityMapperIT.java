@@ -21,6 +21,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -303,11 +304,11 @@ public class FacilityMapperIT {
     programMapper.insert(make(a(defaultProgram, with(programCode, "Random"))));
 
 
-    programSupportedMapper.add(make(a(defaultProgramSupported,
+    programSupportedMapper.insert(make(a(defaultProgramSupported,
       with(supportedFacilityId, facilitySupportingProgramInRG1.getId()),
       with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))))));
 
-    programSupportedMapper.add(make(a(defaultProgramSupported,
+    programSupportedMapper.insert(make(a(defaultProgramSupported,
       with(supportedFacilityId, facilitySupportingProgramNotInAnyRG.getId()),
       with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))))));
 
@@ -318,24 +319,76 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldSearchFacilitiesByCodeOrName() throws Exception {
+  public void shouldSearchAllFacilitiesByCodeOrName() throws Exception {
     Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "FF110"), with(name, "D1100")));
     Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "D00"), with(name, "F110")));
     Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1100"), with(name, "F1100")));
     Facility facility4 = make(a(FacilityBuilder.defaultFacility, with(code, "FF130")));
+    Facility facility5 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1101"), with(virtualFacility, true)));
 
     mapper.insert(facility1);
     mapper.insert(facility2);
     mapper.insert(facility3);
     mapper.insert(facility4);
+    mapper.insert(facility5);
 
     List<Facility> returnedFacilityList = mapper.searchFacilitiesByCodeOrName("f11");
+
+    assertThat(returnedFacilityList.size(), is(4));
+
+    for (Facility facility : returnedFacilityList) {
+      assertThat(facility.getCode().equals(facility1.getCode())
+        || facility.getCode().equals(facility2.getCode())
+        || facility.getCode().equals(facility3.getCode())
+        || facility.getCode().equals(facility5.getCode()), is(true));
+    }
+  }
+
+  @Test
+  public void shouldSearchVirtualFacilitiesByCodeOrName() throws Exception {
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "FF110"), with(name, "D1100")));
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "D00"), with(name, "F110")));
+    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1100"), with(name, "F1100")));
+    Facility facility4 = make(a(FacilityBuilder.defaultFacility, with(code, "FF130")));
+    Facility facility5 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1101"), with(virtualFacility, true)));
+
+    mapper.insert(facility1);
+    mapper.insert(facility2);
+    mapper.insert(facility3);
+    mapper.insert(facility4);
+    mapper.insert(facility5);
+
+    List<Facility> returnedFacilityList = mapper.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("f11", true);
+
+    assertThat(returnedFacilityList.size(), is(1));
+    assertThat(returnedFacilityList.get(0).getCode(), is("FF1101"));
+
+  }
+
+  @Test
+  public void shouldSearchNonVirtualFacilitiesByCodeOrName() throws Exception {
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "FF110"), with(name, "D1100")));
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "D00"), with(name, "F110")));
+    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1100"), with(name, "F1100")));
+    Facility facility4 = make(a(FacilityBuilder.defaultFacility, with(code, "FF130")));
+    Facility facility5 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1101"), with(virtualFacility, true)));
+
+    mapper.insert(facility1);
+    mapper.insert(facility2);
+    mapper.insert(facility3);
+    mapper.insert(facility4);
+    mapper.insert(facility5);
+
+    List<Facility> returnedFacilityList = mapper.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("f11", false);
 
     assertThat(returnedFacilityList.size(), is(3));
 
     for (Facility facility : returnedFacilityList) {
-      assertThat(facility.getCode().equals(facility1.getCode()) || facility.getCode().equals(facility2.getCode()) || facility.getCode().equals(facility3.getCode()), is(true));
+      assertThat(facility.getCode().equals(facility1.getCode())
+        || facility.getCode().equals(facility2.getCode())
+        || facility.getCode().equals(facility3.getCode()), is(true));
     }
+
   }
 
   @Test
@@ -415,6 +468,18 @@ public class FacilityMapperIT {
     assert (facilityFromDatabase.getName()).equals(facility.getName());
   }
 
+  @Test
+  public void shouldGetFacilityByCodeIgnoringCase() throws Exception {
+    Facility facility = make(a(defaultFacility));
+
+    mapper.insert(facility);
+
+    Facility facilityFromDatabase = mapper.getByCode(facility.getCode().toLowerCase());
+
+    assert (facilityFromDatabase.getId()).equals(facility.getId());
+    assert (facilityFromDatabase.getCode()).equals(facility.getCode());
+    assert (facilityFromDatabase.getName()).equals(facility.getName());
+  }
 
   @Test
   public void shouldGetAllInDeliveryZoneAndOrderByGeographicZoneParentAndFacilityName() {
@@ -451,6 +516,48 @@ public class FacilityMapperIT {
     assertThat(memberFacilities.get(2).getCode(), is("F10010"));
   }
 
+  @Test
+  public void shouldReturnAllFacilitiesMatchingModifiedDate() throws Exception {
+
+    String facilityCode1 = "fc1";
+    String facilityCode2 = "fc2";
+    Date date1 = new Date();
+    Date date2 = new Date(date1.getTime() + 123123);
+
+    Facility facility1 = make(a(defaultFacility, with(code, facilityCode1), with(modifiedDate, date1)));
+    Facility facility2 = make(a(defaultFacility, with(code, facilityCode2), with(modifiedDate, date1)));
+
+    mapper.insert(facility1);
+    mapper.insert(facility2);
+    Program program1 = new Program(1L);
+    Program program2 = new Program(2L);
+
+    ProgramSupported programSupported1 = make(a(defaultProgramSupported,
+      with(supportedProgram, program1),
+      with(supportedFacilityId, facility1.getId()),
+      with(dateModified, date1)));
+    programSupportedMapper.insert(programSupported1);
+
+    ProgramSupported programSupported2 = make(a(defaultProgramSupported,
+      with(supportedProgram, program1),
+      with(supportedFacilityId, facility2.getId()),
+      with(dateModified, date2)));
+    programSupportedMapper.insert(programSupported2);
+
+    ProgramSupported programSupported3 = make(a(defaultProgramSupported,
+      with(supportedProgram, program2),
+      with(supportedFacilityId, facility1.getId()),
+      with(dateModified, date2)));
+    programSupportedMapper.insert(programSupported3);
+
+
+    List<Facility> allByDateModified = mapper.getAllByProgramSupportedModifiedDate(date1);
+
+    assertThat(allByDateModified.size(), is(1));
+    assertThat(allByDateModified.get(0).getCode(), is(facilityCode1));
+    assertThat(allByDateModified.get(0).getSupportedPrograms().size(), is(2));
+  }
+
   private Facility insertMemberFacility(DeliveryZone zone, Program program, String facilityCode, String facilityName,
                                         Long geoZoneId, Boolean facilityActive) {
     Facility facility = make(a(FacilityBuilder.defaultFacility, with(code, facilityCode), with(name, facilityName),
@@ -459,7 +566,7 @@ public class FacilityMapperIT {
     ProgramSupported programSupported = new ProgramSupported();
     programSupported.setFacilityId(facility.getId());
     programSupported.setProgram(program);
-    programSupportedMapper.add(programSupported);
+    programSupportedMapper.insert(programSupported);
     DeliveryZoneMember member1 = new DeliveryZoneMember(zone, facility);
     deliveryZoneMemberMapper.insert(member1);
     return facility;

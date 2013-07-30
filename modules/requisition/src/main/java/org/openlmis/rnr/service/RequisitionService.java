@@ -10,10 +10,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
-import org.openlmis.rnr.domain.Comment;
-import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
-import org.openlmis.rnr.domain.ProgramRnrTemplate;
-import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.search.factory.RequisitionSearchStrategyFactory;
@@ -91,7 +88,7 @@ public class RequisitionService {
 
     RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(programId);
 
-    if (rnrTemplate.getRnrColumns().size() == 0)
+    if (rnrTemplate.getColumns().size() == 0)
       throw new DataException("error.rnr.template.not.defined");
 
     validateIfRnrCanBeInitiatedFor(facilityId, programId, periodId);
@@ -231,12 +228,14 @@ public class RequisitionService {
     Rnr savedRnr = requisitionRepository.getById(id);
     fillSupportingInfo(savedRnr);
     fillSupplyingDepot(savedRnr);
+    savedRnr.setSubmittedDate(getOperationDateFor(savedRnr.getId(), RnrStatus.SUBMITTED.toString()));
+    savedRnr.setAuthorizedDate(getOperationDateFor(savedRnr.getId(), RnrStatus.AUTHORIZED.toString()));
     return savedRnr;
   }
 
   public List<Rnr> getApprovedRequisitions() {
     List<Rnr> requisitions = requisitionRepository.getApprovedRequisitions();
-    fillFacilityPeriodProgram(requisitions);
+    fillFacilityPeriodProgramWithAuditFields(requisitions);
     fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));
     return requisitions;
   }
@@ -249,7 +248,7 @@ public class RequisitionService {
   private Rnr fillSupportingInfo(Rnr requisition) {
     if (requisition == null) return null;
 
-    fillFacilityPeriodProgram(asList(requisition));
+    fillFacilityPeriodProgramWithAuditFields(asList(requisition));
     fillPreviousRequisitionsForAmc(requisition);
     return requisition;
   }
@@ -321,13 +320,15 @@ public class RequisitionService {
     requisition.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
   }
 
-  private void fillFacilityPeriodProgram(List<Rnr> requisitions) {
+  private void fillFacilityPeriodProgramWithAuditFields(List<Rnr> requisitions) {
     for (Rnr requisition : requisitions) {
       Facility facility = facilityService.getById(requisition.getFacility().getId());
       ProcessingPeriod period = processingScheduleService.getPeriodById(requisition.getPeriod().getId());
       Program program = programService.getById(requisition.getProgram().getId());
 
       requisition.fillBasicInformation(facility, program, period);
+      requisition.setSubmittedDate(getOperationDateFor(requisition.getId(), SUBMITTED.toString()));
+      requisition.setAuthorizedDate(getOperationDateFor(requisition.getId(), AUTHORIZED.toString()));
     }
   }
 
@@ -365,7 +366,7 @@ public class RequisitionService {
       final List<Rnr> requisitions = requisitionRepository.getAuthorizedRequisitions(assignment);
       requisitionsForApproval.addAll(requisitions);
     }
-    fillFacilityPeriodProgram(requisitionsForApproval);
+    fillFacilityPeriodProgramWithAuditFields(requisitionsForApproval);
     return requisitionsForApproval;
   }
 
@@ -411,6 +412,14 @@ public class RequisitionService {
       comment.setAuthor(user.basicInformation());
     }
     return comments;
+  }
+
+  public Rnr getLWById(Long rnrId) {
+    return requisitionRepository.getLWById(rnrId);
+  }
+
+  public Date getOperationDateFor(Long rnrId, String status) {
+    return requisitionRepository.getOperationDateFor(rnrId, status);
   }
 }
 

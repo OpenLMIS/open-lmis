@@ -28,13 +28,11 @@ import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.db.categories.UnitTests;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
@@ -157,16 +155,26 @@ public class FacilityServiceTest {
     assertThat(result, is(facilities));
   }
 
+
   @Test
-  public void shouldSearchFacilitiesByCodeOrName() throws Exception {
-    List<Facility> facilities = asList(new Facility());
-    when(facilityRepository.searchFacilitiesByCodeOrName("searchParam")).thenReturn(facilities);
+  public void shouldSearchFacilitiesByCodeOrNameAndVirtualFacilityFlag() throws Exception {
+    List<Facility> facilityList = Arrays.asList(new Facility());
+    when(facilityRepository.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", true)).thenReturn(facilityList);
 
-    List<Facility> returnedFacilities = facilityService.searchFacilitiesByCodeOrName("searchParam");
+    List<Facility> returnedFacilities = facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", true);
 
-    assertThat(returnedFacilities, is(facilities));
+    assertThat(returnedFacilities, is(facilityList));
   }
 
+  @Test
+  public void shouldSearchFacilitiesByCodeOrNameIfVirtualFacilityFlagIsNotPresenr() throws Exception {
+    List<Facility> facilityList = Arrays.asList(new Facility());
+    when(facilityRepository.searchFacilitiesByCodeOrName("query")).thenReturn(facilityList);
+
+    List<Facility> returnedFacilities = facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", null);
+
+    assertThat(returnedFacilities, is(facilityList));
+  }
 
   @Test
   public void shouldThrowExceptionIfProgramsSupportedInvalidWhileUpdating() throws Exception {
@@ -279,4 +287,33 @@ public class FacilityServiceTest {
     assertThat(facilities.get(1).getSupportedPrograms(), is(asList(programSupported)));
     verify(facilityRepository).getAllInDeliveryZoneFor(deliveryZoneId, programId);
   }
+
+  @Test
+  public void shouldGetAllFacilitiesByModifiedDate() throws Exception {
+    List<Facility> expectedFacilities = new ArrayList<>();
+    Date dateModified = new Date();
+    PowerMockito.when(facilityRepository.getAllByProgramSupportedModifiedDate(dateModified)).thenReturn(expectedFacilities);
+
+    List<Facility> facilities = facilityService.getAllByProgramSupportedModifiedDate(dateModified);
+
+    assertThat(facilities, is(expectedFacilities));
+    verify(facilityRepository).getAllByProgramSupportedModifiedDate(dateModified);
+
+  }
+
+  @Test
+  public void shouldGetFacilityWithReferenceDataForCode() throws Exception {
+
+    String facilityCode = "F10";
+    Long facilityId = 1l;
+    Facility expectedFacility = new Facility();
+    when(facilityRepository.getIdForCode(facilityCode)).thenReturn(facilityId);
+    when(facilityRepository.getById(facilityId)).thenReturn(expectedFacility);
+    Facility facility = facilityService.getFacilityWithReferenceDataForCode(facilityCode);
+
+    verify(facilityRepository).getIdForCode(facilityCode);
+    verify(facilityRepository).getById(facilityId);
+    assertThat(facility, is(expectedFacility));
+  }
+
 }

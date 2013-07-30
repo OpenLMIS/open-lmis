@@ -56,6 +56,17 @@
                                       temporary-file-suffix="temp"
                                       remote-filename-generator-expression="'error_'+ payload.name"/>
 
+    <int:channel id="ftpArchiveOutputChannel"/>
+
+    <int-ftp:outbound-channel-adapter id="ftpArchiveOutbound" cache-sessions="false"
+                                      channel="ftpArchiveOutputChannel"
+                                      remote-directory="${ftp.remote.archive.directory}"
+                                      session-factory="ftpSessionFactory"
+                                      auto-create-directory="true"
+                                      temporary-file-suffix="temp"
+                                      remote-filename-generator-expression="payload.name"/>
+
+
     <int:outbound-channel-adapter channel="ftpInputChannel" ref="shipmentFileProcessor" method="process"/>
 
     <bean id="messageDispatcher" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">

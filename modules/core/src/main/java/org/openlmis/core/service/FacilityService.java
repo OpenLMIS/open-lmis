@@ -99,10 +99,6 @@ public class FacilityService {
     return facilityRepository.getFacilitiesBy(programId, requisitionGroups);
   }
 
-  public List<Facility> searchFacilitiesByCodeOrName(String searchParam) {
-    return facilityRepository.searchFacilitiesByCodeOrName(searchParam);
-  }
-
   public void save(Facility facility) {
     for (ProgramSupported programSupported : facility.getSupportedPrograms()) {
       programSupported.isValid();
@@ -147,6 +143,22 @@ public class FacilityService {
       facility.getSupportedPrograms().add(programSupportedService.getFilledByFacilityIdAndProgramId(facility.getId(), programId));
     }
     return facilities;
+  }
+
+  public List<Facility> getAllByProgramSupportedModifiedDate(Date dateModified) {
+    return facilityRepository.getAllByProgramSupportedModifiedDate(dateModified);
+  }
+
+  public Facility getFacilityWithReferenceDataForCode(String facilityCode) {
+    Long facilityId = facilityRepository.getIdForCode(facilityCode);
+    return facilityRepository.getById(facilityId);
+  }
+
+  public List<Facility> searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(String query, Boolean virtualFacility) {
+    if(virtualFacility == null) {
+      return facilityRepository.searchFacilitiesByCodeOrName(query);
+    }
+    return facilityRepository.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(query, virtualFacility);
   }
 
   public List<Facility> getAllFacilitiesDetail(){

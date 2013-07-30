@@ -61,6 +61,31 @@ public class DBWrapper {
 
   }
 
+  public void updateVirtualPropertyOfFacility(String facilityCode, String flag) throws SQLException, IOException {
+    update("update facilities set virtualfacility='"+flag+"' where code='"+facilityCode+"';");
+  }
+
+  public String getVirtualPropertyOfFacility(String facilityCode) throws SQLException, IOException {
+    String flag = "";
+    ResultSet rs = query("select virtualfacility from facilities where code='"+facilityCode+"';");
+
+    if (rs.next()) {
+      flag = rs.getString("virtualfacility");
+    }
+    return flag;
+  }
+
+  public String getActivePropertyOfFacility(String facilityCode) throws SQLException, IOException {
+    String flag = "";
+    ResultSet rs = query("select active from facilities where code='"+facilityCode+"';");
+
+    if (rs.next()) {
+      flag = rs.getString("active");
+    }
+    return flag;
+  }
+
+
   public void updateUser(String password, String email) throws SQLException, IOException {
     update("DELETE FROM user_password_reset_tokens;");
     update("update users set password='" + password + "', active=TRUE  where email='" + email + "';");
@@ -99,9 +124,9 @@ public class DBWrapper {
 
   public void insertFacilities(String facility1, String facility2) throws IOException, SQLException {
     update("INSERT INTO facilities\n" +
-      "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, dataReportable) values\n" +
-      "('" + facility1 + "','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',5,2,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE'),\n" +
-      "('" + facility2 + "','Central Hospital','IT department','G7646',9876234981,'fax','A','B',5,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE');\n");
+      "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, dataReportable, virtualFacility) values\n" +
+      "('" + facility1 + "','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',5,2,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE', 'FALSE'),\n" +
+      "('" + facility2 + "','Central Hospital','IT department','G7646',9876234981,'fax','A','B',5,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE', 'FALSE');\n");
 
     update("insert into programs_supported(facilityId, programId, startDate, active, modifiedBy) VALUES\n" +
       "((SELECT id FROM facilities WHERE code = '" + facility1 + "'), 1, '11/11/12', true, 1),\n" +
@@ -115,9 +140,9 @@ public class DBWrapper {
 
   public void insertFacilitiesWithDifferentGeoZones(String facility1, String facility2, String geoZone1, String geoZone2) throws IOException, SQLException {
     update("INSERT INTO facilities\n" +
-      "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, dataReportable) values\n" +
-      "('" + facility1 + "','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',(select id from geographic_zones where code='" + geoZone1 + "'),2,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE'),\n" +
-      "('" + facility2 + "','Central Hospital','IT department','G7646',9876234981,'fax','A','B',(select id from geographic_zones where code='" + geoZone2 + "'),2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE');\n");
+      "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, dataReportable, virtualFacility) values\n" +
+      "('" + facility1 + "','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',(select id from geographic_zones where code='" + geoZone1 + "'),2,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE', 'FALSE'),\n" +
+      "('" + facility2 + "','Central Hospital','IT department','G7646',9876234981,'fax','A','B',(select id from geographic_zones where code='" + geoZone2 + "'),2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE', 'FALSE');\n");
 
     update("insert into programs_supported(facilityId, programId, startDate, active, modifiedBy) VALUES\n" +
       "((SELECT id FROM facilities WHERE code = '" + facility1 + "'), 1, '11/11/12', true, 1),\n" +
@@ -162,6 +187,7 @@ public class DBWrapper {
 
     update("delete from user_password_reset_tokens ;");
     update("delete from comments;");
+    update("delete from distributions ;");
     update("delete from users where userName not like('Admin%');");
     update("DELETE FROM requisition_line_item_losses_adjustments;");
     update("DELETE FROM requisition_line_items;");
@@ -196,6 +222,7 @@ public class DBWrapper {
     update("delete from atomfeed.event_records;");
     update("delete from regimens;");
     update("delete from program_regimen_columns;");
+
   }
 
 
@@ -555,10 +582,23 @@ public class DBWrapper {
     return facilityField;
   }
 
+  public String getFacilityFieldBYCode(String field, String code) throws IOException, SQLException {
+    String facilityField = null;
+    ResultSet rs = query("select " + field + " from facilities where code='" + code + "';");
+
+    if (rs.next()) {
+      facilityField = rs.getString(1);
+    }
+    return facilityField;
+  }
+
+  public void updateFacilityFieldBYCode(String field, String value, String code) throws IOException, SQLException {
+    update("update facilities set "+field+"='"+value+"' where code='"+code+"';");
+  }
+
   public void insertSupplyLines(String supervisoryNode, String programCode, String facilityCode) throws IOException, SQLException {
     update("insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId) values\n" +
       "('supplying node for HIV', (select id from supervisory_nodes where code = '" + supervisoryNode + "'), (select id from programs where code='" + programCode + "'),(select id from facilities where code = '" + facilityCode + "'));\n");
-
   }
 
   public void updateSupplyingFacilityForRequisition(String facilityCode) throws IOException, SQLException {

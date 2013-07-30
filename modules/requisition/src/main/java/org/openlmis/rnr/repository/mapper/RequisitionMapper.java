@@ -29,7 +29,6 @@ public interface RequisitionMapper {
     "status = #{status},",
     "modifiedDate = CURRENT_TIMESTAMP,",
     "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
-    "submittedDate = #{submittedDate},",
     "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost},",
     "supervisoryNodeId = #{supervisoryNodeId},",
     "supplyingFacilityId = #{supplyingFacility.id}",
@@ -52,7 +51,7 @@ public interface RequisitionMapper {
   })
   Rnr getById(Long rnrId);
 
-  @Select({"SELECT id, programId, facilityId, periodId, submittedDate, modifiedDate",
+  @Select({"SELECT id, programId, facilityId, periodId, modifiedDate",
     "FROM requisitions ",
     "WHERE programId =  #{programId}",
     "AND supervisoryNodeId =  #{supervisoryNode.id}"})
@@ -93,7 +92,7 @@ public interface RequisitionMapper {
   Rnr getLastRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Long facilityId,
                                                  @Param(value = "programId") Long programId);
 
-  @Select("SELECT id, programId, facilityId, periodId, supplyingFacilityId, submittedDate, modifiedDate FROM requisitions WHERE STATUS='APPROVED' ORDER BY submittedDate")
+  @Select("SELECT id, programId, facilityId, periodId, supplyingFacilityId, modifiedDate FROM requisitions WHERE STATUS='APPROVED'")
   @Results(value = {
     @Result(property = "facility.id", column = "facilityId"),
     @Result(property = "program.id", column = "programId"),
@@ -127,4 +126,17 @@ public interface RequisitionMapper {
   Rnr getRequisitionWithoutLineItems(@Param("facilityId") Long facilityId,
                                      @Param("programId") Long programId,
                                      @Param("periodId") Long periodId);
+
+
+
+  @Select("SELECT * FROM requisitions WHERE id = #{rnrId}")
+  @Results(value = {
+    @Result(property = "id", column = "id"),
+    @Result(property = "program.id", column = "programId"),
+    @Result(property = "facility.id", column = "facilityId"),
+    @Result(property = "period.id", column = "periodId"),
+    @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
+  })
+  Rnr getLWById(Long rnrId);
+
 }

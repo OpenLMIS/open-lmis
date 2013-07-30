@@ -7,6 +7,7 @@
 package org.openlmis.restapi.authentication;
 
 import org.openlmis.core.domain.Vendor;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.VendorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -24,6 +25,9 @@ public class RestApiAuthenticationProvider implements AuthenticationProvider {
   @Autowired
   private VendorService vendorService;
 
+  @Autowired
+  MessageService messageService;
+
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
     Vendor vendor = new Vendor();
@@ -32,7 +36,7 @@ public class RestApiAuthenticationProvider implements AuthenticationProvider {
     vendor.setAuthToken((String) authentication.getCredentials());
 
     if (!vendorService.authenticate(vendor))
-      throw new BadCredentialsException("Could not authenticate Vendor");
+      throw new BadCredentialsException(messageService.message("error.authentication.failed"));
 
     Collection<? extends GrantedAuthority> authorities = null;
 

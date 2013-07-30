@@ -7,9 +7,12 @@
 package org.openlmis.shipment.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.ProductService;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
@@ -23,19 +26,29 @@ import java.util.List;
 @Service
 @NoArgsConstructor
 public class ShipmentService {
-  private ShipmentRepository shipmentRepository;
-  private OrderService orderService;
-
-
   @Autowired
-  public ShipmentService(ShipmentRepository repository, OrderService orderService) {
-    shipmentRepository = repository;
-    this.orderService = orderService;
-  }
+  private ShipmentRepository shipmentRepository;
+  @Autowired
+  private OrderService orderService;
+  @Autowired
+  private RequisitionService requisitionService;
+  @Autowired
+  private ProductService productService;
+
 
   public void insertShippedLineItem(ShippedLineItem shippedLineItem) {
     shippedLineItem.validateForSave();
+    validateShipment(shippedLineItem);
     shipmentRepository.insertShippedLineItem(shippedLineItem);
+  }
+
+  private void validateShipment(ShippedLineItem shippedLineItem) {
+    if(requisitionService.getLWById(shippedLineItem.getRnrId()) == null) {
+      throw new DataException("error.unknown.order");
+    }
+    if(productService.getIdForCode(shippedLineItem.getProductCode()) == null) {
+      throw new DataException("error.unknown.product");
+    }
   }
 
   public void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {

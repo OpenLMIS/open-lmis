@@ -8,10 +8,7 @@ package org.openlmis.web.model;
 
 import lombok.Data;
 import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
-import org.openlmis.rnr.domain.ProgramRnrTemplate;
-import org.openlmis.rnr.domain.RnrColumn;
-import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.*;
 
 import java.util.List;
 
@@ -21,17 +18,20 @@ import static org.openlmis.rnr.domain.ProgramRnrTemplate.STOCK_IN_HAND;
 @Data
 public class PrintRnrLineItem {
 
-  private RnrLineItem rnrLineItem;
+  private LineItem lineItem;
 
-  public PrintRnrLineItem(RnrLineItem rnrLineItem) {
-    this.rnrLineItem = rnrLineItem;
+  public PrintRnrLineItem(LineItem lineItem) {
+    this.lineItem = lineItem;
   }
 
 
-  public void calculate(ProcessingPeriod period, List<RnrColumn> rnrColumns, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+  public void calculate(ProcessingPeriod period, List<? extends Column> rnrColumns, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+    RnrLineItem rnrLineItem = (RnrLineItem) this.lineItem;
     if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
-    if (template.columnsCalculated(QUANTITY_DISPENSED)) rnrLineItem.calculateQuantityDispensed();
+    if (template.columnsCalculated(QUANTITY_DISPENSED)) {
+      rnrLineItem.calculateQuantityDispensed();
+    }
     calculateNormalizedConsumption();
     calculateAmc(period);
     calculateMaxStockQuantity();
@@ -43,41 +43,41 @@ public class PrintRnrLineItem {
 
   private void calculateStockInHand() {
     try {
-      rnrLineItem.calculateStockInHand();
+      ((RnrLineItem) lineItem).calculateStockInHand();
     } catch (NullPointerException e) {
-      rnrLineItem.setStockInHand(null);
+      ((RnrLineItem) lineItem).setStockInHand(null);
     }
   }
 
   private void calculateMaxStockQuantity() {
     try {
-      rnrLineItem.calculateMaxStockQuantity();
+      ((RnrLineItem) lineItem).calculateMaxStockQuantity();
     } catch (NullPointerException e) {
-      rnrLineItem.setMaxStockQuantity(null);
+      ((RnrLineItem) lineItem).setMaxStockQuantity(null);
     }
   }
 
   private void calculateAmc(ProcessingPeriod period) {
     try {
-      rnrLineItem.calculateAmc(period);
+      ((RnrLineItem) lineItem).calculateAmc(period);
     } catch (NullPointerException e) {
-      rnrLineItem.setAmc(null);
+      ((RnrLineItem) lineItem).setAmc(null);
     }
   }
 
   private void calculateNormalizedConsumption() {
     try {
-      rnrLineItem.calculateNormalizedConsumption();
+      ((RnrLineItem) lineItem).calculateNormalizedConsumption();
     } catch (NullPointerException e) {
-      rnrLineItem.setNormalizedConsumption(null);
+      ((RnrLineItem) lineItem).setNormalizedConsumption(null);
     }
   }
 
   private void calculateLossesAndAdjustments(List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     try {
-      rnrLineItem.calculateTotalLossesAndAdjustments(lossesAndAdjustmentsTypes);
+      ((RnrLineItem) lineItem).calculateTotalLossesAndAdjustments(lossesAndAdjustmentsTypes);
     } catch (NullPointerException e) {
-      rnrLineItem.setTotalLossesAndAdjustments(null);
+      ((RnrLineItem) lineItem).setTotalLossesAndAdjustments(null);
     }
   }
 

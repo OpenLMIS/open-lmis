@@ -50,7 +50,7 @@ public class ProgramRnrColumnMapperIT {
     RnrColumn rnrColumn1 = fetchedColumns.get(0);
 
     assertThat(rnrColumn1.getLabel(), is("Some Random Label"));
-    assertThat(rnrColumn1.isVisible(), is(false));
+    assertThat(rnrColumn1.getVisible(), is(false));
     assertThat(rnrColumn1.getPosition(), is(5));
     assertThat(rnrColumn1.getSource(), is(USER_INPUT));
     assertThat(rnrColumn1.isFormulaValidationRequired(), is(true));
@@ -65,7 +65,7 @@ public class ProgramRnrColumnMapperIT {
     RnrColumn updatedRnrColumn = programRnrColumnMapper.fetchDefinedRnrColumnsForProgram(PROGRAM_ID).get(0);
 
     assertThat(updatedRnrColumn.getId(), is(rnrColumn.getId()));
-    assertThat(updatedRnrColumn.isVisible(), is(false));
+    assertThat(updatedRnrColumn.getVisible(), is(false));
     assertThat(updatedRnrColumn.getPosition(), is(5));
     assertThat(updatedRnrColumn.getLabel(), is("Some Random Label"));
     assertThat(updatedRnrColumn.getSource(), is(RnRColumnSource.CALCULATED));
@@ -101,7 +101,7 @@ public class ProgramRnrColumnMapperIT {
     List<RnrColumn> rnrColumns = programRnrColumnMapper.getVisibleProgramRnrColumns(PROGRAM_ID);
     assertThat(rnrColumns.size(), is(1));
     assertThat(rnrColumns.get(0).getSource(), is(USER_INPUT));
-    assertThat(rnrColumns.get(0).isVisible(), is(true));
+    assertThat(rnrColumns.get(0).getVisible(), is(true));
     assertThat(rnrColumns.get(0).isFormulaValidationRequired(), is(true));
   }
 

@@ -33,15 +33,13 @@ import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_EMPTY)
-@EqualsAndHashCode(callSuper = false)
-public class RnrLineItem extends BaseModel {
+@EqualsAndHashCode(callSuper = true)
+public class RnrLineItem extends LineItem {
 
   public static final String RNR_VALIDATION_ERROR = "error.rnr.validation";
 
   public static final Float MULTIPLIER = 3f;
   public static final Float NUMBER_OF_DAYS = 30f;
-
-  private Long rnrId;
 
   //TODO : hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
   private String product;
@@ -174,7 +172,10 @@ public class RnrLineItem extends BaseModel {
 
   public void validateCalculatedFields(ProgramRnrTemplate template) {
     boolean validQuantityDispensed = true;
-    if (template.getRnrColumns().get(0).isFormulaValidationRequired()) {
+
+    RnrColumn rnrColumn = (RnrColumn) template.getColumns().get(0);
+
+    if (rnrColumn.isFormulaValidationRequired()) {
       validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
     }
     boolean valid = quantityDispensed >= 0 && stockInHand >= 0 && validQuantityDispensed;
@@ -286,7 +287,7 @@ public class RnrLineItem extends BaseModel {
   public void copyCreatorEditableFieldsForFullSupply(RnrLineItem lineItem, ProgramRnrTemplate template) {
     copyBeginningBalance(lineItem, template);
     copyTotalLossesAndAdjustments(lineItem, template);
-    for (RnrColumn column : template.getRnrColumns()) {
+    for (Column column : template.getColumns()) {
       String fieldName = column.getName();
       if (fieldName.equals(QUANTITY_APPROVED)) continue;
       copyField(fieldName, lineItem, template);
@@ -352,7 +353,7 @@ public class RnrLineItem extends BaseModel {
 
   private Integer round(Double packsToShip, Integer orderQuantity) {
     Integer remainderQuantity = orderQuantity % packSize;
-    if (remainderQuantity >= packRoundingThreshold && packsToShip != 0) {
+    if (remainderQuantity >= packRoundingThreshold) {
       packsToShip += 1;
     }
 
@@ -388,4 +389,42 @@ public class RnrLineItem extends BaseModel {
     return false;
   }
 
+  @Override
+  public boolean compareCategory(LineItem lineItem) {
+    if (this.getProductCategory().equals(((RnrLineItem) lineItem).getProductCategory())) return true;
+    return false;
+  }
+
+  @Override
+  public String getCategoryName() {
+    return this.productCategory;
+  }
+
+  @Override
+  public String getValue(String columnName) throws NoSuchFieldException, IllegalAccessException {
+    if (columnName.equals("lossesAndAdjustments")) {
+      return this.getTotalLossesAndAdjustments().toString();
+    }
+    if (columnName.equals("cost")) {
+      return this.calculateCost().toString();
+    }
+    if (columnName.equals("price")) {
+      return this.getPrice().toString();
+    }
+
+    if (columnName.equals("total") && this.getBeginningBalance() != null && this.getQuantityReceived() != null) {
+      return String.valueOf((this.getBeginningBalance() + this.getQuantityReceived()));
+    }
+
+    Field field = RnrLineItem.class.getDeclaredField(columnName);
+    field.setAccessible(true);
+    Object fieldValue = field.get(this);
+    String value = (fieldValue == null) ? "" : fieldValue.toString();
+    return value;
+  }
+
+  @Override
+  public boolean isRnrLineItem() {
+    return true;
+  }
 }

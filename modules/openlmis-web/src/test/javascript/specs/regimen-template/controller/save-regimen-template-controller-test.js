@@ -33,7 +33,7 @@ describe('Save Regimen Template Controller', function () {
       {'id': 2}
     ];
 
-    var regimenTemplate = {regimenColumns: regimenColumns};
+    var regimenTemplate = {columns: regimenColumns};
     scope.newRegimenForm = {$error: {}};
 
     ctrl = $controller(SaveRegimenTemplateController, {$scope: scope, $location: location, program: program, programRegimens: regimens,
@@ -148,8 +148,7 @@ describe('Save Regimen Template Controller', function () {
     scope.regimensByCategory[1] = regimenList1
     scope.regimensByCategory[2] = regimenList2;
     scope.regimenTemplate = {regimenColumns: [
-      {'name': 'column1', 'label': 'columnLabel1', 'visible': true, 'dataType': 'Numeric'},
-      {'name': 'column2', 'label': 'columnLabel2', 'visible': true, 'dataType': 'Text'},
+      {'name': 'column1', 'label': 'columnLabel1', 'visible': false, 'dataType': 'Numeric'},
       {'name': 'column2', 'label': 'columnLabel2', 'visible': false, 'dataType': 'Text'}
     ]};
 
@@ -163,7 +162,7 @@ describe('Save Regimen Template Controller', function () {
   it('should not save regimens when any label is empty', function () {
     scope.regimensByCategory[1] = regimenList1
     scope.regimensByCategory[2] = regimenList2;
-    scope.regimenTemplate={regimenColumns : [
+    scope.regimenTemplate = {columns: [
       {'name': 'column1', 'label': '', 'visible': true, 'dataType': 'Numeric'},
       {'name': 'column2', 'label': '', 'visible': false, 'dataType': 'Text'}
     ]};

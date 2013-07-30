@@ -29,13 +29,13 @@ public class ViewOrdersPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
   private static WebElement programOnViewOrderScreen;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col1 colt1']/div[@class='ngCellText ng-scope']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ng-scope ngRow even']/div[2]/div[2]/div/span")
   private static WebElement facilityCodeNameOnOrderScreen;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col3 colt3']/div[@class='ngCellText ng-scope']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ng-scope ngRow even']/div[4]/div[2]/div/span")
   private static WebElement periodDetailsOnViewOrderScreen;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col4 colt4']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ng-scope ngRow even']/div[5]/div[2]/div/span")
   private static WebElement supplyDepotOnViewOrderScreen;
 
   @FindBy(how = How.XPATH, using = "(//div[@id='orderStatus'])[1]")

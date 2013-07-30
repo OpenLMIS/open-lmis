@@ -4,16 +4,18 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, currency, $routeParams, $dialog, $rootScope, messageService) {
+function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, currency, pageSize, $routeParams, $dialog, $rootScope, messageService) {
   $scope.visibleTab = $routeParams.supplyType;
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
-  $scope.regimenColumns = regimenTemplate ? regimenTemplate.regimenColumns : [];
+  $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
   $scope.currency = currency;
+  $scope.pageSize = pageSize;
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.error = "";
   $scope.message = "";
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
+  $scope.fullScreen = false;
 
   $scope.pageLineItems = [];
   $scope.errorPages = {};
@@ -28,10 +30,18 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     $location.search('page', page);
   };
 
-  $scope.getFullScreen = function () {
-    $rootScope.fullScreen = !$rootScope.fullScreen;
+  $scope.$watch('fullScreen', function () {
     angular.element(window).scrollTop(0);
-  }
+    if (!$.browser.msie) {
+      $scope.fullScreen ? angular.element('.toggleFullScreen').slideUp('slow', function () {
+      }) : angular.element('.toggleFullScreen').slideDown('slow', function () {
+      });
+    }
+    else {
+      $scope.fullScreen ? angular.element('.toggleFullScreen').hide() : angular.element('.toggleFullScreen').show();
+    }
+    $scope.fullScreen ? angular.element('.print-button').css('opacity', '1.0') : angular.element('.print-button').css('opacity', '0');
+  });
 
   $scope.highlightRequired = function (value) {
     if ($scope.approvedQuantityRequiredFlag && (isUndefined(value))) {
@@ -114,15 +124,15 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     resetFlags();
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "save"},
-      rnr, function (data) {
-        if (preventMessage == true) return;
-        $scope.message = data.success;
-        $scope.error = "";
-        setTimeout(fadeSaveMessage, 3000);
-      }, function (data) {
-        $scope.error = data.error;
-        $scope.message = "";
-      });
+        rnr, function (data) {
+          if (preventMessage == true) return;
+          $scope.message = data.success;
+          $scope.error = "";
+          setTimeout(fadeSaveMessage, 3000);
+        }, function (data) {
+          $scope.error = data.error;
+          $scope.message = "";
+        });
     $scope.approvalForm.$setPristine();
   };
 
@@ -151,6 +161,8 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
 
   $scope.dialogCloseCallback = function (result) {
     if (result) {
+      angular.element('.toggleFullScreen').show();
+      $scope.fullScreen = false;
       approveValidatedRnr();
     }
   };
@@ -224,6 +236,16 @@ ApproveRnrController.resolve = {
     $timeout(function () {
       ReferenceData.get({}, function (data) {
         deferred.resolve(data.currency);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  pageSize: function ($q, $timeout, LineItemPageSize) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      LineItemPageSize.get({}, function (data) {
+        deferred.resolve(data.pageSize);
       }, {});
     }, 100);
     return deferred.promise;

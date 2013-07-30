@@ -13,13 +13,10 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
   $scope.noRequisitionSelectedMessage = "";
 
   $scope.gridOptions = { data: 'filteredRequisitions',
-    multiSelect: true,
     selectedItems: $scope.selectedItems,
-    showFooter: false,
+    multiSelect: true,
     showSelectionCheckbox: true,
-    showColumnMenu: false,
     sortInfo: { fields: ['submittedDate'], directions: ['asc'] },
-    showFilter: false,
     columnDefs: [
       {field: 'programName', displayName: messageService.get("program.header") },
       {field: 'facilityCode', displayName: messageService.get("option.value.facility.code")},

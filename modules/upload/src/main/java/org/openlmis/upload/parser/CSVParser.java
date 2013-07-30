@@ -28,7 +28,7 @@ public class CSVParser {
 
   @Transactional
   public int process(InputStream inputStream, ModelClass modelClass, RecordHandler recordHandler, AuditFields auditFields)
-      throws UploadException {
+    throws UploadException {
 
     CsvBeanReader csvBeanReader = null;
     String[] headers = null;
@@ -42,7 +42,7 @@ public class CSVParser {
       while ((importedModel = csvBeanReader.readWithCellProcessors()) != null) {
         recordHandler.execute(importedModel, csvBeanReader.getRowNumber(), auditFields);
       }
-      recordHandler.postProcess();
+      recordHandler.postProcess(auditFields);
     } catch (SuperCsvConstraintViolationException constraintException) {
       if (constraintException.getMessage().contains("^\\d{1,2}/\\d{1,2}/\\d{4}$")) {
         createHeaderException("incorrect.date.format", headers, constraintException);

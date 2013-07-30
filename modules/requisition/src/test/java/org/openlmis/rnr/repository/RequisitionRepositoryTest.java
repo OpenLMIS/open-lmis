@@ -351,4 +351,13 @@ public class RequisitionRepositoryTest {
    verify(regimenLineItemMapper).update(regimenLineItem1);
    verify(regimenLineItemMapper).update(regimenLineItem2);
   }
+
+  @Test
+  public void shouldGetLWRnrById() throws Exception {
+    Rnr expectedRnr = new Rnr();
+    Long rnrId = 1L;
+    when(requisitionMapper.getLWById(rnrId)).thenReturn(expectedRnr);
+    Rnr returnedRnr = requisitionRepository.getLWById(rnrId);
+    assertThat(returnedRnr, is(expectedRnr));
+  }
 }

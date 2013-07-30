@@ -23,6 +23,7 @@ public class ProgramSupportedBuilder {
   public static Property<ProgramSupported, Program> supportedProgram = newProperty();
   public static Property<ProgramSupported, Boolean> isActive = newProperty();
   public static Property<ProgramSupported, Date> startDate = newProperty();
+  public static Property<ProgramSupported, Date> dateModified = newProperty();
 
   public static final Long FACILITY_ID = 101L;
   public static final String FACILITY_CODE = "F_CD";
@@ -42,7 +43,7 @@ public class ProgramSupportedBuilder {
       programSupported.setStartDate(lookup.valueOf(startDate, START_DATE));
       programSupported.setActive(lookup.valueOf(isActive, IS_ACTIVE));
       programSupported.setModifiedBy(1L);
-      programSupported.setModifiedDate(now().toDate());
+      programSupported.setModifiedDate(lookup.valueOf(dateModified, now().toDate()));
       return programSupported;
     }
   };

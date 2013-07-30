@@ -23,6 +23,7 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
@@ -51,6 +52,7 @@ public class Rnr extends BaseModel {
   private Facility supplyingFacility;
   private Long supervisoryNodeId;
   private Date submittedDate;
+  private Date authorizedDate;
   private List<Comment> comments = new ArrayList<>();
 
   public Rnr(Long facilityId, Long programId, Long periodId, Long modifiedBy, Long createdBy) {
@@ -231,7 +233,7 @@ public class Rnr extends BaseModel {
     for (RnrLineItem lineItem : this.fullSupplyLineItems) {
       lineItem.setLineItemFieldsAccordingToTemplate(template);
     }
-    if (regimenTemplate.getRegimenColumns().isEmpty()) return;
+    if (regimenTemplate.getColumns().isEmpty()) return;
     for (RegimenLineItem regimenLineItem : this.regimenLineItems) {
       regimenLineItem.setRegimenFieldsAccordingToTemplate(regimenTemplate);
     }
@@ -316,10 +318,6 @@ public class Rnr extends BaseModel {
 
   public void setAuditFieldsForRequisition(Long modifiedBy, RnrStatus status) {
     this.status = status;
-    Date operationDate = new Date();
-
-    if (status.equals(SUBMITTED)) setSubmittedDate(operationDate);
-
     this.modifiedBy = modifiedBy;
   }
 

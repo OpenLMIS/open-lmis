@@ -14,11 +14,20 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramSupportedService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.upload.model.AuditFields;
 
+import java.util.Date;
+import java.util.List;
+
+import static java.util.Arrays.asList;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ProgramSupportedPersistenceHandlerTest {
@@ -26,6 +35,8 @@ public class ProgramSupportedPersistenceHandlerTest {
   @Mock
   ProgramSupportedService service;
 
+  @Mock
+  FacilityService facilityService;
   @InjectMocks
   private ProgramSupportedPersistenceHandler programSupportedPersistenceHandler;
 
@@ -40,4 +51,19 @@ public class ProgramSupportedPersistenceHandlerTest {
     verify(service).uploadSupportedProgram(programSupported);
   }
 
- }
+  @Test
+  public void shouldPublishProgramSupportedFeedForAllFacilitiesUploaded() throws Exception {
+    Date currentTimestamp = new Date();
+    AuditFields auditFields = new AuditFields(currentTimestamp);
+    Facility facility = new Facility();
+    List<Facility> facilities = asList(facility);
+    when(facilityService.getAllByProgramSupportedModifiedDate(currentTimestamp)).thenReturn(facilities);
+
+    programSupportedPersistenceHandler.postProcess(auditFields);
+
+    verify(facilityService).getAllByProgramSupportedModifiedDate(currentTimestamp);
+    verify(service).notifyProgramSupportedUpdated(facility);
+  }
+
+
+}

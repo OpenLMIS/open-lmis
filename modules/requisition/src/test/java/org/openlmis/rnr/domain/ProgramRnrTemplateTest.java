@@ -31,30 +31,30 @@ public class ProgramRnrTemplateTest {
   @Before
   public void setup() {
     template = new ProgramRnrTemplate(1L, asList(
-        rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
-        rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
-        rnrColumn(STOCK_OUT_DAYS, false, CALCULATED, "stockOutDays"),
-        rnrColumn(NORMALIZED_CONSUMPTION, false, USER_INPUT, "normalizedConsumption"),
-        rnrColumn(STOCK_IN_HAND, true, USER_INPUT, "stock in hand"),
-        rnrColumn(QUANTITY_DISPENSED, true, CALCULATED, "quantity dispensed"),
-        rnrColumn(QUANTITY_RECEIVED, true, USER_INPUT, "quantity received"),
-        rnrColumn(BEGINNING_BALANCE, false, USER_INPUT, "beginning balance"),
-        rnrColumn(LOSSES_AND_ADJUSTMENTS, true, USER_INPUT, "losses and adjustment")
+      rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
+      rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
+      rnrColumn(STOCK_OUT_DAYS, false, CALCULATED, "stockOutDays"),
+      rnrColumn(NORMALIZED_CONSUMPTION, false, USER_INPUT, "normalizedConsumption"),
+      rnrColumn(STOCK_IN_HAND, true, USER_INPUT, "stock in hand"),
+      rnrColumn(QUANTITY_DISPENSED, true, CALCULATED, "quantity dispensed"),
+      rnrColumn(QUANTITY_RECEIVED, true, USER_INPUT, "quantity received"),
+      rnrColumn(BEGINNING_BALANCE, false, USER_INPUT, "beginning balance"),
+      rnrColumn(LOSSES_AND_ADJUSTMENTS, true, USER_INPUT, "losses and adjustment")
     ));
   }
 
   @Test
   public void shouldNotGiveErrorIfDependentsAreNotMissing() throws Exception {
     Map<String, OpenLmisMessage> errors = new ProgramRnrTemplate(1L, asList(
-        rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
-        rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
-        rnrColumn(STOCK_OUT_DAYS, false, CALCULATED, "stockOutDays"),
-        rnrColumn(NORMALIZED_CONSUMPTION, false, USER_INPUT, "normalizedConsumption"),
-        rnrColumn(STOCK_IN_HAND, true, USER_INPUT, "stock in hand"),
-        rnrColumn(QUANTITY_DISPENSED, true, USER_INPUT, "quantity dispensed"),
-        rnrColumn(QUANTITY_RECEIVED, true, USER_INPUT, "quantity received"),
-        rnrColumn(BEGINNING_BALANCE, true, USER_INPUT, "beginning balance"),
-        rnrColumn(LOSSES_AND_ADJUSTMENTS, true, USER_INPUT, "losses and adjustment")
+      rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
+      rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
+      rnrColumn(STOCK_OUT_DAYS, false, CALCULATED, "stockOutDays"),
+      rnrColumn(NORMALIZED_CONSUMPTION, false, USER_INPUT, "normalizedConsumption"),
+      rnrColumn(STOCK_IN_HAND, true, USER_INPUT, "stock in hand"),
+      rnrColumn(QUANTITY_DISPENSED, true, USER_INPUT, "quantity dispensed"),
+      rnrColumn(QUANTITY_RECEIVED, true, USER_INPUT, "quantity received"),
+      rnrColumn(BEGINNING_BALANCE, true, USER_INPUT, "beginning balance"),
+      rnrColumn(LOSSES_AND_ADJUSTMENTS, true, USER_INPUT, "losses and adjustment")
     )).validateToSave();
 
     assertThat(errors.size(), is(0));
@@ -141,12 +141,12 @@ public class ProgramRnrTemplateTest {
     boolean fullSupply = true;
 
     ProgramRnrTemplate programRnrTemplate = new ProgramRnrTemplate(1L, asList(
-        rnrColumn(REMARKS, visible),
-        rnrColumn(REASON_FOR_REQUESTED_QUANTITY, visible),
-        rnrColumn(QUANTITY_REQUESTED, visible),
-        rnrColumn(STOCK_OUT_DAYS, invisible)
+      rnrColumn(REMARKS, visible),
+      rnrColumn(REASON_FOR_REQUESTED_QUANTITY, visible),
+      rnrColumn(QUANTITY_REQUESTED, visible),
+      rnrColumn(STOCK_OUT_DAYS, invisible)
     ));
-    List<RnrColumn> printableColumns = programRnrTemplate.getPrintableColumns(fullSupply);
+    List<? extends Column> printableColumns = programRnrTemplate.getPrintableColumns(fullSupply);
     assertThat(printableColumns.size(), is(1));
     assertThat(printableColumns.get(0).getName(), is(QUANTITY_REQUESTED));
   }
@@ -157,19 +157,19 @@ public class ProgramRnrTemplateTest {
     boolean fullSupply = false;
 
     ProgramRnrTemplate programRnrTemplate = new ProgramRnrTemplate(1L, asList(
-        rnrColumn(PRODUCT, visible),
-        rnrColumn(PRODUCT_CODE, visible),
-        rnrColumn(DISPENSING_UNIT, visible),
-        rnrColumn(QUANTITY_REQUESTED, visible),
-        rnrColumn(PACKS_TO_SHIP, visible),
-        rnrColumn(PRICE, visible),
-        rnrColumn(COST, visible),
-        rnrColumn(QUANTITY_APPROVED, visible),
+      rnrColumn(PRODUCT, visible),
+      rnrColumn(PRODUCT_CODE, visible),
+      rnrColumn(DISPENSING_UNIT, visible),
+      rnrColumn(QUANTITY_REQUESTED, visible),
+      rnrColumn(PACKS_TO_SHIP, visible),
+      rnrColumn(PRICE, visible),
+      rnrColumn(COST, visible),
+      rnrColumn(QUANTITY_APPROVED, visible),
 
-        rnrColumn(QUANTITY_DISPENSED, visible)
+      rnrColumn(QUANTITY_DISPENSED, visible)
     ));
 
-    List<RnrColumn> printableColumns = programRnrTemplate.getPrintableColumns(fullSupply);
+    List<? extends Column> printableColumns = programRnrTemplate.getPrintableColumns(fullSupply);
 
     assertThat(printableColumns.size(), is(8));
     assertFalse(printableColumns.contains(rnrColumn(QUANTITY_DISPENSED, visible)));
@@ -183,13 +183,13 @@ public class ProgramRnrTemplateTest {
     boolean fullSupply = false;
 
     ProgramRnrTemplate programRnrTemplate = new ProgramRnrTemplate(1L, asList(
-        rnrColumn(PRODUCT, visible),
-        rnrColumn(QUANTITY_APPROVED, inVisible),
+      rnrColumn(PRODUCT, visible),
+      rnrColumn(QUANTITY_APPROVED, inVisible),
 
-        rnrColumn(QUANTITY_DISPENSED, visible)
+      rnrColumn(QUANTITY_DISPENSED, visible)
     ));
 
-    List<RnrColumn> printableColumns = programRnrTemplate.getPrintableColumns(fullSupply);
+    List<? extends Column> printableColumns = programRnrTemplate.getPrintableColumns(fullSupply);
 
     assertThat(printableColumns.size(), is(1));
     assertThat(printableColumns.get(0).getName(), is(PRODUCT));

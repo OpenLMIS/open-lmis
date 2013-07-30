@@ -7,12 +7,11 @@
 package org.openlmis.web.form;
 
 import lombok.Data;
-import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
 
 import java.util.List;
 
 @Data
-public class RnrList  {
+public class RnrList {
   private List<RnrDTO> rnrList;
 }

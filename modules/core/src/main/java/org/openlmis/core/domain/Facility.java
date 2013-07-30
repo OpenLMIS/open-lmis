@@ -109,14 +109,16 @@ public class Facility extends BaseModel implements Importable {
   @ImportField(type = "boolean", name = "Is Satellite Facility")
   private Boolean satellite;
 
-  @ImportField(name = "Satellite Parent ID")
-  private Integer satelliteParentId;
+  @ImportField(name = "Parent Facility ID")
+  private Long parentFacilityId;
 
   @ImportField(name = "Facility Comments")
   private String comment;
 
   @ImportField(type = "boolean", mandatory = true, name = "Data Reportable")
   private Boolean dataReportable;
+
+  private Boolean virtualFacility = false;
 
   //TODO : change supportedPrograms to programsSupported
   List<ProgramSupported> supportedPrograms = new ArrayList<>();

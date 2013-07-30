@@ -342,6 +342,7 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(createLink);
     testWebDriver.sleep(2000);
     testWebDriver.keyPress(createLink);
+    testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(myFacilityRadioButton);
     myFacilityRadioButton.click();
     testWebDriver.waitForElementToAppear(programDropDown);
@@ -362,6 +363,7 @@ public class HomePage extends Page {
 
 
   public InitiateRnRPage clickProceed() throws IOException {
+    testWebDriver.handleScrollByPixels(0,2000);
     testWebDriver.waitForElementToAppear(proceedButton);
     proceedButton.click();
     testWebDriver.sleep(1000);

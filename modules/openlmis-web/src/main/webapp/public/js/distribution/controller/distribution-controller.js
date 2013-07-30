@@ -5,7 +5,7 @@
  */
 
 
-function DistributionController($scope, $location, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, IndexedDB, navigateBackService, $http, $dialog) {
+function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, IndexedDB, navigateBackService, $http, $dialog, $scope, $location) {
 
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
@@ -17,10 +17,10 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
 
   $scope.loadPrograms = function () {
     $scope.programs = $scope.periods = [];
-    DeliveryZoneActivePrograms.get({zoneId:$scope.selectedZone.id}, function (data) {
+    DeliveryZoneActivePrograms.get({zoneId: $scope.selectedZone.id}, function (data) {
       $scope.programs = data.deliveryZonePrograms;
-      if ($scope.selectedProgram &&  $scope.fromBackNavigation) {
-        $scope.selectedProgram = _.where($scope.programs, {id:$scope.selectedProgram.id})[0];
+      if ($scope.selectedProgram && $scope.fromBackNavigation) {
+        $scope.selectedProgram = _.where($scope.programs, {id: $scope.selectedProgram.id})[0];
         $scope.loadPeriods();
       }
     }, function (data) {
@@ -30,11 +30,11 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
 
   $scope.loadPeriods = function () {
     $scope.periods = [];
-    DeliveryZoneProgramPeriods.get({zoneId:$scope.selectedZone.id, programId:$scope.selectedProgram.id}, function (data) {
+    DeliveryZoneProgramPeriods.get({zoneId: $scope.selectedZone.id, programId: $scope.selectedProgram.id}, function (data) {
       $scope.periods = data.periods.length ? data.periods.slice(0, 13) : [];
-      if ($scope.selectedPeriod &&  $scope.fromBackNavigation) {
+      if ($scope.selectedPeriod && $scope.fromBackNavigation) {
         $scope.fromBackNavigation = false;
-        $scope.selectedPeriod = _.where($scope.periods, {id:$scope.selectedPeriod.id})[0];
+        $scope.selectedPeriod = _.where($scope.periods, {id: $scope.selectedPeriod.id})[0];
       } else {
         $scope.selectedPeriod = $scope.periods.length ? $scope.periods[0] : NONE_ASSIGNED_LABEL;
       }
@@ -51,27 +51,6 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
     return optionMessage($scope.periods, DEFAULT_PERIOD_MESSAGE);
   };
 
-  $scope.loadDistributionsFromCache = function () {
-    var transaction = IndexedDB.getConnection().transaction('distributions');
-    var cursorRequest = transaction.objectStore('distributions').openCursor();
-
-    var aggregate = [];
-    cursorRequest.onsuccess = function (event) {
-      if (event.target.result) {
-        aggregate.push(event.target.result.value);
-        event.target.result['continue']();
-      }
-    };
-
-    transaction.oncomplete = function (e) {
-      $scope.distributionList = aggregate;
-      $scope.$apply();
-    };
-  };
-
-  $scope.$on('indexedDBReady', function () {
-    $scope.loadDistributionsFromCache();
-  });
 
   $scope.$on('$viewContentLoaded', function () {
     $scope.distributionList = navigateBackService.distributionList;
@@ -79,7 +58,7 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
     $scope.selectedProgram = navigateBackService.program;
     $scope.selectedPeriod = navigateBackService.period;
 
-    if($scope.selectedZone) {
+    if ($scope.selectedZone) {
       $scope.fromBackNavigation = true;
     } else {
       $scope.fromBackNavigation = false;
@@ -87,7 +66,7 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
     }
     $scope.$watch('deliveryZones', function () {
       if ($scope.deliveryZones && $scope.selectedZone) {
-        $scope.selectedZone = _.where($scope.deliveryZones, {id:$scope.selectedZone.id})[0];
+        $scope.selectedZone = _.where($scope.deliveryZones, {id: $scope.selectedZone.id})[0];
         $scope.loadPrograms();
       }
     });
@@ -99,51 +78,72 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
     function isCached() {
       return _.find($scope.distributionList, function (distribution) {
         return distribution.deliveryZone.id == $scope.selectedZone.id &&
-          distribution.program.id == $scope.selectedProgram.id &&
-          distribution.period.id == $scope.selectedPeriod.id;
+            distribution.program.id == $scope.selectedProgram.id &&
+            distribution.period.id == $scope.selectedPeriod.id;
       });
     }
 
     if (isCached()) {
       $scope.message = messageService.get("message.distribution.already.cached",
-        $scope.selectedZone.name, $scope.selectedProgram.name, $scope.selectedPeriod.name);
+          $scope.selectedZone.name, $scope.selectedProgram.name, $scope.selectedPeriod.name);
       return;
     }
 
-    var distribution = new Distribution($scope.selectedZone, $scope.selectedProgram, $scope.selectedPeriod);
+    DeliveryZoneFacilities.get({"programId": $scope.selectedProgram.id, "deliveryZoneId": $scope.selectedZone.id }, onReferenceDataSuccess, {});
 
-    $http.post('/distributions.json', distribution).success(onInitSuccess);
 
-    function onInitSuccess(data, status) {
-      if (status == 201) {
-        $scope.message = data.success;
-        addDistributionToStore(data.distribution);
-      } else {
-        $scope.distribution = data.distribution;
-        var dialogOpts = {
-          id:"distributionInitiated",
-          header:messageService.get('label.distribution.initiated'),
-          body:data.success
+    function onReferenceDataSuccess(data) {
+
+      if (data.facilities.length > 0) {
+        var distributionReferenceDataTransaction = IndexedDB.getConnection().transaction('distributionReferenceData', 'readwrite');
+        var distributionReferenceDataStore = distributionReferenceDataTransaction.objectStore('distributionReferenceData');
+        var zpp = $scope.selectedZone.id + '_' + $scope.selectedProgram.id + '_' + $scope.selectedPeriod.id;
+        var referenceData = {zpp: zpp, facilities: data.facilities}
+        distributionReferenceDataStore.put(referenceData);
+        distributionReferenceDataTransaction.oncomplete = function () {
+          cacheDistribution();
+          $scope.$apply();
         };
-        OpenLmisDialog.newDialog(dialogOpts, $scope.distributionInitiatedCallback, $dialog, messageService);
+      } else {
+        $scope.message = messageService.get("message.no.facility.available", $scope.selectedProgram.name,
+            $scope.selectedZone.name);
       }
     }
 
-    $scope.distributionInitiatedCallback = function (result) {
-      if (result) {
-        addDistributionToStore($scope.distribution);
-      }
+    function cacheDistribution() {
+      var distribution = new Distribution($scope.selectedZone, $scope.selectedProgram, $scope.selectedPeriod);
+      $http.post('/distributions.json', distribution).success(onInitSuccess);
 
-      $scope.distribution = null;
+      function onInitSuccess(data, status) {
+        if (status == 201) {
+          $scope.message = data.success;
+          addDistributionToStore(data.distribution);
+        } else {
+          $scope.distribution = data.distribution;
+          var dialogOpts = {
+            id: "distributionInitiated",
+            header: messageService.get('label.distribution.initiated'),
+            body: data.success
+          };
+          OpenLmisDialog.newDialog(dialogOpts, $scope.distributionInitiatedCallback, $dialog, messageService);
+        }
+
+        $scope.distributionInitiatedCallback = function (result) {
+          if (result) {
+            addDistributionToStore($scope.distribution);
+          }
+
+        }
+      }
     }
+
   };
   function addDistributionToStore(distribution) {
     var transaction = IndexedDB.getConnection().transaction(['distributions', 'distributionReferenceData'], 'readwrite');
     var distributionStore = transaction.objectStore('distributions');
     distributionStore.put(distribution);
-    transaction.oncomplete = function (e) {
-      $scope.loadDistributionsFromCache();
-      $scope.$apply();
+    transaction.oncomplete = function () {
+      $scope.$broadcast('distributionAdded');
     };
   }
 
@@ -154,10 +154,10 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
 
   $scope.viewLoadAmount = function () {
     var data = {
-      deliveryZone:$scope.selectedZone,
-      program:$scope.selectedProgram,
-      period:$scope.selectedPeriod,
-      distributionList:$scope.distributionList
+      deliveryZone: $scope.selectedZone,
+      program: $scope.selectedProgram,
+      period: $scope.selectedPeriod,
+      distributionList: $scope.distributionList
     }
     navigateBackService.setData(data);
     $location.path("/view-load-amounts/" + $scope.selectedZone.id + "/" + +$scope.selectedProgram.id + "/" + $scope.selectedPeriod.id);
@@ -165,7 +165,7 @@ function DistributionController($scope, $location, deliveryZones, DeliveryZoneAc
 }
 
 DistributionController.resolve = {
-  deliveryZones:function (UserDeliveryZones, $timeout, $q) {
+  deliveryZones: function (UserDeliveryZones, $timeout, $q) {
     var deferred = $q.defer();
     $timeout(function () {
       UserDeliveryZones.get({}, function (data) {

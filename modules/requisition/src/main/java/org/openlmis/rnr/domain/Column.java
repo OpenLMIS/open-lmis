@@ -6,17 +6,26 @@
 
 package org.openlmis.rnr.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openlmis.core.domain.BaseModel;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor
+@NoArgsConstructor
 public abstract class Column extends BaseModel {
 
   protected String name;
   protected String label;
-  protected boolean visible;
+  protected Boolean visible;
 
-  public abstract Integer columnWidth();
+  @JsonIgnore
+  public abstract Integer getColumnWidth();
+
+  @JsonIgnore
+  public abstract ColumnType getColumnType();
 }

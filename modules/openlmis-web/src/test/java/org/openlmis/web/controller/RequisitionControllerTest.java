@@ -20,18 +20,14 @@ import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.RegimenColumn;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.MessageService;
-import org.openlmis.core.service.RegimenColumnService;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.rnr.domain.Comment;
-import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrColumn;
+import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
+import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.configurationReader.StaticReferenceDataReader;
@@ -416,6 +412,18 @@ public class RequisitionControllerTest {
 
     verify(requisitionService).getCommentsByRnrId(rnr.getId());
     assertThat(comments, is(response.getBody().getData().get(COMMENTS)));
+  }
+
+  @Test
+  public void shouldGetReferenceDataForRnr() throws Exception {
+    List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes = new ArrayList<>();
+    when(requisitionService.getLossesAndAdjustmentsTypes()).thenReturn(lossesAndAdjustmentsTypes);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.getReferenceData();
+
+    verify(requisitionService).getLossesAndAdjustmentsTypes();
+    assertThat((List<LossesAndAdjustmentsType>) responseEntity.getBody().getData().get("lossAdjustmentTypes"), is(lossesAndAdjustmentsTypes));
+
   }
 
   private Rnr createRequisition() {

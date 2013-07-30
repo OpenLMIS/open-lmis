@@ -79,6 +79,10 @@ services.factory('ReferenceData', function ($resource) {
   return $resource('/reference-data/currency.json', {}, {});
 });
 
+services.factory('LineItemPageSize', function ($resource) {
+  return $resource('/reference-data/lineitem/pagesize.json', {}, {});
+});
+
 services.factory('Requisitions', function ($resource) {
   return $resource('/requisitions/:id/:operation.json', {id: '@id', operation: '@operation'}, update);
 });

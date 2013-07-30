@@ -188,9 +188,10 @@ public class FacilityControllerTest {
   @Test
   public void shouldSearchFacilitiesByCodeOrName() throws Exception {
     List<Facility> facilities = Arrays.asList(new Facility());
-    when(facilityService.searchFacilitiesByCodeOrName("searchParam")).thenReturn(facilities);
+    Boolean virtualFacility = false;
+    when(facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("searchParam", virtualFacility)).thenReturn(facilities);
 
-    List<Facility> returnedFacilities = facilityController.get("searchParam");
+    List<Facility> returnedFacilities = facilityController.get("searchParam", virtualFacility);
 
     assertThat(returnedFacilities, is(facilities));
   }
