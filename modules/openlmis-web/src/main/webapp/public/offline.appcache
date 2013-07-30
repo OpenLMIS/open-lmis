@@ -30,8 +30,6 @@ CACHE:
 /public/lib/localstorage/localStorage.js
 /public/js/shared/localStorageKeys.js
 
-
-/public/pages/index-offline.html
 /public/pages/navigation-offline.html
 /public/pages/header-offline.html
 
@@ -67,7 +65,12 @@ CACHE:
 /public/js/shared/util.js
 
 /public/images/logo.png
-
+/public/images/left-arrow.png
+/public/images/loader.gif
+/public/images/login-bg.png
 
 FALLBACK:
 / /public/pages/index-offline.html
+
+NETWORK:
+*
