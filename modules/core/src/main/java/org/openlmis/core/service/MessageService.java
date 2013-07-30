@@ -6,7 +6,9 @@
 
 package org.openlmis.core.service;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -20,22 +22,27 @@ public class MessageService {
 
   private MessageSource messageSource;
 
+  @Setter
+  @Getter
+  private Locale currentLocale;
+
   @Autowired
   public MessageService(MessageSource messageSource) {
     this.messageSource = messageSource;
+    this.currentLocale = Locale.getDefault();
   }
 
 
   public String message(String key) {
-    return message(key, Locale.getDefault(), (Object) null);
+    return message(key, currentLocale, (Object) null);
   }
 
   public String message(OpenLmisMessage openLmisMessage) {
-    return message(openLmisMessage.getCode(), (Object)openLmisMessage.getParams());
+    return message(openLmisMessage.getCode(), (Object) openLmisMessage.getParams());
   }
 
   public String message(String key, Object... args) {
-    return message(key, Locale.getDefault(), args);
+    return message(key, currentLocale, args);
   }
 
   private String message(String key, Locale locale, Object... args) {
