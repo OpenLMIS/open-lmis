@@ -18,6 +18,7 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.DistributionPage;
+import org.openlmis.pageobjects.FacilityListPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openqa.selenium.WebElement;
@@ -155,6 +156,34 @@ public class ManageDistribution extends TestCaseHelper {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
     distributionPage.clickInitiateDistribution();
   }
+
+  @And("^I click record data$")
+  public void clickRecordData() throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.clickRecordData();
+  }
+
+  @Then("^I should see No facility selected$")
+  public void shouldSeeNoFacilitySelected() throws IOException {
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage.verifyNoFacilitySelected();
+  }
+
+  @And("^I should see \"([^\"]*)\" facilities that support the program \"([^\"]*)\" and delivery zone \"([^\"]*)\"$")
+  public void shouldSeeNoFacilitySelected(String active, String program, String deliveryZone) throws IOException, SQLException {
+    boolean activeFlag = false;
+    if (active.equalsIgnoreCase("active"))
+      activeFlag = true;
+
+    verifyFacilityList(activeFlag, program, deliveryZone);
+  }
+
+  @And("^I should see Delivery Zone \"([^\"]*)\", Program \"([^\"]*)\" and Period \"([^\"]*)\" in the header$")
+  public void shouldVerifyHeaderElements(String deliveryZone, String program, String period) throws IOException, SQLException {
+    FacilityListPage facilityListPage=new FacilityListPage(testWebDriver);
+    facilityListPage.verifyHeaderElements(deliveryZone, program, period);
+  }
+
 
   @And("^I click view load amount$")
   public void clickViewLoadAmount() throws IOException {
@@ -342,6 +371,25 @@ public class ManageDistribution extends TestCaseHelper {
 
   }
 
+  public void verifyFacilityList(boolean active, String program, String deliveryZone) throws SQLException, IOException {
+    String collectionOfValuesPresentINDropDown = "";
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    List<String> valuesToBeVerified = dbWrapper.getFacilityCodeNameForDeliveryZoneAndProgram(deliveryZone, program, active);
+    List<String> facilityList = facilityListPage.getAllFacilitiesFromDropDown();
+
+    int valuesToBeVerifiedCounter = valuesToBeVerified.size();
+    int valuesInSelectFieldCounter = facilityList.size();
+    if (valuesToBeVerifiedCounter == valuesInSelectFieldCounter - 1) {
+      for (String value : facilityList) {
+        collectionOfValuesPresentINDropDown = collectionOfValuesPresentINDropDown + value.trim();
+      }
+      for (String values : valuesToBeVerified) {
+        assertTrue(collectionOfValuesPresentINDropDown.contains(values));
+      }
+    } else {
+      fail("Values in select field are not same in number as values to be verified");
+    }
+  }
 
   private void verifySelectFieldValueNotPresent(String valueToBeVerified, List<WebElement> valuesPresentInDropDown) {
     boolean flag = false;

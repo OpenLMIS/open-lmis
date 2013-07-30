@@ -37,7 +37,6 @@ dependencies {
     testCompile 'info.cukes:cucumber-junit:1.1.2'
     testCompile 'info.cukes:cucumber-jvm:1.1.2'
     testCompile 'info.cukes:cucumber-jvm-deps:1.0.3'
-    testCompile 'info.cukes:gherkin:2.12.0'
     testCompile 'junit:junit:4.10'
     testCompile 'postgresql:postgresql:9.0-801.jdbc4'
 }

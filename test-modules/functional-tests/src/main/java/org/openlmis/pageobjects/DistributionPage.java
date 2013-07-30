@@ -39,6 +39,9 @@ public class DistributionPage extends RequisitionPage {
   @FindBy(how = ID, using = "initiateDistribution")
   private static WebElement initiateDistributionButton;
 
+  @FindBy(how = XPATH, using = "//a[contains(text(),'Record Data')]")
+  private static WebElement recordDataButton;
+
   @FindBy(how = XPATH, using = "//a[contains(text(),'Input facility data')]")
   private static WebElement inputFacilityDataLink;
 
@@ -79,6 +82,12 @@ public class DistributionPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(initiateDistributionButton);
     initiateDistributionButton.click();
      testWebDriver.sleep(200);
+  }
+
+  public void clickRecordData() {
+    testWebDriver.waitForElementToAppear(recordDataButton);
+    recordDataButton.click();
+    testWebDriver.sleep(200);
   }
 
   public void verifyDownloadSuccessFullMessage(String deliveryZone, String program, String period)
