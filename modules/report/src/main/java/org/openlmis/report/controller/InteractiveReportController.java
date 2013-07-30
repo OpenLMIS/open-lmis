@@ -183,6 +183,7 @@ public class InteractiveReportController  extends BaseController {
     }
 
 
+ /*
     @RequestMapping(value = "/stockedOut", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_STOCKED_OUT_REPORT')")
     public Pages getStockedOutReportData( //@PathVariable(value = "reportKey") String reportKey,
@@ -202,6 +203,10 @@ public class InteractiveReportController  extends BaseController {
 
         return new Pages(page,totalRecCount,max,reportList);
     }
+
+   */
+
+
 
      @RequestMapping(value = "/reportdata/adjustmentSummary", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ADJUSTMENT_SUMMARY_REPORT')")
@@ -290,5 +295,29 @@ public class InteractiveReportController  extends BaseController {
 
         return new Pages(page,totalRecCount,max,stockImbalanceReportList);
     }
+
+
+//
+@RequestMapping(value = "/stockedOut", method = GET, headers = BaseController.ACCEPT_JSON)
+@PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_STOCKED_OUT_REPORT')")
+public Pages getStockedOutReportData( //@PathVariable(value = "reportKey") String reportKey,
+                                      @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                      @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                      // @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
+                                      HttpServletRequest request
+) {
+
+
+
+    Report report = reportManager.getReportByKey("stocked_out");
+    List<StockedOutReport> stockedOutFacilityList =
+            (List<StockedOutReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
+     int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
+
+    return new Pages(page,totalRecCount,max,stockedOutFacilityList);
+}
+
+
+
 
 }

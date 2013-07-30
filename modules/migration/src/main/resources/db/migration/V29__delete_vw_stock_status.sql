@@ -1,1 +1,0 @@
-DROP VIEW vw_stock_status;

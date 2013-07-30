@@ -97,7 +97,7 @@
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="stocked_out"/>
                     <property name="template" value="stocked-out-facilities.jasper"/>
-                    <property name="reportDataProvider" ref="stockedOutFacilitiesReportDataProvider"/>
+                    <property name="reportDataProvider" ref="stockedOutReportDataProvider"/>
                     <property name="id" value="RP-Stocked_Out_Facilities"/>
                     <property name="name" value="Stocked Out Facilities"/>
                     <property name="title" value="Stocked Out Facilities"/>

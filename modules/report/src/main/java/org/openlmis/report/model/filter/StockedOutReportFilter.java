@@ -5,10 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
 
+import java.text.DateFormat;
 import java.util.Date;
 
 /**
- * User: Wolde
+ * User: mahmed
  * Date: 6/26/13
  * Time: 3:58 PM
  */
@@ -17,13 +18,37 @@ import java.util.Date;
 @AllArgsConstructor
 public class StockedOutReportFilter implements ReportData {
 
+
+    private String periodType;
+    private int yearFrom;
+    private int yearTo;
+    private int monthFrom;
+    private int monthTo;
     private Date startDate;
     private Date endDate;
-    String period;
-    String reportingGroup;
-    String facilityType;
-    String program;
-    String schedule;
-    String productCategory;
-    String periodType;
+    private int quarterFrom;
+    private int quarterTo;
+    private int semiAnnualFrom;
+    private int semiAnnualTo;
+
+    private int facilityTypeId;
+    private String facilityType;
+    private int productId;
+    private int productCategoryId;
+    private int rgroupId;
+    private String rgroup;
+    private String facility;
+
+    @Override
+    public String toString(){
+
+        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
+
+        StringBuilder filtersValue = new StringBuilder("");
+        filtersValue.append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
+                append("Facility Types : ").append(this.getFacilityType()).append("\n").
+                append("Reporting Groups : ").append(this.getRgroup());
+
+        return filtersValue.toString();
+    }
 }

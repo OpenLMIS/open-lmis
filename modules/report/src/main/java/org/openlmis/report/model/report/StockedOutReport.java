@@ -8,11 +8,11 @@ import org.openlmis.report.model.ReportData;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StockedOutFacility implements ReportData {
+public class StockedOutReport implements ReportData {
 
-    private String id;
-    private String code;
-    private String name;
-    private String facilityType;
+    private String facilitycode;
+    private String facility;
+    private String product;
+    private String facilitytypename;
     private String location;
 }

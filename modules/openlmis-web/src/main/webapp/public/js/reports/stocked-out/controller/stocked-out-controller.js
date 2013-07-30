@@ -1,6 +1,7 @@
-function StockedOutController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, StockedOutFacilities, ReportSchedules, ReportFacilityTypes , Periods, ProductCategories , ReportPrograms, Products,OperationYears,Months, $http, $routeParams,$location) {
+function StockedOutController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, StockedOutReport, ReportSchedules, ReportFacilityTypes , Periods, ProductCategories , ReportPrograms, Products,OperationYears,Months, $http, $routeParams,$location) {
     //to minimize and maximize the filter section
     var section = 1;
+    $scope.summaries = {};
 
     $scope.section = function (id) {
         section = id;
@@ -423,9 +424,9 @@ $scope.getParams = function(pageSize, page){
 
 $scope.getPagedDataAsync = function (pageSize, page) {
     var params = $scope.getParams(pageSize, page);
-    StockedOutFacilities.get(params, function(data) {
+    StockedOutReport.get(params, function(data) {
         $scope.setPagingData(data.pages.rows[0].details,page,pageSize,data.pages.total);
-        $scope.summaries    =  data.pages.rows[0].summary;
+        //$scope.summaries    =  data.pages.rows[0].summary;
     });
 
 };
