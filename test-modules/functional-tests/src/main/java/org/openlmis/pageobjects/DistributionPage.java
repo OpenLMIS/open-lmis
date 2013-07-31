@@ -85,6 +85,7 @@ public class DistributionPage extends RequisitionPage {
   }
 
   public void clickRecordData() {
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(recordDataButton);
     recordDataButton.click();
     testWebDriver.sleep(200);
