@@ -903,6 +903,18 @@ public class DBWrapper {
       "  (SELECT id FROM delivery_zones WHERE code='" + deliveryZoneCode + "'));");
   }
 
+  public void deleteDeliveryZoneToFacilityMapping(String deliveryZoneName) throws SQLException, IOException {
+    update("delete from delivery_zone_members where deliveryzoneid in (select id from delivery_zones where name='"+deliveryZoneName+"');");
+  }
+
+  public void deleteProgramToFacilityMapping(String programCode) throws SQLException, IOException {
+    update("delete from programs_supported where programid in (select id from programs where code='"+programCode+"');");
+  }
+
+  public void updateActiveStatusOfFacility(String facilityCode) throws SQLException, IOException {
+    update("update facilities set active='false' where code='"+facilityCode+"';");
+  }
+
   public void updatePopulationOfFacility(String facility, String population) throws SQLException, IOException {
 
     update("update facilities set catchmentpopulation=" + population + " where code='" + facility + "';");

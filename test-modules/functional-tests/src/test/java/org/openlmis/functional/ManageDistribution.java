@@ -358,6 +358,86 @@ public class ManageDistribution extends TestCaseHelper {
     verifySelectedOptionFromSelectField(defaultPeriodValuesToBeVerified, actualSelectFieldElement);
   }
 
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyNoFacilityToBeShownIfNotMappedWithDeliveryZone(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                      String facilityCodeFirst, String facilityCodeSecond,
+                                                      String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("MANAGE_DISTRIBUTION");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+      deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond,
+      programFirst, programSecond, schedule);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+    dbWrapper.deleteDeliveryZoneToFacilityMapping(deliveryZoneNameFirst);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+    distributionPage.selectValueFromPeriod(period+totalNumberOfPeriods);
+    distributionPage.clickInitiateDistribution();
+    distributionPage.verifyFacilityNotSupportedMessage(programFirst,deliveryZoneNameFirst);
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyNoFacilityToBeShownIfNotMappedWithPrograms(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                                                       String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                                       String facilityCodeFirst, String facilityCodeSecond,
+                                                                       String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("MANAGE_DISTRIBUTION");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+      deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond,
+      programFirst, programSecond, schedule);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+    dbWrapper.deleteProgramToFacilityMapping(programFirst);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+    distributionPage.selectValueFromPeriod(period+totalNumberOfPeriods);
+    distributionPage.clickInitiateDistribution();
+    distributionPage.verifyFacilityNotSupportedMessage(programFirst,deliveryZoneNameFirst);
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyNoFacilityToBeShownIfInactive(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                                                   String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                                   String facilityCodeFirst, String facilityCodeSecond,
+                                                                   String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("MANAGE_DISTRIBUTION");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+      deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond,
+      programFirst, programSecond, schedule);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+    dbWrapper.updateActiveStatusOfFacility(facilityCodeFirst);
+    dbWrapper.updateActiveStatusOfFacility(facilityCodeSecond);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+    distributionPage.selectValueFromPeriod(period+totalNumberOfPeriods);
+    distributionPage.clickInitiateDistribution();
+    distributionPage.verifyFacilityNotSupportedMessage(programFirst,deliveryZoneNameFirst);
+  }
+
+
 
   private void verifyElementsPresent(DistributionPage distributionPage) {
     assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.IsDisplayedSelectDeliveryZoneSelectBox());
