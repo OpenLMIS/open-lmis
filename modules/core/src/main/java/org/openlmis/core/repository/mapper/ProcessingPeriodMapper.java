@@ -34,6 +34,9 @@ public interface ProcessingPeriodMapper {
   @Select("SELECT * FROM processing_periods WHERE id = #{id}")
   ProcessingPeriod getById(Long id);
 
+  @Select("SELECT id FROM processing_periods WHERE name = #{name}")
+  Long getIdByName(String name);
+
   @Select("SELECT * FROM processing_periods " +
     "WHERE scheduleId = #{scheduleId} " +
     "AND startDate > (SELECT pp.endDate FROM processing_periods pp WHERE pp.id = #{startingPeriodId}) " +

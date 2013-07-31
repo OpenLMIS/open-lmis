@@ -82,4 +82,8 @@ public class ProcessingPeriodRepository {
   public List<ProcessingPeriod> getAllPeriodsBefore(Long scheduleId, Date beforeDate) {
     return mapper.getAllPeriodsBefore(scheduleId, beforeDate);
   }
+
+  public Long getIdByName(String name){
+      return mapper.getIdByName(name);
+  }
 }

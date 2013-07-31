@@ -291,6 +291,16 @@
                         <property name="tableName" value="delivery_zone_warehouses"/>
                     </bean>
                 </entry>
+                <entry key="budget">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Budget"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.Budget</value>
+                        </property>
+                        <property name="recordHandler" ref="budgetHandler"/>
+                        <property name="tableName" value="budgets"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

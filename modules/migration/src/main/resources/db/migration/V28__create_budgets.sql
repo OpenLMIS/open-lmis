@@ -5,7 +5,7 @@ CREATE TABLE budgets (
  id SERIAL PRIMARY KEY,
  facilityId INTEGER NOT NULl,
  periodId INTEGER NOT NULL,
- programId  integer NOT NULL,
+ programId  INTEGER NOT NULL,
  netBudgetAmount NUMERIC(20,2) NOT NULl,
  comment TEXT,
  createdBy INTEGER,
