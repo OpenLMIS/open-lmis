@@ -13,7 +13,6 @@ import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.InitiateRnRPage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ViewRequisitionPage;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -30,6 +29,10 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
 public class RnRPagination extends TestCaseHelper {
+
+  private static final String FULL_SUPPLY_BASE_LOCATOR="//table[@id='fullSupplyTable']";
+  private static final String NON_FULL_SUPPLY_BASE_LOCATOR="//table[@id='nonFullSupplyTable']";
+
   @BeforeMethod(groups = {"functional"})
   public void setUp() throws Exception {
     super.setup();
@@ -67,7 +70,7 @@ public class RnRPagination extends TestCaseHelper {
     initiateRnRPage.PopulateMandatoryFullSupplyDetails(11, 10);
 
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
-    assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[1]/tr[1]/td").getText(), "Antibiotics");
+    assertEquals(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[1]/tr[1]/td").getText(), "Antibiotics");
     verifyPageLinksFromLastPage();
 
     initiateRnRPage.addMultipleNonFullSupplyLineItems(11, false);
@@ -77,7 +80,7 @@ public class RnRPagination extends TestCaseHelper {
     verifyNextAndLastLinksEnabled();
 
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
-    assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[1]/tr[1]/td").getText(), "Antibiotics");
+    assertEquals(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[1]/tr[1]/td").getText(), "Antibiotics");
     verifyPageLinksFromLastPage();
 
     initiateRnRPage.submitRnR();
@@ -94,7 +97,7 @@ public class RnRPagination extends TestCaseHelper {
     verifyDisplayOrderFullSupplyOnViewRequisition(10);
 
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
-    assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[1]/tr[1]/td").getText(), "Antibiotics");
+    assertEquals(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[1]/tr[1]/td").getText(), "Antibiotics");
     verifyPageLinksFromLastPage();
 
     viewRequisitionPage.clickNonFullSupplyTab();
@@ -106,7 +109,7 @@ public class RnRPagination extends TestCaseHelper {
     verifyNextAndLastLinksEnabled();
 
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
-    assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody/tr[1]/td").getText(), "Antibiotics");
+    assertEquals(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody/tr[1]/td").getText(), "Antibiotics");
 
 
     verifyPageLinksFromLastPage();
@@ -175,36 +178,35 @@ public class RnRPagination extends TestCaseHelper {
     verifyCategoryDisplayOrderNonFullSupply(10);
   }
 
-//  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-//  public void testCategoryDefaultDisplayOrder(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
-//    dbWrapper.setupMultipleCategoryProducts(program, "Lvl3 Hospital", 11, true);
-//    dbWrapper.insertFacilities("F10", "F11");
-//    dbWrapper.configureTemplate(program);
-//    List<String> rightsList = new ArrayList<String>();
-//    rightsList.add("CREATE_REQUISITION");
-//    rightsList.add("VIEW_REQUISITION");
-//    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
-//    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-//    dbWrapper.insertRoleAssignment("200", "store in-charge");
-//    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
-//    dbWrapper.insertSchedule("M", "Monthly", "Month");
-//    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
-//    dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
-//    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
-//    dbWrapper.insertSupplyLines("N1", program, "F10");
-//
-//    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-//    HomePage homePage = loginPage.loginAs(userSIC, password);
-//    String periodDetails = homePage.navigateAndInitiateRnr(program);
-//    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-//
-//    testWebDriver.sleep(2000);
-//    verifyCategoryDefaultDisplayOrderFullSupply();
-//
-//
-//    initiateRnRPage.addMultipleNonFullSupplyLineItems(11, true);
-//    verifyCategoryDefaultDisplayOrderNonFullSupply();
-//  }
+  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testCategoryDefaultDisplayOrder(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
+    dbWrapper.setupMultipleCategoryProducts(program, "Lvl3 Hospital", 11, true);
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.configureTemplate(program);
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("CREATE_REQUISITION");
+    rightsList.add("VIEW_REQUISITION");
+    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+    dbWrapper.insertRoleAssignment("200", "store in-charge");
+    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
+    dbWrapper.insertSchedule("M", "Monthly", "Month");
+    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
+    dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
+    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
+    dbWrapper.insertSupplyLines("N1", program, "F10");
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateAndInitiateRnr(program);
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+
+    testWebDriver.sleep(2000);
+    verifyCategoryDefaultDisplayOrderFullSupply();
+
+    initiateRnRPage.addMultipleNonFullSupplyLineItems(11, true);
+    verifyCategoryDefaultDisplayOrderNonFullSupply();
+  }
 
   public void verifyPageLinksFromLastPage() throws Exception {
     verifyNextAndLastLinksDisabled();
@@ -264,8 +266,8 @@ public class RnRPagination extends TestCaseHelper {
 
   public void verifyDisplayOrderFullSupply(int numberOfLineItemsPerPage) throws Exception {
     for (int i = 0; i < numberOfLineItemsPerPage; i++) {
-      testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span/ng-switch/span"));
-      assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span/ng-switch/span").getText(), "F" + i);
+      testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span/ng-switch/span"));
+      assertEquals(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span/ng-switch/span").getText(), "F" + i);
     }
   }
 
@@ -278,8 +280,8 @@ public class RnRPagination extends TestCaseHelper {
 
   public void verifyDisplayOrderNonFullSupply(int numberOfLineItemsPerPage) throws Exception {
     for (int i = 0; i < numberOfLineItemsPerPage; i++) {
-      testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span"));
-      assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span").getText(), "NF" + i);
+      testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span"));
+      assertEquals(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[2]/td[1]/ng-switch/span").getText(), "NF" + i);
     }
   }
 
@@ -291,44 +293,46 @@ public class RnRPagination extends TestCaseHelper {
   }
 
   public void verifyDefaultDisplayOrderFullSupply() throws Exception {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[1]/tr[2]/td[1]/ng-switch/span/ng-switch/span"));
-    assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[1]/tr[2]/td[1]/ng-switch/span/ng-switch/span").getText(), "F0");
-    assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[2]/tr[2]/td[1]/ng-switch/span/ng-switch/span").getText(), "F1");
-    assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[3]/tr[2]/td[1]/ng-switch/span/ng-switch/span").getText(), "F10");
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[1]/tr[2]/td[1]/ng-switch/span/ng-switch/span"));
+    assertEquals(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[1]/tr[2]/td[1]/ng-switch/span/ng-switch/span").getText(), "F0");
+    assertEquals(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[2]/tr[2]/td[1]/ng-switch/span/ng-switch/span").getText(), "F1");
+    assertEquals(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[3]/tr[2]/td[1]/ng-switch/span/ng-switch/span").getText(), "F10");
   }
 
   public void verifyDefaultDisplayOrderNonFullSupply() throws Exception {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[1]/tr[2]/td[1]/ng-switch/span"));
-    assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[1]/tr[2]/td[1]/ng-switch/span").getText(), "NF0");
-    assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[2]/tr[2]/td[1]/ng-switch/span").getText(), "NF1");
-    assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[3]/tr[2]/td[1]/ng-switch/span").getText(), "NF10");
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[1]/tr[2]/td[1]/ng-switch/span"));
+    assertEquals(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[1]/tr[2]/td[1]/ng-switch/span").getText(), "NF0");
+    assertEquals(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[2]/tr[2]/td[1]/ng-switch/span").getText(), "NF1");
+    assertEquals(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[3]/tr[2]/td[1]/ng-switch/span").getText(), "NF10");
 
   }
 
   public void verifyCategoryDisplayOrderFullSupply(int numberOfLineItems) throws Exception {
     for (int i = 0; i < numberOfLineItems; i++) {
-      testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[" + (i + 1) + "]/tr[1]/td"));
-      assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[" + (i + 1) + "]/tr[1]/td").getText(), "Antibiotics" + i);
+      testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[1]/td"));
+      assertEquals(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[1]/td").getText(), "Antibiotics" + i);
     }
   }
 
   public void verifyCategoryDisplayOrderNonFullSupply(int numberOfLineItems) throws Exception {
     for (int i = 0; i < numberOfLineItems; i++) {
-      testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[" + (i + 1) + "]/tr[1]/td"));
-      assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[" + (i + 1) + "]/tr[1]/td").getText(), "Antibiotics" + i);
+      testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[1]/td"));
+      assertEquals(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[" + (i + 1) + "]/tr[1]/td").getText(), "Antibiotics" + i);
     }
   }
 
   public void verifyCategoryDefaultDisplayOrderFullSupply() throws Exception {
-    assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[1]/tr[1]/td").getText(), "Antibiotics0");
-    assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[2]/tr[1]/td").getText(), "Antibiotics1");
-    assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[3]/tr[1]/td").getText(), "Antibiotics10");
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[1]/tr[1]/td"));
+    assertEquals(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[1]/tr[1]/td").getText(), "Antibiotics0");
+    assertEquals(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[2]/tr[1]/td").getText(), "Antibiotics1");
+    assertEquals(testWebDriver.getElementByXpath(FULL_SUPPLY_BASE_LOCATOR + "/tbody[3]/tr[1]/td").getText(), "Antibiotics10");
   }
 
   public void verifyCategoryDefaultDisplayOrderNonFullSupply() throws Exception {
-    assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[1]/tr[1]/td").getText(), "Antibiotics0");
-    assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[2]/tr[1]/td").getText(), "Antibiotics1");
-    assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[3]/tr[1]/td").getText(), "Antibiotics10");
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[1]/tr[1]/td"));
+    assertEquals(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[1]/tr[1]/td").getText(), "Antibiotics0");
+    assertEquals(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[2]/tr[1]/td").getText(), "Antibiotics1");
+    assertEquals(testWebDriver.getElementByXpath(NON_FULL_SUPPLY_BASE_LOCATOR + "/tbody[3]/tr[1]/td").getText(), "Antibiotics10");
 
   }
 

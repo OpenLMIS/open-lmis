@@ -26,13 +26,31 @@ public class RestCHWService {
 
   public void create(CHW chw, String userName) {
     chw.validate();
-    if(getExistingFacilityForCode(chw.getAgentCode()) != null) {
+    if (getExistingFacilityForCode(chw.getAgentCode()) != null) {
       throw new DataException("error.chw.already.registered");
     }
     Facility facility = getFacilityForCHW(chw);
     facility.setCreatedBy(vendorService.getByName(userName).getId());
     facility.setModifiedBy(facility.getCreatedBy());
     facilityService.save(facility);
+  }
+
+  public void update(CHW chw, String userName) {
+    if (chw.getActive() == null) {
+      throw new DataException("error.restapi.mandatory.missing");
+    }
+    chw.validate();
+
+    Facility chwFacility = getExistingFacilityForCode(chw.getAgentCode());
+    validateCHWForUpdate(chwFacility);
+
+    chwFacility.setName(chw.getAgentName());
+    chwFacility.setMainPhone(chw.getPhoneNumber() == null ? chwFacility.getMainPhone() : chw.getPhoneNumber());
+    chwFacility.setActive(Boolean.parseBoolean(chw.getActive()));
+    fillBaseFacility(chw, chwFacility);
+    chwFacility.setModifiedDate(new Date());
+    chwFacility.setModifiedBy(vendorService.getByName(userName).getId());
+    facilityService.update(chwFacility);
   }
 
   private Facility getExistingFacilityForCode(String agentCode) {
@@ -65,28 +83,10 @@ public class RestCHWService {
 
   private Facility getValidatedBaseFacility(CHW chw) {
     Facility baseFacility = facilityService.getFacilityWithReferenceDataForCode(chw.getParentFacilityCode());
-    if(baseFacility.getVirtualFacility()) {
+    if (baseFacility.getVirtualFacility()) {
       throw new DataException("error.reference.data.parent.facility.virtual");
     }
     return baseFacility;
-  }
-
-  public void update(CHW chw, String userName) {
-    if (chw.getActive() == null) {
-      throw new DataException("error.restapi.mandatory.missing");
-    }
-    chw.validate();
-
-    Facility chwFacility = getExistingFacilityForCode(chw.getAgentCode());
-    validateCHWForUpdate(chwFacility);
-
-    chwFacility.setName(chw.getAgentName());
-    chwFacility.setMainPhone(chw.getPhoneNumber() == null ? chwFacility.getMainPhone() : chw.getPhoneNumber());
-    chwFacility.setActive(Boolean.parseBoolean(chw.getActive()));
-    fillBaseFacility(chw, chwFacility);
-    chwFacility.setModifiedDate(new Date());
-    chwFacility.setModifiedBy(vendorService.getByName(userName).getId());
-    facilityService.update(chwFacility);
   }
 
   private void validateCHWForUpdate(Facility chwFacility) {
@@ -94,11 +94,11 @@ public class RestCHWService {
       throw new DataException("error.invalid.agent.code");
     }
 
-    if(!chwFacility.getVirtualFacility()) {
+    if (!chwFacility.getVirtualFacility()) {
       throw new DataException("error.chw.not.virtual");
     }
 
-    if(!chwFacility.getDataReportable()) {
+    if (!chwFacility.getDataReportable()) {
       throw new DataException("error.chw.deleted");
     }
   }

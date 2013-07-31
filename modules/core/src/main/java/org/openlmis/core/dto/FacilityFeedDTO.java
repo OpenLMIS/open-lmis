@@ -16,13 +16,12 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 public class FacilityFeedDTO extends BaseFeedDTO {
 
-  private Long id;
 
   private String code;
 
   private String name;
 
-  private Long typeId;
+  private String type;
 
   private String description;
 
@@ -36,7 +35,7 @@ public class FacilityFeedDTO extends BaseFeedDTO {
 
   private String address2;
 
-  private Long geographicZoneID;
+  private String geographicZone;
 
   private Long catchmentPopulation;
 
@@ -74,7 +73,7 @@ public class FacilityFeedDTO extends BaseFeedDTO {
 
   private boolean virtualFacility;
 
-  private Long parentFacilityId;
+  private String parentFacility;
 
   private String comments;
 
@@ -82,20 +81,17 @@ public class FacilityFeedDTO extends BaseFeedDTO {
 
   private Date modifiedDate;
 
-  public FacilityFeedDTO(Facility facility) {
-    this.id = facility.getId();
+  public FacilityFeedDTO(Facility facility, Facility parentFacility) {
     this.code = facility.getCode();
     this.name = facility.getName();
-    this.typeId = facility.getFacilityType().getId();
+    this.type = facility.getFacilityType().getName();
     this.description = facility.getDescription();
     this.GLN = facility.getGln();
     this.mainPhone = facility.getMainPhone();
     this.fax = facility.getFax();
     this.address1 = facility.getAddress1();
     this.address2 = facility.getAddress2();
-    if(facility.getGeographicZone() != null){
-        this.geographicZoneID = facility.getGeographicZone().getId();
-    }
+    this.geographicZone = facility.getGeographicZone().getName();
     this.catchmentPopulation = facility.getCatchmentPopulation();
     this.latitude = facility.getLatitude();
     this.longitude = facility.getLongitude();
@@ -113,8 +109,9 @@ public class FacilityFeedDTO extends BaseFeedDTO {
     this.active = facility.getActive();
     this.goLiveDate = facility.getGoLiveDate();
     this.goDownDate = facility.getGoDownDate();
-    this.parentFacilityId = facility.getParentFacilityId();
+    this.parentFacility = parentFacility != null ? parentFacility.getCode() : null;
     this.virtualFacility = (facility.getVirtualFacility() != null) ? facility.getVirtualFacility() : false;
+    this.satelliteFacility = (facility.getSatellite() != null) ? facility.getSatellite() : false;
     this.comments = facility.getComment();
     this.doNotDisplay = facility.getDataReportable();
     this.modifiedDate = facility.getModifiedDate();

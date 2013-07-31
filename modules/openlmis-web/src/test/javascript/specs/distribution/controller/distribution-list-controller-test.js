@@ -26,11 +26,15 @@ describe('DistributionListController', function () {
     }
   };
 
+  beforeEach(module('distribution'));
+
   beforeEach(inject(function ($rootScope, $location, $controller) {
     scope = $rootScope.$new();
     location = $location;
     var controller = $controller;
-    controller(DistributionListController, {$scope: scope, $location: location, IndexedDB: mockedIndexedDB })
+    var sharedDistribution = {update: function () {
+    }}
+    controller(DistributionListController, {$scope: scope, $location: location, IndexedDB: mockedIndexedDB, SharedDistributions: sharedDistribution })
   }));
 
   it('should set location path', function () {

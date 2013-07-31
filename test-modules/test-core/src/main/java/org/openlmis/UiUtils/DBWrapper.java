@@ -8,6 +8,8 @@ package org.openlmis.UiUtils;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBWrapper {
 
@@ -61,13 +63,35 @@ public class DBWrapper {
 
   }
 
+  public List<String> getFacilityCodeNameForDeliveryZoneAndProgram(String deliveryZoneName, String program, boolean active) throws SQLException {
+    String code = "";
+    String name = "";
+    List<String> codeName = new ArrayList<String>();
+    ResultSet rs = query("select f.code, f.name from facilities f, programs p, programs_supported ps, delivery_zone_members dzm, delivery_zones dz where " +
+      "dzm.Deliveryzoneid=dz.id and " +
+      "f.active='" + active + "' and " +
+      "p.id= ps.programid and " +
+      "p.code='" + program + "' and " +
+      "dz.id=dzm.Deliveryzoneid and " +
+      "dz.name='" + deliveryZoneName + "' and " +
+      "dzm.facilityid=f.id and " +
+      "ps.facilityid=f.id;");
+
+    while (rs.next()) {
+      code = rs.getString("code");
+      name = rs.getString("name");
+      codeName.add(code + " - " + name);
+    }
+    return codeName;
+  }
+
   public void updateVirtualPropertyOfFacility(String facilityCode, String flag) throws SQLException, IOException {
-    update("update facilities set virtualfacility='"+flag+"' where code='"+facilityCode+"';");
+    update("update facilities set virtualfacility='" + flag + "' where code='" + facilityCode + "';");
   }
 
   public String getVirtualPropertyOfFacility(String facilityCode) throws SQLException, IOException {
     String flag = "";
-    ResultSet rs = query("select virtualfacility from facilities where code='"+facilityCode+"';");
+    ResultSet rs = query("select virtualfacility from facilities where code='" + facilityCode + "';");
 
     if (rs.next()) {
       flag = rs.getString("virtualfacility");
@@ -77,7 +101,7 @@ public class DBWrapper {
 
   public String getActivePropertyOfFacility(String facilityCode) throws SQLException, IOException {
     String flag = "";
-    ResultSet rs = query("select active from facilities where code='"+facilityCode+"';");
+    ResultSet rs = query("select active from facilities where code='" + facilityCode + "';");
 
     if (rs.next()) {
       flag = rs.getString("active");
@@ -593,7 +617,7 @@ public class DBWrapper {
   }
 
   public void updateFacilityFieldBYCode(String field, String value, String code) throws IOException, SQLException {
-    update("update facilities set "+field+"='"+value+"' where code='"+code+"';");
+    update("update facilities set " + field + "='" + value + "' where code='" + code + "';");
   }
 
   public void insertSupplyLines(String supervisoryNode, String programCode, String facilityCode) throws IOException, SQLException {
@@ -611,8 +635,8 @@ public class DBWrapper {
 
   }
 
-  public void insertValuesInRegimenLineItems(String patientsontreatment, String patientstoinitiatetreatment, String patientsstoppedtreatment, String remarks ) throws IOException, SQLException {
-    update("update regimen_line_items set patientsontreatment='"+patientsontreatment+"', patientstoinitiatetreatment='"+patientstoinitiatetreatment+"', patientsstoppedtreatment='"+patientsstoppedtreatment+"',remarks='"+remarks+"';");
+  public void insertValuesInRegimenLineItems(String patientsontreatment, String patientstoinitiatetreatment, String patientsstoppedtreatment, String remarks) throws IOException, SQLException {
+    update("update regimen_line_items set patientsontreatment='" + patientsontreatment + "', patientstoinitiatetreatment='" + patientstoinitiatetreatment + "', patientsstoppedtreatment='" + patientsstoppedtreatment + "',remarks='" + remarks + "';");
 
   }
 
@@ -644,7 +668,7 @@ public class DBWrapper {
     String usetID = null;
     ResultSet rs = query("select id from users where username='" + userName + "'");
     if (rs.next()) {
-        usetID = rs.getString("id");
+      usetID = rs.getString("id");
     }
     return usetID;
 
@@ -877,6 +901,18 @@ public class DBWrapper {
       "  (userId, roleId, deliveryZoneId) VALUES\n" +
       "  ((SELECT id FROM USERS WHERE username='" + userName + "'), (SELECT id FROM roles WHERE name = '" + roleName + "'),\n" +
       "  (SELECT id FROM delivery_zones WHERE code='" + deliveryZoneCode + "'));");
+  }
+
+  public void deleteDeliveryZoneToFacilityMapping(String deliveryZoneName) throws SQLException, IOException {
+    update("delete from delivery_zone_members where deliveryzoneid in (select id from delivery_zones where name='"+deliveryZoneName+"');");
+  }
+
+  public void deleteProgramToFacilityMapping(String programCode) throws SQLException, IOException {
+    update("delete from programs_supported where programid in (select id from programs where code='"+programCode+"');");
+  }
+
+  public void updateActiveStatusOfFacility(String facilityCode) throws SQLException, IOException {
+    update("update facilities set active='false' where code='"+facilityCode+"';");
   }
 
   public void updatePopulationOfFacility(String facility, String population) throws SQLException, IOException {

@@ -5,7 +5,7 @@
   -->
 <div ng-controller="DistributionListController">
 
-  <div ng-show="distributionList.length">
+  <div ng-show="sharedDistributions.distributionList.length">
     <h2 openlmis-message="label.initiated.distributions"></h2>
 
     <div id="cachedDistributions">
@@ -23,16 +23,16 @@
       </div>
 
       <div class="list-container">
-        <div class="row-fluid list-row" ng-repeat="distribution in distributionList">
+        <div class="row-fluid list-row" ng-repeat="distribution in sharedDistributions.distributionList">
           <div class="span2">
             <div class="delivery-zone" ng-bind="distribution.deliveryZone.name"></div>
           </div>
           <div class="span2" ng-bind="distribution.program.name"></div>
           <div class="span2" ng-bind="distribution.period.name"></div>
           <div class="span2" ng-bind="distribution.status"></div>
-          <div class="span2"><a href="" openlmis-message="label.record.data"
+          <div class="span2"><a href="javascript:void(0)" openlmis-message="label.record.data"
                                 ng-click="recordFacilityData(distribution.zpp)"></a></div>
-          <div class="span2"><a href="" openlmis-message="label.sync"></a></div>
+          <div class="span2"><a href="javascript:void(0)" openlmis-message="label.sync"></a></div>
         </div>
       </div>
     </div>

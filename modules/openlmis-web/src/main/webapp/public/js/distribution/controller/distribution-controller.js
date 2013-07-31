@@ -5,8 +5,8 @@
  */
 
 
-function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, IndexedDB, navigateBackService, $http, $dialog, $scope, $location) {
-
+function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZoneActivePrograms, messageService,
+                                DeliveryZoneProgramPeriods, IndexedDB, navigateBackService, $http, $dialog, $scope, $location, SharedDistributions) {
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
   var NONE_ASSIGNED_LABEL = messageService.get('label.noneAssigned');
@@ -53,17 +53,11 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
 
 
   $scope.$on('$viewContentLoaded', function () {
-    $scope.distributionList = navigateBackService.distributionList;
     $scope.selectedZone = navigateBackService.deliveryZone;
     $scope.selectedProgram = navigateBackService.program;
     $scope.selectedPeriod = navigateBackService.period;
 
-    if ($scope.selectedZone) {
-      $scope.fromBackNavigation = true;
-    } else {
-      $scope.fromBackNavigation = false;
-
-    }
+    $scope.fromBackNavigation = $scope.selectedZone;
     $scope.$watch('deliveryZones', function () {
       if ($scope.deliveryZones && $scope.selectedZone) {
         $scope.selectedZone = _.where($scope.deliveryZones, {id: $scope.selectedZone.id})[0];
@@ -76,16 +70,16 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
   $scope.initiateDistribution = function () {
 
     function isCached() {
-      return _.find($scope.distributionList, function (distribution) {
+      return _.find(SharedDistributions.distributionList, function (distribution) {
         return distribution.deliveryZone.id == $scope.selectedZone.id &&
-            distribution.program.id == $scope.selectedProgram.id &&
-            distribution.period.id == $scope.selectedPeriod.id;
+          distribution.program.id == $scope.selectedProgram.id &&
+          distribution.period.id == $scope.selectedPeriod.id;
       });
     }
 
     if (isCached()) {
       $scope.message = messageService.get("message.distribution.already.cached",
-          $scope.selectedZone.name, $scope.selectedProgram.name, $scope.selectedPeriod.name);
+        $scope.selectedZone.name, $scope.selectedProgram.name, $scope.selectedPeriod.name);
       return;
     }
 
@@ -106,14 +100,20 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
         };
       } else {
         $scope.message = messageService.get("message.no.facility.available", $scope.selectedProgram.name,
-            $scope.selectedZone.name);
+          $scope.selectedZone.name);
       }
     }
 
     function cacheDistribution() {
-      var distribution = new Distribution($scope.selectedZone, $scope.selectedProgram, $scope.selectedPeriod);
-      $http.post('/distributions.json', distribution).success(onInitSuccess);
+      $scope.distributionInitiatedCallback = function (result) {
+        if (result) {
+          addDistributionToStore($scope.distribution);
+        }
 
+      }
+      var distribution = new Distribution($scope.selectedZone, $scope.selectedProgram, $scope.selectedPeriod);
+
+      $http.post('/distributions.json', distribution).success(onInitSuccess);
       function onInitSuccess(data, status) {
         if (status == 201) {
           $scope.message = data.success;
@@ -128,22 +128,18 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
           OpenLmisDialog.newDialog(dialogOpts, $scope.distributionInitiatedCallback, $dialog, messageService);
         }
 
-        $scope.distributionInitiatedCallback = function (result) {
-          if (result) {
-            addDistributionToStore($scope.distribution);
-          }
-
-        }
       }
     }
 
   };
+
   function addDistributionToStore(distribution) {
     var transaction = IndexedDB.getConnection().transaction(['distributions', 'distributionReferenceData'], 'readwrite');
     var distributionStore = transaction.objectStore('distributions');
     distributionStore.put(distribution);
     transaction.oncomplete = function () {
-      $scope.$broadcast('distributionAdded');
+      SharedDistributions.update();
+      $scope.$apply();
     };
   }
 
@@ -156,8 +152,7 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
     var data = {
       deliveryZone: $scope.selectedZone,
       program: $scope.selectedProgram,
-      period: $scope.selectedPeriod,
-      distributionList: $scope.distributionList
+      period: $scope.selectedPeriod
     }
     navigateBackService.setData(data);
     $location.path("/view-load-amounts/" + $scope.selectedZone.id + "/" + +$scope.selectedProgram.id + "/" + $scope.selectedPeriod.id);
@@ -165,7 +160,10 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
 }
 
 DistributionController.resolve = {
-  deliveryZones: function (UserDeliveryZones, $timeout, $q) {
+  deliveryZones: function (UserDeliveryZones, $timeout, $q, $window) {
+
+    if(!navigator.onLine) $window.location = '/public/pages/logistics/distribution/index-offline.html#/offline-list';
+
     var deferred = $q.defer();
     $timeout(function () {
       UserDeliveryZones.get({}, function (data) {

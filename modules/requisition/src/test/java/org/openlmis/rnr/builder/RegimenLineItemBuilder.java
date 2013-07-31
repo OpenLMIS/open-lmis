@@ -9,6 +9,7 @@ package org.openlmis.rnr.builder;
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
+import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.rnr.domain.RegimenLineItem;
 
 import static com.natpryce.makeiteasy.Property.newProperty;
@@ -40,6 +41,7 @@ public class RegimenLineItemBuilder {
       regimenLineItem.setPatientsToInitiateTreatment(lookup.valueOf(patientsToInitiateTreatment, PATIENTS_TO_INITIATE_TREATMENT));
       regimenLineItem.setPatientsStoppedTreatment(lookup.valueOf(patientsStoppedTreatment, PATIENTS_STOPPED_TREATMENT));
       regimenLineItem.setRemarks(lookup.valueOf(remarks, REMARKS));
+      regimenLineItem.setCategory(new RegimenCategory("RCode", "Category Name", 6));
       return regimenLineItem;
     }
   };

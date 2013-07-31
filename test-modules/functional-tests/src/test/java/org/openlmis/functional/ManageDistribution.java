@@ -18,6 +18,7 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.DistributionPage;
+import org.openlmis.pageobjects.FacilityListPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openqa.selenium.WebElement;
@@ -156,6 +157,42 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.clickInitiateDistribution();
   }
 
+  @And("^I click record data$")
+  public void clickRecordData() throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.clickRecordData();
+  }
+
+  @Then("^I should see No facility selected$")
+  public void shouldSeeNoFacilitySelected() throws IOException {
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage.verifyNoFacilitySelected();
+  }
+
+  @And("^I should see \"([^\"]*)\" facilities that support the program \"([^\"]*)\" and delivery zone \"([^\"]*)\"$")
+  public void shouldSeeNoFacilitySelected(String active, String program, String deliveryZone) throws IOException, SQLException {
+    boolean activeFlag = false;
+    if (active.equalsIgnoreCase("active"))
+      activeFlag = true;
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    List<String> valuesToBeVerified = dbWrapper.getFacilityCodeNameForDeliveryZoneAndProgram(deliveryZone, program, activeFlag);
+    List<WebElement> facilityList = facilityListPage.getAllFacilitiesFromDropDown();
+    verifyAllSelectFieldValues(valuesToBeVerified, facilityList);
+  }
+
+  @When("^I choose facility \"([^\"]*)\"$")
+  public void selectFacility(String facilityCode) throws IOException {
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage.selectFacility(facilityCode);
+  }
+
+  @And("^I should see Delivery Zone \"([^\"]*)\", Program \"([^\"]*)\" and Period \"([^\"]*)\" in the header$")
+  public void shouldVerifyHeaderElements(String deliveryZone, String program, String period) throws IOException, SQLException {
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage.verifyHeaderElements(deliveryZone, program, period);
+  }
+
+
   @And("^I click view load amount$")
   public void clickViewLoadAmount() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
@@ -167,6 +204,12 @@ public class ManageDistribution extends TestCaseHelper {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
     testWebDriver.sleep(1500);
     distributionPage.verifyDownloadSuccessFullMessage(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
+  }
+
+  @Then("^I should see \"([^\"]*)\" in the header$")
+  public void verifyFacilityNameInHeader(String facilityName) throws IOException {
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage.verifyFacilityNameInHeader(facilityName);
   }
 
   @And("^I should see delivery zone \"([^\"]*)\" program \"([^\"]*)\" period \"([^\"]*)\" in table$")
@@ -314,6 +357,86 @@ public class ManageDistribution extends TestCaseHelper {
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
     verifySelectedOptionFromSelectField(defaultPeriodValuesToBeVerified, actualSelectFieldElement);
   }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyNoFacilityToBeShownIfNotMappedWithDeliveryZone(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                      String facilityCodeFirst, String facilityCodeSecond,
+                                                      String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("MANAGE_DISTRIBUTION");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+      deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond,
+      programFirst, programSecond, schedule);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+    dbWrapper.deleteDeliveryZoneToFacilityMapping(deliveryZoneNameFirst);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+    distributionPage.selectValueFromPeriod(period+totalNumberOfPeriods);
+    distributionPage.clickInitiateDistribution();
+    distributionPage.verifyFacilityNotSupportedMessage(programFirst,deliveryZoneNameFirst);
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyNoFacilityToBeShownIfNotMappedWithPrograms(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                                                       String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                                       String facilityCodeFirst, String facilityCodeSecond,
+                                                                       String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("MANAGE_DISTRIBUTION");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+      deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond,
+      programFirst, programSecond, schedule);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+    dbWrapper.deleteProgramToFacilityMapping(programFirst);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+    distributionPage.selectValueFromPeriod(period+totalNumberOfPeriods);
+    distributionPage.clickInitiateDistribution();
+    distributionPage.verifyFacilityNotSupportedMessage(programFirst,deliveryZoneNameFirst);
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyNoFacilityToBeShownIfInactive(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                                                   String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                                   String facilityCodeFirst, String facilityCodeSecond,
+                                                                   String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("MANAGE_DISTRIBUTION");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+      deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond,
+      programFirst, programSecond, schedule);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+    dbWrapper.updateActiveStatusOfFacility(facilityCodeFirst);
+    dbWrapper.updateActiveStatusOfFacility(facilityCodeSecond);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+    distributionPage.selectValueFromPeriod(period+totalNumberOfPeriods);
+    distributionPage.clickInitiateDistribution();
+    distributionPage.verifyFacilityNotSupportedMessage(programFirst,deliveryZoneNameFirst);
+  }
+
 
 
   private void verifyElementsPresent(DistributionPage distributionPage) {

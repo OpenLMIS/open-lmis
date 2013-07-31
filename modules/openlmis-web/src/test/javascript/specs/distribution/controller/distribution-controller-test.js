@@ -26,14 +26,21 @@ describe('DistributionController', function () {
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
   beforeEach(module('IndexedDB'));
+  beforeEach(module('distribution'))
 
   beforeEach(inject(function ($rootScope, $controller, $httpBackend, _messageService_) {
     messageService = _messageService_;
     scope = $rootScope.$new();
     controller = $controller;
     httpBackend = $httpBackend;
+    var sharedDistribution = {update: function () {
+    }, distributionList: [
+      {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}},
+      {deliveryZone: {id: 2}, program: {id: 2}, period: {id: 2}}
+    ]}
 
-    controller(DistributionController, {$scope: scope, deliveryZones: [], IndexedDB: mockedIndexedDB, $dialog: {}, messageService: messageService});
+    controller(DistributionController, {$scope: scope, deliveryZones: [], IndexedDB: mockedIndexedDB, $dialog: {},
+      messageService: messageService, SharedDistributions: sharedDistribution});
   }));
 
   it('should load programs', function () {
@@ -94,13 +101,13 @@ describe('DistributionController', function () {
 
   it('should get reference data for a distribution if distribution not initiated', function () {
     scope.distributionList = [];
-    scope.selectedZone = {id: 1, name: 'zone1'};
-    scope.selectedProgram = {id: 1, name: 'program1'};
-    scope.selectedPeriod = {id: 1, name: 'period1'};
+    scope.selectedZone = {id: 4, name: 'zone1'};
+    scope.selectedProgram = {id: 4, name: 'program1'};
+    scope.selectedPeriod = {id: 3, name: 'period1'};
     var facilities = [
       {id: 2, name: "F1"}
     ];
-    httpBackend.expect('GET', '/deliveryZones/1/programs/1/facilities.json').respond(200, {"facilities": [
+    httpBackend.expect('GET', '/deliveryZones/4/programs/4/facilities.json').respond(200, {"facilities": [
       {'id': '23'}
     ]});
 
@@ -112,11 +119,11 @@ describe('DistributionController', function () {
   it('should not initiate the distribution already initiated', function () {
     spyOn(OpenLmisDialog, 'newDialog')
     scope.distributionList = [];
-    scope.selectedZone = {id: 1, name: 'zone1'};
-    scope.selectedProgram = {id: 1, name: 'program1'};
-    scope.selectedPeriod = {id: 1, name: 'period1'};
+    scope.selectedZone = {id: 4, name: 'zone1'};
+    scope.selectedProgram = {id: 4, name: 'program1'};
+    scope.selectedPeriod = {id: 4, name: 'period1'};
 
-    httpBackend.expect('GET', '/deliveryZones/1/programs/1/facilities.json').respond(200, {"facilities": [
+    httpBackend.expect('GET', '/deliveryZones/4/programs/4/facilities.json').respond(200, {"facilities": [
       {'id': '23'}
     ]});
 
