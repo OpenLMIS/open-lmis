@@ -109,7 +109,8 @@ public class FacilityService {
 
   private void notifyFacilityFeed(Facility facility) {
     try {
-      FacilityFeedDTO facilityFeedDTO = new FacilityFeedDTO(facility);
+      Facility parentFacility = facilityRepository.getById(facility.getParentFacilityId());
+      FacilityFeedDTO facilityFeedDTO = new FacilityFeedDTO(facility, parentFacility);
       eventService.notify(new Event(UUID.randomUUID().toString(), "Facility", DateTime.now(), "",
         facilityFeedDTO.getSerializedContents(), "facility"));
     } catch (URISyntaxException e) {
@@ -155,7 +156,7 @@ public class FacilityService {
   }
 
   public List<Facility> searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(String query, Boolean virtualFacility) {
-    if(virtualFacility == null) {
+    if (virtualFacility == null) {
       return facilityRepository.searchFacilitiesByCodeOrName(query);
     }
     return facilityRepository.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(query, virtualFacility);
