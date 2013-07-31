@@ -1,0 +1,15 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div>
+  <div ng-controller="LocaleController">
+    <div class="locale-items">
+      <span ng-repeat="(key,value) in locales">
+        <a ng-click=changeLocale(key)><span ng-bind=value></span></a> |
+      </span>
+    </div>
+  </div>
+</div>
