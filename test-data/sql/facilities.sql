@@ -70,9 +70,11 @@ INSERT INTO facilities
 INSERT INTO programs_supported(facilityId, programId, startDate, active, modifiedBy) VALUES
 ((SELECT id FROM facilities WHERE code = 'F10'), 3, '11/11/12', true, 1),
 ((SELECT id FROM facilities WHERE code = 'F10'), 2, '11/11/12', true, 1),
+((SELECT id FROM facilities WHERE code = 'F10'), 4, '11/11/12', true, 1),
 ((SELECT id FROM facilities WHERE code = 'F10'), 5, '11/11/12', true, 1),
 ((SELECT id FROM facilities WHERE code = 'F11'), 3, '11/11/12', true, 1),
 ((SELECT id FROM facilities WHERE code = 'F11'), 2, '11/11/12', true, 1),
+((SELECT id FROM facilities WHERE code = 'F11'), 4, '11/11/12', true, 1),
 ((SELECT id FROM facilities WHERE code = 'F11'), 5, '11/11/12', true, 1),
 
 ((SELECT id FROM facilities WHERE code = 'F8A'), 5, '11/11/12', true, 1),
