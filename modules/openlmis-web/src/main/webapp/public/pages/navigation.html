@@ -4,7 +4,7 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<div class="navigation toggleFullScreen" ng-controller="NavigationController" ui-nav>
+<div class="navigation toggleFullScreen" ng-controller="NavigationController" ui-nav >
   <ul class="clearfix" style="display:none">
     <li><a href="/" openlmis-message="link.home"></a></li>
 
@@ -14,8 +14,7 @@
       <div class="submenu">
         <ul>
           <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION')">
-            <a href="/public/pages/logistics/rnr/index.html#/init-rnr"
-               openlmis-message="link.requisitions.create.authorize"></a>
+            <a href="/public/pages/logistics/rnr/index.html#/init-rnr" openlmis-message="link.requisitions.create.authorize"></a>
           </li>
           <li ng-show="hasPermission('APPROVE_REQUISITION')">
             <a href="/public/pages/logistics/rnr/index.html#/rnr-for-approval"
@@ -98,8 +97,7 @@
           </li>
 
           <li class="has-children">
-            <a id="manage-option" href="/public/pages/admin/facility/index.html"
-               openlmis-message="link.admin.manage"></a>
+            <a id="manage-option" href="/public/pages/admin/facility/index.html" openlmis-message="link.admin.manage"></a>
 
             <div class="submenu">
               <ul>
@@ -127,4 +125,3 @@
 
   </ul>
 </div>
-<ng-include src="'/public/pages/locale-list.html'"/>

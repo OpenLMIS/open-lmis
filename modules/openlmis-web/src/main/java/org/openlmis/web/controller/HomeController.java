@@ -6,36 +6,16 @@
 
 package org.openlmis.web.controller;
 
-import org.openlmis.core.service.LocaleService;
-import org.openlmis.web.response.OpenLmisResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class HomeController extends BaseController {
 
-  @Autowired
-  LocaleService localeService;
-
-  @RequestMapping(value = "", method = RequestMethod.GET)
-  public String homeDefault() {
-    return homePageUrl();
-  }
-
-  @RequestMapping(value = "/locales", method = RequestMethod.GET)
-  public ResponseEntity<OpenLmisResponse> getLocales() {
-    return OpenLmisResponse.response("locales", localeService.getLocales());
-  }
-
-  @RequestMapping(value = "/changeLocale", method = RequestMethod.PUT, headers = ACCEPT_JSON)
-  public void changeLocale(@RequestParam("locale") String locale, HttpServletRequest request) {
-    localeService.changeLocale(request);
-  }
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public String homeDefault() {
+        return homePageUrl();
+    }
 
 }

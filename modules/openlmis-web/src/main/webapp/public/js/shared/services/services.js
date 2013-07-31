@@ -246,12 +246,4 @@ services.factory('Distributions', function ($resource) {
   return $resource('/distributions.json', {}, {});
 });
 
-services.factory('Locales', function ($resource) {
-  return $resource('/locales.json', {}, {});
-});
-
-services.factory('ChangeLocale', function ($resource) {
-  return $resource('/changeLocale.json', {}, update);
-});
-
 

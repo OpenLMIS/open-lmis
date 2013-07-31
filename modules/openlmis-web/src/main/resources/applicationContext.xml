@@ -51,7 +51,7 @@
 
     <bean id="localeChangeInterceptor"
           class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-        <property name="paramName" value="locale"/>
+        <property name="paramName" value="lang"/>
     </bean>
 
     <bean id="localeResolver"
@@ -59,29 +59,13 @@
         <property name="defaultLocale" value="en"/>
     </bean>
 
+    <bean id="handlerMapping"
+          class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+        <property name="interceptors">
+            <ref bean="localeChangeInterceptor"/>
+        </property>
+    </bean>
 
-    <!--<bean id="handlerMapping"-->
-    <!--class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">-->
-    <!--<property name="interceptors">-->
-    <!--<list>-->
-    <!--<ref bean="localeChangeInterceptor"/>-->
-    <!--</list>-->
-    <!--</property>-->
-    <!--</bean>-->
-
-    <!--<bean id="urlMapping"-->
-    <!--class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">-->
-    <!--<property name="interceptors">-->
-    <!--<list>-->
-    <!--<ref bean="localeChangeInterceptor"/>-->
-    <!--</list>-->
-    <!--</property>-->
-    <!--<property name="mappings">-->
-    <!--<value>-->
-    <!--/changeLocale/**=homeController-->
-    <!--</value>-->
-    <!--</property>-->
-    <!--</bean>-->
 
     <import resource="classpath:/springSecurityContext.xml"/>
     <import resource="classpath:/applicationContext-authentication.xml"/>
@@ -112,12 +96,6 @@
                 </props>
             </property>
         </bean>
-        <mvc:interceptor>
-            <mvc:mapping path="/changeLocale**"/>
-            <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-                <property name="paramName" value="locale"/>
-            </bean>
-        </mvc:interceptor>
     </mvc:interceptors>
 
 
