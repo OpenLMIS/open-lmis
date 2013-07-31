@@ -14,7 +14,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -56,13 +55,9 @@ public class FacilityListPage extends RequisitionPage {
     assertTrue("noFacilitySelectedHeader should show", noFacilitySelectedHeader.isDisplayed());
   }
 
-  public List<String> getAllFacilitiesFromDropDown() {
+  public List<WebElement> getAllFacilitiesFromDropDown() {
     List<WebElement> options = testWebDriver.getOptions(facilityListDropDown);
-    List<String> finalList = new ArrayList<>();
-    for (WebElement list : options)
-      finalList.add(list.getText());
-    return finalList;
-
+    return options;
   }
 
   public void verifyHeaderElements(String deliveryZone, String program, String period)

@@ -174,19 +174,21 @@ public class ManageDistribution extends TestCaseHelper {
     boolean activeFlag = false;
     if (active.equalsIgnoreCase("active"))
       activeFlag = true;
-
-    verifyFacilityList(activeFlag, program, deliveryZone);
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    List<String> valuesToBeVerified = dbWrapper.getFacilityCodeNameForDeliveryZoneAndProgram(deliveryZone, program, activeFlag);
+    List<WebElement> facilityList = facilityListPage.getAllFacilitiesFromDropDown();
+    verifyAllSelectFieldValues(valuesToBeVerified, facilityList);
   }
 
   @When("^I choose facility \"([^\"]*)\"$")
   public void selectFacility(String facilityCode) throws IOException {
-    FacilityListPage facilityListPage=new FacilityListPage(testWebDriver);
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(facilityCode);
   }
 
   @And("^I should see Delivery Zone \"([^\"]*)\", Program \"([^\"]*)\" and Period \"([^\"]*)\" in the header$")
   public void shouldVerifyHeaderElements(String deliveryZone, String program, String period) throws IOException, SQLException {
-    FacilityListPage facilityListPage=new FacilityListPage(testWebDriver);
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.verifyHeaderElements(deliveryZone, program, period);
   }
 
@@ -206,7 +208,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I should see \"([^\"]*)\" in the header$")
   public void verifyFacilityNameInHeader(String facilityName) throws IOException {
-    FacilityListPage facilityListPage=new FacilityListPage(testWebDriver);
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.verifyFacilityNameInHeader(facilityName);
   }
 
@@ -383,25 +385,6 @@ public class ManageDistribution extends TestCaseHelper {
 
   }
 
-  public void verifyFacilityList(boolean active, String program, String deliveryZone) throws SQLException, IOException {
-    String collectionOfValuesPresentINDropDown = "";
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    List<String> valuesToBeVerified = dbWrapper.getFacilityCodeNameForDeliveryZoneAndProgram(deliveryZone, program, active);
-    List<String> facilityList = facilityListPage.getAllFacilitiesFromDropDown();
-
-    int valuesToBeVerifiedCounter = valuesToBeVerified.size();
-    int valuesInSelectFieldCounter = facilityList.size();
-    if (valuesToBeVerifiedCounter == valuesInSelectFieldCounter - 1) {
-      for (String value : facilityList) {
-        collectionOfValuesPresentINDropDown = collectionOfValuesPresentINDropDown + value.trim();
-      }
-      for (String values : valuesToBeVerified) {
-        assertTrue(collectionOfValuesPresentINDropDown.contains(values));
-      }
-    } else {
-      fail("Values in select field are not same in number as values to be verified");
-    }
-  }
 
   private void verifySelectFieldValueNotPresent(String valueToBeVerified, List<WebElement> valuesPresentInDropDown) {
     boolean flag = false;
