@@ -12,20 +12,18 @@ import com.itextpdf.text.pdf.PdfPRow;
 import com.itextpdf.text.pdf.PdfPTable;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.db.categories.UnitTests;
+import org.openlmis.rnr.builder.RegimenColumnBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
-import org.openlmis.rnr.domain.Column;
-import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.*;
 import org.openlmis.web.controller.RequisitionController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
@@ -33,10 +31,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.openlmis.rnr.builder.RegimenColumnBuilder.*;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.openlmis.rnr.builder.RequisitionBuilder.facility;
 import static org.openlmis.rnr.builder.RequisitionBuilder.rnrWithRegimens;
 import static org.openlmis.rnr.builder.RnrTemplateBuilder.defaultRnrTemplate;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RequisitionPdfModelTest {
 
@@ -53,7 +54,15 @@ public class RequisitionPdfModelTest {
     model.put(RequisitionController.CURRENCY, "$");
     model.put(RequisitionController.RNR, requisition);
     List<? extends Column> rnrTemplate = make(a(defaultRnrTemplate)).getColumns();
+    RegimenColumn regimenColumn1 = make(a(defaultRegimenColumn, with(name, "name"), with(label, "name")));
+    RegimenColumn regimenColumn2 = make(a(defaultRegimenColumn, with(name, "code"), with(label, "code")));
+    RegimenColumn regimenColumn3 = make(a(defaultRegimenColumn));
+    RegimenColumn regimenColumn4 = make(a(defaultRegimenColumn, with(name, "patientsToInitiateTreatment"), with(label, "initiate treatment")));
+    RegimenColumn regimenColumn5 = make(a(defaultRegimenColumn, with(name, "patientsStoppedTreatment"), with(label, "stopped treatment")));
+    RegimenColumn regimenColumn6 = make(a(defaultRegimenColumn, with(name, "remarks"), with(label, "remarks")));
+    List<RegimenColumn> regimenColumnList = Arrays.asList(regimenColumn1, regimenColumn2, regimenColumn3, regimenColumn4, regimenColumn5, regimenColumn6);
     model.put(RequisitionController.RNR_TEMPLATE, rnrTemplate);
+    model.put(RequisitionController.REGIMEN_TEMPLATE, regimenColumnList);
     LossesAndAdjustmentsType additive1 = new LossesAndAdjustmentsType("TRANSFER_IN", "TRANSFER IN", true, 1);
     lossesAndAdjustmentsList = asList(additive1);
     model.put(RequisitionController.LOSSES_AND_ADJUSTMENT_TYPES, lossesAndAdjustmentsList);
@@ -91,13 +100,13 @@ public class RequisitionPdfModelTest {
   @Test
   public void shouldGetFullSupplyHeader() throws Exception {
     Paragraph fullSupplyHeader = requisitionPdfModel.getFullSupplyHeader();
-    assertThat(fullSupplyHeader.getContent(), is("Full supply products"));
+    assertThat(fullSupplyHeader.getContent(), is("Full supply product(s)"));
   }
 
   @Test
   public void shouldGetNonFullSupplyHeader() throws Exception {
     Paragraph nonFullSupplyHeader = requisitionPdfModel.getNonFullSupplyHeader();
-    assertThat(nonFullSupplyHeader.getContent(), is("Non-Full supply products"));
+    assertThat(nonFullSupplyHeader.getContent(), is("Non-Full supply product(s)"));
   }
 
   @Test
@@ -134,9 +143,9 @@ public class RequisitionPdfModelTest {
   @Test
   public void shouldGetRegimenLineItems() throws Exception {
     PdfPTable regimenTable = requisitionPdfModel.getRegimenTable();
-    assertRowValues(regimenTable.getRow(0), "name", "code", "onTreatment", "initiatedTreatment", "stoppedTreatment", "remarks");
-    assertRowValues(regimenTable.getRow(1), "");
-    assertRowValues(regimenTable.getRow(2), "C1");
+    assertRowValues(regimenTable.getRow(0), "name", "code", "patients on treatment", "initiate treatment", "stopped treatment", "remarks");
+    assertRowValues(regimenTable.getRow(1), " ");
+    assertRowValues(regimenTable.getRow(2), "Category Name");
     assertRowValues(regimenTable.getRow(3), "Regimen", "R01", "3", "3", "3", "remarks");
   }
 

@@ -57,10 +57,12 @@ public class RestCHWControllerTest {
   @Test
   public void shouldUpdateCHW() throws Exception {
     CHW chw = mock(CHW.class);
+    String agentCode = "A1";
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(), HttpStatus.OK);
     when(RestResponse.success("message.success.chw.updated")).thenReturn(expectResponse);
 
-    ResponseEntity<RestResponse> response = restCHWController.updateCHW(chw, principal);
+    ResponseEntity<RestResponse> response = restCHWController.updateCHW(chw, agentCode, principal);
+    verify(chw).setAgentCode(agentCode);
 
     verify(restCHWService).update(chw, principal.getName());
     assertThat(response, is(expectResponse));

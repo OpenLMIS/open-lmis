@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +40,9 @@ public class RnrLineItem extends LineItem {
 
   public static final String RNR_VALIDATION_ERROR = "error.rnr.validation";
 
-  public static final Float MULTIPLIER = 3f;
-  public static final Float NUMBER_OF_DAYS = 30f;
+  public static final BigDecimal MULTIPLIER = new BigDecimal(3);
+  public static final BigDecimal NUMBER_OF_DAYS = new BigDecimal(30);
+  public static final MathContext mathContext = new MathContext(12, RoundingMode.HALF_UP);
 
   //TODO : hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
   private String product;
@@ -198,7 +201,7 @@ public class RnrLineItem extends LineItem {
 
   public void calculateAmc(ProcessingPeriod period) {
     int denominator = period.getNumberOfMonths() * (1 + previousNormalizedConsumptions.size());
-    amc = Math.round(((float) normalizedConsumption + sumOfPreviousNormalizedConsumptions()) / denominator);
+    amc = (new BigDecimal(normalizedConsumption).add(sumOfPreviousNormalizedConsumptions())).divide(new BigDecimal(denominator), MathContext.DECIMAL64).setScale(0, RoundingMode.HALF_UP).intValue();
   }
 
   public void calculatePacksToShip() {
@@ -223,12 +226,14 @@ public class RnrLineItem extends LineItem {
   }
 
   public void calculateNormalizedConsumption() {
-    Float consumptionAdjustedWithStockOutDays = ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays) == 0 ? quantityDispensed :
-      (quantityDispensed * ((MULTIPLIER * NUMBER_OF_DAYS) / ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays)));
-    Float adjustmentForNewPatients = (newPatientCount * ((Double) Math.ceil(
-      dosesPerMonth.doubleValue() / dosesPerDispensingUnit)).floatValue()) * MULTIPLIER;
+    BigDecimal stockOut = new BigDecimal(stockOutDays);
+    BigDecimal dispensedQuantity = new BigDecimal(quantityDispensed);
+    BigDecimal consumptionAdjustedWithStockOutDays = (MULTIPLIER.multiply(NUMBER_OF_DAYS)).subtract(stockOut).equals(new BigDecimal(0)) ? dispensedQuantity :
+      (dispensedQuantity.multiply((MULTIPLIER.multiply(NUMBER_OF_DAYS)).divide(((MULTIPLIER.multiply(NUMBER_OF_DAYS)).subtract(stockOut)), MathContext.DECIMAL64)).setScale(0, RoundingMode.HALF_UP));
 
-    normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
+    BigDecimal adjustmentForNewPatients = (new BigDecimal(newPatientCount).multiply(new BigDecimal(dosesPerMonth).divide(new BigDecimal(dosesPerDispensingUnit), mathContext))).multiply(MULTIPLIER);
+
+    normalizedConsumption = (consumptionAdjustedWithStockOutDays.add(adjustmentForNewPatients)).intValue();
   }
 
   public void calculateTotalLossesAndAdjustments(List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
@@ -313,12 +318,12 @@ public class RnrLineItem extends LineItem {
     this.lossesAndAdjustments.add(lossesAndAdjustments);
   }
 
-  private Integer sumOfPreviousNormalizedConsumptions() {
+  private BigDecimal sumOfPreviousNormalizedConsumptions() {
     Integer total = 0;
     for (Integer consumption : previousNormalizedConsumptions) {
       total += consumption;
     }
-    return total;
+    return new BigDecimal(total);
   }
 
   private void requestedQuantityConditionalValidation(ProgramRnrTemplate template) {

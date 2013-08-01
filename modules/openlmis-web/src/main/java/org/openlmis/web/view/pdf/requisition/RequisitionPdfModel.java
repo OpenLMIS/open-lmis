@@ -259,7 +259,7 @@ public class RequisitionPdfModel {
   }
 
   public Money getTotalCost(Rnr requisition) {
-    return new Money(new BigDecimal(requisition.getFullSupplyItemsSubmittedCost().getValue().floatValue() + requisition.getNonFullSupplyItemsSubmittedCost().getValue().floatValue()));
+    return new Money(requisition.getFullSupplyItemsSubmittedCost().getValue().add(requisition.getNonFullSupplyItemsSubmittedCost().getValue()));
   }
 
 

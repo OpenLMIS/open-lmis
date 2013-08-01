@@ -37,7 +37,6 @@ dependencies {
     testCompile 'info.cukes:cucumber-junit:1.1.2'
     testCompile 'info.cukes:cucumber-jvm:1.1.2'
     testCompile 'info.cukes:cucumber-jvm-deps:1.0.3'
-    testCompile 'info.cukes:gherkin:2.12.0'
     testCompile 'junit:junit:4.10'
     testCompile 'postgresql:postgresql:9.0-801.jdbc4'
 }
@@ -52,8 +51,6 @@ task buildOpenLmis(type: GradleBuild) {
 }
 
 
-
-
 task smokeTest(type: Test) {
     dependsOn assemble, compileTestJava
 
@@ -63,6 +60,8 @@ task smokeTest(type: Test) {
         jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
         javaexec {
             System.properties.get('browser', 'firefox')
+            System.properties.get('dburl', "$dburl")
+            System.properties.get('baseurl', "$baseurl")
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output

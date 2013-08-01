@@ -39,6 +39,9 @@ public class DistributionPage extends RequisitionPage {
   @FindBy(how = ID, using = "initiateDistribution")
   private static WebElement initiateDistributionButton;
 
+  @FindBy(how = XPATH, using = "//a[contains(text(),'Record Data')]")
+  private static WebElement recordDataButton;
+
   @FindBy(how = XPATH, using = "//a[contains(text(),'Input facility data')]")
   private static WebElement inputFacilityDataLink;
 
@@ -81,6 +84,13 @@ public class DistributionPage extends RequisitionPage {
      testWebDriver.sleep(200);
   }
 
+  public void clickRecordData() {
+    testWebDriver.sleep(500);
+    testWebDriver.waitForElementToAppear(recordDataButton);
+    recordDataButton.click();
+    testWebDriver.sleep(200);
+  }
+
   public void verifyDownloadSuccessFullMessage(String deliveryZone, String program, String period)
   {
     testWebDriver.sleep(200);
@@ -95,6 +105,12 @@ public class DistributionPage extends RequisitionPage {
 
   }
 
+  public void verifyFacilityNotSupportedMessage(String programFirst, String deliveryZoneNameFirst)
+  {
+    testWebDriver.waitForElementToAppear(saveSuccessMessageDiv);
+    String message="Program ''"+programFirst+"'' is not supported by any facility in delivery zone ''"+deliveryZoneNameFirst+"''";
+    SeleneseTestNgHelper.assertEquals(message,saveSuccessMessageDiv.getText());
+  }
 
 
   public List<WebElement> getAllSelectOptionsFromDeliveryZone() {
