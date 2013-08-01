@@ -5,7 +5,7 @@
 
   <div class="info-box">
     <div class="row-fluid">
-      <select ui-select2 id="selectFacility" class="span3" ng-model=facilitySelected
+      <select ui-select2="{formatResult: format}" id="selectFacility" class="span3" ng-model=facilitySelected
               ng-options="facility as facility.code+' - '+facility.name group by facility.geographicZone.code
               for facility in facilityList | orderBy: 'geographicZone.code'">
         <option value="" openlmis-message="label.select.facility"></option>
