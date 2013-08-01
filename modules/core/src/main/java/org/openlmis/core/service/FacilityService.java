@@ -82,8 +82,7 @@ public class FacilityService {
   }
 
   public void updateDataReportableAndActiveFor(Facility facility) {
-    facilityRepository.updateDataReportableAndActiveFor(facility);
-
+    facility = facilityRepository.updateDataReportableAndActiveFor(facility);
     notify(facility, null);
   }
 
@@ -98,7 +97,7 @@ public class FacilityService {
 
     Facility oldFacility = facilityRepository.getById(newFacility.getId());
 
-    newFacility = facilityRepository.save(newFacility);
+    facilityRepository.save(newFacility);
 
     notify(newFacility, oldFacility);
   }

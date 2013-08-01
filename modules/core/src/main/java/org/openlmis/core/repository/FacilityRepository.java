@@ -41,7 +41,7 @@ public class FacilityRepository {
     return mapper.getAll();
   }
 
-  public Facility save(Facility facility) {
+  public void save(Facility facility) {
     try {
       validateAndSetFacilityOperatedBy(facility);
       validateAndSetFacilityType(facility);
@@ -60,8 +60,6 @@ public class FacilityRepository {
       }
       throw new DataException("error.incorrect.length");
     }
-
-    return facility;
   }
 
   private void validateGeographicZone(Facility facility) {

@@ -108,7 +108,6 @@ public class FacilityServiceTest {
 
     when(facilityRepository.updateDataReportableAndActiveFor(facility)).thenReturn(facility);
 
-    when(facilityRepository.getById(facility.getId())).thenReturn(facility);
     when(facilityRepository.getById(facility.getParentFacilityId())).thenReturn(parentFacility);
 
     DateTime dateTime = new DateTime();
