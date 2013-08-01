@@ -67,16 +67,27 @@ public class FacilityListPage extends RequisitionPage {
     assertEquals(period, testWebDriver.getElementByXpath("//div[@class='info-box']/div[@class='row-fluid']/div[4][@class='span2 info-box-labels']/span[@class='ng-binding']").getText());
   }
 
+  public void verifyGeographicZoneOrder(String geoZoneFirst, String geoZoneSecond)
+  {
+    assertEquals(geoZoneFirst, testWebDriver.getElementByXpath("//ul[@class='select2-results']/li[2][@class='select2-results-dept-0 select2-result select2-result-unselectable select2-result-with-children']/div[@class='select2-result-label']").getText());
+    assertEquals(geoZoneSecond, testWebDriver.getElementByXpath("//ul[@class='select2-results']/li[3][@class='select2-results-dept-0 select2-result select2-result-unselectable select2-result-with-children']/div[@class='select2-result-label']").getText());
+  }
+
   public void selectFacility(String facilityCode)
   {
-    testWebDriver.waitForElementToAppear(facilityListSelect);
-    facilityListSelect.click();
+    clickFacilityListDropDown();
     testWebDriver.waitForElementToAppear(facilityListTextField);
     facilityListTextField.clear();
     facilityListTextField.sendKeys(facilityCode);
     testWebDriver.waitForElementToAppear(facilityListSelectField);
     facilityListSelectField.click();
   }
+
+  public void clickFacilityListDropDown() {
+    testWebDriver.waitForElementToAppear(facilityListSelect);
+    facilityListSelect.click();
+  }
+
 
   public void verifyFacilityNameInHeader(String facilityName)
   {

@@ -7,7 +7,7 @@
 'use strict';
 
 /* App Module */
-var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives'],function ($routeProvider, $locationProvider, $httpProvider) {
+var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives', 'ngCookies'], function ($routeProvider, $locationProvider, $httpProvider) {
   var interceptor = ['$rootScope', '$q', '$window', function (scope, $q, $window) {
     function success(response) {
       angular.element('#loader').hide();
@@ -45,8 +45,7 @@ app.config(function ($httpProvider) {
   $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 });
 
-app.run(function ($rootScope, messageService) {
-  messageService.populate();
+app.run(function ($rootScope) {
   $rootScope.$on('$routeChangeStart', function () {
     angular.element('#ui-datepicker-div').hide();
     //TODO delete modal window

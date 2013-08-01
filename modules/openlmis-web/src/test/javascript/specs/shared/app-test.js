@@ -10,6 +10,7 @@ describe("Message Directive", function () {
   var compile;
 
   beforeEach(module('openlmis'));
+  beforeEach(module(''));
   describe("Non Input", function () {
     beforeEach(inject(function ($compile, $rootScope, _messageService_) {
       messageService = _messageService_;
@@ -75,7 +76,7 @@ describe("Message Directive", function () {
 
   describe("CommentBox", function () {
 
-    var routeParams, httpBackend,scope;
+    var routeParams, httpBackend, scope;
     beforeEach(module('openlmis.services'));
 
     beforeEach(inject(function ($compile, $rootScope, $routeParams, $httpBackend) {
@@ -89,8 +90,8 @@ describe("Message Directive", function () {
     xit("should get comments for a Rnr", function () {
       routeParams.rnrId = 1;
       httpBackend.expect('GET', '/public/pages/template/comment-box.html').respond(200, "<div></div>");
-      httpBackend.expect('GET', '/requisitions/comments.json').respond(200,{"comments":[
-        {"id":1}
+      httpBackend.expect('GET', '/requisitions/comments.json').respond(200, {"comments": [
+        {"id": 1}
       ]});
 
       compile(elm)(scope);

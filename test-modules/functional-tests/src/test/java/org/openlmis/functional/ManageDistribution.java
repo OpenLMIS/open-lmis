@@ -425,8 +425,8 @@ public class ManageDistribution extends TestCaseHelper {
       programFirst, programSecond, schedule);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.updateActiveStatusOfFacility(facilityCodeFirst);
-    dbWrapper.updateActiveStatusOfFacility(facilityCodeSecond);
+    dbWrapper.updateActiveStatusOfFacility(facilityCodeFirst,"false");
+    dbWrapper.updateActiveStatusOfFacility(facilityCodeSecond,"false");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
@@ -437,6 +437,36 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.verifyFacilityNotSupportedMessage(programFirst,deliveryZoneNameFirst);
   }
 
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyGeoZonesOrderOnFacilityListPage(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                      String facilityCodeFirst, String facilityCodeSecond,
+                                                      String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+
+    String geoZoneFirst="District1";
+    String geoZoneSecond="Ngorongoro";
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("MANAGE_DISTRIBUTION");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, geoZoneFirst, geoZoneSecond, geoZoneSecond);
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+      deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond,
+      programFirst, programSecond, schedule);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+    distributionPage.selectValueFromPeriod(period+totalNumberOfPeriods);
+    distributionPage.clickInitiateDistribution();
+    FacilityListPage facilityListPage=distributionPage.clickRecordData();
+    facilityListPage.clickFacilityListDropDown();
+    facilityListPage.verifyGeographicZoneOrder(geoZoneFirst,geoZoneSecond);
+
+
+  }
 
 
   private void verifyElementsPresent(DistributionPage distributionPage) {

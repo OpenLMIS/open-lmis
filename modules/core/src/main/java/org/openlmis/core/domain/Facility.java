@@ -8,7 +8,6 @@ package org.openlmis.core.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -19,12 +18,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
+import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Facility extends BaseModel implements Importable {
@@ -143,6 +143,18 @@ public class Facility extends BaseModel implements Importable {
     this.modifiedBy = modifiedBy;
   }
 
+  @Override
+  public boolean equals(Object o) {
+
+    return reflectionEquals(this, o, false, Facility.class, "supportedPrograms", "geographicZone") &&
+      reflectionEquals(this.geographicZone, ((Facility) o).geographicZone, false, GeographicZone.class, "parent", "level");
+  }
+
+  @Override
+  public int hashCode() {
+    return reflectionHashCode(17, 37, this, false, Facility.class, "supportedPrograms", "geographicZone");
+  }
+
   public Facility basicInformation() {
     return new Facility(id, code, name, operatedBy, geographicZone, facilityType);
   }
@@ -153,5 +165,11 @@ public class Facility extends BaseModel implements Importable {
 
   public static Facility createFacilityToBeRestored(Long facilityId, Long modifiedBy, boolean active) {
     return new Facility(facilityId, true, active, modifiedBy);
+  }
+
+  public void validate() {
+    for (ProgramSupported programSupported : supportedPrograms) {
+      programSupported.isValid();
+    }
   }
 }

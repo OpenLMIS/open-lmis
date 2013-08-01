@@ -9,16 +9,17 @@ describe("HeaderController", function () {
   beforeEach(module('openlmis.services'));
 
   beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('ui.directives'));
 
-  var scope, ctrl,httpBackend,messageService;
+  var scope, ctrl, httpBackend, messageService;
 
-  beforeEach(inject(function ($rootScope, $controller,_messageService_,_$httpBackend_) {
+  beforeEach(inject(function ($rootScope, $controller, _messageService_, _$httpBackend_) {
     httpBackend = _$httpBackend_;
     scope = $rootScope.$new();
     messageService = _messageService_;
     spyOn(messageService, 'populate');
-    httpBackend.when('GET','/user-context.json').respond({"id":123, "userName":"User420"});
-    ctrl = $controller(HeaderController, {$scope:scope, messageService:messageService});
+    httpBackend.when('GET', '/user-context.json').respond({"id": 123, "userName": "User420"});
+    ctrl = $controller(HeaderController, {$scope: scope, messageService: messageService});
   }));
 
 });
