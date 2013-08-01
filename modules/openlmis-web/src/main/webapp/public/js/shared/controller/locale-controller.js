@@ -4,7 +4,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function LocaleController($scope, $rootScope, Locales, ChangeLocale, Messages, messageService, localStorageService) {
+function LocaleController($scope, $rootScope, Locales, ChangeLocale, Messages, messageService, localStorageService, $cookies) {
+
+  $scope.selectedLocale = $cookies.lang == undefined ? "en" : $cookies.lang;
 
   Locales.get({}, function (data) {
     $scope.locales = data.locales;
@@ -12,6 +14,7 @@ function LocaleController($scope, $rootScope, Locales, ChangeLocale, Messages, m
   }, {});
 
   $scope.changeLocale = function (localeKey) {
+    $scope.selectedLocale = localeKey;
     ChangeLocale.update({locale: localeKey}, {}, function (data) {
       Messages.get({}, function (data) {
         for (var attr in data.messages) {

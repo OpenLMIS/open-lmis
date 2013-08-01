@@ -31,26 +31,20 @@ body {
   h1 {
     font-size: 1.7em;
     color: #747474;
-    border-bottom: 1px solid #CCC;
     margin: 0;
+    margin-right: 118px;
     line-height: 24px;
     padding: 14px;
-    border-radius: 3px 3px 0 0;
     text-shadow: 0 1px 0 #FFF;
     font-weight: normal;
     font-family: 'HelveticaNeue-CondensedBold', Arial, sans-serif;
-    background: #DDD; /* Old browsers */
-    background: -moz-linear-gradient(top, #ffffff 0%, #ffffff 24%, #c5c5c5 100%); /* FF3.6+ */
-    background: -webkit-linear-gradient(top, #ffffff 0%, #ffffff 24%, #c5c5c5 100%); /* Chrome10+,Safari5.1+ */
-    background: -ms-linear-gradient(top, #ffffff 0%, #ffffff 24%, #c5c5c5 100%); /* IE10+ */
-    background: linear-gradient(to bottom, #ffffff 0%, #ffffff 24%, #c5c5c5 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ffffff', endColorstr = '#c5c5c5', GradientType = 0); /* IE6-9 */
   }
   h2 {
     font-size: 1.4em;
     color: #414141;
     margin: 0;
-    padding: 10px 0;
+    padding: 15px 0;
+    line-height: 30px;
   }
   .alert-error {
     font-size: 0.9em;
@@ -200,7 +194,45 @@ input[placeholder].placeholder {
   color: #a2a2a2;
 }
 
-.locale-items {
-  display: inline-block;
-  float: right;
+.modal-login-header {
+  border-bottom: 1px solid #CCC;
+  border-radius: 3px 3px 0 0;
+  background: #DDD; /* Old browsers */
+  background: -moz-linear-gradient(top, #ffffff 0%, #ffffff 24%, #c5c5c5 100%); /* FF3.6+ */
+  background: -webkit-linear-gradient(top, #ffffff 0%, #ffffff 24%,#c5c5c5 100%); /* Chrome10+,Safari5.1+ */
+  background: -ms-linear-gradient(top, #ffffff 0%, #ffffff 24%,#c5c5c5 100%); /* IE10+ */
+  background: linear-gradient(to bottom, #ffffff 0%, #ffffff 24%,#c5c5c5 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#c5c5c5',GradientType=0 ); /* IE6-9 */
 }
+.locale-container {
+  position: relative;
+  ul {
+    margin: 0px;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    padding: 10px 10px 12px;
+    float: right;
+    list-style-type: none;
+    li {
+      display: inline;
+      color: #727070;
+      font-size: 11px;
+      a {
+        color: rgb(0, 136, 204);
+      }
+      .selected {
+        color: #888787;
+      }
+      &:last-child {
+        span {
+          &:last-child {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+

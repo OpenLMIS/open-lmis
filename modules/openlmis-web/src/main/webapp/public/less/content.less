@@ -278,27 +278,29 @@ span[class^="tpl-"] {
 .rnr-template-columns {
   margin-bottom: 10px;
   ul {
-  &>li {
-    position: relative;
-    border: 1px solid #DDD;
-    border-top: 0;
-    border-color: transparent #BBB #DDD;
-    background: #FCFCFC;
-    font-size: 0.9em;
+    list-style: none;
+    margin: 0;
+    &>li {
+      position: relative;
+      border: 1px solid #DDD;
+      border-top: 0;
+      border-color: transparent #BBB #DDD;
+      background: #FCFCFC;
+      font-size: 0.9em;
 
-    .drag-handle {
-      .size(16px,12px);
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 10px;
-      margin-top: -9px;
-      background: url("../images/sort-icon.png") no-repeat left center;
-      cursor: move;
-    }
-    &> li:hover .drag-handle {
-      display: block;
-    }
+      .drag-handle {
+        .size(16px,12px);
+        margin-top: -9px;
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        background: url("../images/sort-icon.png") no-repeat left center;
+        cursor: move;
+      }
+      &> li:hover .drag-handle {
+        display: block;
+      }
     }
   }
 }
@@ -1952,7 +1954,8 @@ input[placeholder].placeholder {
   height: 12px;
   padding: 0 1px;
   position: fixed;
-  bottom: 92px; z-index: 12;
+  bottom: 92px;
+  z-index: 12;
   .box-shadow(inset 0 0 4px rgba(0,0,0,0.8));
   background-color: rgba(0,0,0,0.6);
   .scroll-handle {

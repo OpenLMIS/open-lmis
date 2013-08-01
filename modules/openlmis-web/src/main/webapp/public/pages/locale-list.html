@@ -5,11 +5,13 @@
   -->
 
 <div>
-  <div ng-controller="LocaleController">
-    <div class="locale-items">
-      <span ng-repeat="(key,value) in locales">
-        <a ng-click=changeLocale(key)><span ng-bind=value></span></a> |
-      </span>
-    </div>
+  <div class="locale-container" ng-controller="LocaleController">
+    <ul>
+      <li ng-repeat="(key,value) in locales">
+        <a ng-hide="selectedLocale == key" ng-click=changeLocale(key) href="" ng-bind=value></a>
+        <span ng-class = "{'selected': selectedLocale == key}" ng-show = "selectedLocale == key" ng-bind=value></span>
+        <span>|</span>
+      </li>
+    </ul>
   </div>
 </div>
