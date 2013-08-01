@@ -11,7 +11,7 @@
           ng-init="showSupervisoryNodeList('txtFilterSupervisoryNodes')" on-keyup="filterSupervisoryNodes('txtFilterSupervisoryNodes')" placeholder="Enter supervisory node name"/>
 
 
-    <div class="facility-list">
+    <div>
         <h3 ng-show="query.length>0">
             <ng-pluralize count="resultCount"
                           when="{ 0: 'No matches found for \'{{query}}\'',
@@ -20,28 +20,48 @@
 
             </ng-pluralize>
         </h3>
-
-
-        <div class="row-fluid list-row">
-            <div class="span2" style="..."><strong>Supervisory Node Name</strong></div>
-            <div class="span2" style="..."><strong>Code</strong></div>
-            <div class="span2" style="..."><strong>Facility</strong></div>
-            <div class="span2" style="overflow: visible;"><strong>Parent</strong></div>
-            <div class="span2" style="..."><strong>Supervisors Count</strong></div>
-            <div class="span2" style="..."><strong>Action</strong></div>
-        </div>
-        <div ng-repeat="supervisoryNode in filteredSupervisoryNodes" class="row-fluid list-row">
-            <div class="span2" style="overflow: visible;"> {{supervisoryNode.name}}</div>
-            <div class="span2" style="..."> {{supervisoryNode.code}}</div>
-            <div class="span2" style="overflow: visible;"> {{supervisoryNode.facility.name}}</div>
-            <div class="span2" style="overflow: visible;"> {{supervisoryNode.parent.name}}</div>
-            <div class="span2" style="overflow: visible;"> {{supervisoryNode.supervisorCount}}</div>
-            <div class="span2" style="...">
-                <a ng-click="editSupervisoryNode(supervisoryNode.id)">Edit</a>
-                <a ng-click="showRemoveSupervisoryNodeMemberConfirmDialog($index)"> Delete</a>
-            </div>
-        </div>
-
+        <br/>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr class="gradient-header">
+                <th>Supervisory Node Name
+                </th>
+                <th>Code
+                </th>
+                <th>Facility
+                </th>
+                <th>Parent
+                </th>
+                <th>Supervisors Count
+                </th>
+                <th>Action
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="supervisoryNode in filteredSupervisoryNodes">
+                <td>
+                    <div>{{supervisoryNode.name}}</div>
+                </td>
+                <td>
+                    <div>{{supervisoryNode.code}}</div>
+                </td>
+                <td>
+                    <div>{{supervisoryNode.facility.name}}</div>
+                </td>
+                <td>
+                    <div>{{supervisoryNode.parent.name}}</div>
+                </td>
+                <td>
+                    <div>{{supervisoryNode.supervisorCount}}</div>
+                </td>
+                <td>
+                    <a ng-click="editSupervisoryNode(supervisoryNode.id)">Edit</a>
+                    <a ng-click="showRemoveSupervisoryNodeMemberConfirmDialog($index)"> Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
     </div>
 </div>

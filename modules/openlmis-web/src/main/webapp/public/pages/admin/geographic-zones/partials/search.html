@@ -11,7 +11,7 @@
           ng-init="showGeographicZonesSearchResults('searchGeographicZone')" on-keyup="filterGeographicZones('searchGeographicZone')" placeholder="Enter geographic zone name"/>
 
 
-    <div class="facility-list">  <!--ng-show="query.length > 2">-->
+    <div>  <!--ng-show="query.length > 2">-->
         <h3 ng-show="query.length>0">
             <ng-pluralize count="resultCount"
                           when="{ 0: 'No matches found for \'{{query}}\'',
@@ -20,21 +20,37 @@
 
             </ng-pluralize>
         </h3>
-
-
-        <div class="row-fluid list-row">
-            <div class="span3" style="overflow: visible;"><strong>Name</strong></a></div>
-            <div class="span3" style="overflow: visible;"><strong>Code</strong></div>
-            <div class="span3" style="overflow: visible;"><strong>Level</strong></div>
-            <div class="span2" style="overflow: visible;"><strong>Parent</strong></div>
-        </div>
-        <div ng-repeat="geographicZone in filteredGeographicZones" class="row-fluid list-row">
-            <div class="span3" style="overflow: visible;"><a ng-click="editGeographicZones(geographicZone.id)">{{geographicZone.name}}</a></div>
-            <div class="span3" style="overflow: visible;"> {{geographicZone.code}}</div>
-            <div class="span3" style="overflow: visible;"> {{geographicZone.level.name}}</div>
-            <div class="span2" style="overflow: visible;"> {{geographicZone.parent.name}}</div>
-        </div>
-
+        <br/>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr class="gradient-header">
+                <th>Name
+                </th>
+                <th>Code
+                </th>
+                <th>Level
+                </th>
+                <th>Parent
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="geographicZone in filteredGeographicZones">
+                <td>
+                    <a ng-click="editGeographicZones(geographicZone.id)">{{geographicZone.name}}</a>
+                </td>
+                <td>
+                    <div>{{geographicZone.code}}</div>
+                </td>
+                <td>
+                    <div>{{geographicZone.level.name}}</div>
+                </td>
+                <td>
+                    <div>{{geographicZone.parent.name}}</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
     </div>
 </div>

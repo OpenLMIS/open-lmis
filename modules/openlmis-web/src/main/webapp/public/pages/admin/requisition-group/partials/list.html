@@ -11,7 +11,7 @@
           ng-init="showRequisitionGroupsList('txtFilterRequisitionGroups')" on-keyup="filterRequisitionGroups('txtFilterRequisitionGroups')" placeholder="Enter requisition group name"/>
 
 
-    <div class="facility-list">
+    <div>
         <h3 ng-show="query.length>0">
             <ng-pluralize count="resultCount"
                           when="{ 0: 'No matches found for \'{{query}}\'',
@@ -20,28 +20,49 @@
 
             </ng-pluralize>
         </h3>
-
-
-        <div class="row-fluid list-row">
-            <div class="span2" style="..."><strong>Requisition Group</strong></div>
-            <div class="span2" style="..."><strong>Code</strong></div>
-            <div class="span2" style="..."><strong>Supervisory Node</strong></div>
-            <div class="span2" style="overflow: visible;"><strong>Facilities Count</strong></div>
-            <div class="span2" style="overflow: visible;"><strong>Program Count</strong></div>
-            <div class="span2" style="..."><strong>Action</strong></div>
-        </div>
-        <div ng-repeat="requisitionGroup in filteredRequisitionGroups" class="row-fluid list-row">
-            <div class="span2" style="overflow: visible;"> {{requisitionGroup.name}}</div>
-            <div class="span2" style="..."> {{requisitionGroup.code}}</div>
-            <div class="span2" style="overflow: visible;"> {{requisitionGroup.supervisoryNode.name}}</div>
-            <div class="span2" style="overflow: visible;"> {{requisitionGroup.countOfFacilities}}</div>
-            <div class="span2" style="overflow: visible;"> {{requisitionGroup.countOfPrograms}}</div>
-            <div class="span2" style="...">
-                <a ng-click="editRequisitionGroup(requisitionGroup.id)">Edit</a>
-                <a ng-click="deleteRequisitionGroup(requisitionGroup.id)"> Delete</a>
-            </div>
-        </div>
-
+        <br/>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr class="gradient-header">
+                <th>Requisition Group
+                </th>
+                <th>Code
+                </th>
+                <th>Supervisory Node
+                </th>
+                <th>Facilities Count
+                </th>
+                <th>Program Count
+                </th>
+                <th>Action
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="requisitionGroup in filteredRequisitionGroups">
+                <td>
+                    <div>{{requisitionGroup.name}}</div>
+                </td>
+                <td>
+                    <div>{{requisitionGroup.code}}</div>
+                </td>
+                <td>
+                    <div>{{requisitionGroup.supervisoryNode.name}}</div>
+                </td>
+                <td>
+                    <div> {{requisitionGroup.countOfFacilities}}</div>
+                </td>
+                <td>
+                    <div>{{requisitionGroup.countOfPrograms}}</div>
+                </td>
+                <td>
+                    <a ng-click="editRequisitionGroup(requisitionGroup.id)">Edit</a>
+                    <a ng-click="deleteRequisitionGroup(requisitionGroup.id)"> Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
     </div>
+
 </div>
