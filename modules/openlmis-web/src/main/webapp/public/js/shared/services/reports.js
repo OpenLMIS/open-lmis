@@ -102,7 +102,7 @@ services.factory('GeographicZone', function ($resource) {
 });
 
 services.factory('CreateGeographicZone', function ($resource) {
-    return $resource('/geographicZone/insert.json', {}, {insert:{method:'POST'}});
+    return $resource('/geographicZone/insert.json', {}, {update:{method:'POST'}});
 });
 
 services.factory('GeographicLevels', function($resource) {

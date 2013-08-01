@@ -8,6 +8,7 @@ import org.openlmis.report.service.ReportLookupService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -44,7 +45,7 @@ public class GeographicZoneController extends BaseController {
 
 
 
-    @RequestMapping(value = "/geographicZone/insert", method = POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/geographicZone/insert.json", method = POST, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
     public ResponseEntity<OpenLmisResponse> insert(@RequestBody GeographicZone geographicZone, HttpServletRequest request) {
         ResponseEntity<OpenLmisResponse> successResponse;
@@ -57,9 +58,9 @@ public class GeographicZoneController extends BaseController {
         } catch (DataException e) {
             return error(e, HttpStatus.BAD_REQUEST);
         }
-        successResponse = success(String.format("Geographic zone '%s' has been successfully created",
-                geographicZone.getName()), "");
+        successResponse = success("Geographic zone " + geographicZone.getName() + " has been successfully created");
         successResponse.getBody().addData("geographicZone", geographicZone);
+        successResponse.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         return successResponse;
     }
 
@@ -71,11 +72,16 @@ public class GeographicZoneController extends BaseController {
         ResponseEntity<OpenLmisResponse> successResponse;
         geographicZone.setModifiedBy(loggedInUserId(request));
         try {
-            geographicZoneServiceExt.update(geographicZone);
+            if(geographicZone.getId()==null){
+                geographicZoneServiceExt.saveNew(geographicZone);
+            }
+            else{
+                geographicZoneServiceExt.update(geographicZone);
+            }
         } catch (DataException e) {
             return error(e, HttpStatus.BAD_REQUEST);
         }
-        successResponse = success("Geographic zone '" + geographicZone.getName() + "' has been successfully updated");
+        successResponse = success("Geographic zone '" + geographicZone.getName() + "' has been successfully saved");
         successResponse.getBody().addData("geographicZone", geographicZone);
         return successResponse;
     }

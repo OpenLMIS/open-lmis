@@ -32,11 +32,8 @@ function GeographicZonesController($scope, $routeParams, $location, GeographicZo
             $scope.error = response.data.error;
         };
 
-        if ($scope.geographicZone.id) {
-            SetGeographicZone.save($scope.geographicZone,successHandler,errorHandler);
-        } else {
-            CreateGeographicZone.save($scope.geographicZone,successHandler,errorHandler);
-        }
+        SetGeographicZone.save($scope.geographicZone,successHandler,errorHandler);
+
         return true;
     };
 

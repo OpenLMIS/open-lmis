@@ -58,7 +58,6 @@ public interface GeographicZoneMapperExtension extends GeographicZoneMapper {
 
 
     @Insert("INSERT INTO geographic_zones (code, name, levelId, parentId, createdBy, modifiedBy, modifiedDate) " +
-            "VALUES ('#{code}', '#{name}', #{level.id}, #{parent.id}, #{createdBy}, #{modifiedBy}, '#{modifiedDate}')")
-    @Options(useGeneratedKeys = true)
+            "VALUES (#{code}, #{name}, #{level.id}, #{parent.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
     Integer insert_Ext(GeographicZone geographicZone);
 }
