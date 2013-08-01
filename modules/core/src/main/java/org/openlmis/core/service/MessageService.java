@@ -14,16 +14,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
+import static org.springframework.web.context.WebApplicationContext.SCOPE_SESSION;
+
 @Service
 @NoArgsConstructor
-@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope(value = SCOPE_SESSION, proxyMode = TARGET_CLASS)
 public class MessageService {
 
   private MessageSource messageSource;
@@ -39,6 +43,14 @@ public class MessageService {
   public MessageService(MessageSource messageSource) {
     this.messageSource = messageSource;
     this.currentLocale = Locale.getDefault();
+  }
+
+  @Scope(WebApplicationContext.SCOPE_REQUEST)
+  public static MessageService getRequestInstance() {
+    ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
+    resourceBundleMessageSource.setBasename("messages");
+    resourceBundleMessageSource.setDefaultEncoding("UTF-8");
+    return new MessageService(resourceBundleMessageSource);
   }
 
   public String message(String key) {
@@ -68,5 +80,10 @@ public class MessageService {
     }
 
     return localeMap;
+  }
+
+  @Scope(value = "request")
+  public MessageService getMessageService() {
+    return new MessageService();
   }
 }
