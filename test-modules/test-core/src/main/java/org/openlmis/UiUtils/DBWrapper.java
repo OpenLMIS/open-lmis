@@ -138,12 +138,8 @@ public class DBWrapper {
   }
 
 
-  public void deleteFacilities() throws IOException, SQLException {
-    update("DELETE FROM requisition_line_item_losses_adjustments;");
-    update("DELETE FROM requisition_line_items;");
-    update("DELETE FROM requisitions;");
-    update("DELETE FROM programs_supported;");
-    update("delete from facilities;");
+  public void updateFacilityFieldValue(String facilityCode, String fieldName, String value) throws IOException, SQLException {
+    update("update facilities set "+fieldName+"='"+value+"' where code='"+facilityCode+"';");
   }
 
   public void insertFacilities(String facility1, String facility2) throws IOException, SQLException {
