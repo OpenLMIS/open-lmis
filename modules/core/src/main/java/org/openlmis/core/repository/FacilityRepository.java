@@ -41,9 +41,9 @@ public class FacilityRepository {
     return mapper.getAll();
   }
 
-  public void save(Facility facility) {
+  public Facility save(Facility facility) {
     try {
-      validateAndSetFacilityOperator(facility);
+      validateAndSetFacilityOperatedBy(facility);
       validateAndSetFacilityType(facility);
       validateGeographicZone(facility);
       if (facility.getId() == null) {
@@ -60,6 +60,8 @@ public class FacilityRepository {
       }
       throw new DataException("error.incorrect.length");
     }
+
+    return facility;
   }
 
   private void validateGeographicZone(Facility facility) {
@@ -93,7 +95,7 @@ public class FacilityRepository {
 
   }
 
-  private void validateAndSetFacilityOperator(Facility facility) {
+  private void validateAndSetFacilityOperatedBy(Facility facility) {
     if (facility.getOperatedBy() == null) return;
 
     String operatedByCode = facility.getOperatedBy().getCode();

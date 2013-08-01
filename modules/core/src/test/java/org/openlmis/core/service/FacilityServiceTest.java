@@ -41,8 +41,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
@@ -122,7 +121,6 @@ public class FacilityServiceTest {
     facilityService.updateDataReportableAndActiveFor(facility);
 
     verify(facilityRepository).updateDataReportableAndActiveFor(facility);
-    verify(facilityRepository).getById(facility.getId());
     verify(facilityRepository).getById(facility.getParentFacilityId());
     verify(eventService).notify(argThat(eventMatcher(uuid, "Facility", dateTime, "",
       facilityFeedDTO.getSerializedContents(), "facility")));
@@ -199,20 +197,41 @@ public class FacilityServiceTest {
   }
 
   @Test
-  public void shouldUpdateFacility() throws Exception {
+  public void shouldUpdateFacilityAndNotifyForFeedIfCoreAttriButeChanges() throws Exception {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported)));
       add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L, "ARV")))));
     }};
     when(programSupportedService.getAllByFacilityId(facility.getId())).thenReturn(programsForFacility);
-    when(facilityRepository.getById(facility.getId())).thenReturn(facility);
+    facility.setSupportedPrograms(programsForFacility);
+    Facility savedFacility = make(a(FacilityBuilder.defaultFacility));
+    savedFacility.setName("Updated Name");
+    when(facilityRepository.getById(facility.getId())).thenReturn(savedFacility);
 
     facilityService.update(facility);
 
     verify(facilityRepository).save(facility);
     verify(programSupportedService).updateSupportedPrograms(facility);
     verify(eventService).notify(any(Event.class));
+  }
+
+  @Test
+  public void shouldUpdateFacilityAndNotNotifyForFeedIfNoCoreAttributeChanges() throws Exception {
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
+      add(make(a(defaultProgramSupported)));
+      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L, "ARV")))));
+    }};
+    facility.setSupportedPrograms(programsForFacility);
+    Facility savedFacility = make(a(FacilityBuilder.defaultFacility));
+    when(facilityRepository.getById(facility.getId())).thenReturn(savedFacility);
+
+    facilityService.update(facility);
+
+    verify(facilityRepository).save(facility);
+    verify(programSupportedService).updateSupportedPrograms(facility);
+    verify(eventService, never()).notify(any(Event.class));
   }
 
   @Test

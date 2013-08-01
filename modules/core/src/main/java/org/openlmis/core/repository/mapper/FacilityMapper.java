@@ -66,7 +66,7 @@ public interface FacilityMapper {
   @Select("SELECT * FROM facilities WHERE id = #{id}")
   @Results(value = {
     @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getById")),
+      one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById")),
     @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
     @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById"))
   })
@@ -153,7 +153,7 @@ public interface FacilityMapper {
     "AND PS.programId = #{programId}  AND DZM.deliveryZoneId = #{deliveryZoneId} order by F.name"})
   @Results(value = {
     @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getById"))
+      one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById"))
   })
   List<Facility> getAllInDeliveryZoneFor(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
 

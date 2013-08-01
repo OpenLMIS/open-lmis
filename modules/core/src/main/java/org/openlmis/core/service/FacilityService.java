@@ -84,13 +84,7 @@ public class FacilityService {
   public void updateDataReportableAndActiveFor(Facility facility) {
     facilityRepository.updateDataReportableAndActiveFor(facility);
 
-    getFacilityAndNotify(facility);
-  }
-
-  private void getFacilityAndNotify(Facility facility) {
-    facility = facilityRepository.getById(facility.getId());
-
-    notifyFacilityFeed(facility);
+    notify(facility, null);
   }
 
   public List<Facility> getUserSupervisedFacilities(Long userId, Long programId, Right... rights) {
@@ -99,23 +93,28 @@ public class FacilityService {
     return facilityRepository.getFacilitiesBy(programId, requisitionGroups);
   }
 
-  public void save(Facility facility) {
-    for (ProgramSupported programSupported : facility.getSupportedPrograms()) {
-      programSupported.isValid();
-    }
-    facilityRepository.save(facility);
-    getFacilityAndNotify(facility);
+  public void save(Facility newFacility) {
+    newFacility.validate();
+
+    Facility oldFacility = facilityRepository.getById(newFacility.getId());
+
+    newFacility = facilityRepository.save(newFacility);
+
+    notify(newFacility, oldFacility);
   }
 
-  private void notifyFacilityFeed(Facility facility) {
+  private void notify(Facility newFacility, Facility oldFacility) {
+    if (newFacility.equals(oldFacility)) return;
+
     try {
-      Facility parentFacility = facilityRepository.getById(facility.getParentFacilityId());
-      FacilityFeedDTO facilityFeedDTO = new FacilityFeedDTO(facility, parentFacility);
+      Facility parentFacility = facilityRepository.getById(newFacility.getParentFacilityId());
+      FacilityFeedDTO facilityFeedDTO = new FacilityFeedDTO(newFacility, parentFacility);
       eventService.notify(new Event(UUID.randomUUID().toString(), "Facility", DateTime.now(), "",
         facilityFeedDTO.getSerializedContents(), "facility"));
     } catch (URISyntaxException e) {
       logger.error("Unable to generate facility event", e);
     }
+
   }
 
   public List<Facility> getForUserAndRights(Long userId, Right... rights) {

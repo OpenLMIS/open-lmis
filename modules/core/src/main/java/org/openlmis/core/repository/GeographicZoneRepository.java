@@ -64,6 +64,6 @@ public class GeographicZoneRepository {
   }
 
   public GeographicZone getById(Long id) {
-    return mapper.getById(id);
+    return mapper.getWithParentById(id);
   }
 }
