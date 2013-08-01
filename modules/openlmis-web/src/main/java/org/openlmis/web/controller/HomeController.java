@@ -6,14 +6,14 @@
 
 package org.openlmis.web.controller;
 
-import org.openlmis.core.service.LocaleService;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 public class HomeController extends BaseController {
 
   @Autowired
-  LocaleService localeService;
+  MessageService messageService;
 
   @RequestMapping(value = "", method = RequestMethod.GET)
   public String homeDefault() {
@@ -29,13 +29,14 @@ public class HomeController extends BaseController {
   }
 
   @RequestMapping(value = "/locales", method = RequestMethod.GET)
-  public ResponseEntity<OpenLmisResponse> getLocales() {
-    return OpenLmisResponse.response("locales", localeService.getLocales());
+  public ResponseEntity<OpenLmisResponse> getLocales(HttpServletRequest request) {
+    messageService.setCurrentLocale(RequestContextUtils.getLocale(request));
+    return OpenLmisResponse.response("locales", messageService.getLocales());
   }
 
   @RequestMapping(value = "/changeLocale", method = RequestMethod.PUT, headers = ACCEPT_JSON)
-  public void changeLocale(@RequestParam("locale") String locale, HttpServletRequest request) {
-    localeService.changeLocale(request);
+  public void changeLocale(HttpServletRequest request) {
+    messageService.setCurrentLocale(RequestContextUtils.getLocale(request));
   }
 
 }

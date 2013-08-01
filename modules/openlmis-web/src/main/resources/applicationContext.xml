@@ -56,32 +56,11 @@
 
     <bean id="localeResolver"
           class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="cookieName" value="lang"/>
         <property name="defaultLocale" value="en"/>
+        <property name="cookieMaxAge" value="0x7fffffff"/>
     </bean>
 
-
-    <!--<bean id="handlerMapping"-->
-    <!--class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">-->
-    <!--<property name="interceptors">-->
-    <!--<list>-->
-    <!--<ref bean="localeChangeInterceptor"/>-->
-    <!--</list>-->
-    <!--</property>-->
-    <!--</bean>-->
-
-    <!--<bean id="urlMapping"-->
-    <!--class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">-->
-    <!--<property name="interceptors">-->
-    <!--<list>-->
-    <!--<ref bean="localeChangeInterceptor"/>-->
-    <!--</list>-->
-    <!--</property>-->
-    <!--<property name="mappings">-->
-    <!--<value>-->
-    <!--/changeLocale/**=homeController-->
-    <!--</value>-->
-    <!--</property>-->
-    <!--</bean>-->
 
     <import resource="classpath:/springSecurityContext.xml"/>
     <import resource="classpath:/applicationContext-authentication.xml"/>
