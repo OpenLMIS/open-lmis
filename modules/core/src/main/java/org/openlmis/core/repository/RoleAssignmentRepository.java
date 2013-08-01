@@ -55,6 +55,10 @@ public class RoleAssignmentRepository {
     return mapper.getAdminRole(userId);
   }
 
+  public RoleAssignment getReportRole(Long userId) {
+      return mapper.getReportRole(userId);
+  }
+
   public void insert(List<RoleAssignment> roleAssignments, final Long userId) {
     if(roleAssignments == null) return;
 

@@ -22,7 +22,28 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     }
   });
 
-  $scope.restoreAdminRole = function (result) {
+  $("#reportRoles").on("change", function (e) {
+        if (e.removed) {
+            var dialogOpts = {
+                id: "deleteReportRolesModal",
+                header: messageService.get("create.user.deleteReportRoleHeader"),
+                body: messageService.get("create.user.deleteReportRoles")
+            };
+            OpenLmisDialog.newDialog(dialogOpts, $scope.restoreReportRole, $dialog, messageService);
+
+            window.lastReportRoleRemoved = e.removed;
+        }
+  });
+
+    $scope.restoreReportRole = function (result) {
+        if (result) return;
+
+        if (window.lastReportRoleRemoved) {
+            $scope.user.reportRoles.roleIds.push(window.lastReportRoleRemoved.id);
+        }
+    };
+
+    $scope.restoreAdminRole = function (result) {
     if (result) return;
 
     if (window.lastAdminRoleRemoved) {
