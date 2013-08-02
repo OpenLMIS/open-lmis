@@ -53,11 +53,11 @@ public class FacilityFeedDTO extends BaseFeedDTO {
 
   private Boolean suppliesOthers;
 
-  private Boolean isSDP;
+  private Boolean sdp;
 
   private Boolean hasElectricity;
 
-  private Boolean isOnline;
+  private Boolean online;
 
   private Boolean hasElectronicSCC;
 
@@ -99,8 +99,8 @@ public class FacilityFeedDTO extends BaseFeedDTO {
     this.operatedBy = (facility.getOperatedBy() != null) ? facility.getOperatedBy().getText() : null;
     this.coldStorageGrossCapacity = facility.getColdStorageGrossCapacity();
     this.coldStorageNetCapacity = facility.getColdStorageNetCapacity();
-    this.isSDP = facility.getSdp();
-    this.isOnline = facility.getOnline();
+    this.sdp = facility.getSdp();
+    this.online = facility.getOnline();
     this.suppliesOthers = facility.getSuppliesOthers();
     this.hasElectricity = facility.getHasElectricity();
     this.hasElectronicSCC = facility.getHasElectronicScc();

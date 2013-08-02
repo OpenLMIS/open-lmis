@@ -42,9 +42,9 @@ public class FacilityFeedDTOTest {
     assertThat(facilityFeedDTO.getColdStorageGrossCapacity(), is(facility.getColdStorageGrossCapacity()));
     assertThat(facilityFeedDTO.getColdStorageNetCapacity(), is(facility.getColdStorageNetCapacity()));
     assertThat(facilityFeedDTO.getSuppliesOthers(), is(facility.getSuppliesOthers()));
-    assertThat(facilityFeedDTO.getIsSDP(), is(facility.getSdp()));
+    assertThat(facilityFeedDTO.getSdp(), is(facility.getSdp()));
     assertThat(facilityFeedDTO.getHasElectricity(), is(facility.getHasElectricity()));
-    assertThat(facilityFeedDTO.getIsOnline(), is(facility.getOnline()));
+    assertThat(facilityFeedDTO.getOnline(), is(facility.getOnline()));
     assertThat(facilityFeedDTO.getHasElectronicSCC(), is(facility.getHasElectronicScc()));
     assertThat(facilityFeedDTO.getHasElectronicDAR(), is(facility.getHasElectronicDar()));
     assertThat(facilityFeedDTO.getActive(), is(facility.getActive()));
