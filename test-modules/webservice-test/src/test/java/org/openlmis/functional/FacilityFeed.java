@@ -249,6 +249,12 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"parentFacility\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
 
+//    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"isOnline\":"));
+//    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectricity\":"));
+//    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicSCC\":"));
+//    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicDAR\":"));
+//    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"satelliteFacility\":"));
+
     chwJson.setActive("false");
     client.SendJSON(getJsonStringFor(chwJson),
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
@@ -258,6 +264,11 @@ public class FacilityFeed extends TestCaseHelper {
 
     ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
     assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"active\":false"));
+//    assertFalse("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"isOnline\":"));
+//    assertFalse("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"hasElectricity\":"));
+//    assertFalse("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"hasElectronicSCC\":"));
+//    assertFalse("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"hasElectronicDAR\":"));
+//    assertFalse("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"satelliteFacility\":"));
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntityUpdated.getResponse(), "content");
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"active\":true"));
