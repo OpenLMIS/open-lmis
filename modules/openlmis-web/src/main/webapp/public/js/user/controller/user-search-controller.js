@@ -54,10 +54,11 @@ function UserSearchController($scope, $location, Users, navigateBackService) {
       var fullName = user.firstName.toLowerCase() + ' ' + user.lastName.toLowerCase();
 
       if (user.firstName.toLowerCase().indexOf() >= 0 ||
-        user.lastName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
-        fullName.indexOf(query.trim().toLowerCase()) >= 0 ||
-        user.email.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0
-        ) {
+          user.lastName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
+          fullName.indexOf(query.trim().toLowerCase()) >= 0 ||
+          user.email.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
+          user.userName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0
+          ) {
         $scope.filteredUsers.push(user);
       }
     });

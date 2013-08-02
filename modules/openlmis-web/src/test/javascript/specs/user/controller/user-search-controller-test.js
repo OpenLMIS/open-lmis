@@ -46,12 +46,13 @@ describe("User Search Controller", function () {
     expect(scope.resultCount).toEqual(1);
   });
 
-  it("should get and filter users when more than 3 characters are pasted for search and first 3 chars does not match with previous query's first three chars", function () {
+  it("should get and filter users when more than 3 characters are pasted for search and first 3 chars does not match " +
+      "with previous query's first three chars", function () {
     scope.previousQuery = "abcd";
     scope.query = "lokesh";
 
-    var user1 = {"id": 2, "firstName": "lokesh", "lastName": "Doe", "email": "lokesh_doe@gmail.com"};
-    var user2 = {"id": 2, "firstName": "lokaaahh", "lastName": "Doe", "email": "lokaaahh_doe@gmail.com"};
+    var user1 = {"id": 2, "userName": "lok", "firstName": "lokesh", "lastName": "Doe", "email": "lokesh_doe@gmail.com"};
+    var user2 = {"id": 2, "userName": "loke", "firstName": "lokaaahh", "lastName": "Doe", "email": "lokaaahh_doe@gmail.com"};
     var userResponse = {"userList": [user1, user2]};
     $httpBackend.when('GET', '/users.json?param=lok').respond(userResponse);
 

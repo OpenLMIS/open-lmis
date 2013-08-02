@@ -5,29 +5,34 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html">
-    <h2><span openlmis-message="label.search.user"></span>
-        <a href="#/create-user" class="pull-right btn btn-primary"><span id="user-add-new" openlmis-message="button.add.new"></span></a>
-    </h2>
+  <h2><span openlmis-message="label.search.user"></span>
+    <a href="#/create-user" class="pull-right btn btn-primary"><span id="user-add-new"
+                                                                     openlmis-message="button.add.new"></span></a>
+  </h2>
 
-    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="userId">
-        <span ng-bind="message"></span>.&nbsp;&nbsp;<a href="" ng-click="editUser(userId)" openlmis-message="search.viewHere"></a>
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="userId">
+    <span ng-bind="message"></span>.&nbsp;&nbsp;<a href="" ng-click="editUser(userId)"
+                                                   openlmis-message="search.viewHere"></a>
+  </div>
+
+  <input id="searchUser" class="search-query input-xlarge" type="text" ng-model="query"
+         on-keyup="showUserSearchResults()" openlmis-message="placeholder.user.search"/>
+
+  <div class="form-tip" openlmis-message="search.threeCharacters"></div>
+  <div class="facility-list" ng-show="query.length > 2">
+    <div ng-switch on="resultCount">
+      <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
+
+      <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
+
+      <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
     </div>
-
-    <input id="searchUser" class="search-query input-xlarge" type="text" ng-model="query"
-           on-keyup="showUserSearchResults()" openlmis-message="placeholder.user.search"/>
-
-    <div class="form-tip" openlmis-message="search.threeCharacters"></div>
-    <div class="facility-list" ng-show="query.length > 2">
-      <div ng-switch on="resultCount">
-        <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
-        <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
-        <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
-      </div>
-        <a class="close-btn" href="" ng-click="clearSearch()"></a>
-        <ul>
-            <li ng-repeat="user in filteredUsers">
-                <a href="" ng-click="editUser(user.id)">{{user.firstName}} {{user.lastName}} - {{user.email}}</a>
-            </li>
-        </ul>
-    </div>
+    <a class="close-btn" href="" ng-click="clearSearch()"></a>
+    <ul>
+      <li ng-repeat="user in filteredUsers">
+        <a href="" ng-click="editUser(user.id)">{{user.firstName}} {{user.lastName}} {{user.userName}} -
+          {{user.email}}</a>
+      </li>
+    </ul>
+  </div>
 </div>

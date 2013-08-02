@@ -235,6 +235,20 @@ public class UserMapperIT {
   }
 
   @Test
+  public void shouldGetUsersWithSearchedUsername() throws Exception {
+    String userSearchValue = "user";
+    User user = make(a(defaultUser, with(userName, "User"), with(facilityId, facility.getId())));
+
+    userMapper.insert(user);
+
+    List<User> listOfUsers = userMapper.getUserWithSearchedName(userSearchValue);
+    User userResult = listOfUsers.get(0);
+
+    assertThat(userResult.getUserName(), is(user.getUserName()));
+    assertThat(listOfUsers.size(), is(1));
+  }
+
+  @Test
   public void shouldUpdateUserIfUserExist() throws Exception {
     User user = make(a(defaultUser, with(facilityId, facility.getId())));
     userMapper.insert(user);
