@@ -77,13 +77,32 @@ public class FacilityFeed extends TestCaseHelper {
     createFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
 
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
-//    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + facilityCodePrefix + date_time + "\",\"name\":\"" + facilityNamePrefix + date_time + "\"," +
-//      "\"type\":\"" + facilityType + "\",\"description\":\"Testing description\",\"mainPhone\":\"9711231305\",\"fax\":\"9711231305\"," +
-//      "\"address1\":\"Address1\",\"address2\":\"Address2\",\"geographicZone\":\"" + geoZone + "\",\"catchmentPopulation\":" + catchmentPopulationValue + ",\"latitude\":-555.5555," +
-//      "\"longitude\":444.4444,\"altitude\":4545.4545,\"operatedBy\":\"" + operatedBy + "\",\"coldStorageGrossCapacity\":3434.3434," +
-//      "\"coldStorageNetCapacity\":3535.3535,\"suppliesOthers\":true,\"hasElectricity\":true,\"hasElectronicSCC\":true," +
-//      "\"hasElectronicDAR\":true,\"active\":true,\"goLiveDate\":1377369000000,\"goDownDate\":1377455400000," +
-//      "\"satelliteFacility\":false,\"virtualFacility\":false,\"comments\":\"Comments\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + facilityCodePrefix + date_time + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"" + facilityNamePrefix + date_time + "\""));
+//    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"type\":\"" + facilityType + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"description\":\"Testing description\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"mainPhone\":\"9711231305\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"fax\":\"9711231305\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"address1\":\"Address1\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"address2\":\"Address2\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZone\":\"" + geoZone + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"catchmentPopulation\":" + catchmentPopulationValue + ""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"latitude\":-555.5555"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"longitude\":444.4444"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"altitude\":4545.4545"));
+//    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"operatedBy\":\"" + operatedBy + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"coldStorageGrossCapacity\":3434.3434"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"coldStorageNetCapacity\":3535.3535"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"suppliesOthers\":true"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectricity\":true"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicSCC\":true"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicDAR\":true"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":true"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\":1377369000000"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goDownDate\":1377455400000"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"satelliteFacility\":false"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":false"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comments\":\"Comments\""));
 
     DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(date_time);
@@ -112,7 +131,7 @@ public class FacilityFeed extends TestCaseHelper {
     createFacilityPage.addProgram("VACCINES", true);
     createFacilityPage.saveFacility();
     Thread.sleep(5000);
-    assertEquals(feedJSONList.size(),3);
+    assertEquals(feedJSONList.size(), 3);
 
     deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(date_time);
@@ -121,7 +140,7 @@ public class FacilityFeed extends TestCaseHelper {
     createFacilityPage.saveFacility();
 
     Thread.sleep(5000);
-    assertEquals(feedJSONList.size(),3);
+    assertEquals(feedJSONList.size(), 3);
 
     homePage.logout(baseUrlGlobal);
   }
@@ -152,13 +171,32 @@ public class FacilityFeed extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
 
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
-//    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + facilityCodePrefix + "\",\"name\":\"" + facilityNamePrefix + "\"," +
-//      "\"type\":\"" + facilityType + "\",\"description\":\"IT department\",\"mainPhone\":\"9711231305\",\"fax\":\"9711231305\"," +
-//      "\"address1\":\"Address1\",\"address2\":\"Address2\",\"geographicZone\":\"" + geoZone + "\",\"catchmentPopulation\":" + catchmentPopulationValue + "," +
-//      "\"latitude\":-555.5555,\"longitude\":444.4444,\"altitude\":4545.4545,\"operatedBy\":\"" + operatedBy + "\",\"coldStorageGrossCapacity\":3434.3434," +
-//      "\"coldStorageNetCapacity\":3535.3535,\"suppliesOthers\":true,\"hasElectricity\":true,\"hasElectronicSCC\":true," +
-//      "\"hasElectronicDAR\":true,\"active\":true,\"goLiveDate\":1352572200000,\"goDownDate\":-2592106200000,\"satelliteFacility\":true," +
-//      "\"virtualFacility\":false,\"comments\":\"fc\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + facilityCodePrefix + "\""));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"" + facilityNamePrefix + "\""));
+//      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"type\":\"" + facilityType + "\""));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"description\":\"IT department\""));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"mainPhone\":\"9711231305\""));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"fax\":\"9711231305\""));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"address1\":\"Address1\""));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"address2\":\"Address2\","));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZone\":\"" + geoZone + "\""));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"catchmentPopulation\":" + catchmentPopulationValue + ""));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"latitude\":-555.5555"));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"longitude\":444.4444"));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"altitude\":4545.4545"));
+//      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"operatedBy\":\"" + operatedBy + "\"" ));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"coldStorageGrossCapacity\":3434.3434" ));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"coldStorageNetCapacity\":3535.3535" ));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"suppliesOthers\":true" ));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectricity\":true" ));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicSCC\":true" ));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicDAR\":true" ));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":true" ));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\":1352572200000" ));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goDownDate\":-2592106200000" ));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"satelliteFacility\":true" ));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":false" ));
+      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comments\":\"fc\""));
 
     uploadPage.uploadFacilities("QA_facilities_Subsequent_WebService.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
@@ -200,12 +238,16 @@ public class FacilityFeed extends TestCaseHelper {
       dbWrapper.getAuthToken(commTrackUser));
 
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
-//    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\",\"name\":\"" + DEFAULT_AGENT_NAME + "\"," +
-//      "\"type\":\"Lvl3 Hospital\",\"mainPhone\":\"" + PHONE_NUMBER + "\",\"geographicZone\":\"Ngorongoro\"," +
-//      "\"operatedBy\":\"NGO\"," +
-//      "\"active\":" + ACTIVE_STATUS + ","));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"" + DEFAULT_AGENT_NAME + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"type\":\"Lvl3 Hospital\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"mainPhone\":\"" + PHONE_NUMBER + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZone\":\"Ngorongoro\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"operatedBy\":\"NGO\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":" + ACTIVE_STATUS + ""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":true,\"parentFacility\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":true"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"parentFacility\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
 
     chwJson.setActive("false");
     client.SendJSON(getJsonStringFor(chwJson),
@@ -224,6 +266,162 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"online\":false"));
 
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"active\":false"));
+    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"dataReportable\":true"));
+
+
+  }
+
+//  @Test(groups = {"webservice"})
+  public void testFacilityFeedUsingCommTrackUsingOpenLmisVendor() throws Exception {
+
+    HttpClient client = new HttpClient();
+    client.createContext();
+    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
+
+    client.SendJSON(getJsonStringFor(chwJson),
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
+
+    ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=openlmis", "GET", "", "");
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"" + DEFAULT_AGENT_NAME + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"type\":\"Lvl3 Hospital\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"mainPhone\":\"" + PHONE_NUMBER + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZone\":\"Ngorongoro\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"operatedBy\":\"NGO\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":" + ACTIVE_STATUS + ""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":true"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"parentFacility\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
+
+    chwJson.setActive("false");
+    client.SendJSON(getJsonStringFor(chwJson),
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
+
+    ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=openlmis", "GET", "", "");
+    assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"active\":false"));
+
+    List<String> feedJSONList = XmlUtils.getNodeValues(responseEntityUpdated.getResponse(), "content");
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"active\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"dataReportable\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"sdp\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"online\":false"));
+
+    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"active\":false"));
+    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"dataReportable\":true"));
+
+
+  }
+
+//  @Test(groups = {"webservice"})
+  public void testFacilityFeedUsingCommTrackUsingInvalidVendor() throws Exception {
+
+    HttpClient client = new HttpClient();
+    client.createContext();
+    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
+
+    client.SendJSON(getJsonStringFor(chwJson),
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
+
+    ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=testing", "GET", "", "");
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"" + DEFAULT_AGENT_NAME + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"type\":\"Lvl3 Hospital\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"mainPhone\":\"" + PHONE_NUMBER + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZone\":\"Ngorongoro\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"operatedBy\":\"NGO\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":" + ACTIVE_STATUS + ""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":true"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"parentFacility\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
+
+    chwJson.setActive("false");
+    client.SendJSON(getJsonStringFor(chwJson),
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
+
+    ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=testing", "GET", "", "");
+    assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"active\":false"));
+
+    List<String> feedJSONList = XmlUtils.getNodeValues(responseEntityUpdated.getResponse(), "content");
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"active\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"dataReportable\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"sdp\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"online\":false"));
+
+    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"active\":false"));
+    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"dataReportable\":true"));
+
+
+  }
+
+  //  @Test(groups = {"webservice"})
+  public void testFacilityFeedForCommTrackVendorSpecificInfo() throws Exception {
+
+    HttpClient client = new HttpClient();
+    client.createContext();
+    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
+    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
+    chwJson.setAgentName(DEFAULT_AGENT_NAME);
+    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    chwJson.setPhoneNumber(PHONE_NUMBER);
+    chwJson.setActive(ACTIVE_STATUS);
+
+    client.SendJSON(getJsonStringFor(chwJson),
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
+
+    ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=commtrack", "GET", "", "");
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityCode\":\"" + DEFAULT_AGENT_CODE + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityName\":\"" + DEFAULT_AGENT_NAME + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityTypeID\":\"Lvl3 Hospital\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityMainPhone\":\"" + PHONE_NUMBER + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZoneID\":\"Ngorongoro\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityOperatedBy\":\"NGO\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityIsActive\":" + ACTIVE_STATUS + ""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityGoLiveDate\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityIsVirtual\":true"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"SatelliteParentID\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
+
+    chwJson.setActive("false");
+    client.SendJSON(getJsonStringFor(chwJson),
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      dbWrapper.getAuthToken(commTrackUser));
+
+    ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=commTrack", "GET", "", "");
+    assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"facilityIsActive\":false"));
+
+    List<String> feedJSONList = XmlUtils.getNodeValues(responseEntityUpdated.getResponse(), "content");
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"facilityIsActive\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"dataReportable\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"facilityIsSDP\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"facilityIsOnline\":false"));
+
+    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"facilityIsActive\":false"));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"dataReportable\":true"));
 
 
