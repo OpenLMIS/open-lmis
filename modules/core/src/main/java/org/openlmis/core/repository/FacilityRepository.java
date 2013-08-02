@@ -89,7 +89,7 @@ public class FacilityRepository {
     if (existingFacilityType == null)
       throw new DataException("error.reference.data.invalid.facility.type");
 
-    facilityType.setId(existingFacilityType.getId());
+    facility.setFacilityType(existingFacilityType);
 
   }
 
