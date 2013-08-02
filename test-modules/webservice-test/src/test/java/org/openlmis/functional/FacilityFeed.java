@@ -10,7 +10,7 @@ import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
-import org.openlmis.restapi.domain.CHW;
+import org.openlmis.restapi.domain.Agent;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -229,14 +229,14 @@ public class FacilityFeed extends TestCaseHelper {
 
     HttpClient client = new HttpClient();
     client.createContext();
-    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
-    chwJson.setAgentName(DEFAULT_AGENT_NAME);
-    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
-    chwJson.setPhoneNumber(PHONE_NUMBER);
-    chwJson.setActive(ACTIVE_STATUS);
+    Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
+    agentJson.setAgentCode(DEFAULT_AGENT_CODE);
+    agentJson.setAgentName(DEFAULT_AGENT_NAME);
+    agentJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    agentJson.setPhoneNumber(PHONE_NUMBER);
+    agentJson.setActive(ACTIVE_STATUS);
 
-    client.SendJSON(getJsonStringFor(chwJson),
+    client.SendJSON(getJsonStringFor(agentJson),
       CREATE_URL,
       POST,
       commTrackUser,
@@ -260,8 +260,8 @@ public class FacilityFeed extends TestCaseHelper {
 //    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicDAR\":"));
 //    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"satelliteFacility\":"));
 
-    chwJson.setActive("false");
-    client.SendJSON(getJsonStringFor(chwJson),
+    agentJson.setActive("false");
+    client.SendJSON(getJsonStringFor(agentJson),
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
@@ -292,14 +292,14 @@ public class FacilityFeed extends TestCaseHelper {
 
     HttpClient client = new HttpClient();
     client.createContext();
-    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
-    chwJson.setAgentName(DEFAULT_AGENT_NAME);
-    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
-    chwJson.setPhoneNumber(PHONE_NUMBER);
-    chwJson.setActive(ACTIVE_STATUS);
+    Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
+    agentJson.setAgentCode(DEFAULT_AGENT_CODE);
+    agentJson.setAgentName(DEFAULT_AGENT_NAME);
+    agentJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    agentJson.setPhoneNumber(PHONE_NUMBER);
+    agentJson.setActive(ACTIVE_STATUS);
 
-    client.SendJSON(getJsonStringFor(chwJson),
+    client.SendJSON(getJsonStringFor(agentJson),
       CREATE_URL,
       POST,
       commTrackUser,
@@ -317,8 +317,8 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"parentFacility\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
 
-    chwJson.setActive("false");
-    client.SendJSON(getJsonStringFor(chwJson),
+    agentJson.setActive("false");
+    client.SendJSON(getJsonStringFor(agentJson),
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
@@ -344,14 +344,14 @@ public class FacilityFeed extends TestCaseHelper {
 
     HttpClient client = new HttpClient();
     client.createContext();
-    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
-    chwJson.setAgentName(DEFAULT_AGENT_NAME);
-    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
-    chwJson.setPhoneNumber(PHONE_NUMBER);
-    chwJson.setActive(ACTIVE_STATUS);
+    Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
+    agentJson.setAgentCode(DEFAULT_AGENT_CODE);
+    agentJson.setAgentName(DEFAULT_AGENT_NAME);
+    agentJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    agentJson.setPhoneNumber(PHONE_NUMBER);
+    agentJson.setActive(ACTIVE_STATUS);
 
-    client.SendJSON(getJsonStringFor(chwJson),
+    client.SendJSON(getJsonStringFor(agentJson),
       CREATE_URL,
       POST,
       commTrackUser,
@@ -369,8 +369,8 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"parentFacility\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
 
-    chwJson.setActive("false");
-    client.SendJSON(getJsonStringFor(chwJson),
+    agentJson.setActive("false");
+    client.SendJSON(getJsonStringFor(agentJson),
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
@@ -396,14 +396,14 @@ public class FacilityFeed extends TestCaseHelper {
 
     HttpClient client = new HttpClient();
     client.createContext();
-    CHW chwJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, CHW.class);
-    chwJson.setAgentCode(DEFAULT_AGENT_CODE);
-    chwJson.setAgentName(DEFAULT_AGENT_NAME);
-    chwJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
-    chwJson.setPhoneNumber(PHONE_NUMBER);
-    chwJson.setActive(ACTIVE_STATUS);
+    Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
+    agentJson.setAgentCode(DEFAULT_AGENT_CODE);
+    agentJson.setAgentName(DEFAULT_AGENT_NAME);
+    agentJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    agentJson.setPhoneNumber(PHONE_NUMBER);
+    agentJson.setActive(ACTIVE_STATUS);
 
-    client.SendJSON(getJsonStringFor(chwJson),
+    client.SendJSON(getJsonStringFor(agentJson),
       CREATE_URL,
       POST,
       commTrackUser,
@@ -421,8 +421,8 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityIsVirtual\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"SatelliteParentID\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
 
-    chwJson.setActive("false");
-    client.SendJSON(getJsonStringFor(chwJson),
+    agentJson.setActive("false");
+    client.SendJSON(getJsonStringFor(agentJson),
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,

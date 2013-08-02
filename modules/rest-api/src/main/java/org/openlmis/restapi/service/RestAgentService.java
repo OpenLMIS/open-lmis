@@ -9,14 +9,14 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.VendorService;
-import org.openlmis.restapi.domain.CHW;
+import org.openlmis.restapi.domain.Agent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Service
-public class RestCHWService {
+public class RestAgentService {
 
   @Autowired
   FacilityService facilityService;
@@ -24,30 +24,30 @@ public class RestCHWService {
   @Autowired
   VendorService vendorService;
 
-  public void create(CHW chw, String userName) {
-    chw.validate();
-    if (getExistingFacilityForCode(chw.getAgentCode()) != null) {
-      throw new DataException("error.chw.already.registered");
+  public void create(Agent agent, String userName) {
+    agent.validate();
+    if (getExistingFacilityForCode(agent.getAgentCode()) != null) {
+      throw new DataException("error.agent.already.registered");
     }
-    Facility facility = getFacilityForCHW(chw);
+    Facility facility = getFacilityForCHW(agent);
     facility.setCreatedBy(vendorService.getByName(userName).getId());
     facility.setModifiedBy(facility.getCreatedBy());
     facilityService.save(facility);
   }
 
-  public void update(CHW chw, String userName) {
-    if (chw.getActive() == null) {
+  public void update(Agent agent, String userName) {
+    if (agent.getActive() == null) {
       throw new DataException("error.restapi.mandatory.missing");
     }
-    chw.validate();
+    agent.validate();
 
-    Facility chwFacility = getExistingFacilityForCode(chw.getAgentCode());
+    Facility chwFacility = getExistingFacilityForCode(agent.getAgentCode());
     validateCHWForUpdate(chwFacility);
 
-    chwFacility.setName(chw.getAgentName());
-    chwFacility.setMainPhone(chw.getPhoneNumber() == null ? chwFacility.getMainPhone() : chw.getPhoneNumber());
-    chwFacility.setActive(Boolean.parseBoolean(chw.getActive()));
-    fillBaseFacility(chw, chwFacility);
+    chwFacility.setName(agent.getAgentName());
+    chwFacility.setMainPhone(agent.getPhoneNumber() == null ? chwFacility.getMainPhone() : agent.getPhoneNumber());
+    chwFacility.setActive(Boolean.parseBoolean(agent.getActive()));
+    fillBaseFacility(agent, chwFacility);
     chwFacility.setModifiedDate(new Date());
     chwFacility.setModifiedBy(vendorService.getByName(userName).getId());
     facilityService.update(chwFacility);
@@ -59,30 +59,30 @@ public class RestCHWService {
     return facilityService.getByCode(facility);
   }
 
-  private Facility getFacilityForCHW(CHW chw) {
+  private Facility getFacilityForCHW(Agent agent) {
     Facility facility = new Facility();
-    facility.setCode(chw.getAgentCode());
-    facility.setName(chw.getAgentName());
-    facility.setMainPhone(chw.getPhoneNumber());
-    facility.setActive(Boolean.parseBoolean(chw.getActive()));
+    facility.setCode(agent.getAgentCode());
+    facility.setName(agent.getAgentName());
+    facility.setMainPhone(agent.getPhoneNumber());
+    facility.setActive(Boolean.parseBoolean(agent.getActive()));
     facility.setVirtualFacility(true);
     facility.setSdp(true);
     facility.setDataReportable(true);
-    fillBaseFacility(chw, facility);
+    fillBaseFacility(agent, facility);
     facility.setGoLiveDate(new Date());
     return facility;
   }
 
-  private void fillBaseFacility(CHW chw, Facility facility) {
-    Facility baseFacility = getValidatedBaseFacility(chw);
+  private void fillBaseFacility(Agent agent, Facility facility) {
+    Facility baseFacility = getValidatedBaseFacility(agent);
     facility.setParentFacilityId(baseFacility.getId());
     facility.setFacilityType(baseFacility.getFacilityType());
     facility.setGeographicZone(baseFacility.getGeographicZone());
     facility.setOperatedBy(baseFacility.getOperatedBy());
   }
 
-  private Facility getValidatedBaseFacility(CHW chw) {
-    Facility baseFacility = facilityService.getFacilityWithReferenceDataForCode(chw.getParentFacilityCode());
+  private Facility getValidatedBaseFacility(Agent agent) {
+    Facility baseFacility = facilityService.getFacilityWithReferenceDataForCode(agent.getParentFacilityCode());
     if (baseFacility.getVirtualFacility()) {
       throw new DataException("error.reference.data.parent.facility.virtual");
     }
@@ -95,11 +95,11 @@ public class RestCHWService {
     }
 
     if (!chwFacility.getVirtualFacility()) {
-      throw new DataException("error.chw.not.virtual");
+      throw new DataException("error.agent.not.virtual");
     }
 
     if (!chwFacility.getDataReportable()) {
-      throw new DataException("error.chw.deleted");
+      throw new DataException("error.agent.deleted");
     }
   }
 }

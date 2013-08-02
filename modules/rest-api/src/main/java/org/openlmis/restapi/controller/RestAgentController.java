@@ -10,9 +10,9 @@ package org.openlmis.restapi.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.restapi.domain.CHW;
+import org.openlmis.restapi.domain.Agent;
 import org.openlmis.restapi.response.RestResponse;
-import org.openlmis.restapi.service.RestCHWService;
+import org.openlmis.restapi.service.RestAgentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,29 +28,29 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @Controller
 @NoArgsConstructor
-public class RestCHWController extends BaseController {
+public class RestAgentController extends BaseController {
 
   @Autowired
-  private RestCHWService restCHWService;
+  private RestAgentService restAgentService;
 
   @RequestMapping(value = "/rest-api/chw", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> createCHW(@RequestBody CHW chw, Principal principal) {
+  public ResponseEntity<RestResponse> createCHW(@RequestBody Agent agent, Principal principal) {
     try {
-      restCHWService.create(chw, principal.getName());
+      restAgentService.create(agent, principal.getName());
     } catch (DataException e) {
       return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
-    return RestResponse.success("message.success.chw.created");
+    return RestResponse.success("message.success.agent.created");
   }
 
   @RequestMapping(value = "/rest-api/chw/{agentCode}", method = PUT, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> updateCHW(@RequestBody CHW chw, @PathVariable String agentCode, Principal principal) {
+  public ResponseEntity<RestResponse> updateCHW(@RequestBody Agent agent, @PathVariable String agentCode, Principal principal) {
     try {
-      chw.setAgentCode(agentCode);
-      restCHWService.update(chw, principal.getName());
+      agent.setAgentCode(agentCode);
+      restAgentService.update(agent, principal.getName());
     } catch (DataException e) {
       return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
-    return RestResponse.success("message.success.chw.updated");
+    return RestResponse.success("message.success.agent.updated");
   }
 }

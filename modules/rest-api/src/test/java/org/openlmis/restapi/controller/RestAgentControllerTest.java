@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.restapi.controller;
 
 import org.junit.Before;
@@ -7,9 +13,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.restapi.domain.CHW;
+import org.openlmis.restapi.domain.Agent;
 import org.openlmis.restapi.response.RestResponse;
-import org.openlmis.restapi.service.RestCHWService;
+import org.openlmis.restapi.service.RestAgentService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
@@ -25,13 +31,13 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(RestResponse.class)
 @Category(UnitTests.class)
-public class RestCHWControllerTest {
+public class RestAgentControllerTest {
 
   @Mock
-  RestCHWService restCHWService;
+  RestAgentService restAgentService;
 
   @InjectMocks
-  RestCHWController restCHWController;
+  RestAgentController restAgentController;
 
   Principal principal;
 
@@ -44,27 +50,27 @@ public class RestCHWControllerTest {
 
   @Test
   public void shouldCreateCHW() throws Exception {
-    CHW chw = mock(CHW.class);
+    Agent agent = mock(Agent.class);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(), HttpStatus.OK);
-    when(RestResponse.success("message.success.chw.created")).thenReturn(expectResponse);
+    when(RestResponse.success("message.success.agent.created")).thenReturn(expectResponse);
 
-    ResponseEntity<RestResponse> response = restCHWController.createCHW(chw, principal);
+    ResponseEntity<RestResponse> response = restAgentController.createCHW(agent, principal);
 
-    verify(restCHWService).create(chw, principal.getName());
+    verify(restAgentService).create(agent, principal.getName());
     assertThat(response, is(expectResponse));
   }
 
   @Test
   public void shouldUpdateCHW() throws Exception {
-    CHW chw = mock(CHW.class);
+    Agent agent = mock(Agent.class);
     String agentCode = "A1";
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(), HttpStatus.OK);
-    when(RestResponse.success("message.success.chw.updated")).thenReturn(expectResponse);
+    when(RestResponse.success("message.success.agent.updated")).thenReturn(expectResponse);
 
-    ResponseEntity<RestResponse> response = restCHWController.updateCHW(chw, agentCode, principal);
-    verify(chw).setAgentCode(agentCode);
+    ResponseEntity<RestResponse> response = restAgentController.updateCHW(agent, agentCode, principal);
+    verify(agent).setAgentCode(agentCode);
 
-    verify(restCHWService).update(chw, principal.getName());
+    verify(restAgentService).update(agent, principal.getName());
     assertThat(response, is(expectResponse));
   }
 

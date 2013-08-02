@@ -13,7 +13,7 @@ import org.openlmis.core.exception.DataException;
 
 @Data
 @NoArgsConstructor
-public class CHW {
+public class Agent {
 
   private String agentCode;
   private String agentName;
