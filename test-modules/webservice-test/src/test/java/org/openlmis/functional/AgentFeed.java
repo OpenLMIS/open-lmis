@@ -28,10 +28,10 @@ public class AgentFeed extends TestCaseHelper {
   public static final String GET = "GET";
   public static final String POST = "POST";
   public static final String PUT = "PUT";
-  public static final String FULL_JSON_TXT_FILE_NAME = "CHWValid.txt";
+  public static final String FULL_JSON_TXT_FILE_NAME = "AgentValid.txt";
   public static final String userEmail = "Fatim_Doe@openlmis.com";
-  public static final String CREATE_URL = "http://localhost:9091/rest-api/chw.json";
-  public static final String UPDATE_URL = "http://localhost:9091/rest-api/chw/";
+  public static final String CREATE_URL = "http://localhost:9091/rest-api/agent.json";
+  public static final String UPDATE_URL = "http://localhost:9091/rest-api/agent/";
   public static final String commTrackUser = "commTrack";
   public static final String PHONE_NUMBER = "0099887766";
   public static final String DEFAULT_AGENT_NAME = "AgentVinod";
