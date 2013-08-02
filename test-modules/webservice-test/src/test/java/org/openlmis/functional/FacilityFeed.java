@@ -28,7 +28,7 @@ import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
 public class FacilityFeed extends TestCaseHelper {
   public WebDriver driver;
-  public static final String FULL_JSON_TXT_FILE_NAME = "CHWValid.txt";
+  public static final String FULL_JSON_TXT_FILE_NAME = "AgentValid.txt";
   public static final String userEmail = "Fatim_Doe@openlmis.com";
   public static final String CREATE_URL = "http://localhost:9091/rest-api/chw.json";
   public static final String UPDATE_URL = "http://localhost:9091/rest-api/chw/";
