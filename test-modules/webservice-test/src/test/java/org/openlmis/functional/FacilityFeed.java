@@ -137,6 +137,7 @@ public class FacilityFeed extends TestCaseHelper {
     String facilityType = "Lvl3 Hospital";
     String operatedBy = "MoH";
     String facilityCodePrefix = "facilityf10";
+    String parentFacilityCode = "F10";
     String facilityNamePrefix = "facilityf10 Village Dispensary";
     String facilityCodeUpdatedPrefix = "facilityf11";
     String facilityNameUpdatedPrefix = "facilityf11 Village Dispensary";
@@ -172,7 +173,7 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"active\":false"));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"sdp\":true"));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"online\":true"));
-    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"parentFacility\":\"" + facilityCodePrefix + "\""));
+    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"parentFacility\":\"" + parentFacilityCode + "\""));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"gln\":\"G7645\""));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"dataReportable\":true"));
 
