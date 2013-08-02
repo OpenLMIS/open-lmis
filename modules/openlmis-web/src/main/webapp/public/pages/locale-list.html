@@ -1,0 +1,17 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div>
+  <div class="locale-container" ng-controller="LocaleController">
+    <ul>
+      <li ng-repeat="(key,value) in locales">
+        <a ng-hide="selectedLocale == key" ng-click=changeLocale(key) href="" ng-bind=value></a>
+        <span ng-class = "{'selected': selectedLocale == key}" ng-show = "selectedLocale == key" ng-bind=value></span>
+        <span>|</span>
+      </li>
+    </ul>
+  </div>
+</div>

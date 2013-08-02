@@ -42,6 +42,10 @@ public class RoleAssignmentService {
     return roleAssignmentRepository.getAdminRole(userId);
   }
 
+  public RoleAssignment getReportRole(Long userId) {
+    return roleAssignmentRepository.getReportRole(userId);
+  }
+
   public List<RoleAssignment> getSupervisorRoles(Long userId) {
     return roleAssignmentRepository.getSupervisorRoles(userId);
   }
@@ -64,6 +68,7 @@ public class RoleAssignmentService {
     roleAssignmentRepository.insert(user.getHomeFacilityRoles(), user.getId());
     roleAssignmentRepository.insert(user.getSupervisorRoles(), user.getId());
     roleAssignmentRepository.insert(user.getAllocationRoles(), user.getId());
+    roleAssignmentRepository.insert(asList(user.getReportRoles()), user.getId());
     roleAssignmentRepository.insert(asList(user.getAdminRole()), user.getId());
   }
 }

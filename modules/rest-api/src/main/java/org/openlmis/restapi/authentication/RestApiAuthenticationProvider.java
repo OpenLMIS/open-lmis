@@ -25,8 +25,7 @@ public class RestApiAuthenticationProvider implements AuthenticationProvider {
   @Autowired
   private VendorService vendorService;
 
-  @Autowired
-  MessageService messageService;
+  MessageService messageService = MessageService.getRequestInstance();
 
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {

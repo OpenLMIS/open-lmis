@@ -46,19 +46,14 @@
 
     <bean id="localeChangeInterceptor"
           class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-        <property name="paramName" value="lang"/>
+        <property name="paramName" value="locale"/>
     </bean>
 
     <bean id="localeResolver"
           class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="cookieName" value="lang"/>
         <property name="defaultLocale" value="en"/>
-    </bean>
-
-    <bean id="handlerMapping"
-          class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-        <property name="interceptors">
-            <ref bean="localeChangeInterceptor"/>
-        </property>
+        <property name="cookieMaxAge" value="0x7fffffff"/>
     </bean>
 
 
@@ -94,6 +89,12 @@
                 </props>
             </property>
         </bean>
+        <mvc:interceptor>
+            <mvc:mapping path="/changeLocale**"/>
+            <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+                <property name="paramName" value="locale"/>
+            </bean>
+        </mvc:interceptor>
     </mvc:interceptors>
 
 

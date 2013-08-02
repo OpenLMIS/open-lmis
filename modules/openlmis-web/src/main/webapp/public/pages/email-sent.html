@@ -6,7 +6,7 @@
   -->
 
 <html xmlns="http://www.w3.org/1999/html" ng-app="openlmis">
-<head>
+  <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
     <title openlmis-message="app.title"></title>
@@ -14,6 +14,7 @@
     <script src="/public/lib/jquery/jquery-1.8.2.min.js"></script>
     <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>
     <script src="/public/lib/angular/angular.min.js"></script>
+    <script src="/public/lib/angular/angular-cookies.js"></script>
     <script src="/public/lib/angular/angular-resource.min.js"></script>
     <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
@@ -21,6 +22,7 @@
     <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
     <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
 
+    <script src="/public/js/shared/controller/locale-controller.js"></script>
     <script src="/public/js/shared/services/services.js"></script>
     <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
     <script src="/public/js/shared/app.js"></script>
@@ -33,22 +35,23 @@
     <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
     <!--[if IE 9]>
     <!--<link rel="stylesheet" href="/public/css/ie9.css" />-->
-</head>
+  </head>
 
-<body>
-<div class="login-page">
-    <div class="login-container">
-        <h1 openlmis-message="label.app.header"></h1>
-
-        <div class="forgot-password-form">
-            <h2 openlmis-message="email.sent.message"></h2>
-
-            <div class="form-desc" openlmis-message="email.check.message">
-            </div>
+  <body>
+    <div class="login-page">
+      <div class="login-container">
+        <div class="modal-login-header">
+          <h1 openlmis-message="label.app.header"></h1>
+          <ng-include src="'/public/pages/locale-list.html'"/>
         </div>
 
+        <div class="forgot-password-form">
+          <h2 openlmis-message="email.sent.message"></h2>
 
+          <div class="form-desc" openlmis-message="email.check.message">
+          </div>
+        </div>
+      </div>
     </div>
-</div>
-</body>
+  </body>
 </html>

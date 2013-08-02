@@ -7,6 +7,7 @@
 body {
   background: #2a393a;
 }
+
 .login-page {
   position: absolute;
   top: 50%;
@@ -18,37 +19,32 @@ body {
   border: 1px solid white;
   border-radius: 6px;
 }
+
 .login-container {
   background: #FFF; /* Old browsers */
   background: -moz-linear-gradient(top, #ffffff 0%, #ffffff 48%, #e1e1e1 100%); /* FF3.6+ */
-  background: -webkit-linear-gradient(top, #ffffff 0%, #ffffff 48%,#e1e1e1 100%); /* Chrome10+,Safari5.1+ */
-  background: -ms-linear-gradient(top, #ffffff 0%, #ffffff 48%,#e1e1e1 100%); /* IE10+ */
-  background: linear-gradient(to bottom, #ffffff 0%, #ffffff 48%,#e1e1e1 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e1e1e1',GradientType=0 ); /* IE6-9 */
+  background: -webkit-linear-gradient(top, #ffffff 0%, #ffffff 48%, #e1e1e1 100%); /* Chrome10+,Safari5.1+ */
+  background: -ms-linear-gradient(top, #ffffff 0%, #ffffff 48%, #e1e1e1 100%); /* IE10+ */
+  background: linear-gradient(to bottom, #ffffff 0%, #ffffff 48%, #e1e1e1 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ffffff', endColorstr = '#e1e1e1', GradientType = 0); /* IE6-9 */
   border-radius: 4px;
   h1 {
     font-size: 1.7em;
     color: #747474;
-    border-bottom: 1px solid #CCC;
     margin: 0;
+    margin-right: 118px;
     line-height: 24px;
     padding: 14px;
-    border-radius: 3px 3px 0 0;
     text-shadow: 0 1px 0 #FFF;
     font-weight: normal;
     font-family: 'HelveticaNeue-CondensedBold', Arial, sans-serif;
-    background: #DDD; /* Old browsers */
-    background: -moz-linear-gradient(top, #ffffff 0%, #ffffff 24%, #c5c5c5 100%); /* FF3.6+ */
-    background: -webkit-linear-gradient(top, #ffffff 0%, #ffffff 24%,#c5c5c5 100%); /* Chrome10+,Safari5.1+ */
-    background: -ms-linear-gradient(top, #ffffff 0%, #ffffff 24%,#c5c5c5 100%); /* IE10+ */
-    background: linear-gradient(to bottom, #ffffff 0%, #ffffff 24%,#c5c5c5 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#c5c5c5',GradientType=0 ); /* IE6-9 */
   }
   h2 {
     font-size: 1.4em;
     color: #414141;
     margin: 0;
-    padding: 10px 0;
+    padding: 15px 0;
+    line-height: 30px;
   }
   .alert-error {
     font-size: 0.9em;
@@ -85,8 +81,8 @@ body {
         background-repeat: repeat-x;
         border-color: #42a7ad #42a7ad #356b6f;
         border-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff42a7ad', endColorstr='#ff004484', GradientType=0);
-        filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ff42a7ad', endColorstr = '#ff004484', GradientType = 0);
+        filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
       }
 
       &.btn-primary:hover,
@@ -108,8 +104,8 @@ body {
         background-repeat: repeat-x;
         border-color: #777777 #777777 #444444;
         border-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc5c5c5', endColorstr='#ff777777', GradientType=0);
-        filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ffc5c5c5', endColorstr = '#ff777777', GradientType = 0);
+        filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
       }
 
       &.btn-cancel:hover,
@@ -128,6 +124,7 @@ body {
     text-decoration: underline;
   }
 }
+
 textarea:focus,
 input[type="text"]:focus,
 input[type="password"]:focus,
@@ -146,18 +143,20 @@ input[type="color"]:focus,
 .uneditable-input:focus {
   border-color: #17888f;
   outline: 0;
-  outline: thin dotted \9;
-  /* IE6-9 */
+  outline: thin dotted  \9;
+/* IE6-9 */
 
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23,136,143, 0.6);
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23,136,143, 0.6);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23,136,143, 0.6);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23, 136, 143, 0.6);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23, 136, 143, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23, 136, 143, 0.6);
 }
+
 .login-form {
   background: url(../images/login-bg.png) no-repeat 20px top;
   padding: 0 55px 0 330px;
   min-height: 310px;
 }
+
 .forgot-password-form {
   padding: 2px 20px 25px;
   min-height: 140px;
@@ -173,19 +172,67 @@ input[type="color"]:focus,
     padding: 9px 40px;
   }
 }
+
 .forgot-link {
   padding: 15px 0 20px;
 }
+
 .form-desc {
   padding-bottom: 15px;
 }
+
 .or-row {
   padding: 0 0 12px 3px;
 }
+
 .modal-login {
   width: 692px;
   margin-left: -346px;
 }
-input[placeholder].placeholder{
+
+input[placeholder].placeholder {
   color: #a2a2a2;
 }
+
+.modal-login-header {
+  border-bottom: 1px solid #CCC;
+  border-radius: 3px 3px 0 0;
+  background: #DDD; /* Old browsers */
+  background: -moz-linear-gradient(top, #ffffff 0%, #ffffff 24%, #c5c5c5 100%); /* FF3.6+ */
+  background: -webkit-linear-gradient(top, #ffffff 0%, #ffffff 24%,#c5c5c5 100%); /* Chrome10+,Safari5.1+ */
+  background: -ms-linear-gradient(top, #ffffff 0%, #ffffff 24%,#c5c5c5 100%); /* IE10+ */
+  background: linear-gradient(to bottom, #ffffff 0%, #ffffff 24%,#c5c5c5 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#c5c5c5',GradientType=0 ); /* IE6-9 */
+}
+.locale-container {
+  position: relative;
+  ul {
+    margin: 0px;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    padding: 10px 10px 12px;
+    float: right;
+    list-style-type: none;
+    li {
+      display: inline;
+      color: #727070;
+      font-size: 11px;
+      a {
+        color: rgb(0, 136, 204);
+      }
+      .selected {
+        color: #888787;
+      }
+      &:last-child {
+        span {
+          &:last-child {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+

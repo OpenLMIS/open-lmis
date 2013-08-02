@@ -84,11 +84,12 @@ public class DistributionPage extends RequisitionPage {
      testWebDriver.sleep(200);
   }
 
-  public void clickRecordData() {
+  public FacilityListPage clickRecordData() throws IOException {
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(recordDataButton);
     recordDataButton.click();
-    testWebDriver.sleep(200);
+    testWebDriver.sleep(250);
+    return new FacilityListPage(testWebDriver);
   }
 
   public void verifyDownloadSuccessFullMessage(String deliveryZone, String program, String period)

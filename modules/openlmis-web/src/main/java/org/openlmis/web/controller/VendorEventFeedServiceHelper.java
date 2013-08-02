@@ -12,8 +12,8 @@ import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 import org.ict4h.atomfeed.server.service.EventFeedService;
 import org.jdom.Document;
-import org.jdom.JDOMException;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.openlmis.core.exception.DataException;
 import org.springframework.core.io.ClassPathResource;
@@ -21,7 +21,11 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 public class VendorEventFeedServiceHelper{
 
@@ -47,11 +51,12 @@ public class VendorEventFeedServiceHelper{
 
     Map<String, String> map = createTemplateMap(template);
 
+    Pattern pattern = Pattern.compile("(?:<!\\[CDATA\\[)(.)*(?:\\]\\]>)");
     List<Entry> feedEntries = feed.getEntries();
     for (Entry entry : feedEntries) {
       List<Content> contentList = entry.getContents();
       for( Content content : contentList){
-        String value = content.getValue();
+        String value = pattern.matcher(content.getValue()).group();
         JsonNode rootNode = convertToTemplate(map, value);
         content.setValue("<![CDATA["+rootNode.toString()+"]]>");
       }

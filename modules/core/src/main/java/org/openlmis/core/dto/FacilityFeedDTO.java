@@ -77,7 +77,7 @@ public class FacilityFeedDTO extends BaseFeedDTO {
 
   private String comments;
 
-  private boolean doNotDisplay;
+  private boolean dataReportable;
 
   private Date modifiedDate;
 
@@ -113,7 +113,7 @@ public class FacilityFeedDTO extends BaseFeedDTO {
     this.virtualFacility = (facility.getVirtualFacility() != null) ? facility.getVirtualFacility() : false;
     this.satelliteFacility = (facility.getSatellite() != null) ? facility.getSatellite() : false;
     this.comments = facility.getComment();
-    this.doNotDisplay = facility.getDataReportable();
+    this.dataReportable = facility.getDataReportable();
     this.modifiedDate = facility.getModifiedDate();
   }
 
