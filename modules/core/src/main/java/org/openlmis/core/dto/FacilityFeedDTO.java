@@ -51,27 +51,27 @@ public class FacilityFeedDTO extends BaseFeedDTO {
 
   private Double coldStorageNetCapacity;
 
-  private boolean suppliesOthers;
+  private Boolean suppliesOthers;
 
-  private boolean isSDP;
+  private Boolean isSDP;
 
-  private boolean hasElectricity;
+  private Boolean hasElectricity;
 
-  private boolean isOnline;
+  private Boolean isOnline;
 
-  private boolean hasElectronicSCC;
+  private Boolean hasElectronicSCC;
 
-  private boolean hasElectronicDAR;
+  private Boolean hasElectronicDAR;
 
-  private boolean active;
+  private Boolean active;
 
   private Date goLiveDate;
 
   private Date goDownDate;
 
-  private boolean satelliteFacility;
+  private Boolean satelliteFacility;
 
-  private boolean virtualFacility;
+  private Boolean virtualFacility;
 
   private String parentFacility;
 
@@ -100,18 +100,17 @@ public class FacilityFeedDTO extends BaseFeedDTO {
     this.coldStorageGrossCapacity = facility.getColdStorageGrossCapacity();
     this.coldStorageNetCapacity = facility.getColdStorageNetCapacity();
     this.isSDP = facility.getSdp();
-    this.isOnline = (facility.getOnline() != null) ? facility.getOnline() : false;
-    this.suppliesOthers = (facility.getSuppliesOthers() != null) ? facility.getSuppliesOthers() : false;
-    this.hasElectricity = (facility.getHasElectricity() != null) ? facility.getHasElectricity() : false;
-    this.hasElectronicSCC = (facility.getHasElectronicScc() != null) ? facility.getHasElectronicScc() : false;
-    this.hasElectronicDAR = (facility.getHasElectronicDar() != null) ? facility.getHasElectronicDar() : false;
-    this.satelliteFacility = (facility.getSatellite() != null) ? facility.getSatellite() : false;
+    this.isOnline = facility.getOnline();
+    this.suppliesOthers = facility.getSuppliesOthers();
+    this.hasElectricity = facility.getHasElectricity();
+    this.hasElectronicSCC = facility.getHasElectronicScc();
+    this.hasElectronicDAR = facility.getHasElectronicDar();
+    this.satelliteFacility = facility.getSatellite();
+    this.virtualFacility = facility.getVirtualFacility();
     this.active = facility.getActive();
     this.goLiveDate = facility.getGoLiveDate();
     this.goDownDate = facility.getGoDownDate();
     this.parentFacility = parentFacility != null ? parentFacility.getCode() : null;
-    this.virtualFacility = (facility.getVirtualFacility() != null) ? facility.getVirtualFacility() : false;
-    this.satelliteFacility = (facility.getSatellite() != null) ? facility.getSatellite() : false;
     this.comments = facility.getComment();
     this.dataReportable = facility.getDataReportable();
     this.modifiedDate = facility.getModifiedDate();

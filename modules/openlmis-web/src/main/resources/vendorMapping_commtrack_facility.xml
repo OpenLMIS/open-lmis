@@ -2,7 +2,7 @@
 <mapping>
     <field openlmis-name="code" vendor-name="facilityCode" />
     <field openlmis-name="name" vendor-name="facilityName" />
-    <field openlmis-name="typeId" vendor-name="facilityTypeID" />
+    <field openlmis-name="type" vendor-name="facilityType" />
     <field openlmis-name="description" vendor-name="facilityDescription" />
     <field openlmis-name="gln" vendor-name="GLN" />
     <field openlmis-name="mainPhone" vendor-name="facilityMainPhone" />
