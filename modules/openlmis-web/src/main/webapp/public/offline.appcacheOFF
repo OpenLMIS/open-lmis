@@ -12,6 +12,7 @@ CACHE:
 /public/lib/angular-ui/angular-ui.min.css
 
 /public/js/shared/app.js
+/public/lib/angular/angular-cookies.min.js
 /public/lib/select2/select2.js
 /public/js/shared/select2-ext.js
 /public/lib/select2/select2.css
