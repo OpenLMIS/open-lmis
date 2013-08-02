@@ -23,7 +23,7 @@ import static org.openlmis.functional.JsonUtility.getJsonStringFor;
 import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
 
-public class ChwFeed extends TestCaseHelper {
+public class AgentFeed extends TestCaseHelper {
   public WebDriver driver;
   public static final String GET = "GET";
   public static final String POST = "POST";

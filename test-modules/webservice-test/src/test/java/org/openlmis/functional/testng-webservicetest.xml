@@ -14,7 +14,7 @@
     <classes preserver-order="true">
       <class name="org.openlmis.functional.FacilityFeed">
       </class>
-      <class name="org.openlmis.functional.ChwFeed">
+      <class name="org.openlmis.functional.AgentFeed">
       </class>
       <class name="org.openlmis.functional.FacilityProgramSupportedFeed">
       </class>
