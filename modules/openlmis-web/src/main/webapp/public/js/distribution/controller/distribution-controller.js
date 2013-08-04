@@ -166,13 +166,13 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
 DistributionController.resolve = {
   deliveryZones: function (UserDeliveryZones, $timeout, $q, $window) {
 
+    if (!navigator.onLine) $window.location = '/public/pages/logistics/distribution/offline.html#/list';
+
     var deferred = $q.defer();
     $timeout(function () {
       UserDeliveryZones.get({}, function (data) {
         deferred.resolve(data.deliveryZones);
-      }, function () {
-        $window.location = '/public/pages/logistics/distribution/offline.html#/list'
-      });
+      }, {});
     }, 100);
     return deferred.promise;
   }
