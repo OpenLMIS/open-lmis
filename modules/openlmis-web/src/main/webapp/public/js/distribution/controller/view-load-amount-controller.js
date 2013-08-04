@@ -4,9 +4,7 @@
  *  If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ViewLoadAmountController($scope, facilities, period, deliveryZone, GeographicZones) {
-
-
+function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
   if (facilities.length > 0) {
     $scope.message = "";
     $scope.program = facilities[0].supportedPrograms[0].program;

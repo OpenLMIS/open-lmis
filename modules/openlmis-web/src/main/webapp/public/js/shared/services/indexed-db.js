@@ -4,14 +4,16 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-angular.module('IndexedDB', []).service('IndexedDB', function ($rootScope) {
+angular.module('IndexedDB', []).service('IndexedDB', function ($rootScope, $q) {
 
   var request = indexedDB.open("open_lmis", 2);
   var indexedDBConnection = null;
+  var deferred = $q.defer();
 
   request.onsuccess = function (event) {
     indexedDBConnection = event.currentTarget.result;
-    $rootScope.$broadcast('indexedDBReady', indexedDBConnection.version);
+    deferred.resolve();
+    $rootScope.$apply();
   }
 
   request.onupgradeneeded = function (event) {
@@ -43,6 +45,16 @@ angular.module('IndexedDB', []).service('IndexedDB', function ($rootScope) {
 
   this.getConnection = function () {
     return indexedDBConnection;
+  }
+
+  this.transaction = function (transactionFunction) {
+    if (indexedDBConnection === null) {
+      deferred.promise.then(function () {
+        transactionFunction(indexedDBConnection);
+      })
+    } else {
+      transactionFunction(indexedDBConnection);
+    }
   }
 
 });

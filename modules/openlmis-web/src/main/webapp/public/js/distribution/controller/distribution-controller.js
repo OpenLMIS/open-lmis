@@ -5,8 +5,7 @@
  */
 
 
-function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZoneActivePrograms, messageService,
-                                DeliveryZoneProgramPeriods, IndexedDB, navigateBackService, $http, $dialog, $scope, $location, SharedDistributions) {
+function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, IndexedDB, navigateBackService, $http, $dialog, $scope, $location, SharedDistributions) {
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
   var NONE_ASSIGNED_LABEL = messageService.get('label.noneAssigned');
@@ -89,16 +88,19 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
     function onReferenceDataSuccess(data) {
 
       if (data.facilities.length > 0) {
-        var distributionReferenceDataTransaction = IndexedDB.getConnection().transaction('distributionReferenceData', 'readwrite');
-        var distributionReferenceDataStore = distributionReferenceDataTransaction.objectStore('distributionReferenceData');
-        var zpp = $scope.selectedZone.id + '_' + $scope.selectedProgram.id + '_' + $scope.selectedPeriod.id;
-        var referenceData = {zpp: zpp, facilities: data.facilities}
-        distributionReferenceDataStore.put(referenceData);
-        distributionReferenceDataTransaction.oncomplete = function () {
-          cacheDistribution();
-          $scope.$apply();
-        };
-      } else {
+        IndexedDB.transaction(function (connection) {
+          var distributionReferenceDataTransaction = connection.transaction('distributionReferenceData', 'readwrite');
+          var distributionReferenceDataStore = distributionReferenceDataTransaction.objectStore('distributionReferenceData');
+          var zpp = $scope.selectedZone.id + '_' + $scope.selectedProgram.id + '_' + $scope.selectedPeriod.id;
+          var referenceData = {zpp: zpp, facilities: data.facilities}
+          distributionReferenceDataStore.put(referenceData);
+          distributionReferenceDataTransaction.oncomplete = function () {
+            cacheDistribution();
+            $scope.$apply();
+          };
+        })
+      }
+      else {
         $scope.message = messageService.get("message.no.facility.available", $scope.selectedProgram.name,
           $scope.selectedZone.name);
       }
@@ -134,13 +136,15 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
   };
 
   function addDistributionToStore(distribution) {
-    var transaction = IndexedDB.getConnection().transaction(['distributions', 'distributionReferenceData'], 'readwrite');
-    var distributionStore = transaction.objectStore('distributions');
-    distributionStore.put(distribution);
-    transaction.oncomplete = function () {
-      SharedDistributions.update();
-      $scope.$apply();
-    };
+    IndexedDB.transaction(function (connection) {
+        var transaction = connection.transaction(['distributions', 'distributionReferenceData'], 'readwrite');
+        transaction.objectStore('distributions').put(distribution);
+        transaction.oncomplete = function () {
+          SharedDistributions.update();
+          $scope.$apply();
+        };
+      }
+    )
   }
 
   var optionMessage = function (entity, defaultMessage) {
@@ -153,16 +157,16 @@ function DistributionController(DeliveryZoneFacilities, deliveryZones, DeliveryZ
       deliveryZone: $scope.selectedZone,
       program: $scope.selectedProgram,
       period: $scope.selectedPeriod
-    }
+    };
     navigateBackService.setData(data);
     $location.path("/view-load-amounts/" + $scope.selectedZone.id + "/" + +$scope.selectedProgram.id + "/" + $scope.selectedPeriod.id);
-  }
+  };
 }
 
 DistributionController.resolve = {
   deliveryZones: function (UserDeliveryZones, $timeout, $q, $window) {
 
-    if(!navigator.onLine) $window.location = '/public/pages/logistics/distribution/index-offline.html#/offline-list';
+    if (!navigator.onLine) $window.location = '/public/pages/logistics/distribution/index-offline.html#/offline-list';
 
     var deferred = $q.defer();
     $timeout(function () {
