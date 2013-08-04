@@ -171,7 +171,7 @@ DistributionController.resolve = {
       UserDeliveryZones.get({}, function (data) {
         deferred.resolve(data.deliveryZones);
       }, function () {
-        $window.location = '/public/pages/logistics/distribution/offline.html#/offline-list'
+        $window.location = '/public/pages/logistics/distribution/offline.html#/list'
       });
     }, 100);
     return deferred.promise;
