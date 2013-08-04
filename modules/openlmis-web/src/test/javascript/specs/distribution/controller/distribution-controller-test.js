@@ -8,21 +8,10 @@ describe('DistributionController', function () {
   var scope, controller, httpBackend, messageService;
 
   var mockedIndexedDB = {
-    getConnection: function () {
-      return {
-        transaction: function () {
-          return {
-            objectStore: function () {
-              return {
-                put: function () {
-                }
-              }
-            }
-          };
-        }
-      }
+    transaction: function () {
     }
-  };
+  }
+
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
   beforeEach(module('IndexedDB'));
@@ -32,12 +21,13 @@ describe('DistributionController', function () {
     messageService = _messageService_;
     scope = $rootScope.$new();
     controller = $controller;
+    spyOn(mockedIndexedDB, 'transaction');
     httpBackend = $httpBackend;
     var sharedDistribution = {update: function () {
     }, distributionList: [
       {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}},
       {deliveryZone: {id: 2}, program: {id: 2}, period: {id: 2}}
-    ]}
+    ]};
 
     controller(DistributionController, {$scope: scope, deliveryZones: [], IndexedDB: mockedIndexedDB, $dialog: {},
       messageService: messageService, SharedDistributions: sharedDistribution});
@@ -113,6 +103,7 @@ describe('DistributionController', function () {
     scope.initiateDistribution();
 
     httpBackend.flush();
+    expect(mockedIndexedDB.transaction).toHaveBeenCalled();
   });
 
   it('should not initiate the distribution already initiated', function () {
@@ -126,6 +117,8 @@ describe('DistributionController', function () {
     ]});
 
     scope.initiateDistribution();
+
     httpBackend.flush();
+    expect(mockedIndexedDB.transaction).toHaveBeenCalled();
   });
 });
