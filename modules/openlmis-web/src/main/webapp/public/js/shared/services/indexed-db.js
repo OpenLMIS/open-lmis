@@ -51,7 +51,7 @@ angular.module('IndexedDB', []).service('IndexedDB', function ($rootScope, $q) {
     if (indexedDBConnection === null) {
       deferred.promise.then(function () {
         transactionFunction(indexedDBConnection);
-      })
+      });
     } else {
       transactionFunction(indexedDBConnection);
     }

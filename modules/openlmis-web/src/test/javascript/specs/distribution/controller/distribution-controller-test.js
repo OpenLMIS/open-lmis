@@ -100,7 +100,6 @@ describe('DistributionController', function () {
   });
 
   it('should get reference data for a distribution if distribution not initiated', function () {
-    scope.distributionList = [];
     scope.selectedZone = {id: 4, name: 'zone1'};
     scope.selectedProgram = {id: 4, name: 'program1'};
     scope.selectedPeriod = {id: 3, name: 'period1'};
@@ -118,7 +117,6 @@ describe('DistributionController', function () {
 
   it('should not initiate the distribution already initiated', function () {
     spyOn(OpenLmisDialog, 'newDialog')
-    scope.distributionList = [];
     scope.selectedZone = {id: 4, name: 'zone1'};
     scope.selectedProgram = {id: 4, name: 'program1'};
     scope.selectedPeriod = {id: 4, name: 'period1'};
