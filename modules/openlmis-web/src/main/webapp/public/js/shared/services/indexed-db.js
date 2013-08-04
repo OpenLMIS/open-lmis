@@ -23,7 +23,7 @@ angular.module('IndexedDB', []).service('IndexedDB', function ($rootScope, $q) {
       if (connection.objectStoreNames.contains(storeName)) {
         connection.deleteObjectStore(storeName);
       }
-    }
+    };
 
     if (!event.oldVersion || event.oldVersion < 2) {
       createDistributionStore();
@@ -42,10 +42,6 @@ angular.module('IndexedDB', []).service('IndexedDB', function ($rootScope, $q) {
       distributionReferenceDataStore.createIndex("index_reference_data", "zpp", {"unique": true});
     }
   };
-
-  this.getConnection = function () {
-    return indexedDBConnection;
-  }
 
   this.transaction = function (transactionFunction) {
     if (indexedDBConnection === null) {

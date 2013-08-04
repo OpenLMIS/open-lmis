@@ -7,34 +7,21 @@
 describe('DistributionListController', function () {
 
   var scope, location;
-
-  var mockedIndexedDB = {
-    getConnection: function () {
-      return {
-        transaction: function () {
-          return {
-            objectStore: function () {
-              return {
-                openCursor: function () {
-                  return {}
-                }
-              }
-            }
-          };
-        }
-      }
-    }
-  };
+  var sharedDistribution;
 
   beforeEach(module('distribution'));
+  beforeEach(module('IndexedDB'));
 
   beforeEach(inject(function ($rootScope, $location, $controller) {
     scope = $rootScope.$new();
     location = $location;
     var controller = $controller;
-    var sharedDistribution = {update: function () {
-    }}
-    controller(DistributionListController, {$scope: scope, $location: location, IndexedDB: mockedIndexedDB, SharedDistributions: sharedDistribution })
+    sharedDistribution = {update: function () {
+    }};
+
+    spyOn(sharedDistribution, 'update');
+
+    controller(DistributionListController, {$scope: scope, $location: location, SharedDistributions: sharedDistribution })
   }));
 
   it('should set location path', function () {
@@ -46,4 +33,12 @@ describe('DistributionListController', function () {
 
     expect(locationPath).toHaveBeenCalledWith(path);
   });
+
+  it('should refresh distributions list', function() {
+    expect(sharedDistribution.update).toHaveBeenCalled();
+  })
+
+  it('should set distributions in scope', function() {
+    expect(scope.sharedDistributions).toBe(sharedDistribution);
+  })
 });
