@@ -25,7 +25,7 @@ angular.module('IndexedDB', []).service('IndexedDB', function ($rootScope, $q) {
       }
     }
 
-    if (event.oldVersion < 2) {
+    if (!event.oldVersion || event.oldVersion < 2) {
       createDistributionStore();
       createDistributionReferenceData();
     }
