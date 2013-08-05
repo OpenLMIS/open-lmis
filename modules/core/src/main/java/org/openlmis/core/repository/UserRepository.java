@@ -14,10 +14,10 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.repository.mapper.UserMapper;
-import org.openlmis.email.domain.EmailMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -81,7 +81,7 @@ public class UserRepository {
     User supervisor = null;
 
     if (user.getSupervisor() != null && user.getSupervisor().getUserName() != null
-        && !user.getSupervisor().getUserName().isEmpty()) {
+      && !user.getSupervisor().getUserName().isEmpty()) {
 
       supervisor = userMapper.getByUsernameAndVendorId(user.getSupervisor());
       if (supervisor == null)
@@ -127,8 +127,8 @@ public class UserRepository {
     return userMapper.selectUserByUserNameAndPassword(userName, password);
   }
 
-  public void insertEmailNotification(EmailMessage emailMessage) {
-    userMapper.insertEmailNotification(emailMessage);
+  public void insertEmailNotification(SimpleMailMessage emailMessage) {
+    userMapper.insertEmailNotification(emailMessage.getTo()[0], emailMessage.getSubject(), emailMessage.getText());
   }
 
   public void updateUserPassword(Long userId, String password) {

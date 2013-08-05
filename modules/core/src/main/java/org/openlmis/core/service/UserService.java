@@ -10,10 +10,10 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.repository.UserRepository;
-import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,8 +45,9 @@ public class UserService {
     prepareForEmailNotification(user, passwordResetLink);
   }
 
-  public void sendUserCreationEmail(User user, String resetPasswordLink) {
-    EmailMessage emailMessage = accountCreatedEmailMessage(user, resetPasswordLink);
+  private void sendUserCreationEmail(User user, String resetPasswordLink) {
+    String subject = messageService.message("accountcreated.email.subject");
+    SimpleMailMessage emailMessage = createEmailMessage(user, resetPasswordLink, subject);
     sendEmail(emailMessage);
   }
 
@@ -62,7 +63,7 @@ public class UserService {
     roleAssignmentService.saveRolesForUser(user);
   }
 
-  private void sendEmail(EmailMessage emailMessage) {
+  private void sendEmail(SimpleMailMessage emailMessage) {
     try {
       emailService.send(emailMessage);
     } catch (EmailException e) {
@@ -72,8 +73,12 @@ public class UserService {
 
   public void sendForgotPasswordEmail(User user, String resetPasswordLink) {
     user = getValidatedUser(user);
+
     userRepository.deletePasswordResetTokenForUser(user.getId());
-    EmailMessage emailMessage = forgotPasswordEmailMessage(user, resetPasswordLink);
+
+    String subject = messageService.message("forgotpassword.email.subject");
+    SimpleMailMessage emailMessage = createEmailMessage(user, resetPasswordLink, subject);
+
     sendEmail(emailMessage);
   }
 
@@ -88,30 +93,21 @@ public class UserService {
     return user;
   }
 
-  private EmailMessage createEmailMessage(User user, String resetPasswordLink) {
-    EmailMessage emailMessage = new EmailMessage();
-    emailMessage.setReceiver(user.getEmail());
+  private SimpleMailMessage createEmailMessage(User user, String resetPasswordLink, String subject) {
     String passwordResetToken = generateUUID();
     String[] passwordResetLink = new String[]{resetPasswordLink + passwordResetToken};
-    String mailBody = messageService.message("passwordreset.email.body", (Object[])passwordResetLink);
-    emailMessage.setContent(mailBody);
+    String mailBody = messageService.message("passwordreset.email.body", (Object[]) passwordResetLink);
 
     userRepository.insertPasswordResetToken(user, passwordResetToken);
 
+    SimpleMailMessage emailMessage = new SimpleMailMessage();
+    emailMessage.setSubject(subject);
+    emailMessage.setText(mailBody);
+    emailMessage.setTo(user.getEmail());
+
     return emailMessage;
   }
 
-  private EmailMessage accountCreatedEmailMessage(User user, String resetPasswordLink) {
-    EmailMessage emailMessage = createEmailMessage(user, resetPasswordLink);
-    emailMessage.setSubject(messageService.message("accountcreated.email.subject"));
-    return emailMessage;
-  }
-
-  private EmailMessage forgotPasswordEmailMessage(User user, String resetPasswordLink) {
-    EmailMessage emailMessage = createEmailMessage(user, resetPasswordLink);
-    emailMessage.setSubject(messageService.message("forgotpassword.email.subject"));
-    return emailMessage;
-  }
 
   private String generateUUID() {
     return Encoder.hash(UUID.randomUUID().toString());
@@ -154,7 +150,8 @@ public class UserService {
 
 
   private void prepareForEmailNotification(User user, String passwordResetLink) {
-    EmailMessage emailMessage = accountCreatedEmailMessage(user, passwordResetLink);
+    String subject = messageService.message("accountcreated.email.subject");
+    SimpleMailMessage emailMessage = createEmailMessage(user, passwordResetLink, subject);
     userRepository.insertEmailNotification(emailMessage);
   }
 

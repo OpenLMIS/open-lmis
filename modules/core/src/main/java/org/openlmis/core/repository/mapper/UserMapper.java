@@ -11,7 +11,6 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
-import org.openlmis.email.domain.EmailMessage;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -73,8 +72,8 @@ public interface UserMapper {
   void updateUserPasswordAndActivate(@Param(value = "userId") Long userId, @Param(value = "password") String password);
 
   @Insert("INSERT INTO email_notifications(receiver, subject, content) VALUES (#{receiver}, #{subject}, #{content})")
-  @Options(useGeneratedKeys = true)
-  int insertEmailNotification(EmailMessage emailMessage);
+  int insertEmailNotification(@Param(value = "receiver") String receiver, @Param(value = "subject") String subject,
+                              @Param(value = "content") String content);
 
   @Update("UPDATE users SET password = #{password} WHERE id = #{userId}")
   void updateUserPassword(@Param(value = "userId")Long userId, @Param(value = "password")String password);

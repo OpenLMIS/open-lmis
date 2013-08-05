@@ -23,15 +23,16 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.repository.UserRepository;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.mail.SimpleMailMessage;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -41,6 +42,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.service.UserService.PASSWORD_RESET_TOKEN_INVALID;
+import static org.openlmis.email.builder.EmailMessageBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.*;
 
@@ -80,11 +82,11 @@ public class UserServiceTest {
 
   }
 
-  private Matcher<EmailMessage> emailMessageMatcher(final EmailMessage that) {
-    return new ArgumentMatcher<EmailMessage>() {
+  private Matcher<SimpleMailMessage> emailMessageMatcher(final SimpleMailMessage that) {
+    return new ArgumentMatcher<SimpleMailMessage>() {
       @Override
       public boolean matches(Object argument) {
-        EmailMessage emailMessage = (EmailMessage) argument;
+        SimpleMailMessage emailMessage = (SimpleMailMessage) argument;
         return emailMessage.equals(that);
       }
     };
@@ -121,7 +123,8 @@ public class UserServiceTest {
     user.setEmail("random@random.com");
     user.setId(1111L);
 
-    EmailMessage emailMessage = new EmailMessage("random@random.com", "Forgot password email subject", "email body");
+    SimpleMailMessage emailMessage = make(a(defaultEmailMessage, with(receiver, "random@random.com"),
+      with(subject, "Forgot password email subject"), with(content, "email body")));
     when(userRepository.getByEmail(user.getEmail())).thenReturn(user);
 
     mockStatic(Encoder.class);
@@ -143,7 +146,7 @@ public class UserServiceTest {
     User user = new User();
     user.setEmail("some email");
     when(userRepository.getByEmail(user.getEmail())).thenReturn(userWithoutEmail);
-    doThrow(new EmailException("")).when(emailService).send(any(EmailMessage.class));
+    doThrow(new EmailException("")).when(emailService).send(any(SimpleMailMessage.class));
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage(UserService.USER_EMAIL_NOT_FOUND);
@@ -180,7 +183,7 @@ public class UserServiceTest {
 
     userService.create(user, FORGET_PASSWORD_LINK);
 
-    verify(emailService).send(any(EmailMessage.class));
+    verify(emailService).send(any(SimpleMailMessage.class));
   }
 
 
@@ -237,8 +240,8 @@ public class UserServiceTest {
   public void shouldCreateUserInDB() throws Exception {
     User user = new User();
 
-    EmailMessage emailMessage = new EmailMessage();
-    whenNew(EmailMessage.class).withNoArguments().thenReturn(emailMessage);
+    SimpleMailMessage emailMessage = new SimpleMailMessage();
+    whenNew(SimpleMailMessage.class).withNoArguments().thenReturn(emailMessage);
 
     when(messageService.message("accountcreated.email.subject")).thenReturn("Account created message");
 

@@ -16,7 +16,6 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.utils.mapper.TestVendorMapper;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.email.domain.EmailMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -24,11 +23,11 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -332,12 +331,13 @@ public class UserMapperIT {
 
   @Test
   public void shouldInsertEmailNotification() throws Exception {
-    EmailMessage emailMessage = new EmailMessage("toUser@email.com", "subject for email", "content of email");
-    int insertCount = userMapper.insertEmailNotification(emailMessage);
+
+    int insertCount = userMapper.insertEmailNotification("toUser@email.com", "subject for email", "content of email");
 
     assertThat(insertCount, is(1));
 
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM email_notifications WHERE id=?", Arrays.asList(emailMessage.getId()));
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM email_notifications WHERE receiver = ?",
+      asList("toUser@email.com"));
     resultSet.next();
     assertThat(resultSet.getString("receiver"), is("toUser@email.com"));
     assertThat(resultSet.getString("subject"), is("subject for email"));
