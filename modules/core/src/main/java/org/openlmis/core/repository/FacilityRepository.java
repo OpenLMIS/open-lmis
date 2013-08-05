@@ -45,6 +45,10 @@ public class FacilityRepository {
       return mapper.getAllFacilitiesDetail();
   }
 
+  public List<Facility> getFacilitiesCompleteList(){
+      return mapper.getFacilitiesCompleteList();
+  }
+
   public List<Facility> getMailingLabels(){
       return mapper.getMailingLabels();
   }
