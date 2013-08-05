@@ -841,13 +841,23 @@ table td.cell-input .cell-text {
       &:first-child {
         border-top: 0;
       }
-      a {
+      > a {
         padding: 10px;
         display: block;
       }
-      &:hover a {
+      &:hover > a {
         background-color: #f9f9f9;
       }
+      &:hover .user-actions {
+        display: block;
+      }
+    }
+    .user-actions {
+      position: absolute;
+      right: 10px;
+      top: 0;
+      padding: 6px 0;
+      display: none;
     }
   }
 }
@@ -1437,6 +1447,16 @@ table td.delete-button {
 .user-program {
   padding: 10px;
 }
+.user-list li {
+  position: relative;
+}
+.user-name {
+  font-weight: bold;
+}
+.user-username {
+  color: #666;
+}
+
 
 td .close {
   display: block;
@@ -2020,5 +2040,14 @@ input[placeholder].placeholder {
   }
   .delivery-zone {
     padding-left: 12px;
+  }
+}
+
+#changePassword {
+  .row-fluid [class*="span"] {
+      min-height: 75px;
+  }
+  form {
+    margin-bottom: 0;
   }
 }

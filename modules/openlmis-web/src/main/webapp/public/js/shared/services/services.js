@@ -255,3 +255,9 @@ services.factory('ChangeLocale', function ($resource) {
 });
 
 
+services.factory('UpdatePassword', function ($resource) {
+  return $resource('/admin/resetPassword/:userId.json', {}, update);
+});
+
+
+

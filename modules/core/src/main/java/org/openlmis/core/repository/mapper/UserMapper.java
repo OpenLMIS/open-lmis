@@ -77,5 +77,5 @@ public interface UserMapper {
   int insertEmailNotification(EmailMessage emailMessage);
 
   @Update("UPDATE users SET password = #{password} WHERE id = #{userId}")
-  void updateUserPassword(Long userId, String password);
+  void updateUserPassword(@Param(value = "userId")Long userId, @Param(value = "password")String password);
 }

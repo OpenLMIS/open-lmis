@@ -151,12 +151,13 @@ public class UserController extends BaseController {
     return success(messageService.message("password.reset"));
   }
 
-  public ResponseEntity<OpenLmisResponse> updateUserPassword(Long userId, String password) {
+  @RequestMapping(value = "/admin/resetPassword/{userId}", method = PUT)
+  public ResponseEntity<OpenLmisResponse> updateUserPassword(@PathVariable(value = "userId") Long userId, @RequestBody String password) {
     try {
       userService.updateUserPassword(userId, password);
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
-    return success(messageService.message("password.reset"));
+    return success(messageService.message("password.reset.success"));
   }
 }

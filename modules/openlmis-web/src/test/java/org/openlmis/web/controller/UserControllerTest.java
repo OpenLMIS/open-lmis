@@ -216,7 +216,7 @@ public class UserControllerTest {
   @Test
   public void shouldUpdateUserPassword(){
     String password = "newPassword";
-    when(messageService.message("password.reset")).thenReturn("password.reset");
+    when(messageService.message("password.reset.success")).thenReturn("password.reset");
 
     ResponseEntity<OpenLmisResponse> response = userController.updateUserPassword(userId, password);
 
