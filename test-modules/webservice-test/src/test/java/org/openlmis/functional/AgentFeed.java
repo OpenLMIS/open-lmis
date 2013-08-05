@@ -55,6 +55,7 @@ public class AgentFeed extends TestCaseHelper {
   public void tearDown() throws Exception {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
+
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
