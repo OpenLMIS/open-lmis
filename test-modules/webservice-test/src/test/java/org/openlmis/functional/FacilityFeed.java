@@ -418,7 +418,7 @@ public class FacilityFeed extends TestCaseHelper {
                 commTrackUser,
                 dbWrapper.getAuthToken(commTrackUser));
 
-        ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=commTrack", "GET", "", "");
+        ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=commtrack", "GET", "", "");
         assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"facilityIsActive\":false"));
 
         List<String> feedJSONList = XmlUtils.getNodeValues(responseEntityUpdated.getResponse(), "content");
