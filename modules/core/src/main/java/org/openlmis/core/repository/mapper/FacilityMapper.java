@@ -155,9 +155,7 @@ public interface FacilityMapper {
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById")),
-    @Result(property = "refrigerators", column = "id", javaType = List.class,
-      many = @Many(select = "org.openlmis.core.repository.mapper.RefrigeratorMapper.getRefrigerators"))
+      one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById"))
   })
   List<Facility> getAllInDeliveryZoneFor(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
 

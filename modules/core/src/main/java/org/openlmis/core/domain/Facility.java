@@ -123,8 +123,6 @@ public class Facility extends BaseModel implements Importable {
   //TODO : change supportedPrograms to programsSupported
   List<ProgramSupported> supportedPrograms = new ArrayList<>();
 
-  List<Refrigerator> refrigerators ;
-
   public Facility(Long id) {
     this.id = id;
   }

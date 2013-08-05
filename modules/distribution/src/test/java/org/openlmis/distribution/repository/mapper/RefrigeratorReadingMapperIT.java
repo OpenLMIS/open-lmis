@@ -8,6 +8,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.Refrigerator;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -80,7 +81,7 @@ public class RefrigeratorReadingMapperIT {
   }
 
   private Refrigerator getRefrigerator(Facility facility) {
-    Refrigerator refrigerator = new Refrigerator("SAM2", "SER11", "SAM1", facility.getId());
+    Refrigerator refrigerator = new Refrigerator("SAM2", "SER11", "SAM1", facility.getId(),null);
     refrigerator.setCreatedBy(1L);
     refrigerator.setModifiedBy(1L);
     return refrigerator;

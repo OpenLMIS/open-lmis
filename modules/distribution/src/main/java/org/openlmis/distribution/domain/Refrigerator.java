@@ -1,17 +1,20 @@
-package org.openlmis.core.domain;
+package org.openlmis.distribution.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Refrigerator extends BaseModel{
+public class Refrigerator extends BaseModel {
 
   String brand;
   String serialNumber;
   String model;
   Long facilityId;
+
+  RefrigeratorReading reading;
 
 }
