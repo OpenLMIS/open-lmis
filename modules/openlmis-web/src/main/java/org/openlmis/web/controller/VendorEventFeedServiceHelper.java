@@ -95,17 +95,16 @@ public class VendorEventFeedServiceHelper {
     private static JsonNode convertToTemplate(Map<String, String> map, String value) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(value);
-        Iterator<Map.Entry<String, JsonNode>> iterator = rootNode.getFields();
         ObjectNode returnedNode = new ObjectNode(JsonNodeFactory.instance);
+        Iterator<Map.Entry<String, JsonNode>> iterator = rootNode.getFields();
         while (iterator.hasNext()) {
-            Map.Entry<String, JsonNode> jsonNode = iterator.next();
-            String fieldName = jsonNode.getKey();
+            Map.Entry<String, JsonNode> mapEntry = iterator.next();
+            String fieldName = mapEntry.getKey();
             String mappedName = map.get(fieldName);
-            String textValue = jsonNode.getValue().asText();
             if (mappedName != null) {
-                returnedNode.put(mappedName, textValue);
+                returnedNode.put(mappedName, mapEntry.getValue());
             } else {
-                returnedNode.put(fieldName, textValue);
+                returnedNode.put(fieldName, mapEntry.getValue());
             }
         }
         return returnedNode;

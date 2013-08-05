@@ -381,7 +381,7 @@ public class FacilityFeed extends TestCaseHelper {
         assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"dataReportable\":true"));
     }
 
-    @Test(groups = {"webservice"}, enabled = false)
+    @Test(groups = {"webservice"})
     public void testFacilityFeedForCommTrackVendorSpecificInfo() throws Exception {
 
         HttpClient client = new HttpClient();
@@ -402,14 +402,14 @@ public class FacilityFeed extends TestCaseHelper {
         ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=commtrack", "GET", "", "");
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityCode\":\"" + DEFAULT_AGENT_CODE + "\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityName\":\"" + DEFAULT_AGENT_NAME + "\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityTypeID\":\"Lvl3 Hospital\""));
+        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"Lvl3 Hospital\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityMainPhone\":\"" + PHONE_NUMBER + "\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZoneID\":\"Ngorongoro\""));
+        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZone\":\"Ngorongoro\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityOperatedBy\":\"NGO\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityIsActive\":" + ACTIVE_STATUS + ""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityGoLiveDate\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityIsVirtual\":true"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"SatelliteParentID\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
+        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"SatelliteParent\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
 
         agentJson.setActive("false");
         client.SendJSON(getJsonStringFor(agentJson),
@@ -425,7 +425,6 @@ public class FacilityFeed extends TestCaseHelper {
         assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"facilityIsActive\":true"));
         assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"dataReportable\":true"));
         assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"facilityIsSDP\":true"));
-        assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"facilityIsOnline\":false"));
 
         assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"facilityIsActive\":false"));
         assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"dataReportable\":true"));

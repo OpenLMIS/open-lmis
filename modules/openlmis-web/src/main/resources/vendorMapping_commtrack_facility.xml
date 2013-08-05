@@ -2,14 +2,14 @@
 <mapping>
     <field openlmis-name="code" vendor-name="facilityCode"/>
     <field openlmis-name="name" vendor-name="facilityName"/>
-    <field openlmis-name="type" vendor-name="facilityTypeID"/>
+    <field openlmis-name="type" vendor-name="facilityType"/>
     <field openlmis-name="description" vendor-name="facilityDescription"/>
     <field openlmis-name="gln" vendor-name="GLN"/>
     <field openlmis-name="mainPhone" vendor-name="facilityMainPhone"/>
     <field openlmis-name="fax" vendor-name="facilityFax"/>
     <field openlmis-name="address1" vendor-name="facilityAddress1"/>
     <field openlmis-name="address2" vendor-name="facilityAddress2"/>
-    <field openlmis-name="geographicZone" vendor-name="geographicZoneID"/>
+    <field openlmis-name="geographicZone" vendor-name="geographicZone"/>
     <field openlmis-name="catchmentPopulation" vendor-name="catchmentPopulation"/>
     <field openlmis-name="latitude" vendor-name="facilityLAT"/>
     <field openlmis-name="longitude" vendor-name="facilityLONG"/>
@@ -28,7 +28,7 @@
     <field openlmis-name="goDownDate" vendor-name="facilityGoDownDate"/>
     <field openlmis-name="satellite" vendor-name="facilityIsSatellite"/>
     <field openlmis-name="virtualFacility" vendor-name="facilityIsVirtual"/>
-    <field openlmis-name="parentFacility" vendor-name="SatelliteParentID"/>
+    <field openlmis-name="parentFacility" vendor-name="SatelliteParent"/>
     <field openlmis-name="comments" vendor-name="facilityComments"/>
     <field openlmis-name="dataReportable" vendor-name="dataReportable"/>
     <field openlmis-name="modifiedDate" vendor-name="modifiedDate"/>
