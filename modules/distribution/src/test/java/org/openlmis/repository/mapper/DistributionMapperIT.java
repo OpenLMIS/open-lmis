@@ -55,7 +55,7 @@ import static org.openlmis.distribution.domain.DistributionStatus.INITIATED;
 @ContextConfiguration(locations = "classpath*:test-applicationContext-distribution.xml")
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 @Transactional
-public class DistributionMapperTest {
+public class DistributionMapperIT {
 
   @Autowired
   DeliveryZoneMapper deliveryZoneMapper;
