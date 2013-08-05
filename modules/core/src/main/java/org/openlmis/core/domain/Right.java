@@ -30,7 +30,6 @@ public enum Right {
   MANAGE_ROLE("right.manage.role", ADMIN, "Permission to create and edit roles in the system", 5),
   MANAGE_SCHEDULE("right.manage.schedule", ADMIN, "Permission to create and edit schedules in the system", 6),
   MANAGE_USER("right.manage.user", ADMIN, "Permission to manage users(crud)", 7),
-  MANAGE_USERS("Admin - Manage Users", ADMIN, "Permission to manage users(crud)", 43),
   UPLOADS("right.upload", ADMIN, "Permission to upload", 8),
   VIEW_REPORT("right.view.report", ADMIN, "Permission to view reports", 11),
   VIEW_REPORTS("Admin - View Reports", ADMIN, "Permission to view reports", 44),
