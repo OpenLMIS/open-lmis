@@ -237,3 +237,7 @@ services.factory('GetSupervisoryNode',function($resource){
 services.factory('RemoveSupervisoryNode',function($resource){
     return $resource('/supervisoryNode/remove/:id.json',{},{});
 });
+
+services.factory('Settings',function($resource){
+    return $resource('/settings.json',{},{});
+});

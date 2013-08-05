@@ -1,8 +1,3 @@
-/*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
 
 'use strict';
 angular.module('setting', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).config(['$routeProvider', function ($routeProvider) {
@@ -13,3 +8,48 @@ angular.module('setting', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialo
     $rootScope.roleSelected = "selected";
     AuthorizationService.preAuthorize('MANAGE_SETTING');
   });
+
+
+app.directive('setting', function ($compile, $http, $templateCache) {
+
+    var noteTemplate = '<div class="entry-note"><div class="entry-text"><div class="entry-title">{{name}}</div><div class="entry-copy">{{content.data}}</div></div></div>';
+
+
+
+    var getTemplate = function(contentType) {
+        var templateLoader,
+            baseUrl = '/public/pages/admin/setting/templates/',
+            templateMap = {
+                TEXT: 'text.html',
+                TEXT_AREA: 'text-area.html',
+                NUBMER: 'number.html',
+                OPTIONS: 'options.html',
+                BOOLEAN: 'boolean.html',
+                EMAIL: 'email.html'
+            };
+
+        var templateUrl = baseUrl + templateMap[contentType];
+        templateLoader = $http.get(templateUrl, {cache: $templateCache});
+
+        return templateLoader;
+
+    }
+
+    var linker = function(scope, element, attrs) {
+        var loader = getTemplate(scope.content.valueType);
+        var promise = loader.success(function(html) {
+                            element.html(html);
+                        }).then(function (response) {
+                            element.replaceWith($compile(element.html())(scope));
+                        });
+    }
+
+    return {
+        restrict: "E",
+        rep1ace: true,
+        link: linker,
+        scope: {
+            content:'=ngModel'
+        }
+    };
+});

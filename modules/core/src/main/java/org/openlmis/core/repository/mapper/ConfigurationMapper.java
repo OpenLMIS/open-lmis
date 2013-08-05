@@ -10,11 +10,16 @@ import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.Configuration;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ConfigurationMapper {
 
     // Used by mapper
     @Select("SELECT * FROM configurations WHERE key = #{key}")
     Configuration getByKey(String key);
+
+    @Select("SELECT * FROM configurations order by groupName, displayOrder, name")
+    List<Configuration> getAll();
 
 }

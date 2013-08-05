@@ -4,8 +4,8 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<div ng-hide="roles" openlmis-message="msg.loading"></div>
-<div ng-show="roles">
+<div ng-hide="settings" openlmis-message="msg.loading"></div>
+<div ng-show="settings">
   <h2>
     <span openlmis-message="configure.setting.header"></span>
 
@@ -27,13 +27,13 @@
     <tbody>
     <tr ng-repeat="setting in settings">
       <td class="col-role-name">
-        <a ng-href="#/edit/{{role.id}}">{{setting.name}}</a>
+        <a>{{setting.name}}</a>
       </td>
       <td class="col-role-description">
         <div>{{setting.description}}</div>
       </td>
       <td class="col-role-rights">
-           {{ setting.value }}
+           <setting ng-model="setting"></setting>
       </td>
     </tr>
     </tbody>

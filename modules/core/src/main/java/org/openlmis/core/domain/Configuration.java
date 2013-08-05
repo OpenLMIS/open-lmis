@@ -17,4 +17,10 @@ public class Configuration {
 
     private String key;
     private String value;
+    private String name;
+    private String description;
+    private String valueType;
+    private String valueOptions;
+    private String displayOrder;
+    private String groupName;
 }
