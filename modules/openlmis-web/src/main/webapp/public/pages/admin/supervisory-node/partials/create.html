@@ -11,7 +11,7 @@
                 <div class="form-row clearfix">
                     <div class="form-cell">
                         <div>
-                            <label for="code">Code: </label>
+                            <label for="code">Code: <span class="label-required"> *</span></label>
 
                             <div class="form-field">
                                 <input ng-model="supervisoryNode.code" name="code" id="code" type="text" maxlength="30" width="200px"
@@ -22,7 +22,7 @@
                             </div>
                         </div>
                         <div>
-                            <label for="name">Name: </label>
+                            <label for="name">Name: <span class="label-required"> *</span></label>
 
                             <div class="form-field">
                                 <input ng-model="supervisoryNode.name" name="name" id="name" type="text" maxlength="30" width ="320px"
@@ -64,7 +64,7 @@
                 </div>
             </div>
             <div>
-                <h2><span>Associated Facility</span>
+                <h2><span>Associated Facility<span class="label-required"> *</span></span>
                     <a ng-click="associateFacility()" class="pull-right btn btn-primary"><span id="supervisory-node-facility-add-new">Choose a Facility</span></a>
                 </h2>
                 <div ng-hide="supervisoryNode.facility">Please associate a facility...</div>
