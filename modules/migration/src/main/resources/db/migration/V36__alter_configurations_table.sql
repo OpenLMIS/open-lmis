@@ -18,11 +18,11 @@ alter table configurations
 -- the possible values for this column include but not limited to ..
 -- TEXT_AREA, TEXT, OPTION, BOOLEAN, NUMBER, DECIMAL, EMAIL, PASSWORD
 alter table configurations
-add value_type varchar(250) default('TEXT') not null;
+add valueType varchar(250) default('TEXT') not null;
 
 -- Add the value options column
 alter table configurations
-  add value_options varchar(1000);
+  add valueOptions varchar(1000);
 
 -- copy over the name from the keys column
 update configurations set name = key;
