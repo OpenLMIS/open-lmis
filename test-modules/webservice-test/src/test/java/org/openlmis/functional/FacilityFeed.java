@@ -224,7 +224,7 @@ public class FacilityFeed extends TestCaseHelper {
     homePage.logout(baseUrlGlobal);
   }
 
-  @Test(groups = {"webservice"})
+//  @Test(groups = {"webservice"})
   public void testFacilityFeedUsingCommTrack() throws Exception {
 
     HttpClient client = new HttpClient();
