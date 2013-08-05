@@ -212,4 +212,14 @@ public class UserRepositoryTest {
 
     verify(userMapper).update(user);
   }
+
+  @Test
+  public void shouldUpdateUserPasword(){
+    Long userId = 1l;
+    String password = "newPassword";
+
+    userRepository.updateUserPassword(userId, password);
+
+    verify(userMapper).updateUserPassword(userId, password);
+  }
 }

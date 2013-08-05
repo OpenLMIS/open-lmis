@@ -81,7 +81,7 @@ public class UserMapperIT {
   public void shouldGetUserByUserNameAndPassword() throws Exception {
     User someUser = make(a(defaultUser, with(facilityId, facility.getId())));
     userMapper.insert(someUser);
-    userMapper.updateUserPassword(someUser.getId(), "random");
+    userMapper.updateUserPasswordAndActivate(someUser.getId(), "random");
 
     User user = userMapper.selectUserByUserNameAndPassword(defaultUserName, "random");
     assertThat(user, is(notNullValue()));
@@ -307,11 +307,11 @@ public class UserMapperIT {
   }
 
   @Test
-  public void shouldUpdateUserPassword() throws Exception {
+  public void shouldUpdateUserPasswordAndActivate() throws Exception {
     User user = make(a(defaultUser, with(facilityId, facility.getId())));
     userMapper.insert(user);
     String newPassword = "newPassword";
-    userMapper.updateUserPassword(user.getId(), newPassword);
+    userMapper.updateUserPasswordAndActivate(user.getId(), newPassword);
     User returnedUser = userMapper.selectUserByUserNameAndPassword(user.getUserName(), newPassword);
     assertThat(returnedUser, is(notNullValue()));
   }
@@ -324,7 +324,7 @@ public class UserMapperIT {
     User externalUser = make(a(defaultUser, with(facilityId, facility.getId()), with(vendorId, commTrac.getId())));
 
     userMapper.insert(externalUser);
-    userMapper.updateUserPassword(externalUser.getId(), "random");
+    userMapper.updateUserPasswordAndActivate(externalUser.getId(), "random");
 
     User user = userMapper.selectUserByUserNameAndPassword(defaultUserName, "random");
     assertThat(user, is(nullValue()));

@@ -140,7 +140,7 @@ public class UserService {
 
   public void updateUserPassword(String token, String password) {
     Long userId = getUserIdByPasswordResetToken(token);
-    userRepository.updateUserPassword(userId, Encoder.hash(password));
+    userRepository.updateUserPasswordAndActivate(userId, Encoder.hash(password));
     userRepository.deletePasswordResetTokenForUser(userId);
   }
 
@@ -158,4 +158,7 @@ public class UserService {
     userRepository.insertEmailNotification(emailMessage);
   }
 
+  public void updateUserPassword(Long userId, String password) {
+    userRepository.updateUserPassword(userId, password);
+  }
 }

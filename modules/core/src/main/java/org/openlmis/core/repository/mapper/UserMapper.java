@@ -70,9 +70,12 @@ public interface UserMapper {
   void deletePasswordResetTokenForUser(Long userId);
 
   @Update("UPDATE users SET password = #{password}, active = TRUE WHERE id = #{userId}")
-  void updateUserPassword(@Param(value = "userId") Long userId, @Param(value = "password") String password);
+  void updateUserPasswordAndActivate(@Param(value = "userId") Long userId, @Param(value = "password") String password);
 
   @Insert("INSERT INTO email_notifications(receiver, subject, content) VALUES (#{receiver}, #{subject}, #{content})")
   @Options(useGeneratedKeys = true)
   int insertEmailNotification(EmailMessage emailMessage);
+
+  @Update("UPDATE users SET password = #{password} WHERE id = #{userId}")
+  void updateUserPassword(Long userId, String password);
 }

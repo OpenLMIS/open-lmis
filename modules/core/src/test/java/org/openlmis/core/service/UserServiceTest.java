@@ -29,7 +29,6 @@ import org.openlmis.email.service.EmailService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,10 +38,12 @@ import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.openlmis.core.service.UserService.PASSWORD_RESET_TOKEN_INVALID;
 import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.*;
+
 @Category(UnitTests.class)
 
 @RunWith(PowerMockRunner.class)
@@ -127,7 +128,7 @@ public class UserServiceTest {
     when(Encoder.hash(anyString())).thenReturn("token");
 
     when(messageService.message("passwordreset.email.body", new Object[]{FORGET_PASSWORD_LINK + "token"}))
-        .thenReturn("email body");
+      .thenReturn("email body");
 
     userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
 
@@ -257,5 +258,15 @@ public class UserServiceTest {
 
     verify(userRepository).create(user);
     verify(roleAssignmentService).saveRolesForUser(user);
+  }
+
+  @Test
+  public void shouldUpdateUserPassword() {
+    Long userId = 1l;
+    String newPassword = "newPassword";
+
+    userService.updateUserPassword(userId, newPassword);
+
+    verify(userRepository).updateUserPassword(userId, newPassword);
   }
 }

@@ -212,5 +212,17 @@ public class UserControllerTest {
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat((Boolean) response.getBody().getData().get(TOKEN_VALID), is(true));
   }
+  
+  @Test
+  public void shouldUpdateUserPassword(){
+    String password = "newPassword";
+    when(messageService.message("password.reset")).thenReturn("password.reset");
+
+    ResponseEntity<OpenLmisResponse> response = userController.updateUserPassword(userId, password);
+
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat(response.getBody().getSuccessMsg(), is("password.reset"));
+    verify(userService).updateUserPassword(userId, password);
+  }
 
 }

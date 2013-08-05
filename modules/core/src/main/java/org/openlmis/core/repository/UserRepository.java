@@ -119,8 +119,8 @@ public class UserRepository {
     userMapper.deletePasswordResetTokenForUser(userId);
   }
 
-  public void updateUserPassword(Long userId, String password) {
-    userMapper.updateUserPassword(userId, password);
+  public void updateUserPasswordAndActivate(Long userId, String password) {
+    userMapper.updateUserPasswordAndActivate(userId, password);
   }
 
   public User selectUserByUserNameAndPassword(String userName, String password) {
@@ -129,5 +129,9 @@ public class UserRepository {
 
   public void insertEmailNotification(EmailMessage emailMessage) {
     userMapper.insertEmailNotification(emailMessage);
+  }
+
+  public void updateUserPassword(Long userId, String password) {
+    userMapper.updateUserPassword(userId, password);
   }
 }

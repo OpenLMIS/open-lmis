@@ -6,9 +6,7 @@
 
 package org.openlmis.web.controller;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
@@ -153,4 +151,12 @@ public class UserController extends BaseController {
     return success(messageService.message("password.reset"));
   }
 
+  public ResponseEntity<OpenLmisResponse> updateUserPassword(Long userId, String password) {
+    try {
+      userService.updateUserPassword(userId, password);
+    } catch (DataException e) {
+      return error(e, HttpStatus.BAD_REQUEST);
+    }
+    return success(messageService.message("password.reset"));
+  }
 }
