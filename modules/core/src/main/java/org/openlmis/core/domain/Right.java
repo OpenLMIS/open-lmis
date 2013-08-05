@@ -50,6 +50,7 @@ public enum Right {
   MANAGE_PRODUCT("Admin - Manage Products", ADMIN, "Permission to manage products",29),
   MANAGE_SUPPLYLINE("Admin - Manage Supply Line", ADMIN, "Permission to manage supply line",30),
   MANAGE_GEOGRAPHIC_ZONES ("Admin - Manage Geographic Zones", ADMIN, "Permission to manage geographic zones.",31),
+  MANAGE_SETTING("Admin - Configure Settings", ADMIN, "Permission to configure settings.",32),
 
   VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", REPORT, "Permission to view Facility List Report",32),
   VIEW_MAILING_LABEL_REPORT("Report - Facility Listing (V2)", REPORT, "Permission to view mailing labels for facilities",33),
