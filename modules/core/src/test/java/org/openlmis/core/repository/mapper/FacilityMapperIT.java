@@ -86,6 +86,9 @@ public class FacilityMapperIT {
   @Autowired
   DeliveryZoneMapper deliveryZoneMapper;
 
+  @Autowired
+  RefrigeratorMapper refrigeratorMapper;
+
   @Test
   public void shouldFetchAllFacilitiesAvailable() throws Exception {
     Facility trz001 = make(a(defaultFacility,
@@ -497,6 +500,13 @@ public class FacilityMapperIT {
 
     Facility facility1 = insertMemberFacility(deliveryZone, program, "F10A", "facility1", 10l, true);
 
+    Refrigerator refrigerator = new Refrigerator("SAM","AUO","SAM1",facility1.getId());
+    refrigerator.setCreatedBy(1L);
+    refrigerator.setModifiedBy(1L);
+
+    refrigeratorMapper.insert(refrigerator);
+
+
     insertMemberFacility(deliveryZone, program, "F10011", "facility2", 9l, true);
     insertMemberFacility(deliveryZone, program, "F10010", "facility3", 9L, true);
     insertMemberFacility(deliveryZone, program, "F10012", "facility4", 9L, false);
@@ -514,6 +524,7 @@ public class FacilityMapperIT {
     assertThat(memberFacilities.get(0).getGeographicZone().getId(), is(10L));
     assertThat(memberFacilities.get(1).getCode(), is("F10011"));
     assertThat(memberFacilities.get(2).getCode(), is("F10010"));
+    assertThat(memberFacilities.get(0).getRefrigerators().get(0),is(refrigerator));
   }
 
   @Test

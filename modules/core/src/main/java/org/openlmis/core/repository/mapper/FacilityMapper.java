@@ -149,11 +149,15 @@ public interface FacilityMapper {
     "INNER JOIN programs_supported PS ON PS.facilityId = F.id",
     "INNER JOIN delivery_zones DZ ON DZ.id = DZM.deliveryZoneId",
     "INNER JOIN delivery_zone_program_schedules DZPS ON DZPS.deliveryZoneId = DZM.deliveryZoneId",
+    "LEFT OUTER JOIN refrigerators RF ON RF.facilityId = F.id",
     "WHERE DZPS.programId = #{programId} AND F.active = true",
     "AND PS.programId = #{programId}  AND DZM.deliveryZoneId = #{deliveryZoneId} order by F.name"})
   @Results(value = {
+    @Result(property = "id", column = "id"),
     @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById"))
+      one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById")),
+    @Result(property = "refrigerators", column = "id", javaType = List.class,
+      many = @Many(select = "org.openlmis.core.repository.mapper.RefrigeratorMapper.getRefrigerators"))
   })
   List<Facility> getAllInDeliveryZoneFor(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
 
