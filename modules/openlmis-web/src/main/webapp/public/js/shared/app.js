@@ -48,6 +48,8 @@ app.config(function ($httpProvider) {
 app.run(function ($rootScope) {
   $rootScope.$on('$routeChangeStart', function () {
     angular.element('#ui-datepicker-div').hide();
+    angular.element('#select2-drop').hide();
+    angular.element('#select2-drop-mask').hide();
     //TODO delete modal window
     angular.element('body > .modal-backdrop').hide();
     angular.element('.dialog').parent('.modal').remove();
