@@ -30,6 +30,8 @@ public class UserBuilder {
   public static final Property<User, Long> supervisorId = newProperty();
   public static final Property<User, String> supervisorUserName = newProperty();
   public static final Property<User, Long> vendorId = newProperty();
+  public static final Property<User, Boolean> verified = newProperty();
+  public static final Property<User, Boolean> active = newProperty();
 
   public static final String defaultUserName = "User123";
   public static final String defaultPassword = "not-in-use";
@@ -44,6 +46,8 @@ public class UserBuilder {
   public static final Long defaultSupervisorId = 1L;
   public static final String defaultSupervisorUserName = "supervisorUserName";
   public static final Long defaultVendorId = 1L;
+  public static final Boolean defaultVerified = false;
+  public static final Boolean defaultActive = false;
 
 
   public static final Instantiator<User> defaultUser = new Instantiator<User>() {
@@ -62,6 +66,8 @@ public class UserBuilder {
       user.setCellPhone(lookup.valueOf(cellPhone, defaultCellPhone));
       user.setEmail(lookup.valueOf(email, defaultEmail));
       user.setVendorId(lookup.valueOf(vendorId, defaultVendorId));
+      user.setVerified(lookup.valueOf(verified, defaultVerified));
+      user.setActive(lookup.valueOf(active, defaultActive));
       User supervisor = new User();
       supervisor.setId(lookup.valueOf(supervisorId, defaultSupervisorId));
       supervisor.setUserName(lookup.valueOf(supervisorUserName, defaultSupervisorUserName));

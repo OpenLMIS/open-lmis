@@ -78,9 +78,9 @@ public class UserMapperIT {
 
   @Test
   public void shouldGetUserByUserNameAndPassword() throws Exception {
-    User someUser = make(a(defaultUser, with(facilityId, facility.getId())));
+    User someUser = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true)));
     userMapper.insert(someUser);
-    userMapper.updateUserPasswordAndActivate(someUser.getId(), "random");
+    userMapper.updateUserPasswordAndVerify(someUser.getId(), "random");
 
     User user = userMapper.selectUserByUserNameAndPassword(defaultUserName, "random");
     assertThat(user, is(notNullValue()));
@@ -94,7 +94,7 @@ public class UserMapperIT {
 
   @Test
   public void shouldInsertUserWithDbDefaultDateWhenSuppliedModifiedDateNull() throws Exception {
-    User someUser = make(a(defaultUser, with(facilityId, facility.getId())));
+    User someUser = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true)));
     someUser.setModifiedDate(null);
 
     userMapper.insert(someUser);
@@ -108,7 +108,7 @@ public class UserMapperIT {
 
   @Test
   public void shouldInsertUserWithSuppliedModifiedDate() throws Exception {
-    User someUser = make(a(defaultUser, with(facilityId, facility.getId())));
+    User someUser = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true)));
     Calendar calendar = Calendar.getInstance();
     calendar.set(Calendar.MONTH, Calendar.JANUARY);
     someUser.setModifiedDate(calendar.getTime());
@@ -124,7 +124,7 @@ public class UserMapperIT {
   @Test
   public void shouldGetUsersWithGivenRightInNodeForProgram() {
     String nullString = null;
-    User someUser = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString)));
+    User someUser = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString), with(active, true)));
     userMapper.insert(someUser);
 
     Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
@@ -143,6 +143,16 @@ public class UserMapperIT {
   }
 
   @Test
+  public void shouldReturnNullWhenUserIsVerifiedButDisabled(){
+    String nullString = null;
+    User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString),
+      with(verified, true)));
+    userMapper.insert(user);
+
+    assertThat(userMapper.selectUserByUserNameAndPassword(user.getUserName(), user.getPassword()), is(nullValue()));
+  }
+
+  @Test
   public void shouldInsertAUser() throws Exception {
     User user = make(a(defaultUser, with(facilityId, facility.getId())));
     Integer userCount = userMapper.insert(user);
@@ -157,7 +167,8 @@ public class UserMapperIT {
     vendor.setName("newVendor");
     vendorMapper.insert(vendor);
 
-    User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString), with(vendorId, vendor.getId())));
+    User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString),
+      with(vendorId, vendor.getId()), with(active, true)));
     user.setModifiedDate(Calendar.getInstance().getTime());
     userMapper.insert(user);
 
@@ -170,7 +181,7 @@ public class UserMapperIT {
   public void shouldGetUserWithUserNameAndVendorIdWhenVendorIdIsNull() throws Exception {
     String nullString = null;
 
-    User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString)));
+    User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString), with(active, true)));
     user.setModifiedDate(Calendar.getInstance().getTime());
     userMapper.insert(user);
 
@@ -249,7 +260,7 @@ public class UserMapperIT {
 
   @Test
   public void shouldUpdateUserIfUserExist() throws Exception {
-    User user = make(a(defaultUser, with(facilityId, facility.getId())));
+    User user = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true)));
     userMapper.insert(user);
 
     user.setUserName("New Name");
@@ -273,6 +284,13 @@ public class UserMapperIT {
     assertThat(user.getUserName(), is(returnedUser.getUserName()));
   }
 
+  @Test
+  public void shouldNotUpdateDisabledUserData(){
+    User user = make(a(defaultUser, with(facilityId, facility.getId())));
+    userMapper.insert(user);
+
+    assertThat(userMapper.getByUsernameAndVendorId(user), is(nullValue()));
+  }
 
   @Test
   public void shouldInsertPasswordResetToken() throws Exception {
@@ -307,10 +325,10 @@ public class UserMapperIT {
 
   @Test
   public void shouldUpdateUserPasswordAndActivate() throws Exception {
-    User user = make(a(defaultUser, with(facilityId, facility.getId())));
+    User user = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true)));
     userMapper.insert(user);
     String newPassword = "newPassword";
-    userMapper.updateUserPasswordAndActivate(user.getId(), newPassword);
+    userMapper.updateUserPasswordAndVerify(user.getId(), newPassword);
     User returnedUser = userMapper.selectUserByUserNameAndPassword(user.getUserName(), newPassword);
     assertThat(returnedUser, is(notNullValue()));
   }
@@ -323,11 +341,12 @@ public class UserMapperIT {
     User externalUser = make(a(defaultUser, with(facilityId, facility.getId()), with(vendorId, commTrac.getId())));
 
     userMapper.insert(externalUser);
-    userMapper.updateUserPasswordAndActivate(externalUser.getId(), "random");
+    userMapper.updateUserPasswordAndVerify(externalUser.getId(), "random");
 
     User user = userMapper.selectUserByUserNameAndPassword(defaultUserName, "random");
     assertThat(user, is(nullValue()));
   }
+
 
   @Test
   public void shouldInsertEmailNotification() throws Exception {
@@ -342,6 +361,16 @@ public class UserMapperIT {
     assertThat(resultSet.getString("receiver"), is("toUser@email.com"));
     assertThat(resultSet.getString("subject"), is("subject for email"));
     assertThat(resultSet.getString("content"), is("content of email"));
+  }
+
+  @Test
+  public void shouldSetActiveAsFalseForAUser(){
+    User user = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true)));
+    userMapper.insert(user);
+    userMapper.setActive(user.getId(), false);
+
+    User savedUser = userMapper.getById(user.getId());
+    assertThat(savedUser.getActive(), is(false));
   }
 
   private Program insertProgram(Program program) {

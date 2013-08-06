@@ -15,6 +15,7 @@ CREATE TABLE users (
   email VARCHAR(50),
   supervisorId INTEGER references users(id),
   facilityId INT REFERENCES facilities(id),
+  verified BOOLEAN DEFAULT FALSE,
   active BOOLEAN DEFAULT FALSE,
   vendorId INTEGER references vendors(id),
   createdBy INTEGER,

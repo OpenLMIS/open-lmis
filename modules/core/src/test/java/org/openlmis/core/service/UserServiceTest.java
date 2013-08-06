@@ -275,4 +275,18 @@ public class UserServiceTest {
 
     verify(userRepository).updateUserPassword(userId, hashedPassword);
   }
+
+  @Test
+  public void shouldEnableUser(){
+    Long userId = 1l;
+    userService.enable(userId);
+    verify(userRepository).setActive(userId, true);
+  }
+
+  @Test
+  public void shouldDisableUser(){
+    Long userId = 1l;
+    userService.disable(userId);
+    verify(userRepository).setActive(userId, false);
+  }
 }

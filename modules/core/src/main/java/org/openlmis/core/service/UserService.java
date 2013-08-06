@@ -158,4 +158,12 @@ public class UserService {
   public void updateUserPassword(Long userId, String password) {
     userRepository.updateUserPassword(userId, Encoder.hash(password));
   }
+
+  public void enable(Long userId) {
+    userRepository.setActive(userId, true);
+  }
+
+  public void disable(Long userId) {
+    userRepository.setActive(userId, false);
+  }
 }

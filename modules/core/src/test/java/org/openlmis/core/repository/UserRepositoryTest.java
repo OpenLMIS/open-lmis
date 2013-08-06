@@ -222,4 +222,15 @@ public class UserRepositoryTest {
 
     verify(userMapper).updateUserPassword(userId, password);
   }
+
+  @Test
+  public void shouldSetActiveForUser(){
+    Long userId = 1l;
+    Boolean active = true;
+
+    userRepository.setActive(userId, active);
+
+    verify(userMapper).setActive(userId, active);
+  }
+
 }

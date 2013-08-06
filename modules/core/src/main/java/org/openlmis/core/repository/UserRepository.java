@@ -120,7 +120,7 @@ public class UserRepository {
   }
 
   public void updateUserPasswordAndActivate(Long userId, String password) {
-    userMapper.updateUserPasswordAndActivate(userId, password);
+    userMapper.updateUserPasswordAndVerify(userId, password);
   }
 
   public User selectUserByUserNameAndPassword(String userName, String password) {
@@ -133,5 +133,9 @@ public class UserRepository {
 
   public void updateUserPassword(Long userId, String password) {
     userMapper.updateUserPassword(userId, password);
+  }
+
+  public void setActive(Long userId, Boolean active) {
+    userMapper.setActive(userId, active);
   }
 }
