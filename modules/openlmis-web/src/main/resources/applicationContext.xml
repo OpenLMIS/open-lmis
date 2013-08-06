@@ -26,7 +26,7 @@
         <property name="locations">
             <list>
                 <value>classpath:/default.properties</value>
-                <value>classpath:${environmentName}/app.properties</value>
+                <value>classpath:/uat_zm/app.properties</value>
                 <value>classpath:/messages_en.properties</value>
             </list>
         </property>
