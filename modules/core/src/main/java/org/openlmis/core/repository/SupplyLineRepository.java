@@ -39,22 +39,13 @@ public class SupplyLineRepository {
     supplyLineMapper.update(supplyLine);
   }
 
-    public List<SupplyLine> getAllSupplyLine() {
-        return supplyLineMapper.getAllSupplyLine();
-    }
-
-    public SupplyLine get(Long id) {
+  public SupplyLine get(Long id) {
         return supplyLineMapper.get(id);
-    }
+  }
 
   public SupplyLine getSupplyLineBySupervisoryNodeProgramAndFacility(SupplyLine supplyLine) {
     return supplyLineMapper.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine);
   }
 
-
-   // mahmed - 07.11.2013 delete supplyline
-    public void deleteById(Long supplylineId) {
-        supplyLineMapper.deleteById(supplylineId);
-    }
 
 }

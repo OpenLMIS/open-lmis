@@ -4,9 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function SupplylineController($scope,  ReportPrograms, AllFacilities, SupervisoryNodes, Supplylines, Supplyline, Supplylinelist, $location,$dialog,messageService,SupplylineDelete) {
-
-    //$scope.$parent.newSupplylineMode = false;
+function SupplylineController($scope,$location,$dialog,messageService,ReportPrograms, AllFacilites, SupervisoryNodes, Supplylines, Supplyline, SupplylineDelete) {
 
     //initialize
     $scope.supplylinesBackupMap = [];
@@ -15,6 +13,15 @@ function SupplylineController($scope,  ReportPrograms, AllFacilities, Supervisor
     $scope.editSupplyline = {};
     $scope.creationError = '';
 
+    if ($scope.$parent.newSupplylineMode || $scope.$parent.editSupplylineMode) {
+        $scope.AddEditMode = true;
+        $scope.title = ($scope.$parent.newSupplylineMode) ? $scope.title = 'Add Supply Line' : $scope.title = 'Edit Supply Line';
+
+    } else {
+        $scope.AddEditMode = false;
+        $scope.title = 'Supply Lines';
+    }
+
 
     // drop down lists
     ReportPrograms.get(function (data){
@@ -22,28 +29,21 @@ function SupplylineController($scope,  ReportPrograms, AllFacilities, Supervisor
         //alert(JSON.stringify($scope.programs, null, 4));
     });
 
-    AllFacilities.get(function(data){
+    AllFacilites.get(function(data){
         $scope.facilities = data.allFacilities;
     });
 
+    //$scope.facilities  ={};
 
     SupervisoryNodes.get(function(data){
         $scope.supervisoryNodes = data.supervisoryNodes;
     });
 
-// all supply lines   for list
-    Supplylinelist.get({}, function (data) {
-        $scope.supplylineslist = data.supplyLineList;
-
-    }, function (data) {
-        $location.path($scope.$parent.sourceUrl);
-    });
-
-
     // all supply lines
     Supplylines.get({}, function (data) {
         $scope.initialSupplylines = angular.copy(data.supplylines, $scope.initialSupplylines);
         $scope.supplylines = data.supplylines;
+        //alert(JSON.stringify($scope.supplylines, null, 4));
         for(var supplylineIndex in data.supplylines){
             var supplyline = data.supplylines[supplylineIndex];
             $scope.supplylinesBackupMap[supplyline.id] =  $scope.getBackupSupplyline(supplyline);
@@ -64,18 +64,35 @@ function SupplylineController($scope,  ReportPrograms, AllFacilities, Supervisor
         };
     };
 
+    $scope.processSave = function (supplyline,form)
+    {
+      if ($scope.$parent.newSupplylineMode)
+      {
+         $scope.createSupplyline();
+      } else {
+          $scope.updateSupplyline(supplyline, form);
+      }
+    }
+
+    //  switch to new mode
+    $scope.startAddNewSupplyline = function() {
+        $scope.setFlags('add','start');
+        $scope.$parent.formActive = "supplyline-form-active";
+    };
+
     // create supply line
-    // this is controller (js)
     $scope.createSupplyline = function () {
         $scope.error = "";
 
-        if ($scope.createSupplylineForm.$invalid) {
-            $scope.showErrorForCreate = true;
+        if ($scope.supplylineForm.$invalid) {
+            $scope.showError = true;
             return;
         }
-        $scope.showErrorForCreate = false;
-        Supplylines.save({}, $scope.newSupplyline, function (data) {
-             $scope.supplylines.unshift(data.supplyline);
+        $scope.showError = false;
+        Supplylines.save({}, $scope.supplyline, function (data) {
+
+            //alert(JSON.stringify(data.supplyline, null, 4));
+            $scope.supplylines.unshift(data.supplyline);
             $scope.completeAddNewSupplyline(data.supplyline);
             $scope.message = data.success;
             setTimeout(function() {
@@ -91,52 +108,55 @@ function SupplylineController($scope,  ReportPrograms, AllFacilities, Supervisor
         });
     };
 
-//  switch to new mode
-    $scope.startAddNewSupplyline = function() {
-        $scope.$parent.newSupplylineMode = true;
-        $scope.$parent.formActive = "supplyline-form-active";
-    };
-
-    //  backup record
+   //  backup record
     $scope.completeAddNewSupplyline = function(supplyline) {
         $scope.supplylinesBackupMap[supplyline.id] = $scope.getBackupSupplyline(supplyline);
-        $scope.$parent.newSupplylineMode = false;
-        $scope.showErrorForCreate = false;
-        //$scope.supplylines.refresh();
+        $scope.showError = false;
+        $scope.setFlags('add','end');
     };
 
 // cancel record
     $scope.cancelAddNewSupplyline = function(supplyline) {
-        $scope.$parent.newSupplylineMode = false;
-        $scope.showErrorForCreate = false;
-    };
+        $scope.showError = false;
+        $scope.setFlags('cancel','cancel');
+      };
 
 //    //  scope is undefined,
     $scope.supplylineLoaded = function () {
-
         //alert(JSON.stringify($scope.supplylines, null, 4));
         return !($scope.supplylines == undefined || $scope.supplylines == null);
     };
 
-    // update
 
+    //
+    $scope.startSupplylineEdit = function (supplylineUnderEdit) {
+        $scope.supplylinesBackupMap[supplylineUnderEdit.id].editFormActive = "supplyline-form-active";
+        Supplyline.get({id: supplylineUnderEdit.id}, function (data) {
+        $scope.supplyline = data.supplyline;
+            //alert(JSON.stringify($scope.supplyline, null, 4));
+        }, {});
+        $scope.setFlags('edit','start');
+    };
+    // update
     $scope.updateSupplyline = function (supplyline, form) {
-        function updateUiData(sourceSupplyline) {
+
+       function updateUiData(sourceSupplyline) {
+
             var supplylinesLength = $scope.supplylines.length;
-            //alert(JSON.stringify(sourceSupplyline, null, 4));
+
             for (var i = 0; i < supplylinesLength; i++) {
                 if ($scope.supplylines[i].id == sourceSupplyline.id) {
-                    $scope.supplylines[i].programid = sourceSupplyline.programid;
-                    $scope.supplylines[i].supervisorynode = sourceSupplyline.supervisorynode;
-                    $scope.supplylines[i].supplyingfacilityid = sourceSupplyline.supplyingfacilityid;
+                    $scope.supplylines[i].program = sourceSupplyline.program;
+                    $scope.supplylines[i].supervisoryNode = sourceSupplyline.supervisoryNode;
+                    $scope.supplylines[i].supplyingFacility = sourceSupplyline.supplyingFacility;
                     $scope.supplylines[i].description = sourceSupplyline.description;
                     $scope.supplylines[i].modifiedBy = sourceSupplyline.modifiedBy;
                     $scope.supplylines[i].modifiedDate = sourceSupplyline.modifiedDate;
                 }
             }
-        }
 
-        $scope.error = "";
+        }
+          $scope.error = "";
         if (form.$invalid) {
             $scope.showErrorForEdit = true;
             return;
@@ -148,19 +168,19 @@ function SupplylineController($scope,  ReportPrograms, AllFacilities, Supervisor
         Supplyline.update({id:supplyline.id}, supplyline, function (data) {
             var returnedSupplyline = data.supplyline;
             $scope.supplylinesBackupMap[returnedSupplyline.id] = $scope.getBackupSupplyline(returnedSupplyline);
-
-            updateUiData(returnedSupplyline);
+            updateUiData(data.supplylines);
+            $scope.completeEditSupplyline(returnedSupplyline);
             $scope.message = data.success;
             setTimeout(function() {
                 $scope.$apply(function() {
                     // refresh list
-                    $scope.supplylineslist = data.supplyLineList;
                     $scope.message = "";
                 });
             }, 4000);
             $scope.error = "";
             $scope.newSupplyline = {};
             $scope.editSupplyline = {};
+            $scope.AddEditMode = false;
 
             $scope.supplylinesBackupMap[returnedSupplyline.id].editFormActive = 'updated-item';
             $scope.supplylinesBackupMap[returnedSupplyline.id].edit = false;
@@ -171,15 +191,26 @@ function SupplylineController($scope,  ReportPrograms, AllFacilities, Supervisor
         });
     };
 
-    //
-    $scope.startSupplylineEdit = function (supplylineUnderEdit) {
-        //alert(JSON.stringify(supplylineUnderEdit, null, 4));
-        //alert(JSON.stringify($scope.supplylinesBackupMap, null, 4));
-        //alert(JSON.stringify($scope.initialSupplylines, null, 4));
+    //  backup record
+    $scope.completeEditSupplyline = function(supplyline) {
+        $scope.supplylinesBackupMap[supplyline.id] = $scope.getBackupSupplyline(supplyline);
 
+        var supplylinesLength = $scope.supplylines.length;
 
-        $scope.supplylinesBackupMap[supplylineUnderEdit.id].editFormActive = "supplyline-form-active";
+        for (var i = 0; i < supplylinesLength; i++) {
+            if ($scope.supplylines[i].id == supplyline.id) {
+                $scope.supplylines[i].program = supplyline.program;
+                $scope.supplylines[i].supervisoryNode = supplyline.supervisoryNode;
+                $scope.supplylines[i].supplyingFacility = supplyline.supplyingFacility;
+                $scope.supplylines[i].description = supplyline.description;
+                $scope.supplylines[i].modifiedBy = supplyline.modifiedBy;
+                $scope.supplylines[i].modifiedDate = supplyline.modifiedDate;
+            }
+        }
+        $scope.showError = false;
+        $scope.setFlags('edit','end');
     };
+
 
     $scope.cancelSupplylineEdit = function (supplylineUnderEdit) {
         var backupSupplylineRow = $scope.supplylinesBackupMap[supplylineUnderEdit.id];
@@ -189,8 +220,9 @@ function SupplylineController($scope,  ReportPrograms, AllFacilities, Supervisor
         supplylineUnderEdit.description = backupSupplylineRow.description;
         $scope.supplylinesBackupMap[supplylineUnderEdit.id].error = '';
         $scope.supplylinesBackupMap[supplylineUnderEdit.id].editFormActive = '';
+        alert('cancel');
+        $scope.setFlags('cancel','cancel');
     };
-
 
     $scope.showConfirmSupplylineDeleteWindow = function (supplylineUnderDelete) {
         var dialogOpts = {
@@ -210,22 +242,60 @@ function SupplylineController($scope,  ReportPrograms, AllFacilities, Supervisor
         }
 
           SupplylineDelete.get({id : $scope.supplylineUnderDelete.id }, $scope.supplyline, function (data) {
-
-            $scope.message = data.success;
-            setTimeout(function() {
+          $scope.message = data.success;
+          setTimeout(function() {
                 $scope.$apply(function() {
-                    // refresh list
-                    $scope.supplylineslist = data.supplyLineList;
+                    $scope.supplylines = data.supplylines;
                     $scope.message = "";
                 });
             }, 4000);
             $scope.error = "";
             $scope.newSupplyline = {};
             $scope.editSupplyline = {};
+            $scope.setFlags('delete','delete');
 
          });
 
     };
+
+ $scope.setFlags = function(mode, state)
+ {
+
+         $scope.$parent.editSupplylineMode = false;
+         $scope.$parent.newSupplylineMode = false;
+         $scope.AddEditMode = false;
+         $scope.title = 'Supply Lines';
+
+
+       if (mode == 'edit' && state == 'start') {
+        $scope.$parent.editSupplylineMode = true;
+        $scope.$parent.newSupplylineMode = false;
+        $scope.AddEditMode = true;
+        $scope.title = 'Edit Supply Line';
+    }
+
+     if (mode == 'edit' && state == 'end') {
+         $scope.$parent.editSupplylineMode = false;
+         $scope.$parent.newSupplylineMode = false;
+         $scope.AddEditMode = false;
+         $scope.title = 'Supply Lines';
+     }
+
+     if (mode == 'add' && state == 'start') {
+         $scope.$parent.editSupplylineMode = false;
+         $scope.$parent.newSupplylineMode = true;
+         $scope.AddEditMode = true;
+         $scope.title = 'Add Supply Line';
+     }
+
+     if (mode == 'add' && state == 'end') {
+         $scope.$parent.editSupplylineMode = false;
+         $scope.$parent.newSupplylineMode = false;
+         $scope.AddEditMode = false;
+         $scope.title = 'Supply Lines';
+     }
+
+ }
 
 
     //

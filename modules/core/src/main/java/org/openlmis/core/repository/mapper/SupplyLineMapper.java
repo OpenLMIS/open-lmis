@@ -25,14 +25,7 @@ public interface SupplyLineMapper {
     Integer insert(SupplyLine supplyLine);
 
 
-    @Select("SELECT * FROM supply_lines " +
-            "ORDER BY description")
-    List<SupplyLine> getAllSupplyLine();
-
-
-
-
-  @Select("SELECT * FROM supply_lines WHERE id = #{id}")
+   @Select("SELECT * FROM supply_lines WHERE id = #{id}")
   SupplyLine get(Long id);
 
     @Select("SELECT * FROM supply_lines WHERE supervisoryNodeId = #{supervisoryNode.id} AND programId = #{program.id}")
@@ -55,9 +48,4 @@ public interface SupplyLineMapper {
     @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
   })
   SupplyLine getSupplyLineBySupervisoryNodeProgramAndFacility(SupplyLine supplyLine);
-
-  // mahmed - 07.11.2013 - delete supply line
-  @Delete("DELETE FROM supply_lines where id = #{supplylineId}")
-  int deleteById(Long supplylineId);
-
 }

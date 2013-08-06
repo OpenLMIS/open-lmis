@@ -11,8 +11,7 @@ import org.openlmis.core.repository.SupplyLineRepository;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
-import org.openlmis.report.model.dto.SupplyLineList;
-import org.openlmis.report.service.SupplyLineListDataProvider;
+import org.openlmis.core.service.SupplyLineServiceExtension;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.openlmis.web.response.OpenLmisResponse.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +47,7 @@ public class SupplyLineController extends BaseController {
     private SupplyLineService supplyLineService;
 
     @Autowired
-    private SupplyLineListDataProvider supplyLineListService;
-
-
+    private SupplyLineServiceExtension supplyLineServiceExt;
 
     @Autowired
     public SupplyLineController(SupplyLineService supplyLineService) {
@@ -68,25 +65,27 @@ public class SupplyLineController extends BaseController {
     @Autowired
     private FacilityService facilityService;
 
+  /*
     // supply line list for view
-    @RequestMapping(value = "/supplylineslist", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/supplylineslist", method = RequestMethod.GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLYLINE')")
     public ResponseEntity<OpenLmisResponse> getAll() {
-        return OpenLmisResponse.response(SUPPLYLINELIST, supplyLineListService.getAll());
+        return OpenLmisResponse.response(SUPPLYLINELIST, supplyLineServiceExt.getAllSupplyLine());
     }
 
+*/
     // supply line for add/update
     @RequestMapping(value = "/supplylines", method = RequestMethod.GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLYLINE')")
     public ResponseEntity<OpenLmisResponse> getAllSupplyLine() {
-        return OpenLmisResponse.response(SUPPLYLINES, supplyLineService.getAllSupplyLine());
+        return OpenLmisResponse.response(SUPPLYLINES, supplyLineServiceExt.getAllSupplyLine());
     }
 
     @RequestMapping(value = "/supplylines/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLYLINE')")
     public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Long id) {
         try{
-            SupplyLine supplyLine = supplyLineService.get(id);
+            SupplyLine supplyLine = supplyLineServiceExt.getSupplylineById(id);
             return OpenLmisResponse.response(SUPPLYLINE, supplyLine);
         } catch (DataException e){
             return error(e, HttpStatus.NOT_FOUND);
@@ -102,13 +101,13 @@ public class SupplyLineController extends BaseController {
         supplyLine.setCreatedDate(new Date());
         // load the supervisory node ... and attach it to the supply line object
         // this is requred by the valiation and the save.
-        SupervisoryNode sn = supervisoryNodeMapper.getSupervisoryNode(Long.parseLong(supplyLine.getSupervisorynodeid().toString()));
+        SupervisoryNode sn = supervisoryNodeMapper.getSupervisoryNode(Long.parseLong(supplyLine.getSupervisoryNode().getId().toString()));
         supplyLine.setSupervisoryNode(sn);
         // load the programs
-        Program program = programService.getById(Long.parseLong(supplyLine.getProgramid().toString()));
+        Program program = programService.getById(Long.parseLong(supplyLine.getProgram().getId().toString()));
         supplyLine.setProgram(program);
 
-        Facility facility = facilityService.getById(Long.parseLong(supplyLine.getSupplyingfacilityid().toString()));
+        Facility facility = facilityService.getById(Long.parseLong(supplyLine.getSupplyingFacility().getId().toString()));
         supplyLine.setSupplyingFacility(facility);
 
         // there has to be a better way to do the code above
@@ -123,12 +122,12 @@ public class SupplyLineController extends BaseController {
         supplyLine.setId(id);
         // load the supervisory node ... and attach it to the supply line object
         // this is requred by the valiation and the save.
-        SupervisoryNode sn = supervisoryNodeMapper.getSupervisoryNode(Long.parseLong(supplyLine.getSupervisorynodeid().toString()));
+        SupervisoryNode sn = supervisoryNodeMapper.getSupervisoryNode(Long.parseLong(supplyLine.getSupervisoryNode().getId().toString()));
         supplyLine.setSupervisoryNode(sn);
         // load the programs
-        Program program = programService.getById(Long.parseLong(supplyLine.getProgramid().toString()));
+        Program program = programService.getById(Long.parseLong(supplyLine.getProgram().getId().toString()));
         supplyLine.setProgram(program);
-        Facility facility = facilityService.getById(Long.parseLong(supplyLine.getSupplyingfacilityid().toString()));
+        Facility facility = facilityService.getById(Long.parseLong(supplyLine.getSupplyingFacility().getId().toString()));
         supplyLine.setSupplyingFacility(facility);
         // there has to be a better way to do the code above
         return saveSupplyline(supplyLine, false);
@@ -139,8 +138,15 @@ public class SupplyLineController extends BaseController {
         try {
             supplyLineService.save(supplyLine);
             ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("'" + supplyLine.getDescription() + "' "+ (createOperation?"created":"updated") +" successfully");
-            response.getBody().addData(SUPPLYLINE, supplyLineService.get(supplyLine.getId()));
-            response.getBody().addData(SUPPLYLINELIST, supplyLineListService.getAll());
+
+
+            if (createOperation) {
+            response.getBody().addData(SUPPLYLINE, supplyLineServiceExt.getSupplylineDetailById(supplyLine.getId()));
+            } else
+            {
+                response.getBody().addData(SUPPLYLINE, supplyLineServiceExt.getSupplylineDetailById(supplyLine.getId()));
+            }
+            response.getBody().addData(SUPPLYLINES, supplyLineServiceExt.getAllSupplyLine());
             return response;
         } catch (DataException e) {
             return error(e, HttpStatus.BAD_REQUEST);
@@ -152,9 +158,9 @@ public class SupplyLineController extends BaseController {
        @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLYLINE')")
        public ResponseEntity<OpenLmisResponse> delete(@PathVariable("id") Long id, HttpServletRequest request) {
            try{
-               supplyLineService.deleteById(id);
+               supplyLineServiceExt.deleteById(id);
                ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("Supply line deleted successfully");
-               response.getBody().addData(SUPPLYLINELIST, supplyLineListService.getAll());
+               response.getBody().addData(SUPPLYLINES, supplyLineServiceExt.getAllSupplyLine());
                return response;
            }
            catch (DataException e) {
