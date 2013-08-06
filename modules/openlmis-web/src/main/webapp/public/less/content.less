@@ -844,12 +844,17 @@ table td.cell-input .cell-text {
       > a {
         padding: 10px;
         display: block;
+        &:hover, &:focus {
+          + .user-actions a {
+              display: inline-block;
+            }
+        }
       }
       &:hover > a {
         background-color: #f9f9f9;
       }
-      &:hover .user-actions {
-        display: block;
+      &:hover .user-actions a {
+        display: inline-block;
       }
     }
     .user-actions {
@@ -857,7 +862,9 @@ table td.cell-input .cell-text {
       right: 10px;
       top: 0;
       padding: 6px 0;
-      display: none;
+      a {
+        display: none;
+      }
     }
   }
 }

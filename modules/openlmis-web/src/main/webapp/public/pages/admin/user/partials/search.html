@@ -27,7 +27,7 @@
 
       <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
     </div>
-    <a class="close-btn" href="" ng-click="clearSearch()"></a>
+    <a class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
     <ul class="user-list">
       <li ng-repeat="user in filteredUsers">
         <a href="" ng-click="editUser(user.id)">
@@ -38,9 +38,9 @@
 
         <div class="user-actions">
           <a href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
-             ng-click="editUser(user.id)"></a>
+             ng-click="editUser(user.id)" tabindex="-1"></a>
           <a href="" class="btn btn-primary btn-small" openlmis-message="button.reset.password"
-             ng-click="changePassword(user)"></a>
+             ng-click="changePassword(user)" tabindex="-1"></a>
         </div>
       </li>
     </ul>
@@ -62,16 +62,14 @@
                 <div class="span12">
                   <label openlmis-message="placeholder.new.password"></label>
                   <input type="password" id="password1" ng-trim="false" oncopy="return false;" maxlength="16"
-                         ng-model="password1"
-                         openlmis-message="placeholder.new.password"/>
+                         ng-model="password1" />
                 </div>
               </div>
               <div class="row-fluid">
                 <div class="span12">
                   <label openlmis-message="placeholder.reenter.password"></label>
                   <input type="password" id="password2" ng-trim="false" oncopy="return false;" maxlength="16"
-                         ng-model="password2"
-                         openlmis-message="placeholder.reenter.password"/>
+                         ng-model="password2" />
                 </div>
               </div>
 
