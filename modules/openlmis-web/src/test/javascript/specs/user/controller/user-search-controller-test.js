@@ -90,6 +90,10 @@ describe("User Search Controller", function () {
   it("should open password modal", function() {
     var user = {id: 1, firstName: "User"};
     scope.changePassword(user);
+    expect(scope.password1).toEqual("");
+    expect(scope.password2).toEqual("");
+    expect(scope.message).toEqual("");
+    expect(scope.error).toEqual("");
     expect(scope.changePasswordModal).toEqual(true);
     expect(scope.user).toEqual(user);
   });
@@ -98,10 +102,6 @@ describe("User Search Controller", function () {
     scope.resetPasswordModal();
     expect(scope.changePasswordModal).toEqual(false);
     expect(scope.user).toEqual(undefined);
-    expect(scope.password1).toEqual("");
-    expect(scope.password2).toEqual("");
-    expect(scope.message).toEqual("");
-    expect(scope.error).toEqual("");
   });
 
   it("should update user password if password matches and is valid",function () {

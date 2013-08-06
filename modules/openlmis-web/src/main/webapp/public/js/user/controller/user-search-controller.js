@@ -40,6 +40,8 @@ function UserSearchController($scope, $location, Users, navigateBackService, Upd
   };
 
   $scope.changePassword = function (user) {
+    $scope.userId = undefined;
+    $scope.password1 = $scope.password2 = $scope.message = $scope.error = "";
     $scope.changePasswordModal = true;
     $scope.user = user;
   };
@@ -63,7 +65,6 @@ function UserSearchController($scope, $location, Users, navigateBackService, Upd
 
   $scope.resetPasswordModal = function () {
     $scope.changePasswordModal = false;
-    $scope.password1 = $scope.password2 = $scope.message = $scope.error = "";
     $scope.user = undefined;
   }
 
