@@ -259,5 +259,9 @@ services.factory('UpdatePassword', function ($resource) {
   return $resource('/admin/resetPassword/:userId.json', {}, update);
 });
 
+services.factory('Refrigerators', function($resource) {
+  return $resource('/deliveryZone/:deliveryZoneId/program/:programId/refrigerators.json', {}, {});
+})
+
 
 

@@ -117,7 +117,7 @@ public class RefrigeratorMapperIT {
     Program unsupportedProgram = new Program();
     unsupportedProgram.setId(2l);
 
-    List<Refrigerator> refrigerators = mapper.getRefrigeratorInfoForADeliveryZoneProgram(deliveryZone.getId(), program.getId());
+    List<Refrigerator> refrigerators = mapper.getRefrigeratorsForADeliveryZoneAndProgram(deliveryZone.getId(), program.getId());
 
     assertThat(refrigerators.get(0).getSerialNumber(),is(refrigerator.getSerialNumber()));
   }

@@ -99,6 +99,9 @@ describe('DistributionController', function () {
     httpBackend.expect('GET', '/deliveryZones/4/programs/4/facilities.json').respond(200, {"facilities": [
       {'id': '23'}
     ]});
+    httpBackend.expect('GET', '/deliveryZone/4/program/4/refrigerators.json').respond(200, {"refrigerators": [
+      {'id': '1'}
+    ]});
 
     scope.initiateDistribution();
 
@@ -114,6 +117,9 @@ describe('DistributionController', function () {
 
     httpBackend.expect('GET', '/deliveryZones/4/programs/4/facilities.json').respond(200, {"facilities": [
       {'id': '23'}
+    ]});
+    httpBackend.expect('GET', '/deliveryZone/4/program/4/refrigerators.json').respond(200, {"refrigerators": [
+      {'id': '1'}
     ]});
 
     scope.initiateDistribution();
