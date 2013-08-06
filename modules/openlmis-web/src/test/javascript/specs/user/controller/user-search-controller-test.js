@@ -6,12 +6,13 @@
 
 describe("User Search Controller", function () {
 
-  var scope, $httpBackend, ctrl, navigateBackService, location;
+  var scope, $httpBackend, ctrl, navigateBackService, location, messageService;
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'))
+  beforeEach(module('openlmis.localStorage'));
   var searchTextId = 'searchTextId';
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _navigateBackService_, $location) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _navigateBackService_, $location, _messageService_) {
     scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     scope.query = "joh";
@@ -19,7 +20,8 @@ describe("User Search Controller", function () {
     navigateBackService.query = '';
     location = $location;
     ctrl = $controller;
-    ctrl('UserSearchController', {$scope: scope});
+    messageService = _messageService_;
+    ctrl('UserSearchController', {$scope: scope, messageService: messageService});
   }));
 
   it('should get all users depending on search criteria when three characters are entered in search', function () {
