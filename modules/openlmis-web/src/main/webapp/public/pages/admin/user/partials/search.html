@@ -30,7 +30,7 @@
     <a class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
     <ul class="user-list">
       <li ng-repeat="user in filteredUsers">
-        <a href="" ng-click="editUser(user.id)">
+        <a id="user{{$index}}" href="" ng-click="editUser(user.id)">
           <span class="user-name">{{user.firstName}} {{user.lastName}}</span>
           <span class="user-username">({{user.userName}})</span> -
           {{user.email}}
