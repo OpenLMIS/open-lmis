@@ -133,8 +133,7 @@ public interface FacilityMapper {
 
   @Select({"SELECT DISTINCT f.* FROM facilities f",
     "INNER JOIN requisition_group_members rgm ON f.id= rgm.facilityId",
-    "WHERE rgm.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[])",
-    "AND f.active = true"})
+    "WHERE rgm.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[])"})
   @Results(value = {
     @Result(property = "geographicZone.id", column = "geographicZoneId"),
     @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
