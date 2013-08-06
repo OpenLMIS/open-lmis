@@ -87,4 +87,49 @@ describe("User Search Controller", function () {
     expect(query).toEqual(scope.query);
   });
 
+  it("should open password modal", function() {
+    var user = {id: 1, firstName: "User"};
+    scope.changePassword(user);
+    expect(scope.changePasswordModal).toEqual(true);
+    expect(scope.user).toEqual(user);
+  });
+
+  it("should reset password modal", function () {
+    scope.resetPasswordModal();
+    expect(scope.changePasswordModal).toEqual(false);
+    expect(scope.user).toEqual(undefined);
+    expect(scope.password1).toEqual("");
+    expect(scope.password2).toEqual("");
+    expect(scope.message).toEqual("");
+    expect(scope.error).toEqual("");
+  });
+
+  it("should update user password if password matches and is valid",function () {
+    scope.password1 = scope.password2 = "Abcd1234!";
+    scope.user = {id: 1, firstName: "User"};
+
+    $httpBackend.expect('PUT', '/admin/resetPassword/1.json').respond(200, {success: "password updated"});
+    scope.updatePassword();
+    $httpBackend.flush();
+    expect(scope.message).toEqual("password updated")
+    expect(scope.error).toEqual(undefined)
+  });
+
+  it("should update show error if password is not valid",function () {
+    scope.password1 = scope.password2 = "invalid";
+    scope.user = {id: 1, firstName: "User"};
+    spyOn(messageService, 'get');
+    scope.updatePassword();
+    expect(messageService.get).toHaveBeenCalledWith("error.password.invalid");
+  });
+
+  it("should update show error if passwords do not match" ,function () {
+    scope.password1 = "Abcd1234!";
+  scope.password2 = "invalid";
+    scope.user = {id: 1, firstName: "User"};
+    spyOn(messageService, 'get');
+    scope.updatePassword();
+    expect(messageService.get).toHaveBeenCalledWith("error.password.mismatch");
+  });
+
 });

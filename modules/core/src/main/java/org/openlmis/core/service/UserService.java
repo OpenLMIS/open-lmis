@@ -156,6 +156,6 @@ public class UserService {
   }
 
   public void updateUserPassword(Long userId, String password) {
-    userRepository.updateUserPassword(userId, password);
+    userRepository.updateUserPassword(userId, Encoder.hash(password));
   }
 }

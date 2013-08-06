@@ -267,9 +267,12 @@ public class UserServiceTest {
   public void shouldUpdateUserPassword() {
     Long userId = 1l;
     String newPassword = "newPassword";
+    mockStatic(Encoder.class);
+    String hashedPassword = "hashedPassword";
+    when(Encoder.hash(newPassword)).thenReturn(hashedPassword);
 
     userService.updateUserPassword(userId, newPassword);
 
-    verify(userRepository).updateUserPassword(userId, newPassword);
+    verify(userRepository).updateUserPassword(userId, hashedPassword);
   }
 }
