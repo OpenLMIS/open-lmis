@@ -10,15 +10,18 @@ package org.openlmis.pageobjects;
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.*;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+//import java.awt.*;
+import java.awt.*;
+import java.awt.event.InputEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -40,6 +43,12 @@ public class UserPage extends Page {
   @FindBy(how = How.ID, using = "lastName")
   private static WebElement lastNameField;
 
+  @FindBy(how = How.ID, using = "password1")
+  private static WebElement newPasswordField;
+
+  @FindBy(how = How.ID, using = "password2")
+  private static WebElement confirmPasswordField;
+
   @FindBy(how = How.XPATH, using = "//input[@value='Save']")
   private static WebElement saveButton;
 
@@ -59,8 +68,23 @@ public class UserPage extends Page {
   @FindBy(how = How.ID, using = "searchFacility")
   private static WebElement searchFacility;
 
+  @FindBy(how = How.ID, using = "searchUser")
+  private static WebElement searchUserTextField;
+
+  @FindBy(how = How.ID, using = "user0")
+  private static WebElement firstUserLink;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='changePassword']/div/input[1]")
+  private static WebElement resetPasswordDone;
+
+    @FindBy(how = How.XPATH, using = "//div[@id='changePassword']/div/input[2]")
+    private static WebElement resetPasswordCancel;
+
   @FindBy(how = How.XPATH, using = "//a[@ng-click='setSelectedFacility(facility)']")
   private static WebElement selectFacility;
+
+  @FindBy(how = How.XPATH, using = "//a[@ng-click='changePassword(user)']")
+  private static WebElement selectResetPassword;
 
   @FindBy(how = How.XPATH, using = "//select[@ng-model='selectedProgramIdToSupervise']")
   private static WebElement programsToSupervise;
@@ -147,6 +171,53 @@ public class UserPage extends Page {
     testWebDriver.setImplicitWait(1);
 
   }
+
+    public void searchUser(String user) {
+        testWebDriver.waitForElementToAppear(searchUserTextField);
+        sendKeys(searchUserTextField, user);
+        testWebDriver.sleep(2000);
+    }
+
+    public void clickUserList(String userString) {
+        testWebDriver.waitForElementToAppear(firstUserLink);
+        firstUserLink.click();
+        testWebDriver.waitForElementToAppear(userNameField);
+    }
+
+    public void focusOnFirstUserLink() {
+        testWebDriver.waitForElementToAppear(firstUserLink);
+        searchUserTextField.click();
+        searchUserTextField.sendKeys(Keys.TAB);
+
+        testWebDriver.waitForElementToAppear(selectResetPassword);
+    }
+
+    public void clickResetPassword()  throws AWTException{
+        //Point coordinates = selectResetPassword.getLocation();
+        //System.out.print(coordinates.getX() + "  " +coordinates.getY());
+        Robot robot = new Robot();
+        robot.mouseMove(1478, 351) ;
+        selectResetPassword.click();
+        //robot.mousePress(InputEvent.BUTTON1_MASK);
+        //robot.mouseRelease(InputEvent.BUTTON1_MASK);
+    }
+
+    public void verifyUserOnList(String userString) {
+        testWebDriver.waitForElementToAppear(firstUserLink);
+        SeleneseTestNgHelper.assertTrue("User not available in list.", firstUserLink.getText().contains(userString)) ;
+    }
+
+    public void verifyResetPassword() {
+        testWebDriver.waitForElementToAppear(firstUserLink);
+        SeleneseTestNgHelper.assertTrue("Reset password link not available.",selectResetPassword.isDisplayed()) ;
+    }
+
+    public void resetPassword(String newPassword, String confirmPassword) {
+        testWebDriver.waitForElementToAppear(newPasswordField);
+        newPasswordField.sendKeys(newPassword);
+        confirmPasswordField.sendKeys(confirmPassword);
+        resetPasswordDone.click();
+        }
 
   public String enterAndVerifyUserDetails(String userName, String email, String firstName, String lastName, String baseurl, String dburl) throws IOException, SQLException {
     testWebDriver.waitForElementToAppear(addNewButton);

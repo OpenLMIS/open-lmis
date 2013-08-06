@@ -189,6 +189,37 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   }
 
+    @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+    public void testCreateSearchResetPasswordUser(String user, String program, String[] credentials)throws Exception {
+
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+
+        String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+        UserPage userPage = homePage.navigateToUser();
+
+        String email = "Jasmine_Doe@openlmis.com";
+        userPage.enterAndVerifyUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe", baseUrlGlobal, dburlGlobal);
+        dbWrapper.updateUser(passwordUsers, email);
+
+        homePage.navigateToUser();
+        userPage.searchUser(email);
+        userPage.verifyUserOnList(email);
+
+        homePage.navigateToUser();
+        userPage.searchUser(LAB_IN_CHARGE);
+        userPage.verifyUserOnList(LAB_IN_CHARGE);
+
+        homePage.navigateToUser();
+        userPage.searchUser("Jasmine Doe");
+        userPage.verifyUserOnList("Jasmine Doe");
+
+        userPage.focusOnFirstUserLink();
+        userPage.verifyResetPassword();
+//        userPage.clickResetPassword();
+//        userPage.resetPassword("abcd1234","abcd1234");
+    }
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, String roleType) throws IOException, SQLException {
     UserPage userPage = homePage.navigateToUser();
