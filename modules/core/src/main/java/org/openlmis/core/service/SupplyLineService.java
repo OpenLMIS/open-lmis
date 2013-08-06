@@ -37,11 +37,7 @@ public class SupplyLineService {
     this.supervisoryNodeRepository = supervisoryNodeRepository;
   }
 
-    public List<SupplyLine> getAllSupplyLine() {
-        return supplyLineRepository.getAllSupplyLine();
-    }
-
-    public SupplyLine get(Long id) {
+  public SupplyLine get(Long id) {
         SupplyLine supplyLine = supplyLineRepository.get(id);
         if (supplyLine == null) {
             throw new DataException("error.supplyline.not.found");
@@ -66,21 +62,6 @@ public class SupplyLineService {
   }
 
 
-// mahmed - 06.20.2013
-    public SupplyLine saveSupplyLine(SupplyLine supplyLine) {
-        validateIfSupervisoryNodeIsTopmostNode(supplyLine);
-
-        if (supplyLine.getId() == null) {
-            this.supplyLineRepository.insert(supplyLine);
-        }  else
-        {
-            this.supplyLineRepository.update(supplyLine);
-        }
-
-        return supplyLineRepository.get(supplyLine.getId());
-    }
-
-
   private void populateIdsForSupplyLine(SupplyLine supplyLine) {
     supplyLine.getProgram().setId(programRepository.getIdByCode(supplyLine.getProgram().getCode()));
     supplyLine.getSupplyingFacility().setId(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode()));
@@ -100,10 +81,5 @@ public class SupplyLineService {
     return supplyLineRepository.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine);
   }
 
-    //mahmed - 07.11.2013 delete supply line
-    public void deleteById(Long supplyLineId) {
-
-        this.supplyLineRepository.deleteById(supplyLineId);
-    }
 
 }
