@@ -48,6 +48,7 @@
 
   <util:properties id="mailProperties">
     <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+    <prop key="mail.smtp.debug">${mail.smtp.debug}</prop>
     <prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
     <prop key="mail.smtp.quitwait">${mail.smtp.quitwait}</prop>
   </util:properties>
