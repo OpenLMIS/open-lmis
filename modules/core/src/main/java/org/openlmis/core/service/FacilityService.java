@@ -168,4 +168,8 @@ public class FacilityService {
       return facilityRepository.getAllInRequisitionGroups(requisitionGroups);
   }
 
+  public List<Facility> getFacilitiesCompleteList(){
+      return facilityRepository.getFacilitiesCompleteList();
+  }
+
 }

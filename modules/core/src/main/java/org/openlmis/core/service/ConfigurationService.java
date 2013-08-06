@@ -59,5 +59,9 @@ public class ConfigurationService {
       return values;
   }
 
+  public List<Configuration> getConfigurations(){
+    return configurationRepository.getAll();
+  }
+
 
 }

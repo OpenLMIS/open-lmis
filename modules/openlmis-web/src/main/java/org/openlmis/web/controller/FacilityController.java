@@ -187,7 +187,7 @@ public class FacilityController extends BaseController {
   @RequestMapping(value="/facilities/getFacilityCompleteList",method= GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQUISITION_GROUP')")
   public ResponseEntity<OpenLmisResponse> getAllFacilityDetail(HttpServletRequest request){
-      return OpenLmisResponse.response("facilities",facilityService.getAllFacilitiesDetail());
+      return OpenLmisResponse.response("facilities",facilityService.getFacilitiesCompleteList());
   }
 
 

@@ -9,7 +9,7 @@
             <div>
                 <div class="form-row clearfix">
                     <div>
-                        <label for="code">Code: </label>
+                        <label for="code">Code: <span class="label-required"> *</span></label>
 
                         <div class="form-field">
                             <input ng-model="geographicZone.code" name="code" id="code" type="text" maxlength="30"
@@ -20,7 +20,7 @@
                         </div>
                     </div>
                     <div>
-                        <label for="name">Name: </label>
+                        <label for="name">Name: <span class="label-required"> *</span></label>
 
                         <div class="form-field">
                             <input ng-model="geographicZone.name" name="name" id="name" type="text" maxlength="30"
@@ -31,14 +31,14 @@
                         </div>
                     </div>
                     <div>
-                        <label for="level">Level: </label>
+                        <label for="level">Level: <span class="label-required"> *</span></label>
                         <div class="form-field">
                             <select  style="width:200px;" ng-required="true"  name="level" id="level" ng-model="geographicZone.level.id" ng-options="option.id as option.name for option in geographicLevels">
                             </select>
                         </div>
                     </div>
                     <div>
-                        <label for="parent">Parent: </label>
+                        <label for="parent">Parent: <span class="label-required"> *</span></label>
                         <div class="form-field">
                             <select style="width:200px;" ng-required="true"  name="parent" id="parent" ng-model="geographicZone.parent.id" ng-options="option.id as option.name for option in geographicZones">
                             </select>

@@ -34,14 +34,14 @@
                 </th>
                 <th>Program Count
                 </th>
-                <th>Action
+                <th>
                 </th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="requisitionGroup in filteredRequisitionGroups">
                 <td>
-                    <div>{{requisitionGroup.name}}</div>
+                    <a ng-click="editRequisitionGroup(requisitionGroup.id)">{{requisitionGroup.name}}</a>
                 </td>
                 <td>
                     <div>{{requisitionGroup.code}}</div>
@@ -56,8 +56,7 @@
                     <div>{{requisitionGroup.countOfPrograms}}</div>
                 </td>
                 <td>
-                    <a ng-click="editRequisitionGroup(requisitionGroup.id)">Edit</a>
-                    <a ng-click="deleteRequisitionGroup(requisitionGroup.id)"> Delete</a>
+                    <a class="close" ng-click="deleteRequisitionGroup(requisitionGroup.id)">X</a>
                 </td>
             </tr>
             </tbody>

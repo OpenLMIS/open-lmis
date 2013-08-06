@@ -13,6 +13,8 @@ import org.openlmis.core.repository.mapper.ConfigurationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @NoArgsConstructor
 public class ConfigurationRepository {
@@ -26,5 +28,9 @@ public class ConfigurationRepository {
 
   public Configuration getByKey(String  key) {
      return mapper.getByKey(key);
+  }
+
+  public List<Configuration> getAll(){
+    return mapper.getAll();
   }
 }

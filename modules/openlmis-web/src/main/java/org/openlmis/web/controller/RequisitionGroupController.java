@@ -50,7 +50,7 @@ public class RequisitionGroupController extends BaseController {
         } catch (DataException e) {
             return error(e, HttpStatus.BAD_REQUEST);
         }
-        successResponse = success(String.format("Requisition group '%s' has been successfully created", requisitionGroup.getName()));
+        successResponse = success(String.format("Requisition group '%s' has been successfully saved", requisitionGroup.getName()));
         successResponse.getBody().addData("requisitionGroup", requisitionGroup);
         return successResponse;
     }

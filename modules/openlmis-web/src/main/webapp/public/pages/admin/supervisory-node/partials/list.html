@@ -34,14 +34,14 @@
                 </th>
                 <th>Supervisors Count
                 </th>
-                <th>Action
+                <th>
                 </th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="supervisoryNode in filteredSupervisoryNodes">
                 <td>
-                    <div>{{supervisoryNode.name}}</div>
+                    <a ng-click="editSupervisoryNode(supervisoryNode.id)">{{supervisoryNode.name}}</a>
                 </td>
                 <td>
                     <div>{{supervisoryNode.code}}</div>
@@ -56,8 +56,7 @@
                     <div>{{supervisoryNode.supervisorCount}}</div>
                 </td>
                 <td>
-                    <a ng-click="editSupervisoryNode(supervisoryNode.id)">Edit</a>
-                    <a ng-click="showRemoveSupervisoryNodeMemberConfirmDialog($index)"> Delete</a>
+                    <a class="close" ng-click="showRemoveSupervisoryNodeMemberConfirmDialog($index)">X</a>
                 </td>
             </tr>
             </tbody>

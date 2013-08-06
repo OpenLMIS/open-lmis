@@ -125,7 +125,7 @@ function RequisitionGroupController($scope, ReportFacilityTypes, $routeParams, $
         var options = {
             id: "removeRequisitionGroupMemberConfirmDialog",
             header: "Confirmation",
-            body: "Are you sure you want to remove the selected facility"
+            body: "Please confirm that you want to remove the facility: " + $scope.selectedFacility.code + " - " + $scope.selectedFacility.name
         };
         OpenLmisDialog.newDialog(options, $scope.removeRequisitionGroupMemberConfirm, $dialog, messageService);
     };
