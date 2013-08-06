@@ -116,4 +116,7 @@ public class ProductRepository {
     return mapper.getProductFormIdForCode(code);
   }
 
+  public boolean isActive(String code) {
+    return mapper.isActive(code);
+  }
 }

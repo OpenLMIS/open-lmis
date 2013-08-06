@@ -23,7 +23,6 @@ public class StaticReferenceDataReader {
 
   @Autowired
   public StaticReferenceDataReader(MessageSource messageSource) {
-
     this.messageSource = messageSource;
   }
 

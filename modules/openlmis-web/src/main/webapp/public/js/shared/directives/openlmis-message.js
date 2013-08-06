@@ -48,6 +48,7 @@ app.directive('openlmisMessage', function (messageService) {
             existsInScope = false;
             return false;
           }
+          return true;
         });
 
         var key = existsInScope ? evaluatedVariable : keyWithArgs[0];

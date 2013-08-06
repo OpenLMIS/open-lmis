@@ -80,4 +80,8 @@ public class ProductService {
   public Product getByCode(String code) {
     return repository.getByCode(code);
   }
+
+  public boolean isActive(String code) {
+    return repository.isActive(code);
+  }
 }

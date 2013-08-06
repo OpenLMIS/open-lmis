@@ -13,6 +13,7 @@ import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.builder.ProgramSupportedBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.service.SpringIntegrationTest;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -63,6 +67,9 @@ public class
 
   @Autowired
   SupervisoryNodeMapper supervisoryNodeMapper;
+
+  @Autowired
+  QueryExecutor queryExecutor;
 
   @Test
   public void shouldGetProgramsWhichAreActiveByFacilityCode() {
@@ -297,6 +304,45 @@ public class
 
     assertThat(returnedProgram.isRegimenTemplateConfigured(), is(true));
 
+  }
+
+  @Test
+  public void shouldSetSendFeedFlag() throws SQLException {
+    Program program = new Program(2L);
+    programMapper.setFeedSendFlag(program, true);
+    boolean flag;
+
+    try (ResultSet set = queryExecutor.execute("SELECT sendFeed from programs WHERE id = ?", asList(2))) {
+      set.next();
+      flag = set.getBoolean(1);
+    }
+
+    assertTrue(flag);
+  }
+
+  @Test
+  public void shouldResetSendFeedFlag() throws SQLException {
+    Program program = new Program(2L);
+    programMapper.setFeedSendFlag(program, false);
+    boolean flag = true;
+
+    try (ResultSet set = queryExecutor.execute("SELECT sendFeed from programs WHERE id = ?", asList(2))) {
+      set.next();
+      flag = set.getBoolean(1);
+    }
+
+    assertFalse(flag);
+  }
+
+  @Test
+  public void shouldGetAllProgramsWithSendFeedFlagTrue() throws Exception {
+    Program program = new Program(2L);
+    programMapper.setFeedSendFlag(program, true);
+
+    List<Program> programsForNotification = programMapper.getProgramsForNotification();
+
+    assertThat(programsForNotification.size(), is(1));
+    assertThat(programsForNotification.get(0).getId(), is(2L));
   }
 
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {

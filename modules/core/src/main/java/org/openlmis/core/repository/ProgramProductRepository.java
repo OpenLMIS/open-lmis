@@ -105,4 +105,7 @@ public class ProgramProductRepository {
   }
 
 
+  public ProgramProduct getById(Long id) {
+    return mapper.getById(id);
+  }
 }

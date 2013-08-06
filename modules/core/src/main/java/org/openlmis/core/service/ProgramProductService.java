@@ -11,9 +11,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.core.repository.ProgramProductRepository;
-import org.openlmis.core.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,16 +21,14 @@ import java.util.List;
 @NoArgsConstructor
 public class ProgramProductService {
 
+  @Autowired
   private ProgramProductRepository programProductRepository;
-  private ProgramRepository programRepository;
-  private ProductRepository productRepository;
 
   @Autowired
-  public ProgramProductService(ProgramProductRepository programProductRepository, ProgramRepository programRepository, ProductRepository productRepository) {
-    this.programProductRepository = programProductRepository;
-    this.programRepository = programRepository;
-    this.productRepository = productRepository;
-  }
+  private ProgramService programService;
+
+  @Autowired
+  private ProductService productService;
 
   public Long getIdByProgramIdAndProductId(Long programId, Long productId) {
     return programProductRepository.getIdByProgramIdAndProductId(programId, productId);
@@ -55,6 +51,16 @@ public class ProgramProductService {
   }
 
   public void save(ProgramProduct programProduct) {
+    if (programProduct.getId() == null) {
+      boolean globalProductStatus = productService.isActive(programProduct.getProduct().getCode());
+      if (globalProductStatus && programProduct.isActive())
+        programService.setFeedSendFlag(programProduct.getProgram(), true);
+    } else {
+      ProgramProduct existingProgramProduct = programProductRepository.getById(programProduct.getId());
+      if (existingProgramProduct.getProduct().getActive() && (existingProgramProduct.isActive() != programProduct.isActive())) {
+        programService.setFeedSendFlag(programProduct.getProgram(), true);
+      }
+    }
     programProductRepository.save(programProduct);
   }
 
@@ -68,8 +74,8 @@ public class ProgramProductService {
   }
 
   private void populateProgramProductIds(ProgramProduct programProduct) {
-    Long programId = programRepository.getIdByCode(programProduct.getProgram().getCode());
-    Long productId = productRepository.getIdByCode(programProduct.getProduct().getCode());
+    Long programId = programService.getIdForCode(programProduct.getProgram().getCode());
+    Long productId = productService.getIdForCode(programProduct.getProduct().getCode());
     programProduct.setId(programProductRepository.getIdByProgramIdAndProductId(programId, productId));
   }
 
