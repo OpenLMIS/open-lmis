@@ -86,6 +86,8 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators,
       return;
     }
 
+    cacheDistribution();
+
     DeliveryZoneFacilities.get({"programId": $scope.selectedProgram.id, "deliveryZoneId": $scope.selectedZone.id }, onDeliveryZoneGetSuccess, {});
 
     function onDeliveryZoneGetSuccess(data) {
@@ -110,7 +112,6 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators,
       referenceData['zpp'] = zpp;
       distributionReferenceDataStore.put(referenceData);
       distributionReferenceDataTransaction.oncomplete = function () {
-        cacheDistribution();
         $scope.$apply();
       };
     });

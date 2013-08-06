@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Refrigerator;
-import org.openlmis.distribution.service.RefrigeratorReadingService;
 import org.openlmis.distribution.service.RefrigeratorService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +25,6 @@ public class RefrigeratorControllerTest {
 
   @Mock
   RefrigeratorService refrigeratorService;
-
-  @Mock
-  RefrigeratorReadingService refrigeratorReadingService;
 
   @InjectMocks
   RefrigeratorController controller;

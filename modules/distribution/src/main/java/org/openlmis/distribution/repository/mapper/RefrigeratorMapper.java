@@ -1,6 +1,9 @@
 package org.openlmis.distribution.repository.mapper;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.openlmis.distribution.domain.Refrigerator;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +22,7 @@ public interface RefrigeratorMapper {
   @Select({"SELECT * FROM refrigerators rf JOIN facilities f ON f.id = rf.facilityid WHERE f.id=#{id}"})
   List<Refrigerator> getRefrigerators(Long id);
 
-  @Select({"SELECT RF.brand,RF.model,RF.serialNumber,RF.facilityId,RF.createdBy,RF.createdDate,RF.modifiedBy,RF.modifiedDate",
+  @Select({"SELECT RF.*",
     "FROM facilities F INNER JOIN delivery_zone_members DZM ON F.id = DZM.facilityId",
     "INNER JOIN programs_supported PS ON PS.facilityId = F.id",
     "INNER JOIN delivery_zones DZ ON DZ.id = DZM.deliveryZoneId",
@@ -27,9 +30,6 @@ public interface RefrigeratorMapper {
     "INNER JOIN refrigerators RF ON RF.facilityId = F.id",
     "WHERE DZPS.programId = #{programId} AND F.active = true",
     "AND PS.programId = #{programId}  AND DZM.deliveryZoneId = #{deliveryZoneId} order by F.name"})
-  @Results(value = {
-    @Result(property = "id", column = "id")
-  })
   List<Refrigerator> getRefrigeratorsForADeliveryZoneAndProgram(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
 
 }

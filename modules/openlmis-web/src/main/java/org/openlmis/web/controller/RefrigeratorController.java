@@ -2,7 +2,6 @@ package org.openlmis.web.controller;
 
 import org.openlmis.core.exception.DataException;
 import org.openlmis.distribution.domain.Refrigerator;
-import org.openlmis.distribution.service.RefrigeratorReadingService;
 import org.openlmis.distribution.service.RefrigeratorService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +24,6 @@ public class RefrigeratorController extends BaseController {
 
   @Autowired
   RefrigeratorService refrigeratorService;
-
-  @Autowired
-  RefrigeratorReadingService refrigeratorReadingService;
-
 
   @RequestMapping(value = "/deliveryZone/{deliveryZoneId}/program/{programId}/refrigerators", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getRefrigeratorsForADeliveryZoneAndProgram(@PathVariable(value = "deliveryZoneId") Long deliveryZoneId, @PathVariable(value = "programId") Long programId) {
