@@ -30,7 +30,6 @@ import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
-import org.openlmis.web.configurationReader.StaticReferenceDataReader;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -73,8 +72,6 @@ public class RequisitionControllerTest {
   private RequisitionService requisitionService;
   @Mock
   private RnrTemplateService rnrTemplateService;
-  @Mock
-  private StaticReferenceDataReader staticReferenceDataReader;
   @Mock
   private MessageService messageService;
 
@@ -375,7 +372,7 @@ public class RequisitionControllerTest {
     List<LossesAndAdjustmentsType> lossesAndAdjustmentTypes = new ArrayList<>();
     when(requisitionService.getLossesAndAdjustmentsTypes()).thenReturn(lossesAndAdjustmentTypes);
     when(rnrTemplateService.fetchColumnsForRequisition(programId)).thenReturn(rnrTemplate);
-    when(staticReferenceDataReader.getCurrency()).thenReturn("$");
+    when(messageService.message(LABEL_CURRENCY_SYMBOL)).thenReturn("$");
     List<RegimenColumn> regimenTemplate = new ArrayList<>();
     when(regimenColumnService.getRegimenColumnsByProgramId(programId)).thenReturn(regimenTemplate);
     ModelAndView modelAndView = controller.printRequisition(rnrId);

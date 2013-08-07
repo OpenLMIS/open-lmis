@@ -7,7 +7,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.web.configurationReader.StaticReferenceDataReader;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -25,18 +25,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class StaticReferenceDataController extends BaseController {
 
   public static final String CURRENCY = "currency";
-  private StaticReferenceDataReader staticReferenceDataReader;
+  public static final String LABEL_CURRENCY_SYMBOL = "label.currency.symbol";
+  private MessageService messageService;
   private Environment environment;
 
   @Autowired
-  public StaticReferenceDataController(StaticReferenceDataReader staticReferenceDataReader, Environment environment) {
-    this.staticReferenceDataReader = staticReferenceDataReader;
+  public StaticReferenceDataController(MessageService messageService, Environment environment) {
+    this.messageService = messageService;
     this.environment = environment;
   }
 
   @RequestMapping(value = "/reference-data/currency", method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> getCurrency() {
-    OpenLmisResponse response = new OpenLmisResponse(CURRENCY, staticReferenceDataReader.getCurrency());
+    OpenLmisResponse response = new OpenLmisResponse(CURRENCY, messageService.message(LABEL_CURRENCY_SYMBOL));
     return new ResponseEntity(response, HttpStatus.OK);
   }
 

@@ -16,7 +16,6 @@ import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
-import org.openlmis.web.configurationReader.StaticReferenceDataReader;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,10 +53,10 @@ public class RequisitionController extends BaseController {
   public static final String COMMENTS = "comments";
   public static final String REGIMEN_TEMPLATE = "regimen_template";
   public static final String LOSS_ADJUSTMENT_TYPES = "lossAdjustmentTypes";
+  public static final String LABEL_CURRENCY_SYMBOL = "label.currency.symbol";
 
   private RequisitionService requisitionService;
   private RnrTemplateService rnrTemplateService;
-  private StaticReferenceDataReader staticReferenceDataReader;
   public static final String LOSSES_AND_ADJUSTMENT_TYPES = "lossesAndAdjustmentTypes";
 
   private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
@@ -65,10 +64,9 @@ public class RequisitionController extends BaseController {
 
 
   @Autowired
-  public RequisitionController(RequisitionService requisitionService, RnrTemplateService rnrTemplateService, StaticReferenceDataReader staticReferenceDataReader, RegimenColumnService regimenColumnService) {
+  public RequisitionController(RequisitionService requisitionService, RnrTemplateService rnrTemplateService, RegimenColumnService regimenColumnService) {
     this.requisitionService = requisitionService;
     this.rnrTemplateService = rnrTemplateService;
-    this.staticReferenceDataReader = staticReferenceDataReader;
     this.regimenColumnService = regimenColumnService;
   }
 
@@ -226,7 +224,7 @@ public class RequisitionController extends BaseController {
     Long programId = requisition.getProgram().getId();
     modelAndView.addObject(RNR_TEMPLATE, rnrTemplateService.fetchColumnsForRequisition(programId));
     modelAndView.addObject(REGIMEN_TEMPLATE, regimenColumnService.getRegimenColumnsForPrintByProgramId(programId));
-    modelAndView.addObject(CURRENCY, staticReferenceDataReader.getCurrency());
+    modelAndView.addObject(CURRENCY, messageService.message(LABEL_CURRENCY_SYMBOL));
     return modelAndView;
   }
 
