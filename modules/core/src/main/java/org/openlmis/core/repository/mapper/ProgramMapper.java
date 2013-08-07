@@ -120,7 +120,7 @@ public interface ProgramMapper {
   @Update("UPDATE programs SET regimenTemplateConfigured = true WHERE id = #{id}")
   void setRegimenTemplateConfigured(Long id);
 
-  @Update("UPDATE programs SET sendFeed = #{sendFeed} WHERE id = #{program.id}")
+  @Update("UPDATE programs SET sendFeed = #{sendFeed} WHERE code = #{program.code}")
   void setFeedSendFlag(@Param("program") Program program, @Param("sendFeed") Boolean sendFeed);
 
   @Select("SELECT * FROM programs WHERE sendFeed = TRUE")

@@ -308,11 +308,12 @@ public class
 
   @Test
   public void shouldSetSendFeedFlag() throws SQLException {
-    Program program = new Program(2L);
+    Program program = new Program();
+    program.setCode("HIV");
     programMapper.setFeedSendFlag(program, true);
     boolean flag;
 
-    try (ResultSet set = queryExecutor.execute("SELECT sendFeed from programs WHERE id = ?", asList(2))) {
+    try (ResultSet set = queryExecutor.execute("SELECT sendFeed from programs WHERE code = ?", asList("HIV"))) {
       set.next();
       flag = set.getBoolean(1);
     }
@@ -322,11 +323,12 @@ public class
 
   @Test
   public void shouldResetSendFeedFlag() throws SQLException {
-    Program program = new Program(2L);
+    Program program = new Program();
+    program.setCode("HIV");
     programMapper.setFeedSendFlag(program, false);
     boolean flag = true;
 
-    try (ResultSet set = queryExecutor.execute("SELECT sendFeed from programs WHERE id = ?", asList(2))) {
+    try (ResultSet set = queryExecutor.execute("SELECT sendFeed from programs WHERE code = ?", asList("HIV"))) {
       set.next();
       flag = set.getBoolean(1);
     }
@@ -336,13 +338,14 @@ public class
 
   @Test
   public void shouldGetAllProgramsWithSendFeedFlagTrue() throws Exception {
-    Program program = new Program(2L);
+    Program program = new Program();
+    program.setCode("HIV");
     programMapper.setFeedSendFlag(program, true);
 
     List<Program> programsForNotification = programMapper.getProgramsForNotification();
 
     assertThat(programsForNotification.size(), is(1));
-    assertThat(programsForNotification.get(0).getId(), is(2L));
+    assertThat(programsForNotification.get(0).getCode(), is("HIV"));
   }
 
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {
