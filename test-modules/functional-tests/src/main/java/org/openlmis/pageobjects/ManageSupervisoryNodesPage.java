@@ -108,4 +108,29 @@ public class ManageSupervisoryNodesPage extends Page {
 
         SeleneseTestNgHelper.assertTrue("Error message is not showing up for empty facility.",saveErrorMessage.isDisplayed());
     }
+
+    public void EnterAndVerifyNewSupervisoryNodeWONameAndCode(String supervisoryNodeParentID, String description,String facilityId){
+        testWebDriver.waitForElementToAppear(addSupervisoryNodeButton);
+        addSupervisoryNodeButton.click();
+        testWebDriver.waitForElementToAppear(supervisoryNodeCodeField);
+
+        testWebDriver.selectByValue(supervisoryNodeParentField, supervisoryNodeParentID);
+        supervisoryNodeDescriptionField.clear();
+        supervisoryNodeDescriptionField.sendKeys(description);
+
+        testWebDriver.waitForElementToAppear(chooseFacilityButton);
+        chooseFacilityButton.click();
+        testWebDriver.waitForElementToAppear(associatedFacilityField);
+        testWebDriver.selectByValue(associatedFacilityField, facilityId);
+
+        testWebDriver.waitForElementToAppear(closeFacilityDialogButton);
+        closeFacilityDialogButton.click();
+
+        testWebDriver.waitForElementToAppear(saveButton);
+        saveButton.click();
+
+        testWebDriver.sleep(1500);
+
+        SeleneseTestNgHelper.assertTrue("Error message is not showing up for empty code and name.",saveErrorMessage.isDisplayed());
+    }
 }
