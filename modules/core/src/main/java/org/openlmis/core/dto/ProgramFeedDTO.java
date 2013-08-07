@@ -14,12 +14,12 @@ import org.openlmis.core.domain.Program;
 @Data
 public class ProgramFeedDTO extends BaseFeedDTO{
 
-  private String code;
+  private String programCode;
 
-  private String name;
+  private String programName;
 
   public ProgramFeedDTO(Program program) {
-    this.code = program.getCode();
-    this.name = program.getName();
+    this.programCode = program.getCode();
+    this.programName = program.getName();
   }
 }

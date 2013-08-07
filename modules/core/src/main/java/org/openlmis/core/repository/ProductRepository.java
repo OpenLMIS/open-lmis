@@ -51,6 +51,10 @@ public class ProductRepository {
     }
   }
 
+  public void update(Product product) {
+    mapper.update(product);
+  }
+
   private void validateAndSetProductGroup(Product product) {
     ProductGroup group = product.getProductGroup();
     if (group == null) return;
@@ -102,10 +106,6 @@ public class ProductRepository {
 
   public Product getByCode(String code) {
     return mapper.getByCode(code);
-  }
-
-  public void update(Product product) {
-    mapper.update(product);
   }
 
   public Long getDosageUnitIdForCode(String code) {

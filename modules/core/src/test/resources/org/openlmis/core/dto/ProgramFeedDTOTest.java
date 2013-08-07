@@ -31,6 +31,6 @@ public class ProgramFeedDTOTest {
 
     String serializedFeed = new ProgramFeedDTO(program).getSerializedContents();
 
-    assertThat(serializedFeed, is("{\"code\":\"YELL_FVR\",\"name\":\"Yellow Fever\"}"));
+    assertThat(serializedFeed, is("{\"programCode\":\"YELL_FVR\",\"programName\":\"Yellow Fever\"}"));
   }
 }
