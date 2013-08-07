@@ -96,7 +96,7 @@ describe('DistributionController', function () {
     var facilities = [
       {id: 2, name: "F1"}
     ];
-    httpBackend.expect('POST','/distributions.json').respond(200, {"success": "Data has been downloaded", "distribution": {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}});
+    httpBackend.expect('POST','/distributions.json').respond(200, {"success": "Data has been downloaded", "distribution": {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}}});
     httpBackend.expect('GET', '/deliveryZones/4/programs/4/facilities.json').respond(200, {"facilities": [
       {'id': '23'}
     ]});
@@ -116,7 +116,7 @@ describe('DistributionController', function () {
     scope.selectedProgram = {id: 4, name: 'program1'};
     scope.selectedPeriod = {id: 4, name: 'period1'};
 
-    httpBackend.expect('POST','/distributions.json').respond(200, {"success": "Data has been downloaded", "distribution": {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}});
+    httpBackend.expect('POST','/distributions.json').respond(200, {"success": "Data has been downloaded", "distribution": {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}}});
     httpBackend.expect('GET', '/deliveryZones/4/programs/4/facilities.json').respond(200, {"facilities": [
       {'id': '23'}
     ]});
