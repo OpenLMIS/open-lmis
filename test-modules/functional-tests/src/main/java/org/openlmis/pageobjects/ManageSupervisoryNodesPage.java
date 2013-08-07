@@ -39,6 +39,9 @@ public class ManageSupervisoryNodesPage extends Page {
     @FindBy(how=How.XPATH, using = "//div[@id='saveSuccessMessageDiv']/span")
     private static WebElement saveSuccessMessage;
 
+    @FindBy(how=How.XPATH, using = "//div[@id='saveErrorMsgDiv']")
+    private static WebElement saveErrorMessage;
+
 
     @FindBy(how=How.ID, using = "supervisory-node-facility-add-new")
     private static WebElement chooseFacilityButton;
@@ -83,5 +86,26 @@ public class ManageSupervisoryNodesPage extends Page {
         testWebDriver.sleep(1500);
 
         SeleneseTestNgHelper.assertTrue("Supervisory node '" + name + "' has been successfully created message is not showing up.",saveSuccessMessage.isDisplayed());
+    }
+
+    public void EnterAndVerifyNewSupervisoryNodeWOFacility(String code, String name, String supervisoryNodeParentID, String description){
+        testWebDriver.waitForElementToAppear(addSupervisoryNodeButton);
+        addSupervisoryNodeButton.click();
+        testWebDriver.waitForElementToAppear(supervisoryNodeCodeField);
+
+        supervisoryNodeCodeField.clear();
+        supervisoryNodeCodeField.sendKeys(code);
+        supervisoryNodeNameField.clear();
+        supervisoryNodeNameField.sendKeys(name);
+        testWebDriver.selectByValue(supervisoryNodeParentField, supervisoryNodeParentID);
+        supervisoryNodeDescriptionField.clear();
+        supervisoryNodeDescriptionField.sendKeys(description);
+
+        testWebDriver.waitForElementToAppear(saveButton);
+        saveButton.click();
+
+        testWebDriver.sleep(1500);
+
+        SeleneseTestNgHelper.assertTrue("Error message is not showing up for empty facility.",saveErrorMessage.isDisplayed());
     }
 }

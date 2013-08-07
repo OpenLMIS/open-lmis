@@ -36,6 +36,14 @@ public class E2EManageSupervisoryNodes extends TestCaseHelper {
         manageSupervisoryNodesPage.EnterAndVerifyNewSupervisoryNode("Code123","Test123","1","Test Description","2");
     }
 
+    @Test(enabled=true, groups = {"functional2"},dataProvider = "Data-Provider-Function-Positive")
+    public void testE2EManageSupervisoryNodesAddNewSupGroupWithEmptyFacility (String [] credentials ) throws IOException{
+        LoginPage loginPage = new LoginPage(testWebDriver,baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[0],credentials[1]);
+        ManageSupervisoryNodesPage manageSupervisoryNodesPage = homePage.navigateToSupervisoryNode();
+        manageSupervisoryNodesPage.EnterAndVerifyNewSupervisoryNodeWOFacility("Code123","Test123","1","Test Description");
+    }
+
     @AfterMethod
     public void tearDown() throws IOException{
         HomePage homePage= new HomePage(testWebDriver);
