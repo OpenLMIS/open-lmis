@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.ict4h.atomfeed.server.repository.AllEventRecords;
 import org.ict4h.atomfeed.server.service.EventFeedService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,18 +30,21 @@ public class AtomFeedController extends BaseController {
     @Autowired
     AllEventRecords allEventRecords;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/feeds/{category}/recent", produces = "application/atom+xml")
+    @Value("${app.url}")
+    String baseUrl;
+
+
+    @RequestMapping(method = RequestMethod.GET, value = "feeds/{category}/recent", produces = "application/atom+xml")
     @ResponseBody
-    public String getRecentFeeds(@PathVariable(value = "category") String category,
-                                 HttpServletRequest request,
+    public String getRecentFeeds(@PathVariable(value = "category") String category, HttpServletRequest request,
                                  @RequestParam(value = "vendor", required = false) String vendor) {
-        return getRecentFeed(eventFeedService, request.getRequestURL().toString(), logger, vendor, category);
+        return getRecentFeed(eventFeedService, baseUrl + request.getServletPath(), logger, vendor, category);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/feeds/{category}/{id}", produces = "application/atom+xml")
+    @RequestMapping(method = RequestMethod.GET, value = "feeds/{category}/{id}", produces = "application/atom+xml")
     @ResponseBody
     public String getFeed(@PathVariable(value = "category") String category, HttpServletRequest request,
                           @PathVariable Integer id, @RequestParam(value = "vendor", required = false) String vendor) {
-        return getEventFeed(eventFeedService, request.getRequestURL().toString(), id, logger, vendor, category);
+        return getEventFeed(eventFeedService, baseUrl + request.getServletPath(), id, logger, vendor, category);
     }
 }
