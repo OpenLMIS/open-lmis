@@ -245,4 +245,15 @@ public class ProgramProductServiceTest {
     verify(programProductRepository).getByProgram(program);
   }
 
+  @Test
+  public void shouldGetAllProgramProductsByProductCode() {
+    List<ProgramProduct> expectedProgramProducts = new ArrayList<>();
+    when(programProductRepository.getByProductCode("code")).thenReturn(expectedProgramProducts);
+
+    List<ProgramProduct> programProducts = programProductService.getByProductCode("code");
+
+    assertThat(programProducts, is(expectedProgramProducts));
+    verify(programProductRepository).getByProductCode("code");
+  }
+
 }

@@ -9,18 +9,19 @@ package org.openlmis.core.upload;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.core.service.ProgramService;
+import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductPersistenceHandler extends AbstractModelPersistenceHandler {
 
+  @Autowired
   private ProductService productService;
 
   @Autowired
-  public ProductPersistenceHandler(ProductService productService) {
-    this.productService = productService;
-  }
+  private ProgramService programService;
 
   @Override
   protected BaseModel getExisting(BaseModel record) {
@@ -30,6 +31,11 @@ public class ProductPersistenceHandler extends AbstractModelPersistenceHandler {
   @Override
   protected void save(BaseModel record) {
     productService.save((Product) record);
+  }
+
+  @Override
+  public void postProcess(AuditFields auditFields) {
+    programService.notifyProgramChange();
   }
 
   @Override

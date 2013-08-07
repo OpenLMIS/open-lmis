@@ -6,22 +6,30 @@
 
 package org.openlmis.core.service;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.db.categories.UnitTests;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.ProgramProductBuilder.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -36,13 +44,15 @@ public class ProductServiceTest {
   @Mock
   private ProductRepository productRepository;
 
+  @Mock
+  private ProgramService programService;
+
+  @Mock
+  ProgramProductService programProductService;
+
+  @InjectMocks
   private ProductService productService;
 
-
-  @Before
-  public void setUp() throws Exception {
-    productService = new ProductService(productRepository, categoryService, null);
-  }
 
   @Test
   public void shouldStoreProduct() throws Exception {
@@ -84,9 +94,105 @@ public class ProductServiceTest {
   public void shouldUpdateProductIfPresent() {
     Product product = new Product();
     product.setId(2L);
+    product.setCode("proCode");
+
+    List<ProgramProduct> programProducts = new ArrayList<>();
+    when(programProductService.getByProductCode("proCode")).thenReturn(programProducts);
 
     productService.save(product);
 
     verify(productRepository).update(product);
+  }
+
+  @Test
+  public void shouldNotifyIfActiveFlagsChangeFromTTtoTF() throws Exception {
+    String productCode = "P1";
+    Product product = new Product();
+    product.setActive(false);
+    product.setCode(productCode);
+    product.setId(2L);
+
+    final ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, true), with(productActive, true)));
+    List programProductList = new ArrayList() {{
+      add(existingProgramProduct);
+    }};
+    when(programProductService.getByProductCode(productCode)).thenReturn(programProductList);
+
+    productService.save(product);
+
+    verify(programService).setFeedSendFlag(existingProgramProduct.getProgram(), true);
+  }
+
+  @Test
+  public void shouldNotifyIfActiveFlagsChangeFromTFtoTT() throws Exception {
+    String productCode = "P1";
+    Product product = new Product();
+    product.setActive(true);
+    product.setCode(productCode);
+    product.setId(2L);
+
+    final ProgramProduct tbProduct = make(a(defaultProgramProduct, with(programCode, "TB"), with(active, true), with(productActive, false)));
+    final ProgramProduct hivProduct = make(a(defaultProgramProduct, with(programCode, "HIV"), with(active, true), with(productActive, false)));
+    List programProductList = new ArrayList() {{
+      add(hivProduct);
+      add(tbProduct);
+    }};
+    when(programProductService.getByProductCode(productCode)).thenReturn(programProductList);
+
+    productService.save(product);
+
+    verify(programService).setFeedSendFlag(tbProduct.getProgram(), true);
+    verify(programService).setFeedSendFlag(hivProduct.getProgram(), true);
+  }
+
+  @Test
+  public void shouldNotNotifyIfNotAnUpdate() throws Exception {
+    String productCode = "P1";
+    Product product = new Product();
+    product.setActive(true);
+    product.setCode(productCode);
+
+    productService.save(product);
+
+    verify(programService, never()).setFeedSendFlag(any(Program.class), anyBoolean());
+    verify(programProductService, never()).getByProductCode(anyString());
+  }
+
+  @Test
+  public void shouldNotNotifyIfActiveFlagsChangeFromFTtoFF() throws Exception {
+    String productCode = "P1";
+    Product product = new Product();
+    product.setActive(false);
+    product.setCode(productCode);
+    product.setId(2L);
+
+    final ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, false), with(productActive, true)));
+    List programProductList = new ArrayList() {{
+      add(existingProgramProduct);
+    }};
+    when(programProductService.getByProductCode(productCode)).thenReturn(programProductList);
+
+    productService.save(product);
+
+    verify(programService, never()).setFeedSendFlag(any(Program.class), anyBoolean());
+  }
+
+  @Test
+  public void shouldNotNotifyIfActiveFlagsChangeFromFFtoFT() throws Exception {
+    String productCode = "P1";
+    Product product = new Product();
+    product.setActive(true);
+    product.setCode(productCode);
+    product.setId(2L);
+
+    final ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, false), with(productActive, false)));
+    List programProductList = new ArrayList() {{
+      add(existingProgramProduct);
+    }};
+    when(programProductService.getByProductCode(productCode)).thenReturn(programProductList);
+
+    productService.save(product);
+
+    verify(programService, never()).setFeedSendFlag(any(Program.class), anyBoolean());
   }
 }

@@ -10,27 +10,34 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.ProductGroup;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductGroupRepository;
 import org.openlmis.core.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @NoArgsConstructor
 public class ProductService {
 
+  @Autowired
   private ProductRepository repository;
+
+  @Autowired
   private ProductGroupRepository productGroupRepository;
+
+  @Autowired
   private ProductCategoryService categoryService;
 
   @Autowired
-  public ProductService(ProductRepository repository, ProductCategoryService categoryService, ProductGroupRepository productGroupRepository) {
-    this.repository = repository;
-    this.categoryService = categoryService;
-    this.productGroupRepository = productGroupRepository;
-  }
+  ProgramProductService programProductService;
+
+  @Autowired
+  ProgramService programService;
 
   public void save(Product product) {
     validateAndSetProductCategory(product);
@@ -42,7 +49,19 @@ public class ProductService {
 
     setReferenceDataForProduct(product);
 
+    List<ProgramProduct> existingProgramProducts = programProductService.getByProductCode(product.getCode());
+
     repository.update(product);
+
+    notifyProgramCatalogChange(product, existingProgramProducts);
+  }
+
+  private void notifyProgramCatalogChange(Product product, List<ProgramProduct> existingProgramProducts) {
+    for (ProgramProduct existingProgramProduct : existingProgramProducts) {
+      if (existingProgramProduct.isActive() && (existingProgramProduct.getProduct().getActive() != product.getActive())) {
+        programService.setFeedSendFlag(existingProgramProduct.getProgram(), true);
+      }
+    }
   }
 
   private void setReferenceDataForProduct(Product product) {

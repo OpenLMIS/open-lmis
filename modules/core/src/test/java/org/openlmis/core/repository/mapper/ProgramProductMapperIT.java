@@ -7,7 +7,7 @@
 package org.openlmis.core.repository.mapper;
 
 
-import org.junit.Assert;
+import org.apache.commons.collections.Predicate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -25,8 +25,8 @@ import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.*;
+import static org.apache.commons.collections.CollectionUtils.exists;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -123,7 +123,7 @@ public class ProgramProductMapperIT {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProductMapper.insert(programProduct);
 
-    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 1d,2, 3.3, 5.6, 4, 5, 5);
+    ProgramProductISA programProductISA = new ProgramProductISA(programProduct.getId(), 1d, 2, 3.3, 5.6, 4, 5, 5);
 
     programProductISAMapper.insert(programProductISA);
 
@@ -144,5 +144,38 @@ public class ProgramProductMapperIT {
     ProgramProduct savedProgramProduct = programProductMapper.getById(programProduct.getId());
 
     assertThat(savedProgramProduct.getId(), is(programProduct.getId()));
+  }
+
+  @Test
+  public void shouldGetByProductCode() throws Exception {
+
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    Program hiv = new Program(1L);
+    hiv.setCode("HIV");
+
+    ProgramProduct programProduct2 = new ProgramProduct(hiv, product, 10, true);
+
+    programProductMapper.insert(programProduct);
+    programProductMapper.insert(programProduct2);
+
+    List<ProgramProduct> returnedProducts = programProductMapper.getByProductCode(programProduct.getProduct().getCode());
+
+    assertThat(returnedProducts.size(), is(2));
+    assertContainsProgramProduct(returnedProducts, programProduct);
+    assertContainsProgramProduct(returnedProducts, programProduct2);
+  }
+
+  private void assertContainsProgramProduct(List<ProgramProduct> returnedProducts, final ProgramProduct programProduct) {
+    boolean exists = exists(returnedProducts, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        ProgramProduct productFromCollection = (ProgramProduct) o;
+        return (productFromCollection.getProgram().getCode().equals(programProduct.getProgram().getCode())) &&
+          (productFromCollection.isActive() == programProduct.isActive()) &&
+          (productFromCollection.getProduct().getActive() == programProduct.getProduct().getActive());
+      }
+    });
+
+    assertTrue(exists);
   }
 }

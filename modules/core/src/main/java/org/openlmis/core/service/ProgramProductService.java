@@ -82,4 +82,8 @@ public class ProgramProductService {
   public List<ProgramProduct> getByProgram(Program program) {
     return programProductRepository.getByProgram(program);
   }
+
+  public List<ProgramProduct> getByProductCode(String productCode) {
+    return programProductRepository.getByProductCode(productCode);
+  }
 }

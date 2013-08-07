@@ -108,4 +108,8 @@ public class ProgramProductRepository {
   public ProgramProduct getById(Long id) {
     return mapper.getById(id);
   }
+
+  public List<ProgramProduct> getByProductCode(String code) {
+    return mapper.getByProductCode(code);
+  }
 }

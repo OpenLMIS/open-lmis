@@ -291,19 +291,19 @@ public class ProgramCatalogChangesFeed extends TestCaseHelper {
     assertTrue("feed json list : " + feedJSONListUpdated.get(1)+ ", response : "+responseEntity.getResponse(), feedJSONListUpdated.get(1).contains("\"programCode\":\"" + Program + "\",\"programName\":\"" + Program + "\""));
     assertTrue("feed json list : " + feedJSONListUpdated.get(3)+ ", response : "+responseEntity.getResponse(), feedJSONListUpdated.get(3).contains("\"programCode\":\"" + ProgramSecond + "\",\"programName\":\"" + ProgramSecond + "\""));
     assertTrue("feed json list : " + feedJSONListUpdated.get(4)+ ", response : "+responseEntity.getResponse(), feedJSONListUpdated.get(4).contains("\"programCode\":\"" + ProgramThird + "\",\"programName\":\"" + ProgramThird + "\""));
-    assertEquals(feedJSONList.size(), 5);
+    assertEquals(feedJSONListUpdated.size(), 5);
 
     uploadPage.uploadProducts("QA_products_prod6active_Webservice.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
-    uploadPage.uploadProducts("QA_program_product6_active_Webservice.csv");
+    uploadPage.uploadProgramProductMapping("QA_program_product6_active_Webservice.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
     ResponseEntity responseEntityUpdated = client.SendJSON("", URL, GET, "", "");
 
     List<String> feedJSONListFinal = XmlUtils.getNodeValues(responseEntityUpdated.getResponse(), "content");
     assertTrue("feed json list : " + feedJSONListFinal.get(0)+ ", response : "+responseEntityUpdated.getResponse(), feedJSONListFinal.get(0).contains("\"programCode\":\"" + ProgramSecond + "\",\"programName\":\"" + ProgramSecond + "\""));
-    assertEquals(feedJSONListUpdated.size(), 1);
+    assertEquals(feedJSONListFinal.size(), 1);
 
 
   }
