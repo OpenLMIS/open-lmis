@@ -94,8 +94,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     if (!requiredFieldsPresent($scope.user))  return false;
 
     if ($scope.user.id) {
-
-
+      Users.update({id: $scope.user.id}, $scope.user, successHandler, errorHandler);
     } else {
       Users.save({}, $scope.user, successHandler, errorHandler);
     }
@@ -190,13 +189,22 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     OpenLmisDialog.newDialog(dialogOpts, $scope.disableUserCallback, $dialog, messageService);
   };
 
+  var successFunc = function (data) {
+    $scope.showError = "false";
+    $scope.$parent.message = data.success;
+    $scope.$parent.userId = $scope.user.id;
+  };
+
+  var errorFunc = function (data) {
+    $scope.showError = "true";
+    $scope.$parent.message = "";
+    $scope.error = data.error;
+  };
+
+
   $scope.disableUserCallback = function (result) {
     if (!result) return;
-    Users.disable({id: $scope.user.id}, {}, function() {
-      console.log('disabled success');
-    }, function() {
-      console.log('disabled error');
-    });
+    Users.disable({id: $scope.user.id}, {}, successFunc, errorFunc);
   };
 
 
