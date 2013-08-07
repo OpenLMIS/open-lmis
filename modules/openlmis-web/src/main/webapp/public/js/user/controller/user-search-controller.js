@@ -92,4 +92,11 @@ function UserSearchController($scope, $location, Users, navigateBackService, Upd
     });
     $scope.resultCount = $scope.filteredUsers.length;
   };
+
+  setTimeout(function() {
+    angular.element(".user-list a").live("focus", function() {
+      $(".user-actions a").hide();
+      $(this).parents("li").find(".user-actions a").css("display", "inline-block");
+    });
+  });
 }
