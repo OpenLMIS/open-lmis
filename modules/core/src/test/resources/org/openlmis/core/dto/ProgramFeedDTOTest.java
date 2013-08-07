@@ -5,29 +5,32 @@
  *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  */
-package org.openlmis.core.event;
+
+package org.openlmis.core.dto;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.builder.ProgramBuilder;
+import org.openlmis.core.domain.Program;
 import org.openlmis.db.categories.UnitTests;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
-public class ProgramChangeEventTest {
+public class ProgramFeedDTOTest {
 
   @Test
-  public void shouldCreateAProgramChangeEvent() throws Exception {
-    ProgramChangeEvent programChangeEvent = new ProgramChangeEvent(make(a(ProgramBuilder.defaultProgram)));
+  public void shouldGetSerializedContents() throws Exception {
+    Program program = make(a(defaultProgram));
 
-    assertThat(programChangeEvent.getCategory(), is("programCatalogChanges"));
-    assertThat(programChangeEvent.getTitle(), is("Program Catalog Changes"));
+    String serializedFeed = new ProgramFeedDTO(program).getSerializedContents();
+
+    assertThat(serializedFeed, is("{\"code\":\"YELL_FVR\",\"name\":\"Yellow Fever\"}"));
   }
 }

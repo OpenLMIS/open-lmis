@@ -11,6 +11,7 @@ package org.openlmis.core.event;
 import org.ict4h.atomfeed.server.service.Event;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.dto.ProgramFeedDTO;
 
 import java.net.URISyntaxException;
 import java.util.UUID;
@@ -18,6 +19,6 @@ import java.util.UUID;
 public class ProgramChangeEvent extends Event {
 
   public ProgramChangeEvent(Program program) throws URISyntaxException {
-    super(UUID.randomUUID().toString(), "Program", DateTime.now(), "", "ProgramFeedDTO.getSerializedContents(program)", "program");
+    super(UUID.randomUUID().toString(), "Program Catalog Changes", DateTime.now(), "", new ProgramFeedDTO(program).getSerializedContents(), "programCatalogChanges");
   }
 }
