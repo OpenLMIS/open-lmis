@@ -10,6 +10,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 apply plugin: 'jetty'
 apply plugin: 'war'
 apply plugin: 'js'
+apply plugin: 'cobertura'
 
 
 buildscript {
@@ -191,10 +192,10 @@ task phantomRun(type: Exec) {
     commandLine 'phantomjs', "${projectDir}/src/test/javascript/lib/run_jasmine_test.coffee", "${projectDir}/src/test/javascript/SpecRunner.html"
 }
 
-task JasmineRun(type: Test) {
-    include '**/org/openlmis/jasmine/*.*'
-    useTestNG()
-}
+//task JasmineRun(type: Test) {
+//    include '**/org/openlmis/jasmine/*.*'
+//    useTestNG()
+//}
 
 compileJava.dependsOn compileLess
 
