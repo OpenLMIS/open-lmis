@@ -29,7 +29,9 @@ describe('DistributionController', function () {
       {deliveryZone: {id: 2}, program: {id: 2}, period: {id: 2}}
     ]};
 
-    controller(DistributionController, {$scope: scope, deliveryZones: [], IndexedDB: mockedIndexedDB, $dialog: {},
+    spyOn(OpenLmisDialog, 'newDialog');
+
+    controller(DistributionController, {$scope: scope, deliveryZones: [], IndexedDB: mockedIndexedDB,
       messageService: messageService, SharedDistributions: sharedDistribution});
   }));
 
@@ -107,11 +109,11 @@ describe('DistributionController', function () {
     scope.initiateDistribution();
 
     httpBackend.flush();
+    expect(OpenLmisDialog.newDialog).toHaveBeenCalled();
     expect(mockedIndexedDB.transaction).toHaveBeenCalled();
   });
 
   it('should not initiate the distribution already initiated', function () {
-    spyOn(OpenLmisDialog, 'newDialog')
     scope.selectedZone = {id: 4, name: 'zone1'};
     scope.selectedProgram = {id: 4, name: 'program1'};
     scope.selectedPeriod = {id: 4, name: 'period1'};
