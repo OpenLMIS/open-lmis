@@ -235,6 +235,7 @@ public class DBWrapper {
     update("delete from delivery_zones;");
 
     update("delete from supervisory_nodes;");
+    update("delete from refrigerators;");
     update("delete from facilities;");
     update("delete from geographic_zones where code not in ('Root','Arusha','Dodoma', 'Ngorongoro');");
     update("delete from processing_periods;");

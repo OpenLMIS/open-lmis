@@ -217,8 +217,12 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
         userPage.focusOnFirstUserLink();
         userPage.verifyResetPassword();
-//        userPage.clickResetPassword();
-//        userPage.resetPassword("abcd1234","abcd1234");
+
+        userPage.resetPassword("abcd1234","abcd1234");
+
+        homePage.logout(baseUrlGlobal);
+        loginPage.loginAs(LAB_IN_CHARGE, "abcd1234");
+        homePage.verifyLoggedInUser(LAB_IN_CHARGE);
     }
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, String roleType) throws IOException, SQLException {

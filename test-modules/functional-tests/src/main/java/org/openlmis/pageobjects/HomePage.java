@@ -29,6 +29,9 @@ public class HomePage extends Page {
 
   private static WebElement logoutLink;
 
+  @FindBy(how = How.XPATH, using = "//div[@class='user-info ng-scope']/strong")
+  private static WebElement loggedInUserLabel;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Requisitions')]")
   private static WebElement requisitionMenuItem;
 
@@ -450,4 +453,9 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(errorMsg);
     SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "Requisition not initiated yet");
   }
+
+    public void verifyLoggedInUser(String Username) {
+        testWebDriver.waitForElementToAppear(loggedInUserLabel);
+        SeleneseTestNgHelper.assertEquals(loggedInUserLabel.getText(), Username);
+    }
 }
