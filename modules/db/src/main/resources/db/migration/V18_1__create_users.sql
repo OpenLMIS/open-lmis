@@ -16,7 +16,7 @@ CREATE TABLE users (
   supervisorId INTEGER references users(id),
   facilityId INT REFERENCES facilities(id),
   verified BOOLEAN DEFAULT FALSE,
-  active BOOLEAN DEFAULT FALSE,
+  active BOOLEAN DEFAULT TRUE,
   vendorId INTEGER references vendors(id),
   createdBy INTEGER,
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
