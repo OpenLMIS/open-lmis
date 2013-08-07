@@ -88,6 +88,7 @@ public class FacilityListPage extends RequisitionPage {
   }
 
   public void clickFacilityListDropDown() {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(facilityListSelect);
     facilityListSelect.click();
   }

@@ -108,6 +108,7 @@ public class DistributionPage extends RequisitionPage {
 
   public void verifyFacilityNotSupportedMessage(String programFirst, String deliveryZoneNameFirst)
   {
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(saveSuccessMessageDiv);
     String message="Program ''"+programFirst+"'' is not supported by any facility in delivery zone ''"+deliveryZoneNameFirst+"''";
     SeleneseTestNgHelper.assertEquals(message,saveSuccessMessageDiv.getText());
