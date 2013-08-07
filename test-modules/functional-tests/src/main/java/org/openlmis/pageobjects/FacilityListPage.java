@@ -62,7 +62,7 @@ public class FacilityListPage extends RequisitionPage {
 
   public void verifyHeaderElements(String deliveryZone, String program, String period)
   {
-    testWebDriver.sleep(500);
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//div[@class='info-box']/div[@class='row-fluid']/div[2][@class='span3 offset1 info-box-labels']/span[@class='ng-binding']"));
     assertEquals(deliveryZone, testWebDriver.getElementByXpath("//div[@class='info-box']/div[@class='row-fluid']/div[2][@class='span3 offset1 info-box-labels']/span[@class='ng-binding']").getText());
     assertEquals(program, testWebDriver.getElementByXpath("//div[@class='info-box']/div[@class='row-fluid']/div[3][@class='span3 info-box-labels']/span[@class='ng-binding']").getText());
@@ -71,7 +71,7 @@ public class FacilityListPage extends RequisitionPage {
 
   public void verifyGeographicZoneOrder(String geoZoneFirst, String geoZoneSecond)
   {
-    testWebDriver.sleep(500);
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//ul[@class='select2-results']/li[2][@class='select2-results-dept-0 select2-result select2-result-unselectable select2-result-with-children']/div[@class='select2-result-label']"));
     assertEquals(geoZoneFirst, testWebDriver.getElementByXpath("//ul[@class='select2-results']/li[2][@class='select2-results-dept-0 select2-result select2-result-unselectable select2-result-with-children']/div[@class='select2-result-label']").getText());
     assertEquals(geoZoneSecond, testWebDriver.getElementByXpath("//ul[@class='select2-results']/li[3][@class='select2-results-dept-0 select2-result select2-result-unselectable select2-result-with-children']/div[@class='select2-result-label']").getText());
