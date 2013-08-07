@@ -47,7 +47,7 @@ public class UserBuilder {
   public static final String defaultSupervisorUserName = "supervisorUserName";
   public static final Long defaultVendorId = 1L;
   public static final Boolean defaultVerified = false;
-  public static final Boolean defaultActive = false;
+  public static final Boolean defaultActive = true;
 
 
   public static final Instantiator<User> defaultUser = new Instantiator<User>() {

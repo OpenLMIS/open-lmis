@@ -285,9 +285,11 @@ public class UserMapperIT {
   }
 
   @Test
-  public void shouldNotUpdateDisabledUserData(){
+  public void shouldNotGetDisabledUserData(){
     User user = make(a(defaultUser, with(facilityId, facility.getId())));
     userMapper.insert(user);
+
+    userMapper.setActive(user.getId(), false);
 
     assertThat(userMapper.getByUsernameAndVendorId(user), is(nullValue()));
   }
