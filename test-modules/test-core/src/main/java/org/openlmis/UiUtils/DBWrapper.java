@@ -112,7 +112,7 @@ public class DBWrapper {
 
   public void updateUser(String password, String email) throws SQLException, IOException {
     update("DELETE FROM user_password_reset_tokens;");
-    update("update users set password='" + password + "', active=TRUE  where email='" + email + "';");
+    update("update users set password='" + password + "', active=TRUE, verified=TRUE  where email='" + email + "';");
   }
 
   public String getDeliveryZoneNameAssignedToUser(String user) throws SQLException, IOException {
