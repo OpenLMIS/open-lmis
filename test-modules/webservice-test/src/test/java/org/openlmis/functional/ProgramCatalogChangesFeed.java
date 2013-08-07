@@ -37,6 +37,8 @@ public class ProgramCatalogChangesFeed extends TestCaseHelper {
 
   @AfterMethod(groups = {"webservice"})
   public void tearDown() throws Exception {
+    HomePage homePage=new HomePage(testWebDriver);
+    homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
@@ -87,7 +89,6 @@ public class ProgramCatalogChangesFeed extends TestCaseHelper {
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
     assertEquals(feedJSONList.size(), 1);
 
-    homePage.logout(baseUrlGlobal);
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
@@ -135,7 +136,6 @@ public class ProgramCatalogChangesFeed extends TestCaseHelper {
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
     assertEquals(feedJSONList.size(), 1);
 
-    homePage.logout(baseUrlGlobal);
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
@@ -183,7 +183,6 @@ public class ProgramCatalogChangesFeed extends TestCaseHelper {
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
     assertEquals(feedJSONList.size(), 1);
 
-    homePage.logout(baseUrlGlobal);
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
@@ -232,7 +231,6 @@ public class ProgramCatalogChangesFeed extends TestCaseHelper {
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
     assertEquals(feedJSONList.size(), 1);
 
-    homePage.logout(baseUrlGlobal);
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
@@ -307,7 +305,7 @@ public class ProgramCatalogChangesFeed extends TestCaseHelper {
     assertTrue("feed json list : " + feedJSONListFinal.get(0)+ ", response : "+responseEntityUpdated.getResponse(), feedJSONListFinal.get(0).contains("\"programCode\":\"" + ProgramSecond + "\",\"programName\":\"" + ProgramSecond + "\""));
     assertEquals(feedJSONListUpdated.size(), 1);
 
-    homePage.logout(baseUrlGlobal);
+
   }
 
 
