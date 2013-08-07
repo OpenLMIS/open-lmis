@@ -225,12 +225,12 @@ public class UserRepositoryTest {
 
   @Test
   public void shouldSetActiveForUser(){
-    Long userId = 1l;
-    Boolean active = true;
+    Long userId = 3l;
+    Long modifiedBy = 1L;
 
-    userRepository.setActive(userId, active);
+    userRepository.disable(userId, modifiedBy);
 
-    verify(userMapper).setActive(userId, active);
+    verify(userMapper).disable(userId, modifiedBy);
   }
 
 }

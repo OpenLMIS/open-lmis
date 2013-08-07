@@ -83,6 +83,6 @@ public interface UserMapper {
   void updateUserPassword(@Param(value = "userId")Long userId, @Param(value = "password")String password);
 
 
-  @Update("UPDATE users SET active = #{active} WHERE id = #{userId}")
-  void setActive(@Param(value = "userId")Long userId, @Param(value = "active")Boolean active);
+  @Update("UPDATE users SET active = FALSE, modifiedBy = #{modifiedBy} WHERE id = #{userId}")
+  void disable(@Param(value = "userId") Long userId, @Param(value = "modifiedBy") Long modifiedBy);
 }

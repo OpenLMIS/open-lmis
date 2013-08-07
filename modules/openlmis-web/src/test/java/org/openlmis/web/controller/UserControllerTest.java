@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -40,12 +41,14 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
+import static org.openlmis.core.builder.UserBuilder.active;
+import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.web.controller.UserController.TOKEN_VALID;
 
 @Category(UnitTests.class)
 public class UserControllerTest {
 
-  public static final Long userId = 1L;
+  private Long userId;
 
   private MockHttpSession session;
 
@@ -67,6 +70,7 @@ public class UserControllerTest {
   @Before
   public void setUp() {
     initMocks(this);
+    userId = 3L;
     httpServletRequest = new MockHttpServletRequest();
     session = new MockHttpSession();
     httpServletRequest.setSession(session);
@@ -141,14 +145,17 @@ public class UserControllerTest {
 
   @Test
   public void shouldUpdateUser() throws Exception {
-    User user = new User();
-    user.setId(1L);
+    User user = make(a(defaultUser));
+    user.setId(userId);
     user.setPassword("password");
     httpServletRequest.getSession().setAttribute(USER_ID, userId);
     httpServletRequest.getSession().setAttribute(USER, USER);
-    when(messageService.message("message.user.updated.success", null, null)).thenReturn("User 'null null' has been successfully updated");
+    when(messageService.message("message.user.updated.success", user.getFirstName(), user.getLastName())).
+      thenReturn("User 'Mizengo Pinda' has been successfully updated");
 
-    ResponseEntity<OpenLmisResponse> response = userController.update(user, 1L, httpServletRequest);
+    when(userService.getById(userId)).thenReturn(user);
+
+    ResponseEntity<OpenLmisResponse> response = userController.update(user, userId, httpServletRequest);
 
     verify(userService).update(user);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -156,6 +163,30 @@ public class UserControllerTest {
     assertThat(user.getPassword(), is(Encoder.hash("password")));
     assertThat(user.getModifiedBy(), is(userId));
   }
+
+  @Test
+  public void shouldEnableUser() throws Exception {
+    User existingUser = make(a(defaultUser, with(active, false)));
+    existingUser.setId(userId);
+
+    User user = make(a(defaultUser));
+    user.setId(userId);
+
+    httpServletRequest.getSession().setAttribute(USER_ID, userId);
+    httpServletRequest.getSession().setAttribute(USER, USER);
+    when(messageService.message("msg.user.enable.success", user.getFirstName(), user.getLastName())).
+      thenReturn("User 'Mizengo Pinda' has been enabled");
+
+    when(userService.getById(userId)).thenReturn(existingUser);
+
+    ResponseEntity<OpenLmisResponse> response = userController.update(user, userId, httpServletRequest);
+
+    verify(userService).update(user);
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat(response.getBody().getSuccessMsg(), is("User '" + user.getFirstName() + " " + user.getLastName() + "' has been enabled"));
+    assertThat(user.getModifiedBy(), is(userId));
+  }
+
 
   @Test
   public void shouldReturnErrorIfSaveUserFails() throws Exception {
@@ -225,4 +256,17 @@ public class UserControllerTest {
     verify(userService).updateUserPassword(userId, password);
   }
 
+  @Test
+  public void shouldDisableUser() throws Exception {
+    Long modifiedBy = 1L;
+    httpServletRequest.getSession().setAttribute(USER_ID, modifiedBy);
+    doNothing().when(userService).disable(userId, modifiedBy);
+
+    ResponseEntity<OpenLmisResponse> response = userController.disable(userId, httpServletRequest);
+
+    String successMsg = response.getBody().getSuccessMsg();
+
+    assertThat(successMsg, is(UserController.MSG_USER_DISABLE_SUCCESS));
+    verify(userService).disable(userId, modifiedBy);
+  }
 }

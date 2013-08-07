@@ -135,7 +135,7 @@ public class UserRepository {
     userMapper.updateUserPassword(userId, password);
   }
 
-  public void setActive(Long userId, Boolean active) {
-    userMapper.setActive(userId, active);
+  public void disable(Long userId, Long modifiedBy) {
+    userMapper.disable(userId, modifiedBy);
   }
 }

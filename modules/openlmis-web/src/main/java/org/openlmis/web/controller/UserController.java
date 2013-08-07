@@ -38,6 +38,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @NoArgsConstructor
 public class UserController extends BaseController {
 
+  public static final String MSG_USER_DISABLE_SUCCESS = "msg.user.disable.success";
+
   private RoleRightsService roleRightService;
   private UserService userService;
 
@@ -101,12 +103,17 @@ public class UserController extends BaseController {
     return successResponse;
   }
 
+  private boolean isUserEnabled(User existingUser, User newUser) {
+    return !existingUser.getActive() && newUser.getActive();
+  }
+
   @RequestMapping(value = "/users/{id}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> update(@RequestBody User user,
                                                  @PathVariable("id") Long id,
                                                  HttpServletRequest request) {
     ResponseEntity<OpenLmisResponse> successResponse;
+    User existingUser = userService.getById(id);
     user.setModifiedBy(loggedInUserId(request));
     user.setId(id);
     try {
@@ -114,7 +121,8 @@ public class UserController extends BaseController {
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
-    successResponse = success(messageService.message("message.user.updated.success", user.getFirstName(), user.getLastName()));
+    successResponse = success(messageService.message(isUserEnabled(existingUser, user) ?
+      "msg.user.enable.success" : "message.user.updated.success", user.getFirstName(), user.getLastName()));
     successResponse.getBody().addData("user", user);
     return successResponse;
   }
@@ -129,6 +137,13 @@ public class UserController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
   public User get(@PathVariable(value = "id") Long id) {
     return userService.getById(id);
+  }
+
+  @RequestMapping(value = "/users/{id}", method = DELETE, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> disable(@PathVariable("id") Long id,
+                                                  HttpServletRequest request) {
+    userService.disable(id, loggedInUserId(request));
+    return success(MSG_USER_DISABLE_SUCCESS);
   }
 
   @RequestMapping(value = "/user/validatePasswordResetToken/{token}", method = GET)

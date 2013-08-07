@@ -36,7 +36,13 @@ services.factory('UserContext', function ($resource) {
 });
 
 services.factory('Users', function ($resource) {
-  return $resource('/users/:id.json', {id: '@id'}, update);
+  var resource = $resource('/users/:id.json', {id: '@id'}, update);
+
+  resource.disable = function(pathParams, success, error) {
+    $resource('/users/:id.json', {}, {update: {method: 'DELETE'}}).update(pathParams, {}, success, error);
+  };
+
+  return resource;
 });
 
 services.factory('UserFacilityList', function ($resource) {

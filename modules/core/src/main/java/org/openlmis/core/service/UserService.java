@@ -159,11 +159,7 @@ public class UserService {
     userRepository.updateUserPassword(userId, Encoder.hash(password));
   }
 
-  public void enable(Long userId) {
-    userRepository.setActive(userId, true);
-  }
-
-  public void disable(Long userId) {
-    userRepository.setActive(userId, false);
+  public void disable(Long userId, Long modifiedBy) {
+    userRepository.disable(userId, modifiedBy);
   }
 }

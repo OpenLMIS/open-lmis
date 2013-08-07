@@ -277,16 +277,9 @@ public class UserServiceTest {
   }
 
   @Test
-  public void shouldEnableUser(){
-    Long userId = 1l;
-    userService.enable(userId);
-    verify(userRepository).setActive(userId, true);
-  }
-
-  @Test
   public void shouldDisableUser(){
-    Long userId = 1l;
-    userService.disable(userId);
-    verify(userRepository).setActive(userId, false);
+    Long userId = 3l;
+    userService.disable(userId, 1L);
+    verify(userRepository).disable(userId, 1L);
   }
 }

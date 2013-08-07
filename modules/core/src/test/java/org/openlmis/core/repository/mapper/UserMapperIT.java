@@ -289,7 +289,7 @@ public class UserMapperIT {
     User user = make(a(defaultUser, with(facilityId, facility.getId())));
     userMapper.insert(user);
 
-    userMapper.setActive(user.getId(), false);
+    userMapper.disable(user.getId(), 1L);
 
     assertThat(userMapper.getByUsernameAndVendorId(user), is(nullValue()));
   }
@@ -366,10 +366,10 @@ public class UserMapperIT {
   }
 
   @Test
-  public void shouldSetActiveAsFalseForAUser(){
+  public void shouldDisableAUser(){
     User user = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true)));
     userMapper.insert(user);
-    userMapper.setActive(user.getId(), false);
+    userMapper.disable(user.getId(), 1L);
 
     User savedUser = userMapper.getById(user.getId());
     assertThat(savedUser.getActive(), is(false));
