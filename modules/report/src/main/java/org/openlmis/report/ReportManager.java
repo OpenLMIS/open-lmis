@@ -133,7 +133,6 @@ public class ReportManager {
         params.put(Constants.REPORT_VERSION, report.getVersion());
         params.put(Constants.REPORT_OUTPUT_OPTION, outputOption.toString());
         Configuration configuration =  configurationService.getByKey(Constants.LOGO_FILE_NAME_KEY);
-        configurationService.getByKey(Constants.LOGO_FILE_NAME_KEY).getValue();
         params.put(Constants.LOGO,this.getClass().getClassLoader().getResourceAsStream(configuration != null ? configuration.getValue() : "logo.png"));
         params.put(Constants.GENERATED_BY, generatedBy);
         configuration =  configurationService.getByKey(Constants.OPERATOR_LOGO_FILE_NAME_KEY);

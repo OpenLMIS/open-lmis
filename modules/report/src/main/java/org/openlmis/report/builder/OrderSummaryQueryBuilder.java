@@ -1,6 +1,7 @@
 package org.openlmis.report.builder;
 
 
+import java.util.Calendar;
 import java.util.Map;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
@@ -55,29 +56,10 @@ public class OrderSummaryQueryBuilder {
         }
     }
 
-    public static String SelectFilteredSortedPagedRecordsCount(Map params){
-
-        BEGIN();
-        SELECT("COUNT(*) perCounts");
-        FROM("orders");
-        INNER_JOIN("requisitions on requisitions.id = orders.rnrid ");
-        INNER_JOIN("facilities on facilities.id = requisitions.facilityid");
-        INNER_JOIN("facility_types on facility_types.id = facilities.typeid ");
-        INNER_JOIN("requisition_line_items on requisition_line_items.rnrid = requisitions.id");
-        INNER_JOIN("products on products.code::text = requisition_line_items.productcode::text");
-        LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments on requisition_line_item_losses_adjustments.requisitionlineitemid = requisition_line_items.id");
-        LEFT_OUTER_JOIN("geographic_zones  on geographic_zones.id = facilities.geographiczoneid");
-        writePredicates(params);
-        String subQuery = SQL().toString();
-
-        BEGIN();
-        SELECT("COUNT(*)");
-        FROM("( "+ subQuery +" ) as counts");
-        return SQL();
-    }
-
     private static void writePredicates(Map params){
         Map<String, String []> filter = (Map<String, String[]>) params.get("filterCriteria");
+        Calendar originalStart = Calendar.getInstance();
+        Calendar originalEnd = Calendar.getInstance();
 
         String facilityTypeId =  filter.get("facilityTypeId") == null ? null : filter.get("facilityTypeId")[0];
         String facilityName = filter.get("facilityName") == null ? null : filter.get("facilityName")[0];
@@ -87,9 +69,9 @@ public class OrderSummaryQueryBuilder {
         if (zone != null &&  !zone.equals("undefined") && !zone.isEmpty() && !zone.equals("0")  && !zone.equals("-1")) {
             WHERE("facilities.geographiczoneid = "+zone);
         }
-       // if (product != null &&  !product.equals("undefined") && !product.isEmpty() && !product.equals("0") &&  !product.equals("-1")) {
+        if (!product.equals("-1")) {
             WHERE("products.id ="+ product);
-       // }
+        }
 
         if (facilityTypeId != null &&  !facilityTypeId.equals("undefined") && !facilityTypeId.isEmpty() && !facilityTypeId.equals("0") &&  !facilityTypeId.equals("-1")) {
             WHERE("facility_types.id = "+ facilityTypeId);
@@ -97,6 +79,12 @@ public class OrderSummaryQueryBuilder {
         if (facilityName != null &&  !facilityName.equals("undefined") && !facilityName.isEmpty() ) {
             WHERE("facilities.name = '"+ facilityName +"'");
         }
+       /* if (filter.getStartDate() != null) {
+            WHERE("processing_periods_start_date >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
+        }
+        if (filter.getEndDate() != null) {
+            WHERE("processing_periods_end_date <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
+        }*/
 
     }
 }

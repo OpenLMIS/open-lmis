@@ -16,7 +16,7 @@ import java.util.List;
 public interface ConfigurationMapper {
 
     // Used by mapper
-    @Select("SELECT * FROM configurations WHERE key = #{key}")
+    @Select("SELECT * FROM configurations WHERE LOWER(key) = LOWER(#{key})")
     Configuration getByKey(String key);
 
     @Select("SELECT * FROM configurations order by groupName, displayOrder, name")
