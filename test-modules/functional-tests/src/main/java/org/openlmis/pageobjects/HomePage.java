@@ -191,6 +191,9 @@ public class HomePage extends Page {
   @FindBy(how=How.ID,using="requisition-group-tab")
   private static WebElement requisitionGroupsTab;
 
+  @FindBy(how=How.ID,using="supervisory-node-tab")
+  private static WebElement supervisoryNodesTab;
+
   @FindBy(how = How.LINK_TEXT, using = "Supply Lines")
   private static WebElement supplylinesLink;
 
@@ -478,6 +481,17 @@ public class HomePage extends Page {
       testWebDriver.waitForElementToAppear(requisitionGroupsTab);
       requisitionGroupsTab.click();
       return new ManageRequisitionGroupsPage(testWebDriver);
+  }
+
+  public ManageSupervisoryNodesPage navigateToSupervisoryNode() throws IOException {
+      SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+      testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+      testWebDriver.keyPress(AdministrationMenuItem);
+      testWebDriver.waitForElementToAppear(manageLink);
+      testWebDriver.keyPress(manageLink);
+      testWebDriver.waitForElementToAppear(supervisoryNodesTab);
+      supervisoryNodesTab.click();
+      return new ManageSupervisoryNodesPage(testWebDriver);
   }
 
   public ApprovePage navigateToApprove() throws IOException {
