@@ -63,7 +63,7 @@ public class UploadControllerTest {
   @Mock
   MessageService messageService;
 
-  RecordHandler handler = new ProductPersistenceHandler(null);
+  RecordHandler handler = new ProductPersistenceHandler();
 
   private MockHttpServletRequest request;
 
