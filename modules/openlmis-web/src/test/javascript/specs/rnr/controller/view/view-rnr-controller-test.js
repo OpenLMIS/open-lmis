@@ -18,6 +18,7 @@ describe('ViewRnrController', function () {
   var regimenTemplate = {regimenColumns: regimenColumns};
 
   beforeEach(module('openlmis.services'));
+  beforeEach(module('openlmis.localStorage'));
   beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location) {
     routeParams = {'programId': 2, 'rnr': 1, 'supplyType': 'full-supply'};
     scope = $rootScope.$new();

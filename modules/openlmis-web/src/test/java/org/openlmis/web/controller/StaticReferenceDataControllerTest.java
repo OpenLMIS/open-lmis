@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -23,8 +22,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.openlmis.web.controller.StaticReferenceDataController.CURRENCY;
-import static org.openlmis.web.controller.StaticReferenceDataController.LABEL_CURRENCY_SYMBOL;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -33,25 +30,12 @@ public class StaticReferenceDataControllerTest {
   private StaticReferenceDataController staticReferenceDataController;
 
   @Mock
-  MessageService messageService;
-
-  @Mock
   Environment environment;
 
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    staticReferenceDataController = new StaticReferenceDataController(messageService, environment);
-  }
-
-  @Test
-  public void shouldGetCurrency() throws Exception {
-    when(messageService.message(LABEL_CURRENCY_SYMBOL)).thenReturn("$");
-    ResponseEntity<OpenLmisResponse> response = staticReferenceDataController.getCurrency();
-
-    OpenLmisResponse openLmisResponse = response.getBody();
-    assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat((String) openLmisResponse.getData().get(CURRENCY), is("$"));
+    staticReferenceDataController = new StaticReferenceDataController(environment);
   }
 
   @Test

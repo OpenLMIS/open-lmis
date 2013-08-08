@@ -5,11 +5,12 @@
  */
 
 describe('CreateRequisitionController', function () {
+
   var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns, regimenColumnList,
       lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate;
-
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
+
   beforeEach(module('ui.bootstrap.dialog'));
 
   beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $routeParams, _localStorageService_, _messageService_) {
@@ -21,6 +22,11 @@ describe('CreateRequisitionController', function () {
     controller = $controller;
     httpBackend = $httpBackend;
     messageService = _messageService_;
+    spyOn(messageService, 'get').andCallFake(function (arg) {
+      if (arg == 'label.currency.symbol')
+        return '$';
+      return 'some message'
+    });
     scope.$parent.facility = "10134";
     scope.$parent.program = {code: "programCode", "id": 1};
 
@@ -117,6 +123,7 @@ describe('CreateRequisitionController', function () {
     ])
   });
 
+
   it('should save work in progress for rnr', function () {
     scope.rnr = {"id": "rnrId"};
     scope.pageLineItems = [rnrLineItem];
@@ -131,8 +138,6 @@ describe('CreateRequisitionController', function () {
     expect(scope.message).toEqual("R&R saved successfully!");
     expect(scope.saveRnrForm.pristine).toBeTruthy();
   });
-
-
   it('should get Currency from service', function () {
     expect(scope.currency).toEqual("$");
   });
@@ -574,8 +579,6 @@ describe('CreateRequisitionController', function () {
 
     scope.rnr = rnr;
 
-    spyOn(messageService, 'get').andReturn('some message');
-
     scope.submitRnr();
 
     expect(scope.regimenLineItemInValid).toBeTruthy();
@@ -594,8 +597,6 @@ describe('CreateRequisitionController', function () {
     var rnr = new Rnr({"id": "1", "regimenLineItems": regimenLineItems});
 
     scope.rnr = rnr;
-
-    spyOn(messageService, 'get').andReturn('some message');
 
     scope.submitRnr();
 

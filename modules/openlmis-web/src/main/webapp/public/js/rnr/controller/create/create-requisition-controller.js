@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function CreateRequisitionController($scope, requisition, currency, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $rootScope, $dialog, messageService) {
+function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $rootScope, $dialog, messageService) {
   $scope.visibleTab = $routeParams.supplyType;
   $scope.baseUrl = "/create-rnr/" + $routeParams.rnr + '/' + $routeParams.facility + '/' + $routeParams.program;
   $scope.pageSize = pageSize;
@@ -20,6 +20,7 @@ function CreateRequisitionController($scope, requisition, currency, pageSize, rn
   $scope.errorPages = {fullSupply: [], nonFullSupply: []};
   $scope.fullScreen = false;
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
+  $scope.currency = messageService.get('label.currency.symbol');
 
   var NON_FULL_SUPPLY = 'non-full-supply';
   var FULL_SUPPLY = 'full-supply';
@@ -59,7 +60,6 @@ function CreateRequisitionController($scope, requisition, currency, pageSize, rn
 
   prepareRnr();
 
-  $scope.currency = currency;
 
   $scope.checkErrorOnPage = function (page) {
     return $scope.visibleTab == NON_FULL_SUPPLY ? _.contains($scope.errorPages.nonFullSupply, page) : $scope.visibleTab == FULL_SUPPLY ? _.contains($scope.errorPages.fullSupply, page) : [];
@@ -351,16 +351,6 @@ CreateRequisitionController.resolve = {
     $timeout(function () {
       ProgramRnRColumnList.get({programId: $route.current.params.program}, function (data) {
         deferred.resolve(data.rnrColumnList);
-      }, {});
-    }, 100);
-    return deferred.promise;
-  },
-
-  currency: function ($q, $timeout, ReferenceData) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      ReferenceData.get({}, function (data) {
-        deferred.resolve(data.currency);
       }, {});
     }, 100);
     return deferred.promise;
