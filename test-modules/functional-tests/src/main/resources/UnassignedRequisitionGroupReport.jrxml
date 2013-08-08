@@ -44,72 +44,76 @@
 		</box>
 	</style>
 	<queryString>
-		<![CDATA[SELECT f.active, gz1.name as firstLevel, gz2.name as secondLevel, f.code || '-' || f.name AS codename, ft.name as facilitytypename, p.name as productname FROM facilities f, geographic_zones gz1,geographic_zones gz2, facility_types ft, programs p WHERE gz2.parentId = gz1.id AND f.id NOT IN (SELECT f.id FROM facilities f INNER JOIN facility_types ft ON f.typeId  = ft.id INNER JOIN programs_supported ps ON ps.facilityId = f.id INNER JOIN programs p ON ps.programId = p.id INNER JOIN requisition_group_program_schedules rgps ON p.id=rgps.programId INNER JOIN geographic_zones gz ON f.geographicZoneId = gz.id INNER JOIN requisition_group_members rgm ON f.id=rgm.facilityId INNER JOIN requisition_groups rg ON rg.id=rgm.requisitionGroupId WHERE f.dataReportable = TRUE AND f.virtualFacility = FALSE AND f.satellite = FALSE AND p.active = TRUE AND p.push = FALSE) ORDER BY f.active, gz1.levelId, gz2.levelId, codename]]>
+		<![CDATA[Select (CASE WHEN f.active = true THEN 'Active' WHEN f.active = false THEN 'Inactive' END) as status, gz.name as geographicZone,(select gz1.name from geographic_zones gz1 where gz.parentid=gz1.id) as parentgeographiczone,f.code || '-' || f.name as codename, ft.name facilitytypename,p.name as programname from facilities f, facility_types ft, programs p, programs_supported ps,geographic_zones gz where ps.facilityid=f.id and ps.programid=p.id and f.typeid=ft.id and f.datareportable=true and f.virtualfacility=false and f.satellite=true and f.geographiczoneid=gz.id and f.id in ((select fc.id from facilities fc where p.push=false and  p.active=true and fc.id not in (select distinct f.id from facilities f, programs p, requisition_groups rg, requisition_group_members rgm, requisition_group_program_schedules rgps, programs_supported ps where f.id=rgm.facilityid and f.id=ps.facilityid and p.id=rgps.programid and p.id=ps.programid  and rg.id=rgm.requisitiongroupid and rg.id= rgps.requisitiongroupid))) order by 1,2,3,4;]]>
 	</queryString>
-	<field name="active" class="java.lang.Boolean"/>
-	<field name="firstlevel" class="java.lang.String"/>
-	<field name="secondlevel" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="geographiczone" class="java.lang.String"/>
+	<field name="parentgeographiczone" class="java.lang.String"/>
 	<field name="codename" class="java.lang.String"/>
 	<field name="facilitytypename" class="java.lang.String"/>
-	<field name="productname" class="java.lang.String"/>
+	<field name="programname" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
-	<pageHeader>
-		<band height="53" splitType="Stretch">
+	<title>
+		<band height="32">
 			<staticText>
-				<reportElement uuid="ef159a2f-33d9-42ba-9b59-6670c74bd785" x="512" y="33" width="144" height="20"/>
-				<textElement>
-					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
-				</textElement>
-				<text><![CDATA[Facility Type]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="9a07393f-5522-4bce-9f72-d87cd57c5a0d" x="318" y="33" width="194" height="20"/>
-				<textElement>
-					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
-				</textElement>
-				<text><![CDATA[Facility Code - Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="d949733d-046b-41aa-a2a4-3d5c0bd9170a" x="86" y="33" width="114" height="20"/>
-				<textElement>
-					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
-				</textElement>
-				<text><![CDATA[Province]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="a3153510-d287-46ad-835a-df817aa47786" x="200" y="33" width="118" height="20"/>
-				<textElement>
-					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
-				</textElement>
-				<text><![CDATA[District]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="212194e9-72ca-4321-8f61-a735ab2074b7" x="0" y="1" width="710" height="32"/>
+				<reportElement uuid="212194e9-72ca-4321-8f61-a735ab2074b7" x="0" y="0" width="710" height="32"/>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="24" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Unassigned Requisition Group Report]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement uuid="2dd094dc-e4b5-43c0-89ab-02f2dda79bb5" x="710" y="1" width="72" height="32"/>
+				<reportElement uuid="2dd094dc-e4b5-43c0-89ab-02f2dda79bb5" x="710" y="0" width="72" height="32"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="20" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="5a7f10ba-925c-4ca7-b48a-4feb4161ed64" x="0" y="33" width="86" height="20"/>
+				<reportElement uuid="ef159a2f-33d9-42ba-9b59-6670c74bd785" x="512" y="0" width="144" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Facility Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9a07393f-5522-4bce-9f72-d87cd57c5a0d" x="318" y="0" width="194" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Facility Code - Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d949733d-046b-41aa-a2a4-3d5c0bd9170a" x="86" y="0" width="114" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Province]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a3153510-d287-46ad-835a-df817aa47786" x="200" y="0" width="118" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[District]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5a7f10ba-925c-4ca7-b48a-4feb4161ed64" x="0" y="0" width="86" height="20"/>
 				<textElement>
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Status]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="3161a1ea-075d-4af8-9716-80a78c3269f8" x="656" y="33" width="126" height="20"/>
+				<reportElement uuid="3161a1ea-075d-4af8-9716-80a78c3269f8" x="656" y="0" width="126" height="20"/>
 				<textElement>
-					<font size="12" isBold="true"/>
+					<font size="12" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Program]]></text>
 			</staticText>
@@ -118,34 +122,34 @@
 	<detail>
 		<band height="20">
 			<textField>
-				<reportElement uuid="73e4a3d2-4c7b-413f-9122-ad048525a9d4" x="0" y="0" width="86" height="20"/>
+				<reportElement uuid="5cd9e45f-a83f-4627-bf8f-b4e8e8a3620a" x="204" y="0" width="114" height="20"/>
 				<textElement/>
-				<textFieldExpression><![CDATA[$F{active}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{geographiczone}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="bdd2863d-9c90-4a37-9da4-37869e03a6d6" x="86" y="0" width="114" height="20"/>
+				<reportElement uuid="f8bab911-1457-4910-8879-e692ca246dc4" x="86" y="0" width="114" height="20"/>
 				<textElement/>
-				<textFieldExpression><![CDATA[$F{firstlevel}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{parentgeographiczone}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="ed714771-113f-4539-b49d-3b5f84b378b1" x="200" y="0" width="118" height="20"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{secondlevel}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="724a434d-3664-44c6-9e42-01878f8eecc1" x="318" y="0" width="194" height="20"/>
+				<reportElement uuid="0c4098bf-d027-42d2-807b-993dcada8fda" x="318" y="0" width="194" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{codename}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="94f1d8d8-6b89-4b66-ad12-4446cee052ff" x="512" y="0" width="144" height="20"/>
+				<reportElement uuid="95c7a6d6-5ba1-4e3e-990e-358e193a2797" x="512" y="0" width="144" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{facilitytypename}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="b56cd94e-2e86-47a4-bf30-a8110e8b5cdb" x="656" y="0" width="126" height="20"/>
+				<reportElement uuid="857488db-eb8d-44d0-9d9e-285c95e3e369" x="656" y="0" width="126" height="20"/>
 				<textElement/>
-				<textFieldExpression><![CDATA[$F{productname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{programname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7396086d-2a40-4c6c-9e9f-cd1bf4877284" x="0" y="0" width="86" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
