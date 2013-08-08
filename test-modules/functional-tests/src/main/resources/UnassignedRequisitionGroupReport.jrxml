@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="782" pageHeight="555" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="782" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="a0a4e861-0726-422f-b3d5-54b1aefe96ce">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<queryString>
+		<![CDATA[SELECT f.active, gz1.name as firstLevel, gz2.name as secondLevel, f.code || '-' || f.name AS codename, ft.name as facilitytypename, p.name as productname FROM facilities f, geographic_zones gz1,geographic_zones gz2, facility_types ft, programs p WHERE gz2.parentId = gz1.id AND f.id NOT IN (SELECT f.id FROM facilities f INNER JOIN facility_types ft ON f.typeId  = ft.id INNER JOIN programs_supported ps ON ps.facilityId = f.id INNER JOIN programs p ON ps.programId = p.id INNER JOIN requisition_group_program_schedules rgps ON p.id=rgps.programId INNER JOIN geographic_zones gz ON f.geographicZoneId = gz.id INNER JOIN requisition_group_members rgm ON f.id=rgm.facilityId INNER JOIN requisition_groups rg ON rg.id=rgm.requisitionGroupId WHERE f.dataReportable = TRUE AND f.virtualFacility = FALSE AND f.satellite = FALSE AND p.active = TRUE AND p.push = FALSE) ORDER BY f.active, gz1.levelId, gz2.levelId, codename]]>
+	</queryString>
+	<field name="active" class="java.lang.Boolean"/>
+	<field name="firstlevel" class="java.lang.String"/>
+	<field name="secondlevel" class="java.lang.String"/>
+	<field name="codename" class="java.lang.String"/>
+	<field name="facilitytypename" class="java.lang.String"/>
+	<field name="productname" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="53" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="ef159a2f-33d9-42ba-9b59-6670c74bd785" x="512" y="33" width="144" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Facility Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9a07393f-5522-4bce-9f72-d87cd57c5a0d" x="318" y="33" width="194" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Facility Code - Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d949733d-046b-41aa-a2a4-3d5c0bd9170a" x="86" y="33" width="114" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Province]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a3153510-d287-46ad-835a-df817aa47786" x="200" y="33" width="118" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[District]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="212194e9-72ca-4321-8f61-a735ab2074b7" x="0" y="1" width="710" height="32"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="24" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Unassigned Requisition Group Report]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="2dd094dc-e4b5-43c0-89ab-02f2dda79bb5" x="710" y="1" width="72" height="32"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="5a7f10ba-925c-4ca7-b48a-4feb4161ed64" x="0" y="33" width="86" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3161a1ea-075d-4af8-9716-80a78c3269f8" x="656" y="33" width="126" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Program]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="20">
+			<textField>
+				<reportElement uuid="73e4a3d2-4c7b-413f-9122-ad048525a9d4" x="0" y="0" width="86" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{active}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="bdd2863d-9c90-4a37-9da4-37869e03a6d6" x="86" y="0" width="114" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{firstlevel}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ed714771-113f-4539-b49d-3b5f84b378b1" x="200" y="0" width="118" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{secondlevel}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="724a434d-3664-44c6-9e42-01878f8eecc1" x="318" y="0" width="194" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{codename}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="94f1d8d8-6b89-4b66-ad12-4446cee052ff" x="512" y="0" width="144" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{facilitytypename}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b56cd94e-2e86-47a4-bf30-a8110e8b5cdb" x="656" y="0" width="126" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{productname}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20">
+			<textField>
+				<reportElement uuid="1abcd2c7-1ce1-4a4b-a6cd-4885e7254155" x="710" y="0" width="72" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2e4a2985-b901-4963-b62f-68c26194b7c3" x="0" y="0" width="710" height="20"/>
+				<textElement/>
+				<text><![CDATA[ ]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="52">
+			<staticText>
+				<reportElement uuid="488f93d8-d2fe-4df6-8769-af621a8e549b" x="0" y="32" width="782" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="15"/>
+				</textElement>
+				<text><![CDATA[All facilities properly assigned to requisition group(s) that support each of their currently active programs.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6659ba1e-006b-4f7f-9238-092a1177a2f6" x="0" y="0" width="782" height="32"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="24" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Unassigned Requisition Group Report]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>
