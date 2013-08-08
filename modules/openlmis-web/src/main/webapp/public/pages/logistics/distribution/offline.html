@@ -72,6 +72,10 @@
 <ng-include src="'/public/pages/navigation-offline.html'"></ng-include>
 
 <div class="content">
+  <div class="alert alert-info" id="noDistributionInitiated" ng-hide="sharedDistributions.distributionList.length">
+    <span openlmis-message="message.no.distribution.initiated"></span>
+  </div>
+
   <div ng-view></div>
 </div>
 </body>
