@@ -1,41 +1,53 @@
-<!--
-  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
-  ~
-  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
-  -->
 
-<div ng-hide="settings" openlmis-message="msg.loading"></div>
-<div ng-show="settings">
-  <h2>
-    <span openlmis-message="configure.setting.header"></span>
+<div tab-scroll>
+    <form ng-submit="saveSettings()" id="setting-form" name="settingForm" novalidate>
+        <div ng-hide="settings" openlmis-message="msg.loading"></div>
+        <div ng-show="settings">
+            <h2>
+                <span openlmis-message="configure.setting.header"></span>
+            </h2>
 
-  </h2>
+            <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
 
-  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr class="gradient-header">
+                    <th class="col-name" openlmis-message="header.name">
+                    </th>
+                    <th class="col-desc" openlmis-message="label.description">
+                    </th>
+                    <th class="col-right" openlmis-message="header.value">
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="setting in settings.list">
+                    <td>
+                        {{setting.name}}
+                    </td>
+                    <td class="col-role-description">
+                        <div>{{setting.description}}</div>
+                    </td>
+                    <td>
+                        <setting ng-model="setting"></setting>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <table class="table table-striped table-bordered">
-    <thead>
-    <tr class="gradient-header">
-      <th class="col-name" openlmis-message="header.name">
-      </th>
-      <th class="col-desc" openlmis-message="label.description">
-      </th>
-      <th class="col-right" openlmis-message="header.value">
-      </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="setting in settings">
-      <td class="col-role-name">
-        <a>{{setting.name}}</a>
-      </td>
-      <td class="col-role-description">
-        <div>{{setting.description}}</div>
-      </td>
-      <td class="col-role-rights">
-           <setting ng-model="setting"></setting>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+        <div form-toolbar id="action_buttons" class="action-buttons">
+            <div class="form-cell button-row">
+                <input type="submit" id="save-button" class="btn btn-primary save-button" openlmis-message="button.save"/>
+            </div>
+
+
+            <div class="toolbar-error" id="saveErrorMsgDiv">
+                <span openlmis-message="error" ng-show="error"></span>&nbsp;
+                <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+            </div>
+            <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+        </div>
+    </form>
+
 </div>

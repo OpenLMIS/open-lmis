@@ -241,3 +241,7 @@ services.factory('RemoveSupervisoryNode',function($resource){
 services.factory('Settings',function($resource){
     return $resource('/settings.json',{},{});
 });
+
+services.factory('SettingUpdator', function($resource){
+    return $resource('/saveSettings.json', {} , { post: {method:'POST'} } );
+});

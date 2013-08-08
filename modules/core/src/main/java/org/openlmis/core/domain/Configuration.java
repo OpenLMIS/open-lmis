@@ -8,11 +8,15 @@ package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.lang.String;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+
 @Data
 @NoArgsConstructor
+@JsonSerialize(include = NON_NULL)
 public class Configuration {
 
     private String key;

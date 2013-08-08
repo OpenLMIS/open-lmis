@@ -7,6 +7,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.Configuration;
 import org.springframework.stereotype.Repository;
 
@@ -21,5 +22,8 @@ public interface ConfigurationMapper {
 
     @Select("SELECT * FROM configurations order by groupName, displayOrder, name")
     List<Configuration> getAll();
+
+    @Update("UPDATE configurations set value = #{value} where KEY = #{key} ")
+    void updateValue(Configuration config );
 
 }
