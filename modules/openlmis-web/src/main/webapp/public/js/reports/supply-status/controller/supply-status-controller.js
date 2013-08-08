@@ -1,4 +1,4 @@
-function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, ReportPrograms , Periods , Products ,ReportFacilityTypes,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
+function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, ReportPrograms , ReportPeriods , Products ,ReportFacilityTypes,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
     //to minimize and maximize the filter section
     var section = 1;
 
@@ -74,7 +74,7 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
     });
 
     $scope.ChangeSchedule = function(){
-        Periods.get({ scheduleId : $scope.schedule },function(data) {
+        ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
             $scope.periods = data.periods;
             $scope.periods.push({'name': 'Select Period', 'id':'All'});
         });

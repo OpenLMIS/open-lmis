@@ -14,8 +14,6 @@
                 <tr class="gradient-header">
                     <th class="col-name" openlmis-message="header.name">
                     </th>
-                    <th class="col-desc" openlmis-message="label.description">
-                    </th>
                     <th class="col-right" openlmis-message="header.value">
                     </th>
                 </tr>
@@ -25,11 +23,9 @@
                     <td>
                         {{setting.name}}
                     </td>
-                    <td class="col-role-description">
-                        <div>{{setting.description}}</div>
-                    </td>
                     <td>
                         <setting ng-model="setting"></setting>
+                        <div>{{setting.description}}</div>
                     </td>
                 </tr>
                 </tbody>

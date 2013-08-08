@@ -1,4 +1,4 @@
-function StockedOutController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, StockedOutReport, ReportSchedules, ReportFacilityTypes , Periods, ProductCategories , ReportPrograms, Products,OperationYears,Months, $http, $routeParams,$location) {
+function StockedOutController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, StockedOutReport, ReportSchedules, ReportFacilityTypes , ReportPeriods, ProductCategories , ReportPrograms, Products,OperationYears,Months, $http, $routeParams,$location) {
     //to minimize and maximize the filter section
     var section = 1;
     $scope.summaries = {};
@@ -154,7 +154,7 @@ function StockedOutController($scope, RequisitionGroupsByProgramSchedule , Requi
 
     $scope.ChangeSchedule = function(){
         //  if($scope.schedule != undefined &&  $scope.isPreDefined){
-        Periods.get({ scheduleId : $scope.schedule },function(data) {
+        ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
             $scope.periods = data.periods;
             $scope.periods.push({'name': 'Select Period'});
         });

@@ -93,6 +93,10 @@ services.factory('FacilityList', function ($resource) {
     return $resource('/reports/facilitylist.json', {}, {});
 });
 
+services.factory('ReportPeriods', function ($resource) {
+    return $resource('/reports/schedules/:scheduleId/periods.json', {}, {});
+});
+
 services.factory('GeographicZones', function ($resource) {
     return $resource('/reports/geographicZones.json', {}, {});
 });
