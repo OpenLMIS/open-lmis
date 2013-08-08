@@ -1,10 +1,10 @@
-package org.openlmis.distribution.repository.mapper;
+package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.openlmis.distribution.domain.Refrigerator;
+import org.openlmis.core.domain.Refrigerator;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

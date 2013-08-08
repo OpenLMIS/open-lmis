@@ -5,7 +5,6 @@
  */
 
 .record-facility-data {
-
   .info-box {
     padding-bottom: 8px;
 
@@ -13,7 +12,6 @@
       padding-top: 5px;
     }
   }
-
 }
 
 .facility-info {
@@ -105,5 +103,89 @@
   a {
     padding: 11px 11px 9px;
     text-decoration: none;
+  }
+}
+
+.refrigerator-container {
+  padding: 15px;
+  .status-icon {
+    margin-left: 37px;
+  }
+  h3 {
+    margin: 0px;
+  }
+  .form-group {
+    border-top: none;
+  }
+  #refrigeratorReadingDone {
+    margin: 13px 0 0 57px;
+  }
+  .list-header, .list-row {
+    .span2 {
+      margin-left: 0;
+    }
+    .span3 {
+      &:last-child {
+        a {
+            margin-right: 10px;
+          &:first-child {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+}
+.refrigerator-form {
+  background: white;
+  padding-top: 0;
+  margin-left: 58px;
+  margin-right: 27px;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  &>.form-row {
+    border-bottom: 1px solid #e6e6e6;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  .form-cell {
+    width: 47%;
+    label {
+      display: inline;
+      &:first-child {
+        display: block;
+        font-weight: bold;
+      }
+    }
+    input[type="text"] {
+      width: 100px;
+      margin-right: 5px;
+    }
+    input[type="checkbox"] {
+      margin: 0 2px 0 10px;
+      vertical-align: middle;
+    }
+    input[type="radio"] {
+      margin-top: 0px;
+      margin-right: 2px;
+    }
+    .radio-label {
+      margin-right: 24px;
+    }
+    .checkbox-label {
+      vertical-align: middle;
+      line-height: normal;
+    }
+    .problem-form {
+      padding-top: 0;
+      #otherTextbox {
+        margin-left: 10px;
+      }
+    }
+    #notes {
+      width: 300px;
+      height: 100px;
+    }
   }
 }

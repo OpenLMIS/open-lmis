@@ -1,4 +1,4 @@
-package org.openlmis.distribution.repository;
+package org.openlmis.core.repository;
 
 
 import org.junit.Test;
@@ -8,8 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.distribution.domain.Refrigerator;
-import org.openlmis.distribution.repository.mapper.RefrigeratorMapper;
+import org.openlmis.core.domain.Refrigerator;
+import org.openlmis.core.repository.mapper.RefrigeratorMapper;
 
 import java.util.ArrayList;
 import java.util.List;

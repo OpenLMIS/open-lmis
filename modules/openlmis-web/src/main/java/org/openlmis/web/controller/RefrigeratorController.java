@@ -1,8 +1,8 @@
 package org.openlmis.web.controller;
 
 import org.openlmis.core.exception.DataException;
-import org.openlmis.distribution.domain.Refrigerator;
-import org.openlmis.distribution.service.RefrigeratorService;
+import org.openlmis.core.domain.Refrigerator;
+import org.openlmis.core.service.RefrigeratorService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

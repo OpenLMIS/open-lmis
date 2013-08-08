@@ -1,7 +1,7 @@
-package org.openlmis.distribution.service;
+package org.openlmis.core.service;
 
-import org.openlmis.distribution.domain.Refrigerator;
-import org.openlmis.distribution.repository.RefrigeratorRepository;
+import org.openlmis.core.domain.Refrigerator;
+import org.openlmis.core.repository.RefrigeratorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

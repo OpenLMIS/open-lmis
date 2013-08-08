@@ -18,7 +18,8 @@ public class RefrigeratorReading extends BaseModel {
   RadioOptions problemSinceLastTime;
   String problemList;
   String notes;
-  Long refrigeratorId;
+  String refrigeratorSerialNumber;
+  Long facilityId;
   Long distributionId;
 }
 

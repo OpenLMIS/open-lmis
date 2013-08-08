@@ -1,0 +1,97 @@
+<!--
+~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+~
+~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+
+<div class="form-group refrigerator-form">
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label>What was the refrigerator's temperature when you arrived?</label>
+      <input type="text" ng-model="refrigeratorReading.temperature"/>&deg;C
+      <input id="temperatureNR" type="checkbox"/>
+      <label class="checkbox-label" for="temperatureNR">NR</label>
+    </div>
+    <div class="form-cell">
+      <label>Was it functioning correctly when you left?</label>
+
+      <input type="radio" id="functioningCorrectlyYes" name="functioningCorrectly" value="Y"/>
+      <label for="functioningCorrectlyYes" class="radio-label">Yes</label>
+
+      <input type="radio" id="functioningCorrectlyNo" name="functioningCorrectly" value="N"/>
+      <label class="radio-label" for="functioningCorrectlyNo">No</label>
+
+      <input type="radio" id="functioningCorrectlyDontKnow" name="functioningCorrectly" value="D"/>
+      <label class="radio-label" for="functioningCorrectlyDontKnow">Don't know</label>
+
+      <input id="functioningCorrectlyNR" type="checkbox"/>
+      <label class="checkbox-label" for="functioningCorrectlyNR">NR</label>
+    </div>
+  </div>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label>Number of low-alarm events since last visit</label>
+      <input type="text" ng-model="refrigeratorReading.lowAlarmEvents"/>&deg;C
+
+      <input id="lowAlarmEventNR" type="checkbox"/>
+      <label class="checkbox-label" for="lowAlarmEventNR">NR</label>
+    </div>
+    <div class="form-cell">
+      <label class="form-questions">Number of high-alarm events since last visit</label>
+      <input type="text" ng-model="refrigeratorReading.highAlarmEvents"/>&deg;C
+
+      <input id="highAlarmEventNR" type="checkbox"/>
+      <label class="checkbox-label" for="highAlarmEventNR">NR</label>
+    </div>
+  </div>
+
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label>Has there been a problem with the refrigerator since last visit?</label>
+      <input type="radio" id="problemSinceLastVisitYes" name="problemSinceLastVisit" value="Y"/>
+      <label class="radio-label" for="problemSinceLastVisitYes">Yes</label>
+      <input type="radio" id="problemSinceLastVisitNo" name="problemSinceLastVisit" value="N"/>
+      <label class="radio-label" for="problemSinceLastVisitNo">No</label>
+      <input type="radio" id="problemSinceLastVisitDontKnow" name="problemSinceLastVisit" value="D"/>
+      <label class="radio-label" for="problemSinceLastVisitDontKnow">Don't know</label>
+      <input id="problemSinceLastVisitNR" type="checkbox"/>
+      <label class="checkbox-label" for="problemSinceLastVisitNR">NR</label>
+      <div class="form-group problem-form">
+        <div class="form-row clearfix">
+          <label>What are the problems?</label>
+        </div>
+        <div class="form-row clearfix">
+          <input id="operatorError" type="checkbox" />
+          <label class="checkbox-label" for="operatorError">Operator error</label>
+        </div>
+        <div class="form-row clearfix">
+          <input id="burnerProblem" type="checkbox" />
+          <label class="checkbox-label" for="burnerProblem">Burner problem</label>
+        </div>
+        <div class="form-row clearfix">
+          <input id="gasLeakage" type="checkbox" />
+          <label class="checkbox-label" for="gasLeakage">Gas leak or gas line problem</label>
+        </div>
+        <div class="form-row clearfix">
+          <input id="gasFault" type="checkbox" />
+          <label class="checkbox-label" for="gasFault">Electrical/Gas/Petrol fault</label>
+        </div>
+        <div class="form-row clearfix">
+          <input id="thermostatSetting" type="checkbox" />
+          <label class="checkbox-label" for="thermostatSetting">Thermostat setting</label>
+        </div>
+        <div class="form-row clearfix">
+          <input id="other" type="checkbox" />
+          <label class="checkbox-label" for="other">Other</label>
+          <div class="form-row clearfix">
+            <textarea id="otherTextbox"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-cell">
+      <label>Notes</label>
+      <textarea id="notes" ng-model="refrigeratorReading.notes"></textarea>
+    </div>
+  </div>
+</div>

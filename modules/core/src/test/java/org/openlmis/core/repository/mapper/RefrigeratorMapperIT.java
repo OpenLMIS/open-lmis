@@ -1,4 +1,4 @@
-package org.openlmis.distribution.repository.mapper;
+package org.openlmis.core.repository.mapper;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -8,10 +8,8 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.distribution.domain.Refrigerator;
-import org.openlmis.distribution.domain.RefrigeratorReading;
+import org.openlmis.core.domain.Refrigerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -27,7 +25,7 @@ import static org.openlmis.core.builder.FacilityBuilder.*;
 
 @Category(IntegrationTests.class)
 @Transactional
-@ContextConfiguration(locations = "classpath*:test-applicationContext-distribution.xml")
+@ContextConfiguration(locations = "classpath*:test-applicationContext-core.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class RefrigeratorMapperIT {
@@ -78,7 +76,7 @@ public class RefrigeratorMapperIT {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
 
-    Refrigerator refrigerator = new Refrigerator("SAM","AUO","SAM1",facility.getId(),null);
+    Refrigerator refrigerator = new Refrigerator("SAM","AUO","SAM1",facility.getId());
     refrigerator.setCreatedBy(1L);
     refrigerator.setModifiedBy(1L);
 
@@ -106,9 +104,8 @@ public class RefrigeratorMapperIT {
 
     Facility facility1 = insertMemberFacility(deliveryZone, program, "F10A", "facility1", 10l, true);
 
-    RefrigeratorReading reading = new RefrigeratorReading();
-    reading.setHighAlarmEvents(12);
-    Refrigerator refrigerator = new Refrigerator("SAM","AUO","SAM1",facility1.getId(),reading);
+
+    Refrigerator refrigerator = new Refrigerator("SAM","AUO","SAM1",facility1.getId());
     refrigerator.setCreatedBy(1L);
     refrigerator.setModifiedBy(1L);
 
