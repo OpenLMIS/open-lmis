@@ -6,8 +6,6 @@
 function DistributionListController($scope, $location, SharedDistributions) {
   $scope.sharedDistributions = SharedDistributions;
 
-  $scope.sharedDistributions.update();
-
   $scope.recordFacilityData = function (zpp) {
     $location.path("/record-facility-data/" + zpp);
   }

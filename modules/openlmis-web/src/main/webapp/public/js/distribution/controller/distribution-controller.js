@@ -5,11 +5,7 @@
  */
 
 
-function DistributionController(DeliveryZoneFacilities, Refrigerators,
-                                deliveryZones, DeliveryZoneActivePrograms,
-                                messageService, DeliveryZoneProgramPeriods,
-                                IndexedDB, navigateBackService, $http, $dialog,
-                                $scope, $location, SharedDistributions) {
+function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, IndexedDB, navigateBackService, $http, $dialog, $scope, $location, SharedDistributions) {
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
   var NONE_ASSIGNED_LABEL = messageService.get('label.noneAssigned');
@@ -106,8 +102,8 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators,
 
   function getRefrigeratorReading(refrigerators) {
     var refrigeratorReadings = [];
-    $.each(refrigerators, function(index, refrigerator) {
-       refrigeratorReadings.push({facilityId : refrigerator.facilityId,distributionId:$scope.distribution.id, refrigeratorSerialNumber :refrigerator.serialNumber})
+    $.each(refrigerators, function (index, refrigerator) {
+      refrigeratorReadings.push({facilityId: refrigerator.facilityId, distributionId: $scope.distribution.id, refrigeratorSerialNumber: refrigerator.serialNumber})
     });
     return refrigeratorReadings;
   }
@@ -139,6 +135,7 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators,
     function onInitSuccess(data, status) {
       if (status == 201) {
         $scope.message = data.success;
+        $scope.distribution = data.distribution;
         addDistributionToStore(data.distribution);
       } else {
         $scope.distribution = data.distribution;
@@ -155,14 +152,13 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators,
 
   function addDistributionToStore(distribution) {
     IndexedDB.transaction(function (connection) {
-        var transaction = connection.transaction(['distributions', 'distributionReferenceData'], 'readwrite');
-        transaction.objectStore('distributions').put(distribution);
-        transaction.oncomplete = function () {
-          SharedDistributions.update();
-          $scope.$apply();
-        };
-      }
-    )
+      var transaction = connection.transaction(['distributions'], 'readwrite');
+      transaction.objectStore('distributions').put(distribution);
+      transaction.oncomplete = function () {
+        SharedDistributions.update();
+        $scope.$apply();
+      };
+    });
   }
 
   var optionMessage = function (entity, defaultMessage) {
