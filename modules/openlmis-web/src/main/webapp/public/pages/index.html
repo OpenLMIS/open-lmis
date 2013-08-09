@@ -12,7 +12,7 @@
   <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
   <script src="/public/lib/jquery/jquery-1.8.2.min.js"></script>
   <script src="/public/lib/angular/angular.min.js"></script>
-  <script src="/public/lib/angular/angular-cookies.js"></script>
+  <script src="/public/lib/angular/angular-cookies.min.js"></script>
   <script src="/public/lib/angular/angular-resource.min.js"></script>
   <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
@@ -50,11 +50,11 @@
 <ng-include src="'/public/pages/header.html'"></ng-include>
 <ng-include src="'/public/pages/navigation.html'"></ng-include>
 <div class="home-content">
-  <h2 class="innershadow" title="Welcome to" openlmis-message="welcome.to.message"></h2>
+  <h2 class="innershadow welcome-message" openlmis-message="welcome.to.message"></h2>
 
-  <h3 class="innershadow" title="Logistics Management" openlmis-message="label.logistics.management"></h3>
+  <h3 class="innershadow welcome-message" openlmis-message="label.logistics.management"></h3>
 
-  <h3 class="innershadow" title="Information Systems" openlmis-message="label.information.systems"></h3>
+  <h3 class="innershadow welcome-message" openlmis-message="label.information.systems"></h3>
 </div>
 
 </body>

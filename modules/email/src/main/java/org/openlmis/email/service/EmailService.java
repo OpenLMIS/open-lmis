@@ -7,9 +7,6 @@
 package org.openlmis.email.service;
 
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Transformer;
-import org.openlmis.email.domain.EmailMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.Payload;
@@ -20,7 +17,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -39,26 +35,20 @@ public class EmailService {
   }
 
   @Async
-  public Future<Boolean> send(EmailMessage emailMessage) {
-    EmailMessage msg = emailMessage;
+  public Future<Boolean> send(SimpleMailMessage emailMessage) {
     if (!mailSendingFlag) {
       return new AsyncResult(true);
     }
-    mailSender.send(emailMessage.createSimpleMailMessage());
+    mailSender.send(emailMessage);
     return new AsyncResult(true);
   }
 
   @ServiceActivator(inputChannel = "inputChannel")
-  public void processEmails(@Payload List<EmailMessage> emailMessages) {
-    if(!mailSendingFlag) {
+  public void processEmails(@Payload List<SimpleMailMessage> simpleMailMessage) {
+    if (!mailSendingFlag) {
       return;
     }
-    Collection<SimpleMailMessage> simpleMailMessages = CollectionUtils.collect(emailMessages, new Transformer() {
-      @Override
-      public Object transform(Object o) {
-        return ((EmailMessage) o).createSimpleMailMessage();
-      }
-    });
-    mailSender.send(simpleMailMessages.toArray(new SimpleMailMessage[0]));
+
+    mailSender.send(simpleMailMessage.toArray(new SimpleMailMessage[0]));
   }
 }

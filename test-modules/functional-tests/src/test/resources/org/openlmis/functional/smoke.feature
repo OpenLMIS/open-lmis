@@ -259,5 +259,5 @@ Feature: Smoke Tests
     And I should see No facility selected
     And I should see "active" facilities that support the program "VACCINES" and delivery zone "Delivery Zone First"
     When I choose facility "F10"
-    Then I should see "Village Dispensary" in the header
-
+    Then I should see "Health center" in the header
+    And  I should see "Village Dispensary" in the header

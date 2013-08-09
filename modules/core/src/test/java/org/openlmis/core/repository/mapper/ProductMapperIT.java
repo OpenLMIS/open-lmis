@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.Product;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +22,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.openlmis.core.builder.ProductBuilder.active;
+import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -91,7 +93,7 @@ public class ProductMapperIT {
 
   @Test
   public void shouldReturnProductIdForValidProductCode() {
-    Product product = make(a(ProductBuilder.defaultProduct));
+    Product product = make(a(defaultProduct));
     productMapper.insert(product);
     Long id = productMapper.getIdByCode(product.getCode());
     assertThat(id, is(product.getId()));
@@ -99,7 +101,7 @@ public class ProductMapperIT {
 
   @Test
   public void shouldReturnProductByCode() {
-    Product product = make(a(ProductBuilder.defaultProduct));
+    Product product = make(a(defaultProduct));
     productMapper.insert(product);
     Product expectedProduct = productMapper.getByCode(product.getCode());
     assertThat(expectedProduct.getId(), is(product.getId()));
@@ -110,7 +112,7 @@ public class ProductMapperIT {
 
   @Test
   public void shouldUpdateProduct() {
-    Product product = make(a(ProductBuilder.defaultProduct));
+    Product product = make(a(defaultProduct));
     productMapper.insert(product);
 
     product.setPrimaryName("Updated Name");
@@ -126,8 +128,8 @@ public class ProductMapperIT {
   }
 
   @Test
-  public void shouldGetAProductById(){
-    Product product = make(a(ProductBuilder.defaultProduct));
+  public void shouldGetAProductById() {
+    Product product = make(a(defaultProduct));
 
     productMapper.insert(product);
 
@@ -137,5 +139,23 @@ public class ProductMapperIT {
     assertThat(returnedProduct.getCode(), is(product.getCode()));
     assertThat(returnedProduct.getProductGroup(), is(product.getProductGroup()));
     assertThat(returnedProduct.getPrimaryName(), is(product.getPrimaryName()));
+  }
+
+  @Test
+  public void shouldReturnFalseIfProductInactive() throws Exception {
+    Product product = make(a(defaultProduct, with(active, false)));
+
+    productMapper.insert(product);
+
+    assertFalse(productMapper.isActive(product.getCode()));
+  }
+
+  @Test
+  public void shouldReturnTrueIfProductActive() throws Exception {
+    Product product = make(a(defaultProduct, with(active, true)));
+
+    productMapper.insert(product);
+
+    assertTrue(productMapper.isActive(product.getCode()));
   }
 }

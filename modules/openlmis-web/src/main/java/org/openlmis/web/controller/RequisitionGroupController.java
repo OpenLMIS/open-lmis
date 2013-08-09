@@ -61,4 +61,17 @@ public class RequisitionGroupController extends BaseController {
         return OpenLmisResponse.response("requisitionGroup",requisitionGroupService.loadRequisitionGroupById(id));
     }
 
+    @RequestMapping(value="/requisitionGroup/remove/{id}",method = GET,headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQUISITION_GROUP')")
+    public ResponseEntity<OpenLmisResponse> remove(@PathVariable(value="id") Long requisitionGroupId, HttpServletRequest request){
+        ResponseEntity<OpenLmisResponse> successResponse;
+        try {
+            requisitionGroupService.removeRequisitionGroup(requisitionGroupId);
+        } catch (DataException e) {
+            return error(e, HttpStatus.BAD_REQUEST);
+        }
+        successResponse = success(String.format("Requisition group has been successfully removed"));
+        return successResponse;
+    }
+
 }

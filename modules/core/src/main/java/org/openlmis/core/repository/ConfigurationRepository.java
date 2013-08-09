@@ -33,4 +33,8 @@ public class ConfigurationRepository {
   public List<Configuration> getAll(){
     return mapper.getAll();
   }
+
+  public void setValue(Configuration config){
+    mapper.updateValue(config);
+  }
 }

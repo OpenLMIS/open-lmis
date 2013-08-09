@@ -6,9 +6,7 @@
 
 package org.openlmis.web.controller;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
@@ -33,12 +31,16 @@ import java.util.List;
 import static java.lang.Boolean.TRUE;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.web.response.OpenLmisResponse.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 
 @Controller
 @NoArgsConstructor
 public class UserController extends BaseController {
+
+  static final String MSG_USER_DISABLE_SUCCESS = "msg.user.disable.success";
+  static final String USER_CREATED_SUCCESS_MSG = "message.user.created.success.email.sent";
 
   private RoleRightsService roleRightService;
   private UserService userService;
@@ -82,25 +84,24 @@ public class UserController extends BaseController {
       userService.sendForgotPasswordEmail(user, resetPasswordLink);
       return success(messageService.message("email.sent"));
     } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
+      return error(e, BAD_REQUEST);
     }
   }
 
   @RequestMapping(value = "/users", method = POST, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> create(@RequestBody User user, HttpServletRequest request) {
-    ResponseEntity<OpenLmisResponse> successResponse;
     user.setCreatedBy(loggedInUserId(request));
     user.setModifiedBy(loggedInUserId(request));
     try {
       String resetPasswordBaseLink = baseUrl + RESET_PASSWORD_PATH;
       userService.create(user, resetPasswordBaseLink);
     } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
+      return error(e, BAD_REQUEST);
     }
-    successResponse = success(messageService.message("message.user.created.success.email.sent", user.getFirstName(), user.getLastName()));
-    successResponse.getBody().addData("user", user);
-    return successResponse;
+    ResponseEntity<OpenLmisResponse> success = success(USER_CREATED_SUCCESS_MSG);
+    success.getBody().addData("user", user);
+    return success;
   }
 
   @RequestMapping(value = "/users/{id}", method = PUT, headers = ACCEPT_JSON)
@@ -108,17 +109,14 @@ public class UserController extends BaseController {
   public ResponseEntity<OpenLmisResponse> update(@RequestBody User user,
                                                  @PathVariable("id") Long id,
                                                  HttpServletRequest request) {
-    ResponseEntity<OpenLmisResponse> successResponse;
     user.setModifiedBy(loggedInUserId(request));
     user.setId(id);
     try {
       userService.update(user);
     } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
+      return error(e, BAD_REQUEST);
     }
-    successResponse = success(messageService.message("message.user.updated.success", user.getFirstName(), user.getLastName()));
-    successResponse.getBody().addData("user", user);
-    return successResponse;
+    return new OpenLmisResponse().response(HttpStatus.OK);
   }
 
   @RequestMapping(value = "/users", method = GET)
@@ -133,12 +131,19 @@ public class UserController extends BaseController {
     return userService.getById(id);
   }
 
+  @RequestMapping(value = "/users/{id}", method = DELETE, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> disable(@PathVariable("id") Long id,
+                                                  HttpServletRequest request) {
+    userService.disable(id, loggedInUserId(request));
+    return success(MSG_USER_DISABLE_SUCCESS);
+  }
+
   @RequestMapping(value = "/user/validatePasswordResetToken/{token}", method = GET)
   public ResponseEntity<OpenLmisResponse> validatePasswordResetToken(@PathVariable(value = "token") String token) throws IOException, ServletException {
     try {
       userService.getUserIdByPasswordResetToken(token);
     } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
+      return error(e, BAD_REQUEST);
     }
     return response(TOKEN_VALID, true);
   }
@@ -148,9 +153,18 @@ public class UserController extends BaseController {
     try {
       userService.updateUserPassword(token, password);
     } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
+      return error(e, BAD_REQUEST);
     }
     return success(messageService.message("password.reset"));
   }
 
+  @RequestMapping(value = "/admin/resetPassword/{userId}", method = PUT)
+  public ResponseEntity<OpenLmisResponse> updateUserPassword(@PathVariable(value = "userId") Long userId, @RequestBody String password) {
+    try {
+      userService.updateUserPassword(userId, password);
+    } catch (DataException e) {
+      return error(e, BAD_REQUEST);
+    }
+    return success(messageService.message("password.reset.success"));
+  }
 }

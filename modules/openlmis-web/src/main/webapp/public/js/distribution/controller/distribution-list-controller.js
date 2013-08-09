@@ -3,18 +3,8 @@
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-function DistributionListController($scope, $location, IndexedDB, SharedDistributions) {
-
+function DistributionListController($scope, $location, SharedDistributions) {
   $scope.sharedDistributions = SharedDistributions;
-
-  if (IndexedDB.getConnection() == null) {
-    $scope.$on('indexedDBReady', function () {
-      $scope.sharedDistributions.update();
-    });
-  }
-  else {
-    $scope.sharedDistributions.update();
-  }
 
   $scope.recordFacilityData = function (zpp) {
     $location.path("/record-facility-data/" + zpp);

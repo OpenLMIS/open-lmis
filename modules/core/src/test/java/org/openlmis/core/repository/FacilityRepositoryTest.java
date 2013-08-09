@@ -135,10 +135,20 @@ public class FacilityRepositoryTest {
   public void shouldSetFacilityOperatorIdWhenCodeIsValid() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.getOperatedBy().setCode("valid code");
-    when(mapper.getOperatedByIdForCode("valid code")).thenReturn(1L);
+    Long facilityOperatorId = 1L;
+    String operatedByCode = "operatedBy";
+    String operatedByName = "operatedByName";
+    when(mapper.getOperatedByIdForCode("valid code")).thenReturn(facilityOperatorId);
+    FacilityOperator facilityOperator = new FacilityOperator();
+    facilityOperator.setId(1l);
+    facilityOperator.setCode(operatedByCode);
+    facilityOperator.setText(operatedByName);
+    when(mapper.getFacilityOperatorById(1l)).thenReturn(facilityOperator);
 
     repository.save(facility);
-    assertThat(facility.getOperatedBy().getId(), is(1L));
+    assertThat(facility.getOperatedBy().getId(), is(facilityOperatorId));
+    assertThat(facility.getOperatedBy().getCode(), is(operatedByCode));
+    assertThat(facility.getOperatedBy().getText(), is(operatedByName));
   }
 
   @Test

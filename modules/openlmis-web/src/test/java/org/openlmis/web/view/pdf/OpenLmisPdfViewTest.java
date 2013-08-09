@@ -9,6 +9,8 @@ package org.openlmis.web.view.pdf;
 import com.itextpdf.text.pdf.PdfDocument;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.web.view.pdf.requisition.RequisitionPdfWriter;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -28,10 +30,12 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @PrepareForTest({OpenLmisPdfView.class, PdfDocument.class})
 public class OpenLmisPdfViewTest {
 
+  @Mock
+  MessageService messageService;
   @Test
   public void shouldCreateADocumentAndWriteToResponse() throws Exception {
 
-    OpenLmisPdfView pdfView = new OpenLmisPdfView();
+    OpenLmisPdfView pdfView = new OpenLmisPdfView(messageService);
     Map<String, Object> model = new HashMap<>();
     HttpServletRequest request = new MockHttpServletRequest();
     HttpServletResponse response = new MockHttpServletResponse();

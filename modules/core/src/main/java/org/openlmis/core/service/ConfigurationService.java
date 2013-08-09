@@ -63,5 +63,11 @@ public class ConfigurationService {
     return configurationRepository.getAll();
   }
 
+  public void update(List<Configuration> settings){
+    for(Configuration conf : settings){
+         configurationRepository.setValue(conf);
+    }
+  }
+
 
 }

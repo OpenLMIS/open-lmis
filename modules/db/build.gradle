@@ -20,7 +20,8 @@ dependencies {
             'org.springframework:spring-jdbc:3.1.1.RELEASE',
             'org.springframework:spring-aspects:3.1.1.RELEASE',
             'org.aspectj:aspectjrt:1.7.0',
-            'org.mybatis:mybatis-spring:1.1.1'
+            'org.mybatis:mybatis:3.2.2',
+            'org.mybatis:mybatis-spring:1.2.0'
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE'
 

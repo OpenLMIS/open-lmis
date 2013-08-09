@@ -15,11 +15,11 @@ import org.apache.commons.lang.ArrayUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Money;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.web.controller.RequisitionController;
 import org.openlmis.web.model.PrintRnrLineItem;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +30,7 @@ import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.*;
 @Data
 @NoArgsConstructor
 public class RequisitionPdfModel {
+  public static final String LABEL_CURRENCY_SYMBOL = "label.currency.symbol";
   private Map<String, Object> model;
   public static final float PARAGRAPH_SPACING = 30.0f;
   public static final BaseColor ROW_GREY_BACKGROUND = new BaseColor(235, 235, 235);
@@ -40,24 +41,24 @@ public class RequisitionPdfModel {
   private List<? extends Column> rnrColumnList;
   private List<? extends Column> regimenColumnList;
   private Rnr requisition;
-  private String currency;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
+  private MessageService messageService;
 
-  public RequisitionPdfModel(Map<String, Object> model) {
+  public RequisitionPdfModel(Map<String, Object> model, MessageService messageService) {
     this.model = model;
     this.rnrColumnList = (List<RnrColumn>) model.get(RequisitionController.RNR_TEMPLATE);
     this.regimenColumnList = (List<RegimenColumn>) model.get(RequisitionController.REGIMEN_TEMPLATE);
     this.requisition = (Rnr) model.get(RequisitionController.RNR);
-    this.currency = (String) model.get(RequisitionController.CURRENCY);
     this.lossesAndAdjustmentsTypes = (List<LossesAndAdjustmentsType>) model.get(RequisitionController.LOSSES_AND_ADJUSTMENT_TYPES);
+    this.messageService = messageService;
   }
 
   public Paragraph getFullSupplyHeader() {
-    return new Paragraph("Full supply product(s)", H2_FONT);
+    return new Paragraph(messageService.message("label.full.supply.products"), H2_FONT);
   }
 
   public Paragraph getNonFullSupplyHeader() {
-    return new Paragraph("Non-Full supply product(s)", H2_FONT);
+    return new Paragraph(messageService.message("label.non.full.supply.products"), H2_FONT);
   }
 
   public PdfPTable getFullSupplyTable() throws DocumentException, NoSuchFieldException, IllegalAccessException {
@@ -91,7 +92,7 @@ public class RequisitionPdfModel {
         printRnrLineItem.calculate(requisition.getPeriod(), rnrColumnList, lossesAndAdjustmentsTypes);
       }
 
-      List<PdfPCell> cells = getCells(visibleColumns, lineItem, currency);
+      List<PdfPCell> cells = getCells(visibleColumns, lineItem, messageService.message(LABEL_CURRENCY_SYMBOL));
       odd = !odd;
 
       for (PdfPCell cell : cells) {
@@ -156,7 +157,7 @@ public class RequisitionPdfModel {
 
 
   private void addHeading(PdfPTable table) throws DocumentException {
-    Chunk chunk = new Chunk(String.format("Report and Requisition for: %s (%s)",
+    Chunk chunk = new Chunk(String.format(messageService.message("label.requisition") + ": %s (%s)",
       this.requisition.getProgram().getName(),
       this.requisition.getFacility().getFacilityType().getName()), H1_FONT);
 
@@ -168,13 +169,13 @@ public class RequisitionPdfModel {
   }
 
   private void addFirstLine(Facility facility, PdfPTable table) {
-    String text = String.format("Facility: %s", facility.getName());
+    String text = String.format(messageService.message("label.facility") + ": %s", facility.getName());
     insertCell(table, text, 1);
-    text = String.format("Operated By: %s", facility.getOperatedBy().getText());
+    text = String.format(messageService.message("create.facility.operatedBy") + ": %s", facility.getOperatedBy().getText());
     insertCell(table, text, 1);
-    text = String.format("Maximum Stock level: %s", facility.getFacilityType().getNominalMaxMonth());
+    text = String.format(messageService.message("label.facility.maximumStock") + ": %s", facility.getFacilityType().getNominalMaxMonth());
     insertCell(table, text, 1);
-    text = String.format("Emergency Order Point: %s", facility.getFacilityType().getNominalEop());
+    text = String.format(messageService.message("label.facility.emergencyOrder") + ": %s", facility.getFacilityType().getNominalEop());
     insertCell(table, text, 1);
   }
 
@@ -197,7 +198,7 @@ public class RequisitionPdfModel {
     builder.append(parent.getLevel().getName()).append(": ").append(parent.getName());
     insertCell(table, builder.toString(), 1);
     builder = new StringBuilder();
-    builder.append("Reporting Period: ").append(DATE_FORMAT.format(requisition.getPeriod().getStartDate())).append(" - ").
+    builder.append(messageService.message("label.facility.reportingPeriod") + ": ").append(DATE_FORMAT.format(requisition.getPeriod().getStartDate())).append(" - ").
       append(DATE_FORMAT.format(requisition.getPeriod().getEndDate()));
     insertCell(table, builder.toString(), 2);
   }
@@ -225,18 +226,18 @@ public class RequisitionPdfModel {
     summaryTable.setWidthPercentage(40);
     summaryTable.setHorizontalAlignment(0);
 
-    PdfPCell summaryHeaderCell = headingCell("Summary");
+    PdfPCell summaryHeaderCell = headingCell(messageService.message("label.summary"));
     summaryHeaderCell.setColspan(2);
     summaryHeaderCell.setPadding(10);
     summaryHeaderCell.setBorder(0);
     summaryTable.addCell(summaryHeaderCell);
 
-    summaryTable.addCell(summaryCell(textCell("Total Cost For Full Supply Items")));
-    summaryTable.addCell(summaryCell(numberCell(currency + requisition.getFullSupplyItemsSubmittedCost())));
-    summaryTable.addCell(summaryCell(textCell("Total Cost For Non Full Supply Items")));
-    summaryTable.addCell(summaryCell(numberCell(currency + requisition.getNonFullSupplyItemsSubmittedCost())));
-    summaryTable.addCell(summaryCell(textCell("Total Cost")));
-    summaryTable.addCell(summaryCell(numberCell(currency + this.getTotalCost(requisition).toString())));
+    summaryTable.addCell(summaryCell(textCell(messageService.message("label.total.cost.full.supply.items"))));
+    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + requisition.getFullSupplyItemsSubmittedCost())));
+    summaryTable.addCell(summaryCell(textCell(messageService.message("label.total.cost.non.full.supply.items"))));
+    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + requisition.getNonFullSupplyItemsSubmittedCost())));
+    summaryTable.addCell(summaryCell(textCell(messageService.message("label.total.cost"))));
+    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + this.getTotalCost(requisition).toString())));
     summaryTable.addCell(summaryCell(textCell(" ")));
     summaryTable.addCell(summaryCell(textCell(" ")));
     summaryTable.addCell(summaryCell(textCell(" ")));
@@ -245,10 +246,10 @@ public class RequisitionPdfModel {
     String submittedDate = requisition.getSubmittedDate() != null ? DATE_FORMAT.format(requisition.getSubmittedDate()) : "";
     String authorizedDate = requisition.getAuthorizedDate() != null ? DATE_FORMAT.format(requisition.getAuthorizedDate()) : "";
 
-    summaryTable.addCell(summaryCell(textCell("Submitted By: ")));
-    summaryTable.addCell(summaryCell(textCell("Date: " + submittedDate)));
-    summaryTable.addCell(summaryCell(textCell("Authorized By: ")));
-    summaryTable.addCell(summaryCell(textCell("Date: " + authorizedDate)));
+    summaryTable.addCell(summaryCell(textCell(messageService.message("label.submitted.by") + ": ")));
+    summaryTable.addCell(summaryCell(textCell(messageService.message("label.date") + ": " + submittedDate)));
+    summaryTable.addCell(summaryCell(textCell(messageService.message("label.authorized.by") + ": ")));
+    summaryTable.addCell(summaryCell(textCell(messageService.message("label.date") + ": " + authorizedDate)));
     return summaryTable;
   }
 
@@ -264,6 +265,6 @@ public class RequisitionPdfModel {
 
 
   public Paragraph getRegimenHeader() {
-    return new Paragraph("Regimen(s)", H2_FONT);
+    return new Paragraph(messageService.message("label.regimens"), H2_FONT);
   }
 }

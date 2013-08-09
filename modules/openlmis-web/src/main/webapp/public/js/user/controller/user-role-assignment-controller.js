@@ -9,6 +9,10 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
   $scope.selectSuperviseProgramMessage = messageService.get('label.select.program');
   $scope.selectSupervisoryNodeMessage = messageService.get('label.select.node');
 
+  if (!$scope.user.active && $scope.user.id) {
+    $scope.disableAllFields();
+  }
+
   $("#adminRoles").on("change", function (e) {
     if (e.removed) {
       var dialogOpts = {
@@ -132,7 +136,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     }
   };
 
-  $scope.checkSupervisoryRolesDuplicacy = function() {
+  $scope.checkSupervisoryRolesDuplicacy = function () {
     var result = _.find($scope.user.supervisorRoles, function (roleAssignment) {
       return (roleAssignment.programId == $scope.selectedProgramIdToSupervise && roleAssignment.supervisoryNode.id == $scope.selectedSupervisoryNodeIdToSupervise)
     });
@@ -185,7 +189,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     return valid;
   }
 
-  $scope.checkDeliveryZoneAndProgramDuplicacy = function() {
+  $scope.checkDeliveryZoneAndProgramDuplicacy = function () {
     if (!validate()) {
       $scope.duplicateAllocationRoleError = 'error.delivery.zone.program.combination';
       return true;

@@ -7,27 +7,30 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.ict4h.atomfeed.server.service.EventService;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
+import org.openlmis.core.event.ProgramChangeEvent;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
 
 @Service
 @NoArgsConstructor
 public class ProgramService {
-  private ProgramRepository programRepository;
-  private ProgramSupportedRepository programSupportedRepository;
 
   @Autowired
-  public ProgramService(ProgramRepository programRepository, ProgramSupportedRepository programSupportedRepository) {
-    this.programRepository = programRepository;
-    this.programSupportedRepository = programSupportedRepository;
-  }
+  private ProgramRepository programRepository;
+  @Autowired
+  private ProgramSupportedRepository programSupportedRepository;
+  @Autowired
+  private EventService eventService;
 
   public List<Program> getByFacility(Long facilityId) {
     return programRepository.getByFacility(facilityId);
@@ -81,4 +84,19 @@ public class ProgramService {
     programRepository.setRegimenTemplateConfigured(programId);
   }
 
+  public void setFeedSendFlag(Program program, Boolean sendFeed) {
+    programRepository.setFeedSendFlag(program, sendFeed);
+  }
+
+  public void notifyProgramChange() {
+    List<Program> programsForNotifications = programRepository.getProgramsForNotification();
+    for (Program program : programsForNotifications) {
+      try {
+        eventService.notify(new ProgramChangeEvent(program));
+        programRepository.setFeedSendFlag(program, false);
+      } catch (URISyntaxException e) {
+        throw new DataException("error.malformed.uri");
+      }
+    }
+  }
 }

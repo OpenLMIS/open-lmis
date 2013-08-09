@@ -43,8 +43,8 @@
         </div>
       </div>
       <div class="span2">
-        <a href="" class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index, 'supervisorRoles')"
-           openlmis-message="button.remove"></a>
+        <input type="button" class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index, 'supervisorRoles')"
+           openlmis-message="button.remove"/>
       </div>
     </div>
   </div>
@@ -93,7 +93,7 @@
 
       <div class="span2">
         <div class="fluid-grid-cell">
-          <a href="" ng-click="addSupervisoryRole()" class="btn btn-primary" openlmis-message="button.add"></a>
+          <input type="button" ng-click="addSupervisoryRole()" class="btn btn-primary" openlmis-message="button.add"/>
         </div>
       </div>
 
@@ -106,8 +106,8 @@
       <p openlmis-message="create.user.delete.warning"></p>
     </div>
     <div class="modal-footer">
-      <a href="" class="btn btn-primary" ng-click="deleteSupervisorRole()" openlmis-message="button.ok"></a>
-      <a href="" class="btn" ng-click="deleteRolesModal=false" openlmis-message="button.cancel"></a>
+      <input type="button" class="btn btn-primary" ng-click="deleteSupervisorRole()" openlmis-message="button.ok"/>
+      <input type="button" class="btn" ng-click="deleteRolesModal=false" openlmis-message="button.cancel"/>
     </div>
   </div>
 </div>

@@ -90,4 +90,12 @@ public class ProgramRepository {
   public void setRegimenTemplateConfigured(Long programId) {
     mapper.setRegimenTemplateConfigured(programId);
   }
+
+  public void setFeedSendFlag(Program program, Boolean sendFeed) {
+    mapper.setFeedSendFlag(program, sendFeed);
+  }
+
+  public List<Program> getProgramsForNotification() {
+    return mapper.getProgramsForNotification();
+  }
 }

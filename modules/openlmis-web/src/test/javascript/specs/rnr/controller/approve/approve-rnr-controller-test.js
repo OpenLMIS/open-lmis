@@ -7,7 +7,7 @@
 describe('Approve Requisition controller', function () {
 
   var scope, ctrl, httpBackend, location, routeParams, controller, requisition, messageService, regimenTemplate,
-      programRnrColumnList, nonFullSupplyLineItems, lineItems, regimenLineItems, dialog, rnrLineItem, regimenColumns;
+    programRnrColumnList, nonFullSupplyLineItems, lineItems, regimenLineItems, dialog, rnrLineItem, regimenColumns;
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
   beforeEach(module('ui.bootstrap.dialog'));
@@ -17,7 +17,12 @@ describe('Approve Requisition controller', function () {
     location = $location;
     controller = $controller;
     httpBackend = $httpBackend;
-    messageService = _messageService_;
+    spyOn(_messageService_, 'get').andCallFake(function (arg) {
+      if (arg == 'label.currency.symbol') {
+        return '$';
+      }
+      return ':P';
+    })
     routeParams = {"rnr": "1", "program": "1", "supplyType": "full-supply"};
     lineItems = [];
     nonFullSupplyLineItems = [];

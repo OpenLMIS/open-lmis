@@ -58,8 +58,11 @@ public class RequisitionGroupRepository {
      return mapper.getCompleteList();
   }
 
-  public RequisitionGroup loadRequisitionGroupById(Long id)
-  {
+  public RequisitionGroup loadRequisitionGroupById(Long id){
       return mapper.getRequisitionGroupById(id);
+  }
+
+  public void removeRequisitionGroup(Long id){
+      mapper.removeRequisitionGroup(id);
   }
 }

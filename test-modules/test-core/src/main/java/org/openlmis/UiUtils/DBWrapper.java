@@ -57,8 +57,8 @@ public class DBWrapper {
     update("delete from users where userName like('" + userName + "');");
 
     update("INSERT INTO users\n" +
-      "  (id, userName, password,vendorId, facilityId, firstName, lastName, email, active) VALUES\n" +
-      "  ('" + userId + "', '" + userName + "', '" + password + "',(SELECT id FROM vendors WHERE name = '" + vendorName + "'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 'Fatima', 'Doe', '" + email + "','true');\n");
+      "  (id, userName, password,vendorId, facilityId, firstName, lastName, email, active, verified) VALUES\n" +
+      "  ('" + userId + "', '" + userName + "', '" + password + "',(SELECT id FROM vendors WHERE name = '" + vendorName + "'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 'Fatima', 'Doe', '" + email + "','true','true');\n");
 
 
   }
@@ -112,7 +112,7 @@ public class DBWrapper {
 
   public void updateUser(String password, String email) throws SQLException, IOException {
     update("DELETE FROM user_password_reset_tokens;");
-    update("update users set password='" + password + "', active=TRUE  where email='" + email + "';");
+    update("update users set password='" + password + "', active=TRUE, verified=TRUE  where email='" + email + "';");
   }
 
   public String getDeliveryZoneNameAssignedToUser(String user) throws SQLException, IOException {
@@ -235,6 +235,7 @@ public class DBWrapper {
     update("delete from delivery_zones;");
 
     update("delete from supervisory_nodes;");
+    update("delete from refrigerators;");
     update("delete from facilities;");
     update("delete from geographic_zones where code not in ('Root','Arusha','Dodoma', 'Ngorongoro');");
     update("delete from processing_periods;");
@@ -399,6 +400,13 @@ public class DBWrapper {
     update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n" +
       "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product1 + "'), 30, 12.5, true),\n" +
       "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product2 + "'), 30, 0, true);");
+  }
+
+  public void insertProgramProduct(String product, String program, String doses, String active) throws SQLException, IOException {
+
+
+    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n" +
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product + "'), '"+doses+"', 12.5, '"+active+"');");
   }
 
   public void insertProgramProductsWithCategory(String product, String program) throws SQLException, IOException {

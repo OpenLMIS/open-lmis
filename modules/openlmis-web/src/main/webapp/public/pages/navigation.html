@@ -50,7 +50,79 @@
     </li>
 
     <li ng-show="hasPermission('VIEW_REPORT')">
-      <a href="/public/pages/report/index.html" openlmis-message="link.reports"></a>
+      <a href="javascript: void(0)" openlmis-message="link.reports"></a>
+      <div class="submenu">
+          <ul>
+              <li class="has-children">
+                  <a href="javascript: void(0);">Product Reports</a>
+
+                  <div class="submenu">
+                      <ul>
+                          <li ng-show="hasPermission('VIEW_AVERAGE_CONSUMPTION_REPORT')">
+                              <a href="/public/pages/reports/average-consumption/index.html">Consumption Average by Product</a>
+                          </li>
+                          <li ng-show="hasPermission('VIEW_ADJUSTMENT_SUMMARY_REPORT')">
+                              <a href="/public/pages/reports/adjustment-summary/index.html">Adjustment Summary</a>
+                          </li>
+                          <li ng-show="hasPermission('VIEW_STOCKED_OUT_REPORT')">
+                              <a href="/public/pages/reports/stocked-out/index.html">Stocked Out</a>
+                          </li>
+                          <li ng-show="hasPermission('VIEW_SUMMARY_REPORT')">
+                              <a href="/public/pages/reports/summary/index.html">Summary Report</a>
+                          </li>
+                          <li ng-show="hasPermission('VIEW_ORDER_REPORT')">
+                              <a href="/public/pages/reports/order/index.html">Order Report</a>
+                          </li>
+                          <li class="beak"></li>
+                          <!--<li ng-show="hasPermission('VIEW_CONSUMPTION_REPORT')">-->
+                          <!--<a href="/public/pages/reports/consumption/index.html">Consumption Report</a>-->
+                          <!--</li>-->
+                      </ul>
+                  </div>
+              </li>
+
+              <li class="has-children">
+                  <a href="javascript: void(0);">Admin Reports</a>
+
+                  <div class="submenu">
+                      <ul>
+                          <li ng-show="hasPermission('VIEW_FACILITY_REPORT')">
+                              <a href="/public/pages/reports/facility-list/index.html">Facility List (V1)</a>
+                          </li>
+                          <li ng-show="hasPermission('VIEW_MAILING_LABEL_REPORT')">
+                              <a href="/public/pages/reports/mailing-labels/index.html">Facility List (V2)</a>
+                          </li>
+                          <li class="beak"></li>
+                      </ul>
+                  </div>
+              </li>
+              <li class="has-children">
+                  <a href="javascript: void(0);">Performance Reports</a>
+
+                  <div class="submenu">
+                      <ul>
+                          <li ng-show="hasPermission('VIEW_NON_REPORTING_FACILITIES')">
+                              <a href="/public/pages/reports/non-reporting/index.html">Non Reporting Facilities</a>
+                          </li>
+                          <li ng-show="hasPermission('VIEW_REPORTING_RATE_REPORT')">
+                              <a href="/public/pages/reports/reporting-rate/index.html">Reporting Rate</a>
+                          </li>
+                          <li ng-show="hasPermission('VIEW_DISTRICT_CONSUMPTION_REPORT')">
+                              <a href="/public/pages/reports/district-consumption/index.html">District Consumption
+                                  Comparison</a>
+                          </li>
+                          <li ng-show="hasPermission('VIEW_SUPPLY_STATUS_REPORT')">
+                              <a href="/public/pages/reports/supply-status/index.html">Supply Status by Facility</a>
+                          </li>
+                          <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
+                              <a href="/public/pages/reports/stock-imbalance/index.html">Stock Imbalance by Facility</a>
+                          </li>
+                          <li class="beak"></li>
+                      </ul>
+                  </div>
+              </li>
+          </ul>
+      </div>
     </li>
 
     <li>
@@ -108,16 +180,16 @@
             <div class="submenu">
               <ul>
                 <li ng-show="hasPermission('MANAGE_FACILITY')">
-                  <a href="/public/pages/admin/facility/index.html" openlmis-message="link.admin.manage.facilities"></a>
+                  <a href="/public/pages/admin/facility/index.html" openlmis-message="menu.header.facilities"></a>
                 </li>
                 <li ng-show="hasPermission('MANAGE_ROLE')">
-                  <a href="/public/pages/admin/role/index.html" openlmis-message="link.admin.manage.roles"></a>
+                  <a href="/public/pages/admin/role/index.html" openlmis-message="menu.header.roles"></a>
                 </li>
                 <li ng-show="hasPermission('MANAGE_SCHEDULE')">
-                  <a href="/public/pages/admin/schedule/index.html" openlmis-message="link.admin.manage.schedules"></a>
+                  <a href="/public/pages/admin/schedule/index.html" openlmis-message="menu.header.schedules"></a>
                 </li>
                 <li ng-show="hasPermission('MANAGE_USER')">
-                  <a href="/public/pages/admin/user/index.html" openlmis-message="link.admin.manage.users"></a>
+                  <a href="/public/pages/admin/user/index.html" openlmis-message="menu.header.users"></a>
                 </li>
                   <li ng-show="hasPermission('MANAGE_SUPPLYLINE')">
                       <a href="/public/pages/admin/supplyline/index.html">Supply Lines</a>
@@ -146,76 +218,6 @@
       </div>
 
     </li>
-
-
-      <li >
-          <a href="javascript: void(0);">Admin Reports</a>
-
-          <div class="submenu">
-              <ul>
-                  <li ng-show="hasPermission('VIEW_FACILITY_REPORT')">
-                      <a href="/public/pages/reports/facility-list/index.html">Facility List (V1)</a>
-                  </li>
-                  <li ng-show="hasPermission('VIEW_MAILING_LABEL_REPORT')">
-                      <a href="/public/pages/reports/mailing-labels/index.html">Facility List (V2)</a>
-                  </li>
-
-              </ul>
-          </div>
-      </li>
-      <li >
-          <a href="javascript: void(0);">Product Reports</a>
-
-          <div class="submenu">
-              <ul>
-                  <li ng-show="hasPermission('VIEW_AVERAGE_CONSUMPTION_REPORT')">
-                      <a href="/public/pages/reports/average-consumption/index.html">Consumption Average by Product</a>
-                  </li>
-                  <li ng-show="hasPermission('VIEW_ADJUSTMENT_SUMMARY_REPORT')">
-                      <a href="/public/pages/reports/adjustment-summary/index.html">Adjustment Summary</a>
-                  </li>
-                  <li ng-show="hasPermission('VIEW_STOCKED_OUT_REPORT')">
-                      <a href="/public/pages/reports/stocked-out/index.html">Stocked Out</a>
-                  </li>
-                  <li ng-show="hasPermission('VIEW_SUMMARY_REPORT')">
-                      <a href="/public/pages/reports/summary/index.html">Summary Report</a>
-                  </li>
-                  <li ng-show="hasPermission('VIEW_ORDER_REPORT')">
-                      <a href="/public/pages/reports/order/index.html">Order Report</a>
-                  </li>
-
-                  <!--<li ng-show="hasPermission('VIEW_CONSUMPTION_REPORT')">-->
-                  <!--<a href="/public/pages/reports/consumption/index.html">Consumption Report</a>-->
-                  <!--</li>-->
-              </ul>
-          </div>
-      </li>
-      <li >
-          <a href="javascript: void(0);">Performance Reports</a>
-
-          <div class="submenu">
-              <ul>
-                  <li ng-show="hasPermission('VIEW_NON_REPORTING_FACILITIES')">
-                      <a href="/public/pages/reports/non-reporting/index.html">Non Reporting Facilities</a>
-                  </li>
-                  <li ng-show="hasPermission('VIEW_REPORTING_RATE_REPORT')">
-                      <a href="/public/pages/reports/reporting-rate/index.html">Reporting Rate</a>
-                  </li>
-                  <li ng-show="hasPermission('VIEW_DISTRICT_CONSUMPTION_REPORT')">
-                      <a href="/public/pages/reports/district-consumption/index.html">District Consumption
-                          Comparison</a>
-                  </li>
-                  <li ng-show="hasPermission('VIEW_SUPPLY_STATUS_REPORT')">
-                      <a href="/public/pages/reports/supply-status/index.html">Supply Status by Facility</a>
-                  </li>
-                  <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
-                      <a href="/public/pages/reports/stock-imbalance/index.html">Stock Imbalance by Facility</a>
-                  </li>
-              </ul>
-          </div>
-      </li>
-
-
   </ul>
 </div>
 <div class="navigation-locale-bar">

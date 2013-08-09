@@ -212,4 +212,25 @@ public class UserRepositoryTest {
 
     verify(userMapper).update(user);
   }
+
+  @Test
+  public void shouldUpdateUserPasword(){
+    Long userId = 1l;
+    String password = "newPassword";
+
+    userRepository.updateUserPassword(userId, password);
+
+    verify(userMapper).updateUserPassword(userId, password);
+  }
+
+  @Test
+  public void shouldSetActiveForUser(){
+    Long userId = 3l;
+    Long modifiedBy = 1L;
+
+    userRepository.disable(userId, modifiedBy);
+
+    verify(userMapper).disable(userId, modifiedBy);
+  }
+
 }

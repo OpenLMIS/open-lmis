@@ -45,6 +45,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.web.controller.UploadController.INCORRECT_FILE_FORMAT;
 import static org.openlmis.web.controller.UploadController.UPLOAD_FILE_SUCCESS;
 
 @Category(UnitTests.class)
@@ -62,7 +63,7 @@ public class UploadControllerTest {
   @Mock
   MessageService messageService;
 
-  RecordHandler handler = new ProductPersistenceHandler(null);
+  RecordHandler handler = new ProductPersistenceHandler();
 
   private MockHttpServletRequest request;
 
@@ -159,12 +160,13 @@ public class UploadControllerTest {
   public void shouldGiveErrorIfFileNotOfTypeCsv() throws Exception {
     byte[] content = new byte[1];
     MockMultipartFile multiPartMock = new MockMultipartFile("mock.doc", content);
+    String errorMsg = "Incorrect file format.  Please upload product data as a '.csv' file.";
 
-    OpenLmisMessage message = new OpenLmisMessage(UploadController.INCORRECT_FILE_FORMAT, "product");
-    when(messageService.message(message)).thenReturn("Incorrect file format.  Please upload product data as a '.csv' file.");
+    when(messageService.message(INCORRECT_FILE_FORMAT, productUploadBean.getDisplayName())).thenReturn(errorMsg);
+    when(messageService.message(new OpenLmisMessage(errorMsg))).thenReturn(errorMsg);
 
     ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(multiPartMock, "product", request);
-    assertThat(uploadResponse.getBody().getErrorMsg(), is("Incorrect file format.  Please upload product data as a '.csv' file."));
+    assertThat(uploadResponse.getBody().getErrorMsg(), is(errorMsg));
   }
 
   @Test

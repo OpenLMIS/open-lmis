@@ -34,6 +34,8 @@ public class User extends BaseModel implements Importable {
   private String password;
 
   @JsonIgnore
+  private Boolean verified;
+
   private Boolean active;
 
   @ImportField(mandatory = true, name = "First Name")

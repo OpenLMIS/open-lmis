@@ -19,8 +19,8 @@ INSERT INTO roles
   ((select id from roles where name = 'Admin'), 'MANAGE_REGIMEN_TEMPLATE');
 
 INSERT INTO users
-  (userName, password,vendorId, facilityId, firstName, lastName, email, active) VALUES
-  ('Admin123', 'TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie',(SELECT id from vendors where name='openLmis'), null, 'John', 'Doe', 'John_Doe@openlmis.com', true);
+  (userName, password,vendorId, facilityId, firstName, lastName, email, verified, active) VALUES
+  ('Admin123', 'TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie',(SELECT id from vendors where name='openLmis'), null, 'John', 'Doe', 'John_Doe@openlmis.com', true, true);
 
 INSERT INTO role_assignments
   (userId, roleId) VALUES

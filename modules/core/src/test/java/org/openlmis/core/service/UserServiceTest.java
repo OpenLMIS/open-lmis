@@ -23,26 +23,30 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.repository.UserRepository;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.mail.SimpleMailMessage;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.service.UserService.PASSWORD_RESET_TOKEN_INVALID;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.openlmis.core.builder.UserBuilder.*;
+import static org.openlmis.core.service.UserService.*;
+import static org.openlmis.email.builder.EmailMessageBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.*;
+
 @Category(UnitTests.class)
 
 @RunWith(PowerMockRunner.class)
@@ -79,11 +83,11 @@ public class UserServiceTest {
 
   }
 
-  private Matcher<EmailMessage> emailMessageMatcher(final EmailMessage that) {
-    return new ArgumentMatcher<EmailMessage>() {
+  private Matcher<SimpleMailMessage> emailMessageMatcher(final SimpleMailMessage that) {
+    return new ArgumentMatcher<SimpleMailMessage>() {
       @Override
       public boolean matches(Object argument) {
-        EmailMessage emailMessage = (EmailMessage) argument;
+        SimpleMailMessage emailMessage = (SimpleMailMessage) argument;
         return emailMessage.equals(that);
       }
     };
@@ -107,7 +111,7 @@ public class UserServiceTest {
     when(userRepository.getByEmail(email)).thenReturn(null);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(UserService.USER_EMAIL_INCORRECT);
+    expectedException.expectMessage(USER_EMAIL_INCORRECT);
 
     userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
 
@@ -115,19 +119,17 @@ public class UserServiceTest {
 
   @Test
   public void shouldSendForgotPasswordEmailIfUserEmailExists() throws Exception {
-    User user = new User();
-    user.setUserName("Admin");
-    user.setEmail("random@random.com");
-    user.setId(1111L);
+    User user = make(a(defaultUser, with(email, "random@random.com"), with(userName, "Admin")));
 
-    EmailMessage emailMessage = new EmailMessage("random@random.com", "Forgot password email subject", "email body");
+    SimpleMailMessage emailMessage = make(a(defaultEmailMessage, with(receiver, "random@random.com"),
+      with(subject, "Forgot password email subject"), with(content, "email body")));
     when(userRepository.getByEmail(user.getEmail())).thenReturn(user);
 
     mockStatic(Encoder.class);
     when(Encoder.hash(anyString())).thenReturn("token");
 
-    when(messageService.message("passwordreset.email.body", new Object[]{FORGET_PASSWORD_LINK + "token"}))
-        .thenReturn("email body");
+    when(messageService.message("passwordreset.email.body", new Object[]{"Admin", FORGET_PASSWORD_LINK + "token"}))
+      .thenReturn("email body");
 
     userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
 
@@ -138,16 +140,40 @@ public class UserServiceTest {
 
   @Test
   public void shouldGiveErrorIfUserEmailDoesNotExist() throws Exception {
-    User userWithoutEmail = new User();
     User user = new User();
-    user.setEmail("some email");
-    when(userRepository.getByEmail(user.getEmail())).thenReturn(userWithoutEmail);
-    doThrow(new EmailException("")).when(emailService).send(any(EmailMessage.class));
+    user.setEmail("x@y.com");
+    User userWithoutEmail = make(a(defaultUser, with(email, "")));
+    when(userRepository.getByEmail("x@y.com")).thenReturn(userWithoutEmail);
+    doThrow(new EmailException("")).when(emailService).send(any(SimpleMailMessage.class));
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage(UserService.USER_EMAIL_NOT_FOUND);
 
     userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
+  }
+
+  @Test
+  public void shouldGiveErrorIfUserEmailExistsButUserIsDisabled() throws Exception {
+    User disabledUserWithEmail = make(a(defaultUser, with(active, false)));
+
+    when(userRepository.getByEmail(disabledUserWithEmail.getEmail())).thenReturn(disabledUserWithEmail);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(USER_EMAIL_INCORRECT);
+
+    userService.sendForgotPasswordEmail(disabledUserWithEmail, FORGET_PASSWORD_LINK);
+  }
+
+  @Test
+  public void shouldGiveErrorIfUserNameExistsButUserIsDisabled() throws Exception {
+    User disabledUser = make(a(defaultUser, with(email, ""), with(active, false)));
+
+    when(userRepository.getByUsernameAndVendorId(disabledUser)).thenReturn(disabledUser);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(USER_USERNAME_INCORRECT);
+
+    userService.sendForgotPasswordEmail(disabledUser, FORGET_PASSWORD_LINK);
   }
 
   @Test
@@ -179,7 +205,7 @@ public class UserServiceTest {
 
     userService.create(user, FORGET_PASSWORD_LINK);
 
-    verify(emailService).send(any(EmailMessage.class));
+    verify(emailService).send(any(SimpleMailMessage.class));
   }
 
 
@@ -236,8 +262,8 @@ public class UserServiceTest {
   public void shouldCreateUserInDB() throws Exception {
     User user = new User();
 
-    EmailMessage emailMessage = new EmailMessage();
-    whenNew(EmailMessage.class).withNoArguments().thenReturn(emailMessage);
+    SimpleMailMessage emailMessage = new SimpleMailMessage();
+    whenNew(SimpleMailMessage.class).withNoArguments().thenReturn(emailMessage);
 
     when(messageService.message("accountcreated.email.subject")).thenReturn("Account created message");
 
@@ -257,5 +283,26 @@ public class UserServiceTest {
 
     verify(userRepository).create(user);
     verify(roleAssignmentService).saveRolesForUser(user);
+  }
+
+  @Test
+  public void shouldUpdateUserPassword() {
+    Long userId = 1l;
+    String newPassword = "newPassword";
+    mockStatic(Encoder.class);
+    String hashedPassword = "hashedPassword";
+    when(Encoder.hash(newPassword)).thenReturn(hashedPassword);
+
+    userService.updateUserPassword(userId, newPassword);
+
+    verify(userRepository).updateUserPassword(userId, hashedPassword);
+  }
+
+  @Test
+  public void shouldDisableUser(){
+    Long userId = 3l;
+    userService.disable(userId, 1L);
+    verify(userRepository).disable(userId, 1L);
+    verify(userRepository).deletePasswordResetTokenForUser(userId);
   }
 }

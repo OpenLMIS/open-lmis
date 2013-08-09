@@ -534,6 +534,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
     assertEquals(productDescriptionNonFullSupply.getText().trim(), nonFullSupplyItems);
     assertEquals(productCodeNonFullSupply.getText().trim(), productCode);
+    testWebDriver.waitForElementToAppear(requestedQuantity);
     assertEquals(testWebDriver.getAttribute(requestedQuantity, "value").trim(), requestedQuantityValue);
     assertEquals(testWebDriver.getAttribute(requestedQuantityExplanation, "value").trim(), requestedQuantityExplanationValue);
 

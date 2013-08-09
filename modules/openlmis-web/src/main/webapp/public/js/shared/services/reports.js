@@ -93,6 +93,10 @@ services.factory('FacilityList', function ($resource) {
     return $resource('/reports/facilitylist.json', {}, {});
 });
 
+services.factory('ReportPeriods', function ($resource) {
+    return $resource('/reports/schedules/:scheduleId/periods.json', {}, {});
+});
+
 services.factory('GeographicZones', function ($resource) {
     return $resource('/reports/geographicZones.json', {}, {});
 });
@@ -244,4 +248,8 @@ services.factory('RemoveSupervisoryNode',function($resource){
 
 services.factory('Settings',function($resource){
     return $resource('/settings.json',{},{});
+});
+
+services.factory('SettingUpdator', function($resource){
+    return $resource('/saveSettings.json', {} , { post: {method:'POST'} } );
 });

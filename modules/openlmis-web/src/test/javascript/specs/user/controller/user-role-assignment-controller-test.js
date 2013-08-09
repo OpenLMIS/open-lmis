@@ -28,6 +28,7 @@ describe("User", function () {
       })
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
+      scope.user = {active: true};
       ctrl = $controller(UserRoleAssignmentController, {$scope: scope});
     }));
 

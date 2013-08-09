@@ -17,6 +17,8 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
 
+import static org.openqa.selenium.support.How.ID;
+
 
 public class HomePage extends Page {
 
@@ -27,11 +29,17 @@ public class HomePage extends Page {
 
   private static WebElement logoutLink;
 
+  @FindBy(how = How.XPATH, using = "//div[@class='user-info ng-scope']/strong")
+  private static WebElement loggedInUserLabel;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Requisitions')]")
   private static WebElement requisitionMenuItem;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Distributions')]")
   private static WebElement distributionsMenuItem;
+
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Program Product ISA')]")
+  private static WebElement programProductISAMenuItem;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Home')]")
   private static WebElement homeMenuItem;
@@ -78,7 +86,7 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Convert Requisitions to Order')]")
   private static WebElement convertToOrderHeader;
 
-  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Manage distribution')]")
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Manage a Distribution')]")
   private static WebElement manageDistributionHeader;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'View Orders')]")
@@ -191,6 +199,9 @@ public class HomePage extends Page {
   @FindBy(how=How.ID,using="requisition-group-tab")
   private static WebElement requisitionGroupsTab;
 
+  @FindBy(how=How.ID,using="supervisory-node-tab")
+  private static WebElement supervisoryNodesTab;
+
   @FindBy(how = How.LINK_TEXT, using = "Supply Lines")
   private static WebElement supplylinesLink;
 
@@ -207,7 +218,7 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
   private static WebElement errorMsg;
 
-  @FindBy(how = How.ID, using = "program")
+  @FindBy(how = ID, using = "program")
   private static WebElement selectProgramSelectBox;
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Product Reports')]")
   private static WebElement ProductReportsMenuItem;
@@ -276,8 +287,7 @@ public class HomePage extends Page {
     return new CreateFacilityPage(testWebDriver);
   }
 
-
-   private void clickCreateFacilityButton() {
+  private void clickCreateFacilityButton() {
     testWebDriver.waitForElementToAppear(createFacility);
     testWebDriver.sleep(1000);
     testWebDriver.keyPress(createFacility);
@@ -296,7 +306,7 @@ public class HomePage extends Page {
   }
 
 
-   private void verifyTabs() {
+  private void verifyTabs() {
     testWebDriver.waitForElementToAppear(facilitiesTab);
     SeleneseTestNgHelper.assertTrue(facilitiesTab.isDisplayed());
     SeleneseTestNgHelper.assertTrue(rolesTab.isDisplayed());
@@ -312,12 +322,9 @@ public class HomePage extends Page {
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
     testWebDriver.keyPress(TemplateConfigTab);
-    //TemplateConfigTab.click();
     testWebDriver.waitForElementToAppear(RnRTemplateConfigTab);
     testWebDriver.keyPress(RnRTemplateConfigTab);
-    //RnRTemplateConfigTab.click();
     testWebDriver.waitForElementToAppear(testWebDriver.getElementById(programme));
-    //testWebDriver.selectByVisibleText(ProgramDropDown, programme);
     testWebDriver.getElementById(programme).click();
 
     return new TemplateConfigPage(testWebDriver);
@@ -480,6 +487,17 @@ public class HomePage extends Page {
       return new ManageRequisitionGroupsPage(testWebDriver);
   }
 
+  public ManageSupervisoryNodesPage navigateToSupervisoryNode() throws IOException {
+      SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+      testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+      testWebDriver.keyPress(AdministrationMenuItem);
+      testWebDriver.waitForElementToAppear(manageLink);
+      testWebDriver.keyPress(manageLink);
+      testWebDriver.waitForElementToAppear(supervisoryNodesTab);
+      supervisoryNodesTab.click();
+      return new ManageSupervisoryNodesPage(testWebDriver);
+  }
+
   public ApprovePage navigateToApprove() throws IOException {
     SeleneseTestNgHelper.assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.keyPress(requisitionMenuItem);
@@ -514,8 +532,8 @@ public class HomePage extends Page {
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
     testWebDriver.keyPress(TemplateConfigTab);
-    //testWebDriver.waitForElementToAppear(programProductISAMenuItem);
-    //testWebDriver.keyPress(programProductISAMenuItem);
+    testWebDriver.waitForElementToAppear(programProductISAMenuItem);
+    testWebDriver.keyPress(programProductISAMenuItem);
     testWebDriver.waitForElementToAppear(selectProgramSelectBox);
     return new ProgramProductISAPage(testWebDriver);
   }
@@ -613,4 +631,8 @@ public class HomePage extends Page {
   }
 
 
+    public void verifyLoggedInUser(String Username) {
+        testWebDriver.waitForElementToAppear(loggedInUserLabel);
+        SeleneseTestNgHelper.assertEquals(loggedInUserLabel.getText(), Username);
+    }
 }

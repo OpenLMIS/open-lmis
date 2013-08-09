@@ -62,5 +62,9 @@ public class RequisitionGroupService {
           requisitionGroupRepository.update(requisitionGroup);
   }
 
+  public void removeRequisitionGroup(Long id){
+      requisitionGroupRepository.removeRequisitionGroup(id);
+  }
+
 
 }

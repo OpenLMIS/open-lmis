@@ -81,4 +81,8 @@ public interface RequisitionGroupMapper {
   })
   List<RequisitionGroup> getCompleteList();
 
+
+  @Delete("DELETE FROM requisition_groups WHERE ID = #{id}")
+  void removeRequisitionGroup(@Param(value="id") Long id);
+
 }

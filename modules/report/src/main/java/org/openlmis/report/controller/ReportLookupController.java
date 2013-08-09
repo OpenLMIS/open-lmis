@@ -1,7 +1,10 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.report.model.dto.AdjustmentType;
 import org.openlmis.report.model.dto.Product;
 import org.openlmis.report.model.dto.Schedule;
@@ -13,18 +16,18 @@ import org.openlmis.report.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
 
@@ -44,6 +47,8 @@ public class ReportLookupController extends BaseController {
     @Autowired
     private FacilityService facilityService;
 
+    @Autowired
+    private ProcessingScheduleService processingScheduleService;
 
     @RequestMapping(value="/programs", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getPrograms(){
@@ -129,5 +134,11 @@ public class ReportLookupController extends BaseController {
     @RequestMapping(value = "/allFacilities", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getAllFacilities(HttpServletRequest request) {
         return OpenLmisResponse.response("allFacilities", reportLookupService.getAllFacilities());
+    }
+
+    @RequestMapping(value = "/schedules/{scheduleId}/periods", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAll(@PathVariable("scheduleId") Long scheduleId) {
+      List<ProcessingPeriod> periodList = processingScheduleService.getAllPeriods(scheduleId);
+      return OpenLmisResponse.response("periods", periodList);
     }
 }
