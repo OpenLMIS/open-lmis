@@ -82,7 +82,7 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[@ng-click='editUser(user.id)']")
   private static WebElement selectFirstEditUser;
 
-  @FindBy(how = How.XPATH, using = "//a[@ng-click='changePassword(user)']")
+  @FindBy(how = How.XPATH, using = "//ul[@class='user-list']/li/div[@class='user-actions']/a[2]")
   private static WebElement selectFirstResetPassword;
 
   @FindBy(how = How.XPATH, using = "//select[@ng-model='selectedProgramIdToSupervise']")
@@ -426,7 +426,7 @@ public class UserPage extends Page {
   }
 
   public void clickAllRemoveButton() {
-    List<WebElement> removeButtons = testWebDriver.getElementsByXpath("//a[contains(text(),'Remove')]");
+    List<WebElement> removeButtons = testWebDriver.getElementsByXpath("//input[@class='btn delete-role']");
     for (WebElement removeButton : removeButtons) {
       removeButton.click();
       clickOk();
