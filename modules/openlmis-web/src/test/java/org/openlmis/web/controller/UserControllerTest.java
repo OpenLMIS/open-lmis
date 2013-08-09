@@ -14,7 +14,6 @@ import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
@@ -33,7 +32,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -41,9 +41,9 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
-import static org.openlmis.core.builder.UserBuilder.active;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
-import static org.openlmis.web.controller.UserController.TOKEN_VALID;
+import static org.openlmis.web.controller.UserController.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Category(UnitTests.class)
 public class UserControllerTest {
@@ -125,7 +125,7 @@ public class UserControllerTest {
 
     ResponseEntity<OpenLmisResponse> response = userController.sendPasswordTokenEmail(user);
 
-    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    assertThat(response.getStatusCode(), is(BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("some error"));
   }
 
@@ -134,59 +134,29 @@ public class UserControllerTest {
     User user = new User();
     httpServletRequest.getSession().setAttribute(USER_ID, userId);
     httpServletRequest.getSession().setAttribute(USER, USER);
-    when(messageService.message("message.user.created.success.email.sent", null, null)).thenReturn("User 'null null' has been successfully created, password link has been sent on registered Email address");
     ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
 
     verify(userService).create(eq(user), eq("http://localhost:9091/public/pages/reset-password.html#/token/"));
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat(response.getBody().getSuccessMsg(), is("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully created, password link has been sent on registered Email address"));
+    assertThat((User)response.getBody().getData().get("user"), is(user));
+    assertThat(response.getBody().getSuccessMsg(), is(USER_CREATED_SUCCESS_MSG));
   }
 
   @Test
   public void shouldUpdateUser() throws Exception {
     User user = make(a(defaultUser));
     user.setId(userId);
-    user.setPassword("password");
     httpServletRequest.getSession().setAttribute(USER_ID, userId);
     httpServletRequest.getSession().setAttribute(USER, USER);
-    when(messageService.message("message.user.updated.success", user.getFirstName(), user.getLastName())).
-      thenReturn("User 'Mizengo Pinda' has been successfully updated");
-
-    when(userService.getById(userId)).thenReturn(user);
 
     ResponseEntity<OpenLmisResponse> response = userController.update(user, userId, httpServletRequest);
 
     verify(userService).update(user);
+
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat(response.getBody().getSuccessMsg(), is("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully updated"));
-    assertThat(user.getPassword(), is(Encoder.hash("password")));
     assertThat(user.getModifiedBy(), is(userId));
   }
-
-  @Test
-  public void shouldEnableUser() throws Exception {
-    User existingUser = make(a(defaultUser, with(active, false)));
-    existingUser.setId(userId);
-
-    User user = make(a(defaultUser));
-    user.setId(userId);
-
-    httpServletRequest.getSession().setAttribute(USER_ID, userId);
-    httpServletRequest.getSession().setAttribute(USER, USER);
-    when(messageService.message("msg.user.enable.success", user.getFirstName(), user.getLastName())).
-      thenReturn("User 'Mizengo Pinda' has been enabled");
-
-    when(userService.getById(userId)).thenReturn(existingUser);
-
-    ResponseEntity<OpenLmisResponse> response = userController.update(user, userId, httpServletRequest);
-
-    verify(userService).update(user);
-    assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat(response.getBody().getSuccessMsg(), is("User '" + user.getFirstName() + " " + user.getLastName() + "' has been enabled"));
-    assertThat(user.getModifiedBy(), is(userId));
-  }
-
 
   @Test
   public void shouldReturnErrorIfSaveUserFails() throws Exception {
@@ -194,7 +164,7 @@ public class UserControllerTest {
     doThrow(new DataException("Save user failed")).when(userService).create(eq(user), anyString());
     ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
 
-    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    assertThat(response.getStatusCode(), is(BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("Save user failed"));
   }
 
@@ -230,7 +200,7 @@ public class UserControllerTest {
     ResponseEntity<OpenLmisResponse> response = userController.validatePasswordResetToken(invalidToken);
 
     verify(userService).getUserIdByPasswordResetToken(invalidToken);
-    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    assertThat(response.getStatusCode(), is(BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
   }
 
@@ -266,7 +236,7 @@ public class UserControllerTest {
 
     String successMsg = response.getBody().getSuccessMsg();
 
-    assertThat(successMsg, is(UserController.MSG_USER_DISABLE_SUCCESS));
+    assertThat(successMsg, is(MSG_USER_DISABLE_SUCCESS));
     verify(userService).disable(userId, modifiedBy);
   }
 }

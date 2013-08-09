@@ -12,11 +12,14 @@ describe("User", function () {
 
   describe("User Controller", function () {
 
-    var scope, $httpBackend, ctrl, user, location, roles, messageService;
+    var scope, $httpBackend, ctrl, user, location, controller, roles, messageService;
+    var programs;
+    var deliveryZones;
 
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, _messageService_) {
       messageService = _messageService_;
       scope = $rootScope.$new();
+      controller = $controller;
       $httpBackend = _$httpBackend_;
       location = $location;
       roles = [
@@ -37,20 +40,14 @@ describe("User", function () {
         }
       ];
 
-
-      spyOn(messageService, 'get').andCallFake(function (value) {
-        if (value == 'label.active') return "Active"
-        if (value == 'label.inactive') return "Inactive"
-      });
-
-      var deliveryZones = [
+      deliveryZones = [
         {id: 1},
         {id: 2},
         {id: 3},
         {id: 4}
       ];
 
-      var programs = [
+      programs = [
         {"id": 1, active: false, push: false},
         {id: 2, active: true, push: false},
         {id: 3, active: true, push: true}
@@ -58,14 +55,27 @@ describe("User", function () {
 
       var user = {"id": 123, "userName": "User420"};
 
-      ctrl = $controller(UserController, {$scope: scope, roles: roles, programs: programs,
-        supervisoryNodes: [], user: user, deliveryZones: deliveryZones}, $location);
+      ctrl = controller(UserController, {$scope: scope, roles: roles, programs: programs,
+        supervisoryNodes: [], user: user, deliveryZones: deliveryZones}, location);
       scope.userForm = {$error: { pattern: "" }};
     }));
 
-    it('should group programs by type', function() {
-      expect(scope.programsMap.pull).toEqual([{"id": 1, active: false, push: false, status : 'Inactive'}, {id: 2, active: true, push: false, status: 'Active'}]);
-      expect(scope.programsMap.push).toEqual([{"id": 3, active: true, push:true, status: 'Active'}]);
+    it('should group programs by type', function () {
+      spyOn(messageService, 'get').andCallFake(function (value) {
+        if (value == 'label.active') return "Active"
+        if (value == 'label.inactive') return "Inactive"
+      });
+
+      ctrl = controller(UserController, {$scope: scope, roles: roles, programs: programs,
+        supervisoryNodes: [], user: user, deliveryZones: deliveryZones}, location);
+
+      expect(scope.programsMap.pull).toEqual([
+        {"id": 1, active: false, push: false, status: 'Inactive'},
+        {id: 2, active: true, push: false, status: 'Active'}
+      ]);
+      expect(scope.programsMap.push).toEqual([
+        {"id": 3, active: true, push: true, status: 'Active'}
+      ]);
     })
 
     it('should populate role map in scope', function () {
@@ -82,6 +92,14 @@ describe("User", function () {
     });
 
     it('should set programs in scope with added status', function () {
+      spyOn(messageService, 'get').andCallFake(function (value) {
+        if (value == 'label.active') return "Active"
+        if (value == 'label.inactive') return "Inactive"
+      });
+
+      ctrl = controller(UserController, {$scope: scope, roles: roles, programs: programs,
+        supervisoryNodes: [], user: user, deliveryZones: deliveryZones}, location);
+
       expect(scope.programsMap).toEqual({pull: [
         {"id": 1, active: false, status: 'Inactive', push: false},
         {id: 2, active: true, status: 'Active', push: false}
@@ -96,13 +114,16 @@ describe("User", function () {
 
     it('should update user successful', function () {
       scope.user = {"id": 123, "userName": "User420"};
-      $httpBackend.expectPUT('/users/123.json', scope.user).respond(200, {"success": "Saved successfully", "user": {id: 123}});
+      $httpBackend.expectPUT('/users/123.json', scope.user).respond(200);
 
+      spyOn(messageService, 'get').andCallFake(function (value) {
+        return "Saved successfully";
+      })
       scope.saveUser();
       $httpBackend.flush();
 
-      expect(scope.message).toEqual("Saved successfully");
-      expect(scope.user).toEqual({id: 123});
+      expect(scope.$parent.message).toEqual("Saved successfully");
+      expect(scope.$parent.userId).toEqual(123);
       expect(scope.showError).toBeFalsy();
       expect(scope.error).toEqual("");
       expect(location.path()).toBe('/');
@@ -185,6 +206,11 @@ describe("User", function () {
         {programId: 111, roleIds: [1, 2, 3]},
         {programId: 222, roleIds: [1]}
       ]};
+
+      spyOn(messageService, 'get').andCallFake(function (value) {
+        return "Saved successfully";
+      });
+
       scope.userForm = {$error: { required: false}};
       scope.user = userWithRoleAssignments;
       location.path("create");
@@ -192,7 +218,7 @@ describe("User", function () {
 
       expect(scope.saveUser()).toEqual(true);
       $httpBackend.flush();
-      expect(scope.message).toEqual("Saved successfully");
+      expect(scope.$parent.message).toEqual("Saved successfully");
       expect(scope.user).toEqual({id: 500});
       expect(scope.showError).toBeFalsy();
       expect(scope.error).toEqual("");
@@ -201,13 +227,18 @@ describe("User", function () {
 
     it("should create a user without role assignment, if all required fields are present", function () {
       var userWithoutRoleAssignment = {userName: "User 123"};
+
+      spyOn(messageService, 'get').andCallFake(function (value) {
+        return "Saved successfully";
+      });
+
       scope.userForm = {$error: { required: false}};
       scope.user = userWithoutRoleAssignment;
       $httpBackend.expectPOST('/users.json', userWithoutRoleAssignment).respond(200, {"success": "Saved successfully", user: {id: 500}});
       location.path('/create');
       expect(scope.saveUser()).toEqual(true);
       $httpBackend.flush();
-      expect(scope.message).toEqual("Saved successfully");
+      expect(scope.$parent.message).toEqual("Saved successfully");
       expect(scope.user).toEqual({id: 500});
       expect(scope.showError).toBeFalsy();
       expect(scope.error).toEqual("");
@@ -320,7 +351,8 @@ describe("User", function () {
 
     it('should get all supervisory nodes', function () {
       var supervisoryNodes = [
-        {id: 5},{id: 7}
+        {id: 5},
+        {id: 7}
       ];
       $httpBackend.expect('GET', "/supervisory-nodes.json").respond({supervisoryNodes: supervisoryNodes});
       ctrl(UserController.resolve.supervisoryNodes, {$q: $q});
@@ -332,7 +364,8 @@ describe("User", function () {
 
     it('should get all delivery zones', function () {
       var deliveryZones = [
-        {id: 5},{id: 7}
+        {id: 5},
+        {id: 7}
       ];
       $httpBackend.expect('GET', "/deliveryZones.json").respond({deliveryZones: deliveryZones});
       ctrl(UserController.resolve.deliveryZones, {$q: $q});

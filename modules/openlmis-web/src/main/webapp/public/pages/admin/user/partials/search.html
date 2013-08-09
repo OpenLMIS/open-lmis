@@ -39,7 +39,7 @@
         <div class="user-actions">
           <a href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
              ng-click="editUser(user.id)"></a>
-          <a href="" class="btn btn-primary btn-small" openlmis-message="button.reset.password"
+          <a href="" ng-show="user.active" class="btn btn-primary btn-small" openlmis-message="button.reset.password"
              ng-click="changePassword(user)"></a>
         </div>
       </li>

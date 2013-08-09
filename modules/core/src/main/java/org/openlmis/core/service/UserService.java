@@ -21,10 +21,10 @@ import java.util.UUID;
 
 @Service
 public class UserService {
-  public static final String USER_EMAIL_NOT_FOUND = "user.email.not.found";
-  public static final String USER_EMAIL_INCORRECT = "user.email.incorrect";
-  public static final String PASSWORD_RESET_TOKEN_INVALID = "user.password.reset.token.invalid";
-  private static final String USER_USERNAME_INCORRECT = "user.username.incorrect";
+  static final String USER_EMAIL_NOT_FOUND = "user.email.not.found";
+  static final String USER_EMAIL_INCORRECT = "user.email.incorrect";
+  static final String PASSWORD_RESET_TOKEN_INVALID = "user.password.reset.token.invalid";
+  static final String USER_USERNAME_INCORRECT = "user.username.incorrect";
 
   @Autowired
   private UserRepository userRepository;
@@ -85,10 +85,10 @@ public class UserService {
   private User getValidatedUser(User user) {
     if (user.getEmail() != null && !user.getEmail().equals("")) {
       user = userRepository.getByEmail(user.getEmail());
-      if (user == null) throw new DataException(USER_EMAIL_INCORRECT);
+      if (user == null || !user.getActive()) throw new DataException(USER_EMAIL_INCORRECT);
     } else {
       user = userRepository.getByUsernameAndVendorId(user);
-      if (user == null) throw new DataException(USER_USERNAME_INCORRECT);
+      if (user == null || !user.getActive()) throw new DataException(USER_USERNAME_INCORRECT);
     }
     return user;
   }
@@ -161,5 +161,6 @@ public class UserService {
 
   public void disable(Long userId, Long modifiedBy) {
     userRepository.disable(userId, modifiedBy);
+    userRepository.deletePasswordResetTokenForUser(userId);
   }
 }

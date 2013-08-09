@@ -41,7 +41,8 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.openlmis.core.service.UserService.PASSWORD_RESET_TOKEN_INVALID;
+import static org.openlmis.core.builder.UserBuilder.*;
+import static org.openlmis.core.service.UserService.*;
 import static org.openlmis.email.builder.EmailMessageBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -110,7 +111,7 @@ public class UserServiceTest {
     when(userRepository.getByEmail(email)).thenReturn(null);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(UserService.USER_EMAIL_INCORRECT);
+    expectedException.expectMessage(USER_EMAIL_INCORRECT);
 
     userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
 
@@ -118,10 +119,7 @@ public class UserServiceTest {
 
   @Test
   public void shouldSendForgotPasswordEmailIfUserEmailExists() throws Exception {
-    User user = new User();
-    user.setUserName("Admin");
-    user.setEmail("random@random.com");
-    user.setId(1111L);
+    User user = make(a(defaultUser, with(email, "random@random.com"), with(userName, "Admin")));
 
     SimpleMailMessage emailMessage = make(a(defaultEmailMessage, with(receiver, "random@random.com"),
       with(subject, "Forgot password email subject"), with(content, "email body")));
@@ -142,16 +140,40 @@ public class UserServiceTest {
 
   @Test
   public void shouldGiveErrorIfUserEmailDoesNotExist() throws Exception {
-    User userWithoutEmail = new User();
     User user = new User();
-    user.setEmail("some email");
-    when(userRepository.getByEmail(user.getEmail())).thenReturn(userWithoutEmail);
+    user.setEmail("x@y.com");
+    User userWithoutEmail = make(a(defaultUser, with(email, "")));
+    when(userRepository.getByEmail("x@y.com")).thenReturn(userWithoutEmail);
     doThrow(new EmailException("")).when(emailService).send(any(SimpleMailMessage.class));
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage(UserService.USER_EMAIL_NOT_FOUND);
 
     userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
+  }
+
+  @Test
+  public void shouldGiveErrorIfUserEmailExistsButUserIsDisabled() throws Exception {
+    User disabledUserWithEmail = make(a(defaultUser, with(active, false)));
+
+    when(userRepository.getByEmail(disabledUserWithEmail.getEmail())).thenReturn(disabledUserWithEmail);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(USER_EMAIL_INCORRECT);
+
+    userService.sendForgotPasswordEmail(disabledUserWithEmail, FORGET_PASSWORD_LINK);
+  }
+
+  @Test
+  public void shouldGiveErrorIfUserNameExistsButUserIsDisabled() throws Exception {
+    User disabledUser = make(a(defaultUser, with(email, ""), with(active, false)));
+
+    when(userRepository.getByUsernameAndVendorId(disabledUser)).thenReturn(disabledUser);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(USER_USERNAME_INCORRECT);
+
+    userService.sendForgotPasswordEmail(disabledUser, FORGET_PASSWORD_LINK);
   }
 
   @Test
@@ -281,5 +303,6 @@ public class UserServiceTest {
     Long userId = 3l;
     userService.disable(userId, 1L);
     verify(userRepository).disable(userId, 1L);
+    verify(userRepository).deletePasswordResetTokenForUser(userId);
   }
 }

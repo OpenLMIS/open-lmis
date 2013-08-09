@@ -72,7 +72,7 @@ public class RefrigeratorMapperIT {
 
 
   @Test
-  public void shouldReturnListOfRefrigeratosForAFacility() throws Exception {
+  public void shouldReturnListOfRefrigeratorForAFacility() throws Exception {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
 

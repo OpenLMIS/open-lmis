@@ -10,24 +10,20 @@ package org.openlmis.pageobjects;
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openqa.selenium.*;
+import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-//import java.awt.*;
-import java.awt.*;
-import java.awt.event.InputEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
-
 
 public class UserPage extends Page {
 
@@ -142,13 +138,13 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[contains(text(),'Medical-Officer')]")
   private static WebElement medicalOfficerOption;
 
-  @FindBy(how = How.XPATH, using = "//a[@ng-click='addSupervisoryRole()']")
+  @FindBy(how = How.XPATH, using = "//input[@ng-click='addSupervisoryRole()']")
   private static WebElement addButton;
 
-  @FindBy(how = How.XPATH, using = "//a[@ng-click='addAllocationRole()']")
+  @FindBy(how = How.XPATH, using = "//input[@ng-click='addAllocationRole()']")
   private static WebElement addAllocationRoleButton;
 
-  @FindBy(how = How.XPATH, using = "//a[@ng-click='addHomeFacilityRole()']")
+  @FindBy(how = How.XPATH, using = "//input[@ng-click='addHomeFacilityRole()']")
   private static WebElement addButtonMyFacility;
 
 
@@ -156,7 +152,7 @@ public class UserPage extends Page {
   private static WebElement editUserHeader;
 
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Remove')]")
+  @FindBy(how = How.XPATH, using = "//input[contains(text(),'Remove')]")
   private static WebElement removeButton;
 
   @FindBy(how = How.XPATH, using = "//label[@ng-bind='getDeliveryZoneName(roleAssignment.deliveryZone.id)']")

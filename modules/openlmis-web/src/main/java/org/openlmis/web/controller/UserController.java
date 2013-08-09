@@ -31,6 +31,7 @@ import java.util.List;
 import static java.lang.Boolean.TRUE;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.web.response.OpenLmisResponse.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 
@@ -38,7 +39,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @NoArgsConstructor
 public class UserController extends BaseController {
 
-  public static final String MSG_USER_DISABLE_SUCCESS = "msg.user.disable.success";
+  static final String MSG_USER_DISABLE_SUCCESS = "msg.user.disable.success";
+  static final String USER_CREATED_SUCCESS_MSG = "message.user.created.success.email.sent";
 
   private RoleRightsService roleRightService;
   private UserService userService;
@@ -82,29 +84,24 @@ public class UserController extends BaseController {
       userService.sendForgotPasswordEmail(user, resetPasswordLink);
       return success(messageService.message("email.sent"));
     } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
+      return error(e, BAD_REQUEST);
     }
   }
 
   @RequestMapping(value = "/users", method = POST, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> create(@RequestBody User user, HttpServletRequest request) {
-    ResponseEntity<OpenLmisResponse> successResponse;
     user.setCreatedBy(loggedInUserId(request));
     user.setModifiedBy(loggedInUserId(request));
     try {
       String resetPasswordBaseLink = baseUrl + RESET_PASSWORD_PATH;
       userService.create(user, resetPasswordBaseLink);
     } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
+      return error(e, BAD_REQUEST);
     }
-    successResponse = success(messageService.message("message.user.created.success.email.sent", user.getFirstName(), user.getLastName()));
-    successResponse.getBody().addData("user", user);
-    return successResponse;
-  }
-
-  private boolean isUserEnabled(User existingUser, User newUser) {
-    return !existingUser.getActive() && newUser.getActive();
+    ResponseEntity<OpenLmisResponse> success = success(USER_CREATED_SUCCESS_MSG);
+    success.getBody().addData("user", user);
+    return success;
   }
 
   @RequestMapping(value = "/users/{id}", method = PUT, headers = ACCEPT_JSON)
@@ -112,19 +109,14 @@ public class UserController extends BaseController {
   public ResponseEntity<OpenLmisResponse> update(@RequestBody User user,
                                                  @PathVariable("id") Long id,
                                                  HttpServletRequest request) {
-    ResponseEntity<OpenLmisResponse> successResponse;
-    User existingUser = userService.getById(id);
     user.setModifiedBy(loggedInUserId(request));
     user.setId(id);
     try {
       userService.update(user);
     } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
+      return error(e, BAD_REQUEST);
     }
-    successResponse = success(messageService.message(isUserEnabled(existingUser, user) ?
-      "msg.user.enable.success" : "message.user.updated.success", user.getFirstName(), user.getLastName()));
-    successResponse.getBody().addData("user", user);
-    return successResponse;
+    return new OpenLmisResponse().response(HttpStatus.OK);
   }
 
   @RequestMapping(value = "/users", method = GET)
@@ -151,7 +143,7 @@ public class UserController extends BaseController {
     try {
       userService.getUserIdByPasswordResetToken(token);
     } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
+      return error(e, BAD_REQUEST);
     }
     return response(TOKEN_VALID, true);
   }
@@ -161,7 +153,7 @@ public class UserController extends BaseController {
     try {
       userService.updateUserPassword(token, password);
     } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
+      return error(e, BAD_REQUEST);
     }
     return success(messageService.message("password.reset"));
   }
@@ -171,7 +163,7 @@ public class UserController extends BaseController {
     try {
       userService.updateUserPassword(userId, password);
     } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
+      return error(e, BAD_REQUEST);
     }
     return success(messageService.message("password.reset.success"));
   }

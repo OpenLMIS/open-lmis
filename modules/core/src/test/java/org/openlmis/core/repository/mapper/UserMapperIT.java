@@ -241,6 +241,7 @@ public class UserMapperIT {
     User userResult = listOfUsers.get(0);
 
     assertThat(userResult.getEmail(), is(user.getEmail()));
+    assertThat(userResult.getActive(), is(true));
     assertThat(listOfUsers.size(), is(1));
   }
 
@@ -255,22 +256,26 @@ public class UserMapperIT {
     User userResult = listOfUsers.get(0);
 
     assertThat(userResult.getUserName(), is(user.getUserName()));
+    assertThat(userResult.getActive(), is(true));
     assertThat(listOfUsers.size(), is(1));
   }
 
   @Test
   public void shouldUpdateUserIfUserExist() throws Exception {
-    User user = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true)));
+    User user = make(a(defaultUser, with(facilityId, facility.getId())));
     userMapper.insert(user);
 
     user.setUserName("New Name");
 
+    user.setActive(false);
+
     userMapper.update(user);
 
-    User fetchedUser = userMapper.getByUsernameAndVendorId(user);
+    User fetchedUser = userMapper.getById(user.getId());
 
     assertThat(fetchedUser.getFirstName(), is(user.getFirstName()));
     assertThat(fetchedUser.getLastName(), is(user.getLastName()));
+    assertThat(fetchedUser.getActive(), is(false));
   }
 
   @Test
