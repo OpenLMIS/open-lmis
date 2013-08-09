@@ -11,10 +11,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="requisitionPDF"
-          class="org.openlmis.web.view.pdf.OpenLmisPdfView">
-    </bean>
-
     <bean id="orderCSV"
           class="org.openlmis.web.view.csv.OpenLmisCsvView">
     </bean>

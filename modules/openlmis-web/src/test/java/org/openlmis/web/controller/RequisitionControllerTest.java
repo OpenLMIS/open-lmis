@@ -372,13 +372,11 @@ public class RequisitionControllerTest {
     List<LossesAndAdjustmentsType> lossesAndAdjustmentTypes = new ArrayList<>();
     when(requisitionService.getLossesAndAdjustmentsTypes()).thenReturn(lossesAndAdjustmentTypes);
     when(rnrTemplateService.fetchColumnsForRequisition(programId)).thenReturn(rnrTemplate);
-    when(messageService.message(LABEL_CURRENCY_SYMBOL)).thenReturn("$");
     List<RegimenColumn> regimenTemplate = new ArrayList<>();
     when(regimenColumnService.getRegimenColumnsByProgramId(programId)).thenReturn(regimenTemplate);
     ModelAndView modelAndView = controller.printRequisition(rnrId);
 
     assertThat((Rnr) modelAndView.getModel().get(RNR), is(rnr));
-    assertThat((String) modelAndView.getModel().get(CURRENCY), is("$"));
     assertThat((ArrayList<LossesAndAdjustmentsType>) modelAndView.getModel().get(LOSSES_AND_ADJUSTMENT_TYPES), is(lossesAndAdjustmentTypes));
     assertThat((ArrayList<RnrColumn>) modelAndView.getModel().get(RNR_TEMPLATE), is(rnrTemplate));
 

@@ -224,7 +224,6 @@ public class RequisitionController extends BaseController {
     Long programId = requisition.getProgram().getId();
     modelAndView.addObject(RNR_TEMPLATE, rnrTemplateService.fetchColumnsForRequisition(programId));
     modelAndView.addObject(REGIMEN_TEMPLATE, regimenColumnService.getRegimenColumnsForPrintByProgramId(programId));
-    modelAndView.addObject(CURRENCY, messageService.message(LABEL_CURRENCY_SYMBOL));
     return modelAndView;
   }
 
