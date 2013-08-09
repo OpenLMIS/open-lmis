@@ -190,7 +190,7 @@
           <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
           <input type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel" ng-click="cancelUserSave()"/>
           <input type="button" class="btn btn-danger delete-button" ng-show="user.id!=null"
-             ng-click="showConfirmUserDisableWindow()" openlmis-message="button.disable"></a>
+             ng-click="showConfirmUserDisableModal()" openlmis-message="button.disable"></a>
         </div>
         <div class="form-cell button-row" ng-show="(!user.active && user.id!=null)">
           <input type="button" class="btn btn-danger save-button" openlmis-message="button.restore"

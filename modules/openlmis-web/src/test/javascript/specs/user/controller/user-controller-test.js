@@ -12,7 +12,7 @@ describe("User", function () {
 
   describe("User Controller", function () {
 
-    var scope, $httpBackend, ctrl, user, location, controller, roles, messageService;
+    var scope, httpBackend, ctrl, user, location, controller, roles, messageService;
     var programs;
     var deliveryZones;
 
@@ -20,7 +20,7 @@ describe("User", function () {
       messageService = _messageService_;
       scope = $rootScope.$new();
       controller = $controller;
-      $httpBackend = _$httpBackend_;
+      httpBackend = _$httpBackend_;
       location = $location;
       roles = [
         {
@@ -53,7 +53,7 @@ describe("User", function () {
         {id: 3, active: true, push: true}
       ];
 
-      var user = {"id": 123, "userName": "User420"};
+      user = {"id": 123, "userName": "User420"};
 
       ctrl = controller(UserController, {$scope: scope, roles: roles, programs: programs,
         supervisoryNodes: [], user: user, deliveryZones: deliveryZones}, location);
@@ -114,13 +114,13 @@ describe("User", function () {
 
     it('should update user successful', function () {
       scope.user = {"id": 123, "userName": "User420"};
-      $httpBackend.expectPUT('/users/123.json', scope.user).respond(200);
+      httpBackend.expectPUT('/users/123.json', scope.user).respond(200);
 
       spyOn(messageService, 'get').andCallFake(function (value) {
         return "Saved successfully";
       })
       scope.saveUser();
-      $httpBackend.flush();
+      httpBackend.flush();
 
       expect(scope.$parent.message).toEqual("Saved successfully");
       expect(scope.$parent.userId).toEqual(123);
@@ -131,11 +131,11 @@ describe("User", function () {
 
     it('should give error message if save not successful and not redirect the user', function () {
       scope.user = {"userName": "User420"};
-      $httpBackend.expectPOST('/users.json').respond(400, {"error": "errorMsg"});
+      httpBackend.expectPOST('/users.json').respond(400, {"error": "errorMsg"});
       var path = '/create';
       location.path(path);
       scope.saveUser();
-      $httpBackend.flush();
+      httpBackend.flush();
       expect("errorMsg").toEqual(scope.error);
       expect(scope.showError).toBeTruthy();
       expect(location.path()).toBe(path);
@@ -151,12 +151,12 @@ describe("User", function () {
       var facilityResponse = {"facilityList": [
         {"code": "F101"}
       ]};
-      $httpBackend.expectGET('/facilities.json?searchParam=F10&virtualFacility=false').respond(facilityResponse);
+      httpBackend.expectGET('/facilities.json?searchParam=F10&virtualFacility=false').respond(facilityResponse);
 
       scope.query = "F10";
       scope.showFacilitySearchResults();
 
-      $httpBackend.flush();
+      httpBackend.flush();
       expect(scope.filteredFacilities).toEqual([
         {"code": "F101"}
       ]);
@@ -214,10 +214,10 @@ describe("User", function () {
       scope.userForm = {$error: { required: false}};
       scope.user = userWithRoleAssignments;
       location.path("create");
-      $httpBackend.expectPOST('/users.json', userWithRoleAssignments).respond(200, {"success": "Saved successfully", user: {id: 500}});
+      httpBackend.expectPOST('/users.json', userWithRoleAssignments).respond(200, {"success": "Saved successfully", user: {id: 500}});
 
       expect(scope.saveUser()).toEqual(true);
-      $httpBackend.flush();
+      httpBackend.flush();
       expect(scope.$parent.message).toEqual("Saved successfully");
       expect(scope.user).toEqual({id: 500});
       expect(scope.showError).toBeFalsy();
@@ -234,10 +234,10 @@ describe("User", function () {
 
       scope.userForm = {$error: { required: false}};
       scope.user = userWithoutRoleAssignment;
-      $httpBackend.expectPOST('/users.json', userWithoutRoleAssignment).respond(200, {"success": "Saved successfully", user: {id: 500}});
+      httpBackend.expectPOST('/users.json', userWithoutRoleAssignment).respond(200, {"success": "Saved successfully", user: {id: 500}});
       location.path('/create');
       expect(scope.saveUser()).toEqual(true);
-      $httpBackend.flush();
+      httpBackend.flush();
       expect(scope.$parent.message).toEqual("Saved successfully");
       expect(scope.user).toEqual({id: 500});
       expect(scope.showError).toBeFalsy();
@@ -251,10 +251,10 @@ describe("User", function () {
 
       var data = {};
       data.facility = facility;
-      $httpBackend.expectGET('/facilities/' + facility.id + '.json').respond(data);
+      httpBackend.expectGET('/facilities/' + facility.id + '.json').respond(data);
 
       scope.setSelectedFacility(facility);
-      $httpBackend.flush();
+      httpBackend.flush();
 
       expect(scope.facilitySelected).toEqual(facility);
     });
@@ -283,17 +283,67 @@ describe("User", function () {
       expect(scope.user.facilityId).toEqual(null);
     });
 
+    it('should show confirm modal when Admin clicks Disable', function() {
+      spyOn(OpenLmisDialog, 'newDialog');
+      spyOn(messageService, 'get');
+      httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+
+      scope.showConfirmUserDisableModal();
+
+      expect(OpenLmisDialog.newDialog).toHaveBeenCalled();
+    });
+
+    it('should disable a user if Admin clicks OK in disable confirm modal', function() {
+      user.active = false;
+      httpBackend.expectDELETE('/users/123.json').respond(200, {"success": "msg.user.disable.success"});
+
+      spyOn(messageService, 'get').andCallFake(function() {
+        return "User has been disabled";
+      });
+      scope.disableUserCallback(true);
+      httpBackend.flush();
+      expect(scope.message).toEqual("User has been disabled");
+      expect(scope.error).toEqual("");
+      expect(scope.showError).toEqual("false");
+      expect(scope.user.active).toBeFalsy();
+      expect(scope.user).toEqual(user);
+    });
+
+    it('should show confirm modal when Admin clicks Restore', function() {
+      spyOn(OpenLmisDialog, 'newDialog');
+      spyOn(messageService, 'get');
+      httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+
+      scope.showConfirmUserRestoreModal();
+
+      expect(OpenLmisDialog.newDialog).toHaveBeenCalled();
+    });
+
+    it('should restore a user if Admin clicks OK in restore confirm modal', function() {
+      httpBackend.expectPUT('/users/123.json').respond(200);
+
+      spyOn(messageService, 'get').andCallFake(function() {
+        return "User has been restored";
+      });
+      scope.restoreUserCallback(true);
+      httpBackend.flush();
+      expect(scope.message).toEqual("User has been restored");
+      expect(scope.error).toEqual("");
+      expect(scope.showError).toEqual("false");
+      expect(scope.user.active).toBeTruthy();
+    });
+
   });
 
   describe("User controller resolve", function () {
-    var $httpBackend, ctrl, $timeout, $route, $q;
+    var httpBackend, ctrl, $timeout, $route, $q;
     var deferredObject;
     var user = {"id": 123, "userName": "User420"};
 
     beforeEach(module('openlmis.services'));
 
     beforeEach(inject(function (_$httpBackend_, $controller, _$timeout_) {
-      $httpBackend = _$httpBackend_;
+      httpBackend = _$httpBackend_;
       deferredObject = {promise: {id: 1}, resolve: function () {
       }};
       spyOn(deferredObject, 'resolve');
@@ -311,11 +361,11 @@ describe("User", function () {
     }));
 
     it('should get user if user id present in route', function () {
-      $httpBackend.expect('GET', "/users/1.json").respond({user: user});
+      httpBackend.expect('GET', "/users/1.json").respond({user: user});
       ctrl(UserController.resolve.user, {$q: $q, $route: $route});
       expect($q.defer).toHaveBeenCalled();
       $timeout.flush();
-      $httpBackend.flush();
+      httpBackend.flush();
       expect(deferredObject.resolve).toHaveBeenCalledWith(user);
     });
 
@@ -329,11 +379,11 @@ describe("User", function () {
       var roles = [
         {id: 1}
       ];
-      $httpBackend.expect('GET', "/roles.json").respond({roles: roles});
+      httpBackend.expect('GET', "/roles.json").respond({roles: roles});
       ctrl(UserController.resolve.roles, {$q: $q});
       expect($q.defer).toHaveBeenCalled();
       $timeout.flush();
-      $httpBackend.flush();
+      httpBackend.flush();
       expect(deferredObject.resolve).toHaveBeenCalledWith(roles);
     });
 
@@ -341,11 +391,11 @@ describe("User", function () {
       var programs = [
         {id: 3}
       ];
-      $httpBackend.expect('GET', "/programs.json").respond({programs: programs});
+      httpBackend.expect('GET', "/programs.json").respond({programs: programs});
       ctrl(UserController.resolve.programs, {$q: $q});
       expect($q.defer).toHaveBeenCalled();
       $timeout.flush();
-      $httpBackend.flush();
+      httpBackend.flush();
       expect(deferredObject.resolve).toHaveBeenCalledWith(programs);
     });
 
@@ -354,11 +404,11 @@ describe("User", function () {
         {id: 5},
         {id: 7}
       ];
-      $httpBackend.expect('GET', "/supervisory-nodes.json").respond({supervisoryNodes: supervisoryNodes});
+      httpBackend.expect('GET', "/supervisory-nodes.json").respond({supervisoryNodes: supervisoryNodes});
       ctrl(UserController.resolve.supervisoryNodes, {$q: $q});
       expect($q.defer).toHaveBeenCalled();
       $timeout.flush();
-      $httpBackend.flush();
+      httpBackend.flush();
       expect(deferredObject.resolve).toHaveBeenCalledWith(supervisoryNodes);
     });
 
@@ -367,11 +417,11 @@ describe("User", function () {
         {id: 5},
         {id: 7}
       ];
-      $httpBackend.expect('GET', "/deliveryZones.json").respond({deliveryZones: deliveryZones});
+      httpBackend.expect('GET', "/deliveryZones.json").respond({deliveryZones: deliveryZones});
       ctrl(UserController.resolve.deliveryZones, {$q: $q});
       expect($q.defer).toHaveBeenCalled();
       $timeout.flush();
-      $httpBackend.flush();
+      httpBackend.flush();
       expect(deferredObject.resolve).toHaveBeenCalledWith(deliveryZones);
     });
 

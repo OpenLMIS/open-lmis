@@ -212,7 +212,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     $scope.error = data.error;
   };
 
-  $scope.showConfirmUserDisableWindow = function () {
+  $scope.showConfirmUserDisableModal = function () {
     var dialogOpts = {
       id: "disableUserDialog",
       header: messageService.get('disable.user.header'),
