@@ -31,12 +31,14 @@ function RefrigeratorController(IndexedDB, $scope, $route) {
     $scope.edit = false;
   };
 
-  $scope.updateProblems = function () {
-    /* var problems = $scope.refrigeratorReading.problems == undefined ? [] : $scope.refrigeratorReading.problems ;
-     if ($(this).is(":checked")) {
-     problems.push()
-     }
-     */
+
+  $scope.deleteOtherProblems = function (refrigeratorReading) {
+    if (!refrigeratorReading.problemSinceLastTimed) {
+      for (var key in refrigeratorReading.problems.problemMap) {
+        refrigeratorReading.problems.problemMap[key] = undefined
+      }
+      refrigeratorReading.problems.other = undefined;
+    }
   };
 
   function fetchReferenceData() {

@@ -5,93 +5,115 @@
 -->
 
 <div class="form-group refrigerator-form">
-  <div class="form-row clearfix">
-    <div class="form-cell">
-      <label>What was the refrigerator's temperature when you arrived?</label>
-      <input type="text" name="temperature" ng-model="refrigeratorReading.temperature"/>&deg;C
-      <input id="temperature" type="checkbox" not-recorded/>
-      <label class="checkbox-label" for="temperature">NR</label>
+    <div class="form-row clearfix">
+        <div class="form-cell">
+            <label openlmis-message="label.refrigerator.temperature"></label>
+            <input type="text" name="temperature{{$index}}" ng-model="refrigeratorReading.temperature"/>&deg;<span
+                openlmis-message="label.celcius.symbol"></span>
+            <input id="temperature{{$index}}" type="checkbox" not-recorded/>
+            <label class="checkbox-label" for="temperature{{$index}}" openlmis-message="label.not.recorded"></label>
+        </div>
+        <div class="form-cell">
+            <label openlmis-message="label.refrigerator.working.correctly"></label>
+
+            <input type="radio" id="functioningCorrectlyYes" name="functioningCorrectly{{$index}}" value="Y"
+                   ng-model="refrigeratorReading.functioningCorrectly"/>
+            <label for="functioningCorrectlyYes" class="radio-label" openlmis-message="label.yes"></label>
+
+            <input type="radio" id="functioningCorrectlyNo" name="functioningCorrectly{{$index}}" value="N"
+                   ng-model="refrigeratorReading.functioningCorrectly"/>
+            <label class="radio-label" for="functioningCorrectlyNo" openlmis-message="label.no"></label>
+
+            <input type="radio" id="functioningCorrectlyDontKnow" name="functioningCorrectly{{$index}}" value="D"
+                   ng-model="refrigeratorReading.functioningCorrectly"/>
+            <label class="radio-label" for="functioningCorrectlyDontKnow" openlmis-message="label.dont.know"></label>
+
+            <input id="functioningCorrectly{{$index}}" type="checkbox" not-recorded/>
+            <label class="checkbox-label" for="functioningCorrectly{{$index}}" openlmis-message="label.not.recorded"></label>
+        </div>
     </div>
-    <div class="form-cell">
-      <label>Was it functioning correctly when you left?</label>
+    <div class="form-row clearfix">
+        <div class="form-cell">
+            <label openlmis-message="label.number.low.alarms"></label>
+            <input type="text" name="lowAlarmEvent{{$index}}" ng-model="refrigeratorReading.lowAlarmEvents"/>
 
-      <input type="radio" id="functioningCorrectlyYes" name="functioningCorrectly" value="Y" ng-model="refrigeratorReading.functioningCorrectly"/>
-      <label for="functioningCorrectlyYes" class="radio-label">Yes</label>
+            <input id="lowAlarmEvent{{$index}}" type="checkbox" not-recorded/>
+            <label class="checkbox-label" for="lowAlarmEvent{{$index}}" openlmis-message="label.not.recorded"></label>
+        </div>
+        <div class="form-cell">
+            <label class="form-questions" openlmis-message="label.number.high.alarms"></label>
+            <input name="highAlarmEvent{{$index}}" type="text" ng-model="refrigeratorReading.highAlarmEvents"/>
 
-      <input type="radio" id="functioningCorrectlyNo" name="functioningCorrectly" value="N" ng-model="refrigeratorReading.functioningCorrectly"/>
-      <label class="radio-label" for="functioningCorrectlyNo">No</label>
-
-      <input type="radio" id="functioningCorrectlyDontKnow" name="functioningCorrectly" value="D" ng-model="refrigeratorReading.functioningCorrectly"/>
-      <label class="radio-label" for="functioningCorrectlyDontKnow">Don't know</label>
-
-      <input id="functioningCorrectly" type="checkbox" not-recorded/>
-      <label class="checkbox-label" for="functioningCorrectly">NR</label>
+            <input id="highAlarmEvent{{$index}}" type="checkbox" not-recorded/>
+            <label class="checkbox-label" for="highAlarmEvent{{$index}}" openlmis-message="label.not.recorded"></label>
+        </div>
     </div>
-  </div>
-  <div class="form-row clearfix">
-    <div class="form-cell">
-      <label>Number of low-alarm events since last visit</label>
-      <input type="text" name="lowAlarmEvent" ng-model="refrigeratorReading.lowAlarmEvents"/>&deg;C
 
-      <input id="lowAlarmEvent" type="checkbox" not-recorded/>
-      <label class="checkbox-label" for="lowAlarmEvent">NR</label>
-    </div>
-    <div class="form-cell">
-      <label class="form-questions">Number of high-alarm events since last visit</label>
-      <input name="highAlarmEvent" type="text" ng-model="refrigeratorReading.highAlarmEvents"/>&deg;C
+    <div class="form-row clearfix">
+        <div class="form-cell">
+            <label openlmis-message="label.problem.last.visit"></label>
 
-      <input id="highAlarmEvent" type="checkbox" not-recorded/>
-      <label class="checkbox-label" for="highAlarmEvent">NR</label>
-    </div>
-  </div>
+            <input type="radio" id="problemSinceLastVisitYes" name="problemSinceLastVisit{{$index}}" value="Y"
+                   ng-model="refrigeratorReading.problemSinceLastTime"/>
+            <label class="radio-label" for="problemSinceLastVisitYes" openlmis-message="label.yes"></label>
 
-  <div class="form-row clearfix">
-    <div class="form-cell">
-      <label>Has there been a problem with the refrigerator since last visit?</label>
-      <input type="radio" id="problemSinceLastVisitYes" name="problemSinceLastVisit" value="Y" ng-model="refrigeratorReading.problemSinceLastTime"/>
-      <label class="radio-label" for="problemSinceLastVisitYes">Yes</label>
-      <input type="radio" id="problemSinceLastVisitNo" name="problemSinceLastVisit" value="N" ng-model="refrigeratorReading.problemSinceLastTime"/>
-      <label class="radio-label" for="problemSinceLastVisitNo">No</label>
-      <input type="radio" id="problemSinceLastVisitDontKnow" name="problemSinceLastVisit" value="D" ng-model="refrigeratorReading.problemSinceLastTime"/>
-      <label class="radio-label" for="problemSinceLastVisitDontKnow">Don't know</label>
-      <input id="problemSinceLastVisit" type="checkbox" not-recorded/>
-      <label class="checkbox-label" for="problemSinceLastVisit">NR</label>
-      <div class="form-group problem-form">
-        <div class="form-row clearfix">
-          <label>What are the problems?</label>
+            <input type="radio" id="problemSinceLastVisitNo" name="problemSinceLastVisit{{$index}}" value="N"
+                   ng-model="refrigeratorReading.problemSinceLastTime"/>
+            <label class="radio-label" for="problemSinceLastVisitNo" openlmis-message="label.no"></label>
+
+            <input type="radio" id="problemSinceLastVisitDontKnow" name="problemSinceLastVisit{{$index}}" value="D"
+                   ng-model="refrigeratorReading.problemSinceLastTime"/>
+            <label class="radio-label" for="problemSinceLastVisitDontKnow" openlmis-message="label.dont.know"></label>
+
+            <input id="problemSinceLastVisit{{$index}}" type="checkbox" not-recorded ng-click="deleteOtherProblems(refrigeratorReading)"/>
+            <label class="checkbox-label" for="problemSinceLastVisit{{$index}}" openlmis-message="label.not.recorded"></label>
+
+            <div class="form-group problem-form" ng-show="refrigeratorReading.problemSinceLastTime === 'Y'">
+                <div class="form-row clearfix">
+                    <label openlmis-message="label.what.problems"></label>
+                </div>
+                <div class="form-row clearfix">
+                    <input id="operatorError" type="checkbox"
+                           ng-model="refrigeratorReading.problems.problemMap.operatorError"/>
+                    <label class="checkbox-label" for="operatorError" openlmis-message="label.operator.error"></label>
+                </div>
+                <div class="form-row clearfix">
+                    <input id="burnerProblem" type="checkbox"
+                           ng-model="refrigeratorReading.problems.problemMap.burnerProblem"/>
+                    <label class="checkbox-label" for="burnerProblem" openlmis-message="label.burner.problem"></label>
+                </div>
+                <div class="form-row clearfix">
+                    <input id="gasLeakage" type="checkbox"
+                           ng-model="refrigeratorReading.problems.problemMap.gasLeakage"/>
+                    <label class="checkbox-label" for="gasLeakage" openlmis-message="label.gas.problem"></label>
+                    <!--Haha-->
+                </div>
+                <div class="form-row clearfix">
+                    <input id="egpFault" type="checkbox" ng-model="refrigeratorReading.problems.problemMap.egpFault"/>
+                    <label class="checkbox-label" for="egpFault" openlmis-message="label.egp.fault"></label>
+                </div>
+                <div class="form-row clearfix">
+                    <input id="thermostatSetting" type="checkbox"
+                           ng-model="refrigeratorReading.problems.problemMap.thermostatSetting"/>
+                    <label class="checkbox-label" for="thermostatSetting"
+                           openlmis-message="label.thermostat.setting"></label>
+                </div>
+                <div class="form-row clearfix">
+                    <input id="other" type="checkbox"
+                       ng-click="refrigeratorReading.problems.other = refrigeratorReading.problems.problemMap.other ? refrigeratorReading.problems.other : undefined"
+                           ng-model="refrigeratorReading.problems.problemMap.other"/>
+                    <label class="checkbox-label" for="other" openlmis-message="label.other"></label>
+
+                    <div class="form-row clearfix">
+                        <textarea id="otherTextbox" ng-show="refrigeratorReading.problems.problemMap.other"
+                                  ng-model="refrigeratorReading.problems.other"></textarea>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="form-row clearfix">
-          <input id="operatorError" type="checkbox" ng-click="updateProblems()" />
-          <label class="checkbox-label" for="operatorError">Operator error</label>
+        <div class="form-cell">
+            <label openlmis-message="label.notes"></label>
+            <textarea id="notes" ng-model="refrigeratorReading.notes"></textarea>
         </div>
-        <div class="form-row clearfix">
-          <input id="burnerProblem" type="checkbox" ng-click="updateProblems()"/>
-          <label class="checkbox-label" for="burnerProblem">Burner problem</label>
-        </div>
-        <div class="form-row clearfix">
-          <input id="gasLeakage" type="checkbox" ng-click="updateProblems()" />
-          <label class="checkbox-label" for="gasLeakage">Gas leak or gas line problem</label>
-        </div>
-        <div class="form-row clearfix">
-          <input id="gasFault" type="checkbox" ng-click="updateProblems()"/>
-          <label class="checkbox-label" for="gasFault">Electrical/Gas/Petrol fault</label>
-        </div>
-        <div class="form-row clearfix">
-          <input id="thermostatSetting" type="checkbox" ng-click="updateProblems()"/>
-          <label class="checkbox-label" for="thermostatSetting">Thermostat setting</label>
-        </div>
-        <div class="form-row clearfix">
-          <input id="other" type="checkbox" ng-click="updateProblems()"/>
-          <label class="checkbox-label" for="other">Other</label>
-          <div class="form-row clearfix">
-            <textarea id="otherTextbox"></textarea>
-          </div>
-        </div>
-      </div>
     </div>
-    <div class="form-cell">
-      <label>Notes</label>
-      <textarea id="notes" ng-model="refrigeratorReading.notes"></textarea>
-    </div>
-  </div>
 </div>
