@@ -6,7 +6,8 @@
 
 <div class="refrigerator-container" ng-controller="RefrigeratorController">
   <h3>Refrigerators
-    <a href="" class="btn btn-primary pull-right" ng-click="addRefrigerator()" openlmis-message="button.add.new"></a>
+    <a href="" class="btn btn-primary pull-right" ng-click="showAddRefrigeratorModal()"
+       openlmis-message="button.add.new"></a>
   </h3>
 
   <div class="list-header-container">
@@ -28,22 +29,23 @@
         <div class="span3" ng-bind="refrigerator.model"></div>
         <div class="span3" ng-bind="refrigerator.serialNumber"></div>
         <div class="span3">
-          <a href="" class="btn btn-danger pull-right" openlmis-message="button.delete"></a>
-          <a href="" class="btn btn-primary pull-right" ng-click="edit=true" ng-hide="edit" openlmis-message="button.edit"></a>
+          <span class="pull-right">
+            <a href="" class="btn btn-primary" ng-click="editRefrigerator(refrigerator)" ng-hide="edit" openlmis-message="button.edit"></a>
+            <a href="" class="btn btn-danger" openlmis-message="button.delete"></a>
+          </span>
         </div>
       </div>
       <div ng-show="edit" class="row-fluid">
         <ng-include src="'/public/pages/logistics/distribution/partials/refrigerator-reading.html'"></ng-include>
       </div>
       <div ng-show="edit" class="row-fluid">
-        <a href="" id="refrigeratorReadingDone" class="btn btn-primary" ng-click="edit=false" openlmis-message="button.done"></a>
+        <a href="" id="refrigeratorReadingDone" class="btn btn-primary" ng-click="closeRefrigeratorEdit()"
+           openlmis-message="button.done"></a>
       </div>
     </div>
   </div>
 
-  </div>
-
-  <div id="addRefrigeratorModal" class="modal" ng-show="addRefrigeratorModal">
+  <div id="addRefrigeratorModal" modal="addRefrigeratorModal" options="{ backdrop: 'static', escape: false}">
     <div class="modal-header">
       <h3>New Refrigerator</h3>
     </div>
@@ -52,8 +54,8 @@
       <div class="row-fluid">
         <div class="span12">
           <label for="brand">Brand
-              <span class="label-required">*</span>
-            </label>
+            <span class="label-required">*</span>
+          </label>
           <input type="text" id="brand" ng-model="newRefrigerator.brand"/>
         </div>
       </div>
@@ -61,8 +63,8 @@
       <div class="row-fluid">
         <div class="span12">
           <label for="model">Model
-              <span class="label-required">*</span>
-            </label>
+            <span class="label-required">*</span>
+          </label>
           <input type="text" id="model" ng-model="newRefrigerator.model"/>
         </div>
       </div>
@@ -70,18 +72,18 @@
       <div class="row-fluid">
         <div class="span12">
           <label for="manufacturerSerialNumber">ManufacturerSerialNumber
-              <span class="label-required">*</span>
-            </label>
-          <input type="text" id="manufacturerSerialNumber" ng-model="newRefrigerator.serialNumber" />
+            <span class="label-required">*</span>
+          </label>
+          <input type="text" id="manufacturerSerialNumber" ng-model="newRefrigerator.serialNumber"/>
         </div>
       </div>
     </div>
 
     <div class="modal-footer">
-      <a href="" class="btn btn-primary" openlmis-message="button.done"></a>
+      <a href="" class="btn btn-primary" ng-click="addRefrigeratorToStore()" openlmis-message="button.done"></a>
       <a href="" class="btn btn-cancel" ng-click="closeRefrigeratorModal()" openlmis-message="button.cancel"></a>
     </div>
 
   </div>
-  <div class="modal-backdrop" ng-show="addRefrigeratorModal"></div>
+  <!--<div class="modal-backdrop" ng-show="addRefrigeratorModal"></div>-->
 </div>

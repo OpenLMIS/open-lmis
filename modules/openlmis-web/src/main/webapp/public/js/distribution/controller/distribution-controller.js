@@ -104,12 +104,21 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators,
     }
   }
 
+  function getRefrigeratorReading(refrigerators) {
+    var refrigeratorReadings = [];
+    $.each(refrigerators, function(index, refrigerator) {
+       refrigeratorReadings.push({facilityId : refrigerator.facilityId,distributionId:$scope.distribution.id, refrigeratorSerialNumber :refrigerator.serialNumber})
+    });
+    return refrigeratorReadings;
+  }
+
   function onReferenceDataSuccess(referenceData) {
     IndexedDB.transaction(function (connection) {
       var distributionReferenceDataTransaction = connection.transaction('distributionReferenceData', 'readwrite');
       var distributionReferenceDataStore = distributionReferenceDataTransaction.objectStore('distributionReferenceData');
       var zpp = $scope.selectedZone.id + '_' + $scope.selectedProgram.id + '_' + $scope.selectedPeriod.id;
       referenceData['zpp'] = zpp;
+      referenceData["refrigeratorReadings"] = getRefrigeratorReading(referenceData["refrigerators"]);
       distributionReferenceDataStore.put(referenceData);
       distributionReferenceDataTransaction.oncomplete = function () {
         $scope.$apply();

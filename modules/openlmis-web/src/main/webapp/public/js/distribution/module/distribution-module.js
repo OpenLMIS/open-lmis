@@ -3,7 +3,7 @@
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-var distributionModule = angular.module('distribution', ['openlmis', 'IndexedDB', 'ui.bootstrap.dialog']);
+var distributionModule = angular.module('distribution', ['openlmis', 'IndexedDB', 'ui.bootstrap.dialog', 'ui.bootstrap.modal']);
 
 distributionModule.config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
@@ -13,4 +13,36 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
       when('/record-facility-data/:zpp', {controller: RecordFacilityDataController, templateUrl: 'partials/record-facility-data.html', resolve: RecordFacilityDataController.resolve}).
       otherwise({redirectTo: '/manage'});
 
-}]);
+}]).directive('notRecorded', function () {
+    return {
+      require: '?ngModel',
+      link: function (scope, element, attrs, ctrl) {
+        distributionModule["notRecordedDirective"](element, ctrl, scope);
+      }
+    };
+  });
+;
+
+
+
+distributionModule.notRecordedDirective = function (element) {
+  element.bind('click', function () {
+    if(element.is(":checked")) {
+     toggleElementDisable(true);
+    } else {
+      toggleElementDisable(false);
+    }
+  });
+  function toggleElementDisable(state) {
+    $.each(document.getElementsByName(element.attr('id')), function (index, ele) {
+      switch(ele.type) {
+        case "text": ele.value = "";
+                     break;
+        case "radio": ele.checked = false;
+                      break;
+      }
+      ele.disabled = state;
+    });
+  }
+
+};

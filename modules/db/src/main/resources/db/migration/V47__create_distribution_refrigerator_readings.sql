@@ -8,7 +8,6 @@ CREATE TABLE distribution_refrigerator_readings (
   lowAlarmEvents           INTEGER,
   highAlarmEvents          INTEGER,
   problemSinceLastTime     radio_options,
-  problemList              VARCHAR,
   notes                    VARCHAR(30),
   refrigeratorSerialNumber VARCHAR(30) REFERENCES refrigerators (serialNumber),
   facilityId               INTEGER REFERENCES facilities (id),

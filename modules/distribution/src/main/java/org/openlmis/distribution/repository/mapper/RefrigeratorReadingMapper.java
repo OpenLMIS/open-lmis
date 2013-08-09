@@ -12,10 +12,10 @@ public interface RefrigeratorReadingMapper {
 
   @Insert({"INSERT INTO distribution_refrigerator_readings",
     "(temperature, functioningCorrectly, lowAlarmEvents, highAlarmEvents, ",
-      "problemSinceLastTime, problemList, notes, refrigeratorSerialNumber, facilityId, distributionId, createdBy, modifiedBy)",
+      "problemSinceLastTime, notes, refrigeratorSerialNumber, facilityId, distributionId, createdBy, modifiedBy)",
     "VALUES",
     "(#{temperature}, #{functioningCorrectly}, #{lowAlarmEvents}, #{highAlarmEvents}, ",
-      "#{problemSinceLastTime}, #{problemList}, #{notes}, #{refrigeratorSerialNumber}, #{facilityId}, #{distributionId}, #{createdBy}, #{modifiedBy})"})
+      "#{problemSinceLastTime}, #{notes}, #{refrigeratorSerialNumber}, #{facilityId}, #{distributionId}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   void insert(RefrigeratorReading refrigeratorReading);
 }

@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,7 +18,7 @@ public class RefrigeratorReading extends BaseModel {
   Integer lowAlarmEvents;
   Integer highAlarmEvents;
   RadioOptions problemSinceLastTime;
-  String problemList;
+  List<String> problems;
   String notes;
   String refrigeratorSerialNumber;
   Long facilityId;
