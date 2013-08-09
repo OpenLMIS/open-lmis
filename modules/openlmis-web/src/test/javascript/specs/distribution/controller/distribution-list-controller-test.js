@@ -34,10 +34,6 @@ describe('DistributionListController', function () {
     expect(locationPath).toHaveBeenCalledWith(path);
   });
 
-  it('should refresh distributions list', function() {
-    expect(sharedDistribution.update).toHaveBeenCalled();
-  })
-
   it('should set distributions in scope', function() {
     expect(scope.sharedDistributions).toBe(sharedDistribution);
   })
