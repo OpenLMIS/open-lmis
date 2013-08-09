@@ -3,7 +3,9 @@ package org.openlmis.web.view.csv;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.rnr.domain.Rnr;
@@ -30,6 +32,8 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @PrepareForTest(OpenLmisCsvView.class)
 public class OpenLmisCsvViewTest {
 
+  @Mock
+  MessageService messageService;
 
   @Test
   public void shouldGenerateCsvForGivenOrder() throws Exception {
@@ -56,7 +60,7 @@ public class OpenLmisCsvViewTest {
     model.put(OrderController.ORDER, order);
     String fileName = "O1.csv";
 
-    OpenLmisCsvView csvView = new OpenLmisCsvView();
+    OpenLmisCsvView csvView = new OpenLmisCsvView(messageService);
 
     csvView.renderMergedOutputModel(model, request, response);
 
