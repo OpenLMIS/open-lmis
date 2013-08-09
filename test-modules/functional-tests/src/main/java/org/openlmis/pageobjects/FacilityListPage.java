@@ -97,7 +97,7 @@ public class FacilityListPage extends RequisitionPage {
   public void verifyFacilityNameInHeader(String facilityName)
   {
     testWebDriver.waitForElementToAppear(facilityPageHeader);
-    assertEquals(facilityPageHeader.getText(), facilityName);
+    assertTrue("Facility name incorrect in header.",facilityPageHeader.getText().contains(facilityName));
   }
 
 
