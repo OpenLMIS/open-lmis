@@ -17,6 +17,9 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
 import static java.lang.System.getProperty;
@@ -41,8 +44,10 @@ public class ApproveRequisitionTest extends TestCaseHelper {
   }
 
   @AfterMethod(groups = {"webservice"})
-  public void tearDown() {
+  public void tearDown() throws IOException, SQLException {
     driver.close();
+    dbWrapper.deleteData();
+    dbWrapper.closeConnection();
   }
 
   @Test(groups = {"webservice"})

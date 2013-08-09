@@ -32,6 +32,9 @@ app.directive('openlmisMessage', function (messageService) {
 
           default:
             element.html(displayMessage).append(children);
+            if (element.hasClass('welcome-message')) {       // Adding same title as the HTML content to the welcome message on home page
+              element.attr('title', displayMessage);
+            }
             break;
         }
       }
@@ -45,6 +48,7 @@ app.directive('openlmisMessage', function (messageService) {
             existsInScope = false;
             return false;
           }
+          return true;
         });
 
         var key = existsInScope ? evaluatedVariable : keyWithArgs[0];

@@ -9,27 +9,26 @@ package org.openlmis.email.builder;
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
-import org.openlmis.email.domain.EmailMessage;
+import org.springframework.mail.SimpleMailMessage;
 
 import static com.natpryce.makeiteasy.Property.newProperty;
 
 public class EmailMessageBuilder {
 
-  public static final Property<EmailMessage, String> from = newProperty();
-  public static final Property<EmailMessage, String> receiver = newProperty();
-  public static final Property<EmailMessage, String> subject = newProperty();
-  public static final Property<EmailMessage, String> content = newProperty();
+  public static final Property<SimpleMailMessage, String> receiver = newProperty();
+  public static final Property<SimpleMailMessage, String> subject = newProperty();
+  public static final Property<SimpleMailMessage, String> content = newProperty();
 
 
-  public static final Instantiator<EmailMessage> defaultEmailMessage = new Instantiator<EmailMessage>() {
+  public static final Instantiator<SimpleMailMessage> defaultEmailMessage = new Instantiator<SimpleMailMessage>() {
 
     @Override
-    public EmailMessage instantiate(PropertyLookup<EmailMessage> lookup) {
+    public SimpleMailMessage instantiate(PropertyLookup<SimpleMailMessage> lookup) {
 
-      EmailMessage message = new EmailMessage();
-      message.setReceiver(lookup.valueOf(receiver, "to@openlmis.org"));
+      SimpleMailMessage message = new SimpleMailMessage();
+      message.setTo(lookup.valueOf(receiver, "to@openlmis.org"));
       message.setSubject(lookup.valueOf(subject, "Test Email"));
-      message.setContent(lookup.valueOf(content, "Test Email Text"));
+      message.setText(lookup.valueOf(content, "Test Email Text"));
 
       return message;
     }

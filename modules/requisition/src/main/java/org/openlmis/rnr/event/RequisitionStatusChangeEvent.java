@@ -12,7 +12,6 @@ import org.openlmis.core.domain.Vendor;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrFeedDTO;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
@@ -20,10 +19,7 @@ import java.util.UUID;
 public class RequisitionStatusChangeEvent extends Event {
 
   public RequisitionStatusChangeEvent(Rnr requisition, Vendor vendor) throws URISyntaxException {
-    this(UUID.randomUUID().toString(), "Requisition", DateTime.now(), "", RnrFeedDTO.populate(requisition, vendor).getSerializedContents(), "requisition");
+    super(UUID.randomUUID().toString(), "Requisition", DateTime.now(), "", RnrFeedDTO.populate(requisition, vendor).getSerializedContents(), "requisition");
   }
 
-  public RequisitionStatusChangeEvent(String uuid, String title, DateTime timeStamp, String uriString, String serializedContents, String category) throws URISyntaxException {
-    super(uuid, title, timeStamp, uriString, serializedContents, category);
-  }
 }

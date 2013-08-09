@@ -14,25 +14,27 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.rnr.builder.RegimenColumnBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.web.controller.RequisitionController;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.builder.RegimenColumnBuilder.*;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.openlmis.rnr.builder.RequisitionBuilder.facility;
 import static org.openlmis.rnr.builder.RequisitionBuilder.rnrWithRegimens;
 import static org.openlmis.rnr.builder.RnrTemplateBuilder.defaultRnrTemplate;
@@ -45,6 +47,8 @@ public class RequisitionPdfModelTest {
   private Rnr requisition;
   private RequisitionPdfModel requisitionPdfModel;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
+  @Mock
+  MessageService messageService;
 
   @Before
   public void setUp() throws Exception {
@@ -66,11 +70,18 @@ public class RequisitionPdfModelTest {
     LossesAndAdjustmentsType additive1 = new LossesAndAdjustmentsType("TRANSFER_IN", "TRANSFER IN", true, 1);
     lossesAndAdjustmentsList = asList(additive1);
     model.put(RequisitionController.LOSSES_AND_ADJUSTMENT_TYPES, lossesAndAdjustmentsList);
-    requisitionPdfModel = new RequisitionPdfModel(model);
+    requisitionPdfModel = new RequisitionPdfModel(model,messageService);
   }
 
   @Test
   public void shouldGetHeader() throws Exception {
+    when(messageService.message("label.requisition")).thenReturn("Report and Requisition for");
+    when(messageService.message("label.facility")).thenReturn("Facility");
+    when(messageService.message("create.facility.operatedBy")).thenReturn("Operated By");
+    when(messageService.message("label.facility.maximumStock")).thenReturn("Maximum Stock level");
+    when(messageService.message("label.facility.emergencyOrder")).thenReturn("Emergency Order Point");
+    when(messageService.message("label.facility.reportingPeriod")).thenReturn("Reporting Period");
+
     PdfPTable header = requisitionPdfModel.getRequisitionHeader();
     assertRowValues(header.getRow(0), "Report and Requisition for: Yellow Fever (Central Warehouse)");
     assertRowValues(header.getRow(1), "Facility: F1", "Operated By: MOH", "Maximum Stock level: 100", "Emergency Order Point: 50.5");
@@ -81,6 +92,15 @@ public class RequisitionPdfModelTest {
 
   @Test
   public void shouldGetSummary() throws Exception {
+    when(messageService.message("label.summary")).thenReturn("Summary");
+    when(messageService.message("label.total.cost.full.supply.items")).thenReturn("Total Cost For Full Supply Items");
+    when(messageService.message("label.total.cost.non.full.supply.items")).thenReturn("Total Cost For Non Full Supply Items");
+    when(messageService.message("label.total.cost")).thenReturn("Total Cost");
+    when(messageService.message("label.submitted.by")).thenReturn("Submitted By");
+    when(messageService.message("label.authorized.by")).thenReturn("Authorized By");
+    when(messageService.message("label.date")).thenReturn("Date");
+    when(messageService.message("label.currency.symbol")).thenReturn("$");
+
     PdfPTable summary = requisitionPdfModel.getSummary();
 
     verify(requisition).fillFullSupplyCost();
@@ -99,18 +119,21 @@ public class RequisitionPdfModelTest {
 
   @Test
   public void shouldGetFullSupplyHeader() throws Exception {
+    when(messageService.message("label.full.supply.products")).thenReturn("Full supply product(s)");
     Paragraph fullSupplyHeader = requisitionPdfModel.getFullSupplyHeader();
     assertThat(fullSupplyHeader.getContent(), is("Full supply product(s)"));
   }
 
   @Test
   public void shouldGetNonFullSupplyHeader() throws Exception {
+    when(messageService.message("label.non.full.supply.products")).thenReturn("Non-Full supply product(s)");
     Paragraph nonFullSupplyHeader = requisitionPdfModel.getNonFullSupplyHeader();
     assertThat(nonFullSupplyHeader.getContent(), is("Non-Full supply product(s)"));
   }
 
   @Test
   public void shouldGetRegimenHeader() throws Exception {
+    when(messageService.message("label.regimens")).thenReturn("Regimen(s)");
     Paragraph regimenHeader = requisitionPdfModel.getRegimenHeader();
     assertThat(regimenHeader.getContent(), is("Regimen(s)"));
   }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source source="LOCAL" name="Data Source" product="PostgreSQL" version="9.2.1" jdbc-version="4.0" driver-name="PostgreSQL Native Driver" driver-version="PostgreSQL 9.2 JDBC4 (build 1002)" uuid="c52cd9d0-48ab-486e-b4e8-7bb50073eb81">
+    <identifier-quote-string>&quot;</identifier-quote-string>
+    <synchronize>true</synchronize>
+    <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+    <jdbc-url>jdbc:postgresql://localhost:5432/open_lmis</jdbc-url>
+    <user-name>postgres</user-name>
+    <user-password>dfdadfeadfd9dfd9dfdddf9adfd8dfce</user-password>
+    <libraries>
+      <library>
+        <url>jar://$USER_HOME$/Softwares/postgresql-9.2-1002.jdbc4.jar!/</url>
+      </library>
+      <library>
+        <url>file://$USER_HOME$/Softwares/postgresql-driver-license.txt</url>
+      </library>
+    </libraries>
+  </data-source>
+</component>

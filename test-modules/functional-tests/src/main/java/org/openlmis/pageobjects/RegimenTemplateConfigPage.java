@@ -368,7 +368,7 @@ public class RegimenTemplateConfigPage extends Page {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[@id='" + program + "']/span"));
   }
 
-  private void sendKeys(WebElement locator, String value) {
+  public void sendKeys(WebElement locator, String value) {
     int length = testWebDriver.getAttribute(locator, "value").length();
     for (int i = 0; i < length; i++){
       locator.sendKeys(Keys.ARROW_RIGHT);

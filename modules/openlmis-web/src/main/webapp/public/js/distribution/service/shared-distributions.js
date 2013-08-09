@@ -5,26 +5,26 @@ distributionModule.service('SharedDistributions', function (IndexedDB, $rootScop
   var thisService = this;
 
   this.update = function () {
+    IndexedDB.transaction(function (connection) {
+      var transaction = connection.transaction('distributions');
 
-    var transaction = IndexedDB.getConnection().transaction('distributions');
+      var cursorRequest = transaction.objectStore('distributions').openCursor();
+      var aggregate = [];
 
-    var distributionsStore = transaction.objectStore('distributions');
+      cursorRequest.onsuccess = function (event) {
+        if (event.target.result) {
+          aggregate.push(event.target.result.value);
+          event.target.result['continue']();
+        }
+      };
 
-    var cursorRequest = distributionsStore.openCursor();
-    var aggregate = [];
+      transaction.oncomplete = function (e) {
+        thisService.distributionList = aggregate;
+        $rootScope.$apply();
+      };
+    });
+  };
 
-    cursorRequest.onsuccess = function (event) {
-      if (event.target.result) {
-        aggregate.push(event.target.result.value);
-        event.target.result['continue']();
-      }
-    };
-
-    transaction.oncomplete = function (e) {
-      thisService.distributionList = aggregate;
-      $rootScope.$apply();
-    };
-
-  }
+  this.update();
 
 });

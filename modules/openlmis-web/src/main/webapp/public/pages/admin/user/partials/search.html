@@ -5,29 +5,92 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html">
-    <h2><span openlmis-message="label.search.user"></span>
-        <a href="#/create-user" class="pull-right btn btn-primary"><span id="user-add-new" openlmis-message="button.add.new"></span></a>
-    </h2>
+  <h2><span openlmis-message="label.search.user"></span>
+    <a href="#/create-user" class="pull-right btn btn-primary"><span id="user-add-new"
+                                                                     openlmis-message="button.add.new"></span></a>
+  </h2>
 
-    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="userId">
-        <span ng-bind="message"></span>.&nbsp;&nbsp;<a href="" ng-click="editUser(userId)" openlmis-message="search.viewHere"></a>
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="userId">
+    <span ng-bind="message"></span>.&nbsp;&nbsp;<a href="" ng-click="editUser(userId)"
+                                                   openlmis-message="search.viewHere"></a>
+  </div>
+
+  <input id="searchUser" class="search-query input-xxlarge" type="text" ng-model="query"
+         on-keyup="showUserSearchResults()" openlmis-message="placeholder.user.search"/>
+
+  <div class="form-tip" openlmis-message="search.threeCharacters"></div>
+  <div class="facility-list" ng-show="query.length > 2">
+    <div ng-switch on="resultCount">
+      <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
+
+      <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
+
+      <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
     </div>
+    <a class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
+    <ul class="user-list">
+      <li ng-repeat="user in filteredUsers" ng-class="{'user-disabled': !user.active}">
+        <a id="user{{$index}}" href="" ng-click="editUser(user.id)">
+          <span class="user-name">{{user.firstName}} {{user.lastName}}</span>
+          <span class="user-username">({{user.userName}})</span> -
+          {{user.email}}
+        </a>
 
-    <input id="searchUser" class="search-query input-xlarge" type="text" ng-model="query"
-           on-keyup="showUserSearchResults()" openlmis-message="placeholder.user.search"/>
+        <div class="user-actions">
+          <a href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
+             ng-click="editUser(user.id)"></a>
+          <a href="" class="btn btn-primary btn-small" ng-class="{'disabled': !user.active}" openlmis-message="button.reset.password"
+             ng-click="user.active? changePassword(user): ''"></a>
+        </div>
+      </li>
+    </ul>
+  </div>
 
-    <div class="form-tip" openlmis-message="search.threeCharacters"></div>
-    <div class="facility-list" ng-show="query.length > 2">
-      <div ng-switch on="resultCount">
-        <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
-        <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
-        <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
+  <div id="changePassword" modal="changePasswordModal" options="{'backdrop':'static', 'escape':false}">
+    <form name="passwordForm">
+      <div class="modal-header">
+        <h3>
+          <span openlmis-message="message.reset.password"></span>&nbsp;<span ng-bind="user.firstName"></span>&nbsp;
+          <span ng-bind="user.lastName"></span>
+        </h3>
       </div>
-        <a class="close-btn" href="" ng-click="clearSearch()"></a>
-        <ul>
-            <li ng-repeat="user in filteredUsers">
-                <a href="" ng-click="editUser(user.id)">{{user.firstName}} {{user.lastName}} - {{user.email}}</a>
-            </li>
-        </ul>
-    </div>
+
+      <div class="modal-body">
+        <div ng-hide="message">
+          <form name='ResetPasswordForm'>
+              <div class="row-fluid">
+                <div class="span12">
+                  <label openlmis-message="placeholder.new.password"></label>
+                  <input type="password" id="password1" ng-trim="false" oncopy="return false;" maxlength="16"
+                         ng-model="password1" />
+                </div>
+              </div>
+              <div class="row-fluid">
+                <div class="span12">
+                  <label openlmis-message="placeholder.reenter.password"></label>
+                  <input type="password" id="password2" ng-trim="false" oncopy="return false;" maxlength="16"
+                         ng-model="password2" />
+                </div>
+              </div>
+
+              <div class="alert alert-error" ng-bind="error" ng-show="error"></div>
+          </form>
+        </div>
+
+
+        <div class="alert alert-success" ng-bind="message" ng-show="message"></div>
+      </div>
+
+      <div class="modal-footer">
+        <input type="button" class="btn btn-primary" openlmis-message="button.done" ng-click="updatePassword()"
+               ng-hide="message"/>
+        <input type="button" class="btn btn-cancel" openlmis-message="button.cancel" ng-click="resetPasswordModal()"
+               ng-hide="message"/>
+        <input type="button" class="btn btn-primary" openlmis-message="button.ok" ng-click="resetPasswordModal()"
+               ng-show="message"/>
+      </div>
+
+    </form>
+  </div>
+
 </div>

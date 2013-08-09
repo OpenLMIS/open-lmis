@@ -25,7 +25,6 @@ import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 
-
 public class UserPage extends Page {
 
   @FindBy(how = How.ID, using = "userName")
@@ -39,6 +38,12 @@ public class UserPage extends Page {
 
   @FindBy(how = How.ID, using = "lastName")
   private static WebElement lastNameField;
+
+  @FindBy(how = How.ID, using = "password1")
+  private static WebElement newPasswordField;
+
+  @FindBy(how = How.ID, using = "password2")
+  private static WebElement confirmPasswordField;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Save']")
   private static WebElement saveButton;
@@ -59,8 +64,26 @@ public class UserPage extends Page {
   @FindBy(how = How.ID, using = "searchFacility")
   private static WebElement searchFacility;
 
+  @FindBy(how = How.ID, using = "searchUser")
+  private static WebElement searchUserTextField;
+
+  @FindBy(how = How.ID, using = "user0")
+  private static WebElement firstUserLink;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='changePassword']/div/input[1]")
+  private static WebElement resetPasswordDone;
+
+    @FindBy(how = How.XPATH, using = "//div[@id='changePassword']/div/input[2]")
+    private static WebElement resetPasswordCancel;
+
   @FindBy(how = How.XPATH, using = "//a[@ng-click='setSelectedFacility(facility)']")
   private static WebElement selectFacility;
+
+  @FindBy(how = How.XPATH, using = "//a[@ng-click='editUser(user.id)']")
+  private static WebElement selectFirstEditUser;
+
+  @FindBy(how = How.XPATH, using = "//ul[@class='user-list']/li/div[@class='user-actions']/a[2]")
+  private static WebElement selectFirstResetPassword;
 
   @FindBy(how = How.XPATH, using = "//select[@ng-model='selectedProgramIdToSupervise']")
   private static WebElement programsToSupervise;
@@ -115,13 +138,13 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[contains(text(),'Medical-Officer')]")
   private static WebElement medicalOfficerOption;
 
-  @FindBy(how = How.XPATH, using = "//a[@ng-click='addSupervisoryRole()']")
+  @FindBy(how = How.XPATH, using = "//input[@ng-click='addSupervisoryRole()']")
   private static WebElement addButton;
 
-  @FindBy(how = How.XPATH, using = "//a[@ng-click='addAllocationRole()']")
+  @FindBy(how = How.XPATH, using = "//input[@ng-click='addAllocationRole()']")
   private static WebElement addAllocationRoleButton;
 
-  @FindBy(how = How.XPATH, using = "//a[@ng-click='addHomeFacilityRole()']")
+  @FindBy(how = How.XPATH, using = "//input[@ng-click='addHomeFacilityRole()']")
   private static WebElement addButtonMyFacility;
 
 
@@ -129,7 +152,7 @@ public class UserPage extends Page {
   private static WebElement editUserHeader;
 
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Remove')]")
+  @FindBy(how = How.XPATH, using = "//input[contains(text(),'Remove')]")
   private static WebElement removeButton;
 
   @FindBy(how = How.XPATH, using = "//label[@ng-bind='getDeliveryZoneName(roleAssignment.deliveryZone.id)']")
@@ -147,6 +170,47 @@ public class UserPage extends Page {
     testWebDriver.setImplicitWait(1);
 
   }
+
+    public void searchUser(String user) {
+        testWebDriver.waitForElementToAppear(searchUserTextField);
+        sendKeys(searchUserTextField, user);
+        testWebDriver.sleep(2000);
+    }
+
+    public void clickUserList(String userString) {
+        testWebDriver.waitForElementToAppear(firstUserLink);
+        firstUserLink.click();
+        testWebDriver.waitForElementToAppear(userNameField);
+    }
+
+    public void focusOnFirstUserLink() {
+        testWebDriver.waitForElementToAppear(firstUserLink);
+        searchUserTextField.click();
+        searchUserTextField.sendKeys(Keys.TAB);
+
+        testWebDriver.waitForElementToAppear(selectFirstEditUser);
+    }
+
+    public void verifyUserOnList(String userString) {
+        testWebDriver.waitForElementToAppear(firstUserLink);
+        SeleneseTestNgHelper.assertTrue("User not available in list.", firstUserLink.getText().contains(userString)) ;
+    }
+
+    public void verifyResetPassword() {
+        testWebDriver.waitForElementToAppear(firstUserLink);
+        SeleneseTestNgHelper.assertTrue("Reset password link not available.",selectFirstResetPassword.isDisplayed()) ;
+    }
+
+    public void resetPassword(String newPassword, String confirmPassword) {
+        firstUserLink.sendKeys(Keys.TAB);
+        selectFirstEditUser.sendKeys(Keys.TAB);
+
+        selectFirstResetPassword.click();
+        testWebDriver.waitForElementToAppear(newPasswordField);
+        newPasswordField.sendKeys(newPassword);
+        confirmPasswordField.sendKeys(confirmPassword);
+        resetPasswordDone.click();
+    }
 
   public String enterAndVerifyUserDetails(String userName, String email, String firstName, String lastName, String baseurl, String dburl) throws IOException, SQLException {
     testWebDriver.waitForElementToAppear(addNewButton);
@@ -362,7 +426,7 @@ public class UserPage extends Page {
   }
 
   public void clickAllRemoveButton() {
-    List<WebElement> removeButtons = testWebDriver.getElementsByXpath("//a[contains(text(),'Remove')]");
+    List<WebElement> removeButtons = testWebDriver.getElementsByXpath("//input[@class='btn delete-role']");
     for (WebElement removeButton : removeButtons) {
       removeButton.click();
       clickOk();

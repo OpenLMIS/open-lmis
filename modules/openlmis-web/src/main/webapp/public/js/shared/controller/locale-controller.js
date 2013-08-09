@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function LocaleController($scope, $rootScope, Locales, ChangeLocale, Messages, messageService, localStorageService, $cookies) {
+function LocaleController($scope, $rootScope, $cookies, Locales, ChangeLocale, Messages, messageService, localStorageService) {
 
   $scope.selectedLocale = $cookies.lang == undefined ? "en" : $cookies.lang;
 

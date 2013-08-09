@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
@@ -51,7 +57,9 @@ public class ProductRepository {
     }
   }
 
-
+  public void update(Product product) {
+    mapper.update(product);
+  }
 
   private void validateAndSetProductGroup(Product product) {
     ProductGroup group = product.getProductGroup();
@@ -118,5 +126,7 @@ public class ProductRepository {
     return mapper.getProductFormIdForCode(code);
   }
 
-
+  public boolean isActive(String code) {
+    return mapper.isActive(code);
+  }
 }

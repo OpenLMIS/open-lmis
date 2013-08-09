@@ -19,6 +19,10 @@ function UploadController($scope, SupportedUploads, messageService) {
     $('#uploadForm').ajaxForm(options);
   });
 
+  $scope.getMessage = function(key) {
+    return messageService.get(key);
+  };
+
   $scope.validate = function (formData) {
     $scope.$apply(function () {
       $scope.inProgress = true;

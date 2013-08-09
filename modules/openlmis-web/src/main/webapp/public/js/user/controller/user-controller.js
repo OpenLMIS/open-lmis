@@ -1,11 +1,10 @@
-/*
+       /*
  * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles, programs, supervisoryNodes, deliveryZones) {
-
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
   $scope.showSupervisorRoleMappingError = false;
@@ -13,9 +12,15 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   $scope.supervisoryNodes = supervisoryNodes;
   $scope.deliveryZones = deliveryZones;
   $scope.$parent.userId = null;
+  $scope.message = "";
+  var originalUser = $.extend(true, {}, user);
 
   loadUserFacility();
   preparePrograms(programs);
+
+  $scope.disableAllFields = function() {
+    $('.form-group').find(':input').attr('disabled','disabled');
+  };
 
   $scope.rolesMap = _.groupBy(roles, function (role) {
     return role.type;
@@ -67,17 +72,26 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   };
 
   $scope.saveUser = function () {
-    var successHandler = function (response) {
-      $scope.user = response.user;
+    var successHandler = function (msgKey) {
       $scope.showError = false;
       $scope.error = "";
-      $scope.$parent.message = response.success;
+      $scope.$parent.message = messageService.get(msgKey, $scope.user.firstName, $scope.user.lastName);
       $scope.$parent.userId = $scope.user.id;
       $location.path('');
+    }
+
+    var saveSuccessHandler = function (response) {
+      $scope.user = response.user;
+      successHandler(response.success);
+    };
+
+    var updateSuccessHandler = function () {
+      successHandler("message.user.updated.success");
     };
 
     var errorHandler = function (response) {
       $scope.showError = true;
+      $scope.message = "";
       $scope.error = response.data.error;
     };
 
@@ -94,9 +108,9 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     if (!requiredFieldsPresent($scope.user))  return false;
 
     if ($scope.user.id) {
-      Users.update({id: $scope.user.id}, $scope.user, successHandler, errorHandler);
+      Users.update({id: $scope.user.id}, $scope.user, updateSuccessHandler, errorHandler);
     } else {
-      Users.save({}, $scope.user, successHandler, errorHandler);
+      Users.save({}, $scope.user, saveSuccessHandler, errorHandler);
     }
     return true;
   };
@@ -144,6 +158,9 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   };
 
   $scope.confirmFacilityDelete = function () {
+    if(!$scope.user.active) {
+      return;
+    }
     var dialogOpts = {
       id: "deleteFacilityModal",
       header: messageService.get('delete.facility.header'),
@@ -153,7 +170,6 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   };
 
   function loadUserFacility() {
-
     if (!$scope.user) return;
 
     if (!utils.isNullOrUndefined($scope.user.facilityId)) {
@@ -180,6 +196,62 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     })
   };
 
+  $scope.cancelUserSave = function() {
+    $location.path('#/search');
+  };
+
+  var clearErrorAndSetMessage = function (msgKey) {
+    $scope.showError = "false";
+    $scope.error = "";
+    $scope.message = messageService.get(msgKey, $scope.user.firstName, $scope.user.lastName);
+  }
+
+  var errorFunc = function (data) {
+    $scope.showError = "true";
+    $scope.message = "";
+    $scope.error = data.error;
+  };
+
+  $scope.showConfirmUserDisableModal = function () {
+    var dialogOpts = {
+      id: "disableUserDialog",
+      header: messageService.get('disable.user.header'),
+      body: messageService.get('disable.user.confirm', $scope.user.firstName, $scope.user.lastName)
+    };
+    OpenLmisDialog.newDialog(dialogOpts, $scope.disableUserCallback, $dialog, messageService);
+  };
+
+  $scope.disableUserCallback = function (result) {
+    if (!result) return;
+    Users.disable({id: $scope.user.id}, disableSuccessFunc, errorFunc);
+  };
+
+  var disableSuccessFunc = function (data) {
+    clearErrorAndSetMessage(data.success);
+    $scope.user = originalUser;
+    $scope.user.active = false;
+    $scope.disableAllFields();
+  };
+
+  $scope.showConfirmUserRestoreModal = function() {
+    var dialogOpts = {
+      id: "restoreUserDialog",
+      header: messageService.get('restore.user.header'),
+      body: messageService.get('restore.user.confirm', $scope.user.firstName, $scope.user.lastName)
+    };
+    OpenLmisDialog.newDialog(dialogOpts, $scope.restoreUserCallback, $dialog, messageService);
+  }
+
+  $scope.restoreUserCallback = function (result) {
+    if (!result) return;
+    $scope.user.active = true;
+    Users.update({id: $scope.user.id}, $scope.user, restoreSuccessFunc, errorFunc);
+  };
+
+  var restoreSuccessFunc = function (data) {
+    clearErrorAndSetMessage("msg.user.restore.success");
+    $('.form-group').find(':input').removeAttr('disabled');
+  };
 }
 
 UserController.resolve = {

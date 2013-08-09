@@ -12,6 +12,7 @@ CACHE:
 /public/lib/angular-ui/angular-ui.min.css
 
 /public/js/shared/app.js
+/public/lib/angular/angular-cookies.min.js
 /public/lib/select2/select2.js
 /public/js/shared/select2-ext.js
 /public/lib/select2/select2.css
@@ -34,7 +35,7 @@ CACHE:
 /public/pages/header-offline.html
 
 
-/public/pages/logistics/distribution/index-offline.html
+/public/pages/logistics/distribution/offline.html
 /public/pages/logistics/distribution/partials/list.html
 /public/pages/logistics/distribution/partials/init.html
 /public/pages/logistics/distribution/partials/record-facility-data.html
@@ -70,7 +71,7 @@ CACHE:
 /public/images/login-bg.png
 
 FALLBACK:
-/ /public/pages/index-offline.html
+/ /public/pages/offline.html
 
 NETWORK:
 *

@@ -2,6 +2,7 @@
 -- If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 DELETE FROM programs_supported;
+DELETE FROM refrigerators;
 DELETE FROM facilities;
 
 INSERT INTO facilities
@@ -108,3 +109,7 @@ INSERT INTO programs_supported(facilityId, programId, startDate, active, modifie
 ((SELECT id FROM facilities WHERE code = 'W16'), 5, '11/11/12', true, 1),
 ((SELECT id FROM facilities WHERE code = 'W17'), 5, '11/11/12', true, 1),
 ((SELECT id FROM facilities WHERE code = 'W18'), 5, '11/11/12', true, 1);
+
+
+INSERT INTO refrigerators(brand, model, serialNumber, facilityId, createdBy , modifiedBy) VALUES
+('SAM','SAM1','SER11',(SELECT id FROM facilities WHERE code = 'F10'),1,1);

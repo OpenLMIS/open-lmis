@@ -10,6 +10,7 @@ function HeaderController($scope, localStorageService) {
   $scope.logout = function () {
     localStorageService.remove(localStorageKeys.RIGHT);
     localStorageService.remove(localStorageKeys.USERNAME);
+    document.cookie = 'JSESSIONID' + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
     window.location = "/j_spring_security_logout";
   };
 }

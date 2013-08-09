@@ -1,0 +1,55 @@
+<!--
+~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+~
+~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+
+<div class="clearfix facility-container">
+  <div class="left-navigation">
+    <ul>
+      <li class="is-complete">
+        <a href="">
+          <span class="status-icon"></span>
+          <span>Visit Information</span>
+        </a>
+      </li>
+      <li class="is-incomplete">
+        <a href="">
+          <span class="status-icon"></span>
+          <span>Refrigerators</span>
+        </a>
+      </li>
+      <li class="selected is-empty">
+        <a href="">
+          <span class="status-icon"></span>
+          <span>EPI Inventory</span>
+        </a>
+      </li>
+      <li class="is-empty">
+        <a href="">
+          <span class="status-icon"></span>
+          <span>EPI Use</span>
+        </a>
+      </li>
+      <li class="is-empty">
+        <a href="">
+          <span class="status-icon"></span>
+          <span>Coverage</span>
+        </a>
+      </li>
+      <li class="is-empty">
+        <a href="">
+          <span class="status-icon"></span>
+          <span>Observations</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="facility-info">
+    <ng-include src="'/public/pages/logistics/distribution/partials/refrigerator.html'"></ng-include>
+  </div>
+  <div class="facility-info facility-toolbar">
+    <a href="" class="pull-left">&laquo; Previous</a>
+    <a href="" class="pull-right">Next &raquo;</a>
+  </div>
+</div>

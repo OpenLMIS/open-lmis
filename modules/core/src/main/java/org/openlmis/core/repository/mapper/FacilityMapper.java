@@ -158,8 +158,7 @@ public interface FacilityMapper {
 
   @Select({"SELECT DISTINCT f.* FROM facilities f",
     "INNER JOIN requisition_group_members rgm ON f.id= rgm.facilityId",
-    "WHERE rgm.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[])",
-    "AND f.active = true"})
+    "WHERE rgm.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[])"})
   @Results(value = {
     @Result(property = "geographicZone.id", column = "geographicZoneId"),
     @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
@@ -174,9 +173,11 @@ public interface FacilityMapper {
     "INNER JOIN programs_supported PS ON PS.facilityId = F.id",
     "INNER JOIN delivery_zones DZ ON DZ.id = DZM.deliveryZoneId",
     "INNER JOIN delivery_zone_program_schedules DZPS ON DZPS.deliveryZoneId = DZM.deliveryZoneId",
+    "LEFT OUTER JOIN refrigerators RF ON RF.facilityId = F.id",
     "WHERE DZPS.programId = #{programId} AND F.active = true",
     "AND PS.programId = #{programId}  AND DZM.deliveryZoneId = #{deliveryZoneId} order by F.name"})
   @Results(value = {
+    @Result(property = "id", column = "id"),
     @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
       one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById"))
   })

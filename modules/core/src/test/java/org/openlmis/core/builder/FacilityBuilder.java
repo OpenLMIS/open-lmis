@@ -43,7 +43,7 @@ public class FacilityBuilder {
   public static final Long GEOGRAPHIC_ZONE_ID = 3L;
 
   public static final String GEOGRAPHIC_ZONE_CODE = "GEOGRAPHIC_ZONE_CODE";
-  public static final List<ProgramSupported> EMPTY_LIST = new ArrayList<>();
+  public static final List EMPTY_LIST = new ArrayList<>();
   public static final Instantiator<Facility> defaultFacility = new Instantiator<Facility>() {
 
     @Override

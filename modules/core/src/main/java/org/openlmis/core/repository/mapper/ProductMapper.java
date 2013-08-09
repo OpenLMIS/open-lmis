@@ -102,4 +102,8 @@ public interface ProductMapper {
         one = @One(select = "org.openlmis.core.repository.mapper.ProductGroupMapper.getById"))
     })
   Product getById(Long id);
- }
+
+
+  @Select("SELECT active FROM products WHERE code = #{code}")
+  boolean isActive(String code);
+}

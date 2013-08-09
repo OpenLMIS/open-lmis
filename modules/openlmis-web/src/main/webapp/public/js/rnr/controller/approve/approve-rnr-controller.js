@@ -4,12 +4,12 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, currency, pageSize, $routeParams, $dialog, $rootScope, messageService) {
+function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, $dialog, messageService) {
   $scope.visibleTab = $routeParams.supplyType;
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
-  $scope.currency = currency;
+  $scope.currency = messageService.get('label.currency.symbol');
   $scope.pageSize = pageSize;
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.error = "";
@@ -226,16 +226,6 @@ ApproveRnrController.resolve = {
     $timeout(function () {
       ProgramRnRColumnList.get({programId: $route.current.params.program}, function (data) {
         deferred.resolve(data.rnrColumnList);
-      }, {});
-    }, 100);
-    return deferred.promise;
-  },
-
-  currency: function ($q, $timeout, ReferenceData) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      ReferenceData.get({}, function (data) {
-        deferred.resolve(data.currency);
       }, {});
     }, 100);
     return deferred.promise;

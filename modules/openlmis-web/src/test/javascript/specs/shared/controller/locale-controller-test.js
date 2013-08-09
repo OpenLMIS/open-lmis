@@ -9,27 +9,30 @@ describe("LocaleController", function () {
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('ngCookies'));
 
-  var controller, scope, $httpBackend;
+  var controller, scope, $httpBackend, $cookies;
 
-  beforeEach(inject(function (_$rootScope_, _$httpBackend_, $controller, _messageService_, _localStorageService_) {
+  beforeEach(inject(function (_$rootScope_, _$httpBackend_, $controller, _messageService_, _localStorageService_, _$cookies_) {
     scope = _$rootScope_.$new();
     $httpBackend = _$httpBackend_;
+    $cookies = _$cookies_;
     var messageService = _messageService_;
 
     var messagesReturned = {"messages": {"key": "message"}};
 
-    $httpBackend.expectGET('/locales').respond(200, {locales: {pt: "portuguese", en: "English"}});
+    $httpBackend.expectGET('/locales.json').respond(200, {locales: {pt: "portuguese", en: "English"}});
     $httpBackend.when('GET', '/messages.json').respond(messagesReturned);
 
     controller = $controller(LocaleController, {$scope: scope, $rootScope: _$rootScope_, messageService: messageService,
-      localStorageService: _localStorageService_});
+      localStorageService: _localStorageService_, $cookies: _$cookies_});
   }));
 
   it("Should change the locale and clear local storage", function () {
     $httpBackend.expectPUT('/changeLocale.json?locale=pt').respond(200);
     $httpBackend.expectGET('/messages.json');
     scope.changeLocale('pt');
+    $httpBackend.flush();
   });
 
 });

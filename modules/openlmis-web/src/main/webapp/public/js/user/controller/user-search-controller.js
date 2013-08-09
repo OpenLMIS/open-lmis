@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function UserSearchController($scope, $location, Users, navigateBackService) {
+function UserSearchController($scope, $location, Users, navigateBackService, UpdatePassword, messageService) {
   $scope.showUserSearchResults = function () {
     var query = $scope.query;
 
@@ -39,6 +39,34 @@ function UserSearchController($scope, $location, Users, navigateBackService) {
     $location.path('edit/' + id);
   };
 
+  $scope.changePassword = function (user) {
+    $scope.userId = undefined;
+    $scope.password1 = $scope.password2 = $scope.message = $scope.error = "";
+    $scope.changePasswordModal = true;
+    $scope.user = user;
+  };
+
+  $scope.updatePassword = function () {
+    var reWhiteSpace = new RegExp("\\s");
+    var digits = new RegExp("\\d");
+    if ($scope.password1.length < 8 || $scope.password1.length > 16 || !digits.test($scope.password1) || reWhiteSpace.test($scope.password1)) {
+      $scope.error = messageService.get("error.password.invalid");
+      return;
+    }
+    if ($scope.password1 != $scope.password2) {
+      $scope.error = messageService.get('error.password.mismatch');
+      return;
+    }
+    UpdatePassword.update({userId: $scope.user.id}, $scope.password1, function (data) {
+      $scope.message = data.success;
+    }, {});
+
+  }
+
+  $scope.resetPasswordModal = function () {
+    $scope.changePasswordModal = false;
+    $scope.user = undefined;
+  }
 
   $scope.clearSearch = function () {
     $scope.query = "";
@@ -56,11 +84,19 @@ function UserSearchController($scope, $location, Users, navigateBackService) {
       if (user.firstName.toLowerCase().indexOf() >= 0 ||
         user.lastName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
         fullName.indexOf(query.trim().toLowerCase()) >= 0 ||
-        user.email.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0
+        user.email.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
+        user.userName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0
         ) {
         $scope.filteredUsers.push(user);
       }
     });
     $scope.resultCount = $scope.filteredUsers.length;
   };
+
+  setTimeout(function() {
+    angular.element(".user-list a").live("focus", function() {
+      $(".user-actions a").hide();
+      $(this).parents("li").find(".user-actions a").css("display", "inline-block");
+    });
+  });
 }

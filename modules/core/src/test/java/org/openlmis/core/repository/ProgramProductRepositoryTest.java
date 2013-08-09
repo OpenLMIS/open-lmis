@@ -201,5 +201,26 @@ public class ProgramProductRepositoryTest {
     assertThat(programProducts, is(expectedProgramProducts));
   }
 
+  @Test
+  public void shouldGetProgramProductById() {
+    ProgramProduct expectedProgramProduct = new ProgramProduct();
+    when(programProductMapper.getById(2L)).thenReturn(expectedProgramProduct);
+
+    ProgramProduct programProduct = programProductRepository.getById(2L);
+
+    verify(programProductMapper).getById(2L);
+    assertThat(programProduct, is(expectedProgramProduct));
+  }
+
+  @Test
+  public void shouldGetProgramProductByProductCode() {
+    List<ProgramProduct> expectedProgramProducts = new ArrayList<>();
+    when(programProductMapper.getByProductCode("code")).thenReturn(expectedProgramProducts);
+
+    List<ProgramProduct> programProducts = programProductRepository.getByProductCode("code");
+
+    verify(programProductMapper).getByProductCode("code");
+    assertThat(programProducts, is(expectedProgramProducts));
+  }
 
 }

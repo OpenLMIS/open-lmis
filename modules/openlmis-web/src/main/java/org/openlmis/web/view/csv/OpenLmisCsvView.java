@@ -1,8 +1,11 @@
 package org.openlmis.web.view.csv;
 
 
+import org.openlmis.core.service.MessageService;
 import org.openlmis.order.domain.Order;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.AbstractView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,8 +17,15 @@ import java.util.Map;
 
 import static org.openlmis.web.controller.OrderController.ORDER;
 
+@Component("orderCSV")
 public class OpenLmisCsvView extends AbstractView {
 
+  MessageService messageService;
+
+  @Autowired
+  public OpenLmisCsvView(MessageService messageService) {
+    this.messageService = messageService;
+  }
 
   @Override
   protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) {
@@ -25,7 +35,9 @@ public class OpenLmisCsvView extends AbstractView {
     response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 
     try (BufferedWriter writer = new BufferedWriter(response.getWriter())) {
-      String header = "Order Number, Facility Code, Product Code, Quantity Ordered ,Pack Size";
+      String header = messageService.message("header.order.number") + ", " + messageService.message("create.facility.code") + ", " +
+        messageService.message("header.product.code") + ", " + messageService.message("header.quantity.ordered") + ", "
+        + messageService.message("header.pack.size");
       writer.write(header);
       writer.newLine();
       writeLineItems(order, writer, order.getRnr().getFullSupplyLineItems());

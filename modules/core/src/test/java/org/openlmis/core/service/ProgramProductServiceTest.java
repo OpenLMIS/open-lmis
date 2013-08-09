@@ -6,46 +6,50 @@
 
 package org.openlmis.core.service;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.builder.ProgramProductBuilder;
+import org.openlmis.core.domain.Money;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramProductRepository;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.builder.ProgramProductBuilder.defaultProgramProduct;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.openlmis.core.builder.ProgramProductBuilder.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
 public class ProgramProductServiceTest {
+
   @Rule
   public ExpectedException expectException = ExpectedException.none();
 
   @Mock
   private ProgramProductRepository programProductRepository;
 
-  private ProgramProductService programProductService;
+  @Mock
+  private ProductService productService;
 
-  @Before
-  public void setUp() throws Exception {
-    programProductService = new ProgramProductService(programProductRepository, null, null);
-  }
+  @Mock
+  private ProgramService programService;
+
+  @InjectMocks
+  private ProgramProductService programProductService;
 
   @Test
   public void shouldUpdateCurrentPriceOfProgramProductCodeCombinationAndUpdatePriceHistory() throws Exception {
@@ -93,26 +97,141 @@ public class ProgramProductServiceTest {
 
   @Test
   public void shouldInsertProgramProduct() throws Exception {
-    ProgramProduct programProduct = new ProgramProduct();
+    ProgramProduct programProduct = make(a(defaultProgramProduct));
 
     programProductService.save(programProduct);
 
     verify(programProductRepository).save(programProduct);
-
   }
 
   @Test
-  public void shouldThrowErrorIfProgramProductExistsWithSameTimeStamp() throws Exception {
-    ProgramProduct programProduct = new ProgramProduct();
-    Date date = new Date();
-    programProduct.setModifiedDate(date);
-    expectException.expect(DataException.class);
-    expectException.expectMessage("Duplicate Program Product found");
-
-    doThrow(new DataException("Duplicate Program Product found")).when(programProductRepository).save(programProduct);
+  public void shouldNotifyIfNewActiveProductAddedToAProgramAndProgramProductIsActive() throws Exception {
+    String product = "product";
+    ProgramProduct programProduct = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+      with(active, true)));
+    programProduct.setId(null);
+    when(productService.isActive(product)).thenReturn(true);
 
     programProductService.save(programProduct);
+
+    verify(programService).setFeedSendFlag(programProduct.getProgram(), true);
   }
+
+  @Test
+  public void shouldNotNotifyIfNewProductAddedWhichIsGloballyInactive() throws Exception {
+    String product = "product";
+    ProgramProduct programProduct = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+      with(active, true)));
+    when(productService.isActive(product)).thenReturn(false);
+
+    programProductService.save(programProduct);
+
+    verify(programService, never()).setFeedSendFlag(programProduct.getProgram(), false);
+  }
+
+  @Test
+  public void shouldNotNotifyIfNewInactiveProductAddedEvenIfItIsGloballyActive() throws Exception {
+    String product = "product";
+    ProgramProduct programProduct = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+      with(active, false)));
+    when(productService.isActive(product)).thenReturn(true);
+
+    programProductService.save(programProduct);
+
+    verify(programService, never()).setFeedSendFlag(programProduct.getProgram(), false);
+  }
+
+  @Test
+  public void shouldNotNotifyIfNewInactiveProductAddedAlsoInactiveGlobally() throws Exception {
+    String product = "product";
+    ProgramProduct programProduct = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+      with(active, false)));
+    when(productService.isActive(product)).thenReturn(false);
+
+    programProductService.save(programProduct);
+
+    verify(programService, never()).setFeedSendFlag(programProduct.getProgram(), false);
+  }
+
+  @Test
+  public void shouldNotifyOnUpdateIfActiveFlagsChangeFromTTAndBecomeFT() throws Exception {
+    String product = "product";
+    Long existingProgramProductId = 2L;
+    ProgramProduct programProductForUpdate = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+      with(active, false)));
+    programProductForUpdate.setId(existingProgramProductId);
+
+    ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, true), with(productActive, true)));
+    when(programProductRepository.getById(existingProgramProductId)).thenReturn(existingProgramProduct);
+
+    programProductService.save(programProductForUpdate);
+
+    verify(programService).setFeedSendFlag(programProductForUpdate.getProgram(), true);
+  }
+
+  @Test
+  public void shouldNotifyOnUpdateIfActiveFlagsChangeFromFTAndBecomeTT() throws Exception {
+    String product = "product";
+    Long existingProgramProductId = 2L;
+    ProgramProduct programProductForUpdate = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+      with(active, true)));
+    programProductForUpdate.setId(existingProgramProductId);
+
+    ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, false), with(productActive, true)));
+    when(programProductRepository.getById(existingProgramProductId)).thenReturn(existingProgramProduct);
+
+    programProductService.save(programProductForUpdate);
+
+    verify(programService).setFeedSendFlag(programProductForUpdate.getProgram(), true);
+  }
+
+  @Test
+  public void shouldNotNotifyOnUpdateIfActiveFlagsChangeFromFFAndBecomeFF() throws Exception {
+    String product = "product";
+    Long existingProgramProductId = 2L;
+    ProgramProduct programProductForUpdate = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+      with(active, false)));
+    programProductForUpdate.setId(existingProgramProductId);
+
+    ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, false), with(productActive, false)));
+    when(programProductRepository.getById(existingProgramProductId)).thenReturn(existingProgramProduct);
+
+    programProductService.save(programProductForUpdate);
+
+    verify(programService, never()).setFeedSendFlag(programProductForUpdate.getProgram(), true);
+  }
+
+  @Test
+  public void shouldNotNotifyOnUpdateIfActiveFlagsChangeFromTFAndBecomeTF() throws Exception {
+    String product = "product";
+    Long existingProgramProductId = 2L;
+    ProgramProduct programProductForUpdate = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+      with(active, true)));
+    programProductForUpdate.setId(existingProgramProductId);
+
+    ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, true), with(productActive, false)));
+    when(programProductRepository.getById(existingProgramProductId)).thenReturn(existingProgramProduct);
+
+    programProductService.save(programProductForUpdate);
+
+    verify(programService, never()).setFeedSendFlag(programProductForUpdate.getProgram(), true);
+   }
+
+  @Test
+  public void shouldNotNotifyOnUpdateIfActiveFlagsChangeFromTFAndBecomeFF() throws Exception {
+    String product = "product";
+    Long existingProgramProductId = 2L;
+    ProgramProduct programProductForUpdate = make(a(defaultProgramProduct, with(productCode, product), with(ProgramProductBuilder.programCode, "program"),
+      with(active, false)));
+    programProductForUpdate.setId(existingProgramProductId);
+
+    ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, true), with(productActive, false)));
+    when(programProductRepository.getById(existingProgramProductId)).thenReturn(existingProgramProduct);
+
+    programProductService.save(programProductForUpdate);
+
+    verify(programService, never()).setFeedSendFlag(programProductForUpdate.getProgram(), true);
+   }
 
   @Test
   public void shouldGetAllProductsByProgram() {
@@ -124,6 +243,17 @@ public class ProgramProductServiceTest {
 
     assertThat(programProducts, is(expectedProgramProducts));
     verify(programProductRepository).getByProgram(program);
+  }
+
+  @Test
+  public void shouldGetAllProgramProductsByProductCode() {
+    List<ProgramProduct> expectedProgramProducts = new ArrayList<>();
+    when(programProductRepository.getByProductCode("code")).thenReturn(expectedProgramProducts);
+
+    List<ProgramProduct> programProducts = programProductService.getByProductCode("code");
+
+    assertThat(programProducts, is(expectedProgramProducts));
+    verify(programProductRepository).getByProductCode("code");
   }
 
 }

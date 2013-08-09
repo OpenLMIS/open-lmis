@@ -256,7 +256,8 @@
             <input type = "button"
                    ng-click = "addLossAndAdjustment(lossAndAdjustment)"
                    ng-disabled = "!(lossAndAdjustment.type && lossAndAdjustment.quantity)"
-                   class = "btn btn-primary" value = "Add" />
+                   class = "btn btn-primary"
+                   openlmis-message="button.add"/>
           </div >
         </div >
 
@@ -309,10 +310,11 @@
     <div class = "modal-footer">
       <input type = "button" class = "btn btn-primary save-button"
              ng-click = "saveLossesAndAdjustmentsForRnRLineItem()"
-             value = "Done" />
+             openlmis-message="button.done"/>
       <input type = "button"
              ng-click = "clearAndCloseLossesAndAdjustmentModal();modalError=''"
-             class = "btn btn-cancel" value = "Cancel" />
+             class = "btn btn-cancel"
+             openlmis-message="button.cancel"/>
 
     </div >
   </div >

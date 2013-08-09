@@ -6,11 +6,15 @@
 
 package org.openlmis.core.service;
 
-import org.junit.Before;
+import org.ict4h.atomfeed.server.service.EventService;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.event.ProgramChangeEvent;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.openlmis.db.categories.UnitTests;
@@ -19,28 +23,31 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
+import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
 
+@RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
 public class ProgramServiceTest {
   @Mock
   private ProgramSupportedRepository programSupportedRepository;
+
   @Mock
   private ProgramRepository programRepository;
-  private ProgramService service;
 
-  @Before
-  public void setUp() throws Exception {
-    initMocks(this);
-    service = new ProgramService(programRepository, programSupportedRepository);
-  }
+  @Mock
+  EventService eventService;
+
+  @InjectMocks
+  private ProgramService service;
 
   @Test
   public void shouldGetProgramStartDate() throws Exception {
@@ -84,6 +91,42 @@ public class ProgramServiceTest {
     service.setRegimenTemplateConfigured(1L);
     verify(programRepository).setRegimenTemplateConfigured(1L);
 
+  }
+
+  @Test
+  public void shouldSetFlagForSendProgramFeed() throws Exception {
+    Program program = new Program();
+    service.setFeedSendFlag(program, true);
+
+    verify(programRepository).setFeedSendFlag(program, true);
+  }
+
+  @Test
+  public void shouldNotifyProgramsForWhichFeedSendFlagIsSet() throws Exception {
+    List<Program> programList = new ArrayList<Program>() {{
+      add(make(a(defaultProgram)));
+      add(make(a(defaultProgram, with(programCode, "second program"))));
+    }};
+    when(programRepository.getProgramsForNotification()).thenReturn(programList);
+
+    service.notifyProgramChange();
+
+    verify(programRepository).getProgramsForNotification();
+    verify(eventService, times(2)).notify(any(ProgramChangeEvent.class));
+  }
+
+  @Test
+  public void shouldResetSendFeedFlagAfterNotifying() throws Exception {
+    List<Program> programList = new ArrayList<Program>() {{
+      add(make(a(defaultProgram)));
+      add(make(a(defaultProgram, with(programCode, "second program"))));
+    }};
+    when(programRepository.getProgramsForNotification()).thenReturn(programList);
+
+    service.notifyProgramChange();
+
+    verify(programRepository).setFeedSendFlag(programList.get(0), false);
+    verify(programRepository).setFeedSendFlag(programList.get(1), false);
   }
 }
 

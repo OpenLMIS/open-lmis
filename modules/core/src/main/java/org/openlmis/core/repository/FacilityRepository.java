@@ -101,7 +101,7 @@ public class FacilityRepository {
     if (existingFacilityType == null)
       throw new DataException("error.reference.data.invalid.facility.type");
 
-    facilityType.setId(existingFacilityType.getId());
+    facility.setFacilityType(existingFacilityType);
 
   }
 
@@ -114,7 +114,7 @@ public class FacilityRepository {
     Long operatedById = mapper.getOperatedByIdForCode(operatedByCode);
     if (operatedById == null) throw new DataException("error.reference.data.invalid.operated.by");
 
-    facility.getOperatedBy().setId(operatedById);
+    facility.setOperatedBy(mapper.getFacilityOperatorById(operatedById));
   }
 
   public List<FacilityType> getAllTypes() {

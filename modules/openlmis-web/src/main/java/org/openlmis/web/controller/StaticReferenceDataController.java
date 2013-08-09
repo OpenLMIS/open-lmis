@@ -7,7 +7,6 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.web.configurationReader.StaticReferenceDataReader;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -24,20 +23,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @PropertySource({"classpath:/default.properties", "classpath:${environmentName}/app.properties"})
 public class StaticReferenceDataController extends BaseController {
 
-  public static final String CURRENCY = "currency";
-  private StaticReferenceDataReader staticReferenceDataReader;
   private Environment environment;
 
   @Autowired
-  public StaticReferenceDataController(StaticReferenceDataReader staticReferenceDataReader, Environment environment) {
-    this.staticReferenceDataReader = staticReferenceDataReader;
+  public StaticReferenceDataController(Environment environment) {
     this.environment = environment;
-  }
-
-  @RequestMapping(value = "/reference-data/currency", method = RequestMethod.GET)
-  public ResponseEntity<OpenLmisResponse> getCurrency() {
-    OpenLmisResponse response = new OpenLmisResponse(CURRENCY, staticReferenceDataReader.getCurrency());
-    return new ResponseEntity(response, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/reference-data/lineitem/pagesize", method = RequestMethod.GET)

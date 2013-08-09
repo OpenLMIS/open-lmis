@@ -6,6 +6,7 @@
 package org.openlmis.email.domain;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
@@ -15,12 +16,11 @@ import java.sql.SQLException;
 public class EmailMessageRowMapper implements RowMapper {
 
   @Override
-  public EmailMessage mapRow(ResultSet rs, int rowNum) throws SQLException {
-    EmailMessage emailMessage = new EmailMessage();
-    emailMessage.setId(rs.getLong("id"));
-    emailMessage.setReceiver(rs.getString("receiver"));
+  public SimpleMailMessage mapRow(ResultSet rs, int rowNum) throws SQLException {
+    SimpleMailMessage emailMessage = new SimpleMailMessage();
+    emailMessage.setTo(rs.getString("receiver"));
     emailMessage.setSubject(rs.getString("subject"));
-    emailMessage.setContent(rs.getString("content"));
+    emailMessage.setText(rs.getString("content"));
     return emailMessage;
   }
 }

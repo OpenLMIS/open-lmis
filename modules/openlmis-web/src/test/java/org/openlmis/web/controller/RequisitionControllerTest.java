@@ -30,7 +30,6 @@ import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
-import org.openlmis.web.configurationReader.StaticReferenceDataReader;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -73,8 +72,6 @@ public class RequisitionControllerTest {
   private RequisitionService requisitionService;
   @Mock
   private RnrTemplateService rnrTemplateService;
-  @Mock
-  private StaticReferenceDataReader staticReferenceDataReader;
   @Mock
   private MessageService messageService;
 
@@ -375,13 +372,11 @@ public class RequisitionControllerTest {
     List<LossesAndAdjustmentsType> lossesAndAdjustmentTypes = new ArrayList<>();
     when(requisitionService.getLossesAndAdjustmentsTypes()).thenReturn(lossesAndAdjustmentTypes);
     when(rnrTemplateService.fetchColumnsForRequisition(programId)).thenReturn(rnrTemplate);
-    when(staticReferenceDataReader.getCurrency()).thenReturn("$");
     List<RegimenColumn> regimenTemplate = new ArrayList<>();
     when(regimenColumnService.getRegimenColumnsByProgramId(programId)).thenReturn(regimenTemplate);
     ModelAndView modelAndView = controller.printRequisition(rnrId);
 
     assertThat((Rnr) modelAndView.getModel().get(RNR), is(rnr));
-    assertThat((String) modelAndView.getModel().get(CURRENCY), is("$"));
     assertThat((ArrayList<LossesAndAdjustmentsType>) modelAndView.getModel().get(LOSSES_AND_ADJUSTMENT_TYPES), is(lossesAndAdjustmentTypes));
     assertThat((ArrayList<RnrColumn>) modelAndView.getModel().get(RNR_TEMPLATE), is(rnrTemplate));
 

@@ -133,4 +133,23 @@ public class ProgramRepositoryTest {
 
     verify(programMapper).setRegimenTemplateConfigured(1L);
   }
+
+  @Test
+  public void shouldSetSendFeedFlag() throws Exception {
+    Program program = new Program();
+    programRepository.setFeedSendFlag(program, true);
+
+    verify(programMapper).setFeedSendFlag(program, true);
+  }
+
+  @Test
+  public void shouldGetAllProgramsWithSendFeedFlagTrue() throws Exception {
+    List<Program> returnedPrograms = new ArrayList<>();
+    when(programMapper.getProgramsForNotification()).thenReturn(returnedPrograms);
+
+    List<Program> programs = programRepository.getProgramsForNotification();
+
+    assertThat(programs, is(returnedPrograms));
+    verify(programMapper).getProgramsForNotification();
+  }
 }

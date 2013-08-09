@@ -103,7 +103,7 @@
             <map>
                 <entry key="product">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Products"/>
+                        <property name="displayName" value="label.products"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.Product</value>
                         </property>
@@ -113,7 +113,7 @@
                 </entry>
                 <entry key="facility">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Facilities"/>
+                        <property name="displayName" value="menu.header.facilities"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.Facility</value>
                         </property>
@@ -123,7 +123,7 @@
                 </entry>
                 <entry key="programSupported">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Programs supported by facilities"/>
+                        <property name="displayName" value="label.program.supported.facilities"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.ProgramSupported</value>
                         </property>
@@ -133,7 +133,7 @@
                 </entry>
                 <entry key="supervisoryNode">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Supervisory Nodes"/>
+                        <property name="displayName" value="label.supervisory.node"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.SupervisoryNode</value>
                         </property>
@@ -143,7 +143,7 @@
                 </entry>
                 <entry key="requisitionGroup">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Requisition Groups"/>
+                        <property name="displayName" value="label.requisition.group"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroup</value>
                         </property>
@@ -153,7 +153,7 @@
                 </entry>
                 <entry key="requisitionGroupProgramSchedule">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Map Requisition Groups to Programs + Schedule"/>
+                        <property name="displayName" value="label.map.program.schedule"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroupProgramSchedule
                             </value>
@@ -164,7 +164,7 @@
                 </entry>
                 <entry key="requisitionGroupMember">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Requisition Group Members"/>
+                        <property name="displayName" value="label.requisition.group.member"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroupMember</value>
                         </property>
@@ -174,7 +174,7 @@
                 </entry>
                 <entry key="programProduct">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Program Product"/>
+                        <property name="displayName" value="label.program.products"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.ProgramProduct</value>
                         </property>
@@ -184,7 +184,7 @@
                 </entry>
                 <entry key="supplyLine">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Supply Lines"/>
+                        <property name="displayName" value="label.supply.lines"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.SupplyLine</value>
                         </property>
@@ -194,7 +194,7 @@
                 </entry>
                 <entry key="user">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Users"/>
+                        <property name="displayName" value="menu.header.users"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.User</value>
                         </property>
@@ -204,7 +204,7 @@
                 </entry>
                 <entry key="facilityTypeApprovedProduct">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Facility Approved Products"/>
+                        <property name="displayName" value="label.facility.approved.products"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.FacilityTypeApprovedProduct</value>
                         </property>
@@ -214,7 +214,7 @@
                 </entry>
                 <entry key="programProductPrice">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Product Prices per Program"/>
+                        <property name="displayName" value="label.product.prices.program"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.ProgramProductPrice</value>
                         </property>
@@ -224,7 +224,7 @@
                 </entry>
                 <entry key="productCategory">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Product Category"/>
+                        <property name="displayName" value="label.product.category"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.ProductCategory</value>
                         </property>
@@ -234,7 +234,7 @@
                 </entry>
                 <entry key="geographicZone">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Geographic Zones"/>
+                        <property name="displayName" value="label.geographic.zones"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.GeographicZone</value>
                         </property>
@@ -244,7 +244,7 @@
                 </entry>
                 <entry key="productGroup">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Product Groups"/>
+                        <property name="displayName" value="label.product.groups"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.ProductGroup</value>
                         </property>
@@ -254,7 +254,7 @@
                 </entry>
                 <entry key="deliveryZone">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Delivery Zones"/>
+                        <property name="displayName" value="label.delivery.zones"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.DeliveryZone</value>
                         </property>
@@ -264,7 +264,7 @@
                 </entry>
                 <entry key="deliveryZoneProgramSchedule">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Map Delivery Zones To Program Schedules"/>
+                        <property name="displayName" value="label.map.delivery.zone.program.schedules"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.DeliveryZoneProgramSchedule</value>
                         </property>
@@ -274,7 +274,7 @@
                 </entry>
                 <entry key="deliveryZoneMember">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Delivery Zone Members"/>
+                        <property name="displayName" value="label.delivery.zone.members"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.DeliveryZoneMember</value>
                         </property>
@@ -284,7 +284,7 @@
                 </entry>
                 <entry key="deliveryZoneWarehouse">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Delivery Zone Warehouses"/>
+                        <property name="displayName" value="label.delivery.zone.warehouses"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.DeliveryZoneWarehouse</value>
                         </property>
