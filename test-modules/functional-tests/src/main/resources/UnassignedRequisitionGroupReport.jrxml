@@ -62,7 +62,7 @@ FROM (SELECT
         LEFT OUTER JOIN requisition_group_members RGM
           ON F.id = RGM.facilityid
         LEFT OUTER JOIN requisition_group_program_schedules RGPS
-          ON PS.programid = RGPS.programid
+          ON PS.programid = RGPS.programid where PS.active = TRUE
       EXCEPT
       SELECT
         F.id         AS facility,
