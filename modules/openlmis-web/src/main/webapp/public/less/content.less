@@ -1457,6 +1457,12 @@ table td.delete-button {
 }
 .user-list li {
   position: relative;
+  &.user-disabled {
+    .user-username,
+    .user-name {
+      color: #888;
+    }
+  }
 }
 .user-name {
   font-weight: bold;
