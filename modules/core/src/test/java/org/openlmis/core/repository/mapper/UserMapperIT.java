@@ -24,10 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static java.util.Calendar.YEAR;
+import static org.apache.commons.lang.time.DateUtils.truncate;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -372,12 +375,14 @@ public class UserMapperIT {
 
   @Test
   public void shouldDisableAUser(){
-    User user = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true)));
+    User user = make(a(defaultUser, with(facilityId, facility.getId())));
+    user.setModifiedDate(truncate(new Date(), YEAR));
     userMapper.insert(user);
     userMapper.disable(user.getId(), 1L);
 
-    User savedUser = userMapper.getById(user.getId());
+    User savedUser = userMapper.getByEmail(user.getEmail());
     assertThat(savedUser.getActive(), is(false));
+    assertThat(savedUser.getModifiedDate().after(user.getModifiedDate()), is(true));
   }
 
   private Program insertProgram(Program program) {

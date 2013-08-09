@@ -62,7 +62,8 @@ public interface UserMapper {
     "email = #{email}, active = #{active}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(User user);
 
-  @Select("SELECT id, userName, firstName, lastName, employeeId, facilityId, jobTitle, officePhone, primaryNotificationMethod, cellPhone, email, active FROM users WHERE id=#{id}")
+  @Select("SELECT id, userName, firstName, lastName, employeeId, facilityId, jobTitle, officePhone, " +
+    "primaryNotificationMethod, cellPhone, email, active FROM users WHERE id=#{id}")
   User getById(Long id);
 
   @Insert("INSERT INTO user_password_reset_tokens (userId, token) VALUES (#{user.id}, #{token})")
@@ -85,6 +86,6 @@ public interface UserMapper {
   void updateUserPassword(@Param(value = "userId")Long userId, @Param(value = "password")String password);
 
 
-  @Update("UPDATE users SET active = FALSE, modifiedBy = #{modifiedBy} WHERE id = #{userId}")
+  @Update("UPDATE users SET active = FALSE, modifiedBy = #{modifiedBy}, modifiedDate = NOW() WHERE id = #{userId}")
   void disable(@Param(value = "userId") Long userId, @Param(value = "modifiedBy") Long modifiedBy);
 }
