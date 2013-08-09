@@ -105,7 +105,7 @@
 			</staticText>
 			<staticText>
 				<reportElement uuid="5a7f10ba-925c-4ca7-b48a-4feb4161ed64" x="0" y="0" width="86" height="20"/>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Status]]></text>
@@ -122,7 +122,7 @@
 	<detail>
 		<band height="20">
 			<textField>
-				<reportElement uuid="5cd9e45f-a83f-4627-bf8f-b4e8e8a3620a" x="204" y="0" width="114" height="20"/>
+				<reportElement uuid="5cd9e45f-a83f-4627-bf8f-b4e8e8a3620a" x="200" y="0" width="118" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{geographiczone}]]></textFieldExpression>
 			</textField>
@@ -148,7 +148,7 @@
 			</textField>
 			<textField>
 				<reportElement uuid="7396086d-2a40-4c6c-9e9f-cd1bf4877284" x="0" y="0" width="86" height="20"/>
-				<textElement/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
 			</textField>
 		</band>
