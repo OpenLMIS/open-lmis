@@ -172,4 +172,8 @@ public class FacilityService {
       return facilityRepository.getFacilitiesCompleteList();
   }
 
+  public List<Facility> getFacilitiesListForAFacilityType(Long facilityTypeId){
+     return facilityRepository.getFacilitiesForAFacilityType(facilityTypeId);
+  }
+
 }

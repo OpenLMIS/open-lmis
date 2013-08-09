@@ -202,5 +202,15 @@ public interface FacilityMapper {
   })
   List<Facility> getFacilitiesCompleteList();
 
-
+    @Select("SELECT facilities.*, facility_types.name  as facilityType "+
+            "FROM facilities, facility_types "+
+            "WHERE   facilities.typeid = facility_types.id and facilities.typeid = #{facilityTypeId}"+
+            "ORDER BY facilities.code, facilities.name")
+    @Results(value = {
+            @Result(property = "geographicZone", column = "geographicZoneId", javaType = Integer.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapperExtension.getGeographicZoneById_Ext")),
+            @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),
+            @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById"))
+    })
+    List<Facility> getFacilitiesListForAFacilityType(Long facilityTypeId);
 }
