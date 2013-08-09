@@ -44,14 +44,68 @@
 		</box>
 	</style>
 	<queryString>
-		<![CDATA[Select (CASE WHEN f.active = true THEN 'Active' WHEN f.active = false THEN 'Inactive' END) as status, gz.name as geographicZone,(select gz1.name from geographic_zones gz1 where gz.parentid=gz1.id) as parentgeographiczone,f.code || '-' || f.name as codename, ft.name facilitytypename,p.name as programname from facilities f, facility_types ft, programs p, programs_supported ps,geographic_zones gz where ps.facilityid=f.id and ps.programid=p.id and f.typeid=ft.id and f.datareportable=true and f.virtualfacility=false and f.satellite=true and f.geographiczoneid=gz.id and f.id in ((select fc.id from facilities fc where p.push=false and  p.active=true and fc.id not in (select distinct f.id from facilities f, programs p, requisition_groups rg, requisition_group_members rgm, requisition_group_program_schedules rgps, programs_supported ps where f.id=rgm.facilityid and f.id=ps.facilityid and p.id=rgps.programid and p.id=ps.programid  and rg.id=rgm.requisitiongroupid and rg.id= rgps.requisitiongroupid))) order by 1,2,3,4;]]>
+		<![CDATA[SELECT
+  F.code || '-' || F.name AS codename,
+  (CASE WHEN F.active = true THEN 'Active' WHEN F.active = false THEN 'Inactive' END) as status,
+  FT.name                 AS facilitytypename,
+  P.name                  AS programname,
+  GZ.name                 AS geographicZone,
+  GL.name                 AS geo_level,
+  GZP.name                AS parentgeographiczone,
+  GLP.name                AS geo_level_parent
+FROM (SELECT
+        F.id         AS facility,
+        PS.programid AS program
+      FROM facilities F
+        INNER JOIN programs_supported PS
+          ON PS.facilityid = F.id
+        LEFT OUTER JOIN requisition_group_members RGM
+          ON F.id = RGM.facilityid
+        LEFT OUTER JOIN requisition_group_program_schedules RGPS
+          ON PS.programid = RGPS.programid
+      EXCEPT
+      SELECT
+        F.id         AS facility,
+        PS.programid AS program
+      FROM facilities F
+        INNER JOIN programs_supported PS
+          ON PS.facilityid = F.id
+        LEFT OUTER JOIN requisition_group_members RGM
+          ON F.id = RGM.facilityid
+        LEFT OUTER JOIN requisition_group_program_schedules RGPS
+          ON PS.programid = RGPS.programid
+      WHERE RGM.requisitiongroupid = RGPS.requisitiongroupid) AS IFP
+
+  INNER JOIN facilities F
+    ON F.id = IFP.facility
+  INNER JOIN facility_types FT
+    ON FT.id = F.typeid
+  INNER JOIN programs P
+    ON P.id = IFP.program
+  INNER JOIN geographic_zones GZ
+    ON F.geographiczoneid = GZ.id
+  INNER JOIN geographic_levels GL
+    ON GZ.levelid = GL.id
+  INNER JOIN geographic_zones GZP
+    ON GZ.parentid = GZP.id
+  INNER JOIN geographic_levels GLP
+    ON GZP.levelid = GLP.id
+
+WHERE F.dataReportable = TRUE
+      AND F.virtualFacility = FALSE
+      AND F.satellite = FALSE
+      AND P.active = TRUE
+      AND P.push = FALSE
+ORDER BY status, GZP.name, GZ.name, F.code;]]>
 	</queryString>
-	<field name="status" class="java.lang.String"/>
-	<field name="geographiczone" class="java.lang.String"/>
-	<field name="parentgeographiczone" class="java.lang.String"/>
 	<field name="codename" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
 	<field name="facilitytypename" class="java.lang.String"/>
 	<field name="programname" class="java.lang.String"/>
+	<field name="geographiczone" class="java.lang.String"/>
+	<field name="geo_level" class="java.lang.String"/>
+	<field name="parentgeographiczone" class="java.lang.String"/>
+	<field name="geo_level_parent" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -76,36 +130,22 @@
 	<pageHeader>
 		<band height="20" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="ef159a2f-33d9-42ba-9b59-6670c74bd785" x="512" y="0" width="144" height="20"/>
+				<reportElement uuid="ef159a2f-33d9-42ba-9b59-6670c74bd785" x="226" y="0" width="128" height="20"/>
 				<textElement>
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Facility Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="9a07393f-5522-4bce-9f72-d87cd57c5a0d" x="318" y="0" width="194" height="20"/>
+				<reportElement uuid="9a07393f-5522-4bce-9f72-d87cd57c5a0d" x="55" y="0" width="171" height="20"/>
 				<textElement>
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Facility Code - Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="d949733d-046b-41aa-a2a4-3d5c0bd9170a" x="86" y="0" width="114" height="20"/>
+				<reportElement uuid="5a7f10ba-925c-4ca7-b48a-4feb4161ed64" x="354" y="0" width="70" height="20"/>
 				<textElement>
-					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
-				</textElement>
-				<text><![CDATA[Province]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="a3153510-d287-46ad-835a-df817aa47786" x="200" y="0" width="118" height="20"/>
-				<textElement>
-					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
-				</textElement>
-				<text><![CDATA[District]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="5a7f10ba-925c-4ca7-b48a-4feb4161ed64" x="0" y="0" width="86" height="20"/>
-				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Status]]></text>
@@ -117,27 +157,43 @@
 				</textElement>
 				<text><![CDATA[Program]]></text>
 			</staticText>
+			<textField>
+				<reportElement uuid="2ec66298-1d0b-4a17-9095-c3dfae17053a" x="552" y="0" width="104" height="20"/>
+				<textElement>
+					<font size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{geo_level_parent}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="535fc724-2255-49e1-9f10-e829735ed20e" x="424" y="0" width="128" height="20"/>
+				<textElement>
+					<font size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{geo_level}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="038536ec-acb1-4e50-b801-bab259cd2177" x="0" y="0" width="55" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[S.No.]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
 		<band height="20">
 			<textField>
-				<reportElement uuid="5cd9e45f-a83f-4627-bf8f-b4e8e8a3620a" x="200" y="0" width="118" height="20"/>
+				<reportElement uuid="5cd9e45f-a83f-4627-bf8f-b4e8e8a3620a" x="552" y="0" width="104" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{geographiczone}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="f8bab911-1457-4910-8879-e692ca246dc4" x="86" y="0" width="114" height="20"/>
+				<reportElement uuid="f8bab911-1457-4910-8879-e692ca246dc4" x="424" y="0" width="128" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{parentgeographiczone}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="0c4098bf-d027-42d2-807b-993dcada8fda" x="318" y="0" width="194" height="20"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{codename}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="95c7a6d6-5ba1-4e3e-990e-358e193a2797" x="512" y="0" width="144" height="20"/>
+				<reportElement uuid="95c7a6d6-5ba1-4e3e-990e-358e193a2797" x="226" y="0" width="128" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{facilitytypename}]]></textFieldExpression>
 			</textField>
@@ -147,9 +203,19 @@
 				<textFieldExpression><![CDATA[$F{programname}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="7396086d-2a40-4c6c-9e9f-cd1bf4877284" x="0" y="0" width="86" height="20"/>
-				<textElement textAlignment="Center"/>
+				<reportElement uuid="7396086d-2a40-4c6c-9e9f-cd1bf4877284" x="354" y="0" width="70" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0c4098bf-d027-42d2-807b-993dcada8fda" x="55" y="0" width="171" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{codename}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="eb632d7a-a4f1-42e3-a6ef-3c97765d531d" x="0" y="0" width="55" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
