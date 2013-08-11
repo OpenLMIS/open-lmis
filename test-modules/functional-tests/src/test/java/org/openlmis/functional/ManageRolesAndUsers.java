@@ -78,10 +78,22 @@ public class ManageRolesAndUsers extends TestCaseHelper {
         userPage.clickDisableButton();
     }
 
+    @Then("^I should see disable fields$")
+    public void verifyDisableFields() throws Exception {
+        UserPage userPage = new UserPage(testWebDriver);
+        userPage.verifyFieldsDisabled();
+    }
+
     @Then("^I should see disable user \"([^\"]*)\" message$")
     public void verifyDisableUser(String user) throws Exception {
         UserPage userPage = new UserPage(testWebDriver);
         //userPage.verifyMessage("User \''"+ user +"\'' has been disabled");
+    }
+
+    @Then("^I should see enable fields$")
+    public void verifyEnableFields() throws Exception {
+        UserPage userPage = new UserPage(testWebDriver);
+        userPage.verifyFieldsEnabled();
     }
 
     @When("^I restore user \"([^\"]*)\"$")
