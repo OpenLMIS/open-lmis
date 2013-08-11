@@ -61,6 +61,9 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']/span")
   private static WebElement successMessage;
 
+  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
+  private static WebElement userUpdateSuccessMessage;
+
   @FindBy(how = How.ID, using = "searchFacility")
   private static WebElement searchFacility;
 
@@ -73,8 +76,8 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='changePassword']/div/input[1]")
   private static WebElement resetPasswordDone;
 
-    @FindBy(how = How.XPATH, using = "//div[@id='changePassword']/div/input[2]")
-    private static WebElement resetPasswordCancel;
+  @FindBy(how = How.XPATH, using = "//div[@id='changePassword']/div/input[2]")
+  private static WebElement resetPasswordCancel;
 
   @FindBy(how = How.XPATH, using = "//a[@ng-click='setSelectedFacility(facility)']")
   private static WebElement selectFacility;
@@ -163,6 +166,12 @@ public class UserPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'No matches found for')]")
   private static WebElement noMatchFoundLink;
+
+  @FindBy(how = How.XPATH, using = "//input[@class='btn btn-danger delete-button']")
+  private static WebElement disableButton;
+
+  @FindBy(how = How.XPATH, using = "//input[@value='Restore']")
+  private static WebElement restoreButton;
 
   public UserPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -306,6 +315,10 @@ public class UserPage extends Page {
 
   }
 
+    public void verifyMessage(String message){
+        SeleneseTestNgHelper.assertEquals(userUpdateSuccessMessage.getText(),message) ;
+    }
+
     public void enterDeliveryZoneData(String deliveryZoneCode, String program, String role) {
         testWebDriver.handleScroll();
         testWebDriver.waitForElementToAppear(deliveryZone);
@@ -377,6 +390,18 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
     testWebDriver.sleep(100);
+  }
+
+  public void clickDisableButton() {
+    testWebDriver.waitForElementToAppear(disableButton);
+    disableButton.click();
+    clickOk();
+  }
+
+  public void clickRestoreButton() {
+    testWebDriver.waitForElementToAppear(restoreButton);
+    restoreButton.click();
+    clickOk();
   }
 
   public void verifyRolePresent(String roleName) {

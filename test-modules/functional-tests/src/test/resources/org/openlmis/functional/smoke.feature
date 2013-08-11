@@ -261,3 +261,16 @@ Feature: Smoke Tests
     When I choose facility "F10"
     Then I should see "Health center" in the header
     And  I should see "Village Dispensary" in the header
+
+  @smoke
+  @ie2
+
+  Scenario: Admin can create, disable & restore user
+    Given I am logged in as Admin
+    When I create a user:
+      |Email                  |Firstname|Lastname|UserName       |
+      |Dummy_User@openlmis.com|Dummy    |User    |Dummy          |
+    And I disable user "Dummy User"
+    Then I should see disable user "Dummy User" message
+    And I restore user "Dummy User"
+    Then I should see restore user "Dummy User" message
