@@ -6,6 +6,7 @@
 
 package org.openlmis.pageobjects;
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -96,6 +97,33 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = XPATH, using = "//h3[contains(text(),'Refrigerators')]")
   private static WebElement refrigeratorsHeader;
 
+  @FindBy(how = ID, using = "brand")
+  private static WebElement brandTextField;
+
+  @FindBy(how = ID, using = "model")
+  private static WebElement modelTextField;
+
+  @FindBy(how = ID, using = "manufacturerSerialNumber")
+  private static WebElement manufacturerSerialNumberTextField;
+
+  @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[3]/a[1]")
+  private static WebElement doneButtonOnModal;
+
+  @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[3]/a[2]")
+  private static WebElement cancelButtonOnModal;
+
+  @FindBy(how = XPATH, using = "//h3[contains(text(),'New Refrigerator')]")
+  private static WebElement newRefrigeratorHeaderOnModal;
+
+  @FindBy(how = XPATH, using = "//a[contains(text(),'Next »')]")
+  private static WebElement nextLink;
+
+  @FindBy(how = XPATH, using = "//a[contains(text(),'« Previous')]")
+  private static WebElement previousLink;
+
+  @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']")
+  private static WebElement saveSuccessMessageDiv;
+
 
   protected RefrigeratorPage(TestWebDriver driver) {
     super(driver);
@@ -156,6 +184,21 @@ public class RefrigeratorPage extends Page {
     sendKeys(lowAlarmEventsTextField, value);
   }
 
+  public void enterValueInBrandModal(String value) {
+    testWebDriver.waitForElementToAppear(brandTextField);
+    sendKeys(brandTextField, value);
+  }
+
+  public void enterValueInModelModal(String value) {
+    testWebDriver.waitForElementToAppear(modelTextField);
+    sendKeys(modelTextField, value);
+  }
+
+  public void enterValueInManufacturingSerialNumberModal(String value) {
+    testWebDriver.waitForElementToAppear(manufacturerSerialNumberTextField);
+    sendKeys(manufacturerSerialNumberTextField, value);
+  }
+
   public void enterValueInHighAlarmEvents(String value) {
     testWebDriver.waitForElementToAppear(highAlarmEventsTextField);
     sendKeys(highAlarmEventsTextField, value);
@@ -174,6 +217,16 @@ public class RefrigeratorPage extends Page {
   public void clickRefrigeratorTemperatureNR() {
     testWebDriver.waitForElementToAppear(refrigeratorTemperatureNR);
     refrigeratorTemperatureNR.click();
+  }
+
+  public void clickDoneOnModal() {
+    testWebDriver.waitForElementToAppear(doneButtonOnModal);
+    doneButtonOnModal.click();
+  }
+
+  public void clickCancelOnModal() {
+    testWebDriver.waitForElementToAppear(cancelButtonOnModal);
+    cancelButtonOnModal.click();
   }
 
   public void clickLowAlarmEventNR() {
@@ -209,11 +262,13 @@ public class RefrigeratorPage extends Page {
   public void clickAddNew() {
     testWebDriver.waitForElementToAppear(addNewButton);
     addNewButton.click();
+    testWebDriver.waitForElementToAppear(newRefrigeratorHeaderOnModal);
   }
 
   public void clickEdit() {
     testWebDriver.waitForElementToAppear(editButton);
     editButton.click();
+    testWebDriver.waitForElementToAppear(refrigeratorTemperatureNR);
   }
 
   public void clickDelete() {
@@ -230,6 +285,20 @@ public class RefrigeratorPage extends Page {
   public void clickDone() {
     testWebDriver.waitForElementToAppear(doneButton);
     doneButton.click();
+  }
+
+  public void addNewRefrigerator(String brand, String model, String manufacturerSerialNumber)
+  {
+    enterValueInBrandModal(brand);
+    enterValueInModelModal(model);
+    enterValueInManufacturingSerialNumberModal(manufacturerSerialNumber);
+    clickDoneOnModal();
+  }
+
+  public void verifySuccessMessage(String message)
+  {
+    testWebDriver.waitForElementToAppear(saveSuccessMessageDiv);
+    SeleneseTestNgHelper.assertEquals(saveSuccessMessageDiv.getText(),message);
   }
 
 }
