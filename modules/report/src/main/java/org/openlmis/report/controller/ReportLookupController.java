@@ -13,6 +13,7 @@ import org.openlmis.report.model.dto.ProductCategory;
 import org.openlmis.report.model.dto.RequisitionGroup;
 import org.openlmis.report.service.ReportLookupService;
 import org.openlmis.report.response.OpenLmisResponse;
+import org.openlmis.report.util.InteractiveReportPeriodFilterParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -140,5 +142,22 @@ public class ReportLookupController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getAll(@PathVariable("scheduleId") Long scheduleId) {
       List<ProcessingPeriod> periodList = processingScheduleService.getAllPeriods(scheduleId);
       return OpenLmisResponse.response("periods", periodList);
+    }
+
+    @RequestMapping(value = "/allPeriods", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllPeriods(HttpServletRequest request) {
+        List<org.openlmis.report.model.dto.ProcessingPeriod> periodList = reportLookupService.getAllProcessingPeriods();
+        return OpenLmisResponse.response("periods", periodList);
+    }
+
+    @RequestMapping(value = "/periods", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFilteredPeriods(HttpServletRequest request) {
+
+        Date startDate = InteractiveReportPeriodFilterParser.getStartDateFilterValue(request.getParameterMap());
+        Date endDate = InteractiveReportPeriodFilterParser.getEndDateFilterValue(request.getParameterMap());
+
+        List<org.openlmis.report.model.dto.ProcessingPeriod> periodList = reportLookupService.getFilteredPeriods(startDate,endDate);
+
+        return OpenLmisResponse.response("periods", periodList);
     }
 }

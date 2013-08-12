@@ -6,6 +6,7 @@ import org.openlmis.report.mapper.OrderSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.filter.OrderReportFilter;
 import org.openlmis.report.util.Constants;
+import org.openlmis.report.util.InteractiveReportPeriodFilterParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -67,7 +68,7 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
             orderReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
             orderReportFilter.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
             orderReportFilter.setFacilityType( (filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "ALL Facilities" : filterCriteria.get("facilityType")[0]);
-            orderReportFilter.setFacility(filterCriteria.get("facilityName") == null ? "" : filterCriteria.get("facility")[0]);
+            orderReportFilter.setFacility(filterCriteria.get("facilityName") == null ? "" : filterCriteria.get("facilityName")[0]);
             orderReportFilter.setFacilityTypeId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0])); //defaults to 0
 
             orderReportFilter.setRgroup( (filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "ALL Reporting Groups" : filterCriteria.get("rgroup")[0]);
@@ -76,8 +77,13 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
             orderReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
             orderReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
             orderReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
+            orderReportFilter.setOrderType(filterCriteria.get("orderType") == null ? "" : filterCriteria.get("orderType")[0].toString());
+            orderReportFilter.setProductId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0])); //defaults to 0
 
-            orderReportFilter.setYearFrom(filterCriteria.get("fromYear") == null ? originalStart.get(Calendar.YEAR) : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0
+            orderReportFilter.setStartDate(InteractiveReportPeriodFilterParser.getStartDateFilterValue(filterCriteria));
+            orderReportFilter.setEndDate(InteractiveReportPeriodFilterParser.getEndDateFilterValue(filterCriteria));
+
+            /*orderReportFilter.setYearFrom(filterCriteria.get("fromYear") == null ? originalStart.get(Calendar.YEAR) : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0
             orderReportFilter.setYearTo(filterCriteria.get("toYear") == null ? originalEnd.get(Calendar.YEAR) : Integer.parseInt(filterCriteria.get("toYear")[0])); //defaults to 0
             orderReportFilter.setMonthFrom(filterCriteria.get("fromMonth") == null ? originalStart.get(Calendar.MONTH) : Integer.parseInt(filterCriteria.get("fromMonth")[0])); //defaults to 0
             orderReportFilter.setMonthTo(filterCriteria.get("toMonth") == null ? originalEnd.get(Calendar.MONTH) : Integer.parseInt(filterCriteria.get("toMonth")[0])); //defaults to 0
@@ -117,7 +123,9 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
             calendar.set(Calendar.YEAR, orderReportFilter.getYearTo());
             calendar.set(Calendar.MONTH, monthTo);
             calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-            orderReportFilter.setEndDate(calendar.getTime());
+            orderReportFilter.setEndDate(calendar.getTime());*/
+
+
 
         }
         return orderReportFilter;

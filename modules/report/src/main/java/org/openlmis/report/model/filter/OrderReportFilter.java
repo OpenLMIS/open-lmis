@@ -41,6 +41,7 @@ public class OrderReportFilter implements ReportData {
     private int programId;
     private String orderType;
     private int zoneId;
+    private int periodId;
 
     @Override
     public String toString(){

@@ -78,8 +78,8 @@ public class OrderSummaryQueryBuilder {
 
         WHERE("requisitions.programid = "+filter.getProgramId());
         WHERE("facilities.id = "+filter.getFacilityId());
-        WHERE("processing_periods.startdate >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
-        WHERE("processing_periods.enddate <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
+        WHERE("processing_periods.id = "+filter.getPeriodId());
+
         if (filter.getZoneId() != 0 && filter.getZoneId() != -1) {
             WHERE("facilities.geographiczoneid = "+filter.getZoneId());
         }

@@ -158,6 +158,13 @@ public class ReportLookupService {
         return processingPeriodMapper.getAll();
     }
 
+    public List<ProcessingPeriod> getFilteredPeriods(Date startDate, Date endDate){
+        if(startDate == null && endDate == null){
+            return processingPeriodMapper.getAll();
+        }
+        return processingPeriodMapper.getFilteredPeriods(startDate, endDate);
+    }
+
     public List<ProductGroup> getAllProductGroups(){
         return productGroupReportMapper.getAll();
     }
