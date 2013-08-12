@@ -87,7 +87,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     @Then("^I should see disable user \"([^\"]*)\" message$")
     public void verifyDisableUser(String user) throws Exception {
         UserPage userPage = new UserPage(testWebDriver);
-        //userPage.verifyMessage("User \''"+ user +"\'' has been disabled");
+        userPage.verifyMessage("User \''"+ user +"\'' has been disabled");
     }
 
     @Then("^I should see enable fields$")
@@ -277,6 +277,18 @@ public class ManageRolesAndUsers extends TestCaseHelper {
         userPage.focusOnFirstUserLink();
         userPage.verifyResetPassword();
 
+        userPage.clickEditUser();
+        userPage.clickDisableButton();
+        homePage.navigateToUser();
+        userPage.searchUser(LAB_IN_CHARGE);
+        userPage.focusOnFirstUserLink();
+        userPage.verifyDisabledResetPassword();
+        userPage.clickEditUser();
+        userPage.clickRestoreButton();
+
+        homePage.navigateToUser();
+        userPage.searchUser(LAB_IN_CHARGE);
+        userPage.focusOnFirstUserLink();
         userPage.resetPassword("abcd1234","abcd1234");
 
         homePage.logout(baseUrlGlobal);

@@ -201,6 +201,11 @@ public class UserPage extends Page {
         testWebDriver.waitForElementToAppear(selectFirstEditUser);
     }
 
+    public void clickEditUser() {
+        testWebDriver.waitForElementToAppear(selectFirstEditUser);
+        selectFirstEditUser.click();
+    }
+
     public void verifyUserOnList(String userString) {
         testWebDriver.waitForElementToAppear(firstUserLink);
         SeleneseTestNgHelper.assertTrue("User not available in list.", firstUserLink.getText().contains(userString)) ;
@@ -209,6 +214,11 @@ public class UserPage extends Page {
     public void verifyResetPassword() {
         testWebDriver.waitForElementToAppear(firstUserLink);
         SeleneseTestNgHelper.assertTrue("Reset password link not available.",selectFirstResetPassword.isDisplayed()) ;
+    }
+
+    public void verifyDisabledResetPassword() {
+        testWebDriver.waitForElementToAppear(firstUserLink);
+        assertTrue("Reset password link not disabled.", selectFirstResetPassword.getAttribute("class").contains("disabled")) ;
     }
 
     public void resetPassword(String newPassword, String confirmPassword) {
