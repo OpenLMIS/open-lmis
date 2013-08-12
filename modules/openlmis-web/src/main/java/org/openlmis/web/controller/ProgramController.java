@@ -58,7 +58,7 @@ public class ProgramController extends BaseController {
     return pullPrograms;
   }
 
-  @RequestMapping(value = "/create/requisition/programs")
+  @RequestMapping(value = "/create/requisition/programs",  method = GET, headers = ACCEPT_JSON)
   public List<Program> getProgramsForCreateOrAuthorizeRequisition(@RequestParam(value = "facilityId", required = false) Long facilityId,
                                                                   HttpServletRequest request) {
     Right[] rights = {CREATE_REQUISITION, AUTHORIZE_REQUISITION};

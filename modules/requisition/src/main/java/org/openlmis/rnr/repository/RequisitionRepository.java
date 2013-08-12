@@ -20,9 +20,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 
-import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
-import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
-import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
+import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Repository
 public class RequisitionRepository {
@@ -77,7 +75,7 @@ public class RequisitionRepository {
   }
 
   private void updateRegimenLineItems(Rnr rnr) {
-    for(RegimenLineItem regimenLineItem : rnr.getRegimenLineItems()){
+    for (RegimenLineItem regimenLineItem : rnr.getRegimenLineItems()) {
       regimenLineItemMapper.update(regimenLineItem);
     }
   }

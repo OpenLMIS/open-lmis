@@ -81,6 +81,7 @@ public class FacilityService {
     return facility;
   }
 
+  @Transactional
   public void updateDataReportableAndActiveFor(Facility facility) {
     facility = facilityRepository.updateDataReportableAndActiveFor(facility);
     notify(facility, null);
