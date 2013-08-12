@@ -1,4 +1,4 @@
-function OrderReportController($scope, OrderReport, Products ,ReportFacilityTypes,GeographicZones, $http,OperationYears, Months, ReportPrograms, $routeParams,$location) {
+function OrderReportController($scope, OrderReport, Products ,ReportFacilityTypes,GeographicZones,AllReportPeriods,ReportFilteredPeriods, $http,OperationYears, Months, ReportPrograms,AllFacilites,GetFacilityByFacilityType, $routeParams,$location) {
         //to minimize and maximize the filter section
         var section = 1;
 
@@ -142,6 +142,7 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
              rgroupId : $scope.rgroup,
              rgroup : "",
              facilityName : $scope.facilityNameFilter,
+             facilityId: $scope.facility,
              orderType: ""
         };
 
@@ -155,6 +156,11 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             $scope.facilityTypes.push({'name': 'All Facility Types', 'id' : 'All'});
         });
 
+        AllFacilites.get(function(data){
+            $scope.allFacilities = data.allFacilities;
+        });
+
+
         Products.get(function(data){
             $scope.products = data.productList;
             $scope.products.push({'name': 'All Products','id':'All'});
@@ -164,6 +170,24 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             $scope.zones = data.zones;
             $scope.zones.push({'name': '- All Zones -', 'id' : 'All'});
         });
+
+        AllReportPeriods.get(function(data) {
+            $scope.periods = data.periods;
+            $scope.periods.push({'name': 'Select Period'});
+        });
+
+        $scope.ChangeReportingPeriods = function(){
+            var params  = {};
+
+            $.each($scope.filterObject, function(index, value) {
+
+                params[index] = value;
+            });
+
+            ReportFilteredPeriods.get(params, function(data) {
+                $scope.periods = data.periods;
+            });
+        }
 
         $scope.$watch('facilityType', function(selection){
             if(selection == "All"){
@@ -178,10 +202,35 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             }else{
                 $scope.filterObject.facilityTypeId =  0;
             }
-            $scope.filterGrid();
+            if($scope.filterObject.facilityTypeId !== -1 && $scope.filterObject.facilityTypeId !== 0){
+
+                $scope.ChangeFacility();
+            }
+           $scope.filterGrid();
         });
 
-        $scope.$watch('orderType', function(selection){
+        $scope.ChangeFacility = function(){
+            GetFacilityByFacilityType.get({ facilityTypeId : $scope.filterObject.facilityTypeId },function(data) {
+                $scope.allFacilities =  data.facilities;
+            });
+        };
+
+    $scope.$watch('facility', function(selection){
+        if(selection != undefined || selection == ""){
+            $scope.filterObject.facilityId =  selection;
+            $.each( $scope.allFacilities,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.facilityName = idx.name;
+                }
+            });
+        }else{
+            $scope.filterObject.facilityId =  0;
+        }
+         $scope.filterGrid();
+    });
+
+
+    $scope.$watch('orderType', function(selection){
             if(selection != undefined || selection == ""){
                 $scope.filterObject.orderType =  selection;
 
@@ -264,6 +313,7 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
                 $scope.startYear  = date.getFullYear().toString();
                 $scope.filterObject.fromYear =  date.getFullYear();
             }
+            $scope.ChangeReportingPeriods();
             $scope.filterGrid();
         });
 
@@ -278,6 +328,7 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
                 $scope.endYear  = date.getFullYear().toString();
                 $scope.filterObject.toYear =  date.getFullYear();
             }
+            $scope.ChangeReportingPeriods();
             $scope.filterGrid();
         });
 
@@ -290,6 +341,7 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
                 var date = new Date();
                 $scope.filterObject.fromQuarter =  1;
             }
+            $scope.ChangeReportingPeriods();
             $scope.filterGrid();
         });
 
@@ -301,6 +353,7 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
                 var date = new Date();
                 $scope.filterObject.toQuarter =  $scope.filterObject.fromQuarter;
             }
+            $scope.ChangeReportingPeriods();
             $scope.filterGrid();
         });
 
@@ -312,6 +365,7 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             }else{
                 $scope.filterObject.fromSemiAnnual =  1;
             }
+            $scope.ChangeReportingPeriods();
             $scope.filterGrid();
         });
         $scope.$watch('endHalf', function(selection){
@@ -322,6 +376,7 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
                 var date = new Date();
                 $scope.filterObject.toSemiAnnual =  1;
             }
+            $scope.ChangeReportingPeriods();
             $scope.filterGrid();
         });
         $scope.$watch('startMonth', function(selection){
@@ -333,6 +388,7 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
                 $scope.startMonth = (date.getMonth()+1 ).toString();
                 $scope.filterObject.fromMonth =  (date.getMonth()+1);
             }
+            $scope.ChangeReportingPeriods();
             $scope.filterGrid();
         });
 
@@ -344,6 +400,7 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
                 $scope.endMonth = (date.getMonth() +1 ).toString();
                 $scope.filterObject.toMonth =  (date.getMonth()+1);
             }
+            $scope.ChangeReportingPeriods();
             $scope.filterGrid();
         });
 
@@ -416,6 +473,7 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             }else{
                 $scope.filterObject.periodType =  "monthly";
             }
+            $scope.ChangeReportingPeriods();
             $scope.filterGrid();
         });
 

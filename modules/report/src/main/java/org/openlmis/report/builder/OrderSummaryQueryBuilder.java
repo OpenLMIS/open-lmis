@@ -1,6 +1,8 @@
 package org.openlmis.report.builder;
 
 
+import org.openlmis.report.model.filter.OrderReportFilter;
+
 import java.util.Calendar;
 import java.util.Map;
 
@@ -14,9 +16,9 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
 public class OrderSummaryQueryBuilder {
     public static String SelectFilteredSortedPagedRecords(Map params){
 
-        Map<String, String []> filter = (Map<String, String[]>) params.get("filterCriteria");
 
-        String orderType =   filter.get("orderType") == null ? null : filter.get("orderType")[0];
+        OrderReportFilter filter  = (OrderReportFilter)params.get("filterCriteria");
+        String orderType =   filter.getOrderType() == null ? null : filter.getOrderType();
 
         //Regular Orders
         if(orderType == null || orderType.isEmpty() || orderType.equals("Regular")){
@@ -30,9 +32,17 @@ public class OrderSummaryQueryBuilder {
             INNER_JOIN("facility_types on facility_types.id = facilities.typeid ");
             INNER_JOIN("requisition_line_items on requisition_line_items.rnrid = requisitions.id");
             INNER_JOIN("products on products.code::text = requisition_line_items.productcode::text");
+            INNER_JOIN("program_products ON program_products.productid = products.id ");
+            INNER_JOIN("programs ON  program_products.programid = programs.id   AND  programs.id = requisitions.programid ");
+            INNER_JOIN("programs_supported ON  programs.id = programs_supported.programid   AND   facilities.id = programs_supported.facilityid");
+            INNER_JOIN("requisition_group_members ON facilities.id = requisition_group_members.facilityid");
+            INNER_JOIN("requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid ");
+            INNER_JOIN("requisition_group_program_schedules ON requisition_group_program_schedules.programid = programs.id   AND requisition_group_program_schedules.requisitiongroupid = requisition_groups.id ");
+            INNER_JOIN("processing_schedules ON processing_schedules.id = requisition_group_program_schedules.programid");
+            INNER_JOIN("processing_periods ON processing_periods.scheduleid = processing_schedules.id ");
             LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments on requisition_line_item_losses_adjustments.requisitionlineitemid = requisition_line_items.id");
             LEFT_OUTER_JOIN("geographic_zones  on geographic_zones.id = facilities.geographiczoneid");
-            writePredicates(params);
+            writePredicates(filter);
             ORDER_BY("facilities.name asc");
             return SQL();
 
@@ -48,43 +58,35 @@ public class OrderSummaryQueryBuilder {
             INNER_JOIN("facility_types on facility_types.id = facilities.typeid ");
             INNER_JOIN("requisition_line_items on requisition_line_items.rnrid = requisitions.id");
             INNER_JOIN("products on products.code::text = requisition_line_items.productcode::text");
+            INNER_JOIN("program_products ON program_products.productid = products.id ");
+            INNER_JOIN("programs ON  program_products.programid = programs.id   AND  programs.id = requisitions.programid ");
+            INNER_JOIN("programs_supported ON  programs.id = programs_supported.programid   AND   facilities.id = programs_supported.facilityid");
+            INNER_JOIN("requisition_group_members ON facilities.id = requisition_group_members.facilityid");
+            INNER_JOIN("requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid ");
+            INNER_JOIN("requisition_group_program_schedules ON requisition_group_program_schedules.programid = programs.id   AND requisition_group_program_schedules.requisitiongroupid = requisition_groups.id ");
+            INNER_JOIN("processing_schedules ON processing_schedules.id = requisition_group_program_schedules.programid");
+            INNER_JOIN("processing_periods ON processing_periods.scheduleid = processing_schedules.id ");
             LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments on requisition_line_item_losses_adjustments.requisitionlineitemid = requisition_line_items.id");
             LEFT_OUTER_JOIN("geographic_zones  on geographic_zones.id = facilities.geographiczoneid");
-            writePredicates(params);
+            writePredicates(filter);
             ORDER_BY("facilities.name asc");
             return SQL();
         }
     }
 
-    private static void writePredicates(Map params){
-        Map<String, String []> filter = (Map<String, String[]>) params.get("filterCriteria");
-        Calendar originalStart = Calendar.getInstance();
-        Calendar originalEnd = Calendar.getInstance();
+    private static void writePredicates(OrderReportFilter  filter){
 
-        String facilityTypeId =  filter.get("facilityTypeId") == null ? null : filter.get("facilityTypeId")[0];
-        String facilityName = filter.get("facilityName") == null ? null : filter.get("facilityName")[0];
-        String product =   filter.get("productId") == null ? null : filter.get("productId")[0];
-        String zone =     filter.get("zoneId") == null ? null : filter.get("zoneId")[0];
+        WHERE("requisitions.programid = "+filter.getProgramId());
+        WHERE("facilities.id = "+filter.getFacilityId());
+        WHERE("processing_periods.id = "+filter.getPeriodId());
 
-        if (zone != null &&  !zone.equals("undefined") && !zone.isEmpty() && !zone.equals("0")  && !zone.equals("-1")) {
-            WHERE("facilities.geographiczoneid = "+zone);
+        if (filter.getZoneId() != 0 && filter.getZoneId() != -1) {
+            WHERE("facilities.geographiczoneid = "+filter.getZoneId());
         }
-        if (!product.equals("-1")) {
-            WHERE("products.id ="+ product);
+        if (filter.getProductId() != -1) {
+            WHERE("products.id ="+ filter.getProductId());
         }
 
-        if (facilityTypeId != null &&  !facilityTypeId.equals("undefined") && !facilityTypeId.isEmpty() && !facilityTypeId.equals("0") &&  !facilityTypeId.equals("-1")) {
-            WHERE("facility_types.id = "+ facilityTypeId);
-        }
-        if (facilityName != null &&  !facilityName.equals("undefined") && !facilityName.isEmpty() ) {
-            WHERE("facilities.name = '"+ facilityName +"'");
-        }
-       /* if (filter.getStartDate() != null) {
-            WHERE("processing_periods_start_date >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
-        }
-        if (filter.getEndDate() != null) {
-            WHERE("processing_periods_end_date <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
-        }*/
 
     }
 }

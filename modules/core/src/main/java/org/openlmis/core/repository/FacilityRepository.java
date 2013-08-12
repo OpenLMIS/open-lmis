@@ -49,6 +49,10 @@ public class FacilityRepository {
       return mapper.getFacilitiesCompleteList();
   }
 
+    public List<Facility> getFacilitiesForAFacilityType(Long facilityTypeId){
+        return mapper.getFacilitiesListForAFacilityType(facilityTypeId);
+    }
+
   public List<Facility> getMailingLabels(){
       return mapper.getMailingLabels();
   }

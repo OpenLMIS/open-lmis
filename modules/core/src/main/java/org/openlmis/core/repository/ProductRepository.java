@@ -57,10 +57,6 @@ public class ProductRepository {
     }
   }
 
-  public void update(Product product) {
-    mapper.update(product);
-  }
-
   private void validateAndSetProductGroup(Product product) {
     ProductGroup group = product.getProductGroup();
     if (group == null) return;

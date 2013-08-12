@@ -97,6 +97,14 @@ services.factory('ReportPeriods', function ($resource) {
     return $resource('/reports/schedules/:scheduleId/periods.json', {}, {});
 });
 
+services.factory('AllReportPeriods', function ($resource) {
+    return $resource('/reports/allPeriods.json', {}, {});
+});
+
+services.factory('ReportFilteredPeriods', function ($resource) {
+    return $resource('/reports/periods.json', {}, {});
+});
+
 services.factory('GeographicZones', function ($resource) {
     return $resource('/reports/geographicZones.json', {}, {});
 });
@@ -172,6 +180,10 @@ services.factory('FacilityCompleteListInRequisitionGroup',function($resource){
 
 services.factory('GetFacilityCompleteList',function($resource){
     return $resource('/facilities/getFacilityCompleteList.json',{},{});
+});
+
+services.factory('GetFacilityByFacilityType',function($resource){
+    return $resource('/facilities/facilityType/:facilityTypeId.json',{},{});
 });
 
 services.factory('SaveRequisitionGroupMember',function($resource){

@@ -24,11 +24,9 @@ public interface OrderSummaryReportMapper {
     @SelectProvider(type=OrderSummaryQueryBuilder.class, method="SelectFilteredSortedPagedRecords")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<OrderSummaryReport> getFilteredSortedPagedOrderSummaryReport(
-            @Param("filterCriteria") Map<String, String[]> filterCriteria,
+            @Param("filterCriteria") ReportData filterCriteria,
             @Param("RowBounds") RowBounds rowBounds
     );
 
-    @SelectProvider(type=OrderSummaryQueryBuilder.class, method="SelectFilteredSortedPagedRecordsCount")
-    public Integer SelectFilteredOrderSummaryReportCount(@Param("filterCriteria") Map<String, String[]> filterCriteria);
 
 }
