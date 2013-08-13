@@ -4,10 +4,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function RefrigeratorController($scope, refrigerators, distribution) {
+function RefrigeratorController(IndexedDB, $scope, $routeParams, refrigerators) {
 
   $scope.refrigerators = refrigerators;
-  $scope.distribution = distribution;
+  console.log(refrigerators);
 
   $scope.closeRefrigeratorModal = function () {
     $scope.addRefrigeratorModal = false;
@@ -48,21 +48,15 @@ RefrigeratorController.resolve = {
 
   refrigerators: function ($q, IndexedDB, $route) {
     var waitOn = $q.defer();
-    var distributionId = $route.current.params.distribution;
+    var zpp = $route.current.params.zpp;
     var facilityId = $route.current.params.facility;
 
-    IndexedDB.get('distributionReferenceData', utils.parseIntWithBaseTen(distributionId), function (event) {
-      waitOn.resolve(_.where(event.target.result.refrigerators, {facilityId: utils.parseIntWithBaseTen(facilityId)}));
-    }, {});
-
-    return waitOn.promise;
-  },
-
-  distribution: function ($q, IndexedDB, $route) {
-    var waitOn = $q.defer();
-    IndexedDB.get('distributions', utils.parseIntWithBaseTen($route.current.params.distribution), function (e) {
-      waitOn.resolve(e.target.result);
-    }, {});
+    IndexedDB.transaction(function (connection) {
+      var request = connection.transaction('distributionReferenceData').objectStore('distributionReferenceData').get(zpp);
+      request.onsuccess = function (event) {
+        waitOn.resolve(_.where(event.target.result.refrigerators, {facilityId: utils.parseIntWithBaseTen(facilityId)}));
+      }
+    });
 
     return waitOn.promise;
   }

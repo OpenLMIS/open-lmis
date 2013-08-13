@@ -4,19 +4,23 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-app.directive('autoSave', function ($route) {
+app.directive('autoSave', function () {
   return {
     restrict: 'A',
     link: function (scope, element, attrs, ngModelController) {
 
-      var save = {
-        "refrigeratorReadings": function (e) {
-          var fridge = {facilityId: $route.current.params.facility, distributionId: $route.current.params.distribution, serialNumber: scope.refrigerator.serialNumber}
-        }
+      console.log(element);
+      var inputs = element.find("input[type='text']");
+      var radios = element.find("input[type='radio']");
+      var checkboxes = element.find("input[type='checkbox']");
+      var textareas = element.find("textarea");
 
-      };
+      inputs.each(function(index, input) {
+        $(input).on('blur', function(e) {
+          console.log(scope);
+        });
+      });
 
-      element.find('input, textarea').bind('blur', save[attrs.autoSave]);
     }
   };
 });

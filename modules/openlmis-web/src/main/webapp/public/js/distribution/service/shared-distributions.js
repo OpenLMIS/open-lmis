@@ -14,7 +14,7 @@ distributionModule.service('SharedDistributions', function (IndexedDB, $rootScop
       cursorRequest.onsuccess = function (event) {
         if (event.target.result) {
           aggregate.push(event.target.result.value);
-          event.target.result.continue();
+          event.target.result['continue']();
         }
       };
 
