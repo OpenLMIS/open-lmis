@@ -9,6 +9,7 @@ angular.module('IndexedDB', []).service('IndexedDB', function ($rootScope, $q) {
   var request = indexedDB.open("open_lmis", 3);
   var indexedDBConnection = null;
   var deferred = $q.defer();
+  var thisService = this;
 
   request.onsuccess = function (event) {
     indexedDBConnection = event.currentTarget.result;
@@ -47,5 +48,24 @@ angular.module('IndexedDB', []).service('IndexedDB', function ($rootScope, $q) {
       transactionFunction(indexedDBConnection);
     });
   };
+
+
+  this.get = function (objectStore, operationKey, successFunc, errorFunc) {
+    deferred.promise.then(function () {
+      thisService.transaction(function (connection) {
+          var request = connection.transaction(objectStore).objectStore(objectStore).get(operationKey);
+          request.onsuccess = function (e) {
+            successFunc(e);
+            $rootScope.$apply();
+          };
+          request.onerror = function (e) {
+            console.log(e);
+            errorFunc(e)
+          }
+
+        }
+      )
+    });
+  }
 
 });

@@ -18,7 +18,7 @@ function RecordFacilityDataController($scope, facilities, $location, $routeParam
     }
   }
 
-  $scope.chooseFacility = function() {
+  $scope.chooseFacility = function () {
     $location.path('record-facility-data/' + $routeParams.zpp + '/' + $scope.facilitySelected.id + '/refrigerator-data');
   }
 
@@ -27,19 +27,15 @@ function RecordFacilityDataController($scope, facilities, $location, $routeParam
 
 RecordFacilityDataController.resolve = {
 
-  facilities: function($q, $timeout, IndexedDB, $route) {
+  facilities: function ($q, $timeout, IndexedDB, $route) {
     var waitOn = $q.defer();
     var zpp = $route.current.params.zpp;
 
-    IndexedDB.transaction(function (connection) {
-      var request = connection.transaction('distributionReferenceData').objectStore('distributionReferenceData').get(zpp);
-      request.onsuccess = function (event) {
-        waitOn.resolve(event.target.result.facilities);
-      }
-    });
+    IndexedDB.get('distributionReferenceData', zpp, function (event) {
+      waitOn.resolve(event.target.result.facilities);
+    }, {});
 
     return waitOn.promise;
-
   }
 };
 

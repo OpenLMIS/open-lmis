@@ -51,12 +51,9 @@ RefrigeratorController.resolve = {
     var zpp = $route.current.params.zpp;
     var facilityId = $route.current.params.facility;
 
-    IndexedDB.transaction(function (connection) {
-      var request = connection.transaction('distributionReferenceData').objectStore('distributionReferenceData').get(zpp);
-      request.onsuccess = function (event) {
-        waitOn.resolve(_.where(event.target.result.refrigerators, {facilityId: utils.parseIntWithBaseTen(facilityId)}));
-      }
-    });
+    IndexedDB.get('distributionReferenceData', zpp, function (event) {
+      waitOn.resolve(_.where(event.target.result.refrigerators, {facilityId: utils.parseIntWithBaseTen(facilityId)}));
+    }, {});
 
     return waitOn.promise;
   }
