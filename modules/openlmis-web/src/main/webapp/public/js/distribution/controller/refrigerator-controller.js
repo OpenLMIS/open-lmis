@@ -4,9 +4,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function RefrigeratorController(IndexedDB, $scope, $route) {
+function RefrigeratorController(IndexedDB, $scope, $routeParams, refrigerators) {
 
-  $scope.refrigeratorReading = null;
+  $scope.refrigerators = refrigerators;
+  console.log(refrigerators);
 
   $scope.closeRefrigeratorModal = function () {
     $scope.addRefrigeratorModal = false;
@@ -33,34 +34,32 @@ function RefrigeratorController(IndexedDB, $scope, $route) {
 
 
   $scope.deleteOtherProblems = function (refrigeratorReading) {
-    if (!refrigeratorReading.problemSinceLastTimed) {
-      for (var key in refrigeratorReading.problems.problemMap) {
-        refrigeratorReading.problems.problemMap[key] = undefined
-      }
-      refrigeratorReading.problems.other = undefined;
+    if (refrigeratorReading.problemSinceLastTimed || !refrigeratorReading.problems) return;
+
+    for (var key in refrigeratorReading.problems.problemMap) {
+      refrigeratorReading.problems.problemMap[key] = undefined
     }
+    refrigeratorReading.problems.other = undefined;
   };
 
-  function fetchReferenceData() {
+}
+
+RefrigeratorController.resolve = {
+
+  refrigerators: function ($q, IndexedDB, $route) {
+    var waitOn = $q.defer();
     var zpp = $route.current.params.zpp;
+    var facilityId = $route.current.params.facility;
+
     IndexedDB.transaction(function (connection) {
-      var transaction = connection.transaction(['distributionReferenceData', 'distributions']);
-      var distributionReferenceDataRequest = transaction.objectStore('distributionReferenceData').get(zpp);
-      var by_zpp = transaction.objectStore('distributions').index('index_zpp');
-      by_zpp.get(zpp).onsuccess = function (event) {
-        $scope.distribution = event.target.result;
-        $scope.$apply();
-      };
-      distributionReferenceDataRequest.onsuccess = function (event) {
-        $scope.refrigerators = distributionReferenceDataRequest.result.refrigerators;
-        $scope.refrigeratorReadings = distributionReferenceDataRequest.result.refrigeratorReadings;
-        $scope.$apply();
+      var request = connection.transaction('distributionReferenceData').objectStore('distributionReferenceData').get(zpp);
+      request.onsuccess = function (event) {
+        waitOn.resolve(_.where(event.target.result.refrigerators, {facilityId: utils.parseIntWithBaseTen(facilityId)}));
       }
     });
+
+    return waitOn.promise;
   }
-
-  fetchReferenceData();
-
-}
+};
 
 

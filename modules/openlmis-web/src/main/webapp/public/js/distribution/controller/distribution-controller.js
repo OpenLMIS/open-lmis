@@ -50,22 +50,6 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
     return optionMessage($scope.periods, DEFAULT_PERIOD_MESSAGE);
   };
 
-
-  $scope.$on('$viewContentLoaded', function () {
-    $scope.selectedZone = navigateBackService.deliveryZone;
-    $scope.selectedProgram = navigateBackService.program;
-    $scope.selectedPeriod = navigateBackService.period;
-
-    $scope.fromBackNavigation = $scope.selectedZone;
-    $scope.$watch('deliveryZones', function () {
-      if ($scope.deliveryZones && $scope.selectedZone) {
-        $scope.selectedZone = _.where($scope.deliveryZones, {id: $scope.selectedZone.id})[0];
-        $scope.loadPrograms();
-      }
-    });
-  });
-
-
   $scope.initiateDistribution = function () {
 
     function isCached() {
@@ -100,21 +84,12 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
     }
   }
 
-  function getRefrigeratorReading(refrigerators) {
-    var refrigeratorReadings = [];
-    $.each(refrigerators, function (index, refrigerator) {
-      refrigeratorReadings.push({facilityId: refrigerator.facilityId, distributionId: $scope.distribution.id, refrigeratorSerialNumber: refrigerator.serialNumber})
-    });
-    return refrigeratorReadings;
-  }
-
   function onReferenceDataSuccess(referenceData) {
     IndexedDB.transaction(function (connection) {
       var distributionReferenceDataTransaction = connection.transaction('distributionReferenceData', 'readwrite');
       var distributionReferenceDataStore = distributionReferenceDataTransaction.objectStore('distributionReferenceData');
       var zpp = $scope.selectedZone.id + '_' + $scope.selectedProgram.id + '_' + $scope.selectedPeriod.id;
       referenceData['zpp'] = zpp;
-      referenceData["refrigeratorReadings"] = getRefrigeratorReading(referenceData["refrigerators"]);
       distributionReferenceDataStore.put(referenceData);
       distributionReferenceDataTransaction.oncomplete = function () {
         $scope.$apply();

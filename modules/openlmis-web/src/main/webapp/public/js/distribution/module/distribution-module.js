@@ -11,6 +11,7 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
       when('/list', {controller: DistributionListController, templateUrl: 'partials/list.html'}).
       when('/view-load-amounts/:deliveryZoneId/:programId/:periodId', {controller: ViewLoadAmountController, templateUrl: 'partials/view-load-amount.html', resolve: ViewLoadAmountController.resolve}).
       when('/record-facility-data/:zpp', {controller: RecordFacilityDataController, templateUrl: 'partials/record-facility-data.html', resolve: RecordFacilityDataController.resolve}).
+      when('/record-facility-data/:zpp/:facility/refrigerator-data', {controller: RefrigeratorController, templateUrl: 'partials/refrigerator.html', resolve: RefrigeratorController.resolve}).
       otherwise({redirectTo: '/manage'});
 
   }]).directive('notRecorded', function () {
@@ -38,7 +39,7 @@ distributionModule.notRecordedDirective = function (element, scope) {
         evaluatedVar = evaluatedVar[va];
         return true;
       });
-      scope.$apply();
     });
+    scope.$apply();
   });
 };

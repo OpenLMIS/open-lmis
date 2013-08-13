@@ -4,8 +4,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function RecordFacilityDataController(IndexedDB, $scope, $route) {
+function RecordFacilityDataController($scope, facilities, $location, $routeParams) {
 
+  $scope.facilities = facilities;
 
   $scope.format = function (facility) {
     if (facility.id) {
@@ -17,28 +18,30 @@ function RecordFacilityDataController(IndexedDB, $scope, $route) {
     }
   }
 
-  function fetchReferenceData() {
-    var zpp = $route.current.params.zpp;
-    IndexedDB.transaction(function (connection) {
-      var transaction = connection.transaction(['distributionReferenceData', 'distributions']);
-      var request = transaction.objectStore('distributionReferenceData').get(zpp);
-      var by_zpp = transaction.objectStore('distributions').index('index_zpp');
-      by_zpp.get(zpp).onsuccess = function (event) {
-        var result = event.target.result;
-        $scope.deliveryZoneName = result.deliveryZone.name;
-        $scope.programName = result.program.name;
-        $scope.periodName = result.period.name;
-        $scope.$apply();
-      };
-      request.onsuccess = function (event) {
-        $scope.facilityList = request.result.facilities;
-        $scope.$apply();
-      }
-    });
+  $scope.chooseFacility = function() {
+    $location.path('record-facility-data/' + $routeParams.zpp + '/' + $scope.facilitySelected.id + '/refrigerator-data');
   }
 
-  fetchReferenceData();
 }
+
+
+RecordFacilityDataController.resolve = {
+
+  facilities: function($q, $timeout, IndexedDB, $route) {
+    var waitOn = $q.defer();
+    var zpp = $route.current.params.zpp;
+
+    IndexedDB.transaction(function (connection) {
+      var request = connection.transaction('distributionReferenceData').objectStore('distributionReferenceData').get(zpp);
+      request.onsuccess = function (event) {
+        waitOn.resolve(event.target.result.facilities);
+      }
+    });
+
+    return waitOn.promise;
+
+  }
+};
 
 
 

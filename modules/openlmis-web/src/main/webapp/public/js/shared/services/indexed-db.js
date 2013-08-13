@@ -6,7 +6,7 @@
 
 angular.module('IndexedDB', []).service('IndexedDB', function ($rootScope, $q) {
 
-  var request = indexedDB.open("open_lmis", 2);
+  var request = indexedDB.open("open_lmis", 3);
   var indexedDBConnection = null;
   var deferred = $q.defer();
 
@@ -14,43 +14,38 @@ angular.module('IndexedDB', []).service('IndexedDB', function ($rootScope, $q) {
     indexedDBConnection = event.currentTarget.result;
     deferred.resolve();
     $rootScope.$apply();
-  }
+  };
 
   request.onupgradeneeded = function (event) {
     var connection = event.currentTarget.result;
 
-    var dropIfExist = function (storeName) {
-      if (connection.objectStoreNames.contains(storeName)) {
-        connection.deleteObjectStore(storeName);
-      }
+    var dropDatastores = function () {
+      $(connection.objectStoreNames).each(function (index, objectStore) {
+        connection.deleteObjectStore(objectStore);
+      });
     };
 
-    if (!event.oldVersion || event.oldVersion < 2) {
+    if (!event.oldVersion || event.oldVersion < 3) {
+      dropDatastores();
       createDistributionStore();
       createDistributionReferenceData();
     }
 
     function createDistributionStore() {
-      dropIfExist("distributions");
       var distributionStore = connection.createObjectStore("distributions", {"keyPath": "id"});
       distributionStore.createIndex("index_zpp", "zpp", {"unique": true});
     }
 
     function createDistributionReferenceData() {
-      dropIfExist("distributionReferenceData");
       var distributionReferenceDataStore = connection.createObjectStore("distributionReferenceData", {"keyPath": "zpp"});
       distributionReferenceDataStore.createIndex("index_reference_data", "zpp", {"unique": true});
     }
   };
 
   this.transaction = function (transactionFunction) {
-    if (indexedDBConnection === null) {
-      deferred.promise.then(function () {
-        transactionFunction(indexedDBConnection);
-      });
-    } else {
+    deferred.promise.then(function () {
       transactionFunction(indexedDBConnection);
-    }
-  }
+    });
+  };
 
 });

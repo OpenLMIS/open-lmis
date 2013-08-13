@@ -1,4 +1,4 @@
-<div ng-controller="RecordFacilityDataController" class="record-facility-data">
+<div class="record-facility-data">
   <h2 openlmis-message="heading.health.center" ng-show="facilitySelected">
     <span>:&nbsp;</span>
     <span openlmis-message="facilitySelected.name"></span>
@@ -8,11 +8,12 @@
 
   <div class="info-box">
     <div class="row-fluid">
-      <select ui-select2="{formatResult: format}" id="selectFacility" class="span3" ng-model=facilitySelected
+      <select ui-select2="{formatResult: format}" id="selectFacility" class="span3" ng-model="facilitySelected"
               ng-options="facility as facility.code+' - '+facility.name group by facility.geographicZone.code
-            for facility in facilityList | orderBy: 'geographicZone.code'">
+            for facility in facilities | orderBy: 'geographicZone.code'" ng-change="chooseFacility()">
         <option value="" openlmis-message="label.select.facility"></option>
       </select>
+
       <div class="span3 offset1 info-box-labels">
         <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span ng-bind="deliveryZoneName"></span>
       </div>
@@ -24,6 +25,4 @@
       </div>
     </div>
   </div>
-
-  <ng-include  src="'/public/pages/logistics/distribution/partials/distribution-navigation.html'"></ng-include>
 </div>
