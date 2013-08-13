@@ -7,9 +7,7 @@
 function RefrigeratorController($scope, refrigerators, distribution) {
 
   $scope.refrigerators = refrigerators;
-
   $scope.distribution = distribution;
-  console.log(distribution);
 
   $scope.closeRefrigeratorModal = function () {
     $scope.addRefrigeratorModal = false;
