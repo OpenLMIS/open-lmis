@@ -9,12 +9,14 @@ app.directive('autoSave', function ($route) {
     restrict: 'A',
     link: function (scope, element, attrs, ngModelController) {
 
-      var save = function (e) {
-//        var fridge = {facilityId: $route.current.params.facility, distributionZpp: $route.current.params.zpp, serialNumber: scope.refrigerator.serialNumber}
-//        var scope[attrs.autoSave];
+      var save = {
+        "refrigeratorReadings": function (e) {
+          var fridge = {facilityId: $route.current.params.facility, distributionId: $route.current.params.distribution, serialNumber: scope.refrigerator.serialNumber}
+        }
+
       };
 
-      element.find('input, textarea').bind('blur', save);
+      element.find('input, textarea').bind('blur', save[attrs.autoSave]);
     }
   };
 });

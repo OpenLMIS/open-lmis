@@ -118,9 +118,24 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
       }
     }
 
+    function prepareDistribution(distribution, referenceData) {
+      distribution.facilityDistributionData = [];
+      $(referenceData.facilities).each(function (index, facility) {
+        var refrigeratorReadings = [];
+        $(_.where(referenceData.refrigerators, {facilityId: facility.id})).each(function (i, refrigerator) {
+          refrigeratorReadings.push({refrigeratorSerialNumber: refrigerator.serialNumber})
+        });
+        distribution.facilityDistributionData.push({facilityId: facility.id, refrigeratorReadings: refrigeratorReadings});
+      });
+
+      return distribution;
+    }
+
     $q.all([distributionDefer.promise, referenceDataDefer.promise]).then(function (resolved) {
       var distribution = resolved[0];
       var referenceData = resolved[1];
+
+      distribution = prepareDistribution(distribution, referenceData);
 
       IndexedDB.put('distributions', distribution, function () {
       }, {}, function () {
