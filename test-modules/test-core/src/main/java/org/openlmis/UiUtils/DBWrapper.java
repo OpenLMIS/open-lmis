@@ -72,19 +72,30 @@ public class DBWrapper {
     List<String> prodDetails = new ArrayList<String>();
 
     ResultSet rs = query("select prog.code as programCode, prog.name as programName, prod.code as productCode, " +
-      "prod.primaryname as productName, prod.description as desc, prod.dispensingunit as unit, pg.name as pgName from products prod, programs prog, " +
-      "program_products pp, product_categories pg where prog.id=pp.programid and pp.productid=prod.id and " +
-      "pg.id=prod.categoryid and prog.code='TB';");
+      "prod.primaryname as productName, prod.description as desc, prod.dispensingunit as unit, pg.name as pgName " +
+      "from products prod, programs prog, " +
+      "program_products pp, product_categories pg " +
+      "where prog.id=pp.programid and pp.productid=prod.id and " +
+      "pg.id=prod.categoryid and prog.code='" + programCode + "' " +
+      "and prod.active='true' and pp.active='true';");
 
     while (rs.next()) {
-      productCode = rs.getString("productCode");
-      productName = rs.getString("productName");
-      desc = rs.getString("desc");
-      unit = rs.getString("unit");
-      pgName = rs.getString("pgName");
-      prodDetails.add(productCode + "," + productName+","+desc+","+unit+","+pgName);
+      productCode = rs.getString(0);
+      productName = rs.getString(1);
+      desc = rs.getString(2);
+      unit = rs.getString(3);
+      pgName = rs.getString(4);
+      prodDetails.add(productCode + "," + productName + "," + desc + "," + unit + "," + pgName);
     }
     return prodDetails;
+  }
+
+  public void updateActiveStatusOfProduct(String productCode, String active) throws SQLException {
+    update("update products set active='" + active + "' where code='" + productCode + "';");
+  }
+
+  public void updateActiveStatusOfProgramProduct(String productCode, String programCode, String active) throws SQLException {
+    update("update program_products set active='"+active+"' where programid=(select id from programs where code='" + programCode + "') and productid=(select id from products where code='" + productCode + "');");
   }
 
   public List<String> getFacilityCodeNameForDeliveryZoneAndProgram(String deliveryZoneName, String program, boolean active) throws SQLException {
@@ -163,7 +174,7 @@ public class DBWrapper {
 
 
   public void updateFacilityFieldValue(String facilityCode, String fieldName, String value) throws IOException, SQLException {
-    update("update facilities set "+fieldName+"='"+value+"' where code='"+facilityCode+"';");
+    update("update facilities set " + fieldName + "='" + value + "' where code='" + facilityCode + "';");
   }
 
   public void insertFacilities(String facility1, String facility2) throws IOException, SQLException {
@@ -430,7 +441,7 @@ public class DBWrapper {
 
 
     update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n" +
-      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product + "'), '"+doses+"', 12.5, '"+active+"');");
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product + "'), '" + doses + "', 12.5, '" + active + "');");
   }
 
   public void insertProgramProductsWithCategory(String product, String program) throws SQLException, IOException {
@@ -932,15 +943,15 @@ public class DBWrapper {
   }
 
   public void deleteDeliveryZoneToFacilityMapping(String deliveryZoneName) throws SQLException, IOException {
-    update("delete from delivery_zone_members where deliveryzoneid in (select id from delivery_zones where name='"+deliveryZoneName+"');");
+    update("delete from delivery_zone_members where deliveryzoneid in (select id from delivery_zones where name='" + deliveryZoneName + "');");
   }
 
   public void deleteProgramToFacilityMapping(String programCode) throws SQLException, IOException {
-    update("delete from programs_supported where programid in (select id from programs where code='"+programCode+"');");
+    update("delete from programs_supported where programid in (select id from programs where code='" + programCode + "');");
   }
 
   public void updateActiveStatusOfFacility(String facilityCode, String active) throws SQLException, IOException {
-    update("update facilities set active='"+active+"' where code='"+facilityCode+"';");
+    update("update facilities set active='" + active + "' where code='" + facilityCode + "';");
   }
 
   public void updatePopulationOfFacility(String facility, String population) throws SQLException, IOException {

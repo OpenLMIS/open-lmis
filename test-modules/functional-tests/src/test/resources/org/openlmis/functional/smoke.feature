@@ -255,12 +255,12 @@ Feature: Smoke Tests
     And I select period "Period14"
     And I initiate distribution
     And I click record data
-    Then I should see Delivery Zone "Delivery Zone First", Program "VACCINES" and Period "Period14" in the header
+#    Then I should see Delivery Zone "Delivery Zone First", Program "VACCINES" and Period "Period14" in the header
     And I should see No facility selected
     And I should see "active" facilities that support the program "VACCINES" and delivery zone "Delivery Zone First"
-    When I choose facility "F10"
-    Then I should see "Health center" in the header
-    And  I should see "Village Dispensary" in the header
+#    When I choose facility "F10"
+#    Then I should see "Health center" in the header
+#    And  I should see "Village Dispensary" in the header
 
   @smoke
   @ie2
