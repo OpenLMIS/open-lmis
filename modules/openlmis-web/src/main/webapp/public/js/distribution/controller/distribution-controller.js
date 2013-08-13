@@ -5,7 +5,7 @@
  */
 
 
-function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, IndexedDB, navigateBackService, $http, $dialog, $scope, $location, SharedDistributions) {
+function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, IndexedDB, navigateBackService, $http, $dialog, $scope, $location, SharedDistributions, $q) {
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
   var NONE_ASSIGNED_LABEL = messageService.get('label.noneAssigned');
@@ -53,7 +53,7 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
   $scope.initiateDistribution = function () {
 
     function isCached() {
-      return _.find(SharedDistributions.distributionList, function (distribution) {
+      return !!_.find(SharedDistributions.distributionList, function (distribution) {
         return distribution.deliveryZone.id == $scope.selectedZone.id &&
           distribution.program.id == $scope.selectedProgram.id &&
           distribution.period.id == $scope.selectedPeriod.id;
@@ -66,75 +66,89 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
       return;
     }
 
+    var distributionDefer = $q.defer();
+
     cacheDistribution();
 
-    DeliveryZoneFacilities.get({"programId": $scope.selectedProgram.id, "deliveryZoneId": $scope.selectedZone.id }, onDeliveryZoneGetSuccess, {});
+    function cacheDistribution() {
 
-    function onDeliveryZoneGetSuccess(data) {
+      $scope.distributionInitiatedCallback = function (result) {
+        if (result) {
+          distributionDefer.resolve(distribution);
+        } else {
+          distributionDefer.reject();
+        }
+      };
+
+      var distribution = new Distribution($scope.selectedZone, $scope.selectedProgram, $scope.selectedPeriod);
+
+      $http.post('/distributions.json', distribution).success(onInitSuccess);
+
+      function onInitSuccess(data, status) {
+        if (status == 201) {
+          $scope.message = data.success;
+          distributionDefer.resolve(data.distribution);
+        } else {
+          distribution = data.distribution;
+          var dialogOpts = {
+            id: "distributionInitiated",
+            header: messageService.get('label.distribution.initiated'),
+            body: data.success
+          };
+          OpenLmisDialog.newDialog(dialogOpts, $scope.distributionInitiatedCallback, $dialog, messageService);
+        }
+      }
+    }
+
+    var referenceDataDefer = $q.defer();
+
+    DeliveryZoneFacilities.get({"programId": $scope.selectedProgram.id, "deliveryZoneId": $scope.selectedZone.id }, onDeliveryZoneFacilitiesGetSuccess, {});
+
+    function onDeliveryZoneFacilitiesGetSuccess(data) {
       if (data.facilities.length > 0) {
         var referenceData = {facilities: data.facilities};
         Refrigerators.get({"deliveryZoneId": $scope.selectedZone.id, "programId": $scope.selectedProgram.id}, function (data) {
           referenceData["refrigerators"] = data.refrigerators;
-          onReferenceDataSuccess(referenceData);
-        }, function (error) {
-        });
-      } else
+          referenceDataDefer.resolve(referenceData);
+        }, {});
+      } else {
+        referenceDataDefer.reject();
         $scope.message = messageService.get("message.no.facility.available", $scope.selectedProgram.name,
           $scope.selectedZone.name);
-    }
-  }
-
-  function onReferenceDataSuccess(referenceData) {
-    IndexedDB.transaction(function (connection) {
-      var distributionReferenceDataTransaction = connection.transaction('distributionReferenceData', 'readwrite');
-      var distributionReferenceDataStore = distributionReferenceDataTransaction.objectStore('distributionReferenceData');
-      var zpp = $scope.selectedZone.id + '_' + $scope.selectedProgram.id + '_' + $scope.selectedPeriod.id;
-      referenceData['zpp'] = zpp;
-      distributionReferenceDataStore.put(referenceData);
-      distributionReferenceDataTransaction.oncomplete = function () {
-        $scope.$apply();
-      };
-    });
-  }
-
-  function cacheDistribution() {
-    $scope.distributionInitiatedCallback = function (result) {
-      if (result) {
-        addDistributionToStore($scope.distribution);
       }
-
     }
-    var distribution = new Distribution($scope.selectedZone, $scope.selectedProgram, $scope.selectedPeriod);
 
-    $http.post('/distributions.json', distribution).success(onInitSuccess);
-    function onInitSuccess(data, status) {
-      if (status == 201) {
-        $scope.message = data.success;
-        $scope.distribution = data.distribution;
-        addDistributionToStore(data.distribution);
-      } else {
-        $scope.distribution = data.distribution;
-        var dialogOpts = {
-          id: "distributionInitiated",
-          header: messageService.get('label.distribution.initiated'),
-          body: data.success
-        };
-        OpenLmisDialog.newDialog(dialogOpts, $scope.distributionInitiatedCallback, $dialog, messageService);
-      }
+    function prepareDistribution(distribution, referenceData) {
+      distribution.facilityDistributionData = [];
+      $(referenceData.facilities).each(function (index, facility) {
+        var refrigeratorReadings = [];
+        $(_.where(referenceData.refrigerators, {facilityId: facility.id})).each(function (i, refrigerator) {
+          refrigeratorReadings.push({refrigeratorSerialNumber: refrigerator.serialNumber})
+        });
+        distribution.facilityDistributionData.push({facilityId: facility.id, refrigeratorReadings: refrigeratorReadings});
+      });
 
+      return distribution;
     }
-  }
 
-  function addDistributionToStore(distribution) {
-    IndexedDB.transaction(function (connection) {
-      var transaction = connection.transaction(['distributions'], 'readwrite');
-      transaction.objectStore('distributions').put(distribution);
-      transaction.oncomplete = function () {
+    $q.all([distributionDefer.promise, referenceDataDefer.promise]).then(function (resolved) {
+      var distribution = resolved[0];
+      var referenceData = resolved[1];
+
+      distribution = prepareDistribution(distribution, referenceData);
+
+      IndexedDB.put('distributions', distribution, function () {
+      }, {}, function () {
         SharedDistributions.update();
-        $scope.$apply();
-      };
+      });
+
+      referenceData.distributionId = distribution.id;
+      IndexedDB.put('distributionReferenceData', referenceData, function () {
+      }, {});
+
     });
-  }
+  };
+
 
   var optionMessage = function (entity, defaultMessage) {
     return entity == null || entity.length == 0 ? NONE_ASSIGNED_LABEL : defaultMessage;
