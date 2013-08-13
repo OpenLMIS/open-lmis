@@ -7,6 +7,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Boolean.TRUE;
@@ -52,6 +54,7 @@ public class UserController extends BaseController {
   private static final String RESET_PASSWORD_PATH = "public/pages/reset-password.html#/token/";
 
   @Autowired
+  @Setter
   private SessionRegistry sessionRegistry;
 
   private String baseUrl;
@@ -146,7 +149,7 @@ public class UserController extends BaseController {
 
   private void deactivateUserSessions(Long id) {
     List<Object> principals = sessionRegistry.getAllPrincipals();
-    List<SessionInformation> disabledUserSessions = null;
+    List<SessionInformation> disabledUserSessions = new ArrayList<>();
 
     if (principals.contains(id)) {
       Object disabledUserPrincipal = getDisabledUserPrincipal(principals, id);

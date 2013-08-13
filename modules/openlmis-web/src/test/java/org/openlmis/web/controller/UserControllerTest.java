@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.core.session.SessionRegistry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -63,6 +64,9 @@ public class UserControllerTest {
   @Mock
   private MessageService messageService;
 
+  @Mock
+  private SessionRegistry sessionRegistry;
+
   private UserController userController;
 
   private String baseUrl = "http://localhost:9091/";
@@ -76,6 +80,7 @@ public class UserControllerTest {
     httpServletRequest.setSession(session);
     userController = new UserController(roleRightService, userService, baseUrl);
     userController.setMessageService(messageService);
+    userController.setSessionRegistry(sessionRegistry);
   }
 
   @Test
