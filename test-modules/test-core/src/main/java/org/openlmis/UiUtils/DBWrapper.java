@@ -63,6 +63,30 @@ public class DBWrapper {
 
   }
 
+  public List<String> getProductDetailsForProgram(String programCode) throws SQLException {
+    String productCode = "";
+    String productName = "";
+    String desc = "";
+    String unit = "";
+    String pgName = "";
+    List<String> prodDetails = new ArrayList<String>();
+
+    ResultSet rs = query("select prog.code as programCode, prog.name as programName, prod.code as productCode, " +
+      "prod.primaryname as productName, prod.description as desc, prod.dispensingunit as unit, pg.name as pgName from products prod, programs prog, " +
+      "program_products pp, product_categories pg where prog.id=pp.programid and pp.productid=prod.id and " +
+      "pg.id=prod.categoryid and prog.code='TB';");
+
+    while (rs.next()) {
+      productCode = rs.getString("productCode");
+      productName = rs.getString("productName");
+      desc = rs.getString("desc");
+      unit = rs.getString("unit");
+      pgName = rs.getString("pgName");
+      prodDetails.add(productCode + "," + productName+","+desc+","+unit+","+pgName);
+    }
+    return prodDetails;
+  }
+
   public List<String> getFacilityCodeNameForDeliveryZoneAndProgram(String deliveryZoneName, String program, boolean active) throws SQLException {
     String code = "";
     String name = "";

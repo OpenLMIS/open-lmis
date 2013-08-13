@@ -25,6 +25,7 @@ import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 public class UserPage extends Page {
 
@@ -181,56 +182,56 @@ public class UserPage extends Page {
 
   }
 
-    public void searchUser(String user) {
-        testWebDriver.waitForElementToAppear(searchUserTextField);
-        sendKeys(searchUserTextField, user);
-        testWebDriver.sleep(2000);
-    }
+  public void searchUser(String user) {
+    testWebDriver.waitForElementToAppear(searchUserTextField);
+    sendKeys(searchUserTextField, user);
+    testWebDriver.sleep(2000);
+  }
 
-    public void clickUserList(String userString) {
-        testWebDriver.waitForElementToAppear(firstUserLink);
-        firstUserLink.click();
-        testWebDriver.waitForElementToAppear(userNameField);
-    }
+  public void clickUserList(String userString) {
+    testWebDriver.waitForElementToAppear(firstUserLink);
+    firstUserLink.click();
+    testWebDriver.waitForElementToAppear(userNameField);
+  }
 
-    public void focusOnFirstUserLink() {
-        testWebDriver.waitForElementToAppear(firstUserLink);
-        searchUserTextField.click();
-        searchUserTextField.sendKeys(Keys.TAB);
+  public void focusOnFirstUserLink() {
+    testWebDriver.waitForElementToAppear(firstUserLink);
+    searchUserTextField.click();
+    searchUserTextField.sendKeys(Keys.TAB);
 
-        testWebDriver.waitForElementToAppear(selectFirstEditUser);
-    }
+    testWebDriver.waitForElementToAppear(selectFirstEditUser);
+  }
 
-    public void clickEditUser() {
-        testWebDriver.waitForElementToAppear(selectFirstEditUser);
-        selectFirstEditUser.click();
-    }
+  public void clickEditUser() {
+    testWebDriver.waitForElementToAppear(selectFirstEditUser);
+    selectFirstEditUser.click();
+  }
 
-    public void verifyUserOnList(String userString) {
-        testWebDriver.waitForElementToAppear(firstUserLink);
-        SeleneseTestNgHelper.assertTrue("User not available in list.", firstUserLink.getText().contains(userString)) ;
-    }
+  public void verifyUserOnList(String userString) {
+    testWebDriver.waitForElementToAppear(firstUserLink);
+    SeleneseTestNgHelper.assertTrue("User not available in list.", firstUserLink.getText().contains(userString));
+  }
 
-    public void verifyResetPassword() {
-        testWebDriver.waitForElementToAppear(firstUserLink);
-        SeleneseTestNgHelper.assertTrue("Reset password link not available.",selectFirstResetPassword.isDisplayed()) ;
-    }
+  public void verifyResetPassword() {
+    testWebDriver.waitForElementToAppear(firstUserLink);
+    SeleneseTestNgHelper.assertTrue("Reset password link not available.", selectFirstResetPassword.isDisplayed());
+  }
 
-    public void verifyDisabledResetPassword() {
-        testWebDriver.waitForElementToAppear(firstUserLink);
-        assertTrue("Reset password link not disabled.", selectFirstResetPassword.getAttribute("class").contains("disabled")) ;
-    }
+  public void verifyDisabledResetPassword() {
+    testWebDriver.waitForElementToAppear(firstUserLink);
+    assertTrue("Reset password link not disabled.", selectFirstResetPassword.getAttribute("class").contains("disabled"));
+  }
 
-    public void resetPassword(String newPassword, String confirmPassword) {
-        firstUserLink.sendKeys(Keys.TAB);
-        selectFirstEditUser.sendKeys(Keys.TAB);
+  public void resetPassword(String newPassword, String confirmPassword) {
+    firstUserLink.sendKeys(Keys.TAB);
+    selectFirstEditUser.sendKeys(Keys.TAB);
 
-        selectFirstResetPassword.click();
-        testWebDriver.waitForElementToAppear(newPasswordField);
-        newPasswordField.sendKeys(newPassword);
-        confirmPasswordField.sendKeys(confirmPassword);
-        resetPasswordDone.click();
-    }
+    selectFirstResetPassword.click();
+    testWebDriver.waitForElementToAppear(newPasswordField);
+    newPasswordField.sendKeys(newPassword);
+    confirmPasswordField.sendKeys(confirmPassword);
+    resetPasswordDone.click();
+  }
 
   public String enterAndVerifyUserDetails(String userName, String email, String firstName, String lastName, String baseurl, String dburl) throws IOException, SQLException {
     testWebDriver.waitForElementToAppear(addNewButton);
@@ -259,8 +260,7 @@ public class UserPage extends Page {
 
   }
 
-  public void enterUserHomeFacility(String facilityCode)
-  {
+  public void enterUserHomeFacility(String facilityCode) {
     searchFacility.clear();
     testWebDriver.handleScrollByPixels(0, 5000);
     searchFacility.sendKeys(facilityCode);
@@ -272,9 +272,8 @@ public class UserPage extends Page {
     testWebDriver.sleep(1000);
   }
 
-  public void verifyNoMatchedFoundMessage()
-  {
-    SeleneseTestNgHelper.assertTrue("No match found link should show up",noMatchFoundLink.isDisplayed());
+  public void verifyNoMatchedFoundMessage() {
+    SeleneseTestNgHelper.assertTrue("No match found link should show up", noMatchFoundLink.isDisplayed());
   }
 
   public void enterMyFacilityAndMySupervisedFacilityData(String firstName, String lastName, String facilityCode, String program1, String node, String role, String roleType) {
@@ -304,9 +303,9 @@ public class UserPage extends Page {
       testWebDriver.waitForElementToAppear(rolesSelectField);
       rolesSelectField.click();
 
-      SeleneseTestNgHelper.assertEquals(testWebDriver.getFirstSelectedOption(supervisoryNodeToSupervise).getText(), node);
-      SeleneseTestNgHelper.assertEquals(testWebDriver.getFirstSelectedOption(programsToSupervise).getText(), program1);
-      SeleneseTestNgHelper.assertEquals(rolesListFieldMySupervisedFacility.getText().trim().toLowerCase(), role.toLowerCase());
+      assertEquals(testWebDriver.getFirstSelectedOption(supervisoryNodeToSupervise).getText(), node);
+      assertEquals(testWebDriver.getFirstSelectedOption(programsToSupervise).getText(), program1);
+      assertEquals(rolesListFieldMySupervisedFacility.getText().trim().toLowerCase(), role.toLowerCase());
 
       addButton.click();
       testWebDriver.sleep(1000);
@@ -326,24 +325,25 @@ public class UserPage extends Page {
 
   }
 
-    public void verifyMessage(String message){
-        SeleneseTestNgHelper.assertEquals(userUpdateSuccessMessage.getText(),message) ;
-    }
+  public void verifyMessage(String message) {
+    testWebDriver.sleep(500);
+    assertEquals(userUpdateSuccessMessage.getText(), message);
+  }
 
-    public void enterDeliveryZoneData(String deliveryZoneCode, String program, String role) {
-        testWebDriver.handleScroll();
-        testWebDriver.waitForElementToAppear(deliveryZone);
-        testWebDriver.selectByVisibleText(deliveryZone, deliveryZoneCode);
-        testWebDriver.sleep(1000);
-        testWebDriver.selectByVisibleText(deliveryZoneProgram, program);
-        testWebDriver.sleep(1000);
-        rolesInputFieldMDeliveryZone.click();
-        rolesInputFieldMDeliveryZone.clear();
-        rolesInputFieldMDeliveryZone.sendKeys(role);
-        rolesInputFieldMDeliveryZone.sendKeys(Keys.RETURN);
-        addAllocationRoleButton.click();
-        testWebDriver.sleep(1000);
-    }
+  public void enterDeliveryZoneData(String deliveryZoneCode, String program, String role) {
+    testWebDriver.handleScroll();
+    testWebDriver.waitForElementToAppear(deliveryZone);
+    testWebDriver.selectByVisibleText(deliveryZone, deliveryZoneCode);
+    testWebDriver.sleep(1000);
+    testWebDriver.selectByVisibleText(deliveryZoneProgram, program);
+    testWebDriver.sleep(1000);
+    rolesInputFieldMDeliveryZone.click();
+    rolesInputFieldMDeliveryZone.clear();
+    rolesInputFieldMDeliveryZone.sendKeys(role);
+    rolesInputFieldMDeliveryZone.sendKeys(Keys.RETURN);
+    addAllocationRoleButton.click();
+    testWebDriver.sleep(1000);
+  }
 
   public void enterDeliveryZoneDataWithoutHomeAndSupervisoryRolesAssigned(String deliveryZoneCode, String program, String role) {
     testWebDriver.handleScroll();
@@ -361,7 +361,7 @@ public class UserPage extends Page {
   }
 
 
-    public void removeRole(int indexOfCancelIcon, boolean adminRole) {
+  public void removeRole(int indexOfCancelIcon, boolean adminRole) {
     int counter = 1;
     List<WebElement> closeButtons = testWebDriver.getElementsByXpath("//a[@class='select2-search-choice-close']");
     for (WebElement closeButton : closeButtons) {
@@ -409,16 +409,16 @@ public class UserPage extends Page {
     clickOk();
   }
 
-    public void verifyFieldsDisabled() {
-        assertFalse("Username field not disabled.", userNameField.isEnabled());
-        assertFalse("Firstname field not disabled.", firstNameField.isEnabled());
-        assertFalse("Lastname field not disabled.", lastNameField.isEnabled());
-        assertFalse("Email field not disabled.", emailField.isEnabled());
-        assertFalse("Admin role field not disabled.", adminRolesInputField.isEnabled());
-        assertFalse("Role input field not disabled.", rolesInputField.isEnabled());
-        assertFalse("Deliveryzone role field not disabled.", rolesInputFieldDeliveryZone.isEnabled());
-        assertFalse("My Facility role field not disabled.", rolesInputFieldMyFacility.isEnabled());
-    }
+  public void verifyFieldsDisabled() {
+    assertFalse("Username field not disabled.", userNameField.isEnabled());
+    assertFalse("Firstname field not disabled.", firstNameField.isEnabled());
+    assertFalse("Lastname field not disabled.", lastNameField.isEnabled());
+    assertFalse("Email field not disabled.", emailField.isEnabled());
+    assertFalse("Admin role field not disabled.", adminRolesInputField.isEnabled());
+    assertFalse("Role input field not disabled.", rolesInputField.isEnabled());
+    assertFalse("Deliveryzone role field not disabled.", rolesInputFieldDeliveryZone.isEnabled());
+    assertFalse("My Facility role field not disabled.", rolesInputFieldMyFacility.isEnabled());
+  }
 
   public void clickRestoreButton() {
     testWebDriver.waitForElementToAppear(restoreButton);
@@ -426,16 +426,16 @@ public class UserPage extends Page {
     clickOk();
   }
 
-    public void verifyFieldsEnabled() {
-        assertTrue("Username field not enabled.", userNameField.isEnabled()) ;
-        assertTrue("Firstname field not enabled.", firstNameField.isEnabled());
-        assertTrue("Lastname field not enabled.", lastNameField.isEnabled());
-        assertTrue("Email field not enabled.", emailField.isEnabled());
-        assertTrue("Admin role field not enabled.", adminRolesInputField.isEnabled());
-        assertTrue("Role input field not enabled.", rolesInputField.isEnabled());
-        assertTrue("Deliveryzone role field not enabled.", rolesInputFieldDeliveryZone.isEnabled());
-        assertTrue("My Facility role field not enabled.", rolesInputFieldMyFacility.isEnabled());
-    }
+  public void verifyFieldsEnabled() {
+    assertTrue("Username field not enabled.", userNameField.isEnabled());
+    assertTrue("Firstname field not enabled.", firstNameField.isEnabled());
+    assertTrue("Lastname field not enabled.", lastNameField.isEnabled());
+    assertTrue("Email field not enabled.", emailField.isEnabled());
+    assertTrue("Admin role field not enabled.", adminRolesInputField.isEnabled());
+    assertTrue("Role input field not enabled.", rolesInputField.isEnabled());
+    assertTrue("Deliveryzone role field not enabled.", rolesInputFieldDeliveryZone.isEnabled());
+    assertTrue("My Facility role field not enabled.", rolesInputFieldMyFacility.isEnabled());
+  }
 
   public void verifyRolePresent(String roleName) {
     testWebDriver.sleep(500);
@@ -443,13 +443,13 @@ public class UserPage extends Page {
     SeleneseTestNgHelper.assertTrue(roleName + " should be displayed", roleElement.isDisplayed());
   }
 
-    public String getAllProgramsToSupervise() {
-        return programsToSupervise.getText();
-    }
+  public String getAllProgramsToSupervise() {
+    return programsToSupervise.getText();
+  }
 
-    public String getAllProgramsHomeFacility() {
-        return programsMyFacility.getText();
-    }
+  public String getAllProgramsHomeFacility() {
+    return programsMyFacility.getText();
+  }
 
   public void clickViewHere() {
     testWebDriver.waitForElementToAppear(viewHereLink);
@@ -492,10 +492,11 @@ public class UserPage extends Page {
     }
   }
 
-  public String getAddedDeliveryZoneLabel(){
-      return addedDeliveryZoneLabel.getText();
+  public String getAddedDeliveryZoneLabel() {
+    return addedDeliveryZoneLabel.getText();
   }
-    public String getAddedDeliveryZoneProgramLabel(){
-        return addedDeliveryZoneProgramLabel.getText();
-    }
+
+  public String getAddedDeliveryZoneProgramLabel() {
+    return addedDeliveryZoneProgramLabel.getText();
+  }
 }
