@@ -59,6 +59,11 @@
                     authentication-failure-handler-ref="simpleUrlAuthenticationFailureHandler"/>
         <access-denied-handler ref="openLmisAccessDeniedHandler"/>
         <logout logout-success-url="/" invalidate-session="true" delete-cookies="true"/>
+
+        <session-management>
+            <concurrency-control session-registry-alias="sessionRegistry" expired-url="/public/pages/login.html"
+                                 error-if-maximum-exceeded="false" max-sessions="10"/>
+        </session-management>
     </http>
 
     <beans:bean id="authenticationSuccessHandler"
