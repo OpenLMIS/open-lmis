@@ -29,9 +29,9 @@ RecordFacilityDataController.resolve = {
 
   facilities: function ($q, $timeout, IndexedDB, $route) {
     var waitOn = $q.defer();
-    var zpp = $route.current.params.zpp;
+    var distributionId = $route.current.params.distribution;
 
-    IndexedDB.get('distributionReferenceData', zpp, function (event) {
+    IndexedDB.get('distributionReferenceData', utils.parseIntWithBaseTen(distributionId), function (event) {
       waitOn.resolve(event.target.result.facilities);
     }, {});
 
