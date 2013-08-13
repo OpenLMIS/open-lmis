@@ -21,9 +21,9 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
-import java.util.Map;
+import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
@@ -63,14 +63,14 @@ public class HomeControllerTest {
   public void shouldGetLocales() {
     mockStatic(RequestContextUtils.class);
     when(RequestContextUtils.getLocale(request)).thenReturn(Locale.getDefault());
-    Map<String, String> localeMap = new HashMap<String, String>();
-    localeMap.put("pt", "Portuguese");
-    localeMap.put("en", "English");
+    Set<String> localeMap = new HashSet<>();
+    localeMap.add("pt");
+    localeMap.add("en");
     when(messageService.getLocales()).thenReturn(localeMap);
 
     ResponseEntity<OpenLmisResponse> locales = homeController.getLocales(request);
 
-    Map<String, String> foundLocales = (Map<String, String>) locales.getBody().getData().get("locales");
+    Set<String> foundLocales = (Set<String>) locales.getBody().getData().get("locales");
     assertThat(foundLocales, is(localeMap));
   }
 

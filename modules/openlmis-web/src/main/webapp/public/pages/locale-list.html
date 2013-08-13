@@ -7,9 +7,9 @@
 <div>
   <div class="locale-container" ng-controller="LocaleController">
     <ul>
-      <li ng-repeat="(key,value) in locales">
-        <a ng-hide="selectedLocale == key" ng-click=changeLocale(key) href="" ng-bind=value></a>
-        <span ng-class = "{'selected': selectedLocale == key}" ng-show = "selectedLocale == key" ng-bind=value></span>
+      <li ng-repeat="code in locales">
+        <a id="locale_{{code}}" ng-class="{'selected': selectedLocale == code}" ng-click=changeLocale(code)
+           openlmis-message="label.locale.{{code}}" href=""></a>
         <span>|</span>
       </li>
     </ul>
