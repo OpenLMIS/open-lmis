@@ -233,7 +233,7 @@ public class InitiateRnRPage extends RequisitionPage {
   public InitiateRnRPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
-    testWebDriver.setImplicitWait(1);
+    testWebDriver.setImplicitWait(2);
   }
 
   public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails, String geoZone, String parentgeoZone, String operatedBy, String facilityType) {
@@ -530,7 +530,7 @@ public class InitiateRnRPage extends RequisitionPage {
     assertEquals(nonFullSupplyProductQuantityRequested.getAttribute("value").trim(), requestedQuantityValue);
     assertEquals(nonFullSupplyProductReasonForRequestedQuantity.getAttribute("value").trim(), requestedQuantityExplanationValue);
     doneButtonNonFullSupply.click();
-    testWebDriver.sleep(500);
+    testWebDriver.sleep(1000);
 
     assertEquals(productDescriptionNonFullSupply.getText().trim(), nonFullSupplyItems);
     assertEquals(productCodeNonFullSupply.getText().trim(), productCode);
