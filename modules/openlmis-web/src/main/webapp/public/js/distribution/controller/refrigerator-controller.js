@@ -48,10 +48,10 @@ RefrigeratorController.resolve = {
 
   refrigerators: function ($q, IndexedDB, $route) {
     var waitOn = $q.defer();
-    var zpp = $route.current.params.zpp;
+    var distributionId = $route.current.params.distribution;
     var facilityId = $route.current.params.facility;
 
-    IndexedDB.get('distributionReferenceData', zpp, function (event) {
+    IndexedDB.get('distributionReferenceData', utils.parseIntWithBaseTen(distributionId), function (event) {
       waitOn.resolve(_.where(event.target.result.refrigerators, {facilityId: utils.parseIntWithBaseTen(facilityId)}));
     }, {});
 

@@ -19,7 +19,7 @@ function RecordFacilityDataController($scope, facilities, $location, $routeParam
   }
 
   $scope.chooseFacility = function () {
-    $location.path('record-facility-data/' + $routeParams.zpp + '/' + $scope.facilitySelected.id + '/refrigerator-data');
+    $location.path('record-facility-data/' + $routeParams.distribution + '/' + $scope.facilitySelected.id + '/refrigerator-data');
   }
 
 }
