@@ -61,9 +61,9 @@ INSERT INTO role_assignments
   ((SELECT ID FROM USERS WHERE username='lmu'),            (SELECT id FROM roles WHERE name = 'LMU'), 3, (SELECT id from supervisory_nodes WHERE code = 'N1')),
   ((SELECT ID FROM USERS WHERE username='lmu'),            (SELECT id FROM roles WHERE name = 'LMU'), 2, (SELECT id from supervisory_nodes WHERE code = 'N1')),
   ((SELECT ID FROM USERS WHERE username='lmu'),            (SELECT id FROM roles WHERE name = 'LMU'), 4, (SELECT id from supervisory_nodes WHERE code = 'N1')),
-  ((SELECT ID FROM USERS WHERE username='lmuincharge'),    (SELECT id FROM roles WHERE name = 'LMU In-Charge'), 3, (SELECT id from supervisory_nodes WHERE code = 'N1')),
-  ((SELECT ID FROM USERS WHERE username='lmuincharge'),    (SELECT id FROM roles WHERE name = 'LMU In-Charge'), 2, (SELECT id from supervisory_nodes WHERE code = 'N1')),
-  ((SELECT ID FROM USERS WHERE username='lmuincharge'),    (SELECT id FROM roles WHERE name = 'LMU In-Charge'), 4, (SELECT id from supervisory_nodes WHERE code = 'N1')),
+  ((SELECT ID FROM USERS WHERE username='lmuincharge'),    (SELECT id FROM roles WHERE name = 'LMU In-Charge'), null, (SELECT id from supervisory_nodes WHERE code = 'N1')),
+  ((SELECT ID FROM USERS WHERE username='lmuincharge'),    (SELECT id FROM roles WHERE name = 'LMU In-Charge'), null, (SELECT id from supervisory_nodes WHERE code = 'N1')),
+  ((SELECT ID FROM USERS WHERE username='lmuincharge'),    (SELECT id FROM roles WHERE name = 'LMU In-Charge'), null, (SELECT id from supervisory_nodes WHERE code = 'N1')),
   ((SELECT ID FROM USERS WHERE username='commTrack'),      (SELECT id FROM roles WHERE name = 'Store In-Charge'), 2, null),
   ((SELECT ID FROM USERS WHERE username='commTrack'),      (SELECT id FROM roles WHERE name = 'FacilityHead'), 2, null);
 
