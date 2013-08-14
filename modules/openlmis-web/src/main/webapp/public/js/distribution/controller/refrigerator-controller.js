@@ -4,10 +4,11 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function RefrigeratorController($scope, refrigerators, distribution) {
+function RefrigeratorController($scope, refrigerators, distribution, $routeParams) {
 
   $scope.refrigerators = refrigerators;
   $scope.distribution = distribution;
+  $scope.selectedFacilityId = $routeParams.facility;
 
   $scope.closeRefrigeratorModal = function () {
     $scope.addRefrigeratorModal = false;
@@ -17,15 +18,6 @@ function RefrigeratorController($scope, refrigerators, distribution) {
   $scope.showAddRefrigeratorModal = function () {
     $scope.addRefrigeratorModal = true;
     $scope.newRefrigerator = null;
-  };
-
-  $scope.editRefrigerator = function (refrigerator) {
-    $scope.edit = true;
-    $scope.refrigeratorReading = _.where($scope.refrigeratorReadings, {
-      facilityId: refrigerator.facilityId,
-      distributionId: $scope.distribution.id,
-      refrigeratorSerialNumber: refrigerator.serialNumber
-    })[0];
   };
 
   $scope.closeRefrigeratorEdit = function () {
@@ -45,7 +37,6 @@ function RefrigeratorController($scope, refrigerators, distribution) {
 }
 
 RefrigeratorController.resolve = {
-
   refrigerators: function ($q, IndexedDB, $route) {
     var waitOn = $q.defer();
     var distributionId = $route.current.params.distribution;

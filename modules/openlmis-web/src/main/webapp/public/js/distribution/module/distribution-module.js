@@ -23,7 +23,6 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
     };
   });
 
-
 distributionModule.notRecordedDirective = function (element, scope) {
   element.bind('click', function () {
     $.each(document.getElementsByName(element.attr('id')), function (index, ele) {
@@ -31,12 +30,12 @@ distributionModule.notRecordedDirective = function (element, scope) {
       var evaluatedVar = scope;
 
       var ngModel = $(ele).attr('ng-model').split('.');
-      $(ngModel).each(function (index, va) {
+      $(ngModel).each(function (index, value) {
         if (index == ngModel.length - 1) {
-          evaluatedVar[va] = undefined;
+          evaluatedVar[value] = undefined;
           return false;
         }
-        evaluatedVar = evaluatedVar[va];
+        evaluatedVar = evaluatedVar[value];
         return true;
       });
     });

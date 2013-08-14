@@ -4,19 +4,20 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-app.directive('autoSave', function ($route) {
+app.directive('autoSave', function ($route, IndexedDB, $timeout) {
   return {
     restrict: 'A',
-    link: function (scope, element, attrs, ngModelController) {
+    link: function (scope, element, attrs) {
 
-      var save = {
-        "refrigeratorReadings": function (e) {
-          var fridge = {facilityId: $route.current.params.facility, distributionId: $route.current.params.distribution, serialNumber: scope.refrigerator.serialNumber}
-        }
-
+      var save = function () {
+        IndexedDB.put(attrs.objectStore, scope[attrs.autoSave], function () {
+          console.log('Successfully saved ', scope[attrs.autoSave]);
+        });
       };
 
-      element.find('input, textarea').bind('blur', save[attrs.autoSave]);
+      $timeout(function () {
+        element.find('input, textarea').bind('blur', save);
+      }, 100);
     }
   };
 });

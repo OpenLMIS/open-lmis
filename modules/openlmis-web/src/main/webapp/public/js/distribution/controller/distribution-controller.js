@@ -123,9 +123,9 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
       $(referenceData.facilities).each(function (index, facility) {
         var refrigeratorReadings = [];
         $(_.where(referenceData.refrigerators, {facilityId: facility.id})).each(function (i, refrigerator) {
-          refrigeratorReadings.push({refrigeratorSerialNumber: refrigerator.serialNumber})
+          refrigeratorReadings.push({'refrigerator': refrigerator});
         });
-        distribution.facilityDistributionData.push({facilityId: facility.id, refrigeratorReadings: refrigeratorReadings});
+        distribution.facilityDistributionData[facility.id] = {refrigeratorReadings: refrigeratorReadings};
       });
 
       return distribution;
