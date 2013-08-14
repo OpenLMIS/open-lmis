@@ -162,7 +162,9 @@ public class UploadControllerTest {
     MockMultipartFile multiPartMock = new MockMultipartFile("mock.doc", content);
     String errorMsg = "Incorrect file format.  Please upload product data as a '.csv' file.";
 
-    when(messageService.message(INCORRECT_FILE_FORMAT, productUploadBean.getDisplayName())).thenReturn(errorMsg);
+    String uploadType = "product data";
+    when(messageService.message(productUploadBean.getDisplayName())).thenReturn(uploadType);
+    when(messageService.message(INCORRECT_FILE_FORMAT, uploadType)).thenReturn(errorMsg);
     when(messageService.message(new OpenLmisMessage(errorMsg))).thenReturn(errorMsg);
 
     ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(multiPartMock, "product", request);
