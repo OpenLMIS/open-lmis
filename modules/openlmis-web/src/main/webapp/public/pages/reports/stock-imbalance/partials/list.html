@@ -95,7 +95,7 @@
                                     <label class="labels">Product</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="product"  ng-model="product" ng-options="option.id as option.name for option in products">
+                                        <select ui-select2 style="width:200px;" name="product"  ng-model="product" ng-options="option.id as option.name group by option.tracer for option in products">
 
                                         </select>
                                     </div>

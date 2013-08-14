@@ -73,6 +73,11 @@ public class ReportLookupController extends BaseController {
           return this.reportLookupService.getAllProducts();
     }
 
+    @RequestMapping(value="/products_by_category", method = GET, headers = BaseController.ACCEPT_JSON)
+    public List<Product> getProductsByCategory(@RequestParam(value = "category", required = true, defaultValue = "0") int category){
+        return this.reportLookupService.getProductListByCategory(category);
+    }
+
     @RequestMapping(value="/rgroups", method = GET, headers = BaseController.ACCEPT_JSON)
     public List<RequisitionGroup> getRequisitionGroups(){
         return this.reportLookupService.getAllRequisitionGroups();

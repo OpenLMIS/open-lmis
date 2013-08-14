@@ -28,25 +28,25 @@ public class StockImbalanceQueryBuilder {
         WHERE("status <> 'SP'");
         if(filter != null){
             if (filter.getFacilityTypeId() != 0 && filter.getFacilityTypeId() != -1) {
-                WHERE("facility_type_id = #{filterCriteria.facilityTypeId}");
+                WHERE("facilitytypeid = #{filterCriteria.facilityTypeId}");
             }
             if(filter.getFacility() != null && !filter.getFacility().isEmpty()){
                 WHERE("facility = #{filterCriteria.facility}");
             }
             if (filter.getStartDate() != null) {
-                WHERE("processing_periods_start_date >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
+                WHERE("startdate >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
             }
             if (filter.getEndDate() != null) {
-                WHERE("processing_periods_end_date <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
+                WHERE("enddate <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
             }
             if(filter.getProductCategoryId() != 0 && filter.getProductCategoryId() != -1 ){
-                WHERE("product_category_id = #{filterCriteria.productCategoryId}");
+                WHERE("categoryid = #{filterCriteria.productCategoryId}");
             }
             if(filter.getRgroupId() != 0 && filter.getRgroupId() != -1){
-                WHERE("requisition_group_id = #{filterCriteria.rgroupId}");
+                WHERE("rgid = #{filterCriteria.rgroupId}");
             }
             if(filter.getProductId() != -1){
-                WHERE("product_id= #{filterCriteria.productId}");
+                WHERE("productid= #{filterCriteria.productId}");
             }
         }
     }
