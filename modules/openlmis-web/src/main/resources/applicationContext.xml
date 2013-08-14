@@ -302,6 +302,16 @@
                         <property name="tableName" value="budgets"/>
                     </bean>
                 </entry>
+                <entry key="shipmentFileDetail">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Shipment File Detail"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.ShipmentFileDetail</value>
+                        </property>
+                        <property name="recordHandler" ref="shipmentFileDetailHandler"/>
+                        <property name="tableName" value="shipment_file_details"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

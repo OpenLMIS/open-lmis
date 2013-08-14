@@ -11,6 +11,8 @@ import org.joda.time.DateTime;
 import org.openlmis.core.domain.Vendor;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrFeedDTO;
+import org.openlmis.rnr.service.NotificationServices;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URISyntaxException;
 import java.util.UUID;
@@ -18,8 +20,19 @@ import java.util.UUID;
 
 public class RequisitionStatusChangeEvent extends Event {
 
+  @Autowired
+  NotificationServices notificationService;
+
   public RequisitionStatusChangeEvent(Rnr requisition, Vendor vendor) throws URISyntaxException {
     super(UUID.randomUUID().toString(), "Requisition", DateTime.now(), "", RnrFeedDTO.populate(requisition, vendor).getSerializedContents(), "requisition");
+  }
+
+  public RequisitionStatusChangeEvent(Rnr requisition, Vendor vendor, NotificationServices nServices) throws URISyntaxException {
+    super(UUID.randomUUID().toString(), "Requisition", DateTime.now(), "", RnrFeedDTO.populate(requisition, vendor).getSerializedContents(), "requisition");
+    if(requisition != null)  {
+      notificationService = nServices;
+      notificationService.notifyStatusChange(requisition, vendor);
+    }
   }
 
 }
