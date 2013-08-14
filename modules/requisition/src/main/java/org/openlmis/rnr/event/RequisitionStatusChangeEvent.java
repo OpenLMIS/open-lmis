@@ -25,7 +25,14 @@ public class RequisitionStatusChangeEvent extends Event {
 
   public RequisitionStatusChangeEvent(Rnr requisition, Vendor vendor) throws URISyntaxException {
     super(UUID.randomUUID().toString(), "Requisition", DateTime.now(), "", RnrFeedDTO.populate(requisition, vendor).getSerializedContents(), "requisition");
-    notificationService.notifyStatusChange(requisition, vendor);
+  }
+
+  public RequisitionStatusChangeEvent(Rnr requisition, Vendor vendor, NotificationServices nServices) throws URISyntaxException {
+    super(UUID.randomUUID().toString(), "Requisition", DateTime.now(), "", RnrFeedDTO.populate(requisition, vendor).getSerializedContents(), "requisition");
+    if(requisition != null)  {
+      notificationService = nServices;
+      notificationService.notifyStatusChange(requisition, vendor);
+    }
   }
 
 }

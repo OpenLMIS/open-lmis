@@ -26,10 +26,13 @@ public class RequisitionEventService {
   @Autowired
   VendorService vendorService;
 
+  @Autowired
+  NotificationServices notificationServices;
+
   public void notifyForStatusChange(Rnr requisition) {
     Vendor vendor = vendorService.getByUserId(requisition.getModifiedBy());
     try {
-      eventService.notify(new RequisitionStatusChangeEvent(requisition, vendor));
+      eventService.notify(new RequisitionStatusChangeEvent(requisition, vendor, notificationServices));
     } catch (URISyntaxException e) {
       throw new DataException("error.malformed.uri");
     }

@@ -1,5 +1,7 @@
 package org.openlmis.rnr.service;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.service.ApproverService;
@@ -9,6 +11,7 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -18,6 +21,9 @@ import java.util.List;
  * Date: 8/13/13
  * Time: 10:53 AM
  */
+@Service
+@NoArgsConstructor
+@AllArgsConstructor
 public class NotificationServices {
 
   @Autowired
@@ -63,11 +69,12 @@ public class NotificationServices {
               SimpleMailMessage message = new SimpleMailMessage();
               String emailMessage = emailTemplate;
 
-              emailMessage.replaceAll("{facility_name}", requisition.getFacility().getName());
-              emailMessage.replaceAll("{approver_name}", user.getFirstName() + " " + user.getLastName());
-              emailMessage.replaceAll("{period}", requisition.getPeriod().getName());
+              emailMessage = emailMessage.replaceAll("\\{facility_name\\}", requisition.getFacility().getName());
+              emailMessage = emailMessage.replaceAll("\\{approver_name\\}", user.getFirstName() + " " + user.getLastName());
+              emailMessage = emailMessage.replaceAll("\\{period\\}", requisition.getPeriod().getName());
 
               message.setText(emailMessage);
+              message.setSubject(configService.getByKey("EMAIL_SUBJECT_APPROVAL").getValue());
               message.setTo(user.getEmail());
 
               emailService.send(message);
