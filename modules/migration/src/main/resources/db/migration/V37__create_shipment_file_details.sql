@@ -1,4 +1,4 @@
-drop table shipment_file_details;
+--drop table shipment_file_details;
 
 create table shipment_file_details
 (
