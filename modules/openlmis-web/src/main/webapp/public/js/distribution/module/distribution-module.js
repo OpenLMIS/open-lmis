@@ -17,13 +17,37 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
   }]).directive('notRecorded', function () {
     return {
       require: '?ngModel',
-      link: function (scope, element) {
+      link: function (scope, element, attrs) {
         distributionModule["notRecordedDirective"](element, scope);
       }
     };
   });
 
 distributionModule.notRecordedDirective = function (element, scope) {
+
+  var model = $(document.getElementsByName(element.attr('id'))[0]).attr('ng-model');
+
+  var evaluatedVariable = scope;
+  var keyExists = true;
+
+  $(model.split('.')).each(function (index, key) {
+    if (!(key in evaluatedVariable)) {
+      keyExists = false;
+      return false;
+    }
+    evaluatedVariable = evaluatedVariable[key];
+    return true;
+  });
+
+  if (evaluatedVariable === undefined && keyExists) {
+    element.prop('checked', true);
+    $.each(document.getElementsByName(element.attr('id')), function (index, ele) {
+      ele.disabled = element.is(":checked");
+    });
+
+    scope.$apply();
+  }
+
   element.bind('click', function () {
     $.each(document.getElementsByName(element.attr('id')), function (index, ele) {
       ele.disabled = element.is(":checked");
