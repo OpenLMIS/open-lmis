@@ -27,6 +27,7 @@ angular.module('IndexedDB', []).service('IndexedDB', function ($rootScope, $q) {
     };
 
     if (!event.oldVersion || event.oldVersion < 3) {
+      //TODO remove drop database logic before release
       dropDatastores();
       createDistributionStore();
       createDistributionReferenceData();

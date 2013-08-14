@@ -10,9 +10,7 @@ app.directive('autoSave', function ($route, IndexedDB, $timeout) {
     link: function (scope, element, attrs) {
 
       var save = function () {
-        IndexedDB.put(attrs.objectStore, scope[attrs.autoSave], function () {
-          console.log('Successfully saved ', scope[attrs.autoSave]);
-        });
+        IndexedDB.put(attrs.objectStore, scope[attrs.autoSave]);
       };
 
       $timeout(function () {
