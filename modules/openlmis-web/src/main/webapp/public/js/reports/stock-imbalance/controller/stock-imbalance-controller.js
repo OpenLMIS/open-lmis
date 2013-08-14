@@ -1,4 +1,4 @@
-function StockImbalanceController($scope, StockImbalanceReport, Products , ProductCategories, ReportFacilityTypes, RequisitionGroups,OperationYears,Months, $http, $routeParams,$location) {
+function StockImbalanceController($scope, StockImbalanceReport, Products , ProductCategories,ProductsByCategory, ReportFacilityTypes, RequisitionGroups,OperationYears,Months, $http, $routeParams,$location) {
     //to minimize and maximize the filter section
     var section = 1;
 
@@ -126,7 +126,7 @@ function StockImbalanceController($scope, StockImbalanceReport, Products , Produ
 
     Products.get(function(data){
         $scope.products = data.productList;
-        $scope.products.push({'name': 'All Products','id':'All'});
+        $scope.products.push({'name': 'All Products','id':'All','tracer': 'All'});
     });
 
     ProductCategories.get(function(data){
@@ -170,8 +170,16 @@ function StockImbalanceController($scope, StockImbalanceReport, Products , Produ
         }else{
             $scope.filterObject.productCategoryId =  0;
         }
+        $scope.ChangeProductList();
         $scope.filterGrid();
     });
+
+    $scope.ChangeProductList = function(){
+        ProductsByCategory.get({category : $scope.filterObject.productCategoryId}, function(data){
+            $scope.products = data.productList;
+            $scope.products.push({'name': 'All Products','id':'All','tracer': 'All'});
+        });
+    }
 
     $scope.$watch('product', function(selection){
         if(selection == "All"){

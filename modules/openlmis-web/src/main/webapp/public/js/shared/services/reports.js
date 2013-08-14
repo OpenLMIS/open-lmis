@@ -22,6 +22,10 @@ services.factory('Products', function($resource){
     return $resource('/reports/products.json', {}, {});
 }) ;
 
+services.factory('ProductsByCategory', function($resource){
+    return $resource('/reports/products_by_category.json', {}, {});
+});
+
 services.factory('ProductCategories', function($resource){
     return $resource('/reports/productCategories.json', {}, {});
 }) ;
