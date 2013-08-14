@@ -23,6 +23,7 @@ CACHE:
 /public/js/shared/directives/placeholder.js
 /public/js/shared/directives/ui-nav.js
 /public/js/shared/directives/tab-scroll.js
+/public/js/shared/directives/modal-events.js
 
 /public/css/app.css
 /public/js/shared/services/services.js
@@ -50,6 +51,7 @@ CACHE:
 /public/js/distribution/controller/distribution-controller.js
 /public/js/distribution/controller/view-load-amount-controller.js
 /public/js/distribution/controller/record-facility-data-controller.js
+/public/js/distribution/controller/refrigerator-controller.js
 
 
 /public/js/shared/services/indexed-db.js
