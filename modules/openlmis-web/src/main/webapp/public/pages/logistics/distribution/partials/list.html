@@ -5,9 +5,13 @@
   -->
 <div ng-controller="DistributionListController">
 
-  <div ng-show="sharedDistributions.distributionList.length">
-    <h2 openlmis-message="label.initiated.distributions"></h2>
+  <h2 openlmis-message="label.initiated.distributions"></h2>
 
+  <div class="alert alert-info" id="noDistributionInitiated" ng-hide="sharedDistributions.distributionList.length > 0">
+    <span openlmis-message="message.no.distribution.initiated"></span>
+  </div>
+
+  <div ng-show="sharedDistributions.distributionList.length">
     <div id="cachedDistributions">
       <div class="list-header-container">
         <div class="row-fluid list-header">
