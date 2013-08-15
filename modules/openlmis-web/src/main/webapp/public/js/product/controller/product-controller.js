@@ -10,21 +10,21 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
     $scope.newProduct = {};
     $scope.products = {};
     $scope.editProduct = {};
+    $scope.product={};
     $scope.creationError = '';
-    $scope.title='Products';
+    $scope.title = 'Products';
     $scope.demoproducts = {};
     $scope.AddEditMode = '';
     $scope.programProductsCost = [];
 
 
     if ($scope.$parent.newProductMode || $scope.$parent.editProductMode) {
-         $scope.AddEditMode = true;
-          $scope.title = ($scope.$parent.newProductMode) ? $scope.title='Add Product' : $scope.title='Edit Product';
+        $scope.AddEditMode = true;
+        $scope.title = ($scope.$parent.newProductMode) ? $scope.title = 'Add Product' : $scope.title = 'Edit Product';
 
-     } else
-    {
+    } else {
         $scope.AddEditMode = false;
-        $scope.title='Products';
+        $scope.title = 'Products';
     }
 
     // Programs list
@@ -35,7 +35,7 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
     })
 
 
-     // all products list
+    // all products list
     ProductList.get({}, function (data) {
         $scope.productsList = data.productList;
         $scope.filteredProducts = $scope.productsList;
@@ -43,18 +43,17 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
         $scope.initialProducts = angular.copy(data.productList, $scope.initialProducts);
         $scope.products = $scope.productsList;
 
-        //alert(JSON.stringify($scope.products, null, 4));
-        for(var productIndex in data.productList){
+        //alert(JSON.stringify($scope.filteredProducts, null, 4));
+        for (var productIndex in data.productList) {
             var product = data.productList[productIndex];
-            $scope.productsBackupMap[product.id] =  $scope.getBackupProduct(product);
+            $scope.productsBackupMap[product.id] = $scope.getBackupProduct(product);
         }
 
-    //alert(JSON.stringify($scope.products, null, 4));
+        //alert(JSON.stringify($scope.products, null, 4));
     }, function (data) {
-          $location.path($scope.$parent.sourceUrl);
+        $location.path($scope.$parent.sourceUrl);
 
-     });
-
+    });
 
 
     // show search results
@@ -95,7 +94,8 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
 
     // delete confirm window
     $scope.showConfirmProductDeleteWindow = function (productUnderDelete) {
-        //alert(JSON.stringify( productUnderDelete, null, 4));
+
+        //alert(JSON.stringify( $scope.product, null, 4));
         var dialogOpts = {
             id: "deleteProductDialog",
             header: messageService.get('Delete product'),
@@ -127,6 +127,10 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
             $scope.error = "";
             $scope.newProduct = {};
             $scope.editProduct = {};
+            $scope.AddEditMode = false;
+            $scope.editProductMode = false;
+            $('html, body').animate({ scrollTop: 0 }, 'fast');
+            $scope.title = 'Products';
 
         });
 
@@ -138,7 +142,7 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
             id: "restoreProductDialog",
             header: messageService.get('Restore product'),
             //body: messageService.get('delete.facility.confirm', productUnderRestore.fullName, productUnderRestore.id)
-            body: messageService.get('"' + productUnderRestore.fullName + '"'+ " will be restored.")
+            body: messageService.get('"' + productUnderRestore.fullName + '"' + " will be restored.")
         };
         $scope.productUnderRestore = productUnderRestore;
         OpenLmisDialog.newDialog(dialogOpts, $scope.restoreProductCallBack, $dialog, messageService);
@@ -166,6 +170,11 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
             $scope.error = "";
             $scope.newProduct = {};
             $scope.editProduct = {};
+            $scope.AddEditMode = false;
+            $scope.editProductMode = false;
+            $('html, body').animate({ scrollTop: 0 }, 'fast');
+            $scope.title = 'Products';
+
 
         });
 
@@ -174,14 +183,14 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
     //  given product
     $scope.getBackupProduct = function (product) {
         return {
-            id:			            product.id,
-            active:			        product.active,
-            categoryId:		        product.categoryId,
-            code:			        product.code,
-            dispensingUnit:		    product.dispensingUnit,
-            displayOrder:		    product.displayOrder,
+            id: product.id,
+            active: product.active,
+            categoryId: product.categoryId,
+            code: product.code,
+            dispensingUnit: product.dispensingUnit,
+            displayOrder: product.displayOrder,
             dosageUnitId:		    product.dosageUnitId,
-            formId:			        product.formId,
+            formId: product.formId,
             fullName:		        product.fullName,
             primaryName:		    product.primaryName,
             programName:		    product.programName,
@@ -300,8 +309,8 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
     };
 
 
-      $scope.startProductEdit = function (productUnderEdit) {
-          $scope.$parent.editProductMode = true;
+    $scope.startProductEdit = function (productUnderEdit) {
+        $scope.$parent.editProductMode = true;
           $scope.title='Edit product';
           $scope.AddEditMode = true;
           $scope.editProduct = productUnderEdit;
@@ -387,6 +396,15 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
     };
 
 
+    //  backup record
+    $scope.completeEditProduct = function (product) {
+        //$scope.productsBackupMap[product.id] = $scope.getBackupProduct(product);
+        $scope.$parent.editProductMode = false;
+        $scope.showErrorForCreate = false;
+        $scope.AddEditMode = false;
+        $('html, body').animate({ scrollTop: 0 }, 'fast');
+        $scope.title = 'Products';
+    };
 
     $scope.cancelProductEdit = function (productUnderEdit) {
         var backupProductRow = $scope.productsBackupMap[productUnderEdit.id];
@@ -423,7 +441,7 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
 
         //alert(JSON.stringify( backupProductRow, null, 4));
 
-     };
+    };
 
 
 };

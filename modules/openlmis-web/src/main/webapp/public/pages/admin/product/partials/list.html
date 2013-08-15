@@ -38,11 +38,13 @@
       novalidate select2-blur>
 
 <div class="app-form">
+<!--Basic Information-->
 <div class="form-group">
 <h3>Basic Information</h3>
 
 <div class="form-row clearfix">
 
+<!-- Product code-->
 <div class="form-cell">
     <label for="code">Code<span
             class="label-required"> *</span></label>
@@ -144,6 +146,7 @@
                                         </span>
     </div>
 </div>
+
 <!-- product strength-->
 <div class="form-cell">
     <label for="strength">Strength</label>
@@ -240,7 +243,6 @@
 </div>
 
 
-
 <div class="form-cell"></div>
 
 
@@ -292,8 +294,7 @@
 
 </div>
 </div>
-<!--basic information-->
-
+<!--Program Association-->
 <div class="form-group">
     <h3>Program Association</h3>
 
@@ -304,13 +305,16 @@
         <th style="text-align: left">Price Per Pack</th>
         <th style="text-align: left">Price Per Dose</th>
         <tr ng-repeat="program in programs" tab-scroll>
-            <td  style="width: 200px;">&nbsp;</td>
+            <td style="width: 200px;">&nbsp;</td>
             <td><span class="span1" openlmis-message="program.name"></span></td>
-            <td><span class="span1"><input name="programid" id="program_{{program.id}}" type="checkbox" ng-checked="contains(program.id)"
+            <td><span class="span1"><input name="programid" id="program_{{program.id}}" type="checkbox"
+                                           ng-checked="contains(program.id)"
                                            ng-model="checked"/></span></td>
-            <td  style="width: 100px;">&nbsp;</td>
-            <td><span class="span1"><input ng-model="product.priceperpack"   name="priceperpack"   id="price_{{program.id}}" type="text"/></span></td>
-            <td><span class="span1"><input ng-model="product.priceperdosage" name="priceperdosage" id="priceperdosage_{{program.id}}" type="text"/></span></td>
+            <td style="width: 100px;">&nbsp;</td>
+            <td><span class="span1"><input ng-model="product.priceperpack" name="priceperpack" id="price_{{program.id}}"
+                                           type="text"/></span></td>
+            <td><span class="span1"><input ng-model="product.priceperdosage" name="priceperdosage"
+                                           id="priceperdosage_{{program.id}}" type="text"/></span></td>
         </tr>
     </table>
 
@@ -319,7 +323,8 @@
 <div form-toolbar id="action_buttons" class="action-buttons" ng-show="newProductMode">
     <div class="form-cell button-row">
         <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
-        <a ng-click="cancelAddNewProduct()" class="btn btn-cancel cancel-button"><span openlmis-message="button.cancel"></span></a>
+        <a ng-click="cancelAddNewProduct()" class="btn btn-cancel cancel-button"><span
+                openlmis-message="button.cancel"></span></a>
     </div>
     <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>
 </div>
@@ -327,14 +332,14 @@
 </div>
 </form>
 
-
 <!-------------------------------------------------------------------------------------------------------------
 Edit Product
  -------------------------------------------------------------------------------------------------------------->
-<form id="editProductForm" name="editProductForm"   ng-model="editProduct"
-      ng-submit="updateProduct(editProduct, editProductForm);"
-      ng-show="editProduct" novalidate select2-blur>
+<form id="editProductForm" name="editProductForm" ng-model="product"
+      ng-submit="updateProduct(product, editProductForm);"
+      ng-show="product" novalidate select2-blur>
 <input type="hidden" ng-model="backupProductRow"/>
+
 <div ng-class="editProductMode">
 <div class="row-fluid list-row" ng-show="editProductMode">
 
@@ -351,9 +356,10 @@ Edit Product
 
     <div class="form-field" style="width: 40%;">
 
-        <input ng-model="editProduct.code" name="code" id="code_edt" type="text"
+        <input ng-model="product.code" name="code" id="code_edt" type="text" value="{{editProduct.code}}"
                ng-show="editProduct"
                maxlength="20"
+
                ng-required="true"/>
                                         <span class="field-error"
                                               ng-show="editProductForm.code.$error.required && showErrorForCreate"
@@ -369,7 +375,8 @@ Edit Product
     </label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="editProduct.packSize" name="packSize" id="packSize_edt" type="text"
+        <input ng-model="product.packSize" name="packSize" id="packSize_edt" type="text"
+               value="{{editProduct.packSize}}"
                ng-show="editProduct"
                maxlength="20"
                ng-required="true"/>
@@ -382,12 +389,13 @@ Edit Product
 
 <!-- product name-->
 <div class="form-cell">
-    <label for="fullName_edt">Product Name
+    <label for="primaryName_edt">Product Name
         <span ng-show="editProduct" class="label-required">*</span>
     </label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="editProduct.fullName" name="fullName" id="fullName_edt" type="text"
+        <input ng-model="product.primaryName" name="primaryName" id="primaryName_edt" type="text"
+               value="{{editProduct.primaryName}}"
                ng-show="editProduct"
                maxlength="20"
                ng-required="true"/>
@@ -405,7 +413,8 @@ Edit Product
     </label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="editProduct.dispensingUnit" name="dispensingUnit" id="dispensingUnit_edt"
+        <input ng-model="product.dispensingUnit" name="dispensingUnit" id="dispensingUnit_edt"
+               value="{{editProduct.dispensingUnit}}"
                type="text"
                ng-show="editProduct"
                maxlength="20"
@@ -425,7 +434,8 @@ Edit Product
     </label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="editProduct.dosesPerDispensingUnit" name="dispensingUnit" id="dosesPerDispensingUnit_edt"
+        <input ng-model="product.dosesPerDispensingUnit" name="dispensingUnit" id="dosesPerDispensingUnit_edt"
+               value="{{editProduct.dosesPerDispensingUnit}}"
                type="text"
                ng-show="editProduct"
                maxlength="20"
@@ -445,7 +455,8 @@ Edit Product
     </label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="editProduct.packRoundingThreshold" name="packRoundingThreshold" id="packRoundingThreshold_edt"
+        <input ng-model="product.packRoundingThreshold" name="packRoundingThreshold" id="packRoundingThreshold_edt"
+               value="{{editProduct.packRoundingThreshold}}"
                type="text"
                ng-show="editProduct"
                maxlength="20"
@@ -462,7 +473,8 @@ Edit Product
     <label for="strength">Strength</label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="editProduct.strength" name="strength" id="strength_edt" type="text"
+        <input ng-model="product.strength" name="strength" id="strength_edt" type="text"
+               value="{{editProduct.strength}}"
                ng-show="editProduct"
                maxlength="20"/>
                                         <span class="field-error"
@@ -472,13 +484,12 @@ Edit Product
     </div>
 </div>
 
-
 <!-- Type-->
 <div class="form-cell">
     <label for="type">Type</label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="editProduct.type" name="type" id="type_edt" type="text"
+        <input ng-model="product.type" name="type" id="type_edt" type="text" value="{{editProduct.type}}"
                ng-show="editProduct"
                maxlength="20"/>
                                         <span class="field-error"
@@ -490,11 +501,12 @@ Edit Product
 
 <!-- Dosage Units-->
 <div class="form-cell">
-    <label for="dosageUnit">DosageUnit</label>
+    <label for="dosageUnitId_edt">DosageUnit</label>
 
     <div class="form-field" style="width: 40%;">
 
-        <select ui-select2 style="width:200px;" name="dosageUnitId" id="dosageUnitId_edt"  ng-model="editProduct.dosageUnitId"
+        <select ui-select2 style="width:200px;" name="dosageUnitId" id="dosageUnitId_edt"
+                ng-model="product.dosageUnit.id"
                 ng-show="editProduct"
                 ng-options="option.id as option.code for option in dosageUnits">
 
@@ -507,14 +519,13 @@ Edit Product
 </div>
 
 
-
-
 <!-- Product Display Order-->
 <div class="form-cell">
     <label for="displayOrder">Display Order</label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="editProduct.displayOrder" name="displayOrder" id="displayOrder_edt" type="text"
+        <input ng-model="product.displayOrder" name="displayOrder" id="displayOrder_edt" type="text"
+               value="{{editProduct.displayOrder}}"
                ng-show="editProduct"
                maxlength="20"/>
                                         <span class="field-error"
@@ -526,12 +537,12 @@ Edit Product
 
 <!-- Product Form-->
 <div class="form-cell">
-    <label for="formid">Product Form</label>
+    <label for="formid_edt">Product Form</label>
 
     <div class="form-field" style="width: 40%;">
 
         <select ui-select2 style="width:200px;" name="formId" id="formid_edt"
-                ng-model="editProduct.formId"
+                ng-model="product.form.id"
                 ng-show="editProduct"
                 ng-options="option.id as option.code for option in productForms">
 
@@ -550,7 +561,7 @@ Edit Product
 
     <div class="form-field" style="width: 40%;">
 
-        <select ui-select2 style="width:200px;" name="categoryid" id="categoryid_edt" ng-model="editProduct.categoryId"
+        <select ui-select2 style="width:200px;" name="categoryid" id="categoryid_edt" ng-model="product.category.id"
                 ng-show="editProduct"
                 ng-options="option.id as option.name for option in productCategories">
 
@@ -571,9 +582,10 @@ Edit Product
     <div class="form-field" style="width: 40%;">
         <table>
             <tr>
-                <td><input ng-model="editProduct.fullSupply" name="fullSupply" id="fullSupply_edt"
+                <td><input ng-model="product.fullSupply" name="fullSupply" id="fullSupply_edt"
                            type="checkbox"
                            ng-show="editProduct"
+                           ng-checked="editProduct.fullSupply"
                            ng-required="false"/>
                 </td>
                 <td>&nbsp;</td>
@@ -582,8 +594,9 @@ Edit Product
             </tr>
             <tr>
                 <td>
-                    <input ng-model="editProduct.tracer" name="tracer" id="tracer_edt" type="checkbox"
+                    <input ng-model="product.tracer" name="tracer" id="tracer_edt" type="checkbox"
                            ng-show="editProduct"
+                           ng-checked="editProduct.tracer"
                            ng-required="false"/>
                 </td>
                 <td>&nbsp;</td>
@@ -592,8 +605,9 @@ Edit Product
             </tr>
             <tr>
                 <td>
-                    <input ng-model="editProduct.active" name="active" id="active_edt" type="checkbox"
+                    <input ng-model="product.active" name="active" id="active_edt" type="checkbox"
                            ng-show="editProduct"
+                           ng-checked="editProduct.active"
                            ng-required="false"/>
                 </td>
                 <td>&nbsp;</td>
@@ -602,8 +616,9 @@ Edit Product
             </tr>
             <tr>
                 <td>
-                    <input ng-model="editProduct.roundToZero" name="roundToZero" id="roundToZero_edt" type="checkbox"
+                    <input ng-model="product.roundToZero" name="roundToZero" id="roundToZero_edt" type="checkbox"
                            ng-show="editProduct"
+                           ng-checked="editProduct.roundToZero"
                            ng-required="false"/>
                 </td>
                 <td>&nbsp;</td>
@@ -631,25 +646,33 @@ Edit Product
         <th style="text-align: left">Price Per Pack</th>
         <th style="text-align: left">Price Per Dose</th>
         <tr ng-repeat="program in programs" tab-scroll>
-            <td  style="width: 200px;">&nbsp;</td>
+            <td style="width: 200px;">&nbsp;</td>
             <td><span class="span1" openlmis-message="program.name"></span></td>
-            <td><span class="span1"><input id="program_{{program.id}}_edt" type="checkbox" ng-checked="programProductsCost[program.id].id"
+            <td><span class="span1"><input id="program_{{program.id}}_edt" type="checkbox"
+                                           ng-checked="programProductsCost[program.id].id"
                                            ng-model="Checked"/></span></td>
-            <td  style="width: 100px;">&nbsp;</td>
-            <td><span class="span1"><input id="price_{{program.id}}_edt" type="text" value="{{programProductsCost[program.id].priceperpack}}"/></span></td>
-            <td><span class="span1"><input id="priceperdosage_{{program.id}}_edt" type="text" value="{{programProductsCost[program.id].priceperdosage}}"/></span></td>
+            <td style="width: 100px;">&nbsp;</td>
+            <td><span class="span1"><input id="price_{{program.id}}_edt" type="text"
+                                           value="{{programProductsCost[program.id].priceperpack}}"/></span></td>
+            <td><span class="span1"><input id="priceperdosage_{{program.id}}_edt" type="text"
+                                           value="{{programProductsCost[program.id].priceperdosage}}"/></span></td>
         </tr>
     </table>
 </div>
-</div>
-</div>
 
+</div>
+</div>
 
 
 <div form-toolbar id="action_buttons_edit" class="action-buttons" ng-show="editProductMode">
     <div class="form-cell button-row">
         <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
-        <a ng-click="cancelProductEdit(editProduct, backupProductRow); editProduct=false;" class="btn btn-cancel cancel-button"><span openlmis-message="button.cancel"></span></a>
+        <a href="" class="btn btn-danger delete-button" style="margin-right: 50px;" ng-show="product.active"
+           ng-click="showConfirmProductDeleteWindow(product); productsBackupMap[product.id].deleted=true;">Deactivate</a>
+        <a href="" class="btn btn-danger delete-button" style="margin-right: 50px;" ng-hide="product.active"
+           ng-click="showConfirmProductRestoreWindow(product); productsBackupMap[product.id].restore=true;">Restore</a>
+        <a ng-click="cancelProductEdit(editProduct, backupProductRow); editProduct=false;"
+           class="btn btn-cancel cancel-button"><span openlmis-message="button.cancel"></span></a>
     </div>
     <div class="toolbar-error" id="ediErrorMsgDiv" openlmis-message="error" ng-show="error"/>
 </div>
@@ -660,104 +683,129 @@ Edit Product
 <!---->
 
 <div ng-hide="AddEditMode">
-    <!-- column headers-->
-    <div class="list-header-container">
-        <div class="row-fluid list-header">
-            <div class="span1" style="float: left; width: 40px;"></div>
-            <div class="span1" style="float: left; width: 40px;"></div>
-            <div class="span1">Code</div>
-            <div class="span3">Name</div>
-            <div class="span1">Program</div>
-            <div class="span1">Strength</div>
-            <div class="span2">Unit of Measure</div>
-            <div class="span1">Active</div>
-            <div class="span1">Full Supply</div>
+    <table class="table table-striped table-bordered">
 
-        </div>
-    </div>
-    <div class="list-container">
+        <!-- column headers-->
+        <thead>
+        <tr class="gradient-header">
+            <th>Code</th>
+            <th>Name</th>
+            <th>Program</th>
+            <th>Strength</th>
+            <th>Unit of Measure</th>
+            <th>Display Order</th>
+            <th>Active</th>
+            <th>Full Supply</th>
+            <th>Action</th>
+
+        </tr>
+        </thead>
+
+
+        <tbody>
         <!--repeat-->
-        <div ng-repeat="pr in filteredProducts | orderBy:'-fullName':true" class="row-fluid list-row">
-            <div class="span1" style="float: left; width: 40px;">
-                <!-- Edit button-->
-                <input type="button"
-                       class="btn btn-mini pull-right"
-                       value="Edit"
-                       ng-click="startProductEdit(pr, backupProductRow); productsBackupMap[pr.id].edit=true;"/>
-            </div>
-            <!-- Delete button-->
-            <div class="span1" style="float: left; width: 40px;">
-                <input type="button"
-                       class="btn btn-mini pull-right"
-                       value="Deactivate"
-                       ng-show="pr.active==true"
-                       ng-click="showConfirmProductDeleteWindow(pr); productsBackupMap[pr.id].deleted=true;"/>
-
-                <input type="button"
-                       class="btn btn-mini pull-right"
-                       value="Restore"
-                       ng-show="pr.active==false"
-                       ng-click="showConfirmProductRestoreWindow(pr); productsBackupMap[pr.id].restore=true;"/>
-
-            </div>
-
+        <tr ng-repeat="pr in filteredProducts | orderBy:['displayOrder','primaryName']">
 
             <!-- Code-->
-            <div class="span1" style="overflow: visible;"> {{pr.code}}</div>
+            <td>
+                <div>{{pr.code}}</div>
+            </td>
             <!-- name-->
-            <div class="span3" style="..."> {{pr.primaryName}}</div>
+            <td>
+                <div>{{pr.primaryName}}</div>
+            </td>
             <!-- Program-->
-            <div class="span1" style="..."> {{pr.programName}}</div>
+            <td>
+                <div>{{pr.programName}}</div>
+            </td>
             <!-- Strenght-->
-            <div class="span1" style="overflow: visible;"> {{pr.strength}}</div>
+            <td>
+                <div>{{pr.strength}}</div>
+            </td>
             <!-- UOM-->
-            <div class="span2" style="..."> {{pr.dispensingUnit}}</div>
+            <td>
+                <div>{{pr.dispensingUnit}}</div>
+            </td>
+            <!-- Display Order-->
+            <td>
+                <div>{{pr.displayOrder}}</div>
+            </td>
             <!-- Active-->
-            <div class="span1" style="..."> {{YesNo(pr.active)}}</div>
+            <td>
+                <div>{{YesNo(pr.active)}}</div>
+            </td>
             <!-- Active-->
-            <div class="span1" style="..."> {{YesNo(pr.fullSupply)}}</div>
+            <td>
+                <div>{{YesNo(pr.fullSupply)}}</div>
+            </td>
 
-
-            <!--list-->                     </div>
-        <!--list-->    </div>
+            <td>
+                <a ng-click="startProductEdit(pr, backupProductRow); productsBackupMap[pr.id].edit=true;">Edit</a> |
+                <a ng-show="pr.active==true"
+                   ng-click="showConfirmProductDeleteWindow(pr); productsBackupMap[pr.id].deleted=true;">Delete</a>
+                <a ng-show="pr.active==false"
+                   ng-click="showConfirmProductRestoreWindow(pr); productsBackupMap[pr.id].restore=true;">Restore</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!--list-->
+<!--list-->
 </div>
+
+
 
 <div ng-show="editProductMode">
     <h2><span>Price History</span></h2>
-    <!-- column headers-->
-    <div class="list-header-container">
-        <div class="row-fluid list-header">
-            <div class="span1" style="float: left; width: 40px;"></div>
-            <div class="span1">Program</div>
-            <div class="span2">Price Per Pack</div>
-            <div class="span2">Price Per Dosage</div>
-            <div class="span1">Source</div>
-            <div class="span2">Start Date</div>
-            <div class="span1">End Date</div>
-        </div>
-    </div>
-    <div class="list-container">
+    <table class="table table-striped table-bordered">
+
+        <!-- column headers-->
+        <thead>
+        <tr class="gradient-header">
+            <th>Program</th>
+            <th>Program</th>
+            <th>Price Per Pack</th>
+            <th>Price Per Dosage</th>
+            <th>Source</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+        </tr>
+        </thead>
+
+
+        <tbody>
         <!--repeat-->
-        <div ng-repeat="cost in selectedProductCost | orderBy:'-programname':true" class="row-fluid list-row">
-            <div class="span1" style="float: left; width: 40px;"></div>
-            <!-- program-->
-            <div class="span1" style="overflow: visible;"> {{cost.programname}}</div>
-            <!-- Price per pack-->
-            <div class="span2" style="..."> {{cost.priceperpack}}</div>
-            <!-- price per dosage-->
-            <div class="span2" style="..."> {{cost.priceperdosage}}</div>
-            <!-- source-->
-            <div class="span1" style="..."> {{cost.source}}</div>
-             <!-- start date-->
-            <div class="span2" style="..."> {{cost.startdate | date:'dd/MM/yyyy'}}</div>
-            <!-- end date-->
-            <div class="span2" style="..."> {{cost.enddate | date:'dd/MM/yyyy'}}</div>
+        <tr ng-repeat="cost in selectedProductCost | orderBy:'startdate':true">
 
-
-
-            <!--list-->                     </div>
-        <!--list-->    </div>
+            <!-- Program-->
+            <td>
+                <div>{{cost.programname}}</div>
+            </td>
+            <!-- Price Per Pack-->
+            <td>
+                <div>{{cost.priceperpack}}</div>
+            </td>
+            <!-- Price Per Pack-->
+            <td>
+                <div>{{cost.priceperdosage}}</div>
+            </td>
+            <!-- Price Per Pack-->
+            <td>
+                <div>{{cost.source}}</div>
+            </td>
+            <!-- Start Date-->
+            <td>
+                <div>{{cost.startdate | date:'dd/MM/yyyy'}}</div>
+            </td>
+            <!-- End Date-->
+            <td>
+                <div>{{cost.enddate | date:'dd/MM/yyyy'}}</div>
+            </td>
+        <tr>
+        </tbody>
+    </table>
 </div>
+
 
 </div>
 

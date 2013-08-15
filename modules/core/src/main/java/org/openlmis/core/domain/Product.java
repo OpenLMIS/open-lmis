@@ -168,4 +168,9 @@ public class Product extends BaseModel implements Importable {
   @ImportField(type = "boolean", name = "Has Been Archived")
   private Boolean archived;
 
+  private String programName;
+
+  // this section is added to make the product editing form work.
+  private List<ProgramProduct> programProducts;
+
 }

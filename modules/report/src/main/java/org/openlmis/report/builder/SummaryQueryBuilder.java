@@ -44,15 +44,15 @@ public class SummaryQueryBuilder {
             return query;
     }
     private static String writePredicates(Map params){
-        String predicate = "WHERE r.status = 'RELEASED' ";
-        String facilityTypeId =  params.get("facilityTypeId") == null ? null :((String[])params.get("facilityTypeId"))[0];
-        String facilityName = params.get("facilityName") == null ? null : ((String[])params.get("facilityName"))[0];
-        String period =    params.get("periodId") == null ? null : ((String[])params.get("periodId"))[0];
-        String program =   params.get("programId") == null ? null : ((String[])params.get("programId"))[0];
-        String product =   params.get("productId") == null ? null : ((String[])params.get("productId"))[0];
-        String zone =     params.get("zoneId") == null ? null : ((String[])params.get("zoneId"))[0];
-        String rgroup =     params.get("rgroupId") == null ? null : ((String[])params.get("rgroupId"))[0];
-        String schedule = params.get("scheduleId") == null ? null : ((String[])params.get("scheduleId"))[0];
+        String predicate = "WHERE 1 = 1 ";
+        String facilityTypeId = (!params.containsKey("facilityTypeId") || params.get("facilityTypeId") == null) ? null :((String[])params.get("facilityTypeId"))[0];
+        String facilityName = (!params.containsKey("facilityName") || params.get("facilityName") == null) ? null : ((String[])params.get("facilityName"))[0];
+        String period =    (!params.containsKey("periodId") || params.get("periodId") == null) ? null : ((String[])params.get("periodId"))[0];
+        String program =   (!params.containsKey("programId") || params.get("programId") == null) ? null : ((String[])params.get("programId"))[0];
+        String product =   (!params.containsKey("productId") || params.get("productId") == null) ? null : ((String[])params.get("productId"))[0];
+        String zone =     (!params.containsKey("zoneId") || params.get("zoneId") == null) ? null : ((String[])params.get("zoneId"))[0];
+        String rgroup =     (!params.containsKey("rgroupId") || params.get("rgroupId") == null) ? null : ((String[])params.get("rgroupId"))[0];
+        String schedule = (!params.containsKey("facilityTypeId") || params.get("scheduleId") == null) ? null : ((String[])params.get("scheduleId"))[0];
 
         if (period != null &&  !period.equals("undefined") && !period.isEmpty() && !period.equals("0")  && !period.equals("-1")){
             predicate += " and r.periodid = "+ period;
