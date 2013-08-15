@@ -217,7 +217,7 @@ services.factory('CreateProduct', function ($resource) {
 
 // mahmed 07.13.2013
 services.factory('UpdateProduct', function ($resource) {
-    return $resource('/updateProduct/:id.json', {}, {update:{method:'PUT'}});
+    return $resource('/updateProduct.json', {}, {update:{method:'PUT'}});
 });
 
 // mahmed 07.13.2013
@@ -264,4 +264,8 @@ services.factory('Settings',function($resource){
 
 services.factory('SettingUpdator', function($resource){
     return $resource('/saveSettings.json', {} , { post: {method:'POST'} } );
+});
+
+services.factory('ProductDetail', function($resource){
+    return $resource('/productDetail/:id.json', {} , { post: {method:'GET'} } );
 });

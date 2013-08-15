@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ProductController($scope, $location, $dialog, messageService, AllProductCost, CreateProduct, UpdateProduct,ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits, ProductForms) {
+function ProductController($scope, $location, $dialog, messageService, ProductDetail , AllProductCost, CreateProduct, UpdateProduct,ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits, ProductForms) {
 
     $scope.productsBackupMap = [];
     $scope.newProduct = {};
@@ -313,13 +313,18 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
         $scope.$parent.editProductMode = true;
           $scope.title='Edit product';
           $scope.AddEditMode = true;
-          $scope.editProduct = productUnderEdit;
-          $scope.productsBackupMap[productUnderEdit.id].editFormActive = "product-form-active";
+
+          // now get a fresh copy of the product object from the server
+          ProductDetail.get({id:productUnderEdit.id}, function(data){
+              $scope.editProduct = data.product;
+              $scope.productsBackupMap[data.product.id].editFormActive = "product-form-active";
+              $scope.edit_id = productUnderEdit.id;
+          });
+
           $('html, body').animate({ scrollTop: 0 }, 'fast');
-          $scope.edit_id = productUnderEdit.id;
 
-          //alert(JSON.stringify($scope.editProduct, null, 4));
-
+          // we will have to check if this part is going to be important to do or not.
+          // if we avoided it, the better
           AllProductCost.get({}, function (data) {
               $scope.productCost = data.allProductCost;
               $scope.selectedProductCost = _.where($scope.productCost, {productid: $scope.edit_id});
@@ -339,10 +344,11 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
       };
 
 
-    $scope.updateProduct = function (product, form) {
+    $scope.updateProduct = function () {
+
+        product = $scope.editProduct;
         function updateUiData(sourceProduct) {
             var productsLength = $scope.products.length;
-            //alert(JSON.stringify(sourceSupplyline, null, 4));
             for (var i = 0; i < productsLength; i++) {
                 if  ($scope.products[i].id == sourceProduct.id) {
                     $scope.products[i].active = sourceProduct.active;
@@ -357,37 +363,20 @@ function ProductController($scope, $location, $dialog, messageService, AllProduc
                 }
             }
         }
-
         $scope.error = "";
-        if (form.$invalid) {
+        if (editProductForm.$invalid) {
             $scope.showErrorForEdit = true;
             return;
         }
 
         $scope.productsBackupMap[product.id].error = '';
         $scope.showErrorForEdit = true;
-
-        //alert(JSON.stringify(product, null, 4));
         UpdateProduct.update(product, function (data) {
             var returnedProduct = data.product;
             //alert(JSON.stringify(returnedProduct, null, 4));
             $scope.productsBackupMap[returnedProduct.id] = $scope.getBackupProduct(returnedProduct);
+            alert('the update was successful');
 
-            updateUiData(returnedProduct);
-            $scope.message = data.success;
-            setTimeout(function() {
-                $scope.$apply(function() {
-                    // refresh list
-                    $scope.productslist = data.productList;
-                    $scope.message = "";
-                });
-            }, 4000);
-            $scope.error = "";
-            $scope.newProduct = {};
-            $scope.editProduct = {};
-
-            $scope.productsBackupMap[returnedProduct.id].editFormActive = 'updated-item';
-            $scope.productsBackupMap[returnedProduct.id].edit = false;
         }, function (data) {
             $scope.message = "";
             $scope.startProductEdit(product);

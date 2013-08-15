@@ -27,7 +27,7 @@ public interface ProductReportMapper {
     @Select("SELECT * " +
             "   FROM " +
             "       products")
-    List<Product> getFullProductList();
+    List<ProductList> getFullProductList();
 
     @Select("SELECT id, genericname as name, code, " +
             "CASE WHEN tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer  " +

@@ -71,14 +71,22 @@ public class Product extends BaseModel implements Importable {
   @ImportField(type = "String", name = "Product Form", nested = "code")
   private ProductForm form;
 
+  private Long formId;
+
   @ImportField(mandatory = true, type = "String", name = "Product Category", nested = "code")
   private ProductCategory category;
+
+  private Long categoryId;
 
   @ImportField(type = "String", name = "Product Group", nested = "code")
   private ProductGroup productGroup;
 
+  private Long productGroupId;
+
   @ImportField(type = "String", name = "Dosage Units", nested = "code")
   private DosageUnit dosageUnit;
+
+  private Long dosageUnitId;
 
   @ImportField(name = "Dispensing Units")
   private String dispensingUnit;

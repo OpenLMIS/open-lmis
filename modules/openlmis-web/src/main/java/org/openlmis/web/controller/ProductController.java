@@ -11,7 +11,9 @@ import org.openlmis.core.domain.Product;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.DosageUnitMapper;
 import org.openlmis.core.repository.mapper.ProductFormMapper;
+import org.openlmis.core.service.ProductGroupService;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,6 +59,13 @@ public class ProductController extends BaseController {
     private ReportLookupService reportLookupService;
 
     @Autowired
+    private ProgramProductService programProductService;
+
+    @Autowired
+    private ProductGroupService productGroupService;
+
+
+    @Autowired
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
@@ -80,6 +89,14 @@ public class ProductController extends BaseController {
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> getAllPrices() {
         return OpenLmisResponse.response(ALLPRODUCTCOST, programPriceService.getAllPrices());
+    }
+
+    @RequestMapping(value = "/productDetail/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> getProductDetails(@PathVariable("id") Long id){
+      Product product = productListService.get(id);
+      product.setProgramProducts(programProductService.getByProductCode(product.getCode()));
+      return OpenLmisResponse.response("product", product);
     }
 
 
@@ -114,14 +131,12 @@ public class ProductController extends BaseController {
     }
 
     // mahmed - 07.11.2013  update
-    @RequestMapping(value = "/updateProduct/{id}", method = RequestMethod.PUT, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/updateProduct", method = RequestMethod.PUT, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> update( @RequestBody Product product,
                                                     HttpServletRequest request) {
         //product.setId(id);
         product.setModifiedBy(loggedInUserId(request));
-        product.setCreatedBy(loggedInUserId(request));
-        product.setCreatedDate(new Date());
         product.setModifiedDate(new Date());
         return saveProduct(product, true);
     }
@@ -136,6 +151,7 @@ public class ProductController extends BaseController {
         product.setCreatedBy(loggedInUserId(request));
         product.setCreatedDate(new Date());
         product.setModifiedDate(new Date());
+
         return saveProduct(product, true);
     }
 
@@ -145,10 +161,12 @@ public class ProductController extends BaseController {
     private ResponseEntity<OpenLmisResponse> saveProduct(Product product, boolean createOperation) {
         try {
             productService.save(product);
+            for(org.openlmis.core.domain.ProgramProduct pp: product.getProgramProducts()){
 
-            //if (product.getId() == null)  {
-
-           // }
+              // set the product for each of the program products ... for the save functionalitiy to work
+              pp.setProduct(product);
+              programProductService.save(pp);
+            }
 
             ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("'" + product.getPrimaryName() + "' "+ (createOperation?"created":"updated") +" successfully");
             response.getBody().addData(PRODUCT, productListService.get(product.getId()));

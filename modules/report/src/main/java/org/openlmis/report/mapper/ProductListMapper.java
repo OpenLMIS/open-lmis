@@ -41,13 +41,13 @@ public interface ProductListMapper {
             "product_forms.id AS formId,\n" +
             "product_forms.code AS formCode,\n" +
             "programs.id AS programId, \n" +
-            "programs.name AS programName\n" +
-            "FROM\n" +
-            "products\n" +
-            "INNER JOIN product_forms ON product_forms.id = products.formid\n" +
-            "INNER JOIN dosage_units ON dosage_units.id = products.dosageunitid\n" +
-            "INNER JOIN product_categories ON product_categories.id = products.categoryid\n" +
-            "INNER JOIN program_products ON products.id = program_products.productid\n" +
+            "programs.name AS programName \n" +
+            "FROM \n" +
+            "products \n" +
+            "INNER JOIN product_forms ON product_forms.id = products.formid \n" +
+            "INNER JOIN dosage_units ON dosage_units.id = products.dosageunitid \n" +
+            "INNER JOIN product_categories ON product_categories.id = products.categoryid \n" +
+            "INNER JOIN program_products ON products.id = program_products.productid \n" +
             "INNER JOIN programs ON programs.id = program_products.programid")
     List<ProductList> getList();
 
@@ -60,6 +60,5 @@ public interface ProductListMapper {
     int restoreById(Long productId);
 
     @Select("SELECT * FROM products WHERE id=#{id}")
-
     Product getProductById(Long id);
 }
