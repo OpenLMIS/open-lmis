@@ -20,7 +20,7 @@ public class RefrigeratorPage extends Page {
   private static WebElement addNewButton;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Edit')]")
-  private static WebElement editButton;
+  public static WebElement editButton;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Delete')]")
   private static WebElement deleteButton;
@@ -32,7 +32,7 @@ public class RefrigeratorPage extends Page {
   private static WebElement refrigeratorTab;
 
   @FindBy(how = XPATH, using = "//input[@ng-model='refrigeratorReading.temperature']")
-  private static WebElement refrigeratorTemperatureTextField;
+  public static WebElement refrigeratorTemperatureTextField;
 
   @FindBy(how = XPATH, using = "//input[@ng-model='refrigeratorReading.lowAlarmEvents'")
   private static WebElement lowAlarmEventsTextField;
@@ -285,6 +285,7 @@ public class RefrigeratorPage extends Page {
   public void clickDone() {
     testWebDriver.waitForElementToAppear(doneButton);
     doneButton.click();
+    testWebDriver.sleep(500);
   }
 
   public void addNewRefrigerator(String brand, String model, String manufacturerSerialNumber)

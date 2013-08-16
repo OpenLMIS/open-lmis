@@ -26,6 +26,7 @@ import org.testng.annotations.Listeners;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
 
@@ -46,7 +47,7 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @When("^I click Add New Button$")
   public void clickAddNewButton() throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage=new RefrigeratorPage(testWebDriver);
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.clickAddNew();
   }
 
@@ -57,42 +58,118 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @When("^I enter Brand \"([^\"]*)\"$")
   public void enterBrand(String brand) throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage=new RefrigeratorPage(testWebDriver);
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInBrandModal(brand);
   }
 
   @And("^I enter Modal \"([^\"]*)\"$")
   public void enterModal(String modal) throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage=new RefrigeratorPage(testWebDriver);
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInModelModal(modal);
   }
 
   @And("^I enter Serial Number \"([^\"]*)\"$")
   public void enterSerialNumber(String serial) throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage=new RefrigeratorPage(testWebDriver);
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInManufacturingSerialNumberModal(serial);
   }
 
-  @And("^I click Done$")
-  public void clickDone() throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage=new RefrigeratorPage(testWebDriver);
+  @And("^I click Done on modal$")
+  public void clickDoneOnModal() throws IOException, SQLException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.clickDoneOnModal();
   }
 
   @And("^I click Delete")
   public void clickDelete() throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage=new RefrigeratorPage(testWebDriver);
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.clickDelete();
   }
 
-  @Then("^I should be see Refrigerators screen")
+  @And("^I click Edit")
+  public void clickEdit() throws IOException, SQLException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.clickEdit();
+  }
+
+  @And("^I enter refrigerator temperature \"([^\"]*)\"$")
+  public void enterRefrigeratorTemperature(String temperature) throws IOException, SQLException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.enterValueInRefrigeratorTemperature(temperature);
+  }
+
+  @And("^I enter low alarm events \"([^\"]*)\"$")
+  public void enterLowEvents(String event) throws IOException, SQLException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.enterValueInLowAlarmEvents(event);
+  }
+
+  @And("^I enter high alarm events \"([^\"]*)\"$")
+  public void enterHighEvents(String event) throws IOException, SQLException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.enterValueInHighAlarmEvents(event);
+  }
+
+  @And("^I enter Notes$")
+  public void enterNotes(String notes) throws IOException, SQLException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.enterValueInNotesTextArea(notes);
+  }
+
+  @And("^I click Done$")
+  public void clickDone() throws IOException, SQLException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.clickDone();
+  }
+
+  @Then("^I should not see Refrigerator details section$")
+  public void shouldNotSeeRefrigeratorSection() throws IOException, SQLException {
+    verifyShouldNotSeeRefrigeratorSection();
+  }
+
+  @And("^I should see Edit button$")
+  public void shouldSeeEditButton() throws IOException, SQLException {
+    assertTrue("Edit button should show up",new RefrigeratorPage(testWebDriver).editButton.isDisplayed());
+  }
+
+  @And("^I click \"([^\"]*)\" it was working correctly when I left$")
+  public void clickFunctioningCorrectly(String flag) throws IOException, SQLException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    if (flag.equalsIgnoreCase("Yes"))
+      refrigeratorPage.clickFunctioningCorrectlyYesRadio();
+    else if (flag.equalsIgnoreCase("No"))
+      refrigeratorPage.clickFunctioningCorrectlyNoRadio();
+    else if (flag.equalsIgnoreCase("Dont know"))
+      refrigeratorPage.clickFunctioningCorrectlyDontKnowRadio();
+    else
+      refrigeratorPage.clickFunctioningCorrectlyNR();
+  }
+
+  @And("^I click \"([^\"]*)\" that there is a problem with refrigerator since last visit$")
+  public void clickProblemSinceLastVisit(String flag) throws IOException, SQLException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    if (flag.equalsIgnoreCase("Yes"))
+      refrigeratorPage.clickProblemSinceLastVisitYesRadio();
+    else if (flag.equalsIgnoreCase("No"))
+      refrigeratorPage.clickProblemSinceLastVisitNoRadio();
+    else if (flag.equalsIgnoreCase("Dont know"))
+      refrigeratorPage.clickProblemSinceLastVisitDontKnowRadio();
+    else
+      refrigeratorPage.clickProblemSinceLastVisitNR();
+  }
+
+  @Then("^I should see Refrigerators screen")
   public void onRefrigeratorScreen() throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage=new RefrigeratorPage(testWebDriver);
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.clickRefrigeratorTab();
   }
 
   public void verifyNewRefrigeratorModalWindowExist() {
     assertTrue("New Refrigerator modal window should show up", new RefrigeratorPage(testWebDriver).newRefrigeratorHeaderOnModal.isDisplayed());
+  }
+
+  public void verifyShouldNotSeeRefrigeratorSection() {
+    assertFalse("Refrigerator details section should not show up", new RefrigeratorPage(testWebDriver).refrigeratorTemperatureTextField.isDisplayed());
   }
 
 
