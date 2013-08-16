@@ -289,34 +289,31 @@
     <h3>Program Association</h3>
 
     <table border="0">
-        <th></th>
-        <th colspan="2">Program</th>
-        <th></th>
-        <th style="text-align: left">Price Per Pack</th>
-        <th style="text-align: left">Price Per Dose</th>
-        <tr ng-repeat="program in programs" tab-scroll>
-            <td style="width: 200px;">&nbsp;</td>
-            <td><span class="span1" openlmis-message="program.name"></span></td>
-            <td><span class="span1"><input name="programid" id="program_{{program.id}}" type="checkbox"
-                                           ng-checked="contains(program.id)"
-                                           ng-model="checked"/></span></td>
-            <td style="width: 100px;">&nbsp;</td>
-            <td><span class="span1"><input ng-model="product.priceperpack" name="priceperpack" id="price_{{program.id}}"
-                                           type="text"/></span></td>
-            <td><span class="span1"><input ng-model="product.priceperdosage" name="priceperdosage"
-                                           id="priceperdosage_{{program.id}}" type="text"/></span></td>
+         <tr>
+             <th style="width:200px;text-align: left;" >Program</th>
+             <th style="width:50px"></th>
+             <th style="text-align: left">Price Per Pack</th>
+         </tr>
+        <tr ng-repeat="pg in product.programProducts" >
+            <td>{{ pg.programName }}</td>
+            <td><input type="checkbox" ng-model="pg.active"/></td>
+            <td>
+                <input ng-model="pg.currentPrice"
+                                           type="text"/>
+            </td>
+
         </tr>
     </table>
 
 </div>
 
-    <div form-toolbar id="action_buttons" class="action-buttons" ng-show="newProductMode">
+ <div form-toolbar id="action_buttons" class="action-buttons" >
     <div class="form-cell button-row">
         <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
         <a ng-click="cancelAddNewProduct()" class="btn btn-cancel cancel-button"><span
                 openlmis-message="button.cancel"></span></a>
     </div>
-    <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>
+   <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>
 </div>
 
 </div>

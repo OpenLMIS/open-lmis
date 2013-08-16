@@ -46,8 +46,6 @@
             <th>Display Order</th>
             <th>Active</th>
             <th>Full Supply</th>
-            <th>Action</th>
-
         </tr>
         </thead>
 
@@ -62,7 +60,9 @@
             </td>
             <!-- name-->
             <td>
-                <div>{{pr.primaryName}}</div>
+                <div>
+                    <a href="#edit/{{ pr.id }}">{{pr.primaryName}}</a>
+                </div>
             </td>
             <!-- Program-->
             <td>
@@ -89,13 +89,7 @@
                 <div>{{YesNo(pr.fullSupply)}}</div>
             </td>
 
-            <td>
-                <a href="#edit/{{ pr.id }}">Edit</a> |
-                <a ng-show="pr.active==true"
-                   ng-click="showConfirmProductDeleteWindow(pr); productsBackupMap[pr.id].deleted=true;">Delete</a>
-                <a ng-show="pr.active==false"
-                   ng-click="showConfirmProductRestoreWindow(pr); productsBackupMap[pr.id].restore=true;">Restore</a>
-            </td>
+
         </tr>
         </tbody>
     </table>
