@@ -113,7 +113,7 @@ public class RefrigeratorPage extends Page {
   private static WebElement cancelButtonOnModal;
 
   @FindBy(how = XPATH, using = "//h3[contains(text(),'New Refrigerator')]")
-  private static WebElement newRefrigeratorHeaderOnModal;
+  public static WebElement newRefrigeratorHeaderOnModal;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Next »')]")
   private static WebElement nextLink;
@@ -125,7 +125,7 @@ public class RefrigeratorPage extends Page {
   private static WebElement saveSuccessMessageDiv;
 
 
-  protected RefrigeratorPage(TestWebDriver driver) {
+  public RefrigeratorPage(TestWebDriver driver) {
     super(driver);
   }
 
