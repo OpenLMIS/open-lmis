@@ -92,6 +92,17 @@ public class ManageRefrigerator extends TestCaseHelper {
     refrigeratorPage.clickEdit();
   }
 
+  @When("^I confirm delete$")
+  public void clickOK() throws IOException, SQLException {
+    verifyConfirmationPopUp();
+  }
+
+  @Then("^I should see confirmation for delete$")
+  public void shouldSeeConfirmationOfDelete() throws IOException, SQLException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.clickOKButton();
+  }
+
   @And("^I enter refrigerator temperature \"([^\"]*)\"$")
   public void enterRefrigeratorTemperature(String temperature) throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
@@ -129,7 +140,7 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I should see Edit button$")
   public void shouldSeeEditButton() throws IOException, SQLException {
-    assertTrue("Edit button should show up",new RefrigeratorPage(testWebDriver).editButton.isDisplayed());
+    assertTrue("Edit button should show up", new RefrigeratorPage(testWebDriver).editButton.isDisplayed());
   }
 
   @And("^I click \"([^\"]*)\" it was working correctly when I left$")
@@ -170,6 +181,10 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   public void verifyShouldNotSeeRefrigeratorSection() {
     assertFalse("Refrigerator details section should not show up", new RefrigeratorPage(testWebDriver).refrigeratorTemperatureTextField.isDisplayed());
+  }
+
+  public void verifyConfirmationPopUp() {
+    assertFalse("Refrigerator confirmation for delete should show up", new RefrigeratorPage(testWebDriver).OKButton.isDisplayed());
   }
 
 

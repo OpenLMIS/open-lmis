@@ -124,6 +124,9 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']")
   private static WebElement saveSuccessMessageDiv;
 
+  @FindBy(how = XPATH, using = "//a[contains(text(),'OK')]")
+  public static WebElement OKButton;
+
 
   public RefrigeratorPage(TestWebDriver driver) {
     super(driver);
@@ -137,6 +140,11 @@ public class RefrigeratorPage extends Page {
   public void clickProblemSinceLastVisitYesRadio() {
     testWebDriver.waitForElementToAppear(problemSinceLastVisitYesRadio);
     problemSinceLastVisitYesRadio.click();
+  }
+
+  public void clickOKButton() {
+    testWebDriver.waitForElementToAppear(OKButton);
+    OKButton.click();
   }
 
   public void clickProblemSinceLastVisitNoRadio() {
