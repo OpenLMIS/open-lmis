@@ -96,7 +96,7 @@ public interface ProductMapper {
     "modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE id=#{id}"})
   void update(Product product);
 
-  @Select("SELECT * FROM products WHERE id=#{id}")
+   @Select("SELECT * FROM products WHERE id=#{id}")
     @Results({
       @Result(property = "productGroup", column = "productGroupId", javaType = ProductGroup.class,
         one = @One(select = "org.openlmis.core.repository.mapper.ProductGroupMapper.getById"))

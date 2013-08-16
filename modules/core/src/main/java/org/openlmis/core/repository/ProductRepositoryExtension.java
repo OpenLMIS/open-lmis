@@ -22,14 +22,43 @@ public class ProductRepositoryExtension {
     @Autowired
     private ProductMapperExtension mapper;
 
+    @Autowired
+    private ProductMapper productMapper;
 
-    //@Autowired
-    //public ProductRepositoryExtension(ProductMapperExtension mapper) {
-    //    this.mapper = mapper;
-    //}
-
-    public List<Product> getProductList() {
-        return mapper.getList();
+    @Autowired
+    public ProductRepositoryExtension(ProductMapperExtension productMapperExt) {
+        this.mapper = productMapperExt;
     }
 
+    public List<Product> searchProduct(String productSearchParam) {
+        return mapper.getProductWithSearchedName(productSearchParam);
+    }
+
+    public List<Product> getProductList() {
+        return mapper.getAllProducts_Ext();
+    }
+
+    public Product getByProductId(Long id){
+        return mapper.getProductById(id);
+    }
+
+    // mahmed - 07.11.2013 delete product
+    public void deleteById(Long productId) {
+        mapper.deleteById_Ext(productId);
+    }
+
+    // mahmed - 07.11.2013 delete product
+    public void restoreById(Long productId) {
+        mapper.restoreById_Ext(productId);
+    }
+
+    public void addProduct(Product product) {
+        productMapper.insert(product);
+
+    }
+
+    public void updateProduct(Product product) {
+        productMapper.update(product);
+
+    }
 }

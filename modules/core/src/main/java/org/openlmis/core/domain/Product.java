@@ -13,6 +13,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
+import java.util.List;
+
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -69,14 +71,22 @@ public class Product extends BaseModel implements Importable {
   @ImportField(type = "String", name = "Product Form", nested = "code")
   private ProductForm form;
 
+  private Long formId;
+
   @ImportField(mandatory = true, type = "String", name = "Product Category", nested = "code")
   private ProductCategory category;
+
+  private Long categoryId;
 
   @ImportField(type = "String", name = "Product Group", nested = "code")
   private ProductGroup productGroup;
 
+  private Long productGroupId;
+
   @ImportField(type = "String", name = "Dosage Units", nested = "code")
   private DosageUnit dosageUnit;
+
+  private Long dosageUnitId;
 
   @ImportField(name = "Dispensing Units")
   private String dispensingUnit;
@@ -167,5 +177,10 @@ public class Product extends BaseModel implements Importable {
 
   @ImportField(type = "boolean", name = "Has Been Archived")
   private Boolean archived;
+
+  private String programName;
+
+  // this section is added to make the product editing form work.
+  private List<ProgramProduct> programProducts;
 
 }

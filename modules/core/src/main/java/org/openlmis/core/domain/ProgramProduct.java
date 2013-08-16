@@ -35,6 +35,7 @@ public class ProgramProduct extends BaseModel implements Importable {
 
   ProgramProductISA programProductIsa;
 
+  // this section is added here to ensure that the product edit form has a way to show the price information along with the program product.
   private Money currentPrice;
 
   public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active) {
