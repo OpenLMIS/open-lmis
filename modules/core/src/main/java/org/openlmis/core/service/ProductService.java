@@ -1,11 +1,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductCategory;
-import org.openlmis.core.domain.ProductGroup;
-import org.openlmis.core.domain.SupplyLine;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductGroupRepository;
 import org.openlmis.core.repository.ProductRepository;
@@ -46,7 +42,6 @@ public class ProductService {
     }
 
     setReferenceDataForProduct(product);
-
     List<ProgramProduct> existingProgramProducts = programProductService.getByProductCode(product.getCode());
 
     repository.update(product);
@@ -73,8 +68,29 @@ public class ProductService {
       ProductGroup productGroup = productGroupRepository.getByCode(product.getProductGroup().getCode());
       if (productGroup == null) throw new DataException("error.reference.data.invalid.product.group");
       product.getProductGroup().setId(productGroup.getId());
-
     }
+
+    // set from reference information for the online form... that returns it using the id columns
+    if(product.getForm() == null && product.getFormId() != null){
+      product.setForm(new ProductForm());
+      product.getForm().setId(product.getFormId());
+    }
+
+    if(product.getDosageUnit() == null && product.getDosageUnitId() != null){
+      product.setDosageUnit(new DosageUnit());
+      product.getDosageUnit().setId(product.getDosageUnitId());
+    }
+
+    if(product.getProductGroup() == null && product.getProductGroupId() != null){
+      product.setProductGroup(new ProductGroup());
+      product.getProductGroup().setId(product.getProductGroupId());
+    }
+
+    if(product.getCategory() == null && product.getCategoryId() != null){
+      product.setCategory(new ProductCategory());
+      product.getCategory().setId(product.getFormId());
+    }
+
   }
 
 

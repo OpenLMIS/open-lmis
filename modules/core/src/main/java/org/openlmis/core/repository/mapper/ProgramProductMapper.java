@@ -33,7 +33,7 @@ public interface ProgramProductMapper {
   @Select(("SELECT * FROM program_products where programId = #{programId} and productId = #{productId}"))
   ProgramProduct getByProgramAndProductId(@Param("programId") Long programId, @Param("productId") Long productId);
 
-  @Update("UPDATE program_products SET  dosesPerMonth=#{dosesPerMonth}, active=#{active}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE programId=#{program.id} AND productId=#{product.id}")
+  @Update("UPDATE program_products SET  dosesPerMonth=#{dosesPerMonth}, active=#{active}, currentPrice=#{currentPrice}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE programId=#{program.id} AND productId=#{product.id}")
   void update(ProgramProduct programProduct);
 
   @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id WHERE programId = #{id} " ,

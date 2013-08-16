@@ -114,6 +114,10 @@ public class ProductRepository {
     return mapper.getByCode(code);
   }
 
+  public Product getById(Long id) {
+      return mapper.getById(id);
+  }
+
   public Long getDosageUnitIdForCode(String code) {
     return mapper.getDosageUnitIdForCode(code);
   }
