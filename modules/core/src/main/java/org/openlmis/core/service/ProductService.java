@@ -58,20 +58,17 @@ public class ProductService {
   }
 
   private void setReferenceDataForProduct(Product product) {
-    if (product.getForm() != null) {
+    if (product.getForm() != null && product.getForm().getCode() != null) {
       product.getForm().setId(repository.getProductFormIdForCode(product.getForm().getCode()));
     }
-    if (product.getDosageUnit() != null) {
+    if (product.getDosageUnit() != null && product.getDosageUnit().getCode() != null) {
       product.getDosageUnit().setId(repository.getDosageUnitIdForCode(product.getDosageUnit().getCode()));
     }
-    if (product.getProductGroup() != null) {
+    if (product.getProductGroup() != null && product.getProductGroup().getCode() != null) {
       ProductGroup productGroup = productGroupRepository.getByCode(product.getProductGroup().getCode());
       if (productGroup == null) throw new DataException("error.reference.data.invalid.product.group");
       product.getProductGroup().setId(productGroup.getId());
     }
-
-
-
   }
 
 
