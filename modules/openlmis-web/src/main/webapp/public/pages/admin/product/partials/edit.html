@@ -241,6 +241,24 @@ Edit Product
     </div>
 </div>
 
+<!-- Product Groups-->
+<div class="form-cell">
+    <label for="productGroupId">Product Group</label>
+
+    <div class="form-field" style="width: 40%;">
+
+        <select ui-select2 style="width:200px;" ng-model="editProduct.productGroupId"
+                ng-options="option.id as option.name for option in productGroups">
+
+        </select>
+       <span class="field-error"
+             ng-show="createProductForm.productGroupId.$error.required && showErrorForCreate"
+             openlmis-message="missing.value">
+        </span>
+    </div>
+</div>
+
+
 <div class="form-cell"></div>
 
 <!-- Product Full Supply-->

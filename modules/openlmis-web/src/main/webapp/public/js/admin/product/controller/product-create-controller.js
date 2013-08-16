@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ProductCreateController($scope, $location, $dialog, messageService, CreateProduct, ProductCategories, ReportPrograms, DosageUnits, ProductForms) {
+function ProductCreateController($scope, $location, $dialog, messageService, CreateProduct, ProductGroups, ProductCategories, ReportPrograms, DosageUnits, ProductForms) {
 
     $scope.productsBackupMap = [];
     $scope.newProduct = {};
@@ -26,9 +26,11 @@ function ProductCreateController($scope, $location, $dialog, messageService, Cre
 
         for(var i = 0; i <= data.programs.length; i++){
             var program = data.programs[i];
-            $scope.product.programProducts.push({programId:program.id, currentPrice: 0, active:false, programName:program.name });
+            $scope.product.programProducts.push({program:program , currentPrice: 0, dosesPerMonth:1, active:true, programName:program.name });
         }
-
+        // default the program to be active & not a tracer drug.
+        $scope.product.active = true;
+        $scope.product.tracer = false;
         $scope.apply();
     })
 
@@ -49,7 +51,7 @@ function ProductCreateController($scope, $location, $dialog, messageService, Cre
                $scope.message = 'New product created successfully';
                $location.path('');
                 $scope.newProduct = {};
-            }, 4000 , function (data) {
+            },  function (data) {
             $scope.message = "";
             $scope.creationError = data.data.error;
         });
@@ -95,9 +97,14 @@ function ProductCreateController($scope, $location, $dialog, messageService, Cre
         $scope.dosageUnits = data.dosageUnits;
     });
 
-
+   // load the product form dropdown list
     ProductForms.get(function (data) {
         $scope.productForms = data.productForms;
+    });
+
+    // load the product group dropdown list
+    ProductGroups.get(function (data){
+       $scope.productGroups = data.productGroups;
     });
 
     $scope.YesNo = function (tf) {

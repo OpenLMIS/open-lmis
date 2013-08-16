@@ -70,26 +70,7 @@ public class ProductService {
       product.getProductGroup().setId(productGroup.getId());
     }
 
-    // set from reference information for the online form... that returns it using the id columns
-    if(product.getForm() == null && product.getFormId() != null){
-      product.setForm(new ProductForm());
-      product.getForm().setId(product.getFormId());
-    }
 
-    if(product.getDosageUnit() == null && product.getDosageUnitId() != null){
-      product.setDosageUnit(new DosageUnit());
-      product.getDosageUnit().setId(product.getDosageUnitId());
-    }
-
-    if(product.getProductGroup() == null && product.getProductGroupId() != null){
-      product.setProductGroup(new ProductGroup());
-      product.getProductGroup().setId(product.getProductGroupId());
-    }
-
-    if(product.getCategory() == null && product.getCategoryId() != null){
-      product.setCategory(new ProductCategory());
-      product.getCategory().setId(product.getFormId());
-    }
 
   }
 

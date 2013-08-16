@@ -31,162 +31,162 @@
 <form ng-submit="createProduct()" id="createProductForm" name="createProductForm"
       novalidate select2-blur>
 
-    <div class="app-form">
-    <!--Basic Information-->
-    <div class="form-group">
-        <h3>Basic Information</h3>
+<div class="app-form">
+<!--Basic Information-->
+<div class="form-group">
+<h3>Basic Information</h3>
 
-        <div class="form-row clearfix">
+<div class="form-row clearfix">
 
-        <!-- Product code-->
-        <div class="form-cell">
-        <label for="code">Code<span
-                class="label-required"> *</span></label>
+<!-- Product code-->
+<div class="form-cell">
+    <label for="code">Code<span
+            class="label-required"> *</span></label>
 
-        <div class="form-field" style="width: 40%;">
+    <div class="form-field" style="width: 40%;">
 
-            <input ng-model="product.code" name="code" id="code" type="text"
-                   maxlength="20"
-                   ng-required="true"/>
+        <input ng-model="product.code" name="code" id="code" type="text"
+               maxlength="20"
+               ng-required="true"/>
                                             <span class="field-error"
                                                   ng-show="createProductForm.code.$error.required && showErrorForCreate"
                                                   openlmis-message="missing.value">
                                             </span>
-        </div>
     </div>
+</div>
 
-        <!-- Product Pack Size-->
-        <div class="form-cell">
-        <label for="packSize">Pack Size<span
-                class="label-required"> *</span></label>
+<!-- Product Pack Size-->
+<div class="form-cell">
+    <label for="packSize">Pack Size<span
+            class="label-required"> *</span></label>
 
-        <div class="form-field" style="width: 40%;">
-            <input ng-model="product.packSize" name="packSize" id="packSize" type="text"
-                   maxlength="20"
-                   ng-required="true"/>
+    <div class="form-field" style="width: 40%;">
+        <input ng-model="product.packSize" name="packSize" id="packSize" type="text"
+               maxlength="20"
+               ng-required="true"/>
                                             <span class="field-error"
                                                   ng-show="createProductForm.packSize.$error.required && showErrorForCreate"
                                                   openlmis-message="missing.value">
                                             </span>
-        </div>
     </div>
+</div>
 
-        <!-- product name-->
-        <div class="form-cell">
-        <label for="primaryName">Product Name<span
-                class="label-required"> *</span></label>
+<!-- product name-->
+<div class="form-cell">
+    <label for="primaryName">Product Name<span
+            class="label-required"> *</span></label>
 
-        <div class="form-field" style="width: 40%;">
-            <input ng-model="product.primaryName" name="primaryName" id="primaryName" type="text"
-                   maxlength="20"
-                   ng-required="true"/>
+    <div class="form-field" style="width: 40%;">
+        <input ng-model="product.primaryName" name="primaryName" id="primaryName" type="text"
+               maxlength="20"
+               ng-required="true"/>
                                             <span class="field-error"
                                                   ng-show="createProductForm.primaryName.$error.required && showErrorForCreate"
                                                   openlmis-message="missing.value">
                                             </span>
-        </div>
     </div>
+</div>
 
-        <!-- Dispensing Units-->
-        <div class="form-cell">
-        <label for="dispensingUnit">Dispensing Unit<span
-                class="label-required"> *</span></label>
+<!-- Dispensing Units-->
+<div class="form-cell">
+    <label for="dispensingUnit">Dispensing Unit<span
+            class="label-required"> *</span></label>
 
-        <div class="form-field" style="width: 40%;">
-            <input ng-model="product.dispensingUnit" name="dispensingUnit" id="dispensingUnit"
-                   type="text"
-                   maxlength="20"
-                   ng-required="true"/>
+    <div class="form-field" style="width: 40%;">
+        <input ng-model="product.dispensingUnit" name="dispensingUnit" id="dispensingUnit"
+               type="text"
+               maxlength="20"
+               ng-required="true"/>
                                             <span class="field-error"
                                                   ng-show="createProductForm.dispensingUnit.$error.required && showErrorForCreate"
                                                   openlmis-message="missing.value">
                                             </span>
 
-        </div>
     </div>
+</div>
 
-        <!-- Doses Per Dispensing Units-->
-        <div class="form-cell">
-        <label for="dosesPerDispensingUnit">Doses Dispensing Unit<span
-                class="label-required"> *</span></label>
+<!-- Doses Per Dispensing Units-->
+<div class="form-cell">
+    <label for="dosesPerDispensingUnit">Doses Dispensing Unit<span
+            class="label-required"> *</span></label>
 
-        <div class="form-field" style="width: 40%;">
-            <input ng-model="product.dosesPerDispensingUnit" name="dosesPerDispensingUnit" id="dosesPerDispensingUnit"
-                   type="text"
-                   maxlength="20"
-                   ng-required="true"/>
+    <div class="form-field" style="width: 40%;">
+        <input ng-model="product.dosesPerDispensingUnit" name="dosesPerDispensingUnit" id="dosesPerDispensingUnit"
+               type="text"
+               maxlength="20"
+               ng-required="true"/>
                                             <span class="field-error"
                                                   ng-show="createProductForm.dosesPerDispensingUnit.$error.required && showErrorForCreate"
                                                   openlmis-message="missing.value">
                                             </span>
 
-        </div>
     </div>
+</div>
 
-        <!-- Thresh hold-->
-        <div class="form-cell">
-        <label for="packRoundingThreshold">Threshold<span
-                class="label-required"> *</span></label>
+<!-- Thresh hold-->
+<div class="form-cell">
+    <label for="packRoundingThreshold">Threshold<span
+            class="label-required"> *</span></label>
 
-        <div class="form-field" style="width: 40%;">
-            <input ng-model="product.packRoundingThreshold" name="packRoundingThreshold" id="packRoundingThreshold"
-                   type="text"
-                   maxlength="20"
-                   ng-required="true"/>
+    <div class="form-field" style="width: 40%;">
+        <input ng-model="product.packRoundingThreshold" name="packRoundingThreshold" id="packRoundingThreshold"
+               type="text"
+               maxlength="20"
+               ng-required="true"/>
                                             <span class="field-error"
                                                   ng-show="createProductForm.packRoundingThreshold.$error.required && showErrorForCreate"
                                                   openlmis-message="missing.value">
                                             </span>
-        </div>
     </div>
+</div>
 
-        <!-- product strength-->
-        <div class="form-cell">
-        <label for="strength">Strength</label>
+<!-- product strength-->
+<div class="form-cell">
+    <label for="strength">Strength</label>
 
-        <div class="form-field" style="width: 40%;">
-            <input ng-model="product.strength" name="strength" id="strength" type="text"
-                   maxlength="20"/>
+    <div class="form-field" style="width: 40%;">
+        <input ng-model="product.strength" name="strength" id="strength" type="text"
+               maxlength="20"/>
                                             <span class="field-error"
                                                   ng-show="createProductForm.strength.$error.required && showErrorForCreate"
                                                   openlmis-message="missing.value">
                                             </span>
-        </div>
     </div>
+</div>
 
-        <!-- Type-->
-        <div class="form-cell">
-        <label for="type">Type</label>
+<!-- Type-->
+<div class="form-cell">
+    <label for="type">Type</label>
 
-        <div class="form-field" style="width: 40%;">
-            <input ng-model="product.type" name="type" id="type" type="text"
-                   maxlength="20"/>
+    <div class="form-field" style="width: 40%;">
+        <input ng-model="product.type" name="type" id="type" type="text"
+               maxlength="20"/>
                                             <span class="field-error"
                                                   ng-show="createProductForm.type.$error.required && showErrorForCreate"
                                                   openlmis-message="missing.value">
                                             </span>
-        </div>
     </div>
+</div>
 
-        <!-- Dosage Units-->
-        <div class="form-cell">
-        <label for="dosageUnit">Dosage Unit</label>
+<!-- Dosage Units-->
+<div class="form-cell">
+    <label for="dosageUnit">Dosage Unit</label>
 
-        <div class="form-field" style="width: 40%;">
+    <div class="form-field" style="width: 40%;">
 
-            <select ui-select2 style="width:200px;" name="dosageUnit" id="dosageUnit" ng-model="product.dosageUnit"
-                    ng-options="option as option.id for option in dosageUnits">
+        <select ui-select2 style="width:200px;" name="dosageUnit" id="dosageUnit" ng-model="product.dosageUnitId"
+                ng-options="option.id as option.code for option in dosageUnits">
 
-            </select>
+        </select>
                                            <span class="field-error"
                                                  ng-show="createProductForm.dosageUnit.$error.required && showErrorForCreate"
                                                  openlmis-message="missing.value">
                                             </span>
-        </div>
     </div>
+</div>
 
-    <!-- Product Display Order-->
-    <div class="form-cell">
+<!-- Product Display Order-->
+<div class="form-cell">
     <label for="displayOrder">Display Order</label>
 
     <div class="form-field" style="width: 40%;">
@@ -199,14 +199,14 @@
     </div>
 </div>
 
-    <!-- Product Form-->
-    <div class="form-cell">
+<!-- Product Form-->
+<div class="form-cell">
     <label for="formid">Product Form</label>
 
     <div class="form-field" style="width: 40%;">
 
         <select ui-select2 style="width:200px;" name="formid" id="formid" ng-model="product.formId"
-                ng-options="option as option.id for option in productForms">
+                ng-options="option.id as option.code for option in productForms">
 
         </select>
                                        <span class="field-error"
@@ -217,14 +217,14 @@
 </div>
 
 
-    <!-- Product Categories-->
-    <div class="form-cell">
+<!-- Product Categories-->
+<div class="form-cell">
     <label for="categoryid">Category</label>
 
     <div class="form-field" style="width: 40%;">
 
-        <select ui-select2 style="width:200px;"  ng-model="product.category"
-                ng-options="option as option.name for option in productCategories">
+        <select ui-select2 style="width:200px;" ng-model="product.categoryId"
+                ng-options="option.id as option.name for option in productCategories">
 
         </select>
                                        <span class="field-error"
@@ -234,10 +234,25 @@
     </div>
 </div>
 
-    <div class="form-cell"></div>
+<!-- Product Groups-->
+<div class="form-cell">
+    <label for="productGroupId">Product Group</label>
 
-    <!-- Product Full Supply-->
-    <div class="form-cell" style="margin-left: 30px;">
+    <div class="form-field" style="width: 40%;">
+
+        <select ui-select2 style="width:200px;" ng-model="product.productGroupId"
+                ng-options="option.id as option.name for option in productGroups">
+
+        </select>
+       <span class="field-error"
+             ng-show="createProductForm.productGroupId.$error.required && showErrorForCreate"
+             openlmis-message="missing.value">
+        </span>
+    </div>
+</div>
+
+<!-- Product Full Supply-->
+<div class="form-cell" style="margin-left: 30px;">
     <div class="form-field" style="width: 40%;">
         <table>
             <tr>
@@ -260,7 +275,7 @@
             </tr>
             <tr>
                 <td>
-                    <input ng-model="product.active" name="active" id="active" type="checkbox" ng-required="false"/>
+                    <input ng-model="product.active" name="active" id="active" type="checkbox" />
                 </td>
                 <td>&nbsp;</td>
                 </td>
@@ -281,39 +296,43 @@
     </div>
 </div>
 
-    </div>
+</div>
 </div>
 
-    <!--Program Association-->
+<!--Program Association-->
 <div class="form-group">
     <h3>Program Association</h3>
 
     <table border="0">
-         <tr>
-             <th style="width:200px;text-align: left;" >Program</th>
-             <th style="width:50px"></th>
-             <th style="text-align: left">Price Per Pack</th>
-         </tr>
-        <tr ng-repeat="pg in product.programProducts" >
+        <tr>
+            <th style="width:200px;text-align: left;">Program</th>
+            <th style="width:50px"></th>
+            <th style="text-align: left; width:200px;">Price Per Pack</th>
+            <th style="text-align:left;width:200px">Doses Per Month</th>
+        </tr>
+        <tr ng-repeat="pg in product.programProducts">
             <td>{{ pg.programName }}</td>
             <td><input type="checkbox" ng-model="pg.active"/></td>
             <td>
                 <input ng-model="pg.currentPrice"
-                                           type="text"/>
+                       type="text"/>
             </td>
-
+            <td>
+                <input ng-model="pg.dosesPerMonth"
+                       type="text"/>
+            </td>
         </tr>
     </table>
 
 </div>
 
- <div form-toolbar id="action_buttons" class="action-buttons" >
+<div form-toolbar id="action_buttons" class="action-buttons">
     <div class="form-cell button-row">
         <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
         <a ng-click="cancelAddNewProduct()" class="btn btn-cancel cancel-button"><span
                 openlmis-message="button.cancel"></span></a>
     </div>
-   <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>
+    <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>
 </div>
 
 </div>

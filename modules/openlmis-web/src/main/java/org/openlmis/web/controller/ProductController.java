@@ -6,8 +6,7 @@ package org.openlmis.web.controller;
  */
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.DosageUnitMapper;
 import org.openlmis.core.repository.mapper.ProductFormMapper;
@@ -138,31 +137,24 @@ public class ProductController extends BaseController {
         //product.setId(id);
         product.setModifiedBy(loggedInUserId(request));
         product.setModifiedDate(new Date());
-        return saveProduct(product, true);
+        return saveProduct(product, false);
     }
     // create product
     @RequestMapping(value = "/createProduct", method = RequestMethod.POST ,  headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> save(@RequestBody Product product, HttpServletRequest request) {
-       // set default values for some columns
-       // this is a querk until all fields have UI fields
-
         product.setModifiedBy(loggedInUserId(request));
-        product.setCreatedBy(loggedInUserId(request));
-        product.setCreatedDate(new Date());
         product.setModifiedDate(new Date());
-
         return saveProduct(product, true);
     }
-
-
 
    // save/update
     private ResponseEntity<OpenLmisResponse> saveProduct(Product product, boolean createOperation) {
         try {
-            productService.save(product);
-            for(org.openlmis.core.domain.ProgramProduct pp: product.getProgramProducts()){
+          setReferenceObjects(product);
+          productService.save(product);
 
+          for(org.openlmis.core.domain.ProgramProduct pp: product.getProgramProducts()){
               // set the product for each of the program products ... for the save functionalitiy to work
               pp.setProduct(product);
               programProductService.save(pp);
@@ -176,5 +168,29 @@ public class ProductController extends BaseController {
             return error(e, HttpStatus.BAD_REQUEST);
         }
     }
+
+  private void setReferenceObjects(Product product) {
+    // prepare the reference data
+    // set from reference information for the online form... that returns it using the id columns
+    if(product.getForm() == null && product.getFormId() != null){
+      product.setForm(new ProductForm());
+      product.getForm().setId(product.getFormId());
+    }
+
+    if(product.getDosageUnit() == null && product.getDosageUnitId() != null){
+      product.setDosageUnit(new DosageUnit());
+      product.getDosageUnit().setId(product.getDosageUnitId());
+    }
+
+    if(product.getProductGroup() == null && product.getProductGroupId() != null){
+      product.setProductGroup(new ProductGroup());
+      product.getProductGroup().setId(product.getProductGroupId());
+    }
+
+    if(product.getCategory() == null && product.getCategoryId() != null){
+      product.setCategory(new ProductCategory());
+      product.getCategory().setId(product.getFormId());
+    }
+  }
 
 }

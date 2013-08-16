@@ -1,10 +1,4 @@
-/*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-function ProductEditController($scope, $route, $location, $dialog, messageService, ProductDetail , AllProductCost, CreateProduct, UpdateProduct,ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits, ProductForms) {
+function ProductEditController($scope, $route, $location, $dialog, messageService, ProductDetail, ProductGroups , AllProductCost, CreateProduct, UpdateProduct,ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits, ProductForms) {
 
     $scope.productsBackupMap = [];
     $scope.newProduct = {};
@@ -118,50 +112,14 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
 
     };
 
-    //  given product
-    $scope.getBackupProduct = function (product) {
-        return {
-            id: product.id,
-            active: product.active,
-            categoryId: product.categoryId,
-            code: product.code,
-            dispensingUnit: product.dispensingUnit,
-            displayOrder: product.displayOrder,
-            dosageUnitId:		    product.dosageUnitId,
-            formId: product.formId,
-            fullName:		        product.fullName,
-            primaryName:		    product.primaryName,
-            programName:		    product.programName,
-            programId:		        product.programId,
-            fullSupply:		        product.fullSupply,
-            packSize:		        product.packSize,
-            strength:		        product.strength,
-            tracer:			        product.tracer,
-            type:			        product.type,
-            packRoundingThreshold:	product.packRoundingThreshold,
-            formCode:		        product.formCode,
-            dosageUnitCode:		    product.dosageUnitCode,
-            dosesPerDispensingUnit:	product.dosesPerDispensingUnit
-
-
-
-            // TODO: add product fields
-            //programid: supplyline.programid,
-            //supplyingfacilityid: supplyline.supplyingfacilityid,
-            //supervisorynodeid: supplyline.supervisorynodeid,
-            //description: supplyline.description
-        };
-    };
-
-
-// cancel record
+    // cancel record
     $scope.cancelAddNewProduct = function (product) {
         $scope.$parent.newProductMode = false;
         $scope.AddEditMode = false;
         $scope.showErrorForCreate = false;
     };
 
-//  scope is undefined,
+    //  scope is undefined,
     $scope.productLoaded = function () {
         return !($scope.products == undefined || $scope.products == null);
     };
@@ -173,8 +131,12 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
         //alert(JSON.stringify( $scope.productCategories, null, 4));
     });
 
+    // load the product group dropdown list
+    ProductGroups.get(function (data){
+        $scope.productGroups = data.productGroups;
+    });
 
-  // drop down lists
+    // drop down lists
     DosageUnits.get(function (data) {
         $scope.dosageUnits = data.dosageUnits;
     });
@@ -206,19 +168,12 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
           // now get a fresh copy of the product object from the server
           ProductDetail.get({id:productId}, function(data){
               $scope.editProduct = data.product;
-              $scope.productsBackupMap[data.product.id].editFormActive = "product-form-active";
-              $scope.edit_id = productUnderEdit.id;
           });
 
-          $('html, body').animate({ scrollTop: 0 }, 'fast');
-
-          // we will have to check if this part is going to be important to do or not.
           // if we avoided it, the better
           AllProductCost.get({}, function (data) {
               $scope.productCost = data.allProductCost;
-              $scope.selectedProductCost = _.where($scope.productCost, {productid: $scope.edit_id});
 
-              //alert(JSON.stringify($scope.products, null, 4));
               var tmp = 0;
               for(var programIndex in $scope.selectedProductCost){
                   var program = $scope.selectedProductCost[programIndex];
@@ -239,68 +194,24 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
 
         $scope.error = "";
         if (editProductForm.$invalid) {
-            alert('I was here and invalid');ß
             $scope.showErrorForEdit = true;
             return;
         }
-
-
         $scope.showErrorForEdit = true;
-        UpdateProduct.update(product, function (data) {
-            var returnedProduct = data.product;
 
-            $scope.productsBackupMap[returnedProduct.id] = $scope.getBackupProduct(returnedProduct);
+        UpdateProduct.update($scope.editProduct, function (data) {
+        var returnedProduct = data.product;
             $location.path('');
             $scope.message = "The product record was successfully updated.";
         }, function (data) {
-            $scope.message = "";
-
+            alert(JSON.stringify(data));
+            $scope.creationError = data.message;
         });
     };
 
 
-    //  backup record
-    $scope.completeEditProduct = function (product) {
-        //$scope.productsBackupMap[product.id] = $scope.getBackupProduct(product);
-        $scope.$parent.editProductMode = false;
-        $scope.showErrorForCreate = false;
-        $scope.AddEditMode = false;
-        $('html, body').animate({ scrollTop: 0 }, 'fast');
-        $scope.title = 'Products';
-    };
-
     $scope.cancelProductEdit = function (productUnderEdit) {
-        var backupProductRow = $scope.productsBackupMap[productUnderEdit.id];
-
-        productUnderEdit.id	                =backupProductRow.id;
-        productUnderEdit.active	            =backupProductRow.active;
-        productUnderEdit.categoryId	        =backupProductRow.categoryId;
-        productUnderEdit.code	            =backupProductRow.code;
-        productUnderEdit.dispensingUnit	    =backupProductRow.dispensingUnit;
-        productUnderEdit.displayOrder	    =backupProductRow.displayOrder;
-        productUnderEdit.dosageUnitId	    =backupProductRow.dosageUnitId;
-        productUnderEdit.formId	            =backupProductRow.formId;
-        productUnderEdit.fullName	        =backupProductRow.fullName;
-        productUnderEdit.primaryName	    =backupProductRow.primaryName;
-        productUnderEdit.programName	    =backupProductRow.programName;
-        productUnderEdit.programId	        =backupProductRow.programId;
-        productUnderEdit.fullSupply	        =backupProductRow.fullSupply;
-        productUnderEdit.packSize	        =backupProductRow.packSize;
-        productUnderEdit.strength	        =backupProductRow.strength;
-        productUnderEdit.tracer	            =backupProductRow.tracer;
-        productUnderEdit.type	            =backupProductRow.type;
-        productUnderEdit.packRoundingThreshold	=backupProductRow.packRoundingThreshold;
-        productUnderEdit.formCode	            =backupProductRow.formCode;
-        productUnderEdit.dosageUnitCode	        =backupProductRow.dosageUnitCode;
-        productUnderEdit.dosesPerDispensingUnit	=backupProductRow.dosesPerDispensingUnit;
-
-        $scope.productsBackupMap[productUnderEdit.id].error = '';
-        $scope.productsBackupMap[productUnderEdit.id].editFormActive = '';
-
-        $scope.$parent.editProductMode = false;
-        $scope.AddEditMode = false;
-
-        $('html, body').animate({ scrollTop: 0 }, 'fast');
+        $location.path('');
     };
 
 
