@@ -63,9 +63,9 @@ public class FacilityListingReport extends TestCaseHelper {
 
        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-       FacilityListingReportPage facilityListingReportPage = homePage.navigateViewFacilityListingReport();
-       facilityListingReportPage.enterFilterValuesInFacilityListingReport(geoZone, facilityType, status);
-       facilityListingReportPage.verifyHTMLReportOutputOnFacilityListingScreen();
+       FacilityMailingListReportPage facilityListingReportPage = homePage.navigateViewFacilityMailingListReport();
+       //facilityListingReportPage.enterFilterValuesInFacilityListingReport(geoZone, facilityType, status);
+       //facilityListingReportPage.verifyHTMLReportOutputOnFacilityListingScreen();
    }
 
 
@@ -150,7 +150,7 @@ public class FacilityListingReport extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-            {new String[]{"Admin123", "Admin123", "storeincharge", "Admin123"}}
+            {new String[]{"wbomett", "Admin123", "storeincharge", "Admin123"}}
     };
   }
 
