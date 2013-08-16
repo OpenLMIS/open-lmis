@@ -48,12 +48,10 @@ function ProductCreateController($scope, $location, $dialog, messageService, Cre
         CreateProduct.save( $scope.product, function (data) {
                $scope.message = 'New product created successfully';
                $location.path('');
-            }, 4000);
-            $scope.newProduct = {};
-        }, function (data) {
+                $scope.newProduct = {};
+            }, 4000 , function (data) {
             $scope.message = "";
             $scope.creationError = data.data.error;
-
         });
     };
 
