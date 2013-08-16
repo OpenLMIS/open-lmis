@@ -77,7 +77,7 @@ public class DriverFactory {
         unZip = new Unzip();
         unZip.unZipIt(INPUT_ZIP_FILE_CHROMEDRIVER, OUTPUT_FOLDER);
         Thread.sleep(1500);
-        driverType = setProperty("webdriver.chrome.driver", OUTPUT_FOLDER + "chromedriver.exe");
+        driverType = setProperty("webdriver.chrome.driver", OUTPUT_FOLDER + "chromedriver");
         driverType = getProperty("webdriver.chrome.driver");
         return createChromeDriver();
 
