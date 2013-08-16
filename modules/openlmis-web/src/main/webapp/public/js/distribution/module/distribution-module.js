@@ -45,7 +45,7 @@ distributionModule.notRecordedDirective = function (element, scope) {
       ele.disabled = element.is(":checked");
     });
 
-    scope.$apply();
+    if (!scope.$$phase) scope.$apply();
   }
 
   element.bind('click', function () {

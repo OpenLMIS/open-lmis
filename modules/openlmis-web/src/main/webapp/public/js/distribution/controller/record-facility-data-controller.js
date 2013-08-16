@@ -4,9 +4,16 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function RecordFacilityDataController($scope, $location, $routeParams, IndexedDB) {
+function RecordFacilityDataController($scope, $location, $routeParams, $window, IndexedDB) {
 
   $scope.label = $routeParams.facility ? 'label.change.facility' : "label.select.facility";
+
+  if (!isUndefined($window.location)) {
+    if (!navigator.onLine) $window.location.href = $window.location.href.replace('index.html', 'offline.html')
+    else {
+      $window.location.href = $window.location.href.replace('offline.html', 'index.html')
+    }
+  }
 
   IndexedDB.get('distributionReferenceData', utils.parseIntWithBaseTen($routeParams.distribution), function (event) {
     $scope.facilities = event.target.result.facilities;

@@ -4,11 +4,12 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function RefrigeratorController($scope, refrigerators, distribution, $routeParams) {
+function RefrigeratorController($scope, $dialog, messageService, refrigerators, distribution, IndexedDB, $routeParams) {
 
   $scope.refrigerators = refrigerators;
   $scope.distribution = distribution;
   $scope.selectedFacilityId = $routeParams.facility;
+  $scope.edit = {};
 
   $scope.closeRefrigeratorModal = function () {
     $scope.addRefrigeratorModal = false;
@@ -20,10 +21,51 @@ function RefrigeratorController($scope, refrigerators, distribution, $routeParam
     $scope.newRefrigerator = null;
   };
 
-  $scope.closeRefrigeratorEdit = function () {
-    $scope.edit = false;
+  $scope.closeRefrigeratorEdit = function (serialNum) {
+    $scope.edit[serialNum] = false;
   };
 
+  $scope.setEdit = function (serialNum) {
+    $scope.edit[serialNum] = true;
+
+    angular.forEach($scope.edit, function (value, key) {
+      if (key != serialNum) {
+        $scope.edit[key] = false;
+      }
+    })
+  }
+
+  $scope.addRefrigeratorToStore = function () {
+    $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings.push({'refrigerator': $scope.newRefrigerator});
+    IndexedDB.put('distributions', distribution, {}, {}, {});
+    $scope.addRefrigeratorModal = false;
+  }
+
+  $scope.showDeleteRefrigeratorConfirmationModel = function (serialNum) {
+    var dialogOpts = {
+      id: "deleteRefrigeratorInfo",
+      header: messageService.get('delete.refrigerator.readings.header'),
+      body: messageService.get('delete.refrigerator.readings.confirm')
+    };
+    $scope.serialNum = serialNum;
+    OpenLmisDialog.newDialog(dialogOpts, $scope.deleteRefrigeratorReading, $dialog, messageService);
+  }
+
+  $scope.deleteRefrigeratorReading = function (result) {
+    if (!result) return;
+    $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings.splice(getRefrigeratorIndex(), 1);
+    IndexedDB.put('distributions', distribution, {}, {}, {});
+  }
+
+  function getRefrigeratorIndex() {
+    var position;
+    angular.forEach($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings, function (refrigeratorReading,index) {
+          if ($scope.serialNum ==refrigeratorReading.refrigerator.serialNumber) {
+            position = index;
+        }
+      });
+    return position;
+  }
 
   $scope.deleteOtherProblems = function (refrigeratorReading) {
     if (refrigeratorReading.problemSinceLastTimed || !refrigeratorReading.problems) return;
