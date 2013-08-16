@@ -17,7 +17,7 @@ public class StockImbalanceQueryBuilder {
 
         StockImbalanceReportFilter filter  = (StockImbalanceReportFilter)params.get("filterCriteria");
         BEGIN();
-        SELECT("supplyingfacility,  facility,  product,  stockinhand physicalCount,  amc,  mos months,  required orderQuantity, CASE WHEN status = 'SO' THEN  'Stocked Out' WHEN status ='US' then  'Under Stocked' WHEN status ='OS' then  'Over Stocked' END AS status ");
+        SELECT("supplyingfacility,  facility,  product,  stockinhand physicalCount,  amc,  mos months,  required orderQuantity, CASE WHEN status = 'SO' THEN  'Stocked Out' WHEN status ='US' then  'Below Minimum' WHEN status ='OS' then  'Over Stocked' END AS status ");
         FROM("vw_stock_status");
         writePredicates(filter);
         ORDER_BY("supplyingfacility");
