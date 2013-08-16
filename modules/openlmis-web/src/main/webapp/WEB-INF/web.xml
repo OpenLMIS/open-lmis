@@ -64,10 +64,6 @@
             <http-only>true</http-only>
         </cookie-config>
     </session-config>
-    <mime-mapping>
-        <extension>appcache</extension>
-        <mime-type>dev/appcache</mime-type>
-    </mime-mapping>
 
     <listener>
         <listener-class>
