@@ -1,4 +1,4 @@
-function ProductEditController($scope, $route, $location, $dialog, messageService, ProductDetail, ProductGroups , AllProductCost, CreateProduct, UpdateProduct,ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits, ProductForms) {
+function ProductEditController($scope, $route, $location, $dialog, messageService, ProductDetail, PriceHistory , ProductGroups , CreateProduct, UpdateProduct,ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits, ProductForms) {
 
     $scope.productsBackupMap = [];
     $scope.newProduct = {};
@@ -170,19 +170,9 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
               $scope.editProduct = data.product;
           });
 
-          // if we avoided it, the better
-          AllProductCost.get({}, function (data) {
-              $scope.productCost = data.allProductCost;
-
-              var tmp = 0;
-              for(var programIndex in $scope.selectedProductCost){
-                  var program = $scope.selectedProductCost[programIndex];
-                  if (program.progamid !== tmp) {
-                      $scope.programProductsCost[program.programid] =  program;
-                  }
-                  tmp = program.programid;
-              }
-           }, {});
+          PriceHistory.get({productId:productId}, function(data){
+             $scope.priceHistory    = data.priceHistory;
+          });
 
 
       };

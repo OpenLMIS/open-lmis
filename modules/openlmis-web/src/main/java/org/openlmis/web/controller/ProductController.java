@@ -52,9 +52,6 @@ public class ProductController extends BaseController {
     private ProductListDataProvider productListService;
 
     @Autowired
-    private ProgramProductPriceListDataProvider programPriceService;
-
-    @Autowired
     private ReportLookupService reportLookupService;
 
     @Autowired
@@ -74,20 +71,6 @@ public class ProductController extends BaseController {
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> getProductsList() {
         return OpenLmisResponse.response(PRODUCTLIST, productListService.getProductList());
-    }
-
-
-    @RequestMapping(value = "/programs/{productId}/productcost", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-    public ResponseEntity<OpenLmisResponse> getByProductId(@PathVariable("productId") Long productId) {
-        return OpenLmisResponse.response(PRODUCTCOST, programPriceService.getByProductId(productId));
-    }
-
-    // All product cost
-    @RequestMapping(value = "/allproductcost", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-    public ResponseEntity<OpenLmisResponse> getAllPrices() {
-        return OpenLmisResponse.response(ALLPRODUCTCOST, programPriceService.getAllPrices());
     }
 
     @RequestMapping(value = "/productDetail/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
@@ -168,7 +151,8 @@ public class ProductController extends BaseController {
             return error(e, HttpStatus.BAD_REQUEST);
         }
     }
-
+  // TODO: move this class to some other class
+  // may be the service or the domain object itself.
   private void setReferenceObjects(Product product) {
     // prepare the reference data
     // set from reference information for the online form... that returns it using the id columns

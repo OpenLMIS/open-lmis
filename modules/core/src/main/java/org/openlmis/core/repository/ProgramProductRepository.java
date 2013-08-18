@@ -104,6 +104,10 @@ public class ProgramProductRepository {
     return mapper.getByProgram(program);
   }
 
+  public List<ProgramProduct> getOptionsByProgram(Program program) {
+    return mapper.getByProgramOptions(program);
+  }
+
 
   public ProgramProduct getById(Long id) {
     return mapper.getById(id);

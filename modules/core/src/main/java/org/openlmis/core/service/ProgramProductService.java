@@ -93,6 +93,10 @@ public class ProgramProductService {
     return programProductRepository.getByProgram(program);
   }
 
+  public List<ProgramProduct> getOptionsByProgram(Program program) {
+    return programProductRepository.getOptionsByProgram(program);
+  }
+
   public List<ProgramProduct> getByProductCode(String productCode) {
     return programProductRepository.getByProductCode(productCode);
   }

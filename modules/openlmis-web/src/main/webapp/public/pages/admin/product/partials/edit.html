@@ -322,19 +322,20 @@ Edit Product
     <table border="0">
         <tr>
             <th></th>
-            <th colspan="2">Program</th>
+            <th style="text-align:left;">Program</th>
             <th></th>
             <th style="text-align: left">Price Per Pack</th>
+            <th style="text-align: left">Doses Per Month</th>
         </tr>
         <tr ng-repeat="pp in editProduct.programProducts" tab-scroll>
-            <td style="width: 200px;">&nbsp;</td>
-            <td style="width: 200px;">{{pp.program.code}}</td>
-            <td style="width: 200px;">
+            <td >&nbsp;</td>
+            <td style="width: 200px;text-align:left;">{{pp.program.code}}</td>
+            <td style="width: 200px;text-align:left;">
                 <input type="checkbox"
                        ng-model="pp.active"/>
             </td>
             <td><input type="text" ng-model="pp.currentPrice"/></td>
-
+            <td><input type="text" ng-model="pp.dosesPerMonth"/></td>
         </tr>
     </table>
 </div>
@@ -365,10 +366,8 @@ Edit Product
         <thead>
         <tr class="gradient-header">
             <th>Program</th>
-            <th>Program</th>
             <th>Price Per Pack</th>
-            <th>Price Per Dosage</th>
-            <th>Source</th>
+            <th>Doses Per Month</th>
             <th>Start Date</th>
             <th>End Date</th>
         </tr>
@@ -377,7 +376,7 @@ Edit Product
 
         <tbody>
         <!--repeat-->
-        <tr ng-repeat="cost in selectedProductCost | orderBy:'startdate':true">
+        <tr ng-repeat="cost in priceHistory | orderBy:'startdate':true">
 
             <!-- Program-->
             <td>
@@ -389,19 +388,17 @@ Edit Product
             </td>
             <!-- Price Per Pack-->
             <td>
-                <div>{{cost.priceperdosage}}</div>
+                <div>{{cost.dosespermonth}}</div>
             </td>
             <!-- Price Per Pack-->
-            <td>
-                <div>{{cost.source}}</div>
-            </td>
+
             <!-- Start Date-->
             <td>
-                <div>{{cost.startdate | date:'dd/MM/yyyy'}}</div>
+                <div>{{cost.startdate | date:'dd/MM/yyyy hh:mm:ss'}}</div>
             </td>
             <!-- End Date-->
             <td>
-                <div>{{cost.enddate | date:'dd/MM/yyyy'}}</div>
+                <div>{{cost.enddate | date:'dd/MM/yyyy hh:mm:ss'}}</div>
             </td>
         <tr>
         </tbody>

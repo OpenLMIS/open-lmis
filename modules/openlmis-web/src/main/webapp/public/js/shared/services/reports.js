@@ -269,3 +269,7 @@ services.factory('SettingUpdator', function($resource){
 services.factory('ProductDetail', function($resource){
     return $resource('/productDetail/:id.json', {} , { post: {method:'GET'} } );
 });
+
+services.factory('PriceHistory', function($resource){
+    return $resource('/priceHistory/:productId.json', {} , {} );
+});
