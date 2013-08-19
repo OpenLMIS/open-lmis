@@ -46,6 +46,7 @@ public class FacilityRepository {
       validateAndSetFacilityOperatedBy(facility);
       validateAndSetFacilityType(facility);
       validateGeographicZone(facility);
+      validateDataReportableAndActive(facility);
       if (facility.getId() == null) {
         mapper.insert(facility);
       } else {
@@ -60,6 +61,11 @@ public class FacilityRepository {
       }
       throw new DataException("error.incorrect.length");
     }
+  }
+
+  private void validateDataReportableAndActive(Facility facility) {
+    if (facility.getDataReportable() == Boolean.FALSE && facility.getActive() == Boolean.TRUE)
+      throw new DataException("error.dataReportable.false");
   }
 
   private void validateGeographicZone(Facility facility) {
