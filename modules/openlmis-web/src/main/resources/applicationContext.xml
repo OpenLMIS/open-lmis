@@ -294,6 +294,16 @@
                         <property name="tableName" value="delivery_zone_warehouses"/>
                     </bean>
                 </entry>
+                <entry key="facilityFtpDetails">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.facility.ftp.details"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.FacilityFtpDetails</value>
+                        </property>
+                        <property name="recordHandler" ref="facilityFtpDetailsPersistenceHandler"/>
+                        <property name="tableName" value="facility_ftp_details"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>
