@@ -8,6 +8,7 @@ package org.openlmis.order.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.springframework.stereotype.Repository;
 
@@ -36,4 +37,7 @@ public interface OrderMapper {
 
   @Update("UPDATE orders SET shipmentId=#{shipmentFileInfo.id},status=#{status} WHERE rnrid=#{rnr.id} AND STATUS='RELEASED'")
   void updateShipmentInfo(Order order);
+
+  @Select("SELECT * FROM order_file_template")
+  List<OrderFileColumn> getOrderFileTemplate();
 }
