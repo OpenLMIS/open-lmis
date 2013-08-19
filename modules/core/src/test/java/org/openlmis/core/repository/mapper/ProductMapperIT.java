@@ -62,8 +62,8 @@ public class ProductMapperIT {
     expectedEx.expectMessage("null value in column \"primaryname\" violates not-null constraint");
     Product product = new Product();
     product.setCode("ABCD123");
-    int status = productMapper.insert(product);
-    assertEquals(0, status);
+    Long status = productMapper.insert(product);
+    assertEquals(0L, status);
   }
 
   @Test
