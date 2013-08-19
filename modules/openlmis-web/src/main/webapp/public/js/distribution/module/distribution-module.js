@@ -14,13 +14,17 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
       when('/record-facility-data/:distribution/:facility/refrigerator-data', {controller: RefrigeratorController, templateUrl: 'partials/refrigerator.html', resolve: RefrigeratorController.resolve}).
       otherwise({redirectTo: '/manage'});
 
-  }]).directive('notRecorded', function () {
+  }]).directive('notRecorded',function () {
     return {
       require: '?ngModel',
       link: function (scope, element, attrs) {
         distributionModule["notRecordedDirective"](element, scope);
       }
     };
+  }).config(function (IndexedDBProvider) {
+    IndexedDBProvider
+      .setDbName("open_lmis")
+      .migration(4, migrationFunc);
   });
 
 distributionModule.notRecordedDirective = function (element, scope) {
