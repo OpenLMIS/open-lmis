@@ -15,6 +15,7 @@ import org.openlmis.email.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -35,6 +36,7 @@ public class UserService {
   @Autowired
   private MessageService messageService;
 
+  @Transactional
   public void create(User user, String resetPasswordLink) {
     save(user);
     sendUserCreationEmail(user, resetPasswordLink);
@@ -57,6 +59,7 @@ public class UserService {
     roleAssignmentService.saveRolesForUser(user);
   }
 
+  @Transactional
   public void update(User user) {
     user.validate();
     userRepository.update(user);
@@ -135,6 +138,7 @@ public class UserService {
     return userId;
   }
 
+  @Transactional
   public void updateUserPassword(String token, String password) {
     Long userId = getUserIdByPasswordResetToken(token);
     userRepository.updateUserPasswordAndActivate(userId, Encoder.hash(password));
@@ -160,6 +164,7 @@ public class UserService {
     userRepository.updateUserPassword(userId, Encoder.hash(password));
   }
 
+  @Transactional
   public void disable(Long userId, Long modifiedBy) {
     userRepository.disable(userId, modifiedBy);
     userRepository.deletePasswordResetTokenForUser(userId);

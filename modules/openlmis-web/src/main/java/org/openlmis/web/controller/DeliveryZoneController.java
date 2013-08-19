@@ -35,6 +35,7 @@ public class DeliveryZoneController extends BaseController {
   AllocationPermissionService permissionService;
 
   @RequestMapping(value = "user/deliveryZones", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION')")
   public ResponseEntity<OpenLmisResponse> getDeliveryZonesForInitiatingAllocation(HttpServletRequest request) {
     return response(DELIVERY_ZONES, service.getByUserForRight(loggedInUserId(request), MANAGE_DISTRIBUTION));
   }

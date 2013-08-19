@@ -21,13 +21,13 @@ import java.util.Set;
 
 @Service
 @NoArgsConstructor
-public class ConfigurationService {
+public class ConfigurationSettingService {
 
   private ConfigurationRepository configurationRepository;
 
 
   @Autowired
-  public ConfigurationService(ConfigurationRepository configurationRepository) {
+  public ConfigurationSettingService(ConfigurationRepository configurationRepository) {
     this.configurationRepository = configurationRepository;
   }
 

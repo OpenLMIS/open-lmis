@@ -12,6 +12,7 @@ import org.openlmis.core.service.VendorService;
 import org.openlmis.restapi.domain.Agent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -24,6 +25,7 @@ public class RestAgentService {
   @Autowired
   VendorService vendorService;
 
+  @Transactional
   public void create(Agent agent, String userName) {
     agent.validate();
     if (getExistingFacilityForCode(agent.getAgentCode()) != null) {

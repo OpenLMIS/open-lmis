@@ -8,6 +8,12 @@ package org.openlmis.functional;
 
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
+import cucumber.api.DataTable;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
@@ -19,6 +25,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
@@ -38,7 +45,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public static final String CONVERT_TO_ORDER_REQUISITION = "Convert To Order Requisition";
   public static final String VIEW_ORDER_REQUISITION = "View Orders Requisition";
   public static final String MANAGE_DISTRIBUTION = "Manage Distribution";
-    public static final String FIELD_COORDINATOR = "Field Co-Ordinator";
+  public static final String FIELD_COORDINATOR = "Field Co-Ordinator";
   public static final String LMU = "lmu";
   public static final String ADMIN = "admin";
   public static final String geoZone = "Ngorongoro";
@@ -48,9 +55,61 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public static final String facilityNamePrefix = "FCname";
 
   @BeforeMethod(groups = {"functional2"})
+  @Before
   public void setUp() throws Exception {
     super.setup();
   }
+
+    @And("^I create a user:$")
+    public void createUser(DataTable userTable) throws Exception {
+        HomePage homePage = new HomePage(testWebDriver);
+        UserPage userPage = homePage.navigateToUser();
+        List<Map<String, String>> data = userTable.asMaps();
+        for (Map map : data)
+            userPage.enterAndVerifyUserDetails(map.get("UserName").toString(), map.get("Email").toString(), map.get("Firstname").toString(), map.get("Lastname").toString(), baseUrlGlobal, dburlGlobal);
+        }
+
+    @When("^I disable user \"([^\"]*)\"$")
+    public void disableUser(String user) throws Exception {
+        HomePage homePage = new HomePage(testWebDriver);
+        UserPage userPage = homePage.navigateToUser();
+        userPage.searchUser(user);
+        userPage.clickUserList(user);
+        userPage.clickDisableButton();
+    }
+
+    @Then("^I should see disable fields$")
+    public void verifyDisableFields() throws Exception {
+        UserPage userPage = new UserPage(testWebDriver);
+        userPage.verifyFieldsDisabled();
+    }
+
+    @Then("^I should see disable user \"([^\"]*)\" message$")
+    public void verifyDisableUser(String user) throws Exception {
+        UserPage userPage = new UserPage(testWebDriver);
+        userPage.verifyMessage("User \''"+ user +"\'' has been disabled");
+    }
+
+    @Then("^I should see enable fields$")
+    public void verifyEnableFields() throws Exception {
+        UserPage userPage = new UserPage(testWebDriver);
+        userPage.verifyFieldsEnabled();
+    }
+
+    @When("^I restore user \"([^\"]*)\"$")
+    public void restoreUser(String user) throws Exception {
+        HomePage homePage = new HomePage(testWebDriver);
+        UserPage userPage = homePage.navigateToUser();
+        userPage.searchUser(user);
+        userPage.clickUserList(user);
+        userPage.clickRestoreButton();
+    }
+
+    @Then("^I should see restore user \"([^\"]*)\" message$")
+    public void verifyRestoredUser(String user) throws Exception {
+        UserPage userPage = new UserPage(testWebDriver);
+        userPage.verifyMessage("User \''"+ user +"\'' has been restored");
+    }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
   public void testVerifyRightsUponOK(String user, String program, String[] credentials) throws Exception {
@@ -218,6 +277,18 @@ public class ManageRolesAndUsers extends TestCaseHelper {
         userPage.focusOnFirstUserLink();
         userPage.verifyResetPassword();
 
+        userPage.clickEditUser();
+        userPage.clickDisableButton();
+        homePage.navigateToUser();
+        userPage.searchUser(LAB_IN_CHARGE);
+        userPage.focusOnFirstUserLink();
+        userPage.verifyDisabledResetPassword();
+        userPage.clickEditUser();
+        userPage.clickRestoreButton();
+
+        homePage.navigateToUser();
+        userPage.searchUser(LAB_IN_CHARGE);
+        userPage.focusOnFirstUserLink();
         userPage.resetPassword("abcd1234","abcd1234");
 
         homePage.logout(baseUrlGlobal);
@@ -245,13 +316,17 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertFalse(userPage.getAllProgramsToSupervise().contains("VACCINES"));
   }
 
-  @AfterMethod(groups = {"functional2"})
-  public void tearDown() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout(baseUrlGlobal);
-    dbWrapper.deleteData();
-    dbWrapper.closeConnection();
-  }
+    @AfterMethod(groups = "functional2")
+    @After
+    public void tearDown() throws Exception {
+        testWebDriver.sleep(500);
+        if (!testWebDriver.getElementById("username").isDisplayed()) {
+            HomePage homePage = new HomePage(testWebDriver);
+            homePage.logout(baseUrlGlobal);
+        }
+        dbWrapper.deleteData();
+        dbWrapper.closeConnection();
+    }
 
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProvider() {

@@ -23,6 +23,7 @@ CACHE:
 /public/js/shared/directives/placeholder.js
 /public/js/shared/directives/ui-nav.js
 /public/js/shared/directives/tab-scroll.js
+/public/js/shared/directives/modal-events.js
 
 /public/css/app.css
 /public/js/shared/services/services.js
@@ -50,6 +51,13 @@ CACHE:
 /public/js/distribution/controller/distribution-controller.js
 /public/js/distribution/controller/view-load-amount-controller.js
 /public/js/distribution/controller/record-facility-data-controller.js
+/public/js/distribution/controller/refrigerator-controller.js
+/public/js/shared/directives/auto-save.js
+/public/js/distribution/model/refrigerator-reading.js
+/public/js/shared/controller/locale-controller.js
+/public/lib/select2/select2.png
+/public/pages/logistics/distribution/partials/refrigerator-reading.html
+/public/pages/logistics/distribution/partials/refrigerator.html
 
 
 /public/js/shared/services/indexed-db.js
@@ -69,6 +77,9 @@ CACHE:
 /public/images/left-arrow.png
 /public/images/loader.gif
 /public/images/login-bg.png
+
+/public/fonts/fontawesome-webfont.woff
+/public/fonts/HelveticaNeue-CondensedBold.woff
 
 FALLBACK:
 / /public/pages/offline.html

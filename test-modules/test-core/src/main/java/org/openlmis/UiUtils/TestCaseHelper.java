@@ -99,14 +99,14 @@ public class TestCaseHelper {
     dbWrapper.insertSupplyLines("N1", program, "F10");
   }
 
-    public void setupTestUserRoleRightsData(String userId, String userSIC, String vendorName, List<String> rightsList) throws IOException, SQLException {
-        dbWrapper.insertRole("store in-charge", "REQUISITION", "");
-        dbWrapper.insertRole("district pharmacist", "REQUISITION", "");
-        for (String rights : rightsList)
-            dbWrapper.assignRight("store in-charge", rights);
-        String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-        dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com", vendorName);
-    }
+  public void setupTestUserRoleRightsData(String userId, String userSIC, String vendorName, List<String> rightsList) throws IOException, SQLException {
+    dbWrapper.insertRole("store in-charge", "REQUISITION", "");
+    dbWrapper.insertRole("district pharmacist", "REQUISITION", "");
+    for (String rights : rightsList)
+      dbWrapper.assignRight("store in-charge", rights);
+    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+    dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com", vendorName);
+  }
 
   public void setupRnRTestDataRnRForCommTrack(boolean configureGenericTemplate, String program, String user, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
@@ -169,7 +169,7 @@ public class TestCaseHelper {
   public void setupTestRoleRightsData(String roleName, String roleType, String roleRight) throws IOException, SQLException {
     dbWrapper.insertRole(roleName, roleType, "");
     dbWrapper.assignRight(roleName, roleRight);
-    }
+  }
 
   public void setupDataExternalVendor(boolean isPreviousPeriodRnRRequired) throws IOException, SQLException {
     dbWrapper.insertVendor("commTrack");
@@ -196,17 +196,17 @@ public class TestCaseHelper {
                                        String facilityCodeFirst, String facilityCodeSecond,
                                        String programFirst, String programSecond, String schedule) throws IOException, SQLException {
     dbWrapper.insertDeliveryZone(deliveryZoneCodeFirst, deliveryZoneNameFirst);
-    if(multipleFacilityInstances)
-    dbWrapper.insertDeliveryZone(deliveryZoneCodeSecond, deliveryZoneNameSecond);
+    if (multipleFacilityInstances)
+      dbWrapper.insertDeliveryZone(deliveryZoneCodeSecond, deliveryZoneNameSecond);
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeFirst);
     dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeFirst, facilityCodeSecond);
-    if(multipleFacilityInstances)
-    dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeSecond, facilityCodeSecond);
+    if (multipleFacilityInstances)
+      dbWrapper.insertDeliveryZoneMembers(deliveryZoneCodeSecond, facilityCodeSecond);
     dbWrapper.insertProcessingPeriodForDistribution(14, schedule);
     dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programFirst, schedule);
     dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeFirst, programSecond, schedule);
-    if(multipleFacilityInstances)
-    dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond, programSecond, schedule);
+    if (multipleFacilityInstances)
+      dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond, programSecond, schedule);
   }
 
 
@@ -223,8 +223,8 @@ public class TestCaseHelper {
                                                         String vendorName, List<String> rightsList, String programCode,
                                                         String geoLevel1, String geoLevel2, String parentGeoLevel) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
-    dbWrapper.insertGeographicZone(geoLevel1,geoLevel1,parentGeoLevel);
-    dbWrapper.insertFacilitiesWithDifferentGeoZones(facilityCode1, facilityCode2,geoLevel2,geoLevel1);
+    dbWrapper.insertGeographicZone(geoLevel1, geoLevel1, parentGeoLevel);
+    dbWrapper.insertFacilitiesWithDifferentGeoZones(facilityCode1, facilityCode2, geoLevel2, geoLevel1);
     if (configureTemplate)
       dbWrapper.configureTemplate(program);
 
@@ -239,88 +239,90 @@ public class TestCaseHelper {
   }
 
 
-    public void sendKeys(String locator, String value) {
-        int length = testWebDriver.getAttribute(testWebDriver.getElementByXpath(locator), "value").length();
-        for (int i = 0; i < length; i++)
-            testWebDriver.getElementByXpath(locator).sendKeys("\u0008");
-        testWebDriver.getElementByXpath(locator).sendKeys(value);
-    }
+  public void sendKeys(String locator, String value) {
+    int length = testWebDriver.getAttribute(testWebDriver.getElementByXpath(locator), "value").length();
+    for (int i = 0; i < length; i++)
+      testWebDriver.getElementByXpath(locator).sendKeys("\u0008");
+    testWebDriver.getElementByXpath(locator).sendKeys(value);
+  }
 
-    public void sendKeys(WebElement locator, String value) {
-        int length = testWebDriver.getAttribute(locator, "value").length();
-        for (int i = 0; i < length; i++)
-            locator.sendKeys("\u0008");
-        locator.sendKeys(value);
-    }
+  public void sendKeys(WebElement locator, String value) {
+    int length = testWebDriver.getAttribute(locator, "value").length();
+    for (int i = 0; i < length; i++)
+      locator.sendKeys("\u0008");
+    locator.sendKeys(value);
+  }
 
-    public String IsaProgramProduct(String program, String product, String population) throws IOException, SQLException{
-        String[] isaParams = dbWrapper.getProgramProductISA(program,product);
-        return calculateISA(isaParams[0],isaParams[1],isaParams[2],isaParams[3],isaParams[4],isaParams[5],isaParams[6],population);
-    }
+  public String IsaProgramProduct(String program, String product, String population) throws IOException, SQLException {
+    String[] isaParams = dbWrapper.getProgramProductISA(program, product);
+    return calculateISA(isaParams[0], isaParams[1], isaParams[2], isaParams[3], isaParams[4], isaParams[5], isaParams[6], population);
+  }
+
   public String calculateISA(String ratioValue, String dosesPerYearValue, String wastageValue, String bufferPercentageValue, String adjustmentValue,
-                               String minimumValue, String maximumValue, String populationValue) {
-        Float calculatedISA;
-        Float minimum=0.0F;
-        Float maximum=0.0F;
+                             String minimumValue, String maximumValue, String populationValue) {
+    Float calculatedISA;
+    Float minimum = 0.0F;
+    Float maximum = 0.0F;
 
-        Integer population = Integer.parseInt(populationValue);
-        Float ratio = Float.parseFloat(ratioValue) / 100;
-        Integer dosesPerYear = Integer.parseInt(dosesPerYearValue);
-        Float wastage = Float.parseFloat(wastageValue);
-        Float bufferPercentage = (Float.parseFloat(bufferPercentageValue) / 100) + 1;
+    Integer population = Integer.parseInt(populationValue);
+    Float ratio = Float.parseFloat(ratioValue) / 100;
+    Integer dosesPerYear = Integer.parseInt(dosesPerYearValue);
+    Float wastage = Float.parseFloat(wastageValue);
+    Float bufferPercentage = (Float.parseFloat(bufferPercentageValue) / 100) + 1;
 
-        if (minimumValue!=null){
-            minimum = Float.parseFloat(minimumValue);}
-        if (maximumValue!=null){
-            maximum = Float.parseFloat(maximumValue);}
-
-        Integer adjustment = Integer.parseInt(adjustmentValue);
-
-        calculatedISA = (((population * ratio * dosesPerYear * wastage) / 12) * bufferPercentage) + adjustment;
-
-        if (calculatedISA <= minimum && minimum!=0.0)
-                return (minimumValue);
-        else if (calculatedISA >= maximum && maximum!=0.0)
-            return (maximumValue);
-        return (new BigDecimal(calculatedISA).setScale(0,BigDecimal.ROUND_CEILING)).toString();
-   }
-
-    public void SetupDeliveryZoneRolesAndRights(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                                  String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                                  String facilityCodeFirst, String facilityCodeSecond,
-                                                  String programFirst, String programSecond, String schedule, String roleNmae) throws IOException, SQLException {
-        dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
-        dbWrapper.insertSchedule(schedule, "Monthly", "Month");
-        setupTestRoleRightsData(roleNmae,"ALLOCATION","MANAGE_DISTRIBUTION");
-        setupDataForDeliveryZone(true,deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
+    if (minimumValue != null) {
+      minimum = Float.parseFloat(minimumValue);
+    }
+    if (maximumValue != null) {
+      maximum = Float.parseFloat(maximumValue);
     }
 
-    public void OpenIndexedDB(String dbName)
-    {
-        WebDriver driver;
-        String Separator = getProperty("file.separator");
-        //String script = "var z= x();function x() {return document.title;};return z;";
-        String script= "var x;window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB;" +
-                       "var dbreq = window.indexedDB.open(\"" + dbName + "\");" +
-                       "dbreq.onsuccess = function (event){var db = dbreq.result; " +
-                       //"db.createObjectStore(\"objects\", \"keyPath\": \"id\");" +
-                       "var dTableNames = db.objectStoreNames;document.cookie=dTableNames[0]};" +
-                       "dbreq.onerror = function (event) {return \"test.open Error: \" + event.message;};" ;
+    Integer adjustment = Integer.parseInt(adjustmentValue);
+
+    calculatedISA = (((population * ratio * dosesPerYear * wastage) / 12) * bufferPercentage) + adjustment;
+
+    if (calculatedISA <= minimum && minimum != 0.0)
+      return (minimumValue);
+    else if (calculatedISA >= maximum && maximum != 0.0)
+      return (maximumValue);
+    return (new BigDecimal(calculatedISA).setScale(0, BigDecimal.ROUND_CEILING)).toString();
+  }
+
+  public void SetupDeliveryZoneRolesAndRights(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                              String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                              String facilityCodeFirst, String facilityCodeSecond,
+                                              String programFirst, String programSecond, String schedule, String roleNmae) throws IOException, SQLException {
+    dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
+    dbWrapper.insertSchedule(schedule, "Monthly", "Month");
+    setupTestRoleRightsData(roleNmae, "ALLOCATION", "MANAGE_DISTRIBUTION");
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
+  }
+
+  public void OpenIndexedDB(String dbName) {
+    WebDriver driver;
+    String Separator = getProperty("file.separator");
+    //String script = "var z= x();function x() {return document.title;};return z;";
+    String script = "var x;window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB;" +
+      "var dbreq = window.indexedDB.open(\"" + dbName + "\");" +
+      "dbreq.onsuccess = function (event){var db = dbreq.result; " +
+      //"db.createObjectStore(\"objects\", \"keyPath\": \"id\");" +
+      "var dTableNames = db.objectStoreNames;document.cookie=dTableNames[0]};" +
+      "dbreq.onerror = function (event) {return \"test.open Error: \" + event.message;};";
                         /*"var dTableNames = db.objectStoreNames;" +
                         "var strNames;" +
                         "for (var i = 0; i < dTableNames.length; i++) {strNames = strNames + dTableNames[i];};"+
                         "return strNames;";*/
 
-        driver= TestWebDriver.getDriver();
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        Object x= js.executeScript(script);
-        CookieManager cm=new CookieManager();
-        cm.getCookieStore();
-        //cm.
+    driver = TestWebDriver.getDriver();
+    JavascriptExecutor js = (JavascriptExecutor) driver;
+    Object x = js.executeScript(script);
+    CookieManager cm = new CookieManager();
+    cm.getCookieStore();
+    //cm.
 
 
-        Object y = js.executeScript(x.toString());
-        System.out.println(x.getClass());
+    Object y = js.executeScript(x.toString());
+    System.out.println(x.getClass());
 
-    }
+  }
 }

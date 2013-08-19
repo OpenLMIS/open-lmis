@@ -90,7 +90,7 @@ public class RoleRightsController extends BaseController {
     return success(messageService.message("message.role.updated.success", role.getName()));
   }
 
-  @RequestMapping(value = "facility/{facilityId}/program/{programId}/rights")
+  @RequestMapping(value = "facility/{facilityId}/program/{programId}/rights", method = GET)
   public ResponseEntity<OpenLmisResponse> getRightsForUserAndFacilityProgram(@PathVariable("facilityId") Long facilityId, @PathVariable("programId") Long programId, HttpServletRequest httpServletRequest) {
     return response(RIGHTS, roleRightsService.getRightsForUserAndFacilityProgram(loggedInUserId(httpServletRequest), new Facility(facilityId), new Program(programId)));
   }

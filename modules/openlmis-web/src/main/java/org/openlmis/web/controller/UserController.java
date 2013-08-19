@@ -7,6 +7,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Boolean.TRUE;
@@ -49,6 +53,9 @@ public class UserController extends BaseController {
   public static final String TOKEN_VALID = "TOKEN_VALID";
   private static final String RESET_PASSWORD_PATH = "public/pages/reset-password.html#/token/";
 
+  @Autowired
+  @Setter
+  private SessionRegistry sessionRegistry;
 
   private String baseUrl;
 
@@ -135,7 +142,33 @@ public class UserController extends BaseController {
   public ResponseEntity<OpenLmisResponse> disable(@PathVariable("id") Long id,
                                                   HttpServletRequest request) {
     userService.disable(id, loggedInUserId(request));
+    deactivateUserSessions(id);
+
     return success(MSG_USER_DISABLE_SUCCESS);
+  }
+
+  private void deactivateUserSessions(Long id) {
+    List<Object> principals = sessionRegistry.getAllPrincipals();
+    List<SessionInformation> disabledUserSessions = new ArrayList<>();
+
+    if (principals.contains(id)) {
+      Object disabledUserPrincipal = getDisabledUserPrincipal(principals, id);
+      disabledUserSessions = sessionRegistry.getAllSessions(disabledUserPrincipal, false);
+    }
+
+    for (SessionInformation disabledUserSession : disabledUserSessions) {
+      sessionRegistry.getSessionInformation(disabledUserSession.getSessionId()).expireNow();
+    }
+  }
+
+  private Object getDisabledUserPrincipal(List<Object> principals, Long id) {
+    Object disabledUserPrincipal = null;
+    for (Object principal : principals) {
+      if (principal.equals(id)) {
+        disabledUserPrincipal = principal;
+      }
+    }
+    return disabledUserPrincipal;
   }
 
   @RequestMapping(value = "/user/validatePasswordResetToken/{token}", method = GET)

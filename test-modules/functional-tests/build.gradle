@@ -65,7 +65,7 @@ task smokeTest(type: Test) {
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smoke', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smoke','--tags','~@WIP', 'src/test/resources']
         }
     }
 }
@@ -85,7 +85,7 @@ task smokeTestChrome(type: Test) {
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smoke', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smoke', '--tags','~@WIP', 'src/test/resources']
         }
     }
 }
@@ -106,7 +106,7 @@ task smokeTestIE1(type: Test) {
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@ie1', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@ie1','--tags','~@WIP', 'src/test/resources']
         }
     }
 }
@@ -126,7 +126,7 @@ task smokeTestIE2(type: Test) {
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@ie2', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@ie2','--tags','~@WIP', 'src/test/resources']
         }
     }
 }

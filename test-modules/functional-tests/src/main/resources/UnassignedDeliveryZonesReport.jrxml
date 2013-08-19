@@ -44,13 +44,14 @@
 		</box>
 	</style>
 	<queryString>
-		<![CDATA[select row_number() over (ORDER BY dz.code) as sno,dz.code as deliveryZoneCode, dz.name as deliveryZoneName, p.code as programCode, p.name as programName from delivery_zone_program_schedules dzps,delivery_zones dz, role_assignments ra, users u, programs p where dzps.deliveryzoneid=ra.deliveryzoneid and u.id=ra.userid and dz.id=dzps.deliveryzoneid and p.id=dzps.programid and u.active='false' and p.active='true' union select row_number() over (ORDER BY dz.code) as sno, dz.code as deliveryZoneCode, dz.name as deliveryZoneName, p.code as programCode, p.name as programName from delivery_zones dz,delivery_zone_program_schedules dzps, programs p,role_assignments ra where  dz.id=dzps.deliveryzoneid and p.id=dzps.programid and dzps.deliveryzoneid not in (select distinct(deliveryzoneid) from role_assignments where deliveryzoneid is not null) order by deliveryZoneName asc]]>
+		<![CDATA[select dz.code as deliveryZoneCode, dz.name as deliveryZoneName, p.code as programCode, p.name as programName from delivery_zones dz, delivery_zone_program_schedules dzps, role_assignments ra,  programs p, users u where dz.id=dzps.deliveryzoneid and dzps.deliveryzoneid=ra.deliveryzoneid and u.id=ra.userid and  ra.deliveryzoneid=dz.id and p.id=dzps.programid and p.id=ra.programid and u.active='false' and p.active='true'
+                 union
+                 select dz.code as deliveryZoneCode, dz.name as deliveryZoneName, p.code as programCode, p.name as programName from delivery_zones dz, delivery_zone_program_schedules dzps, programs p,role_assignments ra where  dz.id=dzps.deliveryzoneid and p.id=dzps.programid and p.id=ra.programid and dzps.deliveryzoneid not in (select distinct(deliveryzoneid) from role_assignments where deliveryzoneid is not null) group by dz.name, dz.code, p.code,p.name order by deliveryZoneName asc]]>
 	</queryString>
 	<field name="deliveryZoneCode" class="java.lang.String"/>
 	<field name="deliveryZoneName" class="java.lang.String"/>
 	<field name="programCode" class="java.lang.String"/>
 	<field name="programName" class="java.lang.String"/>
-	<field name="sno" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -142,11 +143,11 @@
 				<textFieldExpression><![CDATA[$F{programName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="54ac0f1f-9356-4bb7-a530-821dc64053de" x="0" y="0" width="111" height="20"/>
+				<reportElement uuid="0cb682e4-45b1-4bae-a3c3-5f9512886f9f" x="0" y="0" width="111" height="20"/>
 				<textElement textAlignment="Center">
-					<font fontName="SansSerif" size="12"/>
+					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sno}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

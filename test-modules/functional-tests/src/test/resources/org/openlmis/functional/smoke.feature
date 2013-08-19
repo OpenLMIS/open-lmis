@@ -255,9 +255,67 @@ Feature: Smoke Tests
     And I select period "Period14"
     And I initiate distribution
     And I click record data
-    Then I should see Delivery Zone "Delivery Zone First", Program "VACCINES" and Period "Period14" in the header
+  #    Then I should see Delivery Zone "Delivery Zone First", Program "VACCINES" and Period "Period14" in the header
     And I should see No facility selected
     And I should see "active" facilities that support the program "VACCINES" and delivery zone "Delivery Zone First"
     When I choose facility "F10"
     Then I should see "Health center" in the header
     And  I should see "Village Dispensary" in the header
+
+  @smoke
+  @ie2
+
+  Scenario: Admin can create, disable & restore user
+    Given I am logged in as Admin
+    When I create a user:
+      | Email                   | Firstname | Lastname | UserName |
+      | Dummy_User@openlmis.com | Dummy     | User     | Dummy    |
+    And I disable user "Dummy User"
+    Then I should see disable user "Dummy User" message
+    And I should see disable fields
+    And I restore user "Dummy User"
+    Then I should see restore user "Dummy User" message
+    And I should see enable fields
+
+  @smoke
+  @ie2
+
+  Scenario: User should be able to add/edit/delete refrigerator
+    Given I have the following data for distribution:
+      | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I have data available for "Multiple" facilities attached to delivery zones
+    And I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
+    And I am logged in as "storeincharge"
+    And I access plan my distribution page
+    When I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period14"
+    And I initiate distribution
+    And I click record data
+    When I choose facility "F10"
+    Then I should see Refrigerators screen
+    When I click Add New Button
+    Then I should see New Refrigerator Modal window
+    When I enter Brand "LG"
+    And I enter Modal "800 LITRES, WONDER DOOR, HEALTH GUARD™, INVERTER LINEAR COMPRESSOR WITH 10 YEARS WARRANTY & MULAN SHINE FINISH"
+    And I enter Serial Number "GR-J287PGHV"
+    And I click Done on modal
+    Then I should see refrigerator "LG;800 LITRES, WONDER DOOR, HEALTH GUARD™, INVERTER LINEAR COMPRESSOR WITH 10 YEARS WARRANTY & MULAN SHINE FINISH;GR-J287PGHV" added successfully
+    When I click Edit
+    And I enter refrigerator temperature "3"
+    And I click "Yes" it was working correctly when I left
+    And I enter low alarm events "1"
+    And I enter high alarm events "0"
+    And I click "No" that there is a problem with refrigerator since last visit
+    And I enter Notes "miscellaneous"
+    And I click Done
+    Then I should not see Refrigerator details section
+    And I should see Edit button
+    When I click Edit
+    Then I should see refrigerator details as refrigerator temperature "3" low alarm events "1" high alarm events "0" notes "miscellaneous"
+    And I click Done
+    When I click Delete
+    Then I should see confirmation for delete
+    When I confirm delete
+    Then I should see refrigerator "LG;800 LITRES, WONDER DOOR, HEALTH GUARD™, INVERTER LINEAR COMPRESSOR WITH 10 YEARS WARRANTY & MULAN SHINE FINISH;GR-J287PGHV" deleted successfully
