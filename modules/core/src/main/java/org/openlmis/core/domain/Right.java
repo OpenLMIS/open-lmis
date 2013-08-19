@@ -44,6 +44,7 @@ public enum Right {
   MANAGE_DISTRIBUTION("right.manage.distribution", ALLOCATION, "Permission to manage an distribution", 9),
   MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", ADMIN, "Permission to manage a regimen template", 4),
 
+  MANAGE_REQ_GRP_PROG_SCHEDULE("Admin - Manage Requisition Group Program Schedule", ADMIN, "Permission to manage requisition groups programs schedule", 26),
   MANAGE_SUPERVISORY_NODE("Admin - Manage Supervisory Nodes",ADMIN,"Permission to manage supervisory nodes",27),
   MANAGE_REQUISITION_GROUP("Admin - Manage Requisition Groups", ADMIN, "Permission to manage requisition groups",28),
   MANAGE_PRODUCT("Admin - Manage Products", ADMIN, "Permission to manage products",29),
