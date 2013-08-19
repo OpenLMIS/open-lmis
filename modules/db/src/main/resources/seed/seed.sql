@@ -10,3 +10,4 @@
 \i src/main/resources/seed/product_groups.sql
 \i src/main/resources/seed/programs.sql
 \i src/main/resources/seed/regimen_categories.sql
+\i src/main/resources/seed/order_file_template.sql
