@@ -1,5 +1,5 @@
 -- rename the configuration table to configuration_settings if it was like that.
-ALTER TABLE IF EXISTS configurations RENAME to configuration_settings;
+--ALTER TABLE IF EXISTS configurations RENAME to configuration_settings;
 
 DROP TABLE IF EXISTS configurations;
 CREATE TYPE date_patterns AS ENUM ('ddMMyy', 'ddMMyyyy', 'MMddyy', 'MMddyyyy', 'yyyyMMdd');
