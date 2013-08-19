@@ -63,7 +63,8 @@ public class ProductMapperIT {
     Product product = new Product();
     product.setCode("ABCD123");
     Long status = productMapper.insert(product);
-    assertEquals(0L, status);
+    Long expected = 0L;
+    assertEquals( expected , status);
   }
 
   @Test

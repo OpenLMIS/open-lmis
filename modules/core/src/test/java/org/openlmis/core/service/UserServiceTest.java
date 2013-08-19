@@ -6,6 +6,9 @@
 
 package org.openlmis.core.service;
 
+import com.natpryce.makeiteasy.Instantiator;
+import com.natpryce.makeiteasy.Property;
+import com.natpryce.makeiteasy.PropertyLookup;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
@@ -33,6 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static com.natpryce.makeiteasy.Property.newProperty;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -43,7 +47,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.builder.UserBuilder.*;
 import static org.openlmis.core.service.UserService.*;
-import static org.openlmis.email.builder.EmailMessageBuilder.*;
+//import static org.openlmis.email.builder.EmailMessageBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.*;
 
@@ -52,6 +56,23 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Encoder.class, UserService.class})
 public class UserServiceTest {
+
+  public static final Property<SimpleMailMessage, String> receiver = newProperty();
+  public static final Property<SimpleMailMessage, String> subject = newProperty();
+  public static final Property<SimpleMailMessage, String> content = newProperty();
+  public static final Instantiator<SimpleMailMessage> defaultEmailMessage = new Instantiator<SimpleMailMessage>() {
+
+    @Override
+    public SimpleMailMessage instantiate(PropertyLookup<SimpleMailMessage> lookup) {
+
+      SimpleMailMessage message = new SimpleMailMessage();
+      message.setTo(lookup.valueOf(receiver, "to@openlmis.org"));
+      message.setSubject(lookup.valueOf(subject, "Test Email"));
+      message.setText(lookup.valueOf(content, "Test Email Text"));
+
+      return message;
+    }
+  };
 
   public static final String FORGET_PASSWORD_LINK = "http://openLMIS.org";
   @Rule
