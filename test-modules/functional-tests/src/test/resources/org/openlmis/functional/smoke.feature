@@ -277,9 +277,10 @@ Feature: Smoke Tests
     Then I should see restore user "Dummy User" message
     And I should see enable fields
 
-  @WIP
+  @smoke
+  @ie2
 
-  Scenario: User should be able to add/ delete refrigerator
+  Scenario: User should be able to add/edit/delete refrigerator
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
       | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
@@ -300,18 +301,21 @@ Feature: Smoke Tests
     And I enter Modal "800 LITRES, WONDER DOOR, HEALTH GUARD™, INVERTER LINEAR COMPRESSOR WITH 10 YEARS WARRANTY & MULAN SHINE FINISH"
     And I enter Serial Number "GR-J287PGHV"
     And I click Done on modal
-    Then I should see refrigerator successfully added
+    Then I should see refrigerator "LG;800 LITRES, WONDER DOOR, HEALTH GUARD™, INVERTER LINEAR COMPRESSOR WITH 10 YEARS WARRANTY & MULAN SHINE FINISH;GR-J287PGHV" added successfully
     When I click Edit
     And I enter refrigerator temperature "3"
     And I click "Yes" it was working correctly when I left
     And I enter low alarm events "1"
     And I enter high alarm events "0"
     And I click "No" that there is a problem with refrigerator since last visit
-    And I enter Notes
+    And I enter Notes "miscellaneous"
     And I click Done
     Then I should not see Refrigerator details section
     And I should see Edit button
+    When I click Edit
+    Then I should see refrigerator details as refrigerator temperature "3" low alarm events "1" high alarm events "0" notes "miscellaneous"
+    And I click Done
     When I click Delete
     Then I should see confirmation for delete
     When I confirm delete
-    Then I should see refrigerator deleted successfully
+    Then I should see refrigerator "LG;800 LITRES, WONDER DOOR, HEALTH GUARD™, INVERTER LINEAR COMPRESSOR WITH 10 YEARS WARRANTY & MULAN SHINE FINISH;GR-J287PGHV" deleted successfully

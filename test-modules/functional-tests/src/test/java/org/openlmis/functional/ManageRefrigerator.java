@@ -28,6 +28,7 @@ import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 
 @TransactionConfiguration(defaultRollback = true)
@@ -80,6 +81,11 @@ public class ManageRefrigerator extends TestCaseHelper {
     refrigeratorPage.clickDoneOnModal();
   }
 
+  @And("^I should see refrigerator \"([^\"]*)\" added successfully")
+  public void refrigeratorShouldBeAddedSuccessfully(String refrigeratorDetails) throws IOException, SQLException {
+    verifyRefrigeratorAdded(1, refrigeratorDetails);
+  }
+
   @And("^I click Delete")
   public void clickDelete() throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
@@ -94,13 +100,20 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @When("^I confirm delete$")
   public void clickOK() throws IOException, SQLException {
-    verifyConfirmationPopUp();
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.clickOKButton();
+  }
+
+  @Then("^I should see refrigerator \"([^\"]*)\" deleted successfully$")
+  public void shouldSeeRefrigeratorDeleted(String refrigeratorData) throws IOException, SQLException {
+    String[] data = refrigeratorData.split(";");
+    for (int i = 0; i < data.length; i++)
+      assertFalse("Refrigerator with data :" + data[i] + " should not exist", testWebDriver.getPageSource().contains(data[i]));
   }
 
   @Then("^I should see confirmation for delete$")
   public void shouldSeeConfirmationOfDelete() throws IOException, SQLException {
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-    refrigeratorPage.clickOKButton();
+    verifyConfirmationPopUp();
   }
 
   @And("^I enter refrigerator temperature \"([^\"]*)\"$")
@@ -121,7 +134,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     refrigeratorPage.enterValueInHighAlarmEvents(event);
   }
 
-  @And("^I enter Notes$")
+  @And("^I enter Notes \"([^\"]*)\"$")
   public void enterNotes(String notes) throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.enterValueInNotesTextArea(notes);
@@ -172,26 +185,53 @@ public class ManageRefrigerator extends TestCaseHelper {
   @Then("^I should see Refrigerators screen")
   public void onRefrigeratorScreen() throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-    refrigeratorPage.clickRefrigeratorTab();
+    refrigeratorPage.onRefrigeratorScreen();
+  }
+
+  @Then("^I should see refrigerator details as refrigerator temperature \"([^\"]*)\" low alarm events \"([^\"]*)\" high alarm events \"([^\"]*)\" notes \"([^\"]*)\"")
+  public void verifyRefrigeratorDetails(String temperature, String low, String high, String notes) throws IOException, SQLException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(),temperature);
+//    assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(),low);
+//    assertEquals(refrigeratorPage.getHighAlarmEventsTextFieldValue(),high);
+    assertEquals(refrigeratorPage.getNotesTextAreaValue(),notes);
   }
 
   public void verifyNewRefrigeratorModalWindowExist() {
     assertTrue("New Refrigerator modal window should show up", new RefrigeratorPage(testWebDriver).newRefrigeratorHeaderOnModal.isDisplayed());
   }
 
+
   public void verifyShouldNotSeeRefrigeratorSection() {
     assertFalse("Refrigerator details section should not show up", new RefrigeratorPage(testWebDriver).refrigeratorTemperatureTextField.isDisplayed());
   }
 
   public void verifyConfirmationPopUp() {
-    assertFalse("Refrigerator confirmation for delete should show up", new RefrigeratorPage(testWebDriver).OKButton.isDisplayed());
+    testWebDriver.sleep(250);
+    assertTrue("Refrigerator confirmation for delete should show up", new RefrigeratorPage(testWebDriver).deletePopUpHeader.isDisplayed());
+  }
+
+  public void verifyRefrigeratorAdded(int row, String data) {
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(
+      "//div[@class='refrigerator-container']/div[2][@class='list-container']/form[@class='ng-pristine ng-valid']/div[" + row + "][@class='list-row ng-scope']/div[1][@class='row-fluid is-empty']/div[2][@class='span2 ng-binding']"));
+
+    String[] refrigeratorDetails = data.split(";");
+    int spanVariable = 0;
+
+    for (int i = 0; i < refrigeratorDetails.length; i++) {
+      assertEquals(testWebDriver.getElementByXpath("//div[@class='refrigerator-container']/div[2][@class='list-container']/form[@class='ng-pristine ng-valid']/div[" + row + "][@class='list-row ng-scope']/div[1][@class='row-fluid is-empty']/div[" + (i + 2) + "][@class='span" + (spanVariable + 2) + " ng-binding']").getText(), refrigeratorDetails[i]);
+      spanVariable++;
+      if ((spanVariable) > 1)
+        spanVariable = 1;
+    }
+
   }
 
 
   @AfterMethod(groups = "functional2")
   @After
   public void tearDown() throws Exception {
-    testWebDriver.sleep(500);
+    testWebDriver.sleep(250);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
