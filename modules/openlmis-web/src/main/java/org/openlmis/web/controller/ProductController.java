@@ -6,12 +6,13 @@ package org.openlmis.web.controller;
  */
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.DosageUnitMapper;
 import org.openlmis.core.repository.mapper.ProductFormMapper;
+import org.openlmis.core.service.ProductGroupService;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,10 +52,14 @@ public class ProductController extends BaseController {
     private ProductListDataProvider productListService;
 
     @Autowired
-    private ProgramProductPriceListDataProvider programPriceService;
+    private ReportLookupService reportLookupService;
 
     @Autowired
-    private ReportLookupService reportLookupService;
+    private ProgramProductService programProductService;
+
+    @Autowired
+    private ProductGroupService productGroupService;
+
 
     @Autowired
     public ProductController(ProductService productService) {
@@ -68,18 +73,12 @@ public class ProductController extends BaseController {
         return OpenLmisResponse.response(PRODUCTLIST, productListService.getProductList());
     }
 
-
-    @RequestMapping(value = "/programs/{productId}/productcost", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/productDetail/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-    public ResponseEntity<OpenLmisResponse> getByProductId(@PathVariable("productId") Long productId) {
-        return OpenLmisResponse.response(PRODUCTCOST, programPriceService.getByProductId(productId));
-    }
-
-    // All product cost
-    @RequestMapping(value = "/allproductcost", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-    public ResponseEntity<OpenLmisResponse> getAllPrices() {
-        return OpenLmisResponse.response(ALLPRODUCTCOST, programPriceService.getAllPrices());
+    public ResponseEntity<OpenLmisResponse> getProductDetails(@PathVariable("id") Long id){
+      Product product = productListService.get(id);
+      product.setProgramProducts(programProductService.getByProductCode(product.getCode()));
+      return OpenLmisResponse.response("product", product);
     }
 
 
@@ -114,41 +113,35 @@ public class ProductController extends BaseController {
     }
 
     // mahmed - 07.11.2013  update
-    @RequestMapping(value = "/updateProduct/{id}", method = RequestMethod.PUT, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/updateProduct", method = RequestMethod.PUT, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> update( @RequestBody Product product,
                                                     HttpServletRequest request) {
         //product.setId(id);
         product.setModifiedBy(loggedInUserId(request));
-        product.setCreatedBy(loggedInUserId(request));
-        product.setCreatedDate(new Date());
         product.setModifiedDate(new Date());
-        return saveProduct(product, true);
+        return saveProduct(product, false);
     }
     // create product
     @RequestMapping(value = "/createProduct", method = RequestMethod.POST ,  headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> save(@RequestBody Product product, HttpServletRequest request) {
-       // set default values for some columns
-       // this is a querk until all fields have UI fields
-
         product.setModifiedBy(loggedInUserId(request));
-        product.setCreatedBy(loggedInUserId(request));
-        product.setCreatedDate(new Date());
         product.setModifiedDate(new Date());
         return saveProduct(product, true);
     }
 
-
-
    // save/update
     private ResponseEntity<OpenLmisResponse> saveProduct(Product product, boolean createOperation) {
         try {
-            productService.save(product);
+          setReferenceObjects(product);
+          productService.save(product);
 
-            //if (product.getId() == null)  {
-
-           // }
+          for(org.openlmis.core.domain.ProgramProduct pp: product.getProgramProducts()){
+              // set the product for each of the program products ... for the save functionalitiy to work
+              pp.setProduct(product);
+              programProductService.save(pp);
+            }
 
             ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("'" + product.getPrimaryName() + "' "+ (createOperation?"created":"updated") +" successfully");
             response.getBody().addData(PRODUCT, productListService.get(product.getId()));
@@ -158,5 +151,30 @@ public class ProductController extends BaseController {
             return error(e, HttpStatus.BAD_REQUEST);
         }
     }
+  // TODO: move this class to some other class
+  // may be the service or the domain object itself.
+  private void setReferenceObjects(Product product) {
+    // prepare the reference data
+    // set from reference information for the online form... that returns it using the id columns
+    if(product.getForm() == null && product.getFormId() != null){
+      product.setForm(new ProductForm());
+      product.getForm().setId(product.getFormId());
+    }
+
+    if(product.getDosageUnit() == null && product.getDosageUnitId() != null){
+      product.setDosageUnit(new DosageUnit());
+      product.getDosageUnit().setId(product.getDosageUnitId());
+    }
+
+    if(product.getProductGroup() == null && product.getProductGroupId() != null){
+      product.setProductGroup(new ProductGroup());
+      product.getProductGroup().setId(product.getProductGroupId());
+    }
+
+    if(product.getCategory() == null && product.getCategoryId() != null){
+      product.setCategory(new ProductCategory());
+      product.getCategory().setId(product.getFormId());
+    }
+  }
 
 }

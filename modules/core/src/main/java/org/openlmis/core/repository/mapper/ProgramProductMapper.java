@@ -33,10 +33,13 @@ public interface ProgramProductMapper {
   @Select(("SELECT * FROM program_products where programId = #{programId} and productId = #{productId}"))
   ProgramProduct getByProgramAndProductId(@Param("programId") Long programId, @Param("productId") Long productId);
 
-  @Update("UPDATE program_products SET  dosesPerMonth=#{dosesPerMonth}, active=#{active}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE programId=#{program.id} AND productId=#{product.id}")
+  @Update("UPDATE program_products SET  dosesPerMonth=#{dosesPerMonth}, active=#{active}, currentPrice=#{currentPrice}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE programId=#{program.id} AND productId=#{product.id}")
   void update(ProgramProduct programProduct);
 
-  @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id WHERE programId = #{id} " ,
+  @Select({"SELECT * FROM program_products pp " +
+      "INNER JOIN products p ON pp.productId = p.id " +
+      "" +
+      "WHERE programId = #{id} " ,
     "ORDER BY p.displayOrder NULLS LAST, p.code"})
   @Results(value = {
     @Result(property = "id", column = "id"),
@@ -48,6 +51,22 @@ public interface ProgramProductMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.ProgramProductIsaMapper.getIsaByProgramProductId"))
   })
   List<ProgramProduct> getByProgram(Program program);
+
+
+  @Select({"SELECT " +
+      "   pp.id as id, pp.active, p.id as programId,p.name as programName, pp.currentPrice, pp.dosesPerPack, productId = #{id}, pp.createdBy, pp.modifiedBy, pp.createdDate, pp.modifiedDate " +
+      " FROM programs p " +
+      " left join program_products pp p.id = pp.programId" +
+      " WHERE pp.programId = #{id} " ,
+      " ORDER BY p.name "})
+  @Results(value = {
+      @Result(property = "id", column = "id"),
+      @Result(property = "program", column = "programId", javaType = Program.class,
+          one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+
+  })
+  List<ProgramProduct> getByProgramOptions(Program program);
+
 
   @Select("SELECT * from program_products where id = #{id}")
   @Results(value = {

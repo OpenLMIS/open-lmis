@@ -1,7 +1,7 @@
     <div class="row-fluid sortable ui-sortable">
             <div class="box span12">
                     <div class="box-header">
-                        <h2><i class="icon-edit"></i><span class="break"></span>Stock Imbalance By Facility By Product Report</h2>
+                        <h2><i class="icon-edit"></i><span class="break"></span>Stock Imbalance By Facility Report</h2>
                         <div class="box-icon">
                             <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
                             <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
@@ -17,9 +17,9 @@
 
                                 <div class="form-cell horizontalFilters">
                                     <div >
-                                        <label class="labels">Period Type</label>
+                                        <label class="labels">Period Type<span class="label-required"> *</span></label>
                                         <div class="form-field">
-                                            <select ui-select2 style="width:200px;" class="input-medium" ng-required="true" name="periodType" ng-model="periodType" ng-options="option.value as option.name for option in periodTypes">
+                                            <select ui-select2 style="width:200px;" class="input-medium" ng-required="true" name="periodType" id="periodType" ng-model="periodType" ng-init="reporting"  ng-options="option.value as option.name for option in periodTypes">
 
                                             </select>
                                         </div>
@@ -27,16 +27,16 @@
                                 </div>
 
                                 <div class="form-cell horizontalFilters" style="width:180px">
-                                    <label class="labels">From</label>
+                                    <label class="labels">From<span class="label-required"> *</span></label>
 
                                     <div class="form-field">
 
-                                        <select  style="width:80px;" class="input-small" ng-required="true"  name="startYear" ng-model="startYear" ng-options="year for year in startYears">
+                                        <select  style="width:80px;" class="input-small" ng-required="true"  name="startYear" id="startYear" ng-model="startYear"  ng-options="year for year in startYears">
 
                                         </select>
 
                                         <span ng-show="isMonthly()">
-                                            <select  style="width:80px;" class="input-small" ng-required="true"  name="startMonth" ng-model="startMonth" ng-options="option.value as option.name for option in startMonths">
+                                            <select  style="width:80px;" class="input-small" ng-required="true"  name="startMonth" id="startMonth" ng-model="startMonth"  ng-options="option.value as option.name for option in startMonths">
 
                                             </select>
                                         </span>
@@ -86,17 +86,18 @@
                                     <label class="labels">Product Categories</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="productCategoryElement"   ng-model="productCategory" ng-options="option.id as option.name for option in productCategories">
-
+                                        <select ui-select2 style="width:300px;" name="productCategoryElement"   ng-model="productCategory" ng-options="option.id as option.name for option in productCategories">
+                                            <option id="All" value="">All Product Categories</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Product</label>
+                                    <label class="labels">Product<span class="label-required"> *</span></label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="product"  ng-model="product" ng-options="option.id as option.name for option in products">
-
+                                        <select ui-select2 style="width:300px;" name="product" id="product" ng-model="product" ng-options="option.id as option.name for option in products">
+                                           <option value="">&#60Indicator Products&#62</option>
+                                           <option value=0>All Products</option>
                                         </select>
                                     </div>
                                 </div>
@@ -104,8 +105,8 @@
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="facilityTypeElement"   ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
-
+                                        <select ui-select2 style="width:300px;" name="facilityTypeElement"   ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
+                                            <option value="">All Facility Types</option>
                                         </select>
                                     </div>
                                 </div>
@@ -120,8 +121,8 @@
                                     <label class="labels">Requisition Groups</label>
 
                                     <div class="form-fields">
-                                        <select ui-select2 style="width:300px;" class="extra-large-input"  name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
-
+                                        <select ui-select2 style="width:300px;" name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
+                                            <option value="">All Requisition Groups</option>
                                         </select>
                                     </div>
                                 </div>
@@ -136,7 +137,9 @@
                                 </div>
                             </div>
                          </form>
+                <div class="warning-alert" id="requiredMsgDiv" ng-bind="message" ng-show="message"/>
                 </div>
+
             </div>
 
           <div class="gridStyleReport" ng-grid="gridOptions"></div>

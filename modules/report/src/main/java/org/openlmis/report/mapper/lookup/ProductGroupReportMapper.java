@@ -17,6 +17,6 @@ public interface ProductGroupReportMapper {
 
     @Select("SELECT * " +
             "   FROM " +
-            "       product_groups order by displayorder")
+            "       product_groups order by name")
     List<ProductGroup> getAll();
 }

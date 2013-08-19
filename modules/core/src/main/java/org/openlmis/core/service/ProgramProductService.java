@@ -7,6 +7,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.joda.time.DateTime;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
@@ -29,6 +30,7 @@ public class ProgramProductService {
 
   @Autowired
   private ProductService productService;
+
 
   public Long getIdByProgramIdAndProductId(Long programId, Long productId) {
     return programProductRepository.getIdByProgramIdAndProductId(programId, productId);
@@ -62,6 +64,14 @@ public class ProgramProductService {
       }
     }
     programProductRepository.save(programProduct);
+    // log the price change here.
+    if(programProduct.getId() != null){
+      ProgramProductPrice priceChange = new ProgramProductPrice();
+      priceChange.setProgramProduct(programProduct);
+      priceChange.setPricePerDosage(programProduct.getCurrentPrice());
+      this.updateProgramProductPrice(priceChange);
+    }
+
   }
 
   public ProgramProduct getByProgramAndProductCode(ProgramProduct programProduct) {
@@ -81,6 +91,10 @@ public class ProgramProductService {
 
   public List<ProgramProduct> getByProgram(Program program) {
     return programProductRepository.getByProgram(program);
+  }
+
+  public List<ProgramProduct> getOptionsByProgram(Program program) {
+    return programProductRepository.getOptionsByProgram(program);
   }
 
   public List<ProgramProduct> getByProductCode(String productCode) {

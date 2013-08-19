@@ -41,10 +41,11 @@ public class ProductRepository {
 
   public void insert(Product product) {
     try {
-      validateAndSetDosageUnit(product);
-      validateAndSetProductForm(product);
-      validateAndSetProductGroup(product);
-      mapper.insert(product);
+      validateAndSetDosageUnit( product );
+      validateAndSetProductForm( product );
+      validateAndSetProductGroup( product );
+      Long id = mapper.insert( product );
+      product.setId( id );
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("error.duplicate.product.code");
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
@@ -112,6 +113,10 @@ public class ProductRepository {
 
   public Product getByCode(String code) {
     return mapper.getByCode(code);
+  }
+
+  public Product getById(Long id) {
+      return mapper.getById(id);
   }
 
   public Long getDosageUnitIdForCode(String code) {

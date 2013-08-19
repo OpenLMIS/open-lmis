@@ -1,11 +1,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductCategory;
-import org.openlmis.core.domain.ProductGroup;
-import org.openlmis.core.domain.SupplyLine;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductGroupRepository;
 import org.openlmis.core.repository.ProductRepository;
@@ -46,7 +42,6 @@ public class ProductService {
     }
 
     setReferenceDataForProduct(product);
-
     List<ProgramProduct> existingProgramProducts = programProductService.getByProductCode(product.getCode());
 
     repository.update(product);
@@ -63,17 +58,16 @@ public class ProductService {
   }
 
   private void setReferenceDataForProduct(Product product) {
-    if (product.getForm() != null) {
+    if (product.getForm() != null && product.getForm().getCode() != null) {
       product.getForm().setId(repository.getProductFormIdForCode(product.getForm().getCode()));
     }
-    if (product.getDosageUnit() != null) {
+    if (product.getDosageUnit() != null && product.getDosageUnit().getCode() != null) {
       product.getDosageUnit().setId(repository.getDosageUnitIdForCode(product.getDosageUnit().getCode()));
     }
-    if (product.getProductGroup() != null) {
+    if (product.getProductGroup() != null && product.getProductGroup().getCode() != null) {
       ProductGroup productGroup = productGroupRepository.getByCode(product.getProductGroup().getCode());
       if (productGroup == null) throw new DataException("error.reference.data.invalid.product.group");
       product.getProductGroup().setId(productGroup.getId());
-
     }
   }
 
