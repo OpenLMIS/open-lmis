@@ -56,8 +56,8 @@ public interface ProgramProductMapper {
   @Select({"SELECT " +
       "   pp.id as id, pp.active, p.id as programId,p.name as programName, pp.currentPrice, pp.dosesPerMonth, productId = #{id}, pp.createdBy, pp.modifiedBy, pp.createdDate, pp.modifiedDate " +
       " FROM programs p " +
-      " left join program_products pp on p.id = pp.programId" +
-      " WHERE pp.productId = #{id} " ,
+      " left outer join program_products pp on p.id = pp.programId" +
+      " WHERE pp.productId = #{id} or pp.productId is null  " ,
       " ORDER BY p.name "})
   @Results(value = {
       @Result(property = "id", column = "id"),
