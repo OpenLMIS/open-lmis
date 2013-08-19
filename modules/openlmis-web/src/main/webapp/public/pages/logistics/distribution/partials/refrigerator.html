@@ -130,9 +130,10 @@
             </div>
           </div>
         </div>
+        <div ng-show="validateDuplicateSerialNumber()!=null" openlmis-message="error.duplicate.serial.number"/>
 
         <div class="modal-footer">
-          <a href="" class="btn btn-primary" ng-click="addRefrigeratorToStore()" openlmis-message="button.done"></a>
+          <a href="" class="btn btn-primary" ng-click="addRefrigeratorToStore()" ng-disabled="newRefrigerator.brand==null|| newRefrigerator.model==null || newRefrigerator.serialNumber==null" openlmis-message="button.done"></a>
           <a href="" class="btn btn-cancel" ng-click="closeRefrigeratorModal()" openlmis-message="button.cancel"></a>
         </div>
 

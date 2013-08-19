@@ -41,6 +41,12 @@ function RefrigeratorController($scope, $dialog, messageService, refrigerators, 
     $scope.addRefrigeratorModal = false;
   }
 
+  $scope.validateDuplicateSerialNumber = function() {
+    if($scope.newRefrigerator!=null)
+      $scope.serialNum = $scope.newRefrigerator.serialNumber;
+    return getRefrigeratorIndex();
+  }
+
   $scope.showDeleteRefrigeratorConfirmationModel = function (serialNum) {
     var dialogOpts = {
       id: "deleteRefrigeratorInfo",
@@ -58,12 +64,12 @@ function RefrigeratorController($scope, $dialog, messageService, refrigerators, 
   }
 
   function getRefrigeratorIndex() {
-    var position;
-    angular.forEach($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings, function (refrigeratorReading,index) {
-          if ($scope.serialNum ==refrigeratorReading.refrigerator.serialNumber) {
-            position = index;
-        }
-      });
+    var position = null;
+    angular.forEach($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings, function (refrigeratorReading, index) {
+      if ($scope.serialNum!=null && $scope.serialNum == refrigeratorReading.refrigerator.serialNumber) {
+        position = index;
+      }
+    });
     return position;
   }
 
