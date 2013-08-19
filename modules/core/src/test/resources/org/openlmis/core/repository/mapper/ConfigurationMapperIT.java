@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 @Transactional
 public class ConfigurationMapperIT {
   @Autowired
-  private ConfigurationMapper mapper;
+  private ConfigurationSettingMapper mapper;
 
   @Test
   public void shouldGetConfiguration() throws Exception {

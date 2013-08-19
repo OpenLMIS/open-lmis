@@ -31,13 +31,13 @@ public class ConfigurationSettingService {
     this.configurationRepository = configurationRepository;
   }
 
-  public Configuration getByKey(String key){
+  public ConfigurationSetting getByKey(String key){
       return configurationRepository.getByKey(key);
   }
 
   public int getConfigurationIntValue(String key){
 
-      Configuration configuration = getByKey(key);
+    ConfigurationSetting configuration = getByKey(key);
 
       if(configuration == null || configuration.getValue() == null || configuration.getValue().isEmpty())
           return 0;
@@ -46,7 +46,7 @@ public class ConfigurationSettingService {
   }
 
   public List<Object> getConfigurationListValue(String key, String delimiter){
-      Configuration configuration = getByKey(key);
+    ConfigurationSetting configuration = getByKey(key);
 
       if(configuration == null || configuration.getValue() == null || configuration.getValue().isEmpty())
         return null;
@@ -59,12 +59,12 @@ public class ConfigurationSettingService {
       return values;
   }
 
-  public List<Configuration> getConfigurations(){
+  public List<ConfigurationSetting> getConfigurations(){
     return configurationRepository.getAll();
   }
 
-  public void update(List<Configuration> settings){
-    for(Configuration conf : settings){
+  public void update(List<ConfigurationSetting> settings){
+    for(ConfigurationSetting conf : settings){
          configurationRepository.setValue(conf);
     }
   }

@@ -1,10 +1,25 @@
+
 package org.openlmis.core.domain;
 
-/**
- * e-lmis
- * Created by: Elias Muluneh
- * Date: 8/19/13
- * Time: 10:51 AM
- */
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import java.lang.String;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+
+@Data
+@NoArgsConstructor
+@JsonSerialize(include = NON_NULL)
 public class ConfigurationSetting {
+
+  private String key;
+  private String value;
+  private String name;
+  private String description;
+  private String valueType;
+  private String valueOptions;
+  private String displayOrder;
+  private String groupName;
 }

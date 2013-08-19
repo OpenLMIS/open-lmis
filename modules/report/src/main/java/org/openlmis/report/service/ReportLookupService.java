@@ -4,7 +4,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.domain.ProductForm;
-import org.openlmis.core.service.ConfigurationService;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.lookup.AdjustmentTypeReportMapper;
 import org.openlmis.report.mapper.lookup.*;
 import org.openlmis.report.util.Constants;
@@ -37,7 +37,7 @@ public class ReportLookupService {
     private AdjustmentTypeReportMapper adjustmentTypeReportMapper;
 
     @Autowired
-    private ConfigurationService configurationService;
+    private ConfigurationSettingService configurationService;
 
     @Autowired
     private ScheduleReportMapper scheduleMapper;

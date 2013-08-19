@@ -5,10 +5,9 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.service.ApproverService;
-import org.openlmis.core.service.ConfigurationService;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.email.service.EmailService;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,7 @@ import java.util.List;
 public class NotificationServices {
 
   @Autowired
-  private ConfigurationService configService;
+  private ConfigurationSettingService configService;
 
   @Autowired
   private EmailService emailService;

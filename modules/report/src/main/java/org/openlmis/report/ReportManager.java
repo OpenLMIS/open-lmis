@@ -3,7 +3,7 @@ package org.openlmis.report;
 import lombok.*;
 import org.openlmis.core.domain.Configuration;
 import org.openlmis.core.domain.User;
-import org.openlmis.core.service.ConfigurationService;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.report.exception.ReportException;
 import org.openlmis.report.exporter.ReportExporter;
@@ -40,7 +40,7 @@ public class ReportManager {
     private UserService userService;
 
     @Autowired
-    private ConfigurationService configurationService;
+    private ConfigurationSettingService configurationService;
 
     public ReportManager(ReportAccessAuthorizer reportAccessAuthorizer, ReportExporter reportExporter, List<Report> reports) {
 

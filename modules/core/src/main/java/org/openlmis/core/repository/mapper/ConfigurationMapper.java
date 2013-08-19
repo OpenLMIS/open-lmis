@@ -1,10 +1,12 @@
 package org.openlmis.core.repository.mapper;
 
-/**
- * e-lmis
- * Created by: Elias Muluneh
- * Date: 8/19/13
- * Time: 10:54 AM
- */
-public class ConfigurationMapper {
+
+import org.apache.ibatis.annotations.Select;
+import org.openlmis.core.domain.Configuration;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ConfigurationMapper {
+  @Select("SELECT * FROM configurations")
+  public Configuration getConfiguration();
 }
