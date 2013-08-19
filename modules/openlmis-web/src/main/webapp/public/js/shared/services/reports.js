@@ -261,3 +261,11 @@ services.factory('Settings',function($resource){
 services.factory('SettingUpdator', function($resource){
     return $resource('/saveSettings.json', {} , { post: {method:'POST'} } );
 });
+
+services.factory('ProgramCompleteList',function($resource){
+    return $resource('/programs.json',{},{});
+});
+
+services.factory('ScheduleCompleteList',function($resource){
+    return $resource('/schedules.json',{},{});
+});
