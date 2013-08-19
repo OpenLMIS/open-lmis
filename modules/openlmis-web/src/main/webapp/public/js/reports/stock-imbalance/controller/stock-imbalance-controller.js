@@ -23,7 +23,7 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
         section = id;
     };
 
-    $scope.default = function (str) {
+    $scope.defaultSettings = function (str) {
 
         var retval = '';
         var months = new Array(12);
@@ -93,9 +93,9 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
 
     // default to the monthly period type
     //$scope.periodType = 'monthly';
-    $scope.periodType = $scope.default('P');
-    $scope.startQuarter = $scope.default('Q');
-    $scope.startYear = $scope.default('Y');
+    $scope.periodType = $scope.defaultSettings('P');
+    $scope.startQuarter = $scope.defaultSettings('Q');
+    $scope.startYear = $scope.defaultSettings('Y');
 
     $scope.periodTypes = [
         {'name': 'Monthly', 'value': 'monthly'},
