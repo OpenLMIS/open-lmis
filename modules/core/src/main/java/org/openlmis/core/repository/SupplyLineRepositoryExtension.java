@@ -19,7 +19,7 @@ import java.util.List;
 
 @Repository
 @NoArgsConstructor
-public class SupplyLineRepositoryExtension extends SupplyLineRepository {
+public class SupplyLineRepositoryExtension  {
 
   private SupplyLineMapper supplyLineMapper;
   private SupplyLineMapperExtension supplyLineMapperExt;

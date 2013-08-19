@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SupplyLineMapperExtension extends SupplyLineMapper{
+public interface SupplyLineMapperExtension {
 
     @Select("SELECT " +
             "sl.id, sl.description, p.name AS programName,f.name AS facilityName, n.name As supervisorynodeName " +
