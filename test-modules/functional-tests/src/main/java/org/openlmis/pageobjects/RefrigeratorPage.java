@@ -108,7 +108,7 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = ID, using = "manufacturerSerialNumber")
   private static WebElement manufacturerSerialNumberTextField;
 
-  @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[3]/a[1]")
+  @FindBy(how = ID, using = "done-button")
   private static WebElement doneButtonOnModal;
 
   @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[3]/a[2]")
