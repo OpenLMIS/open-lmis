@@ -17,6 +17,9 @@ function ProductCreateController($scope, $location, $dialog, messageService, Cre
     $scope.programProductsCost = [];
     $scope.AddEditMode = true;
 
+    // clear the parent confirmation message if there was any
+    $scope.$parent.message = '';
+
     // Programs list
     ReportPrograms.get(function (data) {
         var tmp = data.programs;
@@ -48,7 +51,7 @@ function ProductCreateController($scope, $location, $dialog, messageService, Cre
         }
         $scope.showErrorForCreate = false;
         CreateProduct.save( $scope.product, function (data) {
-               $scope.message = 'New product created successfully';
+               $scope.$parent.message = 'New product created successfully';
                $location.path('');
                 $scope.newProduct = {};
             },  function (data) {

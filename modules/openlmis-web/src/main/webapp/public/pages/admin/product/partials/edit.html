@@ -334,8 +334,8 @@ Edit Product
                 <input type="checkbox"
                        ng-model="pp.active"/>
             </td>
-            <td><input type="text" ng-model="pp.currentPrice"/></td>
-            <td><input type="text" ng-model="pp.dosesPerMonth"/></td>
+            <td><input type="text" ng-disabled="!pp.active" ng-required="pp.active" ng-model="pp.currentPrice"/></td>
+            <td><input type="text" ng-disabled="!pp.active" ng-required="pp.active" ng-model="pp.dosesPerMonth"/></td>
         </tr>
     </table>
 </div>
