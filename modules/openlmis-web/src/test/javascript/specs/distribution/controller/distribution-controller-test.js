@@ -8,7 +8,7 @@ describe('DistributionController', function () {
   var scope, controller, httpBackend, messageService;
 
   var mockedIndexedDB = {
-    transaction: function () {
+    execute: function () {
     },
     get: function() {
 
@@ -136,6 +136,6 @@ describe('DistributionController', function () {
     scope.initiateDistribution();
 
     httpBackend.flush();
-    expect(mockedIndexedDB.transaction).toHaveBeenCalled();
+    expect(mockedIndexedDB.execute).toHaveBeenCalled();
   });
 });

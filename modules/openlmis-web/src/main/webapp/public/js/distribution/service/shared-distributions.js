@@ -5,7 +5,7 @@ distributionModule.service('SharedDistributions', function (IndexedDB, $rootScop
   var thisService = this;
 
   this.update = function () {
-    IndexedDB.transaction(function (connection) {
+    IndexedDB.execute(function (connection) {
       var transaction = connection.transaction('distributions');
 
       var cursorRequest = transaction.objectStore('distributions').openCursor();
