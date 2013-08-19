@@ -50,10 +50,10 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
 
     @Override
     public int getReportDataCountByFilterCriteria(Map<String, String[]> filter) {
-        return 0;
+        return reportMapper.getTotal(filter);
     }
 
-    @Override
+     @Override
     public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
         StockedOutReportFilter stockedOutReportFilter = null;
 
