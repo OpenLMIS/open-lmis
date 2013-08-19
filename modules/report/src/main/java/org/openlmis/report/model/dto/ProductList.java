@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.ProductCategory;
 
+import java.util.List;
+
 /**
  * e-lmis
  * Created by: Elias Muluneh
@@ -38,4 +40,6 @@ public class ProductList {
     private String formCode;
     private String dosageUnitCode;
     private Integer dosesPerDispensingUnit;
+
+    private List<Program> programs;
 }

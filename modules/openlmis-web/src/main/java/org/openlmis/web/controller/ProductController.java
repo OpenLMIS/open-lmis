@@ -77,7 +77,7 @@ public class ProductController extends BaseController {
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> getProductDetails(@PathVariable("id") Long id){
       Product product = productListService.get(id);
-      product.setProgramProducts(programProductService.getByProductCode(product.getCode()));
+      product.setProgramProducts(programProductService.getOptionsByProduct(product));
       return OpenLmisResponse.response("product", product);
     }
 

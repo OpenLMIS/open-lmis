@@ -54,10 +54,10 @@ public interface ProgramProductMapper {
 
 
   @Select({"SELECT " +
-      "   pp.id as id, pp.active, p.id as programId,p.name as programName, pp.currentPrice, pp.dosesPerPack, productId = #{id}, pp.createdBy, pp.modifiedBy, pp.createdDate, pp.modifiedDate " +
+      "   pp.id as id, pp.active, p.id as programId,p.name as programName, pp.currentPrice, pp.dosesPerMonth, productId = #{id}, pp.createdBy, pp.modifiedBy, pp.createdDate, pp.modifiedDate " +
       " FROM programs p " +
-      " left join program_products pp p.id = pp.programId" +
-      " WHERE pp.programId = #{id} " ,
+      " left join program_products pp on p.id = pp.programId" +
+      " WHERE pp.productId = #{id} " ,
       " ORDER BY p.name "})
   @Results(value = {
       @Result(property = "id", column = "id"),
@@ -65,7 +65,7 @@ public interface ProgramProductMapper {
           one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
 
   })
-  List<ProgramProduct> getByProgramOptions(Program program);
+  List<ProgramProduct> getOptionsByProduct(Product product);
 
 
   @Select("SELECT * from program_products where id = #{id}")
