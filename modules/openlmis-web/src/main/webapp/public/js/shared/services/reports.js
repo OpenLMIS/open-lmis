@@ -273,3 +273,11 @@ services.factory('ProductDetail', function($resource){
 services.factory('PriceHistory', function($resource){
     return $resource('/priceHistory/:productId.json', {} , {} );
 });
+
+services.factory('ProgramCompleteList',function($resource){
+    return $resource('/programs.json',{},{});
+});
+
+services.factory('ScheduleCompleteList',function($resource){
+    return $resource('/schedules.json',{},{});
+});

@@ -194,7 +194,7 @@ public interface FacilityMapper {
   @Select("SELECT facilities.*, facility_types.name  as facilityType "+
           "FROM facilities, facility_types "+
           "WHERE   facilities.typeid = facility_types.id "+
-          "ORDER BY facilities.code, facilities.name")
+          "ORDER BY facilities.name,facilities.code")
   @Results(value = {
           @Result(property = "geographicZone", column = "geographicZoneId", javaType = Integer.class,
                   one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapperExtension.getGeographicZoneById_Ext")),
