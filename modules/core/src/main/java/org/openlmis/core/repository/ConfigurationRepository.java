@@ -8,6 +8,7 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Configuration;
+import org.openlmis.core.domain.ConfigurationSetting;
 import org.openlmis.core.repository.mapper.ConfigurationSettingMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,15 +26,15 @@ public class ConfigurationRepository {
     this.mapper = configurationSettingMapper;
   }
 
-  public Configuration getByKey(String  key) {
+  public ConfigurationSetting getByKey(String  key) {
      return mapper.getByKey(key);
   }
 
-  public List<Configuration> getAll(){
+  public List<ConfigurationSetting> getAll(){
     return mapper.getAll();
   }
 
-  public void setValue(Configuration config){
+  public void setValue(ConfigurationSetting config){
     mapper.updateValue(config);
   }
 }

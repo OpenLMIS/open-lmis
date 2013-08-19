@@ -2,6 +2,7 @@ package org.openlmis.report;
 
 import lombok.*;
 import org.openlmis.core.domain.Configuration;
+import org.openlmis.core.domain.ConfigurationSetting;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.UserService;
@@ -132,7 +133,7 @@ public class ReportManager {
         params.put(Constants.REPORT_SUB_TITLE, report.getSubTitle());
         params.put(Constants.REPORT_VERSION, report.getVersion());
         params.put(Constants.REPORT_OUTPUT_OPTION, outputOption.toString());
-        Configuration configuration =  configurationService.getByKey(Constants.LOGO_FILE_NAME_KEY);
+        ConfigurationSetting configuration =  configurationService.getByKey(Constants.LOGO_FILE_NAME_KEY);
         params.put(Constants.LOGO,this.getClass().getClassLoader().getResourceAsStream(configuration != null ? configuration.getValue() : "logo.png"));
         params.put(Constants.GENERATED_BY, generatedBy);
         configuration =  configurationService.getByKey(Constants.OPERATOR_LOGO_FILE_NAME_KEY);
