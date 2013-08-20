@@ -272,6 +272,8 @@ public class UserMapperIT {
 
     user.setActive(false);
 
+    user.setVerified(true);
+
     userMapper.update(user);
 
     User fetchedUser = userMapper.getById(user.getId());
@@ -279,6 +281,7 @@ public class UserMapperIT {
     assertThat(fetchedUser.getFirstName(), is(user.getFirstName()));
     assertThat(fetchedUser.getLastName(), is(user.getLastName()));
     assertThat(fetchedUser.getActive(), is(false));
+    assertThat(fetchedUser.getVerified(), is(true));
   }
 
   @Test
