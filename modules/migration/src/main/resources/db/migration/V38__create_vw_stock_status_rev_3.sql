@@ -1,4 +1,4 @@
-DROP VIEW vw_stock_status;
+--DROP VIEW vw_stock_status;
 
 CREATE OR REPLACE VIEW vw_stock_status AS 
 SELECT DISTINCT
