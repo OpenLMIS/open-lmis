@@ -61,7 +61,7 @@ public class RoleRightsServiceTest {
 
 
   @Test
-  public void shouldGetAllRightsInAlphabeticalOrder() throws Exception {
+  public void shouldGetAllRightsByDisplayOrder() throws Exception {
     List<Right> allRights = new ArrayList<>(new RoleRightsService().getAllRights());
     List<Right> alphabeticalRights = asList(CONFIGURE_RNR,
       MANAGE_FACILITY,
@@ -79,7 +79,8 @@ public class RoleRightsServiceTest {
       CONVERT_TO_ORDER,
       CREATE_REQUISITION,
       VIEW_REQUISITION,
-      VIEW_ORDER);
+      VIEW_ORDER,
+      MANAGE_EDI);
 
     assertThat(allRights, is(alphabeticalRights));
   }

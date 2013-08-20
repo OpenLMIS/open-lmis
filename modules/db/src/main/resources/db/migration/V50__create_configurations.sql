@@ -1,12 +1,10 @@
 DROP TABLE IF EXISTS configurations;
-CREATE TYPE date_patterns AS ENUM ('ddMMyy', 'ddMMyyyy', 'MMddyy', 'MMddyyyy', 'yyyyMMdd');
-CREATE TYPE period_patterns AS ENUM ('MMyy', 'MMyyyy', 'yyMM', 'yyyyMM');
 
 CREATE TABLE configurations (
-  orderFilePrefix   VARCHAR(8)      NOT NULL,
-  headerInOrderFile BOOLEAN         NOT NULL,
-  orderDatePattern  date_patterns   NOT NULL,
-  periodDatePattern period_patterns NOT NULL,
+  orderFilePrefix   VARCHAR(8)  NOT NULL,
+  headerInOrderFile BOOLEAN     NOT NULL,
+  orderDatePattern  VARCHAR(25) NOT NULL,
+  periodDatePattern VARCHAR(25) NOT NULL,
   createdBy         INTEGER,
   createdDate       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedBy        INTEGER,

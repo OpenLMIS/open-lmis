@@ -12,8 +12,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Configuration;
+import org.openlmis.core.repository.ConfigurationRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderFileColumn;
+import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -34,14 +38,17 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class OrderServiceTest {
 
   @Mock
+  private ConfigurationRepository configurationRepository;
+
+  @Mock
   private OrderRepository orderRepository;
+
   @Mock
   private RequisitionService requisitionService;
 
   @SuppressWarnings("unuse")
   @InjectMocks
   private OrderService orderService;
-
 
   @Test
   public void shouldSaveOrder() throws Exception {
@@ -125,5 +132,18 @@ public class OrderServiceTest {
     assertThat(order.getRnr().getFullSupplyLineItems().size(), is(0));
     assertThat(order.getRnr().getNonFullSupplyLineItems().size(), is(0));
     assertThat(expectedOrder, is(order));
+  }
+
+  @Test
+  public void shouldGetOrderFileTemplateWithConfiguration() throws Exception {
+    Configuration configuration = new Configuration();
+    List<OrderFileColumn> orderFileColumns = new ArrayList<>();
+    OrderFileTemplateDTO expectedOrderFileTemplateDTO = new OrderFileTemplateDTO(configuration, orderFileColumns);
+    when(configurationRepository.getConfiguration()).thenReturn(configuration);
+    when(orderRepository.getOrderFileTemplate()).thenReturn(orderFileColumns);
+    OrderFileTemplateDTO actualOrderFileTemplateDTO = orderService.getOrderFileTemplateDTO();
+    verify(configurationRepository).getConfiguration();
+    verify(orderRepository).getOrderFileTemplate();
+    assertThat(actualOrderFileTemplateDTO, is(expectedOrderFileTemplateDTO));
   }
 }

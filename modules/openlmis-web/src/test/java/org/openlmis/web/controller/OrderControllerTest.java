@@ -6,9 +6,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
+import org.openlmis.core.domain.Configuration;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.dto.OrderDTO;
+import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.web.form.RequisitionList;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -85,5 +88,15 @@ public class OrderControllerTest {
     Order order = (Order) modelAndView.getModel().get(ORDER);
     assertThat(order, is(expectedOrder));
     verify(orderService).getOrderForDownload(orderId);
+  }
+
+  @Test
+  public void shouldGetOrderFileTemplateDTO() throws Exception {
+    OrderFileTemplateDTO expectedOrderFileTemplateDTO =
+      new OrderFileTemplateDTO(new Configuration(), new ArrayList<OrderFileColumn>());
+    when(orderService.getOrderFileTemplateDTO()).thenReturn(expectedOrderFileTemplateDTO);
+    OrderFileTemplateDTO actualOrderFileTemplateDTO = orderController.getOrderFileTemplateDTO();
+    verify(orderService).getOrderFileTemplateDTO();
+    assertThat(actualOrderFileTemplateDTO, is(expectedOrderFileTemplateDTO));
   }
 }

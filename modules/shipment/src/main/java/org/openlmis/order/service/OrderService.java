@@ -7,7 +7,10 @@
 package org.openlmis.order.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.repository.ConfigurationRepository;
 import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderFileColumn;
+import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -23,6 +26,8 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderService {
 
+  @Autowired
+  private ConfigurationRepository configurationRepository;
   @Autowired
   private OrderRepository orderRepository;
   @Autowired
@@ -81,5 +86,9 @@ public class OrderService {
 
   public void updateFulfilledAndShipmentIdForOrders(List<Order> orders) {
     orderRepository.updateStatusAndShipmentIdForOrder(orders);
+  }
+
+  public OrderFileTemplateDTO getOrderFileTemplateDTO() {
+    return new OrderFileTemplateDTO(configurationRepository.getConfiguration(), orderRepository.getOrderFileTemplate());
   }
 }

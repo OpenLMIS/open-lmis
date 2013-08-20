@@ -1,4 +1,4 @@
-INSERT INTO configurations VALUES ('O', FALSE, 'ddMMyyyy', 'MMyyyy');
+INSERT INTO configurations VALUES ('O', FALSE, 'dd/MM/yy', 'MM/yy');
 
 INSERT INTO order_file_template (dataFieldLabel, columnLabel, position) VALUES ('header.order.number', 'Order number', 1);
 INSERT INTO order_file_template (dataFieldLabel, columnLabel, position) VALUES ('create.facility.code', 'Facility code', 2);

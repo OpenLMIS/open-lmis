@@ -8,6 +8,7 @@ package org.openlmis.web.controller;
 
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.dto.OrderDTO;
+import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.web.form.RequisitionList;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -53,5 +54,11 @@ public class OrderController extends BaseController {
     modelAndView = new ModelAndView("orderCSV");
     modelAndView.addObject(ORDER, order);
     return modelAndView;
+  }
+
+  @RequestMapping(value = "/order-file-template", method = GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_EDI')")
+  public OrderFileTemplateDTO getOrderFileTemplateDTO() {
+    return orderService.getOrderFileTemplateDTO();
   }
 }
