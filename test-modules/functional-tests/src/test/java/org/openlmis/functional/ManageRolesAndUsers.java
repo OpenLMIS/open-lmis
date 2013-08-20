@@ -96,7 +96,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     @Then("^I should see restore user \"([^\"]*)\" message$")
     public void verifyRestoredUser(String user) throws Exception {
         UserPage userPage = new UserPage(testWebDriver);
-        userPage.verifyMessage("User \''"+ user +"\'' has been restored");
+        userPage.verifyMessage("User \''"+ user +"\'' has been enabled");
     }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
