@@ -381,7 +381,7 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.selectValueFromPeriod(period+totalNumberOfPeriods);
     distributionPage.clickInitiateDistribution();
-    //distributionPage.verifyFacilityNotSupportedMessage(programFirst,deliveryZoneNameFirst);
+    distributionPage.verifyFacilityNotSupportedMessage(programFirst,deliveryZoneNameFirst);
   }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
