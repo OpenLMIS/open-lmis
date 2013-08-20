@@ -105,7 +105,7 @@
                             <label for="brand" openlmis-message="label.refrigerator.brand">
                                 <span class="label-required">*</span>
                             </label>
-                            <input type="text" id="brand" ng-model="newRefrigerator.brand"/>
+                            <input type="text" id="brand" ng-model="newRefrigerator.brand" maxlength="20"/>
                         </div>
                     </div>
 
@@ -114,7 +114,7 @@
                             <label for="model" openlmis-message="label.refrigerator.model">
                                 <span class="label-required">*</span>
                             </label>
-                            <input type="text" id="model" ng-model="newRefrigerator.model"/>
+                            <input type="text" id="model" ng-model="newRefrigerator.model" maxlength="20"/>
                         </div>
                     </div>
 
@@ -123,7 +123,8 @@
                             <label for="manufacturerSerialNumber" openlmis-message="label.refrigerator.serial.number">
                                 <span class="label-required">*</span>
                             </label>
-                            <input type="text" id="manufacturerSerialNumber" ng-model="newRefrigerator.serialNumber"/>
+                            <input type="text" id="manufacturerSerialNumber" maxlength="30"
+                                   ng-model="newRefrigerator.serialNumber"/>
 
                             <div ng-show="isDuplicateSerialNumber"
                                  openlmis-message="error.duplicate.serial.number"></div>
