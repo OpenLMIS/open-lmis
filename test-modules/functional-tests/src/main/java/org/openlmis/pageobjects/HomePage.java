@@ -392,6 +392,7 @@ public class HomePage extends Page {
   }
 
   public ApprovePage navigateToApprove() throws IOException {
+    testWebDriver.waitForElementToAppear(requisitionMenuItem);
     SeleneseTestNgHelper.assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(approveLink);
