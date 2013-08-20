@@ -172,7 +172,7 @@ public class AgentFeed extends TestCaseHelper {
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
-    dbWrapper.updateFacilityFieldBYCode("datareportable", "false", DEFAULT_AGENT_CODE);
+    dbWrapper.updateFacilityFieldBYCode("enabled", "false", DEFAULT_AGENT_CODE);
 
     ResponseEntity responseEntityDataReportableFalse = client.SendJSON(getJsonStringFor(agentJson),
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
@@ -329,7 +329,7 @@ public class AgentFeed extends TestCaseHelper {
     String active = "active";
     String virtualfacility = "virtualfacility";
     String sdp = "sdp";
-    String datareportable = "datareportable";
+    String datareportable = "enabled";
 
 
     HttpClient client = new HttpClient();
