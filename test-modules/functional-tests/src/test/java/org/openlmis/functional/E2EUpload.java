@@ -580,7 +580,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Local Folder Path of Record No");
 
-    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Incorrect_Data_Length.csv") ;
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Incorrect_Data_length.csv") ;
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Incorrect data length");
 
