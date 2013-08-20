@@ -80,6 +80,9 @@ public class E2EUpload extends TestCaseHelper {
     verifyInvalidFacilityUpload(uploadPage);
     verifyValidFacilityUpload(uploadPage);
 
+    verifyInValidFacilityFTPDetailsUpload(uploadPage);
+    verifyValidFacilityFTPDetailsUpload(uploadPage);
+
     verifyInvalidFacilityTypeToProductMappingUpload(uploadPage);
     verifyValidFacilityTypeToProductMappingUpload(uploadPage);
     dbWrapper.allocateFacilityToUser(userId, "F10");
@@ -118,9 +121,6 @@ public class E2EUpload extends TestCaseHelper {
 
     verifyInValidDeliveryZonesWarehousesUpload(uploadPage);
     verifyValidDeliveryZonesWarehousesUpload(uploadPage);
-
-    verifyInValidFacilityFTPDetailsUpload(uploadPage);
-    verifyValidFacilityFTPDetailsUpload(uploadPage);
 
   }
 
@@ -555,6 +555,42 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Duplicate.csv") ;
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate Facility Code in Record No");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Facility_Code.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Facility Code of Record No");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Host.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Host of Record No");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Password.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Password of Record No");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Port.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Port of Record No");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Username.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Username of Record No");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Path.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Local Folder Path of Record No");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Incorrect_Data_Length.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Incorrect data length");
+
+    uploadPage.uploadFacilityFTPDetails("UnassignedRequisitionGroupReport.jrxml") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Incorrect file format. Please upload Facility FTP details data as a .csv file");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Delivery_Zone_Members.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Headers in upload file");
   }
 
   private void verifyValidFacilityFTPDetailsUpload(UploadPage uploadPage) throws IOException, SQLException {
