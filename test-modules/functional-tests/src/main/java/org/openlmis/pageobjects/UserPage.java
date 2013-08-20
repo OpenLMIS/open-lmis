@@ -175,7 +175,10 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@class='btn btn-primary enable-button']")
   private static WebElement enableButton;
 
-  public UserPage(TestWebDriver driver) throws IOException {
+  @FindBy(how = How.XPATH, using = "//form[@id='create-user']/div/div[1]/div[7]/div/ng-switch/span")
+  private static WebElement verifiedLabel;
+
+    public UserPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);
@@ -477,4 +480,8 @@ public class UserPage extends Page {
   public String getAddedDeliveryZoneProgramLabel() {
     return addedDeliveryZoneProgramLabel.getText();
   }
+
+    public String getVerifiedLabel() {
+        return verifiedLabel.getText();
+    }
 }

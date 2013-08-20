@@ -270,10 +270,13 @@ Feature: Smoke Tests
     When I create a user:
       | Email                   | Firstname | Lastname | UserName |
       | Dummy_User@openlmis.com | Dummy     | User     | Dummy    |
-    And I disable user "Dummy User"
+    Then I should see user not verified
+    When I disable user "Dummy User"
     Then I should see disable user "Dummy User" message
-    And I restore user "Dummy User"
-    Then I should see restore user "Dummy User" message
+    When I enable user "Dummy User"
+    Then I should see enable user "Dummy User" message
+    When I verify user email "Dummy_User@openlmis.com"
+    Then I should see user verified
 
   @smoke
   @ie2

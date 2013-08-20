@@ -84,7 +84,19 @@ public class ManageRolesAndUsers extends TestCaseHelper {
         userPage.verifyMessage("User \''" + user + "\'' has been disabled");
     }
 
-    @When("^I restore user \"([^\"]*)\"$")
+    @Then("^I should see user not verified$")
+    public void notVerifiedUser() throws Exception {
+        UserPage userPage = new UserPage(testWebDriver);
+        assertEquals(userPage.getVerifiedLabel(),"No");
+    }
+
+    @Then("^I should see user verified$")
+    public void VerifiedUser() throws Exception {
+        UserPage userPage = new UserPage(testWebDriver);
+        assertEquals(userPage.getVerifiedLabel(),"Yes");
+    }
+
+    @When("^I enable user \"([^\"]*)\"$")
     public void restoreUser(String user) throws Exception {
         HomePage homePage = new HomePage(testWebDriver);
         UserPage userPage = homePage.navigateToUser();
@@ -93,10 +105,15 @@ public class ManageRolesAndUsers extends TestCaseHelper {
         userPage.clickEnableButton();
     }
 
-    @Then("^I should see restore user \"([^\"]*)\" message$")
+    @Then("^I should see enable user \"([^\"]*)\" message$")
     public void verifyRestoredUser(String user) throws Exception {
         UserPage userPage = new UserPage(testWebDriver);
         userPage.verifyMessage("User \''"+ user +"\'' has been enabled");
+    }
+
+    @When("^I verify user email \"([^\"]*)\"$")
+    public void verifyUserEmail(String email) throws Exception {
+        dbWrapper.updateUser("abc123", email);
     }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
