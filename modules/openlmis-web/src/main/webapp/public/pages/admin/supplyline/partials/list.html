@@ -15,23 +15,25 @@
    -->
     <div>
         <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
-        <div class="row-fluid list-header">
-            <div class="span1" style="float: left; width: 60px;"></div>
-            <div class="span1" style="float: left; width: 40px;"></div>
-            <div class="span2">Program</div>
-            <div class="span2">Supplying Facility</div>
-            <div class="span2">Supervisory Node</div>
-            <div class="span2">Description</div>
+        <div  class="list-header-container">
+            <div class="row-fluid list-header">
+                <div class="span1" style="float: left; width: 60px;">&nbsp;</div>
+                <div class="span1" style="float: left; width: 60px;">&nbsp;</div>
+                <div class="span2" style="overflow: visible;">Program</div>
+                <div class="span2" style="overflow: visible;">Supplying Facility</div>
+                <div class="span2" style="overflow: visible;">Supervisory Node</div>
+                <div class="span3" style="overflow: visible;">Description</div>
+            </div>
         </div>
 
         <form class="supplyline-form" id="createSupplylineForm" ng-show="newSupplylineMode" name="createSupplylineForm"
               ng-submit="createSupplyline()" novalidate>
             <div ng-class="formActive">
                 <div class="row-fluid list-row">
-                    <div class="span1"></div>
+
                     <div class="span3">
-                        <select name="programid" id="programid" ng-model="newSupplyline.programid"
-                                ng-options="pg.id as pg.name for pg in programs" ng:required="true"
+                        <select name="programid" id="programid" ng-model="newSupplyline.program.id"
+                                ng-options="pg.id as pg.name for pg in programs" ng-required="true"
                                 ng-disabled="supplyline.dataReportable == 'false'">
                             <option value="">--- Select Program ---</option>
                         </select>
@@ -43,8 +45,8 @@
                     </div>
                     <div class="span3">
                         <select name="supplyingfacilityid" id="supplyingfacilityid"
-                                ng-model="newSupplyline.supplyingfacilityid"
-                                ng-options="f.id as f.name for f in facilities" ng:required="true"
+                                ng-model="newSupplyline.supplyingFacility.id"
+                                ng-options="f.id as f.name for f in facilities" ng-required="true"
                                 ng-disabled="supplyline.dataReportable == 'false'">
                             <option value="">--- Select Supplying Facility ---</option>
                         </select>
@@ -57,8 +59,8 @@
 
                     <div class="span3">
                         <select name="supervisorynode" id="supervisorynode"
-                                ng-model="newSupplyline.supervisorynodeid"
-                                ng-options="sn.id as sn.name for sn in supervisoryNodes" ng:required="true"
+                                ng-model="newSupplyline.supervisoryNode.id"
+                                ng-options="sn.id as sn.name for sn in supervisoryNodes" ng-required="true"
                                 ng-disabled="supplyline.dataReportable == 'false'">
                             <option value="">--- Select Supervisory Node ---</option>
                         </select>
@@ -69,8 +71,8 @@
 
                     </div>
 
-                    <div class="span2">
-                        <input id="description" name="description" type="text" ng:required="true"
+                    <div class="span3">
+                        <input id="description" name="description" type="text" ng-required="true"
                                ng-model="newSupplyline.description"
                                maxlength="15" placeholder="Description"/>
                         <span class="label-required">*</span>
@@ -83,7 +85,7 @@
 
                 </div>
                 <div class="row-fluid supplyline-button-row">
-                    <div class="span1"></div>
+                    <div class="span1">&nbsp;</div>
                     <div class="span2">
                         <input type="submit" class="btn btn-primary btn-small" openlmis-message="button.create"/>
                         <input type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel"
@@ -107,18 +109,12 @@
                 <div class="row-fluid list-row" ng-show="supplylinesBackupMap[supplyline.id].edit">
 
             <!-- edit trigger -->
-                    <div class="span1">
-                        <input type="button" ng-hide="supplylinesBackupMap[supplyline.id].edit"
-                               id="editBtn_{{$index}}"
-                               class="btn btn-mini pull-right"
-                               value="Edit"
-                               ng-click="startSupplylineEdit(supplyline, backupSupplylineRow); supplylinesBackupMap[supplyline.id].edit=true;"/>
-                    </div>
-                    <div class="span3" style="overflow: visible;" >
-                        <span ng-hide="supplylinesBackupMap[supplyline.id].edit" ng-bind="supplyline.programid"></span>
+
+                    <div class="span3" >
+                        <span ng-hide="supplylinesBackupMap[supplyline.id].edit" ng-bind="supplyline.program.id"></span>
                         <select name="programid" id="programid_{{$index}}"
-                                ng-model="supplyline.programid"
-                                ng-options="pg.id as pg.name for pg in programs" ng:required="true"
+                                ng-model="supplyline.program.id"
+                                ng-options="pg.id as pg.name for pg in programs" ng-required="true"
                                 ng-disabled="supplyline.dataReportable == 'false'"
                                 ng-show="supplylinesBackupMap[supplyline.id].edit">
                             <option value="">--- Select Program ---</option>
@@ -130,11 +126,11 @@
                     </div>
 
 
-                    <div class="span3" style="overflow: visible;">
-                        <span ng-hide="supplylinesBackupMap[supplyline.id].edit" ng-bind="supplyline.supplyingfacilityid"></span>
+                    <div class="span3">
+                        <span ng-hide="supplylinesBackupMap[supplyline.id].edit" ng-bind="supplyline.supplyingFacility.id"></span>
                         <select name="supplyingfacilityid" id="supplyingfacilityid_{{$index}}"
-                                ng-model="supplyline.supplyingfacilityid"
-                                ng-options="f.id as f.name for f in facilities" ng:required="true"
+                                ng-model="supplyline.supplyingFacility.id"
+                                ng-options="f.id as f.name for f in facilities" ng-required="true"
                                 ng-disabled="supplyline.dataReportable == 'false'"
                                 ng-show="supplylinesBackupMap[supplyline.id].edit">>
                             <option value="">--- Select Supplying Facility ---</option>
@@ -145,11 +141,11 @@
 
                     </div>
 
-                    <div class="span3" style="overflow: visible;">
-                        <span ng-hide="supplylinesBackupMap[supplyline.id].edit" ng-bind="supplyline.supervisorynodeid"></span>
+                    <div class="span3">
+                        <span ng-hide="supplylinesBackupMap[supplyline.id].edit" ng-bind="supplyline.supervisoryNode.id"></span>
                         <select name="supervisorynode" id="supervisorynode_{{$index}}"
-                                ng-model="supplyline.supervisorynodeid"
-                                ng-options="sn.id as sn.name for sn in supervisoryNodes" ng:required="true"
+                                ng-model="supplyline.supervisoryNode.id"
+                                ng-options="sn.id as sn.name for sn in supervisoryNodes" ng-required="true"
                                 ng-disabled="supplyline.dataReportable == 'false'"
                                 ng-show="supplylinesBackupMap[supplyline.id].edit">>
                             <option value="">--- Select Supervisory Node ---</option>
@@ -190,8 +186,8 @@
 
     <div ng-show="supplylineLoaded()">
 
-        <div ng-repeat="sl in supplylineslist" class="row-fluid list-row" ng-hide="supplylinesBackupMap[sl.id].edit">
-            <div class="span1" style="float: left; width: 60px;">
+        <div ng-repeat="sl in supplylines" class="row-fluid list-row" ng-hide="supplylinesBackupMap[sl.id].edit">
+            <div class="span1"  style="float: left; width: 60px;">
                 <input type="button" ng-hide="supplylinesBackupMap[sl.id].edit"
                        id="lstEditBtn_{{$index}}"
                        class="btn btn-mini pull-right"
@@ -200,7 +196,7 @@
 
            </div>
 
-            <div class="span1" style="float: left; width: 40px;">
+            <div class="span1" style="float: left; width: 60px;">
                 <input type="button" ng-hide="supplylinesBackupMap[sl.id].deleted"
                        id="lstDeleteBtn_{{$index}}"
                        class="btn btn-mini pull-right"
@@ -209,10 +205,10 @@
 
             </div>
 
-            <div id="lstprogram_{{$index}}" class="span2" style="overflow: visible;"> {{sl.program}}</div>
-            <div id="lstfacility_{{$index}}" class="span2" style="overflow: visible;"> {{sl.facility}}</div>
-            <div id="lstsupervisorynode_{{$index}}" class="span2" style="overflow: visible;"> {{sl.supervisorynode}}</div>
-            <div id="lstdescription_{{$index}}" class="span2" style="overflow: visible;"> {{sl.description}}</div>
+            <div id="lstprogram_{{$index}}" class="span2" style="overflow: visible;"> {{sl.program.name}}</div>
+            <div id="lstfacility_{{$index}}" class="span2" style="overflow: visible;"> {{sl.supplyingFacility.name}}</div>
+            <div id="lstsupervisorynode_{{$index}}" class="span2" style="overflow: visible;"> {{sl.supervisoryNode.name}}</div>
+            <div id="lstdescription_{{$index}}" class="span3" style="overflow: visible;"> {{sl.description}}</div>
         </div>
     </div>
 </div>
