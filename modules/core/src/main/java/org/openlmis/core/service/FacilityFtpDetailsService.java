@@ -28,7 +28,7 @@ public class FacilityFtpDetailsService {
     facility.setCode(facilityFtpDetails.getFacilityCode());
     Facility existingFacility = facilityService.getByCode(facility);
     if (existingFacility == null) {
-      throw new DataException("error.facility.does.not.exist");
+      throw new DataException("error.facility.code.invalid");
     }
     if (facilityFtpDetails.getId() != null) {
       update(facilityFtpDetails);

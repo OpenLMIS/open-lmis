@@ -74,7 +74,7 @@ public class FacilityFtpDetailsServiceTest {
     when(facilityService.getByCode(facility)).thenReturn(null);
 
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("error.facility.does.not.exist");
+    expectedEx.expectMessage("error.facility.code.invalid");
 
     service.save(facilityFtpDetails);
 
