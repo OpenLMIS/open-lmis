@@ -11,11 +11,6 @@ function RefrigeratorController($scope, $dialog, messageService, refrigerators, 
   $scope.selectedFacilityId = $routeParams.facility;
   $scope.edit = {};
 
-  $scope.closeRefrigeratorModal = function () {
-    $scope.addRefrigeratorModal = false;
-    $scope.newRefrigerator = undefined;
-  }
-
   $scope.showAddRefrigeratorModal = function () {
     $scope.addRefrigeratorModal = true;
     $scope.newRefrigerator = null;
@@ -33,16 +28,23 @@ function RefrigeratorController($scope, $dialog, messageService, refrigerators, 
         $scope.edit[key] = false;
       }
     })
-  }
+  };
 
   $scope.addRefrigeratorToStore = function () {
+    var exists = _.find($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings, function (reading) {
+      return reading.refrigerator.serialNumber.toLowerCase() === $scope.newRefrigerator.serialNumber.toLowerCase();
+    });
+    if (exists) {
+      $scope.isDuplicateSerialNumber = true;
+      return;
+    }
     $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings.push({'refrigerator': $scope.newRefrigerator});
-    IndexedDB.put('distributions', distribution, {}, {}, {});
-    $scope.addRefrigeratorModal = false;
-  }
+    IndexedDB.put('distributions', $scope.distribution);
+    $scope.addRefrigeratorModal = $scope.isDuplicateSerialNumber = $scope.newRefrigerator = undefined;
+  };
 
-  $scope.validateDuplicateSerialNumber = function() {
-    if($scope.newRefrigerator!=null)
+  $scope.validateDuplicateSerialNumber = function () {
+    if ($scope.newRefrigerator != null)
       $scope.serialNum = $scope.newRefrigerator.serialNumber;
     return getRefrigeratorIndex();
   }
@@ -66,7 +68,7 @@ function RefrigeratorController($scope, $dialog, messageService, refrigerators, 
   function getRefrigeratorIndex() {
     var position = null;
     angular.forEach($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings, function (refrigeratorReading, index) {
-      if ($scope.serialNum!=null && $scope.serialNum == refrigeratorReading.refrigerator.serialNumber) {
+      if ($scope.serialNum != null && $scope.serialNum == refrigeratorReading.refrigerator.serialNumber) {
         position = index;
       }
     });

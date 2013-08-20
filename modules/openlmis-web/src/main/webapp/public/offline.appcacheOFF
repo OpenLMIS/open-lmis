@@ -45,6 +45,7 @@ CACHE:
 
 
 /public/js/distribution/module/distribution-module.js
+/public/js/distribution/migrations.js
 /public/js/distribution/model/distribution.js
 /public/js/distribution/controller/distribution-list-controller.js
 /public/js/distribution/service/shared-distributions.js
@@ -60,7 +61,7 @@ CACHE:
 /public/pages/logistics/distribution/partials/refrigerator.html
 
 
-/public/js/shared/services/indexed-db.js
+/public/lib/indexed-db-angular-service/js/services/indexed-db.js
 /public/js/shared/services/authorization-service.js
 /public/js/shared/services/navigate-back-service.js
 /public/js/shared/controller/header-controller.js

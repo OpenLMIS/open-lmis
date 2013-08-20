@@ -127,14 +127,15 @@
                 <span class="label-required">*</span>
               </label>
               <input type="text" id="manufacturerSerialNumber" ng-model="newRefrigerator.serialNumber"/>
+              <div ng-show="isDuplicateSerialNumber" openlmis-message="error.duplicate.serial.number"></div>
             </div>
           </div>
         </div>
-        <div ng-show="validateDuplicateSerialNumber()!=null" openlmis-message="error.duplicate.serial.number"/>
 
         <div class="modal-footer">
-          <a href="" id="done-button" class="btn btn-primary" ng-click="addRefrigeratorToStore()" ng-disabled="newRefrigerator.brand==null|| newRefrigerator.model==null || newRefrigerator.serialNumber==null" openlmis-message="button.done"></a>
-          <a href="" class="btn btn-cancel" ng-click="closeRefrigeratorModal()" openlmis-message="button.cancel"></a>
+          <input type="button" id="done-button" class="btn btn-primary" ng-click="addRefrigeratorToStore()" openlmis-message="button.done"
+                 ng-disabled="!newRefrigerator.brand || !newRefrigerator.model || !newRefrigerator.serialNumber" />
+          <input type="button" class="btn btn-cancel" ng-click="addRefrigeratorModal = false;" openlmis-message="button.cancel"/>
         </div>
 
       </div>
