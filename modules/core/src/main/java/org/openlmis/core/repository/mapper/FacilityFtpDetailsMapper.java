@@ -25,7 +25,7 @@ public interface FacilityFtpDetailsMapper {
 
   @Update({"UPDATE facility_ftp_details SET serverHost = #{serverHost}, serverPort = #{serverPort}, userName = #{userName}, ",
     "password = #{password}, localFolderPath = #{localFolderPath}, ",
-    "modifiedBy = #{modifiedBy} WHERE id = #{id}"})
+    "modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id = #{id}"})
   void update(FacilityFtpDetails facilityFtpDetails);
 
 }
