@@ -108,9 +108,9 @@ public class FacilityFeed extends TestCaseHelper {
     DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(date_time);
     deleteFacilityPage.clickFacilityList(date_time);
-    deleteFacilityPage.deleteFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-    deleteFacilityPage.verifyDeletedFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-    deleteFacilityPage.restoreFacility();
+    deleteFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    deleteFacilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    deleteFacilityPage.enableFacility();
     responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");

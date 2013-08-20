@@ -548,11 +548,11 @@
       <input type="submit" id="save-button" class="btn btn-primary save-button" openlmis-message="button.save"/>
       <input type="button" class="btn btn-primary enable-button"
              ng-show="facility.id!=null && facility.enabled == 'false'"
-             ng-click="showConfirmFacilityRestore()"
+             ng-click="showConfirmFacilityEnable()"
              openlmis-message="button.enable"/>
       <input type="button" class="btn btn-danger delete-button"
              ng-show="facility.id!=null && facility.enabled == 'true'"
-             ng-click="showConfirmFacilityDeleteWindow()" openlmis-message="button.disable" />
+             ng-click="showConfirmFacilityDisableWindow()" openlmis-message="button.disable" />
     </div>
 
 

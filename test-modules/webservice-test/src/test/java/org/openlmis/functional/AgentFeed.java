@@ -109,10 +109,10 @@ public class AgentFeed extends TestCaseHelper {
     DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(vendorCode);
     deleteFacilityPage.clickFacilityList(vendorCode);
-    deleteFacilityPage.deleteFacility(vendorCode, DEFAULT_AGENT_NAME);
+    deleteFacilityPage.disableFacility(vendorCode, DEFAULT_AGENT_NAME);
 
-    deleteFacilityPage.verifyDeletedFacility(vendorCode, DEFAULT_AGENT_NAME);
-    HomePage homePageRestore = deleteFacilityPage.restoreFacility();
+    deleteFacilityPage.verifyDisabledFacility(vendorCode, DEFAULT_AGENT_NAME);
+    HomePage homePageRestore = deleteFacilityPage.enableFacility();
 
     DeleteFacilityPage deleteFacilityPageRestore = homePageRestore.navigateSearchFacility();
     deleteFacilityPageRestore.searchFacility(vendorCode);

@@ -172,8 +172,8 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@class='btn btn-danger delete-button']")
   private static WebElement disableButton;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Restore']")
-  private static WebElement restoreButton;
+  @FindBy(how = How.XPATH, using = "//input[@class='btn btn-primary enable-button']")
+  private static WebElement enableButton;
 
   public UserPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -409,32 +409,10 @@ public class UserPage extends Page {
     clickOk();
   }
 
-  public void verifyFieldsDisabled() {
-    assertFalse("Username field not disabled.", userNameField.isEnabled());
-    assertFalse("Firstname field not disabled.", firstNameField.isEnabled());
-    assertFalse("Lastname field not disabled.", lastNameField.isEnabled());
-    assertFalse("Email field not disabled.", emailField.isEnabled());
-    assertFalse("Admin role field not disabled.", adminRolesInputField.isEnabled());
-    assertFalse("Role input field not disabled.", rolesInputField.isEnabled());
-    assertFalse("Deliveryzone role field not disabled.", rolesInputFieldDeliveryZone.isEnabled());
-    assertFalse("My Facility role field not disabled.", rolesInputFieldMyFacility.isEnabled());
-  }
-
-  public void clickRestoreButton() {
-    testWebDriver.waitForElementToAppear(restoreButton);
-    restoreButton.click();
+  public void clickEnableButton() {
+    testWebDriver.waitForElementToAppear(enableButton);
+    enableButton.click();
     clickOk();
-  }
-
-  public void verifyFieldsEnabled() {
-    assertTrue("Username field not enabled.", userNameField.isEnabled());
-    assertTrue("Firstname field not enabled.", firstNameField.isEnabled());
-    assertTrue("Lastname field not enabled.", lastNameField.isEnabled());
-    assertTrue("Email field not enabled.", emailField.isEnabled());
-    assertTrue("Admin role field not enabled.", adminRolesInputField.isEnabled());
-    assertTrue("Role input field not enabled.", rolesInputField.isEnabled());
-    assertTrue("Deliveryzone role field not enabled.", rolesInputFieldDeliveryZone.isEnabled());
-    assertTrue("My Facility role field not enabled.", rolesInputFieldMyFacility.isEnabled());
   }
 
   public void verifyRolePresent(String roleName) {

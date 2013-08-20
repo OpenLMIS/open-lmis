@@ -78,22 +78,10 @@ public class ManageRolesAndUsers extends TestCaseHelper {
         userPage.clickDisableButton();
     }
 
-    @Then("^I should see disable fields$")
-    public void verifyDisableFields() throws Exception {
-        UserPage userPage = new UserPage(testWebDriver);
-        userPage.verifyFieldsDisabled();
-    }
-
     @Then("^I should see disable user \"([^\"]*)\" message$")
     public void verifyDisableUser(String user) throws Exception {
         UserPage userPage = new UserPage(testWebDriver);
-        userPage.verifyMessage("User \''"+ user +"\'' has been disabled");
-    }
-
-    @Then("^I should see enable fields$")
-    public void verifyEnableFields() throws Exception {
-        UserPage userPage = new UserPage(testWebDriver);
-        userPage.verifyFieldsEnabled();
+        userPage.verifyMessage("User \''" + user + "\'' has been disabled");
     }
 
     @When("^I restore user \"([^\"]*)\"$")
@@ -102,7 +90,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
         UserPage userPage = homePage.navigateToUser();
         userPage.searchUser(user);
         userPage.clickUserList(user);
-        userPage.clickRestoreButton();
+        userPage.clickEnableButton();
     }
 
     @Then("^I should see restore user \"([^\"]*)\" message$")
@@ -284,7 +272,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
         userPage.focusOnFirstUserLink();
         userPage.verifyDisabledResetPassword();
         userPage.clickEditUser();
-        userPage.clickRestoreButton();
+        userPage.clickEnableButton();
 
         homePage.navigateToUser();
         userPage.searchUser(LAB_IN_CHARGE);
