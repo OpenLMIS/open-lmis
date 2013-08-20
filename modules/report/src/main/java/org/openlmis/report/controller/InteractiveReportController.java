@@ -297,25 +297,26 @@ public class InteractiveReportController  extends BaseController {
     }
 
 
-//
-@RequestMapping(value = "/stockedOut", method = GET, headers = BaseController.ACCEPT_JSON)
-@PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_STOCKED_OUT_REPORT')")
-public Pages getStockedOutReportData( //@PathVariable(value = "reportKey") String reportKey,
-                                      @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                      @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                      // @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
-                                      HttpServletRequest request
-) {
+    //
+    @RequestMapping(value = "/reportdata/stockedOut", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_STOCKED_OUT_REPORT')")
+    public Pages getStockedOutData( //@PathVariable(value = "reportKey") String reportKey,
+                                    @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                    @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                    HttpServletRequest request
+    ) {
 
 
 
-    Report report = reportManager.getReportByKey("stocked_out");
-    List<StockedOutReport> stockedOutFacilityList =
-            (List<StockedOutReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-     int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
+        Report report = reportManager.getReportByKey("stocked_out");
+        List<StockedOutReport> stockedOutReportList =
+                (List<StockedOutReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
+        //int totalRecCount =  stockedOutReportList.size();
+        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
 
-    return new Pages(page,totalRecCount,max,stockedOutFacilityList);
-}
+        return new Pages(page,totalRecCount,max,stockedOutReportList);
+    }
+
 
 
 

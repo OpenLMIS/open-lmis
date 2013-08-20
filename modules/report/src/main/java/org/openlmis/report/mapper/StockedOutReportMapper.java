@@ -27,4 +27,6 @@ public interface StockedOutReportMapper {
                                                  @Param("SortCriteria") Map<String, String[]> SortCriteria ,
                                                  @Param("RowBounds")RowBounds rowBounds);
 
+    @SelectProvider(type=StockedOutReportQueryBuilder.class, method="getTotalCount")
+    public Integer getTotal(Map params);
 }

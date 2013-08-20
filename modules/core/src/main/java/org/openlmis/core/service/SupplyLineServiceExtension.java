@@ -11,6 +11,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.SupplyLineRepository;
 import org.openlmis.core.repository.SupplyLineRepositoryExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,13 @@ import java.util.List;
 
 @Service
 @NoArgsConstructor
-public class SupplyLineServiceExtension extends SupplyLineService{
+public class SupplyLineServiceExtension {
+
     @Autowired
     private SupplyLineRepositoryExtension supplyLineRepositoryExt;
+
+    @Autowired
+    private SupplyLineRepository supplyLineRepository;
 
     public List<SupplyLine> getAllSupplyLine(){
         return supplyLineRepositoryExt.getAllSupplyLine();

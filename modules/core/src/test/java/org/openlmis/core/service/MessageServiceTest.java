@@ -11,7 +11,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.MessageSource;
 
 import java.util.Locale;
+import java.util.Set;
 
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
@@ -72,4 +74,15 @@ public class MessageServiceTest {
 
   }
 
+  @Test
+  public void shouldReturnLocalesCodes() throws Exception {
+    MessageService service = new MessageService(messageSource, "en, pt, fr");
+
+    Set<String> locales = service.getLocales();
+    assertThat(locales.size(), is(3));
+    assertTrue(locales.contains("en"));
+    assertTrue(locales.contains("pt"));
+    assertTrue(locales.contains("fr"));
+
+  }
 }

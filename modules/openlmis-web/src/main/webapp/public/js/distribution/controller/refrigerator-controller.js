@@ -4,9 +4,12 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function RefrigeratorController(IndexedDB, $scope, $route) {
+function RefrigeratorController($scope, $dialog, messageService, refrigerators, distribution, IndexedDB, $routeParams) {
 
-  $scope.refrigeratorReading = null;
+  $scope.refrigerators = refrigerators;
+  $scope.distribution = distribution;
+  $scope.selectedFacilityId = $routeParams.facility;
+  $scope.edit = {};
 
   $scope.closeRefrigeratorModal = function () {
     $scope.addRefrigeratorModal = false;
@@ -18,49 +21,90 @@ function RefrigeratorController(IndexedDB, $scope, $route) {
     $scope.newRefrigerator = null;
   };
 
-  $scope.editRefrigerator = function (refrigerator) {
-    $scope.edit = true;
-    $scope.refrigeratorReading = _.where($scope.refrigeratorReadings, {
-      facilityId: refrigerator.facilityId,
-      distributionId: $scope.distribution.id,
-      refrigeratorSerialNumber: refrigerator.serialNumber
-    })[0];
+  $scope.closeRefrigeratorEdit = function (serialNum) {
+    $scope.edit[serialNum] = false;
   };
 
-  $scope.closeRefrigeratorEdit = function () {
-    $scope.edit = false;
-  };
+  $scope.setEdit = function (serialNum) {
+    $scope.edit[serialNum] = true;
 
-
-  $scope.deleteOtherProblems = function (refrigeratorReading) {
-    if (!refrigeratorReading.problemSinceLastTimed) {
-      for (var key in refrigeratorReading.problems.problemMap) {
-        refrigeratorReading.problems.problemMap[key] = undefined
+    angular.forEach($scope.edit, function (value, key) {
+      if (key != serialNum) {
+        $scope.edit[key] = false;
       }
-      refrigeratorReading.problems.other = undefined;
-    }
-  };
-
-  function fetchReferenceData() {
-    var zpp = $route.current.params.zpp;
-    IndexedDB.transaction(function (connection) {
-      var transaction = connection.transaction(['distributionReferenceData', 'distributions']);
-      var distributionReferenceDataRequest = transaction.objectStore('distributionReferenceData').get(zpp);
-      var by_zpp = transaction.objectStore('distributions').index('index_zpp');
-      by_zpp.get(zpp).onsuccess = function (event) {
-        $scope.distribution = event.target.result;
-        $scope.$apply();
-      };
-      distributionReferenceDataRequest.onsuccess = function (event) {
-        $scope.refrigerators = distributionReferenceDataRequest.result.refrigerators;
-        $scope.refrigeratorReadings = distributionReferenceDataRequest.result.refrigeratorReadings;
-        $scope.$apply();
-      }
-    });
+    })
   }
 
-  fetchReferenceData();
+  $scope.addRefrigeratorToStore = function () {
+    $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings.push({'refrigerator': $scope.newRefrigerator});
+    IndexedDB.put('distributions', distribution, {}, {}, {});
+    $scope.addRefrigeratorModal = false;
+  }
+
+  $scope.validateDuplicateSerialNumber = function() {
+    if($scope.newRefrigerator!=null)
+      $scope.serialNum = $scope.newRefrigerator.serialNumber;
+    return getRefrigeratorIndex();
+  }
+
+  $scope.showDeleteRefrigeratorConfirmationModel = function (serialNum) {
+    var dialogOpts = {
+      id: "deleteRefrigeratorInfo",
+      header: messageService.get('delete.refrigerator.readings.header'),
+      body: messageService.get('delete.refrigerator.readings.confirm')
+    };
+    $scope.serialNum = serialNum;
+    OpenLmisDialog.newDialog(dialogOpts, $scope.deleteRefrigeratorReading, $dialog, messageService);
+  }
+
+  $scope.deleteRefrigeratorReading = function (result) {
+    if (!result) return;
+    $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings.splice(getRefrigeratorIndex(), 1);
+    IndexedDB.put('distributions', distribution, {}, {}, {});
+  }
+
+  function getRefrigeratorIndex() {
+    var position = null;
+    angular.forEach($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings, function (refrigeratorReading, index) {
+      if ($scope.serialNum!=null && $scope.serialNum == refrigeratorReading.refrigerator.serialNumber) {
+        position = index;
+      }
+    });
+    return position;
+  }
+
+  $scope.deleteOtherProblems = function (refrigeratorReading) {
+    if (refrigeratorReading.problemSinceLastTimed || !refrigeratorReading.problems) return;
+
+    for (var key in refrigeratorReading.problems.problemMap) {
+      refrigeratorReading.problems.problemMap[key] = undefined
+    }
+    refrigeratorReading.problems.other = undefined;
+  };
 
 }
+
+RefrigeratorController.resolve = {
+  refrigerators: function ($q, IndexedDB, $route) {
+    var waitOn = $q.defer();
+    var distributionId = $route.current.params.distribution;
+    var facilityId = $route.current.params.facility;
+
+    IndexedDB.get('distributionReferenceData', utils.parseIntWithBaseTen(distributionId), function (event) {
+      waitOn.resolve(_.where(event.target.result.refrigerators, {facilityId: utils.parseIntWithBaseTen(facilityId)}));
+    }, {});
+
+    return waitOn.promise;
+  },
+
+  distribution: function ($q, IndexedDB, $route) {
+    var waitOn = $q.defer();
+    IndexedDB.get('distributions', utils.parseIntWithBaseTen($route.current.params.distribution), function (e) {
+      waitOn.resolve(e.target.result);
+    }, {});
+
+    return waitOn.promise;
+  }
+};
 
 

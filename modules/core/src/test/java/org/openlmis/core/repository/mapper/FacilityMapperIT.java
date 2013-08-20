@@ -461,11 +461,23 @@ public class FacilityMapperIT {
 
     mapper.insert(facility);
 
+    Program program = new Program(1L);
+
+    Date date = new Date();
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported,
+      with(supportedProgram, program),
+      with(supportedFacilityId, facility.getId()),
+      with(dateModified, date)));
+    programSupportedMapper.insert(programSupported);
+
     Facility facilityFromDatabase = mapper.getByCode(facility.getCode());
 
-    assert (facilityFromDatabase.getId()).equals(facility.getId());
-    assert (facilityFromDatabase.getCode()).equals(facility.getCode());
-    assert (facilityFromDatabase.getName()).equals(facility.getName());
+    assertThat(facilityFromDatabase.getId(), is(facility.getId()));
+    assertThat(facilityFromDatabase.getCode(), is(facility.getCode()));
+    assertThat(facilityFromDatabase.getName(), is(facility.getName()));
+    ProgramSupported dbSupportedProgram = facilityFromDatabase.getSupportedPrograms().get(0);
+    assertThat(dbSupportedProgram.getFacilityId(), is(programSupported.getFacilityId()));
   }
 
   @Test

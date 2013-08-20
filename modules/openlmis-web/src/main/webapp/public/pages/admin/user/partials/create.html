@@ -203,7 +203,7 @@
              ng-click="showConfirmUserDisableModal()" openlmis-message="button.disable"></a>
         </div>
         <div class="form-cell button-row" ng-show="(!user.active && user.id!=null)">
-          <input type="button" class="btn btn-danger save-button" openlmis-message="button.restore"
+          <input type="button" class="btn btn-primary save-button" openlmis-message="button.restore"
             ng-click="showConfirmUserRestoreModal()"/>
         </div>
         <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>

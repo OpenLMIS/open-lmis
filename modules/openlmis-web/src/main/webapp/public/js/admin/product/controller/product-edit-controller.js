@@ -15,6 +15,8 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
 
     $scope.title = 'Edit Product';
 
+    // clear the parent confirmation message if there was any
+    $scope.$parent.message = '';
 
     // Programs list
     ReportPrograms.get(function (data) {
@@ -192,7 +194,7 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
         UpdateProduct.update($scope.editProduct, function (data) {
         var returnedProduct = data.product;
             $location.path('');
-            $scope.message = "The product record was successfully updated.";
+            $scope.$parent.message = "The product record was successfully updated.";
         }, function (data) {
             alert(JSON.stringify(data));
             $scope.creationError = data.message;

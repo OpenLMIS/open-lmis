@@ -3,6 +3,7 @@ package org.openlmis.web.model;
 import org.openlmis.core.domain.Configuration;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.ConfigurationSetting;
 
 import java.util.List;
 
@@ -16,6 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 public class ConfigurationDTO {
 
-  private List<Configuration> list;
+  private List<ConfigurationSetting> list;
 
 }

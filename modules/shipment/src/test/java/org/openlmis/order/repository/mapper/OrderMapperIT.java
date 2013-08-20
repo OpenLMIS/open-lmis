@@ -22,6 +22,7 @@ import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
@@ -163,6 +164,22 @@ public class OrderMapperIT {
     assertThat(savedOrder.getRnr().getId(), is(expectedOrder.getRnr().getId()));
   }
 
+  @Test
+  public void shouldGetOrderFileTemplate() throws Exception {
+    List<OrderFileColumn> orderFileColumns = mapper.getOrderFileTemplate();
+    String[] expectedDataFieldLabels = {"header.order.number", "create.facility.code", "header.product.code",
+      "header.quantity.approved", "label.period", "header.order.date"};
+    String[] expectedColumnLabels = {"Order number", "Facility code", "Product code", "Approved quantity",
+      "Period", "Order date"};
+    assertThat(orderFileColumns.size(), is(expectedDataFieldLabels.length));
+    for (int i = 0; i < expectedDataFieldLabels.length; i++) {
+      assertThat(orderFileColumns.get(i).getDataFieldLabel(), is(expectedDataFieldLabels[i]));
+      assertThat(orderFileColumns.get(i).getPosition(), is(i+1));
+      assertThat(orderFileColumns.get(i).includeInOrderFile(), is(true));
+      assertThat(orderFileColumns.get(i).getColumnLabel(), is(expectedColumnLabels[i]));
+    }
+  }
+
   private long updateOrderCreatedTime(Order order, Date date) throws SQLException {
     List paramList = new ArrayList();
     paramList.add(new java.sql.Date(date.getTime()));
@@ -179,7 +196,7 @@ public class OrderMapperIT {
 
   private Rnr insertRequisition(Long programId) {
     Rnr rnr = make(a(defaultRnr, with(RequisitionBuilder.facility, facility),
-        with(periodId, processingPeriod.getId()), with(program, new Program(programId))));
+      with(periodId, processingPeriod.getId()), with(program, new Program(programId))));
     requisitionMapper.insert(rnr);
     return rnr;
   }

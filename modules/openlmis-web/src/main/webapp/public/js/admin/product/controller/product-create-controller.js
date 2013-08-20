@@ -1,9 +1,3 @@
-/*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
 function ProductCreateController($scope, $location, $dialog, messageService, CreateProduct, ProductGroups, ProductCategories, ReportPrograms, DosageUnits, ProductForms) {
 
     $scope.productsBackupMap = [];
@@ -16,6 +10,9 @@ function ProductCreateController($scope, $location, $dialog, messageService, Cre
     $scope.AddEditMode = '';
     $scope.programProductsCost = [];
     $scope.AddEditMode = true;
+
+    // clear the parent confirmation message if there was any
+    $scope.$parent.message = '';
 
     // Programs list
     ReportPrograms.get(function (data) {
@@ -48,7 +45,7 @@ function ProductCreateController($scope, $location, $dialog, messageService, Cre
         }
         $scope.showErrorForCreate = false;
         CreateProduct.save( $scope.product, function (data) {
-               $scope.message = 'New product created successfully';
+               $scope.$parent.message = 'New product created successfully';
                $location.path('');
                 $scope.newProduct = {};
             },  function (data) {

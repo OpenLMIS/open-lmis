@@ -5,11 +5,11 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.service.ApproverService;
-import org.openlmis.core.service.ConfigurationService;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.email.service.EmailService;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
@@ -26,14 +26,20 @@ import java.util.List;
 @AllArgsConstructor
 public class NotificationServices {
 
+
   @Autowired
-  private ConfigurationService configService;
+  private ConfigurationSettingService configService;
 
   @Autowired
   private EmailService emailService;
 
   @Autowired
   private ApproverService approverService;
+
+  @Value("${mail.base.url}")
+  String baseURL;
+
+
 
   public void notifyStatusChange(Rnr requisition, Vendor vendor)   {
 
@@ -69,9 +75,16 @@ public class NotificationServices {
               SimpleMailMessage message = new SimpleMailMessage();
               String emailMessage = emailTemplate;
 
+              // compse the link to the RnR
+              String approvalURL = baseURL + "/public/pages/logistics/rnr/index.html#/rnr-for-approval/" + requisition.getId().toString()
+                  + "/"
+                  + requisition.getProgram().getId().toString()
+                  +"?supplyType=full-supply&page=1" ;
+
               emailMessage = emailMessage.replaceAll("\\{facility_name\\}", requisition.getFacility().getName());
               emailMessage = emailMessage.replaceAll("\\{approver_name\\}", user.getFirstName() + " " + user.getLastName());
               emailMessage = emailMessage.replaceAll("\\{period\\}", requisition.getPeriod().getName());
+              emailMessage = emailMessage.replaceAll("\\{link\\}", approvalURL);
 
               message.setText(emailMessage);
               message.setSubject(configService.getByKey("EMAIL_SUBJECT_APPROVAL").getValue());

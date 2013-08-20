@@ -111,6 +111,7 @@ public class RequisitionService {
     return (rnrList == null || rnrList.isEmpty()) ? null : rnrList.get(0);
   }
 
+  @Transactional
   public void save(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
     ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
@@ -144,7 +145,7 @@ public class RequisitionService {
     return requisitionRepository.getLossesAndAdjustmentsTypes();
   }
 
-
+  @Transactional
   public Rnr submit(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
@@ -161,6 +162,7 @@ public class RequisitionService {
     return update(savedRnr);
   }
 
+  @Transactional
   public Rnr authorize(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
@@ -200,6 +202,7 @@ public class RequisitionService {
     return new OpenLmisMessage(RNR_APPROVED_SUCCESSFULLY);
   }
 
+  @Transactional
   public Rnr approve(Rnr requisition) {
     Rnr savedRnr = getFullRequisitionById(requisition.getId());
     savedRnr.validateForApproval();

@@ -6,7 +6,7 @@
 
 function ProductController($scope, $location, $dialog, messageService, ProductDetail , ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits, ProductForms) {
 
-    $scope.productsBackupMap = [];
+
     $scope.newProduct = {};
     $scope.products = {};
     $scope.editProduct = {};
@@ -29,7 +29,6 @@ function ProductController($scope, $location, $dialog, messageService, ProductDe
         //alert(JSON.stringify($scope.filteredProducts, null, 4));
         for (var productIndex in data.productList) {
             var product = data.productList[productIndex];
-            $scope.productsBackupMap[product.id] = $scope.getBackupProduct(product);
         }
 
         //alert(JSON.stringify($scope.products, null, 4));
@@ -59,17 +58,21 @@ function ProductController($scope, $location, $dialog, messageService, ProductDe
 
     // apply filter
     var filterProductsByProgram = function (query) {
+
         $scope.filteredProducts = [];
         query = query || "";
         if (query == 'NaN') {
             $scope.filteredProducts = $scope.productsList;
             return;
         }
-        angular.forEach($scope.productsList, function (product) {
-            if (product.programId == query) {
-                $scope.filteredProducts.push(product);
-            }
 
+        angular.forEach($scope.productsList, function (product) {
+             $scope.product = product;
+             angular.forEach($scope.product.programs, function (pp){
+                 if(pp.id == query){
+                        $scope.filteredProducts.push($scope.product);
+                 }
+            });
         });
 
         $scope.resultCount = $scope.filteredProducts.length;

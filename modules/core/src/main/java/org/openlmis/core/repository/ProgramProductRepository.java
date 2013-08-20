@@ -7,6 +7,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
@@ -104,8 +105,8 @@ public class ProgramProductRepository {
     return mapper.getByProgram(program);
   }
 
-  public List<ProgramProduct> getOptionsByProgram(Program program) {
-    return mapper.getByProgramOptions(program);
+  public List<ProgramProduct> getOptionsByProduct(Product product) {
+    return mapper.getOptionsByProduct(product);
   }
 
 

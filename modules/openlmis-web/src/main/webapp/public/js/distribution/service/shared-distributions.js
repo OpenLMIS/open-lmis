@@ -5,16 +5,17 @@ distributionModule.service('SharedDistributions', function (IndexedDB, $rootScop
   var thisService = this;
 
   this.update = function () {
-    IndexedDB.transaction(function (connection) {
+    IndexedDB.execute(function (connection) {
       var transaction = connection.transaction('distributions');
 
       var cursorRequest = transaction.objectStore('distributions').openCursor();
       var aggregate = [];
 
       cursorRequest.onsuccess = function (event) {
-        if (event.target.result) {
-          aggregate.push(event.target.result.value);
-          event.target.result['continue']();
+        var cursor = event.target.result;
+        if (cursor) {
+          aggregate.push(cursor.value);
+          cursor['continue']();
         }
       };
 

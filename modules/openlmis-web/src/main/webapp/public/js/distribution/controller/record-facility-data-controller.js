@@ -4,8 +4,21 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function RecordFacilityDataController(IndexedDB, $scope, $route) {
+function RecordFacilityDataController($scope, $location, $routeParams, $window, IndexedDB) {
 
+  $scope.label = $routeParams.facility ? 'label.change.facility' : "label.select.facility";
+
+  if (!isUndefined($window.location)) {
+    if (!navigator.onLine) $window.location.href = $window.location.href.replace('index.html', 'offline.html')
+    else {
+      $window.location.href = $window.location.href.replace('offline.html', 'index.html')
+    }
+  }
+
+  IndexedDB.get('distributionReferenceData', utils.parseIntWithBaseTen($routeParams.distribution), function (event) {
+    $scope.facilities = event.target.result.facilities;
+    $scope.facilitySelected = _.findWhere($scope.facilities, {id: utils.parseIntWithBaseTen($routeParams.facility)});
+  }, {});
 
   $scope.format = function (facility) {
     if (facility.id) {
@@ -15,31 +28,14 @@ function RecordFacilityDataController(IndexedDB, $scope, $route) {
     } else {
       return facility.text;
     }
+  };
+
+  $scope.chooseFacility = function () {
+    if (!$scope.facilitySelected || !$scope.facilitySelected.id) {
+      $location.path('record-facility-data/' + $routeParams.distribution);
+      return;
+    }
+    $location.path('record-facility-data/' + $routeParams.distribution + '/' + $scope.facilitySelected.id + '/refrigerator-data');
   }
 
-  function fetchReferenceData() {
-    var zpp = $route.current.params.zpp;
-    IndexedDB.transaction(function (connection) {
-      var transaction = connection.transaction(['distributionReferenceData', 'distributions']);
-      var request = transaction.objectStore('distributionReferenceData').get(zpp);
-      var by_zpp = transaction.objectStore('distributions').index('index_zpp');
-      by_zpp.get(zpp).onsuccess = function (event) {
-        var result = event.target.result;
-        $scope.deliveryZoneName = result.deliveryZone.name;
-        $scope.programName = result.program.name;
-        $scope.periodName = result.period.name;
-        $scope.$apply();
-      };
-      request.onsuccess = function (event) {
-        $scope.facilityList = request.result.facilities;
-        $scope.$apply();
-      }
-    });
-  }
-
-  fetchReferenceData();
 }
-
-
-
-

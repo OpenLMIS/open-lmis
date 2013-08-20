@@ -15,4 +15,5 @@ public class StockedOutReport implements ReportData {
     private String product;
     private String facilitytypename;
     private String location;
+    private String supplyingFacility;
 }

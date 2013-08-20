@@ -79,8 +79,8 @@
 					<text><![CDATA[Line#]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="bc10494a-a227-4f9a-8ae2-c3257bc15012" mode="Transparent" x="539" y="29" width="100" height="20" forecolor="#000000" backcolor="#333333"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<reportElement uuid="bc10494a-a227-4f9a-8ae2-c3257bc15012" mode="Transparent" x="539" y="29" width="82" height="20" forecolor="#000000" backcolor="#333333"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
@@ -103,8 +103,8 @@
 					<text><![CDATA[Status]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="a94b5e58-1f0e-43ca-95ab-8325ae02cd21" mode="Transparent" x="472" y="30" width="67" height="20" forecolor="#000000" backcolor="#333333"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<reportElement uuid="a94b5e58-1f0e-43ca-95ab-8325ae02cd21" mode="Transparent" x="460" y="29" width="67" height="20" forecolor="#000000" backcolor="#333333"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
@@ -163,7 +163,6 @@
 	</title>
 	<detail>
 		<band height="20" splitType="Stretch">
-			<printWhenExpression><![CDATA[new java.lang.Boolean((int)($V{REPORT_COUNT}.intValue())%20==0)]]></printWhenExpression>
 			<textField>
 				<reportElement uuid="497dba92-6949-4bb2-9beb-1f85a98456e5" x="72" y="0" width="759" height="20" forecolor="#006666">
 					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
@@ -199,14 +198,14 @@
 				<textFieldExpression><![CDATA[$F{facility}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="873de690-e086-4f26-8f34-63807934ed39" x="472" y="0" width="67" height="20"/>
+				<reportElement uuid="873de690-e086-4f26-8f34-63807934ed39" x="472" y="0" width="55" height="20"/>
 				<textElement textAlignment="Right">
 					<paragraph leftIndent="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amc}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="ad6bdf5e-6728-45a7-94aa-c0a1cf580105" x="639" y="0" width="86" height="20"/>
+				<reportElement uuid="ad6bdf5e-6728-45a7-94aa-c0a1cf580105" x="639" y="0" width="63" height="20"/>
 				<textElement textAlignment="Right">
 					<paragraph leftIndent="10"/>
 				</textElement>
@@ -218,21 +217,21 @@
 				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="ed08043f-f542-478d-8ced-736a103e45bb" x="539" y="0" width="100" height="20"/>
+				<reportElement uuid="ed08043f-f542-478d-8ced-736a103e45bb" x="539" y="0" width="82" height="20"/>
 				<textElement textAlignment="Right">
 					<paragraph leftIndent="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{months}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="c0437e6c-491e-46ed-8439-313cc762e462" x="387" y="0" width="87" height="20"/>
+				<reportElement uuid="c0437e6c-491e-46ed-8439-313cc762e462" x="387" y="0" width="72" height="20"/>
 				<textElement textAlignment="Right">
 					<paragraph leftIndent="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{physicalCount}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="92e8a139-6275-4458-bf93-b5900a9100d8" x="199" y="0" width="188" height="20"/>
+				<reportElement uuid="92e8a139-6275-4458-bf93-b5900a9100d8" x="199" y="0" width="176" height="20"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
 			</textField>

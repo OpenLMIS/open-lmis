@@ -30,13 +30,6 @@ public class ProgramProductController  extends BaseController  {
     private static final String PROGRAM_PRODUCT_LIST = "programProductList";
     private static final String PROGRAM_PRODUCT_PRICE_LIST = "programProductPriceList";
 
-    @RequestMapping(value = "/programProducts/programId/{programId}", method = GET, headers = BaseController.ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-    public ResponseEntity<OpenLmisResponse> getProgramProductsByProgram(@PathVariable Long programId) {
-        List<ProgramProduct> programProductsByProgram = service.getOptionsByProgram(new Program(programId));
-        return OpenLmisResponse.response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
-    }
-
   // All product cost
   @RequestMapping(value = "/allproductcost", method = RequestMethod.GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")

@@ -114,7 +114,7 @@ public class UploadController extends BaseController {
     } else if (csvFile == null || csvFile.isEmpty()) {
       errorMessage = new OpenLmisMessage(FILE_IS_EMPTY);
     } else if (!csvFile.getOriginalFilename().endsWith(".csv")) {
-      errorMessage = new OpenLmisMessage(messageService.message(INCORRECT_FILE_FORMAT, uploadBeansMap.get(model).getDisplayName()));
+      errorMessage = new OpenLmisMessage(messageService.message(INCORRECT_FILE_FORMAT, messageService.message(uploadBeansMap.get(model).getDisplayName())));
     }
     return errorMessage;
   }

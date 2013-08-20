@@ -2,7 +2,7 @@
 -- If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 DROP TABLE IF EXISTS configurations;
-CREATE TABLE configurations (
+CREATE TABLE configuration_settings (
   id      SERIAL PRIMARY KEY,
   key     VARCHAR(250) NOT NULL,
   value   VARCHAR(250)

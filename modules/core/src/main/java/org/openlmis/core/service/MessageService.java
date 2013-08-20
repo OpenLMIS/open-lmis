@@ -16,13 +16,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.WebApplicationContext;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
-import java.util.Map;
+import java.util.Set;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
+import static org.springframework.web.context.WebApplicationContext.SCOPE_REQUEST;
 import static org.springframework.web.context.WebApplicationContext.SCOPE_SESSION;
 
 @Service
@@ -36,21 +36,22 @@ public class MessageService {
   @Getter
   private Locale currentLocale;
 
-  @Value("${locales.supported}")
+
   private String locales;
 
   @Autowired
-  public MessageService(MessageSource messageSource) {
+  public MessageService(MessageSource messageSource, @Value("${locales.supported}") String locales) {
     this.messageSource = messageSource;
+    this.locales = locales;
     this.currentLocale = Locale.getDefault();
   }
 
-  @Scope(WebApplicationContext.SCOPE_REQUEST)
+  @Scope(SCOPE_REQUEST)
   public static MessageService getRequestInstance() {
     ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
     resourceBundleMessageSource.setBasename("messages");
     resourceBundleMessageSource.setDefaultEncoding("UTF-8");
-    return new MessageService(resourceBundleMessageSource);
+    return new MessageService(resourceBundleMessageSource, "en");
   }
 
   public String message(String key) {
@@ -69,21 +70,16 @@ public class MessageService {
     return messageSource.getMessage(key, args, key, locale);
   }
 
-  public Map<String, String> getLocales() {
-    Map<String, String> localeMap = new HashMap<>();
+  public Set<String> getLocales() {
+    Set<String> localeSet = new HashSet<>();
 
-    String[] localeMapSource = locales.split(",");
+    String[] localeCodes = locales.split(",");
 
-    for (String locale : localeMapSource) {
-      String[] keyValuePair = locale.split(":");
-      localeMap.put(keyValuePair[0], keyValuePair[1]);
+    for (String locale : localeCodes) {
+      localeSet.add(locale.trim());
     }
 
-    return localeMap;
+    return localeSet;
   }
 
-  @Scope(value = "request")
-  public MessageService getMessageService() {
-    return new MessageService();
-  }
 }

@@ -24,16 +24,6 @@ describe('DistributionListController', function () {
     controller(DistributionListController, {$scope: scope, $location: location, SharedDistributions: sharedDistribution })
   }));
 
-  it('should set location path', function () {
-    var zpp = "1_2_3";
-    var path = "/record-facility-data/" + zpp;
-    var locationPath = spyOn(location, 'path').andCallThrough();
-
-    scope.recordFacilityData(zpp);
-
-    expect(locationPath).toHaveBeenCalledWith(path);
-  });
-
   it('should set distributions in scope', function() {
     expect(scope.sharedDistributions).toBe(sharedDistribution);
   })

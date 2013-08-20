@@ -7,7 +7,7 @@
 'use strict';
 
 /* App Module */
-var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives', 'ngCookies'], function ($routeProvider, $locationProvider, $httpProvider) {
+var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives', 'ngCookies'], function ($httpProvider) {
   var interceptor = ['$rootScope', '$q', '$window', function (scope, $q, $window) {
     function success(response) {
       angular.element('#loader').hide();

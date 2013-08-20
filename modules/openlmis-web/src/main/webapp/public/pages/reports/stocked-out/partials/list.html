@@ -1,66 +1,42 @@
-<div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
-<div class="container-fluid">
-
-    <div class="box row-fluid" style="padding:0px;">
+<div class="row-fluid sortable ui-sortable">
+    <div class="box span12">
         <div class="box-header">
-            <h2><i class="icon-edit"></i><span class="break"></span>Stocked Out Facilities Report</h2>
+            <h2><i class="icon-edit"></i><span class="break"></span>Stocked Out Facility Report</h2>
             <div class="box-icon">
-                <!--<a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>-->
-                <!--<a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>-->
+                <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
                 <a id="pdf-button" href="#" ng-click="exportReport('PDF')" class='btn-small btn-info'>PDF</a>
                 <a id="xls-button" href="#" ng-click="exportReport('xls')" class='btn-small btn-info'>Excel</a>
             </div>
         </div>
-        <div class="box-content container-fluid">
-            <div class="row-fluid">
-                <div class="span3" ng-show="show(1)">
-                    <div class="app-form" style="padding: 5px;">
-                        <form ng-submit="filterGrid()"  name="filterForm" novalidate>
 
-                            <div class="clearfix ">
-                               <div class="form-cell horizontalFilters">
-                                    <div >
-                                        <label class="labels">Program</label>
-                                        <div class="form-fields">
-                                            <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-change="ChangeSchedule()" ng-model="program" ng-options="option.id as option.name for option in programs">
+        <div class="box-content"  ng-show="show(1)">
+            <div class="app-form" style="padding: 5px;">
+                <form ng-submit="filterGrid()"  name="filterForm" novalidate>
+                    <div class="clearfix ">
 
-                                            </select>
-                                        </div>
-                                    </div>
+                        <div class="form-cell horizontalFilters">
+                            <div >
+                                <label class="labels">Period Type<span class="label-required"> *</span></label>
+                                <div class="form-field">
+                                    <select ui-select2 style="width:200px;" class="input-medium" ng-required="true" name="periodType" id="periodType" ng-model="periodType" ng-init="reporting"  ng-options="option.value as option.name for option in periodTypes">
+
+                                    </select>
                                 </div>
+                            </div>
+                        </div>
 
+                        <div class="form-cell horizontalFilters" style="width:180px">
+                            <label class="labels">From<span class="label-required"> *</span></label>
 
-                                <div class="clearfix"></div>
-                                <br />
+                            <div class="form-field">
 
+                                <select  style="width:80px;" class="input-small" ng-required="true"  name="startYear" id="startYear" ng-model="startYear"  ng-options="year for year in startYears">
 
-                                 <div class="form-cell horizontalFilters">
-                                    <div >
-                                        <label class="labels">Period Type</label>
-                                        <div class="form-field">
-                                            <select ui-select2 style="width:200px;" ng-required="true" ng-change="filterGrid()" name="periodType" ng-model="periodType" ng-options="option.value as option.name for option in periodTypes">
-
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="clearfix"></div>
-                                <br />
-
-
-
-                                <div class="form-cell horizontalFilters" style="width:180px">
-                                    <label class="labels">From</label>
-
-                                    <div class="form-field">
-
-                                        <select  style="width:80px;" class="input-small" ng-required="true"  name="startYear" ng-model="startYear" ng-options="year for year in startYears">
-
-                                        </select>
+                                </select>
 
                                         <span ng-show="isMonthly()">
-                                            <select  style="width:80px;" class="input-small" ng-required="true"  name="startMonth" ng-model="startMonth" ng-options="option.value as option.name for option in startMonths">
+                                            <select  style="width:80px;" class="input-small" ng-required="true"  name="startMonth" id="startMonth" ng-model="startMonth"  ng-options="option.value as option.name for option in startMonths">
 
                                             </select>
                                         </span>
@@ -75,17 +51,17 @@
 
                                             </select>
                                         </span>
-                                    </div>
-                                </div>
+                            </div>
+                        </div>
 
-                                <div class="form-cell horizontalFilters" style="width:180px">
-                                    <label class="labels">To</label>
+                        <div class="form-cell horizontalFilters" style="width:180px">
+                            <label class="labels">To</label>
 
-                                    <div class="form-field">
+                            <div class="form-field">
 
-                                        <select  style="width:80px;" class="input-small" ng-required="true"  name="endYear" ng-model="endYear" ng-options="year for year in endYears">
+                                <select  style="width:80px;" class="input-small" ng-required="true"  name="endYear" ng-model="endYear" ng-options="year for year in endYears">
 
-                                        </select>
+                                </select>
 
                                         <span ng-show="isMonthly()">
 
@@ -103,108 +79,70 @@
 
                                             </select>
                                         </span>
-                                    </div>
-                                </div>
+                            </div>
+                        </div>
 
+                        <div class="form-cell horizontalFilters" >
+                            <label class="labels">Product Categories</label>
 
+                            <div class="form-field">
+                                <select ui-select2 style="width:300px;" name="productCategoryElement"   ng-model="productCategory" ng-options="option.id as option.name for option in productCategories">
+                                    <option id="All" value="">All Product Categories</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-cell horizontalFilters" >
+                            <label class="labels">Product<span class="label-required"> *</span></label>
 
-                                <div class="clearfix"></div>
-                                <br />
-                                <div class="form-cell horizontalFilters">
-                                    <label class="labels">Schedule</label>
+                            <div class="form-field">
+                                <select ui-select2 style="width:300px;" name="product" id="product" ng-model="product" ng-options="option.id as option.name for option in products">
+                                    <option value="">&#60Indicator Products&#62</option>
+                                    <option value=0>All Products</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-cell horizontalFilters" >
+                            <label class="labels">Facility Type</label>
 
-                                    <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="schedule" ng-options="option.id as option.name for option in schedules">
+                            <div class="form-field">
+                                <select ui-select2 style="width:300px;" name="facilityTypeElement"   ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
+                                    <option value="">All Facility Types</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!--<div class="form-cell horizontalFilters">
+                            <label class="labels">Facility Name</label>
 
-                                        </select>
-                                    </div>
-                                </div>
+                            <div class="form-field">
+                                <input id="name" type="text"  ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
+                            </div>
+                        </div>-->
+                        <div class="form-cell horizontalFilters" >
+                            <label class="labels">Requisition Groups</label>
 
-                                <div class="clearfix"></div>
-                                <br />
-                                <div class="form-cell horizontalFilters">
-                                    <label class="labels">Period</label>
+                            <div class="form-fields">
+                                <select ui-select2 style="width:300px;" name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
+                                    <option value="">All Requisition Groups</option>
+                                </select>
+                            </div>
+                        </div>
 
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  ng-change="filterGrid()" name="period" ng-model="period" ng-options="option.id as option.name for option in periods">
-
-                                        </select>
-                                    </div>
-                                </div>
-
-
-                               <div class="clearfix"></div>
-                               <br />
-                               <div class="form-cell horizontalFilters">
-                                   <label class="labels">Requisition Groups</label>
-
-                                   <div class="form-fields">
-                                       <select ui-select2 style="width:200px;" class="extra-large-input" ng-change="filterGrid()" name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
-
-                                       </select>
-                                   </div>
-                               </div>
-
-
-
-                               <div class="clearfix"></div>
-                               <br />
-                               <div class="form-cell horizontalFilters">
-                                   <label class="labels">Facility Type</label>
-
-                                   <div class="form-field">
-                                       <select ui-select2 style="width:200px;" name="facilityTypeElement"  ng-change="filterGrid()" ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
-
-                                       </select>
-                                   </div>
-                               </div>
-
-
-                               <div class="clearfix"></div>
-                               <br />
-                               <div class="form-cell horizontalFilters">
-                                   <label class="labels">Product Categories</label>
-
-                                   <div class="form-field">
-                                       <select ui-select2 style="width:200px;" name="productCategoryElement"  ng-change="filterGrid()" ng-model="productCategory" ng-options="option.id as option.name for option in productCategories">
-
-                                       </select>
-                                   </div>
-                               </div>
-
-
-                               <div class="clearfix"></div>
-                               <br />
-                               <div class="form-cell horizontalFilters">
-                                   <label class="labels">Product</label>
-
-                                   <div class="form-field">
-                                       <select ui-select2 style="width:200px;" name="product"  ng-model="product" ng-options="option.id as option.name for option in products">
-
-                                       </select>
-                                   </div>
-                               </div>
-
-
-                                <div class="clearfix"></div>
-                                <br />
-                                <div class="form-cell horizontalFilters pull-right" style="text-align: center">
+                        <div class="clearfix"></div>
+                        <br />
+                        <div class="form-cell horizontalFilters pull-right" style="text-align: center">
                                      <span ng-repeat="summary in summaries">
                                          <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
                                      </span>
 
-                                </div>
-                            </div>
-                        </form>
+                        </div>
                     </div>
-                </div>
-
-                <div class="span9">
-                    <div class="gridStyleReport" ng-grid="gridOptions"></div>
-                </div>
-
+                </form>
+                <div class="warning-alert" id="requiredMsgDiv" ng-bind="message" ng-show="message"/>
             </div>
+
         </div>
 
+        <div class="gridStyleReport" ng-grid="gridOptions"></div>
     </div>
 </div>
+

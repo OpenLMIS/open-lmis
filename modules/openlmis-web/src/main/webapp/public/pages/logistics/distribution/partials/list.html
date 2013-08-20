@@ -5,9 +5,13 @@
   -->
 <div ng-controller="DistributionListController">
 
-  <div ng-show="sharedDistributions.distributionList.length">
-    <h2 openlmis-message="label.initiated.distributions"></h2>
+  <h2 openlmis-message="label.initiated.distributions"></h2>
 
+  <div class="alert alert-info" id="noDistributionInitiated" ng-hide="sharedDistributions.distributionList.length > 0">
+    <span openlmis-message="message.no.distribution.initiated"></span>
+  </div>
+
+  <div ng-show="sharedDistributions.distributionList.length">
     <div id="cachedDistributions">
       <div class="list-header-container">
         <div class="row-fluid list-header">
@@ -31,7 +35,7 @@
           <div class="span2" ng-bind="distribution.period.name"></div>
           <div class="span2" ng-bind="distribution.status"></div>
           <div class="span2"><a href="javascript:void(0)" openlmis-message="label.record.data"
-                                ng-click="recordFacilityData(distribution.zpp)"></a></div>
+                                ng-href="#/record-facility-data/{{distribution.id}}"></a></div>
           <div class="span2"><a href="javascript:void(0)" openlmis-message="label.sync"></a></div>
         </div>
       </div>

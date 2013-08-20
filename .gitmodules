@@ -1,0 +1,3 @@
+[submodule "modules/openlmis-web/src/main/webapp/public/lib/indexed-db-angular-service"]
+	path = modules/openlmis-web/src/main/webapp/public/lib/indexed-db-angular-service
+	url = https://github.com/OpenLMIS/indexed-db-angular-service.git

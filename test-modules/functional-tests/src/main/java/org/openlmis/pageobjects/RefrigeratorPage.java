@@ -6,9 +6,12 @@
 
 package org.openlmis.pageobjects;
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
@@ -19,7 +22,7 @@ public class RefrigeratorPage extends Page {
   private static WebElement addNewButton;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Edit')]")
-  private static WebElement editButton;
+  public static WebElement editButton;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Delete')]")
   private static WebElement deleteButton;
@@ -27,19 +30,19 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = XPATH, using = "//a[contains(text(),'Done')]")
   private static WebElement doneButton;
 
-  @FindBy(how = XPATH, using = "//a/span[contains(text(),'Refrigerators')]")
+  @FindBy(how = XPATH, using = "//span[contains(text(),'Refrigerators')]")
   private static WebElement refrigeratorTab;
 
   @FindBy(how = XPATH, using = "//input[@ng-model='refrigeratorReading.temperature']")
-  private static WebElement refrigeratorTemperatureTextField;
+  public static WebElement refrigeratorTemperatureTextField;
 
-  @FindBy(how = XPATH, using = "//input[@ng-model='refrigeratorReading.lowAlarmEvents'")
+  @FindBy(how = XPATH, using = "//div[1][@class='form-cell']/input[1][@class='ng-pristine ng-valid']")
   private static WebElement lowAlarmEventsTextField;
 
-  @FindBy(how = XPATH, using = "//input[@ng-model='refrigeratorReading.highAlarmEvents'")
+  @FindBy(how = XPATH, using = "//div[2][@class='form-cell']/input[1][@class='ng-pristine ng-valid']")
   private static WebElement highAlarmEventsTextField;
 
-  @FindBy(how = ID, using = "temperatureNR")
+  @FindBy(how = ID, using = "temperature0")
   private static WebElement refrigeratorTemperatureNR;
 
   @FindBy(how = ID, using = "functioningCorrectlyYes")
@@ -93,12 +96,47 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = XPATH, using = "//textarea[@ng-model='refrigeratorReading.notes']")
   private static WebElement notesTextArea;
 
-  @FindBy(how = XPATH, using = "//h3[contains(text(),'Refrigerators')]")
+  @FindBy(how = XPATH, using = "//h3/span[contains(text(),'Refrigerators')]")
   private static WebElement refrigeratorsHeader;
 
+  @FindBy(how = ID, using = "brand")
+  private static WebElement brandTextField;
 
-  protected RefrigeratorPage(TestWebDriver driver) {
+  @FindBy(how = ID, using = "model")
+  private static WebElement modelTextField;
+
+  @FindBy(how = ID, using = "manufacturerSerialNumber")
+  private static WebElement manufacturerSerialNumberTextField;
+
+  @FindBy(how = ID, using = "done-button")
+  private static WebElement doneButtonOnModal;
+
+  @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[3]/a[2]")
+  private static WebElement cancelButtonOnModal;
+
+  @FindBy(how = XPATH, using = "//h3[contains(text(),'New Refrigerator')]")
+  public static WebElement newRefrigeratorHeaderOnModal;
+
+  @FindBy(how = XPATH, using = "//a[contains(text(),'Next »')]")
+  private static WebElement nextLink;
+
+  @FindBy(how = XPATH, using = "//a[contains(text(),'« Previous')]")
+  private static WebElement previousLink;
+
+  @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']")
+  private static WebElement saveSuccessMessageDiv;
+
+  @FindBy(how = XPATH, using = "//a[contains(text(),'OK')]")
+  public static WebElement OKButton;
+
+  @FindBy(how = XPATH, using = "//h3[contains(text(),'delete.refrigerator.readings.header')]")
+  public static WebElement deletePopUpHeader;
+
+
+  public RefrigeratorPage(TestWebDriver driver) {
     super(driver);
+    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
+    testWebDriver.setImplicitWait(10);
   }
 
   public void enterValueInRefrigeratorTemperature(String value) {
@@ -109,6 +147,11 @@ public class RefrigeratorPage extends Page {
   public void clickProblemSinceLastVisitYesRadio() {
     testWebDriver.waitForElementToAppear(problemSinceLastVisitYesRadio);
     problemSinceLastVisitYesRadio.click();
+  }
+
+  public void clickOKButton() {
+    testWebDriver.waitForElementToAppear(OKButton);
+    OKButton.click();
   }
 
   public void clickProblemSinceLastVisitNoRadio() {
@@ -156,6 +199,21 @@ public class RefrigeratorPage extends Page {
     sendKeys(lowAlarmEventsTextField, value);
   }
 
+  public void enterValueInBrandModal(String value) {
+    testWebDriver.waitForElementToAppear(brandTextField);
+    sendKeys(brandTextField, value);
+  }
+
+  public void enterValueInModelModal(String value) {
+    testWebDriver.waitForElementToAppear(modelTextField);
+    sendKeys(modelTextField, value);
+  }
+
+  public void enterValueInManufacturingSerialNumberModal(String value) {
+    testWebDriver.waitForElementToAppear(manufacturerSerialNumberTextField);
+    sendKeys(manufacturerSerialNumberTextField, value);
+  }
+
   public void enterValueInHighAlarmEvents(String value) {
     testWebDriver.waitForElementToAppear(highAlarmEventsTextField);
     sendKeys(highAlarmEventsTextField, value);
@@ -174,6 +232,17 @@ public class RefrigeratorPage extends Page {
   public void clickRefrigeratorTemperatureNR() {
     testWebDriver.waitForElementToAppear(refrigeratorTemperatureNR);
     refrigeratorTemperatureNR.click();
+  }
+
+  public void clickDoneOnModal() {
+    testWebDriver.waitForElementToAppear(doneButtonOnModal);
+    doneButtonOnModal.click();
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//a[contains(text(),'Edit')])[1]"));
+  }
+
+  public void clickCancelOnModal() {
+    testWebDriver.waitForElementToAppear(cancelButtonOnModal);
+    cancelButtonOnModal.click();
   }
 
   public void clickLowAlarmEventNR() {
@@ -209,11 +278,13 @@ public class RefrigeratorPage extends Page {
   public void clickAddNew() {
     testWebDriver.waitForElementToAppear(addNewButton);
     addNewButton.click();
+    testWebDriver.waitForElementToAppear(newRefrigeratorHeaderOnModal);
   }
 
   public void clickEdit() {
     testWebDriver.waitForElementToAppear(editButton);
     editButton.click();
+    testWebDriver.waitForElementToAppear(refrigeratorTemperatureNR);
   }
 
   public void clickDelete() {
@@ -221,15 +292,51 @@ public class RefrigeratorPage extends Page {
     deleteButton.click();
   }
 
-  public void clickRefrigeratorTab() {
-    testWebDriver.waitForElementToAppear(refrigeratorTab);
-    refrigeratorTab.click();
+  public String getRefrigeratorTemperateTextFieldValue() {
+    testWebDriver.waitForElementToAppear(refrigeratorTemperatureTextField);
+    return testWebDriver.getAttribute(refrigeratorTemperatureTextField, "value");
+  }
+
+  public String getLowAlarmEventsTextFieldValue() {
+    testWebDriver.waitForElementToAppear(lowAlarmEventsTextField);
+    return testWebDriver.getAttribute(lowAlarmEventsTextField, "value");
+  }
+
+  public String getHighAlarmEventsTextFieldValue() {
+    testWebDriver.waitForElementToAppear(highAlarmEventsTextField);
+    return testWebDriver.getAttribute(highAlarmEventsTextField, "value");
+  }
+
+  public String getNotesTextAreaValue() {
+    testWebDriver.waitForElementToAppear(notesTextArea);
+    return testWebDriver.getAttribute(notesTextArea, "value");
+  }
+
+
+
+  public void onRefrigeratorScreen() {
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(refrigeratorsHeader);
+    SeleneseTestNgHelper.assertTrue("Refrigerator header should show up", refrigeratorsHeader.isDisplayed());
   }
 
   public void clickDone() {
     testWebDriver.waitForElementToAppear(doneButton);
     doneButton.click();
+    testWebDriver.sleep(500);
   }
+
+  public void addNewRefrigerator(String brand, String model, String manufacturerSerialNumber) {
+    enterValueInBrandModal(brand);
+    enterValueInModelModal(model);
+    enterValueInManufacturingSerialNumberModal(manufacturerSerialNumber);
+    clickDoneOnModal();
+  }
+
+  public void verifySuccessMessage(String message) {
+    testWebDriver.waitForElementToAppear(saveSuccessMessageDiv);
+    SeleneseTestNgHelper.assertEquals(saveSuccessMessageDiv.getText(), message);
+  }
+
 
 }

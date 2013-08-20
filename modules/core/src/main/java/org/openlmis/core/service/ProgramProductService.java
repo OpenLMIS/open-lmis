@@ -8,6 +8,7 @@ package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
@@ -93,8 +94,8 @@ public class ProgramProductService {
     return programProductRepository.getByProgram(program);
   }
 
-  public List<ProgramProduct> getOptionsByProgram(Program program) {
-    return programProductRepository.getOptionsByProgram(program);
+  public List<ProgramProduct> getOptionsByProduct(Product product) {
+    return programProductRepository.getOptionsByProduct(product);
   }
 
   public List<ProgramProduct> getByProductCode(String productCode) {

@@ -1,7 +1,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.service.ConfigurationService;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.web.model.ConfigurationDTO;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.openlmis.core.domain.Configuration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * e-lmis
@@ -26,7 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 public class SettingController extends BaseController {
   @Autowired
-  private ConfigurationService configurationService;
+  private ConfigurationSettingService configurationService;
 
 
   @RequestMapping(value = "/settings", method = RequestMethod.GET, headers = "Accept=application/json")

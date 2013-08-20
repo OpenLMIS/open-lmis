@@ -167,6 +167,12 @@ public interface FacilityMapper {
   List<Facility> getAllInRequisitionGroups(@Param("requisitionGroupIds") String requisitionGroupIds);
 
   @Select("SELECT * from facilities WHERE LOWER(code)=LOWER(#{code})")
+  @Results(value =
+    {
+      @Result(property = "id", column = "id"),
+      @Result(property = "supportedPrograms", column = "id", javaType = List.class,
+      many = @Many(select = "org.openlmis.core.repository.mapper.ProgramSupportedMapper.getAllByFacilityId"))
+    })
   Facility getByCode(String code);
 
   @Select({"SELECT F.geographicZoneId, F.name, F.code, F.id, F.catchmentPopulation FROM facilities F INNER JOIN delivery_zone_members DZM ON F.id = DZM.facilityId",
