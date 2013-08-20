@@ -298,31 +298,4 @@ public class TestCaseHelper {
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
   }
 
-  public void OpenIndexedDB(String dbName) {
-    WebDriver driver;
-    String Separator = getProperty("file.separator");
-    //String script = "var z= x();function x() {return document.title;};return z;";
-    String script = "var x;window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB;" +
-      "var dbreq = window.indexedDB.open(\"" + dbName + "\");" +
-      "dbreq.onsuccess = function (event){var db = dbreq.result; " +
-      //"db.createObjectStore(\"objects\", \"keyPath\": \"id\");" +
-      "var dTableNames = db.objectStoreNames;document.cookie=dTableNames[0]};" +
-      "dbreq.onerror = function (event) {return \"test.open Error: \" + event.message;};";
-                        /*"var dTableNames = db.objectStoreNames;" +
-                        "var strNames;" +
-                        "for (var i = 0; i < dTableNames.length; i++) {strNames = strNames + dTableNames[i];};"+
-                        "return strNames;";*/
-
-    driver = TestWebDriver.getDriver();
-    JavascriptExecutor js = (JavascriptExecutor) driver;
-    Object x = js.executeScript(script);
-    CookieManager cm = new CookieManager();
-    cm.getCookieStore();
-    //cm.
-
-
-    Object y = js.executeScript(x.toString());
-    System.out.println(x.getClass());
-
-  }
 }

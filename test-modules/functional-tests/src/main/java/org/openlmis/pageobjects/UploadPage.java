@@ -270,5 +270,11 @@ public class UploadPage extends Page {
     testWebDriver.sleep(250);
   }
 
+  public void uploadFacilityFTPDetails(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Facility FTP details");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
+  }
+
 
 }

@@ -119,6 +119,9 @@ public class E2EUpload extends TestCaseHelper {
     verifyInValidDeliveryZonesWarehousesUpload(uploadPage);
     verifyValidDeliveryZonesWarehousesUpload(uploadPage);
 
+    verifyInValidFacilityFTPDetailsUpload(uploadPage);
+    verifyValidFacilityFTPDetailsUpload(uploadPage);
+
   }
 
   private void verifyValidSupplyLinesUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -537,6 +540,28 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
 
     uploadPage.uploadDeliveryZoneWarehousesValidScenarios("QA_Delivery_zone_warehouses_Subsequent.csv") ;
+    uploadPage.verifySuccessMessageOnUploadScreen();
+  }
+
+  private void verifyInValidFacilityFTPDetailsUpload(UploadPage uploadPage) throws IOException, SQLException {
+    uploadPage.uploadFacilityFTPDetails("QA_Blank.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("File is empty");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Invalid_FacilityCode.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Facility code");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Duplicate.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Facility Code in Record No");
+  }
+
+  private void verifyValidFacilityFTPDetailsUpload(UploadPage uploadPage) throws IOException, SQLException {
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details.csv") ;
+    uploadPage.verifySuccessMessageOnUploadScreen();
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Subsequent.csv") ;
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 

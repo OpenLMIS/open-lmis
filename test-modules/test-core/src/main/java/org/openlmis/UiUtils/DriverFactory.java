@@ -95,6 +95,7 @@ public class DriverFactory {
     profile.setAcceptUntrustedCertificates(true);
     profile.setPreference("signed.applets.codebase_principal_support", true);
     profile.setPreference("javascript.enabled", enableJavascript);
+    profile.setPreference("browser.helperApps.neverAsk.saveToDisk","text/csv");
     return new FirefoxDriver(profile);
   }
 
@@ -103,8 +104,6 @@ public class DriverFactory {
     DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
     ieCapabilities.setCapability("ignoreZoomSetting", true);
     InternetExplorerDriver driver = new InternetExplorerDriver(ieCapabilities);
-//    driver.get(getProperty("baseurl", TestCaseHelper.DEFAULT_BASE_URL));
-//    driver.navigate().to("javascript:document.getElementById('overridelink').click()");
     return driver;
   }
 
