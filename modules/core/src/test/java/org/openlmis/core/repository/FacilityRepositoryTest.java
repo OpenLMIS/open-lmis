@@ -216,7 +216,7 @@ public class FacilityRepositoryTest {
   }
 
   @Test
-  public void shouldUpdateDataReportableActiveFlag() {
+  public void shouldUpdateEnabledActiveFlag() {
     Facility facility = make(a(defaultFacility));
     when(mapper.getById(facility.getId())).thenReturn(facility);
 

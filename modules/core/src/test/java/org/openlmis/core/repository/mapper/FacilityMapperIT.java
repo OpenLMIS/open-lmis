@@ -260,7 +260,7 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldUpdateDataReportableAndActiveForAFacility() throws Exception {
+  public void shouldUpdateEnabledAndActiveForAFacility() throws Exception {
     Facility facility = make(a(defaultFacility));
     mapper.insert(facility);
     facility.setEnabled(false);

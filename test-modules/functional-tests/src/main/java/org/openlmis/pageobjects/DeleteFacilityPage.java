@@ -50,7 +50,7 @@ public class DeleteFacilityPage extends Page {
 
 
   @FindBy(how = How.XPATH, using = "//ng-switch/span")
-  private static WebElement dataReportable;
+  private static WebElement enabledFlag;
 
   @FindBy(how = How.XPATH, using = "//input[@name='isActive' and @value='false']")
   private static WebElement isActiveRadioNoOption;
@@ -188,8 +188,8 @@ public class DeleteFacilityPage extends Page {
     String disableMessageOnFacilityScreenValue = successMessageDiv.getText();
     SeleneseTestNgHelper.assertEquals(disableMessageOnFacilityScreenValue, expectedMessageOnFacilityScreenAfterDisable);
 
-    String dataReportableValue = dataReportable.getText();
-    SeleneseTestNgHelper.assertEquals(dataReportableValue.trim(), "No");
+    String enableValue = enabledFlag.getText();
+    SeleneseTestNgHelper.assertEquals(enableValue.trim(), "No");
 
     SeleneseTestNgHelper.assertTrue(isActiveRadioNoOption.isSelected());
   }
@@ -197,8 +197,8 @@ public class DeleteFacilityPage extends Page {
   public void verifyEnabledFacility() {
 
     testWebDriver.sleep(1000);
-    String dataReportableValue = dataReportable.getText();
-    SeleneseTestNgHelper.assertEquals(dataReportableValue.trim(), "Yes");
+    String enableValue = enabledFlag.getText();
+    SeleneseTestNgHelper.assertEquals(enableValue.trim(), "Yes");
     SeleneseTestNgHelper.assertTrue(isActiveRadioYesOption.isSelected());
     verifyHeader("Edit facility");
   }

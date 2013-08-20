@@ -77,7 +77,7 @@ public class FacilityFeedDTO extends BaseFeedDTO {
 
   private String comments;
 
-  private boolean dataReportable;
+  private boolean enabled;
 
   private Date modifiedDate;
 
@@ -112,7 +112,7 @@ public class FacilityFeedDTO extends BaseFeedDTO {
     this.goDownDate = facility.getGoDownDate();
     this.parentFacility = parentFacility != null ? parentFacility.getCode() : null;
     this.comments = facility.getComment();
-    this.dataReportable = facility.getEnabled();
+    this.enabled = facility.getEnabled();
     this.modifiedDate = facility.getModifiedDate();
   }
 
