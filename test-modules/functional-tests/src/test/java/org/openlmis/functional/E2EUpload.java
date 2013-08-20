@@ -80,6 +80,9 @@ public class E2EUpload extends TestCaseHelper {
     verifyInvalidFacilityUpload(uploadPage);
     verifyValidFacilityUpload(uploadPage);
 
+    verifyInValidFacilityFTPDetailsUpload(uploadPage);
+    verifyValidFacilityFTPDetailsUpload(uploadPage);
+
     verifyInvalidFacilityTypeToProductMappingUpload(uploadPage);
     verifyValidFacilityTypeToProductMappingUpload(uploadPage);
     dbWrapper.allocateFacilityToUser(userId, "F10");
@@ -118,9 +121,6 @@ public class E2EUpload extends TestCaseHelper {
 
     verifyInValidDeliveryZonesWarehousesUpload(uploadPage);
     verifyValidDeliveryZonesWarehousesUpload(uploadPage);
-
-    verifyInValidFacilityFTPDetailsUpload(uploadPage);
-    verifyValidFacilityFTPDetailsUpload(uploadPage);
 
   }
 
@@ -599,6 +599,8 @@ public class E2EUpload extends TestCaseHelper {
 
     uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Subsequent.csv") ;
     uploadPage.verifySuccessMessageOnUploadScreen();
+//    uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. 'Number of records created:1', 'Number of records updated: 1'");
+
   }
 
   @AfterMethod(groups = {"functional"})
