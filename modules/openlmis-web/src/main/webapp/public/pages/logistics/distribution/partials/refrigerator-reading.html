@@ -16,17 +16,17 @@
         <div class="form-cell">
             <label openlmis-message="label.refrigerator.working.correctly"></label>
 
-            <input type="radio" id="functioningCorrectlyYes" name="functioningCorrectly{{$index}}" value="Y"
+            <input type="radio" id="functioningCorrectlyYes{{ $index }}" name="functioningCorrectly{{$index}}" value="Y"
                    ng-model="refrigeratorReading.functioningCorrectly"/>
-            <label for="functioningCorrectlyYes" class="radio-label" openlmis-message="label.yes"></label>
+            <label for="functioningCorrectlyYes{{ $index }}" class="radio-label" openlmis-message="label.yes"></label>
 
-            <input type="radio" id="functioningCorrectlyNo" name="functioningCorrectly{{$index}}" value="N"
+            <input type="radio" id="functioningCorrectlyNo{{ $index }}" name="functioningCorrectly{{$index}}" value="N"
                    ng-model="refrigeratorReading.functioningCorrectly"/>
-            <label class="radio-label" for="functioningCorrectlyNo" openlmis-message="label.no"></label>
+            <label class="radio-label" for="functioningCorrectlyNo{{ $index }}" openlmis-message="label.no"></label>
 
-            <input type="radio" id="functioningCorrectlyDontKnow" name="functioningCorrectly{{$index}}" value="D"
+            <input type="radio" id="functioningCorrectlyDontKnow{{ $index }}" name="functioningCorrectly{{$index}}" value="D"
                    ng-model="refrigeratorReading.functioningCorrectly"/>
-            <label class="radio-label" for="functioningCorrectlyDontKnow"
+            <label class="radio-label" for="functioningCorrectlyDontKnow{{ $index }}"
                    openlmis-message="label.dont.know"></label>
 
             <input id="functioningCorrectly{{$index}}" type="checkbox" not-recorded/>
