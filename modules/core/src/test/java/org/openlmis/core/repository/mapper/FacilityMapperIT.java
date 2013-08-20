@@ -263,14 +263,14 @@ public class FacilityMapperIT {
   public void shouldUpdateDataReportableAndActiveForAFacility() throws Exception {
     Facility facility = make(a(defaultFacility));
     mapper.insert(facility);
-    facility.setDataReportable(false);
+    facility.setEnabled(false);
     facility.setActive(false);
     facility.setModifiedBy(1L);
-    mapper.updateDataReportableAndActiveFor(facility);
+    mapper.updateEnabledAndActiveFor(facility);
 
     Facility updatedFacility = mapper.getById(facility.getId());
 
-    assertThat(updatedFacility.getDataReportable(), is(false));
+    assertThat(updatedFacility.getEnabled(), is(false));
     assertThat(updatedFacility.getActive(), is(false));
     assertThat(updatedFacility.getModifiedBy(), is(1L));
   }

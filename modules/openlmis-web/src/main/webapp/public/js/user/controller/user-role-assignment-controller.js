@@ -9,10 +9,6 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
   $scope.selectSuperviseProgramMessage = messageService.get('label.select.program');
   $scope.selectSupervisoryNodeMessage = messageService.get('label.select.node');
 
-  if (!$scope.user.active && $scope.user.id) {
-    $scope.disableAllFields();
-  }
-
   $("#adminRoles").on("change", function (e) {
     if (e.removed) {
       var dialogOpts = {

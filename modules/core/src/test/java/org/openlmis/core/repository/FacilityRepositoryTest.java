@@ -220,10 +220,10 @@ public class FacilityRepositoryTest {
     Facility facility = make(a(defaultFacility));
     when(mapper.getById(facility.getId())).thenReturn(facility);
 
-    Facility returnedFacility = repository.updateDataReportableAndActiveFor(facility);
+    Facility returnedFacility = repository.updateEnabledAndActiveFor(facility);
 
     assertThat(returnedFacility, is(facility));
-    verify(mapper).updateDataReportableAndActiveFor(facility);
+    verify(mapper).updateEnabledAndActiveFor(facility);
     verify(mapper).getById(facility.getId());
   }
 

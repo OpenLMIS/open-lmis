@@ -69,7 +69,7 @@ public class RestAgentService {
     facility.setActive(Boolean.parseBoolean(agent.getActive()));
     facility.setVirtualFacility(true);
     facility.setSdp(true);
-    facility.setDataReportable(true);
+    facility.setEnabled(true);
     fillBaseFacility(agent, facility);
     facility.setGoLiveDate(new Date());
     return facility;
@@ -100,7 +100,7 @@ public class RestAgentService {
       throw new DataException("error.agent.not.virtual");
     }
 
-    if (!chwFacility.getDataReportable()) {
+    if (!chwFacility.getEnabled()) {
       throw new DataException("error.agent.deleted");
     }
   }

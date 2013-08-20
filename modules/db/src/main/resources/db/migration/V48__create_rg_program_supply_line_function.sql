@@ -73,7 +73,7 @@ CREATE OR REPLACE FUNCTION getRgProgramSupplyLine()
                      INNER JOIN facilities f
                        ON f.id = supply_lines.supplyingFacilityId
                    WHERE supply_lines.supervisorynodeid = temp.ultimateparentid AND
-                         temp.programid = supply_lines.programid AND f.dataReportable = TRUE)
+                         temp.programid = supply_lines.programid AND f.enabled = TRUE)
                   ORDER BY SupervisoryNode, ProgramName, RequisitionGroup';
     RETURN QUERY EXECUTE finalQuery;
   END;

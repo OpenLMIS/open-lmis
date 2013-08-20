@@ -91,7 +91,7 @@ FROM (SELECT
   INNER JOIN geographic_levels GLP
     ON GZP.levelid = GLP.id
 
-WHERE F.dataReportable = TRUE
+WHERE F.enabled = TRUE
       AND F.virtualFacility = FALSE
       AND F.satellite = FALSE
       AND P.active = TRUE

@@ -24,7 +24,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     } else {
       $scope.facility = {};
       updateProgramsToDisplay();
-      $scope.facility.dataReportable = "true";
+      $scope.facility.enabled = "true";
     }
     $scope.facilityProgramProductsList = [];
   }
@@ -170,7 +170,6 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 
 
   $scope.removeSupportedProgram = function () {
-    if ($scope.facility.dataReportable == 'false') return;
     $scope.facility.supportedPrograms = _.without($scope.facility.supportedPrograms, $scope.selectedSupportedProgram);
     updateProgramsToDisplay();
   };
@@ -210,8 +209,8 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   $scope.showConfirmFacilityDeleteWindow = function () {
     var dialogOpts = {
       id: "deleteFacilityDialog",
-      header: messageService.get('delete.facility.header'),
-      body: messageService.get('delete.facility.confirm', $scope.originalFacilityName, $scope.originalFacilityCode)
+      header: messageService.get('disable.facility.header'),
+      body: messageService.get('disable.facility.confirm', $scope.originalFacilityName, $scope.originalFacilityCode)
     };
     OpenLmisDialog.newDialog(dialogOpts, $scope.deleteFacilityCallBack, $dialog, messageService);
   };
@@ -219,8 +218,8 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   $scope.showConfirmFacilityRestore = function () {
     var dialogOpts = {
       id: "restoreConfirmModal",
-      header: messageService.get("create.facility.restoreFacility"),
-      body: "'{0}' / '{1}' will be restored to the system.".format($scope.originalFacilityName, $scope.originalFacilityCode)
+      header: messageService.get("create.facility.enableFacility"),
+      body: "'{0}' / '{1}' will be enabled in the system.".format($scope.originalFacilityName, $scope.originalFacilityCode)
     };
     OpenLmisDialog.newDialog(dialogOpts, $scope.restoreFacilityCallBack, $dialog, messageService);
   };
@@ -255,7 +254,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 }
 
 var populateFlags = function ($scope) {
-  $(['suppliesOthers', 'sdp', 'hasElectricity', 'online', 'hasElectronicScc', 'hasElectronicDar', 'active', 'dataReportable']).each(function (index, field) {
+  $(['suppliesOthers', 'sdp', 'hasElectricity', 'online', 'hasElectronicScc', 'hasElectronicDar', 'active', 'enabled']).each(function (index, field) {
     var value = $scope.facility[field];
     $scope.facility[field] = (value == null) ? "" : value.toString();
   });

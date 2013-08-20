@@ -223,7 +223,7 @@ public class FacilityControllerTest {
 
     assertThat(responseEntity.getBody().getSuccessMsg(), is("\"Test Facility\" / \"Test Code\" deleted successfully"));
     assertThat((Facility) responseEntity.getBody().getData().get("facility"), is(facility));
-    verify(facilityService).updateDataReportableAndActiveFor(facility);
+    verify(facilityService).updateEnabledAndActiveFor(facility);
   }
 
   @Test
@@ -241,7 +241,7 @@ public class FacilityControllerTest {
 
     assertThat(responseEntity.getBody().getSuccessMsg(), is("\"Test Facility\" / \"Test Code\" restored successfully"));
     assertThat((Facility) responseEntity.getBody().getData().get("facility"), is(facility));
-    verify(facilityService).updateDataReportableAndActiveFor(facility);
+    verify(facilityService).updateEnabledAndActiveFor(facility);
   }
 
   @Test

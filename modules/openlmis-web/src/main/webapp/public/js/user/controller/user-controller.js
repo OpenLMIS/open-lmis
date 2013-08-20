@@ -18,10 +18,6 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   loadUserFacility();
   preparePrograms(programs);
 
-  $scope.disableAllFields = function() {
-    $('.form-group').find(':input').attr('disabled','disabled');
-  };
-
   $scope.rolesMap = _.groupBy(roles, function (role) {
     return role.type;
   });
@@ -230,14 +226,13 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     clearErrorAndSetMessage(data.success);
     $scope.user = originalUser;
     $scope.user.active = false;
-    $scope.disableAllFields();
   };
 
   $scope.showConfirmUserRestoreModal = function() {
     var dialogOpts = {
       id: "restoreUserDialog",
-      header: messageService.get('restore.user.header'),
-      body: messageService.get('restore.user.confirm', $scope.user.firstName, $scope.user.lastName)
+      header: messageService.get('enable.user.header'),
+      body: messageService.get('enable.user.confirm', $scope.user.firstName, $scope.user.lastName)
     };
     OpenLmisDialog.newDialog(dialogOpts, $scope.restoreUserCallback, $dialog, messageService);
   }
