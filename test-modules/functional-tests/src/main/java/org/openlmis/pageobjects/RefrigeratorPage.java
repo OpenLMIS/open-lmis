@@ -66,13 +66,13 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = ID, using = "problemSinceLastVisitYes")
   private static WebElement problemSinceLastVisitYesRadio;
 
-  @FindBy(how = ID, using = "problemSinceLastVisitNo")
+  @FindBy(how = ID, using = "problemSinceLastVisitNo0")
   private static WebElement problemSinceLastVisitNoRadio;
 
-  @FindBy(how = ID, using = "problemSinceLastVisitDontKnow")
+  @FindBy(how = ID, using = "problemSinceLastVisitDontKnow0")
   private static WebElement problemSinceLastVisitDontKnowRadio;
 
-  @FindBy(how = ID, using = "problemSinceLastVisitNR")
+  @FindBy(how = ID, using = "problemSinceLastVisitNR0")
   private static WebElement problemSinceLastVisitNR;
 
   @FindBy(how = ID, using = "operatorError")
