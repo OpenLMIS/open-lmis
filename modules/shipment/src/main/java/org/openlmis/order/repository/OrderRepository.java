@@ -7,6 +7,7 @@
 package org.openlmis.order.repository;
 
 import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.repository.mapper.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -35,5 +36,9 @@ public class OrderRepository {
     for (Order order : orders) {
       orderMapper.updateShipmentInfo(order);
     }
+  }
+
+  public List<OrderFileColumn> getOrderFileTemplate() {
+    return orderMapper.getOrderFileTemplate();
   }
 }

@@ -14,11 +14,13 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.repository.mapper.OrderMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -73,5 +75,18 @@ public class OrderRepositoryTest {
     Order savedOrder = orderRepository.getById(1L);
     verify(orderMapper).getById(1L);
     assertThat(savedOrder, is(expectedOrder));
+  }
+
+  @Test
+  public void shouldGetOrderFileTemplate() {
+    OrderFileColumn orderFileColumn = new OrderFileColumn();
+    orderFileColumn.setDataFieldLabel("facility.code");
+    orderFileColumn.setColumnLabel("Facility code");
+    orderFileColumn.setPosition(1);
+    orderFileColumn.setIncludeInOrderFile(false);
+    List<OrderFileColumn> orderFileColumns = asList(orderFileColumn);
+    when(orderMapper.getOrderFileTemplate()).thenReturn(orderFileColumns);
+    assertThat(orderRepository.getOrderFileTemplate(), is(orderFileColumns));
+    verify(orderMapper).getOrderFileTemplate();
   }
 }
