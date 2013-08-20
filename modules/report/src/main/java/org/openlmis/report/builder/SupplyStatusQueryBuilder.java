@@ -32,7 +32,7 @@ public class SupplyStatusQueryBuilder {
                 "    inner join processing_periods ON processing_periods.scheduleid = processing_schedules.id  \n" +
                 "    left outer join vw_program_facility_supplier fs ON fs.supervisory_node_id = requisition_groups.supervisorynodeid AND fs.program_id = programs.id \n" +
 
-                writePredicates(params)+ "\n"+
+                writePredicates((Map) params.get("filterCriteria"))+ "\n"+
 
                 "group by facilities.name,li.productcode, li.product, li.productcategory ,requisition_groups.id \n" +
                 " order by " + QueryHelpers.getSortOrder(params, "facilities.name asc,li.productcode asc,  li.product asc, li.productcategory asc , requisition_groups.id asc");

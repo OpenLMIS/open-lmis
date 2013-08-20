@@ -83,7 +83,7 @@ public class OrderSummaryQueryBuilder {
         if (filter.getZoneId() != 0 && filter.getZoneId() != -1) {
             WHERE("facilities.geographiczoneid = "+filter.getZoneId());
         }
-        if (filter.getProductId() != -1) {
+        if (filter.getProductId() != -1 && filter.getProductId() != 0) {
             WHERE("products.id ="+ filter.getProductId());
         }
 
