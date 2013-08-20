@@ -147,6 +147,16 @@
           </div>
         </div>
 
+        <div class="form-row clearfix">
+          <div class="form-cell">
+            <label openlmis-message="label.is.verified"></label>
+            <ng-switch on="!!user.verified">
+              <span ng-switch-when="true" openlmis-message="button.yes"></span>
+              <span ng-switch-when="false" openlmis-message="button.no"></span>
+            </ng-switch>
+          </div>
+        </div>
+
       </div>
       <!-- /form-group -->
 
