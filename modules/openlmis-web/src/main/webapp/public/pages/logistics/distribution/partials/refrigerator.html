@@ -7,146 +7,147 @@
 <ng-include src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
 
 <div class="clearfix facility-container">
-  <div class="left-navigation">
-    <ul>
-      <li class="is-complete">
-        <a href="">
-          <span class="status-icon"></span>
-          <span>Visit Information</span>
-        </a>
-      </li>
-      <li class="selected is-incomplete">
-        <a href="">
-          <span class="status-icon"></span>
-          <span>Refrigerators</span>
-        </a>
-      </li>
-      <li class="is-empty">
-        <a href="">
-          <span class="status-icon"></span>
-          <span>EPI Inventory</span>
-        </a>
-      </li>
-      <li class="is-empty">
-        <a href="">
-          <span class="status-icon"></span>
-          <span>EPI Use</span>
-        </a>
-      </li>
-      <li class="is-empty">
-        <a href="">
-          <span class="status-icon"></span>
-          <span>Coverage</span>
-        </a>
-      </li>
-      <li class="is-empty">
-        <a href="">
-          <span class="status-icon"></span>
-          <span>Observations</span>
-        </a>
-      </li>
-    </ul>
-  </div>
+    <div class="left-navigation">
+        <ul>
+            <li class="is-complete">
+                <a href="">
+                    <span class="status-icon"></span>
+                    <span>Visit Information</span>
+                </a>
+            </li>
+            <li class="selected is-incomplete">
+                <a href="">
+                    <span class="status-icon"></span>
+                    <span>Refrigerators</span>
+                </a>
+            </li>
+            <li class="is-empty">
+                <a href="">
+                    <span class="status-icon"></span>
+                    <span>EPI Inventory</span>
+                </a>
+            </li>
+            <li class="is-empty">
+                <a href="">
+                    <span class="status-icon"></span>
+                    <span>EPI Use</span>
+                </a>
+            </li>
+            <li class="is-empty">
+                <a href="">
+                    <span class="status-icon"></span>
+                    <span>Coverage</span>
+                </a>
+            </li>
+            <li class="is-empty">
+                <a href="">
+                    <span class="status-icon"></span>
+                    <span>Observations</span>
+                </a>
+            </li>
+        </ul>
+    </div>
 
-  <div class="facility-info">
-    <div class="refrigerator-container">
-      <h3>
-        <span openlmis-message="label.refrigerators"></span>
-        <a href="" class="btn btn-primary pull-right" ng-click="showAddRefrigeratorModal()"
-           openlmis-message="button.add.new"></a>
-      </h3>
+    <div class="facility-info">
+        <div class="refrigerator-container">
+            <h3>
+                <span openlmis-message="label.refrigerators"></span>
+                <a href="" class="btn btn-primary pull-right" ng-click="addRefrigeratorModal = true"
+                   openlmis-message="button.add.new"></a>
+            </h3>
 
-      <div class="list-header-container">
-        <div class="list-header row-fluid">
-          <div class="span1"></div>
-          <div class="span2" openlmis-message="label.refrigerator.brand"></div>
-          <div class="span3" openlmis-message="label.refrigerator.model"></div>
-          <div class="span3" openlmis-message="label.refrigerator.serial.number"></div>
-          <div class="span3"></div>
-        </div>
-      </div>
-      <div class="list-container">
-        <form auto-save="distribution" object-store="distributions">
-          <div class="list-row"
-               ng-repeat="refrigeratorReading in distribution.facilityDistributionData[selectedFacilityId].refrigeratorReadings">
-            <div class="row-fluid is-empty">
-              <div class="span1">
-                <span class="status-icon"></span>
-              </div>
-              <div class="span2" ng-bind="refrigeratorReading.refrigerator.brand"></div>
-              <div class="span3" ng-bind="refrigeratorReading.refrigerator.model"></div>
-              <div class="span3" ng-bind="refrigeratorReading.refrigerator.serialNumber"></div>
-              <div class="span3">
+            <div class="list-header-container">
+                <div class="list-header row-fluid">
+                    <div class="span1"></div>
+                    <div class="span2" openlmis-message="label.refrigerator.brand"></div>
+                    <div class="span3" openlmis-message="label.refrigerator.model"></div>
+                    <div class="span3" openlmis-message="label.refrigerator.serial.number"></div>
+                    <div class="span3"></div>
+                </div>
+            </div>
+            <div class="list-container">
+                <form auto-save="distribution" object-store="distributions">
+                    <div class="list-row"
+                         ng-repeat="refrigeratorReading in distribution.facilityDistributionData[selectedFacilityId].refrigeratorReadings">
+                        <div class="row-fluid is-empty">
+                            <div class="span1">
+                                <span class="status-icon"></span>
+                            </div>
+                            <div class="span2" ng-bind="refrigeratorReading.refrigerator.brand"></div>
+                            <div class="span3" ng-bind="refrigeratorReading.refrigerator.model"></div>
+                            <div class="span3" ng-bind="refrigeratorReading.refrigerator.serialNumber"></div>
+                            <div class="span3">
                 <span class="pull-right">
                   <a href="" class="btn btn-primary" ng-click="setEdit(refrigeratorReading.refrigerator.serialNumber)"
                      ng-hide="edit[refrigeratorReading.refrigerator.serialNumber]"
                      openlmis-message="button.edit"></a>
-                  <a href="" class="btn btn-danger" openlmis-message="button.delete" ng-click="showDeleteRefrigeratorConfirmationModel(refrigeratorReading.refrigerator.serialNumber)"></a>
+                  <a href="" class="btn btn-danger" openlmis-message="button.delete"
+                     ng-click="showDeleteRefrigeratorConfirmationModel(refrigeratorReading.refrigerator.serialNumber)"></a>
                 </span>
-              </div>
+                            </div>
+                        </div>
+                        <div ng-show="edit[refrigeratorReading.refrigerator.serialNumber]" class="row-fluid">
+                            <ng-include
+                                    src="'/public/pages/logistics/distribution/partials/refrigerator-reading.html'"></ng-include>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div ng-show="edit[refrigeratorReading.refrigerator.serialNumber]" class="row-fluid">
-              <ng-include src="'/public/pages/logistics/distribution/partials/refrigerator-reading.html'"></ng-include>
-            </div>
-            <div ng-show="edit[refrigeratorReading.refrigerator.serialNumber]" class="row-fluid">
-              <a href="" id="refrigeratorReadingDone" class="btn btn-primary"
-                 ng-click="closeRefrigeratorEdit(refrigeratorReading.refrigerator.serialNumber)"
-                 openlmis-message="button.done"></a>
-            </div>
-          </div>
-        </form>
-      </div>
 
-      <div id="addRefrigeratorModal" modal="addRefrigeratorModal" options="{ backdrop: 'static', escape: false}">
-        <div class="modal-header">
-          <h3 openlmis-message="label.new.refrigerator"></h3>
+            <div id="addRefrigeratorModal" modal="addRefrigeratorModal" options="{ backdrop: 'static', escape: false}">
+                <div class="modal-header">
+                    <h3 openlmis-message="label.new.refrigerator"></h3>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <label for="brand" openlmis-message="label.refrigerator.brand">
+                                <span class="label-required">*</span>
+                            </label>
+                            <input type="text" id="brand" ng-model="newRefrigerator.brand"/>
+                        </div>
+                    </div>
+
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <label for="model" openlmis-message="label.refrigerator.model">
+                                <span class="label-required">*</span>
+                            </label>
+                            <input type="text" id="model" ng-model="newRefrigerator.model"/>
+                        </div>
+                    </div>
+
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <label for="manufacturerSerialNumber" openlmis-message="label.refrigerator.serial.number">
+                                <span class="label-required">*</span>
+                            </label>
+                            <input type="text" id="manufacturerSerialNumber" ng-model="newRefrigerator.serialNumber"/>
+
+                            <div ng-show="isDuplicateSerialNumber"
+                                 openlmis-message="error.duplicate.serial.number"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <input type="button" id="done-button" class="btn btn-primary" ng-click="addRefrigeratorToStore()"
+                           openlmis-message="button.done"
+                           ng-disabled="!newRefrigerator.brand || !newRefrigerator.model || !newRefrigerator.serialNumber"/>
+                    <input type="button" class="btn btn-cancel" ng-click="addRefrigeratorModal = false;"
+                           openlmis-message="button.cancel"/>
+                </div>
+
+            </div>
         </div>
-
-        <div class="modal-body">
-          <div class="row-fluid">
-            <div class="span12">
-              <label for="brand" openlmis-message="label.refrigerator.brand">
-                <span class="label-required">*</span>
-              </label>
-              <input type="text" id="brand" ng-model="newRefrigerator.brand"/>
-            </div>
-          </div>
-
-          <div class="row-fluid">
-            <div class="span12">
-              <label for="model" openlmis-message="label.refrigerator.model">
-                <span class="label-required">*</span>
-              </label>
-              <input type="text" id="model" ng-model="newRefrigerator.model"/>
-            </div>
-          </div>
-
-          <div class="row-fluid">
-            <div class="span12">
-              <label for="manufacturerSerialNumber" openlmis-message="label.refrigerator.serial.number">
-                <span class="label-required">*</span>
-              </label>
-              <input type="text" id="manufacturerSerialNumber" ng-model="newRefrigerator.serialNumber"/>
-              <div ng-show="isDuplicateSerialNumber" openlmis-message="error.duplicate.serial.number"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <input type="button" id="done-button" class="btn btn-primary" ng-click="addRefrigeratorToStore()" openlmis-message="button.done"
-                 ng-disabled="!newRefrigerator.brand || !newRefrigerator.model || !newRefrigerator.serialNumber" />
-          <input type="button" class="btn btn-cancel" ng-click="addRefrigeratorModal = false;" openlmis-message="button.cancel"/>
-        </div>
-
-      </div>
     </div>
-  </div>
 
-  </div>
-  <div class="facility-info facility-toolbar">
+</div>
+<div class="facility-info facility-toolbar">
     <a href="" class="pull-left">&laquo; Previous</a>
     <a href="" class="pull-right">Next &raquo;</a>
-  </div>
+</div>
 
 </div>
 

@@ -11,23 +11,11 @@ function RefrigeratorController($scope, $dialog, messageService, refrigerators, 
   $scope.selectedFacilityId = $routeParams.facility;
   $scope.edit = {};
 
-  $scope.showAddRefrigeratorModal = function () {
-    $scope.addRefrigeratorModal = true;
-    $scope.newRefrigerator = null;
-  };
-
-  $scope.closeRefrigeratorEdit = function (serialNum) {
-    $scope.edit[serialNum] = false;
-  };
-
   $scope.setEdit = function (serialNum) {
-    $scope.edit[serialNum] = true;
-
     angular.forEach($scope.edit, function (value, key) {
-      if (key != serialNum) {
-        $scope.edit[key] = false;
-      }
-    })
+      $scope.edit[key] = false;
+    });
+    $scope.edit[serialNum] = true;
   };
 
   $scope.addRefrigeratorToStore = function () {
@@ -38,7 +26,7 @@ function RefrigeratorController($scope, $dialog, messageService, refrigerators, 
       $scope.isDuplicateSerialNumber = true;
       return;
     }
-    $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings.push({'refrigerator': $scope.newRefrigerator});
+    $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings.push({'refrigerator': angular.copy($scope.newRefrigerator)});
     IndexedDB.put('distributions', $scope.distribution);
     $scope.addRefrigeratorModal = $scope.isDuplicateSerialNumber = $scope.newRefrigerator = undefined;
   };
