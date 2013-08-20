@@ -272,7 +272,7 @@ Feature: Smoke Tests
       | Dummy_User@openlmis.com | Dummy     | User     | Dummy    |
     And I disable user "Dummy User"
     Then I should see disable user "Dummy User" message
-    And I should see disable fields
+    And I should see enable fields
     And I restore user "Dummy User"
     Then I should see restore user "Dummy User" message
     And I should see enable fields
