@@ -298,4 +298,56 @@ public class TestCaseHelper {
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
   }
 
+  public String[] readCSVFile(String filePath) throws IOException, SQLException {
+        BufferedReader br = null;
+        String line = "";
+        String[] array = new String[50];
+        try {
+            int i=0;
+            br = new BufferedReader(new FileReader(filePath));
+            while ((line = br.readLine()) != null) {
+                array[i]=line;
+                i++;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return array;
+  }
+
+    public void deleteFile(String filePath) {
+        File f = new File(filePath);
+
+        if (!f.exists())
+            throw new IllegalArgumentException(
+                    "Delete: no such file or directory: " + filePath);
+
+        if (!f.canWrite())
+            throw new IllegalArgumentException("Delete: write protected: "
+                    + filePath);
+
+        if (f.isDirectory()) {
+            String[] files = f.list();
+            if (files.length > 0)
+                throw new IllegalArgumentException(
+                        "Delete: directory not empty: " + filePath);
+        }
+
+        boolean success = f.delete();
+
+        if (!success)
+            throw new IllegalArgumentException("Delete: deletion failed");
+    }
+
+
 }
+
+
