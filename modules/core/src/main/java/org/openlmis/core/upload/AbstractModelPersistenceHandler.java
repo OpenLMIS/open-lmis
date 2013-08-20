@@ -43,7 +43,7 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
       save(currentRecord);
 
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
-      throw new DataException(new OpenLmisMessage(messageService.message("upload.record.error", messageService.message("incorrect.data.length"), rowNumberAsString)));
+      throw new DataException(new OpenLmisMessage(messageService.message("upload.record.error", messageService.message("error.incorrect.length"), rowNumberAsString)));
     } catch (DataException exception) {
       throw new DataException(new OpenLmisMessage(messageService.message("upload.record.error", messageService.message(exception.getOpenLmisMessage().getCode()), rowNumberAsString)));
     }
