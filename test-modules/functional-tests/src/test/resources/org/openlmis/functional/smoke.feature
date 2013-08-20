@@ -276,7 +276,7 @@ Feature: Smoke Tests
     When I enable user "Dummy User"
     Then I should see enable user "Dummy User" message
     When I verify user email "Dummy_User@openlmis.com"
-    Then I should see user verified
+    Then I should see user "Dummy User" verified
 
   @smoke
   @ie2

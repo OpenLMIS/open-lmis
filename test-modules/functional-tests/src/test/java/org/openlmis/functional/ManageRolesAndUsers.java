@@ -90,14 +90,17 @@ public class ManageRolesAndUsers extends TestCaseHelper {
         assertEquals(userPage.getVerifiedLabel(),"No");
     }
 
-    @Then("^I should see user verified$")
-    public void VerifiedUser() throws Exception {
-        UserPage userPage = new UserPage(testWebDriver);
+    @Then("^I should see user \"([^\"]*)\" verified$")
+    public void VerifiedUser(String user) throws Exception {
+        HomePage homePage = new HomePage(testWebDriver);
+        UserPage userPage = homePage.navigateToUser();
+        userPage.searchUser(user);
+        userPage.clickUserList(user);
         assertEquals(userPage.getVerifiedLabel(),"Yes");
     }
 
     @When("^I enable user \"([^\"]*)\"$")
-    public void restoreUser(String user) throws Exception {
+    public void enableUser(String user) throws Exception {
         HomePage homePage = new HomePage(testWebDriver);
         UserPage userPage = homePage.navigateToUser();
         userPage.searchUser(user);
@@ -106,7 +109,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     }
 
     @Then("^I should see enable user \"([^\"]*)\" message$")
-    public void verifyRestoredUser(String user) throws Exception {
+    public void verifyEnabledUser(String user) throws Exception {
         UserPage userPage = new UserPage(testWebDriver);
         userPage.verifyMessage("User \''"+ user +"\'' has been enabled");
     }
