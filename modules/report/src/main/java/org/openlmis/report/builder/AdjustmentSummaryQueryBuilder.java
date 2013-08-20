@@ -1,3 +1,8 @@
+/*
+ * Copyright © 2013 John Snow, Inc. (JSI). All Rights Reserved.
+ *
+ * The U.S. Agency for International Development (USAID) funded this section of the application development under the terms of the USAID | DELIVER PROJECT contract no. GPO-I-00-06-00007-00.
+ */
 package org.openlmis.report.builder;
 
 import org.openlmis.report.model.filter.AdjustmentSummaryReportFilter;
@@ -8,11 +13,7 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
 import static org.apache.ibatis.jdbc.SqlBuilder.FROM;
 import static org.apache.ibatis.jdbc.SqlBuilder.SQL;
 
-/**
- * User: Wolde
- * Date: 5/10/13
- * Time: 3:20 PM
- */
+
 public class AdjustmentSummaryQueryBuilder {
     public static String SelectFilteredSortedPagedRecords(Map params){
 

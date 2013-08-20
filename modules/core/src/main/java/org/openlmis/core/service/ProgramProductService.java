@@ -55,22 +55,29 @@ public class ProgramProductService {
 
   public void save(ProgramProduct programProduct) {
     if (programProduct.getId() == null) {
+
       boolean globalProductStatus = productService.isActive(programProduct.getProduct().getCode());
-      if (globalProductStatus && programProduct.isActive())
+      if (globalProductStatus && programProduct.isActive()) {
         programService.setFeedSendFlag(programProduct.getProgram(), true);
+      }
     } else {
+
       ProgramProduct existingProgramProduct = programProductRepository.getById(programProduct.getId());
       if (existingProgramProduct.getProduct().getActive() && (existingProgramProduct.isActive() != programProduct.isActive())) {
         programService.setFeedSendFlag(programProduct.getProgram(), true);
       }
+
     }
     programProductRepository.save(programProduct);
     // log the price change here.
+    // and only log it if there was an actual change in price
     if(programProduct.getId() != null){
+
       ProgramProductPrice priceChange = new ProgramProductPrice();
-      priceChange.setProgramProduct(programProduct);
-      priceChange.setPricePerDosage(programProduct.getCurrentPrice());
-      this.updateProgramProductPrice(priceChange);
+      priceChange.setProgramProduct( programProduct );
+      priceChange.setPricePerDosage( programProduct.getCurrentPrice() );
+      this.updateProgramProductPrice( priceChange );
+
     }
 
   }
