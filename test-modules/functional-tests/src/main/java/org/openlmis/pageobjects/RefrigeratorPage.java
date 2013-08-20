@@ -129,7 +129,7 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = XPATH, using = "//a[contains(text(),'OK')]")
   public static WebElement OKButton;
 
-  @FindBy(how = XPATH, using = "//h3[contains(text(),'delete.refrigerator.readings.header')]")
+  @FindBy(how = XPATH, using = "//h3[contains(text(),'Delete Refrigerator')]")
   public static WebElement deletePopUpHeader;
 
 
