@@ -33,6 +33,8 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 public class ReportData extends TestCaseHelper {
 
+    private static String downloadedFilePath = "/Users/Raman/Downloads/csv";
+
   @BeforeMethod(groups = {"functional"})
   public void setUp() throws Exception {
     super.setup();
@@ -40,21 +42,20 @@ public class ReportData extends TestCaseHelper {
     @Test(dataProvider = "Data-Provider-Function-Positive")
     public void testVerifyReport(String[] credentials) throws Exception {
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-
         HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
         homePage.navigateReportScreen();
-        WebElement x=testWebDriver.getElementByXpath("//table[@class='table table-striped table-bordered']/tbody/tr[1]/td[2]/div/a[3]");
-        x.click();
-        Thread.sleep(5000);
-        String array[]=readCSVFile("/Users/raman/Downloads/csv.csv");
-        System.out.print(array.length);
-        for (int i=0;i<=array.length-1;i++){
-            System.out.println(array[i]);
-        }
-        deleteFile("/Users/raman/Downloads/csv.csv");
+        getReportData(1);
+        deleteFile(downloadedFilePath);
     }
 
-  @AfterMethod(groups = {"functional"})
+    public String[] getReportData(int reportNumber) throws Exception {
+        WebElement reportLink=testWebDriver.getElementByXpath("//table[@class='table table-striped table-bordered']/tbody/tr[" + reportNumber + "]/td[2]/div/a[3]");
+        reportLink.click();
+        Thread.sleep(2000);
+        return(readCSVFile(downloadedFilePath));
+    }
+
+    @AfterMethod(groups = {"functional"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
