@@ -1,3 +1,9 @@
+<!--
+  ~ Copyright © 2013 John Snow, Inc. (JSI). All Rights Reserved.
+  ~
+  ~ The U.S. Agency for International Development (USAID) funded this section of the application development under the terms of the USAID | DELIVER PROJECT contract no. GPO-I-00-06-00007-00.
+  -->
+
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
     <div ng-hide="requisitionGroup.id"><h2>Add Requisition Group</h2></div>
     <div ng-show="requisitionGroup.id">
@@ -14,7 +20,8 @@
                             <label for="code">Code: <span class="label-required"> *</span></label>
 
                             <div class="form-field">
-                                <input ng-model="requisitionGroup.code" name="code" id="code" type="text" maxlength="30" width="200px"
+                                <input ng-model="requisitionGroup.code" name="code" id="code" type="text" maxlength="30"
+                                       width="200px"
                                        ng-required="true"/>
                               <span class="field-error" ng-show="requisitionGroupForm.name.$error.required && showError"
                                     openlmis-message="missing.value">
@@ -25,7 +32,8 @@
                             <label for="name">Name: <span class="label-required"> *</span></label>
 
                             <div class="form-field">
-                                <input ng-model="requisitionGroup.name" name="name" id="name" type="text" maxlength="30" width ="320px"
+                                <input ng-model="requisitionGroup.name" name="name" id="name" type="text" maxlength="30"
+                                       width="320px"
                                        ng-required="true" ng-change="validateRequisitionGroupName()"/>
                                   <span class="field-error" ng-show="requisitionGroup.name.$error.required && showError"
                                         openlmis-message="missing.value">
@@ -50,9 +58,10 @@
                             <label for="description">Description: </label>
 
                             <div class="form-field">
-                                <textarea style="width:350px" ng-model="requisitionGroup.description" name="description" id="description"
-                                       type="text" maxlength="200" rows="5"
-                                       ng-required="false"></textarea>
+                                <textarea style="width:350px" ng-model="requisitionGroup.description" name="description"
+                                          id="description"
+                                          type="text" maxlength="200" rows="5"
+                                          ng-required="false"></textarea>
                             </div>
                         </div>
                         <div form-toolbar id="action_buttons" class="action-buttons">
@@ -71,8 +80,10 @@
                     <span ng-bind="message"></span>.
                 </div>
                 <h2><span>Associated Facilities</span>
-                    <a ng-click="addNewMemberFacility()" class="pull-right btn btn-primary"><span id="requisition-group-facility-add-new">Add New</span></a>
+                    <a ng-click="addNewMemberFacility()" class="pull-right btn btn-primary"><span
+                            id="requisition-group-facility-add-new">Add New</span></a>
                 </h2>
+
                 <div class="facility-list">
                     <div class="row-fluid list-row">
                         <div class="span2" style="..."><strong>Facility Name</strong></div>
@@ -107,7 +118,9 @@
                             <label for="geographicZoneValue"><span>Geographic Zone</span></label>
                         </div>
                         <div class="span4">
-                            <select style="width:200px;"  ng-change="filterFacilityList()" ng-required="true"  name="geographicZoneValue" id="geographicZoneValue" ng-model="geographicZone" ng-options="option as option.name for option in geographicZones">
+                            <select style="width:200px;" ng-change="filterFacilityList()" ng-required="true"
+                                    name="geographicZoneValue" id="geographicZoneValue" ng-model="geographicZone"
+                                    ng-options="option as option.name for option in geographicZones">
                             </select>
                         </div>
                     </div>
@@ -117,7 +130,9 @@
                             <label for="facilityTypeValue"><span>Facility Type</span></label>
                         </div>
                         <div class="span4">
-                            <select style="width:200px;" ng-change="filterFacilityList()" ng-required="true"  name="facilityTypeValue" id="facilityTypeValue" ng-model="facilityType" ng-options="option as option.name for option in facilityTypes">
+                            <select style="width:200px;" ng-change="filterFacilityList()" ng-required="true"
+                                    name="facilityTypeValue" id="facilityTypeValue" ng-model="facilityType"
+                                    ng-options="option as option.name for option in facilityTypes">
                             </select>
                         </div>
                     </div>
@@ -127,7 +142,9 @@
                             <label for="facilityValue"><span>Facility</span></label>
                         </div>
                         <div class="span4">
-                            <select style="width:200px;" ng-required="true" size="7"  name="facilityValue" id="facilityValue" ng-model="requisitionGroupMember.facility" ng-options="option as option.code.concat('-').concat.(option.name) for option in allFacilitiesFiltered">
+                            <select style="width:200px;" ng-required="true" size="7" name="facilityValue"
+                                    id="facilityValue" ng-model="requisitionGroupMember.facility"
+                                    ng-options="option as option.code.concat('-').concat.(option.name) for option in allFacilitiesFiltered">
                             </select>
                         </div>
                     </div>
@@ -151,7 +168,6 @@
     </div>
 
     <!-- -->
-
 
 
 </div>
