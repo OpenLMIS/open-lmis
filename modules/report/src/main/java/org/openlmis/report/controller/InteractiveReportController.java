@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 John Snow, Inc. (JSI). All Rights Reserved.
+ *
+ * The U.S. Agency for International Development (USAID) funded this section of the application development under the terms of the USAID | DELIVER PROJECT contract no. GPO-I-00-06-00007-00.
+ */
+
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
@@ -315,6 +321,24 @@ public class InteractiveReportController  extends BaseController {
         int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
 
         return new Pages(page,totalRecCount,max,stockedOutReportList);
+    }
+
+    @RequestMapping(value = "/reportdata/rnr_feedback", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_RNR_FEEDBACK_REPORT')")
+    public Pages getRnRFeedbackReportData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                       @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                       HttpServletRequest request
+
+    ) {
+
+
+
+        Report report = reportManager.getReportByKey("rnr_feedback");
+        List<RnRFeedbackReport> rnRFeedbackReports =
+                (List<RnRFeedbackReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
+        int totalRecCount =  rnRFeedbackReports.size();
+
+        return new Pages(page,totalRecCount,max,rnRFeedbackReports);
     }
 
 

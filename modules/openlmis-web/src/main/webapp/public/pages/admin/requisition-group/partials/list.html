@@ -1,14 +1,22 @@
+<!--
+  ~ Copyright © 2013 John Snow, Inc. (JSI). All Rights Reserved.
+  ~
+  ~ The U.S. Agency for International Development (USAID) funded this section of the application development under the terms of the USAID | DELIVER PROJECT contract no. GPO-I-00-06-00007-00.
+  -->
+
 <div xmlns="http://www.w3.org/1999/html">
     <h2><span>Requisition Groups List</span>
         <a href="#/create-requisition-group" class="pull-right btn btn-primary"><span id="requisition-group-add-new">Add New</span></a>
     </h2>
 
     <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="requisitionGroupId">
-        <span ng-bind="message"></span>.<!-- &nbsp;&nbsp;<a ng-click="editRequisitionGroups(requisitionGroupId)" openlmis-message="search.viewHere"></a>-->
+        <span ng-bind="message"></span>.
+        <!-- &nbsp;&nbsp;<a ng-click="editRequisitionGroups(requisitionGroupId)" openlmis-message="search.viewHere"></a>-->
     </div>
 
     <input id="txtFilterRequisitionGroups" class="search-query input-xlarge" type="text" ng-model="query"
-          ng-init="showRequisitionGroupsList('txtFilterRequisitionGroups')" on-keyup="filterRequisitionGroups('txtFilterRequisitionGroups')" placeholder="Enter requisition group name"/>
+           ng-init="showRequisitionGroupsList('txtFilterRequisitionGroups')"
+           on-keyup="filterRequisitionGroups('txtFilterRequisitionGroups')" placeholder="Enter requisition group name"/>
 
 
     <div>
