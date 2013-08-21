@@ -157,7 +157,7 @@
                     </div>
 
                     <div class="span2">
-                        <input id="description_{{$index}}" name="desc" ng-show="supplylinesBackupMap[supplyline.id].edit" type="text"  ng:required="true"
+                        <input id="description_{{$index}}" name="desc" ng-show="supplylinesBackupMap[supplyline.id].edit" type="text"  ng-required="true"
                                ng-model="supplyline.description"
                                maxlength="250" placeholder="Description"/>
                         <span ng-show="supplylinesBackupMap[supplyline.id].edit" class="label-required">*</span>
