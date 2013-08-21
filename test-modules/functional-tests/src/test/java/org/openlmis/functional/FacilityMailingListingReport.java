@@ -57,7 +57,7 @@ public class FacilityMailingListingReport extends TestCaseHelper {
         facilityMailingListReportPage = homePage.navigateViewFacilityMailingListReport();
     }
 
-    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+ //   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportMenu(String [] credentials) throws IOException{
         // Assign rights here
        // List<String> rightsList = new ArrayList<String>();
@@ -70,7 +70,7 @@ public class FacilityMailingListingReport extends TestCaseHelper {
         SeleneseTestNgHelper.assertTrue(homePage.reportMenuIsDisplayed());
         homePage.logout(DEFAULT_BASE_URL);
     }
-    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  //  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportMenuHiddenForUnauthorizedUser(String [] credentials) throws IOException{
         // Assign rights here
         //List<String> rightsList = new ArrayList<String>();
@@ -84,29 +84,34 @@ public class FacilityMailingListingReport extends TestCaseHelper {
         homePage.logout(DEFAULT_BASE_URL);
     }
 
-    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  //  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportFiltersRendered(String [] credentials) throws Exception{
-        navigateToFacilityMailingListReportingPage(credentials[2],credentials[3]);
+        navigateToFacilityMailingListReportingPage(credentials[0],credentials[1]);
 
         SeleneseTestNgHelper.assertTrue(facilityMailingListReportPage.facilityCodeIsDisplayed());
         SeleneseTestNgHelper.assertTrue(facilityMailingListReportPage.facilityNameIsDisplayed());
         SeleneseTestNgHelper.assertTrue(facilityMailingListReportPage.facilityTypeIsDisplayed());
     }
 
-    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+ //   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPDFOUtput (String [] credentials) throws Exception {
            navigateToFacilityMailingListReportingPage(credentials[0],credentials[1]);
            facilityMailingListReportPage.verifyPdfReportOutput();
     }
 
 
-    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+ //   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyXLSOUtput (String [] credentials) throws Exception {
         navigateToFacilityMailingListReportingPage(credentials[0],credentials[1]);
          facilityMailingListReportPage.verifyXlsReportOutput();
     }
-
     @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifySorting(String [] credentials) throws IOException {
+        navigateToFacilityMailingListReportingPage(credentials[0],credentials[1]);
+          facilityMailingListReportPage.verifySortAscByCode();
+    }
+
+  //  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
    public void verifyFacilityListingReport(String[] credentials) throws Exception{
 
        String geoZone = "Ngorongoro";
@@ -216,7 +221,7 @@ public class FacilityMailingListingReport extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-            {new String[]{"wbomett", "Admin123", "storeincharge", "Admin123"}}
+            {new String[]{"nidris", "Admin123", "storeincharge", "Admin123"}}
     };
   }
 
