@@ -151,4 +151,33 @@ public class FacilityMailingListReportPage extends Page {
     public boolean facilityTypeIsDisplayed(){
         return facilityType.isDisplayed();
     }
+
+
+    public void verifyPdfReportOutput() throws Exception {
+        testWebDriver.waitForElementToAppear(PdfButton);
+        PdfButton.click();
+        testWebDriver.sleep(500);
+
+        SeleniumFileDownloadUtil downloadHandler = new SeleniumFileDownloadUtil(TestWebDriver.getDriver());
+        downloadHandler.setURI(testWebDriver.getCurrentUrl());
+        File downloadedFile = downloadHandler.downloadFile(this.getClass().getSimpleName(), ".pdf");
+        SeleneseTestNgHelper.assertEquals(downloadHandler.getLinkHTTPStatus(),200);
+        SeleneseTestNgHelper.assertEquals(downloadedFile.exists(), true);
+
+        testWebDriver.sleep(500);
+    }
+
+    public void verifyXlsReportOutput() throws Exception {
+        testWebDriver.waitForElementToAppear(PdfButton);
+        XLSButton.click();
+        testWebDriver.sleep(500);
+
+        SeleniumFileDownloadUtil downloadHandler = new SeleniumFileDownloadUtil(TestWebDriver.getDriver());
+        downloadHandler.setURI(testWebDriver.getCurrentUrl());
+        File downloadedFile = downloadHandler.downloadFile(this.getClass().getSimpleName(), ".xls");
+        SeleneseTestNgHelper.assertEquals(downloadHandler.getLinkHTTPStatus(),200);
+        SeleneseTestNgHelper.assertEquals(downloadedFile.exists(), true);
+
+        testWebDriver.sleep(500);
+    }
 }
