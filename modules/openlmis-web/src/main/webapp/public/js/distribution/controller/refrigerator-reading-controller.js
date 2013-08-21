@@ -34,6 +34,8 @@ function RefrigeratorReadingController($scope) {
       if (!$scope.refrigeratorReading.problems.problemMap || !hasAtLeastOneProblem)
         statusClass = 'is-incomplete';
     }
+
+    $scope.refrigeratorReading.status = statusClass;
     return statusClass;
   };
 };

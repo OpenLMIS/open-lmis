@@ -63,6 +63,20 @@ function RefrigeratorController($scope, $dialog, messageService, distribution, I
     refrigeratorReading.problems.other = undefined;
   };
 
+  $scope.getStatus = function () {
+    var readingList = $scope.distribution.facilityDistributionData[$routeParams.facility].refrigeratorReadings;
+    if (_.findWhere(readingList, {status: 'is-incomplete'})) {
+      return 'is-incomplete';
+    }
+    if (_.findWhere(readingList, {status: 'is-empty'})) {
+      if (_.findWhere(readingList, {status: 'is-complete'})) {
+        return 'is-incomplete';
+      }
+      return 'is-empty';
+    }
+    return 'is-complete';
+  }
+
 }
 
 RefrigeratorController.resolve = {
