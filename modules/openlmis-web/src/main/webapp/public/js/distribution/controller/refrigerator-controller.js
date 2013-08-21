@@ -19,43 +19,41 @@ function RefrigeratorController($scope, $dialog, messageService, refrigerators, 
   };
 
   $scope.addRefrigeratorToStore = function () {
-    var exists = _.find($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings, function (reading) {
-      return reading.refrigerator.serialNumber.toLowerCase() === $scope.newRefrigerator.serialNumber.toLowerCase();
-    });
+    var exists = _.find($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings,
+        function (reading) {
+          return reading.refrigerator.serialNumber.toLowerCase() === $scope.newRefrigerator.serialNumber.toLowerCase();
+        });
     if (exists) {
       $scope.isDuplicateSerialNumber = true;
       return;
     }
-    $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings.push({'refrigerator': angular.copy($scope.newRefrigerator)});
+    $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings.push(
+        {'refrigerator': angular.copy($scope.newRefrigerator)});
     IndexedDB.put('distributions', $scope.distribution);
     $scope.addRefrigeratorModal = $scope.isDuplicateSerialNumber = $scope.newRefrigerator = undefined;
   };
 
-  $scope.showDeleteRefrigeratorConfirmationModel = function (serialNum) {
+  $scope.showDeleteRefrigeratorConfirmationModel = function (serialNumberToDelete) {
     var dialogOpts = {
       id: "deleteRefrigeratorInfo",
       header: messageService.get('delete.refrigerator.readings.header'),
       body: messageService.get('delete.refrigerator.readings.confirm')
     };
-    $scope.serialNum = serialNum;
-    OpenLmisDialog.newDialog(dialogOpts, $scope.deleteRefrigeratorReading, $dialog, messageService);
-  };
 
-  $scope.deleteRefrigeratorReading = function (result) {
-    if (!result) return;
-    $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings.splice(getRefrigeratorIndex(), 1);
-    IndexedDB.put('distributions', $scope.distribution);
-  };
+    var callback = function (serialNumberToDelete) {
+      return function (result) {
+        if (!result) return;
+        $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings =
+            _.reject($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings,
+                function (refrigeratorReading) {
+                  return serialNumberToDelete == refrigeratorReading.refrigerator.serialNumber;
+                });
+        IndexedDB.put('distributions', $scope.distribution);
+      };
+    };
 
-  function getRefrigeratorIndex() {
-    var position = null;
-    angular.forEach($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings, function (refrigeratorReading, index) {
-      if ($scope.serialNum != null && $scope.serialNum == refrigeratorReading.refrigerator.serialNumber) {
-        position = index;
-      }
-    });
-    return position;
-  }
+    OpenLmisDialog.newDialog(dialogOpts, callback(serialNumberToDelete), $dialog, messageService);
+  };
 
   $scope.deleteOtherProblems = function (refrigeratorReading) {
     if (refrigeratorReading.problemSinceLastTime || !refrigeratorReading.problems) return;
