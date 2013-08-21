@@ -124,7 +124,7 @@
           <input type="button" id="done-button" class="btn btn-primary" ng-click="addRefrigeratorToStore()"
                  openlmis-message="button.done"
                  ng-disabled="!newRefrigerator.brand || !newRefrigerator.model || !newRefrigerator.serialNumber"/>
-          <input type="button" class="btn btn-cancel" ng-click="addRefrigeratorModal = false;"
+          <input id="button-cancel" type="button" class="btn btn-cancel" ng-click="addRefrigeratorModal = false;"
                  openlmis-message="button.cancel"/>
         </div>
 

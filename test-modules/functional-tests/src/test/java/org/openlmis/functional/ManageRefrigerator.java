@@ -83,7 +83,7 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I should see refrigerator \"([^\"]*)\" added successfully")
   public void refrigeratorShouldBeAddedSuccessfully(String refrigeratorDetails) throws IOException, SQLException {
-    verifyRefrigeratorAdded(1, refrigeratorDetails);
+    verifyRefrigeratorAdded(refrigeratorDetails);
   }
 
   @And("^I click Delete")
@@ -191,10 +191,10 @@ public class ManageRefrigerator extends TestCaseHelper {
   @Then("^I should see refrigerator details as refrigerator temperature \"([^\"]*)\" low alarm events \"([^\"]*)\" high alarm events \"([^\"]*)\" notes \"([^\"]*)\"")
   public void verifyRefrigeratorDetails(String temperature, String low, String high, String notes) throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-    assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(),temperature);
+    assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(), temperature);
 //    assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(),low);
 //    assertEquals(refrigeratorPage.getHighAlarmEventsTextFieldValue(),high);
-    assertEquals(refrigeratorPage.getNotesTextAreaValue(),notes);
+    assertEquals(refrigeratorPage.getNotesTextAreaValue(), notes);
   }
 
   public void verifyNewRefrigeratorModalWindowExist() {
@@ -211,18 +211,11 @@ public class ManageRefrigerator extends TestCaseHelper {
     assertTrue("Refrigerator confirmation for delete should show up", new RefrigeratorPage(testWebDriver).deletePopUpHeader.isDisplayed());
   }
 
-  public void verifyRefrigeratorAdded(int row, String data) {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(
-      "//div[@class='refrigerator-container']/div[2][@class='list-container']/form[@class='ng-pristine ng-valid']/div[" + row + "][@class='list-row ng-scope']/div[1][@class='row-fluid is-empty']/div[2][@class='span2 ng-binding']"));
-
+  public void verifyRefrigeratorAdded(String data) {
     String[] refrigeratorDetails = data.split(";");
-    int spanVariable = 0;
 
     for (int i = 0; i < refrigeratorDetails.length; i++) {
-      assertEquals(testWebDriver.getElementByXpath("//div[@class='refrigerator-container']/div[2][@class='list-container']/form[@class='ng-pristine ng-valid']/div[" + row + "][@class='list-row ng-scope']/div[1][@class='row-fluid is-empty']/div[" + (i + 2) + "][@class='span" + (spanVariable + 2) + " ng-binding']").getText(), refrigeratorDetails[i]);
-      spanVariable++;
-      if ((spanVariable) > 1)
-        spanVariable = 1;
+      assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/div/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetails[i]);
     }
 
   }

@@ -14,6 +14,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import static org.openqa.selenium.support.How.ID;
+import static org.openqa.selenium.support.How.NAME;
 import static org.openqa.selenium.support.How.XPATH;
 
 public class RefrigeratorPage extends Page {
@@ -33,37 +34,37 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = XPATH, using = "//span[contains(text(),'Refrigerators')]")
   private static WebElement refrigeratorTab;
 
-  @FindBy(how = XPATH, using = "//input[@ng-model='refrigeratorReading.temperature']")
+  @FindBy(how = NAME, using = "temperature0")
   public static WebElement refrigeratorTemperatureTextField;
 
-  @FindBy(how = XPATH, using = "//div[1][@class='form-cell']/input[1][@class='ng-pristine ng-valid']")
+  @FindBy(how = NAME, using = "lowAlarmEvent0")
   private static WebElement lowAlarmEventsTextField;
 
-  @FindBy(how = XPATH, using = "//div[2][@class='form-cell']/input[1][@class='ng-pristine ng-valid']")
+  @FindBy(how = NAME, using = "highAlarmEvent0")
   private static WebElement highAlarmEventsTextField;
 
   @FindBy(how = ID, using = "temperature0")
   private static WebElement refrigeratorTemperatureNR;
 
-  @FindBy(how = ID, using = "functioningCorrectlyYes")
+  @FindBy(how = ID, using = "functioningCorrectlyYes0")
   private static WebElement functioningCorrectlyYesRadio;
 
-  @FindBy(how = ID, using = "functioningCorrectlyNo")
+  @FindBy(how = ID, using = "functioningCorrectlyNo0")
   private static WebElement functioningCorrectlyNoRadio;
 
-  @FindBy(how = ID, using = "functioningCorrectlyDontKnow")
+  @FindBy(how = ID, using = "functioningCorrectlyDontKnow0")
   private static WebElement functioningCorrectlyDontKnowRadio;
 
-  @FindBy(how = ID, using = "functioningCorrectlyNR")
+  @FindBy(how = ID, using = "functioningCorrectlyNR0")
   private static WebElement functioningCorrectlyNR;
 
-  @FindBy(how = ID, using = "lowAlarmEventNR")
+  @FindBy(how = ID, using = "lowAlarmEventNR0")
   private static WebElement lowAlarmEventNR;
 
-  @FindBy(how = ID, using = "highAlarmEventNR")
+  @FindBy(how = ID, using = "highAlarmEventNR0")
   private static WebElement highAlarmEventNR;
 
-  @FindBy(how = ID, using = "problemSinceLastVisitYes")
+  @FindBy(how = ID, using = "problemSinceLastVisitYes0")
   private static WebElement problemSinceLastVisitYesRadio;
 
   @FindBy(how = ID, using = "problemSinceLastVisitNo0")
@@ -75,25 +76,25 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = ID, using = "problemSinceLastVisitNR0")
   private static WebElement problemSinceLastVisitNR;
 
-  @FindBy(how = ID, using = "operatorError")
+  @FindBy(how = ID, using = "operatorError0")
   private static WebElement operatorError;
 
-  @FindBy(how = ID, using = "burnerProblem")
+  @FindBy(how = ID, using = "burnerProblem0")
   private static WebElement burnerProblem;
 
-  @FindBy(how = ID, using = "gasLeakage")
+  @FindBy(how = ID, using = "gasLeakage0")
   private static WebElement gasLeakage;
 
-  @FindBy(how = ID, using = "gasFault")
+  @FindBy(how = ID, using = "gasFault0")
   private static WebElement gasFault;
 
-  @FindBy(how = ID, using = "other")
+  @FindBy(how = ID, using = "other0")
   private static WebElement other;
 
   @FindBy(how = ID, using = "otherTextbox")
   private static WebElement otherTextBox;
 
-  @FindBy(how = XPATH, using = "//textarea[@ng-model='refrigeratorReading.notes']")
+  @FindBy(how = ID, using = "notes")
   private static WebElement notesTextArea;
 
   @FindBy(how = XPATH, using = "//h3/span[contains(text(),'Refrigerators')]")
@@ -111,7 +112,7 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = ID, using = "done-button")
   private static WebElement doneButtonOnModal;
 
-  @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[3]/a[2]")
+  @FindBy(how = ID, using = "button-cancel")
   private static WebElement cancelButtonOnModal;
 
   @FindBy(how = XPATH, using = "//h3[contains(text(),'New Refrigerator')]")

@@ -278,7 +278,8 @@ Feature: Smoke Tests
     When I verify user email "Dummy_User@openlmis.com"
     Then I should see user "Dummy User" verified
 
-  @WIP
+  @smoke
+  @ie2
 
   Scenario: User should be able to add/edit/delete refrigerator
     Given I have the following data for distribution:
@@ -298,10 +299,10 @@ Feature: Smoke Tests
     When I click Add New Button
     Then I should see New Refrigerator Modal window
     When I enter Brand "LG"
-    And I enter Modal "800 LITRES, WONDER DOOR, HEALTH GUARD™, INVERTER LINEAR COMPRESSOR WITH 10 YEARS WARRANTY & MULAN SHINE FINISH"
+    And I enter Modal "800 LITRES"
     And I enter Serial Number "GR-J287PGHV"
     And I click Done on modal
-    Then I should see refrigerator "LG;800 LITRES, WONDER DOOR, HEALTH GUARD™, INVERTER LINEAR COMPRESSOR WITH 10 YEARS WARRANTY & MULAN SHINE FINISH;GR-J287PGHV" added successfully
+    Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" added successfully
     When I click Edit
     And I enter refrigerator temperature "3"
     And I click "Yes" it was working correctly when I left
@@ -318,4 +319,4 @@ Feature: Smoke Tests
     When I click Delete
     Then I should see confirmation for delete
     When I confirm delete
-    Then I should see refrigerator "LG;800 LITRES, WONDER DOOR, HEALTH GUARD™, INVERTER LINEAR COMPRESSOR WITH 10 YEARS WARRANTY & MULAN SHINE FINISH;GR-J287PGHV" deleted successfully
+    Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" deleted successfully
