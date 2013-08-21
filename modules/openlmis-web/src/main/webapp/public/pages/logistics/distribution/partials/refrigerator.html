@@ -56,22 +56,30 @@
            openlmis-message="button.add.new"></a>
       </h3>
 
-      <div class="list-header-container">
-        <div class="list-header row-fluid">
-          <div class="span1"></div>
-          <div class="span2" openlmis-message="label.refrigerator.brand"></div>
-          <div class="span3" openlmis-message="label.refrigerator.model"></div>
-          <div class="span3" openlmis-message="label.refrigerator.serial.number"></div>
-          <div class="span3"></div>
-        </div>
+      <div class="alert alert-info" id="noRefrigerators"
+           ng-hide="distribution.facilityDistributionData[selectedFacilityId].refrigeratorReadings.length">
+        <span openlmis-message="message.no.refrigerators.added"></span>
       </div>
-      <div class="list-container">
-        <form auto-save="distribution" object-store="distributions">
-          <div class="list-row"
-               ng-repeat="refrigeratorReading in distribution.facilityDistributionData[selectedFacilityId].refrigeratorReadings">
-            <ng-include src="'/public/pages/logistics/distribution/partials/refrigerator-reading.html'"></ng-include>
+
+      <div ng-show="distribution.facilityDistributionData[selectedFacilityId].refrigeratorReadings.length">
+        <div class="list-header-container">
+          <div class="list-header row-fluid">
+            <div class="span1"></div>
+            <div class="span2" openlmis-message="label.refrigerator.brand"></div>
+            <div class="span3" openlmis-message="label.refrigerator.model"></div>
+            <div class="span3" openlmis-message="label.refrigerator.serial.number"></div>
+            <div class="span3"></div>
           </div>
-        </form>
+        </div>
+        <div class="list-container">
+          <form auto-save="distribution" object-store="distributions">
+            <div class="list-row"
+                 ng-repeat="refrigeratorReading in distribution.facilityDistributionData[selectedFacilityId].refrigeratorReadings">
+              <ng-include src="'/public/pages/logistics/distribution/partials/refrigerator-reading.html'"></ng-include>
+            </div>
+          </form>
+        </div>
+
       </div>
 
       <div id="addRefrigeratorModal" modal="addRefrigeratorModal" options="{ backdrop: 'static', escape: false}">
@@ -124,10 +132,10 @@
     </div>
   </div>
 
-</div>
-<div class="facility-info facility-toolbar">
-  <a href="" class="pull-left">&laquo; Previous</a>
-  <a href="" class="pull-right">Next &raquo;</a>
+  <div class="facility-info facility-toolbar">
+    <a href="" class="pull-left">&laquo; Previous</a>
+    <a href="" class="pull-right">Next &raquo;</a>
+  </div>
 </div>
 
 </div>
