@@ -95,7 +95,7 @@ public class DBWrapper {
   }
 
   public void updateActiveStatusOfProgramProduct(String productCode, String programCode, String active) throws SQLException {
-    update("update program_products set active='"+active+"' where programid=(select id from programs where code='" + programCode + "') and productid=(select id from products where code='" + productCode + "');");
+    update("update program_products set active='" + active + "' where programid=(select id from programs where code='" + programCode + "') and productid=(select id from products where code='" + productCode + "');");
   }
 
   public List<String> getFacilityCodeNameForDeliveryZoneAndProgram(String deliveryZoneName, String program, boolean active) throws SQLException {
@@ -660,8 +660,8 @@ public class DBWrapper {
   }
 
   public void insertSupplyLines(String supervisoryNode, String programCode, String facilityCode) throws IOException, SQLException {
-    update("insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId) values\n" +
-      "('supplying node for HIV', (select id from supervisory_nodes where code = '" + supervisoryNode + "'), (select id from programs where code='" + programCode + "'),(select id from facilities where code = '" + facilityCode + "'));\n");
+    update("insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId,exportOrders) values\n" +
+      "('supplying node for HIV', (select id from supervisory_nodes where code = '" + supervisoryNode + "'), (select id from programs where code='" + programCode + "'),(select id from facilities where code = '" + facilityCode + "'),'t');\n");
   }
 
   public void updateSupplyingFacilityForRequisition(String facilityCode) throws IOException, SQLException {
