@@ -72,12 +72,10 @@
           </div>
         </div>
         <div class="list-container">
-          <form auto-save="distribution" object-store="distributions">
-            <div class="list-row"
-                 ng-repeat="refrigeratorReading in distribution.facilityDistributionData[selectedFacilityId].refrigeratorReadings">
-              <ng-include src="'/public/pages/logistics/distribution/partials/refrigerator-reading.html'"></ng-include>
-            </div>
-          </form>
+          <div class="list-row"
+               ng-repeat="refrigeratorReading in distribution.facilityDistributionData[selectedFacilityId].refrigeratorReadings">
+            <ng-include src="'/public/pages/logistics/distribution/partials/refrigerator-reading.html'"></ng-include>
+          </div>
         </div>
 
       </div>
