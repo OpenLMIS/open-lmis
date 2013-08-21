@@ -44,13 +44,14 @@ public enum Right {
   MANAGE_DISTRIBUTION("right.manage.distribution", ALLOCATION, "Permission to manage an distribution", 9),
   MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", ADMIN, "Permission to manage a regimen template", 4),
 
+  MANAGE_SETTING("Admin - Configure Settings", ADMIN, "Permission to configure settings.",25),
   MANAGE_REQ_GRP_PROG_SCHEDULE("Admin - Manage Requisition Group Program Schedule", ADMIN, "Permission to manage requisition groups programs schedule", 26),
   MANAGE_SUPERVISORY_NODE("Admin - Manage Supervisory Nodes",ADMIN,"Permission to manage supervisory nodes",27),
   MANAGE_REQUISITION_GROUP("Admin - Manage Requisition Groups", ADMIN, "Permission to manage requisition groups",28),
   MANAGE_PRODUCT("Admin - Manage Products", ADMIN, "Permission to manage products",29),
   MANAGE_SUPPLYLINE("Admin - Manage Supply Line", ADMIN, "Permission to manage supply line",30),
   MANAGE_GEOGRAPHIC_ZONES ("Admin - Manage Geographic Zones", ADMIN, "Permission to manage geographic zones.",31),
-  MANAGE_SETTING("Admin - Configure Settings", ADMIN, "Permission to configure settings.",32),
+
 
   VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", REPORT, "Permission to view Facility List Report",32),
   VIEW_MAILING_LABEL_REPORT("Report - Facility Listing (V2)", REPORT, "Permission to view mailing labels for facilities",33),
