@@ -6,7 +6,9 @@
 
 package org.openlmis.core.upload;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -16,7 +18,6 @@ import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,6 +26,10 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
 
   @Autowired
   MessageService messageService;
+
+  @Getter
+  @Setter
+  String messageKey;
 
   @Override
   public void execute(Importable importable, int rowNumber, AuditFields auditFields) {
@@ -43,8 +48,6 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
       }
       save(currentRecord);
 
-    } catch (DuplicateKeyException duplicateKeyException) {
-      throw new DataException(new OpenLmisMessage(messageService.message("upload.record.error", messageService.message("error.redundant.warehouse"), rowNumberAsString)));
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
       throw new DataException(new OpenLmisMessage(messageService.message("upload.record.error", messageService.message("error.incorrect.length"), rowNumberAsString)));
     } catch (DataException exception) {
@@ -55,7 +58,7 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
   private void throwExceptionIfProcessedInCurrentUpload(AuditFields auditFields, BaseModel existing) {
     if (existing != null) {
       if (existing.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
-        throw new DataException(getDuplicateMessageKey());
+        throw new DataException(getMessageKey());
       }
     }
   }
@@ -69,5 +72,7 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
 
   protected abstract void save(BaseModel record);
 
-  protected abstract String getDuplicateMessageKey();
+//  protected abstract String getMessageKey();
+
+
 }

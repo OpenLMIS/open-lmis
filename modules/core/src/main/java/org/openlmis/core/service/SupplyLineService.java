@@ -65,6 +65,6 @@ public class SupplyLineService {
 
   public SupplyLine getExisting(SupplyLine supplyLine) {
     populateIdsForSupplyLine(supplyLine);
-    return supplyLineRepository.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine);
+    return supplyLineRepository.getSupplyLineBy(supplyLine.getSupervisoryNode(), supplyLine.getProgram());
   }
 }

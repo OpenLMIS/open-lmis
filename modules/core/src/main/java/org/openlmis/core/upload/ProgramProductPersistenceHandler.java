@@ -39,7 +39,7 @@ public class ProgramProductPersistenceHandler extends AbstractModelPersistenceHa
   }
 
   @Override
-  protected String getDuplicateMessageKey() {
+  public String getMessageKey() {
     return "error.duplicate.program.product.combination";
   }
 

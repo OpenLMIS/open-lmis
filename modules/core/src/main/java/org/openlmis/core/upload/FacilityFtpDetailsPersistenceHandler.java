@@ -32,7 +32,7 @@ public class FacilityFtpDetailsPersistenceHandler extends AbstractModelPersisten
   }
 
   @Override
-  protected String getDuplicateMessageKey() {
+  public String getMessageKey() {
     return "error.duplicate.facility.code";
   }
 

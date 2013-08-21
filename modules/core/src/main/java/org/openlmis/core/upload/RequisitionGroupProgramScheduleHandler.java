@@ -38,7 +38,7 @@ public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersist
   }
 
   @Override
-  protected String getDuplicateMessageKey() {
+  public String getMessageKey() {
     return "error.duplicate.requisition.group.program.schedule";
   }
 

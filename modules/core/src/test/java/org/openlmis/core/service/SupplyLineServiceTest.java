@@ -122,7 +122,7 @@ public class SupplyLineServiceTest {
     when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1L);
     supplyLine.getSupervisoryNode().setId(1L);
     when(supervisoryNodeRepository.getSupervisoryNodeParentId(1L)).thenReturn(null);
-    when(supplyLineRepository.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine)).thenReturn(supplyLine);
+    when(supplyLineRepository.getSupplyLineBy(supplyLine.getSupervisoryNode(), supplyLine.getProgram())).thenReturn(supplyLine);
     supplyLineService.save(supplyLine);
 
     SupplyLine result = supplyLineService.getExisting(supplyLine);

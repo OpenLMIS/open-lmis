@@ -134,7 +134,7 @@ public class AbstractModelPersistenceHandlerTest {
       }
 
       @Override
-      protected String getDuplicateMessageKey() {
+      public String getMessageKey() {
         return "duplicate.record.error.code";
       }
 
@@ -153,7 +153,7 @@ public class AbstractModelPersistenceHandlerTest {
       }
 
       @Override
-      protected String getDuplicateMessageKey() {
+      public String getMessageKey() {
         return "duplicate.record.error.code";
       }
 
