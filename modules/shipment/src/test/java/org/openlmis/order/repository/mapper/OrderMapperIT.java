@@ -194,6 +194,7 @@ public class OrderMapperIT {
     orderFileColumn.setDataFieldLabel("More Red Label");
     orderFileColumn.setIncludeInOrderFile(true);
     orderFileColumn.setPosition(55);
+    orderFileColumn.setOpenLmisField(true);
     mapper.insertOrderFileColumn(orderFileColumn);
     List<OrderFileColumn> orderFileColumns = mapper.getOrderFileColumns();
     assertThat(orderFileColumns.contains(orderFileColumn), is(true));
