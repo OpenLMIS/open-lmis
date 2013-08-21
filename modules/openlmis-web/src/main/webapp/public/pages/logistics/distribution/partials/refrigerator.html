@@ -69,27 +69,7 @@
         <form auto-save="distribution" object-store="distributions">
           <div class="list-row"
                ng-repeat="refrigeratorReading in distribution.facilityDistributionData[selectedFacilityId].refrigeratorReadings">
-            <div class="row-fluid is-empty">
-              <div class="span1 status-cell">
-                <span class="status-icon"></span>
-              </div>
-              <div class="span2" ng-bind="refrigeratorReading.refrigerator.brand"></div>
-              <div class="span3" ng-bind="refrigeratorReading.refrigerator.model"></div>
-              <div class="span3" ng-bind="refrigeratorReading.refrigerator.serialNumber"></div>
-              <div class="span3">
-                <span class="pull-right">
-                  <a href="" class="btn btn-primary btn-small" ng-click="setEdit(refrigeratorReading.refrigerator.serialNumber)"
-                     ng-hide="edit[refrigeratorReading.refrigerator.serialNumber]"
-                     openlmis-message="button.edit"></a>
-                  <a href="" class="btn btn-danger btn-small" openlmis-message="button.delete"
-                     ng-click="showDeleteRefrigeratorConfirmationModel(refrigeratorReading.refrigerator.serialNumber)"></a>
-                </span>
-              </div>
-            </div>
-            <div ng-show="edit[refrigeratorReading.refrigerator.serialNumber]" class="row-fluid">
-              <ng-include
-                src="'/public/pages/logistics/distribution/partials/refrigerator-reading.html'"></ng-include>
-            </div>
+            <ng-include src="'/public/pages/logistics/distribution/partials/refrigerator-reading.html'"></ng-include>
           </div>
         </form>
       </div>
@@ -143,9 +123,12 @@
       </div>
     </div>
   </div>
-  <div class="facility-info facility-toolbar">
-    <a href="" class="pull-left">&laquo; Previous</a>
-    <a href="" class="pull-right">Next &raquo;</a>
-  </div>
+
+</div>
+<div class="facility-info facility-toolbar">
+  <a href="" class="pull-left">&laquo; Previous</a>
+  <a href="" class="pull-right">Next &raquo;</a>
+</div>
+
 </div>
 
