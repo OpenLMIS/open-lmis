@@ -54,8 +54,9 @@ CACHE:
 /public/js/distribution/controller/view-load-amount-controller.js
 /public/js/distribution/controller/record-facility-data-controller.js
 /public/js/distribution/controller/refrigerator-controller.js
+/public/js/distribution/controller/refrigerator-reading-controller.js
+
 /public/js/shared/directives/auto-save.js
-/public/js/distribution/model/refrigerator-reading.js
 /public/js/shared/controller/locale-controller.js
 /public/lib/select2/select2.png
 /public/pages/logistics/distribution/partials/refrigerator-reading.html
