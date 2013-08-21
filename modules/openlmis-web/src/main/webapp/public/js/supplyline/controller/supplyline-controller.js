@@ -84,7 +84,9 @@ function SupplylineController($scope,$location,$dialog,messageService,ReportProg
     $scope.createSupplyline = function () {
         $scope.error = "";
 
-        if ($scope.supplylineForm.$invalid) {
+        var form = document.getElementById('createSupplylineForm');
+
+        if (form.$invalid) {
             $scope.showError = true;
             return;
         }
