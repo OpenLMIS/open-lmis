@@ -146,4 +146,14 @@ public class OrderServiceTest {
     verify(orderRepository).getOrderFileTemplate();
     assertThat(actualOrderFileTemplateDTO, is(expectedOrderFileTemplateDTO));
   }
+
+  @Test
+  public void shouldSaveOrderFileColumnsWithConfiguration() throws Exception {
+    Configuration configuration = new Configuration();
+    List<OrderFileColumn> orderFileColumns = new ArrayList<>();
+    OrderFileTemplateDTO orderFileTemplateDTO = new OrderFileTemplateDTO(configuration, orderFileColumns);
+    orderService.saveOrderFileTemplate(orderFileTemplateDTO);
+    verify(configurationRepository).update(configuration);
+    verify(orderRepository).saveOrderFileColumns(orderFileColumns);
+  }
 }

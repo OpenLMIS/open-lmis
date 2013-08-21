@@ -39,6 +39,13 @@ public class OrderRepository {
   }
 
   public List<OrderFileColumn> getOrderFileTemplate() {
-    return orderMapper.getOrderFileTemplate();
+    return orderMapper.getOrderFileColumns();
+  }
+
+  public void saveOrderFileColumns(List<OrderFileColumn> orderFileColumns) {
+    orderMapper.deleteOrderFileColumns();
+    for(OrderFileColumn column : orderFileColumns) {
+      orderMapper.insertOrderFileColumn(column);
+    }
   }
 }

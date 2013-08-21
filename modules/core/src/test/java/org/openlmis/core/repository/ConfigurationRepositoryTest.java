@@ -33,4 +33,11 @@ public class ConfigurationRepositoryTest {
     assertThat(configurationRepository.getConfiguration(), is(configuration));
     verify(configurationMapper).getConfiguration();
   }
+
+  @Test
+  public void shouldUpdateConfigurations() throws Exception {
+    Configuration configuration = new Configuration();
+    configurationRepository.update(configuration);
+    verify(configurationMapper).update(configuration);
+  }
 }

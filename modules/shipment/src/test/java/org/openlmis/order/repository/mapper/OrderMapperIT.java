@@ -166,7 +166,7 @@ public class OrderMapperIT {
 
   @Test
   public void shouldGetOrderFileTemplate() throws Exception {
-    List<OrderFileColumn> orderFileColumns = mapper.getOrderFileTemplate();
+    List<OrderFileColumn> orderFileColumns = mapper.getOrderFileColumns();
     String[] expectedDataFieldLabels = {"header.order.number", "create.facility.code", "header.product.code",
       "header.quantity.approved", "label.period", "header.order.date"};
     String[] expectedColumnLabels = {"Order number", "Facility code", "Product code", "Approved quantity",
@@ -175,9 +175,28 @@ public class OrderMapperIT {
     for (int i = 0; i < expectedDataFieldLabels.length; i++) {
       assertThat(orderFileColumns.get(i).getDataFieldLabel(), is(expectedDataFieldLabels[i]));
       assertThat(orderFileColumns.get(i).getPosition(), is(i+1));
-      assertThat(orderFileColumns.get(i).includeInOrderFile(), is(true));
+      assertThat(orderFileColumns.get(i).getIncludeInOrderFile(), is(true));
       assertThat(orderFileColumns.get(i).getColumnLabel(), is(expectedColumnLabels[i]));
     }
+  }
+
+  @Test
+  public void shouldDeleteAllOrderFileColumns() throws Exception {
+    mapper.deleteOrderFileColumns();
+    List<OrderFileColumn> orderFileColumns = mapper.getOrderFileColumns();
+    assertThat(orderFileColumns.size(), is(0));
+  }
+
+  @Test
+  public void shouldInsertOrderFileColumn() throws Exception {
+    OrderFileColumn orderFileColumn = new OrderFileColumn();
+    orderFileColumn.setColumnLabel("Red Label");
+    orderFileColumn.setDataFieldLabel("More Red Label");
+    orderFileColumn.setIncludeInOrderFile(true);
+    orderFileColumn.setPosition(55);
+    mapper.insertOrderFileColumn(orderFileColumn);
+    List<OrderFileColumn> orderFileColumns = mapper.getOrderFileColumns();
+    assertThat(orderFileColumns.contains(orderFileColumn), is(true));
   }
 
   private long updateOrderCreatedTime(Order order, Date date) throws SQLException {

@@ -9,7 +9,6 @@ package org.openlmis.order.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.repository.ConfigurationRepository;
 import org.openlmis.order.domain.Order;
-import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
@@ -90,5 +89,10 @@ public class OrderService {
 
   public OrderFileTemplateDTO getOrderFileTemplateDTO() {
     return new OrderFileTemplateDTO(configurationRepository.getConfiguration(), orderRepository.getOrderFileTemplate());
+  }
+
+  public void saveOrderFileTemplate(OrderFileTemplateDTO orderFileTemplateDTO) {
+    configurationRepository.update(orderFileTemplateDTO.getConfiguration());
+    orderRepository.saveOrderFileColumns(orderFileTemplateDTO.getOrderFileColumns());
   }
 }

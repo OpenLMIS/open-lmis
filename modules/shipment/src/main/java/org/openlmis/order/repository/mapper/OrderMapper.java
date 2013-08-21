@@ -22,11 +22,11 @@ public interface OrderMapper {
   void insert(Order order);
 
   @Select("SELECT * FROM orders ORDER BY createdDate DESC")
-      @Results({
-          @Result(property = "rnr.id", column = "rnrId"),
-          @Result(property = "shipmentFileInfo", javaType = ShipmentFileInfo.class, column = "shipmentId",
-                  one = @One(select = "org.openlmis.shipment.repository.mapper.ShipmentMapper.getShipmentFileInfo")),
-      })
+  @Results({
+    @Result(property = "rnr.id", column = "rnrId"),
+    @Result(property = "shipmentFileInfo", javaType = ShipmentFileInfo.class, column = "shipmentId",
+      one = @One(select = "org.openlmis.shipment.repository.mapper.ShipmentMapper.getShipmentFileInfo")),
+  })
   List<Order> getAll();
 
   @Select("SELECT * FROM orders WHERE id = #{id}")
@@ -38,6 +38,13 @@ public interface OrderMapper {
   @Update("UPDATE orders SET shipmentId=#{shipmentFileInfo.id},status=#{status} WHERE rnrid=#{rnr.id} AND STATUS='RELEASED'")
   void updateShipmentInfo(Order order);
 
-  @Select("SELECT * FROM order_file_template")
-  List<OrderFileColumn> getOrderFileTemplate();
+  @Select("SELECT * FROM order_file_columns ORDER BY position")
+  List<OrderFileColumn> getOrderFileColumns();
+
+  @Delete("DELETE from order_file_columns")
+  void deleteOrderFileColumns();
+
+  @Insert("INSERT INTO order_file_columns (dataFieldLabel, includeInOrderFile, columnLabel, position, openLmisField)" +
+    " VALUES (#{dataFieldLabel}, #{includeInOrderFile}, #{columnLabel}, #{position}, #{openLmisField})")
+  void insertOrderFileColumn(OrderFileColumn orderFileColumn);
 }

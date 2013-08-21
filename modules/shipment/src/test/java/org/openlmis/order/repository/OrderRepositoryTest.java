@@ -24,9 +24,8 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class OrderRepositoryTest {
@@ -78,15 +77,24 @@ public class OrderRepositoryTest {
   }
 
   @Test
-  public void shouldGetOrderFileTemplate() {
+  public void shouldGetOrderFileColumns() {
     OrderFileColumn orderFileColumn = new OrderFileColumn();
     orderFileColumn.setDataFieldLabel("facility.code");
     orderFileColumn.setColumnLabel("Facility code");
     orderFileColumn.setPosition(1);
     orderFileColumn.setIncludeInOrderFile(false);
     List<OrderFileColumn> orderFileColumns = asList(orderFileColumn);
-    when(orderMapper.getOrderFileTemplate()).thenReturn(orderFileColumns);
+    when(orderMapper.getOrderFileColumns()).thenReturn(orderFileColumns);
     assertThat(orderRepository.getOrderFileTemplate(), is(orderFileColumns));
-    verify(orderMapper).getOrderFileTemplate();
+    verify(orderMapper).getOrderFileColumns();
+  }
+
+  @Test
+  public void shouldSaveOrderFileColumns() throws Exception {
+    OrderFileColumn orderFileColumn = new OrderFileColumn();
+    List<OrderFileColumn> orderFileColumns = asList(orderFileColumn);
+    orderRepository.saveOrderFileColumns(orderFileColumns);
+    verify(orderMapper).deleteOrderFileColumns();
+    verify(orderMapper, times(1)).insertOrderFileColumn(orderFileColumn);
   }
 }

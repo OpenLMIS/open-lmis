@@ -80,7 +80,7 @@ public class RoleRightsServiceTest {
       CREATE_REQUISITION,
       VIEW_REQUISITION,
       VIEW_ORDER,
-      MANAGE_EDI);
+      CONFIGURE_EDI);
 
     assertThat(allRights, is(alphabeticalRights));
   }

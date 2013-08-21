@@ -1,24 +1,17 @@
 package org.openlmis.order.domain;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import static lombok.AccessLevel.PRIVATE;
+import org.openlmis.core.domain.BaseModel;
 
 @Data
 @NoArgsConstructor
-public class OrderFileColumn {
+public class OrderFileColumn extends BaseModel{
+
   private String dataFieldLabel;
-
+  private Boolean openLmisField;
   private int position;
-
   private String columnLabel;
+  private Boolean includeInOrderFile;
 
-  @Getter(PRIVATE)
-  private boolean includeInOrderFile;
-
-  public boolean includeInOrderFile() {
-    return includeInOrderFile;
-  }
 }

@@ -12,10 +12,15 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ConfigurationRepository {
+
   @Autowired
   private ConfigurationMapper configurationMapper;
 
   public Configuration getConfiguration() {
     return configurationMapper.getConfiguration();
+  }
+
+  public void update(Configuration configuration) {
+    configurationMapper.update(configuration);
   }
 }

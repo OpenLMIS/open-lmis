@@ -39,7 +39,7 @@ public enum Right {
   VIEW_ORDER("right.view.order", ADMIN, "Permission to view orders", 17),
   MANAGE_PROGRAM_PRODUCT("right.manage.program.product", ADMIN, "Permission to manage program products", 3),
   MANAGE_DISTRIBUTION("right.manage.distribution", ALLOCATION, "Permission to manage an distribution", 9),
-  MANAGE_EDI("right.manage.edi", ADMIN, "Permission to manage Electronic Data Interchange (EDI)", 18),
+  CONFIGURE_EDI("right.configure.edi", ADMIN, "Permission to configure Electronic Data Interchange (EDI)", 18),
   MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", ADMIN, "Permission to manage a regimen template", 4);
 
   @Getter

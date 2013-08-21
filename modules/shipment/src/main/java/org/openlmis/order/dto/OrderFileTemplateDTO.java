@@ -1,19 +1,21 @@
 package org.openlmis.order.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Configuration;
 import org.openlmis.order.domain.OrderFileColumn;
 
 import java.util.List;
 
 @AllArgsConstructor
-@Getter
+@Data
 @EqualsAndHashCode
+@NoArgsConstructor
 public class OrderFileTemplateDTO {
 
-  private Configuration configuration;
+  Configuration configuration;
 
-  private List<OrderFileColumn> orderFileColumns;
+  List<OrderFileColumn> orderFileColumns;
 }
