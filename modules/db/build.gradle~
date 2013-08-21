@@ -1,0 +1,121 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+import groovy.sql.Sql
+
+configurations {
+    flyway
+    classpath
+}
+
+dependencies {
+    compile 'com.googlecode.flyway:flyway-core:2.1.1',
+            'com.googlecode.flyway:flyway-ant:2.1.1',
+            'postgresql:postgresql:9.1-901.jdbc4',
+            'com.mchange:c3p0:0.9.2.1',
+            'org.springframework:spring-tx:3.1.1.RELEASE',
+            'org.springframework:spring-jdbc:3.1.1.RELEASE',
+            'org.springframework:spring-aspects:3.1.1.RELEASE',
+            'org.aspectj:aspectjrt:1.7.0',
+            'org.mybatis:mybatis-spring:1.1.1'
+
+    testCompile 'org.springframework:spring-test:3.1.1.RELEASE'
+
+    flyway 'com.googlecode.flyway:flyway-ant:1.7',
+            'postgresql:postgresql:9.1-901.jdbc4'
+
+    classpath 'postgresql:postgresql:9.1-901.jdbc4'
+
+    configurations {
+        testFixtures {
+            extendsFrom testRuntime
+        }
+    }
+
+    task testJar(type: Jar) {
+        from sourceSets.test.output
+        classifier = 'test'
+    }
+
+    artifacts {
+        testFixtures testJar
+    }
+
+}
+
+task setupDB(dependsOn: ["createDB", clean]) << {
+    ext.flyway_classpath = files(configurations.flyway)
+    ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
+    ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword)
+
+    tasks.migrateDB.execute()
+    ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword, table: newmigtable  )
+    //tasks.migrateDB.execute()
+}
+
+task createDB(dependsOn: "dropDB") << {
+    println("Creating Database..")
+    executeSqlOnDatabase('create database ' + dbName, dbUser)
+    executeSqlOnDatabase('create schema ' + atomfeedDbSchema, dbName)
+    executeSqlOnDatabase('grant all on schema ' + atomfeedDbSchema + ' to  ' + dbUser, dbName)
+
+}
+
+task dropDB() << {
+    println("Dropping Database..")
+    if (!dropIfInUse(dbName, "procpid")) {
+        dropIfInUse(dbName, "pid")
+    }
+}
+
+boolean dropIfInUse(String dbName, String pid) {
+    try {
+        executeSqlOnDatabase('SELECT pg_terminate_backend(' + pid + ') FROM pg_stat_activity WHERE datname=\'' + dbName + '\'', dbUser)
+        executeSqlOnDatabase('DROP DATABASE IF EXISTS ' + dbName, dbUser)
+        return true
+    } catch (Exception e) {
+        return false
+    }
+}
+
+jar.doFirst {
+    tasks.migrateDB.execute()
+}
+
+task migrateDB() << {
+    println("migrateDB:")
+    ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
+    ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
+    ant.flywayMigrate(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword)
+}
+
+task testSeed(type: Exec) {
+    environment("PGPASSWORD", dbPassword)
+    commandLine 'psql', '-U', dbUser, '--file', '../../test-data/sql/seed.sql', '-h', databaseHostName, '-w', dbName
+}
+
+task seed(type: Exec) {
+    environment("PGPASSWORD", dbPassword)
+    commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/seed.sql', '-h', databaseHostName, '-w', dbName
+}
+
+def executeSqlOnDatabase(String statement, String database) {
+    configurations.classpath.each { file ->
+        gradle.class.classLoader.addURL(file.toURI().toURL())
+    }
+    ext.driverName = 'org.postgresql.Driver'
+    Class.forName(driverName)
+    Sql sql = (Sql) Sql.newInstance(
+            "jdbc:postgresql://$databaseHostName:$databasePort/" + database,
+            dbUser,
+            dbPassword,
+            driverName
+    )
+
+    sql.execute(statement)
+}
+
+
