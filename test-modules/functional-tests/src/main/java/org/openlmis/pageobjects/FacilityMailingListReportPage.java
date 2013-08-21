@@ -231,4 +231,16 @@ public class FacilityMailingListReportPage extends Page {
 
         }
     }
+
+    public void verifyPagination()throws IOException{
+
+        WebElement btnPrev = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[3]/div/div[2]/div[2]/button[2]"));
+        WebElement btnNext = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[3]/div/div[2]/div[2]/button[3]"));
+
+        for(int i=0;i<5;i++)
+            btnNext.click();
+        for(int i=0;i<5;i++)
+            btnPrev.click();
+
+    }
 }

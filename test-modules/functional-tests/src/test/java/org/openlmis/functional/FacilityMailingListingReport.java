@@ -105,10 +105,17 @@ public class FacilityMailingListingReport extends TestCaseHelper {
         navigateToFacilityMailingListReportingPage(credentials[0],credentials[1]);
          facilityMailingListReportPage.verifyXlsReportOutput();
     }
-    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    //@Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifySorting(String [] credentials) throws IOException {
         navigateToFacilityMailingListReportingPage(credentials[0],credentials[1]);
           facilityMailingListReportPage.verifySortAscByCode();
+    }
+
+
+    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifyPagination(String [] credentials) throws Exception {
+        navigateToFacilityMailingListReportingPage(credentials[0],credentials[1]);
+        facilityMailingListReportPage.verifyPagination();
     }
 
   //  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
