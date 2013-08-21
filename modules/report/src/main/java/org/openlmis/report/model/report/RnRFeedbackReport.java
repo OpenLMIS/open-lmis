@@ -17,14 +17,14 @@ public class RnRFeedbackReport implements ReportData {
     private String product;
     private String facility;
     private String facilityCode;
-    private Integer beginingBalance;
-    private Integer receipts;
-    private Integer dispenses;
+    private Integer beginningBalance;
+    private Integer totalQuantityReceived;
+    private Integer totalQuantityDispensed;
     private Integer adjustments;
     private Integer physicalCount;
     private Integer adjustedAMC;
     private Integer newEOP;
-    private Integer orderQauntity;
+    private Integer orderQuantity;
     private Integer quantitySupplied;
     private String unit;
     private Double maximumStock;

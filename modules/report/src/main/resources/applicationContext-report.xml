@@ -140,6 +140,15 @@
                     <property name="title" value="Stock Imbalances by Facility"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="rnr_feedback"/>
+                    <property name="template" value="rnr_feedback_report.jasper"/>
+                    <property name="reportDataProvider" ref="rnRFeedbackReportDataProvider"/>
+                    <property name="id" value="RP-RnR-Feedback"/>
+                    <property name="name" value="Report and Requisition Feedback Report"/>
+                    <property name="title" value="Report and Requisition Feedback"/>
+                    <property name="version" value="1.0"/>
+                </bean>
 
             </list>
         </constructor-arg>
