@@ -38,10 +38,23 @@ public class FacilityListingReport extends TestCaseHelper {
   public static final String APPROVED = "APPROVED";
   public static final String RELEASED = "RELEASED";
 
+  private HomePage homePage;
+  private LoginPage loginPage;
+  private FacilityMailingListReportPage facilityMailingListReportPage;
+
   @BeforeMethod(groups = {"functional"})
   public void setUp() throws Exception {
     super.setup();
   }
+
+    private void login(String userName, String passWord) throws IOException {
+        loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        homePage = loginPage.loginAs(userName, passWord);
+    }
+
+    private void navigateToFacilityMailingListReportingPage(String userName, String passWord){
+
+    }
 
     @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportMenu(String [] credentials) throws IOException{
@@ -50,8 +63,9 @@ public class FacilityListingReport extends TestCaseHelper {
         //rightsList.add("VIEW_REPORT");
         //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
 
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+       /* LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);*/
+        login(credentials[0],credentials[1]);
         SeleneseTestNgHelper.assertTrue(homePage.reportMenuIsDisplayed());
         homePage.logout(DEFAULT_BASE_URL);
     }
@@ -62,8 +76,9 @@ public class FacilityListingReport extends TestCaseHelper {
         //rightsList.add("VIEW_REPORT");
         //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
 
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        HomePage homePage = loginPage.loginAs(credentials[2], credentials[3]);
+/*        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[2], credentials[3]);*/
+        login(credentials[2],credentials[3]);
         SeleneseTestNgHelper.assertFalse(homePage.reportMenuIsDisplayed());
         homePage.logout(DEFAULT_BASE_URL);
     }
@@ -78,6 +93,19 @@ public class FacilityListingReport extends TestCaseHelper {
         SeleneseTestNgHelper.assertTrue(facilityListingReportPage.facilityCodeIsDisplayed());
         SeleneseTestNgHelper.assertTrue(facilityListingReportPage.facilityNameIsDisplayed());
         SeleneseTestNgHelper.assertTrue(facilityListingReportPage.facilityTypeIsDisplayed());
+    }
+
+    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifyPDFOUtput (String [] credentials){
+           navigateToFacilityMailingListReportingPage(credentials[0],credentials[1]);
+
+    }
+
+
+    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifyXLSOUtput (String [] credentials){
+        navigateToFacilityMailingListReportingPage(credentials[0],credentials[1]);
+
     }
 
     @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
@@ -104,6 +132,7 @@ public class FacilityListingReport extends TestCaseHelper {
        //facilityListingReportPage.enterFilterValuesInFacilityListingReport(geoZone, facilityType, status);
        //facilityListingReportPage.verifyHTMLReportOutputOnFacilityListingScreen();
    }
+
 
 
     private void setupRnRData(String[] credentials) throws IOException, SQLException {
