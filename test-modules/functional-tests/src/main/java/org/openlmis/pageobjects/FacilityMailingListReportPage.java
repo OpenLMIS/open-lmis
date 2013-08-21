@@ -204,14 +204,31 @@ public class FacilityMailingListReportPage extends Page {
             System.out.println(str1);
             System.out.println(str2);
 
-            SeleneseTestNgHelper.assertTrue(str1.compareToIgnoreCase(str2) > 1);
+            SeleneseTestNgHelper.assertTrue(str1.trim().compareToIgnoreCase(str2.trim()) > 1);
 
         }
-        System.out.println();
 
     }
 
     public void verifySortDescByCode()throws IOException{
+        WebElement sortButtonDesc = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div"));
+        sortButtonDesc.click();
+        String str1,str2;
+        for(int i=1;i< 10; i++){
+            if (i == 1){
+                str1 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div/div/div/span")).getText();
+                str2 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div[2]/div/div/span")).getText();
+            }else{
+                str1 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div["+String.valueOf(i)+"]/div/div/span")).getText();
+                str2 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div["+String.valueOf(i+1)+"]/div/div/span")).getText();
+            }
+            // str1 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div"+strIdx+"/div/div/span")).getText();
+            // str1 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div"+strIdx+"/div/div/span")).getText();
+            System.out.println(str1);
+            System.out.println(str2);
 
+            SeleneseTestNgHelper.assertTrue(str1.trim().compareToIgnoreCase(str2.trim()) > 1);
+
+        }
     }
 }
