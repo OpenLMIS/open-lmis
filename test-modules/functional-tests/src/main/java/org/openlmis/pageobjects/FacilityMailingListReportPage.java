@@ -10,6 +10,7 @@ package org.openlmis.pageobjects;
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.SeleniumFileDownloadUtil;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
@@ -53,6 +54,9 @@ public class FacilityMailingListReportPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
   private static WebElement columnFacilityType;
+
+  @FindBy(how = CSS, using = "//div.ngHeaderCell:nth-child(1) > div:nth-child(1) > div:nth-child(2)")
+   private static WebElement sortByNameButton;
 
 
   private String facilityNameFilter;
@@ -179,5 +183,64 @@ public class FacilityMailingListReportPage extends Page {
         SeleneseTestNgHelper.assertEquals(downloadedFile.exists(), true);
 
         testWebDriver.sleep(500);
+    }
+    public void verifySortAscByCode()throws IOException{
+        WebElement sortButtonAsc = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div"));//up
+        //WebElement sortButtonDown = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div"));//down
+        //System.out.println(testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div/div/div/span")).getText());
+       // SeleneseTestNgHelper.assertTrue(sortByNameButton.isDisplayed());
+       // sortByNameButton.click();
+        String str1,str2;
+        for(int i=1;i< 10; i++){
+            if (i == 1){
+                str1 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div/div/div/span")).getText();
+                str2 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div[2]/div/div/span")).getText();
+            }else{
+                str1 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div["+String.valueOf(i)+"]/div/div/span")).getText();
+                str2 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div["+String.valueOf(i+1)+"]/div/div/span")).getText();
+            }
+           // str1 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div"+strIdx+"/div/div/span")).getText();
+           // str1 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div"+strIdx+"/div/div/span")).getText();
+            System.out.println(str1);
+            System.out.println(str2);
+
+            SeleneseTestNgHelper.assertTrue(str1.trim().compareToIgnoreCase(str2.trim()) > 1);
+
+        }
+
+    }
+
+    public void verifySortDescByCode()throws IOException{
+        WebElement sortButtonDesc = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div"));
+        sortButtonDesc.click();
+        String str1,str2;
+        for(int i=1;i< 10; i++){
+            if (i == 1){
+                str1 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div/div/div/span")).getText();
+                str2 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div[2]/div/div/span")).getText();
+            }else{
+                str1 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div["+String.valueOf(i)+"]/div/div/span")).getText();
+                str2 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div["+String.valueOf(i+1)+"]/div/div/span")).getText();
+            }
+            // str1 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div"+strIdx+"/div/div/span")).getText();
+            // str1 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div"+strIdx+"/div/div/span")).getText();
+            System.out.println(str1);
+            System.out.println(str2);
+
+            SeleneseTestNgHelper.assertTrue(str1.trim().compareToIgnoreCase(str2.trim()) > 1);
+
+        }
+    }
+
+    public void verifyPagination()throws IOException{
+
+        WebElement btnPrev = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[3]/div/div[2]/div[2]/button[2]"));
+        WebElement btnNext = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[3]/div/div[2]/div[2]/button[3]"));
+
+        for(int i=0;i<5;i++)
+            btnNext.click();
+        for(int i=0;i<5;i++)
+            btnPrev.click();
+
     }
 }
