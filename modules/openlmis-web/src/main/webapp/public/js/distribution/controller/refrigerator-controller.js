@@ -4,9 +4,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function RefrigeratorController($scope, $dialog, messageService, refrigerators, distribution, IndexedDB, $routeParams) {
+function RefrigeratorController($scope, $dialog, messageService, distribution, IndexedDB, $routeParams) {
 
-  $scope.refrigerators = refrigerators;
   $scope.distribution = distribution;
   $scope.selectedFacilityId = $routeParams.facility;
   $scope.edit = {};
@@ -67,18 +66,6 @@ function RefrigeratorController($scope, $dialog, messageService, refrigerators, 
 }
 
 RefrigeratorController.resolve = {
-  refrigerators: function ($q, IndexedDB, $route) {
-    var waitOn = $q.defer();
-    var distributionId = $route.current.params.distribution;
-    var facilityId = $route.current.params.facility;
-
-    IndexedDB.get('distributionReferenceData', utils.parseIntWithBaseTen(distributionId), function (event) {
-      waitOn.resolve(_.where(event.target.result.refrigerators, {facilityId: utils.parseIntWithBaseTen(facilityId)}));
-    }, {});
-
-    return waitOn.promise;
-  },
-
   distribution: function ($q, IndexedDB, $route) {
     var waitOn = $q.defer();
     IndexedDB.get('distributions', utils.parseIntWithBaseTen($route.current.params.distribution), function (e) {
