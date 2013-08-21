@@ -320,3 +320,18 @@ Feature: Smoke Tests
     Then I should see confirmation for delete
     When I confirm delete
     Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" deleted successfully
+
+  @smoke
+  @ie2
+
+  Scenario: User should be able to configure order file format
+    Given I am logged in as Admin
+    And I access configure order screen
+    Then I should see order file prefix "O"
+    And I should see include column header as "false"
+    And I should see all column headers disabled
+    And I should see include checkbox "checked" for all column headers
+    When I click save on order file format screen
+    Then I should see "Order file configuration saved successfully!"
+
+

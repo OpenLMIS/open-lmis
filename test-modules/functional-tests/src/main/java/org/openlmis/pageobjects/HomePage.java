@@ -104,6 +104,9 @@ public class HomePage extends Page {
   @FindBy(how = How.LINK_TEXT, using = "R & R Template")
   private static WebElement RnRTemplateConfigTab;
 
+  @FindBy(how = How.LINK_TEXT, using = "EDI File")
+  private static WebElement ediFileTab;
+
   @FindBy(how = How.LINK_TEXT, using = "Regimen Template")
   private static WebElement RegimenTemplateConfigTab;
 
@@ -267,6 +270,18 @@ public class HomePage extends Page {
     testWebDriver.getElementById(programme).click();
 
     return new TemplateConfigPage(testWebDriver);
+  }
+
+  public ConfigureOrderPage navigateConfigureOrderScreen() throws IOException {
+    SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    testWebDriver.keyPress(AdministrationMenuItem);
+    testWebDriver.waitForElementToAppear(TemplateConfigTab);
+    testWebDriver.keyPress(TemplateConfigTab);
+    testWebDriver.waitForElementToAppear(ediFileTab);
+    testWebDriver.keyPress(ediFileTab);
+
+    return new ConfigureOrderPage(testWebDriver);
   }
 
   public RegimenTemplateConfigPage navigateToRegimenConfigTemplate() {
