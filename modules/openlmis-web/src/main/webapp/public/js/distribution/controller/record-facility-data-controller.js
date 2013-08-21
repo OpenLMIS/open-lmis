@@ -7,6 +7,10 @@
 function RecordFacilityDataController($scope, $location, $routeParams, IndexedDB) {
   $scope.label = $routeParams.facility ? 'label.change.facility' : "label.select.facility";
 
+  IndexedDB.get('distributions', utils.parseIntWithBaseTen($routeParams.distribution), function (e) {
+    $scope.distribution = e.target.result;
+  }, {});
+
   IndexedDB.get('distributionReferenceData', utils.parseIntWithBaseTen($routeParams.distribution), function (event) {
     $scope.facilities = event.target.result.facilities;
     $scope.facilitySelected = _.findWhere($scope.facilities, {id: utils.parseIntWithBaseTen($routeParams.facility)});
@@ -15,8 +19,8 @@ function RecordFacilityDataController($scope, $location, $routeParams, IndexedDB
   $scope.format = function (facility) {
     if (facility.id) {
       return "<div class='is-empty'>" +
-        "<span class='status-icon'></span>" + facility.text +
-        "</div>";
+          "<span class='status-icon'></span>" + facility.text +
+          "</div>";
     } else {
       return facility.text;
     }

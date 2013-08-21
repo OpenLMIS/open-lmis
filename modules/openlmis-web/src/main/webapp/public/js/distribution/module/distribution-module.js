@@ -14,7 +14,7 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
           when('/view-load-amounts/:deliveryZoneId/:programId/:periodId',
           {controller: ViewLoadAmountController, templateUrl: 'partials/view-load-amount.html', resolve: ViewLoadAmountController.resolve}).
           when('/record-facility-data/:distribution',
-          {templateUrl: 'partials/record-facility-data.html', resolve: RecordFacilityDataController.resolve}).
+          {templateUrl: 'partials/record-facility-data.html'}).
           when('/record-facility-data/:distribution/:facility/refrigerator-data',
           {controller: RefrigeratorController, templateUrl: 'partials/refrigerator.html', resolve: RefrigeratorController.resolve}).
           otherwise({redirectTo: '/manage'});
