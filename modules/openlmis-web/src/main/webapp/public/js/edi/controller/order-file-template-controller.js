@@ -5,7 +5,10 @@
  */
 
   function OrderFileTemplateController($scope, orderFileTemplate, OrderFileTemplate) {
+
   $scope.orderFileTemplate = orderFileTemplate;
+  $scope.orderFileColumns = $scope.orderFileTemplate.orderFileColumns;
+  $scope.newOrderFileColumn = {includeInOrderFile: true, dataFieldLabel: "label.not.applicable"};
 
   $scope.saveOrderFileTemplate = function () {
     updatePosition();
@@ -21,8 +24,20 @@
     });
   };
 
+  $scope.addNewOrderFileColumn = function () {
+    $scope.newOrderFileColumn.openLmisField = false;
+    $scope.newOrderFileColumn.position = $scope.orderFileColumns.length + 1;
+    $scope.orderFileColumns.push($scope.newOrderFileColumn);
+    $scope.newOrderFileColumn = {includeInOrderFile:true, dataFieldLabel: "label.not.applicable"};
+  };
+
+  $scope.removeOrderFileColumn = function (index) {
+    $scope.orderFileColumns.splice(index-1, 1);
+    updatePosition();
+  };
+
   function updatePosition() {
-    $scope.orderFileTemplate.orderFileColumns.forEach(function (orderFileColumn, index) {
+    $scope.orderFileColumns.forEach(function (orderFileColumn, index) {
       orderFileColumn.position = index + 1;
     });
   };

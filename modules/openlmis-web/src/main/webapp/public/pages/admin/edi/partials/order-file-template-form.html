@@ -60,10 +60,32 @@
                 <div class="span4">
                   <input type="text" id="columnHeaderField{{ $index }}" ng-model="orderFileColumn.columnLabel" maxlength="50" ng-disabled="orderFileTemplate.configuration.headerInOrderFile == false"/>
                 </div>
+                <div class="span1">
+                  <a href="" class="close" id="remove{{$index}}" ng-click="removeOrderFileColumn(orderFileColumn.position)" ng-hide="orderFileColumn.openLmisField"
+                         openlmis-message="create.facility.removeProgram"></a>
+                </div>
               </div>
             </div>
           </li>
         </ul>
+        <div class="row-fluid list-row">
+          <div class="span1">
+            <span class="first-column checkbox-column">
+              <input type="checkbox" ng-model="newOrderFileColumn.includeInOrderFile"/>
+            </span>
+          </div>
+          <div class="span3">
+            <span openlmis-message="newOrderFileColumn.dataFieldLabel"></span>
+          </div>
+          <div class="span4">
+            <input type="text" ng-model="newOrderFileColumn.columnLabel" maxlength="50"/>
+          </div>
+            <div class="span1">
+              <input type="button" class="btn btn-primary" id="order-column-add" openlmis-message="button.add"
+                   ng-click="addNewOrderFileColumn()">
+            </div>
+        </div>
+
       </div>
     </div>
 

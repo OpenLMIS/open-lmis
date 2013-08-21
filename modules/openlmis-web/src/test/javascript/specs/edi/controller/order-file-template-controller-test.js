@@ -58,4 +58,18 @@ describe("Order File Template Controller", function () {
     httpBackend.flush();
     expect(scope.message).toEqual("Saved successfully");
   });
+
+  it('should add new Order file column', function () {
+    scope.newOrderFileColumn = {"dataFieldLabel": "header.order.number", "columnLabel": "Order number", "includeInOrderFile": true};
+    scope.addNewOrderFileColumn();
+    expect(scope.orderFileTemplate.orderFileColumns.length).toEqual(7);
+    expect(scope.orderFileTemplate.orderFileColumns[6].position).toEqual(7);
+    expect(scope.orderFileTemplate.orderFileColumns[6].openLmisField).toEqual(false);
+    expect(scope.newOrderFileColumn).toEqual({"includeInOrderFile": true, dataFieldLabel : "label.not.applicable"});
+  });
+
+  it('should remove order file column', function() {
+    scope.removeOrderFileColumn(5);
+    expect(scope.orderFileTemplate.orderFileColumns.length).toEqual(5);
+  });
 })

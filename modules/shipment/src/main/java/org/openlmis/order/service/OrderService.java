@@ -92,6 +92,7 @@ public class OrderService {
     return new OrderFileTemplateDTO(configurationRepository.getConfiguration(), orderRepository.getOrderFileTemplate());
   }
 
+  @Transactional
   public void saveOrderFileTemplate(OrderFileTemplateDTO orderFileTemplateDTO, Long userId) {
     Configuration configuration = orderFileTemplateDTO.getConfiguration();
     configuration.setModifiedBy(userId);
