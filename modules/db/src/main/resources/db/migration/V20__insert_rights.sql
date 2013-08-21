@@ -19,5 +19,5 @@ INSERT INTO rights (name, rightType, description) VALUES
 ('MANAGE_REPORT', 'ADMIN', 'Permission to manage reports'),
 ('MANAGE_PROGRAM_PRODUCT', 'ADMIN', 'Permission to manage program products'),
 ('MANAGE_DISTRIBUTION', 'ALLOCATION', 'Permission to manage an distribution'),
-('MANAGE_EDI', 'ADMIN', 'Permission to manage Electronic Data Interchange (EDI)'),
+('CONFIGURE_EDI', 'ADMIN', 'Permission to configure Electronic Data Interchange (EDI)'),
 ('MANAGE_REGIMEN_TEMPLATE', 'ADMIN', 'Permission to manage a regimen template');

@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS configurations;
 
 CREATE TABLE configurations (
-  orderFilePrefix   VARCHAR(8)  NOT NULL,
+  orderFilePrefix   VARCHAR(8),
   headerInOrderFile BOOLEAN     NOT NULL,
   orderDatePattern  VARCHAR(25) NOT NULL,
   periodDatePattern VARCHAR(25) NOT NULL,

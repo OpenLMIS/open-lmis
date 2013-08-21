@@ -16,7 +16,7 @@ INSERT INTO roles
   ((select id from roles where name = 'Admin'), 'MANAGE_USER'),
   ((select id from roles where name = 'Admin'), 'VIEW_REPORT'),
   ((select id from roles where name = 'Admin'), 'MANAGE_REPORT'),
-  ((select id from roles where name = 'Admin'), 'MANAGE_EDI'),
+  ((select id from roles where name = 'Admin'), 'CONFIGURE_EDI'),
   ((select id from roles where name = 'Admin'), 'MANAGE_REGIMEN_TEMPLATE');
 
 INSERT INTO users
