@@ -14,7 +14,8 @@ app.directive('autoSave', function ($route, IndexedDB, $timeout) {
       };
 
       $timeout(function () {
-        element.find('input, textarea').bind('blur', save);
+        element.find(':text, textarea').bind('blur', save);
+        element.find(':radio, :checkbox').bind('change', save);
       }, 100);
     }
   };

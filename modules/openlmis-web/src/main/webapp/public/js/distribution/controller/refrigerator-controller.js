@@ -55,7 +55,7 @@ function RefrigeratorController($scope, $dialog, messageService, distribution, I
   };
 
   $scope.deleteOtherProblems = function (refrigeratorReading) {
-    if (refrigeratorReading.problemSinceLastTime || !refrigeratorReading.problems) return;
+    if (refrigeratorReading.problemSinceLastTime.value || !refrigeratorReading.problems) return;
 
     for (var key in refrigeratorReading.problems.problemMap) {
       refrigeratorReading.problems.problemMap[key] = undefined
