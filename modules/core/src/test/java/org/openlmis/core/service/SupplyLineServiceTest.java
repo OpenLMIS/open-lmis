@@ -32,6 +32,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class SupplyLineServiceTest {
@@ -128,4 +129,5 @@ public class SupplyLineServiceTest {
 
     assertThat(result, is(supplyLine));
   }
+
 }

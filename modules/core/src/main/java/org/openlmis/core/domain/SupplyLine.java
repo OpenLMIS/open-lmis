@@ -18,15 +18,18 @@ import org.openlmis.upload.annotation.ImportField;
 public class SupplyLine extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, name = "Supervising Node", nested = "code")
-  SupervisoryNode supervisoryNode;
+  private SupervisoryNode supervisoryNode;
 
   @ImportField(name = "Description")
-  String description;
+  private String description;
 
   @ImportField(mandatory = true, name = "Program", nested = "code")
-  Program program;
+  private Program program;
 
   @ImportField(mandatory = true, name = "Facility", nested = "code")
-  Facility supplyingFacility;
+  private Facility supplyingFacility;
+
+  @ImportField(mandatory = true, type = "boolean", name = "Export Orders")
+  private Boolean exportOrders;
 
 }
