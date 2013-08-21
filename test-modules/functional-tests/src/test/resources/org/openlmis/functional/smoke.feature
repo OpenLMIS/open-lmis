@@ -278,8 +278,7 @@ Feature: Smoke Tests
     When I verify user email "Dummy_User@openlmis.com"
     Then I should see user "Dummy User" verified
 
-  @smoke
-  @ie2
+  @WIP
 
   Scenario: User should be able to add/edit/delete refrigerator
     Given I have the following data for distribution:
