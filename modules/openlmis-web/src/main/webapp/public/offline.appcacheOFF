@@ -34,6 +34,7 @@ CACHE:
 
 /public/pages/navigation-offline.html
 /public/pages/header-offline.html
+/public/pages/partials/dialogbox.html
 
 
 /public/pages/logistics/distribution/offline.html
