@@ -152,8 +152,9 @@ public class OrderServiceTest {
     Configuration configuration = new Configuration();
     List<OrderFileColumn> orderFileColumns = new ArrayList<>();
     OrderFileTemplateDTO orderFileTemplateDTO = new OrderFileTemplateDTO(configuration, orderFileColumns);
-    orderService.saveOrderFileTemplate(orderFileTemplateDTO);
+    Long userId = 1L;
+    orderService.saveOrderFileTemplate(orderFileTemplateDTO, userId);
     verify(configurationRepository).update(configuration);
-    verify(orderRepository).saveOrderFileColumns(orderFileColumns);
+    verify(orderRepository).saveOrderFileColumns(orderFileColumns, userId);
   }
 }

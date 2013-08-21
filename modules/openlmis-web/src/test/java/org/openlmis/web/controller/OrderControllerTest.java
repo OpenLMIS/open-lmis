@@ -1,5 +1,6 @@
 package org.openlmis.web.controller;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -48,15 +49,18 @@ public class OrderControllerTest {
   @InjectMocks
   private OrderController orderController;
 
-  @Test
-  public void shouldConvertRequisitionsToOrder() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     request = new MockHttpServletRequest();
     MockHttpSession session = new MockHttpSession();
     session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
     session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, USER_ID);
 
     request.setSession(session);
+  }
 
+  @Test
+  public void shouldConvertRequisitionsToOrder() throws Exception {
     RequisitionList rnrList = new RequisitionList();
     orderController.convertToOrder(rnrList, request);
     verify(orderService).convertToOrder(rnrList, 1L);
@@ -102,8 +106,8 @@ public class OrderControllerTest {
   @Test
   public void shouldSaveOrderFileTemplateDTO() throws Exception {
     OrderFileTemplateDTO orderFileTemplateDTO = new OrderFileTemplateDTO(new Configuration(), new ArrayList<OrderFileColumn>());
-    ResponseEntity<OpenLmisResponse> response = orderController.saveOrderFileTemplateDTO(orderFileTemplateDTO);
-    verify(orderService).saveOrderFileTemplate(orderFileTemplateDTO);
+    ResponseEntity<OpenLmisResponse> response = orderController.saveOrderFileTemplateDTO(orderFileTemplateDTO, request);
+    verify(orderService).saveOrderFileTemplate(orderFileTemplateDTO, 1L);
     assertThat(response.getBody().getSuccessMsg(), is("order.file.template.saved.success"));
   }
 }

@@ -13,7 +13,8 @@ public interface ConfigurationMapper {
   public Configuration getConfiguration();
 
   @Update("UPDATE configurations SET orderFilePrefix = #{orderFilePrefix}, headerInOrderFile = #{headerInOrderFile}, " +
-    "orderDatePattern = #{orderDatePattern}, periodDatePattern = #{periodDatePattern}")
+    "orderDatePattern = #{orderDatePattern}, periodDatePattern = #{periodDatePattern}, modifiedBy = #{modifiedBy}, " +
+    "modifiedDate = COALESCE(#{modifiedDate}, NOW())")
   void update(Configuration configuration);
 
 }

@@ -93,7 +93,8 @@ public class OrderRepositoryTest {
   public void shouldSaveOrderFileColumns() throws Exception {
     OrderFileColumn orderFileColumn = new OrderFileColumn();
     List<OrderFileColumn> orderFileColumns = asList(orderFileColumn);
-    orderRepository.saveOrderFileColumns(orderFileColumns);
+    Long userId = 1L;
+    orderRepository.saveOrderFileColumns(orderFileColumns, userId);
     verify(orderMapper).deleteOrderFileColumns();
     verify(orderMapper, times(1)).insertOrderFileColumn(orderFileColumn);
   }

@@ -65,8 +65,8 @@ public class OrderController extends BaseController {
 
   @RequestMapping(value = "/order-file-template", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONFIGURE_EDI')")
-  public ResponseEntity<OpenLmisResponse> saveOrderFileTemplateDTO(@RequestBody OrderFileTemplateDTO orderFileTemplateDTO) {
-    orderService.saveOrderFileTemplate(orderFileTemplateDTO);
+  public ResponseEntity<OpenLmisResponse> saveOrderFileTemplateDTO(@RequestBody OrderFileTemplateDTO orderFileTemplateDTO, HttpServletRequest request) {
+    orderService.saveOrderFileTemplate(orderFileTemplateDTO, loggedInUserId(request));
     return OpenLmisResponse.success("order.file.template.saved.success");
   }
 }
