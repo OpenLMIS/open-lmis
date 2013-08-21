@@ -3,11 +3,22 @@ describe('RefrigeratorController', function () {
 
   beforeEach(module('distribution'));
   beforeEach(inject(function ($rootScope, $controller, $routeParams) {
+    var IndexedDB = {
+      execute: function () {
+      },
+      get: function () {
+
+      },
+      put: function () {
+
+      }
+    };
+
     scope = $rootScope.$new();
 
     $routeParams.facility = 1;
 
-    $controller(RefrigeratorController, {$scope: scope, distribution: {facilityDistributionData: {1: {}}}});
+    $controller(RefrigeratorController, {$scope: scope, distribution: {facilityDistributionData: {1: {}}}, IndexedDB: IndexedDB});
   }));
 
   it('should set status indicator to complete if all refrigeratorReadings are complete', function () {
