@@ -96,6 +96,8 @@ public class DriverFactory {
     profile.setPreference("signed.applets.codebase_principal_support", true);
     profile.setPreference("javascript.enabled", enableJavascript);
     profile.setPreference("browser.helperApps.neverAsk.saveToDisk","text/csv");
+    profile.setPreference("browser.download.dir",new File(System.getProperty("user.dir")).getParent());
+    profile.setPreference("browser.download.folderList", 2);
     return new FirefoxDriver(profile);
   }
 
