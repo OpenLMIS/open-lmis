@@ -31,6 +31,7 @@ public class OrderController extends BaseController {
 
   public static final String ORDERS = "orders";
   public static final String ORDER = "order";
+  public static final String ORDER_FILE_TEMPLATE = "orderFileTemplate";
 
   @Autowired
   private OrderService orderService;
@@ -56,9 +57,16 @@ public class OrderController extends BaseController {
     return modelAndView;
   }
 
-  @RequestMapping(value = "/order-file-template", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_EDI')")
-  public OrderFileTemplateDTO getOrderFileTemplateDTO() {
-    return orderService.getOrderFileTemplateDTO();
+  @RequestMapping(value = "/order-file-template", method = GET,  headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONFIGURE_EDI')")
+  public ResponseEntity<OpenLmisResponse> getOrderFileTemplateDTO() {
+    return OpenLmisResponse.response(ORDER_FILE_TEMPLATE, orderService.getOrderFileTemplateDTO());
+  }
+
+  @RequestMapping(value = "/order-file-template", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONFIGURE_EDI')")
+  public ResponseEntity<OpenLmisResponse> saveOrderFileTemplateDTO(@RequestBody OrderFileTemplateDTO orderFileTemplateDTO) {
+    orderService.saveOrderFileTemplate(orderFileTemplateDTO);
+    return OpenLmisResponse.success("order.file.template.saved.success");
   }
 }

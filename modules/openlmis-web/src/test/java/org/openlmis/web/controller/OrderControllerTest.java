@@ -29,8 +29,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.openlmis.web.controller.OrderController.ORDER;
-import static org.openlmis.web.controller.OrderController.ORDERS;
+import static org.openlmis.web.controller.OrderController.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
@@ -95,8 +94,16 @@ public class OrderControllerTest {
     OrderFileTemplateDTO expectedOrderFileTemplateDTO =
       new OrderFileTemplateDTO(new Configuration(), new ArrayList<OrderFileColumn>());
     when(orderService.getOrderFileTemplateDTO()).thenReturn(expectedOrderFileTemplateDTO);
-    OrderFileTemplateDTO actualOrderFileTemplateDTO = orderController.getOrderFileTemplateDTO();
+    ResponseEntity<OpenLmisResponse> fetchedTemplate = orderController.getOrderFileTemplateDTO();
     verify(orderService).getOrderFileTemplateDTO();
-    assertThat(actualOrderFileTemplateDTO, is(expectedOrderFileTemplateDTO));
+    assertThat((OrderFileTemplateDTO) fetchedTemplate.getBody().getData().get(ORDER_FILE_TEMPLATE), is(expectedOrderFileTemplateDTO));
+  }
+
+  @Test
+  public void shouldSaveOrderFileTemplateDTO() throws Exception {
+    OrderFileTemplateDTO orderFileTemplateDTO = new OrderFileTemplateDTO(new Configuration(), new ArrayList<OrderFileColumn>());
+    ResponseEntity<OpenLmisResponse> response = orderController.saveOrderFileTemplateDTO(orderFileTemplateDTO);
+    verify(orderService).saveOrderFileTemplate(orderFileTemplateDTO);
+    assertThat(response.getBody().getSuccessMsg(), is("order.file.template.saved.success"));
   }
 }
