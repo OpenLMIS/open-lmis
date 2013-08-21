@@ -5,7 +5,7 @@
 -->
 <div ng-controller="RefrigeratorReadingController">
   <div class="row-fluid" ng-class="getStatus()">
-    <div class="span1">
+    <div class="span1 status-cell">
       <span class="status-icon"></span>
     </div>
     <div class="span2" ng-bind="refrigeratorReading.refrigerator.brand"></div>
@@ -13,10 +13,10 @@
     <div class="span3" ng-bind="refrigeratorReading.refrigerator.serialNumber"></div>
     <div class="span3">
                 <span class="pull-right">
-                  <a href="" class="btn btn-primary" ng-click="setEdit(refrigeratorReading.refrigerator.serialNumber)"
+                  <a href="" class="btn btn-small btn-primary" ng-click="setEdit(refrigeratorReading.refrigerator.serialNumber)"
                      ng-hide="edit[refrigeratorReading.refrigerator.serialNumber]"
                      openlmis-message="button.edit"></a>
-                  <a href="" class="btn btn-danger" openlmis-message="button.delete"
+                  <a href="" class="btn btn-small btn-danger" openlmis-message="button.delete"
                      ng-click="showDeleteRefrigeratorConfirmationModel(refrigeratorReading.refrigerator.serialNumber)"></a>
                 </span>
     </div>
@@ -155,7 +155,7 @@
     </div>
 
     <div ng-show="edit[refrigeratorReading.refrigerator.serialNumber]" class="row-fluid">
-      <a href="" id="refrigeratorReadingDone" class="btn btn-primary"
+      <a href="" id="refrigeratorReadingDone" class="btn btn-small btn-primary"
          ng-click="edit[refrigeratorReading.refrigerator.serialNumber] = false;"
          openlmis-message="button.done"></a>
     </div>
