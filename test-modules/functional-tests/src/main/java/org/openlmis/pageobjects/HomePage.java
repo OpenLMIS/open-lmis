@@ -635,4 +635,11 @@ public class HomePage extends Page {
         testWebDriver.waitForElementToAppear(loggedInUserLabel);
         SeleneseTestNgHelper.assertEquals(loggedInUserLabel.getText(), Username);
     }
+
+    public boolean reportMenuIsDisplayed(){
+          return reportMenuItem.isDisplayed();
+    }
+    public boolean adminReportMenuItemIsDisplayed(){
+        return AdministrationMenuItem.isDisplayed();
+    }
 }

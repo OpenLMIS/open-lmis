@@ -140,6 +140,15 @@ public class FacilityMailingListReportPage extends Page {
         testWebDriver.sleep(500);
     }
 
+   public boolean facilityNameIsDisplayed(){
+       return facilityName.isDisplayed();
+   }
 
+    public boolean facilityCodeIsDisplayed(){
+        return facilityCode.isDisplayed();
+    }
 
+    public boolean facilityTypeIsDisplayed(){
+        return facilityType.isDisplayed();
+    }
 }

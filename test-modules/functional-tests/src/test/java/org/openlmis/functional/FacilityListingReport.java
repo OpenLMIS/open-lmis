@@ -7,6 +7,7 @@
 package org.openlmis.functional;
 
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
@@ -42,8 +43,44 @@ public class FacilityListingReport extends TestCaseHelper {
     super.setup();
   }
 
+    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifyReportMenu(String [] credentials) throws IOException{
+        // Assign rights here
+       // List<String> rightsList = new ArrayList<String>();
+        //rightsList.add("VIEW_REPORT");
+        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
 
-   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+        SeleneseTestNgHelper.assertTrue(homePage.reportMenuIsDisplayed());
+        homePage.logout(DEFAULT_BASE_URL);
+    }
+    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifyReportMenuHiddenForUnauthorizedUser(String [] credentials) throws IOException{
+        // Assign rights here
+        //List<String> rightsList = new ArrayList<String>();
+        //rightsList.add("VIEW_REPORT");
+        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
+
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[2], credentials[3]);
+        SeleneseTestNgHelper.assertFalse(homePage.reportMenuIsDisplayed());
+        homePage.logout(DEFAULT_BASE_URL);
+    }
+
+    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifyReportFiltersRendered(String [] credentials) throws Exception{
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[2], credentials[3]);
+
+        FacilityMailingListReportPage facilityListingReportPage = homePage.navigateViewFacilityMailingListReport();
+
+        SeleneseTestNgHelper.assertTrue(facilityListingReportPage.facilityCodeIsDisplayed());
+        SeleneseTestNgHelper.assertTrue(facilityListingReportPage.facilityNameIsDisplayed());
+        SeleneseTestNgHelper.assertTrue(facilityListingReportPage.facilityTypeIsDisplayed());
+    }
+
+    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
    public void verifyFacilityListingReport(String[] credentials) throws Exception{
 
        String geoZone = "Ngorongoro";
@@ -139,6 +176,8 @@ public class FacilityListingReport extends TestCaseHelper {
         homePage.logout(baseUrlGlobal);
 
     }
+
+
   @AfterMethod(groups = {"functional"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
