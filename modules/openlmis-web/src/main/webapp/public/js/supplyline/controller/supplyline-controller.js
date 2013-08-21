@@ -84,12 +84,14 @@ function SupplylineController($scope,$location,$dialog,messageService,ReportProg
     $scope.createSupplyline = function () {
         $scope.error = "";
 
-        if ($scope.supplylineForm.$invalid) {
+        var form = document.getElementById('createSupplylineForm');
+
+        if (form.$invalid) {
             $scope.showError = true;
             return;
         }
         $scope.showError = false;
-        Supplylines.save({}, $scope.supplyline, function (data) {
+        Supplylines.save({}, $scope.newSupplyline, function (data) {
 
             //alert(JSON.stringify(data.supplyline, null, 4));
             $scope.supplylines.unshift(data.supplyline);
