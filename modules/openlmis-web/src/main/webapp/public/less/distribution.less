@@ -108,23 +108,30 @@
 
 .refrigerator-container {
   padding: 15px;
-  .status-icon {
-    margin-left: 37px;
+  form {
+    margin: 0;
   }
   h3 {
     margin: 0px;
-
     .btn {
       font-weight: normal;
     }
   }
+  .status-cell {
+    text-align: center;
+  }
   .form-group {
-    border-top: none;
+    border: 1px solid #EEE;
   }
   #refrigeratorReadingDone {
     margin: 13px 0 0 57px;
   }
-  .list-header, .list-row {
+  .list-row.is-expanded {
+    background-color: #f9f9f9;
+    border-bottom: 2px solid #CCC;
+  }
+  .list-header,
+  .list-row {
     .span2 {
       margin-left: 0;
     }
@@ -147,11 +154,8 @@
   margin-right: 27px;
   padding-bottom: 0;
   margin-bottom: 0;
-  &>.form-row {
-    border-bottom: 1px solid #e6e6e6;
-    &:last-child {
-      border-bottom: none;
-    }
+  .form-group {
+    border: 0 none;
   }
   .form-cell {
     width: 47%;
