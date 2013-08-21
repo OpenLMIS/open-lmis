@@ -21,7 +21,7 @@ public interface FacilityFtpDetailsMapper {
   @Options(useGeneratedKeys = true)
   public void insert(FacilityFtpDetails facilityFtpDetails);
 
-  @Select({"SELECT * FROM facility_ftp_details WHERE facilityCode = #{facilityCode}"})
+  @Select({"SELECT * FROM facility_ftp_details WHERE LOWER(facilityCode) = LOWER(#{facilityCode})"})
   FacilityFtpDetails getByFacilityCode(String facilityCode);
 
   @Update({"UPDATE facility_ftp_details SET serverHost = #{serverHost}, serverPort = #{serverPort}, userName = #{userName}, ",

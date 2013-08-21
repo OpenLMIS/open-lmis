@@ -599,7 +599,7 @@ public class E2EUpload extends TestCaseHelper {
 
     uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Subsequent.csv") ;
     uploadPage.verifySuccessMessageOnUploadScreen();
-//    uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. 'Number of records created:1', 'Number of records updated: 1'");
+    uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. 'Number of records created:1', 'Number of records updated: 1'");
 
   }
 
