@@ -91,7 +91,7 @@ function SupplylineController($scope,$location,$dialog,messageService,ReportProg
             return;
         }
         $scope.showError = false;
-        Supplylines.save({}, $scope.supplyline, function (data) {
+        Supplylines.save({}, $scope.newSupplyline, function (data) {
 
             //alert(JSON.stringify(data.supplyline, null, 4));
             $scope.supplylines.unshift(data.supplyline);
