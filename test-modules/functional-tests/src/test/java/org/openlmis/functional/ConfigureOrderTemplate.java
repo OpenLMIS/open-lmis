@@ -69,7 +69,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.verifyIncludeCheckboxForAllColumnHeaders(flag);
   }
 
-  @When("^I save on order file format$")
+  @When("^I save order file format$")
   public void clickSave() throws Exception {
     ConfigureOrderPage configureOrderPage = new ConfigureOrderPage(testWebDriver);
     configureOrderPage.clickSaveButton();
