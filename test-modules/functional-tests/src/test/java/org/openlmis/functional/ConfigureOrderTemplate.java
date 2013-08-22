@@ -15,13 +15,12 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ConfigureOrderPage;
 import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.LoginPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Listeners;
+import org.testng.annotations.*;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 
@@ -70,7 +69,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.verifyIncludeCheckboxForAllColumnHeaders(flag);
   }
 
-  @When("^I click save on order file format screen$")
+  @When("^I save on order file format$")
   public void clickSave() throws Exception {
     ConfigureOrderPage configureOrderPage = new ConfigureOrderPage(testWebDriver);
     configureOrderPage.clickSaveButton();
@@ -80,6 +79,91 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   public void verifySaveSuccessfullyMessage(String message) throws Exception {
     ConfigureOrderPage configureOrderPage = new ConfigureOrderPage(testWebDriver);
     configureOrderPage.verifySuccessMessage(message);
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyIncludeColumnHeaderONWithHeadersAltered(String user, String password) throws Exception {
+    String facilityCode = "FC";
+    String orderNumber = "ON";
+    String approvedQuantity = "Approved quantityApproved quantityApproved quantit";
+    String productCode = "PC";
+    String period = "Period1";
+    String orderData = "OD";
+    String orderPrefix = "OP";
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(user, password);
+    ConfigureOrderPage configureOrderPage = homePage.navigateConfigureOrderScreen();
+    configureOrderPage.setOrderPrefix(orderPrefix);
+    configureOrderPage.checkIncludeOrderHeader();
+    configureOrderPage.verifyColumnHeadersEnabled();
+    configureOrderPage.setFacilityCode(facilityCode);
+    configureOrderPage.setOrderNumber(orderNumber);
+    configureOrderPage.setApprovedQuantity(approvedQuantity);
+    configureOrderPage.setProductCode(productCode);
+    configureOrderPage.setPeriod(period);
+    configureOrderPage.setOrderDate(orderData);
+    configureOrderPage.clickSaveButton();
+    configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
+
+    assertEquals(facilityCode, configureOrderPage.getFacilityCode());
+    assertEquals(orderNumber, configureOrderPage.getOrderNumber());
+    assertEquals(approvedQuantity, configureOrderPage.getApprovedQuantity());
+    assertEquals(productCode, configureOrderPage.getProductCode());
+    assertEquals(period, configureOrderPage.getPeriod());
+    assertEquals(orderData, configureOrderPage.getOrderDate());
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyIncludeColumnHeaderONWithHeadersBlank(String user, String password) throws Exception {
+    String facilityCode = "";
+    String orderNumber = "";
+    String approvedQuantity = "";
+    String productCode = "";
+    String period = "";
+    String orderData = "";
+    String orderPrefix = "";
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(user, password);
+    ConfigureOrderPage configureOrderPage = homePage.navigateConfigureOrderScreen();
+    configureOrderPage.setOrderPrefix(orderPrefix);
+    configureOrderPage.checkIncludeOrderHeader();
+    configureOrderPage.verifyColumnHeadersEnabled();
+    configureOrderPage.setFacilityCode(facilityCode);
+    configureOrderPage.setOrderNumber(orderNumber);
+    configureOrderPage.setApprovedQuantity(approvedQuantity);
+    configureOrderPage.setProductCode(productCode);
+    configureOrderPage.setPeriod(period);
+    configureOrderPage.setOrderDate(orderData);
+    configureOrderPage.clickSaveButton();
+    configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
+
+    assertEquals(facilityCode, configureOrderPage.getFacilityCode());
+    assertEquals(orderNumber, configureOrderPage.getOrderNumber());
+    assertEquals(approvedQuantity, configureOrderPage.getApprovedQuantity());
+    assertEquals(productCode, configureOrderPage.getProductCode());
+    assertEquals(period, configureOrderPage.getPeriod());
+    assertEquals(orderData, configureOrderPage.getOrderDate());
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyAllIncludeCheckBoxesUnchecked(String user, String password) throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(user, password);
+    ConfigureOrderPage configureOrderPage = homePage.navigateConfigureOrderScreen();
+    configureOrderPage.unCheckFacilityCodeCheckBox();
+    configureOrderPage.unCheckApprovedQuantityCheckBox();
+    configureOrderPage.unCheckIncludeOrderHeader();
+    configureOrderPage.unCheckOrderDateCheckBox();
+    configureOrderPage.unCheckOrderNumberCheckBox();
+    configureOrderPage.unCheckPeriodCheckBox();
+    configureOrderPage.unCheckProductCodeCheckBox();
+    configureOrderPage.clickSaveButton();
+    configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
+    configureOrderPage.clickCancelButton();
+    assertTrue("User should be redirected to home page", testWebDriver.getCurrentUrl().contains("public/pages/index.html#/index.html"));
+
   }
 
 
@@ -98,7 +182,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"Admin123", "Admin123", "VACCINES"}
+      {"Admin123", "Admin123"}
     };
 
   }

@@ -17,6 +17,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
 
 
@@ -224,7 +225,7 @@ public class HomePage extends Page {
   }
 
   public CreateFacilityPage navigateCreateFacility() throws IOException {
-    SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
@@ -251,15 +252,15 @@ public class HomePage extends Page {
 
   private void verifyTabs() {
     testWebDriver.waitForElementToAppear(facilitiesTab);
-    SeleneseTestNgHelper.assertTrue(facilitiesTab.isDisplayed());
-    SeleneseTestNgHelper.assertTrue(rolesTab.isDisplayed());
-    SeleneseTestNgHelper.assertTrue(schedulesTab.isDisplayed());
-    SeleneseTestNgHelper.assertTrue(usersTab.isDisplayed());
+    assertTrue(facilitiesTab.isDisplayed());
+    assertTrue(rolesTab.isDisplayed());
+    assertTrue(schedulesTab.isDisplayed());
+    assertTrue(usersTab.isDisplayed());
   }
 
 
   public TemplateConfigPage selectProgramToConfigTemplate(String programme) {
-    SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
@@ -273,7 +274,7 @@ public class HomePage extends Page {
   }
 
   public ConfigureOrderPage navigateConfigureOrderScreen() throws IOException {
-    SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
@@ -333,7 +334,7 @@ public class HomePage extends Page {
 
 
   public ViewRequisitionPage navigateViewRequisition() throws IOException {
-    SeleneseTestNgHelper.assertTrue(requisitionMenuItem.isDisplayed());
+    assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(viewRequisitonMenuItem);
@@ -343,7 +344,7 @@ public class HomePage extends Page {
   }
 
   public ReportPage navigateReportScreen() throws IOException {
-    SeleneseTestNgHelper.assertTrue(reportMenuItem.isDisplayed());
+    assertTrue(reportMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(reportMenuItem);
     testWebDriver.keyPress(reportMenuItem);
     testWebDriver.waitForElementToAppear(reportsTitle);
@@ -351,7 +352,7 @@ public class HomePage extends Page {
   }
 
   public DeleteFacilityPage navigateSearchFacility() throws IOException {
-    SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -363,7 +364,7 @@ public class HomePage extends Page {
 
 
   public RolesPage navigateRoleAssignments() throws IOException {
-    SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -374,7 +375,7 @@ public class HomePage extends Page {
   }
 
   public UploadPage navigateUploads() throws IOException {
-    SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(uploadLink);
@@ -383,7 +384,7 @@ public class HomePage extends Page {
   }
 
   public ManageSchedulePage navigateToSchedule() throws IOException {
-    SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -395,7 +396,7 @@ public class HomePage extends Page {
   }
 
   public UserPage navigateToUser() throws IOException {
-    SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -408,7 +409,7 @@ public class HomePage extends Page {
 
   public ApprovePage navigateToApprove() throws IOException {
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
-    SeleneseTestNgHelper.assertTrue(requisitionMenuItem.isDisplayed());
+    assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(approveLink);
     testWebDriver.keyPress(approveLink);
@@ -417,7 +418,7 @@ public class HomePage extends Page {
   }
 
   public ConvertOrderPage navigateConvertToOrder() throws IOException {
-    SeleneseTestNgHelper.assertTrue(requisitionMenuItem.isDisplayed());
+    assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(convertToOrderMenuItem);
@@ -427,7 +428,7 @@ public class HomePage extends Page {
   }
 
   public DistributionPage navigatePlanDistribution() throws IOException {
-    SeleneseTestNgHelper.assertTrue(distributionsMenuItem.isDisplayed());
+    assertTrue(distributionsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(distributionsMenuItem);
     testWebDriver.keyPress(distributionsMenuItem);
     testWebDriver.waitForElementToAppear(manageMenuItem);
@@ -448,7 +449,7 @@ public class HomePage extends Page {
   }
 
   public HomePage navigateHomePage() throws IOException {
-    SeleneseTestNgHelper.assertTrue(homeMenuItem.isDisplayed());
+    assertTrue(homeMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(homeMenuItem);
     testWebDriver.keyPress(homeMenuItem);
     testWebDriver.sleep(500);
@@ -456,7 +457,7 @@ public class HomePage extends Page {
   }
 
   public ViewOrdersPage navigateViewOrders() throws IOException {
-    SeleneseTestNgHelper.assertTrue(ordersMenuItem.isDisplayed());
+    assertTrue(ordersMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(ordersMenuItem);
     testWebDriver.keyPress(ordersMenuItem);
     testWebDriver.waitForElementToAppear(viewOrdersMenuItem);

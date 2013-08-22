@@ -227,6 +227,16 @@ public class ConfigureOrderPage extends RequisitionPage {
     sendKeys(facilityCodeTextField, value);
   }
 
+  public void setOrderNumber(String value) {
+    testWebDriver.waitForElementToAppear(orderNumberTextField);
+    sendKeys(orderNumberTextField, value);
+  }
+
+  public String getOrderNumber() {
+    testWebDriver.waitForElementToAppear(orderNumberTextField);
+    return testWebDriver.getAttribute(orderNumberTextField,"value");
+  }
+
   public String getApprovedQuantity() {
     testWebDriver.waitForElementToAppear(approvedQuantityTextField);
     return testWebDriver.getAttribute(approvedQuantityTextField, "value");
@@ -272,9 +282,11 @@ public class ConfigureOrderPage extends RequisitionPage {
     saveButton.click();
   }
 
-  public void clickCancelButton() {
+  public HomePage clickCancelButton() throws IOException {
     testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();
+    testWebDriver.sleep(1500);
+    return new HomePage(testWebDriver);
   }
 
   public void verifyColumnHeadersDisabled() {
@@ -284,6 +296,15 @@ public class ConfigureOrderPage extends RequisitionPage {
     assertFalse("productCodeTextField should be disabled", productCodeTextField.isEnabled());
     assertFalse("orderDateTextField should be disabled", orderDateTextField.isEnabled());
     assertFalse("periodTextField should be disabled", periodTextField.isEnabled());
+  }
+
+  public void verifyColumnHeadersEnabled() {
+    assertTrue("orderNumberTextField should be enabled", orderNumberTextField.isEnabled());
+    assertTrue("facilityCodeTextField should be enabled", facilityCodeTextField.isEnabled());
+    assertTrue("approvedQuantityTextField should be enabled", approvedQuantityTextField.isEnabled());
+    assertTrue("productCodeTextField should be enabled", productCodeTextField.isEnabled());
+    assertTrue("orderDateTextField should be enabled", orderDateTextField.isEnabled());
+    assertTrue("periodTextField should be enabled", periodTextField.isEnabled());
   }
 
   public void verifyIncludeCheckboxForAllColumnHeaders(String flag) {
