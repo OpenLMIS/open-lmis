@@ -27,14 +27,17 @@ function RefrigeratorReadingController($scope) {
     }
 
     if (statusClass === 'is-complete' && $scope.refrigeratorReading['problemSinceLastTime'].value === 'Y') {
-      var hasAtLeastOneProblem = _.filter(_.values($scope.refrigeratorReading.problems.problemMap),function (problem) {
-        return problem;
-      }).length;
+      if (!$scope.refrigeratorReading.problems) statusClass = 'is-incomplete';
+      else {
+        var hasAtLeastOneProblem = _.filter(_.values($scope.refrigeratorReading.problems.problemMap),
+            function (problem) {
+              return problem;
+            }).length;
 
-      if (!$scope.refrigeratorReading.problems.problemMap || !hasAtLeastOneProblem)
-        statusClass = 'is-incomplete';
+        if (!$scope.refrigeratorReading.problems.problemMap || !hasAtLeastOneProblem)
+          statusClass = 'is-incomplete';
+      }
     }
-
     $scope.refrigeratorReading.status = statusClass;
     return statusClass;
   };

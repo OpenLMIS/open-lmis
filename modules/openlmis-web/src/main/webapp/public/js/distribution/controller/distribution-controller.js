@@ -119,7 +119,7 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
     }
 
     function prepareDistribution(distribution, referenceData) {
-      distribution.facilityDistributionData = [];
+      distribution.facilityDistributionData = {};
       $(referenceData.facilities).each(function (index, facility) {
         var refrigeratorReadings = [];
         $(_.where(referenceData.refrigerators, {facilityId: facility.id})).each(function (i, refrigerator) {
