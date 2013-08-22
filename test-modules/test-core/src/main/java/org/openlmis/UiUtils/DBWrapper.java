@@ -11,6 +11,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+
 public class DBWrapper {
 
   String baseUrl, dbUrl, dbUser, dbPassword;
@@ -98,10 +101,25 @@ public class DBWrapper {
     update("delete from distributions;");
   }
 
+    public void verifyDistributionsInDB() throws SQLException {
+        ResultSet rs = query("select count(*) from distributions");
+
+        if (rs.next()) {
+            assertEquals("1",rs.getString("count"));
+        }
+    }
+
   public void deleteRefrigerators() throws SQLException {
     update("delete from refrigerators;");
   }
 
+  public void verifyRefrigeratorsInDB() throws SQLException {
+      ResultSet rs = query("select count(*) from refrigerators");
+
+      if (rs.next()) {
+          assertEquals("0",rs.getString("count"));
+      }
+  }
   public void updateActiveStatusOfProgramProduct(String productCode, String programCode, String active) throws SQLException {
     update("update program_products set active='" + active + "' where programid=(select id from programs where code='" + programCode + "') and productid=(select id from products where code='" + productCode + "');");
   }

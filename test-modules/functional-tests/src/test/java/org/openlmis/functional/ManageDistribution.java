@@ -151,9 +151,9 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.selectValueFromPeriod(period);
   }
 
-  @And("^I verify Distributions data is not sinked$")
-  public void deleteDistributions() throws IOException, SQLException {
-    dbWrapper.deleteDistributions();
+  @And("^I verify Distributions data is not synchronised")
+  public void verifyDistributionsInDB() throws IOException, SQLException {
+    dbWrapper.verifyDistributionsInDB();
   }
 
   @And("^I initiate distribution$")

@@ -52,7 +52,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     refrigeratorPage.clickAddNew();
   }
 
-  @Then("^I should see New Refrigerator Modal window$")
+  @Then("^I should see New Refrigerator screen$")
   public void shouldSeeNewRefrigeratorModalWindow() throws IOException, SQLException {
     verifyNewRefrigeratorModalWindowExist();
   }
@@ -75,7 +75,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     refrigeratorPage.enterValueInManufacturingSerialNumberModal(serial);
   }
 
-  @And("^I click Done on modal$")
+  @And("^I access done$")
   public void clickDoneOnModal() throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.clickDoneOnModal();
@@ -86,9 +86,9 @@ public class ManageRefrigerator extends TestCaseHelper {
     verifyRefrigeratorAdded(refrigeratorDetails);
   }
 
-  @And("^I verify Refrigerator data is not sinked$")
-  public void deleteDistributions() throws IOException, SQLException {
-    dbWrapper.deleteRefrigerators();
+  @And("^I verify Refrigerator data is not synchronised")
+  public void verifyRefrigeratorsInDB() throws IOException, SQLException {
+    dbWrapper.verifyRefrigeratorsInDB();
   }
 
   @And("^I delete refrigerator")

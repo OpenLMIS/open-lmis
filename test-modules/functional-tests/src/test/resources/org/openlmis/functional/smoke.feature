@@ -298,13 +298,13 @@ Feature: Smoke Tests
     When I choose facility "F10"
     Then I should see Refrigerators screen
     When I add new refrigerator
-    Then I should see New Refrigerator Modal window
+    Then I should see New Refrigerator screen
     When I enter Brand "LG"
     And I enter Modal "800 LITRES"
     And I enter Serial Number "GR-J287PGHV"
-    And I click Done on modal
-    And I verify Distributions data is not sinked
-    And I verify Refrigerator data is not sinked
+    And I access done
+    And I verify Distributions data is not synchronised
+    And I verify Refrigerator data is not synchronised
     Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" added successfully
     When I edit refrigerator
     And I enter refrigerator temperature "3"
@@ -314,7 +314,7 @@ Feature: Smoke Tests
     And I verify "No" that there is a problem with refrigerator since last visit
     And I enter Notes "miscellaneous"
     And I add refrigerator
-    And I verify Refrigerator data is not sinked
+    And I verify Refrigerator data is not synchronised
     Then I should not see Refrigerator details section
     And I should see Edit button
     When I edit refrigerator
