@@ -215,7 +215,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     String[] refrigeratorDetails = data.split(";");
 
     for (int i = 0; i < refrigeratorDetails.length; i++) {
-      assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/div/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetails[i]);
+      assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetails[i]);
     }
 
   }
