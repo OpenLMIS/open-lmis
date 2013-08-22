@@ -50,6 +50,6 @@ public interface OrderMapper {
   void insertOrderFileColumn(OrderFileColumn orderFileColumn);
 
   @Update("UPDATE order_file_columns set includeInOrderFile=#{includeInOrderFile}, columnLabel=#{columnLabel}," +
-    " position=#{position}, modifiedBy=#{modifiedBy}")
+    " position=#{position}, modifiedBy=#{modifiedBy} WHERE id = #{id}")
   void updateOrderFileColumn(OrderFileColumn firstColumn);
 }
