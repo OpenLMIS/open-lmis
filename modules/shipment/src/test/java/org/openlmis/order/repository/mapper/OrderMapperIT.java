@@ -37,11 +37,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -147,7 +147,7 @@ public class OrderMapperIT {
 
     mapper.updateShipmentInfo(order);
 
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE rnrid=?", Arrays.asList(order.getRnr().getId()));
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE rnrid=?", asList(order.getRnr().getId()));
 
     resultSet.next();
 
@@ -174,7 +174,7 @@ public class OrderMapperIT {
     assertThat(orderFileColumns.size(), is(expectedDataFieldLabels.length));
     for (int i = 0; i < expectedDataFieldLabels.length; i++) {
       assertThat(orderFileColumns.get(i).getDataFieldLabel(), is(expectedDataFieldLabels[i]));
-      assertThat(orderFileColumns.get(i).getPosition(), is(i+1));
+      assertThat(orderFileColumns.get(i).getPosition(), is(i + 1));
       assertThat(orderFileColumns.get(i).getIncludeInOrderFile(), is(true));
       assertThat(orderFileColumns.get(i).getColumnLabel(), is(expectedColumnLabels[i]));
     }
@@ -188,16 +188,70 @@ public class OrderMapperIT {
   }
 
   @Test
+  public void shouldUpdateOrderFileColumn() throws Exception {
+    OrderFileColumn orderFileColumn = getOrderFileColumn();
+
+    mapper.insertOrderFileColumn(orderFileColumn);
+
+    orderFileColumn.setColumnLabel("updated Column label");
+    orderFileColumn.setModifiedBy(1l);
+
+    mapper.updateOrderFileColumn(orderFileColumn);
+
+    String updatedColumnLabel;
+    Long modifiedBy;
+
+    try (ResultSet set = queryExecutor.execute("SELECT columnLabel, modifiedBy from order_file_columns where id=?", asList(orderFileColumn.getId()))) {
+      set.next();
+      updatedColumnLabel = set.getString(1);
+      modifiedBy = set.getLong(2);
+    }
+
+    assertThat(updatedColumnLabel, is(orderFileColumn.getColumnLabel()));
+    assertThat(modifiedBy, is(1l));
+  }
+
+  @Test
   public void shouldInsertOrderFileColumn() throws Exception {
+    OrderFileColumn orderFileColumn = getOrderFileColumn();
+
+    mapper.insertOrderFileColumn(orderFileColumn);
+    Boolean includeInOrderFile;
+    Boolean openlmisField;
+    String columnLabel;
+    Integer position;
+    Long createdBy;
+    Long modifiedBy;
+
+    try (ResultSet set = queryExecutor.execute("SELECT includeInOrderFile, openlmisField, columnLabel, position, createdBy," +
+      " modifiedBy FROM ORDER_FILE_COLUMNS where id=?", asList(orderFileColumn.getId()))) {
+      set.next();
+      includeInOrderFile = set.getBoolean("includeInOrderFile");
+      openlmisField = set.getBoolean("openlmisField");
+      columnLabel = set.getString("columnLabel");
+      position = set.getInt("position");
+      createdBy = set.getLong("createdBy");
+      modifiedBy = set.getLong("modifiedBy");
+    }
+
+    assertThat(includeInOrderFile,is(true));
+    assertThat(openlmisField,is(false));
+    assertThat(columnLabel,is("Red Label"));
+    assertThat(position,is(55));
+    assertThat(createdBy,is(1l));
+    assertThat( modifiedBy,is(1l));
+
+  }
+
+  private OrderFileColumn getOrderFileColumn() {
     OrderFileColumn orderFileColumn = new OrderFileColumn();
     orderFileColumn.setColumnLabel("Red Label");
-    orderFileColumn.setDataFieldLabel("More Red Label");
     orderFileColumn.setIncludeInOrderFile(true);
     orderFileColumn.setPosition(55);
-    orderFileColumn.setOpenLmisField(true);
-    mapper.insertOrderFileColumn(orderFileColumn);
-    List<OrderFileColumn> orderFileColumns = mapper.getOrderFileColumns();
-    assertThat(orderFileColumns.contains(orderFileColumn), is(true));
+    orderFileColumn.setOpenLmisField(false);
+    orderFileColumn.setCreatedBy(1l);
+    orderFileColumn.setModifiedBy(1l);
+    return orderFileColumn;
   }
 
   private long updateOrderCreatedTime(Order order, Date date) throws SQLException {

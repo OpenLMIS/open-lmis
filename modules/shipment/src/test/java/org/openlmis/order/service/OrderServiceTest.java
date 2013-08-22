@@ -155,6 +155,6 @@ public class OrderServiceTest {
     Long userId = 1L;
     orderService.saveOrderFileTemplate(orderFileTemplateDTO, userId);
     verify(configurationRepository).update(orderConfiguration);
-    verify(orderRepository).saveOrderFileColumns(orderFileColumns, userId);
+    verify(orderRepository).updateOrderFileColumns(orderFileColumns, userId);
   }
 }

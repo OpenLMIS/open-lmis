@@ -42,10 +42,14 @@ public class OrderRepository {
     return orderMapper.getOrderFileColumns();
   }
 
-  public void saveOrderFileColumns(List<OrderFileColumn> orderFileColumns, Long userId) {
-    orderMapper.deleteOrderFileColumns();
-    for(OrderFileColumn column : orderFileColumns) {
+  public void updateOrderFileColumns(List<OrderFileColumn> orderFileColumns, Long userId) {
+    for (OrderFileColumn column : orderFileColumns) {
       column.setModifiedBy(userId);
+      if (column.getId() != null) {
+        orderMapper.updateOrderFileColumn(column);
+        continue;
+      }
+      column.setCreatedBy(userId);
       orderMapper.insertOrderFileColumn(column);
     }
   }

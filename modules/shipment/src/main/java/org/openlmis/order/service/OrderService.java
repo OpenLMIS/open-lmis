@@ -97,6 +97,6 @@ public class OrderService {
     OrderConfiguration orderConfiguration = orderFileTemplateDTO.getOrderConfiguration();
     orderConfiguration.setModifiedBy(userId);
     configurationRepository.update(orderConfiguration);
-    orderRepository.saveOrderFileColumns(orderFileTemplateDTO.getOrderFileColumns(), userId);
+    orderRepository.updateOrderFileColumns(orderFileTemplateDTO.getOrderFileColumns(), userId);
   }
 }
