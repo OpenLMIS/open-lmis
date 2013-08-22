@@ -46,6 +46,29 @@
     </ul>
   </div>
 
+  <div ng-hide="query.length > 2">
+      <table class="table table-striped table-bordered">
+          <thead>
+              <tr  class="gradient-header">
+                  <th>User Name</th>
+                  <th>Full Name</th>
+                  <th>Email</th>
+                  <th>Is Active</th>
+                  <th>Is Email Verified</th>
+              </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="user in users">
+                <td><a href="" ng-click="editUser(user.id)">{{ user.userName }}</a></td>
+                <td>{{ user.firstName }} {{ user.lastName }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.active }}</td>
+                <td>{{ user.verified }}</td>
+            </tr>
+          </tbody>
+      </table>
+  </div>
+
   <div id="changePassword" modal="changePasswordModal" options="{'backdrop':'static', 'escape':false}">
     <form name="passwordForm">
       <div class="modal-header">

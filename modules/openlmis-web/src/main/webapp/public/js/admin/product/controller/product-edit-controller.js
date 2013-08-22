@@ -1,18 +1,13 @@
 function ProductEditController($scope, $route, $location, $dialog, messageService, ProductDetail, PriceHistory , ProductGroups , CreateProduct, UpdateProduct,ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits, ProductForms) {
 
-    $scope.productsBackupMap = [];
-    $scope.newProduct = {};
     $scope.products = {};
     $scope.editProduct = {};
     $scope.product={};
     $scope.creationError = '';
     $scope.title = 'Products';
-    $scope.demoproducts = {};
     $scope.AddEditMode = '';
     $scope.programProductsCost = [];
-
     $scope.AddEditMode = true;
-
     $scope.title = 'Edit Product';
 
     // clear the parent confirmation message if there was any
@@ -26,6 +21,10 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
     })
 
 
+    $scope.disableAllFields = function() {
+        $('.form-group').find(':input').attr('disabled','disabled');
+    };
+
     // delete confirm window
     $scope.showConfirmProductDeleteWindow = function (productUnderDelete) {
 
@@ -33,7 +32,7 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
         var dialogOpts = {
             id: "deleteProductDialog",
             header: messageService.get('Delete product'),
-            body: messageService.get('delete.facility.confirm', productUnderDelete.fullName, productUnderDelete.id)
+            body: "The product " + productUnderDelete.fullName + " will be marked as inactive in the system. Are you sure?"
         };
         $scope.productUnderDelete = productUnderDelete;
         OpenLmisDialog.newDialog(dialogOpts, $scope.deleteProductCallBack, $dialog, messageService);
@@ -47,7 +46,7 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
         }
 
         //alert(JSON.stringify( RemoveProduct, null, 4));
-        RemoveProduct.get({id: $scope.productUnderDelete.id }, $scope.product, function (data) {
+        RemoveProduct.get({id: $scope.editProduct.id }, $scope.product, function (data) {
 
             $scope.message = data.success;
             setTimeout(function () {
@@ -58,13 +57,9 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
                     $scope.message = "";
                 });
             }, 2000);
-            $scope.error = "";
-            $scope.newProduct = {};
-            $scope.editProduct = {};
-            $scope.AddEditMode = false;
-            $scope.editProductMode = false;
-            $('html, body').animate({ scrollTop: 0 }, 'fast');
-            $scope.title = 'Products';
+
+            $location.path('');
+            $scope.$parent.message = "The product was marked as deleted.";
 
         });
 
@@ -75,8 +70,7 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
         var dialogOpts = {
             id: "restoreProductDialog",
             header: messageService.get('Restore product'),
-            //body: messageService.get('delete.facility.confirm', productUnderRestore.fullName, productUnderRestore.id)
-            body: messageService.get('"' + productUnderRestore.fullName + '"' + " will be restored.")
+            body: messageService.get('"' + productUnderRestore.fullName + '"' + " will be restored. Are you sure?")
         };
         $scope.productUnderRestore = productUnderRestore;
         OpenLmisDialog.newDialog(dialogOpts, $scope.restoreProductCallBack, $dialog, messageService);
@@ -101,15 +95,9 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
                     $scope.message = "";
                 });
             }, 2000);
-            $scope.error = "";
-            $scope.newProduct = {};
-            $scope.editProduct = {};
-            $scope.AddEditMode = false;
-            $scope.editProductMode = false;
-            $('html, body').animate({ scrollTop: 0 }, 'fast');
-            $scope.title = 'Products';
 
-
+            $location.path('');
+            $scope.$parent.message = "The product was restored.";
         });
 
     };
@@ -170,6 +158,9 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
           // now get a fresh copy of the product object from the server
           ProductDetail.get({id:productId}, function(data){
               $scope.editProduct = data.product;
+              if($scope.editProduct.active == false){
+                  $scope.disableAllFields();
+              }
           });
 
           PriceHistory.get({productId:productId}, function(data){

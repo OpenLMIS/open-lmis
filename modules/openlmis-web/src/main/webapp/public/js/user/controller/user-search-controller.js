@@ -5,7 +5,13 @@
  */
 
 function UserSearchController($scope, $location, Users, navigateBackService, UpdatePassword, messageService) {
-  $scope.showUserSearchResults = function () {
+
+    // show the list of users by a deault
+    Users.get({param: ''}, function(data){
+       $scope.users = data.userList;
+    });
+
+    $scope.showUserSearchResults = function () {
     var query = $scope.query;
 
     var len = (query == undefined) ? 0 : query.length;
@@ -99,4 +105,5 @@ function UserSearchController($scope, $location, Users, navigateBackService, Upd
       $(this).parents("li").find(".user-actions a").css("display", "inline-block");
     });
   });
+
 }

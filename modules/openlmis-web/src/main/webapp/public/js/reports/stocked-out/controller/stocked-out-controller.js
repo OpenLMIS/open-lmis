@@ -598,7 +598,7 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
                 { field: 'facility', displayName: 'Facility Name', width: "*", resizable: false},
                 { field: 'facilitytypename', displayName: 'Facility Type', width: "*", resizable: false},
                 { field: 'location', displayName: 'Location', width: "*" },
-                { field: 'product', displayName: 'Product', width: "*" }
+                { field: 'product', displayName: 'Product Stocked Out', width: "*" }
             ],
         enablePaging: true,
         enableSorting :true,
