@@ -41,6 +41,29 @@ public class FacilityMailingListingReport extends TestCaseHelper {
     public static final String RELEASED = "RELEASED";
     public static final String TABLE_CELL_XPATH_PREFIX = "//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/";
 
+    //column names
+    public static final String COLUMN_NAME_FACILITY_CODE="Facility Code";
+    public static final String COLUMN_NAME_FACILITY_NAME="Facility Name";
+    public static final String COLUMN_NAME_FACILITY_TYPE="Facility Type";
+    public static final String COLUMN_NAME_REGION="Region";
+    public static final String COLUMN_NAME_ADDRESS="Address1";
+    public static final String COLUMN_NAME_CONTACT="Contact";
+    public static final String COLUMN_NAME_OPERATOR="Operator";
+    public static final String COLUMN_NAME_PHONE="Phone";
+    public static final String COLUMN_NAME_ACTIVE="Active";
+
+    private enum Column{
+        COLUMN_NAME_FACILITY_CODE,
+        COLUMN_NAME_FACILITY_NAME,
+        COLUMN_NAME_FACILITY_TYPE,
+        COLUMN_NAME_REGION,
+        COLUMN_NAME_ADDRESS,
+        COLUMN_NAME_CONTACT,
+        COLUMN_NAME_OPERATOR,
+        COLUMN_NAME_PHONE,
+        COLUMN_NAME_ACTIVE;
+    }
+
     private HomePage homePage;
     private LoginPage loginPage;
     private FacilityMailingListReportPage facilityMailingListReportPage;
@@ -108,7 +131,7 @@ public class FacilityMailingListingReport extends TestCaseHelper {
     @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifySorting(String[] credentials) throws IOException {
         navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
-        verifySortByCode("ASC");
+        verifySort("ASC",Column.COLUMN_NAME_FACILITY_NAME);
     }
 
 
@@ -215,15 +238,17 @@ public class FacilityMailingListingReport extends TestCaseHelper {
 
     }
 
-    public void verifySortByCode(String sortType) throws IOException {
+    public void verifySort(String sortType,Column column) throws IOException {
         WebElement sortButton = null;
-        String columnIdxStr = "[8]";
+        Integer index = column.ordinal() + 1;
+        String columnIdxStr = (index == 1)?"":"["+index+"]";
+        System.out.println(columnIdxStr);
         switch (sortType) {
             case "ASC":
-                sortButton = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div"));
+                sortButton = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div/div[2]/div/div"+columnIdxStr+"/div/div"));
                 break;
             case "DESC":
-                sortButton = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div"));
+                sortButton = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div/div[2]/div/div"+columnIdxStr+"/div/div"));
                 break;
         }
         SeleneseTestNgHelper.assertTrue(sortButton.isDisplayed());
