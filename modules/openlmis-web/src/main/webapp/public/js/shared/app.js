@@ -121,7 +121,7 @@ app.positiveInteger = function (value, errorHolder) {
 
   var valid = (value == undefined) ? true : POSITIVE_INTEGER_REGEXP_FIXED_LENGTH.test(value);
 
-  if (errorHolder != undefined) {
+  if (errorHolder != undefined && document.getElementById(errorHolder) != null) {
     document.getElementById(errorHolder).style.display = (valid) ? 'none' : 'block';
   }
 
