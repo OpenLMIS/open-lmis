@@ -112,8 +112,8 @@ public class ManageRefrigerator extends TestCaseHelper {
   @Then("^I should see refrigerator \"([^\"]*)\" deleted successfully$")
   public void shouldSeeRefrigeratorDeleted(String refrigeratorData) throws IOException, SQLException {
     String[] data = refrigeratorData.split(";");
-    for (int i = 0; i < data.length; i++)
-      assertFalse("Refrigerator with data :" + data[i] + " should not exist", testWebDriver.getPageSource().contains(data[i]));
+    for (String aData : data)
+      assertFalse("Refrigerator with data :" + aData + " should not exist", testWebDriver.getPageSource().contains(aData));
   }
 
   @Then("^I should see confirmation for delete$")
