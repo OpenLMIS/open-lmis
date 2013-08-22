@@ -13,9 +13,15 @@ import org.openlmis.order.serializer.DateFormatSerializer;
 @JsonSerialize(using = DateFormatSerializer.class)
 
 public enum DateFormat {
-  DDMMYYYY("dd-MM-yyyy", true),
-  MMDDYY("MMddyy", true),
-  YYYYMMDD("yyyy/MM/dd", false);
+
+  DATE_1("ddMMyyyy", true),
+  DATE_2("dd/MM/yyyy", true),
+  DATE_3("dd-MM-yyyy", true),
+  DATE_4("dd/MM/yy", true),
+  DATE_5("MMddyy", true),
+
+  DATE_6("MM/yy", false),
+  DATE_7("yyyy/MM/dd", false);
 
   @Getter
   private final String format;
@@ -26,4 +32,5 @@ public enum DateFormat {
     this.format = format;
     this.orderDate = orderDate;
   }
+
 }

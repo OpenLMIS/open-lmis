@@ -1,17 +1,16 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright ï¿½ 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 describe("Order File Template Controller", function () {
-  var scope, controller, httpBackend, messageService, orderFileTemplate, $q, timeout, deferredObject;
+  var scope, controller, httpBackend, messageService, orderFileTemplate, $q, timeout, deferredObject, dateFormats;
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
 
-  beforeEach(inject(function ($rootScope, $controller, $httpBackend,
-                              _messageService_, _$timeout_) {
+  beforeEach(inject(function ($rootScope, $controller, $httpBackend, _messageService_, _$timeout_) {
     messageService = _messageService_;
     scope = $rootScope.$new();
     controller = $controller;
@@ -28,13 +27,21 @@ describe("Order File Template Controller", function () {
         {"id": null, "dataFieldLabel": "header.order.date", "openLmisField": true, "position": 6, "columnLabel": "Order date", "includeInOrderFile": true}
       ]};
 
-    controller(OrderFileTemplateController, {$scope: scope, orderFileTemplate: orderFileTemplate});
+    dateFormats = [
+      {"format": "ddMMyyyy", "orderDate": true},
+      {"format": "dd/MM/yyyy", "orderDate": true},
+      {"format": "dd-MM-yyyy", "orderDate": true},
+      {"format": "MMddyy", "orderDate": true},
+      {"format": "yyyy/MM/dd", "orderDate": false}
+    ];
+
+    controller(OrderFileTemplateController, {$scope: scope, orderFileTemplate: orderFileTemplate, dateFormats: dateFormats});
   }));
 
   it('should get order file template in scope', function () {
     $q = {defer: function () {
     }};
-    deferredObject = {promise: {id: 1}, resolve: function () {
+    deferredObject = {promise: {}, resolve: function () {
     }};
     spyOn(deferredObject, 'resolve');
 
@@ -51,7 +58,28 @@ describe("Order File Template Controller", function () {
     expect(scope.orderFileTemplate).toEqual(orderFileTemplate);
   });
 
-  it('should save order file template', function() {
+  it('should get date formats in scope', function () {
+    $q = {defer: function () {
+    }};
+    deferredObject = {promise: {}, resolve: function () {
+    }};
+    spyOn(deferredObject, 'resolve');
+
+    spyOn($q, 'defer').andCallFake(function () {
+      return deferredObject;
+    });
+
+    httpBackend.expect('GET', "/date-formats.json").respond({dateFormats: dateFormats});
+    controller(OrderFileTemplateController.resolve.dateFormats, {$q: $q});
+    expect($q.defer).toHaveBeenCalled();
+    timeout.flush();
+    httpBackend.flush();
+    expect(deferredObject.resolve).toHaveBeenCalledWith(dateFormats);
+    expect(scope.orderDateFormats).toEqual(["ddMMyyyy", "dd/MM/yyyy", "dd-MM-yyyy", "MMddyy"]);
+    expect(scope.periodDateFormats).toEqual(["ddMMyyyy", "dd/MM/yyyy", "dd-MM-yyyy", "MMddyy", "yyyy/MM/dd"]);
+  });
+
+  it('should save order file template', function () {
     httpBackend.expect('POST', "/order-file-template.json").respond({success: "Saved successfully"}, 200);
     console.log(scope.orderFileTemplate);
     scope.saveOrderFileTemplate();
@@ -65,10 +93,10 @@ describe("Order File Template Controller", function () {
     expect(scope.orderFileTemplate.orderFileColumns.length).toEqual(7);
     expect(scope.orderFileTemplate.orderFileColumns[6].position).toEqual(7);
     expect(scope.orderFileTemplate.orderFileColumns[6].openLmisField).toEqual(false);
-    expect(scope.newOrderFileColumn).toEqual({"includeInOrderFile": true, dataFieldLabel : "label.not.applicable"});
+    expect(scope.newOrderFileColumn).toEqual({"includeInOrderFile": true, dataFieldLabel: "label.not.applicable"});
   });
 
-  it('should remove order file column', function() {
+  it('should remove order file column', function () {
     scope.removeOrderFileColumn(5);
     expect(scope.orderFileTemplate.orderFileColumns.length).toEqual(5);
   });
