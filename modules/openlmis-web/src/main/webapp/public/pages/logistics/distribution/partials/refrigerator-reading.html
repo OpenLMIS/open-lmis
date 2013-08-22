@@ -166,14 +166,15 @@
 
                 <div class="form-row clearfix">
                   <textarea id="otherTextbox" ng-show="refrigeratorReading.problems.problemMap.other"
-                            ng-model="refrigeratorReading.problems.other"></textarea>
+                            ng-model="refrigeratorReading.problems.other"
+                            maxlength="255"></textarea>
                 </div>
               </div>
             </div>
           </div>
           <div class="form-cell">
             <label openlmis-message="label.notes"></label>
-            <textarea id="notes" ng-model="refrigeratorReading.notes"></textarea>
+            <textarea id="notes" ng-model="refrigeratorReading.notes" maxlength="255"></textarea>
           </div>
         </div>
       </div>
