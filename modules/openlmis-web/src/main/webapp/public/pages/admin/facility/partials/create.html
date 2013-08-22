@@ -315,7 +315,7 @@
                 </div>
                 <div class="span3" ng-form="overrideForm">
                   <input id="override-isa{{$index}}" name="overrideISA{{$index}}" type="text" ng-model="programProduct.overriddenIsa"
-                         numeric-validator="numericValue" maxlength="6"/>
+                         numeric-validator="positiveNumericValue" maxlength="6"/>
 
                   <span id="overrideISA{{$index}}" class="form-error" ng-show="overrideForm.overriddenISA.$error.numeric"
                         openlmis-message="error.enter.numeric.value" style="display:none;"></span>

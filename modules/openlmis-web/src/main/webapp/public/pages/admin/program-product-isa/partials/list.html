@@ -83,7 +83,7 @@
             <div class="span4">
               <input id="who-ratio" name="whoRatio" type="text" ng-required="true"
                      ng-model="currentProgramProduct.programProductIsa.whoRatio"
-                     numeric-validator="numericValue,3,3"
+                     numeric-validator="positiveNumericValue,3,3"
                      maxlength="7"
                      ng-change="error=''"
                      ng-class="highlightRequired(currentProgramProduct.programProductIsa.whoRatio)"/>
@@ -120,7 +120,7 @@
                      ng-model="currentProgramProduct.programProductIsa.wastageFactor"
                      ng-change="error=''"
                      maxlength="7"
-                     numeric-validator="numericValue,3,3"
+                     numeric-validator="positiveNumericValue,3,3"
                      ng-class="highlightRequired(currentProgramProduct.programProductIsa.wastageFactor)"/>
 
               <div id="wastageFactor" class="form-error" openlmis-message="error.enter.numeric.value"></div>
@@ -135,7 +135,7 @@
             <div class="span4">
               <input id="buffer-percentage" name="bufferPercentage" type="text" ng-required="true"
                      ng-model="currentProgramProduct.programProductIsa.bufferPercentage"
-                     numeric-validator="numericValue,3,3"
+                     numeric-validator="positiveNumericValue,3,3"
                      maxlength="7"
                      ng-change="error=''"
                      ng-class="highlightRequired(currentProgramProduct.programProductIsa.bufferPercentage)"/>
