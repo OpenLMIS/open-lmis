@@ -144,6 +144,9 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadSupplyLines("QA_Supply_Lines_ParentNodeNotNull.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Supervising Node is not the Top node in Record No");
+    uploadPage.uploadSupplyLines("QA_Supply_Lines_Redundant_Warehouse.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Redundant warehouse specified in Record No. 2");
   }
 
   private void verifyValidRequisitionGroupMembersUpload(UploadPage uploadPage) throws FileNotFoundException {
