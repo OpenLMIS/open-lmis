@@ -45,16 +45,19 @@ app.directive('numericValidator', function () {
       var integerPartLength = attrs.numericValidator.split(',')[1];
       var fractionalPartLength = attrs.numericValidator.split(',')[2];
 
-      var errorHolder = element.attr('error-holder');
-      if (isUndefined(errorHolder)) {
-        errorHolder = element.attr('name');
+      function getErrorHolder() {
+        var errorHolder = element.attr('error-holder');
+        if (isUndefined(errorHolder)) {
+          errorHolder = element.attr('name');
+        }
+        return errorHolder;
       }
 
       element.bind('blur', function () {
-        validationFunction(ctrl.$modelValue, errorHolder, integerPartLength, fractionalPartLength);
+        validationFunction(ctrl.$modelValue, getErrorHolder(), integerPartLength, fractionalPartLength);
       });
       ctrl.$parsers.unshift(function (viewValue) {
-        if (validationFunction(viewValue, errorHolder, integerPartLength, fractionalPartLength)) {
+        if (validationFunction(viewValue, getErrorHolder(), integerPartLength, fractionalPartLength)) {
           if (viewValue == "")  viewValue = undefined;
           return viewValue;
         } else {

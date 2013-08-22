@@ -32,13 +32,13 @@
             <label openlmis-message="label.refrigerator.temperature"></label>
             <input type="text" name="temperature{{$index}}" ng-model="refrigeratorReading.temperature.value"
                    numeric-validator="numericValue,3,1"
-                   error-holder="temperatureError"/>&deg;<span
+                   error-holder="temperatureError{{$index}}"/>&deg;<span
               openlmis-message="label.celcius.symbol"></span>
             <input id="temperature{{$index}}" type="checkbox" ng-model="refrigeratorReading.temperature.notRecorded"
                    not-recorded/>
             <label class="checkbox-label" for="temperature{{$index}}" openlmis-message="label.not.recorded"></label>
 
-            <div id="temperatureError" class="form-error" openlmis-message="error.enter.number.only"
+            <div id="temperatureError{{$index}}" class="form-error" openlmis-message="error.enter.number.only"
                  style="display: none"></div>
           </div>
           <div class="form-cell">
@@ -70,7 +70,7 @@
             <input type="text" name="lowAlarmEvent{{$index}}" ng-model="refrigeratorReading.lowAlarmEvents.value"
                    numeric-validator="positiveInteger"
                    maxlength="3"
-                   error-holder="lowAlarmError"/>
+                   error-holder="lowAlarmError{{$index}}"/>
 
             <input id="lowAlarmEvent{{$index}}" type="checkbox"
                    ng-model="refrigeratorReading.lowAlarmEvents.notRecorded"
@@ -78,7 +78,7 @@
             <label class="checkbox-label" for="lowAlarmEvent{{$index}}"
                    openlmis-message="label.not.recorded"></label>
 
-            <div id="lowAlarmError" class="form-error" openlmis-message="error.enter.number.only"
+            <div id="lowAlarmError{{$index}}" class="form-error" openlmis-message="error.enter.number.only"
                  style="display: none"></div>
 
           </div>
@@ -87,7 +87,7 @@
             <input name="highAlarmEvent{{$index}}" type="text" ng-model="refrigeratorReading.highAlarmEvents.value"
                    numeric-validator="positiveInteger"
                    maxlength="3"
-                   error-holder="highAlarmError"/>
+                   error-holder="highAlarmError{{$index}}"/>
 
             <input id="highAlarmEvent{{$index}}" type="checkbox"
                    ng-model="refrigeratorReading.highAlarmEvents.notRecorded"
@@ -95,7 +95,7 @@
             <label class="checkbox-label" for="highAlarmEvent{{$index}}"
                    openlmis-message="label.not.recorded"></label>
 
-            <div id="highAlarmError" class="form-error" openlmis-message="error.enter.number.only"
+            <div id="highAlarmError{{$index}}" class="form-error" openlmis-message="error.enter.number.only"
                  style="display: none"></div>
           </div>
         </div>
