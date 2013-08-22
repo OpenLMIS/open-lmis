@@ -9,6 +9,7 @@ package org.openlmis.order.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.OrderConfiguration;
 import org.openlmis.core.repository.ConfigurationRepository;
+import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.repository.OrderRepository;
@@ -21,6 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import static java.util.Arrays.asList;
 
 @Service
 @NoArgsConstructor
@@ -98,5 +103,11 @@ public class OrderService {
     orderConfiguration.setModifiedBy(userId);
     configurationRepository.update(orderConfiguration);
     orderRepository.saveOrderFileColumns(orderFileTemplateDTO.getOrderFileColumns(), userId);
+  }
+
+  public Set<DateFormat> getAllDateFormats() {
+    TreeSet<DateFormat> dateFormats = new TreeSet<>();
+    dateFormats.addAll(asList(DateFormat.values()));
+    return dateFormats;
   }
 }

@@ -15,6 +15,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.OrderConfiguration;
 import org.openlmis.core.repository.ConfigurationRepository;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
@@ -27,9 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.openlmis.order.domain.DateFormat.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
@@ -156,5 +159,16 @@ public class OrderServiceTest {
     orderService.saveOrderFileTemplate(orderFileTemplateDTO, userId);
     verify(configurationRepository).update(orderConfiguration);
     verify(orderRepository).saveOrderFileColumns(orderFileColumns, userId);
+  }
+
+  @Test
+  public void shouldGetAllDateFormats() throws Exception {
+    List<DateFormat> dateFormats = new ArrayList<>(orderService.getAllDateFormats());
+    List<DateFormat> expectedDateFormats = asList(DDMMYYYY,
+      MMDDYY,
+      YYYYMMDD
+    );
+
+    assertThat(dateFormats, is(expectedDateFormats));
   }
 }

@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.OrderConfiguration;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.dto.OrderDTO;
@@ -24,7 +25,9 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -109,5 +112,14 @@ public class OrderControllerTest {
     ResponseEntity<OpenLmisResponse> response = orderController.saveOrderFileTemplateDTO(orderFileTemplateDTO, request);
     verify(orderService).saveOrderFileTemplate(orderFileTemplateDTO, 1L);
     assertThat(response.getBody().getSuccessMsg(), is("order.file.template.saved.success"));
+  }
+
+  @Test
+  public void shouldGetAllDateFormats() throws Exception {
+    Set<DateFormat> dateFormats = new HashSet<>();
+    when(orderService.getAllDateFormats()).thenReturn(dateFormats);
+    ResponseEntity<OpenLmisResponse> response = orderController.getAllDateFormats();
+    verify(orderService).getAllDateFormats();
+    assertThat((Set<DateFormat>) response.getBody().getData().get(DATE_FORMATS), is(dateFormats));
   }
 }

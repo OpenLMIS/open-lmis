@@ -272,5 +272,9 @@ services.factory('OrderFileTemplate', function($resource) {
   return $resource('/order-file-template.json', {}, {post: {method: 'POST', isArray: true}});
 });
 
+services.factory('DateFormats', function($resource) {
+  return $resource('/date-formats.json', {}, {});
+});
+
 
 
