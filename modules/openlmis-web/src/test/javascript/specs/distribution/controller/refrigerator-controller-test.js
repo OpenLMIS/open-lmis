@@ -112,7 +112,6 @@ describe('RefrigeratorController', function () {
 
     expect(scope.addRefrigeratorModal).toBeUndefined();
     expect(scope.isDuplicateSerialNumber).toBeUndefined();
-    expect(scope.newRefrigerator).toBeUndefined();
     expect(scope.isDuplicateSerialNumber).toBeFalsy();
     expect(scope.distribution.facilityDistributionData[1].refrigeratorReadings.length).toEqual(3);
     expect(IndexedDB.put).toHaveBeenCalledWith('distributions', scope.distribution);
