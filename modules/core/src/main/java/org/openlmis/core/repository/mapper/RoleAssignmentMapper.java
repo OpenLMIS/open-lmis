@@ -64,7 +64,7 @@ public interface RoleAssignmentMapper {
   RoleAssignment getAdminRole(Long userId);
 
   @Select({"SELECT RA.userId, array_agg(RA.roleId) as roleIdsAsString FROM role_assignments RA INNER JOIN roles R ON RA.roleId = R.id",
-    "WHERE userId = #{userId} AND R.type = 'REPORT' GROUP BY userId, supervisoryNodeId, programId"})
+    " WHERE userId = #{userId} AND R.type = 'REPORT' group by ra.userId "})
   RoleAssignment getReportRole(Long userId);
 
   @Insert("INSERT INTO role_assignments" +

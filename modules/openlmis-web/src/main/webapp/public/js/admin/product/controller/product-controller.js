@@ -38,38 +38,25 @@ function ProductController($scope, $location, $dialog, messageService, ProductDe
     });
 
 
-    // show search results
-    $scope.showProductsSearchResults = function (id) {
-        var query = document.getElementById(id).value;
-        query = parseInt(query) + 1;
-        query = query.toString();
-        $scope.query = query;
 
-        var len = (query == undefined) ? 0 : query.length;
-        if (len >= 0) {
-            $scope.previousQuery = query;
-            //alert(query);
-            filterProductsByProgram(query);
-            return true;
-        } else {
-            return false;
-        }
-    };
 
     // apply filter
-    var filterProductsByProgram = function (query) {
-
+    $scope.filterProductsByProgram = function () {
+        query = $scope.program;
         $scope.filteredProducts = [];
         query = query || "";
-        if (query == 'NaN') {
+        if (query == 'NaN' || query == '') {
             $scope.filteredProducts = $scope.productsList;
             return;
         }
-
+        $scope.query = query;
         angular.forEach($scope.productsList, function (product) {
              $scope.product = product;
+            console.log('Query is ' + $scope.query);
+            console.log(' Product is ' + $scope.product.primaryname);
              angular.forEach($scope.product.programs, function (pp){
-                 if(pp.id == query){
+                 console.log('  Program id is ' + pp.id + ' ' + pp.name);
+                 if(pp.id == $scope.query){
                         $scope.filteredProducts.push($scope.product);
                  }
             });

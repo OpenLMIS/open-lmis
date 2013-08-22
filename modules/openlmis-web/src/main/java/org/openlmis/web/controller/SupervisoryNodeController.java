@@ -59,7 +59,7 @@ public class SupervisoryNodeController extends BaseController {
       } catch (DataException e) {
           return error(e, HttpStatus.BAD_REQUEST);
       }
-      successResponse = success(String.format("Supervisory node '%s' has been successfully created", supervisoryNode.getName()));
+      successResponse = success(String.format("Supervisory node '%s' has been successfully saved", supervisoryNode.getName()));
       successResponse.getBody().addData("supervisoryNode", supervisoryNode);
       return successResponse;
   }

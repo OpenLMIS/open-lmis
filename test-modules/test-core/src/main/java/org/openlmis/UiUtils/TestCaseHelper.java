@@ -29,6 +29,7 @@ public class TestCaseHelper {
   protected static boolean isSeleniumStarted = false;
   protected static DriverFactory driverFactory = new DriverFactory();
   public static final String DEFAULT_BROWSER = "firefox";
+  //public static final String DEFAULT_BASE_URL = "http://uat.zm.elmis-dev.org";
   public static final String DEFAULT_BASE_URL = "http://localhost:9091/";
   public static final String DEFAULT_DB_URL = "jdbc:postgresql://localhost:5432/open_lmis";
 
@@ -39,7 +40,7 @@ public class TestCaseHelper {
     dburlGlobal = getProperty("dburl", DEFAULT_DB_URL);
 
     dbWrapper = new DBWrapper(baseUrlGlobal, dburlGlobal);
-    dbWrapper.deleteData();
+    //dbWrapper.deleteData();
 
     if (!isSeleniumStarted) {
       loadDriver(browser);
@@ -107,6 +108,15 @@ public class TestCaseHelper {
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com", vendorName);
   }
+
+    public void setupUserRoleRights(String userId, String userSIC, String vendorName, List<String> rightsList) throws IOException, SQLException {
+        dbWrapper.insertRole("store in-charge", "REQUISITION", "");
+        dbWrapper.insertRole("district pharmacist", "REQUISITION", "");
+        for (String rights : rightsList)
+            dbWrapper.assignRight("store in-charge", rights);
+        String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+        dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "msyslmn@openlmis.com", vendorName);
+    }
 
   public void setupRnRTestDataRnRForCommTrack(boolean configureGenericTemplate, String program, String user, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
