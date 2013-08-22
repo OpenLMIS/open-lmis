@@ -62,6 +62,7 @@ public class MessageService {
     return message(openLmisMessage.getCode(), (Object) openLmisMessage.getParams());
   }
 
+  @SuppressWarnings("non-varargs")
   public String message(String key, Object... args) {
     return message(key, currentLocale, args);
   }
