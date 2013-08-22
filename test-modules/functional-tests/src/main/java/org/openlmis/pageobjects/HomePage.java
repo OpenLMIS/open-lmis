@@ -334,6 +334,7 @@ public class HomePage extends Page {
 
 
   public ViewRequisitionPage navigateViewRequisition() throws IOException {
+      testWebDriver.sleep(1000);
     assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     testWebDriver.keyPress(requisitionMenuItem);
@@ -408,6 +409,7 @@ public class HomePage extends Page {
   }
 
   public ApprovePage navigateToApprove() throws IOException {
+      testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.keyPress(requisitionMenuItem);
@@ -418,6 +420,7 @@ public class HomePage extends Page {
   }
 
   public ConvertOrderPage navigateConvertToOrder() throws IOException {
+      testWebDriver.sleep(1000);
     assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     testWebDriver.keyPress(requisitionMenuItem);
