@@ -1,9 +1,9 @@
 describe('RefrigeratorController', function () {
-  var scope;
+  var scope, distribution, IndexedDB;
 
   beforeEach(module('distribution'));
   beforeEach(inject(function ($rootScope, $controller, $routeParams) {
-    var IndexedDB = {
+    IndexedDB = {
       execute: function () {
       },
       get: function () {
@@ -18,8 +18,19 @@ describe('RefrigeratorController', function () {
 
     $routeParams.facility = 1;
 
-    $controller(RefrigeratorController, {$scope: scope, distribution: {facilityDistributionData: {1: {}}}, IndexedDB: IndexedDB});
-  }));
+    distribution = {
+      facilityDistributionData: {
+        1: {
+          refrigeratorReadings: [
+            {refrigerator: {serialNumber: "abc"}},
+            {refrigerator: {serialNumber: "XYZ"}}
+          ]
+        }
+      }
+    };
+    $controller(RefrigeratorController, {$scope: scope, distribution: distribution, IndexedDB: IndexedDB});
+  }))
+  ;
 
   it('should set status indicator to complete if all refrigeratorReadings are complete', function () {
     scope.distribution.facilityDistributionData[1].refrigeratorReadings = [
@@ -72,4 +83,39 @@ describe('RefrigeratorController', function () {
 
     expect(status).toEqual('is-complete');
   });
+
+  it('should initialize controller', function () {
+    expect(scope.distribution).toEqual(distribution);
+    expect(scope.selectedFacilityId).toEqual(1);
+  });
+
+  it('should set edit for specific serial number', function () {
+    scope.edit = [
+      {'key1': true, 'key2': false}
+    ];
+    scope.setEdit('key2');
+    expect(scope.edit.key1).toBeFalsy();
+    expect(scope.edit.key2).toBeTruthy();
+  });
+
+  it('should set duplicate serial number if serial number already exists', function () {
+    scope.newRefrigerator = {serialNumber: "Abc"};
+    scope.addRefrigeratorToStore()
+    expect(scope.isDuplicateSerialNumber).toBeTruthy();
+  });
+
+  it('should add new refrigerator if serial number does not exist', function () {
+    scope.newRefrigerator = {serialNumber: "Abcc"};
+    spyOn(IndexedDB, 'put').andCallThrough();
+
+    scope.addRefrigeratorToStore()
+
+    expect(scope.addRefrigeratorModal).toBeUndefined();
+    expect(scope.isDuplicateSerialNumber).toBeUndefined();
+    expect(scope.newRefrigerator).toBeUndefined();
+    expect(scope.isDuplicateSerialNumber).toBeFalsy();
+    expect(scope.distribution.facilityDistributionData[1].refrigeratorReadings.length).toEqual(3);
+    expect(IndexedDB.put).toHaveBeenCalledWith('distributions', scope.distribution);
+  });
+
 });

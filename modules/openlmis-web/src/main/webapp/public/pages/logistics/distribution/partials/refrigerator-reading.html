@@ -37,7 +37,9 @@
             <input id="temperature{{$index}}" type="checkbox" ng-model="refrigeratorReading.temperature.notRecorded"
                    not-recorded/>
             <label class="checkbox-label" for="temperature{{$index}}" openlmis-message="label.not.recorded"></label>
-            <div id="temperatureError" class="form-error" openlmis-message="error.enter.number.only" style="display: none"></div>
+
+            <div id="temperatureError" class="form-error" openlmis-message="error.enter.number.only"
+                 style="display: none"></div>
           </div>
           <div class="form-cell">
             <label openlmis-message="label.refrigerator.working.correctly"></label>
@@ -76,7 +78,8 @@
             <label class="checkbox-label" for="lowAlarmEvent{{$index}}"
                    openlmis-message="label.not.recorded"></label>
 
-            <div id="lowAlarmError" class="form-error" openlmis-message="error.enter.number.only" style="display: none"></div>
+            <div id="lowAlarmError" class="form-error" openlmis-message="error.enter.number.only"
+                 style="display: none"></div>
 
           </div>
           <div class="form-cell">
@@ -92,7 +95,8 @@
             <label class="checkbox-label" for="highAlarmEvent{{$index}}"
                    openlmis-message="label.not.recorded"></label>
 
-            <div id="highAlarmError" class="form-error" openlmis-message="error.enter.number.only" style="display: none"></div>
+            <div id="highAlarmError" class="form-error" openlmis-message="error.enter.number.only"
+                 style="display: none"></div>
           </div>
         </div>
 
@@ -118,7 +122,7 @@
 
             <input id="problemSinceLastVisit{{$index}}" type="checkbox"
                    ng-model="refrigeratorReading.problemSinceLastTime.notRecorded"
-                   not-recorded ng-click="deleteOtherProblems(refrigeratorReading)"/>
+                   not-recorded ng-click="refrigeratorReading.problems=undefined"/>
             <label class="checkbox-label" for="problemSinceLastVisit{{$index}}"
                    openlmis-message="label.not.recorded"></label>
 

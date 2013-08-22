@@ -54,14 +54,6 @@ function RefrigeratorController($scope, $dialog, messageService, distribution, I
     OpenLmisDialog.newDialog(dialogOpts, callback(serialNumberToDelete), $dialog, messageService);
   };
 
-  $scope.deleteOtherProblems = function (refrigeratorReading) {
-    if (refrigeratorReading.problemSinceLastTime.value || !refrigeratorReading.problems) return;
-
-    for (var key in refrigeratorReading.problems.problemMap) {
-      refrigeratorReading.problems.problemMap[key] = undefined
-    }
-    refrigeratorReading.problems.other = undefined;
-  };
 
   $scope.getStatus = function () {
     var readingList = $scope.distribution.facilityDistributionData[$routeParams.facility].refrigeratorReadings;
