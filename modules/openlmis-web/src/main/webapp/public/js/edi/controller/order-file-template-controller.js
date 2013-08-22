@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright ï¿½ 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -29,6 +29,7 @@
     $scope.newOrderFileColumn.position = $scope.orderFileColumns.length + 1;
     $scope.orderFileColumns.push($scope.newOrderFileColumn);
     $scope.newOrderFileColumn = {includeInOrderFile:true, dataFieldLabel: "label.not.applicable"};
+    $("html, body").animate({ scrollTop: $(document).height() }, 300);
   };
 
   $scope.removeOrderFileColumn = function (index) {

@@ -15,9 +15,7 @@
           <label for="orderFilePrefix" openlmis-message="label.order.file.prefix"></label>&nbsp;
 
           <input ng-model="orderFileTemplate.orderConfiguration.filePrefix" name="orderFilePrefix" id="orderFilePrefix"
-                 class="input-small" type="text" maxlength="8"
-                 ng-required="true"/>
-
+                 class="input-small" type="text" maxlength="8" />
 
         </div>
         <div class="span4 include-header-form">
@@ -29,63 +27,52 @@
 
     <hr/>
 
-    <div id="orderColumns">
-      <div class="list-header-container">
-        <div class="row-fluid list-header">
-          <div class="span1">
-            <span class="first-column" openlmis-message="label.include"></span>
-          </div>
-          <div class="span3" openlmis-message="label.data.field"></div>
-          <div class="span4">
-            <div openlmis-message="label.column.header"></div>
-          </div>
-
-        </div>
-      </div>
-
-      <div class="rnr-template-columns">
-        <ul ui-sortable ng-model="orderFileTemplate.orderFileColumns" id="sortable">
-          <li ng-repeat="orderFileColumn in orderFileTemplate.orderFileColumns">
-            <div class="drag-handle"></div>
-            <div class="row-fluid list-row">
-              <div>
-                <div class="span1">
-                  <span class="first-column checkbox-column">
-                    <input id="includeCheckbox{{ $index }}" type="checkbox" ng-model="orderFileColumn.includeInOrderFile"/>
-                  </span>
-                </div>
-                <div class="span3">
-                  <span openlmis-message="orderFileColumn.dataFieldLabel"></span>
-                </div>
-                <div class="span4">
-                  <input type="text" id="columnHeaderField{{ $index }}" ng-model="orderFileColumn.columnLabel" maxlength="50" ng-disabled="orderFileTemplate.orderConfiguration.headerInFile == false"/>
-                </div>
-                <div class="span1">
-                  <a href="" class="close" id="remove{{$index}}" ng-click="removeOrderFileColumn(orderFileColumn.position)" ng-hide="orderFileColumn.openLmisField"
-                         openlmis-message="create.facility.removeProgram"></a>
-                </div>
+    <div class="row-fluid">
+      <div class="span10">
+        <div id="orderColumns">
+          <div class="list-header-container">
+            <div class="row-fluid list-header">
+              <div class="span1">
+                <span class="first-column" openlmis-message="label.include"></span>
               </div>
-            </div>
-          </li>
-        </ul>
-        <div class="row-fluid list-row">
-          <div class="span1">
-            <span class="first-column checkbox-column">
-              <input type="checkbox" ng-model="newOrderFileColumn.includeInOrderFile"/>
-            </span>
-          </div>
-          <div class="span3">
-            <span openlmis-message="newOrderFileColumn.dataFieldLabel"></span>
-          </div>
-          <div class="span4">
-            <input type="text" ng-model="newOrderFileColumn.columnLabel" maxlength="50"/>
-          </div>
-            <div class="span1">
-              <input type="button" class="btn btn-primary" id="order-column-add" openlmis-message="button.add"
-                   ng-click="addNewOrderFileColumn()">
-            </div>
-        </div>
+              <div class="span3" openlmis-message="label.data.field"></div>
+              <div class="span4">
+                <div openlmis-message="label.column.header"></div>
+              </div>
 
+            </div>
+          </div>
+
+          <div class="rnr-template-columns">
+            <ul ui-sortable ng-model="orderFileTemplate.orderFileColumns" id="sortable">
+              <li ng-repeat="orderFileColumn in orderFileTemplate.orderFileColumns">
+                <div class="drag-handle"></div>
+                <div class="row-fluid list-row">
+                  <div>
+                    <div class="span1">
+                      <span class="first-column checkbox-column">
+                        <input id="includeCheckbox{{ $index }}" type="checkbox" ng-model="orderFileColumn.includeInOrderFile"/>
+                      </span>
+                    </div>
+                    <div class="span3">
+                      <span openlmis-message="orderFileColumn.dataFieldLabel"></span>
+                    </div>
+                    <div class="span4">
+                        <input type="text" id="columnHeaderField{{ $index }}" ng-model="orderFileColumn.columnLabel" maxlength="50" ng-disabled="orderFileTemplate.orderConfiguration.headerInFile == false"/>
+                    </div>
+                    <div class="span1">
+                      <a href="" class="remove-row" id="remove{{$index}}" ng-click="removeOrderFileColumn(orderFileColumn.position)" ng-hide="orderFileColumn.openLmisField"
+                         openlmis-message="create.facility.removeProgram"></a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <div class="row-fluid add-new-row-button">
+              <a href="" ng-click="addNewOrderFileColumn()" openlmis-message="button.add.new.row"></a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
