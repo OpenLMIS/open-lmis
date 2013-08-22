@@ -11,6 +11,8 @@ import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -29,23 +31,24 @@ import java.util.List;
 
 public class FacilityMailingListingReport extends TestCaseHelper {
 
-  public static final String STORE_IN_CHARGE = "store in-charge";
-  public static final String APPROVE_REQUISITION = "APPROVE_REQUISITION";
-  public static final String CONVERT_TO_ORDER = "CONVERT_TO_ORDER";
-  public static final String SUBMITTED = "SUBMITTED";
-  public static final String AUTHORIZED = "AUTHORIZED";
-  public static final String IN_APPROVAL = "IN_APPROVAL";
-  public static final String APPROVED = "APPROVED";
-  public static final String RELEASED = "RELEASED";
+    public static final String STORE_IN_CHARGE = "store in-charge";
+    public static final String APPROVE_REQUISITION = "APPROVE_REQUISITION";
+    public static final String CONVERT_TO_ORDER = "CONVERT_TO_ORDER";
+    public static final String SUBMITTED = "SUBMITTED";
+    public static final String AUTHORIZED = "AUTHORIZED";
+    public static final String IN_APPROVAL = "IN_APPROVAL";
+    public static final String APPROVED = "APPROVED";
+    public static final String RELEASED = "RELEASED";
+    public static final String TABLE_CELL_XPATH_PREFIX = "//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/";
 
-  private HomePage homePage;
-  private LoginPage loginPage;
-  private FacilityMailingListReportPage facilityMailingListReportPage;
+    private HomePage homePage;
+    private LoginPage loginPage;
+    private FacilityMailingListReportPage facilityMailingListReportPage;
 
-  @BeforeMethod(groups = {"functional"})
-  public void setUp() throws Exception {
-    super.setup();
-  }
+    @BeforeMethod(groups = {"functional"})
+    public void setUp() throws Exception {
+        super.setup();
+    }
 
     private void login(String userName, String passWord) throws IOException {
         loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -53,96 +56,92 @@ public class FacilityMailingListingReport extends TestCaseHelper {
     }
 
     private void navigateToFacilityMailingListReportingPage(String userName, String passWord) throws IOException {
-        login(userName , passWord);
+        login(userName, passWord);
         facilityMailingListReportPage = homePage.navigateViewFacilityMailingListReport();
     }
 
- //   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyReportMenu(String [] credentials) throws IOException{
+    //   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifyReportMenu(String[] credentials) throws IOException {
         // Assign rights here
-       // List<String> rightsList = new ArrayList<String>();
+        // List<String> rightsList = new ArrayList<String>();
         //rightsList.add("VIEW_REPORT");
         //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
 
-       /* LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);*/
-        login(credentials[0],credentials[1]);
+        login(credentials[0], credentials[1]);
         SeleneseTestNgHelper.assertTrue(homePage.reportMenuIsDisplayed());
         homePage.logout(DEFAULT_BASE_URL);
     }
-  //  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyReportMenuHiddenForUnauthorizedUser(String [] credentials) throws IOException{
+
+    //  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifyReportMenuHiddenForUnauthorizedUser(String[] credentials) throws IOException {
         // Assign rights here
         //List<String> rightsList = new ArrayList<String>();
         //rightsList.add("VIEW_REPORT");
         //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-
-/*        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        HomePage homePage = loginPage.loginAs(credentials[2], credentials[3]);*/
-        login(credentials[2],credentials[3]);
+        login(credentials[2], credentials[3]);
         SeleneseTestNgHelper.assertFalse(homePage.reportMenuIsDisplayed());
         homePage.logout(DEFAULT_BASE_URL);
     }
 
-  //  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyReportFiltersRendered(String [] credentials) throws Exception{
-        navigateToFacilityMailingListReportingPage(credentials[0],credentials[1]);
+    //  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifyReportFiltersRendered(String[] credentials) throws Exception {
+        navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
 
         SeleneseTestNgHelper.assertTrue(facilityMailingListReportPage.facilityCodeIsDisplayed());
         SeleneseTestNgHelper.assertTrue(facilityMailingListReportPage.facilityNameIsDisplayed());
         SeleneseTestNgHelper.assertTrue(facilityMailingListReportPage.facilityTypeIsDisplayed());
     }
 
- //   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyPDFOUtput (String [] credentials) throws Exception {
-           navigateToFacilityMailingListReportingPage(credentials[0],credentials[1]);
-           facilityMailingListReportPage.verifyPdfReportOutput();
+    //   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifyPDFOUtput(String[] credentials) throws Exception {
+        navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
+        facilityMailingListReportPage.verifyPdfReportOutput();
     }
 
 
- //   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyXLSOUtput (String [] credentials) throws Exception {
-        navigateToFacilityMailingListReportingPage(credentials[0],credentials[1]);
-         facilityMailingListReportPage.verifyXlsReportOutput();
+    //   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifyXLSOUtput(String[] credentials) throws Exception {
+        navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
+        facilityMailingListReportPage.verifyXlsReportOutput();
     }
-    //@Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifySorting(String [] credentials) throws IOException {
-        navigateToFacilityMailingListReportingPage(credentials[0],credentials[1]);
-          facilityMailingListReportPage.verifySortAscByCode();
-    }
-
 
     @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyPagination(String [] credentials) throws Exception {
-        navigateToFacilityMailingListReportingPage(credentials[0],credentials[1]);
+    public void verifySorting(String[] credentials) throws IOException {
+        navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
+        verifySortByCode("ASC");
+    }
+
+
+    //@Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifyPagination(String[] credentials) throws Exception {
+        navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
         facilityMailingListReportPage.verifyPagination();
     }
 
-  //  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-   public void verifyFacilityListingReport(String[] credentials) throws Exception{
+    //  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    public void verifyFacilityListingReport(String[] credentials) throws Exception {
 
-       String geoZone = "Ngorongoro";
-       String facilityType = "Lvl3 Hospital";
-       String facilityCodePrefix = "FCcode";
-       String facilityNamePrefix = "FCname";
-       String status = "true";
+        String geoZone = "Ngorongoro";
+        String facilityType = "Lvl3 Hospital";
+        String facilityCodePrefix = "FCcode";
+        String facilityNamePrefix = "FCname";
+        String status = "true";
 
-       Date dObj = new Date();
-       SimpleDateFormat formatter_date_time = new SimpleDateFormat(
-               "yyyyMMdd-hhmmss");
-       String date_time = formatter_date_time.format(dObj);
+        Date dObj = new Date();
+        SimpleDateFormat formatter_date_time = new SimpleDateFormat(
+                "yyyyMMdd-hhmmss");
+        String date_time = formatter_date_time.format(dObj);
 
-       dbWrapper.insertFacilities(facilityNamePrefix + date_time, facilityCodePrefix + date_time);
+        dbWrapper.insertFacilities(facilityNamePrefix + date_time, facilityCodePrefix + date_time);
 
-       LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
-       HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-       FacilityMailingListReportPage facilityListingReportPage = homePage.navigateViewFacilityMailingListReport();
-       //facilityListingReportPage.enterFilterValuesInFacilityListingReport(geoZone, facilityType, status);
-       //facilityListingReportPage.verifyHTMLReportOutputOnFacilityListingScreen();
-   }
-
+        FacilityMailingListReportPage facilityListingReportPage = homePage.navigateViewFacilityMailingListReport();
+        //facilityListingReportPage.enterFilterValuesInFacilityListingReport(geoZone, facilityType, status);
+        //facilityListingReportPage.verifyHTMLReportOutputOnFacilityListingScreen();
+    }
 
 
     private void setupRnRData(String[] credentials) throws IOException, SQLException {
@@ -200,7 +199,7 @@ public class FacilityMailingListingReport extends TestCaseHelper {
 
         HomePage homePageApproved = viewRequisitionPageApproved.verifyFieldsPostApproval("25.00", "1");
 
-       // dbWrapper.updateRequisition("F10");
+        // dbWrapper.updateRequisition("F10");
         ConvertOrderPage convertOrderPage = homePageApproved.navigateConvertToOrder();
         convertOrderPage.convertToOrder();
         ViewRequisitionPage viewRequisitionPageOrdered = homePageApproved.navigateViewRequisition();
@@ -216,20 +215,76 @@ public class FacilityMailingListingReport extends TestCaseHelper {
 
     }
 
+    public void verifySortByCode(String sortType) throws IOException {
+        WebElement sortButton = null;
+        String columnIdxStr = "[8]";
+        switch (sortType) {
+            case "ASC":
+                sortButton = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div"));
+                break;
+            case "DESC":
+                sortButton = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div"));
+                break;
+        }
+        SeleneseTestNgHelper.assertTrue(sortButton.isDisplayed());
 
-  @AfterMethod(groups = {"functional"})
-  public void tearDown() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout(baseUrlGlobal);
-    //dbWrapper.deleteData();
-    dbWrapper.closeConnection();
-  }
+        sortButton.click();
+        String str1, str2;
+        WebElement cell1 = null, cell2 = null;
+        for (int i = 1; i < 100; i++) {
+            if (i == 1) {
+                cell1 = testWebDriver.findElement(By.xpath(TABLE_CELL_XPATH_PREFIX+"div/div"+columnIdxStr+"/div/span"));
+                cell2 = testWebDriver.findElement(By.xpath(TABLE_CELL_XPATH_PREFIX+"div[2]/div"+columnIdxStr+"/div/span"));
 
-  @DataProvider(name = "Data-Provider-Function-Positive")
-  public Object[][] parameterIntTestProviderPositive() {
-    return new Object[][]{
-            {new String[]{"nidris", "Admin123", "storeincharge", "Admin123"}}
-    };
-  }
+            } else {
+                cell1 = testWebDriver.findElement(By.xpath(TABLE_CELL_XPATH_PREFIX+"div[" + String.valueOf(i) + "]/div"+columnIdxStr+"/div/span"));
+                cell2 = testWebDriver.findElement(By.xpath(TABLE_CELL_XPATH_PREFIX+"div[" + String.valueOf(i + 1) + "]/div"+columnIdxStr+"/div/span"));
+            }
+
+            if (cell1 != null && cell1.isDisplayed()) {
+                str1 = cell1.getText();
+            } else {
+                break;
+            }
+            if (cell2 != null && cell2.isDisplayed()) {
+                str2 = cell2.getText();
+                //SeleneseTestNgHelper.assertTrue(str1.trim().compareToIgnoreCase(str2.trim()) < 1);
+            } else {
+                break;
+            }
+            // str1 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div"+strIdx+"/div/div/span")).getText();
+            // str1 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div"+strIdx+"/div/div/span")).getText();
+            System.out.println(str1);
+            System.out.println(str2);
+
+            switch (sortType) {
+                case "ASC":
+                    SeleneseTestNgHelper.assertTrue(str1.trim().compareToIgnoreCase(str2.trim()) > 1);
+                    break;
+                case "DESC":
+                    SeleneseTestNgHelper.assertTrue(str1.trim().compareToIgnoreCase(str2.trim()) < 1);
+                    break;
+            }
+
+
+        }
+
+    }
+
+
+    @AfterMethod(groups = {"functional"})
+    public void tearDown() throws Exception {
+        HomePage homePage = new HomePage(testWebDriver);
+        homePage.logout(baseUrlGlobal);
+        //dbWrapper.deleteData();
+        dbWrapper.closeConnection();
+    }
+
+    @DataProvider(name = "Data-Provider-Function-Positive")
+    public Object[][] parameterIntTestProviderPositive() {
+        return new Object[][]{
+                {new String[]{"nidris", "Admin123", "storeincharge", "Admin123"}}
+        };
+    }
 
 }
