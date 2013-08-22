@@ -46,7 +46,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     super.setup();
   }
 
-  @When("^I click Add New Button$")
+  @When("^I add new refrigerator$")
   public void clickAddNewButton() throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.clickAddNew();
@@ -86,13 +86,18 @@ public class ManageRefrigerator extends TestCaseHelper {
     verifyRefrigeratorAdded(refrigeratorDetails);
   }
 
-  @And("^I click Delete")
+  @And("^I verify Refrigerator data is not sinked$")
+  public void deleteDistributions() throws IOException, SQLException {
+    dbWrapper.deleteRefrigerators();
+  }
+
+  @And("^I delete refrigerator")
   public void clickDelete() throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.clickDelete();
   }
 
-  @And("^I click Edit")
+  @And("^I edit refrigerator")
   public void clickEdit() throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.clickEdit();
@@ -140,7 +145,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     refrigeratorPage.enterValueInNotesTextArea(notes);
   }
 
-  @And("^I click Done$")
+  @And("^I add refrigerator$")
   public void clickDone() throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.clickDone();
@@ -156,7 +161,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     assertTrue("Edit button should show up", new RefrigeratorPage(testWebDriver).editButton.isDisplayed());
   }
 
-  @And("^I click \"([^\"]*)\" it was working correctly when I left$")
+  @And("^I verify \"([^\"]*)\" it was working correctly when I left$")
   public void clickFunctioningCorrectly(String flag) throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     if (flag.equalsIgnoreCase("Yes"))
@@ -169,7 +174,7 @@ public class ManageRefrigerator extends TestCaseHelper {
       refrigeratorPage.clickFunctioningCorrectlyNR();
   }
 
-  @And("^I click \"([^\"]*)\" that there is a problem with refrigerator since last visit$")
+  @And("^I verify \"([^\"]*)\" that there is a problem with refrigerator since last visit$")
   public void clickProblemSinceLastVisit(String flag) throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     if (flag.equalsIgnoreCase("Yes"))

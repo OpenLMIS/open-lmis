@@ -254,7 +254,8 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    And I click record data
+    And I record data
+    And I verify Distributions data is not sinked
     Then I should see Delivery Zone "Delivery Zone First", Program "VACCINES" and Period "Period14" in the header
     And I should see No facility selected
     And I should see "active" facilities that support the program "VACCINES" and delivery zone "Delivery Zone First"
@@ -293,30 +294,33 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    And I click record data
+    And I record data
     When I choose facility "F10"
     Then I should see Refrigerators screen
-    When I click Add New Button
+    When I add new refrigerator
     Then I should see New Refrigerator Modal window
     When I enter Brand "LG"
     And I enter Modal "800 LITRES"
     And I enter Serial Number "GR-J287PGHV"
     And I click Done on modal
+    And I verify Distributions data is not sinked
+    And I verify Refrigerator data is not sinked
     Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" added successfully
-    When I click Edit
+    When I edit refrigerator
     And I enter refrigerator temperature "3"
-    And I click "Yes" it was working correctly when I left
+    And I verify "Yes" it was working correctly when I left
     And I enter low alarm events "1"
     And I enter high alarm events "0"
-    And I click "No" that there is a problem with refrigerator since last visit
+    And I verify "No" that there is a problem with refrigerator since last visit
     And I enter Notes "miscellaneous"
-    And I click Done
+    And I add refrigerator
+    And I verify Refrigerator data is not sinked
     Then I should not see Refrigerator details section
     And I should see Edit button
-    When I click Edit
+    When I edit refrigerator
     Then I should see refrigerator details as refrigerator temperature "3" low alarm events "1" high alarm events "0" notes "miscellaneous"
-    And I click Done
-    When I click Delete
+    And I add refrigerator
+    When I delete refrigerator
     Then I should see confirmation for delete
     When I confirm delete
     Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" deleted successfully
@@ -331,7 +335,7 @@ Feature: Smoke Tests
     And I should see include column header as "false"
     And I should see all column headers disabled
     And I should see include checkbox "checked" for all column headers
-    When I click save on order file format screen
+    When I save on order file format
     Then I should see "Order file configuration saved successfully!"
 
 

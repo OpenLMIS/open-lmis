@@ -151,13 +151,18 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.selectValueFromPeriod(period);
   }
 
+  @And("^I verify Distributions data is not sinked$")
+  public void deleteDistributions() throws IOException, SQLException {
+    dbWrapper.deleteDistributions();
+  }
+
   @And("^I initiate distribution$")
   public void initiateDistribution() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
     distributionPage.clickInitiateDistribution();
   }
 
-  @And("^I click record data$")
+  @And("^I record data$")
   public void clickRecordData() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
     distributionPage.clickRecordData();

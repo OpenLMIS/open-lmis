@@ -94,6 +94,14 @@ public class DBWrapper {
     update("update products set active='" + active + "' where code='" + productCode + "';");
   }
 
+  public void deleteDistributions() throws SQLException {
+    update("delete from distributions;");
+  }
+
+  public void deleteRefrigerators() throws SQLException {
+    update("delete from refrigerators;");
+  }
+
   public void updateActiveStatusOfProgramProduct(String productCode, String programCode, String active) throws SQLException {
     update("update program_products set active='" + active + "' where programid=(select id from programs where code='" + programCode + "') and productid=(select id from products where code='" + productCode + "');");
   }
