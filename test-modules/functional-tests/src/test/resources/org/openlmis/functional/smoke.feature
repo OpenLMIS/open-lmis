@@ -341,7 +341,7 @@ Feature: Smoke Tests
     And I should see include column header as "false"
     And I should see all column headers disabled
     And I should see include checkbox "checked" for all column headers
-    When I save on order file format
+    When I save order file format
     Then I should see "Order file configuration saved successfully!"
 
 
