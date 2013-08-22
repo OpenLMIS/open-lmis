@@ -12,6 +12,8 @@ public class OrderFileColumn extends BaseModel{
   private Boolean openLmisField;
   private int position;
   private String columnLabel;
+  private String nestedPath;
+  private String fieldName;
   private Boolean includeInOrderFile;
 
 }
