@@ -17,6 +17,11 @@ function RefrigeratorController($scope, $dialog, messageService, distribution, I
     $scope.edit[serialNum] = true;
   };
 
+  $scope.showRefrigeratorModal = function(){
+    $scope.addRefrigeratorModal = true
+    $scope.newRefrigerator = null;
+  };
+
   $scope.addRefrigeratorToStore = function () {
     var exists = _.find($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings,
         function (reading) {
@@ -29,7 +34,7 @@ function RefrigeratorController($scope, $dialog, messageService, distribution, I
     $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings.push(
         {'refrigerator': angular.copy($scope.newRefrigerator)});
     IndexedDB.put('distributions', $scope.distribution);
-    $scope.addRefrigeratorModal = $scope.isDuplicateSerialNumber = $scope.newRefrigerator = undefined;
+    $scope.addRefrigeratorModal = $scope.isDuplicateSerialNumber = undefined;
   };
 
   $scope.showDeleteRefrigeratorConfirmationModel = function (serialNumberToDelete) {

@@ -75,10 +75,10 @@ app.numericValue = function (value, errorHolder, integerPartLength, fractionalPa
   str = '^-?\\d*\\.?\\d{1,' + fractionalPartLength + '}$';
   var NUMBER_REGEXP = new RegExp(str);
 
-  var valid = (value == undefined) ? true : NUMERIC_REGEXP_FIXED_PRECISION.test(value);
+  var valid = (value == undefined || value.length == 0) ? true : NUMERIC_REGEXP_FIXED_PRECISION.test(value);
 
   if (errorHolder != undefined && REGEX_FOR_DIGITS_AFTER_DECIMAL.test(value) != true) {
-    document.getElementById(errorHolder).style.display = ((value == undefined) ? true : (NUMBER_REGEXP.test(value))) ? 'none' : 'block';
+    document.getElementById(errorHolder).style.display = ((value == undefined || value.length == 0) ? true : (NUMBER_REGEXP.test(value))) ? 'none' : 'block';
   }
 
   return valid;
