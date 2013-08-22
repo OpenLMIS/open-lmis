@@ -11,7 +11,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
@@ -28,11 +27,4 @@ public class ShippedLineItem extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, type = "intFromDouble", name = "Quantity Shipped")
   private Integer quantityShipped;
-
-  public void validateForSave() {
-    if (quantityShipped < 0) {
-      throw new DataException("error.negative.shipped.quantity");
-    }
-  }
-
 }
