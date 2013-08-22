@@ -90,35 +90,15 @@ public class OrderRepositoryTest {
   }
 
   @Test
-  public void shouldUpdateOrderFileColumnsIfPresent() throws Exception {
-    OrderFileColumn firstColumn = getOrderFileColumn(2l, "column1");
-    OrderFileColumn secondColumn = getOrderFileColumn(3l, "column2");
-
-    List<OrderFileColumn> orderFileColumns = asList(firstColumn, secondColumn);
-
-    orderRepository.updateOrderFileColumns(orderFileColumns, 1l);
-
-    verify(orderMapper).updateOrderFileColumn(firstColumn);
-    verify(orderMapper).updateOrderFileColumn(secondColumn);
-    assertThat(firstColumn.getModifiedBy(), is(1l));
-    assertThat(secondColumn.getModifiedBy(), is(1l));
+  public void shouldSaveOrderFileColumns() throws Exception {
+    OrderFileColumn orderFileColumn = new OrderFileColumn();
+    List<OrderFileColumn> orderFileColumns = asList(orderFileColumn);
+    Long userId = 1L;
+    orderRepository.saveOrderFileColumns(orderFileColumns, userId);
+    verify(orderMapper).deleteOrderFileColumns();
+    verify(orderMapper, times(1)).insertOrderFileColumn(orderFileColumn);
   }
 
-  @Test
-  public void shouldInsertOrderFileColumnIfNotPresent() throws Exception {
-    OrderFileColumn firstColumn = getOrderFileColumn(2l, "column1");
-    OrderFileColumn secondColumn = new OrderFileColumn();
-
-    List<OrderFileColumn> orderFileColumns = asList(firstColumn, secondColumn);
-
-    orderRepository.updateOrderFileColumns(orderFileColumns, 1l);
-
-    verify(orderMapper).updateOrderFileColumn(firstColumn);
-    verify(orderMapper).insertOrderFileColumn(secondColumn);
-    assertThat(firstColumn.getModifiedBy(), is(1L));
-    assertThat(secondColumn.getCreatedBy(), is(1L));
-    assertThat(secondColumn.getModifiedBy(), is(1L));
-  }
 
   private OrderFileColumn getOrderFileColumn(Long id, String label) {
     OrderFileColumn orderFileColumn = new OrderFileColumn();
