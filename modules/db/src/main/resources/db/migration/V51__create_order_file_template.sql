@@ -2,6 +2,8 @@ DROP TABLE IF EXISTS order_file_columns;
 
 CREATE TABLE order_file_columns (
   dataFieldLabel     VARCHAR(50),
+  fieldName          VARCHAR(50),
+  nestedPath         VARCHAR(50),
   includeInOrderFile BOOLEAN NOT NULL DEFAULT TRUE,
   columnLabel        VARCHAR(50),
   position           INTEGER NOT NULL,
