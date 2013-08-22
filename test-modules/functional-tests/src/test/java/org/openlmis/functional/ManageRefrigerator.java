@@ -88,7 +88,7 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I verify Refrigerator data is not synchronised")
   public void verifyRefrigeratorsInDB() throws IOException, SQLException {
-    dbWrapper.verifyRefrigeratorsInDB();
+    dbWrapper.verifyRecordCountInTable("Refrigerators","0");
   }
 
   @And("^I delete refrigerator")
@@ -150,6 +150,12 @@ public class ManageRefrigerator extends TestCaseHelper {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.clickDone();
   }
+
+    @Then("^I should see \"([^\"]*)\" refrigerator icon as \"([^\"]*)\"$")
+    public void verifyIndividualRefrigeratorColor(String whichIcon, String color) throws IOException, SQLException {
+        RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+        refrigeratorPage.verifyIndividualRefrigeratorColor(whichIcon, color);
+    }
 
   @Then("^I should not see Refrigerator details section$")
   public void shouldNotSeeRefrigeratorSection() throws IOException, SQLException {

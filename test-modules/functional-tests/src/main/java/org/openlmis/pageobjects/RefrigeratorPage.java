@@ -13,6 +13,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.NAME;
 import static org.openqa.selenium.support.How.XPATH;
@@ -133,6 +134,11 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = XPATH, using = "//h3[contains(text(),'Delete Refrigerator')]")
   public static WebElement deletePopUpHeader;
 
+  @FindBy(how = XPATH, using = "//form/div/div[1]/div[1]/span[@class='status-icon']")
+  public static WebElement individualRefrigeratorIcon;
+
+  @FindBy(how = XPATH, using = "//div[@class='clearfix facility-container ng-scope']/div[1]/ul/li[2]/a/span[1]")
+  public static WebElement overallRefrigeratorIcon;
 
   public RefrigeratorPage(TestWebDriver driver) {
     super(driver);
@@ -313,7 +319,20 @@ public class RefrigeratorPage extends Page {
     return testWebDriver.getAttribute(notesTextArea, "value");
   }
 
+    public void verifyIndividualRefrigeratorColor(String whichIcon, String color) {
+        testWebDriver.waitForElementToAppear(individualRefrigeratorIcon);
+        if(color.toLowerCase().equals("RED".toLowerCase()))
+            color="rgba(203, 64, 64, 1)";
+        else if(color.toLowerCase().equals("GREEN".toLowerCase()))
+            color="rgba(82, 168, 30, 1)";
+        else if(color.toLowerCase().equals("AMBER".toLowerCase()))
+            color="rgba(240, 165, 19, 1)";
 
+        if(whichIcon.toLowerCase().equals("Overall".toLowerCase()))
+            assertEquals(color,overallRefrigeratorIcon.getCssValue("background-color"));
+        else if(whichIcon.toLowerCase().equals("Individual".toLowerCase()))
+            assertEquals(color,individualRefrigeratorIcon.getCssValue("background-color"));
+    }
 
   public void onRefrigeratorScreen() {
     testWebDriver.sleep(500);
@@ -325,6 +344,7 @@ public class RefrigeratorPage extends Page {
     testWebDriver.waitForElementToAppear(doneButton);
     doneButton.click();
     testWebDriver.sleep(500);
+
   }
 
   public void addNewRefrigerator(String brand, String model, String manufacturerSerialNumber) {
@@ -336,7 +356,7 @@ public class RefrigeratorPage extends Page {
 
   public void verifySuccessMessage(String message) {
     testWebDriver.waitForElementToAppear(saveSuccessMessageDiv);
-    SeleneseTestNgHelper.assertEquals(saveSuccessMessageDiv.getText(), message);
+    assertEquals(saveSuccessMessageDiv.getText(), message);
   }
 
 

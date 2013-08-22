@@ -306,12 +306,18 @@ Feature: Smoke Tests
     And I verify Distributions data is not synchronised
     And I verify Refrigerator data is not synchronised
     Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" added successfully
+    And I should see "overall" refrigerator icon as "RED"
     When I edit refrigerator
+    Then I should see "individual" refrigerator icon as "RED"
     And I enter refrigerator temperature "3"
+    And I should see "overall" refrigerator icon as "AMBER"
+    Then I should see "individual" refrigerator icon as "AMBER"
     And I verify "Yes" it was working correctly when I left
     And I enter low alarm events "1"
     And I enter high alarm events "0"
     And I verify "No" that there is a problem with refrigerator since last visit
+    Then I should see "individual" refrigerator icon as "GREEN"
+    And I should see "overall" refrigerator icon as "GREEN"
     And I enter Notes "miscellaneous"
     And I add refrigerator
     And I verify Refrigerator data is not synchronised
