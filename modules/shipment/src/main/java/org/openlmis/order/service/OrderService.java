@@ -7,7 +7,7 @@
 package org.openlmis.order.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Configuration;
+import org.openlmis.core.domain.OrderConfiguration;
 import org.openlmis.core.repository.ConfigurationRepository;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
@@ -94,9 +94,9 @@ public class OrderService {
 
   @Transactional
   public void saveOrderFileTemplate(OrderFileTemplateDTO orderFileTemplateDTO, Long userId) {
-    Configuration configuration = orderFileTemplateDTO.getConfiguration();
-    configuration.setModifiedBy(userId);
-    configurationRepository.update(configuration);
+    OrderConfiguration orderConfiguration = orderFileTemplateDTO.getOrderConfiguration();
+    orderConfiguration.setModifiedBy(userId);
+    configurationRepository.update(orderConfiguration);
     orderRepository.saveOrderFileColumns(orderFileTemplateDTO.getOrderFileColumns(), userId);
   }
 }

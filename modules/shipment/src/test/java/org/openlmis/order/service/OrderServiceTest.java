@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Configuration;
+import org.openlmis.core.domain.OrderConfiguration;
 import org.openlmis.core.repository.ConfigurationRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
@@ -136,10 +136,10 @@ public class OrderServiceTest {
 
   @Test
   public void shouldGetOrderFileTemplateWithConfiguration() throws Exception {
-    Configuration configuration = new Configuration();
+    OrderConfiguration orderConfiguration = new OrderConfiguration();
     List<OrderFileColumn> orderFileColumns = new ArrayList<>();
-    OrderFileTemplateDTO expectedOrderFileTemplateDTO = new OrderFileTemplateDTO(configuration, orderFileColumns);
-    when(configurationRepository.getConfiguration()).thenReturn(configuration);
+    OrderFileTemplateDTO expectedOrderFileTemplateDTO = new OrderFileTemplateDTO(orderConfiguration, orderFileColumns);
+    when(configurationRepository.getConfiguration()).thenReturn(orderConfiguration);
     when(orderRepository.getOrderFileTemplate()).thenReturn(orderFileColumns);
     OrderFileTemplateDTO actualOrderFileTemplateDTO = orderService.getOrderFileTemplateDTO();
     verify(configurationRepository).getConfiguration();
@@ -149,12 +149,12 @@ public class OrderServiceTest {
 
   @Test
   public void shouldSaveOrderFileColumnsWithConfiguration() throws Exception {
-    Configuration configuration = new Configuration();
+    OrderConfiguration orderConfiguration = new OrderConfiguration();
     List<OrderFileColumn> orderFileColumns = new ArrayList<>();
-    OrderFileTemplateDTO orderFileTemplateDTO = new OrderFileTemplateDTO(configuration, orderFileColumns);
+    OrderFileTemplateDTO orderFileTemplateDTO = new OrderFileTemplateDTO(orderConfiguration, orderFileColumns);
     Long userId = 1L;
     orderService.saveOrderFileTemplate(orderFileTemplateDTO, userId);
-    verify(configurationRepository).update(configuration);
+    verify(configurationRepository).update(orderConfiguration);
     verify(orderRepository).saveOrderFileColumns(orderFileColumns, userId);
   }
 }

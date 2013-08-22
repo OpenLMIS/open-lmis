@@ -14,14 +14,14 @@
         <div class="span3">
           <label for="orderFilePrefix" openlmis-message="label.order.file.prefix"></label>&nbsp;
 
-          <input ng-model="orderFileTemplate.configuration.orderFilePrefix" name="orderFilePrefix" id="orderFilePrefix"
+          <input ng-model="orderFileTemplate.orderConfiguration.filePrefix" name="orderFilePrefix" id="orderFilePrefix"
                  class="input-small" type="text" maxlength="8"
                  ng-required="true"/>
 
 
         </div>
         <div class="span4 include-header-form">
-          <input type="checkbox" id="includeHeadersCheckbox" ng-model="orderFileTemplate.configuration.headerInOrderFile"/>
+          <input type="checkbox" id="includeHeadersCheckbox" ng-model="orderFileTemplate.orderConfiguration.headerInFile"/>
           <label for="includeHeadersCheckbox" openlmis-message="label.column.include.headers"></label>
         </div>
       </div>
@@ -58,7 +58,7 @@
                   <span openlmis-message="orderFileColumn.dataFieldLabel"></span>
                 </div>
                 <div class="span4">
-                  <input type="text" id="columnHeaderField{{ $index }}" ng-model="orderFileColumn.columnLabel" maxlength="50" ng-disabled="orderFileTemplate.configuration.headerInOrderFile == false"/>
+                  <input type="text" id="columnHeaderField{{ $index }}" ng-model="orderFileColumn.columnLabel" maxlength="50" ng-disabled="orderFileTemplate.orderConfiguration.headerInFile == false"/>
                 </div>
                 <div class="span1">
                   <a href="" class="close" id="remove{{$index}}" ng-click="removeOrderFileColumn(orderFileColumn.position)" ng-hide="orderFileColumn.openLmisField"

@@ -27,7 +27,7 @@ public class ConfigureOrderPage extends RequisitionPage {
   @FindBy(how = ID, using = "orderFilePrefix")
   private static WebElement orderFilePrefix;
 
-  @FindBy(how = XPATH, using = "//input[@ng-model='orderFileTemplate.configuration.headerInOrderFile']")
+  @FindBy(how = XPATH, using = "//input[@ng-model='orderFileTemplate.orderConfiguration.headerInFile']")
   private static WebElement includeOrderHeaders;
 
   @FindBy(how = ID, using = "includeCheckbox0")

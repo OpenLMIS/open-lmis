@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
-import org.openlmis.core.domain.Configuration;
+import org.openlmis.core.domain.OrderConfiguration;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
@@ -96,7 +96,7 @@ public class OrderControllerTest {
   @Test
   public void shouldGetOrderFileTemplateDTO() throws Exception {
     OrderFileTemplateDTO expectedOrderFileTemplateDTO =
-      new OrderFileTemplateDTO(new Configuration(), new ArrayList<OrderFileColumn>());
+      new OrderFileTemplateDTO(new OrderConfiguration(), new ArrayList<OrderFileColumn>());
     when(orderService.getOrderFileTemplateDTO()).thenReturn(expectedOrderFileTemplateDTO);
     ResponseEntity<OpenLmisResponse> fetchedTemplate = orderController.getOrderFileTemplateDTO();
     verify(orderService).getOrderFileTemplateDTO();
@@ -105,7 +105,7 @@ public class OrderControllerTest {
 
   @Test
   public void shouldSaveOrderFileTemplateDTO() throws Exception {
-    OrderFileTemplateDTO orderFileTemplateDTO = new OrderFileTemplateDTO(new Configuration(), new ArrayList<OrderFileColumn>());
+    OrderFileTemplateDTO orderFileTemplateDTO = new OrderFileTemplateDTO(new OrderConfiguration(), new ArrayList<OrderFileColumn>());
     ResponseEntity<OpenLmisResponse> response = orderController.saveOrderFileTemplateDTO(orderFileTemplateDTO, request);
     verify(orderService).saveOrderFileTemplate(orderFileTemplateDTO, 1L);
     assertThat(response.getBody().getSuccessMsg(), is("order.file.template.saved.success"));

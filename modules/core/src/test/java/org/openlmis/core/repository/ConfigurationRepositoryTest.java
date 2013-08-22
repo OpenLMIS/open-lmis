@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Configuration;
+import org.openlmis.core.domain.OrderConfiguration;
 import org.openlmis.core.repository.mapper.ConfigurationMapper;
 import org.openlmis.db.categories.UnitTests;
 
@@ -26,18 +26,18 @@ public class ConfigurationRepositoryTest {
 
   @Test
   public void shouldGetConfiguration() {
-    Configuration configuration = new Configuration();
-    configuration.setHeaderInOrderFile(true);
-    configuration.setOrderDatePattern("ddMMyy");
-    when(configurationMapper.getConfiguration()).thenReturn(configuration);
-    assertThat(configurationRepository.getConfiguration(), is(configuration));
+    OrderConfiguration orderConfiguration = new OrderConfiguration();
+    orderConfiguration.setHeaderInFile(true);
+    orderConfiguration.setDatePattern("ddMMyy");
+    when(configurationMapper.getConfiguration()).thenReturn(orderConfiguration);
+    assertThat(configurationRepository.getConfiguration(), is(orderConfiguration));
     verify(configurationMapper).getConfiguration();
   }
 
   @Test
   public void shouldUpdateConfigurations() throws Exception {
-    Configuration configuration = new Configuration();
-    configurationRepository.update(configuration);
-    verify(configurationMapper).update(configuration);
+    OrderConfiguration orderConfiguration = new OrderConfiguration();
+    configurationRepository.update(orderConfiguration);
+    verify(configurationMapper).update(orderConfiguration);
   }
 }

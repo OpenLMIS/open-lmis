@@ -17,13 +17,13 @@ import java.util.Map;
 
 import static org.openlmis.web.controller.OrderController.ORDER;
 
-@Component("orderCSV")
-public class OpenLmisCsvView extends AbstractView {
+@Component
+public class OrderCsvView extends AbstractView {
 
   MessageService messageService;
 
   @Autowired
-  public OpenLmisCsvView(MessageService messageService) {
+  public OrderCsvView(MessageService messageService) {
     this.messageService = messageService;
   }
 

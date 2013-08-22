@@ -5,7 +5,7 @@
  */
 package org.openlmis.core.repository;
 
-import org.openlmis.core.domain.Configuration;
+import org.openlmis.core.domain.OrderConfiguration;
 import org.openlmis.core.repository.mapper.ConfigurationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -16,11 +16,11 @@ public class ConfigurationRepository {
   @Autowired
   private ConfigurationMapper configurationMapper;
 
-  public Configuration getConfiguration() {
+  public OrderConfiguration getConfiguration() {
     return configurationMapper.getConfiguration();
   }
 
-  public void update(Configuration configuration) {
-    configurationMapper.update(configuration);
+  public void update(OrderConfiguration orderConfiguration) {
+    configurationMapper.update(orderConfiguration);
   }
 }

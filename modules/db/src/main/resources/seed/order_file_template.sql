@@ -1,4 +1,4 @@
-INSERT INTO configurations VALUES ('O', FALSE, 'dd/MM/yy', 'MM/yy');
+INSERT INTO order_configurations VALUES ('O', FALSE, 'dd/MM/yy', 'MM/yy');
 
 INSERT INTO order_file_columns (dataFieldLabel, columnLabel, position, openLmisField) VALUES ('header.order.number', 'Order number', 1, true);
 INSERT INTO order_file_columns (dataFieldLabel, columnLabel, position, openLmisField) VALUES ('create.facility.code', 'Facility code', 2, true);

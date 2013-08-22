@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Configuration;
+import org.openlmis.core.domain.OrderConfiguration;
 import org.openlmis.order.domain.OrderFileColumn;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderFileTemplateDTO {
 
-  Configuration configuration;
+  OrderConfiguration orderConfiguration;
 
   List<OrderFileColumn> orderFileColumns;
 }

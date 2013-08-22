@@ -29,8 +29,8 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(OpenLmisCsvView.class)
-public class OpenLmisCsvViewTest {
+@PrepareForTest(OrderCsvView.class)
+public class OrderCsvViewTest {
 
   @Mock
   MessageService messageService;
@@ -60,7 +60,7 @@ public class OpenLmisCsvViewTest {
     model.put(OrderController.ORDER, order);
     String fileName = "O1.csv";
 
-    OpenLmisCsvView csvView = new OpenLmisCsvView(messageService);
+    OrderCsvView csvView = new OrderCsvView(messageService);
 
     csvView.renderMergedOutputModel(model, request, response);
 

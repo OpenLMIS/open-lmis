@@ -1,9 +1,9 @@
-DROP TABLE IF EXISTS configurations;
+DROP TABLE IF EXISTS order_configurations;
 
-CREATE TABLE configurations (
-  orderFilePrefix   VARCHAR(8),
-  headerInOrderFile BOOLEAN     NOT NULL,
-  orderDatePattern  VARCHAR(25) NOT NULL,
+CREATE TABLE order_configurations (
+  filePrefix        VARCHAR(8),
+  headerInFile      BOOLEAN     NOT NULL,
+  datePattern       VARCHAR(25) NOT NULL,
   periodDatePattern VARCHAR(25) NOT NULL,
   createdBy         INTEGER,
   createdDate       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
