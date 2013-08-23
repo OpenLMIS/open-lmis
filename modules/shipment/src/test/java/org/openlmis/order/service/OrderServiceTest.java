@@ -164,9 +164,9 @@ public class OrderServiceTest {
   @Test
   public void shouldGetAllDateFormats() throws Exception {
     List<DateFormat> dateFormats = new ArrayList<>(orderService.getAllDateFormats());
-    List<DateFormat> expectedDateFormats = asList(DDMMYYYY,
-      MMDDYY,
-      YYYYMMDD
+    List<DateFormat> expectedDateFormats = asList(DATE_1,DATE_2,DATE_3,DATE_4,DATE_5,DATE_6,DATE_7,DATE_8,DATE_9,DATE_10,
+      DATE_11,DATE_12,DATE_13,DATE_14,DATE_15,DATE_16,DATE_17,DATE_18,DATE_19,DATE_20,
+      DATE_21,DATE_22,DATE_23,DATE_24,DATE_25,DATE_26,DATE_27,DATE_28,DATE_29,DATE_30
     );
 
     assertThat(dateFormats, is(expectedDateFormats));
