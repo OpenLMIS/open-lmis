@@ -151,7 +151,7 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.selectValueFromPeriod(period);
   }
 
-  @And("^I verify Distributions data is not synchronised")
+  @And("^I verify Distributions data is not synchronised$")
   public void verifyDistributionsInDB() throws IOException, SQLException {
     dbWrapper.verifyRecordCountInTable("Distributions","1");
   }

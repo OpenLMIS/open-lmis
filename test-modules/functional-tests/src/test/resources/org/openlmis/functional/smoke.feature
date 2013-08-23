@@ -255,7 +255,7 @@ Feature: Smoke Tests
     And I select period "Period14"
     And I initiate distribution
     And I record data
-    And I verify Distributions data is not sinked
+    And I verify Distributions data is not synchronised
     Then I should see Delivery Zone "Delivery Zone First", Program "VACCINES" and Period "Period14" in the header
     And I should see No facility selected
     And I should see "active" facilities that support the program "VACCINES" and delivery zone "Delivery Zone First"
