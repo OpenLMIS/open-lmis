@@ -420,9 +420,9 @@ public class HomePage extends Page {
   }
 
   public ConvertOrderPage navigateConvertToOrder() throws IOException {
-      testWebDriver.sleep(1000);
-    assertTrue(requisitionMenuItem.isDisplayed());
+      testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
+    assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(convertToOrderMenuItem);
     testWebDriver.keyPress(convertToOrderMenuItem);
