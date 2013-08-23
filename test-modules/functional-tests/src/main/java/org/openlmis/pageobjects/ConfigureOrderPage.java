@@ -8,7 +8,7 @@ package org.openlmis.pageobjects;
 
 
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openqa.selenium.NoSuchElementException;
+
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -28,7 +28,7 @@ public class ConfigureOrderPage extends RequisitionPage {
   @FindBy(how = ID, using = "orderFilePrefix")
   private static WebElement orderFilePrefix;
 
-  @FindBy(how = XPATH, using = "//input[@ng-model='orderFileTemplate.orderConfiguration.headerInFile']")
+  @FindBy(how = ID, using = "includeHeadersCheckbox")
   private static WebElement includeOrderHeaders;
 
   @FindBy(how = ID, using = "includeCheckbox0")
@@ -83,7 +83,6 @@ public class ConfigureOrderPage extends RequisitionPage {
   private static WebElement addNewButton;
 
 
-
   public ConfigureOrderPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -108,13 +107,6 @@ public class ConfigureOrderPage extends RequisitionPage {
     testWebDriver.getElementByXpath("//a[@id='remove"+(rowNumber)+"']").click();
   }
 
-  public void verifyRemoveIconShouldNotShow(int rowNumber)
-  {
-    try{
-    assertFalse("Remove icon should not show",testWebDriver.getElementByXpath("//a[@id='remove"+(rowNumber)+"']").isDisplayed());
-    }catch(NoSuchElementException e)
-    { }
-  }
 
   public void verifyElementsOnAddNewButtonClick(int row, String includeFlag, String dataField, String columnHeader)
   {
@@ -320,11 +312,9 @@ public class ConfigureOrderPage extends RequisitionPage {
     saveButton.click();
   }
 
-  public HomePage clickCancelButton() throws IOException {
+  public void clickCancelButton() {
     testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();
-    testWebDriver.sleep(1500);
-    return new HomePage(testWebDriver);
   }
 
   public void verifyColumnHeadersDisabled() {

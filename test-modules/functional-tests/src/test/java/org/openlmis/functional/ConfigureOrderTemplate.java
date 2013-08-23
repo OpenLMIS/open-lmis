@@ -21,6 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
+
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 
@@ -179,7 +186,6 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.verifySuccessMessage(successMessage);
     configureOrderPage.clickRemoveIcon(6);
     configureOrderPage.clickSaveButton();
-    configureOrderPage.verifyRemoveIconShouldNotShow(6);
     configureOrderPage.verifySuccessMessage(successMessage);
   }
 

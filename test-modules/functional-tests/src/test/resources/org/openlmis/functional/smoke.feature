@@ -331,6 +331,7 @@ Feature: Smoke Tests
     When I confirm delete
     Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" deleted successfully
 
+
   @smoke
   @ie2
 
@@ -343,5 +344,4 @@ Feature: Smoke Tests
     And I should see include checkbox "checked" for all column headers
     When I save order file format
     Then I should see "Order file configuration saved successfully!"
-
 
