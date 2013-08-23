@@ -21,13 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Listeners;
-
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 
@@ -86,6 +79,36 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   public void verifySaveSuccessfullyMessage(String message) throws Exception {
     ConfigureOrderPage configureOrderPage = new ConfigureOrderPage(testWebDriver);
     configureOrderPage.verifySuccessMessage(message);
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyDefaultSelectionOfPeriodAndOrderDateDropdown(String user, String password) throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(user, password);
+    ConfigureOrderPage configureOrderPage = homePage.navigateConfigureOrderScreen();
+    String period=configureOrderPage.getSelectedOptionOfPeriodDropDown();
+    assertEquals(period,"MM/yy");
+    String orderDate=configureOrderPage.getSelectedOptionOfOrderDateDropDown();
+    assertEquals(orderDate,"dd/MM/yy");
+  }
+
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  public void testEditPeriodAndOrderDateDropDown(String user, String password) throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(user, password);
+    ConfigureOrderPage configureOrderPage = homePage.navigateConfigureOrderScreen();
+    configureOrderPage.selectValueFromPeriodDropDown("MM-dd-yyyy");
+    configureOrderPage.selectValueFromOrderDateDropDown("yyyy-MM-dd");
+    configureOrderPage.clickSaveButton();
+    configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
+    String period=configureOrderPage.getSelectedOptionOfPeriodDropDown();
+    assertEquals(period,"MM-dd-yyyy");
+    String orderDate=configureOrderPage.getSelectedOptionOfOrderDateDropDown();
+    assertEquals(orderDate,"yyyy-MM-dd");
+    configureOrderPage.selectValueFromPeriodDropDown("MM/yy");
+    configureOrderPage.selectValueFromOrderDateDropDown("dd/MM/yy");
+    configureOrderPage.clickSaveButton();
+    configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
   }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
@@ -188,6 +211,8 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.clickSaveButton();
     configureOrderPage.verifySuccessMessage(successMessage);
   }
+
+
 
 
   @AfterMethod(groups = "functional2")

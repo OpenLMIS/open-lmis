@@ -8,13 +8,14 @@ package org.openlmis.pageobjects;
 
 
 import org.openlmis.UiUtils.TestWebDriver;
-
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -82,6 +83,38 @@ public class ConfigureOrderPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//a[contains(text(),'+ Add new row')]")
   private static WebElement addNewButton;
 
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen19']/a/div/b")
+  private static WebElement periodSelectBoxClickableLink;
+
+  @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
+  private static WebElement periodSelectBoxTextField;
+
+  @FindBy(how = XPATH, using = "//select[@ng-model='orderFileTemplate.orderConfiguration.periodDatePattern']")
+  private static WebElement periodSelectBox;
+
+  @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
+  private static WebElement periodSelectBoxSelectableElement;
+
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen21']/a/div/b")
+  private static WebElement orderDateSelectBoxClickableLink;
+
+  @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
+  private static WebElement orderDateSelectBoxTextField;
+
+  @FindBy(how = XPATH, using = "//select[@ng-model='orderFileTemplate.orderConfiguration.datePattern']")
+  private static WebElement orderDateSelectBox;
+
+  @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
+  private static WebElement orderDateSelectBoxSelectableElement;
+
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen19']/a/span")
+  private static WebElement periodSelectBoxDefaultSelected;
+
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen21']/a/span")
+  private static WebElement orderDateSelectBoxDefaultSelected;
+
+
+
 
   public ConfigureOrderPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -101,6 +134,62 @@ public class ConfigureOrderPage extends RequisitionPage {
     addNewButton.click();
     testWebDriver.sleep(250);
   }
+
+
+  public String getSelectedOptionOfPeriodDropDown()
+  {
+    testWebDriver.waitForElementToAppear(periodSelectBoxDefaultSelected);
+    return periodSelectBoxDefaultSelected.getText();
+  }
+
+  public String getSelectedOptionOfOrderDateDropDown()
+  {
+    testWebDriver.waitForElementToAppear(orderDateSelectBoxDefaultSelected);
+    return orderDateSelectBoxDefaultSelected.getText();
+  }
+
+  public void selectValueFromPeriodDropDown(String value)
+  {
+    testWebDriver.waitForElementToAppear(periodSelectBoxClickableLink);
+    periodSelectBoxClickableLink.click();
+    testWebDriver.waitForElementToAppear(periodSelectBoxTextField);
+    sendKeys(periodSelectBoxTextField,value);
+    testWebDriver.waitForElementToAppear(periodSelectBoxSelectableElement);
+    periodSelectBoxSelectableElement.click();
+  }
+
+  public void selectValueFromOrderDateDropDown(String value)
+  {
+    testWebDriver.waitForElementToAppear(orderDateSelectBoxClickableLink);
+    orderDateSelectBoxClickableLink.click();
+    testWebDriver.waitForElementToAppear(orderDateSelectBoxTextField);
+    sendKeys(orderDateSelectBoxTextField,value);
+    testWebDriver.waitForElementToAppear(orderDateSelectBoxSelectableElement);
+    orderDateSelectBoxSelectableElement.click();
+  }
+
+  public List<String> getAllSelectOptionsOfPeriodDropDown()
+  {
+    testWebDriver.waitForElementToAppear(periodSelectBox);
+    List<WebElement> elements=testWebDriver.getAllSelectedOptions(periodSelectBox);
+    List<String> elementsValues=new ArrayList<String>();
+    for(WebElement element:elements)
+      elementsValues.add(element.getText());
+
+    return elementsValues;
+  }
+
+  public List<String> getAllSelectOptionsOfOrderDateDropDown()
+  {
+    testWebDriver.waitForElementToAppear(orderDateSelectBox);
+    List<WebElement> elements=testWebDriver.getAllSelectedOptions(orderDateSelectBox);
+    List<String> elementsValues=new ArrayList<String>();
+    for(WebElement element:elements)
+      elementsValues.add(element.getText());
+
+    return elementsValues;
+  }
+
 
   public void clickRemoveIcon(int rowNumber)
   {
