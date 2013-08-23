@@ -72,7 +72,7 @@
           </div>
         </div>
         <div class="list-container">
-          <div class="list-row"
+          <div class="list-row" ng-class="{isEditable: edit[refrigeratorReading.refrigerator.serialNumber]}"
                ng-repeat="refrigeratorReading in distribution.facilityDistributionData[selectedFacilityId].refrigeratorReadings">
             <ng-include src="'/public/pages/logistics/distribution/partials/refrigerator-reading.html'"></ng-include>
           </div>
