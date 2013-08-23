@@ -28,12 +28,13 @@ public class SupplyLinePersistenceHandler extends AbstractModelPersistenceHandle
   protected BaseModel getExisting(BaseModel record) {
     SupplyLine supplyLine = (SupplyLine) record;
     SupplyLine supplyLineFromDB = supplyLineService.getExisting(supplyLine);
-    if (supplyLineFromDB != null && supplyLineFromDB.getSupplyingFacility() != null)
+    if (supplyLineFromDB != null && supplyLineFromDB.getSupplyingFacility() != null) {
       if (supplyLineFromDB.getSupplyingFacility().getId().equals(supplyLine.getSupplyingFacility().getId())) {
         setMessageKey("error.duplicate.supply.line");
       } else {
         setMessageKey("error.redundant.warehouse");
       }
+    }
     return supplyLineFromDB;
   }
 

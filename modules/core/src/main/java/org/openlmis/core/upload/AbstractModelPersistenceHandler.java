@@ -34,7 +34,6 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
   @Override
   public void execute(Importable importable, int rowNumber, AuditFields auditFields) {
     BaseModel currentRecord = (BaseModel) importable;
-    final String rowNumberAsString = Integer.toString(rowNumber - 1);
     BaseModel existing = getExisting(currentRecord);
 
     try {
@@ -46,13 +45,20 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
       } else {
         currentRecord.setCreatedBy(auditFields.getUser());
       }
+
       save(currentRecord);
 
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
-      throw new DataException(new OpenLmisMessage(messageService.message("upload.record.error", messageService.message("error.incorrect.length"), rowNumberAsString)));
+      throwException("upload.record.error", "error.incorrect.length", rowNumber);
     } catch (DataException exception) {
-      throw new DataException(new OpenLmisMessage(messageService.message("upload.record.error", messageService.message(exception.getOpenLmisMessage().getCode()), rowNumberAsString)));
+      throwException("upload.record.error", exception.getOpenLmisMessage().getCode(), rowNumber);
     }
+  }
+
+  private void throwException(String key1, String key2, int rowNumber) {
+    String param1 = messageService.message(key2);
+    String param2 = Integer.toString(rowNumber - 1);
+    throw new DataException(new OpenLmisMessage(messageService.message(key1, param1, param2)));
   }
 
   private void throwExceptionIfProcessedInCurrentUpload(AuditFields auditFields, BaseModel existing) {
@@ -65,14 +71,10 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
 
   @Override
   public void postProcess(AuditFields auditFields) {
-    // File is processed successfully
   }
 
   protected abstract BaseModel getExisting(BaseModel record);
 
   protected abstract void save(BaseModel record);
-
-//  protected abstract String getMessageKey();
-
 
 }

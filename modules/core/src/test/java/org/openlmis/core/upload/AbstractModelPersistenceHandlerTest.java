@@ -8,7 +8,6 @@ package org.openlmis.core.upload;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -22,6 +21,7 @@ import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Date;
 
@@ -30,12 +30,12 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractModelPersistenceHandlerTest {
+
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 
@@ -47,19 +47,6 @@ public class AbstractModelPersistenceHandlerTest {
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-  }
-
-  @Ignore
-  @Test
-  public void shouldAppendRowNumberToExceptionMessage() throws Exception {
-    handler = instantiateHandlerThrowingExceptionOnSave();
-    handler.messageService = messageService;
-    Importable importable = new TestImportable();
-    expectedEx.expect(dataExceptionMatcher("upload.record.error", "Error Msg", "1"));
-
-    when(messageService.message("error.code")).thenReturn("Error Msg");
-
-    handler.execute(importable, 2, new AuditFields(1L, null));
   }
 
 
@@ -79,7 +66,7 @@ public class AbstractModelPersistenceHandlerTest {
   }
 
   @Test
-  public void shouldAddIdFromExistingModel() throws Exception {
+  public void shouldAddFromExistingModel() throws Exception {
 
     final Date currentTimestamp = new Date();
     AuditFields auditFields = new AuditFields(1L, currentTimestamp);
@@ -112,17 +99,18 @@ public class AbstractModelPersistenceHandlerTest {
     handler = instantiateHandler(existing);
     handler.messageService = messageService;
     when(messageService.message("duplicate.record.error.code")).thenReturn("Duplicate Record");
-    when(messageService.message("upload.record.error", "Duplicate Record", "0")).thenReturn("Upload error, Duplicate Record in row 0");
+    when(messageService.message("upload.record.error", "Duplicate Record", "1")).thenReturn("Upload error, Duplicate Record in row 1");
 
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Upload error, Duplicate Record in row 0");
+    expectedEx.expectMessage("Upload error, Duplicate Record in row 1");
 
-    handler.execute(currentRecord, 1, auditFields);
+    handler.execute(currentRecord, 2, auditFields);
 
   }
 
-  private AbstractModelPersistenceHandler instantiateHandlerThrowingExceptionOnSave() {
-    return new AbstractModelPersistenceHandler() {
+  @Test
+  public void shouldThrowIncorrectDataLengthError() throws Exception {
+    handler = new AbstractModelPersistenceHandler() {
       @Override
       protected BaseModel getExisting(BaseModel record) {
         return null;
@@ -130,15 +118,19 @@ public class AbstractModelPersistenceHandlerTest {
 
       @Override
       protected void save(BaseModel record) {
-        throw new DataException("error.code");
-      }
-
-      @Override
-      public String getMessageKey() {
-        return "duplicate.record.error.code";
+        throw new DataIntegrityViolationException("some error");
       }
 
     };
+
+    handler.messageService = messageService;
+    when(messageService.message("error.incorrect.length")).thenReturn("invalid data length");
+    when(messageService.message("upload.record.error", "invalid data length", "1")).thenReturn("final error message");
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("final error message");
+
+    handler.execute(new TestImportable(), 2, new AuditFields(null));
   }
 
   private AbstractModelPersistenceHandler instantiateHandler(final BaseModel existing) {
@@ -159,7 +151,6 @@ public class AbstractModelPersistenceHandlerTest {
 
     };
   }
-
 
   class TestImportable extends BaseModel implements Importable {
 

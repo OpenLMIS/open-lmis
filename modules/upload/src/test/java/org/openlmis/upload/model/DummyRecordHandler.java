@@ -16,7 +16,7 @@ import java.util.List;
 public class DummyRecordHandler implements RecordHandler<DummyImportable> {
 
   @Getter
-  private List<Importable> importedObjects = new ArrayList<Importable>();
+  private List<Importable> importedObjects = new ArrayList<>();
 
   @Override
   public void execute(DummyImportable importable, int rowNumber, AuditFields auditFields) {
