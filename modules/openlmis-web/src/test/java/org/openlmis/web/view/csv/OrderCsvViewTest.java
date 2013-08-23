@@ -100,13 +100,13 @@ public class OrderCsvViewTest {
     OrderConfiguration orderConfiguration = new OrderConfiguration();
     orderConfiguration.setHeaderInFile(true);
     List<OrderFileColumn> orderFileColumns = new ArrayList<OrderFileColumn>() {{
-      add(make(a(defaultColumn, with(OrderFileColumnBuilder.columnLabel, columnLabel), with(keyPath, "id"), with(nested, "order"))));
-      add(make(a(defaultColumn, with(OrderFileColumnBuilder.columnLabel, "otherLabel"), with(keyPath, "createdDate"), with(nested, "order"))));
-      add(make(a(defaultColumn, with(OrderFileColumnBuilder.columnLabel, "lineItemColumn"), with(keyPath, "quantityApproved"), with(nested, "lineItem"))));
-      add(make(a(defaultColumn, with(OrderFileColumnBuilder.columnLabel, "facilityCode"), with(keyPath, "rnr/facility/code"), with(nested, "order"))));
-      add(make(a(defaultColumn, with(OrderFileColumnBuilder.columnLabel, "periodStartDate"),
+      add(make(a(OrderFileColumnBuilder.defaultColumn, with(OrderFileColumnBuilder.columnLabel, columnLabel), with(keyPath, "id"), with(nested, "order"))));
+      add(make(a(OrderFileColumnBuilder.defaultColumn, with(OrderFileColumnBuilder.columnLabel, "otherLabel"), with(keyPath, "createdDate"), with(nested, "order"))));
+      add(make(a(OrderFileColumnBuilder.defaultColumn, with(OrderFileColumnBuilder.columnLabel, "lineItemColumn"), with(keyPath, "quantityApproved"), with(nested, "lineItem"))));
+      add(make(a(OrderFileColumnBuilder.defaultColumn, with(OrderFileColumnBuilder.columnLabel, "facilityCode"), with(keyPath, "rnr/facility/code"), with(nested, "order"))));
+      add(make(a(OrderFileColumnBuilder.defaultColumn, with(OrderFileColumnBuilder.columnLabel, "periodStartDate"),
         with(keyPath, "rnr/period/startDate"), with(nested, "order"), with(includeInOrderFile, false))));
-      add(make(a(defaultColumn, with(OrderFileColumnBuilder.columnLabel, "NA"), with(nested, ""))));
+      add(make(a(OrderFileColumnBuilder.defaultColumn, with(OrderFileColumnBuilder.columnLabel, "NA"), with(nested, ""))));
     }};
     return new OrderFileTemplateDTO(orderConfiguration, orderFileColumns);
   }
