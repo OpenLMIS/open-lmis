@@ -55,8 +55,8 @@ tasks.withType(War) {
         if (fileCopy.name.equals('services.js') || fileCopy.name.equals('offline.appcacheOFF')) {
             fileCopy.filter(ReplaceTokens, tokens: [version: currentTime])
         }
-        if (fileCopy.name.equals('offline.appcacheOFF')){
-          fileCopy.setName('offline.appcache')
+        if (fileCopy.name.equals('offline.appcacheOFF')) {
+            fileCopy.setName('offline.appcache')
         }
     }
 }
@@ -115,6 +115,7 @@ dependencies {
             'org.seleniumhq.selenium:selenium-java:2.33.0',
             'org.seleniumhq.selenium:selenium-firefox-driver:2.33.0 ',
             'com.itextpdf:itextpdf:5.4.0',
+            'commons-jxpath:commons-jxpath:1.3',
             project(':modules:authentication'),
             project(':modules:requisition'),
             project(':modules:core'),

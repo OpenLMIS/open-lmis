@@ -55,8 +55,10 @@ public class OrderController extends BaseController {
   public ModelAndView downloadOrderCsv(@PathVariable Long id) {
     ModelAndView modelAndView;
     Order order = orderService.getOrderForDownload(id);
+    OrderFileTemplateDTO orderFileTemplate = orderService.getOrderFileTemplateDTO();
     modelAndView = new ModelAndView("orderCSV");
     modelAndView.addObject(ORDER, order);
+    modelAndView.addObject(ORDER_FILE_TEMPLATE, orderFileTemplate);
     return modelAndView;
   }
 

@@ -90,10 +90,16 @@ public class OrderControllerTest {
     Long orderId = 1L;
     Order expectedOrder = new Order();
     when(orderService.getOrderForDownload(orderId)).thenReturn(expectedOrder);
+    OrderFileTemplateDTO expectedOrderFileTemplateDTO =
+      new OrderFileTemplateDTO(new OrderConfiguration(), new ArrayList<OrderFileColumn>());
+    when(orderService.getOrderFileTemplateDTO()).thenReturn(expectedOrderFileTemplateDTO);
     ModelAndView modelAndView = orderController.downloadOrderCsv(orderId);
     Order order = (Order) modelAndView.getModel().get(ORDER);
+    OrderFileTemplateDTO orderFileTemplate = (OrderFileTemplateDTO) modelAndView.getModel().get(ORDER_FILE_TEMPLATE);
     assertThat(order, is(expectedOrder));
+    assertThat(orderFileTemplate, is(expectedOrderFileTemplateDTO));
     verify(orderService).getOrderForDownload(orderId);
+    verify(orderService).getOrderFileTemplateDTO();
   }
 
   @Test
