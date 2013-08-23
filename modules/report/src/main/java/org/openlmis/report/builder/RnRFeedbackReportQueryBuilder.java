@@ -9,6 +9,7 @@ import java.util.Map;
  */
 public class RnRFeedbackReportQueryBuilder {
     public static String getQuery(Map params){
+        Map filterCriteria = (Map) params.get("filterCriteria");
         String query = "SELECT distinct \n" +
                 "vw_requisition_detail.facility_code AS facilityCode,\n" +
                 "vw_requisition_detail.facility_name AS facility,\n" +
@@ -27,48 +28,42 @@ public class RnRFeedbackReportQueryBuilder {
                 "0 maximumStock, --TODO: fix it \n" +
                 "0 emergencyOrder --TODO: fix it \n" +
                 "FROM vw_requisition_detail \n" +
-                writePredicates(params);
+                writePredicates(filterCriteria)
+               ;
 
         return query;
     }
     private static String writePredicates(Map params){
 
-        String predicate = "";
+        String predicate = "WHERE ";
         String facilityTypeId =  params.get("facilityTypeId") == null ? null :((String[])params.get("facilityTypeId"))[0];
         String facilityName = params.get("facilityName") == null ? null : ((String[])params.get("facilityName"))[0];
         String period =    params.get("periodId") == null ? null : ((String[])params.get("periodId"))[0];
         String program =   params.get("programId") == null ? null : ((String[])params.get("programId"))[0];
         String product =   params.get("productId") == null ? null : ((String[])params.get("productId"))[0];
-        String zone =     params.get("zoneId") == null ? null : ((String[])params.get("zoneId"))[0];
         String rgroup =     params.get("rgroupId") == null ? null : ((String[])params.get("rgroupId"))[0];
         String schedule = params.get("scheduleId") == null ? null : ((String[])params.get("scheduleId"))[0];
 
-        predicate += " and processing_periods.id = "+ period;
+        predicate += "  processing_periods_id = "+ period;
 
-        predicate += " and programs.id = "+ program;
+        predicate += " and program_id = "+ program;
 
-        predicate += " and processing_schedules.id = "+ schedule;
+        predicate += " and processing_schedules_id = "+ schedule;
 
-        if (zone != null &&  !zone.equals("undefined") && !zone.isEmpty() && !zone.equals("0")  && !zone.equals("-1")) {
+        predicate += " and facility_name = '"+ facilityName +"'";
 
-            predicate += " and facilities.geographiczoneid = "+ zone;
-        }
         if (product != null &&  !product.equals("undefined") && !product.isEmpty() && !product.equals("0") &&  !product.equals("-1")) {
 
-            predicate += " and program_products.productid = "+ product;
+            predicate += " and product_id = "+ product;
         }
 
         if (rgroup != null &&  !rgroup.equals("undefined") && !rgroup.isEmpty() && !rgroup.equals("0") &&  !rgroup.equals("-1")) {
 
-            predicate += " and requisition_groups.id = "+ rgroup;
+            predicate += " and requisition_group_id = "+ rgroup;
         }
         if (facilityTypeId != null &&  !facilityTypeId.equals("undefined") && !facilityTypeId.isEmpty() && !facilityTypeId.equals("0") &&  !facilityTypeId.equals("-1")) {
 
-            predicate += " and facility_types.id = "+ facilityTypeId;
-        }
-        if (facilityName != null &&  !facilityName.equals("undefined") && !facilityName.isEmpty() ) {
-
-            predicate += " and facilities.name = '"+ facilityName +"'";
+            predicate += " and facility_type_id = "+ facilityTypeId;
         }
 
         return predicate;

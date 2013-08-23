@@ -16,7 +16,7 @@
                             <div class="clearfix ">
 
                                 <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Program</label>
+                                    <label class="labels">Program<span class="label-required"> *</span></label>
 
                                     <div class="form-fields">
                                         <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="program" ng-options="option.id as option.name for option in programs">
@@ -26,7 +26,7 @@
                                 </div>
 
                                 <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Schedule</label>
+                                    <label class="labels">Schedule<span class="label-required"> *</span></label>
 
                                     <div class="form-fields">
                                         <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="schedule" ng-options="option.id as option.name for option in schedules">
@@ -36,7 +36,7 @@
                                 </div>
 
                                 <div class="form-cell horizontalFilters">
-                                    <label class="labels">Period</label>
+                                    <label class="labels">Period<span class="label-required"> *</span></label>
 
                                     <div class="form-field">
                                         <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="period" ng-options="option.id as option.name for option in periods">
@@ -44,7 +44,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-cell horizontalFilters" >
+                               <!-- <div class="form-cell horizontalFilters" >
                                     <label class="labels">Zone</label>
 
                                     <div class="form-field">
@@ -52,9 +52,9 @@
 
                                         </select>
                                     </div>
-                                </div>
+                                </div>-->
                                 <div class="form-cell horizontalFilters">
-                                    <label class="labels">Facility Name</label>
+                                    <label class="labels">Facility Name<span class="label-required"> *</span></label>
 
                                     <div class="form-field">
                                         <input id="name" type="text"  ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
@@ -65,33 +65,30 @@
 
                                     <div class="form-field">
                                         <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
-
+                                            <option value="">All Facility Types</option>
                                         </select>
                                     </div>
                                 </div>
-
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Product</label>
-
                                     <div class="form-field">
                                         <select ui-select2 style="width:200px;" name="product"  ng-model="product" ng-options="option.id as option.name for option in products">
-
+                                            <option value="">All Products</option>
                                         </select>
                                     </div>
                                 </div>
-
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Reporting Groups</label>
-
                                     <div class="form-field">
                                         <select ui-select2 style="width:250px;" name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
-
+                                            <option value="">All Requisition Groups</option>
                                         </select>
                                     </div>
                                 </div>
 
                             </div>
                          </form>
+                    <div class="warning-alert" id="requiredMsgDiv" ng-bind="message" ng-show="message"/>
                 </div>
             </div>
 

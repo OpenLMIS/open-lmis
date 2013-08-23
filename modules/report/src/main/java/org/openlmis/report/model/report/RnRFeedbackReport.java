@@ -15,6 +15,7 @@ import org.openlmis.report.model.ReportData;
 @NoArgsConstructor
 public class RnRFeedbackReport implements ReportData {
     private String product;
+    private String productCode;
     private String facility;
     private String facilityCode;
     private Integer beginningBalance;

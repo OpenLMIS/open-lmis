@@ -18,5 +18,5 @@ import java.util.Map;
 @Repository
 public interface RnRFeedbackReportMapper {
     @SelectProvider(type = RnRFeedbackReportQueryBuilder.class, method = "getQuery")
-    public List<RnRFeedbackReport> getFilteredRnRFeedbackReport(Map params, @Param("RowBounds")RowBounds rowBounds);
+    public List<RnRFeedbackReport> getFilteredRnRFeedbackReport(@Param("filterCriteria") Map params, @Param("RowBounds")RowBounds rowBounds);
 }
