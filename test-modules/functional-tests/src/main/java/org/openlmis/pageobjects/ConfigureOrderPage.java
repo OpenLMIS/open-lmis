@@ -315,6 +315,7 @@ public class ConfigureOrderPage extends RequisitionPage {
   public void clickCancelButton() {
     testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();
+    testWebDriver.sleep(2000);
   }
 
   public void verifyColumnHeadersDisabled() {
