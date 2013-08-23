@@ -14,17 +14,15 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.RefrigeratorPage;
+import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Listeners;
+import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -39,6 +37,8 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 public class ManageRefrigerator extends TestCaseHelper {
 
   public String userSIC, password;
+  public static final String periodDisplayedByDefault = "Period14";
+  public static final String periodNotToBeDisplayedInDropDown = "Period1";
 
   @BeforeMethod(groups = "functional2")
   @Before
@@ -208,6 +208,39 @@ public class ManageRefrigerator extends TestCaseHelper {
     assertEquals(refrigeratorPage.getNotesTextAreaValue(), notes);
   }
 
+    @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+    public void testVerifyDuplicateRefrigerator(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                                    String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                    String facilityCodeFirst, String facilityCodeSecond,
+                                                    String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+
+        List<String> rightsList = new ArrayList<String>();
+        rightsList.add("MANAGE_DISTRIBUTION");
+        setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+        setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+                deliveryZoneNameFirst, deliveryZoneNameSecond,
+                facilityCodeFirst, facilityCodeSecond,
+                programFirst, programSecond, schedule);
+        dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+        dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(userSIC, password);
+        DistributionPage distributionPage = homePage.navigatePlanDistribution();
+        distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+        distributionPage.selectValueFromProgram(programFirst);
+        distributionPage.clickInitiateDistribution();
+        distributionPage.clickRecordData();
+        FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+        facilityListPage.selectFacility("F10");
+        RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+        refrigeratorPage.clickAddNew();
+        refrigeratorPage.addNewRefrigerator("a","a","a");
+        refrigeratorPage.clickAddNew();
+        refrigeratorPage.addNewRefrigerator("a","a","a");
+        refrigeratorPage.verifyDuplicateErrorMessage("Duplicate Manufacturer Serial Number");
+    }
+
   public void verifyNewRefrigeratorModalWindowExist() {
     assertTrue("New Refrigerator modal window should show up", new RefrigeratorPage(testWebDriver).newRefrigeratorHeaderOnModal.isDisplayed());
   }
@@ -245,12 +278,12 @@ public class ManageRefrigerator extends TestCaseHelper {
   }
 
 
-  @DataProvider(name = "Data-Provider-Function")
-  public Object[][] parameterIntTestProviderPositive() {
-    return new Object[][]{
-      {"storeincharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
-        "F10", "F11", "VACCINES", "TB", "M", "Period", 14}
-    };
+    @DataProvider(name = "Data-Provider-Function")
+    public Object[][] parameterIntTestProviderPositive() {
+        return new Object[][]{
+                {"storeincharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
+                        "F10", "F11", "VACCINES", "TB", "M", "Period", 14}
+        };
 
   }
 }

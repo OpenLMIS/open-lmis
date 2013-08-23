@@ -30,6 +30,8 @@
       </class>
       <class name="org.openlmis.functional.ForgotPassword">
       </class>
+      <class name="org.openlmis.functional.ManageRefrigerator">
+        </class>
     </classes>
   </test>
 </suite>

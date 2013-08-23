@@ -140,7 +140,10 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = XPATH, using = "//div[@class='clearfix facility-container ng-scope']/div[1]/ul/li[2]/a/span[1]")
   public static WebElement overallRefrigeratorIcon;
 
-  public RefrigeratorPage(TestWebDriver driver) {
+  @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[2]/div[3]/div/div")
+  public static WebElement duplicateRefrigeratorMessage;
+
+    public RefrigeratorPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
@@ -359,5 +362,9 @@ public class RefrigeratorPage extends Page {
     assertEquals(saveSuccessMessageDiv.getText(), message);
   }
 
+    public void verifyDuplicateErrorMessage(String message) {
+        testWebDriver.waitForElementToAppear(duplicateRefrigeratorMessage);
+        assertEquals(duplicateRefrigeratorMessage.getText(), message);
+    }
 
 }
