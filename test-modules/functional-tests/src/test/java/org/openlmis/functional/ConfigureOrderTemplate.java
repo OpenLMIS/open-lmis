@@ -166,6 +166,23 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
 
   }
 
+  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyAddNewButtonFunctionality(String user, String password) throws Exception {
+    String successMessage = "Order file configuration saved successfully!";
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(user, password);
+    ConfigureOrderPage configureOrderPage = homePage.navigateConfigureOrderScreen();
+    configureOrderPage.clickAddNewButton();
+    configureOrderPage.verifyElementsOnAddNewButtonClick(6,"true","Not applicable","");
+    configureOrderPage.clickSaveButton();
+    configureOrderPage.verifySuccessMessage(successMessage);
+    configureOrderPage.clickRemoveIcon(6);
+    configureOrderPage.clickSaveButton();
+    configureOrderPage.verifyRemoveIconShouldNotShow(6);
+    configureOrderPage.verifySuccessMessage(successMessage);
+  }
+
 
   @AfterMethod(groups = "functional2")
   public void tearDown() throws Exception {

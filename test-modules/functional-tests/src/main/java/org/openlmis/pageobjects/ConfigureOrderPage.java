@@ -8,6 +8,7 @@ package org.openlmis.pageobjects;
 
 
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -78,6 +79,10 @@ public class ConfigureOrderPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//h2[contains(text(),'Configure order file format')]")
   private static WebElement configureOrderFileHeader;
 
+  @FindBy(how = XPATH, using = "//a[contains(text(),'+ Add new row')]")
+  private static WebElement addNewButton;
+
+
 
   public ConfigureOrderPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -89,6 +94,39 @@ public class ConfigureOrderPage extends RequisitionPage {
   public String getOrderPrefix() {
     testWebDriver.waitForElementToAppear(orderFilePrefix);
     return testWebDriver.getAttribute(orderFilePrefix, "value");
+  }
+
+  public void clickAddNewButton()
+  {
+    testWebDriver.waitForElementToAppear(addNewButton);
+    addNewButton.click();
+    testWebDriver.sleep(250);
+  }
+
+  public void clickRemoveIcon(int rowNumber)
+  {
+    testWebDriver.getElementByXpath("//a[@id='remove"+(rowNumber)+"']").click();
+  }
+
+  public void verifyRemoveIconShouldNotShow(int rowNumber)
+  {
+    try{
+    assertFalse("Remove icon should not show",testWebDriver.getElementByXpath("//a[@id='remove"+(rowNumber)+"']").isDisplayed());
+    }catch(NoSuchElementException e)
+    { }
+  }
+
+  public void verifyElementsOnAddNewButtonClick(int row, String includeFlag, String dataField, String columnHeader)
+  {
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[@id='remove"+(row)+"']"));
+    assertTrue("Remove Button should show up", testWebDriver.getElementByXpath("//a[@id='remove" + (row) + "']").isDisplayed());
+    if(includeFlag.equalsIgnoreCase("true"))
+    assertTrue("Include flag for new row should be true",testWebDriver.getElementByXpath("//input[@id='includeCheckbox"+(row)+"']").isSelected());
+    else
+      assertFalse("Include flag for new row should be true", testWebDriver.getElementByXpath("//input[@id='includeCheckbox" + (row) + "']").isSelected());
+    assertTrue("Data field for new row added should be : Not applicable",testWebDriver.getElementByXpath("//ul[@id='sortable']/li["+(row+1)+"]/div[2]/div/div[2]/span").getText().equalsIgnoreCase(dataField));
+    assertTrue("Column header for new row added should be : blank",testWebDriver.getElementByXpath("//input[@id='columnHeaderField"+(row-1)+"']").getText().equals(columnHeader));
+
   }
 
   public boolean getIncludeOrderHeader() {
