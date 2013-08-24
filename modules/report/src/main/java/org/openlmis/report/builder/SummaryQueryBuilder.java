@@ -17,37 +17,44 @@ public class SummaryQueryBuilder {
 
     public static String getQuery(Map params){
 
-        String query = "select MAX(facilities.name) facility,MAX(facility_types.name) facilityType,li.productcode code,li.productcategory as category, li.product,SUM(li.beginningBalance) openingBalance, SUM(li.quantityreceived) receipts, SUM(li.quantitydispensed) issues, SUM(li.totallossesandadjustments) adjustments,  \n" +
-                "    (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) closingBalance, SUM(li.maxmonthsofstock) monthsOfStock, SUM(li.amc) averageMonthlyConsumption       \n" +
-                "    ,(SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) maximumStock,\n" +
-                "  case when(SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) - (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) > 0 then \n" +
-                "   (SUM(li.amc) * SUM(facility_approved_products.maxmonthsofstock)) - (((SUM(li.beginningBalance) + SUM(li.quantityreceived)) -  SUM(li.quantitydispensed)) + SUM(li.totallossesandadjustments)) ELSE 0 end  reorderAmount       \n" +
-                "   ,MAX(fs.facility_name) supplyingFacility, MAX(li.maxmonthsofstock) MaxMOS, MAX(li.maxmonthsofstock) minMOS \n" +
-                "    from facilities        \n" +
-                "    inner join facility_types ON facilities.typeid = facility_types.id       \n" +
-                "    inner join geographic_zones on geographic_zones.id = facilities.geographiczoneid       \n" +
-                "    inner join requisitions r ON  r.facilityid = facilities.id         \n" +
-                "    inner join requisition_line_items li ON li.rnrid = r.id         \n" +
-                "    inner join products ON products.code  ::text =   li.productcode  ::text       \n" +
-                "    inner join program_products ON program_products.productid = products.id \n" +
-                "    inner join facility_approved_products ON facility_approved_products.facilitytypeid = facility_types.id AND facility_approved_products.programproductid = program_products.id \n" +
-                "    inner join programs ON  program_products.programid = programs.id   AND  programs.id = r.programid       \n" +
-                "    inner join programs_supported ON  programs.id = programs_supported.programid   AND   facilities.id = programs_supported.facilityid         \n" +
-                "    inner join requisition_group_members ON facilities.id = requisition_group_members.facilityid         \n" +
-                "    inner join requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid         \n" +
-                "    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programid = programs.id   AND requisition_group_program_schedules.requisitiongroupid = requisition_groups.id         \n" +
-                "    inner join processing_schedules ON processing_schedules.id = requisition_group_program_schedules.programid         \n" +
-                "    inner join processing_periods ON processing_periods.scheduleid = processing_schedules.id  \n" +
-                "    left outer join vw_program_facility_supplier fs ON fs.supervisory_node_id = requisition_groups.supervisorynodeid AND fs.program_id = programs.id \n" +
+        String query = "select " +
+                    " li.productcode as code" +
+                    ", li.product" +
+                    ", li.productcategory as category" +
+                    ", li.dispensingunit as unit" +
+                    ", sum(li.beginningBalance) as openingBalance" +
+                    ", sum(li.quantityReceived) as quantityReceived" +
+                    ", sum(li.quantitydispensed) as actualDispensedQuantity" +
+                    ", sum(li.quantitydispensed) as adjustedDispensedQuantity" +
+                    ", sum(li.quantitydispensed) as adjustedDistributedQuantity" +
+                    ", sum(li.stockInHand) as balanceOnHand " +
+                    ", sum(0) as stockOutRate " +
+                    ", sum(1.0) / (select count(*) from facilities) as productReportingRate " +
+
+                    "    from facilities        \n" +
+                        "    inner join requisitions r ON  r.facilityid = facilities.id         \n" +
+                        "    inner join requisition_line_items li ON li.rnrid = r.id         \n" +
+                        "    inner join products ON products.code  ::text =   li.productcode  ::text       \n" +
+                        "    inner join program_products ON program_products.productid = products.id \n" +
+                        "    inner join programs ON  program_products.programid = programs.id   AND  programs.id = r.programid       \n" +
+                        "    inner join requisition_group_members ON facilities.id = requisition_group_members.facilityid         \n" +
+                        "    inner join requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid         \n" +
+                        "    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programid = programs.id   AND requisition_group_program_schedules.requisitiongroupid = requisition_groups.id         \n" +
+                        "    inner join processing_schedules ON processing_schedules.id = requisition_group_program_schedules.scheduleid         \n" +
+                        "    inner join processing_periods ON processing_periods.scheduleid = processing_schedules.id  \n" +
 
                 writePredicates(params)+
 
-                "group by facilities.name,li.productcode, li.product, li.productcategory ,requisition_groups.id \n" +
-                " order by " + QueryHelpers.getSortOrder(params, "facilities.name asc,li.productcode asc,  li.product asc, li.productcategory asc , requisition_groups.id asc");
+                " group by li.productcode, li.productcategory, li.product, li.dispensingunit" +
+                " order by " + QueryHelpers.getSortOrder(params, "productcategory asc, product asc");
             return query;
     }
+
     private static String writePredicates(Map params){
-        String predicate = "WHERE 1 = 1 ";
+        String predicate = "";
+      if(params.containsKey("param1")){
+        params = (Map) params.get("param1");
+      }
         String facilityTypeId = (!params.containsKey("facilityTypeId") || params.get("facilityTypeId") == null) ? null :((String[])params.get("facilityTypeId"))[0];
         String facilityName = (!params.containsKey("facilityName") || params.get("facilityName") == null) ? null : ((String[])params.get("facilityName"))[0];
         String period =    (!params.containsKey("periodId") || params.get("periodId") == null) ? null : ((String[])params.get("periodId"))[0];
@@ -88,28 +95,27 @@ public class SummaryQueryBuilder {
 
             predicate += " and facilities.name = '"+ facilityName +"'";
         }
-
+        if (predicate == ""){
+          predicate = "WHERE 1 = 0 ";
+        } else{
+          predicate = "WHERE 1 = 1 " + predicate;
+        }
         return predicate;
     }
 
     public static String getTotalCount(Map params){
         String query = "select count(*) \n"+
                 "    from facilities        \n" +
-                "    inner join facility_types ON facilities.typeid = facility_types.id       \n" +
-                "    inner join geographic_zones on geographic_zones.id = facilities.geographiczoneid       \n" +
-                "    inner join requisitions r ON  r.facilityid = facilities.id         \n" +
-                "    inner join requisition_line_items li ON li.rnrid = r.id         \n" +
-                "    inner join products ON products.code  ::text =   li.productcode  ::text       \n" +
-                "    inner join program_products ON program_products.productid = products.id \n" +
-                "    inner join facility_approved_products ON facility_approved_products.facilitytypeid = facility_types.id AND facility_approved_products.programproductid = program_products.id \n" +
-                "    inner join programs ON  program_products.programid = programs.id   AND  programs.id = r.programid       \n" +
-                "    inner join programs_supported ON  programs.id = programs_supported.programid   AND   facilities.id = programs_supported.facilityid         \n" +
-                "    inner join requisition_group_members ON facilities.id = requisition_group_members.facilityid         \n" +
-                "    inner join requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid         \n" +
-                "    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programid = programs.id   AND requisition_group_program_schedules.requisitiongroupid = requisition_groups.id         \n" +
-                "    inner join processing_schedules ON processing_schedules.id = requisition_group_program_schedules.programid         \n" +
-                "    inner join processing_periods ON processing_periods.scheduleid = processing_schedules.id  \n" +
-                "    left outer join vw_program_facility_supplier fs ON fs.supervisory_node_id = requisition_groups.supervisorynodeid AND fs.program_id = programs.id \n" +
+                    "    inner join requisitions r ON  r.facilityid = facilities.id         \n" +
+                    "    inner join requisition_line_items li ON li.rnrid = r.id         \n" +
+                    "    inner join products ON products.code  ::text =   li.productcode  ::text       \n" +
+                    "    inner join program_products ON program_products.productid = products.id \n" +
+                    "    inner join programs ON  program_products.programid = programs.id   AND  programs.id = r.programid       \n" +
+                    "    inner join requisition_group_members ON facilities.id = requisition_group_members.facilityid         \n" +
+                    "    inner join requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid         \n" +
+                    "    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programid = programs.id   AND requisition_group_program_schedules.requisitiongroupid = requisition_groups.id         \n" +
+                    "    inner join processing_schedules ON processing_schedules.id = requisition_group_program_schedules.scheduleid         \n" +
+                    "    inner join processing_periods ON processing_periods.scheduleid = processing_schedules.id  \n" +
 
                 writePredicates(params);
 
