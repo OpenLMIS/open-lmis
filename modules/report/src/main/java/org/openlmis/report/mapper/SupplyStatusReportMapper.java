@@ -22,7 +22,8 @@ import java.util.Map;
 public interface SupplyStatusReportMapper {
 
 
-    @SelectProvider(type=SupplyStatusQueryBuilder.class, method="getQuery")
+    @SelectProvider(type=SupplyStatusQueryBuilder.class, method="getSupplyStatus")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<SupplyStatusReport> getReport(Map params, @Param("RowBounds") RowBounds rowBounds);
+    public List<SupplyStatusReport> getSupplyStatus(@Param("filterCriteria")Map params, @Param("RowBounds") RowBounds rowBounds);
+
 }

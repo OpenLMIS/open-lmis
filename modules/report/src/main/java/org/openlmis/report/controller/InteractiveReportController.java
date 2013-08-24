@@ -279,7 +279,6 @@ public class InteractiveReportController  extends BaseController {
         Report report = reportManager.getReportByKey("supply_status");
         List<SupplyStatusReport> supplyStatusReportList =
                 (List<SupplyStatusReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());;
 
         return new Pages(page,supplyStatusReportList.size(),max,supplyStatusReportList);
     }
