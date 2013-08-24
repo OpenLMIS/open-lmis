@@ -22,7 +22,7 @@
                             <div class="clearfix ">
 
                                 <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Program</label>
+                                    <label class="labels">Program <span class="label-required">*</span></label>
 
                                     <div class="form-fields">
                                         <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="program" ng-options="option.id as option.name for option in programs">
@@ -32,7 +32,7 @@
                                 </div>
 
                                 <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Schedule</label>
+                                    <label class="labels">Schedule <span class="label-required">*</span></label>
 
                                     <div class="form-fields">
                                         <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="schedule" ng-options="option.id as option.name for option in schedules">
@@ -42,7 +42,7 @@
                                 </div>
 
                                 <div class="form-cell horizontalFilters">
-                                    <label class="labels">Period</label>
+                                    <label class="labels">Period <span class="label-required">*</span></label>
 
                                     <div class="form-field">
                                         <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="period" ng-options="option.id as option.name for option in periods">
@@ -60,7 +60,7 @@
                                     </div>
                                 </div>
                                 <div class="form-cell horizontalFilters">
-                                    <label class="labels">Facility Name</label>
+                                    <label class="labels">Facility Name <span class="label-required">*</span></label>
 
                                     <div class="form-field">
                                         <input id="name" type="text"  ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
