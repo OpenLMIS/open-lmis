@@ -13,19 +13,20 @@ import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.filter.StockedOutReportFilter;
 import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * User: mahmed
  * Date: 7/27/13
  * Time: 4:45 PM
  */
-@Service
+//@Service
+//@NoArgsConstructor
+
+@Component
 @NoArgsConstructor
 public class StockedOutReportDataProvider extends ReportDataProvider {
 
@@ -55,11 +56,6 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
     }
 
     @Override
-    public int getReportDataCountByFilterCriteria(Map<String, String[]> filter) {
-        return reportMapper.getTotal(filter);
-    }
-
-     @Override
     public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
         StockedOutReportFilter stockedOutReportFilter = null;
 
@@ -124,4 +120,32 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
         }
         return stockedOutReportFilter;
     }
+    @Override
+    public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
+        return reportMapper.getStockedoutTotalFacilities(filterCriteria).get(0);
+    }
+
+    @Override
+    public HashMap<String, String> getAdditionalReportData(Map params){
+        HashMap<String, String> result = new HashMap<String, String>() ;
+
+        // spit out the summary section on the report.
+        String totalFacilities = reportMapper.getTotalFacilities( params ).get(0).toString();
+        String stockedOut = reportMapper.getStockedoutTotalFacilities(params).get(0).toString();
+        result.put("TOTAL_FACILITIES", totalFacilities);
+        result.put("TOTAL_STOCKEDOUT", stockedOut);
+
+        // Assume by default that the 100% of facilities didn't report
+        Long percent = Long.parseLong("100");
+        if(totalFacilities != "0"){
+            percent = Math.round((Double.parseDouble(stockedOut) /  Double.parseDouble(totalFacilities)) * 100);
+
+        }
+        result.put("PERCENTAGE_STOCKEDOUT",percent.toString());
+
+
+        return    result;
+    }
+
+
 }
