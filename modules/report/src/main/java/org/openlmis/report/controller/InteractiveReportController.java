@@ -277,11 +277,10 @@ public class InteractiveReportController  extends BaseController {
 
 
         Report report = reportManager.getReportByKey("supply_status");
-        List<SupplyStatusReport> orderReportList =
+        List<SupplyStatusReport> supplyStatusReportList =
                 (List<SupplyStatusReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());;
 
-        return new Pages(page,totalRecCount,max,orderReportList);
+        return new Pages(page,supplyStatusReportList.size(),max,supplyStatusReportList);
     }
 
     @RequestMapping(value = "/reportdata/stockImbalance", method = GET, headers = BaseController.ACCEPT_JSON)

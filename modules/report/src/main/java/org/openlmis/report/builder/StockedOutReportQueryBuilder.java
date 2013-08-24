@@ -59,7 +59,7 @@ public class StockedOutReportQueryBuilder {
         }
     }
 
-    public static String getTotalCount(Map params){
+    public static String getTotalFacilities(Map params){
 
         StockedOutReportFilter filter  = (StockedOutReportFilter)params.get("filterCriteria");
 
@@ -69,5 +69,20 @@ public class StockedOutReportQueryBuilder {
         writePredicates(filter);
         return SQL();
     }
+
+    public static String getTotalStockedoutFacilities(Map params){
+
+        StockedOutReportFilter filter  = (StockedOutReportFilter)params.get("filterCriteria");
+
+        BEGIN();
+        SELECT("COUNT(*) facilityCount");
+        FROM("vw_stock_status");
+        WHERE("status = 'SO'");
+        writePredicates(filter);
+        return SQL();
+    }
+
+
+
 
 }
