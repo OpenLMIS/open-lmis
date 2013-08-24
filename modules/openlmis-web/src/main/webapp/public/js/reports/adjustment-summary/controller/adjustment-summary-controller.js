@@ -79,7 +79,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 
         RequisitionGroups.get(function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.push({'name':'All Reporting Groups'});
+            $scope.requisitionGroups.push({'name':'All Reporting Groups',id:''});
         });
 
 
@@ -152,17 +152,17 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 
         ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.push({'name': 'All Facility Types'});
+            $scope.facilityTypes.unshift({'name': 'All Facility Types'});
         });
 
         AdjustmentTypes.get(function(data){
-        $scope.adjustmentTypes = data.adjustmentTypeList;
-        $scope.adjustmentTypes.push({'description': 'All Adjustment Types','name':'All'});
+            $scope.adjustmentTypes = data.adjustmentTypeList;
+            $scope.adjustmentTypes.unshift({'description': 'All Adjustment Types'});
          });
 
         Products.get(function(data){
             $scope.products = data.productList;
-            $scope.products.push({'name': 'All Products','id':'All'});
+            $scope.products.unshift({'name': 'All Products'});
         });
 
         ProductCategories.get(function(data){
