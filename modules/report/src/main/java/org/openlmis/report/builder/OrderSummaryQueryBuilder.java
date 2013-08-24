@@ -37,7 +37,7 @@ public class OrderSummaryQueryBuilder {
             LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments ON vw_requisition_detail.req_line_id = requisition_line_item_losses_adjustments.requisitionlineitemid");
 
             writePredicates(filter);
-            ORDER_BY("facilities.name asc");
+            ORDER_BY("facility_name asc");
             return SQL();
 
         } else{  //Emergency orders
@@ -51,7 +51,7 @@ public class OrderSummaryQueryBuilder {
             LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments ON vw_requisition_detail.req_line_id = requisition_line_item_losses_adjustments.requisitionlineitemid");
 
             writePredicates(filter);
-            ORDER_BY("facilities.name asc");
+            ORDER_BY("facility_name asc");
             return SQL();
         }
     }
