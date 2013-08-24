@@ -13,18 +13,18 @@ public class SupplyStatusQueryBuilder {
 
     public static String getQuery(Map params){
 
-        String query = "SELECT facility,facility_type_name,li_productcode code,li_productcategory category, li_product product, li_beginningbalance openingBalance,\n" +
-                "  li_quantityreceived receipts,\n" +
-                "  li_quantitydispensed issues,\n" +
-                "  li_totallossesandadjustments adjustments,\n" +
-                "  li_stockinhand closingBalance,\n" +
-                "  CASE li_amc when 0 then 0 else li_stockinhand/li_amc end monthsOfStock,\n" +
-                "  li_amc averageMonthlyConsumption,\n" +
-                "  li_amc * fp_maxmonthsofstock maximumStock,\n" +
-                "  li_calculatedorderquantity reorderAmount,\n" +
-                "  r_supplyingfacilityid supplyingFacility,\n" +
-                "  li_maxmonthsofstock MaxMOS,\n" +
-                "  li_maxmonthsofstock  minMOS    \n" +
+        String query = "SELECT facility,facility_type_name facilityType,li_productcode code,li_productcategory category, li_product product, li_beginningbalance openingBalance,\n" +
+                "  li_quantityreceived receipts," +
+                "  li_quantitydispensed issues," +
+                "  li_totallossesandadjustments adjustments," +
+                "  li_stockinhand closingBalance," +
+                "  CASE li_amc when 0 then 0 else li_stockinhand/li_amc end monthsOfStock," +
+                "  li_amc averageMonthlyConsumption," +
+                "  li_amc * fp_maxmonthsofstock maximumStock, " +
+                "  li_calculatedorderquantity reorderAmount, " +
+                "  r_supplyingfacilityid supplyingFacility," +
+                "  li_maxmonthsofstock MaxMOS," +
+                "  li_maxmonthsofstock  minMOS   \n " +
                 " from vw_supply_status \n"+
                 writePredicates((Map) params.get("filterCriteria"))+ "\n"+
 
@@ -32,6 +32,28 @@ public class SupplyStatusQueryBuilder {
                 " order by " + QueryHelpers.getSortOrder(params, "facility asc,li_productcode asc,  li_product asc, li_productcategory asc ");
             return query;
     }
+
+    public static String getSupplyStatusQuery(Map params){
+        String query = "SELECT facility,facility_type_name facilityType,li_productcode code,li_productcategory category, li_product product, li_beginningbalance openingBalance," +
+                "  li_quantityreceived receipts," +
+                "  li_quantitydispensed issues," +
+                "  li_totallossesandadjustments adjustments," +
+                "  li_stockinhand closingBalance," +
+                "  CASE li_amc when 0 then 0 else li_stockinhand/li_amc end monthsOfStock," +
+                "  li_amc averageMonthlyConsumption," +
+                "  li_amc * fp_maxmonthsofstock maximumStock, " +
+                "  li_calculatedorderquantity reorderAmount, " +
+                "  r_supplyingfacilityid supplyingFacility," +
+                "  li_maxmonthsofstock MaxMOS," +
+                "  li_maxmonthsofstock  minMOS   \n " +
+                " from vw_supply_status \n"+
+                writePredicates((Map) params.get("filterCriteria"))+ "\n"+
+
+                // "group by facilities.name,li.productcode, li.product, li.productcategory ,requisition_groups.id \n" +
+                " order by " + QueryHelpers.getSortOrder(params, "facility asc,li_productcode asc,  li_product asc, li_productcategory asc ");
+        return query;
+    }
+
     private static String writePredicates(Map params){
         String predicate = "WHERE r_status = 'RELEASED' ";
         String facilityTypeId =  params.get("facilityTypeId") == null ? null :((String[])params.get("facilityTypeId"))[0];

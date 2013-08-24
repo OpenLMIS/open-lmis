@@ -50,7 +50,7 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
 
     @Override
     public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
-        return 0;//reportMapper.getTotal(filterCriteria);
+        return 0;
     }
 
     @Override
