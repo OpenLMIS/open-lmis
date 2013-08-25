@@ -1,5 +1,10 @@
 package org.openlmis.report.builder;
 
+import org.openlmis.report.model.report.SupplyStatusReport;
+
+import javax.persistence.Column;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -10,6 +15,7 @@ import java.util.Map;
 public class SupplyStatusQueryBuilder {
 
     public String getSupplyStatus(Map params){
+        Map filterCriteria = (Map) params.get("filterCriteria");
         String query = "SELECT facility,facility_type_name facilityType,li_productcode code,li_productcategory category, li_product product, li_beginningbalance openingBalance,\n" +
                 "  li_quantityreceived receipts," +
                 "  li_quantitydispensed issues," +
@@ -19,21 +25,20 @@ public class SupplyStatusQueryBuilder {
                 "  li_amc averageMonthlyConsumption," +
                 "  li_amc * fp_maxmonthsofstock maximumStock, " +
                 "  li_calculatedorderquantity reorderAmount, " +
-                "  r_supplyingfacilityid supplyingFacility," +
+                "  supplyingfacility supplyingFacility," +
                 "  li_maxmonthsofstock MaxMOS," +
                 "  li_maxmonthsofstock  minMOS   \n " +
                 " from vw_supply_status \n"+
-                writePredicates((Map) params.get("filterCriteria"))+ "\n"+
+                writePredicates(filterCriteria)+ "\n"+
 
-                // "group by facilities.name,li.productcode, li.product, li.productcategory ,requisition_groups.id \n" +
-                " order by " + QueryHelpers.getSortOrder(params, "facility asc,li_productcode asc,  li_product asc, li_productcategory asc ");
+                " order by " + QueryHelpers.getSortOrder(filterCriteria,SupplyStatusReport.class, "facility asc,li_productcode asc,  li_product asc, li_productcategory asc ");
         return query;
     }
 
     private static String writePredicates(Map params){
         String predicate = "WHERE r_status = 'RELEASED' ";
         String facilityTypeId =  params.get("facilityTypeId") == null ? null :((String[])params.get("facilityTypeId"))[0];
-        String facilityName = params.get("facilityName") == null ? null : ((String[])params.get("facilityName"))[0];
+        String facilityId = params.get("facilityId") == null ? null : ((String[])params.get("facilityId"))[0];
         String period =    params.get("periodId") == null ? null : ((String[])params.get("periodId"))[0];
         String program =   params.get("programId") == null ? null : ((String[])params.get("programId"))[0];
         String product =   params.get("productId") == null ? null : ((String[])params.get("productId"))[0];
@@ -47,10 +52,7 @@ public class SupplyStatusQueryBuilder {
 
         predicate += " and ps_id = "+ schedule;
 
-        //if (facilityName != null &&  !facilityName.equals("undefined") && !facilityName.isEmpty() ) {
-
-        predicate += " and LOWER(facility) = '"+ facilityName.toLowerCase() +"'";
-        //}
+        predicate += " and f_id = "+ facilityId;
 
         if (zone != null &&  !zone.equals("undefined") && !zone.isEmpty() && !zone.equals("0")  && !zone.equals("-1")) {
 
@@ -59,6 +61,9 @@ public class SupplyStatusQueryBuilder {
         if (product != null &&  !product.equals("undefined") && !product.isEmpty() && !product.equals("0") &&  !product.equals("-1")) {
 
             predicate += " and p_id = "+ product;
+
+        }else if(product != null &&  !product.equals("undefined") && !product.isEmpty() && product.equals("-1")){
+            predicate += " and indicator_product = true";
         }
 
         if (rgroup != null &&  !rgroup.equals("undefined") && !rgroup.isEmpty() && !rgroup.equals("0") &&  !rgroup.equals("-1")) {
@@ -73,4 +78,5 @@ public class SupplyStatusQueryBuilder {
 
         return predicate;
     }
+
 }

@@ -6,6 +6,9 @@
 
 package org.openlmis.report.builder;
 
+import javax.persistence.Column;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -31,5 +34,34 @@ public class QueryHelpers {
             }
         }
         return ((sortOrder == "")? defaultColumn : sortOrder);
+    }
+
+
+    public static String getSortOrder(Map filterCriteria, Class reportModel, String defaultSortOrder){
+
+        Map columnMapping = new HashMap(reportModel.getFields().length);
+
+        for(Field field : reportModel.getDeclaredFields()){
+            if(field.getAnnotation(Column.class) != null){
+                Column column = field.getAnnotation(Column.class);
+                columnMapping.put(field.getName(),column.name());
+
+            }else {//assumes report model column name matches database column name
+                columnMapping.put(field.getName(),field.getName());
+            }
+        }
+        StringBuilder sortOrder = new StringBuilder("");
+
+        for(Object entryObject : filterCriteria.keySet()){
+
+            String entry = entryObject.toString();
+            if(entry.startsWith("sort-") && columnMapping.get(entry.substring(5)) != null)
+                sortOrder = sortOrder.toString().equals("") ?
+                            sortOrder.append(columnMapping.get(entry.substring(5)).toString()).append("  ").append(((String[])filterCriteria.get(entry))[0]) :
+                             sortOrder.append(",").append(columnMapping.get(entry.substring(5)).toString()).append("  ").append(((String[])filterCriteria.get(entry))[0]) ;
+        }
+
+        return sortOrder.toString().equals("") ? defaultSortOrder : sortOrder.toString();
+
     }
 }
