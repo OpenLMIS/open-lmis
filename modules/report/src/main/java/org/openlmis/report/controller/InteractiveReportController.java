@@ -162,7 +162,7 @@ public class InteractiveReportController  extends BaseController {
 
         Report report = reportManager.getReportByKey("summary");
         List<SummaryReport> reportList =
-                (List<SummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),null,page,max);
+                (List<SummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
         int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
 
         return new Pages(page,totalRecCount,max,reportList);

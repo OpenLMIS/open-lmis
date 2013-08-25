@@ -1,4 +1,4 @@
-    <!--
+<!--
   ~ Copyright © 2013 John Snow, Inc. (JSI). All Rights Reserved.
   ~
   ~ The U.S. Agency for International Development (USAID) funded this section of the application development under the terms of the USAID | DELIVER PROJECT contract no. GPO-I-00-06-00007-00.
@@ -16,7 +16,7 @@
                         </div>
                     </div>
 
-            <div class="box-content"  ng-show="show(1)">
+            <div class="box-content" >
                 <div class="app-form" style="padding: 5px;">
                         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
                             <div class="clearfix ">
@@ -103,8 +103,61 @@
                          </form>
                 </div>
             </div>
+         <table class="table" ng-table="tableParams">
+               <thead>
+                  <tr class="gradient-header">
+                      <th>Code</th>
+                      <th>Product</th>
+                      <th>Opening Balance</th>
+                      <th>Receipts</th>
+                      <th>Issues</th>
+                      <th>Adjustements</th>
+                      <th>Closing Balance</th>
+                      <th>Months of Stock</th>
+                      <th>AMC</th>
+                      <th>Minimum Stock</th>
+                      <th>Re Order Amount</th>
+                  </tr>
+               </thead>
+             <tbody>
+                <tr ng-repeat="row in datarows">
+                    <td>{{ row.code }}</td>
+                    <td>{{ row.product }}</td>
+                    <td>{{ row.openingBalance }}</td>
+                    <td>{{ row.receipts }}</td>
+                    <td>{{ row.issues }}</td>
+                    <td>{{ row.adjustemens }}</td>
+                    <td>{{ row.closingBalance }}</td>
+                    <td>{{ row.monthsOfStock }}</td>
+                    <td>{{ row.averageMonthlyConsumption }}</td>
+                    <td>{{ row.minimumStock }}</td>
+                    <td>{{ row.reorderAmount }}</td>
+                </tr>
+                <tr>
+                   <td colspan="11">
+                         No Data to show under selected filters
+                   </td>
+                </tr>
+             </tbody>
+             <tfoot>
+                    <tr><td colspan="13">End of List</td></tr>
+             </tfoot>
+         </table>
+         <!-- <div class="gridStyleReport" ng-grid="gridOptions"></div>
 
-          <div class="gridStyleReport" ng-grid="gridOptions"></div>
+
+                { field: 'code', displayName: 'Code', width: "*", resizable: false},
+                { field: 'product', displayName: 'Product', width: "***" },
+                { field: 'openingBalance', displayName: 'Opening Balance', width : "*"},
+                { field: 'receipts', displayName: 'Receipts', width : "*"},
+                { field: 'issues', displayName: 'Issues', width : "*"},
+                { field: 'adjustments', displayName: 'Adjustments', width : "*"},
+                { field: 'closingBalance', displayName: 'Closing Balance', width : "*"},
+                { field: 'monthsOfStock', displayName: 'Months of Stock', width : "*"},
+                { field: 'averageMonthlyConsumption', displayName: 'AMC', width : "*"},
+                { field: 'maximumStock', displayName: 'Maximum Stock', width : "*"},
+                { field: 'reorderAmount', displayName: 'Re-order Amount', width : "*"}
+         -->
    </div>
   </div>
 

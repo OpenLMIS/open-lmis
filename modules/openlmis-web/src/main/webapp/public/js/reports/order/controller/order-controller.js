@@ -574,13 +574,13 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
         columnDefs:
             [
 
-                { field: 'productCode', displayName: 'Product Code', width: "*", resizable: false},
-                { field: 'description', displayName: 'Description', width: "***" },
-                { field: 'facilityName', displayName: 'Facility', width: "**" },
-                { field: 'unitSize', displayName: 'Unit Size', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'unitQuantity', displayName: 'Unit Quantity', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'packQuantity', displayName: 'Pack Quantity', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'discrepancy', displayName: 'Discrepancy or Damages', width : "*"}
+                { field: 'productCode', displayName: 'Product Code', width: "200px;", resizable: false},
+                { field: 'description', displayName: 'Description', width: "200px;" },
+                { field: 'facilityName', displayName: 'Facility', width: "200px;" },
+                { field: 'unitSize', displayName: 'Unit Size', width : "150px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'unitQuantity', displayName: 'Unit Quantity', width : "150px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'packQuantity', displayName: 'Pack Quantity', width : "150px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'discrepancy', displayName: 'Discrepancy or Damages', width : "200px;"}
 
 
             ],
