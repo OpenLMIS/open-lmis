@@ -53,13 +53,6 @@
                                         </select>
                                     </div>
                                 </div>-->
-                                <div class="form-cell horizontalFilters">
-                                    <label class="labels">Facility Name<span class="label-required"> *</span></label>
-
-                                    <div class="form-field">
-                                        <input id="name" type="text"  ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
-                                    </div>
-                                </div>
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Facility Type</label>
 
@@ -68,6 +61,15 @@
                                             <option value="">All Facility Types</option>
                                         </select>
                                     </div>
+                                </div>
+                                <div class="form-cell horizontalFilters">
+                                    <label class="labels">Facility Name</label>
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility" ng-options="option.id as option.code.concat('-').concat.(option.name) for option in allFacilities">
+
+                                        </select>
+                                    </div>
+
                                 </div>
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Product</label>

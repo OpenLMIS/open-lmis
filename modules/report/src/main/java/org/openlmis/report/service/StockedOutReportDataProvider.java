@@ -39,7 +39,7 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
     @Override
     protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
         RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET,RowBounds.NO_ROW_LIMIT);
-        return reportMapper.getReport(getReportFilterData(filterCriteria), null, rowBounds);
+        return reportMapper.getReport(getReportFilterData(filterCriteria), filterCriteria, rowBounds);
     }
 
     @Override

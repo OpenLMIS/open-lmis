@@ -508,8 +508,6 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
         }
     });
 
-    $scope.sortInfo = { fields: ["code", "facilityType"], directions: ["ASC"]};
-
     $scope.setPagingData = function (data, page, pageSize, total) {
         $scope.myData = data;
         $scope.pagingOptions.totalServerItems = total;
@@ -554,12 +552,6 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
         });
 
 
-        // put out the sort order
-        $.each($scope.sortInfo.fields, function (index, value) {
-            if (value != undefined) {
-                params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-            }
-        });
         //alert(JSON.stringify(params))
         StockedOutReport.get(params, function (data) {
             $scope.setPagingData(data.pages.rows, page, pageSize, data.pages.total);
@@ -576,10 +568,19 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
     }, true);
 
+    $scope.sortInfo = { fields:["supplyingfacility","facility","product"], directions: ["ASC","ASC","ASC"]};
+
+    // put out the sort order
+    $.each($scope.sortInfo.fields, function (index, value) {
+        if (value != undefined) {
+            $scope.filterObject['sort-'+$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+        }
+    });
+
     $scope.$watch('sortInfo', function () {
         $.each($scope.sortInfo.fields, function (index, value) {
             if (value != undefined)
-                $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+                $scope.filterObject['sort-'+$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
         });
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
     }, true);
