@@ -1,4 +1,4 @@
-function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, ReportPrograms , ReportPeriods , Products ,ReportFacilityTypes,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
+function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, ReportPrograms , ReportPeriods , Products ,ReportFacilityTypes, AllFacilites,GetFacilityByFacilityType,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
     //to minimize and maximize the filter section
     var section = 1;
 
@@ -45,7 +45,7 @@ function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, Repor
         scheduleId : $scope.schedule,
         rgroupId : $scope.rgroup,
         rgroup : "",
-        facilityName : $scope.facilityNameFilter
+        facilityId : $scope.facility
     };
 
     ReportPrograms.get(function(data){
@@ -61,6 +61,9 @@ function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, Repor
     ReportFacilityTypes.get(function(data) {
         $scope.facilityTypes = data.facilityTypes;
        // $scope.facilityTypes.push({'name': 'All Facility Types', 'id' : 'All'});
+    });
+    AllFacilites.get(function(data){
+        $scope.allFacilities = data.allFacilities;
     });
 
     ReportSchedules.get(function(data){
@@ -98,16 +101,32 @@ function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, Repor
         }else{
             $scope.filterObject.facilityTypeId =  0;
         }
+
+        if($scope.filterObject.facilityTypeId !== -1 && $scope.filterObject.facilityTypeId !== 0){
+
+            $scope.ChangeFacility();
+        }
+
         $scope.filterGrid();
 
     });
 
-    $scope.$watch('facilityNameFilter', function(selection){
-        if(selection != undefined || selection == ""){
-            $scope.filterObject.facilityName =  selection;
+    $scope.ChangeFacility = function(){
+        GetFacilityByFacilityType.get({ facilityTypeId : $scope.filterObject.facilityTypeId },function(data) {
+            $scope.allFacilities =  data.facilities;
+        });
+    };
 
+    $scope.$watch('facility', function(selection){
+        if(selection != undefined || selection == ""){
+            $scope.filterObject.facilityId =  selection;
+            $.each( $scope.allFacilities,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.facilityName = idx.name;
+                }
+            });
         }else{
-            $scope.filterObject.facilityName = "";
+            $scope.filterObject.facilityId =  0;
         }
         $scope.filterGrid();
     });

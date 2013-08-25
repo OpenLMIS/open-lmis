@@ -37,7 +37,7 @@ public class RnRFeedbackReportQueryBuilder {
 
         String predicate = "WHERE ";
         String facilityTypeId =  params.get("facilityTypeId") == null ? null :((String[])params.get("facilityTypeId"))[0];
-        String facilityName = params.get("facilityName") == null ? null : ((String[])params.get("facilityName"))[0];
+        String facilityId = params.get("facilityId") == null ? null : ((String[])params.get("facilityId"))[0];
         String period =    params.get("periodId") == null ? null : ((String[])params.get("periodId"))[0];
         String program =   params.get("programId") == null ? null : ((String[])params.get("programId"))[0];
         String product =   params.get("productId") == null ? null : ((String[])params.get("productId"))[0];
@@ -50,7 +50,7 @@ public class RnRFeedbackReportQueryBuilder {
 
         predicate += " and processing_schedules_id = "+ schedule;
 
-        predicate += " and facility_name = '"+ facilityName +"'";
+        predicate += " and facility_id = "+ facilityId;
 
         if (product != null &&  !product.equals("undefined") && !product.isEmpty() && !product.equals("0") &&  !product.equals("-1")) {
 
