@@ -93,14 +93,10 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
     $scope.startYears = [];
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
-        //$scope.startYear    = prev('Y');
+        adjustEndYears();
     });
 
     // default to the monthly period type
-    //$scope.periodType = 'monthly';
-    $scope.periodType = $scope.defaultSettings('P');
-    $scope.startQuarter = $scope.defaultSettings('Q');
-    $scope.startYear = $scope.defaultSettings('Y');
 
     $scope.periodTypes = [
         {'name': 'Monthly', 'value': 'monthly'},
@@ -295,7 +291,6 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
     });
 
     $scope.$watch('startYear', function (selection) {
-        alert($scope.startYear+" "+selection)
         var date = new Date();
         //alert(selection);
         if (selection != undefined || selection == "") {
@@ -654,6 +649,20 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
         if (parts[3] == undefined) parts[3] = 0;
         return new Date(+parts[1] + offset + parts[2] * 3600000 + parts[3] * 60000);
     };
+
+    var init = function () {
+
+        $scope.periodType = $scope.defaultSettings('P');
+
+        if ($scope.periodType == 'quarterly') {
+            $scope.startQuarter = $scope.defaultSettings('Q');
+        } else {
+            $scope.startMonth = $scope.defaultSettings('M');
+        }
+        $scope.startYear = $scope.defaultSettings('Y');
+        $scope.product = 'Silver nitrate  single use stick'
+    };
+    init();
 
 
 }
