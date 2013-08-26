@@ -16,11 +16,15 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
  */
 public class NonReportingFacilityQueryBuilder {
 
+
+
     public static String getQuery(Map params){
 
+       params = (Map)( params.containsKey("param1")? params.get("param1") : params );
+
         String period           = ((String[])params.get("period"))[0];
-        String reportingGroup   = ((String[])params.get("rgroup"))[0] ;
-        String facilityType     = ((String[])params.get("ftype"))[0] ;
+        String reportingGroup   = params.containsKey("rgroup")? ((String[])params.get("rgroup"))[0]: "" ;
+        String facilityType     = params.containsKey("ftype")? ((String[])params.get("ftype"))[0] : "" ;
         String program          = ((String[])params.get("program"))[0];
         String schedule         = ((String[])params.get("schedule"))[0];
         return getQueryString(params, program , period , reportingGroup, facilityType, schedule);
@@ -70,11 +74,14 @@ public class NonReportingFacilityQueryBuilder {
 
 
     public static String getTotalFacilities(Map params){
-        String period           = ((String[])params.get("period"))[0];
-        String reportingGroup   = ((String[])params.get("rgroup"))[0];
-        String facilityType     = ((String[])params.get("ftype"))[0];
-        String program          = ((String[])params.get("program"))[0];
-        String schedule         = ((String[])params.get("schedule"))[0];
+      params = (Map)( params.containsKey("param1")? params.get("param1") : params );
+
+      String period           = ((String[])params.get("period"))[0];
+      String reportingGroup   = params.containsKey("rgroup")? ((String[])params.get("rgroup"))[0]: "" ;
+      String facilityType     = params.containsKey("ftype")? ((String[])params.get("ftype"))[0] : "" ;
+      String program          = ((String[])params.get("program"))[0];
+      String schedule         = ((String[])params.get("schedule"))[0];
+
         BEGIN();
         SELECT("COUNT (*)");
         FROM("facilities");
@@ -86,11 +93,13 @@ public class NonReportingFacilityQueryBuilder {
     }
 
      public static String getTotalNonReportingFacilities(Map params){
-         String period           = ((String[])params.get("period"))[0];
-         String reportingGroup   = ((String[])params.get("rgroup"))[0];
-         String facilityType     = ((String[])params.get("ftype"))[0];
-         String program          = ((String[])params.get("program"))[0];
-         String schedule         = ((String[])params.get("schedule"))[0];
+       params = (Map)( params.containsKey("param1")? params.get("param1") : params );
+
+       String period           = ((String[])params.get("period"))[0];
+       String reportingGroup   = params.containsKey("rgroup")? ((String[])params.get("rgroup"))[0]: "" ;
+       String facilityType     = params.containsKey("ftype")? ((String[])params.get("ftype"))[0] : "" ;
+       String program          = ((String[])params.get("program"))[0];
+       String schedule         = ((String[])params.get("schedule"))[0];
 
          BEGIN();
          SELECT("COUNT (*)");
@@ -106,12 +115,13 @@ public class NonReportingFacilityQueryBuilder {
 
 
     public static String getSummaryQuery(Map params){
+      params = (Map)( params.containsKey("param1")? params.get("param1") : params );
 
-        String period           = ((String[])params.get("period"))[0];
-        String reportingGroup   = ((String[])params.get("rgroup"))[0];
-        String facilityType     = ((String[])params.get("ftype"))[0];
-        String program          = ((String[])params.get("program"))[0];
-        String schedule         = ((String[])params.get("schedule"))[0];
+      String period           = ((String[])params.get("period"))[0];
+      String reportingGroup   = params.containsKey("rgroup")? ((String[])params.get("rgroup"))[0]: "" ;
+      String facilityType     = params.containsKey("ftype")? ((String[])params.get("ftype"))[0] : "" ;
+      String program          = ((String[])params.get("program"))[0];
+      String schedule         = ((String[])params.get("schedule"))[0];
 
         BEGIN();
         SELECT("'Non Reporting Facilities' AS name");
@@ -135,12 +145,6 @@ public class NonReportingFacilityQueryBuilder {
         writePredicates(program, period, reportingGroup, facilityType, schedule);
         query += " UNION " + SQL();
         return query;
-//        UNION();
-//        SELECT("'All Facilities in Reporting Group' AS name");
-//        SELECT("COUNT (*)");
-//        FROM("facilities");
-//        INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
-//        WHERE("rgm.requisitiongroupid = " + reportingGroup);
-        //return query;
+
     }
 }

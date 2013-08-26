@@ -61,11 +61,11 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
 
         $scope.ChangeSchedule = function(){
             ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
-                $scope.periods = data.periods;
-                $scope.periods.unshift({'name': 'Select Period'});
-            });
+            $scope.periods = data.periods;
+            $scope.periods.unshift({'name': 'Select Period'});
+        });
 
-            RequisitionGroupsByProgramSchedule.get({program: $scope.program, schedule:$scope.schedule}, function(data){
+        RequisitionGroupsByProgramSchedule.get({program: $scope.program, schedule:$scope.schedule}, function(data){
                 $scope.requisitionGroups = data.requisitionGroupList;
                 $scope.requisitionGroups.unshift({'name':'All requsition groups'});
             });
