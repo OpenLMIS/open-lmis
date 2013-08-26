@@ -285,3 +285,11 @@ services.factory('ProgramCompleteList',function($resource){
 services.factory('ScheduleCompleteList',function($resource){
     return $resource('/schedules.json',{},{});
 });
+
+services.factory('LoadSchedulesForRequisitionGroupProgram',function($resource){
+    return $resource('/requisitionGroupProgramSchedule/getDetails/:rgId/:pgId.json',{},{});
+});
+
+services.factory('SaveRequisitionGroupProgramSchedule',function($resource){
+    return $resource('/requisitionGroupProgramSchedule/insert.json',{},{});
+});
