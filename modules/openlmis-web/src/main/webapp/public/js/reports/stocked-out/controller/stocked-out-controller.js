@@ -93,9 +93,7 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
 
     // default to the monthly period type
     //$scope.periodType = 'monthly';
-    $scope.periodType = $scope.defaultSettings('P');
-    $scope.startQuarter = $scope.defaultSettings('Q');
-    $scope.startYear = $scope.defaultSettings('Y');
+
 
     $scope.periodTypes = [
         {'name': 'Monthly', 'value': 'monthly'},
@@ -106,7 +104,7 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
     $scope.startYears = [];
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
-        //$scope.startYear    = prev('Y');
+        adjustEndYears();
     });
 
     Months.get(function (data) {
@@ -658,6 +656,20 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
         if (parts[3] == undefined) parts[3] = 0;
         return new Date(+parts[1] + offset + parts[2] * 3600000 + parts[3] * 60000);
     };
+
+    var init = function () {
+
+        $scope.periodType = $scope.defaultSettings('P');
+
+        if ($scope.periodType == 'quarterly') {
+            $scope.startQuarter = $scope.defaultSettings('Q');
+        } else {
+            $scope.startMonth = $scope.defaultSettings('M');
+        }
+        $scope.startYear = $scope.defaultSettings('Y');
+        $scope.product = 'Silver nitrate  single use stick'
+    };
+    init();
 
 
 }
