@@ -8,6 +8,7 @@ package org.openlmis.report.builder;
 
 
 import org.openlmis.report.model.filter.OrderReportFilter;
+import org.openlmis.report.model.report.OrderSummaryReport;
 
 import java.util.Calendar;
 import java.util.Map;
@@ -24,6 +25,7 @@ public class OrderSummaryQueryBuilder {
 
 
         OrderReportFilter filter  = (OrderReportFilter)params.get("filterCriteria");
+        Map sortCriteria = (Map) params.get("sortCriteria");
         String orderType =   filter.getOrderType() == null ? null : filter.getOrderType();
 
         //Regular Orders
@@ -37,7 +39,7 @@ public class OrderSummaryQueryBuilder {
             LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments ON vw_requisition_detail.req_line_id = requisition_line_item_losses_adjustments.requisitionlineitemid");
 
             writePredicates(filter);
-            ORDER_BY("facility_name asc");
+            ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, OrderSummaryReport.class,"facility_name asc"));
             return SQL();
 
         } else{  //Emergency orders
@@ -51,7 +53,7 @@ public class OrderSummaryQueryBuilder {
             LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments ON vw_requisition_detail.req_line_id = requisition_line_item_losses_adjustments.requisitionlineitemid");
 
             writePredicates(filter);
-            ORDER_BY("facility_name asc");
+            ORDER_BY(QueryHelpers.getSortOrder(sortCriteria,OrderSummaryReport.class,"facility_name asc"));
             return SQL();
         }
     }
@@ -67,6 +69,8 @@ public class OrderSummaryQueryBuilder {
         }
         if (filter.getProductId() != -1 && filter.getProductId() != 0) {
             WHERE("product_id ="+ filter.getProductId());
+        }else if(filter.getProductId()== -1){
+            WHERE("indicator_product = true");
         }
 
 

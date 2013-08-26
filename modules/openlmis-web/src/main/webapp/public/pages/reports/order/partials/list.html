@@ -133,7 +133,7 @@
 
                             <div class="form-fields">
                                 <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="program" ng-options="option.id as option.name for option in programs">
-
+                                    <option value="">-- Select a Program --</option>
                                 </select>
                             </div>
                         </div>
@@ -145,7 +145,7 @@
 
                             <div class="form-field">
                                 <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
-
+                                  <option value="">-- All Facility Types --</option>
                                 </select>
                             </div>
                         </div>
@@ -156,7 +156,7 @@
 
                             <div class="form-field">
                                 <select  ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone"  ng-options="option.id as option.name for option in zones">
-
+                                    <option value="">-- All Zones --</option>
                                 </select>
                             </div>
                         </div>
@@ -166,7 +166,7 @@
                             <label class="labels">Facility Name<span  class="label-required"> *</span></label>
                             <div class="form-field">
                                 <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility" ng-options="option.id as option.code.concat('-').concat.(option.name) for option in allFacilities">
-
+                                   <option value="">-- Select Facility --</option>
                                 </select>
                             </div>
 
@@ -179,7 +179,7 @@
 
                             <div class="form-field">
                                 <select ui-select2 style="width:200px;" name="product"  ng-model="product" ng-options="option.id as option.name for option in products">
-
+                                    <option  value="">&#60Indicator Products&#62</option>
                                 </select>
                             </div>
                         </div>
