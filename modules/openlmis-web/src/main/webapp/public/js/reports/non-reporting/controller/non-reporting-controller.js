@@ -43,28 +43,31 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
 
         ReportPrograms.get(function(data){
             $scope.programs = data.programs;
-            $scope.programs.push({'name':'Select a Program'});
+            $scope.programs.unshift({'name':'Select a Program'});
+
         })
 
         ReportSchedules.get(function(data){
             $scope.schedules = data.schedules;
-            $scope.schedules.push({'name':'Select a Schedule'});
+            $scope.schedules.unshift({'name':'Select a Schedule'});
+            $scope.periods = [];
+            $scope.periods.push({'name': 'Select Schedule'});
         })
 
         ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.push({'name': 'All Facility Types -'});
+            $scope.facilityTypes.unshift({'name': 'All Facility Types'});
         });
 
         $scope.ChangeSchedule = function(){
             ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
                 $scope.periods = data.periods;
-                $scope.periods.push({'name': 'Select Period'});
+                $scope.periods.unshift({'name': 'Select Period'});
             });
 
             RequisitionGroupsByProgramSchedule.get({program: $scope.program, schedule:$scope.schedule}, function(data){
                 $scope.requisitionGroups = data.requisitionGroupList;
-                $scope.requisitionGroups.push({'name':'All requsition groups'});
+                $scope.requisitionGroups.unshift({'name':'All requsition groups'});
             });
         }
 
