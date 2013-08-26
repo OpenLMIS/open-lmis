@@ -27,7 +27,7 @@ public class OrderFileColumnBuilder {
       column.setColumnLabel(lookup.valueOf(columnLabel, "label"));
       column.setDataFieldLabel(lookup.valueOf(dataFieldLabel, "dataFieldLabel"));
       column.setKeyPath(lookup.valueOf(keyPath, ""));
-      column.setKeyPath(lookup.valueOf(format, ""));
+      column.setFormat(lookup.valueOf(format, ""));
       column.setNested(lookup.valueOf(nested, "order"));
       column.setIncludeInOrderFile(lookup.valueOf(includeInOrderFile, true));
       return column;

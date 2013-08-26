@@ -29,16 +29,21 @@ import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.lang.String.valueOf;
+import static org.apache.commons.lang3.time.DateUtils.parseDate;
+import static org.joda.time.format.DateTimeFormat.forPattern;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
 import static org.openlmis.shipment.builder.OrderFileColumnBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(OrderCsvView.class)
 public class OrderCsvViewTest {
 
+  public static final String FILE_PREFIX = "O_";
   @Mock
   MessageService messageService;
 
@@ -56,11 +61,12 @@ public class OrderCsvViewTest {
   String facilityCode = "F10";
   int quantityApproved = 67;
   int quantityApprovedForNonFullSupply = 567;
-  Date createdDate = new Date();
+  Date createdDate;
   Date periodStartDate = new Date(234123123l);
 
   @Before
   public void setUp() throws Exception {
+    createdDate = parseDate("22/12/13", "dd/MM/yy");
     response = mock(HttpServletResponse.class);
     request = mock(HttpServletRequest.class);
     model = new HashMap<>();
@@ -92,21 +98,27 @@ public class OrderCsvViewTest {
 
     csvView = new OrderCsvView(messageService);
 
+    String nullString = null;
     when(response.getWriter()).thenReturn(writer);
+
+    doThrow(new IOException()).when(bufferedWriter).write(nullString);
     whenNew(BufferedWriter.class).withArguments(writer).thenReturn(bufferedWriter);
   }
 
   private OrderFileTemplateDTO getOrderFileTemplate() {
     OrderConfiguration orderConfiguration = new OrderConfiguration();
     orderConfiguration.setHeaderInFile(true);
+    final String nullString = null;
+    orderConfiguration.setFilePrefix(FILE_PREFIX);
     List<OrderFileColumn> orderFileColumns = new ArrayList<OrderFileColumn>() {{
       add(make(a(OrderFileColumnBuilder.defaultColumn, with(OrderFileColumnBuilder.columnLabel, columnLabel), with(keyPath, "id"), with(nested, "order"))));
-      add(make(a(OrderFileColumnBuilder.defaultColumn, with(OrderFileColumnBuilder.columnLabel, "otherLabel"), with(keyPath, "createdDate"), with(nested, "order"))));
+      add(make(a(OrderFileColumnBuilder.defaultColumn, with(OrderFileColumnBuilder.columnLabel, "otherLabel"), with(keyPath, "createdDate"), with(nested, "order"), with(format, "dd/MM/yy"))));
       add(make(a(OrderFileColumnBuilder.defaultColumn, with(OrderFileColumnBuilder.columnLabel, "lineItemColumn"), with(keyPath, "quantityApproved"), with(nested, "lineItem"))));
       add(make(a(OrderFileColumnBuilder.defaultColumn, with(OrderFileColumnBuilder.columnLabel, "facilityCode"), with(keyPath, "rnr/facility/code"), with(nested, "order"))));
-      add(make(a(OrderFileColumnBuilder.defaultColumn, with(OrderFileColumnBuilder.columnLabel, "periodStartDate"),
+      add(make(a(OrderFileColumnBuilder.defaultColumn, with(OrderFileColumnBuilder.columnLabel, "periodStartDate"), with(format, "MM/yy"),
         with(keyPath, "rnr/period/startDate"), with(nested, "order"), with(includeInOrderFile, false))));
       add(make(a(OrderFileColumnBuilder.defaultColumn, with(OrderFileColumnBuilder.columnLabel, "NA"), with(nested, ""))));
+      add(make(a(OrderFileColumnBuilder.defaultColumn, with(OrderFileColumnBuilder.columnLabel, nullString), with(nested, ""))));
     }};
     return new OrderFileTemplateDTO(orderConfiguration, orderFileColumns);
   }
@@ -145,7 +157,7 @@ public class OrderCsvViewTest {
     csvView.renderMergedOutputModel(model, request, response);
 
     verify(bufferedWriter, times(2)).write(orderId.toString());
-    verify(bufferedWriter, times(2)).write(createdDate.toString());
+    verify(bufferedWriter, times(2)).write("22/12/13");
     verify(bufferedWriter, atLeast(2)).newLine();
   }
 
@@ -186,4 +198,21 @@ public class OrderCsvViewTest {
 
     verify(bufferedWriter, never()).write("periodStartDate");
   }
+
+  @Test
+  public void shouldWriteOrderCreatedDateInCorrectFormat() throws Exception {
+    csvView.renderMergedOutputModel(model, request, response);
+    String formattedDate = forPattern("dd/MM/yy").print(createdDate.getTime());
+
+    verify(bufferedWriter, times(2)).write(formattedDate);
+  }
+
+  @Test
+  public void shouldAddFileNamePrefixFromConfiguration() throws Exception {
+    csvView.renderMergedOutputModel(model, request, response);
+
+    String expectedFileName = FILE_PREFIX + orderId + ".csv";
+    verify(response).setHeader("Content-Disposition", "attachment; filename=" + expectedFileName);
+  }
+
 }

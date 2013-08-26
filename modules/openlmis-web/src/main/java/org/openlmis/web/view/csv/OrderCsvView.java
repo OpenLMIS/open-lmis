@@ -4,6 +4,7 @@ package org.openlmis.web.view.csv;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.jxpath.JXPathContext;
 import org.openlmis.core.domain.OrderConfiguration;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
@@ -17,10 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import static org.apache.commons.collections.CollectionUtils.filter;
+import static org.joda.time.format.DateTimeFormat.forPattern;
 import static org.openlmis.web.controller.OrderController.ORDER;
 import static org.openlmis.web.controller.OrderController.ORDER_FILE_TEMPLATE;
 
@@ -42,6 +45,9 @@ public class OrderCsvView extends AbstractView {
 
     OrderConfiguration orderConfiguration = ((OrderFileTemplateDTO) model.get(ORDER_FILE_TEMPLATE)).getOrderConfiguration();
 
+    String fileName = orderConfiguration.getFilePrefix() + order.getId() + ".csv";
+    response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
     try (BufferedWriter writer = new BufferedWriter(response.getWriter())) {
       if (orderConfiguration.getHeaderInFile()) {
         writeHeader(orderFileColumns, writer);
@@ -50,7 +56,7 @@ public class OrderCsvView extends AbstractView {
       writeLineItems(order, order.getRnr().getNonFullSupplyLineItems(), orderFileColumns, writer);
       writer.flush();
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new DataException(e.getMessage());
     }
   }
 
@@ -65,7 +71,9 @@ public class OrderCsvView extends AbstractView {
 
   private void writeHeader(List<OrderFileColumn> orderFileColumns, BufferedWriter writer) throws IOException {
     for (OrderFileColumn column : orderFileColumns) {
-      writer.write(column.getColumnLabel());
+      String columnLabel = column.getColumnLabel();
+      if (columnLabel == null) columnLabel = "";
+      writer.write(columnLabel);
       if (orderFileColumns.indexOf(column) == (orderFileColumns.size() - 1)) {
         writer.newLine();
         break;
@@ -89,12 +97,16 @@ public class OrderCsvView extends AbstractView {
         writer.write(",");
         continue;
       }
-
+      Object columnValue;
       if (orderFileColumn.getNested().equals("order")) {
-        writer.write(orderContext.getValue(orderFileColumn.getKeyPath()).toString());
+        columnValue = orderContext.getValue(orderFileColumn.getKeyPath());
       } else {
-        writer.write(lineItemContext.getValue(orderFileColumn.getKeyPath()).toString());
+        columnValue = lineItemContext.getValue(orderFileColumn.getKeyPath());
       }
+      if (columnValue instanceof Date) {
+        columnValue = forPattern(orderFileColumn.getFormat()).print(((Date) columnValue).getTime());
+      }
+      writer.write((columnValue).toString());
       if (orderFileColumns.indexOf(orderFileColumn) < orderFileColumns.size() - 1)
         writer.write(",");
     }
