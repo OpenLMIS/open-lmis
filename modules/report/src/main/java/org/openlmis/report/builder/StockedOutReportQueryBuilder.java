@@ -7,6 +7,7 @@
 package org.openlmis.report.builder;
 
 import org.openlmis.report.model.filter.StockedOutReportFilter;
+import org.openlmis.report.model.report.StockedOutReport;
 
 import java.util.Map;
 
@@ -21,12 +22,13 @@ public class StockedOutReportQueryBuilder {
 
 
         StockedOutReportFilter filter  = (StockedOutReportFilter)params.get("filterCriteria");
+        Map sortCriteria = (Map) params.get("SortCriteria");
         BEGIN();
         SELECT("DISTINCT supplyingfacility,facilitycode, facility, product, facilitytypename,  location");
         FROM("vw_stock_status");
         WHERE("status = 'SO'");
         writePredicates(filter);
-        ORDER_BY("facility");
+        ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, StockedOutReport.class,"supplyingfacility asc, facility asc, product asc"));
         return SQL();
 
     }
@@ -59,7 +61,7 @@ public class StockedOutReportQueryBuilder {
         }
     }
 
-    public static String getTotalCount(Map params){
+    public static String getTotalFacilities(Map params){
 
         StockedOutReportFilter filter  = (StockedOutReportFilter)params.get("filterCriteria");
 
@@ -69,5 +71,20 @@ public class StockedOutReportQueryBuilder {
         writePredicates(filter);
         return SQL();
     }
+
+    public static String getTotalStockedoutFacilities(Map params){
+
+        StockedOutReportFilter filter  = (StockedOutReportFilter)params.get("filterCriteria");
+
+        BEGIN();
+        SELECT("COUNT(*) facilityCount");
+        FROM("vw_stock_status");
+        WHERE("status = 'SO'");
+        writePredicates(filter);
+        return SQL();
+    }
+
+
+
 
 }

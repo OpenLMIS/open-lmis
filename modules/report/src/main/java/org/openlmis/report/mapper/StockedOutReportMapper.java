@@ -33,6 +33,15 @@ public interface StockedOutReportMapper {
                                                  @Param("SortCriteria") Map<String, String[]> SortCriteria ,
                                                  @Param("RowBounds")RowBounds rowBounds);
 
-    @SelectProvider(type=StockedOutReportQueryBuilder.class, method="getTotalCount")
-    public Integer getTotal(Map params);
+    // Gets the count of the total facility count under the selection criteria
+    @SelectProvider(type=StockedOutReportQueryBuilder.class, method="getTotalFacilities")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    public List<Integer> getTotalFacilities(Map params);
+
+    // Gets the count of the total facility count that are stocked out under the selection criteria
+    @SelectProvider(type=StockedOutReportQueryBuilder.class, method="getTotalStockedoutFacilities")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    public List<Integer> getStockedoutTotalFacilities(Map params);
+
+
 }

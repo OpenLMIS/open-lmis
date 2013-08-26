@@ -345,11 +345,11 @@ Edit Product
 
   <div form-toolbar id="action_buttons_edit" class="action-buttons" ng-show="editProductMode">
     <div class="form-cell button-row">
-        <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
+        <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save" ng-disabled="editProduct.active == false" />
         <a href="" class="btn btn-danger delete-button" style="margin-right: 50px;" ng-show="editProduct.active"
-           ng-click="showConfirmProductDeleteWindow(product); productsBackupMap[product.id].deleted=true;">Deactivate</a>
+           ng-click="showConfirmProductDeleteWindow(editProduct); ">Deactivate</a>
         <a href="" class="btn btn-danger delete-button" style="margin-right: 50px;" ng-hide="editProduct.active"
-           ng-click="showConfirmProductRestoreWindow(product); productsBackupMap[product.id].restore=true;">Restore</a>
+           ng-click="showConfirmProductRestoreWindow(editProduct); ">Restore</a>
         <a href="#list"
            class="btn btn-cancel cancel-button"><span openlmis-message="button.cancel"></span></a>
    </div>

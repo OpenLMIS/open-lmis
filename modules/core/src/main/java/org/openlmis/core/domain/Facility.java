@@ -8,6 +8,7 @@ package org.openlmis.core.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -26,6 +27,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
+@EqualsAndHashCode(callSuper=false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Facility extends BaseModel implements Importable {
   @ImportField(mandatory = true, name = "Facility Code")

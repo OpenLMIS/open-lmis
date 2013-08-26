@@ -31,6 +31,7 @@ public interface OrderSummaryReportMapper {
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<OrderSummaryReport> getFilteredSortedPagedOrderSummaryReport(
             @Param("filterCriteria") ReportData filterCriteria,
+            @Param("sortCriteria") Map params,
             @Param("RowBounds") RowBounds rowBounds
     );
 

@@ -90,12 +90,13 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
         useExternalFilter: false
     };
 
+    $scope.startYears = [];
+    OperationYears.get(function (data) {
+        $scope.startYears = data.years;
+        adjustEndYears();
+    });
 
     // default to the monthly period type
-    //$scope.periodType = 'monthly';
-    $scope.periodType = $scope.defaultSettings('P');
-    $scope.startQuarter = $scope.defaultSettings('Q');
-    $scope.startYear = $scope.defaultSettings('Y');
 
     $scope.periodTypes = [
         {'name': 'Monthly', 'value': 'monthly'},
@@ -103,11 +104,7 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
         {'name': 'Semi Anual', 'value': 'semi-anual'},
         {'name': 'Annual', 'value': 'annual'}
     ];
-    $scope.startYears = [];
-    OperationYears.get(function (data) {
-        $scope.startYears = data.years;
-        //$scope.startYear    = prev('Y');
-    });
+
 
     Months.get(function (data) {
         var months = data.months;
@@ -192,9 +189,8 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
     });
 
     Products.get(function (data) {
-        $scope.products = data.allPeriods;
-        //alert(JSON.stringify( $scope.products, null, 4));
-        //$scope.products.push({'name': 'All Products','id':'All','tracer': 'All'});
+        $scope.products = data.productList;
+        $scope.products.push({'name': '-- All Products --','id':'All'});
 
     });
 
@@ -246,17 +242,17 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
     $scope.ChangeProductList = function () {
         ProductsByCategory.get({category: $scope.filterObject.productCategoryId}, function (data) {
             $scope.products = data.productList;
-            //$scope.products.push({'name': 'All Products','id':'All','tracer': 'All'});
+            $scope.products.push({'name': '-- All Products --','id':'All'});
         });
     }
 
     $scope.$watch('product', function (selection) {
         if (selection == "All") {
-            $scope.filterObject.productId = -1;
+            $scope.filterObject.productId = 0;
         } else if (selection != undefined || selection == "") {
             $scope.filterObject.productId = selection;
         } else {
-            $scope.filterObject.productId = 0;
+            $scope.filterObject.productId = -1;
         }
         $scope.filterGrid();
     });
@@ -469,7 +465,6 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
         } else {
             $scope.filterObject.periodType = "monthly";
         }
-        //alert('PeriodType');
         $scope.filterGrid();
     });
 
@@ -507,8 +502,6 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
             return;
         }
     });
-
-    $scope.sortInfo = { fields: ["code", "facilityType"], directions: ["ASC"]};
 
     $scope.setPagingData = function (data, page, pageSize, total) {
         $scope.myData = data;
@@ -553,14 +546,6 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
             params[index] = value;
         });
 
-
-        // put out the sort order
-        $.each($scope.sortInfo.fields, function (index, value) {
-            if (value != undefined) {
-                params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-            }
-        });
-        //alert(JSON.stringify(params))
         StockImbalanceReport.get(params, function (data) {
             $scope.setPagingData(data.pages.rows, page, pageSize, data.pages.total);
         });
@@ -576,10 +561,17 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
     }, true);
 
+    $scope.sortInfo = { fields: ["supplyingfacility", "facility","product"], directions: ["ASC","ASC","ASC"]};
+    // put default sort criteria
+    $.each($scope.sortInfo.fields, function(index, value) {
+        if(value != undefined) {
+            $scope.filterObject['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+        }
+    });
     $scope.$watch('sortInfo', function () {
         $.each($scope.sortInfo.fields, function (index, value) {
             if (value != undefined)
-                $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+                $scope.filterObject['sort-'+$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
         });
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
     }, true);
@@ -657,6 +649,19 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
         if (parts[3] == undefined) parts[3] = 0;
         return new Date(+parts[1] + offset + parts[2] * 3600000 + parts[3] * 60000);
     };
+
+    var init = function () {
+
+        $scope.periodType = $scope.defaultSettings('P');
+
+        if ($scope.periodType == 'quarterly') {
+            $scope.startQuarter = $scope.defaultSettings('Q');
+        } else {
+            $scope.startMonth = $scope.defaultSettings('M');
+        }
+        $scope.startYear = $scope.defaultSettings('Y');
+    };
+    init();
 
 
 }

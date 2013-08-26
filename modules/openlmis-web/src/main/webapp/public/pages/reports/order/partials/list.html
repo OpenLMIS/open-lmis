@@ -19,48 +19,31 @@
         <div class="box-content"  ng-show="show(1)">
             <div class="app-form" style="padding: 5px;">
                 <form ng-submit="filterGrid()"  name="filterForm" novalidate>
+
                     <div class="clearfix ">
+                        <!-- Order Type-->
 
                         <div class="form-cell horizontalFilters" >
-                            <label class="labels">Order Type</label>
+                            <label class="labels">Order Type:  </label>
 
-                            <div class="form-field">
+
+
+
                                 <select ui-select2 style="width:200px;" name="orderType"  ng-model="orderType" ng-options="option.name as option.value for option in orderTypes">
 
                                 </select>
+
+
                             </div>
                         </div>
-                        <div class="form-cell horizontalFilters" >
-                            <label class="labels">Program</label>
-
-                            <div class="form-fields">
-                                <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="program" ng-options="option.id as option.name for option in programs">
-
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-cell horizontalFilters" >
-                            <label class="labels">Facility Type</label>
-
-                            <div class="form-field">
-                                <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
-
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-cell horizontalFilters">
-                            <label class="labels">Facility Name</label>
-                            <div class="form-field">
-                                <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility" ng-options="option.id as option.code.concat('-').concat.(option.name) for option in allFacilities">
-
-                                </select>
-                            </div>
-
-                        </div>
-
+ <br style="clear: both">
+                    <div class="clearfix ">
+         <table><tr><td>
+                        <!-- Period Type-->
                         <div class="form-cell horizontalFilters">
                             <div >
-                                <label class="labels">Period Type</label>
+                                <label class="labels">Period Type<span
+                                        class="label-required"> *</span></label>
                                 <div class="form-field">
                                     <select ui-select2 style="width:200px;" class="input-medium" ng-required="true" name="periodType" ng-model="periodType" ng-options="option.value as option.name for option in periodTypes">
 
@@ -68,9 +51,10 @@
                                 </div>
                             </div>
                         </div>
-
+                        <!-- From-->
                         <div class="form-cell horizontalFilters" style="width:180px">
-                            <label class="labels">From</label>
+                            <label class="labels">From<span
+                                    class="label-required"> *</span></label>
 
                             <div class="form-field">
 
@@ -97,6 +81,7 @@
                             </div>
                         </div>
 
+                        <!-- To-->
                         <div class="form-cell horizontalFilters" style="width:180px">
                             <label class="labels">To</label>
 
@@ -124,8 +109,11 @@
                                         </span>
                             </div>
                         </div>
+
+         </td><td>
+                        <!-- Period-->
                         <div class="form-cell horizontalFilters">
-                            <label class="labels">Period</label>
+                            <label class="labels">Period<span  class="label-required"> *</span></label>
 
                             <div class="form-field">
                                 <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="period" ng-options="option.id as option.name for option in periods">
@@ -133,26 +121,69 @@
                                 </select>
                             </div>
                         </div>
+
+         </td><td>
+
+
+                        <!-- Program-->
+
                         <div class="form-cell horizontalFilters" >
-                            <label class="labels">Product</label>
+                            <label class="labels">Program<span
+                                    class="label-required"> *</span></label>
 
-                            <div class="form-field">
-                                <select ui-select2 style="width:200px;" name="product"  ng-model="product" ng-options="option.id as option.name for option in products">
-
+                            <div class="form-fields">
+                                <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="program" ng-options="option.id as option.name for option in programs">
+                                    <option value="">-- Select a Program --</option>
                                 </select>
                             </div>
                         </div>
+
+             </td><td>
+                        <!-- Facility Type-->
+                        <div class="form-cell horizontalFilters" >
+                            <label class="labels">Facility Type</label>
+
+                            <div class="form-field">
+                                <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
+                                  <option value="">-- All Facility Types --</option>
+                                </select>
+                            </div>
+                        </div>
+                </td></tr><tr><td></td><td>
+                        <!-- Zone-->
                         <div class="form-cell horizontalFilters" >
                             <label class="labels">Zone</label>
 
                             <div class="form-field">
                                 <select  ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone"  ng-options="option.id as option.name for option in zones">
-
+                                    <option value="">-- All Zones --</option>
                                 </select>
                             </div>
                         </div>
+                     </td><td>
+                        <!-- Facility-->
+                        <div class="form-cell horizontalFilters">
+                            <label class="labels">Facility Name<span  class="label-required"> *</span></label>
+                            <div class="form-field">
+                                <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility" ng-options="option.id as option.code.concat('-').concat.(option.name) for option in allFacilities">
+                                   <option value="">-- Select Facility --</option>
+                                </select>
+                            </div>
 
+                        </div>
+               </td><td>
+                        <!-- Product-->
 
+                        <div class="form-cell horizontalFilters" >
+                            <label class="labels">Product</label>
+
+                            <div class="form-field">
+                                <select ui-select2 style="width:200px;" name="product"  ng-model="product" ng-options="option.id as option.name for option in products">
+                                    <option  value="">&#60Indicator Products&#62</option>
+                                </select>
+                            </div>
+                        </div>
+                   </td></tr></table>
                     </div>
                 </form>
             </div>

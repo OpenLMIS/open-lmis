@@ -1,4 +1,4 @@
-function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, ReportPrograms , ReportPeriods , Products ,ReportFacilityTypes,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
+function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, ReportPrograms , ReportPeriods , Products ,ReportFacilityTypes, AllFacilites,GetFacilityByFacilityType,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
     //to minimize and maximize the filter section
     var section = 1;
 
@@ -45,7 +45,7 @@ function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, Repor
         scheduleId : $scope.schedule,
         rgroupId : $scope.rgroup,
         rgroup : "",
-        facilityName : $scope.facilityNameFilter
+        facilityId : $scope.facility
     };
 
     ReportPrograms.get(function(data){
@@ -60,7 +60,10 @@ function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, Repor
 
     ReportFacilityTypes.get(function(data) {
         $scope.facilityTypes = data.facilityTypes;
-        $scope.facilityTypes.push({'name': 'All Facility Types', 'id' : 'All'});
+       // $scope.facilityTypes.push({'name': 'All Facility Types', 'id' : 'All'});
+    });
+    AllFacilites.get(function(data){
+        $scope.allFacilities = data.allFacilities;
     });
 
     ReportSchedules.get(function(data){
@@ -69,8 +72,8 @@ function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, Repor
     });
 
     Products.get(function(data){
-        $scope.products = data.productList;
-        $scope.products.push({'name': 'All Products','id':'All'});
+        $scope.products = data.productList;/*
+        $scope.products.push({'name': 'All Products','id':'All'});*/
     });
 
     $scope.ChangeSchedule = function(){
@@ -98,16 +101,32 @@ function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, Repor
         }else{
             $scope.filterObject.facilityTypeId =  0;
         }
+
+        if($scope.filterObject.facilityTypeId !== -1 && $scope.filterObject.facilityTypeId !== 0){
+
+            $scope.ChangeFacility();
+        }
+
         $scope.filterGrid();
 
     });
 
-    $scope.$watch('facilityNameFilter', function(selection){
-        if(selection != undefined || selection == ""){
-            $scope.filterObject.facilityName =  selection;
+    $scope.ChangeFacility = function(){
+        GetFacilityByFacilityType.get({ facilityTypeId : $scope.filterObject.facilityTypeId },function(data) {
+            $scope.allFacilities =  data.facilities;
+        });
+    };
 
+    $scope.$watch('facility', function(selection){
+        if(selection != undefined || selection == ""){
+            $scope.filterObject.facilityId =  selection;
+            $.each( $scope.allFacilities,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.facilityName = idx.name;
+                }
+            });
         }else{
-            $scope.filterObject.facilityName = "";
+            $scope.filterObject.facilityId =  0;
         }
         $scope.filterGrid();
     });
@@ -192,7 +211,7 @@ function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, Repor
     $scope.exportReport   = function (type){
         $scope.filterObject.pdformat =1;
         var params = jQuery.param($scope.filterObject);
-        var url = '/reports/download/supply_status/' + type +'?' + params;
+        var url = '/reports/download/rnr_feedback/' + type +'?' + params;
         window.open(url);
 
     }
@@ -275,25 +294,25 @@ function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, Repor
     }, true);
 
     $scope.formatNumber = function(value){
-        return utils.formatNumber(value,'0,0.00');
+        return utils.formatNumber(value,'0,000');
     }
 
     $scope.gridOptions = {
         data: 'myData',
         columnDefs:
             [
-                { field: 'facility', displayName: 'Facility', width: "*", resizable: false},
-                { field: 'code', displayName: 'Code', width: "*", resizable: false},
-                { field: 'product', displayName: 'Product', width: "*" },
-                { field: 'openingBalance', displayName: 'Opening Balance', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'receipts', displayName: 'Receipts', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'issues', displayName: 'Issues', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'productCode', displayName: 'Product Code', width: "*", resizable: false},
+                { field: 'product', displayName: 'Product', width: "**", resizable: false},
+                { field: 'unit', displayName: 'Unit', width: "*" },
+                { field: 'beginningBalance', displayName: 'Beginning Balance', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'totalQuantityReceived', displayName: 'Tot. Quantity Received', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'totalQuantityDispensed', displayName: 'Tot. Quantity Dispensed', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
                 { field: 'adjustments', displayName: 'Adjustments', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'closingBalance', displayName: 'Closing Balance', width : "*",cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'monthsOfStock', displayName: 'Months of Stock', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'averageMonthlyConsumption', displayName: 'AMC', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'maximumStock', displayName: 'Maximum Stock', width : "*", cellClass : 'pull-right',cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'reorderAmount', displayName: 'Re-order Amount', width : "*", cellClass : 'ngCellTextRight', cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'}
+                { field: 'physicalCount', displayName: 'Physical Count', width : "*",cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'adjustedAMC', displayName: 'Adjusted AMC', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'newEOP', displayName: 'New EOP', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'orderQuantity', displayName: 'Order Quantity', width : "*", cellClass : 'pull-right',cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'quantitySupplied', displayName: 'Quantity Supplied', width : "*", cellClass : 'ngCellTextRight', cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'}
 
             ],
         enablePaging: true,

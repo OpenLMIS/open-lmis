@@ -20,10 +20,10 @@
                 <label class="labels">Program</label>
 
                 <div class="form-fields">
-                    <select ui-select2 style="width:200px;" class="large-input" name="program" id="program"
-                            ng-change="showProductsSearchResults('program')"
+                    <select ui-select2 style="width:200px;" class="large-input"
+                            ng-change="filterProductsByProgram()"
                             ng-model="program" ng-options="option.id as option.name for option in programs">
-                        <option style="display:none" value="">All Programs</option>
+                        <option value="">All Programs</option>
 
                     </select>
                 </div>

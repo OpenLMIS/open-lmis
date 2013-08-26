@@ -233,6 +233,9 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Facility List (V2)')]")
   private static WebElement FacilityMailingListReportMenu;
 
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Admin Reports')]")
+    private static WebElement AdminReportsMenuItem;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Summary Report')]")
   private static WebElement SummaryReportMenu;
 
@@ -565,6 +568,8 @@ public class HomePage extends Page {
     SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(ReportsMenuItem);
     testWebDriver.keyPress(ReportsMenuItem);
+    testWebDriver.waitForElementToAppear(AdminReportsMenuItem);
+    testWebDriver.keyPress(AdminReportsMenuItem);
     testWebDriver.waitForElementToAppear(FacilityMailingListReportMenu);
     testWebDriver.keyPress(FacilityMailingListReportMenu);
     testWebDriver.waitForElementToAppear(facilityListingReportPageHeader);

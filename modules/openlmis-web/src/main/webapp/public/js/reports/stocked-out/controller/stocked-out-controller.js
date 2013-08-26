@@ -93,9 +93,7 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
 
     // default to the monthly period type
     //$scope.periodType = 'monthly';
-    $scope.periodType = $scope.defaultSettings('P');
-    $scope.startQuarter = $scope.defaultSettings('Q');
-    $scope.startYear = $scope.defaultSettings('Y');
+
 
     $scope.periodTypes = [
         {'name': 'Monthly', 'value': 'monthly'},
@@ -106,7 +104,7 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
     $scope.startYears = [];
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
-        //$scope.startYear    = prev('Y');
+        adjustEndYears();
     });
 
     Months.get(function (data) {
@@ -508,8 +506,6 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
         }
     });
 
-    $scope.sortInfo = { fields: ["code", "facilityType"], directions: ["ASC"]};
-
     $scope.setPagingData = function (data, page, pageSize, total) {
         $scope.myData = data;
         $scope.pagingOptions.totalServerItems = total;
@@ -554,12 +550,6 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
         });
 
 
-        // put out the sort order
-        $.each($scope.sortInfo.fields, function (index, value) {
-            if (value != undefined) {
-                params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-            }
-        });
         //alert(JSON.stringify(params))
         StockedOutReport.get(params, function (data) {
             $scope.setPagingData(data.pages.rows, page, pageSize, data.pages.total);
@@ -576,10 +566,19 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
     }, true);
 
+    $scope.sortInfo = { fields:["supplyingfacility","facility","product"], directions: ["ASC","ASC","ASC"]};
+
+    // put out the sort order
+    $.each($scope.sortInfo.fields, function (index, value) {
+        if (value != undefined) {
+            $scope.filterObject['sort-'+$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+        }
+    });
+
     $scope.$watch('sortInfo', function () {
         $.each($scope.sortInfo.fields, function (index, value) {
             if (value != undefined)
-                $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+                $scope.filterObject['sort-'+$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
         });
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
     }, true);
@@ -598,7 +597,7 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
                 { field: 'facility', displayName: 'Facility Name', width: "*", resizable: false},
                 { field: 'facilitytypename', displayName: 'Facility Type', width: "*", resizable: false},
                 { field: 'location', displayName: 'Location', width: "*" },
-                { field: 'product', displayName: 'Product', width: "*" }
+                { field: 'product', displayName: 'Product Stocked Out', width: "*" }
             ],
         enablePaging: true,
         enableSorting :true,
@@ -657,6 +656,19 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
         if (parts[3] == undefined) parts[3] = 0;
         return new Date(+parts[1] + offset + parts[2] * 3600000 + parts[3] * 60000);
     };
+
+    var init = function () {
+
+        $scope.periodType = $scope.defaultSettings('P');
+
+        if ($scope.periodType == 'quarterly') {
+            $scope.startQuarter = $scope.defaultSettings('Q');
+        } else {
+            $scope.startMonth = $scope.defaultSettings('M');
+        }
+        $scope.startYear = $scope.defaultSettings('Y');
+    };
+    init();
 
 
 }

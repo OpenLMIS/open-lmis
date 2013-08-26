@@ -24,7 +24,7 @@
                                         <div class="clearfix ">
                                             <div class="form-cell horizontalFilters">
                                                 <div >
-                                                    <label class="labels">Program</label>
+                                                    <label class="labels">Program <span class="label-required">*</span></label>
                                                     <div class="form-fields">
                                                         <select ui-select2 style="width:200px;" name="program"  ng-model="program"  ng-options="option.id as option.name for option in programs" ng-required="true">
 
@@ -41,7 +41,7 @@
 
                                             <div class="form-cell horizontalFilters">
                                                 <div >
-                                                    <label class="labels">Period Type</label>
+                                                    <label class="labels">Period Type <span class="label-required">*</span></label>
                                                     <div class="form-field">
                                                         <select ui-select2 style="width:200px;" ng-required="true"  name="periodType" ng-model="periodType" ng-options="option.value as option.name for option in periodTypes">
 
@@ -51,7 +51,7 @@
                                             </div>
 
                                             <div class="form-cell horizontalFilters" style="width:180px">
-                                                <label class="labels">From</label>
+                                                <label class="labels">From <span class="label-required">*</span></label>
 
                                                 <div class="form-field">
 
@@ -77,7 +77,7 @@
                                             </div>
 
                                             <div class="form-cell horizontalFilters" style="width:180px">
-                                                <label class="labels">To</label>
+                                                <label class="labels">To <span class="label-required">*</span></label>
 
                                                 <div class="form-field">
                                                     <select style="width:80px;" class="input-small" ng-required="true"  name="endYear" ng-model="endYear"  ng-options="year for year in endYears">
