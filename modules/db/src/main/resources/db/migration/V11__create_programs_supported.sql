@@ -15,4 +15,3 @@ CREATE TABLE programs_supported (
 );
 
 CREATE INDEX i_program_supported_facilityId ON programs_supported(facilityId);
-CREATE INDEX i_program_supported_facilityId_programId ON programs_supported(facilityId, programId);
