@@ -35,4 +35,8 @@ public class RequisitionGroupProgramScheduleService {
     return requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupCodeAndProgramCode(
       requisitionGroupProgramSchedule.getRequisitionGroup().getCode(), requisitionGroupProgramSchedule.getProgram().getCode());
   }
+
+    public RequisitionGroupProgramSchedule getScheduleForRequisitionGroupIdAndProgramId(Long requisitionGroupId, Long programId) {
+        return requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(requisitionGroupId, programId);
+    }
 }
