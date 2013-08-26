@@ -1,6 +1,8 @@
 function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, ReportPrograms , ReportPeriods , Products ,ReportFacilityTypes, AllFacilites,GetFacilityByFacilityType, GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
     //to minimize and maximize the filter section
     var section = 1;
+    $scope.showMessage = false;
+    $scope.message = "Please fill the required fields."
 
     $scope.section = function (id) {
         section = id;
@@ -19,6 +21,7 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
     };
 
     $scope.filterGrid = function (){
+        checkRequiredFields();
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
     };
 
@@ -328,6 +331,17 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         plugins: [new ngGridFlexibleHeightPlugin()]
 
     };
+
+    var checkRequiredFields = function(){
+        if($scope.filterObject.programId == -1 || $scope.filterObject.programId == 0 ||
+            $scope.filterObject.scheduleId == -1 || $scope.filterObject.scheduleId == 0 ||
+            $scope.filterObject.periodId == -1 ||  $scope.filterObject.periodId == 0 ||
+            $scope.filterObject.facilityId == -1 || $scope.filterObject.facilityId == 0 ){
+            $scope.showMessage = true;
+        }else{
+            $scope.showMessage = false;
+        }
+    }
 
 
 }

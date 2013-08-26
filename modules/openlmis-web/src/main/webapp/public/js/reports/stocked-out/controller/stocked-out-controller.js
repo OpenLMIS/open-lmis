@@ -667,7 +667,6 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
             $scope.startMonth = $scope.defaultSettings('M');
         }
         $scope.startYear = $scope.defaultSettings('Y');
-        $scope.product = 'Silver nitrate  single use stick'
     };
     init();
 

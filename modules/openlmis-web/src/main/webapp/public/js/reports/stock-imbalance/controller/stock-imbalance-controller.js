@@ -660,7 +660,6 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
             $scope.startMonth = $scope.defaultSettings('M');
         }
         $scope.startYear = $scope.defaultSettings('Y');
-        $scope.product = 'Silver nitrate  single use stick'
     };
     init();
 
