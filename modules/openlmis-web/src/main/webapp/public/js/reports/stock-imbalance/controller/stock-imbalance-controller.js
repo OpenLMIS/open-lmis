@@ -1,7 +1,9 @@
 function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods, Products, ProductCategories, ProductsByCategory, ReportFacilityTypes, RequisitionGroups, OperationYears, Months, $http, $routeParams, $location) {
     //to minimize and maximize the filter section
     var section = 1;
-    $scope.message = "";
+    $scope.showMessage = true;
+    $scope.message = "* Indicates a required field."
+
     $scope.defaultFlag = true;
     $scope.reporting = "quarterly";
 
@@ -649,6 +651,7 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
         if (parts[3] == undefined) parts[3] = 0;
         return new Date(+parts[1] + offset + parts[2] * 3600000 + parts[3] * 60000);
     };
+
 
     var init = function () {
 

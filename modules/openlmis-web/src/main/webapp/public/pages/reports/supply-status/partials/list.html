@@ -45,7 +45,7 @@
                                     <label class="labels">Period<span class="label-required"> *</span></label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="period" ng-options="option.id as option.name for option in periods" required="">
+                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="period" ng-options="option.id as option.name for option in periods | orderBy:'id'" required="">
 
                                         </select>
                                     </div>
@@ -68,6 +68,7 @@
                                     </div>
 
                                 </div>
+                                <br style="clear: both">
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Zone</label>
 

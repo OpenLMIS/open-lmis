@@ -1,8 +1,8 @@
 function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, ReportPrograms , ReportPeriods , Products ,ReportFacilityTypes, AllFacilites,GetFacilityByFacilityType, GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
     //to minimize and maximize the filter section
     var section = 1;
-    $scope.showMessage = false;
-    $scope.message = "Please fill the required fields."
+    $scope.showMessage = true;
+    $scope.message = "* Indicates a required field."
 
     $scope.section = function (id) {
         section = id;
@@ -21,7 +21,6 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
     };
 
     $scope.filterGrid = function (){
-        checkRequiredFields();
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
     };
 
@@ -302,19 +301,19 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         data: 'myData',
         columnDefs:
             [
-                { field: 'facility', displayName: 'Facility', width: "*", resizable: false},
-                { field: 'code', displayName: 'Code', width: "*", resizable: false},
-                { field: 'product', displayName: 'Product', width: "*" },
-                { field: 'supplyingFacility', displayName: 'Supplying Facility', width: "*", resizable: false},
-                { field: 'openingBalance', displayName: 'Opening Balance', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'receipts', displayName: 'Receipts', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'issues', displayName: 'Issues', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'adjustments', displayName: 'Adjustments', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'closingBalance', displayName: 'Closing Balance', width : "*",cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'monthsOfStock', displayName: 'MOS', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'averageMonthlyConsumption', displayName: 'AMC', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'maximumStock', displayName: 'Maximum Stock', width : "*", cellClass : 'pull-right',cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'reorderAmount', displayName: 'Re-order Amount', width : "*", cellClass : 'ngCellTextRight', cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'}
+                { field: 'supplyingFacility', displayName: 'Supplying Facility', width: "150px;", resizable: false},
+                { field: 'facility', displayName: 'Facility', width: "150px;", resizable: false},
+                { field: 'code', displayName: 'Code', width: "100px;", resizable: false},
+                { field: 'product', displayName: 'Product', width: "250px;" },
+                { field: 'openingBalance', displayName: 'Opening Balance', width : "150px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'receipts', displayName: 'Receipts', width : "130px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'issues', displayName: 'Issues', width : "130px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'adjustments', displayName: 'Adjustments', width : "130px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'closingBalance', displayName: 'Closing Balance', width : "150px;",cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'monthsOfStock', displayName: 'MOS', width : "130px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'averageMonthlyConsumption', displayName: 'AMC', width : "130px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'maximumStock', displayName: 'Maximum Stock', width : "150px;", cellClass : 'pull-right',cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'reorderAmount', displayName: 'Re-order Amount', width : "150px;", cellClass : 'ngCellTextRight', cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'}
 
             ],
         enablePaging: true,
@@ -331,17 +330,5 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         plugins: [new ngGridFlexibleHeightPlugin()]
 
     };
-
-    var checkRequiredFields = function(){
-        if($scope.filterObject.programId == -1 || $scope.filterObject.programId == 0 ||
-            $scope.filterObject.scheduleId == -1 || $scope.filterObject.scheduleId == 0 ||
-            $scope.filterObject.periodId == -1 ||  $scope.filterObject.periodId == 0 ||
-            $scope.filterObject.facilityId == -1 || $scope.filterObject.facilityId == 0 ){
-            $scope.showMessage = true;
-        }else{
-            $scope.showMessage = false;
-        }
-    }
-
 
 }
