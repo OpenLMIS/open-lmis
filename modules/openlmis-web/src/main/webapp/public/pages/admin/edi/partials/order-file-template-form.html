@@ -59,11 +59,11 @@
                     </div>
                     <div class="span2">
                       <div class="row-fluid" ng-show="orderFileColumn.dataFieldLabel == 'header.order.date'">
-                        <select class="span12" ui-select2 ng-model="orderFileTemplate.orderConfiguration.datePattern" ng-options="dateFormat for dateFormat in orderDateFormats">
+                        <select class="span12" ui-select2 ng-model="orderFileColumn.format" ng-options="dateFormat for dateFormat in orderDateFormats">
                         </select>
                       </div>
                       <div class="row-fluid" ng-show="orderFileColumn.dataFieldLabel == 'label.period'">
-                        <select class="span12" ui-select2 ng-model="orderFileTemplate.orderConfiguration.periodDatePattern" ng-options="dateFormat for dateFormat in periodDateFormats">
+                        <select class="span12" ui-select2 ng-model="orderFileColumn.format" ng-options="dateFormat for dateFormat in periodDateFormats">
                         </select>
                       </div>
                     </div>

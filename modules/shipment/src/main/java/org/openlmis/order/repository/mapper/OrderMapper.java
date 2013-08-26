@@ -44,7 +44,7 @@ public interface OrderMapper {
   @Delete("DELETE from order_file_columns")
   void deleteOrderFileColumns();
 
-  @Insert("INSERT INTO order_file_columns (dataFieldLabel, includeInOrderFile, columnLabel, position, openLmisField, nested, keyPath, createdBy, modifiedBy)" +
-    " VALUES (#{dataFieldLabel}, #{includeInOrderFile}, #{columnLabel}, #{position}, #{openLmisField}, #{nested}, #{keyPath}, #{modifiedBy}, #{modifiedBy})")
+  @Insert("INSERT INTO order_file_columns (dataFieldLabel, includeInOrderFile, format, columnLabel, position, openLmisField, nested, keyPath, createdBy, modifiedBy)" +
+    " VALUES (#{dataFieldLabel}, #{includeInOrderFile}, #{format}, #{columnLabel}, #{position}, #{openLmisField}, #{nested}, #{keyPath}, #{modifiedBy}, #{modifiedBy})")
   void insertOrderFileColumn(OrderFileColumn orderFileColumn);
 }

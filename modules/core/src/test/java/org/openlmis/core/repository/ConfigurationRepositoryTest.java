@@ -28,7 +28,6 @@ public class ConfigurationRepositoryTest {
   public void shouldGetConfiguration() {
     OrderConfiguration orderConfiguration = new OrderConfiguration();
     orderConfiguration.setHeaderInFile(true);
-    orderConfiguration.setDatePattern("ddMMyy");
     when(configurationMapper.getConfiguration()).thenReturn(orderConfiguration);
     assertThat(configurationRepository.getConfiguration(), is(orderConfiguration));
     verify(configurationMapper).getConfiguration();

@@ -7,6 +7,7 @@ CREATE TABLE order_file_columns (
   keyPath            VARCHAR(50),
   includeInOrderFile BOOLEAN NOT NULL DEFAULT TRUE,
   columnLabel        VARCHAR(50),
+  format             VARCHAR(20),
   position           INTEGER NOT NULL,
   openLmisField      BOOLEAN NOT NULL DEFAULT FALSE,
   createdBy          INTEGER,

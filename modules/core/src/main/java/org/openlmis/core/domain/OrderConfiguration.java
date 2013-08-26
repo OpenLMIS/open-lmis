@@ -7,8 +7,6 @@ import lombok.Data;
 public class OrderConfiguration extends BaseModel{
 
   private String filePrefix;
-  private String datePattern;
-  private String periodDatePattern;
   private Boolean headerInFile;
 
 }

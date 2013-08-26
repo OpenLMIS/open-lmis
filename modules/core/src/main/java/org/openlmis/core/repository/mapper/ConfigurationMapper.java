@@ -12,9 +12,8 @@ public interface ConfigurationMapper {
   @Select("SELECT * FROM order_configurations")
   public OrderConfiguration getConfiguration();
 
-  @Update("UPDATE order_configurations SET filePrefix = #{filePrefix}, headerInFile = #{headerInFile}, " +
-    "datePattern = #{datePattern}, periodDatePattern = #{periodDatePattern}, modifiedBy = #{modifiedBy}, " +
-    "modifiedDate = COALESCE(#{modifiedDate}, NOW())")
+  @Update({"UPDATE order_configurations SET filePrefix = #{filePrefix}, headerInFile = #{headerInFile}, ",
+    "modifiedBy = #{modifiedBy}, modifiedDate = COALESCE(#{modifiedDate}, NOW())"})
   void update(OrderConfiguration orderConfiguration);
 
 }

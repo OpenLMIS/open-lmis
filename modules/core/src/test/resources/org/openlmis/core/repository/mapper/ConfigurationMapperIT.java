@@ -29,22 +29,16 @@ public class ConfigurationMapperIT {
     OrderConfiguration orderConfiguration = mapper.getConfiguration();
     assertThat(orderConfiguration.getFilePrefix(), is("O"));
     assertThat(orderConfiguration.getHeaderInFile(), is(false));
-    assertThat(orderConfiguration.getDatePattern(), is("dd/MM/yy"));
-    assertThat(orderConfiguration.getPeriodDatePattern(), is("MM/yy"));
   }
 
   @Test
   public void shouldUpdateConfiguration() throws Exception {
     OrderConfiguration orderConfiguration = new OrderConfiguration();
     orderConfiguration.setHeaderInFile(true);
-    orderConfiguration.setDatePattern("dd-MM-yyyy");
-    orderConfiguration.setPeriodDatePattern("MM-yyyy");
     orderConfiguration.setFilePrefix("ORD");
     mapper.update(orderConfiguration);
     OrderConfiguration returnedOrderConfiguration = mapper.getConfiguration();
     assertThat(returnedOrderConfiguration.getHeaderInFile(), is(true));
-    assertThat(returnedOrderConfiguration.getDatePattern(), is("dd-MM-yyyy"));
-    assertThat(returnedOrderConfiguration.getPeriodDatePattern(), is("MM-yyyy"));
     assertThat(returnedOrderConfiguration.getFilePrefix(), is("ORD"));
   }
 }
