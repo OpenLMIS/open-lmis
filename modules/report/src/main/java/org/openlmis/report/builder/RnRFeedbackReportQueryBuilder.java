@@ -1,5 +1,7 @@
 package org.openlmis.report.builder;
 
+import org.openlmis.report.model.report.RnRFeedbackReport;
+
 import java.util.Map;
 
 /**
@@ -28,7 +30,9 @@ public class RnRFeedbackReportQueryBuilder {
                 "0 maximumStock, --TODO: fix it \n" +
                 "0 emergencyOrder --TODO: fix it \n" +
                 "FROM vw_requisition_detail \n" +
-                writePredicates(filterCriteria)
+                writePredicates(filterCriteria) + "\n" +
+                "order by " + QueryHelpers.getSortOrder(filterCriteria, RnRFeedbackReport.class,"productcode asc,facility_name asc")
+
                ;
 
         return query;
