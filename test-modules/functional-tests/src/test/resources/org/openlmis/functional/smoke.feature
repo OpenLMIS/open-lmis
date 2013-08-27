@@ -356,8 +356,8 @@ Feature: Smoke Tests
       |O            |TRUE          |MM/dd/yyyy     |dd-mm-yyyy        |
 
     And I configure openlmis order file columns:
-      |Data Field Label    |Include In Order File|Column Label|Position       |
-      |header.order.number |TRUE                 |Order Number|1              |
+      |Data Field Label    |Include In Order File|Column Label|Position       | Format |
+      |header.order.number |TRUE                 |Order Number|1              |        |
 
     And I configure non openlmis order file columns:
       |Data Field Label    |Include In Order File|Column Label|Position       |

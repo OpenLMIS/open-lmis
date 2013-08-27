@@ -67,14 +67,14 @@ public class DownloadOrderFile extends TestCaseHelper {
   public void setupOrderFileConfiguration(DataTable userTable) throws Exception {
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
-            dbWrapper.setupOrderFileConfiguration(map.get("File Prefix").toString(),map.get("Header In File").toString(),map.get("Date Pattern").toString(),map.get("Period Date Pattern").toString());
+            dbWrapper.setupOrderFileConfiguration(map.get("File Prefix").toString(),map.get("Header In File").toString());
   }
 
   @And("^I configure non openlmis order file columns:$")
   public void setupOrderFileNonOpenLMISColumns(DataTable userTable) throws Exception {
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
-        dbWrapper.setupOrderFileNonOpenLMISColumns(map.get("Data Field Label").toString(),map.get("Include In Order File").toString(),map.get("Column Label").toString(),Integer.parseInt(map.get("Position").toString()) );
+        dbWrapper.setupOrderFileNonOpenLMISColumns(map.get("Data Field Label").toString(),map.get("Include In Order File").toString(),map.get("Column Label").toString(),Integer.parseInt(map.get("Position").toString()));
   }
 
   @And("^I configure openlmis order file columns:$")
@@ -82,7 +82,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.defaultSetupOrderFileOpenLMISColumns();
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
-        dbWrapper.setupOrderFileOpenLMISColumns(map.get("Data Field Label").toString(),map.get("Include In Order File").toString(),map.get("Column Label").toString(),Integer.parseInt(map.get("Position").toString()) );
+        dbWrapper.setupOrderFileOpenLMISColumns(map.get("Data Field Label").toString(),map.get("Include In Order File").toString(),map.get("Column Label").toString(),Integer.parseInt(map.get("Position").toString()),map.get("Format").toString());
   }
 
     @And("^I download order file$")

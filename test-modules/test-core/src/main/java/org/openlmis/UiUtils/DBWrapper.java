@@ -1059,11 +1059,11 @@ public class DBWrapper {
     update("update program_regimen_columns set visible=" + visible + " where name ='" + regimenColumnName + "'and programid=(SELECT id FROM programs WHERE name='" + programName + "');");
   }
 
-    public void setupOrderFileConfiguration(String fileprefix, String headerinfile, String datepattern, String perioddatepattern) throws IOException, SQLException {
+    public void setupOrderFileConfiguration(String fileprefix, String headerinfile) throws IOException, SQLException {
         update("DELETE FROM order_configurations;");
         update("INSERT INTO order_configurations \n" +
-                "  (fileprefix, headerinfile, datepattern, perioddatepattern) VALUES\n" +
-                "  ('" + fileprefix + "', '" + headerinfile + "', '" + datepattern + "', '" + perioddatepattern +"');");
+                "  (fileprefix, headerinfile) VALUES\n" +
+                "  ('" + fileprefix + "', '" + headerinfile  +"');");
     }
 
     public void defaultSetupOrderFileOpenLMISColumns() throws IOException, SQLException {
@@ -1073,14 +1073,14 @@ public class DBWrapper {
         update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField) VALUES ('create.facility.code', 'order', 'rnr/facility/code', 'Facility code', 2, TRUE);");
         update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField) VALUES ('header.product.code', 'lineItem', 'productCode', 'Product code', 3, TRUE);");
         update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField) VALUES ('header.quantity.approved', 'lineItem', 'quantityApproved', 'Approved quantity', 4, TRUE);");
-        update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField) VALUES ('label.period', 'order', 'rnr/period/startDate', 'Period', 5, TRUE);");
-        update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField) VALUES ('header.order.date', 'order', 'createdDate', 'Order date', 6, TRUE);");
+        update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField, format) VALUES ('label.period', 'order', 'rnr/period/startDate', 'Period', 5, TRUE,'MM/yy');");
+        update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField,format) VALUES ('header.order.date', 'order', 'createdDate', 'Order date', 6, TRUE,'dd/MM/yy');");
 
        }
 
-    public void setupOrderFileOpenLMISColumns(String datafieldlabel, String includeinorderfile, String columnlabel, int position) throws IOException, SQLException {
+    public void setupOrderFileOpenLMISColumns(String datafieldlabel, String includeinorderfile, String columnlabel, int position, String Format) throws IOException, SQLException {
         update("UPDATE order_file_columns SET \n" +
-                "includeinorderfile='" + includeinorderfile + "', columnlabel='" + columnlabel + "', position=" + position + " where datafieldlabel='" + datafieldlabel +"';");
+                "includeinorderfile='" + includeinorderfile + "', columnlabel='" + columnlabel + "', position=" + position + ", format='" + Format + "' where datafieldlabel='" + datafieldlabel +"';");
     }
 
     public void setupOrderFileNonOpenLMISColumns(String datafieldlabel, String includeinorderfile, String columnlabel, int position) throws IOException, SQLException {
