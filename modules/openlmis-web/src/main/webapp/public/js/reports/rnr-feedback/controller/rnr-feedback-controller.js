@@ -31,12 +31,13 @@ function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, Repor
         useExternalFilter: false
     };
 
-
+    $scope.formValues = {}
 
     //filter form data section
     $scope.filterObject =  {
         facilityTypeId : $scope.facilityType,
         facilityType : "",
+        facilityName : "",
         programId : $scope.program,
         periodId : $scope.period,
         period : "",
@@ -50,12 +51,10 @@ function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, Repor
 
     ReportPrograms.get(function(data){
         $scope.programs = data.programs;
-        $scope.programs.push({'name':'Select a Program'});
     });
 
     RequisitionGroups.get(function(data){
         $scope.requisitionGroups = data.requisitionGroupList;
-        $scope.requisitionGroups.push({'name':'All Reporting Groups','id':'All'});
     });
 
     ReportFacilityTypes.get(function(data) {
@@ -68,25 +67,17 @@ function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, Repor
 
     ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
-        $scope.schedules.push({'name':'Select a Schedule', 'id':'All'});
     });
 
     Products.get(function(data){
-        $scope.products = data.productList;/*
-        $scope.products.push({'name': 'All Products','id':'All'});*/
+        $scope.products = data.productList;
     });
 
     $scope.ChangeSchedule = function(){
         ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
             $scope.periods = data.periods;
-            $scope.periods.push({'name': 'Select Period', 'id':'All'});
         });
     }
-
-    GeographicZones.get(function(data) {
-        $scope.zones = data.zones;
-        $scope.zones.push({'name': '- All Zones -', 'id' : 'All'});
-    });
 
     $scope.$watch('facilityType', function(selection){
         if(selection == "All"){
@@ -101,13 +92,10 @@ function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, Repor
         }else{
             $scope.filterObject.facilityTypeId =  0;
         }
-
-        if($scope.filterObject.facilityTypeId !== -1 && $scope.filterObject.facilityTypeId !== 0){
-
-            $scope.ChangeFacility();
-        }
+          $scope.ChangeFacility();
 
         $scope.filterGrid();
+        resetFormValues();
 
     });
 
@@ -210,9 +198,14 @@ function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, Repor
 
     $scope.exportReport   = function (type){
         $scope.filterObject.pdformat =1;
+        $scope.formValues = angular.copy($scope.filterObject);
         var params = jQuery.param($scope.filterObject);
         var url = '/reports/download/rnr_feedback/' + type +'?' + params;
         window.open(url);
+        $scope.$apply(function(){
+            $scope.filterObject = angular.copy($scope.formValues);
+            $scope.facilityType = $scope.filterObject.facilityType;
+        });
 
     }
 
@@ -301,18 +294,18 @@ function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, Repor
         data: 'myData',
         columnDefs:
             [
-                { field: 'productCode', displayName: 'Product Code', width: "*", resizable: false},
-                { field: 'product', displayName: 'Product', width: "**", resizable: false},
-                { field: 'unit', displayName: 'Unit', width: "*" },
-                { field: 'beginningBalance', displayName: 'Beginning Balance', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'totalQuantityReceived', displayName: 'Tot. Quantity Received', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'totalQuantityDispensed', displayName: 'Tot. Quantity Dispensed', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'adjustments', displayName: 'Adjustments', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'physicalCount', displayName: 'Physical Count', width : "*",cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'adjustedAMC', displayName: 'Adjusted AMC', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'newEOP', displayName: 'New EOP', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'orderQuantity', displayName: 'Order Quantity', width : "*", cellClass : 'pull-right',cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'quantitySupplied', displayName: 'Quantity Supplied', width : "*", cellClass : 'ngCellTextRight', cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'}
+                { field: 'productCode', displayName: 'Product Code', width: "100px", resizable: false},
+                { field: 'product', displayName: 'Product', width: "200px", resizable: false},
+                { field: 'unit', displayName: 'Unit', width: "100px" },
+                { field: 'beginningBalance', displayName: 'Beginning Balance', width : "100px", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'totalQuantityReceived', displayName: 'Tot. Quantity Received', width : "100px", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'totalQuantityDispensed', displayName: 'Tot. Quantity Dispensed', width : "100px", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'adjustments', displayName: 'Adjustments', width : "100px", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'physicalCount', displayName: 'Physical Count', width : "100px",cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'adjustedAMC', displayName: 'Adjusted AMC', width : "100px", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'newEOP', displayName: 'New EOP', width : "100px", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'orderQuantity', displayName: 'Order Quantity', width : "100px", cellClass : 'pull-right',cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'quantitySupplied', displayName: 'Quantity Supplied', width : "100px", cellClass : 'ngCellTextRight', cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'}
 
             ],
         enablePaging: true,
@@ -329,6 +322,5 @@ function RnRFeedbackController($scope, RnRFeedbackReport, ReportSchedules, Repor
         plugins: [new ngGridFlexibleHeightPlugin()]
 
     };
-
 
 }
