@@ -252,6 +252,8 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     clearErrorAndSetMessage("msg.user.restore.success");
     $('.form-group').find(':input').removeAttr('disabled');
   };
+
+
 }
 
 UserController.resolve = {
@@ -319,8 +321,6 @@ UserController.resolve = {
 
     return deferred.promise;
   }
-
-
 
 };
 

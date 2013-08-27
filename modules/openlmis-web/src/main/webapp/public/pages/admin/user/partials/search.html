@@ -54,7 +54,6 @@
                   <th>Full Name</th>
                   <th>Email</th>
                   <th>Is Active</th>
-                  <th>Is Email Verified</th>
               </tr>
           </thead>
           <tbody>
@@ -62,8 +61,7 @@
                 <td><a href="" ng-click="editUser(user.id)">{{ user.userName }}</a></td>
                 <td>{{ user.firstName }} {{ user.lastName }}</td>
                 <td>{{ user.email }}</td>
-                <td>{{ user.active }}</td>
-                <td>{{ user.verified }}</td>
+                <td ><span class="icon-{{(user.active)?'check':'question-sign'}}" ></span></td>
             </tr>
           </tbody>
       </table>

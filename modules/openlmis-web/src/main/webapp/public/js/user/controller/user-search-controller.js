@@ -106,4 +106,8 @@ function UserSearchController($scope, $location, Users, navigateBackService, Upd
     });
   });
 
+  $scope.YesNo = function (tf) {
+    return (tf == true)? "Yes" : "No";
+  };
+
 }
