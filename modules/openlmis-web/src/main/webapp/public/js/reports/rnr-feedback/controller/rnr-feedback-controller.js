@@ -256,10 +256,8 @@ function RnRFeedbackController($scope, RnRFeedbackReport, Products ,ReportFacili
         }else{
             $scope.filterObject.facilityTypeId =  0;
         }
-        if($scope.filterObject.facilityTypeId !== -1 && $scope.filterObject.facilityTypeId !== 0){
+          $scope.ChangeFacility();
 
-            $scope.ChangeFacility();
-        }
         $scope.filterGrid();
     });
 
@@ -306,11 +304,11 @@ function RnRFeedbackController($scope, RnRFeedbackReport, Products ,ReportFacili
 
     $scope.$watch('product', function(selection){
         if(selection == "All"){
-            $scope.filterObject.productId =  0;
+            $scope.filterObject.productId =  -1;
         }else if(selection != undefined || selection == ""){
             $scope.filterObject.productId =  selection;
         }else{
-            $scope.filterObject.productId =  -1;
+            $scope.filterObject.productId =  0;
         }
         $scope.filterGrid();
     });
@@ -538,7 +536,7 @@ function RnRFeedbackController($scope, RnRFeedbackReport, Products ,ReportFacili
     $scope.exportReport   = function (type){
         $scope.filterObject.pdformat =1;
         var params = jQuery.param($scope.filterObject);
-        var url = '/reports/download/order_summary/' + type +'?' + params;
+        var url = '/reports/download/rnr_feedback/' + type +'?' + params;
         window.open(url);
 
     }
@@ -628,7 +626,7 @@ function RnRFeedbackController($scope, RnRFeedbackReport, Products ,ReportFacili
     [
         { field: 'productCode', displayName: 'Code', width: "100px;", resizable: false},
         { field: 'product', displayName: 'Product', width: "250px;", resizable: false},
-        { field: 'unit', displayName: 'Unit', width: "100" },
+                { field: 'unit', displayName: 'Unit', width: "100" },
         { field: 'beginningBalance', displayName: 'Beginning Balance', width : "180px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
         { field: 'totalQuantityReceived', displayName: 'Quantity Received', width : "180px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
         { field: 'totalQuantityDispensed', displayName: 'Quantity Dispensed', width : "180px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
