@@ -49,10 +49,14 @@
 
     </li>
 
-    <li ng-show="hasPermission('VIEW_REPORT')">
-      <a href="javascript: void(0)" openlmis-message="link.reports"></a>
+    <li >
+        <a href="javascript: void(0)" openlmis-message="link.reports"></a>
+
       <div class="submenu">
           <ul>
+              <li ng-show="hasPermission('VIEW_REPORT')">
+                  <a id="reports-menu" href="/public/pages/report/index.html" openlmis-message="link.reports"></a>
+              </li>
               <li class="has-children">
                   <a href="javascript: void(0);">Product Reports</a>
 
