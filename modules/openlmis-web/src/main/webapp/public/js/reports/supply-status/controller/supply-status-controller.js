@@ -102,11 +102,8 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         }else{
             $scope.filterObject.facilityTypeId =  0;
         }
-
-        if($scope.filterObject.facilityTypeId !== -1 && $scope.filterObject.facilityTypeId !== 0){
-
             $scope.ChangeFacility();
-        }
+
         $scope.filterGrid();
 
     });
@@ -213,7 +210,6 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         var params = jQuery.param($scope.filterObject);
         var url = '/reports/download/supply_status/' + type +'?' + params;
         window.open(url);
-        $scope.resetFormValues();
 
     }
 
