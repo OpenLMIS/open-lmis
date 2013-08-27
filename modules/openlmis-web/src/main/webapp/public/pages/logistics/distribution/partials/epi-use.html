@@ -11,6 +11,51 @@
 
   <div class="facility-info">
     <div class="refrigerator-container">
+      <h3>
+        <span openlmis-message="header.epi.use"></span>
+      </h3>
+
+      <div class="rnr-table" tab-scroll bottom-offset="180" custom-horizontal-scroll>
+        <table id="epiUseTable" fixed-table-header class="table table-bordered scrollable">
+          <thead>
+          <tr>
+            <th ng-repeat="headerColumn in headerColumns">
+              <span ng-bind="headerColumn"></span>
+            </th>
+          </tr>
+          </thead>
+
+          <tbody ng-repeat="epiLineItem in epiLineItems">
+          <tr>
+            <td>
+              <span ng-bind="epiLineItem.productGroup.name"></span>
+            </td>
+            <td>
+              <input type="text" ng-model="epiLineItem.productGroup.stockAtFirst"></span>
+            </td>
+            <td>
+              <input type="text" ng-model="epiLineItem.productGroup.received"></span>
+            </td>
+            <td>
+              <input type="text" ng-model="epiLineItem.productGroup.total"></span>
+            </td>
+            <td>
+              <input type="text" ng-model="epiLineItem.productGroup.distributed"></span>
+            </td>
+            <td>
+              <input type="text" ng-model="epiLineItem.productGroup.loss"></span>
+            </td>
+            <td>
+              <input type="text" ng-model="epiLineItem.productGroup.stockAtEnd"></span>
+            </td>
+            <td>
+              <input type="text" ng-model="epiLineItem.productGroup.expirationDate"></span>
+            </td>
+          </tr>
+          </tbody>
+
+        </table>
+      </div>
     </div>
   </div>
 

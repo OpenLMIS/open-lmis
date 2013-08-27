@@ -137,7 +137,7 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = XPATH, using = "//form/div/div[1]/div[1]/span[@class='status-icon']")
   public static WebElement individualRefrigeratorIcon;
 
-  @FindBy(how = XPATH, using = "//div[@class='clearfix facility-container ng-scope']/div[1]/ul/li[2]/a/span[1]")
+  @FindBy(how = XPATH, using = "//div[@class='left-navigation ng-scope']/ul/li[2]/a/span[1][@class='status-icon']")
   public static WebElement overallRefrigeratorIcon;
 
   @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[2]/div[3]/div/div")

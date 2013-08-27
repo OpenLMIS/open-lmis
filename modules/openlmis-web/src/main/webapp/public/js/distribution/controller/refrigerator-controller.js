@@ -31,7 +31,7 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
   };
 
   $scope.addRefrigeratorToStore = function () {
-    var exists = _.find($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings,
+    var exists = _.find($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigerators.refrigeratorReadings,
       function (reading) {
         return reading.refrigerator.serialNumber.toLowerCase() === $scope.newRefrigerator.serialNumber.toLowerCase();
       });
@@ -39,7 +39,7 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
       $scope.isDuplicateSerialNumber = true;
       return;
     }
-    $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings.push(
+    $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigerators.refrigeratorReadings.push(
       {'refrigerator': angular.copy($scope.newRefrigerator)});
     IndexedDB.put('distributions', $scope.distribution);
     $scope.addRefrigeratorModal = $scope.isDuplicateSerialNumber = undefined;
@@ -55,8 +55,8 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
     var callback = function (serialNumberToDelete) {
       return function (result) {
         if (!result) return;
-        $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings =
-          _.reject($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigeratorReadings,
+        $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigerators.refrigeratorReadings =
+          _.reject($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigerators.refrigeratorReadings,
             function (refrigeratorReading) {
               return serialNumberToDelete == refrigeratorReading.refrigerator.serialNumber;
             });

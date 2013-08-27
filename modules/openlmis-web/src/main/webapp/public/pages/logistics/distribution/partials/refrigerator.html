@@ -16,11 +16,12 @@
       </h3>
 
       <div class="alert alert-info" id="noRefrigerators"
-           ng-hide="distribution.facilityDistributionData[selectedFacilityId].refrigeratorReadings.length">
+           ng-hide="distribution.facilityDistributionData[selectedFacilityId].refrigerators.refrigeratorReadings.length">
         <span openlmis-message="message.no.refrigerators.added"></span>
       </div>
 
-      <div ng-show="distribution.facilityDistributionData[selectedFacilityId].refrigeratorReadings.length">
+      <div
+        ng-show="distribution.facilityDistributionData[selectedFacilityId].refrigerators.refrigeratorReadings.length">
         <div class="list-header-container">
           <div class="list-header row-fluid">
             <div class="span1"></div>
@@ -32,7 +33,7 @@
         </div>
         <div class="list-container">
           <div class="list-row" ng-class="{isEditable: edit[refrigeratorReading.refrigerator.serialNumber]}"
-               ng-repeat="refrigeratorReading in distribution.facilityDistributionData[selectedFacilityId].refrigeratorReadings">
+               ng-repeat="refrigeratorReading in distribution.facilityDistributionData[selectedFacilityId].refrigerators.refrigeratorReadings">
             <ng-include src="'/public/pages/logistics/distribution/partials/refrigerator-reading.html'"></ng-include>
           </div>
         </div>

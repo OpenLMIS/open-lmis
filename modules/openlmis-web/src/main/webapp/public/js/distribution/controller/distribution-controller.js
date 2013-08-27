@@ -121,11 +121,17 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
     function prepareDistribution(distribution, referenceData) {
       distribution.facilityDistributionData = {};
       $(referenceData.facilities).each(function (index, facility) {
-        var refrigeratorReadings = [];
+        var refrigeratorReadings = []
+        var productGroups = _.compact(_.uniq(_.pluck(_.pluck(facility.supportedPrograms[0].programProducts, 'product'), 'productGroup'), false, function (group) {
+          if (group == undefined) return;
+          return group.id;
+        }));
         $(_.where(referenceData.refrigerators, {facilityId: facility.id})).each(function (i, refrigerator) {
           refrigeratorReadings.push({'refrigerator': refrigerator});
         });
-        distribution.facilityDistributionData[facility.id] = {refrigeratorReadings: refrigeratorReadings};
+        distribution.facilityDistributionData[facility.id] = {};
+        distribution.facilityDistributionData[facility.id].refrigerators = {refrigeratorReadings: refrigeratorReadings};
+        distribution.facilityDistributionData[facility.id].epiUse = {productGroups: productGroups};
       });
 
       return distribution;
