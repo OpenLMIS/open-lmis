@@ -3,51 +3,10 @@
 ~
 ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -->
-
 <ng-include src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
 
 <div class="clearfix facility-container">
-  <div class="left-navigation">
-    <ul>
-      <li class="is-complete">
-        <a href="">
-          <span class="status-icon"></span>
-          <span openlmis-message="label.visit.information"></span>
-        </a>
-      </li>
-      <li class="selected" ng-class="getStatus()">
-        <a href="">
-          <span class="status-icon"></span>
-          <span openlmis-message="label.refrigerators"></span>
-        </a>
-      </li>
-      <li class="is-empty">
-        <a href="">
-          <span class="status-icon"></span>
-          <span openlmis-message="label.epi.inventory"></span>
-        </a>
-      </li>
-      <li class="is-empty">
-        <a href="">
-          <span class="status-icon"></span>
-          <span openlmis-message="label.epi.use"></span>
-        </a>
-      </li>
-      <li class="is-empty">
-        <a href="">
-          <span class="status-icon"></span>
-          <span openlmis-message="label.coverage"></span>
-        </a>
-      </li>
-      <li class="is-empty">
-        <a href="">
-          <span class="status-icon"></span>
-          <span openlmis-message="label.observations"></span>
-        </a>
-      </li>
-    </ul>
-  </div>
-
+  <ng-include src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
   <div class="facility-info">
     <div class="refrigerator-container">
       <h3>
