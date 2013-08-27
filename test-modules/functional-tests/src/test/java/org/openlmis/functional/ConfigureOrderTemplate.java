@@ -11,6 +11,7 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import cucumber.api.java.After;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ConfigureOrderPage;
@@ -214,7 +215,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
 
 
 
-
+  @After
   @AfterMethod(groups = "functional2")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);

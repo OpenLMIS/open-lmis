@@ -334,7 +334,6 @@ Feature: Smoke Tests
 
   @smoke
   @ie2
-
   Scenario: User should be able to configure order file format
     Given I am logged in as Admin
     And I access configure order screen
@@ -347,7 +346,6 @@ Feature: Smoke Tests
 
   @smoke
   @ie2
-
   Scenario: User should download order file and verify
     Given I configure order file:
       |File Prefix  |Header In File|
