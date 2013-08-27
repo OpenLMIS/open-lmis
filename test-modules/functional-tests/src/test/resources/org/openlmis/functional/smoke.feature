@@ -334,6 +334,7 @@ Feature: Smoke Tests
 
   @smoke
   @ie2
+
   Scenario: User should be able to configure order file format
     Given I am logged in as Admin
     And I access configure order screen
@@ -349,24 +350,29 @@ Feature: Smoke Tests
   Scenario: User should download order file and verify
     Given I have the following data for regimen:
       | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
-
     And I configure order file:
-      |File Prefix  |Header In File|
-      |O            |TRUE          |
+      | File Prefix | Header In File |
+      | O           | TRUE           |
 
     And I configure openlmis order file columns:
-      |Data Field Label    |Include In Order File|Column Label|Position       | Format |
-      |header.order.number |TRUE                 |Order Number|1              |        |
+      | Data Field Label         | Include In Order File | Column Label | Position | Format     |
+      | header.order.number      | TRUE                  | ONUm         | 6        |            |
+      | header.order.date        | TRUE                  | Order Date   | 5        | yyyy/MM/dd |
+      | label.period             | TRUE                  | Period       | 4        | dd/MM/yyyy |
+      | header.quantity.approved | TRUE                  | AQTY         | 3        |            |
+      | header.product.code      | TRUE                  |              | 2        |            |
+      | create.facility.code     | TRUE                  | FCCode       | 1        |            |
 
     And I configure non openlmis order file columns:
-      |Data Field Label    |Include In Order File|Column Label|Position       |
-      |Not Applicable      |TRUE                 |Testing     |7              |
+      | Data Field Label | Include In Order File | Column Label | Position |
+      |                  | TRUE                  |              | 7        |
+      |                  | TRUE                  | Dummy        | 8        |
 
     And I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION,APPROVE_REQUISITION" rights and data to initiate requisition
     And I have "lmu" role having "ADMIN" based "CONVERT_TO_ORDER,VIEW_ORDER" rights
     And I have users:
-      |UserId |Email                  |Firstname|Lastname|UserName       |Role           |FacilityCode|
-      |111    |Jake_Doe@openlmis.com  |Jake     |Doe     |lmu            |lmu            |F10         |
+      | UserId | Email                 | Firstname | Lastname | UserName | Role | FacilityCode |
+      | 111    | Jake_Doe@openlmis.com | Jake      | Doe      | lmu      | lmu  | F10          |
     And I have regimen template configured
     And I am logged in as "storeincharge"
     And I access initiate requisition page
@@ -383,3 +389,4 @@ Feature: Smoke Tests
     And I convert to order
     And I access view orders page
     And I download order file
+    And I get order data in file prefix "O" and created date format "yyyy/mm/dd"
