@@ -61,7 +61,7 @@ public class DBWrapper {
 
     update("INSERT INTO users\n" +
       "  (id, userName, password,vendorId, facilityId, firstName, lastName, email, active, verified) VALUES\n" +
-      "  ('" + userId + "', '" + userName + "', '" + password + "',(SELECT id FROM vendors WHERE name = '" + vendorName + "'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 'Fatima', 'Doe', '" + email + "','true','true');\n");
+      "  ('" + userId + "', '" + userName + "', '" + password + "',(SELECT id FROM vendors WHERE name = '" + vendorName + "'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 'Fatima', 'Doe', '" + email + "','true','true');");
 
 
   }
@@ -389,6 +389,14 @@ public class DBWrapper {
       "    ('" + userID + "', (SELECT id FROM roles WHERE name = '" + roleName + "'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));");
   }
 
+    public void insertRoleAssignmentForAdminTypeUser(String userID, String roleName) throws SQLException, IOException {
+        update("delete from role_assignments where userId='" + userID + "';");
+
+        update(" INSERT INTO role_assignments\n" +
+                "            (userId, roleId, programId, supervisoryNodeId) VALUES \n" +
+                "    ('" + userID + "', (SELECT id FROM roles WHERE name = '" + roleName + "'), 1, null);");
+               }
+
   public void insertRoleAssignmentforSupervisoryNode(String userID, String roleName, String supervisoryNode) throws SQLException, IOException {
     update("delete from role_assignments where userId='" + userID + "';");
 
@@ -689,7 +697,8 @@ public class DBWrapper {
   }
 
   public void insertValuesInRequisition() throws IOException, SQLException {
-    update("update requisition_line_items set beginningbalance=1,  quantityreceived=1, quantitydispensed=1, newpatientcount=1, stockoutdays=1, quantityrequested=10, reasonforrequestedquantity='bad climate';");
+    update("update requisition_line_items set beginningbalance=1,  quantityreceived=1, quantitydispensed=1, newpatientcount=1, stockoutdays=1, quantityrequested=10, reasonforrequestedquantity='bad climate', normalizedconsumption=10, packstoship=1;");
+      update("update requisitions set fullsupplyitemssubmittedcost=12.5000, nonfullsupplyitemssubmittedcost=0.0000;");
 
   }
 
@@ -1049,4 +1058,34 @@ public class DBWrapper {
   public void updateProgramRegimenColumns(String programName, String regimenColumnName, boolean visible) throws SQLException {
     update("update program_regimen_columns set visible=" + visible + " where name ='" + regimenColumnName + "'and programid=(SELECT id FROM programs WHERE name='" + programName + "');");
   }
+
+    public void setupOrderFileConfiguration(String fileprefix, String headerinfile, String datepattern, String perioddatepattern) throws IOException, SQLException {
+        update("DELETE FROM order_configurations;");
+        update("INSERT INTO order_configurations \n" +
+                "  (fileprefix, headerinfile, datepattern, perioddatepattern) VALUES\n" +
+                "  ('" + fileprefix + "', '" + headerinfile + "', '" + datepattern + "', '" + perioddatepattern +"');");
+    }
+
+    public void defaultSetupOrderFileOpenLMISColumns() throws IOException, SQLException {
+        update("DELETE FROM order_file_columns where openlmisfield=TRUE;");
+
+        update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField) VALUES ('header.order.number', 'order', 'id', 'Order number', 1, TRUE);");
+        update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField) VALUES ('create.facility.code', 'order', 'rnr/facility/code', 'Facility code', 2, TRUE);");
+        update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField) VALUES ('header.product.code', 'lineItem', 'productCode', 'Product code', 3, TRUE);");
+        update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField) VALUES ('header.quantity.approved', 'lineItem', 'quantityApproved', 'Approved quantity', 4, TRUE);");
+        update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField) VALUES ('label.period', 'order', 'rnr/period/startDate', 'Period', 5, TRUE);");
+        update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField) VALUES ('header.order.date', 'order', 'createdDate', 'Order date', 6, TRUE);");
+
+       }
+
+    public void setupOrderFileOpenLMISColumns(String datafieldlabel, String includeinorderfile, String columnlabel, int position) throws IOException, SQLException {
+        update("UPDATE order_file_columns SET \n" +
+                "includeinorderfile='" + includeinorderfile + "', columnlabel='" + columnlabel + "', position=" + position + " where datafieldlabel='" + datafieldlabel +"';");
+    }
+
+    public void setupOrderFileNonOpenLMISColumns(String datafieldlabel, String includeinorderfile, String columnlabel, int position) throws IOException, SQLException {
+        update("DELETE FROM order_file_columns where openlmisfield=FALSE;");
+
+        update("INSERT INTO order_file_columns (dataFieldLabel, includeinorderfile, columnLabel, position, openLmisField) VALUES ('" + datafieldlabel + "','" +  includeinorderfile + "','" + columnlabel + "'," + position + ", FALSE);");
+        }
 }

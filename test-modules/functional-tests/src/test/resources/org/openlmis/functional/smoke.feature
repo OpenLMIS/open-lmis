@@ -345,3 +345,42 @@ Feature: Smoke Tests
     When I save order file format
     Then I should see "Order file configuration saved successfully!"
 
+  @smoke
+  @ie2
+
+  Scenario: User should download order file and verify
+    Given I have the following data for regimen:
+      | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
+    And I configure order file:
+      |File Prefix  |Header In File|Date Pattern|Period Date Pattern  |
+      |O            |TRUE          |MM/dd/yyyy     |dd-mm-yyyy        |
+
+    And I configure openlmis order file columns:
+      |Data Field Label    |Include In Order File|Column Label|Position       |
+      |header.order.number |TRUE                 |Order Number|1              |
+
+    And I configure non openlmis order file columns:
+      |Data Field Label    |Include In Order File|Column Label|Position       |
+      |Not Applicable      |TRUE                 |Testing     |7              |
+
+    And I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION,APPROVE_REQUISITION" rights and data to initiate requisition
+    And I have "lmu" role having "ADMIN" based "CONVERT_TO_ORDER,VIEW_ORDER" rights
+    And I have users:
+      |UserId |Email                  |Firstname|Lastname|UserName       |Role           |FacilityCode|
+      |111    |Jake_Doe@openlmis.com  |Jake     |Doe     |lmu            |lmu            |F10         |
+    And I have regimen template configured
+    And I am logged in as "storeincharge"
+    And I access initiate requisition page
+    When I click proceed
+    And I populate RnR data
+    And I populate Regimen data as patientsOnTreatment "100" patientsToInitiateTreatment "200" patientsStoppedTreatment "300" remarks "Regimens data filled"
+    And I update requisition status to "SUBMITTED"
+    And I update requisition status to "AUTHORIZED"
+    And I have approved quantity "10"
+    And I update requisition status to "APPROVED"
+    And I logout
+    And I am logged in as "lmu"
+    And I access convert to order page
+    And I convert to order
+    And I access view orders page
+    And I download order file

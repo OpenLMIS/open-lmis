@@ -168,7 +168,9 @@ public class TestCaseHelper {
 
   public void setupTestRoleRightsData(String roleName, String roleType, String roleRight) throws IOException, SQLException {
     dbWrapper.insertRole(roleName, roleType, "");
-    dbWrapper.assignRight(roleName, roleRight);
+      String right[] = roleRight.split(",");
+      for(int i=0;i<right.length;i++)
+            dbWrapper.assignRight(roleName, right[i]);
   }
 
   public void setupDataExternalVendor(boolean isPreviousPeriodRnRRequired) throws IOException, SQLException {
