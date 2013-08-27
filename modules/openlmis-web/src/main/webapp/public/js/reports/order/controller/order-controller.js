@@ -7,7 +7,7 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
         };
 
     $scope.showMessage = true;
-    $scope.message = "* Indicates a required field."
+    $scope.message = "Indicates a required field."
 
     $scope.show = function (id) {
             return section == id;
