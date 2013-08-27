@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.OrderConfiguration;
-import org.openlmis.core.repository.mapper.ConfigurationMapper;
+import org.openlmis.core.repository.mapper.OrderConfigurationMapper;
 import org.openlmis.db.categories.UnitTests;
 
 import static org.hamcrest.core.Is.is;
@@ -17,26 +17,26 @@ import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class ConfigurationRepositoryTest {
+public class OrderConfigurationRepositoryTest {
   @InjectMocks
-  private ConfigurationRepository configurationRepository;
+  private OrderConfigurationRepository orderConfigurationRepository;
 
   @Mock
-  private ConfigurationMapper configurationMapper;
+  private OrderConfigurationMapper orderConfigurationMapper;
 
   @Test
   public void shouldGetConfiguration() {
     OrderConfiguration orderConfiguration = new OrderConfiguration();
     orderConfiguration.setHeaderInFile(true);
-    when(configurationMapper.getConfiguration()).thenReturn(orderConfiguration);
-    assertThat(configurationRepository.getConfiguration(), is(orderConfiguration));
-    verify(configurationMapper).getConfiguration();
+    when(orderConfigurationMapper.get()).thenReturn(orderConfiguration);
+    assertThat(orderConfigurationRepository.getConfiguration(), is(orderConfiguration));
+    verify(orderConfigurationMapper).get();
   }
 
   @Test
   public void shouldUpdateConfigurations() throws Exception {
     OrderConfiguration orderConfiguration = new OrderConfiguration();
-    configurationRepository.update(orderConfiguration);
-    verify(configurationMapper).update(orderConfiguration);
+    orderConfigurationRepository.update(orderConfiguration);
+    verify(orderConfigurationMapper).update(orderConfiguration);
   }
 }

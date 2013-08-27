@@ -13,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.OrderConfiguration;
-import org.openlmis.core.repository.ConfigurationRepository;
+import org.openlmis.core.repository.OrderConfigurationRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
@@ -41,7 +41,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class OrderServiceTest {
 
   @Mock
-  private ConfigurationRepository configurationRepository;
+  private OrderConfigurationRepository orderConfigurationRepository;
 
   @Mock
   private OrderRepository orderRepository;
@@ -142,10 +142,10 @@ public class OrderServiceTest {
     OrderConfiguration orderConfiguration = new OrderConfiguration();
     List<OrderFileColumn> orderFileColumns = new ArrayList<>();
     OrderFileTemplateDTO expectedOrderFileTemplateDTO = new OrderFileTemplateDTO(orderConfiguration, orderFileColumns);
-    when(configurationRepository.getConfiguration()).thenReturn(orderConfiguration);
+    when(orderConfigurationRepository.getConfiguration()).thenReturn(orderConfiguration);
     when(orderRepository.getOrderFileTemplate()).thenReturn(orderFileColumns);
     OrderFileTemplateDTO actualOrderFileTemplateDTO = orderService.getOrderFileTemplateDTO();
-    verify(configurationRepository).getConfiguration();
+    verify(orderConfigurationRepository).getConfiguration();
     verify(orderRepository).getOrderFileTemplate();
     assertThat(actualOrderFileTemplateDTO, is(expectedOrderFileTemplateDTO));
   }
@@ -157,7 +157,7 @@ public class OrderServiceTest {
     OrderFileTemplateDTO orderFileTemplateDTO = new OrderFileTemplateDTO(orderConfiguration, orderFileColumns);
     Long userId = 1L;
     orderService.saveOrderFileTemplate(orderFileTemplateDTO, userId);
-    verify(configurationRepository).update(orderConfiguration);
+    verify(orderConfigurationRepository).update(orderConfiguration);
     verify(orderRepository).saveOrderFileColumns(orderFileColumns, userId);
   }
 

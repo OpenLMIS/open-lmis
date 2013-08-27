@@ -20,13 +20,13 @@ import static org.junit.Assert.assertThat;
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 @Transactional
-public class ConfigurationMapperIT {
+public class OrderConfigurationMapperIT {
   @Autowired
-  private ConfigurationMapper mapper;
+  private OrderConfigurationMapper mapper;
 
   @Test
   public void shouldGetConfiguration() throws Exception {
-    OrderConfiguration orderConfiguration = mapper.getConfiguration();
+    OrderConfiguration orderConfiguration = mapper.get();
     assertThat(orderConfiguration.getFilePrefix(), is("O"));
     assertThat(orderConfiguration.getHeaderInFile(), is(false));
   }
@@ -37,7 +37,7 @@ public class ConfigurationMapperIT {
     orderConfiguration.setHeaderInFile(true);
     orderConfiguration.setFilePrefix("ORD");
     mapper.update(orderConfiguration);
-    OrderConfiguration returnedOrderConfiguration = mapper.getConfiguration();
+    OrderConfiguration returnedOrderConfiguration = mapper.get();
     assertThat(returnedOrderConfiguration.getHeaderInFile(), is(true));
     assertThat(returnedOrderConfiguration.getFilePrefix(), is("ORD"));
   }

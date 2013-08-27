@@ -27,4 +27,13 @@ public class ShippedLineItem extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, type = "intFromDouble", name = "Quantity Shipped")
   private Integer quantityShipped;
+
+/*  @ImportField(name = "Cost")
+  private BigDecimal cost;
+
+  @ImportField(type = "date", name = "Packed Date")
+  private Date packedDate;
+
+  @ImportField(type = "date", name = "Shipped Date")
+  private Date shippedDate;*/
 }

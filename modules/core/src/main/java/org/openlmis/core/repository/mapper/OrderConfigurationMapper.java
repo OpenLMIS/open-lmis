@@ -7,12 +7,12 @@ import org.openlmis.core.domain.OrderConfiguration;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ConfigurationMapper {
+public interface OrderConfigurationMapper {
 
-  @Select("SELECT * FROM order_configurations")
-  public OrderConfiguration getConfiguration();
+  @Select("SELECT * FROM order_configuration")
+  public OrderConfiguration get();
 
-  @Update({"UPDATE order_configurations SET filePrefix = #{filePrefix}, headerInFile = #{headerInFile}, ",
+  @Update({"UPDATE order_configuration SET filePrefix = #{filePrefix}, headerInFile = #{headerInFile}, ",
     "modifiedBy = #{modifiedBy}, modifiedDate = COALESCE(#{modifiedDate}, NOW())"})
   void update(OrderConfiguration orderConfiguration);
 

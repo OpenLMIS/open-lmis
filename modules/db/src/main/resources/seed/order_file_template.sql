@@ -1,4 +1,4 @@
-INSERT INTO order_configurations VALUES ('O', FALSE);
+INSERT INTO order_configuration VALUES ('O', FALSE);
 
 INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, format, position, openLmisField) VALUES ('header.order.number', 'order', 'id', 'Order number', '', 1, TRUE);
 INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, format, position, openLmisField) VALUES ('create.facility.code', 'order', 'rnr/facility/code', 'Facility code', '', 2, TRUE);

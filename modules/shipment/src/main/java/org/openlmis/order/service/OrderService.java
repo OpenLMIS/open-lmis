@@ -8,7 +8,7 @@ package org.openlmis.order.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.OrderConfiguration;
-import org.openlmis.core.repository.ConfigurationRepository;
+import org.openlmis.core.repository.OrderConfigurationRepository;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
@@ -32,7 +32,7 @@ import static java.util.Arrays.asList;
 public class OrderService {
 
   @Autowired
-  private ConfigurationRepository configurationRepository;
+  private OrderConfigurationRepository orderConfigurationRepository;
   @Autowired
   private OrderRepository orderRepository;
   @Autowired
@@ -94,14 +94,14 @@ public class OrderService {
   }
 
   public OrderFileTemplateDTO getOrderFileTemplateDTO() {
-    return new OrderFileTemplateDTO(configurationRepository.getConfiguration(), orderRepository.getOrderFileTemplate());
+    return new OrderFileTemplateDTO(orderConfigurationRepository.getConfiguration(), orderRepository.getOrderFileTemplate());
   }
 
   @Transactional
   public void saveOrderFileTemplate(OrderFileTemplateDTO orderFileTemplateDTO, Long userId) {
     OrderConfiguration orderConfiguration = orderFileTemplateDTO.getOrderConfiguration();
     orderConfiguration.setModifiedBy(userId);
-    configurationRepository.update(orderConfiguration);
+    orderConfigurationRepository.update(orderConfiguration);
     orderRepository.saveOrderFileColumns(orderFileTemplateDTO.getOrderFileColumns(), userId);
   }
 
