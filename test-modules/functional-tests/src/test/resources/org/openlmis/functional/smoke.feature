@@ -336,7 +336,10 @@ Feature: Smoke Tests
   @ie2
 
   Scenario: User should be able to configure order file format
-    Given I am logged in as Admin
+    Given I configure order file:
+      | File Prefix | Header In File |
+      | O           | FALSE          |
+    And I am logged in as Admin
     And I access configure order screen
     Then I should see order file prefix "O"
     And I should see include column header as "false"
@@ -365,8 +368,8 @@ Feature: Smoke Tests
 
     And I configure non openlmis order file columns:
       | Data Field Label | Include In Order File | Column Label | Position |
-      |                  | TRUE                  |              | 7        |
-      |                  | TRUE                  | Dummy        | 8        |
+      | NOT APPLICABLE   | TRUE                  |              | 7        |
+      | NOT APPLICABLE   | TRUE                  | Dummy        | 8        |
 
     And I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION,APPROVE_REQUISITION" rights and data to initiate requisition
     And I have "lmu" role having "ADMIN" based "CONVERT_TO_ORDER,VIEW_ORDER" rights
@@ -389,4 +392,8 @@ Feature: Smoke Tests
     And I convert to order
     And I access view orders page
     And I download order file
-    And I get order data in file prefix "O" and created date format "yyyy/mm/dd"
+    And I get order data in file prefix "O"
+    Then I verify order file line "1" having "FCCode,,AQTY,Period,Order Date,ONUm,,Dummy"
+    And I verify order file line "2" having "F10,P10,10,16/01/2012,"
+    And I verify order date format "yyyy/mm/dd" in line "2"
+    And I verify order id in line "2"

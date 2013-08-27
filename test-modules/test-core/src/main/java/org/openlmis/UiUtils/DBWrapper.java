@@ -1082,15 +1082,17 @@ public class DBWrapper {
       "includeinorderfile='" + includeinorderfile + "', columnlabel='" + columnlabel + "', position=" + position + ", format='" + Format + "' where datafieldlabel='" + datafieldlabel + "';");
   }
 
-  public void setupOrderFileNonOpenLMISColumns(String datafieldlabel, String includeinorderfile, String columnlabel, int position) throws IOException, SQLException {
-    update("DELETE FROM order_file_columns where openlmisfield=FALSE;");
+  public void deleteOrderFileNonOpenLMISColumns()throws SQLException {
+      update("DELETE FROM order_file_columns where openlmisfield=FALSE;");
+  }
 
+  public void setupOrderFileNonOpenLMISColumns(String datafieldlabel, String includeinorderfile, String columnlabel, int position) throws IOException, SQLException {
     update("INSERT INTO order_file_columns (dataFieldLabel, includeinorderfile, columnLabel, position, openLmisField) VALUES ('" + datafieldlabel + "','" + includeinorderfile + "','" + columnlabel + "'," + position + ", FALSE);");
   }
 
   public String getCreatedDate(String tableName, String dateFormat) throws SQLException {
     String createdDate = null;
-    ResultSet rs = query("SELECT to_date(createdDate::text, '" + dateFormat + "' ) from " + tableName);
+    ResultSet rs = query("SELECT to_char(createdDate, '" + dateFormat + "' ) from " + tableName);
 
     if (rs.next()) {
       createdDate = rs.getString(1);

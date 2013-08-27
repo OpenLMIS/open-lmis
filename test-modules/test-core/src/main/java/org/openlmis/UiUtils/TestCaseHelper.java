@@ -7,9 +7,11 @@
 package org.openlmis.UiUtils;
 
 
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
 import java.io.*;
@@ -24,13 +26,14 @@ public class TestCaseHelper {
 
   protected DBWrapper dbWrapper;
   protected String baseUrlGlobal, dburlGlobal;
-
+  protected String DOWNLOAD_FILE_PATH;
   protected static TestWebDriver testWebDriver;
   protected static boolean isSeleniumStarted = false;
   protected static DriverFactory driverFactory = new DriverFactory();
   public static final String DEFAULT_BROWSER = "firefox";
   public static final String DEFAULT_BASE_URL = "http://localhost:9091/";
   public static final String DEFAULT_DB_URL = "jdbc:postgresql://localhost:5432/open_lmis";
+
 
 
   public void setup() throws Exception {
@@ -46,6 +49,10 @@ public class TestCaseHelper {
       addTearDownShutDownHook();
       isSeleniumStarted = true;
     }
+      if(getProperty("os.name").startsWith("Windows"))
+          DOWNLOAD_FILE_PATH="C:\\Users\\openlmis\\Downloads";
+      else
+          DOWNLOAD_FILE_PATH=new File(System.getProperty("user.dir")).getParent();
   }
 
   public void tearDownSuite() {
@@ -300,10 +307,11 @@ public class TestCaseHelper {
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
   }
 
-  public String[] readCSVFile(String filePath) throws IOException, SQLException {
+  public String[] readCSVFile(String file) throws IOException, SQLException {
         BufferedReader br = null;
         String line = "";
         String[] array = new String[50];
+        String filePath=DOWNLOAD_FILE_PATH + getProperty("file.separator") + file;
         try {
             int i=0;
             br = new BufferedReader(new FileReader(filePath));
@@ -325,7 +333,8 @@ public class TestCaseHelper {
         return array;
   }
 
-    public void deleteFile(String filePath) {
+    public void deleteFile(String file) {
+        String filePath=DOWNLOAD_FILE_PATH + getProperty("file.separator") + file;
         File f = new File(filePath);
 
         if (!f.exists())

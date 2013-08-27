@@ -11,6 +11,7 @@ import cucumber.api.DataTable;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
+import lombok.installer.IdeFinder;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ConvertOrderPage;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.lang.System.getProperty;
 
@@ -41,9 +43,9 @@ public class DownloadOrderFile extends TestCaseHelper {
   public String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
   public String userSICUserName = "storeincharge";
   private final String separator = getProperty("file.separator");
+  public  String[] csvRows;
 
-
-  @Before
+    @Before
   @BeforeMethod(groups = "functional")
   public void setUp() throws Exception {
     super.setup();
@@ -64,6 +66,7 @@ public class DownloadOrderFile extends TestCaseHelper {
 
   @And("^I configure non openlmis order file columns:$")
   public void setupOrderFileNonOpenLMISColumns(DataTable userTable) throws Exception {
+    dbWrapper.deleteOrderFileNonOpenLMISColumns();
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
       dbWrapper.setupOrderFileNonOpenLMISColumns(map.get("Data Field Label").toString(), map.get("Include In Order File").toString(), map.get("Column Label").toString(), Integer.parseInt(map.get("Position").toString()));
@@ -83,40 +86,59 @@ public class DownloadOrderFile extends TestCaseHelper {
     viewOrderPage.downloadCSV();
   }
 
-  @And("^I get order data in file prefix \"([^\"]*)\" and created date format \"([^\"]*)\"$")
-  public void checkFileHeaders(String filePrefix, String dateFormat) throws Exception {
-    testWebDriver.sleep(100);
-    String orderId = dbWrapper.getOrderId();
-    String createdDate = dbWrapper.getCreatedDate("orders", dateFormat).replace("-", "/");
+    @And("^I get order data in file prefix \"([^\"]*)\"$")
+    public String[] getOrderDataFromDownloadedFile(String filePrefix) throws Exception {
+        csvRows = null;
+        testWebDriver.sleep(100);
+        String orderId = dbWrapper.getOrderId();
 
-    String downloadedFilePath = new File(getProperty("user.dir")).getParent() + separator;
 
-    String[] csvRows = readCSVFile(downloadedFilePath + filePrefix + orderId + ".csv");
 
-    assertEquals(csvRows[0], "FCCode,,AQTY,Period,Order Date,ONUm,Dummy");
-    assertEquals(csvRows[1], "F10,P10,10,16/01/2012," + createdDate + "," + orderId + ",,");
+        csvRows = readCSVFile(filePrefix + orderId + ".csv");
+        testWebDriver.sleep(1000);
+        deleteFile(filePrefix + orderId + ".csv");
 
-    deleteFile(downloadedFilePath + filePrefix + orderId + ".csv");
+        return csvRows;
+    }
+
+  @And("^I verify order file line \"([^\"]*)\" having \"([^\"]*)\"$")
+  public void checkOrderFileData(int lineNumber,String data) throws Exception {
+   assertTrue("Order data incorrect in line number "+ lineNumber, csvRows[lineNumber-1].contains(data));
   }
 
+  @And("^I verify order date format \"([^\"]*)\" in line \"([^\"]*)\"$")
+    public void checkOrderFileOrderDate(String dateFormat,int lineNumber) throws Exception {
+      String createdDate = dbWrapper.getCreatedDate("orders", dateFormat);
+      assertTrue("Order date incorrect.", csvRows[lineNumber-1].contains(createdDate));
+  }
+    @And("^I verify order id in line \"([^\"]*)\"$")
+    public void checkOrderFileOrderId(int lineNumber) throws Exception {
+        String orderId = dbWrapper.getOrderId();
+        assertTrue("Order date incorrect.", csvRows[lineNumber-1].contains(orderId));
+    }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForSpecificConfiguration(String password) throws Exception {
-    dbWrapper.setupOrderFileConfiguration("Z", "TRUE");
+    dbWrapper.setupOrderFileConfiguration("Zero", "TRUE");
     dbWrapper.defaultSetupOrderFileOpenLMISColumns();
 
     dbWrapper.setupOrderFileOpenLMISColumns("create.facility.code", "TRUE", "Facility code", 5, "");
     dbWrapper.setupOrderFileOpenLMISColumns("header.order.number", "TRUE", "Order number", 7, "");
     dbWrapper.setupOrderFileOpenLMISColumns("header.quantity.approved", "TRUE", "Approved quantity", 2, "");
     dbWrapper.setupOrderFileOpenLMISColumns("header.product.code", "TRUE", "Product code", 3, "");
-    dbWrapper.setupOrderFileOpenLMISColumns("header.order.date", "TRUE", "Order date", 4, "dd/MM/yyyy");
-    dbWrapper.setupOrderFileOpenLMISColumns("label.period", "TRUE", "Period", 6, "MM/yyyy");
-
+    dbWrapper.setupOrderFileOpenLMISColumns("header.order.date", "TRUE", "Order date", 4, "MM-dd-yyyy");
+    dbWrapper.setupOrderFileOpenLMISColumns("label.period", "TRUE", "Period", 6, "yyyy-MM");
+    dbWrapper.deleteOrderFileNonOpenLMISColumns();
     dbWrapper.setupOrderFileNonOpenLMISColumns("Not Applicable", "TRUE", "Extra 1", 1);
     dbWrapper.setupOrderFileNonOpenLMISColumns("Not Applicable", "TRUE", "", 8);
 
     setupDownloadOrderFileSetup(password);
-
+    getOrderDataFromDownloadedFile("Zero");
+    checkOrderFileData(1, "Extra 1,Approved quantity,Product code,Order date,Facility code,Period,Order number,");
+    checkOrderFileData(2, ",10,P10,");
+    checkOrderFileData(2,",F10,2012-01,");
+    checkOrderFileOrderDate("MM-dd-yyyy", 2);
+    checkOrderFileOrderId(2);
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function")
@@ -125,7 +147,11 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.defaultSetupOrderFileOpenLMISColumns();
 
     setupDownloadOrderFileSetup(password);
-
+    getOrderDataFromDownloadedFile("O");
+    checkOrderFileData(1,"Order number,Facility code,Product code,Approved quantity,Period,Order date");
+    checkOrderFileData(2,",F10,P10,10,01/12,");
+    checkOrderFileOrderDate("dd/MM/yy", 2);
+    checkOrderFileOrderId(2);
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function")
@@ -134,7 +160,10 @@ public class DownloadOrderFile extends TestCaseHelper {
     dbWrapper.defaultSetupOrderFileOpenLMISColumns();
 
     setupDownloadOrderFileSetup(password);
-
+    getOrderDataFromDownloadedFile("O");
+    checkOrderFileData(1,",F10,P10,10,01/12,");
+    checkOrderFileOrderDate("dd/MM/yy", 1);
+    checkOrderFileOrderId(1);
   }
 
   public void setupDownloadOrderFileSetup(String password) throws Exception {
