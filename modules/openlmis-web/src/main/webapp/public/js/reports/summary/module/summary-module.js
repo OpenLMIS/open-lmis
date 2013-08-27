@@ -1,4 +1,4 @@
-angular.module('summary', ['openlmis', 'ngGrid','ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('summary', ['openlmis', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
         .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/list', {controller:SummaryReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
