@@ -22,7 +22,7 @@
                             <div class="clearfix ">
 
                                 <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Program</label>
+                                    <label class="labels">Program <span class="label-required">*</span></label>
 
                                     <div class="form-fields">
                                         <select ui-select2 style="width:200px;" class="large-input" name="program" ng-change="ChangeSchedule()" ng-model="program" ng-options="option.id as option.name for option in programs">
@@ -32,7 +32,7 @@
                                 </div>
 
                                 <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Schedule</label>
+                                    <label class="labels">Schedule <span class="label-required">*</span></label>
 
                                     <div class="form-fields">
                                         <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="schedule" ng-options="option.id as option.name for option in schedules">
@@ -42,7 +42,7 @@
                                 </div>
 
                                 <div class="form-cell horizontalFilters">
-                                    <label class="labels">Period</label>
+                                    <label class="labels">Period <span class="label-required">*</span></label>
 
                                     <div class="form-field">
                                         <select ui-select2 style="width:200px;" ng-change="filterGrid()" class="input-large" ng-required="true"  name="period" ng-model="period" ng-options="option.id as option.name for option in periods">
@@ -55,7 +55,7 @@
                                     <label class="labels">Reporting Groups</label>
 
                                     <div class="form-fields">
-                                        <select ui-select2 style="width:300px;" class="extra-large-input" name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
+                                        <select ui-select2 style="width:300px;" class="extra-large-input" ng-change="filterGrid()"  name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
 
                                         </select>
                                     </div>
@@ -65,18 +65,25 @@
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="facilityTypeElement"  ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
+                                        <select ui-select2 style="width:200px;" name="facilityTypeElement" ng-change="filterGrid()"   ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
 
                                         </select>
                                     </div>
                                 </div>
+                                <div class="clearfix"></div>
 
-                                <div class="form-cell horizontalFilters pull-right">
-                                     <span ng-repeat="summary in summaries">
-                                         <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
-                                     </span>
-
+                                <div ng-show="summaries.length > 0">
+                                     <br />
+                                     <div class="clearfix"></div>
+                                        <div class="form-cell">
+                                         <div ng-repeat="summary in summaries">
+                                             <div class="pull-right">
+                                                <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
+                                             </div>
+                                         </div>
+                                        </div>
                                 </div>
+
                             </div>
                          </form>
                 </div>
