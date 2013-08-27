@@ -2,7 +2,7 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
     //to minimize and maximize the filter section
     var section = 1;
     $scope.showMessage = true;
-    $scope.message = "* Indicates a required field."
+    $scope.message = "Indicates a required field."
 
     $scope.section = function (id) {
         section = id;
