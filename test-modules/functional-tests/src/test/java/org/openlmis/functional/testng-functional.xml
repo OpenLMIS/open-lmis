@@ -26,6 +26,8 @@
             </class>
             <class name="org.openlmis.functional.InitiateRnR">
             </class>
+            <class name="org.openlmis.functional.DownloadOrderFile">
+            </class>
         </classes>
     </test>
 </suite>

@@ -349,11 +349,9 @@ Feature: Smoke Tests
   @ie2
 
   Scenario: User should download order file and verify
-    Given I have the following data for regimen:
-      | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
-    And I configure order file:
-      |File Prefix  |Header In File|Date Pattern|Period Date Pattern  |
-      |O            |TRUE          |MM/dd/yyyy     |dd-mm-yyyy        |
+    Given I configure order file:
+      |File Prefix  |Header In File|
+      |O            |TRUE          |
 
     And I configure openlmis order file columns:
       |Data Field Label    |Include In Order File|Column Label|Position       | Format |
