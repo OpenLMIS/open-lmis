@@ -2,7 +2,7 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
     //to minimize and maximize the filter section
     var section = 1;
     $scope.showMessage = true;
-    $scope.message = "* Indicates a required field."
+    $scope.message = "Indicates a required field."
 
     $scope.defaultFlag = true;
     $scope.reporting = "quarterly";
