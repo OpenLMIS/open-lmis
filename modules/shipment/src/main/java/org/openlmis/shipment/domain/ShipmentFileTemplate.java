@@ -9,15 +9,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ShipmentFileColumn {
+public class ShipmentFileTemplate {
 
-  private String dataFieldLabel;
-  private int position;
-  private Boolean includedInShipmentFile;
-  private Boolean mandatory;
-  private String datePattern;
+  private ShipmentConfiguration shipmentConfiguration;
 
+  private List<ShipmentFileColumn> shipmentFileColumns;
 }

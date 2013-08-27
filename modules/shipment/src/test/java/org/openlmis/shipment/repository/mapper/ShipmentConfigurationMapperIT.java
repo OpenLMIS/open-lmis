@@ -29,21 +29,15 @@ public class ShipmentConfigurationMapperIT {
   public void shouldGetShipmentConfiguration() {
     ShipmentConfiguration shipmentConfiguration = mapper.get();
     assertThat(shipmentConfiguration.isHeaderInFile(), is(false));
-    assertThat(shipmentConfiguration.getPackedDatePattern(), is("dd/MM/yy"));
-    assertThat(shipmentConfiguration.getShippedDatePattern(), is("dd/MM/yy"));
   }
 
   @Test
   public void shouldUpdateShipmentConfiguration() {
     ShipmentConfiguration shipmentConfiguration = mapper.get();
     shipmentConfiguration.setHeaderInFile(true);
-    shipmentConfiguration.setPackedDatePattern("dd/MM/yyyy");
-    shipmentConfiguration.setShippedDatePattern("dd/MM/yyyy");
     mapper.update(shipmentConfiguration);
     shipmentConfiguration = mapper.get();
     assertThat(shipmentConfiguration.isHeaderInFile(), is(true));
-    assertThat(shipmentConfiguration.getPackedDatePattern(), is("dd/MM/yyyy"));
-    assertThat(shipmentConfiguration.getShippedDatePattern(), is("dd/MM/yyyy"));
   }
 }
 
