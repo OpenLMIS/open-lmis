@@ -9,7 +9,7 @@
     <li><a href="/" openlmis-message="link.home"></a></li>
 
     <li>
-      <a href="javascript: void(0)" openlmis-message="link.requisitions"></a>
+      <a id="requisitions-menu" href="javascript: void(0)" openlmis-message="link.requisitions"></a>
 
       <div class="submenu">
         <ul>
@@ -36,7 +36,7 @@
     </li>
 
     <li>
-      <a href="javascript: void(0)" openlmis-message="link.orders"></a>
+      <a id="orders-menu" href="javascript: void(0)" openlmis-message="link.orders"></a>
 
       <div class="submenu">
         <ul>
@@ -50,11 +50,11 @@
     </li>
 
     <li ng-show="hasPermission('VIEW_REPORT')">
-      <a href="/public/pages/report/index.html" openlmis-message="link.reports"></a>
+      <a id="reports-menu" href="/public/pages/report/index.html" openlmis-message="link.reports"></a>
     </li>
 
     <li>
-      <a href="javascript: void(0)" openlmis-message="link.distributions"></a>
+      <a id="distributions-menu" href="javascript: void(0)" openlmis-message="link.distributions"></a>
 
       <div class="submenu">
         <ul>
@@ -67,7 +67,7 @@
     </li>
 
     <li>
-      <a href="javascript: void(0)" openlmis-message="link.administration"></a>
+      <a id="administration-menu" href="javascript: void(0)" openlmis-message="link.administration"></a>
 
       <div class="submenu">
         <ul>
