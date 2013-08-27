@@ -347,7 +347,10 @@ Feature: Smoke Tests
   @smoke
   @ie2
   Scenario: User should download order file and verify
-    Given I configure order file:
+    Given I have the following data for regimen:
+      | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
+
+    And I configure order file:
       |File Prefix  |Header In File|
       |O            |TRUE          |
 
