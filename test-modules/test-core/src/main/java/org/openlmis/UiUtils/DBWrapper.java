@@ -1059,8 +1059,8 @@ public class DBWrapper {
   }
 
     public void setupOrderFileConfiguration(String fileprefix, String headerinfile) throws IOException, SQLException {
-        update("DELETE FROM order_configurations;");
-        update("INSERT INTO order_configurations \n" +
+        update("DELETE FROM order_configuration;");
+        update("INSERT INTO order_configuration \n" +
                 "  (fileprefix, headerinfile) VALUES\n" +
                 "  ('" + fileprefix + "', '" + headerinfile  +"');");
     }
