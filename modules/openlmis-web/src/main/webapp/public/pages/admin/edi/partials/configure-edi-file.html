@@ -1,0 +1,36 @@
+<div>
+  <h2 openlmis-message="label.admin.configure.edi.file"></h2>
+
+  <div id="saveSuccessMsgDiv" class="alert alert-success" ng-bind="message" ng-show="message"></div>
+  <div>
+    <table id="configureEditFileTemplate" class="configure-program-table table table-striped table-bordered">
+      <thead>
+      <tr>
+        <th openlmis-message="header.template.type"></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td openlmis-message="label.order.file.format"></td>
+        <td>
+          <a class="btn btn-primary" href="/public/pages/admin/edi/index.html#/configure-order-file">
+            <i class="icon-cog"></i> &nbsp;
+            <span openlmis-message="template.configure"></span>
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td openlmis-message="label.shipment.file.format"></td>
+        <td>
+          <a class="btn btn-primary" href="/public/pages/admin/edi/index.html#/configure-shipment-file">
+            <i class="icon-cog"></i> &nbsp;
+            <span openlmis-message="template.configure"></span>
+          </a>
+        </td>
+      </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>

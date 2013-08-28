@@ -1,0 +1,70 @@
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+  <h2 openlmis-message="label.shipment.file.format"></h2>
+  <form ng-submit="saveShipmentFileFormat()" id="create-shipment-file-template" name="createShipmentFileFormat" novalidate>
+    <div class="app-form" tab-scroll>
+      <div class="clearfix form-inline row-fluid">
+        <div class="span4 include-header-form">
+          <input type="checkbox" id="includeHeadersCheckbox" ng-model="shipmentFileTemplate.shipmentConfiguration.headerInFile"/>
+          <label for="includeHeadersCheckbox" openlmis-message="label.column.include.headers"></label>
+        </div>
+      </div>
+    </div>
+
+    <hr/>
+
+    <div class="row-fluid">
+      <div class="span10">
+        <div id="shipmentFileColumns">
+          <div class="list-header-container">
+            <div class="row-fluid list-header">
+              <div class="span1">
+                <span class="first-column" openlmis-message="label.include"></span>
+              </div>
+              <div class="span2" openlmis-message="label.data.field"></div>
+              <div class="span2"></div>
+              <div class="span4">
+                <div openlmis-message="label.position"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rnr-template-columns">
+            <div class="row-fluid list-row" ng-repeat="shipmentFileColumn in shipmentFileTemplate.shipmentFileColumns">
+              <div class="span1">
+                <span class="first-column checkbox-column">
+                  <input id="includeCheckbox{{ $index }}" type="checkbox" ng-model="shipmentFileColumn.includeInOrderFile"/>
+                </span>
+              </div>
+              <div class="span2">
+                <span openlmis-message="shipmentFileColumn.dataFieldLabel"></span>
+              </div>
+              <div class="span2">
+                <div class="row-fluid" ng-show="shipmentFileColumn.dataFieldLabel == 'label.packed.date'">
+                  <select class="span12" ui-select2 ng-model="shipmentFileColumn.format" ng-options="dateFormat for dateFormat in orderDateFormats">
+                  </select>
+                </div>
+                <div class="row-fluid" ng-show="shipmentFileColumn.dataFieldLabel == 'label.shipped.date'">
+                  <select class="span12" ui-select2 ng-model="shipmentFileColumn.format" ng-options="dateFormat for dateFormat in periodDateFormats">
+                  </select>
+                </div>
+              </div>
+              <div class="span4">
+                <input type="text" ng-model="shipmentFileColumn.position" maxlength="3"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div form-toolbar id="action_buttons" class="action-buttons">
+      <div class="form-cell button-row">
+        <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
+        <a href="/public/pages/index.html" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
+      </div>
+      <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+
+    </div>
+
+  </form>
+</div>

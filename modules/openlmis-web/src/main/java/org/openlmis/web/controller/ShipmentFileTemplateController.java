@@ -24,13 +24,13 @@ public class ShipmentFileTemplateController extends BaseController {
   @Autowired
   ShipmentFileTemplateService service;
 
-  @RequestMapping(value = "/shipmentTemplate", method = GET)
+  @RequestMapping(value = "/shipment-file-template", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_EDI')")
   public ResponseEntity<OpenLmisResponse> get() {
     return OpenLmisResponse.response("shipment_template", service.get());
   }
 
-  @RequestMapping(value = "/shipmentTemplate", method = PUT, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/shipment-file-template", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_EDI')")
   public void update(ShipmentFileTemplate shipmentFileTemplate) {
     service.update(shipmentFileTemplate);
