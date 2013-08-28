@@ -9,6 +9,7 @@ package org.openlmis.web.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Right;
@@ -67,6 +68,7 @@ public class UserControllerTest {
   @Mock
   private SessionRegistry sessionRegistry;
 
+  @InjectMocks
   private UserController userController;
 
   private String baseUrl = "http://localhost:9091/";
@@ -78,9 +80,7 @@ public class UserControllerTest {
     httpServletRequest = new MockHttpServletRequest();
     session = new MockHttpSession();
     httpServletRequest.setSession(session);
-    userController = new UserController(roleRightService, userService, baseUrl);
-    userController.setMessageService(messageService);
-    userController.setSessionRegistry(sessionRegistry);
+    userController = new UserController(roleRightService, userService, sessionRegistry, messageService, baseUrl);
   }
 
   @Test
@@ -144,7 +144,7 @@ public class UserControllerTest {
     verify(userService).create(eq(user), eq("http://localhost:9091/public/pages/reset-password.html#/token/"));
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat((User)response.getBody().getData().get("user"), is(user));
+    assertThat((User) response.getBody().getData().get("user"), is(user));
     assertThat(response.getBody().getSuccessMsg(), is(USER_CREATED_SUCCESS_MSG));
   }
 
@@ -218,9 +218,9 @@ public class UserControllerTest {
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat((Boolean) response.getBody().getData().get(TOKEN_VALID), is(true));
   }
-  
+
   @Test
-  public void shouldUpdateUserPassword(){
+  public void shouldUpdateUserPassword() {
     String password = "newPassword";
     when(messageService.message("password.reset.success")).thenReturn("password.reset");
 
