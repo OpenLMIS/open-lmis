@@ -33,10 +33,10 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='user-info ng-scope']/strong")
   private static WebElement loggedInUserLabel;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Requisitions')]")
+  @FindBy(how = How.ID, using = "requisitions-menu")
   private static WebElement requisitionMenuItem;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Distributions')]")
+  @FindBy(how = ID, using = "distributions-menu")
   private static WebElement distributionsMenuItem;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Program Product ISA')]")
@@ -45,19 +45,19 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Home')]")
   private static WebElement homeMenuItem;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Reports')]")
+  @FindBy(how = How.ID, using = "reports-menu")
   private static WebElement reportMenuItem;
 
   @FindBy(how = How.XPATH, using = "//h2/span[contains(text(),'Reports')]")
   private static WebElement reportsTitle;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Orders')]")
+  @FindBy(how = How.ID, using = "orders-menu")
   private static WebElement ordersMenuItem;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Approve')]")
   private static WebElement approveLink;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Administration')]")
+  @FindBy(how = How.ID, using = "administration-menu")
   private static WebElement AdministrationMenuItem;
 
   @FindBy(how = How.ID, using = "manage-option")
