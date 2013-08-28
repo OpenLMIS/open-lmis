@@ -13,11 +13,10 @@ describe('ConvertToOrderListController', function () {
   beforeEach(module('openlmis.localStorage'));
   beforeEach(module('ui.bootstrap.dialog'));
 
-  beforeEach(inject(function ($httpBackend, $rootScope, $controller, _messageService_) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $controller) {
     scope = $rootScope.$new();
     controller = $controller;
     httpBackend = $httpBackend;
-    messageService = _messageService_;
 
     requisitionList = [
       {"facilityName":"first facility", "programName":"first program", "facilityCode":"first code", supplyingDepot:"supplying depot first "},
@@ -93,17 +92,12 @@ describe('ConvertToOrderListController', function () {
   it("should convert the selected requisitions to order", function () {
     httpBackend.expectPOST('/orders.json', scope.gridOptions.selectedItems).respond(200);
     httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list":[requisitionList[1]]});
-
-    spyOn(messageService, 'get').andCallFake(function (arg) {
-      return "The requisition(s) have been successfully converted to Orders";
-    });
     scope.dialogCloseCallback(true);
 
     httpBackend.flush();
-    expect(scope.message).toEqual("The requisition(s) have been successfully converted to Orders");
+    expect(scope.message).toEqual("msg.rnr.converted.to.order");
     expect(scope.error).toEqual("");
     expect(scope.noRequisitionSelectedMessage).toEqual("");
-    expect(messageService.get).toHaveBeenCalledWith("msg.rnr.converted.to.order");
     expect(scope.requisitions).toEqual([requisitionList[1]]);
   });
 
@@ -119,27 +113,17 @@ describe('ConvertToOrderListController', function () {
     scope.gridOptions.selectedItems = [requisitionList[0]];
     httpBackend.expectPOST('/orders.json', scope.gridOptions.selectedItems).respond(200);
     httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list":[requisitionList[1]]});
-
-    spyOn(messageService, 'get').andCallFake(function (arg) {
-      return "The requisition(s) have been successfully converted to Orders";
-    });
     scope.dialogCloseCallback(true);
     httpBackend.flush();
-    expect(scope.message).toEqual("The requisition(s) have been successfully converted to Orders");
-    expect(messageService.get).toHaveBeenCalledWith("msg.rnr.converted.to.order");
+    expect(scope.message).toEqual("msg.rnr.converted.to.order");
     expect(scope.selectedItems.length).toEqual(0);
   });
 
   it('should give message if no requisition selected', function() {
     scope.gridOptions.selectedItems = [];
-
-    spyOn(messageService, 'get').andCallFake(function (arg) {
-      return "Please select at least one Requisition for Converting to Order.";
-    });
     scope.convertToOrder();
 
-    expect(messageService.get).toHaveBeenCalledWith("msg.select.atleast.one.rnr");
-    expect(scope.noRequisitionSelectedMessage).toEqual("Please select at least one Requisition for Converting to Order.");
+    expect(scope.noRequisitionSelectedMessage).toEqual("msg.select.atleast.one.rnr");
   });
 });
 
