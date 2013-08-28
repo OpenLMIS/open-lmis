@@ -18,11 +18,12 @@ describe("RecordFacilityMenuController", function () {
 
     distribution = {
       facilityDistributionData: {
-        1: {
+        1: { refrigerators: {
           refrigeratorReadings: [
             {refrigerator: {serialNumber: "abc"}},
             {refrigerator: {serialNumber: "XYZ"}}
           ]
+        }
         }
       }
     };
@@ -35,7 +36,7 @@ describe("RecordFacilityMenuController", function () {
   }))
 
   it('should set status indicator to complete if all refrigeratorReadings are complete', function () {
-    scope.distribution.facilityDistributionData[1].refrigeratorReadings = [
+    scope.distribution.facilityDistributionData[1].refrigerators.refrigeratorReadings = [
       {status: 'is-complete'}
     ];
 
@@ -45,7 +46,7 @@ describe("RecordFacilityMenuController", function () {
   });
 
   it('should set status indicator to empty if all refrigeratorReadings are empty', function () {
-    scope.distribution.facilityDistributionData[1].refrigeratorReadings = [
+    scope.distribution.facilityDistributionData[1].refrigerators.refrigeratorReadings = [
       {status: 'is-empty'},
       {status: 'is-empty'}
     ];
@@ -56,7 +57,7 @@ describe("RecordFacilityMenuController", function () {
   });
 
   it('should set status indicator to incomplete if at least one refrigeratorReading is incomplete', function () {
-    scope.distribution.facilityDistributionData[1].refrigeratorReadings = [
+    scope.distribution.facilityDistributionData[1].refrigerators.refrigeratorReadings = [
       {status: 'is-incomplete'}
     ];
 
@@ -67,7 +68,7 @@ describe("RecordFacilityMenuController", function () {
 
   it('should set status indicator to incomplete if at least one refrigeratorReading is complete and rest are empty',
     function () {
-      scope.distribution.facilityDistributionData[1].refrigeratorReadings = [
+      scope.distribution.facilityDistributionData[1].refrigerators.refrigeratorReadings = [
         {status: 'is-complete'},
         {status: 'is-complete'},
         {status: 'is-empty'}
@@ -79,7 +80,7 @@ describe("RecordFacilityMenuController", function () {
     });
 
   it('should set status indicator to complete if no refrigeratorReading exists', function () {
-    scope.distribution.facilityDistributionData[1].refrigeratorReadings = [];
+    scope.distribution.facilityDistributionData[1].refrigerators.refrigeratorReadings = [];
 
     var status = scope.getRefrigeratorStatus();
 
