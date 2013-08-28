@@ -154,9 +154,6 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   };
 
   $scope.confirmFacilityDelete = function () {
-    if(!$scope.user.active) {
-      return;
-    }
     var dialogOpts = {
       id: "deleteFacilityModal",
       header: messageService.get('delete.facility.header'),
