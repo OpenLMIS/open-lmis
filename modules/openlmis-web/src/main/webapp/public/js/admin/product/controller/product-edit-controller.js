@@ -150,25 +150,7 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
     };
 
 
-    $scope.startProductEdit = function (productId) {
-        $scope.$parent.editProductMode = true;
-          $scope.title='Edit product';
-          $scope.AddEditMode = true;
 
-          // now get a fresh copy of the product object from the server
-          ProductDetail.get({id:productId}, function(data){
-              $scope.editProduct = data.product;
-              if($scope.editProduct.active == false){
-                  $scope.disableAllFields();
-              }
-          });
-
-          PriceHistory.get({productId:productId}, function(data){
-             $scope.priceHistory    = data.priceHistory;
-          });
-
-
-      };
 
 
     $scope.updateProduct = function () {
@@ -197,7 +179,23 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
         $location.path('');
     };
 
+    $scope.startProductEdit = function (productId) {
+        $scope.$parent.editProductMode = true;
+        $scope.title='Edit product';
+        $scope.AddEditMode = true;
 
+        // now get a fresh copy of the product object from the server
+        ProductDetail.get({id:productId}, function(data){
+            $scope.editProduct = data.product;
+            if($scope.editProduct.active == false){
+                $scope.disableAllFields();
+            }
+        });
+
+        PriceHistory.get({productId:productId}, function(data){
+            $scope.priceHistory    = data.priceHistory;
+        });
+    };
     // now that the functions are defined.
     // start the editing
     $scope.startProductEdit($route.current.params.id);
