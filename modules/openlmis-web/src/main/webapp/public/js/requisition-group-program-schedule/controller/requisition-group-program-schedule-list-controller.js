@@ -73,7 +73,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
         }
 
         if($scope.selectedRequisitionGroup.code == reqGroup.code){
-            return {'background-color':'#f9f9f9'};
+            return 'background-color:#a9a9a9';
         }
         else{
             return 'none';
@@ -92,7 +92,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
         }
 
         if($scope.selectedProgram.code == program.code){
-            return {'background-color':'#f9f9f9'};
+            return 'background-color:#a9a9a9';
         }
         else{
             return 'none';
@@ -107,7 +107,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
         }
 
         if($scope.selectedSchedule.code == schedule.code){
-            return {'background-color':'#f9f9f9'};
+            return 'background-color:#a9a9a9';
         }
         else{
             return 'none';
