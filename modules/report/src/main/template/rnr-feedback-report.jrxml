@@ -63,7 +63,7 @@
 		<groupHeader>
 			<band height="83">
 				<staticText>
-					<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="45" width="802" height="38" forecolor="#FFFFFF" backcolor="#3D9297">
+					<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="45" width="802" height="38" forecolor="#FFFFFF" backcolor="#F6F6F6">
 						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 					</reportElement>
 					<textElement/>
