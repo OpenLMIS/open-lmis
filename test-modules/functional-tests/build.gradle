@@ -8,7 +8,7 @@ apply plugin: 'jetty'
 apply plugin: 'java'
 
 dependencies {
-    compile 'org.seleniumhq.selenium:selenium-java:2.33.0',
+    compile 'org.seleniumhq.selenium:selenium-java:2.35.0',
             'org.seleniumhq.selenium:selenium-firefox-driver:2.33.0',
             'org.seleniumhq.selenium:selenium-ie-driver:2.33.0',
             'org.seleniumhq.selenium:selenium-chrome-driver:2.33.0',
@@ -18,7 +18,7 @@ dependencies {
 
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE'
-    testCompile 'org.seleniumhq.selenium:selenium-java:2.33.0'
+    testCompile 'org.seleniumhq.selenium:selenium-java:2.35.0'
     testCompile 'org.seleniumhq.selenium:selenium-ie-driver:2.33.0'
     testCompile 'org.seleniumhq.selenium:selenium-firefox-driver:2.33.0'
     testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:2.33.0'

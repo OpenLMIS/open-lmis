@@ -112,7 +112,7 @@ dependencies {
             'commons-fileupload:commons-fileupload:1.2.2',
             'javax.servlet:servlet-api:2.5',
             'org.testng:testng:6.1.1',
-            'org.seleniumhq.selenium:selenium-java:2.33.0',
+            'org.seleniumhq.selenium:selenium-java:2.35.0',
             'org.seleniumhq.selenium:selenium-firefox-driver:2.33.0 ',
             'com.itextpdf:itextpdf:5.4.0',
             'commons-jxpath:commons-jxpath:1.3',
