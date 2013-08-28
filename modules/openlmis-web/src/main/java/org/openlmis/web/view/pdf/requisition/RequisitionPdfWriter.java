@@ -31,8 +31,8 @@ public class RequisitionPdfWriter extends PdfWriter {
     document.addWriter(this);
     setDocumentAttributes(document);
     this.setViewerPreferences(getViewerPreferences());
+    this.setPageEvent(new PdfPageEventHandler());
     this.messageService = messageService;
-    this.setPageEvent(new PdfPageEventHandler(messageService));
   }
 
   private void setDocumentAttributes(PdfDocument document) {

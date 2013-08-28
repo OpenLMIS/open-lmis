@@ -60,7 +60,7 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
     $scope.message = "";
     $scope.noRequisitionSelectedMessage = "";
     if ($scope.gridOptions.selectedItems.length == 0) {
-      $scope.noRequisitionSelectedMessage = "msg.select.atleast.one.rnr";
+      $scope.noRequisitionSelectedMessage = messageService.get("msg.select.atleast.one.rnr");
       return;
     }
     showConfirmModal();
@@ -74,7 +74,7 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
         $scope.filterRequisitions();
       });
 
-      $scope.message = "msg.rnr.converted.to.order";
+      $scope.message = messageService.get("msg.rnr.converted.to.order");
       $scope.error = "";
     };
 
