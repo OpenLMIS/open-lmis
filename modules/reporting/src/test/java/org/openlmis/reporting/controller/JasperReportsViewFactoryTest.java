@@ -6,6 +6,7 @@
 
 package org.openlmis.reporting.controller;
 
+import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperReport;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +28,7 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import static net.sf.jasperreports.engine.export.JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
@@ -90,5 +92,21 @@ public class JasperReportsViewFactoryTest {
     verify(jasperReportsView).setJdbcDataSource(dataSource);
     verify(objectOutputStream).writeObject(jasperReport);
 
+  }
+
+  @Test
+  public void shouldAddExportParamToGetRidOfImageInHtmlReport() throws Exception {
+
+    whenNew(JasperReportsMultiFormatView.class).withNoArguments().thenReturn(jasperReportsView);
+    when(objectInputStream.readObject()).thenReturn(jasperReport);
+    when(byteArrayOutputStream.toByteArray()).thenReturn(reportByteData);
+
+    Map<JRExporterParameter, Object> exportParams = new HashMap<>();
+    exportParams.put(IS_USING_IMAGES_TO_ALIGN, false);
+
+    viewFactory.getJasperReportsView(reportTemplate);
+
+
+    verify(jasperReportsView).setExporterParameters(exportParams);
   }
 }
