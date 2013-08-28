@@ -41,16 +41,16 @@ WHERE
 	<group name="GroupByFacility" isStartNewPage="true" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[$F{supplyingFacility}]]></groupExpression>
 		<groupHeader>
-			<band height="50">
+			<band height="40">
 				<staticText>
-					<reportElement uuid="d28eb1aa-5ce3-4073-8f47-4d16cb4774c8" mode="Opaque" x="1" y="31" width="751" height="19" forecolor="#FFFFFF" backcolor="#3D9297">
+					<reportElement uuid="d28eb1aa-5ce3-4073-8f47-4d16cb4774c8" mode="Opaque" x="1" y="20" width="751" height="20" forecolor="#FFFFFF" backcolor="#3D9297">
 						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 					</reportElement>
 					<textElement/>
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="39" y="30" width="57" height="20" forecolor="#000000" backcolor="#003333"/>
+					<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="39" y="20" width="57" height="20" forecolor="#000000" backcolor="#003333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -58,7 +58,7 @@ WHERE
 					<text><![CDATA[Code]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="6f22b5e8-59ea-4512-b209-ce093fe70dbe" mode="Transparent" x="256" y="30" width="160" height="20" forecolor="#000000" backcolor="#003333">
+					<reportElement uuid="6f22b5e8-59ea-4512-b209-ce093fe70dbe" mode="Transparent" x="256" y="20" width="160" height="20" forecolor="#000000" backcolor="#003333">
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -69,7 +69,7 @@ WHERE
 					<text><![CDATA[Facility Type]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="1138c634-4150-46c6-a83e-b93243223977" mode="Transparent" x="96" y="30" width="160" height="20" forecolor="#000000" backcolor="#003333">
+					<reportElement uuid="1138c634-4150-46c6-a83e-b93243223977" mode="Transparent" x="96" y="20" width="160" height="20" forecolor="#000000" backcolor="#003333">
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -80,7 +80,7 @@ WHERE
 					<text><![CDATA[Facility Name]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="2ba4a9ef-e063-4ecc-b8e9-bfd8f2d0ec15" mode="Transparent" x="416" y="30" width="160" height="20" forecolor="#000000" backcolor="#003333">
+					<reportElement uuid="2ba4a9ef-e063-4ecc-b8e9-bfd8f2d0ec15" mode="Transparent" x="416" y="20" width="160" height="20" forecolor="#000000" backcolor="#003333">
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -92,7 +92,7 @@ WHERE
 					<text><![CDATA[Location]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="07a6ede6-7b80-42c0-9f61-e5307f47f3b8" mode="Transparent" x="576" y="30" width="175" height="20" forecolor="#000000" backcolor="#003333">
+					<reportElement uuid="07a6ede6-7b80-42c0-9f61-e5307f47f3b8" mode="Transparent" x="576" y="20" width="175" height="20" forecolor="#000000" backcolor="#003333">
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -104,12 +104,12 @@ WHERE
 					<text><![CDATA[Product]]></text>
 				</staticText>
 				<textField>
-					<reportElement uuid="75d15a8b-70cb-49b9-ae5a-023d9afc262b" x="112" y="10" width="100" height="20"/>
+					<reportElement uuid="75d15a8b-70cb-49b9-ae5a-023d9afc262b" x="96" y="0" width="100" height="20"/>
 					<textElement verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{supplyingFacility}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b" mode="Transparent" x="0" y="30" width="39" height="20" forecolor="#000000" backcolor="#003333"/>
+					<reportElement uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b" mode="Transparent" x="0" y="20" width="39" height="20" forecolor="#000000" backcolor="#003333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="2"/>
@@ -117,7 +117,7 @@ WHERE
 					<text><![CDATA[Line#]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="23690320-d924-418f-934c-065083bf4cbf" mode="Transparent" x="10" y="10" width="102" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement uuid="23690320-d924-418f-934c-065083bf4cbf" mode="Transparent" x="0" y="0" width="96" height="20" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="5"/>
@@ -133,7 +133,7 @@ WHERE
 	<title>
 		<band height="81" splitType="Stretch">
 			<subreport>
-				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="-20" y="0" width="772" height="79" isRemoveLineWhenBlank="true">
+				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="752" height="79" isRemoveLineWhenBlank="true">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="PAGE_NO">
