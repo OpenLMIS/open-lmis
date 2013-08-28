@@ -49,7 +49,7 @@ public class PdfPageEventHandlerTest {
     document.open();
     writer = spy(PdfWriter.getInstance(document, stream));
 
-    PdfPageEventHandler pdfPageEventHandler = new PdfPageEventHandler();
+    PdfPageEventHandler pdfPageEventHandler = new PdfPageEventHandler(messageService);
 
     PdfContentByte mockContentByte = mock(PdfContentByte.class);
     DateTime dateTime = new DateTime().withDate(2013, 3, 20);
@@ -79,7 +79,7 @@ public class PdfPageEventHandlerTest {
 
     when(writer.getDirectContent()).thenReturn(mockContentByte);
 
-    PdfPageEventHandler pdfPageEventHandler = new PdfPageEventHandler();
+    PdfPageEventHandler pdfPageEventHandler = new PdfPageEventHandler(messageService);
     pdfPageEventHandler.onOpenDocument(writer, document);
     verify(writer).getDirectContent();
     verify(mockContentByte).createTemplate(PAGE_TEXT_WIDTH, PAGE_TEXT_HEIGHT);
@@ -96,7 +96,7 @@ public class PdfPageEventHandlerTest {
     when(writer.getPageNumber()).thenReturn(5);
     when(mockContentByte.createTemplate(PAGE_TEXT_WIDTH, PAGE_TEXT_HEIGHT)).thenReturn(template);
 
-    PdfPageEventHandler pdfPageEventHandler = new PdfPageEventHandler();
+    PdfPageEventHandler pdfPageEventHandler = new PdfPageEventHandler(messageService);
     pdfPageEventHandler.onOpenDocument(writer, document);
     pdfPageEventHandler.onCloseDocument(writer, document);
 

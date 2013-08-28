@@ -7,6 +7,7 @@
 package org.openlmis.distribution.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
@@ -16,6 +17,7 @@ import org.openlmis.core.domain.Program;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 
+@EqualsAndHashCode(callSuper = false)
 @Data
 @JsonSerialize(include = NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
