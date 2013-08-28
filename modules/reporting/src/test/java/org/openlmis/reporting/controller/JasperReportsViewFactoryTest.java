@@ -84,7 +84,7 @@ public class JasperReportsViewFactoryTest {
     when(byteArrayOutputStream.toByteArray()).thenReturn(reportByteData);
     Map<String, Object> parameterMap = new HashMap();
     parameterMap.put("createdBy", 1l);
-    JasperReportsMultiFormatView reportView = viewFactory.getJasperReportsView(reportTemplate, parameterMap);
+    JasperReportsMultiFormatView reportView = viewFactory.getJasperReportsView(reportTemplate);
 
     assertThat(reportView, is(jasperReportsView));
     verify(jasperReportsView).setJdbcDataSource(dataSource);
