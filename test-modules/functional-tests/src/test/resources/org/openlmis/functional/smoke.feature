@@ -349,7 +349,6 @@ Feature: Smoke Tests
     Then I should see "Order file configuration saved successfully!"
 
   @smoke
-  @ie2
   Scenario: User should download order file and verify
     Given I have the following data for regimen:
       | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
