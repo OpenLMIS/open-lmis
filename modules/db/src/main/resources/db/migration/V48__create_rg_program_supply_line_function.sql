@@ -13,8 +13,7 @@ CREATE OR REPLACE FUNCTION getRgProgramSupplyLine()
     ultimateParentRecord  RECORD;
     rowRG                 RECORD;
   BEGIN
-    EXECUTE 'DROP TABLE IF EXISTS temp';
-    EXECUTE 'CREATE TABLE temp ( 
+    EXECUTE 'CREATE TEMP TABLE rg_supervisory_node (
             requisitionGroupId INTEGER, 
             requisitionGroup TEXT,
             supervisoryNodeId INTEGER, 
@@ -22,7 +21,7 @@ CREATE OR REPLACE FUNCTION getRgProgramSupplyLine()
             programId INTEGER, 
             name TEXT,
             ultimateParentId INTEGER 
-            )';
+            ) ON COMMIT DROP';
     requisitionGroupQuery := 'SELECT RG.id, RG.code || '' '' || RG.name as requisitionGroup, RG.supervisoryNodeId, RGPS.programId, pg.name 
                               FROM requisition_groups AS RG INNER JOIN requisition_group_program_schedules AS RGPS ON RG.id = RGPS.requisitionGroupId 
                               INNER JOIN programs pg ON pg.id=RGPS.programid WHERE pg.active=true AND pg.push=false';
@@ -57,25 +56,25 @@ CREATE OR REPLACE FUNCTION getRgProgramSupplyLine()
                      max(depth)
                    FROM supervisoryNodesRec);
       EXECUTE
-      'INSERT INTO temp VALUES (' || rowRG.id || ',' ||
+      'INSERT INTO rg_supervisory_node VALUES (' || rowRG.id || ',' ||
       quote_literal(rowRG.requisitionGroup) || ',' || rowRG.supervisoryNodeId ||
       ',' || quote_literal(ultimateParentRecord.sNode) || ',' || rowRG.programId
       || ',' || quote_literal(rowRG.name) || ',' ||
       ultimateParentRecord.ultimateParentId || ')';
     END LOOP;
     finalQuery := 'SELECT
-                  temp.snode            AS SupervisoryNode,
-                  temp.name             AS ProgramName,
-                  temp.requisitiongroup AS RequisitionGroup
-                  FROM temp
+                  RGS.snode            AS SupervisoryNode,
+                  RGS.name             AS ProgramName,
+                  RGS.requisitiongroup AS RequisitionGroup
+                  FROM rg_supervisory_node AS RGS
                   WHERE NOT EXISTS
                   (SELECT
                      *
                    FROM supply_lines
                      INNER JOIN facilities f
                        ON f.id = supply_lines.supplyingFacilityId
-                   WHERE supply_lines.supervisorynodeid = temp.ultimateparentid AND
-                         temp.programid = supply_lines.programid AND f.enabled = TRUE)
+                   WHERE supply_lines.supervisorynodeid = RGS.ultimateparentid AND
+                         RGS.programid = supply_lines.programid AND f.enabled = TRUE)
                   ORDER BY SupervisoryNode, ProgramName, RequisitionGroup';
     RETURN QUERY EXECUTE finalQuery;
   END;
