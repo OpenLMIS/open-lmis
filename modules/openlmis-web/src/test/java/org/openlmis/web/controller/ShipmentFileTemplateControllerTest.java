@@ -14,6 +14,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.service.ShipmentFileTemplateService;
+import org.openlmis.web.response.OpenLmisResponse;
+import org.springframework.http.ResponseEntity;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -37,9 +39,9 @@ public class ShipmentFileTemplateControllerTest {
     ShipmentFileTemplate expectedShipmentFileTemplate = new ShipmentFileTemplate();
     when(shipmentFileTemplateService.get()).thenReturn(expectedShipmentFileTemplate);
 
-    ShipmentFileTemplate shipmentFileTemplate = controller.get();
+    ResponseEntity<OpenLmisResponse> response = controller.get();
 
-    assertThat(shipmentFileTemplate, is(expectedShipmentFileTemplate));
+    assertThat((ShipmentFileTemplate) response.getBody().getData().get("shipment_template"), is(expectedShipmentFileTemplate));
     verify(shipmentFileTemplateService).get();
   }
 
