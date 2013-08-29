@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS shipment_file_columns;
 CREATE TABLE shipment_file_columns (
   id                        SERIAL PRIMARY KEY,
   dataFieldLabel            VARCHAR(50),
-  position                  INTEGER NOT NULL,
+  position                  INTEGER UNIQUE,
   includedInShipmentFile    BOOLEAN NOT NULL,
   mandatory                 BOOLEAN NOT NULL,
   datePattern               VARCHAR(25),

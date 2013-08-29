@@ -5,12 +5,26 @@
  * Time: 2:10 PM
  * To change this template use File | Settings | File Templates.
  */
-function ShipmentFileTemplateController($scope,shipmentFileTemplate, ShipmentFileTemplate,dateFormats){
+function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFileTemplate, dateFormats) {
 
   $scope.shipmentFileTemplate = shipmentFileTemplate;
   $scope.dateFormats = _.pluck(_.where(dateFormats, {"orderDate": true}), "format");
 
+  function isDuplicatePositionPresent() {
+    var positionList = _.pluck($scope.shipmentFileTemplate.shipmentFileColumns, "position");
+    var uniquePositionList = _.uniq(positionList, true);
+    if (uniquePositionList.length != positionList.length) {
+      $scope.message = "shipment.file.duplicate.position";
+      return false;
+    }
+    return true;
+  }
+
   $scope.saveShipmentFileTemplate = function () {
+    if (!isDuplicatePositionPresent()) {
+      return;
+    }
+
     ShipmentFileTemplate.save({}, $scope.shipmentFileTemplate, function (data) {
       $scope.message = data.success;
       setTimeout(function () {
@@ -36,7 +50,7 @@ ShipmentFileTemplateController.resolve = {
     return deferred.promise;
   },
 
-  dateFormats: function($q, $timeout, DateFormats) {
+  dateFormats: function ($q, $timeout, DateFormats) {
     var deferred = $q.defer();
     $timeout(function () {
       DateFormats.get({}, function (data) {
