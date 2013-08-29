@@ -25,31 +25,67 @@
           </tr>
           </thead>
 
-          <tbody ng-repeat="epiLineItem in epiLineItems">
+          <tbody ng-repeat="groupReading in productGroupReadings">
           <tr>
             <td>
-              <span ng-bind="epiLineItem.productGroup.name"></span>
+              <span ng-bind="groupReading.name"></span>
             </td>
             <td>
-              <input type="text" ng-model="epiLineItem.productGroup.stockAtFirst"></span>
+              <input type="text" ng-model="groupReading.reading.stockAtFirstOfMonth" name="stockAtFirstOfMonth{{$index}}" maxlength="7">
+              <input id="stockAtFirstOfMonth{{$index}}" type="checkbox"
+                     ng-model="groupReading.reading.stockAtFirstOfMonth.notRecorded"
+                     not-recorded/>
+              <label class="checkbox-label" for="stockAtFirstOfMonth{{$index}}"
+                     openlmis-message="label.not.recorded"></label>
             </td>
             <td>
-              <input type="text" ng-model="epiLineItem.productGroup.received"></span>
+              <input type="text" ng-model="groupReading.reading.received" name="received{{$index}}" maxlength="7">
+
+              <input id="received{{$index}}" type="checkbox"
+                     ng-model="groupReading.reading.received.notRecorded"
+                     not-recorded/>
+              <label class="checkbox-label" for="received{{$index}}"
+                     openlmis-message="label.not.recorded"></label>
             </td>
             <td>
-              <input type="text" ng-model="epiLineItem.productGroup.total"></span>
+              <input type="text" ng-model="groupReading.reading.total" name="total{{$index}}" maxlength="7">
+              <input id="total{{$index}}" type="checkbox"
+                      ng-model="groupReading.reading.total.notRecorded"
+                      not-recorded/>
+              <label class="checkbox-label" for="received{{$index}}"
+                     openlmis-message="label.not.recorded"></label>
             </td>
             <td>
-              <input type="text" ng-model="epiLineItem.productGroup.distributed"></span>
+              <input type="text" ng-model="groupReading.reading.distributed" name="distributed{{$index}}" maxlength="7">
+              <input id="distributed{{$index}}" type="checkbox"
+                     ng-model="groupReading.reading.distributed.notRecorded"
+                     not-recorded/>
+              <label class="checkbox-label" for="distributed{{$index}}"
+                     openlmis-message="label.not.recorded"></label>
             </td>
             <td>
-              <input type="text" ng-model="epiLineItem.productGroup.loss"></span>
+              <input type="text" ng-model="groupReading.reading.loss" name="loss{{$index}}" maxlength="7">
+              <input id="loss{{$index}}" type="checkbox"
+                     ng-model="groupReading.reading.loss.notRecorded"
+                     not-recorded/>
+              <label class="checkbox-label" for="loss{{$index}}"
+                     openlmis-message="label.not.recorded"></label>
             </td>
             <td>
-              <input type="text" ng-model="epiLineItem.productGroup.stockAtEnd"></span>
+              <input type="text" ng-model="groupReading.reading.stockAtEndOfMonth" name="stockAtEndOfMonth{{$index}}" maxlength="7">
+              <input id="stockAtEndOfMonth{{$index}}" type="checkbox"
+                     ng-model="groupReading.reading.stockAtEndOfMonth.notRecorded"
+                     not-recorded/>
+              <label class="checkbox-label" for="stockAtEndOfMonth{{$index}}"
+                     openlmis-message="label.not.recorded"></label>
             </td>
             <td>
-              <input type="text" ng-model="epiLineItem.productGroup.expirationDate"></span>
+              <input type="text" ng-model="groupReading.reading.expirationDate" name="expirationDate{{$index}}" maxlength="7">
+              <input id="expirationDate{{$index}}" type="checkbox"
+                     ng-model="groupReading.reading.expirationDate.notRecorded"
+                     not-recorded/>
+              <label class="checkbox-label" for="expirationDate{{$index}}"
+                     openlmis-message="label.not.recorded"></label>
             </td>
           </tr>
           </tbody>

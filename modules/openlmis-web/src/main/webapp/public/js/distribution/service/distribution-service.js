@@ -8,21 +8,5 @@ distributionModule.service('distributionService', function (IndexedDB, $q, $rout
 
   var thisService = this;
 
-  function getDistribution() {
-    var waitOn = $q.defer();
-    IndexedDB.get('distributions', utils.parseIntWithBaseTen($route.current.params.distribution), function (e) {
-      waitOn.resolve(e.target.result);
-    }, {});
-
-    return waitOn.promise;
-  };
-
-  var promise = getDistribution();
-
-  promise.then(function (value) {
-    thisService.distribution = value;
-    $rootScope.$broadcast('distributionReceived');
-  }, {})
-
 });
 

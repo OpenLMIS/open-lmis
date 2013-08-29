@@ -6,20 +6,22 @@
 
 function EPIUseController($scope, $routeParams, distributionService) {
 
-  $scope.epiLineItems = [];
+
   $scope.selectedFacilityId = $routeParams.facility;
 
   $scope.$on('distributionReceived', function () {
     $scope.distribution = distributionService.distribution;
-    $($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].epiUse.productGroups).each(function (index, group) {
-      $scope.epiLineItems[index] = {productGroup: group};
+    $scope.productGroupReadings = $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].epiUse.productGroups;
+    $($scope.productGroupReadings).each(function (index, groupReading) {
+      groupReading.reading = {stockAtFirstOfMonth: "", received: "", total: "", distributed: "", loss: "", stockAtEndOfMonth: "", expirationDate: ""}
     });
   })
 
-  if ($scope.distribution == undefined) {
+  if ($scope.distribution == undefined && distributionService.distribution != undefined) {
     $scope.distribution = distributionService.distribution;
-    $($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].epiUse.productGroups).each(function (index, group) {
-      $scope.epiLineItems[index] = {productGroup: group};
+    $scope.productGroupReadings = $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].epiUse.productGroups;
+    $($scope.productGroupReadings).each(function (index, groupReading) {
+      groupReading.reading = {stockAtFirstOfMonth: "", received: "", total: "", distributed: "", loss: "", stockAtEndOfMonth: "", expirationDate: ""}
     });
   }
 

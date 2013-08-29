@@ -121,7 +121,7 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
     function prepareDistribution(distribution, referenceData) {
       distribution.facilityDistributionData = {};
       $(referenceData.facilities).each(function (index, facility) {
-        var refrigeratorReadings = []
+        var refrigeratorReadings = [];
         var productGroups = _.compact(_.uniq(_.pluck(_.pluck(facility.supportedPrograms[0].programProducts, 'product'), 'productGroup'), false, function (group) {
           if (group == undefined) return;
           return group.id;

@@ -40,7 +40,7 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
       return;
     }
     $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigerators.refrigeratorReadings.push(
-      {'refrigerator': angular.copy($scope.newRefrigerator)});
+      {'refrigerator': angular.copy($scope.newRefrigerator), status: "is-empty"});
     IndexedDB.put('distributions', $scope.distribution);
     $scope.addRefrigeratorModal = $scope.isDuplicateSerialNumber = undefined;
   };

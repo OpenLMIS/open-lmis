@@ -19,7 +19,7 @@ function RecordFacilityMenuController($scope, $location, $routeParams, distribut
   }
 
   $scope.getRefrigeratorStatus = function () {
-    if (!isUndefined($scope.distribution)) {
+    if (!isUndefined($scope.distribution) && $scope.distribution.facilityDistributionData[$routeParams.facility].refrigerators) {
       var readingList = $scope.distribution.facilityDistributionData[$routeParams.facility].refrigerators.refrigeratorReadings;
       if (_.findWhere(readingList, {status: undefined})) {
         return 'is-incomplete';
