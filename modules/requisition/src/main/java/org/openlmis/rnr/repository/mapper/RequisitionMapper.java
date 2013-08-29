@@ -31,7 +31,7 @@ public interface RequisitionMapper {
     "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
     "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost},",
     "supervisoryNodeId = #{supervisoryNodeId},",
-    "supplyingFacilityId = #{supplyingFacility.id}",
+    "supplyLineId = #{supplyLine.id}",
     "WHERE id = #{id}"})
   void update(Rnr requisition);
 
@@ -41,7 +41,7 @@ public interface RequisitionMapper {
     @Result(property = "program.id", column = "programId"),
     @Result(property = "facility.id", column = "facilityId"),
     @Result(property = "period.id", column = "periodId"),
-    @Result(property = "supplyingFacility.id", column = "supplyingFacilityId"),
+    @Result(property = "supplyLine.id", column = "supplyLineId"),
     @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
     @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
@@ -92,12 +92,12 @@ public interface RequisitionMapper {
   Rnr getLastRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Long facilityId,
                                                  @Param(value = "programId") Long programId);
 
-  @Select("SELECT id, programId, facilityId, periodId, supplyingFacilityId, modifiedDate FROM requisitions WHERE STATUS='APPROVED'")
+  @Select("SELECT id, programId, facilityId, periodId, supplyLineId, modifiedDate FROM requisitions WHERE STATUS='APPROVED'")
   @Results(value = {
     @Result(property = "facility.id", column = "facilityId"),
     @Result(property = "program.id", column = "programId"),
     @Result(property = "period.id", column = "periodId"),
-    @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
+    @Result(property = "supplyLine.id", column = "supplyLineId")
   })
   List<Rnr> getApprovedRequisitions();
 

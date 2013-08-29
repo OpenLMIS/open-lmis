@@ -23,9 +23,8 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
-import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
+import static org.openlmis.rnr.domain.RnrStatus.APPROVED;
 import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
-import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 @Data
 @NoArgsConstructor
@@ -50,6 +49,7 @@ public class Rnr extends BaseModel {
   private List<RnrLineItem> allLineItems = new ArrayList<>();
 
   private Facility supplyingFacility;
+  private SupplyLine supplyLine;
   private Long supervisoryNodeId;
   private Date submittedDate;
   private Date authorizedDate;
@@ -197,10 +197,6 @@ public class Rnr extends BaseModel {
     this.facility = facility.basicInformation();
   }
 
-  public void fillBasicInformationForSupplyingFacility(Facility facility) {
-    this.supplyingFacility = facility.basicInformation();
-  }
-
   private void addPreviousNormalizedConsumptionFrom(Rnr rnr) {
     if (rnr == null) return;
     for (RnrLineItem currentLineItem : fullSupplyLineItems) {
@@ -321,5 +317,10 @@ public class Rnr extends BaseModel {
     this.modifiedBy = modifiedBy;
   }
 
+  public void prepareForFinalApproval(SupplyLine supplyLine) {
+    this.status = APPROVED;
+    this.supplyLine = supplyLine;
+    this.supervisoryNodeId = null;
+  }
 }
 

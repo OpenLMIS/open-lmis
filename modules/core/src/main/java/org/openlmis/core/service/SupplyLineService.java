@@ -67,4 +67,8 @@ public class SupplyLineService {
     populateIdsForSupplyLine(supplyLine);
     return supplyLineRepository.getSupplyLineBy(supplyLine.getSupervisoryNode(), supplyLine.getProgram());
   }
+
+  public SupplyLine getById(Long id) {
+    return null;  //To change body of created methods use File | Settings | File Templates.
+  }
 }

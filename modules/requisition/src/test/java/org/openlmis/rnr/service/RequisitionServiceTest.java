@@ -40,7 +40,8 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -48,6 +49,7 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessin
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.numberOfMonths;
 import static org.openlmis.core.builder.ProductBuilder.code;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
+import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
@@ -100,7 +102,7 @@ public class RequisitionServiceTest {
   private RegimenColumnService regimenColumnService;
 
   @Mock
-  RequisitionEventService requisitionEventService;
+  private RequisitionEventService requisitionEventService;
 
   @Mock
   private RequisitionPermissionService requisitionPermissionService;
@@ -637,19 +639,15 @@ public class RequisitionServiceTest {
   public void shouldApproveAnRnrAndChangeStatusToApprovedIfThereIsNoFurtherApprovalNeeded() throws Exception {
 
     Long supervisoryNodeId = 1L;
-    Long supplyingFacilityId = 2L;
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
     savedRnr.setSupervisoryNodeId(supervisoryNodeId);
     SupervisoryNode supervisoryNode = new SupervisoryNode();
     supervisoryNode.setId(supervisoryNodeId);
     SupplyLine supplyLine = new SupplyLine();
-    Facility supplyingFacility = new Facility();
-    supplyingFacility.setId(supplyingFacilityId);
-    supplyLine.setSupplyingFacility(supplyingFacility);
 
     when(supplyLineService.getSupplyLineBy(supervisoryNode, savedRnr.getProgram())).thenReturn(supplyLine);
 
-    Rnr rnr = requisitionService.approve(authorizedRnr);
+    requisitionService.approve(authorizedRnr);
 
     verify(requisitionRepository).approve(savedRnr);
     verify(requisitionRepository).logStatusChange(savedRnr);
@@ -657,6 +655,22 @@ public class RequisitionServiceTest {
     assertThat(savedRnr.getSupervisoryNodeId(), is(nullValue()));
     assertThat(savedRnr.getModifiedBy(), is(USER_ID));
 
+  }
+
+  @Test
+  public void shouldDoFinalApprovalOfAnRnrAndTagWithSupplyLine() throws Exception {
+    Long supervisoryNodeId = 1L;
+    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
+    savedRnr.setSupervisoryNodeId(supervisoryNodeId);
+    SupervisoryNode supervisoryNode = new SupervisoryNode();
+    supervisoryNode.setId(supervisoryNodeId);
+    SupplyLine supplyLine = new SupplyLine();
+
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, PROGRAM)).thenReturn(supplyLine);
+
+    Rnr rnr = requisitionService.approve(authorizedRnr);
+
+    assertThat(rnr.getSupplyLine(), is(supplyLine));
   }
 
   @Test
@@ -691,7 +705,7 @@ public class RequisitionServiceTest {
     when(supervisoryNodeService.getParent(1L)).thenReturn(parentNode);
     when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parentNode, PROGRAM)).thenReturn(new User());
 
-    Rnr rnr = requisitionService.approve(authorizedRnr);
+    requisitionService.approve(authorizedRnr);
 
     verify(requisitionRepository).approve(savedRnr);
     verify(requisitionRepository).logStatusChange(savedRnr);
@@ -713,7 +727,7 @@ public class RequisitionServiceTest {
     when(supervisoryNodeService.getParent(1L)).thenReturn(parentNode);
 
     when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parentNode, authorizedRnr.getProgram())).thenReturn(null);
-    Rnr rnr = requisitionService.approve(authorizedRnr);
+    requisitionService.approve(authorizedRnr);
 
     verify(requisitionRepository).approve(savedRnr);
     assertThat(savedRnr.getStatus(), is(IN_APPROVAL));
@@ -905,7 +919,6 @@ public class RequisitionServiceTest {
     requisition.setProgram(PROGRAM);
     requisition.setPeriod(PERIOD);
     requisition.setId(requisitionId);
-    requisition.setSupplyingFacility(FACILITY);
     when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
     when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
     when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
@@ -914,10 +927,49 @@ public class RequisitionServiceTest {
     requisitionService.getFullRequisitionById(requisitionId);
 
     verify(requisitionRepository).getById(requisitionId);
-    verify(facilityService, times(2)).getById(FACILITY.getId());
+    verify(facilityService).getById(FACILITY.getId());
     verify(programService).getById(PROGRAM.getId());
     verify(processingScheduleService).getPeriodById(PERIOD.getId());
   }
+
+  @Test
+  public void shouldGetRequisitionFilledWithSupplyLine() {
+    Long requisitionId = 1L;
+    Rnr requisition = spy(new Rnr());
+    SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setId(3L);
+    SupplyLine filledSupplyLine = make(a(defaultSupplyLine));
+    requisition.setFacility(FACILITY);
+    requisition.setProgram(PROGRAM);
+    requisition.setPeriod(PERIOD);
+    requisition.setId(requisitionId);
+    requisition.setSupplyLine(supplyLine);
+    when(supplyLineService.getById(3L)).thenReturn(filledSupplyLine);
+    when(requisitionRepository.getById(requisitionId)).thenReturn(requisition);
+    Mockito.doNothing().when(requisition).fillBasicInformation(any(Facility.class), any(Program.class), any(ProcessingPeriod.class));
+
+    Rnr returnedRnr = requisitionService.getFullRequisitionById(requisitionId);
+
+    assertThat(returnedRnr.getSupplyLine(), is(filledSupplyLine));
+  }
+
+  @Test
+  public void shouldNotFillSupplyLineIfRequisitionNotTagged() {
+    Long requisitionId = 1L;
+    Rnr requisition = spy(new Rnr());
+    requisition.setFacility(FACILITY);
+    requisition.setProgram(PROGRAM);
+    requisition.setPeriod(PERIOD);
+    requisition.setId(requisitionId);
+    requisition.setSupplyLine(null);
+    when(requisitionRepository.getById(requisitionId)).thenReturn(requisition);
+    Mockito.doNothing().when(requisition).fillBasicInformation(any(Facility.class), any(Program.class), any(ProcessingPeriod.class));
+
+    requisitionService.getFullRequisitionById(requisitionId);
+
+    verify(supplyLineService, never()).getById(anyLong());
+  }
+
 
   @Test
   public void shouldCheckForPermissionBeforeInitiatingRnr() throws Exception {
@@ -1145,6 +1197,7 @@ public class RequisitionServiceTest {
     Rnr returnedRnr = requisitionService.getLWById(rnrId);
     assertThat(returnedRnr, is(expectedRnr));
   }
+
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {
     Rnr savedRnr = spy(rnr);
     when(requisitionPermissionService.hasPermissionToSave(USER_ID, savedRnr)).thenReturn(true);
