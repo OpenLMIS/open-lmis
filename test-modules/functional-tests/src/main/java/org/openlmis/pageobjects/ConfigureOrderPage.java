@@ -77,7 +77,7 @@ public class ConfigureOrderPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//a[contains(text(),'Cancel')]")
   private static WebElement cancelButton;
 
-  @FindBy(how = XPATH, using = "//h2[contains(text(),'Configure order file format')]")
+  @FindBy(how = XPATH, using = "//h2[contains(text(),'Order file')]")
   private static WebElement configureOrderFileHeader;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'+ Add new row')]")
