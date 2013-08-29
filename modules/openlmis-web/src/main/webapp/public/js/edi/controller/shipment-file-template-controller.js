@@ -5,9 +5,23 @@
  * Time: 2:10 PM
  * To change this template use File | Settings | File Templates.
  */
-function ShipmentFileTemplateController($scope,shipmentFileTemplate){
+function ShipmentFileTemplateController($scope,shipmentFileTemplate, ShipmentFileTemplate,dateFormats){
 
   $scope.shipmentFileTemplate = shipmentFileTemplate;
+  $scope.dateFormats = _.pluck(_.where(dateFormats, {"orderDate": true}), "format");
+
+  $scope.saveShipmentFileTemplate = function () {
+    ShipmentFileTemplate.save({}, $scope.shipmentFileTemplate, function (data) {
+      $scope.message = data.success;
+      setTimeout(function () {
+        $scope.$apply(function () {
+          angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
+            $scope.message = '';
+          });
+        });
+      }, 3000);
+    });
+  };
 
 }
 

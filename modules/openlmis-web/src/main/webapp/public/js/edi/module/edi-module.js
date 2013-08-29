@@ -7,8 +7,8 @@
 'use strict';
 angular.module('edi', ['openlmis', 'ui.sortable']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
-    when('/configure-order-file', { controller: OrderFileTemplateController, templateUrl: 'partials/order-file-template-form.html', resolve: OrderFileTemplateController.resolve }).
     when('/configure-edi-file', { templateUrl: 'partials/configure-edi-file.html' }).
+    when('/configure-order-file', { controller: OrderFileTemplateController, templateUrl: 'partials/order-file-template-form.html', resolve: OrderFileTemplateController.resolve }).
     when('/configure-shipment-file', { controller: ShipmentFileTemplateController, templateUrl: 'partials/shipment-file-template-form.html',resolve: ShipmentFileTemplateController.resolve }).
     otherwise({redirectTo: '/configure-order-file'});
 }]);
