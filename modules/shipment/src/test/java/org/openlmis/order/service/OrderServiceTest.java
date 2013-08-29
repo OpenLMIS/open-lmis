@@ -49,7 +49,6 @@ public class OrderServiceTest {
   @Mock
   private RequisitionService requisitionService;
 
-  @SuppressWarnings("unuse")
   @InjectMocks
   private OrderService orderService;
 
