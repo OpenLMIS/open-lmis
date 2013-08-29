@@ -20,10 +20,11 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.io.File;
 import java.io.IOException;
 
-import static org.openqa.selenium.support.How.*;
+import static org.openqa.selenium.support.How.CSS;
+import static org.openqa.selenium.support.How.ID;
 
 
-public class FacilityMailingListReportPage extends Page {
+public class SupplyStatusByFacilityPage extends Page {
 
     @FindBy(how = ID, using = "name")
     private static WebElement facilityName;
@@ -63,7 +64,7 @@ public class FacilityMailingListReportPage extends Page {
     private String facilityCodeFilter;
     private String facilityTypeFilter;
 
-    public FacilityMailingListReportPage(TestWebDriver driver) throws IOException {
+    public SupplyStatusByFacilityPage(TestWebDriver driver) throws IOException {
         super(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
         testWebDriver.setImplicitWait(10);

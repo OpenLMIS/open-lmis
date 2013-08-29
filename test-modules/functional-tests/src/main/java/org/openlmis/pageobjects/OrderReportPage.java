@@ -24,7 +24,7 @@ import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.NAME;
 
 
-public class AverageConsumptionReportPage extends Page {
+public class OrderReportPage extends Page {
 
   @FindBy(how = NAME, using = "periodType")
   private static WebElement periodType;
@@ -98,7 +98,7 @@ public class AverageConsumptionReportPage extends Page {
   @FindBy(how = ID, using = "xls-button")
   private static WebElement XLSButton;
 
-  public AverageConsumptionReportPage(TestWebDriver driver) throws IOException {
+  public OrderReportPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
