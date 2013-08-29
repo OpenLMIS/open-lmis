@@ -40,7 +40,7 @@ public class RnrDTOTest {
     assertThat(rnrDTO.getModifiedDate(), is(rnr.getModifiedDate()));
     assertThat(rnrDTO.getPeriodStartDate(), is(rnr.getPeriod().getStartDate()));
     assertThat(rnrDTO.getPeriodEndDate(), is(rnr.getPeriod().getEndDate()));
-    assertThat(rnrDTO.getSupplyingDepot(), is(rnr.getSupplyingFacility().getName()));
+    assertThat(rnrDTO.getSupplyingDepot(), is(rnr.getSupplyLine().getSupplyingFacility().getName()));
   }
 
   @Test

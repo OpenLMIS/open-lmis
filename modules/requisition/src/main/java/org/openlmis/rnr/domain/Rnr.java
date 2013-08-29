@@ -48,7 +48,6 @@ public class Rnr extends BaseModel {
   @JsonIgnore
   private List<RnrLineItem> allLineItems = new ArrayList<>();
 
-  private Facility supplyingFacility;
   private SupplyLine supplyLine;
   private Long supervisoryNodeId;
   private Date submittedDate;
