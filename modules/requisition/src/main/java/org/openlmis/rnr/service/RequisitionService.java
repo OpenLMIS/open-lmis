@@ -221,7 +221,7 @@ public class RequisitionService {
       SupervisoryNode supervisoryNode = new SupervisoryNode(savedRnr.getSupervisoryNodeId());
       savedRnr.prepareForFinalApproval(supplyLineService.getSupplyLineBy(supervisoryNode, savedRnr.getProgram()));
     } else {
-      approveAndAssignToNextSupervisoryNode(savedRnr, parent);
+      savedRnr.approveAndAssignToNextSupervisoryNode(parent);
     }
     savedRnr.setModifiedBy(requisition.getModifiedBy());
     requisitionRepository.approve(savedRnr);
@@ -345,11 +345,6 @@ public class RequisitionService {
       lastPeriod);
   }
 
-
-  private void approveAndAssignToNextSupervisoryNode(Rnr requisition, SupervisoryNode parent) {
-    requisition.setStatus(IN_APPROVAL);
-    requisition.setSupervisoryNodeId(parent.getId());
-  }
 
   public List<Rnr> listForApproval(Long userId) {
     List<RoleAssignment> assignments = roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, userId);

@@ -37,7 +37,7 @@ public class SupplyLineRepository {
     supplyLineMapper.update(supplyLine);
   }
 
-  public SupplyLine getSupplyLineBySupervisoryNodeProgramAndFacility(SupplyLine supplyLine) {
-    return supplyLineMapper.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine);
+  public SupplyLine getById(Long id) {
+    return supplyLineMapper.getById(id);
   }
 }

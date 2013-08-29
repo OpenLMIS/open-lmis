@@ -117,4 +117,18 @@ public class SupplyLineMapperIT {
     assertThat(supplyLineReturned.getSupplyingFacility().getId(), is(facility.getId()));
     assertThat(supplyLineReturned.getSupervisoryNode().getId(), is(supervisoryNode.getId()));
   }
+
+  @Test
+  public void shouldGetSupplyLineByIdFilledWithSupplyingFacility() throws Exception {
+    mapper.insert(supplyLine);
+
+    SupplyLine supplyLineReturned = mapper.getById(supplyLine.getId());
+
+    assertThat(supplyLineReturned.getProgram().getId(), is(program.getId()));
+    assertThat(supplyLineReturned.getSupplyingFacility().getId(), is(facility.getId()));
+    assertThat(supplyLineReturned.getSupervisoryNode().getId(), is(supervisoryNode.getId()));
+    assertThat(supplyLineReturned.getSupplyingFacility().getName(), is(facility.getName()));
+  }
+
+
 }

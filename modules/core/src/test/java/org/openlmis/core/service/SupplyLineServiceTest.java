@@ -130,4 +130,14 @@ public class SupplyLineServiceTest {
     assertThat(result, is(supplyLine));
   }
 
+  @Test
+  public void shouldGetSupplyLinebyId() throws Exception {
+    SupplyLine expectedSupplyLine = new SupplyLine();
+    when(supplyLineRepository.getById(3L)).thenReturn(expectedSupplyLine);
+
+    SupplyLine returnedSupplyLine = supplyLineService.getById(3L);
+
+    assertThat(returnedSupplyLine, is(expectedSupplyLine));
+    verify(supplyLineRepository).getById(3L);
+  }
 }

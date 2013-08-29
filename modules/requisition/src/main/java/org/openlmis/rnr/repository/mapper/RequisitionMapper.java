@@ -54,7 +54,7 @@ public interface RequisitionMapper {
   @Select({"SELECT id, programId, facilityId, periodId, modifiedDate",
     "FROM requisitions ",
     "WHERE programId =  #{programId}",
-    "AND supervisoryNodeId =  #{supervisoryNode.id}"})
+    "AND supervisoryNodeId =  #{supervisoryNode.id} AND status IN ('AUTHORIZED', 'IN_APPROVAL')"})
   @Results({@Result(property = "program.id", column = "programId"),
     @Result(property = "facility.id", column = "facilityId"),
     @Result(property = "period.id", column = "periodId")})
@@ -126,7 +126,6 @@ public interface RequisitionMapper {
   Rnr getRequisitionWithoutLineItems(@Param("facilityId") Long facilityId,
                                      @Param("programId") Long programId,
                                      @Param("periodId") Long periodId);
-
 
 
   @Select("SELECT * FROM requisitions WHERE id = #{rnrId}")

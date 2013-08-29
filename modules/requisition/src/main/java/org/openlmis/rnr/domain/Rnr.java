@@ -23,8 +23,7 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
-import static org.openlmis.rnr.domain.RnrStatus.APPROVED;
-import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
+import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Data
 @NoArgsConstructor
@@ -320,6 +319,11 @@ public class Rnr extends BaseModel {
     this.status = APPROVED;
     this.supplyLine = supplyLine;
     this.supervisoryNodeId = null;
+  }
+
+  public void approveAndAssignToNextSupervisoryNode(SupervisoryNode parent) {
+    status = IN_APPROVAL;
+    supervisoryNodeId = parent.getId();
   }
 }
 
