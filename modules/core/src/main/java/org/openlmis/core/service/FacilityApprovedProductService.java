@@ -48,6 +48,10 @@ public class FacilityApprovedProductService {
     return repository.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
 
+  public List<FacilityTypeApprovedProduct> getProductsCompleteListByFacilityAndProgram(Long facilityId, Long programId){
+      return repository.getProductsCompleteListByFacilityAndProgram(facilityId, programId);
+  }
+
   public void save(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     fillProgramProductIds(facilityTypeApprovedProduct);
     FacilityType facilityType = facilityService.getFacilityTypeByCode(facilityTypeApprovedProduct.getFacilityType());
