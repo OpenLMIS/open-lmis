@@ -34,19 +34,21 @@ public class StockImbalanceQueryBuilder {
         }
     private static void writePredicates(StockImbalanceReportFilter filter){
         WHERE("status <> 'SP'");
+        WHERE("periodid = #{filterCriteria.periodId}");//required param
+        WHERE("psid = #{filterCriteria.scheduleId}");//required param
+
         if(filter != null){
+
+            if (filter.getProgramId() != 0 && filter.getProgramId() != -1) {
+                WHERE("facilitytypeid = #{filterCriteria.facilityTypeId}");
+            }
             if (filter.getFacilityTypeId() != 0 && filter.getFacilityTypeId() != -1) {
                 WHERE("facilitytypeid = #{filterCriteria.facilityTypeId}");
             }
             if(filter.getFacility() != null && !filter.getFacility().isEmpty()){
                 WHERE("facility = #{filterCriteria.facility}");
             }
-            if (filter.getStartDate() != null) {
-                WHERE("startdate >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
-            }
-            if (filter.getEndDate() != null) {
-                WHERE("enddate <= #{filterCriteria.endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");
-            }
+
             if(filter.getProductCategoryId() != 0 && filter.getProductCategoryId() != -1 ){
                 WHERE("categoryid = #{filterCriteria.productCategoryId}");
             }

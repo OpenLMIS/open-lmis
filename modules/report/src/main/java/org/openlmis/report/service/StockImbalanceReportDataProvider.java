@@ -65,8 +65,6 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
 
         if(filterCriteria != null){
             stockImbalanceReportFilter = new StockImbalanceReportFilter();
-            Calendar originalStart = Calendar.getInstance();
-            Calendar originalEnd = Calendar.getInstance();
 
             stockImbalanceReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
             stockImbalanceReportFilter.setFacilityType( (filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "ALL Facilities" : filterCriteria.get("facilityType")[0]);
@@ -78,48 +76,11 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
             stockImbalanceReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
             stockImbalanceReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
             stockImbalanceReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
+            stockImbalanceReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0]));
+            stockImbalanceReportFilter.setProgram(filterCriteria.get("program") == null ? "" : filterCriteria.get("program")[0]);
+            stockImbalanceReportFilter.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0]));
+            stockImbalanceReportFilter.setSchedule(filterCriteria.get("schedule") == null ? "" : filterCriteria.get("schedule")[0]);
 
-            stockImbalanceReportFilter.setYearFrom(filterCriteria.get("fromYear") == null ? originalStart.get(Calendar.YEAR) : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0
-            stockImbalanceReportFilter.setYearTo(filterCriteria.get("toYear") == null ? originalEnd.get(Calendar.YEAR) : Integer.parseInt(filterCriteria.get("toYear")[0])); //defaults to 0
-            stockImbalanceReportFilter.setMonthFrom(filterCriteria.get("fromMonth") == null ? originalStart.get(Calendar.MONTH) : Integer.parseInt(filterCriteria.get("fromMonth")[0])); //defaults to 0
-            stockImbalanceReportFilter.setMonthTo(filterCriteria.get("toMonth") == null ? originalEnd.get(Calendar.MONTH) : Integer.parseInt(filterCriteria.get("toMonth")[0])); //defaults to 0
-            stockImbalanceReportFilter.setPeriodType(filterCriteria.get("periodType") == null ? "" : filterCriteria.get("periodType")[0].toString());
-            stockImbalanceReportFilter.setQuarterFrom(filterCriteria.get("fromQuarter") == null ? 1 : Integer.parseInt(filterCriteria.get("fromQuarter")[0]));
-            stockImbalanceReportFilter.setQuarterTo(filterCriteria.get("toQuarter") == null ? 1 : Integer.parseInt(filterCriteria.get("toQuarter")[0]));
-            stockImbalanceReportFilter.setSemiAnnualFrom(filterCriteria.get("fromSemiAnnual") == null ? 1 : Integer.parseInt(filterCriteria.get("fromSemiAnnual")[0]));
-            stockImbalanceReportFilter.setSemiAnnualTo(filterCriteria.get("toSemiAnnual") == null ? 1 : Integer.parseInt(filterCriteria.get("toSemiAnnual")[0]));
-
-            int monthFrom = 0;
-            int monthTo = 0;
-
-            String periodType = stockImbalanceReportFilter.getPeriodType();
-
-            if(periodType.equals(Constants.PERIOD_TYPE_QUARTERLY)){
-                monthFrom = 3 *(stockImbalanceReportFilter.getQuarterFrom() - 1);
-                monthTo =  3 * stockImbalanceReportFilter.getQuarterTo() - 1;
-
-            }else if(periodType.equals(Constants.PERIOD_TYPE_MONTHLY)){
-                monthFrom = stockImbalanceReportFilter.getMonthFrom();
-                monthTo = stockImbalanceReportFilter.getMonthTo();
-
-            }else if(periodType.equals(Constants.PERIOD_TYPE_SEMI_ANNUAL)){
-                monthFrom = 6 * (stockImbalanceReportFilter.getSemiAnnualFrom() - 1);
-                monthTo = 6 *stockImbalanceReportFilter.getSemiAnnualTo() - 1;
-            }else if(periodType.equals(Constants.PERIOD_TYPE_ANNUAL)){
-                monthFrom = 0;
-                monthTo = 11;
-            }
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.YEAR, stockImbalanceReportFilter.getYearFrom());
-            calendar.set(Calendar.MONTH, monthFrom);
-            calendar.set(Calendar.DAY_OF_MONTH, 1);
-            stockImbalanceReportFilter.setStartDate(calendar.getTime());
-
-            calendar.set(Calendar.YEAR, stockImbalanceReportFilter.getYearTo());
-            calendar.set(Calendar.MONTH, monthTo);
-            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-            stockImbalanceReportFilter.setEndDate(calendar.getTime());
 
         }
         return stockImbalanceReportFilter;

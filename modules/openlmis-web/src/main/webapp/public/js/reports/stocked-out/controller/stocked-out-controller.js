@@ -192,7 +192,7 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
     });
 
     Products.get(function (data) {
-        $scope.products = data.allPeriods;
+        $scope.products = data.productList;
         //alert(JSON.stringify( $scope.products, null, 4));
         //$scope.products.push({'name': 'All Products','id':'All','tracer': 'All'});
 

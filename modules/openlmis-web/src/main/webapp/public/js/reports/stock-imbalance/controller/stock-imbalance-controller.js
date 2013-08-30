@@ -1,11 +1,17 @@
-function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods, Products, ProductCategories, ProductsByCategory, ReportFacilityTypes, RequisitionGroups, OperationYears, Months, $http, $routeParams, $location) {
+function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroupsByProgramSchedule, AllReportPeriods, Products, ProductCategories, ProductsByCategory, ReportFacilityTypes, RequisitionGroups,ReportSchedules,ReportPrograms,ReportPeriods, OperationYears, SettingsByKey, $http, $routeParams, $location) {
     //to minimize and maximize the filter section
     var section = 1;
     $scope.showMessage = true;
     $scope.message = "Indicates a required field."
 
     $scope.defaultFlag = true;
-    $scope.reporting = "quarterly";
+   // $scope.reporting = "quarterly";
+    $scope.IndicatorProductsKey = "INDICATOR_PRODUCTS";
+    $scope.IndicatorProductsDescription = "";
+
+    SettingsByKey.get({key: $scope.IndicatorProductsKey},function (data){
+          $scope.IndicatorProductsDescription = data.settings[0].value;
+    });
 
     AllReportPeriods.get(function (data) {
         $scope.periods = data.periods;
@@ -25,7 +31,7 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
         section = id;
     };
 
-    $scope.defaultSettings = function (str) {
+  /*  $scope.defaultSettings = function (str) {
 
         var retval = '';
         var months = new Array(12);
@@ -65,7 +71,7 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
             retval = retval + "";
         }
         return retval;
-    };
+    };*/
 
 
     $scope.show = function (id) {
@@ -92,13 +98,12 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
         useExternalFilter: false
     };
 
-    $scope.startYears = [];
+   $scope.startYears = [];
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
-        adjustEndYears();
     });
-
-    // default to the monthly period type
+    /*
+      // default to the monthly period type
 
     $scope.periodTypes = [
         {'name': 'Monthly', 'value': 'monthly'},
@@ -150,10 +155,10 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
         {'name': 'First Half', 'value': '1'},
         {'name': 'Second Half', 'value': '2'}
     ];
-
+*/
     // copy over the start month and end months
     // this is just for initial loading.
-    $(function () {
+   /* $(function () {
         $scope.startQuarters = $scope.quarters;
         $scope.endQuarters = $scope.quarters;
         $scope.endYears = $scope.startYears;
@@ -177,8 +182,15 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
 
     $scope.isSemiAnnualy = function () {
         return $scope.periodType == 'semi-anual';
-    };
+    };*/
 
+    ReportPrograms.get(function(data){
+        $scope.programs = data.programs;
+    })
+
+    ReportSchedules.get(function(data){
+        $scope.schedules = data.schedules;
+    });
 
     RequisitionGroups.get(function (data) {
         $scope.requisitionGroups = data.requisitionGroupList;
@@ -192,14 +204,23 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
 
     Products.get(function (data) {
         $scope.products = data.productList;
-        $scope.products.push({'name': '-- All Products --','id':'All'});
+        $scope.products.unshift({'name': '-- All Products --', 'id':'All'});
+        $scope.products.unshift({'name': $scope.IndicatorProductsDescription, 'id':'-1'});
 
     });
 
     ProductCategories.get(function (data) {
         $scope.productCategories = data.productCategoryList;
-        //$scope.productCategories.push({'name': 'All Product Categories', 'id' : 'All'});
     });
+    $scope.ChangeSchedule = function(){
+        ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
+            $scope.periods = data.periods;
+        });
+
+        RequisitionGroupsByProgramSchedule.get({program: $scope.program, schedule:$scope.schedule}, function(data){
+            $scope.requisitionGroups = data.requisitionGroupList;
+        });
+    }
 
 
     $scope.$watch('facilityType', function (selection) {
@@ -244,7 +265,7 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
     $scope.ChangeProductList = function () {
         ProductsByCategory.get({category: $scope.filterObject.productCategoryId}, function (data) {
             $scope.products = data.productList;
-            $scope.products.push({'name': '-- All Products --','id':'All'});
+            $scope.products.unshift({'name': '-- All Products --','id':'All'});
         });
     }
 
@@ -275,24 +296,41 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
         $scope.filterGrid();
     });
 
-    $scope.$watch('period', function (selection) {
+    $scope.$watch('program', function (selection) {
         if (selection == "All") {
-            $scope.filterObject.periodId = -1;
+            $scope.filterObject.programId = -1;
         } else if (selection != undefined || selection == "") {
-            $scope.filterObject.periodId = selection;
+            $scope.filterObject.programId = selection;
             $.each($scope.periods, function (item, idx) {
                 if (idx.id == selection) {
-                    $scope.filterObject.period = idx.name;
+                    $scope.filterObject.program = idx.name;
                 }
             });
 
         } else {
-            $scope.filterObject.periodId = 0;
+            $scope.filterObject.programId = 0;
         }
         $scope.filterGrid();
     });
 
-    $scope.$watch('startYear', function (selection) {
+    $scope.$watch('schedule', function (selection) {
+        if (selection == "All") {
+            $scope.filterObject.scheduleId = -1;
+        } else if (selection != undefined || selection == "") {
+            $scope.filterObject.scheduleId = selection;
+            $.each($scope.periods, function (item, idx) {
+                if (idx.id == selection) {
+                    $scope.filterObject.schedule = idx.name;
+                }
+            });
+
+        } else {
+            $scope.filterObject.scheduleId = 0;
+        }
+        $scope.filterGrid();
+    });
+
+   /* $scope.$watch('startYear', function (selection) {
         var date = new Date();
         //alert(selection);
         if (selection != undefined || selection == "") {
@@ -468,7 +506,7 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
             $scope.filterObject.periodType = "monthly";
         }
         $scope.filterGrid();
-    });
+    });*/
 
 
     $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
@@ -517,7 +555,7 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
     $scope.filterObject = {
         facilityTypeId: $scope.facilityType,
         facilityType: "",
-        periodType: $scope.periodType,
+        /*periodType: $scope.periodType,
         fromYear: $scope.fromYear,
         fromMonth: $scope.fromMonth,
         fromQuarter: $scope.fromQuarter,
@@ -525,7 +563,11 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
         toYear: $scope.toYear,
         toMonth: $scope.toMonth,
         toQuarter: $scope.toQuarter,
-        toSemiAnnual: $scope.endHalf,
+        toSemiAnnual: $scope.endHalf,*/
+        programId: $scope.program,
+        program: "",
+        scheduleId: $scope.schedule,
+        schedule: "",
         productId: $scope.productId,
         productCategoryId: $scope.productCategoryId,
         rgroupId: $scope.rgroup,
@@ -586,7 +628,7 @@ function StockImbalanceController($scope, StockImbalanceReport, AllReportPeriods
     $scope.gridOptions = {
         data: 'myData',
         columnDefs: [
-            { field: 'supplyingFacility', displayName: 'Supplying Facility', width: "180px;"},
+        { field: 'supplyingFacility', displayName: 'Supplying Facility', width: "180px;"},
             { field: 'facility', displayName: 'Facility', width: "150px;", resizable: false},
             { field: 'product', displayName: 'Product', width: "300px;" },
             { field: 'physicalCount', displayName: 'Physical Count', width: "150px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD,"0,000")}}</span></div>'},

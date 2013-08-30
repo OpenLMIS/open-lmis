@@ -266,6 +266,10 @@ services.factory('Settings',function($resource){
     return $resource('/settings.json',{},{});
 });
 
+services.factory('SettingsByKey',function($resource){
+    return $resource('/settings/:key.json',{},{});
+});
+
 services.factory('SettingUpdator', function($resource){
     return $resource('/saveSettings.json', {} , { post: {method:'POST'} } );
 });
