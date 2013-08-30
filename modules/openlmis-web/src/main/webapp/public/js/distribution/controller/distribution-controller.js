@@ -52,6 +52,8 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
 
   $scope.initiateDistribution = function () {
 
+    var message;
+
     function isCached() {
       return !!_.find(SharedDistributions.distributionList, function (distribution) {
         return distribution.deliveryZone.id == $scope.selectedZone.id &&
@@ -71,7 +73,6 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
     cacheDistribution();
 
     function cacheDistribution() {
-
       $scope.distributionInitiatedCallback = function (result) {
         if (result) {
           distributionDefer.resolve(distribution);
@@ -85,15 +86,15 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
       $http.post('/distributions.json', distribution).success(onInitSuccess);
 
       function onInitSuccess(data, status) {
+        message = data.success;
         if (status == 201) {
-          $scope.message = data.success;
           distributionDefer.resolve(data.distribution);
         } else {
           distribution = data.distribution;
           var dialogOpts = {
             id: "distributionInitiated",
             header: messageService.get('label.distribution.initiated'),
-            body: data.success
+            body: data.message
           };
           OpenLmisDialog.newDialog(dialogOpts, $scope.distributionInitiatedCallback, $dialog, messageService);
         }
@@ -152,6 +153,7 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
       IndexedDB.put('distributionReferenceData', referenceData, function () {
       }, {});
 
+      $scope.message = message;
     });
   };
 
