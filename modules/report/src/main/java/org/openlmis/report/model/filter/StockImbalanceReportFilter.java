@@ -24,7 +24,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class StockImbalanceReportFilter implements ReportData {
 
-    private String periodType;
+    /*private String periodType;
     private int yearFrom;
     private int yearTo;
     private int monthFrom;
@@ -35,7 +35,7 @@ public class StockImbalanceReportFilter implements ReportData {
     private int quarterTo;
     private int semiAnnualFrom;
     private int semiAnnualTo;
-
+*/
     private int facilityTypeId;
     private String facilityType;
     private int productId;
@@ -43,14 +43,20 @@ public class StockImbalanceReportFilter implements ReportData {
     private int rgroupId;
     private String rgroup;
     private String facility;
+    private int programId;
+    private String program;
+    private int scheduleId;
+    private String schedule;
+    private int periodId;
+    private String period;
 
     @Override
     public String toString(){
 
-        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
+       // DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
 
         StringBuilder filtersValue = new StringBuilder("");
-        filtersValue.append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
+        filtersValue.append("Period : ").append(this.period).append("\n").
                 append("Facility Types : ").append(this.getFacilityType()).append("\n").
                 append("Reporting Groups : ").append(this.getRgroup());
 

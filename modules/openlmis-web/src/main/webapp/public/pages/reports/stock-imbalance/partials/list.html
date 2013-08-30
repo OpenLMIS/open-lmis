@@ -20,7 +20,37 @@
                 <div class="app-form" style="padding: 5px;">
                         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
                             <div class="clearfix ">
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Schedule <span class="label-required">*</span></label>
 
+                                    <div class="form-fields">
+                                        <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="schedule" ng-options="option.id as option.name for option in schedules">
+                                           <option value="">-- Select a Schedule --</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters">
+                                    <label class="labels">Year <span class="label-required"></span></label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" class="input-small" ng-required="true"  name="startYear" id="startYear" ng-model="startYear"  ng-options="year for year in startYears">
+                                              <option value=""></option>
+                                        </select>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters">
+                                    <label class="labels">Period <span class="label-required">*</span></label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" ng-change="filterGrid()" class="input-large" ng-required="true"  name="period" ng-model="period" ng-options="option.id as option.name for option in periods">
+                                              <option value="">-- Select a Period --</option>
+                                        </select>
+                                    </div>
+                                </div>
+<!--
                                 <div class="form-cell horizontalFilters">
                                     <div >
                                         <label class="labels">Period Type<span class="label-required"> *</span></label>
@@ -86,14 +116,22 @@
                                             </select>
                                         </span>
                                     </div>
-                                </div>
+                                </div>-->
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Program</label>
 
+                                    <div class="form-fields">
+                                        <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="program" ng-options="option.id as option.name for option in programs">
+                                            <option value="">-- All Programs --</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Product Categories</label>
 
                                     <div class="form-field">
                                         <select ui-select2 style="width:300px;" name="productCategoryElement"   ng-model="productCategory" ng-options="option.id as option.name for option in productCategories">
-                                            <option id="All" value="">All Product Categories</option>
+                                            <option id="All" value="">-- All Product Categories --</option>
                                         </select>
                                     </div>
                                 </div>
