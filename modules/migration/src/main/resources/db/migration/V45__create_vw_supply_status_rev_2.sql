@@ -1,4 +1,4 @@
-DROP VIEW IF EXISTS vw_supply_status;
+/*DROP VIEW IF EXISTS vw_supply_status;
 
 CREATE OR REPLACE VIEW vw_supply_status AS
  SELECT requisition_line_items.id AS li_id,
@@ -71,3 +71,4 @@ CREATE OR REPLACE VIEW vw_supply_status AS
 
 ALTER TABLE vw_supply_status
   OWNER TO postgres;
+  */

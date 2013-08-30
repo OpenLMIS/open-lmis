@@ -1,4 +1,4 @@
-SELECT DISTINCT
+/*SELECT DISTINCT
 fn_get_supplying_facility_name(requisitions.supplyingfacilityid) AS supplyingfacility,
 facilities.code AS facilitycode,
 facilities.name AS facility,
@@ -52,4 +52,4 @@ FROM facilities
 WHERE requisition_line_items.stockinhand IS NOT NULL AND requisitions.status = 'RELEASED'
 
 
-
+*/
