@@ -77,13 +77,13 @@ public class ConfigureOrderPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//a[contains(text(),'Cancel')]")
   private static WebElement cancelButton;
 
-  @FindBy(how = XPATH, using = "//h2[contains(text(),'Configure order file format')]")
+  @FindBy(how = XPATH, using = "//h2[contains(text(),'Order file')]")
   private static WebElement configureOrderFileHeader;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'+ Add new row')]")
   private static WebElement addNewButton;
 
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen19']/a/div/b")
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen15']/a/div/b")
   private static WebElement periodSelectBoxClickableLink;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
@@ -95,7 +95,7 @@ public class ConfigureOrderPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
   private static WebElement periodSelectBoxSelectableElement;
 
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen21']/a/div/b")
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen17']/a/div/b")
   private static WebElement orderDateSelectBoxClickableLink;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
@@ -107,10 +107,10 @@ public class ConfigureOrderPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
   private static WebElement orderDateSelectBoxSelectableElement;
 
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen19']/a/span")
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen15']/a/span")
   private static WebElement periodSelectBoxDefaultSelected;
 
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen21']/a/span")
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen17']/a/span")
   private static WebElement orderDateSelectBoxDefaultSelected;
 
 

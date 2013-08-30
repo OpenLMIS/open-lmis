@@ -13,10 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 public class ShipmentFileTemplateController extends BaseController {
@@ -24,15 +25,16 @@ public class ShipmentFileTemplateController extends BaseController {
   @Autowired
   ShipmentFileTemplateService service;
 
-  @RequestMapping(value = "/shipmentTemplate", method = GET)
+  @RequestMapping(value = "/shipment-file-template", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_EDI')")
   public ResponseEntity<OpenLmisResponse> get() {
     return OpenLmisResponse.response("shipment_template", service.get());
   }
 
-  @RequestMapping(value = "/shipmentTemplate", method = PUT, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/shipment-file-template", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_EDI')")
-  public void update(ShipmentFileTemplate shipmentFileTemplate) {
+  public ResponseEntity<OpenLmisResponse> update(@RequestBody ShipmentFileTemplate shipmentFileTemplate) {
     service.update(shipmentFileTemplate);
+    return OpenLmisResponse.success("shipment.file.configuration.success");
   }
 }

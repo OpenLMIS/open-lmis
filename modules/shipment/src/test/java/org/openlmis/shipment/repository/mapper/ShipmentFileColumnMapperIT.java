@@ -29,7 +29,7 @@ public class ShipmentFileColumnMapperIT {
   @Test
   public void shouldInsertShipmentFileColumn() {
     List<ShipmentFileColumn> existingColumns = mapper.getAll();
-    ShipmentFileColumn shipmentFileColumn = new ShipmentFileColumn("Order Number", 1, true, true, null);
+    ShipmentFileColumn shipmentFileColumn = new ShipmentFileColumn("Order Number", 10, true, true, null);
 
     mapper.insert(shipmentFileColumn);
 

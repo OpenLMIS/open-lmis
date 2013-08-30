@@ -8,14 +8,18 @@ package org.openlmis.shipment.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonSerialize(include = NON_EMPTY)
 public class ShipmentFileColumn {
 
   private String dataFieldLabel;
-  private int position;
+  private Integer position;
   private Boolean includedInShipmentFile;
   private Boolean mandatory;
   private String datePattern;
