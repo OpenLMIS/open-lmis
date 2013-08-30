@@ -50,6 +50,8 @@ public class FacilityRepository {
   }
 
     public List<Facility> getFacilitiesForAFacilityType(Long facilityTypeId){
+        if(facilityTypeId == null || facilityTypeId == 0 || facilityTypeId == -1)
+            return mapper.getAll();
         return mapper.getFacilitiesListForAFacilityType(facilityTypeId);
     }
 

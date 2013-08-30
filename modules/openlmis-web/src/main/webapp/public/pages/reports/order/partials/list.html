@@ -116,7 +116,7 @@
                             <label class="labels">Period<span  class="label-required"> *</span></label>
 
                             <div class="form-field">
-                                <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="period" ng-options="option.id as option.name for option in periods">
+                                <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="period" ng-options="option.id as option.name for option in periods | orderBy:'id'">
 
                                 </select>
                             </div>
@@ -139,18 +139,21 @@
                         </div>
 
              </td><td>
-                        <!-- Facility Type-->
-                        <div class="form-cell horizontalFilters" >
-                            <label class="labels">Facility Type</label>
 
-                            <div class="form-field">
-                                <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
-                                  <option value="">-- All Facility Types --</option>
-                                </select>
-                            </div>
-                        </div>
-                </td></tr><tr><td></td><td>
-                        <!-- Zone-->
+             <!-- Product-->
+
+             <div class="form-cell horizontalFilters" >
+                 <label class="labels">Product</label>
+
+                 <div class="form-field">
+                     <select ui-select2 style="width:200px;" name="product"  ng-model="product" ng-options="option.id as option.name for option in products">
+                         <option  value="">&#60Indicator Products&#62</option>
+                     </select>
+                 </div>
+             </div>
+
+                 </td></tr><tr><td></td><td>
+                        <!-- Zone
                         <div class="form-cell horizontalFilters" >
                             <label class="labels">Zone</label>
 
@@ -160,32 +163,36 @@
                                 </select>
                             </div>
                         </div>
-                     </td><td>
-                        <!-- Facility-->
-                        <div class="form-cell horizontalFilters">
-                            <label class="labels">Facility Name<span  class="label-required"> *</span></label>
-                            <div class="form-field">
-                                <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility" ng-options="option.id as option.code.concat('-').concat.(option.name) for option in allFacilities">
-                                   <option value="">-- Select Facility --</option>
-                                </select>
-                            </div>
+                     </td><td>-->
 
-                        </div>
+             <!-- Facility Type-->
+             <div class="form-cell horizontalFilters" >
+                 <label class="labels">Facility Type</label>
+
+                 <div class="form-field">
+                     <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
+                         <option value="">-- All Facility Types --</option>
+                     </select>
+                 </div>
+             </div>
+
                </td><td>
-                        <!-- Product-->
 
-                        <div class="form-cell horizontalFilters" >
-                            <label class="labels">Product</label>
+             <!-- Facility-->
+             <div class="form-cell horizontalFilters">
+                 <label class="labels">Facility Name<span  class="label-required"> *</span></label>
+                 <div class="form-field">
+                     <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility" ng-options="option.id as option.code.concat('-').concat.(option.name) for option in allFacilities">
+                         <option value="">-- Select Facility --</option>
+                     </select>
+                 </div>
 
-                            <div class="form-field">
-                                <select ui-select2 style="width:200px;" name="product"  ng-model="product" ng-options="option.id as option.name for option in products">
-                                    <option  value="">&#60Indicator Products&#62</option>
-                                </select>
-                            </div>
-                        </div>
+             </div>
+
                    </td></tr></table>
                     </div>
                 </form>
+                <span class="label-required">*</span> <span id="requiredMsgDiv" ng-bind="message" ng-show="showMessage"/>
             </div>
         </div>
 

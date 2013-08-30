@@ -103,46 +103,34 @@
                          </form>
                 </div>
             </div>
-         <table class="table" ng-table="tableParams">
-               <thead>
-                  <tr class="gradient-header">
-                      <th>Code</th>
-                      <th>Product</th>
-                      <th>Opening Balance</th>
-                      <th>Receipts</th>
-                      <th>Issues</th>
-                      <th>Adjustements</th>
-                      <th>Closing Balance</th>
-                      <th>Months of Stock</th>
-                      <th>AMC</th>
-                      <th>Minimum Stock</th>
-                      <th>Re Order Amount</th>
-                  </tr>
-               </thead>
+         <table ng-show="datarows.length > 0" class="table-bordered table" show-filter="true" ng-table="tableParams">
+
              <tbody>
                 <tr ng-repeat="row in datarows">
-                    <td>{{ row.code }}</td>
-                    <td>{{ row.product }}</td>
-                    <td>{{ row.openingBalance }}</td>
-                    <td>{{ row.receipts }}</td>
-                    <td>{{ row.issues }}</td>
-                    <td>{{ row.adjustemens }}</td>
-                    <td>{{ row.closingBalance }}</td>
-                    <td>{{ row.monthsOfStock }}</td>
-                    <td>{{ row.averageMonthlyConsumption }}</td>
-                    <td>{{ row.minimumStock }}</td>
-                    <td>{{ row.reorderAmount }}</td>
+                    <td data-title="'Code'" sortable="code" filter="{ 'code': 'text' }">{{ row.code }}</td>
+                    <td data-title="'Product'" sortable="product" filter="{ 'product': 'text' }">{{ row.product }}</td>
+                    <td data-title="'Product'" filter="{ 'action': 'button' }">{{ row.openingBalance }}</td>
+                    <td data-title="'Recipts'">{{ row.receipts }}</td>
+                    <td data-title="'Issues'">{{ row.issues }}</td>
+                    <td data-title="'Adjustments'">{{ row.adjustments }}</td>
+                    <td data-title="'Closing Balance'">{{ row.closingBalance }}</td>
+                    <td data-title="'MOS'">{{ row.monthsOfStock }}</td>
+                    <td data-title="'AMC'">{{ row.averageMonthlyConsumption }}</td>
+                    <td data-title="'Minimum Stock'">{{ row.minimumStock }}</td>
+                    <td data-title="'Reorder Amount'">{{ row.reorderAmount }}</td>
                 </tr>
-                <tr>
-                   <td colspan="11">
-                         No Data to show under selected filters
-                   </td>
-                </tr>
+
              </tbody>
-             <tfoot>
-                    <tr><td colspan="13">End of List</td></tr>
-             </tfoot>
          </table>
+
+         <table ng-show="datarows.length == 0" class="table">
+             <tr>
+                 <td >
+                     No Data to show under selected filters
+                 </td>
+             </tr>
+         </table>
+
          <!-- <div class="gridStyleReport" ng-grid="gridOptions"></div>
 
 

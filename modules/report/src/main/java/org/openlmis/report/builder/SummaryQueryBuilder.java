@@ -89,7 +89,7 @@ public class SummaryQueryBuilder {
         }
         if (facilityTypeId != null &&  !facilityTypeId.equals("undefined") && !facilityTypeId.isEmpty() && !facilityTypeId.equals("0") &&  !facilityTypeId.equals("-1")) {
 
-            predicate += " and facility_types.id = "+ facilityTypeId;
+            predicate += " and facilities.typeid = "+ facilityTypeId;
         }
         if (facilityName != null &&  !facilityName.equals("undefined") && !facilityName.isEmpty() ) {
 

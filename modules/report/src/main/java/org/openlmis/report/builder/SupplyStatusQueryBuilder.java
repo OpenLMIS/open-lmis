@@ -26,8 +26,8 @@ public class SupplyStatusQueryBuilder {
                 "  li_amc * fp_maxmonthsofstock maximumStock, " +
                 "  li_calculatedorderquantity reorderAmount, " +
                 "  supplyingfacility supplyingFacility," +
-                "  li_maxmonthsofstock MaxMOS," +
-                "  li_maxmonthsofstock  minMOS   \n " +
+                "  fp_maxmonthsofstock MaxMOS," +
+                "  fp_minmonthsofstock  minMOS   \n " +
                 " from vw_supply_status \n"+
                 writePredicates(filterCriteria)+ "\n"+
 

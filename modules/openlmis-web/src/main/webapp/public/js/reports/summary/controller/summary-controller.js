@@ -1,4 +1,4 @@
-function SummaryReportController($scope, ngTableParams , SummaryReport, ReportSchedules, ReportPrograms , ReportPeriods , Products ,ReportFacilityTypes,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
+function SummaryReportController($scope,$filter ,ngTableParams , SummaryReport, ReportSchedules, ReportPrograms , ReportPeriods , Products ,ReportFacilityTypes,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
         //to minimize and maximize the filter section
 
 
@@ -11,11 +11,20 @@ function SummaryReportController($scope, ngTableParams , SummaryReport, ReportSc
 
         $scope.paramsChanged = function(params) {
             // slice array data on pages
-            $scope.datarows = $scope.data.pages.rows.slice(
-                (params.page - 1) * params.count,
-                params.page * params.count
-            );
+            if($scope.data == undefined || $scope.data.pages == undefined || $scope.data.pages.rows == undefined){
+                $scope.datarows = [];
+            }else{
+                var data = $scope.data.pages.rows;
+                var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+                orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
+
+
+
+                params.total = data.length;
+                $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+            }
         };
+
         // watch for changes of parameters
         $scope.$watch('tableParams', $scope.paramsChanged , true);
 
@@ -28,7 +37,6 @@ function SummaryReportController($scope, ngTableParams , SummaryReport, ReportSc
         };
 
         // initialize the defaults for each of the modules
-
         $scope.filterGrid = function (){
            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
@@ -50,39 +58,39 @@ function SummaryReportController($scope, ngTableParams , SummaryReport, ReportSc
 
         ReportPrograms.get(function(data){
             $scope.programs = data.programs;
-            $scope.programs.unshift({'name':'Select a Program','id':''});
+            $scope.programs.unshift({'name':'Select a Program'});
         });
 
         RequisitionGroups.get(function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.unshift({'name':'All Reporting Groups','id':''});
+            $scope.requisitionGroups.unshift({'name':'All Reporting Groups'});
         });
 
         ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.unshift({'name': 'All Facility Types', 'id' : ''});
+            $scope.facilityTypes.unshift({'name': 'All Facility Types'});
         });
 
         ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
-        $scope.schedules.unshift({'name':'Select a Schedule', 'id':''});
+        $scope.schedules.unshift({'name':'Select a Schedule'});
     });
 
         Products.get(function(data){
             $scope.products = data.productList;
-            $scope.products.unshift({'name': 'All Products','id':''});
+            $scope.products.unshift({'name': 'All Products'});
         });
 
         $scope.ChangeSchedule = function(){
             ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
                 $scope.periods = data.periods;
-                $scope.periods.unshift({'name': 'Select Period', 'id':''});
+                $scope.periods.unshift({'name': 'Select Period'});
             });
         }
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
-            $scope.zones.push({'name': '- All Zones -', 'id' : ''});
+            $scope.zones.unshift({'name': '- All Zones -'});
         });
 
         $scope.$watch('facilityType', function(selection){
@@ -223,6 +231,10 @@ function SummaryReportController($scope, ngTableParams , SummaryReport, ReportSc
         };
 
         $scope.getPagedDataAsync = function (pageSize, page) {
+                        if($scope.period == undefined){
+                            return;
+                        }
+                        $scope.data = [];
                         var params  = {};
                         if(pageSize != undefined && page != undefined ){
                             var params =  {
@@ -247,7 +259,6 @@ function SummaryReportController($scope, ngTableParams , SummaryReport, ReportSc
                         SummaryReport.get(params, function(data) {
                            $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
                            $scope.data = data;
-                           $scope.tableParams.total = $scope.data.pages.rows.length;
                            $scope.paramsChanged($scope.tableParams);
                         });
 
