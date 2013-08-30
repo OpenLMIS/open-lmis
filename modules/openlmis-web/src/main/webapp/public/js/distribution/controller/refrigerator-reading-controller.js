@@ -1,5 +1,5 @@
 function RefrigeratorReadingController($scope) {
   $scope.getStatus = function () {
-    return new RefrigeratorReading($scope.refrigeratorReading).getStatus();
+    return new RefrigeratorReading($scope.refrigeratorReading).computeStatus();
   };
 };

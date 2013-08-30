@@ -11,18 +11,10 @@ function EPIUseController($scope, $routeParams, distributionService) {
 
   $scope.$on('distributionReceived', function () {
     $scope.distribution = distributionService.distribution;
-    $scope.productGroupReadings = $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].epiUse.productGroups;
-    $($scope.productGroupReadings).each(function (index, groupReading) {
-      groupReading.reading = {total: {value: 0}}
-    });
   });
 
   if ($scope.distribution == undefined && distributionService.distribution != undefined) {
     $scope.distribution = distributionService.distribution;
-    $scope.productGroupReadings = $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].epiUse.productGroups;
-    $($scope.productGroupReadings).each(function (index, groupReading) {
-      groupReading.reading = {total: {value: 0}};
-    });
   }
 
 };
@@ -31,6 +23,9 @@ function EPIUseController($scope, $routeParams, distributionService) {
 
 function EpiUseRowController($scope) {
   $scope.getTotal = function() {
+    if(isUndefined($scope.groupReading.reading)) {
+      return 0;
+    }
     return getValue($scope.groupReading.reading.stockAtFirstOfMonth) + getValue($scope.groupReading.reading.received);
   }
 

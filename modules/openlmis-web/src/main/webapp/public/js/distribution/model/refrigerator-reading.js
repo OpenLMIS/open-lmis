@@ -3,13 +3,13 @@ function RefrigeratorReading(refrigeratorReading) {
 
   this.refrigeratorReading = refrigeratorReading;
 
-  RefrigeratorReading.prototype.getStatus = function() {
+  RefrigeratorReading.prototype.computeStatus = function() {
     var complete = 'is-complete';
     var incomplete = 'is-incomplete';
     var empty = 'is-empty';
 
     var statusClass = complete;
-    function isValidField(field) {
+    function isEmpty(field) {
       if(isUndefined(refrigeratorReading[field])) {
         return true;
       }
@@ -17,7 +17,7 @@ function RefrigeratorReading(refrigeratorReading) {
     }
 
     $(fieldList).each(function (index, field) {
-      if (isValidField(field)) {
+      if (isEmpty(field)) {
         statusClass = empty;
         return false;
       }
@@ -26,7 +26,7 @@ function RefrigeratorReading(refrigeratorReading) {
 
     if (statusClass === empty) {
       $(fieldList).each(function (index, field) {
-        if (!isValidField(field)) {
+        if (!isEmpty(field)) {
           statusClass = incomplete;
           return false;
         }

@@ -8,29 +8,30 @@
 <div class="clearfix facility-container">
   <ng-include src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
-  <form auto-save="distribution" object-store="distributions">
-    <div class="facility-info">
-      <div class="refrigerator-container">
-        <h3>
-          <span openlmis-message="header.epi.use"></span>
-        </h3>
+  <div class="facility-info">
+    <div class="refrigerator-container">
+      <h3>
+        <span openlmis-message="header.epi.use"></span>
+      </h3>
 
-        <div id="epiUseTable" tab-scroll bottom-offset="180">
-          <div class="list-header-container">
-            <div class="list-header row-fluid">
-              <div class="span2" openlmis-message="header.epi.use.doses"></div>
-              <div class="span1" openlmis-message="header.epi.use.startingStock"></div>
-              <div class="span1" openlmis-message="header.epi.use.received"></div>
-              <div class="span1" openlmis-message="header.epi.use.total"></div>
-              <div class="span1" openlmis-message="header.epi.use.distributed"></div>
-              <div class="span1" openlmis-message="header.epi.use.loss"></div>
-              <div class="span1" openlmis-message="header.epi.use.endingStock"></div>
-              <div class="span1" openlmis-message="description.column.expiration.date"></div>
-            </div>
+      <div id="epiUseTable" tab-scroll bottom-offset="180">
+        <div class="list-header-container">
+          <div class="list-header row-fluid">
+            <div class="span2" openlmis-message="header.epi.use.doses"></div>
+            <div class="span1" openlmis-message="header.epi.use.startingStock"></div>
+            <div class="span1" openlmis-message="header.epi.use.received"></div>
+            <div class="span1" openlmis-message="header.epi.use.total"></div>
+            <div class="span1" openlmis-message="header.epi.use.distributed"></div>
+            <div class="span1" openlmis-message="header.epi.use.loss"></div>
+            <div class="span1" openlmis-message="header.epi.use.endingStock"></div>
+            <div class="span1" openlmis-message="description.column.expiration.date"></div>
           </div>
-          <div class="list-container">
-            <div class="row-fluid list-row" ng-repeat="groupReading in distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups"
-                ng-controller="EpiUseRowController" >
+        </div>
+        <div class="list-container">
+          <div class="row-fluid list-row"
+               ng-repeat="groupReading in distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups"
+               ng-controller="EpiUseRowController">
+            <form auto-save="distribution" object-store="distributions">
               <div class="span2">
                 <span ng-bind="groupReading.name"></span>
               </div>
@@ -38,7 +39,9 @@
                 <input type="text" ng-model="groupReading.reading.stockAtFirstOfMonth.value"
                        name="stockAtFirstOfMonth{{$index}}" numeric-validator="positiveInteger" maxlength="7"
                        error-holder="stockAtFirstOfMonthError{{$index}}"/>
-                <div id="stockAtFirstOfMonthError{{$index}}" class="form-error" openlmis-message="error.enter.number.only"
+
+                <div id="stockAtFirstOfMonthError{{$index}}" class="form-error"
+                     openlmis-message="error.enter.number.only"
                      style="display: none"></div>
                 <input id="stockAtFirstOfMonth{{$index}}" type="checkbox"
                        ng-model="groupReading.reading.stockAtFirstOfMonth.notRecorded"
@@ -49,6 +52,7 @@
               <div class="span1">
                 <input type="text" ng-model="groupReading.reading.received.value" name="received{{$index}}"
                        numeric-validator="positiveInteger" maxlength="7" error-holder="receivedError{{$index}}"/>
+
                 <div id="receivedError{{$index}}" class="form-error" openlmis-message="error.enter.number.only"
                      style="display: none"></div>
                 <input id="received{{$index}}" type="checkbox"
@@ -63,6 +67,7 @@
               <div class="span1">
                 <input type="text" ng-model="groupReading.reading.distributed.value" name="distributed{{$index}}"
                        numeric-validator="positiveInteger" maxlength="7" error-holder="distributedError{{$index}}"/>
+
                 <div id="distributedError{{$index}}" class="form-error" openlmis-message="error.enter.number.only"
                      style="display: none"></div>
                 <input id="distributed{{$index}}" type="checkbox"
@@ -74,6 +79,7 @@
               <div class="span1">
                 <input type="text" ng-model="groupReading.reading.loss.value" name="loss{{$index}}" maxlength="7"
                        numeric-validator="positiveInteger" error-holder="lossError{{$index}}"/>
+
                 <div id="lossError{{$index}}" class="form-error" openlmis-message="error.enter.number.only"
                      style="display: none"></div>
                 <input id="loss{{$index}}" type="checkbox"
@@ -84,7 +90,9 @@
               </div>
               <div class="span1">
                 <input type="text" ng-model="groupReading.reading.stockAtEndOfMonth.value"
-                       name="stockAtEndOfMonth{{$index}}" numeric-validator="positiveInteger" maxlength="7" error-holder="stockAtEndOfMonthError{{$index}}"/>
+                       name="stockAtEndOfMonth{{$index}}" numeric-validator="positiveInteger" maxlength="7"
+                       error-holder="stockAtEndOfMonthError{{$index}}"/>
+
                 <div id="stockAtEndOfMonthError{{$index}}" class="form-error" openlmis-message="error.enter.number.only"
                      style="display: none"></div>
                 <input id="stockAtEndOfMonth{{$index}}" type="checkbox"
@@ -97,23 +105,24 @@
                 <input type="text" ng-model="groupReading.reading.expirationDate.value" name="expirationDate{{$index}}"
                        date-validator="date"
                        showError="inputClass" error-holder="expirationDateError{{$index}}" maxlength="7"/>
-                <span class = "alert alert-warning warning-alert" id="expirationDateError{{$index}}"
-                      style = "display:none;" openlmis-message="error.invalid.date.format"></span>
+                <span class="alert alert-warning warning-alert" id="expirationDateError{{$index}}"
+                      style="display:none;" openlmis-message="error.invalid.date.format"></span>
                 <input id="expirationDate{{$index}}" type="checkbox"
                        ng-model="groupReading.reading.expirationDate.notRecorded"
                        not-recorded="clearError"/>
                 <label class="checkbox-label" for="expirationDate{{$index}}"
                        openlmis-message="label.not.recorded"></label>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="facility-info facility-toolbar">
-      <a href="" class="pull-left">&laquo; <span openlmis-message="link.previous"></span></a>
-      <a href="" class="pull-right"><span openlmis-message="link.next"></span> &raquo;</a>
-    </div>
-  </form>
+  <div class="facility-info facility-toolbar">
+    <a href="" class="pull-left">&laquo; <span openlmis-message="link.previous"></span></a>
+    <a href="" class="pull-right"><span openlmis-message="link.next"></span> &raquo;</a>
+  </div>
+
 </div>

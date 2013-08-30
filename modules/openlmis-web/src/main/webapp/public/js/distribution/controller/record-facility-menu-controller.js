@@ -42,8 +42,11 @@ function RecordFacilityMenuController($scope, $location, $routeParams, distribut
   };
 
   $scope.getEPIUseStatus = function () {
+    if (!isUndefined($scope.distribution) && $scope.distribution.facilityDistributionData[$routeParams.facility].epiUse) {
+      return new EpiUse($scope.distribution.facilityDistributionData[$routeParams.facility].epiUse).computeStatus();
+    }
     return 'is-empty';
-  };
+  }
 
   function getURLName() {
     var urlParts = $location.$$path.split('/');
