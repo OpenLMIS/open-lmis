@@ -47,6 +47,9 @@ distributionModule.notRecordedDirective = function (element, scope, ngModel, $ti
   element.bind('click', function () {
     $.each(document.getElementsByName(element.attr('id')), function (index, associatedElement) {
       associatedElement.disabled = element.is(":checked");
+      if(!isUndefined(element.attr('not-recorded'))) {
+        scope[element.attr('not-recorded')](element.is(":checked"));
+      }
       var evaluatedVar = scope;
 
       var ngModel = $(associatedElement).attr('ng-model').split('.');

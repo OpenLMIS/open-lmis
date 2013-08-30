@@ -6,25 +6,43 @@
 
 function EPIUseController($scope, $routeParams, distributionService) {
 
-
+  $scope.inputClass = "warning-error";
   $scope.selectedFacilityId = $routeParams.facility;
 
   $scope.$on('distributionReceived', function () {
     $scope.distribution = distributionService.distribution;
     $scope.productGroupReadings = $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].epiUse.productGroups;
     $($scope.productGroupReadings).each(function (index, groupReading) {
-      groupReading.reading = {stockAtFirstOfMonth: "", received: "", total: "", distributed: "", loss: "", stockAtEndOfMonth: "", expirationDate: ""}
+      groupReading.reading = {total: {value: 0}}
     });
-  })
+  });
 
   if ($scope.distribution == undefined && distributionService.distribution != undefined) {
     $scope.distribution = distributionService.distribution;
     $scope.productGroupReadings = $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].epiUse.productGroups;
     $($scope.productGroupReadings).each(function (index, groupReading) {
-      groupReading.reading = {stockAtFirstOfMonth: "", received: "", total: "", distributed: "", loss: "", stockAtEndOfMonth: "", expirationDate: ""}
+      groupReading.reading = {total: {value: 0}};
     });
   }
 
-  $scope.headerColumns = ["EPI Stock(doses)", "Stock at first of month", "Received", "Total", "Distributed", "Loss", "Stock at end of month", "Expiration Date(MM/YYYY)"];
-
 };
+
+
+
+function EpiUseRowController($scope) {
+  $scope.getTotal = function() {
+    return getValue($scope.groupReading.reading.stockAtFirstOfMonth) + getValue($scope.groupReading.reading.received);
+  }
+
+  $scope.clearError = function(notRecorded){
+    if(notRecorded){
+      $scope.inputClass = true;
+    } else {
+      $scope.inputClass = "warning-error";
+    }
+  }
+
+  var getValue = function(object) {
+    return (!isUndefined(object) && !isUndefined(object.value)) ? parseInt(object.value, 10) : 0;
+  }
+}

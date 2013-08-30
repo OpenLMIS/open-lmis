@@ -37,6 +37,15 @@ var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorag
       $httpProvider.responseInterceptors.push(interceptor);
     });
 
+app.directive('dateValidator', function () {
+  return {
+    require: '?ngModel',
+    link: function (scope, element, attrs, ctrl) {
+      app[attrs.dateValidator](element, ctrl, scope);
+    }
+  };
+});
+
 app.directive('numericValidator', function () {
   return {
     require: '?ngModel',
@@ -69,6 +78,36 @@ app.directive('numericValidator', function () {
     }
   };
 });
+
+app.date = function (element, ctrl, scope) {
+
+  var shouldSetError = element.attr('showError');
+
+  scope.$watch(shouldSetError, function () {
+    ctrl.setError = scope[shouldSetError];
+    setTimeout(validationFunction, 0);
+  });
+
+  element.keyup(function () {
+    if (isUndefined(ctrl.$viewValue)) document.getElementById(element.attr('error-holder')).style.display = 'none';
+  });
+  element.bind('blur', validationFunction);
+
+  element.bind('focus', function () {
+    document.getElementById(element.attr('error-holder')).style.display = 'none';
+  });
+
+  function validationFunction() {
+    var DATE_REGEXP = /^(0[1-9]|1[012])[/]((2)\d\d\d)$/;
+    var valid = (isUndefined(ctrl.$viewValue)) ? true : DATE_REGEXP.test(ctrl.$viewValue);
+
+    var errorHolder = document.getElementById(element.attr('error-holder'));
+    errorHolder.style.display = (valid) ? 'none' : 'block';
+    if (ctrl.setError)
+      ctrl.$setValidity('date', valid);
+  }
+};
+
 
 app.numericValue = function (value, errorHolder, integerPartLength, fractionalPartLength) {
   var str = '^-?(\\d{0,' + integerPartLength + '}\\.\\d{0,' + fractionalPartLength + '}|\\d{0,' + integerPartLength + '})$';
