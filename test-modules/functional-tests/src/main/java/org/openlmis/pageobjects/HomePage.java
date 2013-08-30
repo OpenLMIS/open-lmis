@@ -17,6 +17,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
 
 
