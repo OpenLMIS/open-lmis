@@ -8,5 +8,6 @@ package org.openlmis.order.domain;
 public enum OrderStatus {
   RELEASED,
   PACKED,
+  IN_ROUTE,
   RECEIVED
 }
