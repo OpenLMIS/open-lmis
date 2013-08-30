@@ -127,4 +127,52 @@ public interface FacilityApprovedProductMapper {
     "where id=#{id}")
   void updateFacilityApprovedProduct(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
 
+
+
+    @Select({"SELECT fap.*, pp.*, pgm.*, pgm.code as program_code, pgm.name as program_name, pgm.active as program_active, " +
+            "p.*, p.code as product_code ",
+            "FROM facility_approved_products fap ",
+            "INNER JOIN facilities f ON f.typeId = fap.facilityTypeId",
+            "INNER JOIN program_products pp ON pp.id = fap.programProductId",
+            "INNER JOIN products p ON p.id = pp.productId ",
+            "INNER JOIN product_categories pc ON pc.id = p.categoryId ",
+            "INNER JOIN programs pgm ON pp.programId = pgm.id ",
+            "WHERE",
+            "pp.programId = #{programId}",
+            "AND f.id = #{facilityId}",
+            "AND p.active = TRUE",
+            "AND pp.active = TRUE",
+            "ORDER BY pc.displayOrder, pc.name, p.displayOrder NULLS LAST, p.code"})
+    @Results(value = {
+            @Result(property = "programProduct.id", column = "programProductId"),
+            @Result(property = "programProduct.dosesPerMonth", column = "dosesPerMonth"),
+            @Result(property = "programProduct.active", column = "active"),
+            @Result(property = "programProduct.currentPrice", column = "currentPrice"),
+            @Result(property = "programProduct.program.id", column = "programId"),
+            @Result(property = "programProduct.program.code", column = "program_code"),
+            @Result(property = "programProduct.program.name", column = "program_name"),
+            @Result(property = "programProduct.program.description", column = "description"),
+            @Result(property = "programProduct.program.active", column = "program_active"),
+            @Result(property = "programProduct.program.templateConfigured", column = "templateConfigured"),
+            @Result(property = "programProduct.product.id", column = "productId"),
+            @Result(property = "programProduct.product.code", column = "product_code"),
+            @Result(property = "programProduct.product.primaryName", column = "primaryName"),
+            @Result(property = "programProduct.product.strength", column = "strength"),
+            @Result(property = "programProduct.product.dosesPerDispensingUnit", column = "dosesPerDispensingUnit"),
+            @Result(property = "programProduct.product.packSize", column = "packSize"),
+            @Result(property = "programProduct.product.roundToZero", column = "roundToZero"),
+            @Result(property = "programProduct.product.packRoundingThreshold", column = "packRoundingThreshold"),
+            @Result(property = "programProduct.product.dispensingUnit", column = "dispensingUnit"),
+            @Result(property = "programProduct.product.fullSupply", column = "fullSupply"),
+            @Result(property = "programProduct.product.displayOrder", column = "displayOrder"),
+            @Result(property = "programProduct.product.form", column = "formId", javaType = ProductForm.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById")),
+            @Result(property = "programProduct.product.category", column = "categoryId", javaType = ProductCategory.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getProductCategoryById")),
+            @Result(property = "programProduct.product.dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
+            @Result(property = "facilityType.id", column = "facilityTypeId")})
+    List<FacilityTypeApprovedProduct> getProductsCompleteListByFacilityAndProgram(@Param("facilityId") Long facilityId,
+                                                                                   @Param("programId") Long programId);
+
 }

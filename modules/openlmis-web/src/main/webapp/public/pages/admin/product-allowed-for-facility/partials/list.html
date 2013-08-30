@@ -1,5 +1,5 @@
 <div xmlns="http://www.w3.org/1999/html">
-    <h2><span>Requisition Group Program Schedule</span>
+    <h2><span>Products Allowed for Facility Types</span>
         <!--<a href="#/create-requisition-group" class="pull-right btn btn-primary"><span id="requisition-group-add-new">Add New</span></a>-->
     </h2>
 
@@ -9,13 +9,13 @@
     </div>
 
 
-    <form ng-submit="saveRequisitionGroupProgramSchedule()" id="manipulate-requisition-group-program-schedule"
-          name="requisitionGroupProgramScheduleForm" novalidate select2-blur>
-        <div>
-            <input id="txtFilterRequisitionGroups" class="search-query input-xlarge" type="text" ng-model="query"
-                   ng-init="showRequisitionGroupsList('txtFilterRequisitionGroups')"
-                   on-keyup="filterRequisitionGroups('txtFilterRequisitionGroups')"
-                   placeholder="Enter requisition group name"/>
+    <form ng-submit="saveRequisitionGroupProgramSchedule()" id="manipulate-product-allowed-for-facility"
+          name="productAllowedForFacilityForm" novalidate select2-blur>
+        <div> <!-- class="app-form">-->
+            <input id="txtFilterFacilityTypeName" class="search-query input-xlarge" type="text" ng-model="query"
+                   ng-init="showFacilityTypeList('txtFilterFacilityTypeName')"
+                   on-keyup="filterFacility('txtFilterFacilityTypeName')"
+                   placeholder="Enter facility type name"/>
 
             <h3 ng-show="query.length>0">
                 <ng-pluralize count="resultCount"
@@ -35,21 +35,16 @@
                         <table class="table table-hover table-bordered">
                             <thead>
                             <tr class="gradient-header">
-                                <th>Code
-                                </th>
-                                <th>Requisition Group
+                                <th>Facility Type Name
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="requisitionGroup in filteredRequisitionGroups"
-                                ng-click="setSelectedReqGroup(requisitionGroup)"
-                                style="{{getReqColor(requisitionGroup)}}">
+                            <tr ng-repeat="facilityType in filteredFacilityTypes"
+                                ng-click="setSelectedFacilityType(facilityType)"
+                                style="{{getFacilityTypeColor(facilityType)}}">
                                 <td>
-                                    <div>{{requisitionGroup.code}}</div>
-                                </td>
-                                <td>
-                                    <div>{{requisitionGroup.name}}</div>
+                                    <div>{{facilityType.name}}</div>
                                 </td>
                             </tr>
                             </tbody>
@@ -84,21 +79,36 @@
                         <table class="table table-hover table-bordered">
                             <thead>
                             <tr class="gradient-header">
-                                <th style="text-align: center">Code
+                                <th style="text-align: center">Allowed
                                 </th>
-                                <th>Schedule Group
+                                <th>Code
+                                </th>
+                                <th>Product Name
+                                </th>
+                                <th>Min
+                                </th>
+                                <th>Max
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="schedule in schedules"
+                            <tr ng-repeat="product in products"
                                 ng-style="getScheduleColor(program)">
                                 <td style="text-align: center">
-                                    <input type="radio" name="is-selected" value="{{schedule.id}}"
-                                           ng-model="selectedSchedule.id" ng-change="setSelectedSchedule(schedule)"/>
+                                    <input type="checkbox" name="is-selected"
+                                           ng-model="product.isSelected" ng-change="setDataChanged()"/>
                                 </td>
                                 <td>
-                                    <div>{{schedule.code}} - {{schedule.name}}</div>
+                                    <div>{{product.programProduct.product.code}}</div>
+                                </td>
+                                <td>
+                                    <div>{{product.programProduct.product.primaryName}}</div>
+                                </td>
+                                <td>
+                                    <div>{{product.minMonthsOfStock}}</div>
+                                </td>
+                                <td>
+                                    <div>{{product.maxMonthsOfStock}}</div>
                                 </td>
                             </tr>
                             </tbody>

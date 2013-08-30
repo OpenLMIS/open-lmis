@@ -297,3 +297,15 @@ services.factory('LoadSchedulesForRequisitionGroupProgram',function($resource){
 services.factory('SaveRequisitionGroupProgramSchedule',function($resource){
     return $resource('/requisitionGroupProgramSchedule/insert.json',{},{});
 });
+
+services.factory('GetProgramsForAFacilityCompleteList',function($resource){
+    return $resource('/facilities/:facilityId/programsList.json',{},{});
+});
+
+services.factory('GetFacilityApprovedProductsCompleteList', function ($resource) {
+    return $resource('/facilityApprovedProducts/facility/:facilityId/program/:programId/all.json', {}, {});
+});
+
+services.factory('GetFacilityProgramProductAlreadyAllowedList',function($resource){
+    return $resource('/facility/:facilityId/program/:programId/programProductList.json',{},{});
+})
