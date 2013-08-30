@@ -40,10 +40,10 @@ function RequisitionGroupListController($scope, $location, navigateBackService, 
         }
         else {
             $scope.filteredRequisitionGroups = [];
-            angular.forEach($scope.requisitionGroupsList, function (geographicZone) {
+            angular.forEach($scope.requisitionGroupsList, function (reqGroup) {
 
-                if (geographicZone.name.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0) {
-                    $scope.filteredRequisitionGroups.push(geographicZone);
+                if (reqGroup.name.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0) {
+                    $scope.filteredRequisitionGroups.push(reqGroup);
                 }
             });
             $scope.resultCount = $scope.filteredRequisitionGroups.length;

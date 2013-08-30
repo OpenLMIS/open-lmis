@@ -51,10 +51,10 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
         }
         else {
             $scope.filteredRequisitionGroups = [];
-            angular.forEach($scope.requisitionGroupsList, function (geographicZone) {
+            angular.forEach($scope.requisitionGroupsList, function (reqGroup) {
 
-                if (geographicZone.name.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0) {
-                    $scope.filteredRequisitionGroups.push(geographicZone);
+                if (reqGroup.name.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0) {
+                    $scope.filteredRequisitionGroups.push(reqGroup);
                 }
             });
             $scope.resultCount = $scope.filteredRequisitionGroups.length;
@@ -73,7 +73,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
         }
 
         if($scope.selectedRequisitionGroup.code == reqGroup.code){
-            return {'background-color':'#f9f9f9'};
+            return "background-color : teal; color: white";
         }
         else{
             return 'none';
@@ -92,7 +92,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
         }
 
         if($scope.selectedProgram.code == program.code){
-            return {'background-color':'#f9f9f9'};
+            return "background-color : teal; color: white";
         }
         else{
             return 'none';
@@ -107,7 +107,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
         }
 
         if($scope.selectedSchedule.code == schedule.code){
-            return {'background-color':'#f9f9f9'};
+            return "background-color : teal; color: white";
         }
         else{
             return 'none';
@@ -153,7 +153,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
     }
 
     $scope.setSelectedSchedule = function(schedule){
-        //$scope.selectedSchedule = schedule;
+        $scope.selectedSchedule = schedule;
         if($scope.selectedSchedule.id != $scope.selectedRequisitionGroupProgramSchedule.processingSchedule.id){
             $scope.isDataChanged = true;
         }
@@ -183,5 +183,4 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
         SaveRequisitionGroupProgramSchedule.save($scope.selectedRequisitionGroupProgramSchedule,successHandler,errorHandler);
     }
 
-    
 }
