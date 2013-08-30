@@ -93,4 +93,12 @@ public class ProgramController extends BaseController {
     return OpenLmisResponse.response(PROGRAMS, programService.getAll());
   }
 
+
+  @RequestMapping(value = "/facilities/{facilityId}/programsList", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT_ALLOWED_FOR_FACILITY')")
+  public ResponseEntity<OpenLmisResponse> getProgramsForFacilityCompleteList(@PathVariable(value = "facilityId") Long facilityId) {
+      return OpenLmisResponse.response(PROGRAMS,programService.getByFacility(facilityId));
+  }
+
+
 }
