@@ -164,6 +164,11 @@ public class RefrigeratorPage extends Page {
     OKButton.click();
   }
 
+  public void navigateToRefrigeratorTab() {
+    testWebDriver.waitForElementToAppear(refrigeratorTab);
+    refrigeratorTab.click();
+  }
+
   public void clickProblemSinceLastVisitNoRadio() {
     testWebDriver.waitForElementToAppear(problemSinceLastVisitNoRadio);
     problemSinceLastVisitNoRadio.click();
