@@ -6,15 +6,14 @@
 package org.openlmis.core.upload;
 
 
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.DeliveryZoneWarehouse;
 import org.openlmis.core.service.DeliveryZoneWarehouseService;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.upload.AbstractModelPersistenceHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DeliveryZoneWarehouseHandler extends AbstractModelPersistenceHandler{
+public class DeliveryZoneWarehouseHandler extends AbstractModelPersistenceHandler {
 
   @Autowired
   private DeliveryZoneWarehouseService service;
@@ -31,7 +30,7 @@ public class DeliveryZoneWarehouseHandler extends AbstractModelPersistenceHandle
   }
 
   @Override
-  protected String getDuplicateMessageKey() {
+  public String getMessageKey() {
     return null;
   }
 }

@@ -1,0 +1,46 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div class="left-navigation" ng-controller="RecordFacilityMenuController">
+  <ul>
+    <li class="is-complete">
+      <a href="">
+        <span class="status-icon"></span>
+        <span openlmis-message="label.visit.information"></span>
+      </a>
+    </li>
+    <li ng-class="[getRefrigeratorStatus(), isSelected('refrigerator-data')]">
+      <a href="" ng-click="changeRoute('refrigerator-data')">
+        <span class="status-icon"></span>
+        <span openlmis-message="label.refrigerators"></span>
+      </a>
+    </li>
+    <li ng-class="[getEPIInventoryStatus(), isSelected('epi-inventory')]">
+      <a href="">
+        <span class="status-icon"></span>
+        <span openlmis-message="label.epi.inventory"></span>
+      </a>
+    </li>
+    <li ng-class="[getEPIUseStatus(), isSelected('epi-use')]">
+      <a href="" ng-click="changeRoute('epi-use')">
+        <span class="status-icon"></span>
+        <span openlmis-message="label.epi.use"></span>
+      </a>
+    </li>
+    <li class="is-empty">
+      <a href="">
+        <span class="status-icon"></span>
+        <span openlmis-message="label.coverage"></span>
+      </a>
+    </li>
+    <li class="is-empty">
+      <a href="">
+        <span class="status-icon"></span>
+        <span openlmis-message="label.observations"></span>
+      </a>
+    </li>
+  </ul>
+</div>

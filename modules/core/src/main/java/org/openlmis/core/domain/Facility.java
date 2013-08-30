@@ -117,8 +117,8 @@ public class Facility extends BaseModel implements Importable {
   @ImportField(name = "Facility Comments")
   private String comment;
 
-  @ImportField(type = "boolean", mandatory = true, name = "Data Reportable")
-  private Boolean dataReportable;
+  @ImportField(type = "boolean", mandatory = true, name = "Enabled")
+  private Boolean enabled;
 
   private Boolean virtualFacility = false;
 
@@ -138,9 +138,9 @@ public class Facility extends BaseModel implements Importable {
     this.facilityType = facilityType;
   }
 
-  public Facility(Long id, boolean dataReportable, boolean active, Long modifiedBy) {
+  public Facility(Long id, boolean enabled, boolean active, Long modifiedBy) {
     this.id = id;
-    this.dataReportable = dataReportable;
+    this.enabled = enabled;
     this.active = active;
     this.modifiedBy = modifiedBy;
   }

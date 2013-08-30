@@ -35,7 +35,7 @@ public class SupervisoryNodeHandler extends AbstractModelPersistenceHandler {
   }
 
   @Override
-  protected String getDuplicateMessageKey() {
+  public String getMessageKey() {
     return "error.duplicate.supervisory.node";
   }
 

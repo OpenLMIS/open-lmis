@@ -13,10 +13,13 @@ app.directive('modal', function() {
     link: function(scope, elm, attrs) {
       var shownExpr = attrs.modal || attrs.show;
 
+
+
       scope.$watch(shownExpr, function(isShown, oldShown) {
         setTimeout(function() {
           if (isShown) {
             var tabbables = elm.find(":tabbable");
+            var backdrop = angular.element("body .modal-backdrop");
 
             tabbables.first().focus();
 
@@ -34,10 +37,19 @@ app.directive('modal', function() {
               }
             });
 
+            var focusTabbableFirstChild = function(e) {
+              tabbables.first().focus();
+            };
+
+            backdrop.bind("click", focusTabbableFirstChild);
+
           } else {
             var tabbables = elm.find(":tabbable");
+            var backdrop = angular.element("body .modal-backdrop");
+
             tabbables.last().unbind("keydown");
             tabbables.first().unbind("keydown");
+            backdrop.unbind("click", focusTabbableFirstChild);
           }
         });
 

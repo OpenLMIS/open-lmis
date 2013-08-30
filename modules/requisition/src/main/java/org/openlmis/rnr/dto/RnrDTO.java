@@ -58,8 +58,8 @@ public class RnrDTO {
 
   public static RnrDTO prepareDTOWithSupplyingDepot(Rnr requisition) {
     RnrDTO rnrDTO = populateDTOWithRequisition(requisition);
-    if (requisition.getSupplyingFacility() != null) {
-      rnrDTO.supplyingDepot = requisition.getSupplyingFacility().getName();
+    if (requisition.getSupplyLine() != null) {
+      rnrDTO.supplyingDepot = requisition.getSupplyLine().getSupplyingFacility().getName();
     }
     return rnrDTO;
   }

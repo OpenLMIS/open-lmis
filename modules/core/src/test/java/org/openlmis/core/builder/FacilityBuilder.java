@@ -33,7 +33,7 @@ public class FacilityBuilder {
   public static final Property<Facility, GeographicZone> geographicZone = newProperty();
   public static Property<Facility, Long> typeId = newProperty();
   private static Property<Facility, Long> operatedById = newProperty();
-  public static final Property<Facility, Boolean> dataReportable = newProperty();
+  public static final Property<Facility, Boolean> enabled = newProperty();
   public static final Property<Facility, List<ProgramSupported>> programSupportedList = newProperty();
   public static final Property<Facility, Date> modifiedDate = newProperty();
 
@@ -75,7 +75,7 @@ public class FacilityBuilder {
 
       facility.setSdp(lookup.valueOf(sdp, true));
       facility.setActive(lookup.valueOf(active, true));
-      facility.setDataReportable(lookup.valueOf(dataReportable, true));
+      facility.setEnabled(lookup.valueOf(enabled, true));
       FacilityOperator operatedBy = new FacilityOperator();
       operatedBy.setCode(lookup.valueOf(operatedByCode, "MoH"));
       operatedBy.setId(lookup.valueOf(operatedById, 1L));

@@ -80,6 +80,9 @@ public class E2EUpload extends TestCaseHelper {
     verifyInvalidFacilityUpload(uploadPage);
     verifyValidFacilityUpload(uploadPage);
 
+    verifyInValidFacilityFTPDetailsUpload(uploadPage);
+    verifyValidFacilityFTPDetailsUpload(uploadPage);
+
     verifyInvalidFacilityTypeToProductMappingUpload(uploadPage);
     verifyValidFacilityTypeToProductMappingUpload(uploadPage);
     dbWrapper.allocateFacilityToUser(userId, "F10");
@@ -141,6 +144,9 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadSupplyLines("QA_Supply_Lines_ParentNodeNotNull.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Supervising Node is not the Top node in Record No");
+    uploadPage.uploadSupplyLines("QA_Supply_Lines_Redundant_Warehouse.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Redundant warehouse specified in Record No. 2");
   }
 
   private void verifyValidRequisitionGroupMembersUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -538,6 +544,66 @@ public class E2EUpload extends TestCaseHelper {
 
     uploadPage.uploadDeliveryZoneWarehousesValidScenarios("QA_Delivery_zone_warehouses_Subsequent.csv") ;
     uploadPage.verifySuccessMessageOnUploadScreen();
+  }
+
+  private void verifyInValidFacilityFTPDetailsUpload(UploadPage uploadPage) throws IOException, SQLException {
+    uploadPage.uploadFacilityFTPDetails("QA_Blank.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("File is empty");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Invalid_FacilityCode.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Facility code");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Duplicate.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Facility Code in Record No");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Facility_Code.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Facility Code of Record No");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Host.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Host of Record No");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Password.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Password of Record No");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Port.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Port of Record No");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Username.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Username of Record No");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Path.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Local Folder Path of Record No");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Incorrect_Data_length.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Incorrect data length");
+
+    uploadPage.uploadFacilityFTPDetails("UnassignedRequisitionGroupReport.jrxml") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Incorrect file format. Please upload Facility FTP details data as a .csv file");
+
+    uploadPage.uploadFacilityFTPDetails("QA_Delivery_Zone_Members.csv") ;
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Headers in upload file");
+  }
+
+  private void verifyValidFacilityFTPDetailsUpload(UploadPage uploadPage) throws IOException, SQLException {
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details.csv") ;
+    uploadPage.verifySuccessMessageOnUploadScreen();
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Subsequent.csv") ;
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. 'Number of records created:1', 'Number of records updated: 1'");
+
   }
 
   @AfterMethod(groups = {"functional"})

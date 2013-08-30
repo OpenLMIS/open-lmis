@@ -13,7 +13,9 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static org.openqa.selenium.support.How.ID;
+import static org.openqa.selenium.support.How.NAME;
 import static org.openqa.selenium.support.How.XPATH;
 
 public class RefrigeratorPage extends Page {
@@ -33,67 +35,67 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = XPATH, using = "//span[contains(text(),'Refrigerators')]")
   private static WebElement refrigeratorTab;
 
-  @FindBy(how = XPATH, using = "//input[@ng-model='refrigeratorReading.temperature']")
+  @FindBy(how = NAME, using = "temperature0")
   public static WebElement refrigeratorTemperatureTextField;
 
-  @FindBy(how = XPATH, using = "//div[1][@class='form-cell']/input[1][@class='ng-pristine ng-valid']")
+  @FindBy(how = NAME, using = "lowAlarmEvent0")
   private static WebElement lowAlarmEventsTextField;
 
-  @FindBy(how = XPATH, using = "//div[2][@class='form-cell']/input[1][@class='ng-pristine ng-valid']")
+  @FindBy(how = NAME, using = "highAlarmEvent0")
   private static WebElement highAlarmEventsTextField;
 
   @FindBy(how = ID, using = "temperature0")
   private static WebElement refrigeratorTemperatureNR;
 
-  @FindBy(how = ID, using = "functioningCorrectlyYes")
+  @FindBy(how = ID, using = "functioningCorrectlyYes0")
   private static WebElement functioningCorrectlyYesRadio;
 
-  @FindBy(how = ID, using = "functioningCorrectlyNo")
+  @FindBy(how = ID, using = "functioningCorrectlyNo0")
   private static WebElement functioningCorrectlyNoRadio;
 
-  @FindBy(how = ID, using = "functioningCorrectlyDontKnow")
+  @FindBy(how = ID, using = "functioningCorrectlyDontKnow0")
   private static WebElement functioningCorrectlyDontKnowRadio;
 
-  @FindBy(how = ID, using = "functioningCorrectlyNR")
+  @FindBy(how = ID, using = "functioningCorrectlyNR0")
   private static WebElement functioningCorrectlyNR;
 
-  @FindBy(how = ID, using = "lowAlarmEventNR")
+  @FindBy(how = ID, using = "lowAlarmEventNR0")
   private static WebElement lowAlarmEventNR;
 
-  @FindBy(how = ID, using = "highAlarmEventNR")
+  @FindBy(how = ID, using = "highAlarmEventNR0")
   private static WebElement highAlarmEventNR;
 
-  @FindBy(how = ID, using = "problemSinceLastVisitYes")
+  @FindBy(how = ID, using = "problemSinceLastVisitYes0")
   private static WebElement problemSinceLastVisitYesRadio;
 
-  @FindBy(how = ID, using = "problemSinceLastVisitNo")
+  @FindBy(how = ID, using = "problemSinceLastVisitNo0")
   private static WebElement problemSinceLastVisitNoRadio;
 
-  @FindBy(how = ID, using = "problemSinceLastVisitDontKnow")
+  @FindBy(how = ID, using = "problemSinceLastVisitDontKnow0")
   private static WebElement problemSinceLastVisitDontKnowRadio;
 
-  @FindBy(how = ID, using = "problemSinceLastVisitNR")
+  @FindBy(how = ID, using = "problemSinceLastVisitNR0")
   private static WebElement problemSinceLastVisitNR;
 
-  @FindBy(how = ID, using = "operatorError")
+  @FindBy(how = ID, using = "operatorError0")
   private static WebElement operatorError;
 
-  @FindBy(how = ID, using = "burnerProblem")
+  @FindBy(how = ID, using = "burnerProblem0")
   private static WebElement burnerProblem;
 
-  @FindBy(how = ID, using = "gasLeakage")
+  @FindBy(how = ID, using = "gasLeakage0")
   private static WebElement gasLeakage;
 
-  @FindBy(how = ID, using = "gasFault")
+  @FindBy(how = ID, using = "gasFault0")
   private static WebElement gasFault;
 
-  @FindBy(how = ID, using = "other")
+  @FindBy(how = ID, using = "other0")
   private static WebElement other;
 
   @FindBy(how = ID, using = "otherTextbox")
   private static WebElement otherTextBox;
 
-  @FindBy(how = XPATH, using = "//textarea[@ng-model='refrigeratorReading.notes']")
+  @FindBy(how = ID, using = "notes")
   private static WebElement notesTextArea;
 
   @FindBy(how = XPATH, using = "//h3/span[contains(text(),'Refrigerators')]")
@@ -111,7 +113,7 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = ID, using = "done-button")
   private static WebElement doneButtonOnModal;
 
-  @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[3]/a[2]")
+  @FindBy(how = ID, using = "button-cancel")
   private static WebElement cancelButtonOnModal;
 
   @FindBy(how = XPATH, using = "//h3[contains(text(),'New Refrigerator')]")
@@ -129,11 +131,19 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = XPATH, using = "//a[contains(text(),'OK')]")
   public static WebElement OKButton;
 
-  @FindBy(how = XPATH, using = "//h3[contains(text(),'delete.refrigerator.readings.header')]")
+  @FindBy(how = XPATH, using = "//h3[contains(text(),'Delete Refrigerator')]")
   public static WebElement deletePopUpHeader;
 
+  @FindBy(how = XPATH, using = "//form/div/div[1]/div[1]/span[@class='status-icon']")
+  public static WebElement individualRefrigeratorIcon;
 
-  public RefrigeratorPage(TestWebDriver driver) {
+  @FindBy(how = XPATH, using = "//div[@class='left-navigation ng-scope']/ul/li[2]/a/span[1][@class='status-icon']")
+  public static WebElement overallRefrigeratorIcon;
+
+  @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[2]/div[3]/div/div")
+  public static WebElement duplicateRefrigeratorMessage;
+
+    public RefrigeratorPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
@@ -312,7 +322,20 @@ public class RefrigeratorPage extends Page {
     return testWebDriver.getAttribute(notesTextArea, "value");
   }
 
+    public void verifyIndividualRefrigeratorColor(String whichIcon, String color) {
+        testWebDriver.waitForElementToAppear(individualRefrigeratorIcon);
+        if(color.toLowerCase().equals("RED".toLowerCase()))
+            color="rgba(203, 64, 64, 1)";
+        else if(color.toLowerCase().equals("GREEN".toLowerCase()))
+            color="rgba(82, 168, 30, 1)";
+        else if(color.toLowerCase().equals("AMBER".toLowerCase()))
+            color="rgba(240, 165, 19, 1)";
 
+        if(whichIcon.toLowerCase().equals("Overall".toLowerCase()))
+            assertEquals(color,overallRefrigeratorIcon.getCssValue("background-color"));
+        else if(whichIcon.toLowerCase().equals("Individual".toLowerCase()))
+            assertEquals(color,individualRefrigeratorIcon.getCssValue("background-color"));
+    }
 
   public void onRefrigeratorScreen() {
     testWebDriver.sleep(500);
@@ -324,6 +347,7 @@ public class RefrigeratorPage extends Page {
     testWebDriver.waitForElementToAppear(doneButton);
     doneButton.click();
     testWebDriver.sleep(500);
+
   }
 
   public void addNewRefrigerator(String brand, String model, String manufacturerSerialNumber) {
@@ -335,8 +359,12 @@ public class RefrigeratorPage extends Page {
 
   public void verifySuccessMessage(String message) {
     testWebDriver.waitForElementToAppear(saveSuccessMessageDiv);
-    SeleneseTestNgHelper.assertEquals(saveSuccessMessageDiv.getText(), message);
+    assertEquals(saveSuccessMessageDiv.getText(), message);
   }
 
+    public void verifyDuplicateErrorMessage(String message) {
+        testWebDriver.waitForElementToAppear(duplicateRefrigeratorMessage);
+        assertEquals(duplicateRefrigeratorMessage.getText(), message);
+    }
 
 }

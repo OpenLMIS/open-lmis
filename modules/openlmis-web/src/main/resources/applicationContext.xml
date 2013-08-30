@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:context="http://www.springframework.org/schema/context"
@@ -27,7 +33,6 @@
             <list>
                 <value>classpath:/default.properties</value>
                 <value>classpath:${environmentName}/app.properties</value>
-                <value>classpath:/messages_en.properties</value>
             </list>
         </property>
 
@@ -59,15 +64,13 @@
 
     <import resource="classpath:/springSecurityContext.xml"/>
     <import resource="classpath:/applicationContext-authentication.xml"/>
-    <import resource="classpath:/applicationContext-requisition.xml"/>
     <import resource="classpath:/applicationContext-core.xml"/>
-    <import resource="classpath:/applicationContext-upload.xml"/>
-    <import resource="classpath:/applicationContext-report.xml"/>
     <import resource="classpath:/applicationContext-restapi.xml"/>
     <import resource="classpath:/applicationContext-shipment.xml"/>
     <import resource="classpath:/applicationContext-reporting.xml"/>
     <import resource="classpath:/applicationContext-distribution.xml"/>
-
+    <import resource="classpath:/applicationContext-report.xml"/>
+    
     <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>
 
     <bean id="multipartResolver"
@@ -312,10 +315,18 @@
                         <property name="tableName" value="shipment_file_details"/>
                     </bean>
                 </entry>
+                <entry key="facilityFtpDetails">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.facility.ftp.details"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.FacilityFtpDetails</value>
+                        </property>
+                        <property name="recordHandler" ref="facilityFtpDetailsPersistenceHandler"/>
+                        <property name="tableName" value="facility_ftp_details"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>
-
-
 
 </beans>

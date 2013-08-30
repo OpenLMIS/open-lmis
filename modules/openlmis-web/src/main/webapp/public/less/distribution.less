@@ -107,25 +107,32 @@
 }
 
 .refrigerator-container {
-  padding: 15px;
-  .status-icon {
-    margin-left: 37px;
+  padding: 2px 15px 15px;
+  form {
+    margin: 0;
   }
   h3 {
-    margin: 0px;
-
-    .btn {
+    margin: 0 0 12px;
+    a {
+      margin-top: 10px;
       font-weight: normal;
     }
   }
+  .status-cell {
+    text-align: center;
+  }
   .form-group {
-    border-top: none;
+    border: 1px solid #EEE;
+    margin-bottom: 16px;
+    padding: 0 3px;
   }
-  #refrigeratorReadingDone {
-    margin: 13px 0 0 57px;
+  .list-row.is-expanded {
+    background-color: #f9f9f9;
+    border-bottom: 2px solid #CCC;
   }
-  .list-header, .list-row {
-    .span2 {
+  .list-header,
+  .list-row {
+    .span2, .span11 {
       margin-left: 0;
     }
     .span3 {
@@ -142,16 +149,11 @@
 }
 .refrigerator-form {
   background: white;
-  padding-top: 0;
-  margin-left: 58px;
-  margin-right: 27px;
-  padding-bottom: 0;
-  margin-bottom: 0;
-  &>.form-row {
-    border-bottom: 1px solid #e6e6e6;
-    &:last-child {
-      border-bottom: none;
-    }
+  margin-top: 8px;
+  .form-group {
+    border: 0 none;
+    margin: 20px 0 0;
+    padding: 0;
   }
   .form-cell {
     width: 47%;
@@ -182,7 +184,6 @@
       line-height: normal;
     }
     .problem-form {
-      padding-top: 0;
       #otherTextbox {
         margin-left: 10px;
       }
@@ -192,4 +193,7 @@
       height: 100px;
     }
   }
+}
+.isEditable {
+  background: #f9f9f9;
 }

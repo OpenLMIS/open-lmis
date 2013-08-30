@@ -14,9 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.openlmis.core.repository.UserRepository.DUPLICATE_USER_NAME_FOUND;
 
 @Component
@@ -45,7 +42,7 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
   }
 
   @Override
-  protected String getDuplicateMessageKey() {
+  public String getMessageKey() {
     return DUPLICATE_USER_NAME_FOUND;
   }
 

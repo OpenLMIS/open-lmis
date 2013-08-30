@@ -54,7 +54,7 @@ public class FacilityFeedDTOTest {
     assertThat(facilityFeedDTO.getVirtualFacility(), is(facility.getVirtualFacility()));
     assertThat(facilityFeedDTO.getParentFacility(), is(parentFacility.getCode()));
     assertThat(facilityFeedDTO.getComments(), is(facility.getComment()));
-    assertThat(facilityFeedDTO.isDataReportable(), is(true));
+    assertThat(facilityFeedDTO.isEnabled(), is(true));
     assertThat(facilityFeedDTO.getModifiedDate(), is(facility.getModifiedDate()));
   }
 }

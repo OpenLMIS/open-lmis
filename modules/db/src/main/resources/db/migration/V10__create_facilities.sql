@@ -32,7 +32,7 @@ CREATE TABLE facilities (
   goLiveDate               DATE               NOT NULL,
   goDownDate               DATE,
   comment                  TEXT,
-  dataReportable           BOOLEAN,
+  enabled                  BOOLEAN,
   virtualfacility          BOOLEAN,
   createdBy                INTEGER,
   createdDate              TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

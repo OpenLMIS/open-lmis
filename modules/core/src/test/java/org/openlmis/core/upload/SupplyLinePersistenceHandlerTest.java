@@ -16,13 +16,11 @@ import org.openlmis.db.categories.UnitTests;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+
 @Category(UnitTests.class)
-public class SupplyLineHandlerTest {
+public class SupplyLinePersistenceHandlerTest {
 
   SupplyLineService supplyLineService;
   SupplyLinePersistenceHandler supplyLinePersistenceHandler;

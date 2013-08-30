@@ -11,6 +11,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+
 public class DBWrapper {
 
   String baseUrl, dbUrl, dbUser, dbPassword;
@@ -58,7 +60,7 @@ public class DBWrapper {
 
     update("INSERT INTO users\n" +
       "  (id, userName, password,vendorId, facilityId, firstName, lastName, email, active, verified) VALUES\n" +
-      "  ('" + userId + "', '" + userName + "', '" + password + "',(SELECT id FROM vendors WHERE name = '" + vendorName + "'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 'Fatima', 'Doe', '" + email + "','true','true');\n");
+      "  ('" + userId + "', '" + userName + "', '" + password + "',(SELECT id FROM vendors WHERE name = '" + vendorName + "'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 'Fatima', 'Doe', '" + email + "','true','true');");
 
 
   }
@@ -94,8 +96,24 @@ public class DBWrapper {
     update("update products set active='" + active + "' where code='" + productCode + "';");
   }
 
+  public void deleteDistributions() throws SQLException {
+    update("delete from distributions;");
+  }
+
+  public void verifyRecordCountInTable(String tableName, String recordCount) throws SQLException {
+    ResultSet rs = query("select count(*) from " + tableName + "");
+
+    if (rs.next()) {
+      assertEquals(recordCount, rs.getString("count"));
+    }
+  }
+
+  public void deleteRefrigerators() throws SQLException {
+    update("delete from refrigerators;");
+  }
+
   public void updateActiveStatusOfProgramProduct(String productCode, String programCode, String active) throws SQLException {
-    update("update program_products set active='"+active+"' where programid=(select id from programs where code='" + programCode + "') and productid=(select id from products where code='" + productCode + "');");
+    update("update program_products set active='" + active + "' where programid=(select id from programs where code='" + programCode + "') and productid=(select id from products where code='" + productCode + "');");
   }
 
   public List<String> getFacilityCodeNameForDeliveryZoneAndProgram(String deliveryZoneName, String program, boolean active) throws SQLException {
@@ -179,7 +197,7 @@ public class DBWrapper {
 
   public void insertFacilities(String facility1, String facility2) throws IOException, SQLException {
     update("INSERT INTO facilities\n" +
-      "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, dataReportable, virtualFacility) values\n" +
+      "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, enabled, virtualFacility) values\n" +
       "('" + facility1 + "','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',5,2,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE', 'FALSE'),\n" +
       "('" + facility2 + "','Central Hospital','IT department','G7646',9876234981,'fax','A','B',5,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE', 'FALSE');\n");
 
@@ -195,7 +213,7 @@ public class DBWrapper {
 
   public void insertFacilitiesWithDifferentGeoZones(String facility1, String facility2, String geoZone1, String geoZone2) throws IOException, SQLException {
     update("INSERT INTO facilities\n" +
-      "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, dataReportable, virtualFacility) values\n" +
+      "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, enabled, virtualFacility) values\n" +
       "('" + facility1 + "','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',(select id from geographic_zones where code='" + geoZone1 + "'),2,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE', 'FALSE'),\n" +
       "('" + facility2 + "','Central Hospital','IT department','G7646',9876234981,'fax','A','B',(select id from geographic_zones where code='" + geoZone2 + "'),2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE', 'FALSE');\n");
 
@@ -278,7 +296,7 @@ public class DBWrapper {
     update("delete from atomfeed.event_records;");
     update("delete from regimens;");
     update("delete from program_regimen_columns;");
-
+    update("delete from facility_ftp_details;");
   }
 
 
@@ -368,6 +386,14 @@ public class DBWrapper {
       "            (userId, roleId, programId, supervisoryNodeId) VALUES \n" +
       "    ('" + userID + "', (SELECT id FROM roles WHERE name = '" + roleName + "'), 1, null),\n" +
       "    ('" + userID + "', (SELECT id FROM roles WHERE name = '" + roleName + "'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));");
+  }
+
+  public void insertRoleAssignmentForAdminTypeUser(String userID, String roleName) throws SQLException, IOException {
+    update("delete from role_assignments where userId='" + userID + "';");
+
+    update(" INSERT INTO role_assignments\n" +
+      "            (userId, roleId, programId, supervisoryNodeId) VALUES \n" +
+      "    ('" + userID + "', (SELECT id FROM roles WHERE name = '" + roleName + "'), 1, null);");
   }
 
   public void insertRoleAssignmentforSupervisoryNode(String userID, String roleName, String supervisoryNode) throws SQLException, IOException {
@@ -660,17 +686,18 @@ public class DBWrapper {
   }
 
   public void insertSupplyLines(String supervisoryNode, String programCode, String facilityCode) throws IOException, SQLException {
-    update("insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId) values\n" +
-      "('supplying node for HIV', (select id from supervisory_nodes where code = '" + supervisoryNode + "'), (select id from programs where code='" + programCode + "'),(select id from facilities where code = '" + facilityCode + "'));\n");
+    update("insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId,exportOrders) values\n" +
+      "('supplying node for HIV', (select id from supervisory_nodes where code = '" + supervisoryNode + "'), (select id from programs where code='" + programCode + "'),(select id from facilities where code = '" + facilityCode + "'),'t');\n");
   }
 
   public void updateSupplyingFacilityForRequisition(String facilityCode) throws IOException, SQLException {
-    update("update requisitions set supplyingfacilityid=(select id from facilities where code='" + facilityCode + "');");
+    update("update requisitions set supplyLineId=(select id from supply_lines where supplyingFacilityId = (select id from facilities where code='" + facilityCode + "'));");
 
   }
 
   public void insertValuesInRequisition() throws IOException, SQLException {
-    update("update requisition_line_items set beginningbalance=1,  quantityreceived=1, quantitydispensed=1, newpatientcount=1, stockoutdays=1, quantityrequested=10, reasonforrequestedquantity='bad climate';");
+    update("update requisition_line_items set beginningbalance=1,  quantityreceived=1, quantitydispensed=1, newpatientcount=1, stockoutdays=1, quantityrequested=10, reasonforrequestedquantity='bad climate', normalizedconsumption=10, packstoship=1;");
+    update("update requisitions set fullsupplyitemssubmittedcost=12.5000, nonfullsupplyitemssubmittedcost=0.0000;");
 
   }
 
@@ -897,9 +924,9 @@ public class DBWrapper {
 
   }
 
-  public String getOrderId(String requisitionId) throws IOException, SQLException {
+  public String getOrderId() throws IOException, SQLException {
     String orderId = null;
-    ResultSet rs = query("SELECT id from orders where rnrid='" + requisitionId + "'");
+    ResultSet rs = query("SELECT id from orders");
 
     if (rs.next()) {
       orderId = rs.getString("id");
@@ -1029,5 +1056,47 @@ public class DBWrapper {
 
   public void updateProgramRegimenColumns(String programName, String regimenColumnName, boolean visible) throws SQLException {
     update("update program_regimen_columns set visible=" + visible + " where name ='" + regimenColumnName + "'and programid=(SELECT id FROM programs WHERE name='" + programName + "');");
+  }
+
+  public void setupOrderFileConfiguration(String fileprefix, String headerinfile) throws IOException, SQLException {
+    update("DELETE FROM order_configuration;");
+    update("INSERT INTO order_configuration \n" +
+      "  (fileprefix, headerinfile) VALUES\n" +
+      "  ('" + fileprefix + "', '" + headerinfile + "');");
+  }
+
+  public void defaultSetupOrderFileOpenLMISColumns() throws IOException, SQLException {
+    update("DELETE FROM order_file_columns where openlmisfield=TRUE;");
+
+    update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField) VALUES ('header.order.number', 'order', 'id', 'Order number', 1, TRUE);");
+    update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField) VALUES ('create.facility.code', 'order', 'rnr/facility/code', 'Facility code', 2, TRUE);");
+    update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField) VALUES ('header.product.code', 'lineItem', 'productCode', 'Product code', 3, TRUE);");
+    update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField) VALUES ('header.quantity.approved', 'lineItem', 'quantityApproved', 'Approved quantity', 4, TRUE);");
+    update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField, format) VALUES ('label.period', 'order', 'rnr/period/startDate', 'Period', 5, TRUE,'MM/yy');");
+    update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField,format) VALUES ('header.order.date', 'order', 'createdDate', 'Order date', 6, TRUE,'dd/MM/yy');");
+
+  }
+
+  public void setupOrderFileOpenLMISColumns(String datafieldlabel, String includeinorderfile, String columnlabel, int position, String Format) throws IOException, SQLException {
+    update("UPDATE order_file_columns SET \n" +
+      "includeinorderfile='" + includeinorderfile + "', columnlabel='" + columnlabel + "', position=" + position + ", format='" + Format + "' where datafieldlabel='" + datafieldlabel + "';");
+  }
+
+  public void deleteOrderFileNonOpenLMISColumns()throws SQLException {
+      update("DELETE FROM order_file_columns where openlmisfield=FALSE;");
+  }
+
+  public void setupOrderFileNonOpenLMISColumns(String datafieldlabel, String includeinorderfile, String columnlabel, int position) throws IOException, SQLException {
+    update("INSERT INTO order_file_columns (dataFieldLabel, includeinorderfile, columnLabel, position, openLmisField) VALUES ('" + datafieldlabel + "','" + includeinorderfile + "','" + columnlabel + "'," + position + ", FALSE);");
+  }
+
+  public String getCreatedDate(String tableName, String dateFormat) throws SQLException {
+    String createdDate = null;
+    ResultSet rs = query("SELECT to_char(createdDate, '" + dateFormat + "' ) from " + tableName);
+
+    if (rs.next()) {
+      createdDate = rs.getString(1);
+    }
+    return createdDate;
   }
 }

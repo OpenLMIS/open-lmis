@@ -20,6 +20,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+import static java.lang.String.format;
+
 @Component
 @NoArgsConstructor
 public class ShipmentRecordHandler implements RecordHandler {
@@ -36,7 +38,8 @@ public class ShipmentRecordHandler implements RecordHandler {
 
     Date processTimeStamp = shipmentService.getProcessedTimeStamp(shippedLineItem);
     if (processTimeStamp != null && !processTimeStamp.equals(shippedLineItem.getModifiedDate())) {
-      logger.error("Process timestamp " + processTimeStamp + " is not equal to " + "modified timestamp " + shippedLineItem.getModifiedDate() + " in row " + rowNumber);
+      logger.error(format("Process timestamp %s is not equal to modified timestamp %s in row %d",
+        processTimeStamp, shippedLineItem.getModifiedDate(), rowNumber));
       throw new DataException("error.duplicate.order");
     }
 
@@ -44,15 +47,13 @@ public class ShipmentRecordHandler implements RecordHandler {
 
     if (shippedLineItemFromDB == null) {
       shipmentService.insertShippedLineItem(shippedLineItem);
-      return;
+    } else {
+      shippedLineItem.setId(shippedLineItemFromDB.getId());
+      shipmentService.updateShippedLineItem(shippedLineItem);
     }
-
-    shippedLineItem.setId(shippedLineItemFromDB.getId());
-    shipmentService.updateShippedLineItem(shippedLineItem);
   }
 
   @Override
   public void postProcess(AuditFields auditFields) {
-    //File processed successfully.
   }
 }

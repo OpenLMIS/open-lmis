@@ -72,5 +72,8 @@ public class ViewOrdersPage extends RequisitionPage {
     else
       SeleneseTestNgHelper.assertTrue("'No products in this order' message should show up", noOrderMessage.isDisplayed());
   }
-
+    public void downloadCSV() throws IOException {
+        testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
+        downloadCSVLink.click();
+        }
 }

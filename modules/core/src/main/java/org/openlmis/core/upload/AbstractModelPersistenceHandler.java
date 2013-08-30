@@ -6,7 +6,9 @@
 
 package org.openlmis.core.upload;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -25,10 +27,17 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
   @Autowired
   MessageService messageService;
 
+  abstract BaseModel getExisting(BaseModel record);
+
+  abstract void save(BaseModel record);
+
+  @Getter
+  @Setter
+  String messageKey;
+
   @Override
   public void execute(Importable importable, int rowNumber, AuditFields auditFields) {
     BaseModel currentRecord = (BaseModel) importable;
-    final String rowNumberAsString = Integer.toString(rowNumber - 1);
     BaseModel existing = getExisting(currentRecord);
 
     try {
@@ -40,31 +49,32 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
       } else {
         currentRecord.setCreatedBy(auditFields.getUser());
       }
+
       save(currentRecord);
 
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
-      throw new DataException(new OpenLmisMessage(messageService.message("upload.record.error", messageService.message("incorrect.data.length"), rowNumberAsString)));
+      throwException("upload.record.error", "error.incorrect.length", rowNumber);
     } catch (DataException exception) {
-      throw new DataException(new OpenLmisMessage(messageService.message("upload.record.error", messageService.message(exception.getOpenLmisMessage().getCode()), rowNumberAsString)));
+      throwException("upload.record.error", exception.getOpenLmisMessage().getCode(), rowNumber);
     }
+  }
+
+  private void throwException(String key1, String key2, int rowNumber) {
+    String param1 = messageService.message(key2);
+    String param2 = Integer.toString(rowNumber - 1);
+    throw new DataException(new OpenLmisMessage(messageService.message(key1, param1, param2)));
   }
 
   private void throwExceptionIfProcessedInCurrentUpload(AuditFields auditFields, BaseModel existing) {
     if (existing != null) {
       if (existing.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
-        throw new DataException(getDuplicateMessageKey());
+        throw new DataException(getMessageKey());
       }
     }
   }
 
   @Override
   public void postProcess(AuditFields auditFields) {
-    // File is processed successfully
   }
 
-  protected abstract BaseModel getExisting(BaseModel record);
-
-  protected abstract void save(BaseModel record);
-
-  protected abstract String getDuplicateMessageKey();
 }

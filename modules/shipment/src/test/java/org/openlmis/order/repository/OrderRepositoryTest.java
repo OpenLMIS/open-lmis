@@ -14,17 +14,18 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.repository.mapper.OrderMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class OrderRepositoryTest {
@@ -73,5 +74,36 @@ public class OrderRepositoryTest {
     Order savedOrder = orderRepository.getById(1L);
     verify(orderMapper).getById(1L);
     assertThat(savedOrder, is(expectedOrder));
+  }
+
+  @Test
+  public void shouldGetOrderFileColumns() {
+    OrderFileColumn orderFileColumn = new OrderFileColumn();
+    orderFileColumn.setDataFieldLabel("facility.code");
+    orderFileColumn.setColumnLabel("Facility code");
+    orderFileColumn.setPosition(1);
+    orderFileColumn.setIncludeInOrderFile(false);
+    List<OrderFileColumn> orderFileColumns = asList(orderFileColumn);
+    when(orderMapper.getOrderFileColumns()).thenReturn(orderFileColumns);
+    assertThat(orderRepository.getOrderFileTemplate(), is(orderFileColumns));
+    verify(orderMapper).getOrderFileColumns();
+  }
+
+  @Test
+  public void shouldSaveOrderFileColumns() throws Exception {
+    OrderFileColumn orderFileColumn = new OrderFileColumn();
+    List<OrderFileColumn> orderFileColumns = asList(orderFileColumn);
+    Long userId = 1L;
+    orderRepository.saveOrderFileColumns(orderFileColumns, userId);
+    verify(orderMapper).deleteOrderFileColumns();
+    verify(orderMapper, times(1)).insertOrderFileColumn(orderFileColumn);
+  }
+
+
+  private OrderFileColumn getOrderFileColumn(Long id, String label) {
+    OrderFileColumn orderFileColumn = new OrderFileColumn();
+    orderFileColumn.setId(id);
+    orderFileColumn.setColumnLabel(label);
+    return orderFileColumn;
   }
 }

@@ -33,7 +33,7 @@ public class GeographicZonePersistenceHandler extends AbstractModelPersistenceHa
   }
 
   @Override
-  protected String getDuplicateMessageKey() {
+  public String getMessageKey() {
     return "error.duplicate.geographic.zone.code";
   }
 

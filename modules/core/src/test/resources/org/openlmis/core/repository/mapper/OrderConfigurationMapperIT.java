@@ -4,7 +4,7 @@ package org.openlmis.core.repository.mapper;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.openlmis.core.domain.Configuration;
+import org.openlmis.core.domain.OrderConfiguration;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -20,16 +20,25 @@ import static org.junit.Assert.assertThat;
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 @Transactional
-public class ConfigurationMapperIT {
+public class OrderConfigurationMapperIT {
   @Autowired
-  private ConfigurationSettingMapper mapper;
+  private OrderConfigurationMapper mapper;
 
   @Test
   public void shouldGetConfiguration() throws Exception {
-    Configuration configuration = mapper.getConfiguration();
-    assertThat(configuration.getOrderFilePrefix(), is("O"));
-    assertThat(configuration.headerInOrderFile(), is(false));
-    assertThat(configuration.getOrderDatePattern(), is("ddMMyyyy"));
-    assertThat(configuration.getPeriodDatePattern(), is("MMyyyy"));
+    OrderConfiguration orderConfiguration = mapper.get();
+    assertThat(orderConfiguration.getFilePrefix(), is("O"));
+    assertThat(orderConfiguration.getHeaderInFile(), is(false));
+  }
+
+  @Test
+  public void shouldUpdateConfiguration() throws Exception {
+    OrderConfiguration orderConfiguration = new OrderConfiguration();
+    orderConfiguration.setHeaderInFile(true);
+    orderConfiguration.setFilePrefix("ORD");
+    mapper.update(orderConfiguration);
+    OrderConfiguration returnedOrderConfiguration = mapper.get();
+    assertThat(returnedOrderConfiguration.getHeaderInFile(), is(true));
+    assertThat(returnedOrderConfiguration.getFilePrefix(), is("ORD"));
   }
 }

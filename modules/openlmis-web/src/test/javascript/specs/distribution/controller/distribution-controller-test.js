@@ -21,7 +21,7 @@ describe('DistributionController', function () {
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
   beforeEach(module('IndexedDB'));
-  beforeEach(module('distribution'))
+  beforeEach(module('distribution'));
 
   beforeEach(inject(function ($rootScope, $controller, $httpBackend, _messageService_) {
     messageService = _messageService_;

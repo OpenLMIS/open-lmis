@@ -1,22 +1,55 @@
-/*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
+function RefrigeratorReading(refrigeratorReading) {
+  var fieldList = ['temperature', 'functioningCorrectly', 'lowAlarmEvents', 'highAlarmEvents', 'problemSinceLastTime'];
 
-function RefrigeratorReading(temperature, functioningCorrectly,
-                             lowAlarmEvents, highAlarmEvents, problemSinceLastTime,
-                             problemList, notes, refrigeratorId, distributionId) {
+  this.refrigeratorReading = refrigeratorReading;
 
-  this.temperature = temperature;
-  this.functioningCorrectly = functioningCorrectly;
-  this.lowAlarmEvents = lowAlarmEvents;
-  this.highAlarmEvents = highAlarmEvents;
-  this.problemSinceLastTime = problemSinceLastTime;
-  this.problemList = problemList;
-  this.notes = notes;
-  this.refrigeratorId = refrigeratorId;
-  this.distributionId = distributionId;
+  RefrigeratorReading.prototype.computeStatus = function() {
+    var complete = 'is-complete';
+    var incomplete = 'is-incomplete';
+    var empty = 'is-empty';
 
-  return this;
+    var statusClass = complete;
+    function isEmpty(field) {
+      if(isUndefined(refrigeratorReading[field])) {
+        return true;
+      }
+      return (isUndefined(refrigeratorReading[field].value) && !refrigeratorReading[field].notRecorded);
+    }
+
+    $(fieldList).each(function (index, field) {
+      if (isEmpty(field)) {
+        statusClass = empty;
+        return false;
+      }
+      return true;
+    });
+
+    if (statusClass === empty) {
+      $(fieldList).each(function (index, field) {
+        if (!isEmpty(field)) {
+          statusClass = incomplete;
+          return false;
+        }
+        return true;
+      });
+    }
+
+    if (statusClass === complete && refrigeratorReading['problemSinceLastTime'] && refrigeratorReading['problemSinceLastTime'].value === 'Y') {
+      if (!refrigeratorReading.problems) statusClass = incomplete;
+      else {
+        var hasAtLeastOneProblem = _.filter(_.values(refrigeratorReading.problems.problemMap),
+          function (problem) {
+            return problem;
+          }).length;
+
+        if (!refrigeratorReading.problems.problemMap || !hasAtLeastOneProblem)
+          statusClass = incomplete;
+      }
+    }
+
+    refrigeratorReading.status = statusClass;
+
+    return statusClass;
+  }
+
 }

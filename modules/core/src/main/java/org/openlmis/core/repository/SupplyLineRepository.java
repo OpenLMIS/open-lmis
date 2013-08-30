@@ -39,6 +39,10 @@ public class SupplyLineRepository {
     supplyLineMapper.update(supplyLine);
   }
 
+  public SupplyLine getById(Long id) {
+    return supplyLineMapper.getById(id);
+  }
+  
   public SupplyLine get(Long id) {
         return supplyLineMapper.get(id);
   }
@@ -46,6 +50,5 @@ public class SupplyLineRepository {
   public SupplyLine getSupplyLineBySupervisoryNodeProgramAndFacility(SupplyLine supplyLine) {
     return supplyLineMapper.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine);
   }
-
-
+  
 }

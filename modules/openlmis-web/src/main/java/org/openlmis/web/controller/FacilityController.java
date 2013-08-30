@@ -134,10 +134,10 @@ public class FacilityController extends BaseController {
   public ResponseEntity softDelete(HttpServletRequest httpServletRequest, @PathVariable Long facilityId) {
     ResponseEntity<OpenLmisResponse> response;
     Facility facilityToBeDeleted = createFacilityToBeDeleted(facilityId, loggedInUserId(httpServletRequest));
-    facilityService.updateDataReportableAndActiveFor(facilityToBeDeleted);
+    facilityService.updateEnabledAndActiveFor(facilityToBeDeleted);
     Facility deletedFacility = facilityService.getById(facilityId);
 
-    response = success(messageService.message("delete.facility.success", deletedFacility.getName(),
+    response = success(messageService.message("disable.facility.success", deletedFacility.getName(),
       deletedFacility.getCode()));
     response.getBody().addData("facility", deletedFacility);
     return response;
@@ -150,11 +150,11 @@ public class FacilityController extends BaseController {
     ResponseEntity<OpenLmisResponse> response;
     Facility facilityToBeDeleted = createFacilityToBeRestored(facilityId, loggedInUserId(request), active);
 
-    facilityService.updateDataReportableAndActiveFor(facilityToBeDeleted);
+    facilityService.updateEnabledAndActiveFor(facilityToBeDeleted);
 
     Facility restoredFacility = facilityService.getById(facilityId);
 
-    response = success(messageService.message("restore.facility.success", restoredFacility.getName(),
+    response = success(messageService.message("enable.facility.success", restoredFacility.getName(),
       restoredFacility.getCode()));
     response.getBody().addData("facility", restoredFacility);
     return response;
