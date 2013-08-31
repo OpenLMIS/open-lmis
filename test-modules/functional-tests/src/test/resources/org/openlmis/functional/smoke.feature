@@ -340,13 +340,25 @@ Feature: Smoke Tests
       | File Prefix | Header In File |
       | O           | FALSE          |
     And I am logged in as Admin
-    And I access configure order screen
+    And I access configure order page
     Then I should see order file prefix "O"
     And I should see include column header as "false"
     And I should see all column headers disabled
     And I should see include checkbox "checked" for all column headers
     When I save order file format
     Then I should see "Order file configuration saved successfully!"
+
+  @smoke
+  @ie2
+
+  Scenario: User should be able to configure shipment file format using default format
+    When I am logged in as Admin
+    And I access configure shipment page
+    And I should see include column headers as "false"
+    And I should see include checkbox for all data fields
+    And I should see default value of positions
+    When I save shipment file format
+    Then I should see successfull message "Shipment file configuration saved successfully!"
 
   @smoke
   Scenario: User should download order file and verify

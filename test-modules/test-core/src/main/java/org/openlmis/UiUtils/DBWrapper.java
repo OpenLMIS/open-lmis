@@ -1078,6 +1078,13 @@ public class DBWrapper {
       "  ('" + fileprefix + "', '" + headerinfile + "');");
   }
 
+    public void setupShipmentFileConfiguration(String headerinfile) throws IOException, SQLException {
+        update("DELETE FROM shipment_configuration;");
+        update("INSERT INTO shipment_configuration \n" +
+                "  (headerinfile) VALUES\n" +
+                "  ('" + headerinfile + "');");
+    }
+
   public void defaultSetupOrderFileOpenLMISColumns() throws IOException, SQLException {
     update("DELETE FROM order_file_columns where openlmisfield=TRUE;");
 
@@ -1089,6 +1096,18 @@ public class DBWrapper {
     update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLmisField,format) VALUES ('header.order.date', 'order', 'createdDate', 'Order date', 6, TRUE,'dd/MM/yy');");
 
   }
+
+    public void defaultSetupShipmentFileColumns() throws IOException, SQLException {
+        update("DELETE FROM shipment_file_columns;");
+
+        update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory) VALUES ('header.order.number', 1, TRUE, TRUE);");
+        update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory) VALUES ('header.product.code', 2, TRUE, TRUE);");
+        update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory) VALUES ('header.quantity.shipped', 3, TRUE, TRUE);");
+        update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory) VALUES ('header.cost', 4, FALSE, FALSE);");
+        update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory, datepattern) VALUES ('header.packed.date', 5, FALSE, FALSE, 'dd/MM/yy');");
+        update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory, datepattern) VALUES ('header.shipped.date', 6, FALSE, FALSE, 'dd/MM/yy');");
+
+    }
 
   public void setupOrderFileOpenLMISColumns(String datafieldlabel, String includeinorderfile, String columnlabel, int position, String Format) throws IOException, SQLException {
     update("UPDATE order_file_columns SET \n" +
