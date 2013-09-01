@@ -6,10 +6,9 @@
 
 package org.openlmis.core.upload;
 
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.service.DeliveryZoneService;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.upload.AbstractModelPersistenceHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +29,7 @@ public class DeliveryZoneHandler extends AbstractModelPersistenceHandler {
   }
 
   @Override
-  protected String getDuplicateMessageKey() {
+  public String getMessageKey() {
     return "error.duplicate.delivery.zone";
   }
 }

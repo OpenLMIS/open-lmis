@@ -37,7 +37,7 @@ public class ShipmentService {
 
 
   public void insertShippedLineItem(ShippedLineItem shippedLineItem) {
-    shippedLineItem.validateForSave();
+    validateForSave(shippedLineItem);
     validateShipment(shippedLineItem);
     shipmentRepository.insertShippedLineItem(shippedLineItem);
   }
@@ -48,6 +48,12 @@ public class ShipmentService {
     }
     if(productService.getIdForCode(shippedLineItem.getProductCode()) == null) {
       throw new DataException("error.unknown.product");
+    }
+  }
+
+  private void validateForSave(ShippedLineItem shippedLineItem) {
+    if (shippedLineItem.getQuantityShipped() < 0) {
+      throw new DataException("error.negative.shipped.quantity");
     }
   }
 

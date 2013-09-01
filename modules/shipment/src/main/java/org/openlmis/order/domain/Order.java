@@ -13,8 +13,6 @@ import org.openlmis.core.domain.BaseModel;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 
-import java.util.Date;
-
 import static org.openlmis.order.domain.OrderStatus.PACKED;
 import static org.openlmis.order.domain.OrderStatus.RELEASED;
 
@@ -25,8 +23,6 @@ public class Order extends BaseModel{
   private Rnr rnr;
   private OrderStatus status;
   private ShipmentFileInfo shipmentFileInfo;
-  private Date createdDate;
-  private Long createdBy;
 
   public Order(Rnr rnr) {
     this.rnr = rnr;

@@ -1,6 +1,4 @@
 package org.openlmis.web.model;
-
-import org.openlmis.core.domain.Configuration;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ConfigurationSetting;

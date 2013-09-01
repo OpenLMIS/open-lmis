@@ -8,6 +8,7 @@ package org.openlmis.web.view.pdf;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.*;
+import org.openlmis.core.service.MessageService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -18,14 +19,16 @@ public class PdfPageEventHandler extends PdfPageEventHelper {
   public static final int PAGE_TEXT_WIDTH = 100;
   public static final int PAGE_TEXT_HEIGHT = 100;
   public static final float FOOTER_TEXT_SIZE = 10f;
+  private final MessageService messageService;
 
   protected BaseFont baseFont;
   private PdfTemplate pageNumberTemplate;
   private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
   private float textAdjustment;
 
-  public PdfPageEventHandler() {
+  public PdfPageEventHandler(MessageService messageService) {
     super();
+    this.messageService = messageService;
     try {
       baseFont = BaseFont.createFont();
       textAdjustment = baseFont.getWidthPoint("0", FOOTER_TEXT_SIZE);
@@ -74,7 +77,7 @@ public class PdfPageEventHandler extends PdfPageEventHelper {
   }
 
   private void writePageNumber(PdfWriter writer, Document document, PdfContentByte contentByte) {
-    String pageNumberText = String.format("Page %s of ", writer.getPageNumber());
+    String pageNumberText = messageService.message("label.page.of", writer.getPageNumber()) + " ";
     float pageNumberTextSize = baseFont.getWidthPoint(pageNumberText, FOOTER_TEXT_SIZE);
     contentByte.setTextMatrix(document.right() - pageNumberTextSize - textAdjustment, document.bottom());
     contentByte.showText(pageNumberText);

@@ -5,10 +5,9 @@
  */
 package org.openlmis.core.upload;
 
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.DeliveryZoneProgramSchedule;
 import org.openlmis.core.service.DeliveryZoneProgramScheduleService;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.upload.AbstractModelPersistenceHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +21,7 @@ public class DeliveryZoneProgramScheduleHandler extends AbstractModelPersistence
   protected BaseModel getExisting(BaseModel record) {
     DeliveryZoneProgramSchedule deliveryZoneProgramSchedule = (DeliveryZoneProgramSchedule) record;
     return service.getByDeliveryZoneCodeAndProgramCode(deliveryZoneProgramSchedule.getDeliveryZone().getCode(),
-        deliveryZoneProgramSchedule.getProgram().getCode());
+      deliveryZoneProgramSchedule.getProgram().getCode());
   }
 
   @Override
@@ -31,7 +30,7 @@ public class DeliveryZoneProgramScheduleHandler extends AbstractModelPersistence
   }
 
   @Override
-  protected String getDuplicateMessageKey() {
+  public String getMessageKey() {
     return "error.duplicate.delivery.zone.program";
   }
 }

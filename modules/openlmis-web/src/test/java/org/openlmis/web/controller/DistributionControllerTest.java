@@ -106,15 +106,16 @@ public class DistributionControllerTest {
 
     when(messageService.message("message.distribution.already.exists", user.getUserName(), DistributionController.DATE_FORMAT.format(creationTimeStamp))).
       thenReturn("Distribution already initiated by XYZ at 2013-05-03 12:10");
+    when(messageService.message("message.distribution.created.success", null, null, null)
+    ).thenReturn("Distribution created successfully");
 
     ResponseEntity<OpenLmisResponse> response = controller.create(distribution, httpServletRequest);
     assertThat(response.getStatusCode(), is(OK));
     Map<String, Object> responseData = response.getBody().getData();
 
-    assertThat((String) responseData.get("success"),
+    assertThat((String) responseData.get("message"),
       is("Distribution already initiated by XYZ at 2013-05-03 12:10"));
     assertThat((Distribution) responseData.get("distribution"), is(existingDistribution));
-
-
+    assertThat((String) response.getBody().getData().get("success"), is("Distribution created successfully"));
   }
 }

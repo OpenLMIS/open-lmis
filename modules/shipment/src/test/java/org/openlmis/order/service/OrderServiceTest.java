@@ -12,8 +12,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.OrderConfiguration;
+import org.openlmis.core.repository.OrderConfigurationRepository;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderFileColumn;
+import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -23,9 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.openlmis.order.domain.DateFormat.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
@@ -34,14 +41,16 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class OrderServiceTest {
 
   @Mock
+  private OrderConfigurationRepository orderConfigurationRepository;
+
+  @Mock
   private OrderRepository orderRepository;
+
   @Mock
   private RequisitionService requisitionService;
 
-  @SuppressWarnings("unuse")
   @InjectMocks
   private OrderService orderService;
-
 
   @Test
   public void shouldSaveOrder() throws Exception {
@@ -125,5 +134,40 @@ public class OrderServiceTest {
     assertThat(order.getRnr().getFullSupplyLineItems().size(), is(0));
     assertThat(order.getRnr().getNonFullSupplyLineItems().size(), is(0));
     assertThat(expectedOrder, is(order));
+  }
+
+  @Test
+  public void shouldGetOrderFileTemplateWithConfiguration() throws Exception {
+    OrderConfiguration orderConfiguration = new OrderConfiguration();
+    List<OrderFileColumn> orderFileColumns = new ArrayList<>();
+    OrderFileTemplateDTO expectedOrderFileTemplateDTO = new OrderFileTemplateDTO(orderConfiguration, orderFileColumns);
+    when(orderConfigurationRepository.getConfiguration()).thenReturn(orderConfiguration);
+    when(orderRepository.getOrderFileTemplate()).thenReturn(orderFileColumns);
+    OrderFileTemplateDTO actualOrderFileTemplateDTO = orderService.getOrderFileTemplateDTO();
+    verify(orderConfigurationRepository).getConfiguration();
+    verify(orderRepository).getOrderFileTemplate();
+    assertThat(actualOrderFileTemplateDTO, is(expectedOrderFileTemplateDTO));
+  }
+
+  @Test
+  public void shouldSaveOrderFileColumnsWithConfiguration() throws Exception {
+    OrderConfiguration orderConfiguration = new OrderConfiguration();
+    List<OrderFileColumn> orderFileColumns = new ArrayList<>();
+    OrderFileTemplateDTO orderFileTemplateDTO = new OrderFileTemplateDTO(orderConfiguration, orderFileColumns);
+    Long userId = 1L;
+    orderService.saveOrderFileTemplate(orderFileTemplateDTO, userId);
+    verify(orderConfigurationRepository).update(orderConfiguration);
+    verify(orderRepository).saveOrderFileColumns(orderFileColumns, userId);
+  }
+
+  @Test
+  public void shouldGetAllDateFormats() throws Exception {
+    List<DateFormat> dateFormats = new ArrayList<>(orderService.getAllDateFormats());
+    List<DateFormat> expectedDateFormats = asList(DATE_1,DATE_2,DATE_3,DATE_4,DATE_5,DATE_6,DATE_7,DATE_8,DATE_9,DATE_10,
+      DATE_11,DATE_12,DATE_13,DATE_14,DATE_15,DATE_16,DATE_17,DATE_18,DATE_19,DATE_20,
+      DATE_21,DATE_22,DATE_23,DATE_24,DATE_25,DATE_26,DATE_27,DATE_28,DATE_29,DATE_30
+    );
+
+    assertThat(dateFormats, is(expectedDateFormats));
   }
 }

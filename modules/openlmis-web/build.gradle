@@ -57,8 +57,8 @@ tasks.withType(War) {
         if (fileCopy.name.equals('services.js') || fileCopy.name.equals('offline.appcacheOFF')) {
             fileCopy.filter(ReplaceTokens, tokens: [version: currentTime])
         }
-        if (fileCopy.name.equals('offline.appcacheOFF')){
-          fileCopy.setName('offline.appcache')
+        if (fileCopy.name.equals('offline.appcacheOFF')) {
+            fileCopy.setName('offline.appcache')
         }
     }
 }
@@ -115,9 +115,10 @@ dependencies {
             'commons-fileupload:commons-fileupload:1.2.2',
             'javax.servlet:servlet-api:2.5',
             'org.testng:testng:6.1.1',
-            'org.seleniumhq.selenium:selenium-java:2.33.0',
+            'org.seleniumhq.selenium:selenium-java:2.35.0',
             'org.seleniumhq.selenium:selenium-firefox-driver:2.33.0 ',
             'com.itextpdf:itextpdf:5.4.0',
+            'commons-jxpath:commons-jxpath:1.3',
             project(':modules:authentication'),
             project(':modules:requisition'),
             project(':modules:core'),
@@ -139,6 +140,7 @@ dependencies {
             project(path: ':modules:core', configuration: 'testFixtures'),
             project(path: ':modules:rest-api', configuration: 'testFixtures'),
             project(path: ':modules:requisition', configuration: 'testFixtures'),
+            project(path: ':modules:shipment', configuration: 'testFixtures'),
             project(path: ':modules:distribution', configuration: 'testFixtures'),
             project(path: ':modules:reporting', configuration: 'testFixtures'),
             project(path :':modules:report',configuration: 'testFixtures')

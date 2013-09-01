@@ -59,11 +59,12 @@ public interface UserMapper {
   @Update("UPDATE users SET userName = #{userName}, firstName = #{firstName}, lastName = #{lastName}, " +
     "employeeId = #{employeeId},facilityId=#{facilityId}, jobTitle = #{jobTitle}, " +
     "primaryNotificationMethod = #{primaryNotificationMethod}, officePhone = #{officePhone}, cellPhone = #{cellPhone}, " +
-    "email = #{email}, active = #{active}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
+    "email = #{email}, active = #{active}, verified = #{verified}, " +
+    "modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(User user);
 
   @Select("SELECT id, userName, firstName, lastName, employeeId, facilityId, jobTitle, officePhone, " +
-    "primaryNotificationMethod, cellPhone, email, active FROM users WHERE id=#{id}")
+    "primaryNotificationMethod, cellPhone, email, verified, active FROM users WHERE id=#{id}")
   User getById(Long id);
 
   @Insert("INSERT INTO user_password_reset_tokens (userId, token) VALUES (#{user.id}, #{token})")

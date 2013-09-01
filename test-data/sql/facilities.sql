@@ -6,7 +6,7 @@ DELETE FROM refrigerators;
 DELETE FROM facilities;
 
 INSERT INTO facilities
-(code, name, description, gln, mainPhone, fax, address1, address2, geographiczoneid, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, dataReportable, virtualFacility, modifieddate) values
+(code, name, description, gln, mainPhone, fax, address1, address2, geographiczoneid, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, enabled, virtualFacility, modifieddate) values
 ('F10','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',(select id from geographic_zones where code ='District1'),1,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','FALSE','fc','TRUE','FALSE','11/11/2012'),
 ('F11','Central Hospital','IT department','G7646',9876234981,'fax','A','B',(select id from geographic_zones where code ='Ngorongoro'),2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','FALSE','fc','TRUE','FALSE','11/11/2012'),
 ('F12','Central Hospital','IT department','G7646',9876234981,'fax','A','B',4,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','FALSE','fc','TRUE','FALSE','11/11/2012'),

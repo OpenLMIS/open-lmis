@@ -33,7 +33,7 @@ public class ProductGroupPersistenceHandler extends AbstractModelPersistenceHand
   }
 
   @Override
-  protected String getDuplicateMessageKey() {
+  public String getMessageKey() {
     return "error.duplicate.product.group.code";
   }
 }

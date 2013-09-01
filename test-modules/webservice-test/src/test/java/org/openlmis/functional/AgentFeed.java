@@ -109,10 +109,10 @@ public class AgentFeed extends TestCaseHelper {
     DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(vendorCode);
     deleteFacilityPage.clickFacilityList(vendorCode);
-    deleteFacilityPage.deleteFacility(vendorCode, DEFAULT_AGENT_NAME);
+    deleteFacilityPage.disableFacility(vendorCode, DEFAULT_AGENT_NAME);
 
-    deleteFacilityPage.verifyDeletedFacility(vendorCode, DEFAULT_AGENT_NAME);
-    HomePage homePageRestore = deleteFacilityPage.restoreFacility();
+    deleteFacilityPage.verifyDisabledFacility(vendorCode, DEFAULT_AGENT_NAME);
+    HomePage homePageRestore = deleteFacilityPage.enableFacility();
 
     DeleteFacilityPage deleteFacilityPageRestore = homePageRestore.navigateSearchFacility();
     deleteFacilityPageRestore.searchFacility(vendorCode);
@@ -145,7 +145,7 @@ public class AgentFeed extends TestCaseHelper {
   }
 
   @Test(groups = {"webservice"})
-  public void testUpdateChwFeedForDataReportableScenarios() throws Exception {
+  public void testUpdateChwFeedForEnableScenarios() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
@@ -172,15 +172,15 @@ public class AgentFeed extends TestCaseHelper {
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
-    dbWrapper.updateFacilityFieldBYCode("datareportable", "false", DEFAULT_AGENT_CODE);
+    dbWrapper.updateFacilityFieldBYCode("enabled", "false", DEFAULT_AGENT_CODE);
 
-    ResponseEntity responseEntityDataReportableFalse = client.SendJSON(getJsonStringFor(agentJson),
+    ResponseEntity responseEntityEnabledFalse = client.SendJSON(getJsonStringFor(agentJson),
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
 
-    assertTrue("Showing response as : " + responseEntityDataReportableFalse.getResponse(), responseEntityDataReportableFalse.getResponse().contains("{\"error\":\"CHW cannot be updated as it has been deleted\"}"));
+    assertTrue("Showing response as : " + responseEntityEnabledFalse.getResponse(), responseEntityEnabledFalse.getResponse().contains("{\"error\":\"CHW cannot be updated as it has been deleted\"}"));
 
   }
 
@@ -329,7 +329,7 @@ public class AgentFeed extends TestCaseHelper {
     String active = "active";
     String virtualfacility = "virtualfacility";
     String sdp = "sdp";
-    String datareportable = "datareportable";
+    String enabled = "enabled";
 
 
     HttpClient client = new HttpClient();
@@ -359,7 +359,7 @@ public class AgentFeed extends TestCaseHelper {
     assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(active, vendorCode));
     assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(virtualfacility, vendorCode));
     assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(sdp, vendorCode));
-    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(datareportable, vendorCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(enabled, vendorCode));
 
     agentJson.setAgentName(vendorNameUpdated);
     agentJson.setParentFacilityCode(firstParentFacilityUpdated);
@@ -382,7 +382,7 @@ public class AgentFeed extends TestCaseHelper {
     assertEquals(FALSE_FLAG, dbWrapper.getFacilityFieldBYCode(active, vendorCode));
     assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(virtualfacility, vendorCode));
     assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(sdp, vendorCode));
-    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(datareportable, vendorCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(enabled, vendorCode));
   }
 
   @Test(groups = {"webservice"})

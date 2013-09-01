@@ -7,7 +7,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -15,11 +14,10 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.*;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
 
 public class UploadPage extends Page {
 
@@ -85,10 +83,14 @@ public class UploadPage extends Page {
     assertTrue("Error Message Not Displayed", saveErrorMsgDiv.isDisplayed());
     testWebDriver.setImplicitWait(implicitWait);
   }
-    public void validateErrorMessageOnUploadScreen(String message) {
-        assertTrue("Error Message incorrect : " + "Expected '" + message + "' but saw '" + saveErrorMsgDiv.getText() + "'.", saveErrorMsgDiv.getText().trim().contains(message.trim()));
 
-    }
+  public void validateErrorMessageOnUploadScreen(String message) {
+    assertTrue("Error Message incorrect : " + "Expected '" + message + "' but saw '" + saveErrorMsgDiv.getText() + "'.", saveErrorMsgDiv.getText().trim().contains(message.trim()));
+  }
+
+  public void validateSuccessMessageOnUploadScreen(String message) {
+    assertTrue("Message Message incorrect : " + "Expected '" + message + "' but saw '" + saveSuccessMsgDiv.getText() + "'.", saveSuccessMsgDiv.getText().trim().contains(message.trim()));
+  }
 
   public void uploadAndVerifyGeographicZone(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Geographic Zones");
@@ -115,53 +117,54 @@ public class UploadPage extends Page {
     testWebDriver.sleep(250);
   }
 
-    public void uploadDeliveryZones(String uploadFileNameWithExtension) throws FileNotFoundException {
-        selectUploadType("Delivery Zones");
-        uploadFile(uploadFileNameWithExtension);
-        testWebDriver.sleep(250);
-    }
+  public void uploadDeliveryZones(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Delivery Zones");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
+  }
 
-    public void uploadDeliveryZonesInvalidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
-        selectUploadType("Delivery Zones");
-        uploadFile(uploadFileNameWithExtension);
-        testWebDriver.sleep(250);
-    }
+  public void uploadDeliveryZonesInvalidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Delivery Zones");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
+  }
 
-    public void uploadDeliveryZoneProgramSchedule(String uploadFileNameWithExtension) throws FileNotFoundException {
-        selectUploadType("Map Delivery Zones To Program Schedules");
-        uploadFile(uploadFileNameWithExtension);
-        testWebDriver.sleep(250);
-    }
+  public void uploadDeliveryZoneProgramSchedule(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Map Delivery Zones To Program Schedules");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
+  }
 
-    public void uploadDeliveryZoneProgramScheduleValidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
-        selectUploadType("Map Delivery Zones To Program Schedules");
-        uploadFile(uploadFileNameWithExtension);
-        testWebDriver.sleep(250);
-    }
+  public void uploadDeliveryZoneProgramScheduleValidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Map Delivery Zones To Program Schedules");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
+  }
 
-    public void uploadDeliveryZoneMembers(String uploadFileNameWithExtension) throws FileNotFoundException {
-        selectUploadType("Delivery Zone Members");
-        uploadFile(uploadFileNameWithExtension);
-        testWebDriver.sleep(250);
-    }
+  public void uploadDeliveryZoneMembers(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Delivery Zone Members");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
+  }
 
-    public void uploadDeliveryZoneMembersValidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
-        selectUploadType("Delivery Zone Members");
-        uploadFile(uploadFileNameWithExtension);
-        testWebDriver.sleep(250);
-    }
+  public void uploadDeliveryZoneMembersValidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Delivery Zone Members");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
+  }
 
-    public void uploadDeliveryZoneWarehouses(String uploadFileNameWithExtension) throws FileNotFoundException {
-        selectUploadType("Delivery Zone Warehouses");
-        uploadFile(uploadFileNameWithExtension);
-        testWebDriver.sleep(250);
-    }
+  public void uploadDeliveryZoneWarehouses(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Delivery Zone Warehouses");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
+  }
 
-    public void uploadDeliveryZoneWarehousesValidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
-        selectUploadType("Delivery Zone Warehouses");
-        uploadFile(uploadFileNameWithExtension);
-        testWebDriver.sleep(250);
-    }
+  public void uploadDeliveryZoneWarehousesValidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Delivery Zone Warehouses");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
+  }
+
   public void uploadProducts(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Products");
     uploadFile(uploadFileNameWithExtension);
@@ -266,6 +269,12 @@ public class UploadPage extends Page {
 
   public void uploadSupplyLines(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Supply Lines");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
+  }
+
+  public void uploadFacilityFTPDetails(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Facility FTP details");
     uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
   }

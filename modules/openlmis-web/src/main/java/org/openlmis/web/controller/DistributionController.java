@@ -64,8 +64,10 @@ public class DistributionController extends BaseController {
 
     OpenLmisResponse openLmisResponse = new OpenLmisResponse("distribution", existingDistribution);
     User createdByUser = userService.getById(existingDistribution.getCreatedBy());
-    openLmisResponse.addData(SUCCESS, messageService.message("message.distribution.already.exists",
+    openLmisResponse.addData("message", messageService.message("message.distribution.already.exists",
       createdByUser.getUserName(), DATE_FORMAT.format(existingDistribution.getCreatedDate())));
+    openLmisResponse.addData(SUCCESS, messageService.message("message.distribution.created.success",
+      distribution.getDeliveryZone().getName(), distribution.getProgram().getName(), distribution.getPeriod().getName()));
     return openLmisResponse.response(OK);
   }
 

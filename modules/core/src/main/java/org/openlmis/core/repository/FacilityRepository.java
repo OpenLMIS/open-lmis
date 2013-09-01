@@ -64,6 +64,7 @@ public class FacilityRepository {
       validateAndSetFacilityOperatedBy(facility);
       validateAndSetFacilityType(facility);
       validateGeographicZone(facility);
+      validateEnabledAndActive(facility);
       if (facility.getId() == null) {
         mapper.insert(facility);
       } else {
@@ -78,6 +79,11 @@ public class FacilityRepository {
       }
       throw new DataException("error.incorrect.length");
     }
+  }
+
+  private void validateEnabledAndActive(Facility facility) {
+    if (facility.getEnabled() == Boolean.FALSE && facility.getActive() == Boolean.TRUE)
+      throw new DataException("error.enabled.false");
   }
 
   private void validateGeographicZone(Facility facility) {
@@ -139,8 +145,8 @@ public class FacilityRepository {
     return mapper.getById(id);
   }
 
-  public Facility updateDataReportableAndActiveFor(Facility facility) {
-    mapper.updateDataReportableAndActiveFor(facility);
+  public Facility updateEnabledAndActiveFor(Facility facility) {
+    mapper.updateEnabledAndActiveFor(facility);
     //TODO is this required??
     return mapper.getById(facility.getId());
   }

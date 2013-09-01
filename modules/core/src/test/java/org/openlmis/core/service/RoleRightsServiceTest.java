@@ -61,7 +61,7 @@ public class RoleRightsServiceTest {
 
 
   @Test
-  public void shouldGetAllRightsInAlphabeticalOrder() throws Exception {
+  public void shouldGetAllRightsByDisplayOrder() throws Exception {
     List<Right> allRights = new ArrayList<>(new RoleRightsService().getAllRights());
     List<Right> alphabeticalRights = asList(CONFIGURE_RNR,
       MANAGE_FACILITY,
@@ -80,19 +80,21 @@ public class RoleRightsServiceTest {
       CREATE_REQUISITION,
       VIEW_REQUISITION,
       VIEW_ORDER,
-            MANAGE_PRODUCT,
-            MANAGE_SUPPLYLINE,
-            MANAGE_GEOGRAPHIC_ZONES,
-            VIEW_FACILITY_REPORT,
-            VIEW_MAILING_LABEL_REPORT,
-            VIEW_SUMMARY_REPORT,
-            VIEW_CONSUMPTION_REPORT,
-            VIEW_AVERAGE_CONSUMPTION_REPORT,
-            VIEW_REPORTING_RATE_REPORT,
-            VIEW_NON_REPORTING_FACILITIES,
-            VIEW_ADJUSTMENT_SUMMARY_REPORT,
-            VIEW_SUPPLY_STATUS_REPORT, VIEW_STOCKED_OUT_REPORT,
-            VIEW_DISTRICT_CONSUMPTION_REPORT
+      CONFIGURE_EDI,
+      MANAGE_PRODUCT,
+      MANAGE_SUPPLYLINE,
+      MANAGE_GEOGRAPHIC_ZONES,
+      VIEW_FACILITY_REPORT,
+      VIEW_MAILING_LABEL_REPORT,
+      VIEW_SUMMARY_REPORT,
+      VIEW_CONSUMPTION_REPORT,
+      VIEW_AVERAGE_CONSUMPTION_REPORT,
+      VIEW_REPORTING_RATE_REPORT,
+      VIEW_NON_REPORTING_FACILITIES,
+      VIEW_ADJUSTMENT_SUMMARY_REPORT,
+      VIEW_SUPPLY_STATUS_REPORT, 
+      VIEW_STOCKED_OUT_REPORT,
+      VIEW_DISTRICT_CONSUMPTION_REPORT
     );
 
     assertThat(allRights, is(alphabeticalRights));

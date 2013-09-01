@@ -1,6 +1,6 @@
 DROP VIEW IF EXISTS vw_stock_status;
 
-
+/*
 CREATE OR REPLACE VIEW vw_stock_status AS
  SELECT fn_get_supplying_facility_name(requisitions.supplyingfacilityid) AS supplyingfacility,
     facilities.code AS facilitycode, facilities.name AS facility,
@@ -50,3 +50,4 @@ CREATE OR REPLACE VIEW vw_stock_status AS
 
 ALTER TABLE vw_stock_status
   OWNER TO postgres;
+ */

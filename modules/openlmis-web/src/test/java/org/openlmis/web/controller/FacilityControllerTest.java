@@ -217,13 +217,13 @@ public class FacilityControllerTest {
     when(Facility.createFacilityToBeDeleted(1L, 1L)).thenReturn(facility);
 
     when(facilityService.getById(facility.getId())).thenReturn(facility);
-    when(messageService.message("delete.facility.success", facility.getName(), facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" deleted successfully");
+    when(messageService.message("disable.facility.success", facility.getName(), facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" deleted successfully");
 
     ResponseEntity<OpenLmisResponse> responseEntity = facilityController.softDelete(httpServletRequest, 1L);
 
     assertThat(responseEntity.getBody().getSuccessMsg(), is("\"Test Facility\" / \"Test Code\" deleted successfully"));
     assertThat((Facility) responseEntity.getBody().getData().get("facility"), is(facility));
-    verify(facilityService).updateDataReportableAndActiveFor(facility);
+    verify(facilityService).updateEnabledAndActiveFor(facility);
   }
 
   @Test
@@ -235,13 +235,13 @@ public class FacilityControllerTest {
     mockStatic(Facility.class);
     when(Facility.createFacilityToBeRestored(1L, 1L, true)).thenReturn(facility);
     when(facilityService.getById(facility.getId())).thenReturn(facility);
-    when(messageService.message("restore.facility.success", facility.getName(), facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" restored successfully");
+    when(messageService.message("enable.facility.success", facility.getName(), facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" restored successfully");
 
     ResponseEntity<OpenLmisResponse> responseEntity = facilityController.restore(httpServletRequest, 1L, true);
 
     assertThat(responseEntity.getBody().getSuccessMsg(), is("\"Test Facility\" / \"Test Code\" restored successfully"));
     assertThat((Facility) responseEntity.getBody().getData().get("facility"), is(facility));
-    verify(facilityService).updateDataReportableAndActiveFor(facility);
+    verify(facilityService).updateEnabledAndActiveFor(facility);
   }
 
   @Test

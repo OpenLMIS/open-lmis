@@ -22,7 +22,7 @@ public interface FacilityMapper {
     "geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById," +
     "coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, online," +
     "satellite, parentFacilityId, hasElectricity, hasElectronicScc, hasElectronicDar, active," +
-    "goLiveDate, goDownDate, comment, virtualFacility, dataReportable, createdDate,createdBy, modifiedBy, modifiedDate) " +
+    "goLiveDate, goDownDate, comment, virtualFacility, enabled, createdDate,createdBy, modifiedBy, modifiedDate) " +
     "values(#{code}, #{name}, #{description}, #{gln}, #{mainPhone}, #{fax}, #{address1}, #{address2}," +
     "#{geographicZone.id}," +
     "#{facilityType.id}," +
@@ -30,7 +30,7 @@ public interface FacilityMapper {
     "#{operatedBy.id}," +
     "#{coldStorageGrossCapacity}, #{coldStorageNetCapacity}, #{suppliesOthers}, #{sdp},#{online}," +
     "#{satellite}, #{parentFacilityId}, #{hasElectricity}, #{hasElectronicScc}, #{hasElectronicDar}, #{active}," +
-    "#{goLiveDate}, #{goDownDate}, #{comment}, #{virtualFacility}, #{dataReportable},COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
+    "#{goLiveDate}, #{goDownDate}, #{comment}, #{virtualFacility}, #{enabled},COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
     "COALESCE(#{modifiedDate}, NOW()))")
   @Options(useGeneratedKeys = true)
   Integer insert(Facility facility);
@@ -108,15 +108,15 @@ public interface FacilityMapper {
     "hasElectricity = #{hasElectricity}, hasElectronicScc = #{hasElectronicScc}, " +
     "hasElectronicDar = #{hasElectronicDar}, active = #{active}, virtualFacility = #{virtualFacility}, " +
     "goLiveDate = #{goLiveDate}, goDownDate = #{goDownDate}," +
-    "comment = #{comment}, dataReportable = #{dataReportable}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
+    "comment = #{comment}, enabled = #{enabled}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(Facility facility);
 
   @Select("SELECT * FROM facility_types where LOWER(code) = LOWER(#{code})")
   FacilityType getFacilityTypeForCode(String facilityTypeCode);
 
-  @Update({"UPDATE facilities SET dataReportable = #{dataReportable}, active=#{active}, " +
+  @Update({"UPDATE facilities SET enabled = #{enabled}, active=#{active}, " +
     "modifiedBy=#{modifiedBy}, modifiedDate = NOW() WHERE id =#{id}"})
-  void updateDataReportableAndActiveFor(Facility facility);
+  void updateEnabledAndActiveFor(Facility facility);
 
   @Select("SELECT id FROM facilities WHERE LOWER(code) = LOWER(#{code})")
   Long getIdForCode(String code);

@@ -78,37 +78,45 @@ public class ManageRolesAndUsers extends TestCaseHelper {
         userPage.clickDisableButton();
     }
 
-    @Then("^I should see disable fields$")
-    public void verifyDisableFields() throws Exception {
-        UserPage userPage = new UserPage(testWebDriver);
-        userPage.verifyFieldsDisabled();
-    }
-
     @Then("^I should see disable user \"([^\"]*)\" message$")
     public void verifyDisableUser(String user) throws Exception {
         UserPage userPage = new UserPage(testWebDriver);
-        userPage.verifyMessage("User \''"+ user +"\'' has been disabled");
+        userPage.verifyMessage("User \''" + user + "\'' has been disabled");
     }
 
-    @Then("^I should see enable fields$")
-    public void verifyEnableFields() throws Exception {
+    @Then("^I should see user not verified$")
+    public void notVerifiedUser() throws Exception {
         UserPage userPage = new UserPage(testWebDriver);
-        userPage.verifyFieldsEnabled();
+        assertEquals(userPage.getVerifiedLabel(),"No");
     }
 
-    @When("^I restore user \"([^\"]*)\"$")
-    public void restoreUser(String user) throws Exception {
+    @Then("^I should see user \"([^\"]*)\" verified$")
+    public void VerifiedUser(String user) throws Exception {
         HomePage homePage = new HomePage(testWebDriver);
         UserPage userPage = homePage.navigateToUser();
         userPage.searchUser(user);
         userPage.clickUserList(user);
-        userPage.clickRestoreButton();
+        assertEquals(userPage.getVerifiedLabel(),"Yes");
     }
 
-    @Then("^I should see restore user \"([^\"]*)\" message$")
-    public void verifyRestoredUser(String user) throws Exception {
+    @When("^I enable user \"([^\"]*)\"$")
+    public void enableUser(String user) throws Exception {
+        HomePage homePage = new HomePage(testWebDriver);
+        UserPage userPage = homePage.navigateToUser();
+        userPage.searchUser(user);
+        userPage.clickUserList(user);
+        userPage.clickEnableButton();
+    }
+
+    @Then("^I should see enable user \"([^\"]*)\" message$")
+    public void verifyEnabledUser(String user) throws Exception {
         UserPage userPage = new UserPage(testWebDriver);
-        userPage.verifyMessage("User \''"+ user +"\'' has been restored");
+        userPage.verifyMessage("User \''"+ user +"\'' has been enabled");
+    }
+
+    @When("^I verify user email \"([^\"]*)\"$")
+    public void verifyUserEmail(String email) throws Exception {
+        dbWrapper.updateUser("abc123", email);
     }
 
   @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
@@ -284,7 +292,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
         userPage.focusOnFirstUserLink();
         userPage.verifyDisabledResetPassword();
         userPage.clickEditUser();
-        userPage.clickRestoreButton();
+        userPage.clickEnableButton();
 
         homePage.navigateToUser();
         userPage.searchUser(LAB_IN_CHARGE);

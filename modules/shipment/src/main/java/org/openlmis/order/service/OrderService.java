@@ -7,7 +7,11 @@
 package org.openlmis.order.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.OrderConfiguration;
+import org.openlmis.core.repository.OrderConfigurationRepository;
+import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
+import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -18,11 +22,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import static java.util.Arrays.asList;
 
 @Service
 @NoArgsConstructor
 public class OrderService {
 
+  @Autowired
+  private OrderConfigurationRepository orderConfigurationRepository;
   @Autowired
   private OrderRepository orderRepository;
   @Autowired
@@ -81,5 +91,23 @@ public class OrderService {
 
   public void updateFulfilledAndShipmentIdForOrders(List<Order> orders) {
     orderRepository.updateStatusAndShipmentIdForOrder(orders);
+  }
+
+  public OrderFileTemplateDTO getOrderFileTemplateDTO() {
+    return new OrderFileTemplateDTO(orderConfigurationRepository.getConfiguration(), orderRepository.getOrderFileTemplate());
+  }
+
+  @Transactional
+  public void saveOrderFileTemplate(OrderFileTemplateDTO orderFileTemplateDTO, Long userId) {
+    OrderConfiguration orderConfiguration = orderFileTemplateDTO.getOrderConfiguration();
+    orderConfiguration.setModifiedBy(userId);
+    orderConfigurationRepository.update(orderConfiguration);
+    orderRepository.saveOrderFileColumns(orderFileTemplateDTO.getOrderFileColumns(), userId);
+  }
+
+  public Set<DateFormat> getAllDateFormats() {
+    TreeSet<DateFormat> dateFormats = new TreeSet<>();
+    dateFormats.addAll(asList(DateFormat.values()));
+    return dateFormats;
   }
 }

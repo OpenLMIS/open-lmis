@@ -80,7 +80,7 @@ public class RestAgentServiceTest {
     verify(facility).setActive(Boolean.parseBoolean(agent.getActive()));
     verify(facility).setVirtualFacility(true);
     verify(facility).setSdp(true);
-    verify(facility).setDataReportable(true);
+    verify(facility).setEnabled(true);
     verify(facility).setOperatedBy(baseFacility.getOperatedBy());
     verify(facility).setGoLiveDate(currentTimeStamp);
     verify(facilityService).save(facility);
@@ -98,7 +98,7 @@ public class RestAgentServiceTest {
 
     Facility chwFacility = spy(new Facility());
     chwFacility.setVirtualFacility(true);
-    chwFacility.setDataReportable(true);
+    chwFacility.setEnabled(true);
     whenNew(Facility.class).withNoArguments().thenReturn(chwFacility);
     when(facilityService.getByCode(chwFacility)).thenReturn(chwFacility);
     when(vendorService.getByName(principal.getName())).thenReturn(new Vendor());
@@ -223,7 +223,7 @@ public class RestAgentServiceTest {
     Agent agent = make(a(defaultCHW));
     Facility facility = new Facility();
     facility.setVirtualFacility(true);
-    facility.setDataReportable(false);
+    facility.setEnabled(false);
     Facility chwFacility = new Facility();
     whenNew(Facility.class).withNoArguments().thenReturn(chwFacility);
     when(facilityService.getByCode(chwFacility)).thenReturn(facility);

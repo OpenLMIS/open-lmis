@@ -147,6 +147,16 @@
           </div>
         </div>
 
+        <div class="form-row clearfix">
+          <div class="form-cell">
+            <label openlmis-message="label.is.verified"></label>
+            <ng-switch on="!!user.verified">
+              <span ng-switch-when="true" openlmis-message="button.yes"></span>
+              <span ng-switch-when="false" openlmis-message="button.no"></span>
+            </ng-switch>
+          </div>
+        </div>
+
       </div>
       <!-- /form-group -->
 
@@ -196,15 +206,15 @@
         <!-- /form-group -->
 
       <div form-toolbar id="action_buttons" class="action-buttons">
-        <div class="form-cell button-row" ng-show="(user.active || user.id==null)">
+        <div class="form-cell button-row">
           <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
-          <input type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel" ng-click="cancelUserSave()"/>
-          <input type="button" class="btn btn-danger delete-button" ng-show="user.id!=null"
-             ng-click="showConfirmUserDisableModal()" openlmis-message="button.disable"></a>
-        </div>
-        <div class="form-cell button-row" ng-show="(!user.active && user.id!=null)">
-          <input type="button" class="btn btn-primary save-button" openlmis-message="button.restore"
-            ng-click="showConfirmUserRestoreModal()"/>
+          <input type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+                 ng-click="cancelUserSave()"/>
+          <input type="button" class="btn btn-danger delete-button" ng-show="user.active && user.id!=null"
+                 ng-click="showConfirmUserDisableModal()" openlmis-message="button.disable"/>
+          <input type="button" class="btn btn-primary enable-button" ng-show="(!user.active && user.id!=null)"
+                 openlmis-message="button.enable"
+                 ng-click="showConfirmUserRestoreModal()"/>
         </div>
         <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>
         <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"/>

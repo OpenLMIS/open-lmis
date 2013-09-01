@@ -99,14 +99,14 @@ public class FacilityServiceTest {
   }
 
   @Test
-  public void shouldUpdateDataReportableAndActiveFor() throws Exception {
+  public void shouldUpdateFacilityEnabledAndActiveFor() throws Exception {
     Facility facility = make(a(defaultFacility));
     Facility parentFacility = new Facility(2l);
     parentFacility.setCode("PF");
     facility.setParentFacilityId(parentFacility.getId());
     FacilityFeedDTO facilityFeedDTO = new FacilityFeedDTO(facility, parentFacility);
 
-    when(facilityRepository.updateDataReportableAndActiveFor(facility)).thenReturn(facility);
+    when(facilityRepository.updateEnabledAndActiveFor(facility)).thenReturn(facility);
 
     when(facilityRepository.getById(facility.getParentFacilityId())).thenReturn(parentFacility);
 
@@ -117,9 +117,9 @@ public class FacilityServiceTest {
     mockStatic(UUID.class);
     Mockito.when(UUID.randomUUID()).thenReturn(uuid);
 
-    facilityService.updateDataReportableAndActiveFor(facility);
+    facilityService.updateEnabledAndActiveFor(facility);
 
-    verify(facilityRepository).updateDataReportableAndActiveFor(facility);
+    verify(facilityRepository).updateEnabledAndActiveFor(facility);
     verify(facilityRepository).getById(facility.getParentFacilityId());
     verify(eventService).notify(argThat(eventMatcher(uuid, "Facility", dateTime, "",
       facilityFeedDTO.getSerializedContents(), "facility")));
