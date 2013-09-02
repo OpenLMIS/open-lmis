@@ -4,10 +4,15 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function Distribution(deliveryZone, program, period) {
-  this.deliveryZone = deliveryZone;
-  this.program = program;
-  this.period = period;
+function Distribution(distributionJson) {
+  $.extend(true, this, distributionJson);
 
+  if (this.facilityDistributionData) {
+    $.each(this.facilityDistributionData, function (key, value) {
+      value.epiUse = new EpiUse(value.epiUse);
+      value.refrigerators = new Refrigerators(value.refrigerators);
+    });
+  }
+  
   return this;
 }

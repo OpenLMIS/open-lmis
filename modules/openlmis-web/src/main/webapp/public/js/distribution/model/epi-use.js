@@ -1,9 +1,10 @@
 function EpiUse(epiUse) {
+  $.extend(true, this, epiUse);
+
   var fieldList = ['stockAtFirstOfMonth', 'received', 'distributed', 'loss', 'stockAtEndOfMonth', 'expirationDate'];
 
-  this.epiUse = epiUse;
-
   EpiUse.prototype.computeStatus = function () {
+    var _this = this;
     var complete = 'is-complete';
     var incomplete = 'is-incomplete';
     var empty = 'is-empty';
@@ -17,23 +18,22 @@ function EpiUse(epiUse) {
       return (isUndefined(obj[field].value) && !obj[field].notRecorded);
     }
 
-    $(epiUse.productGroups).each(function (index, productGroup) {
+    $(_this.productGroups).each(function (index, productGroup) {
       $(fieldList).each(function (index, field) {
-        if (isEmpty(field, productGroup.reading)) {
+        if (!productGroup.reading || isEmpty(field, productGroup.reading)) {
           statusClass = empty;
           return false;
         }
+        return true;
       });
-      if (statusClass == empty) {
-        return false;
-      }
+      return statusClass != empty;
     });
 
 
     if (statusClass === empty) {
-      $(epiUse.productGroups).each(function (index, productGroup) {
+      $(_this.productGroups).each(function (index, productGroup) {
         $(fieldList).each(function (index, field) {
-          if (!isEmpty(field, productGroup.reading)) {
+          if (productGroup.reading && !isEmpty(field, productGroup.reading)) {
             statusClass = incomplete;
             return false;
           }
@@ -43,8 +43,8 @@ function EpiUse(epiUse) {
       });
     }
 
+    _this.status = statusClass;
 
-    epiUse.status = statusClass;
     return statusClass;
   }
 }

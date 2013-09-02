@@ -6,51 +6,11 @@
 
 function RecordFacilityMenuController($scope, $location, $routeParams, distributionService) {
 
-  $scope.$on('distributionReceived', function () {
-    $scope.distribution = distributionService.distribution;
-  });
-
-  if ($scope.distribution == undefined) {
-    $scope.distribution = distributionService.distribution;
-  }
+  $scope.distributionData = distributionService.distribution.facilityDistributionData[$routeParams.facility];
 
   $scope.changeRoute = function (routeName) {
     $location.path($location.$$path.replace(getURLName(), routeName));
-  }
-
-  $scope.statusCalc = function(model) {
-    $scope.distribution.facilityDistributionData[$routeParams.facility][model].computeStatus();
-  }
-
-  $scope.getRefrigeratorStatus = function () {
-    if (!isUndefined($scope.distribution) && $scope.distribution.facilityDistributionData[$routeParams.facility].refrigerators) {
-      var readingList = $scope.distribution.facilityDistributionData[$routeParams.facility].refrigerators.refrigeratorReadings;
-      if (_.findWhere(readingList, {status: undefined})) {
-        return 'is-incomplete';
-      }
-      if (_.findWhere(readingList, {status: 'is-incomplete'})) {
-        return 'is-incomplete';
-      }
-      if (_.findWhere(readingList, {status: 'is-empty'})) {
-        if (_.findWhere(readingList, {status: 'is-complete'})) {
-          return 'is-incomplete';
-        }
-        return 'is-empty';
-      }
-      return 'is-complete';
-    }
   };
-
-  $scope.getEPIInventoryStatus = function () {
-    return 'is-empty';
-  };
-
-  $scope.getEPIUseStatus = function () {
-    if (!isUndefined($scope.distribution) && $scope.distribution.facilityDistributionData[$routeParams.facility].epiUse) {
-      return new EpiUse($scope.distribution.facilityDistributionData[$routeParams.facility].epiUse).computeStatus();
-    }
-    return 'is-empty';
-  }
 
   function getURLName() {
     var urlParts = $location.$$path.split('/');

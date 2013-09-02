@@ -14,11 +14,11 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
       when('/view-load-amounts/:deliveryZoneId/:programId/:periodId',
       {controller: ViewLoadAmountController, templateUrl: 'partials/view-load-amount.html', resolve: ViewLoadAmountController.resolve}).
       when('/record-facility-data/:distribution',
-      {templateUrl: 'partials/record-facility-data.html'}).
+      {templateUrl: 'partials/record-facility-data.html', resolve: ResolveDistribution}).
       when('/record-facility-data/:distribution/:facility/refrigerator-data',
-      {controller: RefrigeratorController, templateUrl: 'partials/refrigerator.html', resolve: Distribution.resolve}).
+      {controller: RefrigeratorController, templateUrl: 'partials/refrigerator.html', resolve: ResolveDistribution}).
       when('/record-facility-data/:distribution/:facility/epi-use',
-      {controller: EPIUseController, templateUrl: 'partials/epi-use.html', resolve: Distribution.resolve}).
+      {controller: EPIUseController, templateUrl: 'partials/epi-use.html', resolve: ResolveDistribution}).
       otherwise({redirectTo: '/manage'});
 
   }]).directive('notRecorded',function ($timeout) {

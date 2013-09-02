@@ -6,7 +6,7 @@
 
 <form auto-save="distribution" object-store="distributions">
   <div ng-controller="RefrigeratorReadingController">
-    <div class="row-fluid" ng-class="getStatus()">
+    <div class="row-fluid" ng-class="refrigeratorReading.computeStatus()">
       <div class="span1 status-cell">
         <span class="status-icon"></span>
       </div>

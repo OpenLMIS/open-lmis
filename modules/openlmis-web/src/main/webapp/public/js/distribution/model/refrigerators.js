@@ -6,24 +6,33 @@
  *
  */
 
-function Refrigerators(readings) {
+function Refrigerators(refrigerators) {
 
-  this.readings = readings;
+  $.extend(true, this, refrigerators);
+
   var _this = this;
 
+  $(this.refrigeratorReadings).each(function (i, value) {
+    _this.refrigeratorReadings[i] = new RefrigeratorReading(value);
+  });
+
   Refrigerators.prototype.computeStatus = function () {
-    if (_.findWhere(_this.readings, {status: undefined})) {
+    if (_.findWhere(this.refrigeratorReadings, {status: undefined})) {
       return 'is-incomplete';
     }
-    if (_.findWhere(_this.readings, {status: 'is-incomplete'})) {
+    if (_.findWhere(this.refrigeratorReadings, {status: 'is-incomplete'})) {
       return 'is-incomplete';
     }
-    if (_.findWhere(_this.readings, {status: 'is-empty'})) {
-      if (_.findWhere(_this.readings, {status: 'is-complete'})) {
+    if (_.findWhere(this.refrigeratorReadings, {status: 'is-empty'})) {
+      if (_.findWhere(this.refrigeratorReadings, {status: 'is-complete'})) {
         return 'is-incomplete';
       }
       return 'is-empty';
     }
     return 'is-complete';
+  };
+
+  Refrigerators.prototype.addRefrigerator = function(reading) {
+    this.refrigeratorReadings.push(new RefrigeratorReading(reading));
   }
 }

@@ -6,12 +6,12 @@
  *
  */
 
-Distribution.resolve = {
+ResolveDistribution = {
   distribution: function (distributionService, $q, IndexedDB, $route) {
     var distributionDefer = $q.defer();
     if (!distributionService.distribution) {
       IndexedDB.get('distributions', utils.parseIntWithBaseTen($route.current.params.distribution), function (e) {
-        distributionService.distribution = e.target.result;
+        distributionService.distribution = new Distribution(e.target.result);
         distributionDefer.resolve(distributionService.distribution);
       }, {});
     } else {

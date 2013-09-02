@@ -17,7 +17,7 @@ function EPIUseController($scope, $routeParams, distributionService) {
     $scope.distribution = distributionService.distribution;
   }
 
-};
+}
 
 
 
