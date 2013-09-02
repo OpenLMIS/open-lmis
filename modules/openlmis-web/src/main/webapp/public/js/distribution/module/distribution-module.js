@@ -16,9 +16,9 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
       when('/record-facility-data/:distribution',
       {templateUrl: 'partials/record-facility-data.html'}).
       when('/record-facility-data/:distribution/:facility/refrigerator-data',
-      {controller: RefrigeratorController, templateUrl: 'partials/refrigerator.html'}).
+      {controller: RefrigeratorController, templateUrl: 'partials/refrigerator.html', resolve: Distribution.resolve}).
       when('/record-facility-data/:distribution/:facility/epi-use',
-      {controller: EPIUseController, templateUrl: 'partials/epi-use.html'}).
+      {controller: EPIUseController, templateUrl: 'partials/epi-use.html', resolve: Distribution.resolve}).
       otherwise({redirectTo: '/manage'});
 
   }]).directive('notRecorded',function ($timeout) {
@@ -47,7 +47,7 @@ distributionModule.notRecordedDirective = function (element, scope, ngModel, $ti
   element.bind('click', function () {
     $.each(document.getElementsByName(element.attr('id')), function (index, associatedElement) {
       associatedElement.disabled = element.is(":checked");
-      if(!isUndefined(element.attr('not-recorded'))) {
+      if (!isUndefined(element.attr('not-recorded'))) {
         scope[element.attr('not-recorded')](element.is(":checked"));
       }
       var evaluatedVar = scope;

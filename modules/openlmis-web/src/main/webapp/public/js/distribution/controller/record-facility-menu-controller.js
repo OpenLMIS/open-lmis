@@ -18,6 +18,10 @@ function RecordFacilityMenuController($scope, $location, $routeParams, distribut
     $location.path($location.$$path.replace(getURLName(), routeName));
   }
 
+  $scope.statusCalc = function(model) {
+    $scope.distribution.facilityDistributionData[$routeParams.facility][model].computeStatus();
+  }
+
   $scope.getRefrigeratorStatus = function () {
     if (!isUndefined($scope.distribution) && $scope.distribution.facilityDistributionData[$routeParams.facility].refrigerators) {
       var readingList = $scope.distribution.facilityDistributionData[$routeParams.facility].refrigerators.refrigeratorReadings;
