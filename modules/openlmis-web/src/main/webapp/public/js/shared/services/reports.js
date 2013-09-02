@@ -105,6 +105,10 @@ services.factory('ReportPeriods', function ($resource) {
     return $resource('/reports/schedules/:scheduleId/periods.json', {}, {});
 });
 
+services.factory('ReportPeriodsByScheduleAndYear', function ($resource) {
+    return $resource('/reports/schedules/:scheduleId/year/:year/periods.json', {}, {});
+});
+
 services.factory('AllReportPeriods', function ($resource) {
     return $resource('/reports/allPeriods.json', {}, {});
 });

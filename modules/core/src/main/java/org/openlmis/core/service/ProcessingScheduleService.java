@@ -104,4 +104,8 @@ public class ProcessingScheduleService {
   public List<ProcessingPeriod> getAllPeriodsBefore(Long scheduleId, Date beforeDate) {
     return periodRepository.getAllPeriodsBefore(scheduleId, beforeDate);
   }
+
+  public List<ProcessingPeriod> getAllPeriodsForScheduleAndYear(Long scheduleId, Long year) {
+        return periodRepository.getAllPeriodsForScheduleAndYear(scheduleId, year);
+    }
 }

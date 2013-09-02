@@ -11,12 +11,9 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.StockImbalanceReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.filter.StockImbalanceReportFilter;
-import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -80,8 +77,8 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
             stockImbalanceReportFilter.setProgram(filterCriteria.get("program") == null ? "" : filterCriteria.get("program")[0]);
             stockImbalanceReportFilter.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0]));
             stockImbalanceReportFilter.setSchedule(filterCriteria.get("schedule") == null ? "" : filterCriteria.get("schedule")[0]);
-
-
+            stockImbalanceReportFilter.setPeriod(filterCriteria.get("period") == null ? "" : filterCriteria.get("period")[0]);
+            stockImbalanceReportFilter.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0]));
         }
         return stockImbalanceReportFilter;
     }
