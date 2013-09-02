@@ -42,7 +42,7 @@ CACHE:
 /public/pages/logistics/distribution/partials/init.html
 /public/pages/logistics/distribution/partials/record-facility-data.html
 /public/pages/logistics/distribution/partials/view-load-amount.html
-
+/public/pages/logistics/distribution/partials/record-facility-menu.html
 
 /public/js/distribution/resolve/distribution-resolve.js
 /public/js/distribution/module/distribution-module.js
