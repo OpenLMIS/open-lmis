@@ -13,10 +13,9 @@ describe("RecordFacilityMenuController", function () {
     location = $location;
     routeParams = $routeParams;
 
-    distributionService = {getDistribution: function () {
-    }};
+    distributionService = {};
 
-    distribution = {
+    distribution = new Distribution({
       facilityDistributionData: {
         1: { refrigerators: {
           refrigeratorReadings: [
@@ -26,64 +25,17 @@ describe("RecordFacilityMenuController", function () {
         }
         }
       }
-    };
+    });
 
     distributionService.distribution = distribution;
     $routeParams.facility = 1;
 
     $controller(RecordFacilityMenuController, {$scope: scope, $routeParams: routeParams, $location: location, distributionService: distributionService});
 
-  }))
+  }));
 
-  it('should set status indicator to complete if all refrigeratorReadings are complete', function () {
-    scope.distribution.facilityDistributionData[1].refrigerators.refrigeratorReadings = [
-      {status: 'is-complete'}
-    ];
-
-    var status = scope.getRefrigeratorStatus();
-
-    expect(status).toEqual('is-complete');
+  it('should set distribution data for facility in scope', function () {
+    expect(scope.distributionData).toEqual(distribution.facilityDistributionData[1]);
   });
 
-  it('should set status indicator to empty if all refrigeratorReadings are empty', function () {
-    scope.distribution.facilityDistributionData[1].refrigerators.refrigeratorReadings = [
-      {status: 'is-empty'},
-      {status: 'is-empty'}
-    ];
-
-    var status = scope.getRefrigeratorStatus();
-
-    expect(status).toEqual('is-empty');
-  });
-
-  it('should set status indicator to incomplete if at least one refrigeratorReading is incomplete', function () {
-    scope.distribution.facilityDistributionData[1].refrigerators.refrigeratorReadings = [
-      {status: 'is-incomplete'}
-    ];
-
-    var status = scope.getRefrigeratorStatus();
-
-    expect(status).toEqual('is-incomplete');
-  });
-
-  it('should set status indicator to incomplete if at least one refrigeratorReading is complete and rest are empty',
-    function () {
-      scope.distribution.facilityDistributionData[1].refrigerators.refrigeratorReadings = [
-        {status: 'is-complete'},
-        {status: 'is-complete'},
-        {status: 'is-empty'}
-      ];
-
-      var status = scope.getRefrigeratorStatus();
-
-      expect(status).toEqual('is-incomplete');
-    });
-
-  it('should set status indicator to complete if no refrigeratorReading exists', function () {
-    scope.distribution.facilityDistributionData[1].refrigerators.refrigeratorReadings = [];
-
-    var status = scope.getRefrigeratorStatus();
-
-    expect(status).toEqual('is-complete');
-  });
 });

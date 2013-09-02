@@ -24,4 +24,4 @@ function RecordFacilityMenuController($scope, $location, $routeParams, distribut
     }
   }
 
-};
+}
