@@ -38,6 +38,9 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   @Before
   public void setUp() throws Exception {
     super.setup();
+      dbWrapper.setupOrderFileConfiguration("O","TRUE");
+      dbWrapper.defaultSetupOrderFileOpenLMISColumns();
+      dbWrapper.deleteOrderFileNonOpenLMISColumns();
   }
 
 

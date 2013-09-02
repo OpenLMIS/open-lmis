@@ -1131,4 +1131,8 @@ public class DBWrapper {
     }
     return createdDate;
   }
+
+    public void setupFacilityFTPDetails(String facilitycode, String serverhost, String serverport, String username, String password, String localfolderpath) throws IOException, SQLException {
+        update("INSERT INTO facility_ftp_details (facilitycode, serverhost, serverport, username, password, localfolderpath) VALUES ('" + facilitycode + "','" + serverhost + "','" + serverport + "','" + username + "','" + password + "','" + localfolderpath + "');");
+    }
 }
