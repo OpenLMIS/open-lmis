@@ -50,15 +50,16 @@ CACHE:
 /public/js/distribution/model/distribution.js
 /public/js/distribution/model/refrigerators.js
 /public/js/distribution/model/epi-use.js
-/public/js/distribution/controller/distribution-list-controller.js
+/public/js/distribution/model/refrigerator-reading.js
 /public/js/distribution/service/shared-distributions.js
 /public/js/distribution/service/distribution-service.js
 
+/public/js/distribution/controller/distribution-list-controller.js
 /public/js/distribution/controller/distribution-controller.js
 /public/js/distribution/controller/view-load-amount-controller.js
+/public/js/distribution/controller/record-facility-menu-controller.js
 /public/js/distribution/controller/record-facility-data-controller.js
 /public/js/distribution/controller/refrigerator-controller.js
-/public/js/distribution/controller/refrigerator-reading-controller.js
 /public/js/distribution/controller/epi-use-controller.js
 
 
