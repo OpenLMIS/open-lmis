@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.service.ShipmentService;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.model.AuditFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,15 +22,13 @@ import static java.lang.String.format;
 
 @Component
 @NoArgsConstructor
-public class ShipmentRecordHandler implements RecordHandler {
+public class ShipmentRecordHandler {
   private static Logger logger = LoggerFactory.getLogger(ShipmentRecordHandler.class);
 
   @Autowired
   private ShipmentService shipmentService;
 
-  @Override
-  public void execute(Importable importable, int rowNumber, AuditFields auditFields) {
-    ShippedLineItem shippedLineItem = (ShippedLineItem) importable;
+  public void execute(ShippedLineItem shippedLineItem, int rowNumber, AuditFields auditFields) {
     shippedLineItem.setModifiedDate(auditFields.getCurrentTimestamp());
 
 
@@ -53,7 +49,4 @@ public class ShipmentRecordHandler implements RecordHandler {
     }
   }
 
-  @Override
-  public void postProcess(AuditFields auditFields) {
-  }
 }

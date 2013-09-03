@@ -31,11 +31,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.lang.Boolean.FALSE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.openlmis.shipment.builder.ShipmentLineItemBuilder.*;
+
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ShipmentServiceTest {
@@ -56,7 +60,12 @@ public class ShipmentServiceTest {
 
   @Test
   public void shouldInsertShipment() throws Exception {
-    ShippedLineItem shippedLineItem = spy(new ShippedLineItem(1l, "P10", 500));
+    ShippedLineItem shippedLineItem = make(a(defaultShipmentLineItem,
+      with(productCode, "P10"),
+      with(rnrId, 1L),
+      with(quantityShipped, 500)));
+
+
     when(requisitionService.getLWById(1l)).thenReturn(new Rnr());
     when(productService.getIdForCode("P10")).thenReturn(1l);
 
@@ -69,7 +78,11 @@ public class ShipmentServiceTest {
 
   @Test
   public void shouldNotInsertShipmentIfRnrIdIsNotValid() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem(1l, "P10", 500);
+    ShippedLineItem shippedLineItem = make(a(defaultShipmentLineItem,
+      with(productCode, "P10"),
+      with(rnrId, 1L),
+      with(quantityShipped, 500)));
+
     when(requisitionService.getLWById(1l)).thenReturn(null);
     when(productService.getIdForCode("P10")).thenReturn(1l);
 
@@ -82,7 +95,12 @@ public class ShipmentServiceTest {
 
   @Test
   public void shouldNotInsertShipmentIfProductCodeIsNotValid() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem(1l, "P10", 500);
+
+    ShippedLineItem shippedLineItem = make(a(defaultShipmentLineItem,
+      with(productCode, "P10"),
+      with(rnrId, 1L),
+      with(quantityShipped, 500)));
+
     when(requisitionService.getLWById(1l)).thenReturn(new Rnr());
     when(productService.getIdForCode("P10")).thenReturn(null);
 
@@ -95,8 +113,12 @@ public class ShipmentServiceTest {
 
   @Test
   public void shouldNotInsertShipmentIfQuantityNegative() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem(1l, "P10", -1);
+    ShippedLineItem shippedLineItem = make(a(defaultShipmentLineItem,
+      with(productCode, "P10"),
+      with(rnrId, 1L),
+      with(quantityShipped, -1)));
 
+    when(productService.getIdForCode("P10")).thenReturn(1l);
     exException.expect(DataException.class);
     exException.expectMessage("error.negative.shipped.quantity");
 

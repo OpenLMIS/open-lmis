@@ -1,5 +1,6 @@
 package org.openlmis.shipment.repository.mapper;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -13,8 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.shipment.builder.ShipmentFileColumnBuilder.columnPosition;
+import static org.openlmis.shipment.builder.ShipmentFileColumnBuilder.mandatoryShipmentFileColumn;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -26,10 +30,16 @@ public class ShipmentFileColumnMapperIT {
   @Autowired
   private ShipmentFileColumnMapper mapper;
 
+  @Before
+  public void setUp() throws Exception {
+    mapper.deleteAll();
+  }
+
   @Test
   public void shouldInsertShipmentFileColumn() {
     List<ShipmentFileColumn> existingColumns = mapper.getAll();
-    ShipmentFileColumn shipmentFileColumn = new ShipmentFileColumn("Order Number", 10, true, true, null);
+
+    ShipmentFileColumn shipmentFileColumn = make(a(mandatoryShipmentFileColumn, with(columnPosition, 10)));
 
     mapper.insert(shipmentFileColumn);
 
@@ -39,11 +49,25 @@ public class ShipmentFileColumnMapperIT {
 
   @Test
   public void shouldGetAllShipmentFileColumns() {
-    assertThat(mapper.getAll().size(), is(6));
+    assertThat(mapper.getAll().size(), is(0));
+
+    ShipmentFileColumn shipmentFileColumn = make(a(mandatoryShipmentFileColumn, with(columnPosition, 10)));
+    mapper.insert(shipmentFileColumn);
+
+    assertThat(mapper.getAll().size(), is(1));
+
   }
 
   @Test
   public void shouldDeleteAllShipmentFileColumns() {
+    ShipmentFileColumn shipmentFileColumn1 = make(a(mandatoryShipmentFileColumn, with(columnPosition, 10)));
+    mapper.insert(shipmentFileColumn1);
+
+    ShipmentFileColumn shipmentFileColumn2 = make(a(mandatoryShipmentFileColumn, with(columnPosition, 20)));
+    mapper.insert(shipmentFileColumn2);
+
+    assertThat(mapper.getAll().size(), is(2));
+
     mapper.deleteAll();
     assertThat(mapper.getAll().size(), is(0));
   }

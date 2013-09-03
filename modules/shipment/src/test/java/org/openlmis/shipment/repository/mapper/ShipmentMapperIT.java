@@ -38,6 +38,7 @@ import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.shipment.builder.ShipmentLineItemBuilder.*;
 
 @Category(IntegrationTests.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-shipment.xml")
@@ -98,7 +99,13 @@ public class ShipmentMapperIT {
 
     productMapper.insert(product);
 
-    return new ShippedLineItem(requisition.getId(), product.getCode(), 23);
+    return make(a(defaultShipmentLineItem,
+      with(productCode, product.getCode()),
+      with(rnrId, requisition.getId()),
+      with(quantityShipped, 23),
+      with(shippedDate, new Date()),
+      with(packedDate, new Date())));
+
   }
 
   @Test

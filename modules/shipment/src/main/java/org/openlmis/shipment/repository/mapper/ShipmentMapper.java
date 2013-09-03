@@ -20,9 +20,10 @@ import java.util.Date;
 @Repository
 public interface ShipmentMapper {
 
-  @Insert({"INSERT INTO shipped_line_items (rnrId, productCode, quantityShipped, modifiedDate) " +
-    "VALUES" +
-    "(#{rnrId}, #{productCode}, #{quantityShipped}, #{modifiedDate})"})
+  @Insert({"INSERT INTO shipped_line_items ",
+    "(rnrId, productCode, quantityShipped, cost, packedDate, shippedDate, modifiedDate)",
+    "VALUES",
+    "(#{rnrId}, #{productCode}, #{quantityShipped}, #{cost}, #{packedDate}, #{shippedDate}, #{modifiedDate})"})
   @Options(useGeneratedKeys = true)
   public void insertShippedLineItem(ShippedLineItem shippedLineItem);
 
@@ -36,7 +37,12 @@ public interface ShipmentMapper {
   @Select("SELECT * FROM shipped_line_items WHERE rnrId= #{rnrId} AND productCode=#{productCode}")
   ShippedLineItem getShippedLineItem(ShippedLineItem shippedLineItem);
 
-  @Update("UPDATE shipped_line_items SET rnrId= #{rnrId}, productCode= #{productCode},quantityShipped= #{quantityShipped},modifiedDate= #{modifiedDate} WHERE id= #{id}")
+  @Update({"UPDATE shipped_line_items ",
+    "SET rnrId= #{rnrId},",
+    "productCode= #{productCode},",
+    "quantityShipped= #{quantityShipped},",
+    "modifiedDate= #{modifiedDate}",
+    "WHERE id= #{id}"})
   void updateShippedLineItem(ShippedLineItem shippedLineItem);
 
   @Select("SELECT modifiedDate FROM shipped_line_items WHERE rnrId = #{rnrId} LIMIT 1")

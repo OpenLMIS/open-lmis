@@ -43,10 +43,10 @@ public class ShipmentService {
   }
 
   private void validateShipment(ShippedLineItem shippedLineItem) {
-    if(requisitionService.getLWById(shippedLineItem.getRnrId()) == null) {
+    if (requisitionService.getLWById(shippedLineItem.getRnrId()) == null) {
       throw new DataException("error.unknown.order");
     }
-    if(productService.getIdForCode(shippedLineItem.getProductCode()) == null) {
+    if (productService.getIdForCode(shippedLineItem.getProductCode()) == null) {
       throw new DataException("error.unknown.product");
     }
   }
@@ -71,15 +71,20 @@ public class ShipmentService {
     orderService.updateFulfilledAndShipmentIdForOrders(orders);
 
   }
-  public ShippedLineItem getShippedLineItem(ShippedLineItem shippedLineItem){
+
+  public ShippedLineItem getShippedLineItem(ShippedLineItem shippedLineItem) {
     return shipmentRepository.getShippedLineItem(shippedLineItem);
   }
 
   public void updateShippedLineItem(ShippedLineItem shippedLineItem) {
-     shipmentRepository.updateShippedLineItem(shippedLineItem);
+    shipmentRepository.updateShippedLineItem(shippedLineItem);
   }
 
   public Date getProcessedTimeStamp(ShippedLineItem shippedLineItem) {
     return shipmentRepository.getProcessedTimeStamp(shippedLineItem);
+  }
+
+  public void insertShippedLineItem(List<ShippedLineItem> shippedLineItems) {
+
   }
 }
