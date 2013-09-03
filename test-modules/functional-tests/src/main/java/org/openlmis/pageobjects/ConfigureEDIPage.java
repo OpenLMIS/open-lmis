@@ -17,22 +17,32 @@ import java.io.IOException;
 import static org.openqa.selenium.support.How.ID;
 
 
-public class EdiPage extends RequisitionPage {
+public class ConfigureEDIPage extends Page {
 
   @FindBy(how = ID, using = "configureOrder")
   private static WebElement configureOrderButton;
 
-  public EdiPage(TestWebDriver driver) throws IOException {
+  @FindBy(how = ID, using = "configureShipment")
+  private static WebElement configureShipmentButton;
+
+  public ConfigureEDIPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
     testWebDriver.waitForElementToAppear(configureOrderButton);
   }
 
-  public ConfigureOrderPage navigateConfigureOrderScreen() throws IOException {
+  public ConfigureOrderPage navigateConfigureOrderPage() throws IOException {
     testWebDriver.waitForElementToAppear(configureOrderButton);
     configureOrderButton.click();
 
     return new ConfigureOrderPage(testWebDriver);
+  }
+
+  public ConfigureShipmentPage navigateConfigureShipmentPage() throws IOException {
+    testWebDriver.waitForElementToAppear(configureShipmentButton);
+      configureShipmentButton.click();
+
+    return new ConfigureShipmentPage(testWebDriver);
   }
 }

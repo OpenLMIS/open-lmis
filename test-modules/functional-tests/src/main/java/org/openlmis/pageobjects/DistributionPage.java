@@ -21,7 +21,7 @@ import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
 
-public class DistributionPage extends RequisitionPage {
+public class DistributionPage extends Page {
 
   @FindBy(how = ID, using = "selectDeliveryZone")
   private static WebElement selectDeliveryZoneSelectBox;

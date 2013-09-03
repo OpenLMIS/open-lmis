@@ -6,7 +6,6 @@
 
 package org.openlmis.web.controller;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.db.service.DbService;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Date;
@@ -38,7 +36,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-@NoArgsConstructor
 public class UploadController extends BaseController {
 
   public static final String SELECT_UPLOAD_TYPE = "upload.select.type";
@@ -52,17 +49,13 @@ public class UploadController extends BaseController {
 
   @Autowired
   private CSVParser csvParser;
+
   @Autowired
   DbService dbService;
 
-  @Resource
-  private Map<String, UploadBean> uploadBeansMap;
+  @Autowired
+  private HashMap<String, UploadBean> uploadBeansMap;
 
-  public UploadController(CSVParser csvParser, Map<String, UploadBean> uploadBeansMap, DbService dbService) {
-    this.csvParser = csvParser;
-    this.uploadBeansMap = uploadBeansMap;
-    this.dbService = dbService;
-  }
 
   @RequestMapping(value = "/upload", method = POST)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UPLOADS')")

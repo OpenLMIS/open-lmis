@@ -12,19 +12,19 @@
         <span openlmis-message="label.visit.information"></span>
       </a>
     </li>
-    <li ng-class="[getRefrigeratorStatus(), isSelected('refrigerator-data')]">
+    <li ng-class="[distributionData.refrigerators.computeStatus(), isSelected('refrigerator-data')]">
       <a href="" ng-click="changeRoute('refrigerator-data')">
         <span class="status-icon"></span>
         <span openlmis-message="label.refrigerators"></span>
       </a>
     </li>
-    <li ng-class="[getEPIInventoryStatus(), isSelected('epi-inventory')]">
+    <li ng-class="[isSelected('epi-inventory')]" class="is-complete">
       <a href="">
         <span class="status-icon"></span>
         <span openlmis-message="label.epi.inventory"></span>
       </a>
     </li>
-    <li ng-class="[getEPIUseStatus(), isSelected('epi-use')]">
+    <li ng-class="[distributionData.epiUse.computeStatus(), isSelected('epi-use')]">
       <a href="" ng-click="changeRoute('epi-use')">
         <span class="status-icon"></span>
         <span openlmis-message="label.epi.use"></span>

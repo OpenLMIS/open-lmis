@@ -6,16 +6,9 @@
 
 function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $routeParams, distributionService) {
 
-
-  $scope.$on('distributionReceived', function () {
-    $scope.distribution = distributionService.distribution;
-  })
-
-  if ($scope.distribution == undefined) {
-    $scope.distribution = distributionService.distribution;
-  }
-
+  $scope.distribution = distributionService.distribution;
   $scope.selectedFacilityId = $routeParams.facility;
+
   $scope.edit = {};
 
   $scope.setEdit = function (serialNum) {
@@ -39,9 +32,11 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
       $scope.isDuplicateSerialNumber = true;
       return;
     }
-    $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigerators.refrigeratorReadings.push(
-      {'refrigerator': angular.copy($scope.newRefrigerator), status: "is-empty"});
+    $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigerators.
+      addRefrigerator({'refrigerator': angular.copy($scope.newRefrigerator), status: "is-empty"});
+
     IndexedDB.put('distributions', $scope.distribution);
+
     $scope.addRefrigeratorModal = $scope.isDuplicateSerialNumber = undefined;
   };
 

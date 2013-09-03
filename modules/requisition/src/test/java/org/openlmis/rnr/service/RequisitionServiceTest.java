@@ -641,18 +641,18 @@ public class RequisitionServiceTest {
     savedRnr.setSupervisoryNodeId(supervisoryNodeId);
     SupervisoryNode supervisoryNode = new SupervisoryNode();
     supervisoryNode.setId(supervisoryNodeId);
-    SupplyLine supplyLine = new SupplyLine();
-
-    when(supplyLineService.getSupplyLineBy(supervisoryNode, savedRnr.getProgram())).thenReturn(supplyLine);
-
+    SupplyLine supplyLine = mock(SupplyLine.class);
+    savedRnr.setStatus(IN_APPROVAL);
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, PROGRAM)).thenReturn(supplyLine);
+    Facility supplyingDepot = new Facility();
+    when(supplyLine.getSupplyingFacility()).thenReturn(supplyingDepot);
     requisitionService.approve(authorizedRnr);
 
     verify(requisitionRepository).approve(savedRnr);
     verify(requisitionRepository).logStatusChange(savedRnr);
     assertThat(savedRnr.getStatus(), is(APPROVED));
-    assertThat(savedRnr.getSupervisoryNodeId(), is(nullValue()));
+    assertThat(savedRnr.getSupervisoryNodeId(), is(supervisoryNodeId));
     assertThat(savedRnr.getModifiedBy(), is(USER_ID));
-
   }
 
   @Test
@@ -668,7 +668,6 @@ public class RequisitionServiceTest {
 
     Rnr rnr = requisitionService.approve(authorizedRnr);
 
-    assertThat(rnr.getSupplyLine(), is(supplyLine));
   }
 
   @Test
@@ -702,6 +701,15 @@ public class RequisitionServiceTest {
     when(supervisoryNodeService.getParent(1L)).thenReturn(parentNode);
     when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parentNode, PROGRAM)).thenReturn(new User());
 
+    savedRnr.setSupervisoryNodeId(1l);
+    SupervisoryNode supervisoryNode = new SupervisoryNode();
+    supervisoryNode.setId(1l);
+    SupplyLine supplyLine = mock(SupplyLine.class);
+
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, PROGRAM)).thenReturn(supplyLine);
+    Facility supplyingDepot = new Facility();
+    when(supplyLine.getSupplyingFacility()).thenReturn(supplyingDepot);
+
     requisitionService.approve(authorizedRnr);
 
     verify(requisitionRepository).approve(savedRnr);
@@ -724,6 +732,16 @@ public class RequisitionServiceTest {
     when(supervisoryNodeService.getParent(1L)).thenReturn(parentNode);
 
     when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parentNode, authorizedRnr.getProgram())).thenReturn(null);
+
+    savedRnr.setSupervisoryNodeId(1l);
+    SupervisoryNode supervisoryNode = new SupervisoryNode();
+    supervisoryNode.setId(1l);
+    SupplyLine supplyLine = mock(SupplyLine.class);
+
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, PROGRAM)).thenReturn(supplyLine);
+    Facility supplyingDepot = new Facility();
+    when(supplyLine.getSupplyingFacility()).thenReturn(supplyingDepot);
+
     requisitionService.approve(authorizedRnr);
 
     verify(requisitionRepository).approve(savedRnr);
@@ -751,10 +769,18 @@ public class RequisitionServiceTest {
     expected.setFacility(FACILITY);
     expected.setProgram(PROGRAM);
     expected.setPeriod(PERIOD);
+    expected.setStatus(RnrStatus.AUTHORIZED);
     final Long supervisoryNodeId = 1L;
     expected.setSupervisoryNodeId(supervisoryNodeId);
     final Long rnrId = 1L;
     when(requisitionRepository.getById(rnrId)).thenReturn(expected);
+    SupervisoryNode supervisoryNode = new SupervisoryNode();
+    supervisoryNode.setId(supervisoryNodeId);
+    SupplyLine supplyLine = mock(SupplyLine.class);
+
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, PROGRAM)).thenReturn(supplyLine);
+    Facility supplyingDepot = new Facility();
+    when(supplyLine.getSupplyingFacility()).thenReturn(supplyingDepot);
 
     List<RoleAssignment> roleAssignments = new ArrayList<RoleAssignment>() {{
     }};
@@ -916,17 +942,28 @@ public class RequisitionServiceTest {
     requisition.setProgram(PROGRAM);
     requisition.setPeriod(PERIOD);
     requisition.setId(requisitionId);
+    requisition.setStatus(RnrStatus.APPROVED);
     when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
     when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
     when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
     when(requisitionRepository.getById(requisitionId)).thenReturn(requisition);
 
-    requisitionService.getFullRequisitionById(requisitionId);
+    requisition.setSupervisoryNodeId(1l);
+    SupervisoryNode supervisoryNode = new SupervisoryNode();
+    supervisoryNode.setId(1l);
+    SupplyLine supplyLine = mock(SupplyLine.class);
+
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, PROGRAM)).thenReturn(supplyLine);
+    Facility supplyingDepot = new Facility();
+    when(supplyLine.getSupplyingFacility()).thenReturn(supplyingDepot);
+
+    Rnr fullRequisition = requisitionService.getFullRequisitionById(requisitionId);
 
     verify(requisitionRepository).getById(requisitionId);
     verify(facilityService).getById(FACILITY.getId());
     verify(programService).getById(PROGRAM.getId());
     verify(processingScheduleService).getPeriodById(PERIOD.getId());
+    assertThat(fullRequisition.getSupplyingDepot(), is(supplyingDepot));
   }
 
   @Test
@@ -940,14 +977,12 @@ public class RequisitionServiceTest {
     requisition.setProgram(PROGRAM);
     requisition.setPeriod(PERIOD);
     requisition.setId(requisitionId);
-    requisition.setSupplyLine(supplyLine);
     when(supplyLineService.getById(3L)).thenReturn(filledSupplyLine);
     when(requisitionRepository.getById(requisitionId)).thenReturn(requisition);
     Mockito.doNothing().when(requisition).fillBasicInformation(any(Facility.class), any(Program.class), any(ProcessingPeriod.class));
 
     Rnr returnedRnr = requisitionService.getFullRequisitionById(requisitionId);
 
-    assertThat(returnedRnr.getSupplyLine(), is(filledSupplyLine));
   }
 
   @Test
@@ -958,7 +993,6 @@ public class RequisitionServiceTest {
     requisition.setProgram(PROGRAM);
     requisition.setPeriod(PERIOD);
     requisition.setId(requisitionId);
-    requisition.setSupplyLine(null);
     when(requisitionRepository.getById(requisitionId)).thenReturn(requisition);
     Mockito.doNothing().when(requisition).fillBasicInformation(any(Facility.class), any(Program.class), any(ProcessingPeriod.class));
 

@@ -13,7 +13,6 @@ import org.joda.time.DateTime;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
-import org.openlmis.core.builder.SupplyLineBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.rnr.domain.Rnr;
@@ -25,7 +24,6 @@ import java.util.Date;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static com.natpryce.makeiteasy.Property.newProperty;
-import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 
 public class RequisitionBuilder {
 
@@ -58,7 +56,6 @@ public class RequisitionBuilder {
     rnr.setPeriod(make(a(ProcessingPeriodBuilder.defaultProcessingPeriod)));
     rnr.getPeriod().setId(lookup.valueOf(periodId, 3L));
     rnr.setStatus(lookup.valueOf(status, RnrStatus.INITIATED));
-    rnr.setSupplyLine(make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, defaultFacility))));
     rnr.setSubmittedDate(lookup.valueOf(submittedDate, SUBMITTED_DATE));
     RnrLineItem rnrLineItemCost48 = make(a(RnrLineItemBuilder.defaultRnrLineItem));
     rnr.add(rnrLineItemCost48, true);

@@ -14,7 +14,12 @@
         <span openlmis-message="header.epi.use"></span>
       </h3>
 
-      <div id="epiUseTable" tab-scroll bottom-offset="180">
+      <div class="alert alert-info" id="noRefrigerators"
+           ng-hide="distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups.length">
+        <span openlmis-message="message.no.product.groups"></span>
+      </div>
+
+      <div id="epiUseTable" tab-scroll bottom-offset="180" ng-show="distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups.length">
         <div class="list-header-container">
           <div class="list-header row-fluid">
             <div class="span2" openlmis-message="header.epi.use.doses"></div>

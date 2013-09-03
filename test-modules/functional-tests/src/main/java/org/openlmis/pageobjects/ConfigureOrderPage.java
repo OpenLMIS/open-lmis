@@ -24,7 +24,7 @@ import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
 
-public class ConfigureOrderPage extends RequisitionPage {
+public class ConfigureOrderPage extends Page {
 
   @FindBy(how = ID, using = "orderFilePrefix")
   private static WebElement orderFilePrefix;

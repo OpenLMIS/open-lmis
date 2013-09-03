@@ -6,9 +6,11 @@
 
 package org.openlmis.web.controller;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
@@ -18,6 +20,7 @@ import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.form.RnrColumnList;
 import org.openlmis.web.form.RnrTemplateForm;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -30,21 +33,20 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
 public class RnrTemplateControllerTest {
 
+  @Mock
   private RnrTemplateService rnrTemplateService;
-  private RnrTemplateController rnrTemplateController;
+
+  @Mock
   private MessageService messageService;
+
+  @InjectMocks
+  private RnrTemplateController rnrTemplateController;
 
   private Long existingProgramId = 1L;
 
-  @Before
-  public void setUp() throws Exception {
-    rnrTemplateService = mock(RnrTemplateService.class);
-    messageService = mock(MessageService.class);
-    rnrTemplateController = new RnrTemplateController(rnrTemplateService);
-    rnrTemplateController.setMessageService(messageService);
-  }
 
   @Test
   public void shouldGetMasterColumnListForRnR() {

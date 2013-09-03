@@ -15,7 +15,7 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ConfigureOrderPage;
-import org.openlmis.pageobjects.EdiPage;
+import org.openlmis.pageobjects.ConfigureEDIPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -38,14 +38,17 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   @Before
   public void setUp() throws Exception {
     super.setup();
+      dbWrapper.setupOrderFileConfiguration("O","TRUE");
+      dbWrapper.defaultSetupOrderFileOpenLMISColumns();
+      dbWrapper.deleteOrderFileNonOpenLMISColumns();
   }
 
 
-  @And("^I access configure order screen$")
+  @And("^I access configure order page$")
   public void accessOrderScreen() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
-    EdiPage ediPage = homePage.navigateEdiScreen();
-    ediPage.navigateConfigureOrderScreen();
+    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
+    configureEDIPage.navigateConfigureOrderPage();
   }
 
   @Then("^I should see order file prefix \"([^\"]*)\"$")
@@ -88,8 +91,8 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   public void testVerifyDefaultSelectionOfPeriodAndOrderDateDropdown(String user, String password) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
-    EdiPage ediPage = homePage.navigateEdiScreen();
-    ConfigureOrderPage configureOrderPage = ediPage.navigateConfigureOrderScreen();
+    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
+    ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
     String period = configureOrderPage.getSelectedOptionOfPeriodDropDown();
     assertEquals(period, "MM/yy");
     String orderDate = configureOrderPage.getSelectedOptionOfOrderDateDropDown();
@@ -100,8 +103,8 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   public void testEditPeriodAndOrderDateDropDown(String user, String password) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
-    EdiPage ediPage = homePage.navigateEdiScreen();
-    ConfigureOrderPage configureOrderPage = ediPage.navigateConfigureOrderScreen();
+    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
+    ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
     configureOrderPage.selectValueFromPeriodDropDown("MM-dd-yyyy");
     configureOrderPage.selectValueFromOrderDateDropDown("yyyy-MM-dd");
     configureOrderPage.clickSaveButton();
@@ -128,8 +131,8 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
-    EdiPage ediPage = homePage.navigateEdiScreen();
-    ConfigureOrderPage configureOrderPage = ediPage.navigateConfigureOrderScreen();
+    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
+    ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
     configureOrderPage.setOrderPrefix(orderPrefix);
     configureOrderPage.checkIncludeOrderHeader();
     configureOrderPage.verifyColumnHeadersEnabled();
@@ -162,8 +165,8 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
-    EdiPage ediPage = homePage.navigateEdiScreen();
-    ConfigureOrderPage configureOrderPage = ediPage.navigateConfigureOrderScreen();
+    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
+    ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
     configureOrderPage.setOrderPrefix(orderPrefix);
     configureOrderPage.checkIncludeOrderHeader();
     configureOrderPage.verifyColumnHeadersEnabled();
@@ -188,8 +191,8 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   public void testVerifyAllIncludeCheckBoxesUnchecked(String user, String password) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
-    EdiPage ediPage = homePage.navigateEdiScreen();
-    ConfigureOrderPage configureOrderPage = ediPage.navigateConfigureOrderScreen();
+    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
+    ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
     configureOrderPage.unCheckFacilityCodeCheckBox();
     configureOrderPage.unCheckApprovedQuantityCheckBox();
     configureOrderPage.unCheckIncludeOrderHeader();
@@ -210,8 +213,8 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
-    EdiPage ediPage = homePage.navigateEdiScreen();
-    ConfigureOrderPage configureOrderPage = ediPage.navigateConfigureOrderScreen();
+    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
+    ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
     configureOrderPage.clickAddNewButton();
     configureOrderPage.verifyElementsOnAddNewButtonClick(6, "true", "Not applicable", "");
     configureOrderPage.clickSaveButton();

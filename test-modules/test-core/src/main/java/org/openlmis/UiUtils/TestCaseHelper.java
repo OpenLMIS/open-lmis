@@ -45,7 +45,7 @@ public class TestCaseHelper {
     dbWrapper = new DBWrapper(baseUrlGlobal, dburlGlobal);
     //dbWrapper.deleteData();
 
-    if (!isSeleniumStarted) {
+      if (!isSeleniumStarted) {
       loadDriver(browser);
       addTearDownShutDownHook();
       isSeleniumStarted = true;

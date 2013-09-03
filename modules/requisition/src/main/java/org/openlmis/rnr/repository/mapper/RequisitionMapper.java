@@ -30,8 +30,7 @@ public interface RequisitionMapper {
     "modifiedDate = CURRENT_TIMESTAMP,",
     "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
     "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost},",
-    "supervisoryNodeId = #{supervisoryNodeId},",
-    "supplyLineId = #{supplyLine.id}",
+    "supervisoryNodeId = #{supervisoryNodeId}",
     "WHERE id = #{id}"})
   void update(Rnr requisition);
 
@@ -41,13 +40,12 @@ public interface RequisitionMapper {
     @Result(property = "program.id", column = "programId"),
     @Result(property = "facility.id", column = "facilityId"),
     @Result(property = "period.id", column = "periodId"),
-    @Result(property = "supplyLine.id", column = "supplyLineId"),
     @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
     @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId")),
     @Result(property = "regimenLineItems", javaType = List.class, column = "id",
-      many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsByRnrId")),
+      many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsByRnrId"))
   })
   Rnr getById(Long rnrId);
 
@@ -92,12 +90,11 @@ public interface RequisitionMapper {
   Rnr getLastRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Long facilityId,
                                                  @Param(value = "programId") Long programId);
 
-  @Select("SELECT id, programId, facilityId, periodId, supplyLineId, modifiedDate FROM requisitions WHERE STATUS='APPROVED'")
+  @Select("SELECT id, programId, facilityId, periodId, status, supervisoryNodeId, modifiedDate FROM requisitions WHERE STATUS='APPROVED'")
   @Results(value = {
     @Result(property = "facility.id", column = "facilityId"),
     @Result(property = "program.id", column = "programId"),
-    @Result(property = "period.id", column = "periodId"),
-    @Result(property = "supplyLine.id", column = "supplyLineId")
+    @Result(property = "period.id", column = "periodId")
   })
   List<Rnr> getApprovedRequisitions();
 

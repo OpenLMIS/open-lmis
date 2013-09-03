@@ -18,7 +18,7 @@ function ViewOrderListController($scope, orders, messageService) {
       {field: 'facilityCode', displayName: messageService.get("label.facility.code.name"), cellTemplate: "<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.facilityCode}} - {{row.entity.rnr.facilityName}}</span></div>"},
       {field: 'rnr.programName', displayName: messageService.get("label.program")},
       {field: 'periodName', displayName: messageService.get("label.period"), cellTemplate: "<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.periodName}} ({{row.entity.rnr.periodStartDate | date: 'dd/MM/yyyy'}} - {{row.entity.rnr.periodEndDate | date: 'dd/MM/yyyy'}})</span></div>"},
-      {field: 'rnr.supplyingDepot', displayName: messageService.get("label.supplying.depot")},
+      {field: 'supplyLine.supplyingFacility.name', displayName: messageService.get("label.supplying.depot")},
       {field: 'createdDate', displayName: messageService.get("label.order.date.time"), cellFilter: "date:'dd/MM/yyyy hh:mm:ss'"},
       {field: 'status', displayName: messageService.get("label.order.status"),
         cellTemplate: "<div class='ngCellText'><span ng-cell-text><div id=\"orderStatus\">{{row.entity.status}} <span ng-show='row.entity.shipmentError' openlmis-message='error.shipment.file'></span></div> "},

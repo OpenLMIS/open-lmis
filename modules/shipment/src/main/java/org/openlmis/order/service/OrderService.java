@@ -8,7 +8,9 @@ package org.openlmis.order.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.OrderConfiguration;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.OrderConfigurationRepository;
+import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
@@ -37,6 +39,8 @@ public class OrderService {
   private OrderRepository orderRepository;
   @Autowired
   private RequisitionService requisitionService;
+  @Autowired
+  private SupplyLineService supplyLineService;
 
   public void save(Order order) {
     orderRepository.save(order);
@@ -47,8 +51,10 @@ public class OrderService {
     requisitionService.releaseRequisitionsAsOrder(rnrList, userId);
     Order order;
     for (Rnr rnr : rnrList) {
+      rnr = requisitionService.getLWById(rnr.getId());
       rnr.setModifiedBy(userId);
       order = new Order(rnr);
+      order.setSupplyLine(supplyLineService.getSupplyLineBy(new SupervisoryNode(rnr.getSupervisoryNodeId()), rnr.getProgram()));
       orderRepository.save(order);
     }
   }
