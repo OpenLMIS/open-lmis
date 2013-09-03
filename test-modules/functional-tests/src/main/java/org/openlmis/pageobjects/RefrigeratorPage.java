@@ -14,9 +14,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static org.openqa.selenium.support.How.ID;
-import static org.openqa.selenium.support.How.NAME;
-import static org.openqa.selenium.support.How.XPATH;
+import static org.openqa.selenium.support.How.*;
 
 public class RefrigeratorPage extends Page {
 
@@ -134,10 +132,10 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = XPATH, using = "//h3[contains(text(),'Delete Refrigerator')]")
   public static WebElement deletePopUpHeader;
 
-  @FindBy(how = XPATH, using = "//form/div/div[1]/div[1]/span[@class='status-icon']")
+  @FindBy(how = XPATH, using = "//form/div[1]/div[1]/span[@class='status-icon']")
   public static WebElement individualRefrigeratorIcon;
 
-  @FindBy(how = XPATH, using = "//div[@class='left-navigation ng-scope']/ul/li[2]/a/span[1][@class='status-icon']")
+  @FindBy(how = XPATH, using = "//ng-include/div/ul/li[2]/a/span[@class='status-icon']")
   public static WebElement overallRefrigeratorIcon;
 
   @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[2]/div[3]/div/div")
