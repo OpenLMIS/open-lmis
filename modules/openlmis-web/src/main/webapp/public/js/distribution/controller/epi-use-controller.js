@@ -11,22 +11,18 @@ function EPIUseController($scope, $routeParams, distributionService) {
 }
 
 function EpiUseRowController($scope) {
-  $scope.getTotal = function() {
-    if(isUndefined($scope.groupReading.reading)) {
+  $scope.getTotal = function () {
+    if (!$scope.groupReading || !$scope.groupReading.reading) {
       return 0;
     }
     return getValue($scope.groupReading.reading.stockAtFirstOfMonth) + getValue($scope.groupReading.reading.received);
   };
 
-  $scope.clearError = function(notRecorded){
-    if(notRecorded){
-      $scope.inputClass = true;
-    } else {
-      $scope.inputClass = "warning-error";
-    }
-  }
+  $scope.clearError = function (notRecorded) {
+    $scope.inputClass = notRecorded ? true : "warning-error";
+  };
 
-  var getValue = function(object) {
+  var getValue = function (object) {
     return (!isUndefined(object) && !isUndefined(object.value)) ? parseInt(object.value, 10) : 0;
   }
 }
