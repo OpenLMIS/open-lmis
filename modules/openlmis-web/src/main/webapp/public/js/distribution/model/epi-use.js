@@ -1,4 +1,6 @@
 function EpiUse(epiUse) {
+  var DATE_REGEXP = /^(0[1-9]|1[012])[/]((2)\d\d\d)$/;
+
   $.extend(true, this, epiUse);
 
   var fieldList = ['stockAtFirstOfMonth', 'received', 'distributed', 'loss', 'stockAtEndOfMonth', 'expirationDate'];
@@ -18,6 +20,10 @@ function EpiUse(epiUse) {
       return (isUndefined(obj[field].value) && !obj[field].notRecorded);
     }
 
+    function isValid(field, obj) {
+      return field != 'expirationDate' || DATE_REGEXP.test(obj[field].value);
+    }
+
     $(_this.productGroups).each(function (index, productGroup) {
       $(fieldList).each(function (index, field) {
         if (!productGroup.reading || isEmpty(field, productGroup.reading)) {
@@ -29,19 +35,16 @@ function EpiUse(epiUse) {
       return statusClass != empty;
     });
 
-
-    if (statusClass === empty) {
-      $(_this.productGroups).each(function (index, productGroup) {
-        $(fieldList).each(function (index, field) {
-          if (productGroup.reading && !isEmpty(field, productGroup.reading)) {
-            statusClass = incomplete;
-            return false;
-          }
-          return true;
-        });
-
+    $(_this.productGroups).each(function (index, productGroup) {
+      $(fieldList).each(function (index, field) {
+        if (productGroup.reading && !isEmpty(field, productGroup.reading) && isValid(field, productGroup.reading)) {
+          statusClass = incomplete;
+          return false;
+        }
+        return true;
       });
-    }
+
+    });
 
     _this.status = statusClass;
 
