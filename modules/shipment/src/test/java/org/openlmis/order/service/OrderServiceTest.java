@@ -11,9 +11,12 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.OrderConfiguration;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.core.repository.OrderConfigurationRepository;
+import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
@@ -23,6 +26,8 @@ import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.service.RequisitionService;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +42,8 @@ import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(OrderService.class)
 public class OrderServiceTest {
 
   @Mock
@@ -48,6 +54,9 @@ public class OrderServiceTest {
 
   @Mock
   private RequisitionService requisitionService;
+
+  @Mock
+  private SupplyLineService supplyLineService;
 
   @InjectMocks
   private OrderService orderService;
@@ -61,15 +70,29 @@ public class OrderServiceTest {
 
   @Test
   public void shouldConvertRequisitionsToOrder() throws Exception {
-    List<Rnr> rnrList = new ArrayList<>();
+    Program program = new Program();
     Rnr rnr = new Rnr();
+    rnr.setId(1L);
+    rnr.setSupervisoryNodeId(1L);
+    rnr.setProgram(program);
+    when(requisitionService.getLWById(1L)).thenReturn(rnr);
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
+    whenNew(SupervisoryNode.class).withArguments(1l).thenReturn(supervisoryNode);
+    SupplyLine supplyLine = new SupplyLine();
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, program)).thenReturn(supplyLine);
+    List<Rnr> rnrList = new ArrayList<>();
     rnrList.add(rnr);
     Long userId = 1L;
+
     orderService.convertToOrder(rnrList, userId);
+
     Order order = new Order(rnr);
-    whenNew(Order.class).withArguments(rnr).thenReturn(order);
-    verify(requisitionService).releaseRequisitionsAsOrder(rnrList, userId);
+    order.setSupplyLine(supplyLine);
     verify(orderRepository).save(order);
+    verify(supplyLineService).getSupplyLineBy(supervisoryNode, program);
+    verify(requisitionService).getLWById(rnr.getId());
+    verify(requisitionService).releaseRequisitionsAsOrder(rnrList, userId);
+    assertThat(order.getSupplyLine(), is(supplyLine));
   }
 
   @Test

@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 
@@ -21,6 +22,7 @@ import static org.openlmis.order.domain.OrderStatus.*;
 public class Order extends BaseModel {
   private Rnr rnr;
   private OrderStatus status;
+  private SupplyLine supplyLine;
   private ShipmentFileInfo shipmentFileInfo;
 
   public Order(Rnr rnr) {

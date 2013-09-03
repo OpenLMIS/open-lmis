@@ -218,8 +218,7 @@ public class RequisitionService {
     final SupervisoryNode parent = supervisoryNodeService.getParent(savedRnr.getSupervisoryNodeId());
 
     if (parent == null) {
-      SupervisoryNode supervisoryNode = new SupervisoryNode(savedRnr.getSupervisoryNodeId());
-      savedRnr.prepareForFinalApproval(supplyLineService.getSupplyLineBy(supervisoryNode, savedRnr.getProgram()));
+      savedRnr.prepareForFinalApproval();
     } else {
       savedRnr.approveAndAssignToNextSupervisoryNode(parent);
     }
@@ -265,8 +264,10 @@ public class RequisitionService {
   }
 
   private void fillSupplyingDepot(Rnr requisition) {
-    if (requisition.getSupplyLine() != null)
-      requisition.setSupplyLine(supplyLineService.getById(requisition.getSupplyLine().getId()));
+    if (requisition.getSupervisoryNodeId() != null && requisition.getStatus().equals(RnrStatus.APPROVED)) {
+      SupplyLine supplyLine = supplyLineService.getSupplyLineBy(new SupervisoryNode(requisition.getSupervisoryNodeId()), requisition.getProgram());
+      requisition.setSupplyingDepot(supplyLine.getSupplyingFacility());
+    }
   }
 
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Long facilityId, Long programId) {
