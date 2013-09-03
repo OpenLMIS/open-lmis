@@ -12,7 +12,7 @@
       </run>
     </groups>
     <classes preserver-order="true">
-     <!-- <class name="org.openlmis.functional.E2EManageFacility">
+      <class name="org.openlmis.functional.E2EManageFacility">
       </class>
       <class name="org.openlmis.functional.E2EUpload">
       </class>
@@ -25,7 +25,7 @@
 `      <class name="org.openlmis.functional.RnRPagination">
       </class>
       <class name="org.openlmis.functional.ManageRolesAndUsers">
-      </class>-->
+      </class>
       <class name="org.openlmis.functional.E2EViewReport">
       </class>
      <!-- <class name="org.openlmis.functional.InitiateRnR">

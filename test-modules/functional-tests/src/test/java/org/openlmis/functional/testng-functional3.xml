@@ -8,31 +8,11 @@
   <test name="Openlmis functional test">
     <groups>
       <run>
-        <include name="functional2"/>
+        <include name="functional3"/>
       </run>
     </groups>
     <classes preserver-order="true">
-      <class name="org.openlmis.functional.ManageISA">
-      </class>
-      <class name="org.openlmis.functional.ManageProgramProductISA">
-      </class>
-      <class name="org.openlmis.functional.ManageDistribution">
-      </class>
-      <class name="org.openlmis.functional.ViewWarehouseLoadAmount">
-      </class>
-      <class name="org.openlmis.functional.ManageRolesAndUsers">
-      </class>
-      <class name="org.openlmis.functional.ConfigureRegimenProgramTemplate">
-      </class>
-      <class name="org.openlmis.functional.ManageReport">
-      </class>
-      <class name="org.openlmis.functional.ForgotPassword">
-      </class>
-      <class name="org.openlmis.functional.E2EManageSupplyline">
-      </class>
-      <class name="org.openlmis.functional.E2EManageGeographicZones">
-      </class>
-      <class name="org.openlmis.functional.E2EManageRequisitionGroups">
+      <class name="org.openlmis.functional.FacilityMailingListReport">
       </class>
     </classes>
   </test>

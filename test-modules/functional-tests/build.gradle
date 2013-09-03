@@ -179,8 +179,27 @@ task functionalTest2(type: Test) {
     }
     workingDir = 'build/'
 }
-
 functionalTest2.doFirst() {
+    buildOpenLmis.execute()
+}
+
+
+task functionalTest3(type: Test) {
+    useTestNG() {
+        systemProperties['browser'] = 'firefox'
+        systemProperties['dburl'] = "$dburl"
+        systemProperties['baseurl'] = "$baseurl"
+
+        suites 'src/test/java/org/openlmis/functional/testng-functional3.xml'
+    }
+    options {
+        listeners << 'org.uncommons.reportng.HTMLReporter'
+        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
+    }
+    workingDir = 'build/'
+}
+
+functionalTest3.doFirst() {
     buildOpenLmis.execute()
 }
 

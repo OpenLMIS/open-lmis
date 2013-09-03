@@ -9,10 +9,9 @@ package org.openlmis.functional;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.pageobjects.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
+import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.SummaryReportPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.AfterMethod;
@@ -21,9 +20,8 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -43,15 +41,19 @@ public class SupplyStatusByFacilityReprot extends ReportTestHelper {
     public static final String TABLE_CELL_XPATH_TEMPLATE = "//div[@id='wrap']/div/div/div/div/div[3]/div[2]/div/div[{row}]/div[{column}]/div/span";
     public static final String TABLE_SORT_BUTTON_XPATH_TEMPLATE = "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div";
 
-    private enum Column {
-        FACILITY_TYPE,
-        FACILITY_NAME,
-        SUPPLYING_FACILITY,
-        PRODUCT,
-        PRODUCT_DESCRIPTION,
-        PRODUCT_CODE,
-        AMC;
-    }
+    private static final Integer FACILITY_NAME = 1;
+    private static final Integer FACILITY_CODE = 2;
+    private static final Integer PRODUCT = 3;
+    private static final Integer OPENING_BALANCE =  4;
+    private static final Integer RECEIPTS = 5;
+    private static final Integer ISSUES = 6;
+    private static final Integer ADJUSTMENTS = 7;
+    private static final Integer CLOSING_BALANCE = 8;
+    private static final Integer MONTHS_OF_STOCK = 9;
+    private static final Integer AMC = 10;
+    private static final Integer MAXIMUM_STOCK = 11;
+    private static final Integer REORDER_AMOUNT = 12;
+
 
     private HomePage homePage;
     private LoginPage loginPage;
@@ -125,13 +127,25 @@ public class SupplyStatusByFacilityReprot extends ReportTestHelper {
     ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifySorting(String[] credentials) throws IOException {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
-        verifySort("ASC", Column.FACILITY_TYPE);
-        verifySort("ASC", Column.FACILITY_NAME);
-        verifySort("ASC", Column.SUPPLYING_FACILITY);
-        verifySort("ASC", Column.PRODUCT);
-        verifySort("ASC", Column.PRODUCT_CODE);
-        verifySort("ASC", Column.PRODUCT_DESCRIPTION);
-        verifySort("ASC", Column.AMC);
+
+        Map<String, String> templates =     new HashMap<String, String>(){{
+            put(SORT_BUTTON_ASC_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+            put(SORT_BUTTON_DESC_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+
+            put(TABLE_CELL_TEMPLATE,"test");
+        }};
+        verifySort("ASC", FACILITY_NAME,templates);
+        verifySort("ASC", FACILITY_CODE,templates);
+        verifySort("ASC", PRODUCT ,templates);
+        verifySort("ASC", OPENING_BALANCE ,templates);
+        verifySort("ASC", RECEIPTS ,templates);
+        verifySort("ASC", ISSUES ,templates);
+        verifySort("ASC", ADJUSTMENTS ,templates);
+        verifySort("ASC", CLOSING_BALANCE ,templates);
+        verifySort("ASC", MONTHS_OF_STOCK ,templates);
+        verifySort("ASC", AMC ,templates);
+        verifySort("ASC", MAXIMUM_STOCK ,templates);
+        verifySort("ASC", REORDER_AMOUNT ,templates);
 
     }
 
@@ -152,131 +166,6 @@ public class SupplyStatusByFacilityReprot extends ReportTestHelper {
         //summaryReportPage.selectPeriodByVisibleText("");
         summaryReportPage.selectScheduleByVisibleText("Group A");
         summaryReportPage.selectPeriodByVisibleText("Oct-Dec");
-
-    }
-
-    private void setupRnRData(String[] credentials) throws IOException, SQLException {
-        List<String> rightsList = new ArrayList<String>();
-        rightsList.add("CREATE_REQUISITION");
-        rightsList.add("VIEW_REQUISITION");
-        setupTestDataToInitiateRnR(true, "HIV", credentials[2], "200", "openLmis", rightsList);
-        dbWrapper.assignRight(STORE_IN_CHARGE, APPROVE_REQUISITION);
-        dbWrapper.assignRight(STORE_IN_CHARGE, CONVERT_TO_ORDER);
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        HomePage homePage = loginPage.loginAs(credentials[2], credentials[3]);
-        homePage.navigateAndInitiateRnr("HIV");
-        InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-        HomePage homePage1 = initiateRnRPage.clickHome();
-
-        ViewRequisitionPage viewRequisitionPage = homePage1.navigateViewRequisition();
-        viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
-        dbWrapper.insertValuesInRequisition();
-        dbWrapper.updateRequisitionStatus(SUBMITTED);
-        viewRequisitionPage.enterViewSearchCriteria();
-        viewRequisitionPage.clickSearch();
-        viewRequisitionPage.verifyNoRequisitionFound();
-        dbWrapper.updateRequisitionStatus(AUTHORIZED);
-        viewRequisitionPage.clickSearch();
-        viewRequisitionPage.clickRnRList();
-
-        HomePage homePageAuthorized = viewRequisitionPage.verifyFieldsPreApproval("12.50", "1");
-        ViewRequisitionPage viewRequisitionPageAuthorized = homePageAuthorized.navigateViewRequisition();
-        viewRequisitionPageAuthorized.enterViewSearchCriteria();
-        viewRequisitionPageAuthorized.clickSearch();
-        viewRequisitionPageAuthorized.verifyStatus(AUTHORIZED);
-        viewRequisitionPageAuthorized.clickRnRList();
-
-        HomePage homePageInApproval = viewRequisitionPageAuthorized.verifyFieldsPreApproval("12.50", "1");
-        dbWrapper.updateRequisitionStatus(IN_APPROVAL);
-        ViewRequisitionPage viewRequisitionPageInApproval = homePageInApproval.navigateViewRequisition();
-        viewRequisitionPageInApproval.enterViewSearchCriteria();
-        viewRequisitionPageInApproval.clickSearch();
-        viewRequisitionPageInApproval.verifyStatus(IN_APPROVAL);
-
-        ApprovePage approvePageTopSNUser = homePageInApproval.navigateToApprove();
-        approvePageTopSNUser.verifyAndClickRequisitionPresentForApproval();
-        approvePageTopSNUser.editApproveQuantityAndVerifyTotalCostViewRequisition("20");
-        approvePageTopSNUser.addComments("Dummy Comments");
-        approvePageTopSNUser.approveRequisition();
-        approvePageTopSNUser.clickOk();
-        approvePageTopSNUser.verifyNoRequisitionPendingMessage();
-        ViewRequisitionPage viewRequisitionPageApproved = homePageInApproval.navigateViewRequisition();
-        viewRequisitionPageApproved.enterViewSearchCriteria();
-        viewRequisitionPageApproved.clickSearch();
-        viewRequisitionPageApproved.verifyStatus(APPROVED);
-        viewRequisitionPageApproved.clickRnRList();
-        viewRequisitionPageApproved.verifyComment("Dummy Comments", "storeincharge", 1);
-        viewRequisitionPageApproved.verifyCommentBoxNotPresent();
-
-        HomePage homePageApproved = viewRequisitionPageApproved.verifyFieldsPostApproval("25.00", "1");
-
-        // dbWrapper.updateRequisition("F10");
-        ConvertOrderPage convertOrderPage = homePageApproved.navigateConvertToOrder();
-        convertOrderPage.convertToOrder();
-        ViewRequisitionPage viewRequisitionPageOrdered = homePageApproved.navigateViewRequisition();
-        viewRequisitionPageOrdered.enterViewSearchCriteria();
-        viewRequisitionPageOrdered.clickSearch();
-        viewRequisitionPageOrdered.verifyStatus(RELEASED);
-        viewRequisitionPageOrdered.clickRnRList();
-        viewRequisitionPageOrdered.verifyFieldsPostApproval("25.00", "1");
-        viewRequisitionPageOrdered.verifyApprovedQuantityFieldPresent();
-
-        homePage = new HomePage(testWebDriver);
-        homePage.logout(baseUrlGlobal);
-
-    }
-
-    public void verifySort(String sortType, Column column) throws IOException {
-        WebElement sortButton = null;
-        String columnIndex = String.valueOf(column.ordinal() + 1);
-        System.out.println(columnIndex);
-        switch (sortType) {
-            case "ASC":
-                sortButton = testWebDriver.findElement(By.xpath(TABLE_SORT_BUTTON_XPATH_TEMPLATE.replace("{column}", columnIndex)));
-                break;
-            case "DESC":
-                sortButton = testWebDriver.findElement(By.xpath(TABLE_SORT_BUTTON_XPATH_TEMPLATE.replace("{column}", columnIndex)));
-                break;
-        }
-        SeleneseTestNgHelper.assertTrue(sortButton.isDisplayed());
-
-        sortButton.click();
-        String str1, str2;
-        WebElement cell1 = null, cell2 = null;
-        for (int i = 1; ; i++) {
-            try {
-                cell1 = testWebDriver.findElement(By.xpath(TABLE_CELL_XPATH_TEMPLATE.replace("{column}", columnIndex).replace("{row}", String.valueOf(i))));
-                cell2 = testWebDriver.findElement(By.xpath(TABLE_CELL_XPATH_TEMPLATE.replace("{column}", columnIndex).replace("{row}", String.valueOf(i + 1))));
-            } catch (NoSuchElementException ex) {
-                break;         // implement other termination condition?
-            }
-
-            if (cell1 != null && cell1.isDisplayed()) {
-                str1 = cell1.getText();
-            } else {
-                break;
-            }
-            if (cell2 != null && cell2.isDisplayed()) {
-                str2 = cell2.getText();
-                //SeleneseTestNgHelper.assertTrue(str1.trim().compareToIgnoreCase(str2.trim()) < 1);
-            } else {
-                break;
-            }
-            // str1 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div"+strIdx+"/div/div/span")).getText();
-            // str1 =  testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div"+strIdx+"/div/div/span")).getText();
-            System.out.println(str1);
-            System.out.println(str2);
-
-            switch (sortType) {
-                case "ASC":
-                    // SeleneseTestNgHelper.assertTrue(str1.trim().compareToIgnoreCase(str2.trim()) > 1);
-                    break;
-                case "DESC":
-                    //  SeleneseTestNgHelper.assertTrue(str1.trim().compareToIgnoreCase(str2.trim()) < 1);
-                    break;
-            }
-        }
-        System.out.print("~||~");
 
     }
 
