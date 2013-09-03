@@ -9,7 +9,9 @@ package org.openlmis.functional;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
+import org.openlmis.UiUtils.SeleniumFileDownloadUtil;
 import org.openlmis.UiUtils.TestCaseHelper;
+import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -17,6 +19,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.Listeners;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -27,9 +30,16 @@ import java.util.Map;
 
 public class ReportTestHelper extends TestCaseHelper {
 
+    //Sorting templates
     public static final String SORT_BUTTON_ASC_TEMPLATE = "SortAscendingButton" ;
     public static final String SORT_BUTTON_DESC_TEMPLATE = "SortDescendingButton" ;
     public static final String TABLE_CELL_TEMPLATE = "TableCellTemplate" ;
+
+    //Pagination templates
+    public static final String PAGINATION_BUTTON_PREV_TEMPLATE = "paginationButtonPrevTemplate";
+    public static final String PAGINATION_BUTTON_NEXT_TEMPLATE = "paginatioinButtonNextTemplate";
+    public static final String PAGINATION_BUTTON_FIRST_TEMPLATE =  "paginationButtonFirstTemplate";
+    public static final String PAGINATION_BUTTON_LAST_TEMPLATE =  "paginationButtonLastTemplate";
 
 
     public void verifySort(String sortType, Integer columnIdx , Map<String, String> templates) throws IOException {
@@ -84,6 +94,54 @@ public class ReportTestHelper extends TestCaseHelper {
         }
         System.out.print("~||~");
 
+    }
+
+    public void verifyPagination( Map<String, String> templates)       {
+        WebElement btnPrev = testWebDriver.findElement(By.xpath(templates.get(PAGINATION_BUTTON_PREV_TEMPLATE)));
+        WebElement btnNext = testWebDriver.findElement(By.xpath(templates.get(PAGINATION_BUTTON_NEXT_TEMPLATE)));
+        WebElement btnFirst = testWebDriver.findElement(By.xpath(templates.get(PAGINATION_BUTTON_FIRST_TEMPLATE)));
+        WebElement btnLast = testWebDriver.findElement(By.xpath(templates.get(PAGINATION_BUTTON_LAST_TEMPLATE)));
+
+        for (int i = 0; i < 10; i++)
+            btnNext.click();
+        for (int i = 0; i < 10; i++)
+            btnPrev.click();
+
+        btnFirst.click();
+        btnLast.click();
+    }
+
+
+    public void verifyPdfReportOutput(String PdfButtonID) throws Exception {
+        WebElement PdfButton  = testWebDriver.findElement(By.id(PdfButtonID));
+        testWebDriver.waitForElementToAppear(PdfButton);
+        PdfButton.click();
+        testWebDriver.sleep(500);
+
+        SeleniumFileDownloadUtil downloadHandler = new SeleniumFileDownloadUtil(TestWebDriver.getDriver());
+        downloadHandler.setURI(testWebDriver.getCurrentUrl());
+        File downloadedFile = downloadHandler.downloadFile(this.getClass().getSimpleName(), ".pdf");
+        SeleneseTestNgHelper.assertEquals(downloadHandler.getLinkHTTPStatus(), 200);
+        SeleneseTestNgHelper.assertEquals(downloadedFile.exists(), true);
+        SeleneseTestNgHelper.assertTrue(downloadedFile.length() > 0);
+
+        testWebDriver.sleep(500);
+    }
+
+    public void verifyXlsReportOutput(String XLSButtonId) throws Exception {
+        WebElement XLSButton = testWebDriver.findElement(By.id(XLSButtonId));
+        testWebDriver.waitForElementToAppear(XLSButton);
+        XLSButton.click();
+        testWebDriver.sleep(500);
+
+        SeleniumFileDownloadUtil downloadHandler = new SeleniumFileDownloadUtil(TestWebDriver.getDriver());
+        downloadHandler.setURI(testWebDriver.getCurrentUrl());
+        File downloadedFile = downloadHandler.downloadFile(this.getClass().getSimpleName(), ".xls");
+        SeleneseTestNgHelper.assertEquals(downloadHandler.getLinkHTTPStatus(), 200);
+        SeleneseTestNgHelper.assertEquals(downloadedFile.exists(), true);
+        SeleneseTestNgHelper.assertTrue(downloadedFile.length() > 0);
+
+        testWebDriver.sleep(500);
     }
 
 

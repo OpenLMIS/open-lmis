@@ -9,16 +9,14 @@ package org.openlmis.functional;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.pageobjects.FacilityMailingListReportPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.StockedOutReportPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +51,7 @@ public class StockedOutReport extends ReportTestHelper {
 
     private HomePage homePage;
     private LoginPage loginPage;
-    private FacilityMailingListReportPage facilityMailingListReportPage;
+    private StockedOutReportPage stockedOutReportPage;
 
     @BeforeMethod(groups = {"functional3"})
     public void setUp() throws Exception {
@@ -65,9 +63,9 @@ public class StockedOutReport extends ReportTestHelper {
         homePage = loginPage.loginAs(userName, passWord);
     }
 
-    private void navigateToFacilityMailingListReportingPage(String userName, String passWord) throws IOException {
+    private void navigateToStockedOutReport(String userName, String passWord) throws IOException {
         login(userName, passWord);
-        facilityMailingListReportPage = homePage.navigateViewFacilityMailingListReport();
+        stockedOutReportPage = homePage.navigateViewStockedOutReport();
     }
 
     //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
@@ -95,29 +93,29 @@ public class StockedOutReport extends ReportTestHelper {
 
     @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportFiltersRendered(String[] credentials) throws Exception {
-        navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
+        navigateToStockedOutReport(credentials[0], credentials[1]);
 
-        SeleneseTestNgHelper.assertTrue(facilityMailingListReportPage.facilityCodeIsDisplayed());
-        SeleneseTestNgHelper.assertTrue(facilityMailingListReportPage.facilityNameIsDisplayed());
-        SeleneseTestNgHelper.assertTrue(facilityMailingListReportPage.facilityTypeIsDisplayed());
+/*        SeleneseTestNgHelper.assertTrue(stockedOutReportPage.facilityCodeIsDisplayed());
+        SeleneseTestNgHelper.assertTrue(stockedOutReportPage.facilityNameIsDisplayed());
+        SeleneseTestNgHelper.assertTrue(stockedOutReportPage.facilityTypeIsDisplayed());*/
     }
 
     //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPDFOUtput(String[] credentials) throws Exception {
-        navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
-        facilityMailingListReportPage.verifyPdfReportOutput();
+        navigateToStockedOutReport(credentials[0], credentials[1]);
+        verifyPdfReportOutput("pdf-button");
     }
 
 
     //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyXLSOUtput(String[] credentials) throws Exception {
-        navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
-        facilityMailingListReportPage.verifyXlsReportOutput();
+        navigateToStockedOutReport(credentials[0], credentials[1]);
+        verifyXlsReportOutput("xls-button");
     }
 
     @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifySorting(String[] credentials) throws IOException {
-        navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
+        navigateToStockedOutReport(credentials[0], credentials[1]);
         Map<String, String> templates =     new HashMap<String, String>(){{
             put(SORT_BUTTON_ASC_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
             put(SORT_BUTTON_DESC_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
@@ -135,33 +133,16 @@ public class StockedOutReport extends ReportTestHelper {
 
     //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPagination(String[] credentials) throws Exception {
-        navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
-        facilityMailingListReportPage.verifyPagination();
-    }
+        navigateToStockedOutReport(credentials[0], credentials[1]);
 
-    //@Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyFacilityListingReport(String[] credentials) throws Exception {
-
-        String geoZone = "Ngorongoro";
-        String facilityType = "Lvl3 Hospital";
-        String facilityCodePrefix = "FCcode";
-        String facilityNamePrefix = "FCname";
-        String status = "true";
-
-        Date dObj = new Date();
-        SimpleDateFormat formatter_date_time = new SimpleDateFormat(
-                "yyyyMMdd-hhmmss");
-        String date_time = formatter_date_time.format(dObj);
-
-        dbWrapper.insertFacilities(facilityNamePrefix + date_time, facilityCodePrefix + date_time);
-
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-
-        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-
-        FacilityMailingListReportPage facilityListingReportPage = homePage.navigateViewFacilityMailingListReport();
-        //facilityListingReportPage.enterFilterValuesInFacilityListingReport(geoZone, facilityType, status);
-        //facilityListingReportPage.verifyHTMLReportOutputOnFacilityListingScreen();
+        Map<String, String> templates =     new HashMap<String, String>(){{
+            put(PAGINATION_BUTTON_PREV_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+            put(PAGINATION_BUTTON_NEXT_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+            put(PAGINATION_BUTTON_FIRST_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+            put(PAGINATION_BUTTON_LAST_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+            put(TABLE_CELL_TEMPLATE,"//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div[{row}]/div[{column}]/div/span");
+        }};
+        verifyPagination(templates);
     }
 
     @AfterMethod(groups = {"functional"})
