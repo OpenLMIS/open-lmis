@@ -5,21 +5,10 @@
  */
 
 function EPIUseController($scope, $routeParams, distributionService) {
-
+  $scope.distribution = distributionService.distribution;
   $scope.inputClass = "warning-error";
   $scope.selectedFacilityId = $routeParams.facility;
-
-  $scope.$on('distributionReceived', function () {
-    $scope.distribution = distributionService.distribution;
-  });
-
-  if ($scope.distribution == undefined && distributionService.distribution != undefined) {
-    $scope.distribution = distributionService.distribution;
-  }
-
 }
-
-
 
 function EpiUseRowController($scope) {
   $scope.getTotal = function() {
@@ -27,7 +16,7 @@ function EpiUseRowController($scope) {
       return 0;
     }
     return getValue($scope.groupReading.reading.stockAtFirstOfMonth) + getValue($scope.groupReading.reading.received);
-  }
+  };
 
   $scope.clearError = function(notRecorded){
     if(notRecorded){
