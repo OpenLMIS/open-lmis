@@ -21,29 +21,21 @@ function EpiUse(epiUse) {
     }
 
     function isValid(field, obj) {
-      return field != 'expirationDate' || DATE_REGEXP.test(obj[field].value);
+      return field != 'expirationDate' || (obj[field].notRecorded || DATE_REGEXP.test(obj[field].value));
     }
 
-    $(_this.productGroups).each(function (index, productGroup) {
-      $(fieldList).each(function (index, field) {
-        if (!productGroup.reading || isEmpty(field, productGroup.reading)) {
-          statusClass = empty;
-          return false;
-        }
-        return true;
-      });
-      return statusClass != empty;
-    });
+    statusClass = empty;
 
-    $(_this.productGroups).each(function (index, productGroup) {
-      $(fieldList).each(function (index, field) {
-        if (productGroup.reading && !isEmpty(field, productGroup.reading) && isValid(field, productGroup.reading)) {
+    $(_this.productGroups).each(function (i, productGroup) {
+      $(fieldList).each(function (i, fieldName) {
+        if (productGroup.reading && !isEmpty(fieldName, productGroup.reading) && isValid(fieldName, productGroup.reading) && statusClass != incomplete) {
+          statusClass = complete;
+        } else if (productGroup.reading && (isEmpty(fieldName, productGroup.reading) || !isValid(fieldName, productGroup.reading)) && statusClass == complete) {
           statusClass = incomplete;
           return false;
         }
         return true;
-      });
-
+      })
     });
 
     _this.status = statusClass;

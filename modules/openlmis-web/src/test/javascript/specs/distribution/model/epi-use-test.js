@@ -39,4 +39,28 @@ describe('EPI Use', function () {
 
     expect(status).toEqual('is-incomplete');
   });
+
+  it('should set status as incomplete if expiration date is not recorded and rest of the form is valid', function () {
+    var epiUse = new EpiUse({productGroups: [
+      {reading: {expirationDate: {notRecorded: true}, stockAtFirstOfMonth: {notRecorded: true}, distributed: {value: 100},
+        received: {value: 80}, stockAtEndOfMonth: {value: 200}, loss: {value: 50}
+      }}
+    ]});
+
+    var status = epiUse.computeStatus();
+
+    expect(status).toEqual('is-complete');
+  });
+
+  it('should set status as complete if the form is valid', function () {
+    var epiUse = new EpiUse({productGroups: [
+      {reading: {expirationDate: {value: '11/2012'}, stockAtFirstOfMonth: {notRecorded: true}, distributed: {value: 100},
+        received: {value: 80}, stockAtEndOfMonth: {value: 200}, loss: {value: 50}
+      }}
+    ]});
+
+    var status = epiUse.computeStatus();
+
+    expect(status).toEqual('is-complete');
+  });
 });
