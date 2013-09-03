@@ -30,48 +30,6 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         section = id;
     };
 
-  /*  $scope.defaultSettings = function (str) {
-
-        var retval = '';
-        var months = new Array(12);
-        months[0] = "Jan";
-        months[1] = "Feb";
-        months[2] = "Mar";
-        months[3] = "Apr";
-        months[4] = "May";
-        months[5] = "Jun";
-        months[6] = "Jul";
-        months[7] = "Aug";
-        months[8] = "Sep";
-        months[9] = "Oct";
-        months[10] = "Nov";
-        months[11] = "Dec";
-
-        var current_date = new Date();
-        month_value = current_date.getMonth() - 6;
-        day_value = current_date.getDate();
-        year_value = current_date.getFullYear();
-
-        retval = "";
-
-        if (str == "M") {
-            retval = month_value;
-        }
-        if (str == "Y") {
-            retval = year_value;
-        }
-        if (str == "P") {
-            retval = $scope.reporting;
-        }
-
-        if (str == "Q") {
-            var d = new Date();
-            retval = parseInt((d.getMonth() + 3) / 3) - 1;
-            retval = retval + "";
-        }
-        return retval;
-    };*/
-
 
     $scope.show = function (id) {
         return section == id;
@@ -101,87 +59,7 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
     });
-    /*
-      // default to the monthly period type
 
-    $scope.periodTypes = [
-        {'name': 'Monthly', 'value': 'monthly'},
-        {'name': 'Quarterly', 'value': 'quarterly'},
-        {'name': 'Semi Anual', 'value': 'semi-anual'},
-        {'name': 'Annual', 'value': 'annual'}
-    ];
-
-
-    Months.get(function (data) {
-        var months = data.months;
-
-        if (months != null) {
-            $scope.startMonths = [];
-            $scope.endMonths = [];
-            $.each(months, function (idx, obj) {
-                $scope.startMonths.push({'name': obj.toString(), 'value': idx + 1});
-                $scope.endMonths.push({'name': obj.toString(), 'value': idx + 1});
-            });
-            //$scope.startMonth   = prev('M');
-            //alert(JSON.stringify(months, null, 4));
-        }
-
-    });
-
-    $scope.startQuarters = function () {
-        return $scope.quarters;
-    };
-
-    $scope.endQuarters = function () {
-        if ($scope.startYear == $scope.endYear && $scope.startQuarter != '') {
-            var arr = [];
-            for (var i = $scope.startQuarter - 1; i < $scope.quarters.length; i++) {
-                arr.push($scope.quarters[i]);
-            }
-            return arr;
-        }
-        return $scope.quarters;
-    };
-
-    $scope.quarters = [
-        {'name': 'One', 'value': '1'},
-        {'name': 'Two', 'value': '2'},
-        {'name': 'Three', 'value': '3'},
-        {'name': 'Four', 'value': '4'}
-    ];
-
-    $scope.semiAnnuals = [
-        {'name': 'First Half', 'value': '1'},
-        {'name': 'Second Half', 'value': '2'}
-    ];
-*/
-    // copy over the start month and end months
-    // this is just for initial loading.
-   /* $(function () {
-        $scope.startQuarters = $scope.quarters;
-        $scope.endQuarters = $scope.quarters;
-        $scope.endYears = $scope.startYears;
-        $scope.startSemiAnnuals = $scope.semiAnnuals;
-        $scope.endSemiAnnuals = $scope.semiAnnuals;
-        $scope.toQuarter = 1;
-        $scope.fromQuarter = 1;
-        $scope.startHalf = 1;
-        $scope.endHalf = 1;
-
-        //alert('function');
-    });
-
-    $scope.isMonthly = function () {
-        return $scope.periodType == 'monthly';
-    };
-
-    $scope.isQuarterly = function () {
-        return $scope.periodType == 'quarterly';
-    };
-
-    $scope.isSemiAnnualy = function () {
-        return $scope.periodType == 'semi-anual';
-    };*/
 
     ReportPrograms.get(function(data){
         $scope.programs = data.programs;
@@ -193,33 +71,21 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
 
     RequisitionGroups.get(function (data) {
         $scope.requisitionGroups = data.requisitionGroupList;
-        //$scope.requisitionGroups.push({'name':'All Reporting Groups','id':'All'});
     });
 
     ReportFacilityTypes.get(function (data) {
         $scope.facilityTypes = data.facilityTypes;
-        //$scope.facilityTypes.push({'name': 'All Facility Types', 'id' : 'All'});
     });
 
     Products.get(function (data) {
         $scope.products = data.productList;
         $scope.products.unshift({'name': '-- All Products --', 'id':'All'});
-        //$scope.products.unshift({'name': $scope.IndicatorProductsDescription, 'id':'-1'});
 
     });
 
     ProductCategories.get(function (data) {
         $scope.productCategories = data.productCategoryList;
     });
-    /*$scope.ChangeSchedule = function(){
-        ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
-            $scope.periods = data.periods;
-        });
-
-        RequisitionGroupsByProgramSchedule.get({program: $scope.program, schedule:$scope.schedule}, function(data){
-            $scope.requisitionGroups = data.requisitionGroupList;
-        });
-    }*/
 
     $scope.ChangeSchedule = function(scheduleBy){
         if(scheduleBy == 'byYear'){
@@ -284,7 +150,6 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         ProductsByCategory.get({category: $scope.filterObject.productCategoryId}, function (data) {
             $scope.products = data.productList;
             $scope.products.unshift({'name': '-- All Products --','id':'All'});
-           // $scope.products.unshift({'name': $scope.IndicatorProductsDescription, 'id':'-1'});
         });
     }
 
@@ -387,186 +252,7 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         }
     });
 
-   /* $scope.$watch('startYear', function (selection) {
-        var date = new Date();
-        //alert(selection);
-        if (selection != undefined || selection == "") {
-            $scope.filterObject.fromYear = selection;
-            adjustEndYears();
-            adjustEndMonths();
-            adjustEndQuarters();
-            adjustEndSemiAnnuals();
-        } else {
-            $scope.startYear = date.getFullYear().toString();
-            $scope.filterObject.fromYear = date.getFullYear();
-        }
-        //$scope.startYear=prev('Y');
-        //checkrequired();
-        //alert('startYear');
-        $scope.filterGrid();
-    });
-
-    $scope.$watch('endYear', function (selection) {
-        var date = new Date();
-        if (selection != undefined || selection == "") {
-            $scope.filterObject.toYear = selection;
-            adjustEndMonths();
-            adjustEndQuarters();
-            adjustEndSemiAnnuals();
-        } else {
-            $scope.endYear = date.getFullYear().toString();
-            $scope.filterObject.toYear = date.getFullYear();
-        }
-        //alert('endYear');
-        $scope.filterGrid();
-    });
-
-    $scope.$watch('startQuarter', function (selection) {
-        var date = new Date();
-        if (selection != undefined || selection == "") {
-            $scope.filterObject.fromQuarter = selection;
-            adjustEndQuarters();
-        } else {
-            var date = new Date();
-            $scope.filterObject.fromQuarter = 1;
-        }
-        //alert('startQurater');
-        $scope.filterGrid();
-    });
-
-    $scope.$watch('endQuarter', function (selection) {
-        var date = new Date();
-        if (selection != undefined || selection == "") {
-            $scope.filterObject.toQuarter = selection;
-        } else {
-            var date = new Date();
-            $scope.filterObject.toQuarter = $scope.filterObject.fromQuarter;
-        }
-        //alert('endQurater');
-        $scope.filterGrid();
-    });
-
-    $scope.$watch('startHalf', function (selection) {
-
-        if (selection != undefined || selection == "") {
-            $scope.filterObject.fromSemiAnnual = selection;
-            adjustEndSemiAnnuals();
-        } else {
-            $scope.filterObject.fromSemiAnnual = 1;
-        }
-        //startHalf');
-        $scope.filterGrid();
-    });
-    $scope.$watch('endHalf', function (selection) {
-
-        if (selection != undefined || selection == "") {
-            $scope.filterObject.toSemiAnnual = selection;
-        } else {
-            var date = new Date();
-            $scope.filterObject.toSemiAnnual = 1;
-        }
-        //alert('endHalf');
-        $scope.filterGrid();
-    });
-    $scope.$watch('startMonth', function (selection) {
-        var date = new Date();
-        if (selection != undefined || selection == "") {
-            $scope.filterObject.fromMonth = selection - 1;
-            adjustEndMonths();
-        } else {
-            $scope.startMonth = (date.getMonth() + 1 ).toString();
-            $scope.filterObject.fromMonth = (date.getMonth() + 1);
-        }
-        //alert('startMonth');
-        $scope.filterGrid();
-    });
-
-    $scope.$watch('endMonth', function (selection) {
-        var date = new Date();
-        if (selection != undefined || selection == "") {
-            $scope.filterObject.toMonth = selection - 1;
-        } else {
-            $scope.endMonth = (date.getMonth() + 1 ).toString();
-            $scope.filterObject.toMonth = (date.getMonth() + 1);
-        }
-        //alert('endMonth');
-        $scope.filterGrid();
-    });
-
-    var adjustEndMonths = function () {
-        if ($scope.startMonth != undefined && $scope.startMonths != undefined && $scope.startYear == $scope.endYear) {
-            $scope.endMonths = [];
-            $.each($scope.startMonths, function (idx, obj) {
-                if (obj.value >= $scope.startMonth) {
-                    $scope.endMonths.push({'name': obj.name, 'value': obj.value});
-                }
-            });
-            if ($scope.endMonth < $scope.startMonth) {
-                $scope.endMonth = $scope.startMonth;
-            }
-        } else {
-            $scope.endMonths = $scope.startMonths;
-        }
-    }
-
-    var adjustEndQuarters = function () {
-        if ($scope.startYear == $scope.endYear) {
-            $scope.endQuarters = [];
-            $.each($scope.startQuarters, function (idx, obj) {
-                if (obj.value >= $scope.startQuarter) {
-                    $scope.endQuarters.push({'name': obj.name, 'value': obj.value});
-                }
-            });
-            if ($scope.endQuarter < $scope.startQuarter) {
-                $scope.endQuarter = $scope.startQuarter;
-            }
-        } else {
-            $scope.endQuarters = $scope.startQuarters;
-        }
-    }
-
-    var adjustEndSemiAnnuals = function () {
-
-        if ($scope.startYear == $scope.endYear) {
-            $scope.endSemiAnnuals = [];
-            $.each($scope.startSemiAnnuals, function (idx, obj) {
-                if (obj.value >= $scope.startHalf) {
-                    $scope.endSemiAnnuals.push({'name': obj.name, 'value': obj.value});
-                }
-            });
-            if ($scope.endHalf < $scope.startHalf) {
-                $scope.endHalf = $scope.startHalf;
-            }
-        } else {
-            $scope.endSemiAnnuals = $scope.startSemiAnnuals;
-        }
-    }
-
-    var adjustEndYears = function () {
-        $scope.endYears = [];
-        $.each($scope.startYears, function (idx, obj) {
-            if (obj >= $scope.startYear) {
-                $scope.endYears.push(obj);
-            }
-        });
-        if ($scope.endYear < $scope.startYear) {
-            $scope.endYear = new Date().getFullYear();
-        }
-    }
-
-
-    $scope.$watch('periodType', function (selection) {
-        if (selection != undefined || selection == "") {
-            $scope.filterObject.periodType = selection;
-
-        } else {
-            $scope.filterObject.periodType = "monthly";
-        }
-        $scope.filterGrid();
-    });*/
-
-
-    $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
+     $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
     $scope.exportReport = function (type) {
         //$scope.message ="";
@@ -612,15 +298,6 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
     $scope.filterObject = {
         facilityTypeId: $scope.facilityType,
         facilityType: "",
-        /*periodType: $scope.periodType,
-        fromYear: $scope.fromYear,
-        fromMonth: $scope.fromMonth,
-        fromQuarter: $scope.fromQuarter,
-        fromSemiAnnual: $scope.startHalf,
-        toYear: $scope.toYear,
-        toMonth: $scope.toMonth,
-        toQuarter: $scope.toQuarter,
-        toSemiAnnual: $scope.endHalf,*/
         periodId : $scope.period,
         period : "",
         programId: $scope.program,
@@ -628,8 +305,11 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         scheduleId: $scope.schedule,
         schedule: "",
         productId: $scope.productId,
+        product : "",
         productCategoryId: $scope.productCategoryId,
+        productCategory : "",
         rgroupId: $scope.rgroup,
+        year : $scope.year,
         rgroup: "",
         facility: $scope.facilityNameFilter
     };
