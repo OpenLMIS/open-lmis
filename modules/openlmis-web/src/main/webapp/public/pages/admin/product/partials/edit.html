@@ -322,11 +322,11 @@ Edit Product
             <td >&nbsp;</td>
             <td style="width: 200px;text-align:left;">{{pp.program.code}}</td>
             <td style="width: 200px;text-align:left;">
-                <input type="checkbox"
+                <input type="checkbox" ng-disabled="!editProduct.active"
                        ng-model="pp.active"/>
             </td>
-            <td><input type="text" ng-disabled="!pp.active" ng-required="pp.active" ng-model="pp.currentPrice"/></td>
-            <td><input type="text" ng-disabled="!pp.active" ng-required="pp.active" ng-model="pp.dosesPerMonth"/></td>
+            <td><input type="text" ng-disabled="(!pp.active || !editProduct.active)" ng-required="pp.active" ng-model="pp.currentPrice"/></td>
+            <td><input type="text" ng-disabled="(!pp.active || !editProduct.active)" ng-required="pp.active" ng-model="pp.dosesPerMonth"/></td>
         </tr>
     </table>
 </div>
