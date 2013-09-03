@@ -6,5 +6,11 @@ CREATE TABLE shipped_line_items (
   rnrId INTEGER NOT NULL REFERENCES requisitions(id),
   productCode VARCHAR(50) NOT NULL REFERENCES products(code),
   quantityShipped INTEGER  NOT NULL,
-  modifiedDate TIMESTAMP
+  cost NUMERIC(15, 4),
+  packedDate TIMESTAMP,
+  shippedDate TIMESTAMP,
+  createdBy INTEGER,
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy INTEGER,
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
