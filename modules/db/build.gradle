@@ -47,7 +47,7 @@ dependencies {
 
 }
 
-task setupDB(dependsOn: ["createDB", clean]) << {
+task setupDB(dependsOn: [{createDB}, clean]) << {
     ext.flyway_classpath = files(configurations.flyway)
     ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
     ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword)
@@ -55,7 +55,7 @@ task setupDB(dependsOn: ["createDB", clean]) << {
     tasks.migrateDB.execute()
 }
 
-task createDB(dependsOn: "dropDB") << {
+task createDB(dependsOn: {dropDB}) << {
     println("Creating Database..")
     executeSqlOnDatabase('create database ' + dbName, dbUser)
     executeSqlOnDatabase('create schema ' + atomfeedDbSchema, dbName)
