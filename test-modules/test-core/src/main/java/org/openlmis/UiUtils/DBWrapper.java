@@ -290,6 +290,7 @@ public class DBWrapper {
 
     update("delete from supervisory_nodes;");
     update("delete from refrigerators;");
+    update("delete from facility_ftp_details;");
     update("delete from facilities;");
     update("delete from geographic_zones where code not in ('Root','Arusha','Dodoma', 'Ngorongoro');");
     update("delete from processing_periods;");
@@ -297,7 +298,6 @@ public class DBWrapper {
     update("delete from atomfeed.event_records;");
     update("delete from regimens;");
     update("delete from program_regimen_columns;");
-    update("delete from facility_ftp_details;");
   }
 
 
