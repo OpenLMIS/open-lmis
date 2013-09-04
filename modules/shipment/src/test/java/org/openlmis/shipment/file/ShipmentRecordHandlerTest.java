@@ -14,7 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.shipment.domain.ShippedLineItem;
+import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.service.ShipmentService;
 import org.openlmis.upload.model.AuditFields;
 
@@ -42,19 +42,19 @@ public class ShipmentRecordHandlerTest {
 
   @Test
   public void shouldInsert() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem();
+    ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
     Date currentTimestamp = new Date();
-    when(shipmentService.getProcessedTimeStamp(shippedLineItem)).thenReturn(null);
+    when(shipmentService.getProcessedTimeStamp(shipmentLineItem)).thenReturn(null);
 
-    shipmentRecordHandler.execute(shippedLineItem, 1, new AuditFields(currentTimestamp));
+    shipmentRecordHandler.execute(shipmentLineItem, 1, new AuditFields(currentTimestamp));
 
-    assertThat(shippedLineItem.getModifiedDate(), is(currentTimestamp));
-    verify(shipmentService).insertShippedLineItem(shippedLineItem);
+    assertThat(shipmentLineItem.getModifiedDate(), is(currentTimestamp));
+    verify(shipmentService).insertShippedLineItem(shipmentLineItem);
   }
 
   @Test
   public void shouldThrowExceptionIfOrderIdIsAlreadyProcessed() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem();
+    ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
 
     Calendar calendar = Calendar.getInstance();
     calendar.add(Calendar.DATE, -1);
@@ -63,36 +63,36 @@ public class ShipmentRecordHandlerTest {
     AuditFields auditFields = new AuditFields();
     auditFields.setCurrentTimestamp(new Date());
 
-    when(shipmentService.getProcessedTimeStamp(shippedLineItem)).thenReturn(date);
+    when(shipmentService.getProcessedTimeStamp(shipmentLineItem)).thenReturn(date);
 
     expectedException.expect(dataExceptionMatcher("error.duplicate.order"));
 
-    shipmentRecordHandler.execute(shippedLineItem, 1, auditFields);
+    shipmentRecordHandler.execute(shipmentLineItem, 1, auditFields);
   }
 
   @Test
   public void shouldUpdateShippedLineItemIfOrderIdPresentWithSameTimeStamp() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem();
+    ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
     Date currentTimestamp = new Date();
     AuditFields auditFields = new AuditFields(currentTimestamp);
 
     Long shippedLineItemFromDbId = 1L;
-    ShippedLineItem shippedLineItemFromDB = new ShippedLineItem();
-    shippedLineItemFromDB.setModifiedDate(currentTimestamp);
-    shippedLineItemFromDB.setId(shippedLineItemFromDbId);
+    ShipmentLineItem shipmentLineItemFromDB = new ShipmentLineItem();
+    shipmentLineItemFromDB.setModifiedDate(currentTimestamp);
+    shipmentLineItemFromDB.setId(shippedLineItemFromDbId);
 
-    when(shipmentService.getShippedLineItem(shippedLineItem)).thenReturn(shippedLineItemFromDB);
+    when(shipmentService.getShippedLineItem(shipmentLineItem)).thenReturn(shipmentLineItemFromDB);
 
-    shipmentRecordHandler.execute(shippedLineItem, 1, auditFields);
+    shipmentRecordHandler.execute(shipmentLineItem, 1, auditFields);
 
-    assertThat(shippedLineItem.getModifiedDate(), is(currentTimestamp));
-    assertThat(shippedLineItem.getId(), is(shippedLineItemFromDbId));
-    verify(shipmentService).updateShippedLineItem(shippedLineItem);
+    assertThat(shipmentLineItem.getModifiedDate(), is(currentTimestamp));
+    assertThat(shipmentLineItem.getId(), is(shippedLineItemFromDbId));
+    verify(shipmentService).updateShippedLineItem(shipmentLineItem);
   }
 
   @Test
   public void shouldThrowErrorIfOrderAlreadyProcessedButProductCodeIsNew() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem();
+    ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
 
     Calendar calendar = Calendar.getInstance();
     calendar.add(Calendar.DATE, -1);
@@ -101,10 +101,10 @@ public class ShipmentRecordHandlerTest {
     AuditFields auditFields = new AuditFields();
     auditFields.setCurrentTimestamp(new Date());
 
-    when(shipmentService.getProcessedTimeStamp(shippedLineItem)).thenReturn(processedDate);
+    when(shipmentService.getProcessedTimeStamp(shipmentLineItem)).thenReturn(processedDate);
 
     expectedException.expect(dataExceptionMatcher("error.duplicate.order"));
 
-    shipmentRecordHandler.execute(shippedLineItem, 1, auditFields);
+    shipmentRecordHandler.execute(shipmentLineItem, 1, auditFields);
   }
 }

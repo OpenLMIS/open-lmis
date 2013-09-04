@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
-import org.openlmis.shipment.domain.ShippedLineItem;
+import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -25,7 +25,7 @@ public interface ShipmentMapper {
     "VALUES",
     "(#{rnrId}, #{productCode}, #{quantityShipped}, #{cost}, #{packedDate}, #{shippedDate}, #{modifiedDate})"})
   @Options(useGeneratedKeys = true)
-  public void insertShippedLineItem(ShippedLineItem shippedLineItem);
+  public void insertShippedLineItem(ShipmentLineItem shipmentLineItem);
 
   @Insert({"INSERT INTO shipment_file_info (fileName, processingError) VALUES (#{fileName},#{processingError})"})
   @Options(useGeneratedKeys = true)
@@ -35,7 +35,7 @@ public interface ShipmentMapper {
   ShipmentFileInfo getShipmentFileInfo(Long id);
 
   @Select("SELECT * FROM shipped_line_items WHERE rnrId= #{rnrId} AND productCode=#{productCode}")
-  ShippedLineItem getShippedLineItem(ShippedLineItem shippedLineItem);
+  ShipmentLineItem getShippedLineItem(ShipmentLineItem shipmentLineItem);
 
   @Update({"UPDATE shipped_line_items ",
     "SET rnrId= #{rnrId},",
@@ -43,8 +43,8 @@ public interface ShipmentMapper {
     "quantityShipped= #{quantityShipped},",
     "modifiedDate= #{modifiedDate}",
     "WHERE id= #{id}"})
-  void updateShippedLineItem(ShippedLineItem shippedLineItem);
+  void updateShippedLineItem(ShipmentLineItem shipmentLineItem);
 
   @Select("SELECT modifiedDate FROM shipped_line_items WHERE rnrId = #{rnrId} LIMIT 1")
-  Date getProcessedTimeStamp(ShippedLineItem shippedLineItem);
+  Date getProcessedTimeStamp(ShipmentLineItem shipmentLineItem);
 }

@@ -8,7 +8,7 @@ package org.openlmis.shipment.file;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.shipment.domain.ShippedLineItem;
+import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.service.ShipmentService;
 import org.openlmis.upload.model.AuditFields;
 import org.slf4j.Logger;
@@ -28,24 +28,24 @@ public class ShipmentRecordHandler {
   @Autowired
   private ShipmentService shipmentService;
 
-  public void execute(ShippedLineItem shippedLineItem, int rowNumber, AuditFields auditFields) {
-    shippedLineItem.setModifiedDate(auditFields.getCurrentTimestamp());
+  public void execute(ShipmentLineItem shipmentLineItem, int rowNumber, AuditFields auditFields) {
+    shipmentLineItem.setModifiedDate(auditFields.getCurrentTimestamp());
 
 
-    Date processTimeStamp = shipmentService.getProcessedTimeStamp(shippedLineItem);
-    if (processTimeStamp != null && !processTimeStamp.equals(shippedLineItem.getModifiedDate())) {
+    Date processTimeStamp = shipmentService.getProcessedTimeStamp(shipmentLineItem);
+    if (processTimeStamp != null && !processTimeStamp.equals(shipmentLineItem.getModifiedDate())) {
       logger.error(format("Process timestamp %s is not equal to modified timestamp %s in row %d",
-        processTimeStamp, shippedLineItem.getModifiedDate(), rowNumber));
+        processTimeStamp, shipmentLineItem.getModifiedDate(), rowNumber));
       throw new DataException("error.duplicate.order");
     }
 
-    ShippedLineItem shippedLineItemFromDB = shipmentService.getShippedLineItem(shippedLineItem);
+    ShipmentLineItem shipmentLineItemFromDB = shipmentService.getShippedLineItem(shipmentLineItem);
 
-    if (shippedLineItemFromDB == null) {
-      shipmentService.insertShippedLineItem(shippedLineItem);
+    if (shipmentLineItemFromDB == null) {
+      shipmentService.insertShippedLineItem(shipmentLineItem);
     } else {
-      shippedLineItem.setId(shippedLineItemFromDB.getId());
-      shipmentService.updateShippedLineItem(shippedLineItem);
+      shipmentLineItem.setId(shipmentLineItemFromDB.getId());
+      shipmentService.updateShippedLineItem(shipmentLineItem);
     }
   }
 

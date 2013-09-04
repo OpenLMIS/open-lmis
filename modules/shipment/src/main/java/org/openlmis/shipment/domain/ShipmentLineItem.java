@@ -19,7 +19,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ShippedLineItem extends BaseModel {
+public class ShipmentLineItem extends BaseModel {
 
   private Long rnrId;
 

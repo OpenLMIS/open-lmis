@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
-import org.openlmis.shipment.domain.ShippedLineItem;
+import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.repository.mapper.ShipmentMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -41,9 +41,9 @@ public class ShipmentRepositoryTest {
 
   @Test
   public void shouldInsertShipment() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem();
-    shipmentRepository.insertShippedLineItem(shippedLineItem);
-    verify(shipmentMapper).insertShippedLineItem(shippedLineItem);
+    ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
+    shipmentRepository.insertShippedLineItem(shipmentLineItem);
+    verify(shipmentMapper).insertShippedLineItem(shipmentLineItem);
   }
 
   @Test
@@ -56,32 +56,32 @@ public class ShipmentRepositoryTest {
 
   @Test
   public void shouldThrowExceptionIfShipmentFileHasIncorrectDataLength() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem();
-    shippedLineItem.setProductCode("R10");
-    doThrow(new DataIntegrityViolationException("Incorrect data length")).when(shipmentMapper).insertShippedLineItem(shippedLineItem);
+    ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
+    shipmentLineItem.setProductCode("R10");
+    doThrow(new DataIntegrityViolationException("Incorrect data length")).when(shipmentMapper).insertShippedLineItem(shipmentLineItem);
 
     expectedException.expect(dataExceptionMatcher("error.incorrect.length"));
 
-    shipmentRepository.insertShippedLineItem(shippedLineItem);
+    shipmentRepository.insertShippedLineItem(shipmentLineItem);
   }
 
   @Test
   public void shouldUpdateShippedLineItem() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem();
-    shipmentRepository.updateShippedLineItem(shippedLineItem);
-    verify(shipmentMapper).updateShippedLineItem(shippedLineItem);
+    ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
+    shipmentRepository.updateShippedLineItem(shipmentLineItem);
+    verify(shipmentMapper).updateShippedLineItem(shipmentLineItem);
   }
 
   @Test
   public void shouldGetProcessedTimeStampByOrderId() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem();
-    shippedLineItem.setRnrId(1L);
+    ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
+    shipmentLineItem.setRnrId(1L);
     Date expectedTimestamp = new Date();
-    when(shipmentMapper.getProcessedTimeStamp(shippedLineItem)).thenReturn(expectedTimestamp);
+    when(shipmentMapper.getProcessedTimeStamp(shipmentLineItem)).thenReturn(expectedTimestamp);
 
-    Date processTimeStamp = shipmentRepository.getProcessedTimeStamp(shippedLineItem);
+    Date processTimeStamp = shipmentRepository.getProcessedTimeStamp(shipmentLineItem);
 
     assertThat(processTimeStamp, is(expectedTimestamp));
-    verify(shipmentMapper).getProcessedTimeStamp(shippedLineItem);
+    verify(shipmentMapper).getProcessedTimeStamp(shipmentLineItem);
   }
 }

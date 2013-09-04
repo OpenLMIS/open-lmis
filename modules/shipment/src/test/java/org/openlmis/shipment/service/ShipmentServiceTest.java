@@ -24,7 +24,7 @@ import org.openlmis.order.service.OrderService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
-import org.openlmis.shipment.domain.ShippedLineItem;
+import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
 
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class ShipmentServiceTest {
 
   @Test
   public void shouldInsertShipment() throws Exception {
-    ShippedLineItem shippedLineItem = make(a(defaultShipmentLineItem,
+    ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
       with(productCode, "P10"),
       with(rnrId, 1L),
       with(quantityShipped, 500)));
@@ -69,16 +69,16 @@ public class ShipmentServiceTest {
     when(requisitionService.getLWById(1l)).thenReturn(new Rnr());
     when(productService.getIdForCode("P10")).thenReturn(1l);
 
-    shipmentService.insertShippedLineItem(shippedLineItem);
+    shipmentService.insertShippedLineItem(shipmentLineItem);
 
     verify(requisitionService).getLWById(1l);
     verify(productService).getIdForCode("P10");
-    verify(shipmentRepository).insertShippedLineItem(shippedLineItem);
+    verify(shipmentRepository).insertShippedLineItem(shipmentLineItem);
   }
 
   @Test
   public void shouldNotInsertShipmentIfRnrIdIsNotValid() throws Exception {
-    ShippedLineItem shippedLineItem = make(a(defaultShipmentLineItem,
+    ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
       with(productCode, "P10"),
       with(rnrId, 1L),
       with(quantityShipped, 500)));
@@ -90,13 +90,13 @@ public class ShipmentServiceTest {
     exException.expect(DataException.class);
     exException.expectMessage("error.unknown.order");
 
-    shipmentService.insertShippedLineItem(shippedLineItem);
+    shipmentService.insertShippedLineItem(shipmentLineItem);
   }
 
   @Test
   public void shouldNotInsertShipmentIfProductCodeIsNotValid() throws Exception {
 
-    ShippedLineItem shippedLineItem = make(a(defaultShipmentLineItem,
+    ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
       with(productCode, "P10"),
       with(rnrId, 1L),
       with(quantityShipped, 500)));
@@ -108,12 +108,12 @@ public class ShipmentServiceTest {
     exException.expect(DataException.class);
     exException.expectMessage("error.unknown.product");
 
-    shipmentService.insertShippedLineItem(shippedLineItem);
+    shipmentService.insertShippedLineItem(shipmentLineItem);
   }
 
   @Test
   public void shouldNotInsertShipmentIfQuantityNegative() throws Exception {
-    ShippedLineItem shippedLineItem = make(a(defaultShipmentLineItem,
+    ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
       with(productCode, "P10"),
       with(rnrId, 1L),
       with(quantityShipped, -1)));
@@ -122,7 +122,7 @@ public class ShipmentServiceTest {
     exException.expect(DataException.class);
     exException.expectMessage("error.negative.shipped.quantity");
 
-    shipmentService.insertShippedLineItem(shippedLineItem);
+    shipmentService.insertShippedLineItem(shipmentLineItem);
   }
 
   @Test
@@ -156,14 +156,14 @@ public class ShipmentServiceTest {
 
   @Test
   public void shouldGetProcessedTimeStampByOrderId() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem();
-    shippedLineItem.setRnrId(1L);
+    ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
+    shipmentLineItem.setRnrId(1L);
     Date expectedTimestamp = new Date();
-    when(shipmentRepository.getProcessedTimeStamp(shippedLineItem)).thenReturn(expectedTimestamp);
+    when(shipmentRepository.getProcessedTimeStamp(shipmentLineItem)).thenReturn(expectedTimestamp);
 
-    Date processTimeStamp = shipmentService.getProcessedTimeStamp(shippedLineItem);
+    Date processTimeStamp = shipmentService.getProcessedTimeStamp(shipmentLineItem);
 
     assertThat(processTimeStamp, is(expectedTimestamp));
-    verify(shipmentRepository).getProcessedTimeStamp(shippedLineItem);
+    verify(shipmentRepository).getProcessedTimeStamp(shipmentLineItem);
   }
 }

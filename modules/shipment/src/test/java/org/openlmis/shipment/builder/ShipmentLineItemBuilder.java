@@ -3,7 +3,7 @@ package org.openlmis.shipment.builder;
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
-import org.openlmis.shipment.domain.ShippedLineItem;
+import org.openlmis.shipment.domain.ShipmentLineItem;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -11,26 +11,26 @@ import java.util.Date;
 public class ShipmentLineItemBuilder {
 
 
-  public static Property<? super ShippedLineItem, Long> rnrId = new Property<>();
+  public static Property<? super ShipmentLineItem, Long> rnrId = new Property<>();
 
-  public static Property<? super ShippedLineItem, String> productCode = new Property<>();
+  public static Property<? super ShipmentLineItem, String> productCode = new Property<>();
 
-  public static Property<? super ShippedLineItem, BigDecimal> cost = new Property<>();
+  public static Property<? super ShipmentLineItem, BigDecimal> cost = new Property<>();
 
-  public static Property<? super ShippedLineItem, Integer> quantityShipped = new Property<>();
+  public static Property<? super ShipmentLineItem, Integer> quantityShipped = new Property<>();
 
-  public static Property<? super ShippedLineItem, Date> shippedDate = new Property<>();
+  public static Property<? super ShipmentLineItem, Date> shippedDate = new Property<>();
 
-  public static Property<? super ShippedLineItem, Date> packedDate = new Property<>();
+  public static Property<? super ShipmentLineItem, Date> packedDate = new Property<>();
 
 
-  public static final Instantiator<ShippedLineItem> defaultShipmentLineItem = new Instantiator<ShippedLineItem>() {
+  public static final Instantiator<ShipmentLineItem> defaultShipmentLineItem = new Instantiator<ShipmentLineItem>() {
 
     @Override
-    public ShippedLineItem instantiate(PropertyLookup<ShippedLineItem> lookup) {
+    public ShipmentLineItem instantiate(PropertyLookup<ShipmentLineItem> lookup) {
       final BigDecimal nullCost = null;
 
-      ShippedLineItem lineItem = new ShippedLineItem();
+      ShipmentLineItem lineItem = new ShipmentLineItem();
 
       lineItem.setRnrId(lookup.valueOf(rnrId, 1L));
       lineItem.setProductCode(lookup.valueOf(productCode, "P123"));

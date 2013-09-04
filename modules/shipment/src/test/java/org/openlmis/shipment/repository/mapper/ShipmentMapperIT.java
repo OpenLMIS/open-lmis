@@ -19,7 +19,7 @@ import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
-import org.openlmis.shipment.domain.ShippedLineItem;
+import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -70,20 +70,20 @@ public class ShipmentMapperIT {
   @Test
   public void shouldInsertShippedLineItems() throws Exception {
 
-    ShippedLineItem shippedLineItem = createShippedLineItem();
-    mapper.insertShippedLineItem(shippedLineItem);
+    ShipmentLineItem shipmentLineItem = createShippedLineItem();
+    mapper.insertShippedLineItem(shipmentLineItem);
 
-    assertThat(shippedLineItem.getId(), is(notNullValue()));
+    assertThat(shipmentLineItem.getId(), is(notNullValue()));
 
     String fetchShipmentFileInfoQuery = "Select * from shipped_line_items where id = ?";
-    ResultSet shipmentFileInfoResultSet = queryExecutor.execute(fetchShipmentFileInfoQuery, Arrays.asList(shippedLineItem.getId()));
+    ResultSet shipmentFileInfoResultSet = queryExecutor.execute(fetchShipmentFileInfoQuery, Arrays.asList(shipmentLineItem.getId()));
     shipmentFileInfoResultSet.next();
-    assertThat(shipmentFileInfoResultSet.getLong("rnrId"), is(shippedLineItem.getRnrId()));
-    assertThat(shipmentFileInfoResultSet.getString("productCode"), is(shippedLineItem.getProductCode()));
-    assertThat(shipmentFileInfoResultSet.getInt("quantityShipped"), is(shippedLineItem.getQuantityShipped()));
+    assertThat(shipmentFileInfoResultSet.getLong("rnrId"), is(shipmentLineItem.getRnrId()));
+    assertThat(shipmentFileInfoResultSet.getString("productCode"), is(shipmentLineItem.getProductCode()));
+    assertThat(shipmentFileInfoResultSet.getInt("quantityShipped"), is(shipmentLineItem.getQuantityShipped()));
   }
 
-  private ShippedLineItem createShippedLineItem() {
+  private ShipmentLineItem createShippedLineItem() {
     Product product = make(a(defaultProduct));
     Facility facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
@@ -133,39 +133,39 @@ public class ShipmentMapperIT {
 
   @Test
   public void shouldSelectShippedLineItem() throws Exception {
-    ShippedLineItem shippedLineItem = createShippedLineItem();
+    ShipmentLineItem shipmentLineItem = createShippedLineItem();
 
-    mapper.insertShippedLineItem(shippedLineItem);
+    mapper.insertShippedLineItem(shipmentLineItem);
 
-    ShippedLineItem returnedShippedLineItem = mapper.getShippedLineItem(shippedLineItem);
+    ShipmentLineItem returnedShipmentLineItem = mapper.getShippedLineItem(shipmentLineItem);
 
-    assertThat(returnedShippedLineItem, is(shippedLineItem));
+    assertThat(returnedShipmentLineItem, is(shipmentLineItem));
   }
 
   @Test
   public void shouldUpdateShippedLineItem() throws Exception {
-    ShippedLineItem shippedLineItem = createShippedLineItem();
-    mapper.insertShippedLineItem(shippedLineItem);
+    ShipmentLineItem shipmentLineItem = createShippedLineItem();
+    mapper.insertShippedLineItem(shipmentLineItem);
 
-    shippedLineItem.setQuantityShipped(10);
+    shipmentLineItem.setQuantityShipped(10);
 
-    mapper.updateShippedLineItem(shippedLineItem);
+    mapper.updateShippedLineItem(shipmentLineItem);
 
-    ShippedLineItem shippedLineItemFromDB = mapper.getShippedLineItem(shippedLineItem);
+    ShipmentLineItem shipmentLineItemFromDB = mapper.getShippedLineItem(shipmentLineItem);
 
-    assertThat(shippedLineItemFromDB.getQuantityShipped(), is(10));
+    assertThat(shipmentLineItemFromDB.getQuantityShipped(), is(10));
   }
 
   @Test
   public void shouldGetProcessedTimestampForShippedLineItem() throws Exception {
-    ShippedLineItem shippedLineItem = createShippedLineItem();
-    mapper.insertShippedLineItem(shippedLineItem);
+    ShipmentLineItem shipmentLineItem = createShippedLineItem();
+    mapper.insertShippedLineItem(shipmentLineItem);
 
-    ShippedLineItem shippedLineItemFromDB = mapper.getShippedLineItem(shippedLineItem);
+    ShipmentLineItem shipmentLineItemFromDB = mapper.getShippedLineItem(shipmentLineItem);
 
-    Date date = mapper.getProcessedTimeStamp(shippedLineItem);
+    Date date = mapper.getProcessedTimeStamp(shipmentLineItem);
 
-    assertThat(date, is(shippedLineItemFromDB.getModifiedDate()));
+    assertThat(date, is(shipmentLineItemFromDB.getModifiedDate()));
   }
 
 

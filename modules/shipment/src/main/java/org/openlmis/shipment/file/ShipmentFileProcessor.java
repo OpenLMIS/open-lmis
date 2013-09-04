@@ -9,11 +9,10 @@ package org.openlmis.shipment.file;
 import lombok.NoArgsConstructor;
 import org.openlmis.db.service.DbService;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
-import org.openlmis.shipment.domain.ShippedLineItem;
+import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.file.csv.handler.ShipmentFilePostProcessHandler;
 import org.openlmis.shipment.service.ShipmentFileTemplateService;
 import org.openlmis.shipment.service.ShipmentService;
-import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.parser.CSVParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,8 +72,8 @@ public class ShipmentFileProcessor {
         if (listReader.length() < maxPosition) {
           logger.warn("Shipment file should contain at least " + maxPosition + " columns");
         } else {
-          List<ShippedLineItem> shippedLineItems = new ArrayList<>();
-          shipmentService.insertShippedLineItem(shippedLineItems);
+          List<ShipmentLineItem> shipmentLineItems = new ArrayList<>();
+          shipmentService.insertShippedLineItem(shipmentLineItems);
         }
       }
     }
