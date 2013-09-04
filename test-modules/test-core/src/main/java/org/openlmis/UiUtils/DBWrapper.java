@@ -703,10 +703,6 @@ public class DBWrapper {
       "('supplying node for HIV', (select id from supervisory_nodes where code = '" + supervisoryNode + "'), (select id from programs where code='" + programCode + "'),(select id from facilities where code = '" + facilityCode + "'),'t');\n");
   }
 
-  public void updateSupplyingFacilityForRequisition(String facilityCode) throws IOException, SQLException {
-    update("update requisitions set supplyLineId=(select id from supply_lines where supplyingFacilityId = (select id from facilities where code='" + facilityCode + "'));");
-
-  }
 
   public void insertValuesInRequisition() throws IOException, SQLException {
     update("update requisition_line_items set beginningbalance=1,  quantityreceived=1, quantitydispensed=1, newpatientcount=1, stockoutdays=1, quantityrequested=10, reasonforrequestedquantity='bad climate', normalizedconsumption=10, packstoship=1;");
