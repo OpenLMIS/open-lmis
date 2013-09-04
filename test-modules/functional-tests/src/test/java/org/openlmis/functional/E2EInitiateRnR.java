@@ -339,11 +339,11 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String requisitionId = dbWrapper.getLatestRequisitionId();
     String[] periods = periodTopSNUser.split("-");
     String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", program);
-    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "RELEASED", true);
+    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "IN_ROUTE", true);
     dbWrapper.updatePacksToShip("0");
     homePage.navigateConvertToOrder();
     homePage.navigateViewOrders();
-    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "RELEASED", false);
+    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "IN_ROUTE", false);
   }
 
   @When("^I do not have anything to pack to ship$")
@@ -360,7 +360,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", program);
     homePage.navigateConvertToOrder();
     homePage.navigateViewOrders();
-    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "RELEASED", false);
+    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "IN_ROUTE", false);
   }
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, String roleType) throws IOException, SQLException {

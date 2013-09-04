@@ -25,7 +25,7 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
       {field: 'periodEndDate', displayName: messageService.get("label.period.end.date"), cellFilter: "date:'dd/MM/yyyy'"},
       {field: 'submittedDate', displayName: messageService.get("label.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
       {field: 'modifiedDate', displayName: messageService.get("label.date.modified"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'supplyingDepot', displayName: messageService.get("label.supplying.depot")}
+      {field: 'supplyingDepotName', displayName: messageService.get("label.supplying.depot")}
     ]
   };
 
@@ -90,7 +90,7 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
   }
 
   function matchesAnyField(query, rnr) {
-    var rnrString = "|" + rnr.programName + "|" + rnr.facilityCode + "|" + "|" + rnr.facilityName + "|" + "|" + rnr.supplyingDepot + "|";
+    var rnrString = "|" + rnr.programName + "|" + rnr.facilityCode + "|" + "|" + rnr.facilityName + "|" + "|" + rnr.supplyingDepotName + "|";
     return contains(rnrString, query);
   }
 }

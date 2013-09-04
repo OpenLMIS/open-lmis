@@ -10,8 +10,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
+import org.openlmis.shipment.domain.ShippedLineItem;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -21,22 +21,22 @@ import java.util.Date;
 public interface ShipmentMapper {
 
   @Insert({"INSERT INTO shipped_line_items (rnrId, productCode, quantityShipped, modifiedDate) " +
-     "VALUES" +
-     "(#{rnrId}, #{productCode}, #{quantityShipped}, #{modifiedDate})"})
-   @Options(useGeneratedKeys = true)
-   public void insertShippedLineItem(ShippedLineItem shippedLineItem);
+    "VALUES" +
+    "(#{rnrId}, #{productCode}, #{quantityShipped}, #{modifiedDate})"})
+  @Options(useGeneratedKeys = true)
+  public void insertShippedLineItem(ShippedLineItem shippedLineItem);
 
   @Insert({"INSERT INTO shipment_file_info (fileName, processingError) VALUES (#{fileName},#{processingError})"})
   @Options(useGeneratedKeys = true)
   void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo);
 
-  @Select("Select * from shipment_file_info where id = #{id}")
+  @Select("SELECT * FROM shipment_file_info WHERE id = #{id}")
   ShipmentFileInfo getShipmentFileInfo(Long id);
 
-  @Select("SELECT * FROM shipped_line_items WHERE rnrId=#{rnrId} AND productCode=#{productCode}")
+  @Select("SELECT * FROM shipped_line_items WHERE rnrId= #{rnrId} AND productCode=#{productCode}")
   ShippedLineItem getShippedLineItem(ShippedLineItem shippedLineItem);
 
-  @Update("UPDATE shipped_line_items SET rnrId=#{rnrId}, productCode=#{productCode},quantityShipped=#{quantityShipped},modifiedDate=#{modifiedDate} WHERE id=#{id}")
+  @Update("UPDATE shipped_line_items SET rnrId= #{rnrId}, productCode= #{productCode},quantityShipped= #{quantityShipped},modifiedDate= #{modifiedDate} WHERE id= #{id}")
   void updateShippedLineItem(ShippedLineItem shippedLineItem);
 
   @Select("SELECT modifiedDate FROM shipped_line_items WHERE rnrId = #{rnrId} LIMIT 1")

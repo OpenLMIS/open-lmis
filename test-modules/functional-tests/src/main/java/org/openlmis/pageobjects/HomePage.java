@@ -336,7 +336,7 @@ public class HomePage extends Page {
     return new TemplateConfigPage(testWebDriver);
   }
 
-  public EdiPage navigateEdiScreen() throws IOException {
+  public ConfigureEDIPage navigateEdiScreen() throws IOException {
     assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
@@ -345,7 +345,7 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(ediFileTab);
     testWebDriver.keyPress(ediFileTab);
 
-    return new EdiPage(testWebDriver);
+    return new ConfigureEDIPage(testWebDriver);
   }
 
   public RegimenTemplateConfigPage navigateToRegimenConfigTemplate() {

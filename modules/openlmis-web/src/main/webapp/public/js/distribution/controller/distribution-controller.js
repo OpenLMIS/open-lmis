@@ -81,7 +81,7 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
         }
       };
 
-      var distribution = new Distribution($scope.selectedZone, $scope.selectedProgram, $scope.selectedPeriod);
+      var distribution = {deliveryZone: $scope.selectedZone, program: $scope.selectedProgram, period: $scope.selectedPeriod};
 
       $http.post('/distributions.json', distribution).success(onInitSuccess);
 

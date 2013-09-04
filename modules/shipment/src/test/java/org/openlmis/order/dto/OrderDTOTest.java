@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.rnr.builder.RequisitionBuilder;
@@ -22,9 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
@@ -40,11 +39,13 @@ public class OrderDTOTest {
   public void shouldGetOrdersForView() throws Exception {
     mockStatic(RnrDTO.class);
 
+    SupplyLine supplyLine = new SupplyLine();
     final Order order1 = new Order();
     Date createdDate = new Date();
     order1.setCreatedDate(createdDate);
     order1.setRnr(make(a(defaultRnr)));
     order1.setShipmentFileInfo(new ShipmentFileInfo("1.csv", false));
+    order1.setSupplyLine(supplyLine);
     final Order order2 = new Order();
     order2.setRnr(make(a(defaultRnr, with(RequisitionBuilder.periodId, 2L), with(RequisitionBuilder.program, new Program(11L, "name")))));
     order2.setShipmentFileInfo(new ShipmentFileInfo("2.csv", true));
@@ -67,5 +68,6 @@ public class OrderDTOTest {
     assertThat(orderDTOs.get(1).getRnr(), is(dtoForOrder2));
     assertThat(orderDTOs.get(0).getCreatedDate(), is(createdDate));
     assertThat(orderDTOs.get(0).getShipmentError(), is(false));
+    assertThat(orderDTOs.get(0).getSupplyLine(), is(supplyLine));
   }
 }

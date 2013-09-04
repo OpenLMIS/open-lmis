@@ -2,12 +2,13 @@
 -- If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 CREATE TABLE orders (
-  id          SERIAL PRIMARY KEY,
-  rnrId       INTEGER NOT NULL REFERENCES requisitions (id),
-  shipmentId  INTEGER REFERENCES shipment_file_info(id),
-  status      VARCHAR(20) NOT NULL,
-  createdBy   INTEGER NOT NULL REFERENCES users(id),
-  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy  INTEGER NOT NULL REFERENCES users(id),
+  id           SERIAL PRIMARY KEY,
+  rnrId        INTEGER     NOT NULL REFERENCES requisitions (id),
+  shipmentId   INTEGER REFERENCES shipment_file_info (id),
+  status       VARCHAR(20) NOT NULL,
+  supplyLineId INTEGER     NOT NULL REFERENCES supply_lines (id),
+  createdBy    INTEGER     NOT NULL REFERENCES users (id),
+  createdDate  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy   INTEGER     NOT NULL REFERENCES users (id),
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

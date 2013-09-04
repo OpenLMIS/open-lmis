@@ -125,6 +125,7 @@ public class RequisitionMapperIT {
     author.setId(1L);
     Comment comment = new Comment(requisition.getId(), author, "A comment", null);
     commentMapper.insert(comment);
+    updateSupplyingDepotForRequisition(requisition);
 
     Rnr fetchedRequisition = mapper.getById(requisition.getId());
 
@@ -138,6 +139,11 @@ public class RequisitionMapperIT {
     assertThat(fetchedRequisition.getNonFullSupplyLineItems().size(), is(1));
   }
 
+  private void updateSupplyingDepotForRequisition(Rnr requisition) {
+    requisition.setSupplyingDepot(facility);
+    mapper.update(requisition);
+  }
+
   @Test
   public void shouldUpdateRequisition() {
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
@@ -145,7 +151,7 @@ public class RequisitionMapperIT {
     Date submittedDate = new Date();
     requisition.setSubmittedDate(submittedDate);
     requisition.setSupervisoryNodeId(supervisoryNode.getId());
-    requisition.setSupplyLine(supplyLine);
+    requisition.setSupplyingDepot(facility);
 
     mapper.update(requisition);
 
@@ -154,7 +160,6 @@ public class RequisitionMapperIT {
     assertThat(updatedRequisition.getId(), is(requisition.getId()));
     assertThat(updatedRequisition.getSupervisoryNodeId(), is(requisition.getSupervisoryNodeId()));
     assertThat(updatedRequisition.getModifiedBy(), is(equalTo(USER_ID)));
-    assertThat(updatedRequisition.getSupplyLine().getId(), is(supplyLine.getId()));
   }
 
 
@@ -267,8 +272,7 @@ public class RequisitionMapperIT {
   public void shouldGetAllTheApprovedRequisitions() {
     Rnr requisition = insertRequisition(processingPeriod1, APPROVED);
     requisition.setSupervisoryNodeId(supervisoryNode.getId());
-    requisition.setSupplyLine(supplyLine);
-    mapper.update(requisition);
+    updateSupplyingDepotForRequisition(requisition);
 
     List<Rnr> requisitions = mapper.getApprovedRequisitions();
 
@@ -278,7 +282,6 @@ public class RequisitionMapperIT {
     assertThat(rnr.getProgram().getId(), is(PROGRAM_ID));
     assertThat(rnr.getPeriod().getId(), is(processingPeriod1.getId()));
     assertThat(rnr.getId(), is(requisition.getId()));
-    assertThat(rnr.getSupplyLine().getId(), is(supplyLine.getId()));
     assertThat(rnr.getModifiedDate(), is(notNullValue()));
   }
 

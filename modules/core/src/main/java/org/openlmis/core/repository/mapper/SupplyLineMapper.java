@@ -7,6 +7,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
@@ -29,7 +30,8 @@ public interface SupplyLineMapper {
 
     @Select("SELECT * FROM supply_lines WHERE supervisoryNodeId = #{supervisoryNode.id} AND programId = #{program.id}")
   @Results(value = {
-    @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
+    @Result(property = "supplyingFacility", javaType = Facility.class, column = "supplyingFacilityId",
+      one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
   SupplyLine getSupplyLineBy(@Param(value = "supervisoryNode") SupervisoryNode supervisoryNode, @Param(value = "program") Program program);
 

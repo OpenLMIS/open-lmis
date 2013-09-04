@@ -175,6 +175,10 @@
                   <a href="/public/pages/admin/edi/index.html#/configure-edi-file"
                      openlmis-message="link.admin.configure.edi"></a>
                 </li>
+                <li ng-show="hasPermission('MANAGE_SETTING')">
+                      <a href="/public/pages/admin/setting/index.html"
+                         openlmis-message="link.admin.configure.setting"></a>
+                </li>
                 <li class="beak"></li>
               </ul>
             </div>
@@ -198,6 +202,27 @@
                 <li ng-show="hasPermission('MANAGE_USER')">
                   <a href="/public/pages/admin/user/index.html" openlmis-message="menu.header.users"></a>
                 </li>
+                  <li ng-show="hasPermission('MANAGE_SUPPLYLINE')">
+                      <a href="/public/pages/admin/supplyline/index.html">Supply Lines</a>
+                  </li>
+                  <li ng-show="hasPermission('MANAGE_GEOGRAPHIC_ZONES')">
+                      <a href="/public/pages/admin/geographic-zones/index.html">Geographic Zones</a>
+                  </li>
+                  <li ng-show="hasPermission('MANAGE_REQUISITION_GROUP')">
+                      <a href="/public/pages/admin/requisition-group/index.html">Requisition Groups</a>
+                  </li>
+                  <li ng-show="hasPermission('MANAGE_PRODUCT')">
+                      <a href="/public/pages/admin/product/index.html">Products</a>
+                  </li>
+                  <li ng-show="hasPermission('MANAGE_SUPERVISORY_NODE')">
+                      <a href="/public/pages/admin/supervisory-node/index.html">Supervisory Nodes</a>
+                  </li>
+                  <li ng-show="hasPermission('MANAGE_REQ_GRP_PROG_SCHEDULE')">
+                      <a href="/public/pages/admin/requisition-group-program-schedule/index.html">Program Schedules</a>
+                  </li>
+                  <li ng-show="hasPermission('MANAGE_PRODUCT_ALLOWED_FOR_FACILITY')">
+                      <a href="/public/pages/admin/product-allowed-for-facility/index.html">Products Permissions</a>
+                  </li>
                 <li class="beak"></li>
               </ul>
             </div>

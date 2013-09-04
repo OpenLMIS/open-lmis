@@ -4,14 +4,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function RecordFacilityDataController($rootScope, $scope, $location, $routeParams, IndexedDB, distributionService) {
+function RecordFacilityDataController($scope, $location, $routeParams, IndexedDB, distributionService) {
   $scope.label = $routeParams.facility ? 'label.change.facility' : "label.select.facility";
 
-  IndexedDB.get('distributions', utils.parseIntWithBaseTen($routeParams.distribution), function (e) {
-    $scope.distribution = e.target.result;
-    distributionService.distribution = $scope.distribution;
-    $rootScope.$broadcast('distributionReceived');
-  }, {});
+  $scope.distribution = distributionService.distribution;
 
   IndexedDB.get('distributionReferenceData', utils.parseIntWithBaseTen($routeParams.distribution), function (event) {
     $scope.facilities = event.target.result.facilities;

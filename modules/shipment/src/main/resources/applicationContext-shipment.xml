@@ -9,10 +9,12 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:int-ftp="http://www.springframework.org/schema/integration/ftp"
        xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-jdbc="http://www.springframework.org/schema/integration/jdbc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/ftp
-       	                   http://www.springframework.org/schema/integration/ftp/spring-integration-ftp.xsd"
+       	                   http://www.springframework.org/schema/integration/ftp/spring-integration-ftp.xsd
+       http://www.springframework.org/schema/integration/jdbc http://www.springframework.org/schema/integration/jdbc/spring-integration-jdbc.xsd"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
     <context:annotation-config/>
@@ -78,5 +80,16 @@
     <int:channel id="ftpInputChannel">
         <int:dispatcher task-executor="messageDispatcher"></int:dispatcher>
     </int:channel>
+
+    <int:channel id="orderInputChannel"/>
+
+    <int-jdbc:inbound-channel-adapter channel="orderInputChannel"
+                                      data-source="dataSource"
+                                      query="SELECT * FROM orders WHERE status = 'IN_ROUTE'"
+                                      row-mapper="orderRowMapper"
+                                      max-rows-per-poll="${max.orders.per.poll}">
+        <int:poller fixed-rate="${order.ftp.routing.poll.rate}">
+        </int:poller>
+    </int-jdbc:inbound-channel-adapter>
 
 </beans>

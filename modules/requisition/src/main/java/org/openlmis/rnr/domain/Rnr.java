@@ -47,7 +47,7 @@ public class Rnr extends BaseModel {
   @JsonIgnore
   private List<RnrLineItem> allLineItems = new ArrayList<>();
 
-  private SupplyLine supplyLine;
+  private Facility supplyingDepot;
   private Long supervisoryNodeId;
   private Date submittedDate;
   private Date authorizedDate;
@@ -315,10 +315,8 @@ public class Rnr extends BaseModel {
     this.modifiedBy = modifiedBy;
   }
 
-  public void prepareForFinalApproval(SupplyLine supplyLine) {
+  public void prepareForFinalApproval() {
     this.status = APPROVED;
-    this.supplyLine = supplyLine;
-    this.supervisoryNodeId = null;
   }
 
   public void approveAndAssignToNextSupervisoryNode(SupervisoryNode parent) {

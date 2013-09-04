@@ -7,15 +7,14 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.session.SessionInformation;
@@ -35,7 +34,7 @@ import java.util.List;
 import static java.lang.Boolean.TRUE;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.web.response.OpenLmisResponse.*;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 
@@ -46,23 +45,33 @@ public class UserController extends BaseController {
   static final String MSG_USER_DISABLE_SUCCESS = "msg.user.disable.success";
   static final String USER_CREATED_SUCCESS_MSG = "message.user.created.success.email.sent";
 
+  @Autowired
   private RoleRightsService roleRightService;
+
+  @Autowired
   private UserService userService;
+
+  @Autowired
+  private SessionRegistry sessionRegistry;
+
+  @Value("${mail.base.url}")
+  private String baseUrl;
 
   public static final String USER_ID = "userId";
   public static final String TOKEN_VALID = "TOKEN_VALID";
+
   private static final String RESET_PASSWORD_PATH = "public/pages/reset-password.html#/token/";
 
-  @Autowired
-  @Setter
-  private SessionRegistry sessionRegistry;
-
-  private String baseUrl;
-
-  @Autowired
-  public UserController(RoleRightsService roleRightService, UserService userService, @Value("${mail.base.url}") String baseUrl) {
+  //TODO get rid of this constructor, only used in test
+  public UserController(RoleRightsService roleRightService,
+                        UserService userService,
+                        SessionRegistry sessionRegistry,
+                        MessageService messageService,
+                        String baseUrl) {
     this.roleRightService = roleRightService;
     this.userService = userService;
+    this.sessionRegistry = sessionRegistry;
+    this.messageService = messageService;
     this.baseUrl = baseUrl;
   }
 
@@ -73,7 +82,7 @@ public class UserController extends BaseController {
       OpenLmisResponse openLmisResponse = new OpenLmisResponse("name", userName);
       openLmisResponse.addData("authenticated", TRUE);
       openLmisResponse.addData("rights", roleRightService.getRights(userName));
-      return openLmisResponse.response(HttpStatus.OK);
+      return openLmisResponse.response(OK);
     } else {
       return authenticationError();
     }
@@ -81,7 +90,7 @@ public class UserController extends BaseController {
 
   @RequestMapping(value = "/authentication-error", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> authenticationError() {
-    return error(messageService.message("user.login.error"), HttpStatus.UNAUTHORIZED);
+    return error(messageService.message("user.login.error"), UNAUTHORIZED);
   }
 
   @RequestMapping(value = "/forgot-password", method = POST, headers = ACCEPT_JSON)
@@ -123,7 +132,7 @@ public class UserController extends BaseController {
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
-    return new OpenLmisResponse().response(HttpStatus.OK);
+    return new OpenLmisResponse().response(OK);
   }
 
   @RequestMapping(value = "/users", method = GET)

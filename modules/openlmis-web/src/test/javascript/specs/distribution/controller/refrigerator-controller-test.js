@@ -16,10 +16,9 @@ describe('RefrigeratorController', function () {
 
     scope = $rootScope.$new();
 
-    distributionService = {getDistribution: function () {
-    }};
+    distributionService = {};
 
-    distribution = {
+    distribution = new Distribution({
       facilityDistributionData: {
         1: { refrigerators: {
           refrigeratorReadings: [
@@ -29,7 +28,7 @@ describe('RefrigeratorController', function () {
         }
         }
       }
-    };
+    });
 
     distributionService.distribution = distribution;
 

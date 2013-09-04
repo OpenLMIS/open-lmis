@@ -6,10 +6,6 @@
 
 package org.openlmis.web.controller;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.web.logger.ApplicationLogger;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -26,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.web.response.OpenLmisResponse.error;
 
-@NoArgsConstructor
 public class BaseController {
   private static Logger logger = LoggerFactory.getLogger(ApplicationLogger.class);
   public static final String UNEXPECTED_EXCEPTION = "unexpected.exception";
@@ -36,7 +31,6 @@ public class BaseController {
   public static final String ACCEPT_CSV = "Accept=application/csv";
 
   @Autowired
-  @Setter
   MessageService messageService;
 
   protected Long loggedInUserId(HttpServletRequest request) {

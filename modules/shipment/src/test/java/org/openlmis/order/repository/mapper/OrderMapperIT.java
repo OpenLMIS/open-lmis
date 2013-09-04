@@ -12,14 +12,11 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.ProcessingSchedule;
-import org.openlmis.core.domain.Program;
+import org.openlmis.core.builder.SupervisoryNodeBuilder;
+import org.openlmis.core.builder.SupplyLineBuilder;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
-import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
-import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
+import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
@@ -48,6 +45,7 @@ import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
+import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 import static org.openlmis.order.domain.OrderStatus.PACKED;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 
@@ -74,9 +72,17 @@ public class OrderMapperIT {
   @Autowired
   private QueryExecutor queryExecutor;
 
+  @Autowired
+  SupplyLineMapper supplyLineMapper;
+
+  @Autowired
+  SupervisoryNodeMapper supervisoryNodeMapper;
+
   private ProcessingSchedule processingSchedule;
   private Facility facility;
   private ProcessingPeriod processingPeriod;
+  private SupervisoryNode supervisoryNode;
+  private SupplyLine supplyLine;
 
   @Before
   public void setUp() throws Exception {
@@ -85,12 +91,17 @@ public class OrderMapperIT {
     processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
     processingScheduleMapper.insert(processingSchedule);
     processingPeriod = insertPeriod();
+    supervisoryNode = insertSupervisoryNode();
+    supplyLine = make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, facility),
+      with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
+    supplyLineMapper.insert(supplyLine);
   }
 
   @Test
   public void shouldInsertOrder() throws Exception {
     Rnr rnr = insertRequisition(1L);
     Order order = new Order(rnr);
+    order.setSupplyLine(supplyLine);
     mapper.insert(order);
     List<Long> orderIds = new ArrayList();
     orderIds.add(order.getId());
@@ -116,6 +127,9 @@ public class OrderMapperIT {
     assertThat(orders.get(1).getRnr().getId(), is(order1.getRnr().getId()));
     assertThat(orders.get(1).getShipmentFileInfo(), is(nullValue()));
     assertThat(orders.get(0).getId(), is(order2.getId()));
+    assertThat(orders.get(0).getSupplyLine().getId(), is(supplyLine.getId()));
+    assertThat(orders.get(1).getSupplyLine().getId(), is(supplyLine.getId()));
+
   }
 
   @Test
@@ -138,6 +152,7 @@ public class OrderMapperIT {
   public void shouldUpdateStatusAndShipmentIdForOrder() throws Exception {
     Rnr rnr = insertRequisition(1L);
     Order order = new Order(rnr);
+    order.setSupplyLine(supplyLine);
     mapper.insert(order);
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
     shipmentFileInfo.setFileName("ord_1.csv");
@@ -162,6 +177,7 @@ public class OrderMapperIT {
     Order savedOrder = mapper.getById(expectedOrder.getId());
     assertThat(savedOrder.getId(), is(expectedOrder.getId()));
     assertThat(savedOrder.getRnr().getId(), is(expectedOrder.getRnr().getId()));
+    assertThat(savedOrder.getSupplyLine().getId(), is(supplyLine.getId()));
   }
 
   @Test
@@ -210,6 +226,7 @@ public class OrderMapperIT {
   private Order insertOrder(Long programId) {
     Rnr rnr = insertRequisition(programId);
     Order order = new Order(rnr);
+    order.setSupplyLine(supplyLine);
     mapper.insert(order);
     return order;
   }
@@ -225,5 +242,14 @@ public class OrderMapperIT {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, processingSchedule.getId())));
     processingPeriodMapper.insert(processingPeriod);
     return processingPeriod;
+  }
+
+
+  private SupervisoryNode insertSupervisoryNode() {
+    supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    supervisoryNode.setFacility(facility);
+
+    supervisoryNodeMapper.insert(supervisoryNode);
+    return supervisoryNode;
   }
 }

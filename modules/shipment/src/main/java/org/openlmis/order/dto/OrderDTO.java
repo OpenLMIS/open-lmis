@@ -9,6 +9,7 @@ package org.openlmis.order.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.rnr.dto.RnrDTO;
@@ -28,6 +29,7 @@ public class OrderDTO {
   private RnrDTO rnr;
   private Boolean productsOrdered;
   private OrderStatus status;
+  private SupplyLine supplyLine;
   private Boolean shipmentError;
 
   public static List<OrderDTO> getOrdersForView(List<Order> orders) {
@@ -44,6 +46,7 @@ public class OrderDTO {
     orderDTO.setRnr(RnrDTO.prepareForOrderView(order.getRnr()));
     orderDTO.setCreatedDate(order.getCreatedDate());
     orderDTO.setStatus(order.getStatus());
+    orderDTO.setSupplyLine(order.getSupplyLine());
     ShipmentFileInfo shipmentFileInfo = order.getShipmentFileInfo();
     if(shipmentFileInfo != null) orderDTO.setShipmentError(shipmentFileInfo.isProcessingError());
     if(order.getRnr().getFullSupplyLineItems().size() == 0 && order.getRnr().getNonFullSupplyLineItems().size() == 0) {

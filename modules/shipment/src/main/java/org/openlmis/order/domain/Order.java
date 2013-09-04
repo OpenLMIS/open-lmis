@@ -10,32 +10,38 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 
-import static org.openlmis.order.domain.OrderStatus.PACKED;
-import static org.openlmis.order.domain.OrderStatus.RELEASED;
+import static org.openlmis.order.domain.OrderStatus.*;
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Order extends BaseModel{
+public class Order extends BaseModel {
   private Rnr rnr;
   private OrderStatus status;
+  private SupplyLine supplyLine;
   private ShipmentFileInfo shipmentFileInfo;
 
   public Order(Rnr rnr) {
     this.rnr = rnr;
     this.createdBy = rnr.getModifiedBy();
-    this.status = RELEASED;
+    this.status = IN_ROUTE;
   }
 
   public Order(Long id) {
     this.id = id;
   }
 
-  public void updateShipmentFileInfo(ShipmentFileInfo shipmentFileInfo){
+  public Order(Long orderId, Rnr rnr) {
+    this.id = orderId;
+    this.rnr = rnr;
+  }
+
+  public void updateShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {
     this.shipmentFileInfo = shipmentFileInfo;
-    this.status = shipmentFileInfo.isProcessingError()? RELEASED : PACKED;
+    this.status = shipmentFileInfo.isProcessingError() ? RELEASED : PACKED;
   }
 }

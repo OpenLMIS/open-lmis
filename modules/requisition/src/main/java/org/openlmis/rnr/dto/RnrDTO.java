@@ -34,7 +34,7 @@ public class RnrDTO {
   private Date periodEndDate;
   private String periodName;
   private Long facilityId;
-  private String supplyingDepot;
+  private String supplyingDepotName;
   private String status;
   private Long modifiedBy;
 
@@ -56,10 +56,10 @@ public class RnrDTO {
     return result;
   }
 
-  public static RnrDTO prepareDTOWithSupplyingDepot(Rnr requisition) {
+  private static RnrDTO prepareDTOWithSupplyingDepot(Rnr requisition) {
     RnrDTO rnrDTO = populateDTOWithRequisition(requisition);
-    if (requisition.getSupplyLine() != null) {
-      rnrDTO.supplyingDepot = requisition.getSupplyLine().getSupplyingFacility().getName();
+    if (requisition.getSupplyingDepot() != null) {
+      rnrDTO.supplyingDepotName = requisition.getSupplyingDepot().getName();
     }
     return rnrDTO;
   }

@@ -1,19 +1,22 @@
 function RefrigeratorReading(refrigeratorReading) {
+
+  $.extend(true, this, refrigeratorReading);
+
   var fieldList = ['temperature', 'functioningCorrectly', 'lowAlarmEvents', 'highAlarmEvents', 'problemSinceLastTime'];
 
-  this.refrigeratorReading = refrigeratorReading;
-
-  RefrigeratorReading.prototype.computeStatus = function() {
+  RefrigeratorReading.prototype.computeStatus = function () {
     var complete = 'is-complete';
     var incomplete = 'is-incomplete';
     var empty = 'is-empty';
 
     var statusClass = complete;
+    var _this = this;
+
     function isEmpty(field) {
-      if(isUndefined(refrigeratorReading[field])) {
+      if (isUndefined(_this[field])) {
         return true;
       }
-      return (isUndefined(refrigeratorReading[field].value) && !refrigeratorReading[field].notRecorded);
+      return (isUndefined(_this[field].value) && !_this[field].notRecorded);
     }
 
     $(fieldList).each(function (index, field) {
@@ -34,20 +37,20 @@ function RefrigeratorReading(refrigeratorReading) {
       });
     }
 
-    if (statusClass === complete && refrigeratorReading['problemSinceLastTime'] && refrigeratorReading['problemSinceLastTime'].value === 'Y') {
-      if (!refrigeratorReading.problems) statusClass = incomplete;
+    if (statusClass === complete && _this['problemSinceLastTime'] && _this['problemSinceLastTime'].value === 'Y') {
+      if (!_this.problems) statusClass = incomplete;
       else {
-        var hasAtLeastOneProblem = _.filter(_.values(refrigeratorReading.problems.problemMap),
+        var hasAtLeastOneProblem = _.filter(_.values(_this.problems.problemMap),
           function (problem) {
             return problem;
           }).length;
 
-        if (!refrigeratorReading.problems.problemMap || !hasAtLeastOneProblem)
+        if (!_this.problems.problemMap || !hasAtLeastOneProblem)
           statusClass = incomplete;
       }
     }
 
-    refrigeratorReading.status = statusClass;
+    _this.status = statusClass;
 
     return statusClass;
   }
