@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function CreateFullSupplyController($scope) {
+function CreateFullSupplyController($scope, messageService) {
   $scope.currentRnrLineItem = undefined;
 
   $scope.getId = function (prefix, parent) {
@@ -15,7 +15,7 @@ function CreateFullSupplyController($scope) {
     $scope.modalError = '';
 
     if (!$scope.currentRnrLineItem.validateLossesAndAdjustments()) {
-      $scope.modalError = 'Please correct the highlighted fields before submitting';
+      $scope.modalError = messageService.get('error.correct.highlighted');
       return;
     }
 
