@@ -16,7 +16,9 @@ distributionModule.service('distributionService', function ($dialog, messageServ
     };
 
     var callback = function () {
-      return function () {
+      return function (result) {
+        if(!result) return;
+
         applyFunc(_this.distribution);
         $($('input[not-recorded]').last()).trigger("blur"); //for auto save
       }
