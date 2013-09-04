@@ -74,7 +74,7 @@ smokeTest.doFirst() {
     buildOpenLmis.execute()
 }
 
-task e2e(type: Test) {
+task e2eTestChrome(type: Test) {
     dependsOn assemble, compileTestJava
 
     doLast {
@@ -82,7 +82,7 @@ task e2e(type: Test) {
         htmlformat = "html:${buildDir}/reports/tests/bddTest-report-functional"
         jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
         javaexec {
-            System.properties.get('browser', 'firefox')
+            System.properties.get('browser', 'chrome')
             System.properties.get('dburl', "$dburl")
             System.properties.get('baseurl', "$baseurl")
             systemProperties System.properties
@@ -93,7 +93,7 @@ task e2e(type: Test) {
     }
 }
 
-e2e.doFirst() {
+e2eTestChrome.doFirst() {
     buildOpenLmis.execute()
 }
 

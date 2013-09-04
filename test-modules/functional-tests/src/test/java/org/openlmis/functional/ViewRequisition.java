@@ -207,7 +207,7 @@ public class ViewRequisition extends TestCaseHelper {
     HomePage homePageApproved = viewRequisitionPageApproved.verifyFieldsPostApproval("25.00", "1");
     viewRequisitionPageAuthorized.clickRegimenTab();
     verifyValuesOnRegimenScreen(initiateRnRPage, patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
-    
+
     ConvertOrderPage convertOrderPage = homePageApproved.navigateConvertToOrder();
     convertOrderPage.convertToOrder();
     ViewRequisitionPage viewRequisitionPageOrdered = homePageApproved.navigateViewRequisition();
