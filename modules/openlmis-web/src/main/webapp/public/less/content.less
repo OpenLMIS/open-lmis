@@ -563,50 +563,8 @@ span[class^="tpl-"] {
       content: "";
     }
 
-    .warning-alert {
-      min-width: 100px;
-      padding: 1px 9px 1px 28px;
-      margin: 0 0 5px;
-      display: block;
-      position: absolute;
-      left: -3px;
-      bottom: 23px;
-      border-radius: 17px;
-      border-color: #e4b863;
-      background-image: url(../images/warning_triangle.png);
-      background-repeat: no-repeat;
-      background-position: 7px center;
-      font-size: 0.8em;
-      line-height: 1.5;
-      white-space: nowrap;
-      color: #b38907;
 
-      &:after {
-        .square(0px);
-        position: absolute;
-        bottom: -6px;
-        left: 12px;
-        z-index: 10;
-        border-top: 6px solid #fcf8e3;
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        content: "";
-      }
-
-      &:before {
-        .square(0px);
-        position: absolute;
-        bottom: -7px;
-        left: 11px;
-        z-index: 10;
-        border-top: 7px solid #b38907;
-        border-left: 7px solid transparent;
-        border-right: 7px solid transparent;
-        content: "";
-      }
-    }
   }
-
   #regimenTable {
     .col-code {
       min-width: 100px;
@@ -635,6 +593,49 @@ span[class^="tpl-"] {
         }
       }
     }
+  }
+}
+.rnr-table td .warning-alert,
+#epiUseTable .warning-alert{
+  min-width: 100px;
+  padding: 1px 9px 1px 28px;
+  margin: 0 0 5px;
+  display: block;
+  position: absolute;
+  left: -3px;
+  bottom: 15px;
+  border-radius: 17px;
+  border-color: #e4b863;
+  background-image: url(../images/warning_triangle.png);
+  background-repeat: no-repeat;
+  background-position: 7px center;
+  font-size: 0.8em;
+  line-height: 1.5;
+  white-space: nowrap;
+  color: #b38907;
+
+  &:after {
+    .square(0px);
+    position: absolute;
+    bottom: -6px;
+    left: 12px;
+    z-index: 10;
+    border-top: 6px solid #fcf8e3;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    content: "";
+  }
+
+  &:before {
+    .square(0px);
+    position: absolute;
+    bottom: -7px;
+    left: 11px;
+    z-index: 10;
+    border-top: 7px solid #b38907;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    content: "";
   }
 }
 

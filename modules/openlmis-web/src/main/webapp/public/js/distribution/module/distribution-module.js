@@ -40,6 +40,11 @@ distributionModule.directive('notRecorded', function ($timeout) {
       scope.$watch(attrs.ngModel, function () {
         $.each(document.getElementsByName(element.attr('id')), function (index, associatedElement) {
           associatedElement.disabled = ctrl.$modelValue;
+          if (!isUndefined(attrs.notRecorded)) {
+            scope[attrs.notRecorded](ctrl.$modelValue);
+          }
+
+          if(!ctrl.$modelValue) return;
 
           var evaluatedVar = scope;
           var ngModel = $(associatedElement).attr('ng-model').split('.');

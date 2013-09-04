@@ -110,7 +110,7 @@
                 <label class="checkbox-label" for="stockAtEndOfMonth{{$index}}"
                        openlmis-message="label.not.recorded"></label>
               </div>
-              <div class="span1">
+              <div class="span1 expiration-date">
                 <input type="text" ng-model="groupReading.reading.expirationDate.value" name="expirationDate{{$index}}"
                        date-validator="date"
                        showError="inputClass" error-holder="expirationDateError{{$index}}" maxlength="7"/>
