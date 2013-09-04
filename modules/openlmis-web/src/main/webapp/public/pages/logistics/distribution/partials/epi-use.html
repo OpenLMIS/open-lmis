@@ -12,6 +12,8 @@
     <div class="refrigerator-container">
       <h3>
         <span openlmis-message="header.epi.use"></span>
+        <a href="javascript:void(0)" ng-click="applyNRAll()" class="pull-right btn"
+           openlmis-message="button.apply.nr.all"></a>
       </h3>
 
       <div class="alert alert-info" id="noRefrigerators"
@@ -19,7 +21,9 @@
         <span openlmis-message="message.no.product.groups"></span>
       </div>
 
-      <div id="epiUseTable" tab-scroll bottom-offset="180" ng-show="distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups.length">
+      <div id="epiUseTable" tab-scroll bottom-offset="180"
+           ng-show="distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups.length">
+
         <div class="list-header-container">
           <div class="list-header row-fluid">
             <div class="span2" openlmis-message="header.epi.use.doses"></div>

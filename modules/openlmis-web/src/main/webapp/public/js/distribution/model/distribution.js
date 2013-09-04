@@ -13,6 +13,12 @@ function Distribution(distributionJson) {
       value.refrigerators = new Refrigerators(value.refrigerators);
     });
   }
-  
+
+  Distribution.prototype.setEpiNotRecorded = function(facilityId) {
+    this.facilityDistributionData[facilityId].epiUse.setNotRecorded();
+  };
+
   return this;
 }
+
+

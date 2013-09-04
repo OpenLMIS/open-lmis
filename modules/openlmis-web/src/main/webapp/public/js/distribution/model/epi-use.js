@@ -1,9 +1,26 @@
 function EpiUse(epiUse) {
   var DATE_REGEXP = /^(0[1-9]|1[012])[/]((2)\d\d\d)$/;
-
-  $.extend(true, this, epiUse);
-
   var fieldList = ['stockAtFirstOfMonth', 'received', 'distributed', 'loss', 'stockAtEndOfMonth', 'expirationDate'];
+
+  function init() {
+    $.extend(true, this, epiUse);
+    $(this.productGroups).each(function (i, group) {
+      group.reading = group.reading || {};
+      $(fieldList).each(function (i, fieldName) {
+        group.reading[fieldName] = group.reading[fieldName] || {};
+      });
+    });
+  }
+
+  init.call(this);
+
+  EpiUse.prototype.setNotRecorded = function () {
+    $(this.productGroups).each(function (i, group) {
+      $.each(group.reading, function (key) {
+        group.reading[key].notRecorded = true;
+      });
+    });
+  };
 
   EpiUse.prototype.computeStatus = function () {
     var _this = this;

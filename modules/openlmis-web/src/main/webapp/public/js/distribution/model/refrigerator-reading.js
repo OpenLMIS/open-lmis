@@ -1,8 +1,16 @@
 function RefrigeratorReading(refrigeratorReading) {
 
-  $.extend(true, this, refrigeratorReading);
-
   var fieldList = ['temperature', 'functioningCorrectly', 'lowAlarmEvents', 'highAlarmEvents', 'problemSinceLastTime'];
+
+  init.call(this);
+
+  function init() {
+    var _this = this;
+    $.extend(true, this, refrigeratorReading);
+    $(fieldList).each(function (i, fieldName) {
+      _this[fieldName] = _this[fieldName] || {};
+    });
+  }
 
   RefrigeratorReading.prototype.computeStatus = function () {
     var complete = 'is-complete';
