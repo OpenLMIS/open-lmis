@@ -18,6 +18,7 @@ dependencies {
             'org.springframework.integration:spring-integration-stream:2.2.3.RELEASE',
             'org.springframework.integration:spring-integration-ftp:2.2.3.RELEASE',
             'org.springframework.security:spring-security-core:3.1.2.RELEASE',
+            'org.apache.camel:camel-core:2.8.3',
             project(':modules:core'),
             project(':modules:upload'),
             project(':modules:requisition'),

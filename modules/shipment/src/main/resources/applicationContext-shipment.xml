@@ -81,8 +81,6 @@
         <int:dispatcher task-executor="messageDispatcher"></int:dispatcher>
     </int:channel>
 
-    <int:channel id="orderInputChannel"/>
-
     <int-jdbc:inbound-channel-adapter channel="orderInputChannel"
                                       data-source="dataSource"
                                       query="SELECT * FROM orders WHERE status = 'IN_ROUTE'"
@@ -91,5 +89,7 @@
         <int:poller fixed-rate="${order.ftp.routing.poll.rate}">
         </int:poller>
     </int-jdbc:inbound-channel-adapter>
+
+    <int:channel id="orderInputChannel"/>
 
 </beans>

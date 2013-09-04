@@ -13,6 +13,7 @@ import org.openlmis.core.repository.OrderConfigurationRepository;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
@@ -55,6 +56,8 @@ public class OrderService {
       rnr.setModifiedBy(userId);
       order = new Order(rnr);
       order.setSupplyLine(supplyLineService.getSupplyLineBy(new SupervisoryNode(rnr.getSupervisoryNodeId()), rnr.getProgram()));
+      OrderStatus status = order.getSupplyLine().getExportOrders() ? OrderStatus.IN_ROUTE : OrderStatus.READY_TO_PACK;
+      order.setStatus(status);
       orderRepository.save(order);
     }
   }

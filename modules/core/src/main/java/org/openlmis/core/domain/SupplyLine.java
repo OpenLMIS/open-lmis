@@ -32,4 +32,7 @@ public class SupplyLine extends BaseModel implements Importable {
   @ImportField(mandatory = true, type = "boolean", name = "Export Orders")
   private Boolean exportOrders;
 
+  public SupplyLine(Long id){
+    this.id = id;
+  }
 }

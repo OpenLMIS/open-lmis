@@ -3,7 +3,7 @@
 DROP TABLE IF EXISTS facility_ftp_details;
 CREATE TABLE facility_ftp_details (
   id              SERIAL PRIMARY KEY,
-  facilityCode    VARCHAR(50) UNIQUE NOT NULL,
+  facilityId      INTEGER REFERENCES facilities(id) NOT NULL,
   serverHost      VARCHAR(100)       NOT NULL,
   serverPort      VARCHAR(10)        NOT NULL,
   userName        VARCHAR(100)       NOT NULL,

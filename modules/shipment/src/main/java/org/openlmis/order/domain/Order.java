@@ -14,7 +14,8 @@ import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 
-import static org.openlmis.order.domain.OrderStatus.*;
+import static org.openlmis.order.domain.OrderStatus.PACKED;
+import static org.openlmis.order.domain.OrderStatus.RELEASED;
 
 @Data
 @NoArgsConstructor
@@ -28,16 +29,16 @@ public class Order extends BaseModel {
   public Order(Rnr rnr) {
     this.rnr = rnr;
     this.createdBy = rnr.getModifiedBy();
-    this.status = IN_ROUTE;
   }
 
   public Order(Long id) {
     this.id = id;
   }
 
-  public Order(Long orderId, Rnr rnr) {
+  public Order(Long orderId, Rnr rnr, SupplyLine supplyLine) {
     this.id = orderId;
     this.rnr = rnr;
+    this.supplyLine = supplyLine;
   }
 
   public void updateShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {

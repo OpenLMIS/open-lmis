@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityFtpDetails;
 import org.openlmis.core.service.FacilityFtpDetailsService;
 import org.openlmis.db.categories.UnitTests;
@@ -34,9 +35,11 @@ public class FacilityFtpDetailsPersistenceHandlerTest {
   @Test
   public void shouldGetExisting() throws Exception {
     FacilityFtpDetails facilityFtpDetails = new FacilityFtpDetails();
-    facilityFtpDetails.setFacilityCode("F10");
+    Facility facility = new Facility();
+    facility.setCode("F10");
+    facilityFtpDetails.setFacility(facility);
 
-    when(facilityFtpDetailsService.getByFacilityCode("F10")).thenReturn(facilityFtpDetails);
+    when(facilityFtpDetailsService.getByFacilityCode(facility)).thenReturn(facilityFtpDetails);
 
     BaseModel result = persistenceHandler.getExisting(facilityFtpDetails);
 

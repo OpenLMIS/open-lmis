@@ -25,9 +25,7 @@ public class FacilityFtpDetailsService {
   FacilityService facilityService;
 
   public void save(FacilityFtpDetails facilityFtpDetails) {
-    Facility facility = new Facility();
-    facility.setCode(facilityFtpDetails.getFacilityCode());
-    Facility existingFacility = facilityService.getByCode(facility);
+    Facility existingFacility = facilityService.getByCode(facilityFtpDetails.getFacility());
     if (existingFacility == null) {
       throw new DataException("error.facility.code.invalid");
     }
@@ -36,6 +34,7 @@ public class FacilityFtpDetailsService {
       return;
     }
 
+    facilityFtpDetails.setFacility(existingFacility);
     insert(facilityFtpDetails);
   }
 
@@ -47,8 +46,11 @@ public class FacilityFtpDetailsService {
     repository.insert(facilityFtpDetails);
   }
 
-  public FacilityFtpDetails getByFacilityCode(String facilityCode) {
-    return repository.getByFacilityCode(facilityCode);
+  public FacilityFtpDetails getByFacilityCode(Facility facility) {
+    return getByFacilityId(facilityService.getByCode(facility));
   }
 
+  public FacilityFtpDetails getByFacilityId(Facility facility) {
+    return repository.getByFacilityId(facility);
+  }
 }

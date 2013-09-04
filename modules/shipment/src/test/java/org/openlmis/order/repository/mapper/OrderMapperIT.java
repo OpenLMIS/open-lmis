@@ -20,6 +20,7 @@ import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
+import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
@@ -101,6 +102,7 @@ public class OrderMapperIT {
   public void shouldInsertOrder() throws Exception {
     Rnr rnr = insertRequisition(1L);
     Order order = new Order(rnr);
+    order.setStatus(OrderStatus.IN_ROUTE);
     order.setSupplyLine(supplyLine);
     mapper.insert(order);
     List<Long> orderIds = new ArrayList();
@@ -152,6 +154,7 @@ public class OrderMapperIT {
   public void shouldUpdateStatusAndShipmentIdForOrder() throws Exception {
     Rnr rnr = insertRequisition(1L);
     Order order = new Order(rnr);
+    order.setStatus(OrderStatus.IN_ROUTE);
     order.setSupplyLine(supplyLine);
     mapper.insert(order);
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
@@ -226,6 +229,7 @@ public class OrderMapperIT {
   private Order insertOrder(Long programId) {
     Rnr rnr = insertRequisition(programId);
     Order order = new Order(rnr);
+    order.setStatus(OrderStatus.IN_ROUTE);
     order.setSupplyLine(supplyLine);
     mapper.insert(order);
     return order;
