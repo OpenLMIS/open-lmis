@@ -51,7 +51,7 @@ public class ManageDistribution extends TestCaseHelper {
     facilityCodeFirst, facilityCodeSecond,
     programFirst, programSecond, schedule;
 
-  @BeforeMethod(groups = "functional2")
+  @BeforeMethod(groups = "distribution")
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -242,7 +242,7 @@ public class ManageDistribution extends TestCaseHelper {
       "/div[1]/div[6]/a").getText(), "Sync");
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void testVerifyAlreadyCachedDistribution(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                                   String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                   String facilityCodeFirst, String facilityCodeSecond,
@@ -270,7 +270,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void testManageDistribution(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                      String facilityCodeFirst, String facilityCodeSecond,
@@ -363,7 +363,7 @@ public class ManageDistribution extends TestCaseHelper {
     verifySelectedOptionFromSelectField(defaultPeriodValuesToBeVerified, actualSelectFieldElement);
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void testVerifyNoFacilityToBeShownIfNotMappedWithDeliveryZone(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                                       String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                       String facilityCodeFirst, String facilityCodeSecond,
@@ -389,7 +389,7 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.verifyFacilityNotSupportedMessage(programFirst,deliveryZoneNameFirst);
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void testVerifyNoFacilityToBeShownIfNotMappedWithPrograms(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                                                        String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                                        String facilityCodeFirst, String facilityCodeSecond,
@@ -415,7 +415,7 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.verifyFacilityNotSupportedMessage(programFirst,deliveryZoneNameFirst);
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void testVerifyNoFacilityToBeShownIfInactive(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                                                    String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                                    String facilityCodeFirst, String facilityCodeSecond,
@@ -442,7 +442,7 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.verifyFacilityNotSupportedMessage(programFirst,deliveryZoneNameFirst);
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void testVerifyGeoZonesOrderOnFacilityListPage(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                                       String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                       String facilityCodeFirst, String facilityCodeSecond,
@@ -519,7 +519,7 @@ public class ManageDistribution extends TestCaseHelper {
     assertEquals(valuesToBeVerified, actualSelectFieldElement.getText());
   }
 
-  @AfterMethod(groups = "functional2")
+  @AfterMethod(groups = "distribution")
   @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);

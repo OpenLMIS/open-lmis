@@ -50,7 +50,7 @@ public class InitiateRnR extends TestCaseHelper {
   public LoginPage loginPage;
   public InitiateRnRPage initiateRnRPage;
 
-  @BeforeMethod(groups = "functional")
+  @BeforeMethod(groups = "requisition")
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -171,7 +171,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.verifySubmitSuccessMsg();
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testSubmitAndAuthorizeRegimen(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(CREATE_REQUISITION);
@@ -211,7 +211,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage2.verifyAuthorizeRnrSuccessMsg();
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testApproveRegimen(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(CREATE_REQUISITION);
@@ -242,7 +242,7 @@ public class InitiateRnR extends TestCaseHelper {
     approvePageLowerSNUser.verifyNoRequisitionPendingMessage();
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testApproveRegimenWithoutSave(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(CREATE_REQUISITION);
@@ -273,7 +273,7 @@ public class InitiateRnR extends TestCaseHelper {
     approvePageLowerSNUser.verifyNoRequisitionPendingMessage();
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testRnRWithInvisibleProgramRegimenColumn(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(CREATE_REQUISITION);
@@ -293,7 +293,7 @@ public class InitiateRnR extends TestCaseHelper {
     assertEquals(initiateRnRPage.getRegimenTableColumnCount(), 6);
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testRnRWithInActiveRegimen(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(CREATE_REQUISITION);
@@ -339,7 +339,7 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
 
-  @AfterMethod(groups = "functional")
+  @AfterMethod(groups = "requisition")
   @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);

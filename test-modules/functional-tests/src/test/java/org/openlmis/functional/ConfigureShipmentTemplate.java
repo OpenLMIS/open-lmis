@@ -33,7 +33,7 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 public class ConfigureShipmentTemplate extends TestCaseHelper {
 
 
-    @BeforeMethod(groups = "functional2")
+    @BeforeMethod(groups = "admin")
     @Before
     public void setUp() throws Exception {
         super.setup();
@@ -88,7 +88,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
         configureShipmentPage.verifyMessage(message);
     }
 
-    @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
     public void testVerifyDefaultSelectionOfPackedAndShippedDateDropdown(String user, String password) throws Exception {
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
         HomePage homePage = loginPage.loginAs(user, password);
@@ -100,7 +100,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
         assertEquals(shippedDate, "dd/MM/yy");
     }
 
-    @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
     public void testEditPackedAndShippedDateDropDown(String user, String password) throws Exception {
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
         HomePage homePage = loginPage.loginAs(user, password);
@@ -124,7 +124,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
         assertEquals(shippedDate, "ddMMyy");
     }
 
-    @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
     public void testVerifyIncludeColumnHeaderONWithAllPositionsAltered(String user, String password) throws Exception {
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
         HomePage homePage = loginPage.loginAs(user, password);
@@ -152,7 +152,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
         assertEquals("106", configureShipmentPage.getShippedDate());
     }
 
-    @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
     public void testVerifyIncludeColumnHeaderOFFWithMandatoryPositionsAltered(String user, String password) throws Exception {
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
         HomePage homePage = loginPage.loginAs(user, password);
@@ -177,7 +177,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
         assertEquals("6", configureShipmentPage.getShippedDate());
     }
 
-    @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
     public void testVerifyDuplicatePosition(String user, String password) throws Exception {
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
         HomePage homePage = loginPage.loginAs(user, password);
@@ -191,7 +191,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     }
 
     @After
-    @AfterMethod(groups = "functional2")
+    @AfterMethod(groups = "admin")
     public void tearDown() throws Exception {
         testWebDriver.sleep(500);
         if (!testWebDriver.getElementById("username").isDisplayed()) {

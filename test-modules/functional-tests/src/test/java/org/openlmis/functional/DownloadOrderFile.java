@@ -46,7 +46,7 @@ public class DownloadOrderFile extends TestCaseHelper {
   public  String[] csvRows;
 
     @Before
-  @BeforeMethod(groups = "functional")
+  @BeforeMethod(groups = "requisition")
   public void setUp() throws Exception {
     super.setup();
   }
@@ -116,7 +116,7 @@ public class DownloadOrderFile extends TestCaseHelper {
         assertTrue("Order date incorrect.", csvRows[lineNumber-1].contains(orderId));
     }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForSpecificConfiguration(String password) throws Exception {
     dbWrapper.setupOrderFileConfiguration("Zero", "TRUE");
     dbWrapper.defaultSetupOrderFileOpenLMISColumns();
@@ -140,7 +140,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     checkOrderFileOrderId(2);
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForDefaultConfiguration(String password) throws Exception {
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
     dbWrapper.defaultSetupOrderFileOpenLMISColumns();
@@ -153,7 +153,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     checkOrderFileOrderId(2);
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForDefaultConfigurationWithNoHeades(String password) throws Exception {
     dbWrapper.setupOrderFileConfiguration("O", "FALSE");
     dbWrapper.defaultSetupOrderFileOpenLMISColumns();
@@ -203,7 +203,7 @@ public class DownloadOrderFile extends TestCaseHelper {
   }
 
   @After
-  @AfterMethod(groups = "functional")
+  @AfterMethod(groups = "requisition")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

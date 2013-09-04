@@ -48,7 +48,7 @@ public class ViewRequisition extends TestCaseHelper {
   public String program, userSIC, password;
 
 
-  @BeforeMethod(groups = "functional")
+  @BeforeMethod(groups = "requisition")
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -135,7 +135,7 @@ public class ViewRequisition extends TestCaseHelper {
     verifyValuesOnRegimenScreen(initiateRnRPage, patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Including-Regimen")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Including-Regimen")
   public void testViewRequisitionAndRegimen(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
@@ -229,7 +229,7 @@ public class ViewRequisition extends TestCaseHelper {
     assertEquals(remarks, initiateRnRPage.getRemarksValue());
   }
 
-  @AfterMethod(groups = "functional")
+  @AfterMethod(groups = "requisition")
   @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);

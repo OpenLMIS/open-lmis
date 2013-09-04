@@ -169,13 +169,13 @@ repositories {
 }
 
 
-task functionalTest(type: Test) {
+task adminTest(type: Test) {
     useTestNG() {
         systemProperties['browser'] = 'firefox'
         systemProperties['dburl'] = "$dburl"
         systemProperties['baseurl'] = "$baseurl"
 
-        suites 'src/test/java/org/openlmis/functional/testng-functional.xml'
+        suites 'src/test/java/org/openlmis/functional/testng-admin.xml'
     }
     options {
         listeners << 'org.uncommons.reportng.HTMLReporter'
@@ -184,17 +184,17 @@ task functionalTest(type: Test) {
     workingDir = 'build/'
 }
 
-functionalTest.doFirst() {
+adminTest.doFirst() {
     buildOpenLmis.execute()
 }
 
-task functionalTest2(type: Test) {
+task requisitionTest(type: Test) {
     useTestNG() {
         systemProperties['browser'] = 'firefox'
         systemProperties['dburl'] = "$dburl"
         systemProperties['baseurl'] = "$baseurl"
 
-        suites 'src/test/java/org/openlmis/functional/testng-functional2.xml'
+        suites 'src/test/java/org/openlmis/functional/testng-requisition.xml'
     }
     options {
         listeners << 'org.uncommons.reportng.HTMLReporter'
@@ -203,10 +203,28 @@ task functionalTest2(type: Test) {
     workingDir = 'build/'
 }
 
-functionalTest2.doFirst() {
+requisitionTest.doFirst() {
     buildOpenLmis.execute()
 }
 
+task distributionTest(type: Test) {
+    useTestNG() {
+        systemProperties['browser'] = 'firefox'
+        systemProperties['dburl'] = "$dburl"
+        systemProperties['baseurl'] = "$baseurl"
+
+        suites 'src/test/java/org/openlmis/functional/testng-distribution.xml'
+    }
+    options {
+        listeners << 'org.uncommons.reportng.HTMLReporter'
+        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
+    }
+    workingDir = 'build/'
+}
+
+distributionTest.doFirst() {
+    buildOpenLmis.execute()
+}
 
 
 
