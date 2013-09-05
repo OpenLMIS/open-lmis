@@ -74,9 +74,10 @@ function RequisitionGroupController($scope, ReportFacilityTypes, $routeParams, $
         $scope.requisitionGroupMember.requisitionGroup = $scope.requisitionGroup;
 
         SaveRequisitionGroupMember.save($scope.requisitionGroupMember,successHandler,errorHandler);
-
+        $scope.facilities.push($scope.requisitionGroupMember.facility);
         $scope.closeModal();
-        loadMemberFacilities();
+
+        //loadMemberFacilities();
         return true;
     };
 
