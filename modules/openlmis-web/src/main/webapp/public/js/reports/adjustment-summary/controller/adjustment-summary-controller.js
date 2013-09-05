@@ -521,9 +521,13 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
                                 params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
                             }
                         });
+                        // clear existing data
+                        $scope.data = [];
 
+                        // try to load the new data based on the selected parameters
                         AdjustmentSummaryReport.get(params, function(data) {
                             $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
+                            $scope.data = $data.pages.rows;
                         });
 
         };
