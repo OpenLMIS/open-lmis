@@ -3,17 +3,15 @@
 2013-09-05 - changed call agrument for fn_get_supplying_facility_name from requisitions.supplylineid to requisitions.supervisorynodeid. Used V59__create_vw_stock_status_rev_6.sql
 ??? Issa Fikadu - ???
 ??? Muhammad Ahmed - created
- 
+
 */
 
 DROP VIEW IF EXISTS vw_stock_status;
 CREATE OR REPLACE VIEW vw_stock_status AS
- SELECT
-    fn_get_supplying_facility_name(requisitions.supervisorynodeid) AS supplyingfacility,
+ SELECT fn_get_supplying_facility_name(requisitions.supervisorynodeid) AS supplyingfacility,
     facilities.code AS facilitycode, facilities.name AS facility,
-    requisitions.status AS req_status,
-    requisition_line_items.product, requisition_line_items.stockinhand,
-    requisition_line_items.amc,
+    requisitions.status AS req_status, requisition_line_items.product,
+    requisition_line_items.stockinhand, requisition_line_items.amc,
         CASE
             WHEN COALESCE(requisition_line_items.amc, 0) = 0 THEN 0::numeric
             ELSE round((requisition_line_items.stockinhand / requisition_line_items.amc)::numeric, 1)
@@ -37,11 +35,11 @@ CREATE OR REPLACE VIEW vw_stock_status AS
         END AS status,
     facility_types.name AS facilitytypename, geographic_zones.name AS location,
     products.id AS productid, processing_periods.startdate,
-	  programs.id AS programid, processing_schedules.id AS psid,
+    programs.id AS programid, processing_schedules.id AS psid,
     processing_periods.enddate, processing_periods.id AS periodid,
     facility_types.id AS facilitytypeid,
     requisition_group_members.requisitiongroupid AS rgid, products.categoryid,
-    products.tracer AS indicator_product, facilities.id AS facility_id, 
+    products.tracer AS indicator_product, facilities.id AS facility_id,
     processing_periods.name AS processing_period_name
    FROM requisition_line_items
    JOIN requisitions ON requisitions.id = requisition_line_items.rnrid
@@ -54,7 +52,7 @@ CREATE OR REPLACE VIEW vw_stock_status AS
    JOIN programs ON programs.id = requisitions.programid
    JOIN requisition_group_members ON requisition_group_members.facilityid = facilities.id
    JOIN geographic_zones ON geographic_zones.id = facilities.geographiczoneid
-  WHERE requisition_line_items.stockinhand IS NOT NULL AND requisitions.status::text = 'RELEASED'::text;
+  WHERE requisition_line_items.stockinhand IS NOT NULL;
 
 ALTER TABLE vw_stock_status
   OWNER TO postgres;
