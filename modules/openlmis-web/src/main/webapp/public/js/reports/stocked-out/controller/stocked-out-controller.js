@@ -680,10 +680,14 @@ function StockedOutController($scope, StockedOutReport, ReportPrograms, AllRepor
             params[index] = value;
         });
 
+        // clear old data if there was any
+        $scope.data = [];
 
-        //alert(JSON.stringify(params))
         StockedOutReport.get(params, function (data) {
-            $scope.setPagingData(data.pages.rows, page, pageSize, data.pages.total);
+            if(data.pages != undefined){
+                $scope.setPagingData(data.pages.rows, page, pageSize, data.pages.total);
+                $scope.data = data.pages.rows;
+            }
 
         });
 
