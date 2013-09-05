@@ -82,7 +82,7 @@ public class ShipmentFileProcessorTest {
 
     when(message.getPayload()).thenReturn(shipmentFile);
     whenNew(FileInputStream.class).withArguments(shipmentFile).thenReturn(shipmentInputStream);
-    shipmentConfiguration = new ShipmentConfiguration();
+    shipmentConfiguration = new ShipmentConfiguration(false);
   }
 
   @Test
@@ -132,6 +132,34 @@ public class ShipmentFileProcessorTest {
 
     shipmentFileProcessor.process(message);
 
+    verify(mockedCsvListReader, times(0)).getHeader(true);
     verify(shipmentService, times(1)).insertShippedLineItem(any(ShipmentLineItem.class));
   }
+
+  @Test
+  public void shouldRemoveHeadersIfPresentInCsv() throws Exception {
+
+    List<ShipmentFileColumn> shipmentFileColumnList = asList(
+      make(a(mandatoryShipmentFileColumn, with(columnPosition, 2)))
+    );
+
+    boolean headerInFile = true;
+    ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(new ShipmentConfiguration(headerInFile), shipmentFileColumnList);
+
+    when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
+
+    CsvListReader mockedCsvListReader = mock(CsvListReader.class);
+    when(mockedCsvListReader.read()).thenReturn(null);
+    FileReader mockedFileReader = mock(FileReader.class);
+
+    whenNew(FileReader.class).withArguments(shipmentFile).thenReturn(mockedFileReader);
+    whenNew(CsvListReader.class).withArguments(mockedFileReader, STANDARD_PREFERENCE)
+      .thenReturn(mockedCsvListReader);
+
+    shipmentFileProcessor.process(message);
+
+    verify(mockedCsvListReader).getHeader(true);
+
+  }
+
 }

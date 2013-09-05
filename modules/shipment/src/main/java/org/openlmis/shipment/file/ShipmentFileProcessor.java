@@ -64,6 +64,11 @@ public class ShipmentFileProcessor {
     int maxPosition = findMaximumPosition(shipmentFileColumns);
 
     try (ICsvListReader listReader = new CsvListReader(new FileReader(shipmentFile), STANDARD_PREFERENCE)) {
+
+      if (shipmentFileTemplate.getShipmentConfiguration().isHeaderInFile()) {
+        listReader.getHeader(true);
+      }
+
       List<String> fieldsInOneRow;
       while ((fieldsInOneRow = listReader.read()) != null) {
         if (fieldsInOneRow.size() < maxPosition) {
