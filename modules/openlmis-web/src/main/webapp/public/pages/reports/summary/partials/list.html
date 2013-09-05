@@ -109,15 +109,15 @@
                 <tr ng-repeat="row in datarows">
                     <td data-title="'Code'" sortable="code" filter="{ 'code': 'text' }">{{ row.code }}</td>
                     <td data-title="'Product'" sortable="product" filter="{ 'product': 'text' }">{{ row.product }}</td>
-                    <td data-title="'Product'" filter="{ 'action': 'button' }">{{ row.openingBalance }}</td>
-                    <td data-title="'Recipts'">{{ row.receipts }}</td>
-                    <td data-title="'Issues'">{{ row.issues }}</td>
-                    <td data-title="'Adjustments'">{{ row.adjustments }}</td>
-                    <td data-title="'Closing Balance'">{{ row.closingBalance }}</td>
-                    <td data-title="'MOS'">{{ row.monthsOfStock }}</td>
-                    <td data-title="'AMC'">{{ row.averageMonthlyConsumption }}</td>
-                    <td data-title="'Minimum Stock'">{{ row.minimumStock }}</td>
-                    <td data-title="'Reorder Amount'">{{ row.reorderAmount }}</td>
+                    <td class="number" sortable="openingBalance" data-title="'Opening Balance'" filter="{ 'action': 'button' }">{{ row.openingBalance | number}}</td>
+                    <td class="number" sortable="receipts" data-title="'Recipts'">{{ row.receipts | number}}</td>
+                    <td class="number" sortable="issues" data-title="'Issues'">{{ row.issues | number}}</td>
+                    <td class="number" sortable="adjustements" data-title="'Adjustments'">{{ row.adjustments | number}}</td>
+                    <td class="number" sortable="closingBalance" data-title="'Closing Balance'">{{ row.closingBalance | number}}</td>
+                    <td class="number" sortable="monthsOfStock" data-title="'MOS'">{{ row.monthsOfStock | number}}</td>
+                    <td class="number" sortable="averageMonthlyConsumption" data-title="'AMC'">{{ row.averageMonthlyConsumption | number}}</td>
+                    <td class="number" sortable="minimumStock" data-title="'Minimum Stock'">{{ row.minimumStock | number}}</td>
+                    <td class="number" sortable="reorderAmount" data-title="'Reorder Amount'">{{ row.reorderAmount | number}}</td>
                 </tr>
 
              </tbody>
