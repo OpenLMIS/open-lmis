@@ -174,9 +174,9 @@ dependencies {
             project(path: ':modules:reporting', configuration: 'testFixtures')
 }
 
-task jettyRunWarDaemon(dependsOn: war)
+task jettyDaemon
 
-jettyRunWarDaemon.doFirst {
+jettyDaemon.doFirst {
     jettyRunWar.daemon = true
     jettyRunWar.httpPort = 9091
     jettyRunWar.contextPath = ''
