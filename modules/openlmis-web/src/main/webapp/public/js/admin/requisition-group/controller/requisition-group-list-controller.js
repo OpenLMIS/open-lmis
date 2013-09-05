@@ -1,4 +1,4 @@
-function RequisitionGroupListController($scope, $location, navigateBackService, RequisitionGroupCompleteList, RemoveRequisitionGroup,$dialog, messageService) {
+function RequisitionGroupListController($scope, $location, navigateBackService, RequisitionGroupCompleteList) {
     $scope.reloadTheList = false;
 
     $scope.$on('$viewContentLoaded', function () {
