@@ -7,11 +7,44 @@
 import com.eriwen.gradle.js.JsMinifier
 import org.apache.tools.ant.filters.ReplaceTokens
 
+import org.apache.tools.ant.taskdefs.condition.Os
+import org.gradle.api.tasks.Exec
+
 apply plugin: 'jetty'
 apply plugin: 'war'
 apply plugin: 'js'
 apply plugin: 'cobertura'
 
+task jsHint(type: GruntTask) {
+    workingDir '.'
+    gruntArgs = "jshint"
+}
+
+task csslint(type: GruntTask) {
+    workingDir '.'
+    gruntArgs = "csslint"
+}
+
+task uglify(type: GruntTask) {
+    workingDir '.'
+    gruntArgs = "uglify"
+}
+
+class GruntTask extends Exec {
+    private String gruntExecutable = Os.isFamily(Os.FAMILY_WINDOWS) ? "grunt.cmd" : "grunt"
+    private String switches = "--no-color"
+
+    String gruntArgs = ""
+
+    public GruntTask() {
+        super()
+        this.setExecutable(gruntExecutable)
+    }
+
+    public void setGruntArgs(String gruntArgs) {
+        this.args = "$switches $gruntArgs".trim().split(" ") as List
+    }
+}
 
 buildscript {
     repositories {
@@ -87,7 +120,7 @@ task cleanMinJs(type: Delete) {
     delete 'src/main/webapp/public/minJs/'
 }
 
-war.dependsOn minifyJSFiles
+war.dependsOn uglify
 
 war.doLast {
     tasks.cleanMinJs.execute()
