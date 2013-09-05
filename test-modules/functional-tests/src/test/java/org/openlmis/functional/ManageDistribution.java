@@ -17,10 +17,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.DistributionPage;
-import org.openlmis.pageobjects.FacilityListPage;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.*;
 import org.openqa.selenium.WebElement;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,17 +71,53 @@ public class ManageDistribution extends TestCaseHelper {
       schedule = map.get("schedule").toString();
     }
 
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true,
       programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+  }
 
+  @And("^I update product \"([^\"]*)\" to have product group \"([^\"]*)\"$")
+  public void setupProductAndProductGroup(String product, String productGroup) throws Exception {
+    updateProductWithGroup(product, productGroup);
+  }
+
+  @Then("^I should see product group \"([^\"]*)\"")
+  public void verifyProductGroup(String productGroup) {
+    new EPIUse(testWebDriver).verifyProductGroup(productGroup, 1);
+  }
+
+  @When("^I Enter EPI values without end of month:$")
+  public void enterEPIValues(DataTable tableData) {
+    EPIUse epiUse = new EPIUse(testWebDriver);
+    Map<String, String> epiData = tableData.asMaps().get(0);
+
+    epiUse.enterValueInDistributed(epiData.get("distributed"), 1);
+    epiUse.enterValueInExpirationDate(epiData.get("expirationDate"), 1);
+    epiUse.enterValueInLoss(epiData.get("loss"), 1);
+    epiUse.enterValueInReceived(epiData.get("received"), 1);
+    epiUse.enterValueInStockAtFirstOfMonth(epiData.get("firstOfMonth"), 1);
+  }
+
+  @When("^I verify saved EPI values:$")
+  public void verifySavedEPIValues(DataTable tableData) {
+    new RefrigeratorPage(testWebDriver).navigateToRefrigeratorTab();
+    EPIUse epiUse = new EPIUse(testWebDriver);
+    epiUse.navigateToEPISUse();
+    Map<String, String> epiData = tableData.asMaps().get(0);
+
+    epiUse.verifyData(epiData);
+  }
+
+  @And("^I verify total is \"([^\"]*)\"$")
+  public void verifyTotalField(String total) {
+    new EPIUse(testWebDriver).verifyTotal(total, 1);
   }
 
   @Then("^I should see program \"([^\"]*)\"$")
   public void verifyProgram(String programs) throws IOException, SQLException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
-    List<String> firstProgramValuesToBeVerified = new ArrayList<String>();
+    List<String> firstProgramValuesToBeVerified = new ArrayList<>();
 
     String[] program = programs.split(",");
     for (int i = 0; i < program.length; i++)
@@ -153,7 +186,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @And("^I verify Distributions data is not synchronised$")
   public void verifyDistributionsInDB() throws IOException, SQLException {
-    dbWrapper.verifyRecordCountInTable("Distributions","1");
+    dbWrapper.verifyRecordCountInTable("Distributions", "1");
   }
 
   @And("^I initiate distribution$")
@@ -171,21 +204,38 @@ public class ManageDistribution extends TestCaseHelper {
   @And("^I switch off network$")
   public void switchOffNetwork() throws IOException {
     testWebDriver.sleep(2000);
-    Runtime.getRuntime ().exec ("sudo ifconfig en1 down");
+    Runtime.getRuntime().exec("sudo ifconfig en1 down");
     testWebDriver.sleep(2000);
   }
 
   @And("^I switch on network$")
-    public void switchOnNetwork() throws IOException {
-        testWebDriver.sleep(2000);
-        Runtime.getRuntime ().exec ("sudo ifconfig en1 up");
-        testWebDriver.sleep(2000);
+  public void switchOnNetwork() throws IOException {
+    testWebDriver.sleep(2000);
+    Runtime.getRuntime().exec("sudo ifconfig en1 up");
+    testWebDriver.sleep(2000);
   }
 
   @Then("^I should see No facility selected$")
   public void shouldSeeNoFacilitySelected() throws IOException {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.verifyNoFacilitySelected();
+  }
+
+  @Then("^Navigate to EPI tab$")
+  public void navigateToEpiTab() throws IOException {
+    EPIUse epiUse = new EPIUse(testWebDriver);
+    epiUse.navigateToEPISUse();
+  }
+
+  @Then("^Verify indicator should be \"([^\"]*)\"$")
+  public void shouldVerifyIndicatorColor(String color) throws IOException, SQLException {
+    EPIUse epiUse = new EPIUse(testWebDriver);
+    epiUse.verifyOverallEPIUseIcon(color);
+  }
+
+  @When("^I enter EPI end of month as \"([^\"]*)\"")
+  public void enterEPIEndOfMonth(String endOfMonth) {
+    new EPIUse(testWebDriver).enterValueInStockAtEndOfMonth(endOfMonth, 1);
   }
 
   @And("^I should see \"([^\"]*)\" facilities that support the program \"([^\"]*)\" and delivery zone \"([^\"]*)\"$")
@@ -379,9 +429,9 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void testVerifyNoFacilityToBeShownIfNotMappedWithDeliveryZone(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                                      String facilityCodeFirst, String facilityCodeSecond,
-                                                      String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                                                       String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                                       String facilityCodeFirst, String facilityCodeSecond,
+                                                                       String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
@@ -398,16 +448,16 @@ public class ManageDistribution extends TestCaseHelper {
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
-    distributionPage.selectValueFromPeriod(period+totalNumberOfPeriods);
+    distributionPage.selectValueFromPeriod(period + totalNumberOfPeriods);
     distributionPage.clickInitiateDistribution();
-    distributionPage.verifyFacilityNotSupportedMessage(programFirst,deliveryZoneNameFirst);
+    distributionPage.verifyFacilityNotSupportedMessage(programFirst, deliveryZoneNameFirst);
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void testVerifyNoFacilityToBeShownIfNotMappedWithPrograms(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                                                       String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                                                       String facilityCodeFirst, String facilityCodeSecond,
-                                                                       String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                                                   String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                                   String facilityCodeFirst, String facilityCodeSecond,
+                                                                   String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
@@ -424,16 +474,16 @@ public class ManageDistribution extends TestCaseHelper {
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
-    distributionPage.selectValueFromPeriod(period+totalNumberOfPeriods);
+    distributionPage.selectValueFromPeriod(period + totalNumberOfPeriods);
     distributionPage.clickInitiateDistribution();
-    distributionPage.verifyFacilityNotSupportedMessage(programFirst,deliveryZoneNameFirst);
+    distributionPage.verifyFacilityNotSupportedMessage(programFirst, deliveryZoneNameFirst);
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void testVerifyNoFacilityToBeShownIfInactive(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                                                   String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                                                   String facilityCodeFirst, String facilityCodeSecond,
-                                                                   String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                      String facilityCodeFirst, String facilityCodeSecond,
+                                                      String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
@@ -444,26 +494,26 @@ public class ManageDistribution extends TestCaseHelper {
       programFirst, programSecond, schedule);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.updateActiveStatusOfFacility(facilityCodeFirst,"false");
-    dbWrapper.updateActiveStatusOfFacility(facilityCodeSecond,"false");
+    dbWrapper.updateActiveStatusOfFacility(facilityCodeFirst, "false");
+    dbWrapper.updateActiveStatusOfFacility(facilityCodeSecond, "false");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
-    distributionPage.selectValueFromPeriod(period+totalNumberOfPeriods);
+    distributionPage.selectValueFromPeriod(period + totalNumberOfPeriods);
     distributionPage.clickInitiateDistribution();
-    distributionPage.verifyFacilityNotSupportedMessage(programFirst,deliveryZoneNameFirst);
+    distributionPage.verifyFacilityNotSupportedMessage(programFirst, deliveryZoneNameFirst);
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void testVerifyGeoZonesOrderOnFacilityListPage(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                                      String facilityCodeFirst, String facilityCodeSecond,
-                                                      String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                                        String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                        String facilityCodeFirst, String facilityCodeSecond,
+                                                        String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
 
-    String geoZoneFirst="District1";
-    String geoZoneSecond="Ngorongoro";
+    String geoZoneFirst = "District1";
+    String geoZoneSecond = "Ngorongoro";
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, geoZoneFirst, geoZoneSecond, geoZoneSecond);
@@ -478,11 +528,11 @@ public class ManageDistribution extends TestCaseHelper {
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
-    distributionPage.selectValueFromPeriod(period+totalNumberOfPeriods);
+    distributionPage.selectValueFromPeriod(period + totalNumberOfPeriods);
     distributionPage.clickInitiateDistribution();
-    FacilityListPage facilityListPage=distributionPage.clickRecordData();
+    FacilityListPage facilityListPage = distributionPage.clickRecordData();
     facilityListPage.clickFacilityListDropDown();
-    facilityListPage.verifyGeographicZoneOrder(geoZoneFirst,geoZoneSecond);
+    facilityListPage.verifyGeographicZoneOrder(geoZoneFirst, geoZoneSecond);
 
 
   }

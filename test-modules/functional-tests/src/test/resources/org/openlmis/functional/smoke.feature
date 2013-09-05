@@ -408,3 +408,35 @@ Feature: Smoke Tests
     And I verify order file line "2" having "F10,P10,10,16/01/2012,"
     And I verify order date format "yyyy/mm/dd" in line "2"
     And I verify order id in line "2"
+
+  @Smoke
+  @ie2
+
+  Scenario: User should fill EPI use data
+    Given I have the following data for distribution:
+      | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I update product "P10" to have product group "penta"
+    And I have data available for "Multiple" facilities attached to delivery zones
+    And I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
+    Given I am logged in as "storeincharge"
+    And I access plan my distribution page
+    When I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period14"
+    And I initiate distribution
+    And I record data
+    When I choose facility "F10"
+    And Navigate to EPI tab
+    Then Verify indicator should be "RED"
+    Then I should see product group "penta-Name"
+    When I Enter EPI values without end of month:
+      | distributed | expirationDate | loss | received | firstOfMonth |
+      | 16          | 11/2012        | 1    | 10       | 12           |
+    Then Verify indicator should be "AMBER"
+    When I enter EPI end of month as "5"
+    Then Verify indicator should be "GREEN"
+    And I verify total is "22"
+    And I verify saved EPI values:
+      | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth | total |
+      | 16          | 11/2012        | 1    | 10       | 12           | 5          | 22    |
