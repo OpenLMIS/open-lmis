@@ -85,19 +85,32 @@
                     <a ng-click="addNewMemberFacility()" class="pull-right btn btn-primary"><span
                             id="requisition-group-facility-add-new">Add New</span></a>
                 </h2>
-                <div class="facility-list">
-                    <div class="row-fluid list-row">
-                        <div class="span2" style="..."><strong>Facility Name</strong></div>
-                        <div class="span2" style="..."><strong>Type</strong></div>
-                    </div>
-                    <div ng-repeat="facility in facilities" class="row-fluid list-row">
-                        <div class="span2" style="..."> {{facility.code}} - {{facility.name}}</div>
-                        <div class="span2" style="..."> {{facility.facilityType.name}}</div>
-                        <div class="span2" style="width:30px;">
-                            <a class="close" ng-click="showRemoveRequisitionGroupMemberConfirmDialog($index)">X</a>
-                        </div>
-                    </div>
-                </div>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr class="gradient-header">
+
+                        <th>Facility Name
+                        </th>
+                        <th>Type
+                        </th>
+                        <th>Action
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="facility in facilities">
+                        <td>
+                            <div>{{facility.code}} - {{facility.name}}</div>
+                        </td>
+                        <td>
+                            <div>{{facility.facilityType.name}}</div>
+                        </td>
+                        <td>
+                            <a href="" class="btn btn-danger" ng-click="showRemoveRequisitionGroupMemberConfirmDialog($index)">Remove</a>
+                        </td>
+                    <tr>
+                </table>
+
             </div>
         </div>
     </form>
