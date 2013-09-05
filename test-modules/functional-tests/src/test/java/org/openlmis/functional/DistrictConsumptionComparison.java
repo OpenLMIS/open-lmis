@@ -9,9 +9,9 @@ package org.openlmis.functional;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,17 +19,19 @@ import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+
+
+
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
-public class FacilityMailingListingReport extends TestCaseHelper {
+public class DistrictConsumptionComparison extends ReportTestHelper {
 
     public static final String STORE_IN_CHARGE = "store in-charge";
     public static final String APPROVE_REQUISITION = "APPROVE_REQUISITION";
@@ -39,134 +41,101 @@ public class FacilityMailingListingReport extends TestCaseHelper {
     public static final String IN_APPROVAL = "IN_APPROVAL";
     public static final String APPROVED = "APPROVED";
     public static final String RELEASED = "RELEASED";
-    public static final String TABLE_CELL_XPATH_PREFIX = "//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/";
+    public static final String TABLE_CELL_XPATH_TEMPLATE = "//div[@id='wrap']/div/div/div/div/div[3]/div[2]/div/div[{row}]/div[{column}]/div/span";
+    public static final String TABLE_SORT_BUTTON_XPATH_TEMPLATE = "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div";
 
-    //column names
-    public static final String COLUMN_NAME_FACILITY_CODE="Facility Code";
-    public static final String COLUMN_NAME_FACILITY_NAME="Facility Name";
-    public static final String COLUMN_NAME_FACILITY_TYPE="Facility Type";
-    public static final String COLUMN_NAME_REGION="Region";
-    public static final String COLUMN_NAME_ADDRESS="Address1";
-    public static final String COLUMN_NAME_CONTACT="Contact";
-    public static final String COLUMN_NAME_OPERATOR="Operator";
-    public static final String COLUMN_NAME_PHONE="Phone";
-    public static final String COLUMN_NAME_ACTIVE="Active";
-
-    private enum Column{
-        COLUMN_NAME_FACILITY_CODE,
-        COLUMN_NAME_FACILITY_NAME,
-        COLUMN_NAME_FACILITY_TYPE,
-        COLUMN_NAME_REGION,
-        COLUMN_NAME_ADDRESS,
-        COLUMN_NAME_CONTACT,
-        COLUMN_NAME_OPERATOR,
-        COLUMN_NAME_PHONE,
-        COLUMN_NAME_ACTIVE;
+    private enum Column {
+        COLUMN_NAME_CODE,
+        COLUMN_NAME_PRODUCT,
+        COLUMN_NAME_OPENING_BALANCE,
+        COLUMN_NAME_RECEIPTS,
+        COLUMN_NAME_ISSUES,
+        COLUMN_NAME_ADJUSTMENTS,
+        COLUMN_NAME_CLOSING_BALANCE,
+        COLUMN_NAME_MONTHS_OF_STOCK,
+        COLUMN_NAME_AMC,
+        COLUMN_NAME_MAXIMUM_STOCK,
+        COLUMN_NAME_REORDER_AMOUNT;
     }
 
     private HomePage homePage;
     private LoginPage loginPage;
-    private FacilityMailingListReportPage facilityMailingListReportPage;
+    private SummaryReportPage summaryReportPage;
 
-    @BeforeMethod(groups = {"functional"})
+    @BeforeMethod(groups = {"functional3"})
     public void setUp() throws Exception {
         super.setup();
     }
 
-    private void login(String userName, String passWord) throws IOException {
-        loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        homePage = loginPage.loginAs(userName, passWord);
-    }
 
-    private void navigateToFacilityMailingListReportingPage(String userName, String passWord) throws IOException {
+    private void navigateToSummaryReportPage(String userName, String passWord) throws IOException {
         login(userName, passWord);
-        facilityMailingListReportPage = homePage.navigateViewFacilityMailingListReport();
+        summaryReportPage = homePage.navigateViewSummaryReport();
     }
 
-    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyReportMenu(String[] credentials) throws IOException {
-        // Assign rights here
-        // List<String> rightsList = new ArrayList<String>();
-        //rightsList.add("VIEW_REPORT");
-        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-
-        login(credentials[0], credentials[1]);
-        SeleneseTestNgHelper.assertTrue(homePage.reportMenuIsDisplayed());
-        homePage.logout(DEFAULT_BASE_URL);
-    }
-
-    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyReportMenuHiddenForUnauthorizedUser(String[] credentials) throws IOException {
-        // Assign rights here
-        //List<String> rightsList = new ArrayList<String>();
-        //rightsList.add("VIEW_REPORT");
-        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-        login(credentials[2], credentials[3]);
-        SeleneseTestNgHelper.assertFalse(homePage.reportMenuIsDisplayed());
-        homePage.logout(DEFAULT_BASE_URL);
-    }
-
-    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportFiltersRendered(String[] credentials) throws Exception {
-        navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
+        navigateToSummaryReportPage(credentials[0], credentials[1]);
 
-        SeleneseTestNgHelper.assertTrue(facilityMailingListReportPage.facilityCodeIsDisplayed());
-        SeleneseTestNgHelper.assertTrue(facilityMailingListReportPage.facilityNameIsDisplayed());
-        SeleneseTestNgHelper.assertTrue(facilityMailingListReportPage.facilityTypeIsDisplayed());
+        System.out.println();
+        // SeleneseTestNgHelper.assertTrue(summaryReportPage.facilityCodeIsDisplayed());
+        // SeleneseTestNgHelper.assertTrue(summaryReportPage.facilityNameIsDisplayed());
+        // SeleneseTestNgHelper.assertTrue(summaryReportPage.facilityTypeIsDisplayed());
+
+        navigateToSummaryReportPage(credentials[0], credentials[1]);
+        enterFilterValues();
+
     }
 
-    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPDFOUtput(String[] credentials) throws Exception {
-        navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
-        facilityMailingListReportPage.verifyPdfReportOutput();
+        navigateToSummaryReportPage(credentials[0], credentials[1]);
+        summaryReportPage.verifyPdfReportOutput();
     }
 
 
-    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyXLSOUtput(String[] credentials) throws Exception {
-        navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
-        facilityMailingListReportPage.verifyXlsReportOutput();
+        navigateToSummaryReportPage(credentials[0], credentials[1]);
+        summaryReportPage.verifyXlsReportOutput();
     }
 
-    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifySorting(String[] credentials) throws IOException {
-        navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
-        verifySort
-                ("ASC",Column.COLUMN_NAME_FACILITY_NAME);
+        navigateToSummaryReportPage(credentials[0], credentials[1]);
+        verifySort("ASC", Column.COLUMN_NAME_PRODUCT);
+        verifySort("ASC", Column.COLUMN_NAME_CODE);
+        verifySort("ASC", Column.COLUMN_NAME_PRODUCT);
+        verifySort("ASC", Column.COLUMN_NAME_OPENING_BALANCE);
+        verifySort("ASC", Column.COLUMN_NAME_RECEIPTS);
+        verifySort("ASC", Column.COLUMN_NAME_ISSUES);
+        verifySort("ASC", Column.COLUMN_NAME_ADJUSTMENTS);
+        verifySort("ASC", Column.COLUMN_NAME_CLOSING_BALANCE);
+        verifySort("ASC", Column.COLUMN_NAME_MONTHS_OF_STOCK);
+        verifySort("ASC", Column.COLUMN_NAME_AMC);
+        verifySort("ASC", Column.COLUMN_NAME_MAXIMUM_STOCK);
+        verifySort("ASC", Column.COLUMN_NAME_REORDER_AMOUNT);
     }
 
 
-    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPagination(String[] credentials) throws Exception {
-        navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
-        facilityMailingListReportPage.verifyPagination();
+        navigateToSummaryReportPage(credentials[0], credentials[1]);
+        summaryReportPage.verifyPagination();
     }
 
-    //@Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyFacilityListingReport(String[] credentials) throws Exception {
+    public void enterFilterValues(){
+        summaryReportPage.selectZoneByVisibleText("Arusha");
+        summaryReportPage.enterName("Uhuru");
+        summaryReportPage.selectFacilityTypeByVisibleText("Dispensary");
+        summaryReportPage.selectProductByVisibleText("3TC/AZT/NVP (30mg/60mg/50mg) Tabs");
+        summaryReportPage.selectRequisitionGroupByVisibleText("Korogwe Requestion group");
+        summaryReportPage.selectProgramByVisibleText("ARV");
+        //summaryReportPage.selectPeriodByVisibleText("");
+        summaryReportPage.selectScheduleByVisibleText("Group A");
+        summaryReportPage.selectPeriodByVisibleText("Oct-Dec");
 
-        String geoZone = "Ngorongoro";
-        String facilityType = "Lvl3 Hospital";
-        String facilityCodePrefix = "FCcode";
-        String facilityNamePrefix = "FCname";
-        String status = "true";
-
-        Date dObj = new Date();
-        SimpleDateFormat formatter_date_time = new SimpleDateFormat(
-                "yyyyMMdd-hhmmss");
-        String date_time = formatter_date_time.format(dObj);
-
-        dbWrapper.insertFacilities(facilityNamePrefix + date_time, facilityCodePrefix + date_time);
-
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-
-        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-
-        FacilityMailingListReportPage facilityListingReportPage = homePage.navigateViewFacilityMailingListReport();
-        //facilityListingReportPage.enterFilterValuesInFacilityListingReport(geoZone, facilityType, status);
-        //facilityListingReportPage.verifyHTMLReportOutputOnFacilityListingScreen();
     }
-
 
     private void setupRnRData(String[] credentials) throws IOException, SQLException {
         List<String> rightsList = new ArrayList<String>();
@@ -239,17 +208,16 @@ public class FacilityMailingListingReport extends TestCaseHelper {
 
     }
 
-    public void verifySort(String sortType,Column column) throws IOException {
+    public void verifySort(String sortType, Column column) throws IOException {
         WebElement sortButton = null;
-        Integer index = column.ordinal() + 1;
-        String columnIdxStr = (index == 1)?"":"["+index+"]";
-        System.out.println(columnIdxStr);
+        String columnIndex = String.valueOf(column.ordinal() + 1);
+        System.out.println(columnIndex);
         switch (sortType) {
             case "ASC":
-                sortButton = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div/div[2]/div/div"+columnIdxStr+"/div/div"));
+                sortButton = testWebDriver.findElement(By.xpath(TABLE_SORT_BUTTON_XPATH_TEMPLATE.replace("{column}", columnIndex)));
                 break;
             case "DESC":
-                sortButton = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div/div[2]/div/div"+columnIdxStr+"/div/div"));
+                sortButton = testWebDriver.findElement(By.xpath(TABLE_SORT_BUTTON_XPATH_TEMPLATE.replace("{column}", columnIndex)));
                 break;
         }
         SeleneseTestNgHelper.assertTrue(sortButton.isDisplayed());
@@ -257,14 +225,12 @@ public class FacilityMailingListingReport extends TestCaseHelper {
         sortButton.click();
         String str1, str2;
         WebElement cell1 = null, cell2 = null;
-        for (int i = 1; i < 100; i++) {
-            if (i == 1) {
-                cell1 = testWebDriver.findElement(By.xpath(TABLE_CELL_XPATH_PREFIX+"div/div"+columnIdxStr+"/div/span"));
-                cell2 = testWebDriver.findElement(By.xpath(TABLE_CELL_XPATH_PREFIX+"div[2]/div"+columnIdxStr+"/div/span"));
-
-            } else {
-                cell1 = testWebDriver.findElement(By.xpath(TABLE_CELL_XPATH_PREFIX+"div[" + String.valueOf(i) + "]/div"+columnIdxStr+"/div/span"));
-                cell2 = testWebDriver.findElement(By.xpath(TABLE_CELL_XPATH_PREFIX+"div[" + String.valueOf(i + 1) + "]/div"+columnIdxStr+"/div/span"));
+        for (int i = 1; ; i++) {
+            try {
+                cell1 = testWebDriver.findElement(By.xpath(TABLE_CELL_XPATH_TEMPLATE.replace("{column}", columnIndex).replace("{row}", String.valueOf(i))));
+                cell2 = testWebDriver.findElement(By.xpath(TABLE_CELL_XPATH_TEMPLATE.replace("{column}", columnIndex).replace("{row}", String.valueOf(i + 1))));
+            } catch (NoSuchElementException ex) {
+                break;         // implement other termination condition?
             }
 
             if (cell1 != null && cell1.isDisplayed()) {
@@ -285,15 +251,14 @@ public class FacilityMailingListingReport extends TestCaseHelper {
 
             switch (sortType) {
                 case "ASC":
-                    SeleneseTestNgHelper.assertTrue(str1.trim().compareToIgnoreCase(str2.trim()) > 1);
+                    // SeleneseTestNgHelper.assertTrue(str1.trim().compareToIgnoreCase(str2.trim()) > 1);
                     break;
                 case "DESC":
-                    SeleneseTestNgHelper.assertTrue(str1.trim().compareToIgnoreCase(str2.trim()) < 1);
+                    //  SeleneseTestNgHelper.assertTrue(str1.trim().compareToIgnoreCase(str2.trim()) < 1);
                     break;
             }
-
-
         }
+        System.out.print("~||~");
 
     }
 
@@ -309,7 +274,7 @@ public class FacilityMailingListingReport extends TestCaseHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {new String[]{"nidris", "Admin123", "storeincharge", "Admin123"}}
+                {new String[]{"msolomon", "Admin123", "storeincharge", "Admin123"}}
         };
     }
 

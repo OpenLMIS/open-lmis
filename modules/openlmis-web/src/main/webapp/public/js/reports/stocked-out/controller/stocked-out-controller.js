@@ -1,8 +1,9 @@
-function StockedOutController($scope, StockedOutReport, AllReportPeriods, Products, ProductCategories, ProductsByCategory, ReportFacilityTypes, RequisitionGroups, OperationYears, Months, $http, $routeParams, $location) {
+function StockedOutController($scope, StockedOutReport, ReportPrograms, AllReportPeriods, ProductCategories,Products, ProductsByCategory, ReportFacilityTypes, AllFacilites,GetFacilityByFacilityType,RequisitionGroups, OperationYears, Months, $http, $routeParams, $location) {
     //to minimize and maximize the filter section
     var section = 1;
     $scope.showMessage = true;
     $scope.message = "Indicates a required field."
+
 
     $scope.defaultFlag = true;
     $scope.reporting = "quarterly";
@@ -24,6 +25,11 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
     $scope.section = function (id) {
         section = id;
     };
+
+    ReportPrograms.get(function(data){
+        $scope.programs = data.programs;
+        //$scope.programs.unshift({'name':'All Programs','id': 'All'});
+    });
 
     $scope.defaultSettings = function (str) {
 
@@ -64,6 +70,8 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
             retval = parseInt((d.getMonth() + 3) / 3) - 1;
             retval = retval + "";
         }
+
+
         return retval;
     };
 
@@ -82,6 +90,7 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
     };
 
     $scope.filterGrid = function () {
+        //alert(JSON.stringify( $scope, null, 4));
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
     };
 
@@ -152,6 +161,8 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
         {'name': 'Second Half', 'value': '2'}
     ];
 
+
+
     // copy over the start month and end months
     // this is just for initial loading.
     $(function () {
@@ -164,6 +175,7 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
         $scope.fromQuarter = 1;
         $scope.startHalf = 1;
         $scope.endHalf = 1;
+
 
         //alert('function');
     });
@@ -181,30 +193,132 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
     };
 
 
+
     RequisitionGroups.get(function (data) {
         $scope.requisitionGroups = data.requisitionGroupList;
         //$scope.requisitionGroups.push({'name':'All Reporting Groups','id':'All'});
     });
 
-    ReportFacilityTypes.get(function (data) {
-        $scope.facilityTypes = data.facilityTypes;
-        //$scope.facilityTypes.push({'name': 'All Facility Types', 'id' : 'All'});
-    });
-
-    Products.get(function (data) {
-        $scope.products = data.productList;
-        //alert(JSON.stringify( $scope.products, null, 4));
-        //$scope.products.push({'name': 'All Products','id':'All','tracer': 'All'});
-
-    });
 
     ProductCategories.get(function (data) {
         $scope.productCategories = data.productCategoryList;
         //$scope.productCategories.push({'name': 'All Product Categories', 'id' : 'All'});
     });
 
+    Products.get(function(data){
+        $scope.products = data.productList;
+        //$scope.products.unshift({'name': 'All Products','id': 'All'});
+        $scope.products.unshift({'name': 'Indicator Products','id': '0'});
+    });
+
+
+    ReportFacilityTypes.get(function (data) {
+        $scope.facilityTypes = data.facilityTypes;
+        //$scope.facilityTypes.push({'name': 'All Facility Types', 'id' : 'All'});
+    });
+
+    AllFacilites.get(function(data){
+        $scope.allFacilities = data.allFacilities;
+    });
+
+
+// program
+/*
+    $scope.$watch('program', function (selection) {
+        if (selection == "All") {
+            $scope.filterObject.programId = -1;
+        } else if (selection != undefined || selection == "") {
+            $scope.filterObject.programId = selection;
+
+            $.each($scope.programs, function (item, idx) {
+                if (idx.id == selection) {
+                    alert(idx.name);
+                    $scope.filterObject.program = idx.name;
+                }
+            });
+
+        } else {
+            $scope.filterObject.programId = 0;
+        }
+        alert(selection + "---program:>>> " + $scope.filterObject.program + " programId:>>>>" + $scope.filterObject.programId);
+        $scope.filterGrid();
+    });
+
+  */
+    $scope.$watch('program', function(selection){
+
+        if(selection == ""){
+            $scope.filterObject.programId =  -2;
+        }else if(selection != undefined || selection == ""){
+            $scope.filterObject.programId =  selection;
+            $.each($scope.programs, function (item, idx) {
+                if (idx.id == selection) {
+                    $scope.filterObject.program = idx.name;
+                }
+            });
+
+        }else{
+            $scope.filterObject.programId =  -2;
+            $scope.filterObject.program =  "Not Selected";
+        }
+        $scope.filterGrid();
+    });
+
+
+
+
+    $scope.$watch('productCategory', function (selection) {
+        if (selection == "All") {
+            $scope.filterObject.productCategoryId = -1;
+        } else if (selection != undefined || selection == "") {
+            $scope.filterObject.productCategoryId = selection;
+
+            $.each($scope.productCategories, function (item, idx) {
+                if (idx.id == selection) {
+                    $scope.filterObject.productCategory = idx.name;
+                }
+            });
+
+
+        } else {
+            $scope.filterObject.productCategoryId = 0;
+        }
+        //alert("productCategory:>>> " + $scope.filterObject.productCategory + " productCategoryId:>>>>" + $scope.filterObject.productCategoryId);
+        //$scope.ChangeProductList();
+        $scope.filterGrid();
+    });
+
+    $scope.ChangeProductList = function () {
+        ProductsByCategory.get({category: $scope.filterObject.productCategoryId}, function (data) {
+            $scope.products = data.productList;
+
+            //$scope.products.push({'name': 'All Products','id':'All','tracer': 'All'});
+        });
+    }
+
+    $scope.$watch('product', function (selection) {
+
+        if (selection == "All") {
+            $scope.filterObject.productId = -1;
+        } else if (selection != undefined || selection == "") {
+            $scope.filterObject.productId = selection;
+
+            $.each($scope.products, function (item, idx) {
+                if (idx.id == selection) {
+                    $scope.filterObject.product = idx.name;
+                }
+            });
+
+        } else {
+            $scope.filterObject.productId = 0;
+        }
+
+       //alert("selection:" + selection + " product:>>> " + $scope.filterObject.product + " productId:>>>>" + $scope.filterObject.productId);
+        $scope.filterGrid();
+    });
 
     $scope.$watch('facilityType', function (selection) {
+
         if (selection == "All") {
             $scope.filterObject.facilityTypeId = -1;
         } else if (selection != undefined || selection == "") {
@@ -217,9 +331,17 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
         } else {
             $scope.filterObject.facilityTypeId = 0;
         }
+        //alert("facilityType:>>> " + $scope.filterObject.facilityType + " facilityId:>>>>" + $scope.filterObject.facilityTypeId);
+        $scope.ChangeFacilityList
         $scope.filterGrid();
 
     });
+
+    $scope.ChangeFacilityList = function(){
+        GetFacilityByFacilityType.get({ facilityTypeId : $scope.filterObject.facilityTypeId },function(data) {
+            $scope.allFacilities =  data.facilities;
+        });
+    };
 
     $scope.$watch('facilityNameFilter', function (selection) {
         if (selection != undefined || selection == "") {
@@ -231,35 +353,26 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
         $scope.filterGrid();
     });
 
-    $scope.$watch('productCategory', function (selection) {
+// facility
+    $scope.$watch('facility', function (selection) {
         if (selection == "All") {
-            $scope.filterObject.productCategoryId = -1;
+            $scope.filterObject.facilityId = -1;
         } else if (selection != undefined || selection == "") {
-            $scope.filterObject.productCategoryId = selection;
+            $scope.filterObject.facilityId = selection;
+            $.each($scope.allFacilities, function (item, idx) {
+                if (idx.id == selection) {
+                    $scope.filterObject.facility = idx.name;
+                }
+            });
+
         } else {
-            $scope.filterObject.productCategoryId = 0;
+            $scope.filterObject.facilityId = 0;
         }
-        $scope.ChangeProductList();
+        //alert("facility:>>> " + $scope.filterObject.facility + " facilityId:>>>>" + $scope.filterObject.facilityId);
         $scope.filterGrid();
     });
 
-    $scope.ChangeProductList = function () {
-        ProductsByCategory.get({category: $scope.filterObject.productCategoryId}, function (data) {
-            $scope.products = data.productList;
-            //$scope.products.push({'name': 'All Products','id':'All','tracer': 'All'});
-        });
-    }
 
-    $scope.$watch('product', function (selection) {
-        if (selection == "All") {
-            $scope.filterObject.productId = -1;
-        } else if (selection != undefined || selection == "") {
-            $scope.filterObject.productId = selection;
-        } else {
-            $scope.filterObject.productId = 0;
-        }
-        $scope.filterGrid();
-    });
 
     $scope.$watch('rgroup', function (selection) {
         if (selection == "All") {
@@ -274,10 +387,23 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
         } else {
             $scope.filterObject.rgroupId = 0;
         }
+        //alert("rgroup:>>> " + selection + " rgroupId:>>>>" + productId);
         $scope.filterGrid();
     });
 
-    $scope.$watch('period', function (selection) {
+
+    $scope.$watch('periodType', function (selection) {
+        if (selection != undefined || selection == "") {
+            $scope.filterObject.periodType = selection;
+
+        } else {
+            $scope.filterObject.periodType = "monthly";
+        }
+        //alert('PeriodType');
+        $scope.filterGrid();
+    });
+
+     $scope.$watch('period', function (selection) {
         if (selection == "All") {
             $scope.filterObject.periodId = -1;
         } else if (selection != undefined || selection == "") {
@@ -462,17 +588,6 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
     }
 
 
-    $scope.$watch('periodType', function (selection) {
-        if (selection != undefined || selection == "") {
-            $scope.filterObject.periodType = selection;
-
-        } else {
-            $scope.filterObject.periodType = "monthly";
-        }
-        //alert('PeriodType');
-        $scope.filterGrid();
-    });
-
 
     $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
@@ -509,18 +624,16 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
     });
 
     $scope.setPagingData = function (data, page, pageSize, total) {
+
         $scope.myData = data;
         $scope.pagingOptions.totalServerItems = total;
         $scope.numberOfPages = ( Math.ceil(total / pageSize)) ? Math.ceil(total / pageSize) : 1;
 
     };
 
-
     //filter form data section
     $scope.filterObject = {
-        facilityTypeId: $scope.facilityType,
-        facilityType: "",
-        periodType: $scope.periodType,
+       periodType: $scope.periodType,
         fromYear: $scope.fromYear,
         fromMonth: $scope.fromMonth,
         fromQuarter: $scope.fromQuarter,
@@ -529,12 +642,28 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
         toMonth: $scope.toMonth,
         toQuarter: $scope.toQuarter,
         toSemiAnnual: $scope.endHalf,
-        productId: $scope.productId,
-        productCategoryId: $scope.productCategoryId,
+
+        programId: $scope.program,
+        program: "",
+
         rgroupId: $scope.rgroup,
         rgroup: "",
-        facility: $scope.facilityNameFilter
+
+        productCategoryId: $scope.productCategory,
+        productCategory: $scope.productCategory,
+
+        productId: $scope.product,
+        product: $scope.product,
+
+        facilityTypeId: $scope.facilityType,
+        facilityType: "",
+
+        facilityId: $scope.facility,
+        facility: $scope.facility
+
+
     };
+
 
     $scope.getPagedDataAsync = function (pageSize, page) {
         var params = {};
@@ -551,10 +680,15 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
             params[index] = value;
         });
 
+        // clear old data if there was any
+        $scope.data = [];
 
-        //alert(JSON.stringify(params))
         StockedOutReport.get(params, function (data) {
-            $scope.setPagingData(data.pages.rows, page, pageSize, data.pages.total);
+            if(data.pages != undefined){
+                $scope.setPagingData(data.pages.rows, page, pageSize, data.pages.total);
+                $scope.data = data.pages.rows;
+            }
+
         });
 
     };
@@ -568,7 +702,7 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
     }, true);
 
-    $scope.sortInfo = { fields:["supplyingfacility","facility","product"], directions: ["ASC","ASC","ASC"]};
+    $scope.sortInfo = { fields:["supplyingfacility","facility","product","processing_period_name"], directions: ["ASC","ASC","ASC","ASC"]};
 
     // put out the sort order
     $.each($scope.sortInfo.fields, function (index, value) {
@@ -595,11 +729,12 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
         columnDefs:
             [
                 { field: 'supplyingFacility', displayName: 'Supplying Facility', width: "180px;"},
-                { field: 'facilitycode', displayName: 'Code', width: "*" },
-                { field: 'facility', displayName: 'Facility Name', width: "*", resizable: false},
-                { field: 'facilitytypename', displayName: 'Facility Type', width: "*", resizable: false},
-                { field: 'location', displayName: 'Location', width: "*" },
-                { field: 'product', displayName: 'Product Stocked Out', width: "*" }
+                { field: 'facilitycode', displayName: 'Code', width: "100px;" },
+                { field: 'facility', displayName: 'Facility Name', width: "250px;", resizable: false},
+                { field: 'facilitytypename', displayName: 'Facility Type', width: "150px;", resizable: false},
+                { field: 'location', displayName: 'Location', width: "100px;" },
+                { field: 'product', displayName: 'Product Stocked Out', width: "350px;" },
+                { field: 'processing_period_name', displayName: 'Period', width: "250px;" }
             ],
         enablePaging: true,
         enableSorting :true,
@@ -649,6 +784,7 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
             $scope.message = check == "" ? reqMsg : "";
         }
 
+
     }
 
     function parseJsonDate(jsonDate) {
@@ -669,7 +805,11 @@ function StockedOutController($scope, StockedOutReport, AllReportPeriods, Produc
             $scope.startMonth = $scope.defaultSettings('M');
         }
         $scope.startYear = $scope.defaultSettings('Y');
+
+
+
     };
+
     init();
 
 

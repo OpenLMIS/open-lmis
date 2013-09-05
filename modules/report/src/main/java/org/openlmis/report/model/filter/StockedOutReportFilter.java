@@ -37,12 +37,18 @@ public class StockedOutReportFilter implements ReportData {
     private int semiAnnualFrom;
     private int semiAnnualTo;
 
-    private int facilityTypeId;
-    private String facilityType;
-    private int productId;
-    private int productCategoryId;
+
+    private int programId;
+    private String program;
     private int rgroupId;
     private String rgroup;
+    private int productCategoryId;
+    private String productCategory;
+    private int productId;
+    private String product;
+    private int facilityTypeId;
+    private String facilityType;
+    private int facilityId;
     private String facility;
 
     @Override
@@ -51,10 +57,24 @@ public class StockedOutReportFilter implements ReportData {
         DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
 
         StringBuilder filtersValue = new StringBuilder("");
-        filtersValue.append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
-                append("Facility Types : ").append(this.getFacilityType()).append("\n").
-                append("Reporting Groups : ").append(this.getRgroup());
 
+        String strProgram = this.getProgram() == null ? "All Programs" : this.getProgram();
+        String strReportingGroup = this.getRgroup() == null ? "All Requisition Groups" : this.getRgroup();
+        String strProductCategory = this.getProductCategory() == null ? "All Product Categories" : this.getProductCategory();
+        String strProduct = this.getProduct() == null ? "All Products" : this.getProduct();
+        String strFacilityType = this.getFacilityType() == null ? "All Facility Types" : this.getFacilityType();
+        String strFacility = this.getFacility() == null || this.getFacility() =="" ? "All Facilities" : this.getFacility();
+
+        filtersValue.
+                append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
+                append("Program : ").append(strProgram).append("\n").
+                append("Reporting Groups : ").append(strReportingGroup).append("\n").
+                append("Product Category : ").append(strProductCategory).append("\n").
+                append("Product : ").append(strProduct).append("\n").
+                append("Facility Types : ").append(strFacilityType).append("\n").
+                append("Facility : ").append(strFacility).append("\n");
         return filtersValue.toString();
     }
+
+
 }

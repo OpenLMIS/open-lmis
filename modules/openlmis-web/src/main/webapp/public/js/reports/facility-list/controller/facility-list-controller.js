@@ -39,12 +39,12 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
 
         ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.push({'name': '- All Facility Types -'});
+            $scope.facilityTypes.unshift({'name': 'All Facility Types', id:'0'});
         });
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
-            $scope.zones.push({'name': '- All Zones -'});
+            $scope.zones.unshift({'name': 'All Zones', id:'0'});
         });
            // [
            // ,
@@ -54,7 +54,7 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
         //];
 
         $scope.statuses = [
-            {'name': '- All Statuses -'},
+            {'name': 'All Statuses'},
             {'name': 'Active', 'value': "TRUE"},
             {'name': 'Inavtive', 'value': "FALSE"}
         ];
@@ -135,8 +135,15 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
                             if(value != undefined)
                                 params[index] = value;
                         });
+
+                        $scope.data = [];
+
                         FacilityList.get(params, function(data) {
-                            $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
+                            //if(data.pages != undefined){
+                                $scope.data = data.pages.rows;
+                                $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
+                            //}
+
                         });
         };
 

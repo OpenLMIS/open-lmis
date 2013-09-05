@@ -24,16 +24,16 @@ public class StockedOutReportQueryBuilder {
         StockedOutReportFilter filter  = (StockedOutReportFilter)params.get("filterCriteria");
         Map sortCriteria = (Map) params.get("SortCriteria");
         BEGIN();
-        SELECT("DISTINCT supplyingfacility,facilitycode, facility, product, facilitytypename,  location");
+        SELECT("DISTINCT supplyingfacility,facilitycode, facility, product, facilitytypename, location, processing_period_name");
         FROM("vw_stock_status");
         WHERE("status = 'SO'");
         writePredicates(filter);
-        ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, StockedOutReport.class,"supplyingfacility asc, facility asc, product asc"));
+        ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, StockedOutReport.class,"supplyingfacility asc, facility asc, product asc, processing_period_name asc"));
         return SQL();
 
     }
     private static void writePredicates(StockedOutReportFilter filter){
-
+        WHERE("req_status in ('APPROVED','RELEASED')");
         if(filter != null){
             if (filter.getFacilityTypeId() != 0 && filter.getFacilityTypeId() != -1) {
                 WHERE("facilitytypeid = #{filterCriteria.facilityTypeId}");
@@ -53,10 +53,16 @@ public class StockedOutReportQueryBuilder {
             if(filter.getRgroupId() != 0 && filter.getRgroupId() != -1){
                 WHERE("rgid = #{filterCriteria.rgroupId}");
             }
-            if(filter.getProductId() != 0){
+            if(filter.getProductId() > 0){
                 WHERE("productid= #{filterCriteria.productId}");
-            } else {
+            } else if (filter.getProductId() == 0) {
                 WHERE("indicator_product = true");
+            }
+            if(filter.getProgramId() != 0 && filter.getProgramId() != -1){
+                 WHERE("programid = #{filterCriteria.programId}");
+            }
+            if(filter.getFacilityId() != 0 && filter.getFacilityId() != -1){
+                WHERE("facility_id = #{filterCriteria.facilityId}");
             }
         }
     }

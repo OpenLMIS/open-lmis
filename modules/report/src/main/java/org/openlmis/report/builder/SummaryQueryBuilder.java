@@ -8,11 +8,6 @@ package org.openlmis.report.builder;
 
 import java.util.Map;
 
-/**
- * User: Elias
- * Date: 4/11/13
- * Time: 11:34 AM
- */
 public class SummaryQueryBuilder {
 
     public static String getQuery(Map params){
@@ -51,10 +46,12 @@ public class SummaryQueryBuilder {
     }
 
     private static String writePredicates(Map params){
-        String predicate = "";
-      if(params.containsKey("param1")){
-        params = (Map) params.get("param1");
-      }
+        String predicate = " WHERE r.status in ('APPROVED','RELEASED') ";
+
+        // if for some reason the map is coming as a map of maps, decode it here
+        if(params.containsKey("param1")){
+          params = (Map) params.get("param1");
+        }
         String facilityTypeId = (!params.containsKey("facilityTypeId") || params.get("facilityTypeId") == null) ? null :((String[])params.get("facilityTypeId"))[0];
         String facilityName = (!params.containsKey("facilityName") || params.get("facilityName") == null) ? null : ((String[])params.get("facilityName"))[0];
         String period =    (!params.containsKey("periodId") || params.get("periodId") == null) ? null : ((String[])params.get("periodId"))[0];
@@ -95,11 +92,7 @@ public class SummaryQueryBuilder {
 
             predicate += " and facilities.name = '"+ facilityName +"'";
         }
-        if (predicate == ""){
-          predicate = "WHERE 1 = 0 ";
-        } else{
-          predicate = "WHERE 1 = 1 " + predicate;
-        }
+
         return predicate;
     }
 
