@@ -33,7 +33,7 @@ public class StockedOutReportQueryBuilder {
 
     }
     private static void writePredicates(StockedOutReportFilter filter){
-
+        WHERE("req_status in ('APPROVED','RELEASED')");
         if(filter != null){
             if (filter.getFacilityTypeId() != 0 && filter.getFacilityTypeId() != -1) {
                 WHERE("facilitytypeid = #{filterCriteria.facilityTypeId}");
