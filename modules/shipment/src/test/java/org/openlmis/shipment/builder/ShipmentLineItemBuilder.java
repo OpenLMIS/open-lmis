@@ -11,7 +11,7 @@ import java.util.Date;
 public class ShipmentLineItemBuilder {
 
 
-  public static Property<? super ShipmentLineItem, Long> rnrId = new Property<>();
+  public static Property<? super ShipmentLineItem, Long> orderId = new Property<>();
 
   public static Property<? super ShipmentLineItem, String> productCode = new Property<>();
 
@@ -32,7 +32,7 @@ public class ShipmentLineItemBuilder {
 
       ShipmentLineItem lineItem = new ShipmentLineItem();
 
-      lineItem.setRnrId(lookup.valueOf(rnrId, 1L));
+      lineItem.setOrderId(lookup.valueOf(orderId, 1L));
       lineItem.setProductCode(lookup.valueOf(productCode, "P123"));
       lineItem.setQuantityShipped(lookup.valueOf(quantityShipped, 0));
       lineItem.setCost(lookup.valueOf(cost, nullCost));

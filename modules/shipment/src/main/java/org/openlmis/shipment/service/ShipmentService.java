@@ -43,7 +43,7 @@ public class ShipmentService {
   }
 
   private void validateShipment(ShipmentLineItem shipmentLineItem) {
-    if (requisitionService.getLWById(shipmentLineItem.getRnrId()) == null) {
+    if (requisitionService.getLWById(shipmentLineItem.getOrderId()) == null) {
       throw new DataException("error.unknown.order");
     }
     if (productService.getIdForCode(shipmentLineItem.getProductCode()) == null) {

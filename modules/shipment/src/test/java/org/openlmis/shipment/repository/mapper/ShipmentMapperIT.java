@@ -78,7 +78,7 @@ public class ShipmentMapperIT {
     String fetchShipmentFileInfoQuery = "Select * from shipment_line_items where id = ?";
     ResultSet shipmentFileInfoResultSet = queryExecutor.execute(fetchShipmentFileInfoQuery, Arrays.asList(shipmentLineItem.getId()));
     shipmentFileInfoResultSet.next();
-    assertThat(shipmentFileInfoResultSet.getLong("rnrId"), is(shipmentLineItem.getRnrId()));
+    assertThat(shipmentFileInfoResultSet.getLong("orderId"), is(shipmentLineItem.getOrderId()));
     assertThat(shipmentFileInfoResultSet.getString("productCode"), is(shipmentLineItem.getProductCode()));
     assertThat(shipmentFileInfoResultSet.getInt("quantityShipped"), is(shipmentLineItem.getQuantityShipped()));
   }
@@ -101,7 +101,7 @@ public class ShipmentMapperIT {
 
     return make(a(defaultShipmentLineItem,
       with(productCode, product.getCode()),
-      with(rnrId, requisition.getId()),
+      with(orderId, requisition.getId()),
       with(quantityShipped, 23),
       with(shippedDate, new Date()),
       with(packedDate, new Date())));

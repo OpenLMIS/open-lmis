@@ -21,7 +21,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 public class ShipmentLineItem extends BaseModel {
 
-  private Long rnrId;
+  private Long orderId;
 
   private String productCode;
 

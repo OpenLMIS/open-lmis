@@ -75,7 +75,7 @@ public class ShipmentRepositoryTest {
   @Test
   public void shouldGetProcessedTimeStampByOrderId() throws Exception {
     ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
-    shipmentLineItem.setRnrId(1L);
+    shipmentLineItem.setOrderId(1L);
     Date expectedTimestamp = new Date();
     when(shipmentMapper.getProcessedTimeStamp(shipmentLineItem)).thenReturn(expectedTimestamp);
 

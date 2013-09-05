@@ -62,7 +62,7 @@ public class ShipmentServiceTest {
   public void shouldInsertShipment() throws Exception {
     ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
       with(productCode, "P10"),
-      with(rnrId, 1L),
+      with(orderId, 1L),
       with(quantityShipped, 500)));
 
 
@@ -77,10 +77,10 @@ public class ShipmentServiceTest {
   }
 
   @Test
-  public void shouldNotInsertShipmentIfRnrIdIsNotValid() throws Exception {
+  public void shouldNotInsertShipmentIfOrderIdIsNotValid() throws Exception {
     ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
       with(productCode, "P10"),
-      with(rnrId, 1L),
+      with(orderId, 1L),
       with(quantityShipped, 500)));
 
     when(requisitionService.getLWById(1l)).thenReturn(null);
@@ -98,7 +98,7 @@ public class ShipmentServiceTest {
 
     ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
       with(productCode, "P10"),
-      with(rnrId, 1L),
+      with(orderId, 1L),
       with(quantityShipped, 500)));
 
     when(requisitionService.getLWById(1l)).thenReturn(new Rnr());
@@ -115,7 +115,7 @@ public class ShipmentServiceTest {
   public void shouldNotInsertShipmentIfQuantityNegative() throws Exception {
     ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
       with(productCode, "P10"),
-      with(rnrId, 1L),
+      with(orderId, 1L),
       with(quantityShipped, -1)));
 
     when(productService.getIdForCode("P10")).thenReturn(1l);
@@ -157,7 +157,7 @@ public class ShipmentServiceTest {
   @Test
   public void shouldGetProcessedTimeStampByOrderId() throws Exception {
     ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
-    shipmentLineItem.setRnrId(1L);
+    shipmentLineItem.setOrderId(1L);
     Date expectedTimestamp = new Date();
     when(shipmentRepository.getProcessedTimeStamp(shipmentLineItem)).thenReturn(expectedTimestamp);
 

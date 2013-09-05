@@ -21,9 +21,9 @@ import java.util.Date;
 public interface ShipmentMapper {
 
   @Insert({"INSERT INTO shipment_line_items ",
-    "(rnrId, productCode, quantityShipped, cost, packedDate, shippedDate, modifiedDate)",
+    "(orderId, productCode, quantityShipped, cost, packedDate, shippedDate, modifiedDate)",
     "VALUES",
-    "(#{rnrId}, #{productCode}, #{quantityShipped}, #{cost}, #{packedDate}, #{shippedDate}, #{modifiedDate})"})
+    "(#{orderId}, #{productCode}, #{quantityShipped}, #{cost}, #{packedDate}, #{shippedDate}, #{modifiedDate})"})
   @Options(useGeneratedKeys = true)
   public void insertShippedLineItem(ShipmentLineItem shipmentLineItem);
 
@@ -34,17 +34,17 @@ public interface ShipmentMapper {
   @Select("SELECT * FROM shipment_file_info WHERE id = #{id}")
   ShipmentFileInfo getShipmentFileInfo(Long id);
 
-  @Select("SELECT * FROM shipment_line_items WHERE rnrId= #{rnrId} AND productCode=#{productCode}")
+  @Select("SELECT * FROM shipment_line_items WHERE orderId = #{orderId} AND productCode=#{productCode}")
   ShipmentLineItem getShippedLineItem(ShipmentLineItem shipmentLineItem);
 
   @Update({"UPDATE shipment_line_items ",
-    "SET rnrId= #{rnrId},",
+    "SET orderId = #{orderId},",
     "productCode= #{productCode},",
     "quantityShipped= #{quantityShipped},",
     "modifiedDate= #{modifiedDate}",
     "WHERE id= #{id}"})
   void updateShippedLineItem(ShipmentLineItem shipmentLineItem);
 
-  @Select("SELECT modifiedDate FROM shipment_line_items WHERE rnrId = #{rnrId} LIMIT 1")
+  @Select("SELECT modifiedDate FROM shipment_line_items WHERE orderId = #{orderId} LIMIT 1")
   Date getProcessedTimeStamp(ShipmentLineItem shipmentLineItem);
 }

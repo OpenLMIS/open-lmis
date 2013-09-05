@@ -23,7 +23,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @NoArgsConstructor
 public class ShipmentLineItemTransformer {
 
-  private String rnrId;
+  private String orderId;
   private String productCode;
   private String quantityShipped;
   private String cost;
@@ -45,7 +45,9 @@ public class ShipmentLineItemTransformer {
     return lineItem;
   }
 
-  private void setOptionalFields(ShipmentLineItem lineItem, String packedDateFormat, String shippedDateFormat) throws ParseException {
+  private void setOptionalFields(ShipmentLineItem lineItem, String packedDateFormat, String shippedDateFormat)
+    throws ParseException {
+
     if (!isBlank(cost)) {
       lineItem.setCost(new BigDecimal(cost.trim()));
     }
@@ -62,13 +64,13 @@ public class ShipmentLineItemTransformer {
 
   private void setMandatoryFields(ShipmentLineItem lineItem) {
     lineItem.setProductCode(productCode.trim());
-    lineItem.setRnrId(Long.valueOf(rnrId.trim()));
+    lineItem.setOrderId(Long.valueOf(orderId.trim()));
     lineItem.setQuantityShipped(Integer.valueOf(quantityShipped.trim()));
 
   }
 
   private void checkMandatory() {
-    if (isBlank(productCode) || isBlank(rnrId) || isBlank(quantityShipped)) {
+    if (isBlank(productCode) || isBlank(orderId) || isBlank(quantityShipped)) {
       throw new DataException("mandatory.field.missing");
     }
   }

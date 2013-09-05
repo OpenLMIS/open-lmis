@@ -1,3 +1,9 @@
+/*
+ * CShipment © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.shipment;
 
 import org.junit.Rule;
@@ -20,19 +26,19 @@ public class ShipmentLineItemTransformerTest {
   @Test
   public void shouldTrimAndParseFieldsWithSpaces() throws Exception {
 
-    String rnrIdWithSpaces = " 11 ";
+    String orderIdWithSpaces = " 11 ";
     String productCodeWithSpaces = " P111 ";
     String quantityShippedWithSpaces = " 22 ";
     String costWithSpaces = "21 ";
     String packedDateWithSpaces = " 10/10/2013 ";
     String shippedDateWithSpaces = "10/12/2013";
-    ShipmentLineItem lineItem = new ShipmentLineItemTransformer(rnrIdWithSpaces, productCodeWithSpaces,
+    ShipmentLineItem lineItem = new ShipmentLineItemTransformer(orderIdWithSpaces, productCodeWithSpaces,
       quantityShippedWithSpaces, costWithSpaces, packedDateWithSpaces, shippedDateWithSpaces)
       .transform("MM/dd/yyyy", "MM/dd/yyyy");
 
     assertThat(lineItem.getProductCode(), is("P111"));
     assertThat(lineItem.getQuantityShipped(), is(22));
-    assertThat(lineItem.getRnrId(), is(11L));
+    assertThat(lineItem.getOrderId(), is(11L));
     assertThat(lineItem.getPackedDate().toString(), is("Thu Oct 10 00:00:00 IST 2013"));
     assertThat(lineItem.getShippedDate().toString(), is("Sat Oct 12 00:00:00 IST 2013"));
     assertThat(lineItem.getCost().toString(), is("21"));
@@ -47,7 +53,7 @@ public class ShipmentLineItemTransformerTest {
 
     assertThat(lineItem.getProductCode(), is("P123"));
     assertThat(lineItem.getQuantityShipped(), is(1234));
-    assertThat(lineItem.getRnrId(), is(111L));
+    assertThat(lineItem.getOrderId(), is(111L));
     assertNull(lineItem.getPackedDate());
     assertNull(lineItem.getShippedDate());
     assertNull(lineItem.getCost());
@@ -56,7 +62,7 @@ public class ShipmentLineItemTransformerTest {
   @Test
   public void shouldThrowErrorForWrongRnrIdDataType() {
     ShipmentLineItemTransformer transformer = transformerWithAllFields();
-    transformer.setRnrId("3333.33");
+    transformer.setOrderId("3333.33");
 
     expectException.expect(DataException.class);
     expectException.expectMessage("wrong.data.type");
@@ -127,7 +133,7 @@ public class ShipmentLineItemTransformerTest {
   @Test
   public void shouldThrowErrorIfRnrIdIsMissing() {
     ShipmentLineItemTransformer transformer = transformerWithAllFields();
-    transformer.setRnrId(null);
+    transformer.setOrderId(null);
 
     expectException.expect(DataException.class);
     expectException.expectMessage("mandatory.field.missing");
@@ -153,7 +159,7 @@ public class ShipmentLineItemTransformerTest {
     ShipmentLineItem lineItem = transformer.transform(SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT);
     assertThat(lineItem.getProductCode(), is("P123"));
     assertThat(lineItem.getQuantityShipped(), is(1234));
-    assertThat(lineItem.getRnrId(), is(111L));
+    assertThat(lineItem.getOrderId(), is(111L));
     assertThat(lineItem.getCost().toString(), is("3333.33"));
 
 
@@ -173,7 +179,7 @@ public class ShipmentLineItemTransformerTest {
     ShipmentLineItemTransformer transformer = new ShipmentLineItemTransformer();
     transformer.setProductCode("P123");
     transformer.setQuantityShipped("1234");
-    transformer.setRnrId("111");
+    transformer.setOrderId("111");
 
     return transformer;
   }
@@ -184,7 +190,7 @@ public class ShipmentLineItemTransformerTest {
 
     transformer.setProductCode("P123");
     transformer.setQuantityShipped("1234");
-    transformer.setRnrId("111");
+    transformer.setOrderId("111");
     transformer.setCost("11");
     transformer.setShippedDate("03/03/2012");
     transformer.setPackedDate("03/03/2012");
