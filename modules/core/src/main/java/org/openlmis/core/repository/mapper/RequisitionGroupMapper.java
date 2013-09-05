@@ -71,7 +71,8 @@ public interface RequisitionGroupMapper {
           "                    Count(DISTINCT facilityid) facilityCount  " +
           "             FROM   requisition_group_members rgm  " +
           "             GROUP  BY rgm.requisitiongroupid) AS z  " +
-          "         ON z.id = x.id ")
+          "         ON z.id = x.id " +
+          "ORDER BY y.supervisoryNodeName, y.name")
   @Results(value={
           @Result(property = "supervisoryNode.id", column = "supervisoryNodeId"),
           @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
