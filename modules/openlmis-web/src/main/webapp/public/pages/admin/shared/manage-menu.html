@@ -6,6 +6,12 @@
 
 <div class="manage-nav">
   <ul class="clearfix">
+
+  <li ng-show="hasPermission('MANAGE_GEOGRAPHIC_ZONES')" ng-class="geographicZonesSelected">
+      <a href="/public/pages/admin/geographic-zones/index.html#/search">
+          <span id="geographic-zones-tab">Geo Zones</span>
+      </a>
+  </li>
     <li ng-show="hasPermission('MANAGE_FACILITY')" ng-class="facilitySelected">
       <a href="/public/pages/admin/facility/index.html">
         <span id="facility-tab" openlmis-message="menu.header.facilities"></span>
@@ -16,29 +22,45 @@
               <span openlmis-message="menu.header.roles"></span>
           </a>
       </li>
-    <li ng-show="hasPermission('MANAGE_SCHEDULE')" ng-class="schedulesSelected"><a
-      href="/public/pages/admin/schedule/index.html"><span id="schedule-tab" openlmis-message="menu.header.schedules"></span></a></li>
-    <li ng-show="hasPermission('MANAGE_USER')" ng-class="userSelected"><a
-      href="/public/pages/admin/user/index.html#/search"><span id="user-tab" openlmis-message="menu.header.users"></span></a></li>
-  
-    <li ng-show="hasPermission('MANAGE_GEOGRAPHIC_ZONES')" ng-class="geographicZonesSelected"><a
-          href="/public/pages/admin/geographic-zones/index.html#/search"><span id="geographic-zones-tab">Geographic Zones</span></a></li>
-  
-    <li ng-show="hasPermission('MANAGE_SUPPLYLINE')" ng-class="supplylineSelected">
-      <a href="/public/pages/admin/supplyline/index.html"><span id="supplyline-tab"></span>Supply Lines</a>
+    <li ng-show="hasPermission('MANAGE_SCHEDULE')" ng-class="schedulesSelected">
+        <a href="/public/pages/admin/schedule/index.html">
+            <span id="schedule-tab" openlmis-message="menu.header.schedules"></span>
+        </a>
+    </li>
+    <li ng-show="hasPermission('MANAGE_USER')" ng-class="userSelected">
+        <a href="/public/pages/admin/user/index.html#/search">
+            <span id="user-tab" openlmis-message="menu.header.users"></span>
+        </a>
     </li>
 
     <li ng-show="hasPermission('MANAGE_PRODUCT')" ng-class="productSelected">
-        <a href="/public/pages/admin/product/index.html"><span id="product-tab">Manage Products</span></a>
+        <a href="/public/pages/admin/product/index.html">
+            <span id="product-tab">Products</span>
+        </a>
     </li>
-    <li ng-show="hasPermission('MANAGE_REQUISITION_GROUP')" ng-class="requisitionGroupSelected"><a
-          href="/public/pages/admin/requisition-group/index.html#/list"><span id="requisition-group-tab">Requisition Groups</span></a></li>
-    <li ng-show="hasPermission('MANAGE_SUPERVISORY_NODE')" ng-class="supervisoryNodeSelected"><a
-          href="/public/pages/admin/supervisory-node/index.html#/list"><span id="supervisory-node-tab">Supervisory Nodes</span></a>
+  <li ng-show="hasPermission('MANAGE_SUPERVISORY_NODE')" ng-class="supervisoryNodeSelected">
+      <a href="/public/pages/admin/supervisory-node/index.html#/list">
+          <span id="supervisory-node-tab">Supervisory Nodes</span>
+      </a>
+  </li>
+    <li ng-show="hasPermission('MANAGE_REQUISITION_GROUP')" ng-class="requisitionGroupSelected">
+        <a href="/public/pages/admin/requisition-group/index.html#/list">
+            <span id="requisition-group-tab">Requisition Groups</span>
+        </a>
     </li>
-    <li ng-show="hasPermission('MANAGE_REQ_GRP_PROG_SCHEDULE')" ng-class="requisitionGroupProgramScheduleSelected"><a
-          href="/public/pages/admin/requisition-group-program-schedule/index.html#/list"><span id="requisition-group-program-schedule-tab">Requisition Group Program Schedules</span></a>
+
+  <li ng-show="hasPermission('MANAGE_SUPPLYLINE')" ng-class="supplylineSelected">
+      <a href="/public/pages/admin/supplyline/index.html">
+          <span id="supplyline-tab"></span>Supply Lines
+      </a>
+  </li>
+    <li ng-show="hasPermission('MANAGE_REQ_GRP_PROG_SCHEDULE')" ng-class="requisitionGroupProgramScheduleSelected">
+        <a href="/public/pages/admin/requisition-group-program-schedule/index.html#/list">
+            <span id="requisition-group-program-schedule-tab">Program Schedules</span>
+        </a>
     </li>
-  
+    <li ng-show="hasPermission('MANAGE_PRODUCT_ALLOWED_FOR_FACILITY')" ng-class="productAllowedForFacilitySelected"><a
+          href="/public/pages/admin/product-allowed-for-facility/index.html#/list"><span id="product-allowed-for-facility-tab">Products Permissions</span></a>
+    </li>
   </ul>
 </div>

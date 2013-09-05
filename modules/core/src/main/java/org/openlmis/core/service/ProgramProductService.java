@@ -54,31 +54,40 @@ public class ProgramProductService {
   }
 
   public void save(ProgramProduct programProduct) {
+
+
     if (programProduct.getId() == null) {
-
       boolean globalProductStatus = productService.isActive(programProduct.getProduct().getCode());
-      if (globalProductStatus && programProduct.isActive()) {
+      if (globalProductStatus && programProduct.isActive())
         programService.setFeedSendFlag(programProduct.getProgram(), true);
-      }
     } else {
-
       ProgramProduct existingProgramProduct = programProductRepository.getById(programProduct.getId());
       if (existingProgramProduct.getProduct().getActive() && (existingProgramProduct.isActive() != programProduct.isActive())) {
         programService.setFeedSendFlag(programProduct.getProgram(), true);
       }
-
     }
     programProductRepository.save(programProduct);
-    // log the price change here.
-    // and only log it if there was an actual change in price
-    if(programProduct.getId() != null){
+  }
 
+  public void saveAndLogPriceChange(ProgramProduct programProduct){
+    ProgramProduct existingProgramProduct = null;
+
+    if (programProduct.getId() != null) {
+      existingProgramProduct = programProductRepository.getById(programProduct.getId());
+    }
+    save(programProduct);
+    if( ( existingProgramProduct == null && programProduct.isActive() ) || (existingProgramProduct != null && programProduct.getCurrentPrice().compareTo( existingProgramProduct.getCurrentPrice()) != 0)){
+      programProductRepository.save(programProduct);
+      // now log the price change if it has to be logged.
+      logPriceChange(programProduct);
+    }
+  }
+
+  private void logPriceChange(ProgramProduct programProduct) {
       ProgramProductPrice priceChange = new ProgramProductPrice();
       priceChange.setProgramProduct( programProduct );
       priceChange.setPricePerDosage( programProduct.getCurrentPrice() );
       this.updateProgramProductPrice( priceChange );
-
-    }
 
   }
 

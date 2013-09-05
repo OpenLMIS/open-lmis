@@ -23,6 +23,7 @@
   <script src="/public/lib/underscore/underscore-min.js"></script>
   <script src="/public/lib/select2/select2.js"></script>
   <script src="/public/js/shared/select2-ext.js"></script>
+  <script src="/public/lib/indexed-db-angular-service/js/services/indexed-db.js"></script>
   <link rel="stylesheet" href="/public/lib/select2/select2.css">
   <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
@@ -32,7 +33,6 @@
   <script src="/public/js/shared/util.js"></script>
   <script src="/public/js/shared/services/services.js"></script>
   <script src="/public/js/shared/services/message-service.js"></script>
-  <script src="/public/js/shared/services/indexed-db.js"></script>
   <script src="/public/js/shared/services/authorization-service.js"></script>
   <script src="/public/js/shared/services/navigate-back-service.js"></script>
   <script src="/public/js/shared/controller/header-controller.js"></script>
@@ -45,15 +45,24 @@
   <script src="/public/js/shared/directives/openlmis-message.js"></script>
   <script src="/public/js/shared/directives/ui-nav.js"></script>
   <script src="/public/js/shared/directives/modal-events.js"></script>
+  <script src="/public/js/shared/directives/auto-save.js"></script>
 
   <script src="/public/lib/localstorage/localStorage.js"></script>
   <script src="/public/js/shared/localStorageKeys.js"></script>
 
   <!-- page specific libaries/files -->
+  <script src="/public/js/distribution/resolve/distribution-resolve.js"></script>
   <script src="/public/js/distribution/module/distribution-module.js"></script>
+  <script src="/public/js/distribution/migrations.js"></script>
   <script src="/public/js/distribution/model/distribution.js"></script>
   <script src="/public/js/distribution/model/refrigerator-reading.js"></script>
+  <script src="/public/js/distribution/model/refrigerators.js"></script>
+  <script src="/public/js/distribution/model/epi-use.js"></script>
+  <script src="/public/js/distribution/model/refrigerators.js"></script>
   <script src="/public/js/distribution/service/shared-distributions.js"></script>
+  <script src="/public/js/distribution/service/distribution-service.js"></script>
+  <script src="/public/js/distribution/controller/epi-use-controller.js"></script>
+  <script src="/public/js/distribution/controller/record-facility-menu-controller.js"></script>
   <script src="/public/js/distribution/controller/distribution-list-controller.js"></script>
   <script src="/public/js/distribution/controller/distribution-controller.js"></script>
   <script src="/public/js/distribution/controller/view-load-amount-controller.js"></script>
@@ -72,9 +81,9 @@
 <ng-include src="'/public/pages/header-offline.html'"></ng-include>
 <ng-include src="'/public/pages/navigation-offline.html'"></ng-include>
 
-  <div class="content">
-    <div ng-view></div>
-  </div>
+<div class="content">
+  <div ng-view></div>
+</div>
 
 </body>
 </html>

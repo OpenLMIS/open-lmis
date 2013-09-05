@@ -32,6 +32,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class SupplyLineServiceTest {
@@ -121,11 +122,22 @@ public class SupplyLineServiceTest {
     when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1L);
     supplyLine.getSupervisoryNode().setId(1L);
     when(supervisoryNodeRepository.getSupervisoryNodeParentId(1L)).thenReturn(null);
-    when(supplyLineRepository.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine)).thenReturn(supplyLine);
+    when(supplyLineRepository.getSupplyLineBy(supplyLine.getSupervisoryNode(), supplyLine.getProgram())).thenReturn(supplyLine);
     supplyLineService.save(supplyLine);
 
     SupplyLine result = supplyLineService.getExisting(supplyLine);
 
     assertThat(result, is(supplyLine));
+  }
+
+  @Test
+  public void shouldGetSupplyLinebyId() throws Exception {
+    SupplyLine expectedSupplyLine = new SupplyLine();
+    when(supplyLineRepository.getById(3L)).thenReturn(expectedSupplyLine);
+
+    SupplyLine returnedSupplyLine = supplyLineService.getById(3L);
+
+    assertThat(returnedSupplyLine, is(expectedSupplyLine));
+    verify(supplyLineRepository).getById(3L);
   }
 }

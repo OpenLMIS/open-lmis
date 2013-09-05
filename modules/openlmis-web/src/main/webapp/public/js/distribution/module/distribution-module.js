@@ -3,22 +3,29 @@
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-var distributionModule = angular.module('distribution', ['openlmis', 'IndexedDB', 'ui.bootstrap.dialog', 'ui.bootstrap.modal']);
+var distributionModule = angular.module('distribution',
+  ['openlmis', 'IndexedDB', 'ui.bootstrap.dialog', 'ui.bootstrap.modal']);
 
 distributionModule.config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
-      when('/manage', {controller: DistributionController, templateUrl: 'partials/init.html', resolve: DistributionController.resolve}).
+      when('/manage',
+      {controller: DistributionController, templateUrl: 'partials/init.html', resolve: DistributionController.resolve}).
       when('/list', {controller: DistributionListController, templateUrl: 'partials/list.html'}).
-      when('/view-load-amounts/:deliveryZoneId/:programId/:periodId', {controller: ViewLoadAmountController, templateUrl: 'partials/view-load-amount.html', resolve: ViewLoadAmountController.resolve}).
-      when('/record-facility-data/:distribution', {templateUrl: 'partials/record-facility-data.html', resolve: RecordFacilityDataController.resolve}).
-      when('/record-facility-data/:distribution/:facility/refrigerator-data', {controller: RefrigeratorController, templateUrl: 'partials/refrigerator.html', resolve: RefrigeratorController.resolve}).
+      when('/view-load-amounts/:deliveryZoneId/:programId/:periodId',
+      {controller: ViewLoadAmountController, templateUrl: 'partials/view-load-amount.html', resolve: ViewLoadAmountController.resolve}).
+      when('/record-facility-data/:distribution',
+      {templateUrl: 'partials/record-facility-data.html', resolve: ResolveDistribution}).
+      when('/record-facility-data/:distribution/:facility/refrigerator-data',
+      {controller: RefrigeratorController, templateUrl: 'partials/refrigerator.html', resolve: ResolveDistribution}).
+      when('/record-facility-data/:distribution/:facility/epi-use',
+      {controller: EPIUseController, templateUrl: 'partials/epi-use.html', resolve: ResolveDistribution}).
       otherwise({redirectTo: '/manage'});
 
-  }]).directive('notRecorded',function () {
+  }]).directive('notRecorded',function ($timeout) {
     return {
       require: '?ngModel',
-      link: function (scope, element, attrs) {
-        distributionModule["notRecordedDirective"](element, scope);
+      link: function (scope, element, attrs, ngModel) {
+        distributionModule["notRecordedDirective"](element, scope, ngModel, $timeout);
       }
     };
   }).config(function (IndexedDBProvider) {
@@ -27,37 +34,25 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
       .migration(4, migrationFunc);
   });
 
-distributionModule.notRecordedDirective = function (element, scope) {
+distributionModule.notRecordedDirective = function (element, scope, ngModel, $timeout) {
 
-  var model = $(document.getElementsByName(element.attr('id'))[0]).attr('ng-model');
-
-  var evaluatedVariable = scope;
-  var keyExists = true;
-
-  $(model.split('.')).each(function (index, key) {
-    if (!(key in evaluatedVariable)) {
-      keyExists = false;
-      return false;
-    }
-    evaluatedVariable = evaluatedVariable[key];
-    return true;
-  });
-
-  if (evaluatedVariable === undefined && keyExists) {
-    element.prop('checked', true);
+  $timeout(function () {
     $.each(document.getElementsByName(element.attr('id')), function (index, ele) {
-      ele.disabled = element.is(":checked");
+      ele.disabled = ngModel.$modelValue;
     });
+  }, 0);
 
-    if (!scope.$$phase) scope.$apply();
-  }
+  if (!scope.$$phase) scope.$apply();
 
   element.bind('click', function () {
-    $.each(document.getElementsByName(element.attr('id')), function (index, ele) {
-      ele.disabled = element.is(":checked");
+    $.each(document.getElementsByName(element.attr('id')), function (index, associatedElement) {
+      associatedElement.disabled = element.is(":checked");
+      if (!isUndefined(element.attr('not-recorded'))) {
+        scope[element.attr('not-recorded')](element.is(":checked"));
+      }
       var evaluatedVar = scope;
 
-      var ngModel = $(ele).attr('ng-model').split('.');
+      var ngModel = $(associatedElement).attr('ng-model').split('.');
       $(ngModel).each(function (index, value) {
         if (index == ngModel.length - 1) {
           evaluatedVar[value] = undefined;

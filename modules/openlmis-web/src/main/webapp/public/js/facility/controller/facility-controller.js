@@ -24,7 +24,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     } else {
       $scope.facility = {};
       updateProgramsToDisplay();
-      $scope.facility.dataReportable = "true";
+      $scope.facility.enabled = "true";
     }
     $scope.facilityProgramProductsList = [];
   }
@@ -170,7 +170,6 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 
 
   $scope.removeSupportedProgram = function () {
-    if ($scope.facility.dataReportable == 'false') return;
     $scope.facility.supportedPrograms = _.without($scope.facility.supportedPrograms, $scope.selectedSupportedProgram);
     updateProgramsToDisplay();
   };
@@ -196,36 +195,36 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.error = data.data.error;
   };
 
-  $scope.restoreFacility = function (active) {
+  $scope.enableFacility = function (active) {
     $scope.activeConfirmModal = false;
     $scope.facility.active = active;
     Facility.restore({id: $scope.facility.id, active: active}, successFunc, errorFunc);
   };
 
-  $scope.deleteFacilityCallBack = function (result) {
+  $scope.disableFacilityCallBack = function (result) {
     if (!result) return;
     Facility.remove({id: $scope.facility.id}, {}, successFunc, errorFunc);
   };
 
-  $scope.showConfirmFacilityDeleteWindow = function () {
+  $scope.showConfirmFacilityDisableWindow = function () {
     var dialogOpts = {
-      id: "deleteFacilityDialog",
-      header: messageService.get('delete.facility.header'),
-      body: messageService.get('delete.facility.confirm', $scope.originalFacilityName, $scope.originalFacilityCode)
+      id: "disableFacilityDialog",
+      header: messageService.get('disable.facility.header'),
+      body: messageService.get('disable.facility.confirm', $scope.originalFacilityName, $scope.originalFacilityCode)
     };
-    OpenLmisDialog.newDialog(dialogOpts, $scope.deleteFacilityCallBack, $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.disableFacilityCallBack, $dialog, messageService);
   };
 
-  $scope.showConfirmFacilityRestore = function () {
+  $scope.showConfirmFacilityEnable = function () {
     var dialogOpts = {
-      id: "restoreConfirmModal",
-      header: messageService.get("create.facility.restoreFacility"),
-      body: "'{0}' / '{1}' will be restored to the system.".format($scope.originalFacilityName, $scope.originalFacilityCode)
+      id: "enableConfirmModal",
+      header: messageService.get("create.facility.enableFacility"),
+      body: "'{0}' / '{1}' will be enabled in the system.".format($scope.originalFacilityName, $scope.originalFacilityCode)
     };
-    OpenLmisDialog.newDialog(dialogOpts, $scope.restoreFacilityCallBack, $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.enableFacilityCallBack, $dialog, messageService);
   };
 
-  $scope.restoreFacilityCallBack = function (result) {
+  $scope.enableFacilityCallBack = function (result) {
     if (!result) return;
     $scope.showConfirmFacilityActivate();
   };
@@ -240,7 +239,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   };
 
   $scope.activateFacilityCallBack = function (result) {
-    $scope.restoreFacility(result);
+    $scope.enableFacility(result);
   };
 
   function updateProgramsToDisplay() {
@@ -255,7 +254,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 }
 
 var populateFlags = function ($scope) {
-  $(['suppliesOthers', 'sdp', 'hasElectricity', 'online', 'hasElectronicScc', 'hasElectronicDar', 'active', 'dataReportable']).each(function (index, field) {
+  $(['suppliesOthers', 'sdp', 'hasElectricity', 'online', 'hasElectronicScc', 'hasElectronicDar', 'active', 'enabled']).each(function (index, field) {
     var value = $scope.facility[field];
     $scope.facility[field] = (value == null) ? "" : value.toString();
   });

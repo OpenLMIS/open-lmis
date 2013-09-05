@@ -254,8 +254,9 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    And I click record data
-  #    Then I should see Delivery Zone "Delivery Zone First", Program "VACCINES" and Period "Period14" in the header
+    And I record data
+    And I verify Distributions data is not synchronised
+    Then I should see Delivery Zone "Delivery Zone First", Program "VACCINES" and Period "Period14" in the header
     And I should see No facility selected
     And I should see "active" facilities that support the program "VACCINES" and delivery zone "Delivery Zone First"
     When I choose facility "F10"
@@ -270,12 +271,13 @@ Feature: Smoke Tests
     When I create a user:
       | Email                   | Firstname | Lastname | UserName |
       | Dummy_User@openlmis.com | Dummy     | User     | Dummy    |
-    And I disable user "Dummy User"
+    Then I should see user not verified
+    When I disable user "Dummy User"
     Then I should see disable user "Dummy User" message
-    And I should see disable fields
-    And I restore user "Dummy User"
-    Then I should see restore user "Dummy User" message
-    And I should see enable fields
+    When I enable user "Dummy User"
+    Then I should see enable user "Dummy User" message
+    When I verify user email "Dummy_User@openlmis.com"
+    Then I should see user "Dummy User" verified
 
   @smoke
   @ie2
@@ -292,30 +294,117 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    And I click record data
+    And I record data
     When I choose facility "F10"
     Then I should see Refrigerators screen
-    When I click Add New Button
-    Then I should see New Refrigerator Modal window
+    When I add new refrigerator
+    Then I should see New Refrigerator screen
     When I enter Brand "LG"
-    And I enter Modal "800 LITRES, WONDER DOOR, HEALTH GUARD™, INVERTER LINEAR COMPRESSOR WITH 10 YEARS WARRANTY & MULAN SHINE FINISH"
+    And I enter Modal "800 LITRES"
     And I enter Serial Number "GR-J287PGHV"
-    And I click Done on modal
-    Then I should see refrigerator "LG;800 LITRES, WONDER DOOR, HEALTH GUARD™, INVERTER LINEAR COMPRESSOR WITH 10 YEARS WARRANTY & MULAN SHINE FINISH;GR-J287PGHV" added successfully
-    When I click Edit
+    And I access done
+    And I verify Distributions data is not synchronised
+    And I verify Refrigerator data is not synchronised
+    Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" added successfully
+    And I should see "overall" refrigerator icon as "RED"
+    When I edit refrigerator
+    Then I should see "individual" refrigerator icon as "RED"
     And I enter refrigerator temperature "3"
-    And I click "Yes" it was working correctly when I left
+    And I should see "overall" refrigerator icon as "AMBER"
+    Then I should see "individual" refrigerator icon as "AMBER"
+    And I verify "Yes" it was working correctly when I left
     And I enter low alarm events "1"
     And I enter high alarm events "0"
-    And I click "No" that there is a problem with refrigerator since last visit
+    And I verify "No" that there is a problem with refrigerator since last visit
+    Then I should see "individual" refrigerator icon as "GREEN"
+    And I should see "overall" refrigerator icon as "GREEN"
     And I enter Notes "miscellaneous"
-    And I click Done
+    And I add refrigerator
+    And I verify Refrigerator data is not synchronised
     Then I should not see Refrigerator details section
     And I should see Edit button
-    When I click Edit
+    When I edit refrigerator
     Then I should see refrigerator details as refrigerator temperature "3" low alarm events "1" high alarm events "0" notes "miscellaneous"
-    And I click Done
-    When I click Delete
+    And I add refrigerator
+    When I delete refrigerator
     Then I should see confirmation for delete
     When I confirm delete
-    Then I should see refrigerator "LG;800 LITRES, WONDER DOOR, HEALTH GUARD™, INVERTER LINEAR COMPRESSOR WITH 10 YEARS WARRANTY & MULAN SHINE FINISH;GR-J287PGHV" deleted successfully
+    Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" deleted successfully
+
+
+  @smoke
+  @ie2
+
+  Scenario: User should be able to configure order file format
+    Given I configure order file:
+      | File Prefix | Header In File |
+      | O           | FALSE          |
+    And I am logged in as Admin
+    And I access configure order page
+    Then I should see order file prefix "O"
+    And I should see include column header as "false"
+    And I should see all column headers disabled
+    And I should see include checkbox "checked" for all column headers
+    When I save order file format
+    Then I should see "Order file configuration saved successfully!"
+
+  @smoke
+  @ie2
+
+  Scenario: User should be able to configure shipment file format using default format
+    When I am logged in as Admin
+    And I access configure shipment page
+    And I should see include column headers as "false"
+    And I should see include checkbox for all data fields
+    And I should see default value of positions
+    When I save shipment file format
+    Then I should see successfull message "Shipment file configuration saved successfully!"
+
+  @smoke
+  Scenario: User should download order file and verify
+    Given I have the following data for regimen:
+      | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
+    And I configure order file:
+      | File Prefix | Header In File |
+      | O           | TRUE           |
+
+    And I configure openlmis order file columns:
+      | Data Field Label         | Include In Order File | Column Label | Position | Format     |
+      | header.order.number      | TRUE                  | ONUm         | 6        |            |
+      | header.order.date        | TRUE                  | Order Date   | 5        | yyyy/MM/dd |
+      | label.period             | TRUE                  | Period       | 4        | dd/MM/yyyy |
+      | header.quantity.approved | TRUE                  | AQTY         | 3        |            |
+      | header.product.code      | TRUE                  |              | 2        |            |
+      | create.facility.code     | TRUE                  | FCCode       | 1        |            |
+
+    And I configure non openlmis order file columns:
+      | Data Field Label | Include In Order File | Column Label | Position |
+      | NOT APPLICABLE   | TRUE                  |              | 7        |
+      | NOT APPLICABLE   | TRUE                  | Dummy        | 8        |
+
+    And I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION,APPROVE_REQUISITION" rights and data to initiate requisition
+    And I have "lmu" role having "ADMIN" based "CONVERT_TO_ORDER,VIEW_ORDER" rights
+    And I have users:
+      | UserId | Email                 | Firstname | Lastname | UserName | Role | FacilityCode |
+      | 111    | Jake_Doe@openlmis.com | Jake      | Doe      | lmu      | lmu  | F10          |
+    And I have regimen template configured
+    And I am logged in as "storeincharge"
+    And I access initiate requisition page
+    When I click proceed
+    And I populate RnR data
+    And I populate Regimen data as patientsOnTreatment "100" patientsToInitiateTreatment "200" patientsStoppedTreatment "300" remarks "Regimens data filled"
+    And I update requisition status to "SUBMITTED"
+    And I update requisition status to "AUTHORIZED"
+    And I have approved quantity "10"
+    And I update requisition status to "APPROVED"
+    And I logout
+    And I am logged in as "lmu"
+    And I access convert to order page
+    And I convert to order
+    And I access view orders page
+    And I download order file
+    And I get order data in file prefix "O"
+    Then I verify order file line "1" having "FCCode,,AQTY,Period,Order Date,ONUm,,Dummy"
+    And I verify order file line "2" having "F10,P10,10,16/01/2012,"
+    And I verify order date format "yyyy/mm/dd" in line "2"
+    And I verify order id in line "2"

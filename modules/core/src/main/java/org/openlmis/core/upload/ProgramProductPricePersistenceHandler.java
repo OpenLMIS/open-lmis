@@ -35,7 +35,7 @@ public class ProgramProductPricePersistenceHandler extends AbstractModelPersiste
   }
 
   @Override
-  protected String getDuplicateMessageKey() {
+  public String getMessageKey() {
     return "error.duplicate.program.product";
   }
 

@@ -1,4 +1,4 @@
-SELECT DISTINCT
+/*SELECT DISTINCT
 fn_get_supplying_facility_name(requisitions.supplyingfacilityid) AS supplyingfacility,
 facilities.code AS facilitycode,
 facilities.name AS facility,
@@ -50,6 +50,8 @@ FROM facilities
    JOIN processing_periods ON processing_periods.scheduleid = processing_schedules.id
    JOIN geographic_zones ON geographic_zones.id = facilities.geographiczoneid
 WHERE requisition_line_items.stockinhand IS NOT NULL AND requisitions.status = 'RELEASED'
+
+*/
 
 
 

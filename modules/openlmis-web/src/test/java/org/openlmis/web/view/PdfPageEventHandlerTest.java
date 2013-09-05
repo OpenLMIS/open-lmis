@@ -16,6 +16,9 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.view.pdf.PdfPageEventHandler;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -42,6 +45,9 @@ public class PdfPageEventHandlerTest {
 
   Document document;
 
+  @Mock
+  MessageService messageService;
+
   @Test
   public void shouldPrintPageFooterInformation() throws Exception {
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -49,11 +55,12 @@ public class PdfPageEventHandlerTest {
     document.open();
     writer = spy(PdfWriter.getInstance(document, stream));
 
-    PdfPageEventHandler pdfPageEventHandler = new PdfPageEventHandler();
+    PdfPageEventHandler pdfPageEventHandler = new PdfPageEventHandler(messageService);
 
     PdfContentByte mockContentByte = mock(PdfContentByte.class);
     DateTime dateTime = new DateTime().withDate(2013, 3, 20);
     whenNew(Date.class).withNoArguments().thenReturn(dateTime.toDate());
+    Mockito.when(messageService.message("label.page.of", 3 )).thenReturn("Page 3 of");
 
     doReturn(3).when(writer).getPageNumber();
     doReturn(600f).when(document).bottom();
@@ -79,7 +86,7 @@ public class PdfPageEventHandlerTest {
 
     when(writer.getDirectContent()).thenReturn(mockContentByte);
 
-    PdfPageEventHandler pdfPageEventHandler = new PdfPageEventHandler();
+    PdfPageEventHandler pdfPageEventHandler = new PdfPageEventHandler(messageService);
     pdfPageEventHandler.onOpenDocument(writer, document);
     verify(writer).getDirectContent();
     verify(mockContentByte).createTemplate(PAGE_TEXT_WIDTH, PAGE_TEXT_HEIGHT);
@@ -96,7 +103,7 @@ public class PdfPageEventHandlerTest {
     when(writer.getPageNumber()).thenReturn(5);
     when(mockContentByte.createTemplate(PAGE_TEXT_WIDTH, PAGE_TEXT_HEIGHT)).thenReturn(template);
 
-    PdfPageEventHandler pdfPageEventHandler = new PdfPageEventHandler();
+    PdfPageEventHandler pdfPageEventHandler = new PdfPageEventHandler(messageService);
     pdfPageEventHandler.onOpenDocument(writer, document);
     pdfPageEventHandler.onCloseDocument(writer, document);
 

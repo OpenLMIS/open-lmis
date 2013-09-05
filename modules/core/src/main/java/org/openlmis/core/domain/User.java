@@ -33,7 +33,6 @@ public class User extends BaseModel implements Importable {
   @JsonIgnore
   private String password;
 
-  @JsonIgnore
   private Boolean verified;
 
   private Boolean active;

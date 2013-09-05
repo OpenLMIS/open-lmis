@@ -24,6 +24,7 @@ import static org.openlmis.web.response.OpenLmisResponse.response;
 public class FacilityApprovedProductController extends BaseController {
 
   public static final String NON_FULL_SUPPLY_PRODUCTS = "nonFullSupplyProducts";
+  public static final String PRODUCTS = "products";
 
   private FacilityApprovedProductService facilityApprovedProductService;
 
@@ -38,4 +39,12 @@ public class FacilityApprovedProductController extends BaseController {
                                                                                           @PathVariable("programId") Long programId) {
     return response(NON_FULL_SUPPLY_PRODUCTS, facilityApprovedProductService.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId));
   }
+
+  @RequestMapping(value = "/facilityApprovedProducts/facility/{facilityId}/program/{programId}/all", method = RequestMethod.GET, headers = "Accept=application/json")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT_ALLOWED_FOR_FACILITY')")
+  public ResponseEntity<OpenLmisResponse> getProductsCompleteListByFacilityAndProgram(@PathVariable("facilityId") Long facilityId,
+                                                                                          @PathVariable("programId") Long programId) {
+      return response(PRODUCTS, facilityApprovedProductService.getProductsCompleteListByFacilityAndProgram(facilityId, programId));
+  }
+
 }

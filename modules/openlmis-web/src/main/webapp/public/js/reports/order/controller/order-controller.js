@@ -6,7 +6,10 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             section = id;
         };
 
-        $scope.show = function (id) {
+    $scope.showMessage = true;
+    $scope.message = "Indicates a required field."
+
+    $scope.show = function (id) {
             return section == id;
         };
         // lookups and references
@@ -18,6 +21,8 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             currentPage: 1
         };
 
+        $scope.reporting = "quarterly";
+
         $scope.orderTypes = [
             {'name':'Regular', 'value':'Regular'},
             {'name':'Emergency', 'value':'Emergency'}
@@ -27,7 +32,6 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
         $scope.orderType = 'Regular'
 
         // default to the monthly period type
-        $scope.periodType = 'monthly';
 
         $scope.periodTypes = [
             {'name':'Monthly', 'value':'monthly'},
@@ -38,7 +42,49 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
         $scope.startYears = [];
         OperationYears.get(function(data){
             $scope.startYears  = data.years;
+            adjustEndYears();
         });
+    $scope.defaultSettings = function (str) {
+
+        var retval = '';
+        var months = new Array(12);
+        months[0] = "Jan";
+        months[1] = "Feb";
+        months[2] = "Mar";
+        months[3] = "Apr";
+        months[4] = "May";
+        months[5] = "Jun";
+        months[6] = "Jul";
+        months[7] = "Aug";
+        months[8] = "Sep";
+        months[9] = "Oct";
+        months[10] = "Nov";
+        months[11] = "Dec";
+
+        var current_date = new Date();
+        month_value = current_date.getMonth() - 6;
+        day_value = current_date.getDate();
+        year_value = current_date.getFullYear();
+
+        retval = "";
+
+        if (str == "M") {
+            retval = month_value;
+        }
+        if (str == "Y") {
+            retval = year_value;
+        }
+        if (str == "P") {
+            retval = $scope.reporting;
+        }
+
+        if (str == "Q") {
+            var d = new Date();
+            retval = parseInt((d.getMonth() + 3) / 3) - 1;
+            retval = retval + "";
+        }
+        return retval;
+    };
 
         Months.get(function(data){
             var months = data.months;
@@ -148,12 +194,11 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
 
         ReportPrograms.get(function(data){
             $scope.programs = data.programs;
-            $scope.programs.push({'name':'Select a Program'});
         });
 
         ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.push({'name': 'All Facility Types', 'id' : 'All'});
+          //  $scope.facilityTypes.push({'name': 'All Facility Types', 'id' : 'All'});
         });
 
         AllFacilites.get(function(data){
@@ -163,17 +208,26 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
 
         Products.get(function(data){
             $scope.products = data.productList;
-            $scope.products.push({'name': 'All Products','id':'All'});
+            $scope.products.push({'name': '-- All Products --','id':'All'});
         });
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
-            $scope.zones.push({'name': '- All Zones -', 'id' : 'All'});
+          //  $scope.zones.push({'name': '- All Zones -', 'id' : 'All'});
         });
 
-        AllReportPeriods.get(function(data) {
+        AllReportPeriods.get(function (data) {
             $scope.periods = data.periods;
-            $scope.periods.push({'name': 'Select Period'});
+            var startdt = parseJsonDate('/Date(' + $scope.periods[1].startdate + ')/');
+            var enddt = parseJsonDate('/Date(' + $scope.periods[1].enddate + ')/');
+            var diff = enddt.getMonth() - startdt.getMonth() + 1;
+
+            if (diff == 3) {
+                $scope.reporting = "quarterly";
+            } else {
+                $scope.reporting = "monthly";
+            }
+
         });
 
         $scope.ChangeReportingPeriods = function(){
@@ -252,11 +306,11 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
 
         $scope.$watch('product', function(selection){
             if(selection == "All"){
-                $scope.filterObject.productId =  -1;
+                $scope.filterObject.productId =  0;
             }else if(selection != undefined || selection == ""){
                 $scope.filterObject.productId =  selection;
             }else{
-                $scope.filterObject.productId =  0;
+                $scope.filterObject.productId =  -1;
             }
             $scope.filterGrid();
         });
@@ -511,9 +565,6 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             }
         });
 
-
-        $scope.sortInfo = { fields:["code","facilityType"], directions: ["ASC"]};
-
         $scope.setPagingData = function(data, page, pageSize, total){
             $scope.myData = data;
             $scope.pagingOptions.totalServerItems = total;
@@ -535,14 +586,6 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
                                 params[index] = value;
                         });
 
-
-                        // put out the sort order
-                        $.each($scope.sortInfo.fields, function(index, value) {
-                            if(value != undefined) {
-                                params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-                            }
-                        });
-
                         OrderReport.get(params, function(data) {
                         $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
                         });
@@ -558,29 +601,39 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         }, true);
 
-        $scope.$watch('sortInfo', function () {
+
+
+    $scope.sortInfo = { fields:["productCode","facilityName"], directions: ["ASC","ASC"]};
+
+    // put out the sort order
+    $.each($scope.sortInfo.fields, function(index, value) {
+        if(value != undefined) {
+            $scope.filterObject['sort-'+$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+        }
+    });
+    $scope.$watch('sortInfo', function () {
 
             $.each($scope.sortInfo.fields, function(index, value) {
                 if(value != undefined)
-                    $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+                    $scope.filterObject['sort-'+$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
             });
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
         }, true);
     $scope.formatNumber = function(value){
-        return utils.formatNumber(value,'0,0.00');
+        return utils.formatNumber(value,'0,000');
     }
     $scope.gridOptions = {
         data: 'myData',
         columnDefs:
             [
 
-                { field: 'productCode', displayName: 'Product Code', width: "*", resizable: false},
-                { field: 'description', displayName: 'Description', width: "***" },
-                { field: 'facilityName', displayName: 'Facility', width: "**" },
-                { field: 'unitSize', displayName: 'Unit Size', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'unitQuantity', displayName: 'Unit Quantity', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'packQuantity', displayName: 'Pack Quantity', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'discrepancy', displayName: 'Discrepancy or Damages', width : "*"}
+                { field: 'productCode', displayName: 'Product Code', width: "200px;", resizable: false},
+                { field: 'description', displayName: 'Description', width: "200px;" },
+                { field: 'facilityName', displayName: 'Facility', width: "200px;" },
+                { field: 'unitSize', displayName: 'Unit Size', width : "150px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'unitQuantity', displayName: 'Unit Quantity', width : "150px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'packQuantity', displayName: 'Pack Quantity', width : "150px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'discrepancy', displayName: 'Discrepancy or Damages', width : "200px;"}
 
 
             ],
@@ -598,5 +651,27 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
         plugins: [new ngGridFlexibleHeightPlugin()]
 
     };
+
+    function parseJsonDate(jsonDate) {
+        var offset = new Date().getTimezoneOffset() * 60000;
+        var parts = /\/Date\((-?\d+)([+-]\d{2})?(\d{2})?.*/.exec(jsonDate);
+        if (parts[2] == undefined) parts[2] = 0;
+        if (parts[3] == undefined) parts[3] = 0;
+        return new Date(+parts[1] + offset + parts[2] * 3600000 + parts[3] * 60000);
+    };
+
+    var init = function () {
+
+        $scope.periodType = $scope.defaultSettings('P');
+
+        if ($scope.periodType == 'quarterly') {
+            $scope.startQuarter = $scope.defaultSettings('Q');
+        } else {
+            $scope.startMonth = $scope.defaultSettings('M');
+        }
+        $scope.startYear = $scope.defaultSettings('Y');
+    };
+    init();
+
 
 }

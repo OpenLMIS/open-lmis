@@ -26,11 +26,11 @@
 
                                      <div class="form-cell horizontalFilters">
                                          <div >
-                                             <label class="labels">Program</label>
+                                             <label class="labels">Program <span class="label-required">*</span></label>
 
                                              <div class="form-fields">
-                                                 <select ui-select2 style="width:200px;" class="input-medium" name="program"  ng-model="program" ng-options="option.id as option.name for option in programs">
-
+                                                 <select ui-select2 style="width:200px;" class="input-medium" name="program"  ng-model="program" >
+                                                     <option  ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }}</option>
                                                  </select>
                                              </div>
                                          </div>
@@ -44,66 +44,66 @@
 
                                      <div class="form-cell horizontalFilters">
                                          <div >
-                                             <label class="labels">Period Type</label>
+                                             <label class="labels">Period Type <span class="label-required">*</span></label>
                                              <div class="form-field">
-                                                 <select ui-select2 style="width:200px;" class="input-medium" ng-required="true" name="periodType" ng-model="periodType" ng-options="option.value as option.name for option in periodTypes">
-
+                                                 <select ui-select2 style="width:200px;" class="input-medium" ng-required="true" name="periodType" ng-model="periodType">
+                                                     <option  ng-repeat="option in periodTypes" value="{{ option.value }}">{{ option.name }}</option>
                                                  </select>
                                              </div>
                                          </div>
                                      </div>
 
                                      <div class="form-cell horizontalFilters" style="width:180px">
-                                         <label class="labels">From</label>
+                                         <label class="labels">From <span class="label-required">*</span></label>
 
                                          <div class="form-field">
 
-                                             <select  style="width:80px;" class="input-small" ng-required="true"  name="startYear" ng-model="startYear" ng-options="year for year in startYears">
-
+                                             <select ui-select2 style="width:80px;" class="input-small" ng-required="true"  name="startYear" ng-model="startYear" >
+                                                 <option  ng-repeat="option in startYears" value="{{ option }}">{{ option }}</option>
                                              </select>
 
                                         <span ng-show="isMonthly()">
-                                            <select  style="width:80px;" class="input-small" ng-required="true"  name="startMonth" ng-model="startMonth" ng-options="option.value as option.name for option in startMonths">
-
+                                            <select ui-select2 style="width:80px;" class="input-small" ng-required="true"  name="startMonth" ng-model="startMonth" >
+                                                <option  ng-repeat="option in startMonths" value="{{ option.value }}">{{ option.name }}</option>
                                             </select>
                                         </span>
                                         <span ng-show="isQuarterly()">
 
-                                            <select  style="width:80px;" class="input-small" ng-required="true"  name="startQuarter" ng-model="startQuarter" ng-options="option.value as option.name for option in startQuarters">
-
+                                            <select ui-select2 style="width:80px;" class="input-medium" ng-required="true"  name="startQuarter" ng-model="startQuarter">
+                                                <option  ng-repeat="option in startQuarters" value="{{ option.value }}">{{ option.name }}</option>
                                             </select>
                                         </span>
                                         <span ng-show="isSemiAnnualy()">
-                                            <select  style="width:80px;" ng-required="true"  name="startHalf" ng-model="startHalf" ng-options="option.value as option.name for option in startSemiAnnuals">
-
+                                            <select ui-select2 style="width:80px;" ng-required="true"  name="startHalf" ng-model="startHalf" >
+                                                <option  ng-repeat="option in startSemiAnnuals" value="{{ option.value }}">{{ option.name }}</option>
                                             </select>
                                         </span>
                                          </div>
                                      </div>
 
                                      <div class="form-cell horizontalFilters" style="width:180px">
-                                         <label class="labels">To</label>
+                                         <label class="labels">To <span class="label-required">*</span></label>
 
                                          <div class="form-field">
 
-                                             <select  style="width:80px;" class="input-small" ng-required="true"  name="endYear" ng-model="endYear" ng-options="year for year in endYears">
-
+                                             <select ui-select2 style="width:80px;" class="input-small" ng-required="true"  name="endYear" ng-model="endYear">
+                                                 <option ui-select2 ng-repeat="option in endYears" value="{{ option }}">{{ option }}</option>
                                              </select>
 
                                         <span ng-show="isMonthly()">
 
-                                            <select  style="width:80px;" class="input-small" ng-required="true"  name="endMonth" ng-model="endMonth" ng-options="option.value as option.name for option in endMonths">
-
+                                            <select ui-select2 style="width:80px;" class="input-small" ng-required="true"  name="endMonth" ng-model="endMonth">
+                                                <option  ng-repeat="option in endMonths" value="{{ option.value }}">{{ option.name }}</option>
                                             </select>
                                         </span>
                                         <span ng-show="isQuarterly()">
-                                            <select  style="width:80px;" class="input-small" ng-required="true"  name="endQuarter" ng-model="endQuarter" ng-options="option.value as option.name for option in endQuarters">
-
+                                            <select ui-select2 style="width:80px;" class="input-medium" ng-required="true"  name="endQuarter" ng-model="endQuarter" >
+                                                <option ng-repeat="option in endQuarters" value="{{ option.value }}">{{ option.name }}</option>
                                             </select>
                                         </span>
                                         <span ng-show="isSemiAnnualy()">
-                                            <select  style="width:80px;" ng-required="true"  name="endHalf" ng-model="endHalf" ng-options="option.value as option.name for option in endSemiAnnuals">
-
+                                            <select ui-select2 style="width:80px;" ng-required="true"  name="endHalf" ng-model="endHalf" >
+                                                <option  ng-repeat="option in endSemiAnnuals" value="{{ option.value }}">{{ option.name }}</option>
                                             </select>
                                         </span>
                                          </div>
@@ -115,8 +115,8 @@
                                          <label class="labels">Adjustment Types</label>
 
                                          <div class="form-field">
-                                             <select ui-select2 style="width:200px;" name="adjustmentType"  ng-model="adjustmentType.value" ng-options="option.name as option.description for option in adjustmentTypes">
-
+                                             <select ui-select2 style="width:200px;" name="adjustmentType"  ng-model="adjustmentType.value" >
+                                                 <option  ng-repeat="option in adjustmentTypes" value="{{ option.name }}">{{ option.description }}</option>
                                              </select>
                                          </div>
                                      </div>
@@ -127,37 +127,39 @@
                                          <label class="labels">Facility Type</label>
 
                                          <div class="form-field">
-                                             <select ui-select2 style="width:200px;" name="facilityType" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
-
+                                             <select ui-select2 style="width:200px;" name="facilityType" ng-model="facilityType.value" >
+                                                 <option  ng-repeat="option in facilityTypes" value="{{ option.id }}">{{ option.name }}</option>
                                              </select>
                                          </div>
                                      </div>
-                                     <div class="form-cell horizontalFilters" >
-                                         <label class="labels">Product</label>
-
-                                         <div class="form-field">
-                                             <select ui-select2 style="width:200px;" name="product"  ng-model="product" ng-options="option.id as option.name for option in products">
-
-                                             </select>
-                                         </div>
-                                     </div>
-
                                      <div class="form-cell horizontalFilters" >
                                          <label class="labels">Product Category</label>
 
                                          <div class="form-field">
-                                             <select ui-select2 style="width:200px;" name="productCategory"  ng-model="productCategory" ng-options="option.id as option.name for option in productCategories">
-
+                                             <select ui-select2 style="width:200px;" name="productCategory"  ng-model="productCategory" >
+                                                 <option  ng-repeat="option in productCategories" value="{{ option.id }}">{{ option.name }}</option>
                                              </select>
                                          </div>
                                      </div>
+
+                                     <div class="form-cell horizontalFilters" >
+                                         <label class="labels">Product</label>
+
+                                         <div class="form-field">
+                                             <select ui-select2 style="width:200px;" name="product"  ng-model="product" >
+                                                 <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>
+                                             </select>
+                                         </div>
+                                     </div>
+
+
 
                                      <div class="form-cell horizontalFilters" >
                                          <label class="labels">Reporting Groups</label>
 
                                          <div class="form-field">
-                                             <select ui-select2 style="width:250px;" name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
-
+                                             <select ui-select2 style="width:250px;" name="requisitionGroup"  ng-model="rgroup" >
+                                                 <option  ng-repeat="option in requisitionGroups" value="{{ option.id }}">{{ option.name }}</option>
                                              </select>
                                          </div>
                                      </div>
@@ -168,7 +170,13 @@
                          </div>
                      </div>
                      <div class="span9">
-                         <div class="gridStyleReport" ng-grid="gridOptions"></div>
+                         <div class="gridStyleReport" ng-show="data.length > 0" ng-grid="gridOptions"></div>
+
+                         <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                             <tr>
+                                 <td>No data to show under selected filters</td>
+                             </tr>
+                         </table>
                      </div>
                  </div>
              </div>

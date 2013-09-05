@@ -8,20 +8,20 @@ apply plugin: 'jetty'
 apply plugin: 'java'
 
 dependencies {
-    compile 'org.seleniumhq.selenium:selenium-java:2.34.0',
-            'org.seleniumhq.selenium:selenium-firefox-driver:2.34.0',
-            'org.seleniumhq.selenium:selenium-ie-driver:2.34.0',
-            'org.seleniumhq.selenium:selenium-chrome-driver:2.34.0',
+    compile 'org.seleniumhq.selenium:selenium-java:2.35.0',
+            'org.seleniumhq.selenium:selenium-firefox-driver:2.33.0',
+            'org.seleniumhq.selenium:selenium-ie-driver:2.33.0',
+            'org.seleniumhq.selenium:selenium-chrome-driver:2.33.0',
             'net.sf.json-lib:json-lib:0.9',
             'postgresql:postgresql:9.0-801.jdbc4',
             project(':test-modules:test-core')
 
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE'
-    testCompile 'org.seleniumhq.selenium:selenium-java:2.34.0'
-    testCompile 'org.seleniumhq.selenium:selenium-ie-driver:2.34.0'
-    testCompile 'org.seleniumhq.selenium:selenium-firefox-driver:2.34.0'
-    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:2.34.0'
+    testCompile 'org.seleniumhq.selenium:selenium-java:2.35.0'
+    testCompile 'org.seleniumhq.selenium:selenium-ie-driver:2.33.0'
+    testCompile 'org.seleniumhq.selenium:selenium-firefox-driver:2.33.0'
+    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:2.33.0'
     testCompile 'org.testng:testng:6.1.1'
     testCompile group: 'com.google.inject', name: 'guice', version: '3.0'
     testCompile("org.uncommons:reportng:1.1.2") {
@@ -71,6 +71,29 @@ task smokeTest(type: Test) {
 }
 
 smokeTest.doFirst() {
+    buildOpenLmis.execute()
+}
+
+task e2e(type: Test) {
+    dependsOn assemble, compileTestJava
+
+    doLast {
+
+        htmlformat = "html:${buildDir}/reports/tests/bddTest-report-functional"
+        jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
+        javaexec {
+            System.properties.get('browser', 'firefox')
+            System.properties.get('dburl', "$dburl")
+            System.properties.get('baseurl', "$baseurl")
+            systemProperties System.properties
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@e2e','--tags','~@WIP', 'src/test/resources']
+        }
+    }
+}
+
+e2e.doFirst() {
     buildOpenLmis.execute()
 }
 

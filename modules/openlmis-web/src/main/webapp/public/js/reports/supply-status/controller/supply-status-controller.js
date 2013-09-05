@@ -1,6 +1,8 @@
-function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, ReportPrograms , ReportPeriods , Products ,ReportFacilityTypes,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
+function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, ReportPrograms , ReportPeriods , Products ,ReportFacilityTypes, AllFacilites,GetFacilityByFacilityType, GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
     //to minimize and maximize the filter section
     var section = 1;
+    $scope.showMessage = true;
+    $scope.message = "Indicates a required field."
 
     $scope.section = function (id) {
         section = id;
@@ -17,8 +19,6 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         totalServerItems: 0,
         currentPage: 1
     };
-
-
 
     $scope.filterGrid = function (){
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
@@ -45,44 +45,50 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         scheduleId : $scope.schedule,
         rgroupId : $scope.rgroup,
         rgroup : "",
-        facilityName : $scope.facilityNameFilter
+        facilityId : $scope.facility
     };
 
     ReportPrograms.get(function(data){
         $scope.programs = data.programs;
-        $scope.programs.push({'name':'Select a Program'});
+        $scope.programs.unshift({'name':'Select a Program'});
     });
 
     RequisitionGroups.get(function(data){
         $scope.requisitionGroups = data.requisitionGroupList;
-        $scope.requisitionGroups.push({'name':'All Reporting Groups','id':'All'});
+        $scope.requisitionGroups.unshift({'name':'All Reporting Groups','id':''});
     });
 
     ReportFacilityTypes.get(function(data) {
         $scope.facilityTypes = data.facilityTypes;
-        $scope.facilityTypes.push({'name': 'All Facility Types', 'id' : 'All'});
+        $scope.facilityTypes.unshift({'name': 'All Facility Types', 'id' : ''});
+    });
+
+    AllFacilites.get(function(data){
+        $scope.allFacilities = data.allFacilities;
+        $scope.allFacilities.unshift({name:'All Facilities',id:''});
     });
 
     ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
-        $scope.schedules.push({'name':'Select a Schedule', 'id':'All'});
+        $scope.schedules.unshift({'name':'Select a Schedule', 'id':''});
     });
 
     Products.get(function(data){
         $scope.products = data.productList;
-        $scope.products.push({'name': 'All Products','id':'All'});
+        $scope.products.unshift({'name': '<All Products>','id':'All'});
+        $scope.products.unshift({'name':'<Indicator Products>', id:''});
     });
 
     $scope.ChangeSchedule = function(){
         ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
             $scope.periods = data.periods;
-            $scope.periods.push({'name': 'Select Period', 'id':'All'});
+            $scope.periods.unshift({'name': 'Select Period', 'id':''});
         });
     }
 
     GeographicZones.get(function(data) {
         $scope.zones = data.zones;
-        $scope.zones.push({'name': '- All Zones -', 'id' : 'All'});
+        $scope.zones.unshift({'name': 'All Zones', 'id' : ''});
     });
 
     $scope.$watch('facilityType', function(selection){
@@ -98,27 +104,40 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         }else{
             $scope.filterObject.facilityTypeId =  0;
         }
+            $scope.ChangeFacility();
+
         $scope.filterGrid();
 
     });
 
-    $scope.$watch('facilityNameFilter', function(selection){
+    $scope.$watch('facility', function(selection){
         if(selection != undefined || selection == ""){
-            $scope.filterObject.facilityName =  selection;
-
+            $scope.filterObject.facilityId =  selection;
+            $.each( $scope.allFacilities,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.facilityName = idx.name;
+                }
+            });
         }else{
-            $scope.filterObject.facilityName = "";
+            $scope.filterObject.facilityId =  0;
         }
         $scope.filterGrid();
     });
 
+    $scope.ChangeFacility = function(){
+        GetFacilityByFacilityType.get({ facilityTypeId : $scope.filterObject.facilityTypeId },function(data) {
+            $scope.allFacilities =  data.facilities;
+            $scope.allFacilities.unshift({name:'All Facilities',id:''});
+        });
+    };
+
     $scope.$watch('product', function(selection){
         if(selection == "All"){
-            $scope.filterObject.productId =  -1;
+            $scope.filterObject.productId =  0;
         }else if(selection != undefined || selection == ""){
             $scope.filterObject.productId =  selection;
         }else{
-            $scope.filterObject.productId =  0;
+            $scope.filterObject.productId =  -1;
         }
         $scope.filterGrid();
     });
@@ -219,15 +238,20 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         }
     });
 
-
-    $scope.sortInfo = { fields:["code","facilityType"], directions: ["ASC"]};
-
     $scope.setPagingData = function(data, page, pageSize, total){
         $scope.myData = data;
         $scope.pagingOptions.totalServerItems = total;
         $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
 
     };
+
+    $scope.sortInfo = { fields:["code","facility"], directions: ["ASC","ASC"]};
+    // put default sort criteria
+    $.each($scope.sortInfo.fields, function(index, value) {
+        if(value != undefined) {
+            $scope.filterObject['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+        }
+    });
 
     $scope.getPagedDataAsync = function (pageSize, page) {
         var params  = {};
@@ -242,17 +266,9 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
             //if(value != undefined)
             params[index] = value;
         });
-
-
-        // put out the sort order
-        $.each($scope.sortInfo.fields, function(index, value) {
-            if(value != undefined) {
-                params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-            }
-        });
-
         SupplyStatusReport.get(params, function(data) {
             $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
+            $scope.data = $data.pages.rows;
         });
 
     };
@@ -266,34 +282,38 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
     }, true);
 
+    $scope.formatNumber = function(value){
+        return utils.formatNumber(value,'0,0.00');
+    };
+
     $scope.$watch('sortInfo', function () {
+
         $.each($scope.sortInfo.fields, function(index, value) {
-            if(value != undefined)
-                $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+            if(value != undefined){
+
+                $scope.filterObject['sort-'+$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+            }
         });
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
     }, true);
-
-    $scope.formatNumber = function(value){
-        return utils.formatNumber(value,'0,0.00');
-    }
 
     $scope.gridOptions = {
         data: 'myData',
         columnDefs:
             [
-                { field: 'facility', displayName: 'Facility', width: "*", resizable: false},
-                { field: 'code', displayName: 'Code', width: "*", resizable: false},
-                { field: 'product', displayName: 'Product', width: "*" },
-                { field: 'openingBalance', displayName: 'Opening Balance', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'receipts', displayName: 'Receipts', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'issues', displayName: 'Issues', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'adjustments', displayName: 'Adjustments', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'closingBalance', displayName: 'Closing Balance', width : "*",cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'monthsOfStock', displayName: 'Months of Stock', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'averageMonthlyConsumption', displayName: 'AMC', width : "*", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'maximumStock', displayName: 'Maximum Stock', width : "*", cellClass : 'pull-right',cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-                { field: 'reorderAmount', displayName: 'Re-order Amount', width : "*", cellClass : 'ngCellTextRight', cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'}
+                { field: 'supplyingFacility', displayName: 'Supplying Facility', width: "150px;", resizable: false},
+                { field: 'facility', displayName: 'Facility', width: "150px;", resizable: false},
+                { field: 'code', displayName: 'Code', width: "100px;", resizable: false},
+                { field: 'product', displayName: 'Product', width: "250px;" },
+                { field: 'openingBalance', displayName: 'Opening Balance', width : "150px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'receipts', displayName: 'Receipts', width : "130px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'issues', displayName: 'Issues', width : "130px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'adjustments', displayName: 'Adjustments', width : "130px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'closingBalance', displayName: 'Closing Balance', width : "150px;",cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'monthsOfStock', displayName: 'MOS', width : "130px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'averageMonthlyConsumption', displayName: 'AMC', width : "130px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'maximumStock', displayName: 'Maximum Stock', width : "150px;", cellClass : 'pull-right',cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
+                { field: 'reorderAmount', displayName: 'Re-order Amount', width : "150px;", cellClass : 'ngCellTextRight', cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'}
 
             ],
         enablePaging: true,
@@ -310,6 +330,5 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         plugins: [new ngGridFlexibleHeightPlugin()]
 
     };
-
 
 }

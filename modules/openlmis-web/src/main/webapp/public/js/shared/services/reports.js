@@ -105,6 +105,10 @@ services.factory('ReportPeriods', function ($resource) {
     return $resource('/reports/schedules/:scheduleId/periods.json', {}, {});
 });
 
+services.factory('ReportPeriodsByScheduleAndYear', function ($resource) {
+    return $resource('/reports/schedules/:scheduleId/year/:year/periods.json', {}, {});
+});
+
 services.factory('AllReportPeriods', function ($resource) {
     return $resource('/reports/allPeriods.json', {}, {});
 });
@@ -266,6 +270,10 @@ services.factory('Settings',function($resource){
     return $resource('/settings.json',{},{});
 });
 
+services.factory('SettingsByKey',function($resource){
+    return $resource('/settings/:key.json',{},{});
+});
+
 services.factory('SettingUpdator', function($resource){
     return $resource('/saveSettings.json', {} , { post: {method:'POST'} } );
 });
@@ -285,3 +293,23 @@ services.factory('ProgramCompleteList',function($resource){
 services.factory('ScheduleCompleteList',function($resource){
     return $resource('/schedules.json',{},{});
 });
+
+services.factory('LoadSchedulesForRequisitionGroupProgram',function($resource){
+    return $resource('/requisitionGroupProgramSchedule/getDetails/:rgId/:pgId.json',{},{});
+});
+
+services.factory('SaveRequisitionGroupProgramSchedule',function($resource){
+    return $resource('/requisitionGroupProgramSchedule/insert.json',{},{});
+});
+
+services.factory('GetProgramsForAFacilityCompleteList',function($resource){
+    return $resource('/facilities/:facilityId/programsList.json',{},{});
+});
+
+services.factory('GetFacilityApprovedProductsCompleteList', function ($resource) {
+    return $resource('/facilityApprovedProducts/facility/:facilityId/program/:programId/all.json', {}, {});
+});
+
+services.factory('GetFacilityProgramProductAlreadyAllowedList',function($resource){
+    return $resource('/facility/:facilityId/program/:programId/programProductList.json',{},{});
+})

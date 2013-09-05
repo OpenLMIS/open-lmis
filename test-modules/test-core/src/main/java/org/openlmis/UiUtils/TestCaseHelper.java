@@ -7,9 +7,11 @@
 package org.openlmis.UiUtils;
 
 
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
 import java.io.*;
@@ -24,7 +26,7 @@ public class TestCaseHelper {
 
   protected DBWrapper dbWrapper;
   protected String baseUrlGlobal, dburlGlobal;
-
+  protected String DOWNLOAD_FILE_PATH;
   protected static TestWebDriver testWebDriver;
   protected static boolean isSeleniumStarted = false;
   protected static DriverFactory driverFactory = new DriverFactory();
@@ -32,6 +34,7 @@ public class TestCaseHelper {
   //public static final String DEFAULT_BASE_URL = "http://uat.zm.elmis-dev.org";
   public static final String DEFAULT_BASE_URL = "http://localhost:9091/";
   public static final String DEFAULT_DB_URL = "jdbc:postgresql://localhost:5432/open_lmis";
+
 
 
   public void setup() throws Exception {
@@ -42,11 +45,15 @@ public class TestCaseHelper {
     dbWrapper = new DBWrapper(baseUrlGlobal, dburlGlobal);
     //dbWrapper.deleteData();
 
-    if (!isSeleniumStarted) {
+      if (!isSeleniumStarted) {
       loadDriver(browser);
       addTearDownShutDownHook();
       isSeleniumStarted = true;
     }
+      if(getProperty("os.name").startsWith("Windows"))
+          DOWNLOAD_FILE_PATH="C:\\Users\\openlmis\\Downloads";
+      else
+          DOWNLOAD_FILE_PATH=new File(System.getProperty("user.dir")).getParent();
   }
 
   public void tearDownSuite() {
@@ -178,7 +185,9 @@ public class TestCaseHelper {
 
   public void setupTestRoleRightsData(String roleName, String roleType, String roleRight) throws IOException, SQLException {
     dbWrapper.insertRole(roleName, roleType, "");
-    dbWrapper.assignRight(roleName, roleRight);
+      String right[] = roleRight.split(",");
+      for(int i=0;i<right.length;i++)
+            dbWrapper.assignRight(roleName, right[i]);
   }
 
   public void setupDataExternalVendor(boolean isPreviousPeriodRnRRequired) throws IOException, SQLException {
@@ -308,31 +317,58 @@ public class TestCaseHelper {
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
   }
 
-  public void OpenIndexedDB(String dbName) {
-    WebDriver driver;
-    String Separator = getProperty("file.separator");
-    //String script = "var z= x();function x() {return document.title;};return z;";
-    String script = "var x;window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB;" +
-      "var dbreq = window.indexedDB.open(\"" + dbName + "\");" +
-      "dbreq.onsuccess = function (event){var db = dbreq.result; " +
-      //"db.createObjectStore(\"objects\", \"keyPath\": \"id\");" +
-      "var dTableNames = db.objectStoreNames;document.cookie=dTableNames[0]};" +
-      "dbreq.onerror = function (event) {return \"test.open Error: \" + event.message;};";
-                        /*"var dTableNames = db.objectStoreNames;" +
-                        "var strNames;" +
-                        "for (var i = 0; i < dTableNames.length; i++) {strNames = strNames + dTableNames[i];};"+
-                        "return strNames;";*/
-
-    driver = TestWebDriver.getDriver();
-    JavascriptExecutor js = (JavascriptExecutor) driver;
-    Object x = js.executeScript(script);
-    CookieManager cm = new CookieManager();
-    cm.getCookieStore();
-    //cm.
-
-
-    Object y = js.executeScript(x.toString());
-    System.out.println(x.getClass());
-
+  public String[] readCSVFile(String file) throws IOException, SQLException {
+        BufferedReader br = null;
+        String line = "";
+        String[] array = new String[50];
+        String filePath=DOWNLOAD_FILE_PATH + getProperty("file.separator") + file;
+        try {
+            int i=0;
+            br = new BufferedReader(new FileReader(filePath));
+            while ((line = br.readLine()) != null) {
+                array[i]=line;
+                i++;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return array;
   }
+
+    public void deleteFile(String file) {
+        String filePath=DOWNLOAD_FILE_PATH + getProperty("file.separator") + file;
+        File f = new File(filePath);
+
+        if (!f.exists())
+            throw new IllegalArgumentException(
+                    "Delete: no such file or directory: " + filePath);
+
+        if (!f.canWrite())
+            throw new IllegalArgumentException("Delete: write protected: "
+                    + filePath);
+
+        if (f.isDirectory()) {
+            String[] files = f.list();
+            if (files.length > 0)
+                throw new IllegalArgumentException(
+                        "Delete: directory not empty: " + filePath);
+        }
+
+        boolean success = f.delete();
+
+        if (!success)
+            throw new IllegalArgumentException("Delete: deletion failed");
+    }
+
+
 }
+
+

@@ -13,19 +13,20 @@ import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.filter.StockedOutReportFilter;
 import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * User: mahmed
  * Date: 7/27/13
  * Time: 4:45 PM
  */
-@Service
+//@Service
+//@NoArgsConstructor
+
+@Component
 @NoArgsConstructor
 public class StockedOutReportDataProvider extends ReportDataProvider {
 
@@ -39,7 +40,7 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
     @Override
     protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
         RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET,RowBounds.NO_ROW_LIMIT);
-        return reportMapper.getReport(getReportFilterData(filterCriteria), null, rowBounds);
+        return reportMapper.getReport(getReportFilterData(filterCriteria), filterCriteria, rowBounds);
     }
 
     @Override
@@ -55,11 +56,6 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
     }
 
     @Override
-    public int getReportDataCountByFilterCriteria(Map<String, String[]> filter) {
-        return reportMapper.getTotal(filter);
-    }
-
-     @Override
     public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
         StockedOutReportFilter stockedOutReportFilter = null;
 
@@ -69,15 +65,23 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
             Calendar originalEnd = Calendar.getInstance();
 
             stockedOutReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-            stockedOutReportFilter.setFacilityType( (filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "ALL Facilities" : filterCriteria.get("facilityType")[0]);
+            stockedOutReportFilter.setFacilityType( (filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "ALL Facilities Types" : filterCriteria.get("facilityType")[0]);
+
+            stockedOutReportFilter.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
             stockedOutReportFilter.setFacility(filterCriteria.get("facility") == null ? "" : filterCriteria.get("facility")[0]);
 
+            stockedOutReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
             stockedOutReportFilter.setRgroup( (filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "ALL Reporting Groups" : filterCriteria.get("rgroup")[0]);
 
+            stockedOutReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
 
             stockedOutReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
-            stockedOutReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
+            stockedOutReportFilter.setProductCategory( (filterCriteria.get("productCategory") == null || filterCriteria.get("productCategory")[0].equals("")) ? "ALL Product Categories" : filterCriteria.get("productCategory")[0]);
+
             stockedOutReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
+
+            stockedOutReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0]));
+            stockedOutReportFilter.setProgram(filterCriteria.get("program") == null ? "" : filterCriteria.get("program")[0]);
 
             stockedOutReportFilter.setYearFrom(filterCriteria.get("fromYear") == null ? originalStart.get(Calendar.YEAR) : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0
             stockedOutReportFilter.setYearTo(filterCriteria.get("toYear") == null ? originalEnd.get(Calendar.YEAR) : Integer.parseInt(filterCriteria.get("toYear")[0])); //defaults to 0
@@ -124,4 +128,32 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
         }
         return stockedOutReportFilter;
     }
+    @Override
+    public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
+        return reportMapper.getStockedoutTotalFacilities(filterCriteria).get(0);
+    }
+
+    @Override
+    public HashMap<String, String> getAdditionalReportData(Map params){
+        HashMap<String, String> result = new HashMap<String, String>() ;
+
+        // spit out the summary section on the report.
+        String totalFacilities = reportMapper.getTotalFacilities( params ).get(0).toString();
+        String stockedOut = reportMapper.getStockedoutTotalFacilities(params).get(0).toString();
+        result.put("TOTAL_FACILITIES", totalFacilities);
+        result.put("TOTAL_STOCKEDOUT", stockedOut);
+
+        // Assume by default that the 100% of facilities didn't report
+        Long percent = Long.parseLong("100");
+        if(totalFacilities != "0"){
+            percent = Math.round((Double.parseDouble(stockedOut) /  Double.parseDouble(totalFacilities)) * 100);
+
+        }
+        result.put("PERCENTAGE_STOCKEDOUT",percent.toString());
+
+
+        return    result;
+    }
+
+
 }

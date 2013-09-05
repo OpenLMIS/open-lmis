@@ -35,7 +35,7 @@ public class FacilityApprovedProductPersistenceHandler extends AbstractModelPers
   }
 
   @Override
-  protected String getDuplicateMessageKey() {
+  public String getMessageKey() {
     return "error.duplicate.facility.approved.product";
   }
 }

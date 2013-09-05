@@ -33,6 +33,9 @@ public class FacilityTypeApprovedProduct extends BaseModel implements Importable
   @ImportField(name = "Max months of stock", mandatory = true, type = "int")
   private Integer maxMonthsOfStock = 0;
 
+  @ImportField(name = "Min months of stock", mandatory = true, type = "int")
+  private Integer minMonthsOfStock = 0;
+
   public FacilityTypeApprovedProduct(FacilityType facilityType, ProgramProduct programProduct, Integer maxMonthsOfStock) {
     this.facilityType = facilityType;
     this.maxMonthsOfStock = maxMonthsOfStock;

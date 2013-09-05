@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright © 2013 John Snow, Inc. (JSI). All Rights Reserved.
-  ~
-  ~ The U.S. Agency for International Development (USAID) funded this section of the application development under the terms of the USAID | DELIVER PROJECT contract no. GPO-I-00-06-00007-00.
-  -->
-
-<!-- Created with Jaspersoft Studio version last-->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="openlmis-report-header-landscape" language="groovy" pageWidth="760" pageHeight="150" orientation="Landscape" columnWidth="760" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b1774485-8c52-493d-8b62-63c6cd58f66d">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="openlmis-report-header-landscape" language="groovy" pageWidth="760" pageHeight="200" orientation="Landscape" columnWidth="760" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b1774485-8c52-493d-8b62-63c6cd58f66d">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -22,7 +15,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="150">
+		<band height="200">
 			<textField>
 				<reportElement uuid="8e7e49a1-6c5e-4a50-ba77-935008c82741" x="206" y="59" width="348" height="21" isPrintInFirstWholeBand="true" forecolor="#3D9297"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
@@ -93,7 +86,7 @@
 				<textFieldExpression><![CDATA[$P{REPORT_SUB_TITLE}.toUpperCase()=="NULL"?"":$P{REPORT_SUB_TITLE}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="828612ae-f65b-4fa4-b46d-8317145288cc" x="206" y="101" width="348" height="42" isRemoveLineWhenBlank="true"/>
+				<reportElement uuid="828612ae-f65b-4fa4-b46d-8317145288cc" x="206" y="101" width="348" height="99" isRemoveLineWhenBlank="true"/>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$P{REPORT_FILTER_PARAM_VALUES}]]></textFieldExpression>
 			</textField>

@@ -22,7 +22,6 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.repository.mapper.RequisitionMapper;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShippedLineItem;
@@ -63,7 +62,6 @@ public class ShipmentServiceTest {
 
     shipmentService.insertShippedLineItem(shippedLineItem);
 
-    verify(shippedLineItem).validateForSave();
     verify(requisitionService).getLWById(1l);
     verify(productService).getIdForCode("P10");
     verify(shipmentRepository).insertShippedLineItem(shippedLineItem);
@@ -91,6 +89,16 @@ public class ShipmentServiceTest {
 
     exException.expect(DataException.class);
     exException.expectMessage("error.unknown.product");
+
+    shipmentService.insertShippedLineItem(shippedLineItem);
+  }
+
+  @Test
+  public void shouldNotInsertShipmentIfQuantityNegative() throws Exception {
+    ShippedLineItem shippedLineItem = new ShippedLineItem(1l, "P10", -1);
+
+    exException.expect(DataException.class);
+    exException.expectMessage("error.negative.shipped.quantity");
 
     shipmentService.insertShippedLineItem(shippedLineItem);
   }

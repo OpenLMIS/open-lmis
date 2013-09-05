@@ -12,27 +12,24 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @NoArgsConstructor
 public class ConfigurationSettingService {
 
-  private ConfigurationRepository configurationRepository;
+  private ConfigurationSettingRepository configurationSettingRepository;
 
 
   @Autowired
-  public ConfigurationSettingService(ConfigurationRepository configurationRepository) {
-    this.configurationRepository = configurationRepository;
+  public ConfigurationSettingService(ConfigurationSettingRepository configurationSettingRepository) {
+    this.configurationSettingRepository = configurationSettingRepository;
   }
 
   public ConfigurationSetting getByKey(String key){
-      return configurationRepository.getByKey(key);
+      return configurationSettingRepository.getByKey(key);
   }
 
   public int getConfigurationIntValue(String key){
@@ -60,12 +57,12 @@ public class ConfigurationSettingService {
   }
 
   public List<ConfigurationSetting> getConfigurations(){
-    return configurationRepository.getAll();
+    return configurationSettingRepository.getAll();
   }
 
   public void update(List<ConfigurationSetting> settings){
     for(ConfigurationSetting conf : settings){
-         configurationRepository.setValue(conf);
+         configurationSettingRepository.setValue(conf);
     }
   }
 

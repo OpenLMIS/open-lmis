@@ -216,10 +216,11 @@ public class RequisitionService {
 
     savedRnr.calculateForApproval();
     final SupervisoryNode parent = supervisoryNodeService.getParent(savedRnr.getSupervisoryNodeId());
+
     if (parent == null) {
-      doFinalApproval(savedRnr);
+      savedRnr.prepareForFinalApproval();
     } else {
-      approveAndAssignToNextSupervisoryNode(savedRnr, parent);
+      savedRnr.approveAndAssignToNextSupervisoryNode(parent);
     }
     savedRnr.setModifiedBy(requisition.getModifiedBy());
     requisitionRepository.approve(savedRnr);
@@ -263,9 +264,9 @@ public class RequisitionService {
   }
 
   private void fillSupplyingDepot(Rnr requisition) {
-    if (requisition.getSupplyingFacility() != null) {
-      Facility facility = facilityService.getById(requisition.getSupplyingFacility().getId());
-      requisition.fillBasicInformationForSupplyingFacility(facility);
+    if (requisition.getSupervisoryNodeId() != null && requisition.getStatus().equals(RnrStatus.APPROVED)) {
+      SupplyLine supplyLine = supplyLineService.getSupplyLineBy(new SupervisoryNode(requisition.getSupervisoryNodeId()), requisition.getProgram());
+      requisition.setSupplyingDepot(supplyLine.getSupplyingFacility());
     }
   }
 
@@ -345,22 +346,6 @@ public class RequisitionService {
       lastPeriod);
   }
 
-
-  private void approveAndAssignToNextSupervisoryNode(Rnr requisition, SupervisoryNode parent) {
-    requisition.setStatus(IN_APPROVAL);
-    requisition.setSupervisoryNodeId(parent.getId());
-  }
-
-  private void doFinalApproval(Rnr rnr) {
-    rnr.setStatus(APPROVED);
-    SupervisoryNode supervisoryNode = new SupervisoryNode();
-    supervisoryNode.setId(rnr.getSupervisoryNodeId());
-    SupplyLine supplyLine = supplyLineService.getSupplyLineBy(supervisoryNode, rnr.getProgram());
-    if (supplyLine != null) {
-      rnr.setSupplyingFacility(supplyLine.getSupplyingFacility());
-    }
-    rnr.setSupervisoryNodeId(null);
-  }
 
   public List<Rnr> listForApproval(Long userId) {
     List<RoleAssignment> assignments = roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, userId);

@@ -5,12 +5,6 @@
  */
 
 package org.openlmis.web.controller;
-
-/**
- * User: mahmed
- * Date: 6/19/13
- */
-
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
@@ -87,8 +81,6 @@ public class ProductController extends BaseController {
       return OpenLmisResponse.response("product", product);
     }
 
-
-    // mahmed - 07.11.2013  delete
     @RequestMapping(value = "/removeProduct/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> delete(@PathVariable("id") Long id, HttpServletRequest request) {
@@ -103,7 +95,6 @@ public class ProductController extends BaseController {
         }
     }
 
-    // mahmed - 07.11.2013  delete
     @RequestMapping(value = "/restoreProduct/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> restore(@PathVariable("id") Long id, HttpServletRequest request) {
@@ -118,7 +109,6 @@ public class ProductController extends BaseController {
         }
     }
 
-    // mahmed - 07.11.2013  update
     @RequestMapping(value = "/updateProduct", method = RequestMethod.PUT, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> update( @RequestBody Product product,
@@ -146,7 +136,10 @@ public class ProductController extends BaseController {
           for(org.openlmis.core.domain.ProgramProduct pp: product.getProgramProducts()){
               // set the product for each of the program products ... for the save functionalitiy to work
               pp.setProduct(product);
-              programProductService.save(pp);
+              // save only those that need to be saved
+              if((pp.getId() == null && pp.isActive()) || pp.getId() != null){
+                  programProductService.saveAndLogPriceChange(pp);
+              }
             }
 
             ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("'" + product.getPrimaryName() + "' "+ (createOperation?"created":"updated") +" successfully");
@@ -157,7 +150,7 @@ public class ProductController extends BaseController {
             return error(e, HttpStatus.BAD_REQUEST);
         }
     }
-  // TODO: move this class to some other class
+  // TODO: move this method to some other class
   // may be the service or the domain object itself.
   private void setReferenceObjects(Product product) {
     // prepare the reference data
@@ -179,7 +172,7 @@ public class ProductController extends BaseController {
 
     if(product.getCategory() == null && product.getCategoryId() != null){
       product.setCategory(new ProductCategory());
-      product.getCategory().setId(product.getFormId());
+      product.getCategory().setId(product.getCategoryId());
     }
   }
 

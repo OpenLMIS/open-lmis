@@ -35,7 +35,7 @@ public class RequisitionGroupMemberHandler extends AbstractModelPersistenceHandl
   }
 
   @Override
-  protected String getDuplicateMessageKey() {
+  public String getMessageKey() {
     return "error.duplicate.requisition.group.member";
   }
 

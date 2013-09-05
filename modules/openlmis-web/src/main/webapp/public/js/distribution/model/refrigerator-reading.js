@@ -1,22 +1,58 @@
-/*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
+function RefrigeratorReading(refrigeratorReading) {
 
-function RefrigeratorReading(temperature, functioningCorrectly,
-                             lowAlarmEvents, highAlarmEvents, problemSinceLastTime,
-                             problemList, notes, refrigeratorId, distributionId) {
+  $.extend(true, this, refrigeratorReading);
 
-  this.temperature = temperature;
-  this.functioningCorrectly = functioningCorrectly;
-  this.lowAlarmEvents = lowAlarmEvents;
-  this.highAlarmEvents = highAlarmEvents;
-  this.problemSinceLastTime = problemSinceLastTime;
-  this.problemList = problemList;
-  this.notes = notes;
-  this.refrigeratorId = refrigeratorId;
-  this.distributionId = distributionId;
+  var fieldList = ['temperature', 'functioningCorrectly', 'lowAlarmEvents', 'highAlarmEvents', 'problemSinceLastTime'];
 
-  return this;
+  RefrigeratorReading.prototype.computeStatus = function () {
+    var complete = 'is-complete';
+    var incomplete = 'is-incomplete';
+    var empty = 'is-empty';
+
+    var statusClass = complete;
+    var _this = this;
+
+    function isEmpty(field) {
+      if (isUndefined(_this[field])) {
+        return true;
+      }
+      return (isUndefined(_this[field].value) && !_this[field].notRecorded);
+    }
+
+    $(fieldList).each(function (index, field) {
+      if (isEmpty(field)) {
+        statusClass = empty;
+        return false;
+      }
+      return true;
+    });
+
+    if (statusClass === empty) {
+      $(fieldList).each(function (index, field) {
+        if (!isEmpty(field)) {
+          statusClass = incomplete;
+          return false;
+        }
+        return true;
+      });
+    }
+
+    if (statusClass === complete && _this['problemSinceLastTime'] && _this['problemSinceLastTime'].value === 'Y') {
+      if (!_this.problems) statusClass = incomplete;
+      else {
+        var hasAtLeastOneProblem = _.filter(_.values(_this.problems.problemMap),
+          function (problem) {
+            return problem;
+          }).length;
+
+        if (!_this.problems.problemMap || !hasAtLeastOneProblem)
+          statusClass = incomplete;
+      }
+    }
+
+    _this.status = statusClass;
+
+    return statusClass;
+  }
+
 }

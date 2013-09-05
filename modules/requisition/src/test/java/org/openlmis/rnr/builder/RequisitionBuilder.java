@@ -57,8 +57,6 @@ public class RequisitionBuilder {
     rnr.getPeriod().setId(lookup.valueOf(periodId, 3L));
     rnr.setStatus(lookup.valueOf(status, RnrStatus.INITIATED));
     rnr.setSubmittedDate(lookup.valueOf(submittedDate, SUBMITTED_DATE));
-    rnr.setSupplyingFacility(make(a(FacilityBuilder.defaultFacility)));
-    rnr.getSupplyingFacility().setId(5L);
     RnrLineItem rnrLineItemCost48 = make(a(RnrLineItemBuilder.defaultRnrLineItem));
     rnr.add(rnrLineItemCost48, true);
     rnr.setModifiedBy(lookup.valueOf(modifiedBy, 1L));

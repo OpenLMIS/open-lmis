@@ -280,7 +280,7 @@ span[class^="tpl-"] {
   ul {
     list-style: none;
     margin: 0;
-    &>li {
+    > li {
       position: relative;
       border: 1px solid #DDD;
       border-top: 0;
@@ -298,7 +298,7 @@ span[class^="tpl-"] {
         background: url("../images/sort-icon.png") no-repeat left center;
         cursor: move;
       }
-      &> li:hover .drag-handle {
+      &:hover .drag-handle {
         display: block;
       }
     }
@@ -2063,5 +2063,75 @@ input[placeholder].placeholder {
   }
   form {
     margin-bottom: 0;
+  }
+}
+.include-header-form {
+  input, label {
+    margin: 2px 0 0;
+    vertical-align: text-top;
+  }
+  input {
+    margin: 6px 2px 0 0;
+  }
+}
+.add-new-row-button {
+  margin-top: 6px;
+  font-weight: bold;
+  text-shadow: 0 1px 0 #FFF;
+  a {
+    font-size: 1.2em;
+    color: #666;
+    background-color: #d6d6d6;
+    padding: 12px 0;
+    text-align: center;
+    display: block;
+    &:hover {
+      background-color: #CCC;
+      text-decoration: none;
+      color: #555;
+    }
+  }
+}
+.remove-row {
+  color: indianred;
+  font-weight: bold;
+  font-size: 2.4em;
+  &:hover {
+    color: darkred;
+    text-decoration: none;
+  }
+}
+
+#epiUseTable {
+  .list-header, .list-row {
+    div {
+      line-height: 21px;
+    }
+  }
+  .list-row {
+    padding: 0;
+  }
+  .row-fluid [class*="span"] {
+//    border-left: 1px solid #ccc;
+    word-wrap: normal;
+  }
+  .list-row [class*="span"]{
+    padding: 8px 5px;
+//    &:first-child {
+//      border-left: none;
+//    }
+    label {
+      display: inline;
+      vertical-align: middle;
+    }
+  }
+  .list-header-container {
+    padding: 5px;
+  }
+  input[type="text"] {
+    margin-bottom: 3px;
+  }
+  input[type="checkbox"] {
+    margin-top: 0;
   }
 }

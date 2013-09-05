@@ -215,7 +215,7 @@ describe("Facility Controller", function () {
           "fax": "fax", "address1": "A", "address2": "B", "geographicZone": {"id": 1}, "facilityType": {"code": "warehouse"}, "catchmentPopulation": 333,
           "latitude": 22.1, "longitude": 1.2, "altitude": 3.3, "operatedBy": {"code": "NGO"}, "coldStorageGrossCapacity": 9.9, "coldStorageNetCapacity": 6.6,
           "suppliesOthers": true, "sdp": true, "hasElectricity": true, "online": true, "hasElectronicScc": true, "hasElectronicDar": null, "active": true,
-          "goLiveDate": 1352572200000, "goDownDate": -2592106200000, "satellite": true, "satelliteParentId": null, "comment": "fc", "dataReportable": true,
+          "goLiveDate": 1352572200000, "goDownDate": -2592106200000, "satellite": true, "satelliteParentId": null, "comment": "fc", "enabled": true,
           "supportedPrograms": [
             {"code": "ARV", "name": "ARV", "description": "ARV", "active": true, "program": {"id": 1}, "startDate": 1352572200000},
             {"code": "HIV", "name": "HIV", "description": "HIV", "active": true, "program": {"id": 1}, "startDate": 1352572200000}
@@ -236,7 +236,7 @@ describe("Facility Controller", function () {
       it('should delete a facility', function () {
         httpBackend.expect('DELETE', '/facilities/1.json').respond(200, {"success": "Deleted successfully", "facility": scope.facility});
 
-        scope.deleteFacilityCallBack(true);
+        scope.disableFacilityCallBack(true);
         httpBackend.flush();
 
         expect(scope.message).toEqual("Deleted successfully");
@@ -249,7 +249,7 @@ describe("Facility Controller", function () {
       it('should not delete a facility if error occurs', function () {
         httpBackend.expect('DELETE', '/facilities/1.json').respond(404, {"error": "something went wrong", "facility": scope.facility});
 
-        scope.deleteFacilityCallBack(true);
+        scope.disableFacilityCallBack(true);
         httpBackend.flush();
 
         expect(scope.error).toEqual("something went wrong");
@@ -262,7 +262,7 @@ describe("Facility Controller", function () {
       it('should restore a facility', function () {
         httpBackend.expect('PUT', '/facilities/1/restore.json?active=true').respond(200, {"success": "Restored Successfully", "facility": scope.facility});
 
-        scope.restoreFacility(true);
+        scope.enableFacility(true);
         httpBackend.flush();
 
         expect(scope.message).toEqual("Restored Successfully");
@@ -275,7 +275,7 @@ describe("Facility Controller", function () {
       it('should not restore a facility if error occurs', function () {
         httpBackend.expect('PUT', '/facilities/1/restore.json?active=true').respond(400, {"error": "something went wrong", "facility": scope.facility});
 
-        scope.restoreFacility(true);
+        scope.enableFacility(true);
         httpBackend.flush();
 
         expect(scope.error).toEqual("something went wrong");

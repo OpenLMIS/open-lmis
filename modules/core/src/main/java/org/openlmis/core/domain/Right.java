@@ -32,7 +32,6 @@ public enum Right {
   MANAGE_USER("right.manage.user", ADMIN, "Permission to manage users(crud)", 7),
   UPLOADS("right.upload", ADMIN, "Permission to upload", 8),
   VIEW_REPORT("right.view.report", ADMIN, "Permission to view reports", 11),
-  VIEW_REPORTS("Admin - View Reports", ADMIN, "Permission to view reports", 44),
   MANAGE_REPORT("right.manage.report", ADMIN, "Permission to manage reports", 10, VIEW_REPORT),
   VIEW_REQUISITION("right.view.requisition", REQUISITION, "Permission to view requisitions", 16),
   CREATE_REQUISITION("right.create.requisition", REQUISITION, "Permission to create, edit, submit and recall requisitions", 15, VIEW_REQUISITION),
@@ -42,8 +41,10 @@ public enum Right {
   VIEW_ORDER("right.view.order", ADMIN, "Permission to view orders", 17),
   MANAGE_PROGRAM_PRODUCT("right.manage.program.product", ADMIN, "Permission to manage program products", 3),
   MANAGE_DISTRIBUTION("right.manage.distribution", ALLOCATION, "Permission to manage an distribution", 9),
+  CONFIGURE_EDI("right.configure.edi", ADMIN, "Permission to configure Electronic Data Interchange (EDI)", 18),
   MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", ADMIN, "Permission to manage a regimen template", 4),
 
+  MANAGE_PRODUCT_ALLOWED_FOR_FACILITY("Admin - Manage Products Allowed for Facilities", ADMIN, "Permission to manage allowed products for facilities",24),
   MANAGE_SETTING("Admin - Configure Settings", ADMIN, "Permission to configure settings.",25),
   MANAGE_REQ_GRP_PROG_SCHEDULE("Admin - Manage Requisition Group Program Schedule", ADMIN, "Permission to manage requisition groups programs schedule", 26),
   MANAGE_SUPERVISORY_NODE("Admin - Manage Supervisory Nodes",ADMIN,"Permission to manage supervisory nodes",27),
@@ -68,7 +69,7 @@ public enum Right {
   VIEW_STOCK_IMBALANCE_REPORT("Report - Stock Imbalance Report", REPORT, "Permission to view Stock Imbalance Report",46),
   VIEW_RNR_FEEDBACK_REPORT("Report - Report and Requisition Feedback", REPORT, "Permission to view Report and Requisition Feedback Report",47);
 
-    @Getter
+  @Getter
   private final String rightName;
 
   @Getter

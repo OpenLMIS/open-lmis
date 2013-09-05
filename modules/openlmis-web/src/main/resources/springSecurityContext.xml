@@ -61,8 +61,7 @@
         <logout logout-success-url="/" invalidate-session="true" delete-cookies="true"/>
 
         <session-management>
-            <concurrency-control session-registry-alias="sessionRegistry" expired-url="/user-context.json"
-                                 error-if-maximum-exceeded="false" max-sessions="10"/>
+            <concurrency-control expired-url="/user-context.json" max-sessions="10" />
         </session-management>
     </http>
 

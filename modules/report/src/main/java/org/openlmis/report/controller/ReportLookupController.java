@@ -155,6 +155,12 @@ public class ReportLookupController extends BaseController {
       return OpenLmisResponse.response("periods", periodList);
     }
 
+    @RequestMapping(value = "/schedules/{scheduleId}/year/{year}/periods", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getPeriodsByScheduleAndYear(@PathVariable("scheduleId") Long scheduleId, @PathVariable("year") Long year) {
+        List<ProcessingPeriod> periodList = processingScheduleService.getAllPeriodsForScheduleAndYear(scheduleId,year);
+        return OpenLmisResponse.response("periods", periodList);
+    }
+
     @RequestMapping(value = "/allPeriods", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getAllPeriods(HttpServletRequest request) {
         List<org.openlmis.report.model.dto.ProcessingPeriod> periodList = reportLookupService.getAllProcessingPeriods();

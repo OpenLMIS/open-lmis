@@ -46,7 +46,7 @@ public class ProgramSupportedPersistenceHandler extends AbstractModelPersistence
   }
 
   @Override
-  protected String getDuplicateMessageKey() {
+  public String getMessageKey() {
     return "error.duplicate.program.supported";
   }
 

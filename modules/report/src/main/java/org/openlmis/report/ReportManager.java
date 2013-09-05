@@ -7,7 +7,6 @@
 package org.openlmis.report;
 
 import lombok.*;
-import org.openlmis.core.domain.Configuration;
 import org.openlmis.core.domain.ConfigurationSetting;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.ConfigurationSettingService;

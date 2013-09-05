@@ -7,6 +7,7 @@
 package org.openlmis.report.builder;
 
 import org.openlmis.report.model.filter.StockedOutReportFilter;
+import org.openlmis.report.model.report.StockedOutReport;
 
 import java.util.Map;
 
@@ -21,12 +22,13 @@ public class StockedOutReportQueryBuilder {
 
 
         StockedOutReportFilter filter  = (StockedOutReportFilter)params.get("filterCriteria");
+        Map sortCriteria = (Map) params.get("SortCriteria");
         BEGIN();
-        SELECT("DISTINCT supplyingfacility,facilitycode, facility, product, facilitytypename,  location");
+        SELECT("DISTINCT supplyingfacility,facilitycode, facility, product, facilitytypename, location, processing_period_name");
         FROM("vw_stock_status");
         WHERE("status = 'SO'");
         writePredicates(filter);
-        ORDER_BY("facility");
+        ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, StockedOutReport.class,"supplyingfacility asc, facility asc, product asc, processing_period_name asc"));
         return SQL();
 
     }
@@ -51,15 +53,21 @@ public class StockedOutReportQueryBuilder {
             if(filter.getRgroupId() != 0 && filter.getRgroupId() != -1){
                 WHERE("rgid = #{filterCriteria.rgroupId}");
             }
-            if(filter.getProductId() != 0){
+            if(filter.getProductId() > 0){
                 WHERE("productid= #{filterCriteria.productId}");
-            } else {
+            } else if (filter.getProductId() == 0) {
                 WHERE("indicator_product = true");
+            }
+            if(filter.getProgramId() != 0 && filter.getProgramId() != -1){
+                 WHERE("programid = #{filterCriteria.programId}");
+            }
+            if(filter.getFacilityId() != 0 && filter.getFacilityId() != -1){
+                WHERE("facility_id = #{filterCriteria.facilityId}");
             }
         }
     }
 
-    public static String getTotalCount(Map params){
+    public static String getTotalFacilities(Map params){
 
         StockedOutReportFilter filter  = (StockedOutReportFilter)params.get("filterCriteria");
 
@@ -69,5 +77,20 @@ public class StockedOutReportQueryBuilder {
         writePredicates(filter);
         return SQL();
     }
+
+    public static String getTotalStockedoutFacilities(Map params){
+
+        StockedOutReportFilter filter  = (StockedOutReportFilter)params.get("filterCriteria");
+
+        BEGIN();
+        SELECT("COUNT(*) facilityCount");
+        FROM("vw_stock_status");
+        WHERE("status = 'SO'");
+        writePredicates(filter);
+        return SQL();
+    }
+
+
+
 
 }

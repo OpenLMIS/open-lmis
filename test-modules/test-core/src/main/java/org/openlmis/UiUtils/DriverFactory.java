@@ -19,6 +19,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.Map;
 
 import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
@@ -95,6 +97,9 @@ public class DriverFactory {
     profile.setAcceptUntrustedCertificates(true);
     profile.setPreference("signed.applets.codebase_principal_support", true);
     profile.setPreference("javascript.enabled", enableJavascript);
+    profile.setPreference("browser.helperApps.neverAsk.saveToDisk","text/csv");
+    profile.setPreference("browser.download.dir",new File(System.getProperty("user.dir")).getParent());
+    profile.setPreference("browser.download.folderList", 2);
     return new FirefoxDriver(profile);
   }
 
@@ -103,14 +108,17 @@ public class DriverFactory {
     DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
     ieCapabilities.setCapability("ignoreZoomSetting", true);
     InternetExplorerDriver driver = new InternetExplorerDriver(ieCapabilities);
-//    driver.get(getProperty("baseurl", TestCaseHelper.DEFAULT_BASE_URL));
-//    driver.navigate().to("javascript:document.getElementById('overridelink').click()");
     return driver;
   }
 
 
   private WebDriver createChromeDriver() {
     DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+      Map<String, String> prefs = new Hashtable<String, String>();
+      prefs.put("download.prompt_for_download", "false");
+      prefs.put("download.default_directory", "C:\\Users\\openlmis\\Downloads");
+
+    capabilities.setCapability("chrome.prefs", prefs);
     capabilities.setCapability("chrome.switches", Arrays.asList("--ignore-certificate-errors"));
     return new ChromeDriver(capabilities);
   }

@@ -173,7 +173,7 @@ Edit Product
     <label for="dosageUnitId_edt">Dosage Unit</label>
 
     <div class="form-field" style="width: 40%;">
-        <select ui-select2
+        <select
                 style="width:200px;"
                 ng-model="editProduct.dosageUnitId"
                 ng-show="editProduct"
@@ -210,7 +210,7 @@ Edit Product
 <div class="form-cell">
     <label for="formid_edt">Product Form</label>
     <div class="form-field" style="width: 40%;">
-           <select ui-select2 style="width:200px;" name="formId" id="formid_edt"
+           <select style="width:200px;" name="formId" id="formid_edt"
                 ng-model="editProduct.formId"
                 ng-show="editProduct"
                 ng-options="option.id as option.code for option in productForms">
@@ -229,7 +229,7 @@ Edit Product
 
     <div class="form-field" style="width: 40%;">
 
-        <select ui-select2 style="width:200px;" name="categoryid" id="categoryid_edt" ng-model="editProduct.categoryId"
+        <select style="width:200px;" name="categoryid" id="categoryid_edt" ng-model="editProduct.categoryId"
                 ng-show="editProduct"
                 ng-options="option.id as option.name for option in productCategories">
 
@@ -247,7 +247,7 @@ Edit Product
 
     <div class="form-field" style="width: 40%;">
 
-        <select ui-select2 style="width:200px;" ng-model="editProduct.productGroupId"
+        <select style="width:200px;" ng-model="editProduct.productGroupId"
                 ng-options="option.id as option.name for option in productGroups">
 
         </select>
@@ -285,16 +285,7 @@ Edit Product
                 </td>
                 <td>Tracer</td>
             </tr>
-            <tr>
-                <td>
-                    <input ng-model="editProduct.active" name="active" id="active_edt" type="checkbox"
-                           ng-show="editProduct"
-                           ng-required="false"/>
-                </td>
-                <td>&nbsp;</td>
-                </td>
-                <td>Active</td>
-            </tr>
+
             <tr>
                 <td>
                     <input ng-model="product.roundToZero" name="roundToZero" id="roundToZero_edt" type="checkbox"
@@ -331,11 +322,11 @@ Edit Product
             <td >&nbsp;</td>
             <td style="width: 200px;text-align:left;">{{pp.program.code}}</td>
             <td style="width: 200px;text-align:left;">
-                <input type="checkbox"
+                <input type="checkbox" ng-disabled="!editProduct.active"
                        ng-model="pp.active"/>
             </td>
-            <td><input type="text" ng-disabled="!pp.active" ng-required="pp.active" ng-model="pp.currentPrice"/></td>
-            <td><input type="text" ng-disabled="!pp.active" ng-required="pp.active" ng-model="pp.dosesPerMonth"/></td>
+            <td><input type="text" ng-disabled="(!pp.active || !editProduct.active)" ng-required="pp.active" ng-model="pp.currentPrice"/></td>
+            <td><input type="text" ng-disabled="(!pp.active || !editProduct.active)" ng-required="pp.active" ng-model="pp.dosesPerMonth"/></td>
         </tr>
     </table>
 </div>

@@ -14,6 +14,8 @@
     <classes preserver-order="true">
       <class name="org.openlmis.functional.ManageISA">
       </class>
+      <class name="org.openlmis.functional.ConfigureOrderTemplate">
+      </class>
       <class name="org.openlmis.functional.ManageProgramProductISA">
       </class>
       <class name="org.openlmis.functional.ManageDistribution">
@@ -28,6 +30,10 @@
       </class>
       <class name="org.openlmis.functional.ForgotPassword">
       </class>
+      <class name="org.openlmis.functional.ManageRefrigerator">
+        </class>
+      <class name="org.openlmis.functional.ConfigureShipmentTemplate">
+        </class>
       <class name="org.openlmis.functional.E2EManageSupplyline">
       </class>
       <class name="org.openlmis.functional.E2EManageGeographicZones">

@@ -11,6 +11,7 @@ import org.openlmis.core.domain.Budget;
 import org.openlmis.core.domain.ShipmentFileDetail;
 import org.openlmis.core.repository.ShipmentFileDetailRepository;
 import org.openlmis.core.service.*;
+import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +34,12 @@ public class ShipmentFileDetailHandler extends AbstractModelPersistenceHandler {
   }
 
   @Override
-  protected String getDuplicateMessageKey() {
+  public String getMessageKey() {
     return "error.duplicate.ShipmentFileDetail";
   }
+
+  @Override
+  public void postProcess(AuditFields auditFields) {
+  }
+
 }

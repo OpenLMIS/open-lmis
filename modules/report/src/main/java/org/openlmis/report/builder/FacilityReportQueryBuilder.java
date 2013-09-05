@@ -11,14 +11,7 @@ import org.openlmis.report.model.sorter.FacilityReportSorter;
 import java.util.Map;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
-//import static org.apache.ibatis.jdbc.SelectBuilder.*;
-/**
- * Created with IntelliJ IDEA.
- * User: user
- * Date: 3/29/13
- * Time: 6:32 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class FacilityReportQueryBuilder {
 
     public static String SelectFilteredSortedPagedFacilitiesSql(Map params){//ReportData filterCriteria,ReportData SortCriteria ,int page,int pageSize) {

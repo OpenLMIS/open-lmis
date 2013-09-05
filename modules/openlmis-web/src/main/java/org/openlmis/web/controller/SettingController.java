@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,6 +38,11 @@ public class SettingController extends BaseController {
     ConfigurationDTO dto = new ConfigurationDTO();
     dto.setList( configurationService.getConfigurations() );
     return OpenLmisResponse.response("settings", dto );
+  }
+
+  @RequestMapping(value = "/settings/{key}",  method = RequestMethod.GET, headers = "Accept=application/json")
+  public ResponseEntity<OpenLmisResponse> getByKey(@PathVariable(value = "key") String key) {
+    return OpenLmisResponse.response("settings", configurationService.getByKey(key) );
   }
 
   @RequestMapping(value = "/saveSettings", method = RequestMethod.POST, headers = "Accept=application/json")

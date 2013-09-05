@@ -12,14 +12,11 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.ProcessingSchedule;
-import org.openlmis.core.domain.Program;
+import org.openlmis.core.builder.SupervisoryNodeBuilder;
+import org.openlmis.core.builder.SupplyLineBuilder;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
-import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
-import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
+import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
@@ -37,17 +34,18 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
+import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 import static org.openlmis.order.domain.OrderStatus.PACKED;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 
@@ -74,9 +72,17 @@ public class OrderMapperIT {
   @Autowired
   private QueryExecutor queryExecutor;
 
+  @Autowired
+  SupplyLineMapper supplyLineMapper;
+
+  @Autowired
+  SupervisoryNodeMapper supervisoryNodeMapper;
+
   private ProcessingSchedule processingSchedule;
   private Facility facility;
   private ProcessingPeriod processingPeriod;
+  private SupervisoryNode supervisoryNode;
+  private SupplyLine supplyLine;
 
   @Before
   public void setUp() throws Exception {
@@ -85,12 +91,17 @@ public class OrderMapperIT {
     processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
     processingScheduleMapper.insert(processingSchedule);
     processingPeriod = insertPeriod();
+    supervisoryNode = insertSupervisoryNode();
+    supplyLine = make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, facility),
+      with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
+    supplyLineMapper.insert(supplyLine);
   }
 
   @Test
   public void shouldInsertOrder() throws Exception {
     Rnr rnr = insertRequisition(1L);
     Order order = new Order(rnr);
+    order.setSupplyLine(supplyLine);
     mapper.insert(order);
     List<Long> orderIds = new ArrayList();
     orderIds.add(order.getId());
@@ -116,6 +127,9 @@ public class OrderMapperIT {
     assertThat(orders.get(1).getRnr().getId(), is(order1.getRnr().getId()));
     assertThat(orders.get(1).getShipmentFileInfo(), is(nullValue()));
     assertThat(orders.get(0).getId(), is(order2.getId()));
+    assertThat(orders.get(0).getSupplyLine().getId(), is(supplyLine.getId()));
+    assertThat(orders.get(1).getSupplyLine().getId(), is(supplyLine.getId()));
+
   }
 
   @Test
@@ -138,6 +152,7 @@ public class OrderMapperIT {
   public void shouldUpdateStatusAndShipmentIdForOrder() throws Exception {
     Rnr rnr = insertRequisition(1L);
     Order order = new Order(rnr);
+    order.setSupplyLine(supplyLine);
     mapper.insert(order);
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
     shipmentFileInfo.setFileName("ord_1.csv");
@@ -147,7 +162,7 @@ public class OrderMapperIT {
 
     mapper.updateShipmentInfo(order);
 
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE rnrid=?", Arrays.asList(order.getRnr().getId()));
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE rnrid=?", asList(order.getRnr().getId()));
 
     resultSet.next();
 
@@ -162,11 +177,12 @@ public class OrderMapperIT {
     Order savedOrder = mapper.getById(expectedOrder.getId());
     assertThat(savedOrder.getId(), is(expectedOrder.getId()));
     assertThat(savedOrder.getRnr().getId(), is(expectedOrder.getRnr().getId()));
+    assertThat(savedOrder.getSupplyLine().getId(), is(supplyLine.getId()));
   }
 
   @Test
   public void shouldGetOrderFileTemplate() throws Exception {
-    List<OrderFileColumn> orderFileColumns = mapper.getOrderFileTemplate();
+    List<OrderFileColumn> orderFileColumns = mapper.getOrderFileColumns();
     String[] expectedDataFieldLabels = {"header.order.number", "create.facility.code", "header.product.code",
       "header.quantity.approved", "label.period", "header.order.date"};
     String[] expectedColumnLabels = {"Order number", "Facility code", "Product code", "Approved quantity",
@@ -174,10 +190,30 @@ public class OrderMapperIT {
     assertThat(orderFileColumns.size(), is(expectedDataFieldLabels.length));
     for (int i = 0; i < expectedDataFieldLabels.length; i++) {
       assertThat(orderFileColumns.get(i).getDataFieldLabel(), is(expectedDataFieldLabels[i]));
-      assertThat(orderFileColumns.get(i).getPosition(), is(i+1));
-      assertThat(orderFileColumns.get(i).includeInOrderFile(), is(true));
+      assertThat(orderFileColumns.get(i).getPosition(), is(i + 1));
+      assertThat(orderFileColumns.get(i).getIncludeInOrderFile(), is(true));
       assertThat(orderFileColumns.get(i).getColumnLabel(), is(expectedColumnLabels[i]));
     }
+  }
+
+  @Test
+  public void shouldDeleteAllOrderFileColumns() throws Exception {
+    mapper.deleteOrderFileColumns();
+    List<OrderFileColumn> orderFileColumns = mapper.getOrderFileColumns();
+    assertThat(orderFileColumns.size(), is(0));
+  }
+
+  @Test
+  public void shouldInsertOrderFileColumn() throws Exception {
+    OrderFileColumn orderFileColumn = new OrderFileColumn();
+    orderFileColumn.setColumnLabel("Red Label");
+    orderFileColumn.setDataFieldLabel("More Red Label");
+    orderFileColumn.setIncludeInOrderFile(true);
+    orderFileColumn.setPosition(55);
+    orderFileColumn.setOpenLmisField(true);
+    mapper.insertOrderFileColumn(orderFileColumn);
+    List<OrderFileColumn> orderFileColumns = mapper.getOrderFileColumns();
+    assertThat(orderFileColumns.contains(orderFileColumn), is(true));
   }
 
   private long updateOrderCreatedTime(Order order, Date date) throws SQLException {
@@ -190,6 +226,7 @@ public class OrderMapperIT {
   private Order insertOrder(Long programId) {
     Rnr rnr = insertRequisition(programId);
     Order order = new Order(rnr);
+    order.setSupplyLine(supplyLine);
     mapper.insert(order);
     return order;
   }
@@ -205,5 +242,14 @@ public class OrderMapperIT {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, processingSchedule.getId())));
     processingPeriodMapper.insert(processingPeriod);
     return processingPeriod;
+  }
+
+
+  private SupervisoryNode insertSupervisoryNode() {
+    supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    supervisoryNode.setFacility(facility);
+
+    supervisoryNodeMapper.insert(supervisoryNode);
+    return supervisoryNode;
   }
 }

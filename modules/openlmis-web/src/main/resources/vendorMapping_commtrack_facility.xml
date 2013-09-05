@@ -30,7 +30,7 @@
     <field openlmis-name="virtualFacility" vendor-name="facilityIsVirtual"/>
     <field openlmis-name="parentFacility" vendor-name="SatelliteParent"/>
     <field openlmis-name="comments" vendor-name="facilityComments"/>
-    <field openlmis-name="dataReportable" vendor-name="dataReportable"/>
+    <field openlmis-name="enabled" vendor-name="enabled"/>
     <field openlmis-name="modifiedDate" vendor-name="modifiedDate"/>
     <field openlmis-name="modifiedBy" vendor-name="modifiedBy"/>
 </mapping>

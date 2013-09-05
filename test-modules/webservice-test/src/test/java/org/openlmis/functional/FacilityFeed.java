@@ -99,8 +99,8 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicSCC\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicDAR\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":true"));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\":1377369000000"));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goDownDate\":1377455400000"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\":1380047400000"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goDownDate\":1380133800000"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":false"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comments\":\"Comments\""));
 //    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"modifiedDate\""));
@@ -108,28 +108,28 @@ public class FacilityFeed extends TestCaseHelper {
     DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(date_time);
     deleteFacilityPage.clickFacilityList(date_time);
-    deleteFacilityPage.deleteFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-    deleteFacilityPage.verifyDeletedFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-    deleteFacilityPage.restoreFacility();
+    deleteFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    deleteFacilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    deleteFacilityPage.enableFacility();
     responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
 
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"active\":true"));
-    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"dataReportable\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"enabled\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"sdp\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"online\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"gln\":\"Testing Gln\""));
 //    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"modifiedDate\""));
 
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"active\":false"));
-    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"dataReportable\":false"));
+    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"enabled\":false"));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"type\":\"" + facilityType + "\""));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"operatedBy\":\"" + operatedBy + "\""));
 //    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"modifiedDate\""));
 
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"active\":true"));
-    assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"dataReportable\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"enabled\":true"));
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"type\":\"" + facilityType + "\""));
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"operatedBy\":\"" + operatedBy + "\""));
 //    assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"modifiedDate\""));
@@ -223,7 +223,7 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"online\":true"));
 //        assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"parentFacility\":\"" + parentFacilityCode + "\""));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"gln\":\"G7645\""));
-    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"dataReportable\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"enabled\":true"));
 //    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"modifiedDate\""));
 
     homePage.logout(baseUrlGlobal);
@@ -284,12 +284,12 @@ public class FacilityFeed extends TestCaseHelper {
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntityUpdated.getResponse(), "content");
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"active\":true"));
-    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"dataReportable\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"enabled\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"sdp\":true"));
 //    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"modifiedDate\""));
 
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"active\":false"));
-    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"dataReportable\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"enabled\":true"));
 //    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"modifiedDate\""));
   }
 
@@ -336,12 +336,12 @@ public class FacilityFeed extends TestCaseHelper {
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntityUpdated.getResponse(), "content");
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"active\":true"));
-    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"dataReportable\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"enabled\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"sdp\":true"));
 //    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"modifiedDate\""));
 
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"active\":false"));
-    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"dataReportable\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"enabled\":true"));
 //    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"modifiedDate\""));
   }
 
@@ -388,12 +388,12 @@ public class FacilityFeed extends TestCaseHelper {
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntityUpdated.getResponse(), "content");
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"active\":true"));
-    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"dataReportable\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"enabled\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"sdp\":true"));
 //    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"modifiedDate\""));
 
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"active\":false"));
-    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"dataReportable\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"enabled\":true"));
 //    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"modifiedDate\""));
   }
 
@@ -440,12 +440,12 @@ public class FacilityFeed extends TestCaseHelper {
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntityUpdated.getResponse(), "content");
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"facilityIsActive\":true"));
-    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"dataReportable\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"enabled\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"facilityIsSDP\":true"));
 //    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"modifiedDate\""));
 
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"facilityIsActive\":false"));
-    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"dataReportable\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"enabled\":true"));
 //    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"modifiedDate\""));
   }
 

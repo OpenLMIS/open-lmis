@@ -27,16 +27,16 @@ public class DeleteFacilityPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='facility-list']/ul/li/a")
   private static WebElement facilityList;
 
-  @FindBy(how = How.LINK_TEXT, using = "Delete")
-  private static WebElement deleteButton;
+  @FindBy(how = How.XPATH, using = "//input[@class='btn btn-danger delete-button']")
+  private static WebElement disableButton;
 
   @FindBy(how = How.LINK_TEXT, using = "OK")
   private static WebElement okButton;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='deleteFacilityDialog']/div[@class='modal-body']/p")
-  private static WebElement deleteMessageOnAlert;
+  @FindBy(how = How.XPATH, using = "//div[@id='disableFacilityDialog']/div[@class='modal-body']/p")
+  private static WebElement disableMessageOnAlert;
 
-  @FindBy(how = How.XPATH, using = "//a[@ng-click='deleteFacility()']")
+  @FindBy(how = How.XPATH, using = "//a[@ng-click='disableFacility()']")
   private static WebElement deteteButtonOnAlert;
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']/span")
@@ -50,7 +50,7 @@ public class DeleteFacilityPage extends Page {
 
 
   @FindBy(how = How.XPATH, using = "//ng-switch/span")
-  private static WebElement dataReportable;
+  private static WebElement enabledFlag;
 
   @FindBy(how = How.XPATH, using = "//input[@name='isActive' and @value='false']")
   private static WebElement isActiveRadioNoOption;
@@ -58,11 +58,11 @@ public class DeleteFacilityPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@name='isActive' and @value='true']")
   private static WebElement isActiveRadioYesOption;
 
-  @FindBy(how = How.LINK_TEXT, using = "Restore")
-  private static WebElement restoreButton;
+  @FindBy(how = How.XPATH, using = "//input[@class='btn btn-primary enable-button']")
+  private static WebElement enableButton;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='restoreConfirmModal']/div[@class='modal-body']/p")
-  private static WebElement restoreMessageOnAlert;
+  @FindBy(how = How.XPATH, using = "//div[@id='enableConfirmModal']/div[@class='modal-body']/p")
+  private static WebElement enableMessageOnAlert;
 
   @FindBy(how = How.LINK_TEXT, using = "OK")
   private static WebElement okLink;
@@ -144,32 +144,32 @@ public class DeleteFacilityPage extends Page {
   }
 
 
-  public void deleteFacility(String facilityCodeValue, String facilityNameValue) {
+  public void disableFacility(String facilityCodeValue, String facilityNameValue) {
 
-    String expectedMessageOnAlert = "''" + facilityNameValue + "'' / ''" + facilityCodeValue + "'' will be deleted from the system.";
+    String expectedMessageOnAlert = "''" + facilityNameValue + "'' / ''" + facilityCodeValue + "'' will be disabled in the system.";
     verifyHeader("Edit facility");
-    clickDeleteButtonOnFacilityScreen();
-    verifyDeleteAlert(expectedMessageOnAlert);
-    clickDeleteButtonOnAlert();
+    clickDisableButtonOnFacilityScreen();
+    verifyDisableAlert(expectedMessageOnAlert);
+    clickOkButtonOnAlert();
 
 
   }
 
-  private void clickDeleteButtonOnFacilityScreen() {
-    testWebDriver.waitForElementToAppear(deleteButton);
-    deleteButton.click();
+  private void clickDisableButtonOnFacilityScreen() {
+    testWebDriver.waitForElementToAppear(disableButton);
+    disableButton.click();
   }
 
-  private void clickDeleteButtonOnAlert() {
+  private void clickOkButtonOnAlert() {
     testWebDriver.sleep(1000);
     okButton.click();
   }
 
-  private void verifyDeleteAlert(String expectedMessageOnAlert) {
-    testWebDriver.waitForElementToAppear(deleteMessageOnAlert);
+  private void verifyDisableAlert(String expectedMessageOnAlert) {
+    testWebDriver.waitForElementToAppear(disableMessageOnAlert);
 
-    String deleteMessageOnAlertValue = deleteMessageOnAlert.getText();
-    SeleneseTestNgHelper.assertEquals(deleteMessageOnAlertValue, expectedMessageOnAlert);
+    String disableMessageOnAlertValue = disableMessageOnAlert.getText();
+    SeleneseTestNgHelper.assertEquals(disableMessageOnAlertValue, expectedMessageOnAlert);
   }
 
 
@@ -179,37 +179,37 @@ public class DeleteFacilityPage extends Page {
   }
 
 
-  public void verifyDeletedFacility(String facilityCodeValue, String facilityNameValue) {
-    String expectedMessageOnFacilityScreenAfterDelete = "\"" + facilityNameValue + "\" / \"" + facilityCodeValue + "\" deleted successfully";
+  public void verifyDisabledFacility(String facilityCodeValue, String facilityNameValue) {
+    String expectedMessageOnFacilityScreenAfterDisable = "\"" + facilityNameValue + "\" / \"" + facilityCodeValue + "\" is now disabled";
 
     testWebDriver.waitForElementToAppear(successMessageDiv);
 
     testWebDriver.sleep(1000);
-    String deleteMessageOnFacilityScreenValue = successMessageDiv.getText();
-    SeleneseTestNgHelper.assertEquals(deleteMessageOnFacilityScreenValue, expectedMessageOnFacilityScreenAfterDelete);
+    String disableMessageOnFacilityScreenValue = successMessageDiv.getText();
+    SeleneseTestNgHelper.assertEquals(disableMessageOnFacilityScreenValue, expectedMessageOnFacilityScreenAfterDisable);
 
-    String dataReportableValue = dataReportable.getText();
-    SeleneseTestNgHelper.assertEquals(dataReportableValue.trim(), "No");
+    String enableValue = enabledFlag.getText();
+    SeleneseTestNgHelper.assertEquals(enableValue.trim(), "No");
 
     SeleneseTestNgHelper.assertTrue(isActiveRadioNoOption.isSelected());
   }
 
-  public void verifyRestoredFacility() {
+  public void verifyEnabledFacility() {
 
     testWebDriver.sleep(1000);
-    String dataReportableValue = dataReportable.getText();
-    SeleneseTestNgHelper.assertEquals(dataReportableValue.trim(), "Yes");
+    String enableValue = enabledFlag.getText();
+    SeleneseTestNgHelper.assertEquals(enableValue.trim(), "Yes");
     SeleneseTestNgHelper.assertTrue(isActiveRadioYesOption.isSelected());
     verifyHeader("Edit facility");
   }
 
-  public HomePage restoreFacility() throws IOException {
+  public HomePage enableFacility() throws IOException {
     String expectedIsActiveMessageOnAlert = "Do you want to set facility as active?";
 
-    testWebDriver.waitForElementToAppear(restoreButton);
+    testWebDriver.waitForElementToAppear(enableButton);
     testWebDriver.sleep(1000);
-    restoreButton.click();
-    testWebDriver.waitForElementToAppear(restoreMessageOnAlert);
+    enableButton.click();
+    testWebDriver.waitForElementToAppear(enableMessageOnAlert);
 
 
     testWebDriver.sleep(1000);
@@ -222,7 +222,7 @@ public class DeleteFacilityPage extends Page {
     testWebDriver.sleep(1000);
     okLink.click();
 
-    verifyRestoredFacility();
+    verifyEnabledFacility();
 
     return new HomePage(testWebDriver);
   }
@@ -235,7 +235,7 @@ public class DeleteFacilityPage extends Page {
 
     verifyHeader("Edit facility");
 
-    testWebDriver.waitForElementToAppear(deleteButton);
+    testWebDriver.waitForElementToAppear(disableButton);
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(facilityCode);
     catchmentPopulation.clear();
@@ -288,7 +288,7 @@ public class DeleteFacilityPage extends Page {
     int i = 1;
     clickFacilityList(date_time);
     verifyHeader("Edit facility");
-    testWebDriver.waitForElementToAppear(deleteButton);
+    testWebDriver.waitForElementToAppear(disableButton);
     testWebDriver.sleep(1500);
     for (String program : programsSupported) {
       WebElement programsSupportedElement = testWebDriver.getElementByXpath("//table[@class='table table-striped table-bordered']/tbody/tr[" + i + "]/td[1]");

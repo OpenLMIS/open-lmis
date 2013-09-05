@@ -9,7 +9,7 @@
     <li><a href="/" openlmis-message="link.home"></a></li>
 
     <li>
-      <a href="javascript: void(0)" openlmis-message="link.requisitions"></a>
+      <a id="requisitions-menu" href="javascript: void(0)" openlmis-message="link.requisitions"></a>
 
       <div class="submenu">
         <ul>
@@ -36,7 +36,7 @@
     </li>
 
     <li>
-      <a href="javascript: void(0)" openlmis-message="link.orders"></a>
+      <a id="orders-menu" href="javascript: void(0)" openlmis-message="link.orders"></a>
 
       <div class="submenu">
         <ul>
@@ -49,10 +49,14 @@
 
     </li>
 
-    <li ng-show="hasPermission('VIEW_REPORT')">
-      <a href="javascript: void(0)" openlmis-message="link.reports"></a>
+    <li >
+        <a href="javascript: void(0)" openlmis-message="link.reports"></a>
+
       <div class="submenu">
           <ul>
+              <li ng-show="hasPermission('VIEW_REPORT')">
+                  <a id="reports-menu" href="/public/pages/report/index.html" openlmis-message="link.reports"></a>
+              </li>
               <li class="has-children">
                   <a href="javascript: void(0);">Product Reports</a>
 
@@ -117,6 +121,9 @@
                           <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
                               <a href="/public/pages/reports/stock-imbalance/index.html">Stock Imbalance by Facility</a>
                           </li>
+                          <li ng-show="hasPermission('VIEW_RNR_FEEDBACK_REPORT')">
+                              <a href="/public/pages/reports/rnr-feedback/index.html">Report and Requisition Feedback</a>
+                          </li>
                           <li class="beak"></li>
                       </ul>
                   </div>
@@ -126,7 +133,7 @@
     </li>
 
     <li>
-      <a href="javascript: void(0)" openlmis-message="link.distributions"></a>
+      <a id="distributions-menu" href="javascript: void(0)" openlmis-message="link.distributions"></a>
 
       <div class="submenu">
         <ul>
@@ -139,7 +146,7 @@
     </li>
 
     <li>
-      <a href="javascript: void(0)" openlmis-message="link.administration"></a>
+      <a id="administration-menu" href="javascript: void(0)" openlmis-message="link.administration"></a>
 
       <div class="submenu">
         <ul>
@@ -164,9 +171,13 @@
                   <a href="/public/pages/admin/program-product-isa/index.html"
                      openlmis-message="link.admin.configure.programProductISA"></a>
                 </li>
+                <li ng-show="hasPermission('CONFIGURE_EDI')">
+                  <a href="/public/pages/admin/edi/index.html#/configure-edi-file"
+                     openlmis-message="link.admin.configure.edi"></a>
+                </li>
                 <li ng-show="hasPermission('MANAGE_SETTING')">
-                  <a href="/public/pages/admin/setting/index.html"
-                     openlmis-message="link.admin.configure.setting"></a>
+                      <a href="/public/pages/admin/setting/index.html"
+                         openlmis-message="link.admin.configure.setting"></a>
                 </li>
                 <li class="beak"></li>
               </ul>
@@ -179,48 +190,49 @@
 
             <div class="submenu">
               <ul>
-                <li ng-show="hasPermission('MANAGE_FACILITY')">
-                  <a href="/public/pages/admin/facility/index.html" openlmis-message="menu.header.facilities"></a>
-                </li>
-                <li ng-show="hasPermission('MANAGE_ROLE')">
-                  <a href="/public/pages/admin/role/index.html" openlmis-message="menu.header.roles"></a>
-                </li>
-                <li ng-show="hasPermission('MANAGE_SCHEDULE')">
-                  <a href="/public/pages/admin/schedule/index.html" openlmis-message="menu.header.schedules"></a>
-                </li>
-                <li ng-show="hasPermission('MANAGE_USER')">
-                  <a href="/public/pages/admin/user/index.html" openlmis-message="menu.header.users"></a>
-                </li>
-                  <li ng-show="hasPermission('MANAGE_SUPPLYLINE')">
-                      <a href="/public/pages/admin/supplyline/index.html">Supply Lines</a>
-                  </li>
-                  <li ng-show="hasPermission('MANAGE_GEOGRAPHIC_ZONES')">
+                    <li ng-show="hasPermission('MANAGE_GEOGRAPHIC_ZONES')">
                       <a href="/public/pages/admin/geographic-zones/index.html">Geographic Zones</a>
+                    </li>
+                    <li ng-show="hasPermission('MANAGE_FACILITY')">
+                      <a href="/public/pages/admin/facility/index.html" openlmis-message="menu.header.facilities"></a>
+                    </li>
+                    <li ng-show="hasPermission('MANAGE_ROLE')">
+                      <a href="/public/pages/admin/role/index.html" openlmis-message="menu.header.roles"></a>
+                    </li>
+                    <li ng-show="hasPermission('MANAGE_SCHEDULE')">
+                      <a href="/public/pages/admin/schedule/index.html" openlmis-message="menu.header.schedules"></a>
+                    </li>
+                    <li ng-show="hasPermission('MANAGE_USER')">
+                      <a href="/public/pages/admin/user/index.html" openlmis-message="menu.header.users"></a>
+                    </li>
+                    <li ng-show="hasPermission('MANAGE_PRODUCT')">
+                       <a href="/public/pages/admin/product/index.html">Products</a>
+                    </li>
+                  <li ng-show="hasPermission('MANAGE_SUPERVISORY_NODE')">
+                      <a href="/public/pages/admin/supervisory-node/index.html">Supervisory Nodes</a>
                   </li>
                   <li ng-show="hasPermission('MANAGE_REQUISITION_GROUP')">
                       <a href="/public/pages/admin/requisition-group/index.html">Requisition Groups</a>
                   </li>
-                  <li ng-show="hasPermission('MANAGE_PRODUCT')">
-                      <a href="/public/pages/admin/product/index.html">Products</a>
-                  </li>
-                  <li ng-show="hasPermission('MANAGE_SUPERVISORY_NODE')">
-                      <a href="/public/pages/admin/supervisory-node/index.html">Supervisory Nodes</a>
+                  <li ng-show="hasPermission('MANAGE_SUPPLYLINE')">
+                      <a href="/public/pages/admin/supplyline/index.html">Supply Lines</a>
                   </li>
                   <li ng-show="hasPermission('MANAGE_REQ_GRP_PROG_SCHEDULE')">
-                      <a href="/public/pages/admin/requisition-group-program-schedule/index.html">Requisition Group Program Schedules</a>
+                      <a href="/public/pages/admin/requisition-group-program-schedule/index.html">Program Schedules</a>
                   </li>
-
-
+                  <li ng-show="hasPermission('MANAGE_PRODUCT_ALLOWED_FOR_FACILITY')">
+                      <a href="/public/pages/admin/product-allowed-for-facility/index.html">Products Permissions</a>
+                  </li>
                 <li class="beak"></li>
               </ul>
             </div>
           </li>
           <li class="beak"></li>
-
         </ul>
       </div>
 
     </li>
+
   </ul>
 </div>
 <div class="navigation-locale-bar">

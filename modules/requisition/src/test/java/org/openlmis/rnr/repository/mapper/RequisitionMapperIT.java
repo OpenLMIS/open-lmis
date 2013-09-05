@@ -33,10 +33,10 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.FacilityBuilder.code;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
+import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
@@ -80,8 +80,11 @@ public class RequisitionMapperIT {
   private ProgramMapper programMapper;
   @Autowired
   private CommentMapper commentMapper;
+  @Autowired
+  SupplyLineMapper supplyLineMapper;
 
   private SupervisoryNode supervisoryNode;
+  private SupplyLine supplyLine;
 
 
   @Before
@@ -96,6 +99,9 @@ public class RequisitionMapperIT {
     processingPeriod2 = insertPeriod("Period 2");
     processingPeriod3 = insertPeriod("Period 3");
     supervisoryNode = insertSupervisoryNode();
+    supplyLine = make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, facility),
+      with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
+    supplyLineMapper.insert(supplyLine);
   }
 
   @Test
@@ -119,6 +125,7 @@ public class RequisitionMapperIT {
     author.setId(1L);
     Comment comment = new Comment(requisition.getId(), author, "A comment", null);
     commentMapper.insert(comment);
+    updateSupplyingDepotForRequisition(requisition);
 
     Rnr fetchedRequisition = mapper.getById(requisition.getId());
 
@@ -132,16 +139,19 @@ public class RequisitionMapperIT {
     assertThat(fetchedRequisition.getNonFullSupplyLineItems().size(), is(1));
   }
 
+  private void updateSupplyingDepotForRequisition(Rnr requisition) {
+    requisition.setSupplyingDepot(facility);
+    mapper.update(requisition);
+  }
+
   @Test
   public void shouldUpdateRequisition() {
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
-    Facility supplyingFacility = make(a(defaultFacility, with(code, "SF")));
-    facilityMapper.insert(supplyingFacility);
     requisition.setModifiedBy(USER_ID);
     Date submittedDate = new Date();
     requisition.setSubmittedDate(submittedDate);
     requisition.setSupervisoryNodeId(supervisoryNode.getId());
-    requisition.setSupplyingFacility(supplyingFacility);
+    requisition.setSupplyingDepot(facility);
 
     mapper.update(requisition);
 
@@ -150,7 +160,6 @@ public class RequisitionMapperIT {
     assertThat(updatedRequisition.getId(), is(requisition.getId()));
     assertThat(updatedRequisition.getSupervisoryNodeId(), is(requisition.getSupervisoryNodeId()));
     assertThat(updatedRequisition.getModifiedBy(), is(equalTo(USER_ID)));
-    assertThat(updatedRequisition.getSupplyingFacility().getId(), is(supplyingFacility.getId()));
   }
 
 
@@ -263,10 +272,7 @@ public class RequisitionMapperIT {
   public void shouldGetAllTheApprovedRequisitions() {
     Rnr requisition = insertRequisition(processingPeriod1, APPROVED);
     requisition.setSupervisoryNodeId(supervisoryNode.getId());
-    Facility supplyingFacility = make(a(defaultFacility, with(code, "SF")));
-    facilityMapper.insert(supplyingFacility);
-    requisition.setSupplyingFacility(supplyingFacility);
-    mapper.update(requisition);
+    updateSupplyingDepotForRequisition(requisition);
 
     List<Rnr> requisitions = mapper.getApprovedRequisitions();
 
@@ -276,7 +282,6 @@ public class RequisitionMapperIT {
     assertThat(rnr.getProgram().getId(), is(PROGRAM_ID));
     assertThat(rnr.getPeriod().getId(), is(processingPeriod1.getId()));
     assertThat(rnr.getId(), is(requisition.getId()));
-    assertThat(rnr.getSupplyingFacility().getId(), is(supplyingFacility.getId()));
     assertThat(rnr.getModifiedDate(), is(notNullValue()));
   }
 

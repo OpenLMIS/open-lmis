@@ -17,6 +17,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
 
 
@@ -32,10 +33,10 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='user-info ng-scope']/strong")
   private static WebElement loggedInUserLabel;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Requisitions')]")
+  @FindBy(how = How.ID, using = "requisitions-menu")
   private static WebElement requisitionMenuItem;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Distributions')]")
+  @FindBy(how = ID, using = "distributions-menu")
   private static WebElement distributionsMenuItem;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Program Product ISA')]")
@@ -44,19 +45,19 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Home')]")
   private static WebElement homeMenuItem;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Reports')]")
+  @FindBy(how = How.ID, using = "reports-menu")
   private static WebElement reportMenuItem;
 
   @FindBy(how = How.XPATH, using = "//h2/span[contains(text(),'Reports')]")
   private static WebElement reportsTitle;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Orders')]")
+  @FindBy(how = How.ID, using = "orders-menu")
   private static WebElement ordersMenuItem;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Approve')]")
   private static WebElement approveLink;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Administration')]")
+  @FindBy(how = How.ID, using = "administration-menu")
   private static WebElement AdministrationMenuItem;
 
   @FindBy(how = How.ID, using = "manage-option")
@@ -106,6 +107,9 @@ public class HomePage extends Page {
 
   @FindBy(how = How.LINK_TEXT, using = "R & R Template")
   private static WebElement RnRTemplateConfigTab;
+
+  @FindBy(how = How.LINK_TEXT, using = "EDI File")
+  private static WebElement ediFileTab;
 
   @FindBy(how = How.LINK_TEXT, using = "Regimen Template")
   private static WebElement RegimenTemplateConfigTab;
@@ -296,7 +300,7 @@ public class HomePage extends Page {
   }
 
   public CreateFacilityPage navigateCreateFacility() throws IOException {
-    SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
@@ -329,16 +333,15 @@ public class HomePage extends Page {
 
   private void verifyTabs() {
     testWebDriver.waitForElementToAppear(facilitiesTab);
-    SeleneseTestNgHelper.assertTrue(facilitiesTab.isDisplayed());
-    SeleneseTestNgHelper.assertTrue(rolesTab.isDisplayed());
-    SeleneseTestNgHelper.assertTrue(schedulesTab.isDisplayed());
-    SeleneseTestNgHelper.assertTrue(usersTab.isDisplayed());
-    SeleneseTestNgHelper.assertTrue(supplylinesTab.isDisplayed());
+    assertTrue(facilitiesTab.isDisplayed());
+    assertTrue(rolesTab.isDisplayed());
+    assertTrue(schedulesTab.isDisplayed());
+    assertTrue(usersTab.isDisplayed());
   }
 
 
   public TemplateConfigPage selectProgramToConfigTemplate(String programme) {
-    SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
@@ -349,6 +352,18 @@ public class HomePage extends Page {
     testWebDriver.getElementById(programme).click();
 
     return new TemplateConfigPage(testWebDriver);
+  }
+
+  public ConfigureEDIPage navigateEdiScreen() throws IOException {
+    assertTrue(AdministrationMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    testWebDriver.keyPress(AdministrationMenuItem);
+    testWebDriver.waitForElementToAppear(TemplateConfigTab);
+    testWebDriver.keyPress(TemplateConfigTab);
+    testWebDriver.waitForElementToAppear(ediFileTab);
+    testWebDriver.keyPress(ediFileTab);
+
+    return new ConfigureEDIPage(testWebDriver);
   }
 
   public RegimenTemplateConfigPage navigateToRegimenConfigTemplate() {
@@ -391,8 +406,8 @@ public class HomePage extends Page {
 
 
   public InitiateRnRPage clickProceed() throws IOException {
- //   testWebDriver.handleScrollByPixels(0,2000);
- //   testWebDriver.waitForElementToAppear(proceedButton);
+    testWebDriver.handleScrollByPixels(0,2000);
+    testWebDriver.waitForElementToAppear(proceedButton);
     proceedButton.click();
     testWebDriver.sleep(1000);
     return new InitiateRnRPage(testWebDriver);
@@ -400,7 +415,8 @@ public class HomePage extends Page {
 
 
   public ViewRequisitionPage navigateViewRequisition() throws IOException {
-    SeleneseTestNgHelper.assertTrue(requisitionMenuItem.isDisplayed());
+      testWebDriver.sleep(1000);
+    assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(viewRequisitonMenuItem);
@@ -410,7 +426,7 @@ public class HomePage extends Page {
   }
 
   public ReportPage navigateReportScreen() throws IOException {
-    SeleneseTestNgHelper.assertTrue(reportMenuItem.isDisplayed());
+    assertTrue(reportMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(reportMenuItem);
     testWebDriver.keyPress(reportMenuItem);
     testWebDriver.waitForElementToAppear(reportsTitle);
@@ -418,7 +434,7 @@ public class HomePage extends Page {
   }
 
   public DeleteFacilityPage navigateSearchFacility() throws IOException {
-    SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -430,7 +446,7 @@ public class HomePage extends Page {
 
 
   public RolesPage navigateRoleAssignments() throws IOException {
-    SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -441,7 +457,7 @@ public class HomePage extends Page {
   }
 
   public UploadPage navigateUploads() throws IOException {
-    SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(uploadLink);
@@ -450,7 +466,7 @@ public class HomePage extends Page {
   }
 
   public ManageSchedulePage navigateToSchedule() throws IOException {
-    SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -475,7 +491,7 @@ public class HomePage extends Page {
    }
 
   public UserPage navigateToUser() throws IOException {
-    SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -520,7 +536,9 @@ public class HomePage extends Page {
   }
 
   public ApprovePage navigateToApprove() throws IOException {
-    SeleneseTestNgHelper.assertTrue(requisitionMenuItem.isDisplayed());
+      testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(requisitionMenuItem);
+    assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(approveLink);
     testWebDriver.keyPress(approveLink);
@@ -529,8 +547,9 @@ public class HomePage extends Page {
   }
 
   public ConvertOrderPage navigateConvertToOrder() throws IOException {
-    SeleneseTestNgHelper.assertTrue(requisitionMenuItem.isDisplayed());
+      testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
+    assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(convertToOrderMenuItem);
     testWebDriver.keyPress(convertToOrderMenuItem);
@@ -539,7 +558,7 @@ public class HomePage extends Page {
   }
 
   public DistributionPage navigatePlanDistribution() throws IOException {
-    SeleneseTestNgHelper.assertTrue(distributionsMenuItem.isDisplayed());
+    assertTrue(distributionsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(distributionsMenuItem);
     testWebDriver.keyPress(distributionsMenuItem);
     testWebDriver.waitForElementToAppear(manageMenuItem);
@@ -560,7 +579,7 @@ public class HomePage extends Page {
   }
 
   public HomePage navigateHomePage() throws IOException {
-    SeleneseTestNgHelper.assertTrue(homeMenuItem.isDisplayed());
+    assertTrue(homeMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(homeMenuItem);
     testWebDriver.keyPress(homeMenuItem);
     testWebDriver.sleep(500);
@@ -568,7 +587,7 @@ public class HomePage extends Page {
   }
 
   public ViewOrdersPage navigateViewOrders() throws IOException {
-    SeleneseTestNgHelper.assertTrue(ordersMenuItem.isDisplayed());
+    assertTrue(ordersMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(ordersMenuItem);
     testWebDriver.keyPress(ordersMenuItem);
     testWebDriver.waitForElementToAppear(viewOrdersMenuItem);

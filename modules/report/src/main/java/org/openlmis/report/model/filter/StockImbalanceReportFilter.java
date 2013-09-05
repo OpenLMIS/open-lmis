@@ -11,8 +11,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
 
-import java.text.DateFormat;
-import java.util.Date;
 
 /**
  * User: Wolde
@@ -24,33 +22,32 @@ import java.util.Date;
 @AllArgsConstructor
 public class StockImbalanceReportFilter implements ReportData {
 
-    private String periodType;
-    private int yearFrom;
-    private int yearTo;
-    private int monthFrom;
-    private int monthTo;
-    private Date startDate;
-    private Date endDate;
-    private int quarterFrom;
-    private int quarterTo;
-    private int semiAnnualFrom;
-    private int semiAnnualTo;
-
     private int facilityTypeId;
     private String facilityType;
     private int productId;
+    private String product;
     private int productCategoryId;
+    private String productCategory;
     private int rgroupId;
     private String rgroup;
     private String facility;
+    private int programId;
+    private String program;
+    private int scheduleId;
+    private String schedule;
+    private int periodId;
+    private String period;
+    private Integer year;
 
     @Override
     public String toString(){
 
-        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
-
         StringBuilder filtersValue = new StringBuilder("");
-        filtersValue.append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
+        filtersValue.append("Period : ").append(this.period).append("\n").
+                append("Schedule : ").append(this.schedule).append("\n").
+                append("Program : ").append(this.program).append("\n").
+                append("Product Category : ").append(this.productCategory).append("\n").
+                append("Product : ").append(this.product).append("\n").
                 append("Facility Types : ").append(this.getFacilityType()).append("\n").
                 append("Reporting Groups : ").append(this.getRgroup());
 

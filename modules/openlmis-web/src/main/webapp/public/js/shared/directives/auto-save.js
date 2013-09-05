@@ -15,7 +15,11 @@ app.directive('autoSave', function ($route, IndexedDB, $timeout) {
 
       $timeout(function () {
         element.find('input, textarea').bind('blur', save);
-      }, 100);
+        element.find(':radio, :checkbox').bind('click', function () {
+          this.focus();   //like a boss- btw it is a hack to make this work in webkit
+        });
+      });
     }
   };
 });
+

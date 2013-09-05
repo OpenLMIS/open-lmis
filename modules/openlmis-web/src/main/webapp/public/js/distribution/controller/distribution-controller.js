@@ -52,6 +52,8 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
 
   $scope.initiateDistribution = function () {
 
+    var message;
+
     function isCached() {
       return !!_.find(SharedDistributions.distributionList, function (distribution) {
         return distribution.deliveryZone.id == $scope.selectedZone.id &&
@@ -71,7 +73,6 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
     cacheDistribution();
 
     function cacheDistribution() {
-
       $scope.distributionInitiatedCallback = function (result) {
         if (result) {
           distributionDefer.resolve(distribution);
@@ -80,20 +81,20 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
         }
       };
 
-      var distribution = new Distribution($scope.selectedZone, $scope.selectedProgram, $scope.selectedPeriod);
+      var distribution = {deliveryZone: $scope.selectedZone, program: $scope.selectedProgram, period: $scope.selectedPeriod};
 
       $http.post('/distributions.json', distribution).success(onInitSuccess);
 
       function onInitSuccess(data, status) {
+        message = data.success;
         if (status == 201) {
-          $scope.message = data.success;
           distributionDefer.resolve(data.distribution);
         } else {
           distribution = data.distribution;
           var dialogOpts = {
             id: "distributionInitiated",
             header: messageService.get('label.distribution.initiated'),
-            body: data.success
+            body: data.message
           };
           OpenLmisDialog.newDialog(dialogOpts, $scope.distributionInitiatedCallback, $dialog, messageService);
         }
@@ -119,13 +120,19 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
     }
 
     function prepareDistribution(distribution, referenceData) {
-      distribution.facilityDistributionData = [];
+      distribution.facilityDistributionData = {};
       $(referenceData.facilities).each(function (index, facility) {
         var refrigeratorReadings = [];
+        var productGroups = _.compact(_.uniq(_.pluck(_.pluck(facility.supportedPrograms[0].programProducts, 'product'), 'productGroup'), false, function (group) {
+          if (group == undefined) return;
+          return group.id;
+        }));
         $(_.where(referenceData.refrigerators, {facilityId: facility.id})).each(function (i, refrigerator) {
           refrigeratorReadings.push({'refrigerator': refrigerator});
         });
-        distribution.facilityDistributionData[facility.id] = {refrigeratorReadings: refrigeratorReadings};
+        distribution.facilityDistributionData[facility.id] = {};
+        distribution.facilityDistributionData[facility.id].refrigerators = {refrigeratorReadings: refrigeratorReadings};
+        distribution.facilityDistributionData[facility.id].epiUse = {productGroups: productGroups};
       });
 
       return distribution;
@@ -146,6 +153,7 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
       IndexedDB.put('distributionReferenceData', referenceData, function () {
       }, {});
 
+      $scope.message = message;
     });
   };
 
@@ -169,12 +177,7 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
 DistributionController.resolve = {
   deliveryZones: function (UserDeliveryZones, $timeout, $q, $window) {
 
-    if (!isUndefined($window.location)) {
-      if (!navigator.onLine) $window.location.href = $window.location.href.replace('index.html', 'offline.html')
-      else {
-        $window.location.href = $window.location.href.replace('offline.html', 'index.html')
-      }
-    }
+    if (!navigator.onLine) $window.location = '/public/pages/logistics/distribution/offline.html#/list';
 
     var deferred = $q.defer();
     $timeout(function () {

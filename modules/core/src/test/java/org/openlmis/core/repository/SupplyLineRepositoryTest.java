@@ -88,4 +88,14 @@ public class SupplyLineRepositoryTest {
     assertThat(returnedSupplyLine, is(supplyLine));
   }
 
+  @Test
+  public void shouldGetSupplyLineById() {
+    when(supplyLineMapper.getById(3L)).thenReturn(supplyLine);
+
+    SupplyLine returnedSupplyLine = supplyLineRepository.getById(3L);
+
+    verify(supplyLineMapper).getById(3L);
+    assertThat(returnedSupplyLine, is(supplyLine));
+  }
+
 }

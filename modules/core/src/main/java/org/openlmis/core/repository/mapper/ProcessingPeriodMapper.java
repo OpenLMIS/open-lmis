@@ -78,4 +78,8 @@ public interface ProcessingPeriodMapper {
     "AND startDate <= COALESCE(#{beforeDate}, NOW())",
     "ORDER BY startDate DESC"})
   List<ProcessingPeriod> getAllPeriodsBefore(@Param("scheduleId")Long scheduleId, @Param("beforeDate")Date beforeDate);
+
+  @Select("SELECT * FROM processing_periods WHERE scheduleId = #{scheduleId} AND extract('year' from startdate) = #{year}  ORDER BY startDate DESC")
+  List<ProcessingPeriod> getAllPeriodsForScheduleAndYear(@Param("scheduleId")Long scheduleId, @Param("year") Long year);
+
 }

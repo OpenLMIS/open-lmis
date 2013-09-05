@@ -41,6 +41,10 @@ public class FacilityApprovedProductRepository {
     return facilityApprovedProductMapper.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
 
+  public List<FacilityTypeApprovedProduct> getProductsCompleteListByFacilityAndProgram(Long facilityId, Long programId) {
+      return facilityApprovedProductMapper.getProductsCompleteListByFacilityAndProgram(facilityId, programId);
+  }
+
   public void insert(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
   }

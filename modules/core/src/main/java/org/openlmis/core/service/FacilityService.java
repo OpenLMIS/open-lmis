@@ -82,8 +82,8 @@ public class FacilityService {
   }
 
   @Transactional
-  public void updateDataReportableAndActiveFor(Facility facility) {
-    facility = facilityRepository.updateDataReportableAndActiveFor(facility);
+  public void updateEnabledAndActiveFor(Facility facility) {
+    facility = facilityRepository.updateEnabledAndActiveFor(facility);
     notify(facility, null);
   }
 

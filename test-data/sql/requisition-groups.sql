@@ -25,8 +25,8 @@ insert into requisition_group_program_schedules ( requisitionGroupId , programId
 ((select id from requisition_groups where code='RG3'),(select id from programs where code='TB'),(select id from processing_schedules where code='M'),TRUE);
 
 
-insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId) values
-('supplying node for ESS_MEDS', (select id from supervisory_nodes where code = 'N1'), (select id from programs where code='ESS_MEDS'),(select id from facilities where code = 'F11')),
-('supplying node for MALARIA', (select id from supervisory_nodes where code = 'N1'), (select id from programs where code='MALARIA'),(select id from facilities where code = 'F11')),
-('supplying node for TB', (select id from supervisory_nodes where code = 'N1'), (select id from programs where code='TB'),(select id from facilities where code = 'F10'));
+insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId,exportOrders) values
+('supplying node for ESS_MEDS', (select id from supervisory_nodes where code = 'N1'), (select id from programs where code='ESS_MEDS'),(select id from facilities where code = 'F11'),'t'),
+('supplying node for MALARIA', (select id from supervisory_nodes where code = 'N1'), (select id from programs where code='MALARIA'),(select id from facilities where code = 'F11'),'t'),
+('supplying node for TB', (select id from supervisory_nodes where code = 'N1'), (select id from programs where code='TB'),(select id from facilities where code = 'F10'),'t');
 

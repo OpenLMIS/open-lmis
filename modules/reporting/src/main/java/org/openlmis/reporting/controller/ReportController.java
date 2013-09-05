@@ -44,27 +44,26 @@ public class ReportController {
     String viewFormat = format == null ? PDF_VIEW : format;
 
     ReportTemplate reportTemplate = reportTemplateMapper.getById(id);
-    Map<String, Object> parameterMap = getParameterMap(request, reportTemplate);
 
-    JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(reportTemplate, parameterMap);
+    JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(reportTemplate);
 
-    Map map = new HashMap();
+    Map<String, Object> map = new HashMap();
     map.put("format", viewFormat);
-    map.putAll(parameterMap);
+
+    setReportParameters(request, reportTemplate, map);
 
     return new ModelAndView(jasperView, map);
   }
 
-  private Map<String, Object> getParameterMap(HttpServletRequest request, ReportTemplate reportTemplate) {
-    Map<String, Object> parameterMap = new HashMap();
+  private void setReportParameters(HttpServletRequest request,
+                                   ReportTemplate reportTemplate, Map<String, Object> map) {
     if (reportTemplate.getParameters() != null) {
       for (String parameter : reportTemplate.getParameters()) {
         if (parameter.equalsIgnoreCase(USER_ID_PARAM)) {
-          parameterMap.put(parameter, loggedInUserId(request).intValue());
+          map.put(parameter, loggedInUserId(request).intValue());
         }
       }
     }
-    return parameterMap;
   }
 
 }

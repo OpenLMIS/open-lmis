@@ -6,7 +6,6 @@
 
 package org.openlmis.web.controller;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.RnRColumnSource;
@@ -36,16 +35,12 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-@NoArgsConstructor
 public class RnrTemplateController extends BaseController {
 
   public static final String RNR_TEMPLATE_SAVE_SUCCESS = "template.save.success";
-  private RnrTemplateService rnrTemplateService;
 
   @Autowired
-  public RnrTemplateController(RnrTemplateService rnrTemplateService) {
-    this.rnrTemplateService = rnrTemplateService;
-  }
+  private RnrTemplateService rnrTemplateService;
 
   @RequestMapping(value = "/program/{programId}/rnr-template", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_RNR')")

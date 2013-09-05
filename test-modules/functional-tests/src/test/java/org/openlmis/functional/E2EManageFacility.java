@@ -15,11 +15,7 @@ import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.Test;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.DataProvider;
+import org.testng.annotations.*;
 
 import java.util.ArrayList;
 
@@ -62,9 +58,9 @@ public class E2EManageFacility extends TestCaseHelper {
     DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(date_time);
     deleteFacilityPage.clickFacilityList(date_time);
-    deleteFacilityPage.deleteFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-    deleteFacilityPage.verifyDeletedFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-    HomePage homePageRestore = deleteFacilityPage.restoreFacility();
+    deleteFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    deleteFacilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    HomePage homePageRestore = deleteFacilityPage.enableFacility();
 
     DeleteFacilityPage deleteFacilityPageRestore = homePageRestore.navigateSearchFacility();
     deleteFacilityPageRestore.searchFacility(date_time);

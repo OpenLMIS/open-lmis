@@ -8,6 +8,7 @@ package org.openlmis.core.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -26,6 +27,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
+@EqualsAndHashCode(callSuper=false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Facility extends BaseModel implements Importable {
   @ImportField(mandatory = true, name = "Facility Code")
@@ -115,8 +117,8 @@ public class Facility extends BaseModel implements Importable {
   @ImportField(name = "Facility Comments")
   private String comment;
 
-  @ImportField(type = "boolean", mandatory = true, name = "Data Reportable")
-  private Boolean dataReportable;
+  @ImportField(type = "boolean", mandatory = true, name = "Enabled")
+  private Boolean enabled;
 
   private Boolean virtualFacility = false;
 
@@ -136,9 +138,9 @@ public class Facility extends BaseModel implements Importable {
     this.facilityType = facilityType;
   }
 
-  public Facility(Long id, boolean dataReportable, boolean active, Long modifiedBy) {
+  public Facility(Long id, boolean enabled, boolean active, Long modifiedBy) {
     this.id = id;
-    this.dataReportable = dataReportable;
+    this.enabled = enabled;
     this.active = active;
     this.modifiedBy = modifiedBy;
   }

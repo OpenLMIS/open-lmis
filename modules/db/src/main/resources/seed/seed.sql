@@ -11,3 +11,4 @@
 \i src/main/resources/seed/programs.sql
 \i src/main/resources/seed/regimen_categories.sql
 \i src/main/resources/seed/order_file_template.sql
+\i src/main/resources/seed/shipment_file_template.sql
