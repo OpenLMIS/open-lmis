@@ -14,10 +14,7 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.SummaryReportPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Listeners;
+import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -62,7 +59,7 @@ public class ReportingRateReport extends ReportTestHelper {
         summaryReportPage = homePage.navigateViewSummaryReport();
     }
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportMenu(String[] credentials) throws IOException {
         // Assign rights here
         // List<String> rightsList = new ArrayList<String>();

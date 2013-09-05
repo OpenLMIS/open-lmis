@@ -15,15 +15,16 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Listeners;
+import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+
+
+
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -76,7 +77,7 @@ public class DistrictConsumptionComparison extends ReportTestHelper {
         summaryReportPage = homePage.navigateViewSummaryReport();
     }
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportMenu(String[] credentials) throws IOException {
         // Assign rights here
         // List<String> rightsList = new ArrayList<String>();

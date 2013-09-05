@@ -68,14 +68,14 @@ public class StockedOutReport extends ReportTestHelper {
         stockedOutReportPage = homePage.navigateViewStockedOutReport();
     }
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportMenu(String[] credentials) throws IOException {
         // Assign rights here
         // List<String> rightsList = new ArrayList<String>();
         //rightsList.add("VIEW_REPORT");
         //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
 
-        login(credentials[0], credentials[1]);
+        navigateToStockedOutReport(credentials[0], credentials[1]);
         SeleneseTestNgHelper.assertTrue(homePage.reportMenuIsDisplayed());
         homePage.logout(DEFAULT_BASE_URL);
     }
@@ -86,7 +86,7 @@ public class StockedOutReport extends ReportTestHelper {
         //List<String> rightsList = new ArrayList<String>();
         //rightsList.add("VIEW_REPORT");
         //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-        login(credentials[2], credentials[3]);
+        navigateToStockedOutReport(credentials[0], credentials[1]);
         SeleneseTestNgHelper.assertFalse(homePage.reportMenuIsDisplayed());
         homePage.logout(DEFAULT_BASE_URL);
     }

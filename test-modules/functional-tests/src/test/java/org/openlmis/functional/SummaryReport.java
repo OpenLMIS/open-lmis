@@ -14,10 +14,7 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.SummaryReportPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Listeners;
+import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -71,7 +68,7 @@ public class SummaryReport extends ReportTestHelper {
         summaryReportPage = homePage.navigateViewSummaryReport();
     }
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportMenu(String[] credentials) throws IOException {
         // Assign rights here
         // List<String> rightsList = new ArrayList<String>();
@@ -89,12 +86,12 @@ public class SummaryReport extends ReportTestHelper {
         //List<String> rightsList = new ArrayList<String>();
         //rightsList.add("VIEW_REPORT");
         //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-        login(credentials[2], credentials[3]);
+        navigateToSummaryReportPage(credentials[0], credentials[1]);
         SeleneseTestNgHelper.assertFalse(homePage.reportMenuIsDisplayed());
         homePage.logout(DEFAULT_BASE_URL);
     }
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportFiltersRendered(String[] credentials) throws Exception {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
 
@@ -108,20 +105,20 @@ public class SummaryReport extends ReportTestHelper {
 
     }
 
-    ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPDFOUtput(String[] credentials) throws Exception {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
         summaryReportPage.verifyPdfReportOutput();
     }
 
 
-    ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyXLSOUtput(String[] credentials) throws Exception {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
         summaryReportPage.verifyXlsReportOutput();
     }
 
-    ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifySorting(String[] credentials) throws IOException {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
 
@@ -146,7 +143,7 @@ public class SummaryReport extends ReportTestHelper {
     }
 
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPagination(String[] credentials) throws Exception {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
 
