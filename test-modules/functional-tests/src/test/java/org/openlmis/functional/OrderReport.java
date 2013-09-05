@@ -7,14 +7,18 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.OrderReportPage;
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.Select;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -55,37 +59,9 @@ public class OrderReport extends ReportTestHelper {
         super.setup();
     }
 
-    private void login(String userName, String passWord) throws IOException {
-        loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        homePage = loginPage.loginAs(userName, passWord);
-    }
-
     private void navigateToOrderReport(String userName, String passWord) throws IOException {
         login(userName, passWord);
         orderReportPage = homePage.navigateViewOrderReport();
-    }
-
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyReportMenu(String[] credentials) throws IOException {
-        // Assign rights here
-        // List<String> rightsList = new ArrayList<String>();
-        //rightsList.add("VIEW_REPORT");
-        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-
-        login(credentials[0], credentials[1]);
-        SeleneseTestNgHelper.assertTrue(homePage.reportMenuIsDisplayed());
-        homePage.logout(DEFAULT_BASE_URL);
-    }
-
-//    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyReportMenuHiddenForUnauthorizedUser(String[] credentials) throws IOException {
-        // Assign rights here
-        //List<String> rightsList = new ArrayList<String>();
-        //rightsList.add("VIEW_REPORT");
-        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-        login(credentials[2], credentials[3]);
-        SeleneseTestNgHelper.assertFalse(homePage.reportMenuIsDisplayed());
-        homePage.logout(DEFAULT_BASE_URL);
     }
 
     //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
@@ -152,7 +128,22 @@ public class OrderReport extends ReportTestHelper {
 
     public void enterFilterValues(){
 
-
+        testWebDriver.findElement(By.name("orderType")).click();
+        testWebDriver.findElement(By.name("periodType")).click();
+        testWebDriver.findElement(By.name("program")).click();
+        testWebDriver.findElement(By.id("facility-type")).click();
+        testWebDriver.findElement(By.id("facility-name")).click();
+        testWebDriver.findElement(By.name("periodType")).click();
+        new Select(testWebDriver.findElement(By.name("startYear"))).selectByVisibleText("2011");
+        testWebDriver.findElement(By.cssSelector("select[name=\"startYear\"] > option[value=\"1\"]")).click();
+        new Select(testWebDriver.findElement(By.name("startHalf"))).selectByVisibleText("First Half");
+        testWebDriver.findElement(By.cssSelector("select[name=\"startHalf\"] > option[value=\"1\"]")).click();
+        new Select(testWebDriver.findElement(By.name("endYear"))).selectByVisibleText("2011");
+        testWebDriver.findElement(By.cssSelector("select[name=\"endYear\"] > option[value=\"1\"]")).click();
+        new Select(testWebDriver.findElement(By.name("endHalf"))).selectByVisibleText("First Half");
+        testWebDriver.findElement(By.cssSelector("select[name=\"endHalf\"] > option[value=\"1\"]")).click();
+        testWebDriver.findElement(By.name("product")).click();
+        testWebDriver.findElement(By.name("zone")).click();
     }
 
     @AfterMethod(groups = {"functional"})

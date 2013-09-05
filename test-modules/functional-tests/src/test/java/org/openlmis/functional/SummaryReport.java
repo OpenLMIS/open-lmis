@@ -7,10 +7,8 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.SummaryReportPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,8 +47,6 @@ public class SummaryReport extends ReportTestHelper {
     public static final Integer COLUMN_NAME_REORDER_AMOUNT = 11;
 
 
-    private HomePage homePage;
-    private LoginPage loginPage;
     private SummaryReportPage summaryReportPage;
 
     @BeforeMethod(groups = {"functional3"})
@@ -58,38 +54,16 @@ public class SummaryReport extends ReportTestHelper {
         super.setup();
     }
 
-    private void login(String userName, String passWord) throws IOException {
-        loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        homePage = loginPage.loginAs(userName, passWord);
-    }
-
     private void navigateToSummaryReportPage(String userName, String passWord) throws IOException {
         login(userName, passWord);
         summaryReportPage = homePage.navigateViewSummaryReport();
     }
 
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportMenu(String[] credentials) throws IOException {
-        // Assign rights here
-        // List<String> rightsList = new ArrayList<String>();
-        //rightsList.add("VIEW_REPORT");
-        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-
-        login(credentials[0], credentials[1]);
-        SeleneseTestNgHelper.assertTrue(homePage.reportMenuIsDisplayed());
-        homePage.logout(DEFAULT_BASE_URL);
+        verifyReportMenu(credentials);
     }
 
-//    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyReportMenuHiddenForUnauthorizedUser(String[] credentials) throws IOException {
-        // Assign rights here
-        //List<String> rightsList = new ArrayList<String>();
-        //rightsList.add("VIEW_REPORT");
-        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-        navigateToSummaryReportPage(credentials[0], credentials[1]);
-        SeleneseTestNgHelper.assertFalse(homePage.reportMenuIsDisplayed());
-        homePage.logout(DEFAULT_BASE_URL);
-    }
 
     @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportFiltersRendered(String[] credentials) throws Exception {
@@ -149,8 +123,8 @@ public class SummaryReport extends ReportTestHelper {
 
 
         Map<String, String> templates =     new HashMap<String, String>(){{
-            put(PAGINATION_BUTTON_PREV_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
-            put(PAGINATION_BUTTON_NEXT_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+            put(PAGINATION_BUTTON_PREV_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div[3]/div/div[2]/div[2]/button[2]");
+            put(PAGINATION_BUTTON_NEXT_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div[3]/div/div[2]/div[2]/button[3]");
             put(PAGINATION_BUTTON_FIRST_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
             put(PAGINATION_BUTTON_LAST_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
             put(TABLE_CELL_TEMPLATE,"//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div[{row}]/div[{column}]/div/span");

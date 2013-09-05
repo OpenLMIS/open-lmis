@@ -7,7 +7,6 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
@@ -58,37 +57,10 @@ public class StockedOutReport extends ReportTestHelper {
         super.setup();
     }
 
-    private void login(String userName, String passWord) throws IOException {
-        loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        homePage = loginPage.loginAs(userName, passWord);
-    }
 
     private void navigateToStockedOutReport(String userName, String passWord) throws IOException {
         login(userName, passWord);
         stockedOutReportPage = homePage.navigateViewStockedOutReport();
-    }
-
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyReportMenu(String[] credentials) throws IOException {
-        // Assign rights here
-        // List<String> rightsList = new ArrayList<String>();
-        //rightsList.add("VIEW_REPORT");
-        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-
-        navigateToStockedOutReport(credentials[0], credentials[1]);
-        SeleneseTestNgHelper.assertTrue(homePage.reportMenuIsDisplayed());
-        homePage.logout(DEFAULT_BASE_URL);
-    }
-
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyReportMenuHiddenForUnauthorizedUser(String[] credentials) throws IOException {
-        // Assign rights here
-        //List<String> rightsList = new ArrayList<String>();
-        //rightsList.add("VIEW_REPORT");
-        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-        navigateToStockedOutReport(credentials[0], credentials[1]);
-        SeleneseTestNgHelper.assertFalse(homePage.reportMenuIsDisplayed());
-        homePage.logout(DEFAULT_BASE_URL);
     }
 
     @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")

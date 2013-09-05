@@ -7,14 +7,16 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.pageobjects.AdjustmentSummaryReportPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -55,37 +57,9 @@ public class AdjustmentSummaryReport extends ReportTestHelper {
         super.setup();
     }
 
-    private void login(String userName, String passWord) throws IOException {
-        loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        homePage = loginPage.loginAs(userName, passWord);
-    }
-
     private void navigateToAdjustmentSummaryReport(String userName, String passWord) throws IOException {
         login(userName, passWord);
         adjustmentSummaryReportPage = homePage.navigateViewAdjustmentSummaryReport();
-    }
-
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyReportMenu(String[] credentials) throws IOException {
-        // Assign rights here
-        // List<String> rightsList = new ArrayList<String>();
-        //rightsList.add("VIEW_REPORT");
-        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-
-        login(credentials[0], credentials[1]);
-        SeleneseTestNgHelper.assertTrue(homePage.reportMenuIsDisplayed());
-        homePage.logout(DEFAULT_BASE_URL);
-    }
-
-//    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyReportMenuHiddenForUnauthorizedUser(String[] credentials) throws IOException {
-        // Assign rights here
-        //List<String> rightsList = new ArrayList<String>();
-        //rightsList.add("VIEW_REPORT");
-        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-        login(credentials[2], credentials[3]);
-        SeleneseTestNgHelper.assertFalse(homePage.reportMenuIsDisplayed());
-        homePage.logout(DEFAULT_BASE_URL);
     }
 
     //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")

@@ -12,6 +12,8 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.SeleniumFileDownloadUtil;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.LoginPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -31,18 +33,47 @@ import java.util.Map;
 public class ReportTestHelper extends TestCaseHelper {
 
     //Sorting templates
-    public static final String SORT_BUTTON_ASC_TEMPLATE = "SortAscendingButton" ;
-    public static final String SORT_BUTTON_DESC_TEMPLATE = "SortDescendingButton" ;
-    public static final String TABLE_CELL_TEMPLATE = "TableCellTemplate" ;
+    public static final String SORT_BUTTON_ASC_TEMPLATE = "SortAscendingButton";
+    public static final String SORT_BUTTON_DESC_TEMPLATE = "SortDescendingButton";
+    public static final String TABLE_CELL_TEMPLATE = "TableCellTemplate";
 
     //Pagination templates
     public static final String PAGINATION_BUTTON_PREV_TEMPLATE = "paginationButtonPrevTemplate";
     public static final String PAGINATION_BUTTON_NEXT_TEMPLATE = "paginatioinButtonNextTemplate";
-    public static final String PAGINATION_BUTTON_FIRST_TEMPLATE =  "paginationButtonFirstTemplate";
-    public static final String PAGINATION_BUTTON_LAST_TEMPLATE =  "paginationButtonLastTemplate";
+    public static final String PAGINATION_BUTTON_FIRST_TEMPLATE = "paginationButtonFirstTemplate";
+    public static final String PAGINATION_BUTTON_LAST_TEMPLATE = "paginationButtonLastTemplate";
+
+    protected LoginPage loginPage;
+    protected HomePage homePage;
 
 
-    public void verifySort(String sortType, Integer columnIdx , Map<String, String> templates) throws IOException {
+    protected void login(String userName, String passWord) throws IOException {
+        loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        homePage = loginPage.loginAs(userName, passWord);
+    }
+
+    public void verifyReportMenu(String[] credentials) throws IOException {
+        // Assign rights here
+        // List<String> rightsList = new ArrayList<String>();
+        //rightsList.add("VIEW_REPORT");
+        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
+
+        login(credentials[0], credentials[1]);
+        SeleneseTestNgHelper.assertTrue(homePage.reportMenuIsDisplayed());
+        homePage.logout(DEFAULT_BASE_URL);
+    }
+
+    public void verifyReportMenuHiddenForUnauthorizedUser(String[] credentials) throws IOException {
+        // Assign rights here
+        //List<String> rightsList = new ArrayList<String>();
+        //rightsList.add("VIEW_REPORT");
+        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
+        login(credentials[2], credentials[3]);
+        SeleneseTestNgHelper.assertFalse(homePage.reportMenuIsDisplayed());
+        homePage.logout(DEFAULT_BASE_URL);
+    }
+
+    public void verifySort(String sortType, Integer columnIdx, Map<String, String> templates) throws IOException {
         WebElement sortButton = null;
         String columnIndex = String.valueOf(columnIdx);
         System.out.println(columnIndex);
@@ -96,24 +127,25 @@ public class ReportTestHelper extends TestCaseHelper {
 
     }
 
-    public void verifyPagination( Map<String, String> templates)       {
+    public void verifyPagination(Map<String, String> templates) {
         WebElement btnPrev = testWebDriver.findElement(By.xpath(templates.get(PAGINATION_BUTTON_PREV_TEMPLATE)));
         WebElement btnNext = testWebDriver.findElement(By.xpath(templates.get(PAGINATION_BUTTON_NEXT_TEMPLATE)));
-        WebElement btnFirst = testWebDriver.findElement(By.xpath(templates.get(PAGINATION_BUTTON_FIRST_TEMPLATE)));
-        WebElement btnLast = testWebDriver.findElement(By.xpath(templates.get(PAGINATION_BUTTON_LAST_TEMPLATE)));
+
 
         for (int i = 0; i < 10; i++)
             btnNext.click();
         for (int i = 0; i < 10; i++)
             btnPrev.click();
 
+        /*WebElement btnFirst = testWebDriver.findElement(By.xpath(templates.get(PAGINATION_BUTTON_FIRST_TEMPLATE)));
+        WebElement btnLast = testWebDriver.findElement(By.xpath(templates.get(PAGINATION_BUTTON_LAST_TEMPLATE)));
         btnFirst.click();
-        btnLast.click();
+        btnLast.click();*/
     }
 
 
     public void verifyPdfReportOutput(String PdfButtonID) throws Exception {
-        WebElement PdfButton  = testWebDriver.findElement(By.id(PdfButtonID));
+        WebElement PdfButton = testWebDriver.findElement(By.id(PdfButtonID));
         testWebDriver.waitForElementToAppear(PdfButton);
         PdfButton.click();
         testWebDriver.sleep(500);
@@ -143,8 +175,6 @@ public class ReportTestHelper extends TestCaseHelper {
 
         testWebDriver.sleep(500);
     }
-
-
 
 
 }

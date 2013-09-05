@@ -7,14 +7,18 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.StockImbalanceByFacilityPage;
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.Select;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -41,7 +45,7 @@ public class StockImbalanceByFacilityReport extends ReportTestHelper {
     private static final Integer SUPPLYING_FACILITY = 1;
     private static final Integer FACILITY = 2;
     private static final Integer PRODUCT = 3;
-    private static final Integer PHYSICAL_COUNT =  4;
+    private static final Integer PHYSICAL_COUNT = 4;
     private static final Integer AMC = 5;
     private static final Integer MOS = 6;
     private static final Integer ORDER_QUANITY = 7;
@@ -55,37 +59,10 @@ public class StockImbalanceByFacilityReport extends ReportTestHelper {
         super.setup();
     }
 
-    private void login(String userName, String passWord) throws IOException {
-        loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        homePage = loginPage.loginAs(userName, passWord);
-    }
 
     private void navigateToStockImbalanceByFacilityPage(String userName, String passWord) throws IOException {
         login(userName, passWord);
         stockImbalanceByFacilityPage = homePage.navigateViewStockImbalanceByFacilityPage();
-    }
-
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyReportMenu(String[] credentials) throws IOException {
-        // Assign rights here
-        // List<String> rightsList = new ArrayList<String>();
-        //rightsList.add("VIEW_REPORT");
-        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-
-        login(credentials[0], credentials[1]);
-        SeleneseTestNgHelper.assertTrue(homePage.reportMenuIsDisplayed());
-        homePage.logout(DEFAULT_BASE_URL);
-    }
-
-//    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyReportMenuHiddenForUnauthorizedUser(String[] credentials) throws IOException {
-        // Assign rights here
-        //List<String> rightsList = new ArrayList<String>();
-        //rightsList.add("VIEW_REPORT");
-        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-        login(credentials[2], credentials[3]);
-        SeleneseTestNgHelper.assertFalse(homePage.reportMenuIsDisplayed());
-        homePage.logout(DEFAULT_BASE_URL);
     }
 
     //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
@@ -119,20 +96,20 @@ public class StockImbalanceByFacilityReport extends ReportTestHelper {
     public void verifySorting(String[] credentials) throws IOException {
         navigateToStockImbalanceByFacilityPage(credentials[0], credentials[1]);
 
-        Map<String, String> templates =     new HashMap<String, String>(){{
-            put(SORT_BUTTON_ASC_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
-            put(SORT_BUTTON_DESC_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+        Map<String, String> templates = new HashMap<String, String>() {{
+            put(SORT_BUTTON_ASC_TEMPLATE, "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+            put(SORT_BUTTON_DESC_TEMPLATE, "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
 
-            put(TABLE_CELL_TEMPLATE,"test");
+            put(TABLE_CELL_TEMPLATE, "test");
         }};
 
-        verifySort("ASC",  SUPPLYING_FACILITY ,templates);
-        verifySort("ASC",  FACILITY  ,templates);
-        verifySort("ASC",  PRODUCT  ,templates);
-        verifySort("ASC",  PHYSICAL_COUNT  ,templates);
-        verifySort("ASC",  AMC  ,templates);
-        verifySort("ASC",  MOS  ,templates);
-        verifySort("ASC",  ORDER_QUANITY  ,templates);
+        verifySort("ASC", SUPPLYING_FACILITY, templates);
+        verifySort("ASC", FACILITY, templates);
+        verifySort("ASC", PRODUCT, templates);
+        verifySort("ASC", PHYSICAL_COUNT, templates);
+        verifySort("ASC", AMC, templates);
+        verifySort("ASC", MOS, templates);
+        verifySort("ASC", ORDER_QUANITY, templates);
 
     }
 
@@ -142,19 +119,27 @@ public class StockImbalanceByFacilityReport extends ReportTestHelper {
         navigateToStockImbalanceByFacilityPage(credentials[0], credentials[1]);
 
 
-        Map<String, String> templates =     new HashMap<String, String>(){{
-            put(PAGINATION_BUTTON_PREV_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
-            put(PAGINATION_BUTTON_NEXT_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
-            put(PAGINATION_BUTTON_FIRST_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
-            put(PAGINATION_BUTTON_LAST_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
-            put(TABLE_CELL_TEMPLATE,"//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div[{row}]/div[{column}]/div/span");
+        Map<String, String> templates = new HashMap<String, String>() {{
+            put(PAGINATION_BUTTON_PREV_TEMPLATE, "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+            put(PAGINATION_BUTTON_NEXT_TEMPLATE, "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+            put(PAGINATION_BUTTON_FIRST_TEMPLATE, "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+            put(PAGINATION_BUTTON_LAST_TEMPLATE, "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+            put(TABLE_CELL_TEMPLATE, "//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div[{row}]/div[{column}]/div/span");
         }};
         verifyPagination(templates);
     }
 
-    public void enterFilterValues(){
+    public void enterFilterValues() {
 
-
+        testWebDriver.findElement(By.cssSelector("b")).click();
+        new Select(testWebDriver.findElement(By.id("startYear"))).selectByVisibleText("2011");
+        new Select(testWebDriver.findElement(By.id("startMonth"))).selectByVisibleText("Jan");
+        new Select(testWebDriver.findElement(By.name("endYear"))).selectByVisibleText("2011");
+        new Select(testWebDriver.findElement(By.name("endMonth"))).selectByVisibleText("Jan");
+        testWebDriver.findElement(By.name("productCategoryElement")).click();
+        testWebDriver.findElement(By.id("product")).click();
+        testWebDriver.findElement(By.name("facilityTypeElement")).click();
+        testWebDriver.findElement(By.name("requisitionGroup")).click();
     }
 
 

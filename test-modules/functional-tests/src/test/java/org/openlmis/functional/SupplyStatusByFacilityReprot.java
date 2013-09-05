@@ -7,14 +7,17 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.SupplyStatusByFacilityPage;
+import org.openqa.selenium.By;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -41,7 +44,7 @@ public class SupplyStatusByFacilityReprot extends ReportTestHelper {
     private static final Integer FACILITY_NAME = 1;
     private static final Integer FACILITY_CODE = 2;
     private static final Integer PRODUCT = 3;
-    private static final Integer OPENING_BALANCE =  4;
+    private static final Integer OPENING_BALANCE = 4;
     private static final Integer RECEIPTS = 5;
     private static final Integer ISSUES = 6;
     private static final Integer ADJUSTMENTS = 7;
@@ -61,37 +64,9 @@ public class SupplyStatusByFacilityReprot extends ReportTestHelper {
         super.setup();
     }
 
-    private void login(String userName, String passWord) throws IOException {
-        loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        homePage = loginPage.loginAs(userName, passWord);
-    }
-
     private void navigateToSupplyStatusByFacilityReport(String userName, String passWord) throws IOException {
         login(userName, passWord);
         supplyStatusByFacilityPage = homePage.navigateViewSupplyStatusByFacilityPage();
-    }
-
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyReportMenu(String[] credentials) throws IOException {
-        // Assign rights here
-        // List<String> rightsList = new ArrayList<String>();
-        //rightsList.add("VIEW_REPORT");
-        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-
-        login(credentials[0], credentials[1]);
-        SeleneseTestNgHelper.assertTrue(homePage.reportMenuIsDisplayed());
-        homePage.logout(DEFAULT_BASE_URL);
-    }
-
-//    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
-    public void verifyReportMenuHiddenForUnauthorizedUser(String[] credentials) throws IOException {
-        // Assign rights here
-        //List<String> rightsList = new ArrayList<String>();
-        //rightsList.add("VIEW_REPORT");
-        //setUpRoleRightstoUser(String "5", String userSIC, String vendorName, List<String> rightsList, String roleName , String roleType)
-        login(credentials[2], credentials[3]);
-        SeleneseTestNgHelper.assertFalse(homePage.reportMenuIsDisplayed());
-        homePage.logout(DEFAULT_BASE_URL);
     }
 
     //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
@@ -125,24 +100,24 @@ public class SupplyStatusByFacilityReprot extends ReportTestHelper {
     public void verifySorting(String[] credentials) throws IOException {
         navigateToSupplyStatusByFacilityReport(credentials[0], credentials[1]);
 
-        Map<String, String> templates =     new HashMap<String, String>(){{
-            put(SORT_BUTTON_ASC_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
-            put(SORT_BUTTON_DESC_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+        Map<String, String> templates = new HashMap<String, String>() {{
+            put(SORT_BUTTON_ASC_TEMPLATE, "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+            put(SORT_BUTTON_DESC_TEMPLATE, "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
 
-            put(TABLE_CELL_TEMPLATE,"test");
+            put(TABLE_CELL_TEMPLATE, "test");
         }};
-        verifySort("ASC", FACILITY_NAME,templates);
-        verifySort("ASC", FACILITY_CODE,templates);
-        verifySort("ASC", PRODUCT ,templates);
-        verifySort("ASC", OPENING_BALANCE ,templates);
-        verifySort("ASC", RECEIPTS ,templates);
-        verifySort("ASC", ISSUES ,templates);
-        verifySort("ASC", ADJUSTMENTS ,templates);
-        verifySort("ASC", CLOSING_BALANCE ,templates);
-        verifySort("ASC", MONTHS_OF_STOCK ,templates);
-        verifySort("ASC", AMC ,templates);
-        verifySort("ASC", MAXIMUM_STOCK ,templates);
-        verifySort("ASC", REORDER_AMOUNT ,templates);
+        verifySort("ASC", FACILITY_NAME, templates);
+        verifySort("ASC", FACILITY_CODE, templates);
+        verifySort("ASC", PRODUCT, templates);
+        verifySort("ASC", OPENING_BALANCE, templates);
+        verifySort("ASC", RECEIPTS, templates);
+        verifySort("ASC", ISSUES, templates);
+        verifySort("ASC", ADJUSTMENTS, templates);
+        verifySort("ASC", CLOSING_BALANCE, templates);
+        verifySort("ASC", MONTHS_OF_STOCK, templates);
+        verifySort("ASC", AMC, templates);
+        verifySort("ASC", MAXIMUM_STOCK, templates);
+        verifySort("ASC", REORDER_AMOUNT, templates);
 
     }
 
@@ -152,18 +127,26 @@ public class SupplyStatusByFacilityReprot extends ReportTestHelper {
         navigateToSupplyStatusByFacilityReport(credentials[0], credentials[1]);
 
 
-        Map<String, String> templates =     new HashMap<String, String>(){{
-            put(PAGINATION_BUTTON_PREV_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
-            put(PAGINATION_BUTTON_NEXT_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
-            put(PAGINATION_BUTTON_FIRST_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
-            put(PAGINATION_BUTTON_LAST_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
-            put(TABLE_CELL_TEMPLATE,"//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div[{row}]/div[{column}]/div/span");
+        Map<String, String> templates = new HashMap<String, String>() {{
+            put(PAGINATION_BUTTON_PREV_TEMPLATE, "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+            put(PAGINATION_BUTTON_NEXT_TEMPLATE, "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+            put(PAGINATION_BUTTON_FIRST_TEMPLATE, "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+            put(PAGINATION_BUTTON_LAST_TEMPLATE, "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+            put(TABLE_CELL_TEMPLATE, "//div[@id='wrap']/div/div/div[2]/div/div[3]/div[2]/div/div[{row}]/div[{column}]/div/span");
         }};
         verifyPagination(templates);
     }
 
-    public void enterFilterValues(){
-
+    public void enterFilterValues() {
+        testWebDriver.findElement(By.cssSelector("b")).click();
+        testWebDriver.findElement(By.name("program")).click();
+        testWebDriver.findElement(By.name("schedule")).click();
+        testWebDriver.findElement(By.name("period")).click();
+        testWebDriver.findElement(By.name("zone")).click();
+        testWebDriver.findElement(By.id("name")).sendKeys("Facility Name");
+        testWebDriver.findElement(By.id("facility-type")).click();
+        testWebDriver.findElement(By.name("product")).click();
+        testWebDriver.findElement(By.name("requisitionGroup")).click();
     }
 
 

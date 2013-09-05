@@ -13,51 +13,50 @@ import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.openqa.selenium.support.How.CSS;
-import static org.openqa.selenium.support.How.ID;
+import static org.openqa.selenium.support.How.*;
 
 
 public class SupplyStatusByFacilityPage extends Page {
 
-    @FindBy(how = ID, using = "name")
-    private static WebElement facilityName;
+    @FindBy(how = NAME, using = "schedule")
+    private static WebElement schedule;
 
-    @FindBy(how = ID, using = "code")
-    private static WebElement facilityCode;
+    @FindBy(how = NAME, using = "period")
+    private static WebElement period;
+
+    @FindBy(how = NAME, using = "zone")
+    private static WebElement zone;
+
+    @FindBy(how = ID, using = "name")
+    private static WebElement name;
 
     @FindBy(how = ID, using = "facility-type")
     private static WebElement facilityType;
 
+    @FindBy(how = NAME, using = "product")
+    private static WebElement product;
+
+    @FindBy(how = NAME, using = "requisitionGroup")
+    private static WebElement requisitionGroup;
+
+    @FindBy(how = NAME, using = "program")
+    private static WebElement program;
+
+
+
+
     @FindBy(how = ID, using = "pdf-button")
     private static WebElement PdfButton;
-
-    @FindBy(how = ID, using = "mailing-button")
-    private static WebElement MailingReportButton;
 
     @FindBy(how = ID, using = "xls-button")
     private static WebElement XLSButton;
 
-    @FindBy(how = How.XPATH, using = "//div[@ng-grid='gridOptions']")
-    private static WebElement facilityListGrid;
-
-    @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col0 colt0']/span")
-    private static WebElement columnFacilityCode;
-
-    @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col1 colt1']/span")
-    private static WebElement columnFacilityName;
-
-    @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
-    private static WebElement columnFacilityType;
-
-    @FindBy(how = CSS, using = "//div.ngHeaderCell:nth-child(1) > div:nth-child(1) > div:nth-child(2)")
-    private static WebElement sortByNameButton;
 
 
     private String facilityNameFilter;
@@ -75,33 +74,14 @@ public class SupplyStatusByFacilityPage extends Page {
         testWebDriver.sleep(1000);
     }
 
-    public void enterFilterValuesInFacilityMailingListReport(String name, String code, String facilityTypeValue) {
-        facilityNameFilter = name;
-        facilityCodeFilter = code;
-        facilityTypeFilter = facilityTypeValue;
+    public void enterFilterValuesInFacilityMailingListReport() {
 
-        testWebDriver.waitForElementToAppear(facilityName);
-        facilityName.clear();
-        facilityName.sendKeys(name);
-        facilityCode.sendKeys(code);
-        testWebDriver.selectByVisibleText(facilityType, "Dispensary");
-        testWebDriver.sleep(500);
 
     }
 
     public void verifyHTMLReportOutputOnFacilityMailingListScreen() {
 
-        //verify facility list grid has the filtered record
-        testWebDriver.waitForElementToAppear(facilityListGrid);
 
-        testWebDriver.waitForElementToAppear(columnFacilityCode);
-        SeleneseTestNgHelper.assertEquals(columnFacilityCode.getText().trim(), facilityCodeFilter);
-
-        testWebDriver.waitForElementToAppear(columnFacilityName);
-        SeleneseTestNgHelper.assertEquals(columnFacilityName.getText().trim(), facilityNameFilter);
-
-        testWebDriver.waitForElementToAppear(columnFacilityType);
-        SeleneseTestNgHelper.assertEquals(columnFacilityType.getText().trim(), facilityTypeFilter);
     }
 
     public void verifyPdfReportOutputOnFacilityMailingListScreen() throws Exception {
@@ -112,20 +92,6 @@ public class SupplyStatusByFacilityPage extends Page {
         SeleniumFileDownloadUtil downloadHandler = new SeleniumFileDownloadUtil(TestWebDriver.getDriver());
         downloadHandler.setURI(testWebDriver.getCurrentUrl());
         File downloadedFile = downloadHandler.downloadFile(this.getClass().getSimpleName(), ".pdf");
-        SeleneseTestNgHelper.assertEquals(downloadHandler.getLinkHTTPStatus(), 200);
-        SeleneseTestNgHelper.assertEquals(downloadedFile.exists(), true);
-
-        testWebDriver.sleep(500);
-    }
-
-    public void verifyMailingReportOutputOnFacilityMailingListScreen() throws Exception {
-        testWebDriver.waitForElementToAppear(XLSButton);
-        MailingReportButton.click();
-        testWebDriver.sleep(500);
-
-        SeleniumFileDownloadUtil downloadHandler = new SeleniumFileDownloadUtil(TestWebDriver.getDriver());
-        downloadHandler.setURI(testWebDriver.getCurrentUrl());
-        File downloadedFile = downloadHandler.downloadFile(this.getClass().getSimpleName() + "_mailing_label", ".pdf");
         SeleneseTestNgHelper.assertEquals(downloadHandler.getLinkHTTPStatus(), 200);
         SeleneseTestNgHelper.assertEquals(downloadedFile.exists(), true);
 
@@ -144,18 +110,6 @@ public class SupplyStatusByFacilityPage extends Page {
         SeleneseTestNgHelper.assertEquals(downloadedFile.exists(), true);
 
         testWebDriver.sleep(500);
-    }
-
-    public boolean facilityNameIsDisplayed() {
-        return facilityName.isDisplayed();
-    }
-
-    public boolean facilityCodeIsDisplayed() {
-        return facilityCode.isDisplayed();
-    }
-
-    public boolean facilityTypeIsDisplayed() {
-        return facilityType.isDisplayed();
     }
 
 
