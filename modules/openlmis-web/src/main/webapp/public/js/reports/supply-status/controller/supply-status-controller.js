@@ -268,6 +268,7 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         });
         SupplyStatusReport.get(params, function(data) {
             $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
+            $scope.data = $data.pages.rows;
         });
 
     };
