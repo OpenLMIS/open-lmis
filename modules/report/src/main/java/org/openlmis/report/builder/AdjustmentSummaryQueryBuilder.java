@@ -51,6 +51,7 @@ public class AdjustmentSummaryQueryBuilder {
     }
 
     private static void writePredicates(AdjustmentSummaryReportFilter filter){
+        WHERE("req_status in ('APPROVED','RELEASED')");
         if(filter != null){
             if (filter.getFacilityTypeId() != 0) {
                 WHERE("facility_type_id = #{filterCriteria.facilityTypeId}");
