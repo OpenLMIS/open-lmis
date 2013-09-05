@@ -84,7 +84,4 @@ public class ShipmentService {
     return shipmentRepository.getProcessedTimeStamp(shipmentLineItem);
   }
 
-  public void insertShippedLineItem(List<ShipmentLineItem> shipmentLineItems) {
-
-  }
 }

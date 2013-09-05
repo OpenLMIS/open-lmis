@@ -22,8 +22,16 @@ public class ShipmentFileColumn extends BaseModel {
   private String name;
   private String dataFieldLabel;
   private Integer position;
-  private Boolean includedInShipmentFile;
+  private Boolean include;
   private Boolean mandatory;
   private String datePattern;
+
+  public Boolean isIncluded() {
+    return include;
+  }
+
+  public Boolean isMandatory() {
+    return mandatory;
+  }
 
 }

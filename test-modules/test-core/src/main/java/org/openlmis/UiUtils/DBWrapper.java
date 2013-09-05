@@ -1095,12 +1095,12 @@ public class DBWrapper {
   public void defaultSetupShipmentFileColumns() throws IOException, SQLException {
     update("DELETE FROM shipment_file_columns;");
 
-    update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory) VALUES ('header.order.number', 1, TRUE, TRUE);");
-    update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory) VALUES ('header.product.code', 2, TRUE, TRUE);");
-    update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory) VALUES ('header.quantity.shipped', 3, TRUE, TRUE);");
-    update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory) VALUES ('header.cost', 4, FALSE, FALSE);");
-    update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory, datepattern) VALUES ('header.packed.date', 5, FALSE, FALSE, 'dd/MM/yy');");
-    update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory, datepattern) VALUES ('header.shipped.date', 6, FALSE, FALSE, 'dd/MM/yy');");
+    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('orderId', 'header.order.number', 1, TRUE, TRUE);");
+    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('productCode', 'header.product.code', 2, TRUE, TRUE);");
+    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('quantityShipped', 'header.quantity.shipped', 3, TRUE, TRUE);");
+    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('cost', 'header.cost', 4, FALSE, FALSE);");
+    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory, datepattern) VALUES ('packedDate', 'header.packed.date', 5, FALSE, FALSE, 'dd/MM/yy');");
+    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory, datepattern) VALUES ('shippedDate', 'header.shipped.date', 6, FALSE, FALSE, 'dd/MM/yy');");
 
   }
 

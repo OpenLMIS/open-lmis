@@ -9,6 +9,7 @@ package org.openlmis.shipment.file;
 import lombok.NoArgsConstructor;
 import org.openlmis.db.service.DbService;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
+import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.file.csv.handler.ShipmentFilePostProcessHandler;
 import org.openlmis.shipment.service.ShipmentFileTemplateService;
@@ -26,7 +27,6 @@ import org.supercsv.io.ICsvListReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
@@ -58,25 +58,32 @@ public class ShipmentFileProcessor {
   public void process(Message message) throws IOException {
     File shipmentFile = (File) message.getPayload();
 
-    List<ShipmentFileColumn> shipmentFileColumns = shipmentFileTemplateService.get().getShipmentFileColumns();
+    ShipmentFileTemplate shipmentFileTemplate = shipmentFileTemplateService.get();
+    List<ShipmentFileColumn> shipmentFileColumns = shipmentFileTemplate.getShipmentFileColumns();
 
-    int maxPosition = 0;
-    for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
-      if (shipmentFileColumn.getPosition() > maxPosition) {
-        maxPosition = shipmentFileColumn.getPosition();
-      }
-    }
+    int maxPosition = findMaximumPosition(shipmentFileColumns);
 
     try (ICsvListReader listReader = new CsvListReader(new FileReader(shipmentFile), STANDARD_PREFERENCE)) {
-      while (listReader.read() != null) {
-        if (listReader.length() < maxPosition) {
+      List<String> fieldsInOneRow;
+      while ((fieldsInOneRow = listReader.read()) != null) {
+        if (fieldsInOneRow.size() < maxPosition) {
           logger.warn("Shipment file should contain at least " + maxPosition + " columns");
         } else {
-          List<ShipmentLineItem> shipmentLineItems = new ArrayList<>();
-          shipmentService.insertShippedLineItem(shipmentLineItems);
+          ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
+          shipmentService.insertShippedLineItem(shipmentLineItem);
         }
       }
     }
+  }
+
+  private int findMaximumPosition(List<ShipmentFileColumn> shipmentFileColumns) {
+    int maxPosition = 0;
+    for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
+      if (shipmentFileColumn.isIncluded() && shipmentFileColumn.getPosition() > maxPosition) {
+        maxPosition = shipmentFileColumn.getPosition();
+      }
+    }
+    return maxPosition;
   }
 
 //  public void process(Message message) throws IOException {

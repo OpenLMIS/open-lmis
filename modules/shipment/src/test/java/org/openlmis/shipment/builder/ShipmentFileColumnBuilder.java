@@ -27,7 +27,22 @@ public class ShipmentFileColumnBuilder {
       column.setDataFieldLabel(lookup.valueOf(dataFieldLabel, "label"));
       column.setPosition(lookup.valueOf(columnPosition, 1));
       column.setMandatory(true);
-      column.setIncludedInShipmentFile(true);
+      column.setInclude(true);
+      column.setDatePattern(null);
+      return column;
+    }
+  };
+
+  public static final Instantiator<ShipmentFileColumn> defaultShipmentFileColumn = new Instantiator<ShipmentFileColumn>() {
+
+    @Override
+    public ShipmentFileColumn instantiate(PropertyLookup<ShipmentFileColumn> lookup) {
+      ShipmentFileColumn column = new ShipmentFileColumn();
+
+      column.setDataFieldLabel(lookup.valueOf(dataFieldLabel, "label"));
+      column.setPosition(lookup.valueOf(columnPosition, 1));
+      column.setMandatory(lookup.valueOf(mandatory, true));
+      column.setInclude(lookup.valueOf(includeInShipmentFile, true));
       column.setDatePattern(null);
       return column;
     }

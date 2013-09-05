@@ -24,7 +24,7 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
     var emptyPosition = false;
     angular.forEach($scope.shipmentFileTemplate.shipmentFileColumns, function (column) {
 
-      if (column.includedInShipmentFile && isUndefined(column.position)) {
+      if (column.include && isUndefined(column.position)) {
         $scope.message = "";
         $scope.error = "shipment.file.empty.position";
         emptyPosition = true;

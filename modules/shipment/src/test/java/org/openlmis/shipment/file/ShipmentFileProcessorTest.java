@@ -5,6 +5,7 @@
  */
 package org.openlmis.shipment.file;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -15,6 +16,7 @@ import org.openlmis.db.service.DbService;
 import org.openlmis.shipment.domain.ShipmentConfiguration;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileTemplate;
+import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.file.csv.handler.ShipmentFilePostProcessHandler;
 import org.openlmis.shipment.service.ShipmentFileTemplateService;
 import org.openlmis.shipment.service.ShipmentService;
@@ -30,14 +32,12 @@ import org.supercsv.io.CsvListReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
-import static org.openlmis.shipment.builder.ShipmentFileColumnBuilder.columnPosition;
-import static org.openlmis.shipment.builder.ShipmentFileColumnBuilder.mandatoryShipmentFileColumn;
+import static org.openlmis.shipment.builder.ShipmentFileColumnBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
@@ -62,19 +62,31 @@ public class ShipmentFileProcessorTest {
   @Mock
   ShipmentService shipmentService;
 
+  @Mock
+  Message message;
+
+  @Mock
+  File shipmentFile;
+
+  @Mock
+  FileInputStream shipmentInputStream;
+
+
   @InjectMocks
   private ShipmentFileProcessor shipmentFileProcessor;
 
+  ShipmentConfiguration shipmentConfiguration;
 
-  @Test
-  public void shouldThrowErrorIfNotEnoughFieldsInShipmentFile() throws Exception {
-    Message message = mock(Message.class);
-    File shipmentFile = mock(File.class);
-    FileInputStream shipmentInputStream = mock(FileInputStream.class);
+  @Before
+  public void setUp() throws Exception {
 
     when(message.getPayload()).thenReturn(shipmentFile);
     whenNew(FileInputStream.class).withArguments(shipmentFile).thenReturn(shipmentInputStream);
-    ShipmentConfiguration shipmentConfiguration = new ShipmentConfiguration();
+    shipmentConfiguration = new ShipmentConfiguration();
+  }
+
+  @Test
+  public void shouldThrowErrorIfNotEnoughFieldsInShipmentFile() throws Exception {
 
     List<ShipmentFileColumn> shipmentFileColumnList = asList(
       make(a(mandatoryShipmentFileColumn, with(columnPosition, 1))),
@@ -87,8 +99,7 @@ public class ShipmentFileProcessorTest {
     when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
 
     CsvListReader mockedCsvListReader = mock(CsvListReader.class);
-    when(mockedCsvListReader.read()).thenReturn(new ArrayList<String>()).thenReturn(null);
-    when(mockedCsvListReader.length()).thenReturn(2);
+    when(mockedCsvListReader.read()).thenReturn(asList("field1", "field2")).thenReturn(null);
     FileReader mockedFileReader = mock(FileReader.class);
 
     whenNew(FileReader.class).withArguments(shipmentFile).thenReturn(mockedFileReader);
@@ -96,8 +107,31 @@ public class ShipmentFileProcessorTest {
 
     shipmentFileProcessor.process(message);
 
-    verify(shipmentService, times(0)).insertShippedLineItem(anyList());
+    verify(shipmentService, times(0)).insertShippedLineItem(any(ShipmentLineItem.class));
+  }
 
+  @Test
+  public void shouldInsertLineItemsIfAllIncludedFieldsArePresent() throws Exception {
 
+    List<ShipmentFileColumn> shipmentFileColumnList = asList(
+      make(a(mandatoryShipmentFileColumn, with(columnPosition, 2))),
+      make(a(defaultShipmentFileColumn, with(columnPosition, 4), with(includeInShipmentFile, false))),
+      make(a(defaultShipmentFileColumn, with(columnPosition, 6), with(includeInShipmentFile, false)))
+    );
+
+    ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumnList);
+
+    when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
+
+    CsvListReader mockedCsvListReader = mock(CsvListReader.class);
+    when(mockedCsvListReader.read()).thenReturn(asList("field1", "field2")).thenReturn(null);
+    FileReader mockedFileReader = mock(FileReader.class);
+
+    whenNew(FileReader.class).withArguments(shipmentFile).thenReturn(mockedFileReader);
+    whenNew(CsvListReader.class).withArguments(mockedFileReader, STANDARD_PREFERENCE).thenReturn(mockedCsvListReader);
+
+    shipmentFileProcessor.process(message);
+
+    verify(shipmentService, times(1)).insertShippedLineItem(any(ShipmentLineItem.class));
   }
 }
