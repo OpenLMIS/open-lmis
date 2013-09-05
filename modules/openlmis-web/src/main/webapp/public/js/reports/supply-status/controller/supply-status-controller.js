@@ -88,7 +88,7 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
 
     GeographicZones.get(function(data) {
         $scope.zones = data.zones;
-        //$scope.zones.push({'name': '- All Zones -', 'id' : 'All'});
+        $scope.zones.unshift({'name': 'All Zones', 'id' : ''});
     });
 
     $scope.$watch('facilityType', function(selection){
