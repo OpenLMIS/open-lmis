@@ -9,12 +9,14 @@ package org.openlmis.pageobjects;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
 public class EPIUse extends Page {
@@ -25,6 +27,14 @@ public class EPIUse extends Page {
   @FindBy(how = XPATH, using = "//div[@class='left-navigation ng-scope']/ul/li[4]/a/span[1][@class='status-icon']")
   public static WebElement overallEPIUseIcon;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Apply NR to all fields')]")
+  private static WebElement applyNRToAllFieldsCheckbox;
+
+  @FindBy(how = ID, using = "button_OK")
+  private static WebElement okButton;
+
+  @FindBy(how = ID, using = "button_Cancel")
+  private static WebElement cancelButton;
 
   public EPIUse(TestWebDriver driver) {
     super(driver);
@@ -96,6 +106,14 @@ public class EPIUse extends Page {
     WebElement lossNotRecordedCheckBox = testWebDriver.getElementById("loss" + rownumber);
     lossNotRecordedCheckBox.click();
   }
+
+    public void checkApplyNRToAllFields(boolean confirm) {
+        applyNRToAllFieldsCheckbox.click();
+        if (confirm)
+            okButton.click();
+        else
+            cancelButton.click();
+    }
 
   public void checkUncheckStockAtEndOfMonthNotRecorded(int rownumber) {
     rownumber = rownumber - 1;

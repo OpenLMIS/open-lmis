@@ -419,14 +419,14 @@ Feature: Smoke Tests
     And I update product "P10" to have product group "penta"
     And I have data available for "Multiple" facilities attached to delivery zones
     And I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
-    Given I am logged in as "storeincharge"
+    When I am logged in as "storeincharge"
     And I access plan my distribution page
-    When I select delivery zone "Delivery Zone First"
+    And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
     And I record data
-    When I choose facility "F10"
+    And I choose facility "F10"
     And Navigate to EPI tab
     Then Verify indicator should be "RED"
     Then I should see product group "penta-Name"

@@ -89,39 +89,23 @@ public class RecordEPIUse extends TestCaseHelper {
         facilityListPage.selectFacility("F10");
         EPIUse epiUse = new EPIUse(testWebDriver);
         epiUse.navigateToEPISUse();
-        epiUse.verifyProductGroup("PG1-Name", 1);
-        epiUse.verifyProductGroup("PG2-Name",2);
-        epiUse.verifyProductGroup("PG3-Name",3);
+        epiUse.verifyProductGroup("PG3-Name",1);
         epiUse.verifyOverallEPIUseIcon("RED");
 
         epiUse.enterValueInStockAtFirstOfMonth("10",1);
+        epiUse.verifyOverallEPIUseIcon("AMBER");
         epiUse.enterValueInReceived("20", 1);
         epiUse.enterValueInDistributed("30", 1);
         epiUse.enterValueInLoss("40", 1);
         epiUse.enterValueInStockAtEndOfMonth("50",1);
         epiUse.enterValueInExpirationDate("10/2011",1);
-        epiUse.verifyOverallEPIUseIcon("AMBER");
 
-        epiUse.checkUncheckStockAtFirstOfMonthNotRecorded(2);
-        epiUse.checkUncheckReceivedNotRecorded(2);
-        epiUse.checkUncheckDistributedNotRecorded(2);
-        epiUse.checkUncheckLossNotRecorded(2);
-        epiUse.checkUncheckStockAtEndOfMonthNotRecorded(2);
-        epiUse.checkUncheckExpirationDateNotRecorded(2);
 
         RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
         refrigeratorPage.navigateToRefrigeratorTab();
         epiUse.navigateToEPISUse();
 
-        epiUse.verifyStockAtFirstOfMonthStatus(false,2);
-        epiUse.verifyReceivedStatus(false,2);
-        epiUse.verifyDistributedStatus(false,2);
-        epiUse.verifyLossStatus(false,2);
-        epiUse.verifyStockAtEndOfMonthStatus(false,2);
-        epiUse.verifyExpirationDateStatus(false,2);
-
         epiUse.verifyTotal("30",1);
-
         epiUse.verifyStockAtFirstOfMonth("10", 1);
         epiUse.verifyReceived("20", 1);
         epiUse.verifyDistributed("30", 1);
@@ -129,6 +113,29 @@ public class RecordEPIUse extends TestCaseHelper {
         epiUse.verifyStockAtEndOfMonth("50", 1);
         epiUse.verifyExpirationDate("10/2011", 1);
 
+        epiUse.checkUncheckStockAtFirstOfMonthNotRecorded(1);
+        epiUse.checkUncheckReceivedNotRecorded(1);
+        epiUse.checkUncheckDistributedNotRecorded(1);
+        epiUse.checkUncheckLossNotRecorded(1);
+        epiUse.checkUncheckStockAtEndOfMonthNotRecorded(1);
+        epiUse.checkUncheckExpirationDateNotRecorded(1);
+
+        refrigeratorPage.navigateToRefrigeratorTab();
+        epiUse.navigateToEPISUse();
+
+        epiUse.verifyStockAtFirstOfMonthStatus(false,1);
+        epiUse.verifyReceivedStatus(false,1);
+        epiUse.verifyDistributedStatus(false,1);
+        epiUse.verifyLossStatus(false,1);
+        epiUse.verifyStockAtEndOfMonthStatus(false,1);
+        epiUse.verifyExpirationDateStatus(false,1);
+
+        epiUse.checkUncheckStockAtFirstOfMonthNotRecorded(1);
+        epiUse.checkUncheckReceivedNotRecorded(1);
+        epiUse.checkUncheckDistributedNotRecorded(1);
+        epiUse.checkUncheckLossNotRecorded(1);
+        epiUse.checkUncheckStockAtEndOfMonthNotRecorded(1);
+        epiUse.checkUncheckExpirationDateNotRecorded(1);
 
         epiUse.enterValueInStockAtFirstOfMonth("20",1);
         epiUse.enterValueInReceived("30", 1);
@@ -137,23 +144,9 @@ public class RecordEPIUse extends TestCaseHelper {
         epiUse.enterValueInStockAtEndOfMonth("60",1);
         epiUse.enterValueInExpirationDate("11/2012",1);
 
-        epiUse.checkUncheckStockAtFirstOfMonthNotRecorded(2);
-        epiUse.checkUncheckReceivedNotRecorded(2);
-        epiUse.checkUncheckDistributedNotRecorded(2);
-        epiUse.checkUncheckLossNotRecorded(2);
-        epiUse.checkUncheckStockAtEndOfMonthNotRecorded(2);
-        epiUse.checkUncheckExpirationDateNotRecorded(2);
-
         refrigeratorPage.navigateToRefrigeratorTab();
         epiUse.navigateToEPISUse();
-
-        epiUse.verifyStockAtFirstOfMonthStatus(true,2);
-        epiUse.verifyReceivedStatus(true,2);
-        epiUse.verifyDistributedStatus(true,2);
-        epiUse.verifyLossStatus(true,2);
-        epiUse.verifyStockAtEndOfMonthStatus(true,2);
-        epiUse.verifyExpirationDateStatus(true,2);
-
+        epiUse.checkApplyNRToAllFields(false);
         epiUse.verifyTotal("50",1);
 
         epiUse.verifyStockAtFirstOfMonth("20", 1);
@@ -163,19 +156,25 @@ public class RecordEPIUse extends TestCaseHelper {
         epiUse.verifyStockAtEndOfMonth("60", 1);
         epiUse.verifyExpirationDate("11/2012", 1);
 
-        epiUse.checkUncheckStockAtFirstOfMonthNotRecorded(2);
-        epiUse.checkUncheckReceivedNotRecorded(2);
-        epiUse.checkUncheckDistributedNotRecorded(2);
-        epiUse.checkUncheckLossNotRecorded(2);
-        epiUse.checkUncheckStockAtEndOfMonthNotRecorded(2);
-        epiUse.checkUncheckExpirationDateNotRecorded(2);
-        epiUse.checkUncheckStockAtFirstOfMonthNotRecorded(3);
-        epiUse.checkUncheckReceivedNotRecorded(3);
-        epiUse.checkUncheckDistributedNotRecorded(3);
-        epiUse.checkUncheckLossNotRecorded(3);
-        epiUse.checkUncheckStockAtEndOfMonthNotRecorded(3);
-        epiUse.checkUncheckExpirationDateNotRecorded(3);
+        epiUse.verifyStockAtFirstOfMonthStatus(true,1);
+        epiUse.verifyReceivedStatus(true,1);
+        epiUse.verifyDistributedStatus(true,1);
+        epiUse.verifyLossStatus(true,1);
+        epiUse.verifyStockAtEndOfMonthStatus(true,1);
+        epiUse.verifyExpirationDateStatus(true,1);
         epiUse.verifyOverallEPIUseIcon("GREEN");
+
+        epiUse.checkApplyNRToAllFields(true);
+        refrigeratorPage.navigateToRefrigeratorTab();
+        epiUse.navigateToEPISUse();
+
+        epiUse.verifyStockAtFirstOfMonthStatus(false,1);
+        epiUse.verifyReceivedStatus(false,1);
+        epiUse.verifyDistributedStatus(false,1);
+        epiUse.verifyLossStatus(false,1);
+        epiUse.verifyStockAtEndOfMonthStatus(false,1);
+        epiUse.verifyExpirationDateStatus(false,1);
+
     }
 
 
