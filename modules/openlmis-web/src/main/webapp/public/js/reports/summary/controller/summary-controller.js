@@ -18,9 +18,7 @@ function SummaryReportController($scope,$filter ,ngTableParams , SummaryReport, 
                 var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
                 orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
 
-
-
-                params.total = data.length;
+                params.total = orderedData.length;
                 $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
             }
         };
