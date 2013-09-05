@@ -54,6 +54,11 @@
             <span id="supervisory-node-tab">Supervisory Nodes</span>
         </a>
     </li>
+    <li ng-show="hasPermission('MANAGE_REQUISITION_GROUP')" ng-class="requisitionGroupSelected">
+        <a href="/public/pages/admin/requisition-group/index.html#/list">
+          <span id="requisition-group-tab">Requisition Groups</span>
+        </a>
+    </li>
     <li ng-show="hasPermission('MANAGE_REQ_GRP_PROG_SCHEDULE')" ng-class="requisitionGroupProgramScheduleSelected">
         <a href="/public/pages/admin/requisition-group-program-schedule/index.html#/list">
             <span id="requisition-group-program-schedule-tab">Program Schedules</span>
