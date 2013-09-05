@@ -51,8 +51,6 @@ SELECT requisition_line_items.id AS li_id,
     facility_approved_products.maxmonthsofstock AS fp_maxmonthsofstock,
     facility_approved_products.minmonthsofstock AS fp_minmonthsofstock,
     facility_approved_products.eop AS fp_eop, requisitions.status AS r_status,
-    requisitions.supplylineid AS r_supplylineid,
-    fn_get_supplying_facility_name(requisitions.supplylineid) AS supplyingfacility,
     requisitions.supervisorynodeid, processing_schedules.id AS ps_id,
     processing_periods.id AS pp_id,
     requisition_group_members.requisitiongroupid AS rgm_id
