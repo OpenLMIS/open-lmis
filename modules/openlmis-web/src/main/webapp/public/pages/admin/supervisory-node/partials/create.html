@@ -63,7 +63,7 @@
                                 <input type="submit" class="btn btn-primary save-button" value="Save"/>
                                 <a ng-href="#/list" class="btn btn-cancel cancel-button"><span
                                         openlmis-message="button.cancel"></span></a>
-                                <input type="button" class="btn btn-danger delete-button" value="Delete"
+                                <input type="button" class="btn btn-danger delete-button" value="Delete" ng-show="supervisoryNode.id!=null"
                                        ng-click="showRemoveSupervisoryNodeMemberConfirmDialog()"/>
                             </div>
                             <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>
@@ -132,7 +132,7 @@
 
             </form>
             </div>
-        </div>
+
 
         <div class="modal-footer">
             <input type="button" class="btn btn-primary save-button" value="Close"
