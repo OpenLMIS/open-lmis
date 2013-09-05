@@ -20,7 +20,7 @@ import java.util.Date;
 @Repository
 public interface ShipmentMapper {
 
-  @Insert({"INSERT INTO shipped_line_items ",
+  @Insert({"INSERT INTO shipment_line_items ",
     "(rnrId, productCode, quantityShipped, cost, packedDate, shippedDate, modifiedDate)",
     "VALUES",
     "(#{rnrId}, #{productCode}, #{quantityShipped}, #{cost}, #{packedDate}, #{shippedDate}, #{modifiedDate})"})
@@ -34,10 +34,10 @@ public interface ShipmentMapper {
   @Select("SELECT * FROM shipment_file_info WHERE id = #{id}")
   ShipmentFileInfo getShipmentFileInfo(Long id);
 
-  @Select("SELECT * FROM shipped_line_items WHERE rnrId= #{rnrId} AND productCode=#{productCode}")
+  @Select("SELECT * FROM shipment_line_items WHERE rnrId= #{rnrId} AND productCode=#{productCode}")
   ShipmentLineItem getShippedLineItem(ShipmentLineItem shipmentLineItem);
 
-  @Update({"UPDATE shipped_line_items ",
+  @Update({"UPDATE shipment_line_items ",
     "SET rnrId= #{rnrId},",
     "productCode= #{productCode},",
     "quantityShipped= #{quantityShipped},",
@@ -45,6 +45,6 @@ public interface ShipmentMapper {
     "WHERE id= #{id}"})
   void updateShippedLineItem(ShipmentLineItem shipmentLineItem);
 
-  @Select("SELECT modifiedDate FROM shipped_line_items WHERE rnrId = #{rnrId} LIMIT 1")
+  @Select("SELECT modifiedDate FROM shipment_line_items WHERE rnrId = #{rnrId} LIMIT 1")
   Date getProcessedTimeStamp(ShipmentLineItem shipmentLineItem);
 }

@@ -75,7 +75,7 @@ public class ShipmentMapperIT {
 
     assertThat(shipmentLineItem.getId(), is(notNullValue()));
 
-    String fetchShipmentFileInfoQuery = "Select * from shipped_line_items where id = ?";
+    String fetchShipmentFileInfoQuery = "Select * from shipment_line_items where id = ?";
     ResultSet shipmentFileInfoResultSet = queryExecutor.execute(fetchShipmentFileInfoQuery, Arrays.asList(shipmentLineItem.getId()));
     shipmentFileInfoResultSet.next();
     assertThat(shipmentFileInfoResultSet.getLong("rnrId"), is(shipmentLineItem.getRnrId()));
