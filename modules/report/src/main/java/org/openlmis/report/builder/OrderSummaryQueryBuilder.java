@@ -59,7 +59,7 @@ public class OrderSummaryQueryBuilder {
     }
 
     private static void writePredicates(OrderReportFilter  filter){
-
+        WHERE("req_status = 'RELEASED'");
         WHERE("program_id = "+filter.getProgramId());
         WHERE("facility_id = "+filter.getFacilityId());
         WHERE("processing_periods_id = "+filter.getPeriodId());
