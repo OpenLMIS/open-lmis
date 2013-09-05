@@ -77,7 +77,6 @@ function RequisitionGroupController($scope, ReportFacilityTypes, $routeParams, $
         $scope.facilities.push($scope.requisitionGroupMember.facility);
         $scope.closeModal();
 
-        //loadMemberFacilities();
         return true;
     };
 
