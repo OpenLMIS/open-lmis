@@ -69,6 +69,8 @@
                                 <input type="submit" class="btn btn-primary save-button" value="Save"/>
                                 <a ng-href="#/list" class="btn btn-cancel cancel-button"><span
                                         openlmis-message="button.cancel"></span></a>
+                                <input type="button" class="btn btn-danger delete-button" value="Delete"
+                                       ng-click="showRemoveRequisitionGroupConfirmDialog()"/>
                             </div>
                             <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>
                         </div>
@@ -83,7 +85,6 @@
                     <a ng-click="addNewMemberFacility()" class="pull-right btn btn-primary"><span
                             id="requisition-group-facility-add-new">Add New</span></a>
                 </h2>
-
                 <div class="facility-list">
                     <div class="row-fluid list-row">
                         <div class="span2" style="..."><strong>Facility Name</strong></div>
