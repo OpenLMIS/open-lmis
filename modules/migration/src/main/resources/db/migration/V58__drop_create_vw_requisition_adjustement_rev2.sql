@@ -1,4 +1,4 @@
-DROP VIEW vw_requisition_adjustment;
+DROP VIEW IF EXISTS public.vw_requisition_adjustment;
 CREATE VIEW public.vw_requisition_adjustment
 (
   program_id,
@@ -24,6 +24,7 @@ CREATE VIEW public.vw_requisition_adjustment
   product_id,
   product_category_name,
   product_category_id,
+  req_status,
   beginningbalance,
   quantityreceived,
   quantitydispensed,
