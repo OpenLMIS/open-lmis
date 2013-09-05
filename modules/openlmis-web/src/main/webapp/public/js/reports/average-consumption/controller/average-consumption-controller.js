@@ -24,7 +24,8 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
 
     $scope.startYears = [];
     OperationYears.get(function(data){
-        $scope.startYears  = data.years;
+        $scope.startYears = $scope.endYears = data.years;
+        adjustEndYears();
     });
 
         // default to the monthly period type
@@ -90,13 +91,11 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
     // copy over the start month and end months
         // this is just for initial loading.
         $(function (){
-             $scope.endYears = $scope.startYears;
+            $scope.endYears = $scope.startYears;
             $scope.startQuarters  = $scope.quarters;
             $scope.endQuarters  = $scope.quarters;
             $scope.startSemiAnnuals = $scope.semiAnnuals;
             $scope.endSemiAnnuals = $scope.semiAnnuals;
-
-
         });
 
 
@@ -157,17 +156,17 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
 
         ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.push({'name': 'All Facility Types'});
+            $scope.facilityTypes.unshift({'name': 'All Facility Types'});
         });
 
         Products.get(function(data){
             $scope.products = data.productList;
-            $scope.products.push({'name': 'All Products'});
+            $scope.products.unshift({'name': 'All Products'});
         });
 
         ProductCategories.get(function(data){
             $scope.productCategories = data.productCategoryList;
-            $scope.productCategories.push({'name': 'All Product Categories'});
+            $scope.productCategories.unshift({'name': 'All Product Categories'});
         });
 
 
@@ -175,12 +174,12 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
-            $scope.zones.push({'name': 'All Geographic Zones'});
+            $scope.zones.unshift({'name': 'All Geographic Zones'});
         });
 
         ReportPrograms.get(function(data){
             $scope.programs = data.programs;
-            $scope.programs.push({'name':'All Programs'});
+            $scope.programs.unshift({'name':'Select Programs'});
         });
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
@@ -517,7 +516,6 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
 
                         $scope.data = [];
                         AverageConsumptionReport.get(params, function(data) {
-
                             if(data.pages != undefined && data.pages.rows != undefined ){
                                 $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total) ;
                                 $scope.MinMos = data.pages.rows[0].minMOS;
