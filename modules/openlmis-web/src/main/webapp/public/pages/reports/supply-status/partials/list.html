@@ -25,8 +25,8 @@
                                     <label class="labels">Program<span class="label-required"> *</span></label>
 
                                     <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="program" ng-options="option.id as option.name for option in programs" required="">
-                                            <option value="">-- Select a Program --</option>
+                                        <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="program"  required="true">
+                                            <option  ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -35,8 +35,9 @@
                                     <label class="labels">Schedule<span class="label-required"> *</span></label>
 
                                     <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="schedule" ng-options="option.id as option.name for option in schedules" required="">
-                                            <option value="">-- Select a Schedule --</option>
+                                        <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="schedule" required="true">
+
+                                            <option  ng-repeat="option in schedules" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -45,8 +46,8 @@
                                     <label class="labels">Period<span class="label-required"> *</span></label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="period" ng-options="option.id as option.name for option in periods | orderBy:'id'" required="">
-
+                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="period" required="true">
+                                            <option  ng-repeat="option in periods" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -56,16 +57,17 @@
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
-                                            <option value="">-- All Facility Types --</option>
+                                        <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityType" >
+
+                                            <option  ng-repeat="option in facilityTypes" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-cell horizontalFilters">
                                     <label class="labels">Facility Name<span class="label-required"> *</span></label>
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility" ng-options="option.id as option.code.concat('-').concat.(option.name) for option in allFacilities" required="">
-                                            <option value="">-- Select a Facility --</option>
+                                        <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility" required="true">
+                                            <option  ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
                                         </select>
                                     </div>
 
@@ -75,8 +77,8 @@
                                     <label class="labels">Zone</label>
 
                                     <div class="form-field">
-                                        <select  ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone"  ng-options="option.id as option.name for option in zones">
-                                            <option value="">-- All Zones --</option>
+                                        <select  ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone" >
+                                            <option  ng-repeat="option in zones" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -85,8 +87,8 @@
                                     <label class="labels">Product</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="product"  ng-model="product" ng-options="option.id as option.name for option in products">
-                                            <option  value="">&#60Indicator Products&#62</option>
+                                        <select ui-select2 style="width:200px;" name="product"  ng-model="product" >
+                                            <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
                                 </div>

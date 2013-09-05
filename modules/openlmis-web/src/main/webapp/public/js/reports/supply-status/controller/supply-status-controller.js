@@ -50,37 +50,39 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
 
     ReportPrograms.get(function(data){
         $scope.programs = data.programs;
-        //$scope.programs.push({'name':'Select a Program'});
+        $scope.programs.unshift({'name':'Select a Program'});
     });
 
     RequisitionGroups.get(function(data){
         $scope.requisitionGroups = data.requisitionGroupList;
-       // $scope.requisitionGroups.push({'name':'All Reporting Groups','id':'All'});
+        $scope.requisitionGroups.unshift({'name':'All Reporting Groups','id':''});
     });
 
     ReportFacilityTypes.get(function(data) {
         $scope.facilityTypes = data.facilityTypes;
-       // $scope.facilityTypes.push({'name': 'All Facility Types', 'id' : 'All'});
+        $scope.facilityTypes.unshift({'name': 'All Facility Types', 'id' : ''});
     });
 
     AllFacilites.get(function(data){
         $scope.allFacilities = data.allFacilities;
+        $scope.allFacilities.unshift({name:'All Facilities',id:''});
     });
 
     ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
-        //$scope.schedules.push({'name':'Select a Schedule', 'id':'All'});
+        $scope.schedules.unshift({'name':'Select a Schedule', 'id':''});
     });
 
     Products.get(function(data){
         $scope.products = data.productList;
-        $scope.products.push({'name': '-- All Products --','id':'All'});
+        $scope.products.unshift({'name': '<All Products>','id':'All'});
+        $scope.products.unshift({'name':'<Indicator Products>', id:''});
     });
 
     $scope.ChangeSchedule = function(){
         ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
             $scope.periods = data.periods;
-           // $scope.periods.push({'name': 'Select Period', 'id':'All'});
+            $scope.periods.unshift({'name': 'Select Period', 'id':''});
         });
     }
 
@@ -125,6 +127,7 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
     $scope.ChangeFacility = function(){
         GetFacilityByFacilityType.get({ facilityTypeId : $scope.filterObject.facilityTypeId },function(data) {
             $scope.allFacilities =  data.facilities;
+            $scope.allFacilities.unshift({name:'All Facilities',id:''});
         });
     };
 
