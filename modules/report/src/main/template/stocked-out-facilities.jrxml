@@ -21,6 +21,9 @@
 	<parameter name="TOTAL_FACILITIES" class="java.lang.String"/>
 	<parameter name="TOTAL_STOCKEDOUT" class="java.lang.String"/>
 	<parameter name="PERCENTAGE_STOCKEDOUT" class="java.lang.String"/>
+	<parameter name="SHOW_SUMMARY" class="java.lang.String">
+		<defaultValueExpression><![CDATA["N"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT DISTINCT supplyingfacility, product, facilitycode, facility,  facilitytypename,  location, processing_period_name
 FROM
@@ -279,8 +282,8 @@ WHERE
 		</band>
 	</detail>
 	<summary>
-		<band height="73">
-			<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} == null]]></printWhenExpression>
+		<band height="78">
+			<printWhenExpression><![CDATA[$P{SHOW_SUMMARY} == "Y"]]></printWhenExpression>
 			<staticText>
 				<reportElement uuid="cf81ba65-a8a9-4f37-bd20-a76e1a266c5b" x="495" y="4" width="130" height="21">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>

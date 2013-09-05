@@ -32,9 +32,9 @@
         <table class="table table-striped table-bordered">
             <thead>
             <tr class="gradient-header">
-                <th>Requisition Group
-                </th>
                 <th>Code
+                </th>
+                <th>Requisition Group
                 </th>
                 <th>Supervisory Node
                 </th>
@@ -42,17 +42,15 @@
                 </th>
                 <th>Program Count
                 </th>
-                <th>
-                </th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="requisitionGroup in filteredRequisitionGroups">
                 <td>
-                    <a ng-click="editRequisitionGroup(requisitionGroup.id)">{{requisitionGroup.name}}</a>
+                    <div>{{requisitionGroup.code}}</div>
                 </td>
                 <td>
-                    <div>{{requisitionGroup.code}}</div>
+                    <a href="" ng-click="editRequisitionGroup(requisitionGroup.id)">{{requisitionGroup.name}}</a>
                 </td>
                 <td>
                     <div>{{requisitionGroup.supervisoryNode.name}}</div>
@@ -62,9 +60,6 @@
                 </td>
                 <td>
                     <div>{{requisitionGroup.countOfPrograms}}</div>
-                </td>
-                <td>
-                    <a class="close" ng-click="showRemoveRequisitionGroupMemberConfirmDialog($index)">X</a>
                 </td>
             </tr>
             </tbody>

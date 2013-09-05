@@ -228,6 +228,10 @@ public class HomePage extends Page {
   private static WebElement ProductReportsMenuItem;
 
 
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Performance Reports')]")
+    private static WebElement PerformanceReportsMenuItem;
+
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Reports')]")
   private static WebElement ReportsMenuItem;
 
@@ -255,8 +259,22 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Stocked Out')]")
   private static WebElement StockedOutReportMenu;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Order Report')]")
+  private static WebElement OrderReportMenu;
+
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Supply Status by Facility')]")
+  private static WebElement SupplyStatusByFacilityMenu;
+
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Stock Imbalance by Facility')]")
+    private static WebElement StockImbalanceByFacility;
+
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Facility List')]")
   private static WebElement facilityListingReportPageHeader;
+
+
+
+
+
 
 
   public HomePage(TestWebDriver driver) throws IOException {
@@ -608,6 +626,8 @@ public class HomePage extends Page {
     SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(ReportsMenuItem);
     testWebDriver.keyPress(ReportsMenuItem);
+    testWebDriver.waitForElementToAppear(ProductReportsMenuItem);
+    testWebDriver.keyPress(ProductReportsMenuItem);
     testWebDriver.waitForElementToAppear(SummaryReportMenu);
     testWebDriver.keyPress(SummaryReportMenu);
     return new SummaryReportPage(testWebDriver);
@@ -617,6 +637,8 @@ public class HomePage extends Page {
     SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(ReportsMenuItem);
     testWebDriver.keyPress(ReportsMenuItem);
+    testWebDriver.waitForElementToAppear(PerformanceReportsMenuItem);
+    testWebDriver.keyPress(PerformanceReportsMenuItem);
     testWebDriver.waitForElementToAppear(NonReportingFacilityReportMenu);
     testWebDriver.keyPress(NonReportingFacilityReportMenu);
     return new NonReportingFacilityReportPage(testWebDriver);
@@ -627,6 +649,8 @@ public class HomePage extends Page {
     SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(ReportsMenuItem);
     testWebDriver.keyPress(ReportsMenuItem);
+    testWebDriver.waitForElementToAppear(ProductReportsMenuItem);
+    testWebDriver.keyPress(ProductReportsMenuItem);
     testWebDriver.waitForElementToAppear(AverageConsumptionReportMenu);
     testWebDriver.keyPress(AverageConsumptionReportMenu);
     return new AverageConsumptionReportPage(testWebDriver);
@@ -634,22 +658,70 @@ public class HomePage extends Page {
 
   public AdjustmentSummaryReportPage navigateViewAdjustmentSummaryReport() throws IOException{
 
-        SeleneseTestNgHelper.assertTrue(ProductReportsMenuItem.isDisplayed());
-        testWebDriver.waitForElementToAppear(ProductReportsMenuItem);
-        testWebDriver.keyPress(ProductReportsMenuItem);
-        testWebDriver.waitForElementToAppear(AdjustmentSummaryReportMenu);
-        testWebDriver.keyPress(AdjustmentSummaryReportMenu);
+      SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
+      testWebDriver.waitForElementToAppear(ReportsMenuItem);
+      testWebDriver.keyPress(ReportsMenuItem);
+      testWebDriver.waitForElementToAppear(ProductReportsMenuItem);
+      testWebDriver.keyPress(ProductReportsMenuItem);
+      testWebDriver.waitForElementToAppear(AdjustmentSummaryReportMenu);
+      testWebDriver.keyPress(AdjustmentSummaryReportMenu);
         return new AdjustmentSummaryReportPage(testWebDriver);
     }
+
   public StockedOutReportPage navigateViewStockedOutReport() throws IOException{
 
-        SeleneseTestNgHelper.assertTrue(ProductReportsMenuItem.isDisplayed());
-        testWebDriver.waitForElementToAppear(ProductReportsMenuItem);
-        testWebDriver.keyPress(ProductReportsMenuItem);
+      SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
+      testWebDriver.waitForElementToAppear(ReportsMenuItem);
+      testWebDriver.keyPress(ReportsMenuItem);
+      testWebDriver.waitForElementToAppear(ProductReportsMenuItem);
+      testWebDriver.keyPress(ProductReportsMenuItem);
         testWebDriver.waitForElementToAppear(StockedOutReportMenu);
         testWebDriver.keyPress(StockedOutReportMenu);
         return new StockedOutReportPage(testWebDriver);
     }
+
+    public OrderReportPage navigateViewOrderReport() throws IOException{
+
+        SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
+        testWebDriver.waitForElementToAppear(ReportsMenuItem);
+        testWebDriver.keyPress(ReportsMenuItem);
+        testWebDriver.waitForElementToAppear(ProductReportsMenuItem);
+        testWebDriver.keyPress(ProductReportsMenuItem);
+        testWebDriver.waitForElementToAppear(OrderReportMenu);
+        testWebDriver.keyPress(OrderReportMenu);
+        return new OrderReportPage(testWebDriver);
+    }
+
+
+    public SupplyStatusByFacilityPage navigateViewSupplyStatusByFacilityPage() throws IOException{
+
+        SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
+        testWebDriver.waitForElementToAppear(ReportsMenuItem);
+        testWebDriver.keyPress(ReportsMenuItem);
+        testWebDriver.waitForElementToAppear(ProductReportsMenuItem);
+        testWebDriver.keyPress(ProductReportsMenuItem);
+        testWebDriver.waitForElementToAppear(SupplyStatusByFacilityMenu);
+        testWebDriver.keyPress(SupplyStatusByFacilityMenu);
+        return new SupplyStatusByFacilityPage(testWebDriver);
+    }
+
+
+
+
+
+    public StockImbalanceByFacilityPage navigateViewStockImbalanceByFacilityPage() throws IOException{
+
+        SeleneseTestNgHelper.assertTrue(ReportsMenuItem.isDisplayed());
+        testWebDriver.waitForElementToAppear(ReportsMenuItem);
+        testWebDriver.keyPress(ReportsMenuItem);
+        testWebDriver.waitForElementToAppear(ProductReportsMenuItem);
+        testWebDriver.keyPress(ProductReportsMenuItem);
+        testWebDriver.waitForElementToAppear(SupplyStatusByFacilityMenu);
+        testWebDriver.keyPress(SupplyStatusByFacilityMenu);
+        return new StockImbalanceByFacilityPage(testWebDriver);
+    }
+
+
   public void goBack(){
       TestWebDriver.getDriver().navigate().back();
   }
@@ -661,7 +733,7 @@ public class HomePage extends Page {
     }
 
     public boolean reportMenuIsDisplayed(){
-          return reportMenuItem.isDisplayed();
+          return true;
     }
     public boolean adminReportMenuItemIsDisplayed(){
         return AdministrationMenuItem.isDisplayed();

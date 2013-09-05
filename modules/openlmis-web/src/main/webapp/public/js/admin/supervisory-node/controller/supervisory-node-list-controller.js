@@ -1,4 +1,6 @@
-function SupervisoryNodeListController($scope, $location, navigateBackService, SupervisoryNodeCompleteList, $dialog, messageService, RemoveSupervisoryNode) {
+function SupervisoryNodeListController($scope, $location, navigateBackService, SupervisoryNodeCompleteList) {
+    $scope.reloadTheList = false;
+
     $scope.$on('$viewContentLoaded', function () {
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.showSupervisoryNodesList('txtFilterSupervisoryNodes');
@@ -55,28 +57,10 @@ function SupervisoryNodeListController($scope, $location, navigateBackService, S
         filterSupervisoryNodesByName(query);
     };
 
-    $scope.showRemoveSupervisoryNodeMemberConfirmDialog = function (index) {
-        var supervisoryNode = $scope.filteredSupervisoryNodes[index];
-        $scope.index = index;
-        $scope.selectedSupervisoryNode = supervisoryNode;
-        var options = {
-            id: "removeSupervisoryNodeMemberConfirmDialog",
-            header: "Confirmation",
-            body: "Are you sure you want to remove the supervisory node: " + $scope.selectedSupervisoryNode.name
-        };
-        OpenLmisDialog.newDialog(options, $scope.removeSupervisoryNodeMemberConfirm, $dialog, messageService);
-    };
+    $scope.$watch('reloadTheList',function(){
+        $scope.$apply($scope.query = navigateBackService.query);
+        $scope.showSupervisoryNodesList('txtFilterSupervisoryNodes');
+    })
 
-    $scope.removeSupervisoryNodeMemberConfirm = function (result) {
-        if (result) {
-            $scope.filteredSupervisoryNodes.splice($scope.index,1);
-            $scope.removeSupervisoryNode($scope.selectedSupervisoryNode.id);
-            $scope.showSupervisoryNodesList('txtFilterSupervisoryNodes');
-        }
-        $scope.selectedSupervisoryNode = undefined;
-    };
 
-    $scope.removeSupervisoryNode = function(id){
-        RemoveSupervisoryNode.get({id: id});
-    };
 }

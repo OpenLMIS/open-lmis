@@ -83,7 +83,7 @@ public class FacilityMailingListReportPage extends Page {
         facilityName.clear();
         facilityName.sendKeys(name);
         facilityCode.sendKeys(code);
-        testWebDriver.selectByVisibleText(facilityType, facilityTypeValue);
+        testWebDriver.selectByVisibleText(facilityType, "Dispensary");
         testWebDriver.sleep(500);
 
     }
@@ -168,6 +168,7 @@ public class FacilityMailingListReportPage extends Page {
         File downloadedFile = downloadHandler.downloadFile(this.getClass().getSimpleName(), ".pdf");
         SeleneseTestNgHelper.assertEquals(downloadHandler.getLinkHTTPStatus(), 200);
         SeleneseTestNgHelper.assertEquals(downloadedFile.exists(), true);
+        SeleneseTestNgHelper.assertTrue(downloadedFile.length() > 0);
 
         testWebDriver.sleep(500);
     }
@@ -182,6 +183,7 @@ public class FacilityMailingListReportPage extends Page {
         File downloadedFile = downloadHandler.downloadFile(this.getClass().getSimpleName(), ".xls");
         SeleneseTestNgHelper.assertEquals(downloadHandler.getLinkHTTPStatus(), 200);
         SeleneseTestNgHelper.assertEquals(downloadedFile.exists(), true);
+        SeleneseTestNgHelper.assertTrue(downloadedFile.length() > 0);
 
         testWebDriver.sleep(500);
     }
@@ -191,9 +193,9 @@ public class FacilityMailingListReportPage extends Page {
         WebElement btnPrev = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[3]/div/div[2]/div[2]/button[2]"));
         WebElement btnNext = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div[2]/div/div[3]/div[3]/div/div[2]/div[2]/button[3]"));
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 10; i++)
             btnNext.click();
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 10; i++)
             btnPrev.click();
 
     }

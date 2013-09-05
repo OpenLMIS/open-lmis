@@ -30,9 +30,9 @@
         <table class="table table-striped table-bordered">
             <thead>
             <tr class="gradient-header">
-                <th>Supervisory Node Name
-                </th>
                 <th>Code
+                </th>
+                <th>Supervisory Node Name
                 </th>
                 <th>Facility
                 </th>
@@ -40,17 +40,15 @@
                 </th>
                 <th>Supervisors Count
                 </th>
-                <th>
-                </th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="supervisoryNode in filteredSupervisoryNodes">
                 <td>
-                    <a ng-click="editSupervisoryNode(supervisoryNode.id)">{{supervisoryNode.name}}</a>
+                    <div>{{supervisoryNode.code}}</div>
                 </td>
                 <td>
-                    <div>{{supervisoryNode.code}}</div>
+                    <a href="" ng-click="editSupervisoryNode(supervisoryNode.id)">{{supervisoryNode.name}}</a>
                 </td>
                 <td>
                     <div>{{supervisoryNode.facility.name}}</div>
@@ -60,9 +58,6 @@
                 </td>
                 <td>
                     <div>{{supervisoryNode.supervisorCount}}</div>
-                </td>
-                <td>
-                    <a class="close" ng-click="showRemoveSupervisoryNodeMemberConfirmDialog($index)">X</a>
                 </td>
             </tr>
             </tbody>

@@ -1,4 +1,4 @@
-function RequisitionGroupController($scope, ReportFacilityTypes, $routeParams, $location, SupervisoryNodes, SaveRequisitionGroup, GetRequisitionGroup, FacilityCompleteListInRequisitionGroup, GeographicZoneCompleteList, GetFacilityCompleteList, SaveRequisitionGroupMember, RemoveRequisitionGroupMember, $dialog, messageService) {
+function RequisitionGroupController($scope, ReportFacilityTypes, $routeParams, $location, SupervisoryNodes, SaveRequisitionGroup, GetRequisitionGroup, FacilityCompleteListInRequisitionGroup, GeographicZoneCompleteList, GetFacilityCompleteList, SaveRequisitionGroupMember, RemoveRequisitionGroupMember, $dialog, messageService, RemoveRequisitionGroup) {
     $scope.geographicZoneNameInvalid = false;
     $scope.requisitionGroup = {};
     $scope.facilities = {};
@@ -74,9 +74,9 @@ function RequisitionGroupController($scope, ReportFacilityTypes, $routeParams, $
         $scope.requisitionGroupMember.requisitionGroup = $scope.requisitionGroup;
 
         SaveRequisitionGroupMember.save($scope.requisitionGroupMember,successHandler,errorHandler);
-
+        $scope.facilities.push($scope.requisitionGroupMember.facility);
         $scope.closeModal();
-        loadMemberFacilities();
+
         return true;
     };
 
@@ -143,6 +143,34 @@ function RequisitionGroupController($scope, ReportFacilityTypes, $routeParams, $
          $scope.requisitionGroupMember.requisitionGroup = $scope.requisitionGroup;*/
         RemoveRequisitionGroupMember.get({rgId: $scope.requisitionGroup.id, facId: $scope.selectedFacility.id});
     };
+
+
+    $scope.showRemoveRequisitionGroupConfirmDialog = function () {
+        $scope.selectedRequisitionGroup = $scope.requisitionGroup;
+        var options = {
+            id: "removeRequisitionGroupMemberConfirmDialog",
+            header: "Confirmation",
+            body: "Are you sure you want to remove the requisition group: " + $scope.selectedRequisitionGroup.name
+        };
+        OpenLmisDialog.newDialog(options, $scope.removeRequisitionGroupConfirm, $dialog, messageService);
+    };
+
+    $scope.removeRequisitionGroupConfirm = function (result) {
+        if (result) {
+            $scope.removeRequisitionGroup($scope.selectedRequisitionGroup.id);
+            $scope.$parent.reloadTheList = true;
+            $scope.$parent.message = "Requisition group: " + $scope.selectedRequisitionGroup.name + " has been successfully removed. ";
+            $location.path('#/list');
+        }
+        $scope.selectedRequisitionGroup = undefined;
+    };
+
+    $scope.removeRequisitionGroup = function(id){
+        RemoveRequisitionGroup.get({id: id});
+    };
+
+
+
 
 }
 

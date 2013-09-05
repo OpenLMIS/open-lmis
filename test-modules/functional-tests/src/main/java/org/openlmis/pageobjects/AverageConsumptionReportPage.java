@@ -10,6 +10,7 @@ package org.openlmis.pageobjects;
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.SeleniumFileDownloadUtil;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
@@ -60,6 +61,13 @@ public class AverageConsumptionReportPage extends Page {
 
   @FindBy(how = NAME, using = "endQuarter")
   private static WebElement endQuarter;
+
+
+  @FindBy(how = NAME, using = "startHalf")
+  private static WebElement startHalf;
+
+  @FindBy(how = NAME, using = "endHalf")
+   private static WebElement endHalf;
 
   @FindBy(how = NAME, using = "program")
   private static WebElement program;
@@ -144,5 +152,36 @@ public class AverageConsumptionReportPage extends Page {
 
       testWebDriver.sleep(500);
     }
+
+
+
+    public void verifyXlsReportOutput() throws Exception {
+        testWebDriver.waitForElementToAppear(PdfButton);
+        XLSButton.click();
+        testWebDriver.sleep(500);
+
+        SeleniumFileDownloadUtil downloadHandler = new SeleniumFileDownloadUtil(TestWebDriver.getDriver());
+        downloadHandler.setURI(testWebDriver.getCurrentUrl());
+        File downloadedFile = downloadHandler.downloadFile(this.getClass().getSimpleName(), ".xls");
+        SeleneseTestNgHelper.assertEquals(downloadHandler.getLinkHTTPStatus(), 200);
+        SeleneseTestNgHelper.assertEquals(downloadedFile.exists(), true);
+        SeleneseTestNgHelper.assertTrue(downloadedFile.length() > 0);
+
+        testWebDriver.sleep(500);
+    }
+
+    public void verifyPagination() throws IOException {
+
+        WebElement btnNext = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div/div/div[3]/div[3]/div/div[2]/div[2]/button[3]"));
+        WebElement btnPrev = testWebDriver.findElement(By.xpath("//div[@id='wrap']/div/div/div/div/div[3]/div[3]/div/div[2]/div[2]/button[2]"));
+
+
+        for (int i = 0; i < 10; i++)
+            btnNext.click();
+        for (int i = 0; i < 10; i++)
+            btnPrev.click();
+
+    }
+
 
 }

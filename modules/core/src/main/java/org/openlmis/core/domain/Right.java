@@ -44,6 +44,7 @@ public enum Right {
   CONFIGURE_EDI("right.configure.edi", ADMIN, "Permission to configure Electronic Data Interchange (EDI)", 18),
   MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", ADMIN, "Permission to manage a regimen template", 4),
 
+  ACCESS_ILS_GATEWAY("Access ILS Gateway",ADMIN,"Permission to access the ILS Gateway",23),
   MANAGE_PRODUCT_ALLOWED_FOR_FACILITY("Admin - Manage Products Allowed for Facilities", ADMIN, "Permission to manage allowed products for facilities",24),
   MANAGE_SETTING("Admin - Configure Settings", ADMIN, "Permission to configure settings.",25),
   MANAGE_REQ_GRP_PROG_SCHEDULE("Admin - Manage Requisition Group Program Schedule", ADMIN, "Permission to manage requisition groups programs schedule", 26),

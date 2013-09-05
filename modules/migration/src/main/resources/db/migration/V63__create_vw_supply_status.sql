@@ -1,4 +1,10 @@
 /*
+
+2013-09-05 - changed call agrument for fn_get_supplying_facility_name from requisitions.supplylineid to requisitions.supervisorynodeid. Used V56__create_vw_supply_status_rev_5.
+??? Issa Fikadu - ???
+??? Muhammad Ahmed - created
+ 
+*/
 DROP VIEW IF EXISTS vw_supply_status;
 
 CREATE OR REPLACE VIEW vw_supply_status AS
@@ -48,6 +54,7 @@ SELECT requisition_line_items.id AS li_id,
     products.description AS p_description, facility_types.name AS facility_type_name,
     facility_types.id AS ft_id, facility_types.code AS ft_code,facility_types.nominalmaxmonth AS ft_nominalmaxmonth, facility_types.nominaleop AS ft_nominaleop,
     facilities.id AS f_id, facilities.code AS f_code, facilities.name AS facility,
+    fn_get_supplying_facility_name(requisitions.supervisorynodeid) AS supplyingfacility,
     facilities.geographiczoneid AS f_zoneid,
     facility_approved_products.maxmonthsofstock AS fp_maxmonthsofstock,
     facility_approved_products.minmonthsofstock AS fp_minmonthsofstock,
@@ -70,4 +77,4 @@ SELECT requisition_line_items.id AS li_id,
    JOIN program_products ON products.id = program_products.productid AND programs.id = program_products.programid AND program_products.id = facility_approved_products.programproductid;
 
 ALTER TABLE vw_supply_status
-  OWNER TO postgres;*/
+  OWNER TO postgres;

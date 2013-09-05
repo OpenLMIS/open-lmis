@@ -129,7 +129,8 @@ public interface SupervisoryNodeMapper {
           "                              Count(DISTINCT userId) supervisorCount  " +
           "                       FROM   role_assignments ra  " +
           "                       GROUP  BY supervisorynodeid) AS x  " +
-          "                   ON y.id = x.id")
+          "                   ON y.id = x.id " +
+          " ORDER BY y.supervisoryNodeParentName, y.name, y.facilityName")
   @Results(value={
           @Result(property = "parent.name", column = "supervisoryNodeParentName"),
           @Result(property = "parent.id", column = "parentid"),

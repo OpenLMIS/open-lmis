@@ -8,7 +8,6 @@ package org.openlmis.functional;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.InitiateRnRPage;
 import org.openlmis.pageobjects.LoginPage;
@@ -28,7 +27,7 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
-public class RnRPagination extends TestCaseHelper {
+public class RnRPagination extends ReportTestHelper {
 
   private static final String FULL_SUPPLY_BASE_LOCATOR="//table[@id='fullSupplyTable']";
   private static final String NON_FULL_SUPPLY_BASE_LOCATOR="//table[@id='nonFullSupplyTable']";
