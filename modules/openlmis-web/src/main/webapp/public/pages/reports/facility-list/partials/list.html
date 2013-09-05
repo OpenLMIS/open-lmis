@@ -22,8 +22,8 @@
                             <label class="labels">Zone</label>
 
                             <div class="form-field">
-                                <select  ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone.value" ng-options="option.id as option.name for option in zones">
-
+                                <select  ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone.value" >
+                                    <option  ng-repeat="option in zones" value="{{ option.id }}">{{ option.name }}</option>
                                 </select>
                             </div>
                         </div>
@@ -31,8 +31,8 @@
                             <label class="labels">Facility Type</label>
 
                             <div class="form-field">
-                                <select ui-select2 style="width:200px;" name="facilityType"  ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
-
+                                <select ui-select2 style="width:200px;" name="facilityType"  ng-model="facilityType.value" >
+                                    <option  ng-repeat="option in facilityTypes" value="{{ option.id }}">{{ option.name }}</option>
                                 </select>
                             </div>
                         </div>
@@ -40,8 +40,8 @@
                             <label class="labels">Status</label>
 
                             <div class="form-field">
-                                <select ui-select2 style="width:200px;" name="status" ng-model="status.value"  ng-options="option.value as option.name for option in statuses">
-
+                                <select ui-select2 style="width:200px;" name="status" ng-model="status.value"  >
+                                    <option  ng-repeat="option in statuses" value="{{ option.value }}">{{ option.name }}</option>
                                 </select>
                             </div>
                         </div>
@@ -50,9 +50,13 @@
             </div>
         </div>
 
-        <div class="gridStyleReport" ng-grid="gridOptions"></div>
+        <div class="gridStyleReport" ng-show="data.length > 0" ng-grid="gridOptions"></div>
+
+        <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+            <tr>
+                <td>No data to show under selected filters</td>
+            </tr>
+        </table>
     </div>
 </div>
-<!-- <div>
-    <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10" check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
-</div> -->
+

@@ -43,32 +43,41 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
 
         ReportPrograms.get(function(data){
             $scope.programs = data.programs;
-            $scope.programs.push({'name':'Select a Program'});
+            $scope.programs.unshift({'name':'Select a Program'});
         })
 
         ReportSchedules.get(function(data){
             $scope.schedules = data.schedules;
-            $scope.schedules.push({'name':'Select a Schedule'});
-        })
-
-        ReportFacilityTypes.get(function(data) {
-            $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.push({'name': 'All Facility Types -'});
+            $scope.schedules.unshift({'name':'Select a Schedule'});
         });
 
         $scope.ChangeSchedule = function(){
+
+            if($scope.schedule == undefined || $scope.schedule == ''){
+                $scope.periods = [];
+                $scope.requisitionGroups = [];
+                $scope.periods.push({name:'<--'});
+                $scope.requisitionGroups.push({name:'<--'});
+                return;
+            }
+
             ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
                 $scope.periods = data.periods;
-                $scope.periods.push({'name': 'Select Period'});
+                $scope.periods.unshift({'name': 'Select Period'});
             });
 
             RequisitionGroupsByProgramSchedule.get({program: $scope.program, schedule:$scope.schedule}, function(data){
                 $scope.requisitionGroups = data.requisitionGroupList;
-                $scope.requisitionGroups.push({'name':'All requsition groups'});
+                $scope.requisitionGroups.unshift({'name':'All requsition groups'});
             });
         }
 
+        ReportFacilityTypes.get(function(data) {
+            $scope.facilityTypes = data.facilityTypes;
+            $scope.facilityTypes.unshift({'name': 'All Facility Types'});
+        });
 
+        $scope.ChangeSchedule();
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
@@ -135,11 +144,15 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
         }
 
         $scope.getPagedDataAsync = function (pageSize, page) {
-                        var params = $scope.getParams(pageSize, page);
-                        NonReportingFacilities.get(params, function(data) {
-                            $scope.setPagingData(data.pages.rows[0].details,page,pageSize,data.pages.total);
-                            $scope.summaries    =  data.pages.rows[0].summary;
-                        });
+            var params = $scope.getParams(pageSize, page);
+            $scope.data = [];
+            NonReportingFacilities.get(params, function(data) {
+                if(data.pages != undefined){
+                    $scope.setPagingData(data.pages.rows[0].details,page,pageSize,data.pages.total);
+                    $scope.summaries    =  data.pages.rows[0].summary;
+                    $scope.data = data.pages.rows[0].details;
+                }
+            });
 
         };
 

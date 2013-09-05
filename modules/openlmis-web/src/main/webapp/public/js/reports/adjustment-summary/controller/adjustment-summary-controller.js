@@ -31,7 +31,8 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
        ];
         $scope.startYears = [];
         OperationYears.get(function(data){
-            $scope.startYears  = data.years;
+            $scope.startYears = $scope.endYears = data.years;
+            adjustEndYears();
         });
 
         Months.get(function(data){
@@ -79,7 +80,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 
         RequisitionGroups.get(function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.push({'name':'All Reporting Groups',id:''});
+            $scope.requisitionGroups.unshift({'name':'All Reporting Groups'});
         });
 
 
@@ -112,8 +113,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
         $scope.filterGrid = function (){
 
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-
-            $(".ngFooterPanel").css("margin-left",$(".span3").width() + ($(".span3").width()/3)) ;
+            //$(".ngFooterPanel").css("margin-left",$(".span3").width() + ($(".span3").width()/3)) ;
         };
 
         //filter form data section
@@ -167,7 +167,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 
         ProductCategories.get(function(data){
             $scope.productCategories = data.productCategoryList;
-            $scope.productCategories.push({'name': 'All Product Categories'});
+            $scope.productCategories.unshift({'name': 'All Product Categories'});
         });
 
 
@@ -180,12 +180,12 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
-            $scope.zones.push({'name': 'All Geographic Zones'});
+            $scope.zones.unshift({'name': 'All Geographic Zones'});
         });
 
         ReportPrograms.get(function(data){
             $scope.programs = data.programs;
-            $scope.programs.push({'name':'All Programs','id':'All'});
+            $scope.programs.unshift({'name':'Select Programs'});
         });
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
@@ -377,7 +377,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
                 $scope.endYears.push(obj);
             }
         });
-        if($scope.endYear < $scope.startYear){
+        if($scope.endYear <= $scope.startYear){
             $scope.endYear  = new Date().getFullYear();
         }
     }
@@ -521,9 +521,15 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
                                 params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
                             }
                         });
+                        // clear existing data
+                        $scope.data = [];
 
+                        // try to load the new data based on the selected parameters
                         AdjustmentSummaryReport.get(params, function(data) {
-                            $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
+                            if(data.pages != undefined){
+                                $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
+                                $scope.data = data.pages.rows;
+                            }
                         });
 
         };
