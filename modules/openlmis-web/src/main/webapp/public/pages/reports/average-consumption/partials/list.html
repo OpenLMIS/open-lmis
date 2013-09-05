@@ -154,8 +154,14 @@
                                 </div>
                             </div>
                             <div class="span9">
-                                <div class="gridStyleReport" ng-grid="gridOptions"></div>
-                                <div id="center-footer-div" style="position: fixed; bottom: 0px; z-index: 20; left: 50%;">
+                                <div class="gridStyleReport" ng-show="data.length > 0" ng-grid="gridOptions"></div>
+
+                                <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                                    <tr>
+                                        <td>No data to show under selected filters</td>
+                                    </tr>
+                                </table>
+                                <div id="center-footer-div" ng-show="data.length > 0" style="position: fixed; bottom: 0px; z-index: 20; left: 50%;">
                                     <span class="report-label">Min Mos : {{MinMos}}</span>  <span class="report-data">Max Mos : {{MaxMos}}</span>
                                 </div>
                             </div>

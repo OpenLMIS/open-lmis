@@ -115,7 +115,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
 
         $scope.filterGrid = function (){
 
-            $(".ngFooterPanel").css("margin-left",$(".span3").width() + ($(".span3").width()/3)) ;
+            //$(".ngFooterPanel").css("margin-left",$(".span3").width() + ($(".span3").width()/3)) ;
             if ($scope.filterForm.$invalid) {
                 $scope.errorShown = true;
                 return;
@@ -515,11 +515,14 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
                             }
                         });
 
+                        $scope.data = [];
                         AverageConsumptionReport.get(params, function(data) {
-                           $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total) ;
-                            if(data.pages.rows != undefined ){
+
+                            if(data.pages != undefined && data.pages.rows != undefined ){
+                                $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total) ;
                                 $scope.MinMos = data.pages.rows[0].minMOS;
                                 $scope.MaxMos=data.pages.rows[0].maxMOS;
+                                $scope.data = data.pages.rows;
                             }
                         });
 
