@@ -89,7 +89,13 @@
                 </div>
             </div>
 
-          <div class="gridStyleReport" ng-grid="gridOptions"></div>
+                <div class="gridStyleReport" ng-show="data.length > 0" ng-grid="gridOptions"></div>
+
+                <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                    <tr>
+                        <td>No data to show under selected filters</td>
+                    </tr>
+                </table>
    </div>
   </div>
 

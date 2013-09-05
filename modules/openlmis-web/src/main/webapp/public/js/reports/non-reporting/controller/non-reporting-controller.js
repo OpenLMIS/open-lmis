@@ -135,11 +135,13 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
         }
 
         $scope.getPagedDataAsync = function (pageSize, page) {
-                        var params = $scope.getParams(pageSize, page);
-                        NonReportingFacilities.get(params, function(data) {
-                            $scope.setPagingData(data.pages.rows[0].details,page,pageSize,data.pages.total);
-                            $scope.summaries    =  data.pages.rows[0].summary;
-                        });
+            var params = $scope.getParams(pageSize, page);
+            $scope.data = [];
+            NonReportingFacilities.get(params, function(data) {
+                $scope.setPagingData(data.pages.rows[0].details,page,pageSize,data.pages.total);
+                $scope.summaries    =  data.pages.rows[0].summary;
+                $scope.data = data.pages.rows[0].details;
+            });
 
         };
 
