@@ -40,9 +40,13 @@ CACHE:
 /public/pages/logistics/distribution/offline.html
 /public/pages/logistics/distribution/partials/list.html
 /public/pages/logistics/distribution/partials/init.html
+/public/pages/logistics/distribution/partials/init.html
 /public/pages/logistics/distribution/partials/record-facility-data.html
-/public/pages/logistics/distribution/partials/view-load-amount.html
 /public/pages/logistics/distribution/partials/record-facility-menu.html
+/public/pages/logistics/distribution/partials/view-load-amount.html
+/public/pages/logistics/distribution/partials/epi-use.html
+/public/pages/logistics/distribution/partials/refrigerator-reading.html
+/public/pages/logistics/distribution/partials/refrigerator.html
 
 /public/js/distribution/resolve/distribution-resolve.js
 /public/js/distribution/module/distribution-module.js
@@ -66,8 +70,6 @@ CACHE:
 /public/js/shared/directives/auto-save.js
 /public/js/shared/controller/locale-controller.js
 /public/lib/select2/select2.png
-/public/pages/logistics/distribution/partials/refrigerator-reading.html
-/public/pages/logistics/distribution/partials/refrigerator.html
 
 
 /public/lib/indexed-db-angular-service/js/services/indexed-db.js
@@ -87,6 +89,7 @@ CACHE:
 /public/images/left-arrow.png
 /public/images/loader.gif
 /public/images/login-bg.png
+/public/images/warning_triangle.png
 
 /public/fonts/fontawesome-webfont.woff
 /public/fonts/HelveticaNeue-CondensedBold.woff
