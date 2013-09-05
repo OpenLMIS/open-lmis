@@ -10,10 +10,13 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
+import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.repository.mapper.OrderMapper;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
@@ -66,6 +69,12 @@ public class ShipmentMapperIT {
   @Autowired
   private QueryExecutor queryExecutor;
 
+  @Autowired
+  private SupervisoryNodeMapper supervisoryNodeMapper;
+
+  @Autowired
+  SupplyLineMapper supplyLineMapper;
+
 
   @Test
   public void shouldInsertShippedLineItems() throws Exception {
@@ -97,15 +106,36 @@ public class ShipmentMapperIT {
     Rnr requisition = make(a(defaultRnr, with(RequisitionBuilder.facility, facility), with(RequisitionBuilder.periodId, period.getId())));
     requisitionMapper.insert(requisition);
 
+    Order order = new Order(requisition);
+    order.setSupplyLine(createSupplyLine(facility, program));
+    order.setStatus(OrderStatus.IN_ROUTE);
+    orderMapper.insert(order);
+
+
     productMapper.insert(product);
 
     return make(a(defaultShipmentLineItem,
       with(productCode, product.getCode()),
-      with(orderId, requisition.getId()),
+      with(orderId, order.getId()),
       with(quantityShipped, 23),
       with(shippedDate, new Date()),
       with(packedDate, new Date())));
 
+  }
+
+  private SupplyLine createSupplyLine(Facility facility, Program program) {
+    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    supervisoryNode.setFacility(facility);
+    supervisoryNodeMapper.insert(supervisoryNode);
+
+    SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setSupplyingFacility(facility);
+    supplyLine.setProgram(program);
+    supplyLine.setSupervisoryNode(supervisoryNode);
+    supplyLine.setExportOrders(Boolean.TRUE);
+
+    supplyLineMapper.insert(supplyLine);
+    return supplyLine;
   }
 
   @Test

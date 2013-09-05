@@ -79,7 +79,7 @@ public class ShipmentFileProcessor {
   private int findMaximumPosition(List<ShipmentFileColumn> shipmentFileColumns) {
     int maxPosition = 0;
     for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
-      if (shipmentFileColumn.isIncluded() && shipmentFileColumn.getPosition() > maxPosition) {
+      if (shipmentFileColumn.getInclude() && shipmentFileColumn.getPosition() > maxPosition) {
         maxPosition = shipmentFileColumn.getPosition();
       }
     }

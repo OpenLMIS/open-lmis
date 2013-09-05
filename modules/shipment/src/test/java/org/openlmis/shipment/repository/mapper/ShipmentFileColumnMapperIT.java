@@ -19,6 +19,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.shipment.builder.ShipmentFileColumnBuilder.columnPosition;
 import static org.openlmis.shipment.builder.ShipmentFileColumnBuilder.mandatoryShipmentFileColumn;
+import static org.testng.Assert.assertNull;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -37,14 +38,19 @@ public class ShipmentFileColumnMapperIT {
 
   @Test
   public void shouldInsertShipmentFileColumn() {
-    List<ShipmentFileColumn> existingColumns = mapper.getAll();
 
     ShipmentFileColumn shipmentFileColumn = make(a(mandatoryShipmentFileColumn, with(columnPosition, 10)));
 
     mapper.insert(shipmentFileColumn);
 
     List<ShipmentFileColumn> updatedColumns = mapper.getAll();
-    assertThat(existingColumns.size() + 1, is(updatedColumns.size()));
+    assertThat(updatedColumns.size(), is(1));
+    assertThat(updatedColumns.get(0).getName(), is("name"));
+    assertThat(updatedColumns.get(0).getDataFieldLabel(), is("label"));
+    assertNull(updatedColumns.get(0).getDatePattern());
+    assertThat(updatedColumns.get(0).getInclude(), is(true));
+    assertThat(updatedColumns.get(0).getMandatory(), is(true));
+    assertThat(updatedColumns.get(0).getPosition(), is(10));
   }
 
   @Test

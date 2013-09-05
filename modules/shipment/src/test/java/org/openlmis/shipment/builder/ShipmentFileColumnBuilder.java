@@ -7,6 +7,8 @@ import org.openlmis.shipment.domain.ShipmentFileColumn;
 
 public class ShipmentFileColumnBuilder {
 
+  public static Property<? super ShipmentFileColumn, String> fieldName = new Property<>();
+
   public static Property<? super ShipmentFileColumn, String> dataFieldLabel = new Property<>();
 
   public static Property<? super ShipmentFileColumn, Integer> columnPosition = new Property<>();
@@ -23,7 +25,7 @@ public class ShipmentFileColumnBuilder {
     @Override
     public ShipmentFileColumn instantiate(PropertyLookup<ShipmentFileColumn> lookup) {
       ShipmentFileColumn column = new ShipmentFileColumn();
-
+      column.setName(lookup.valueOf(fieldName, "name"));
       column.setDataFieldLabel(lookup.valueOf(dataFieldLabel, "label"));
       column.setPosition(lookup.valueOf(columnPosition, 1));
       column.setMandatory(true);
@@ -38,7 +40,7 @@ public class ShipmentFileColumnBuilder {
     @Override
     public ShipmentFileColumn instantiate(PropertyLookup<ShipmentFileColumn> lookup) {
       ShipmentFileColumn column = new ShipmentFileColumn();
-
+      column.setName(lookup.valueOf(fieldName, "name"));
       column.setDataFieldLabel(lookup.valueOf(dataFieldLabel, "label"));
       column.setPosition(lookup.valueOf(columnPosition, 1));
       column.setMandatory(lookup.valueOf(mandatory, true));
