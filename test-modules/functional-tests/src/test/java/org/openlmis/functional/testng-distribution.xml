@@ -18,6 +18,8 @@
       </class>
       <class name="org.openlmis.functional.ManageRefrigerator">
         </class>
+      <class name="org.openlmis.functional.RecordEPIUse">
+      </class>
     </classes>
   </test>
 </suite>

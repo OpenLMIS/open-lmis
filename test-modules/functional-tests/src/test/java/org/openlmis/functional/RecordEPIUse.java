@@ -162,6 +162,19 @@ public class RecordEPIUse extends TestCaseHelper {
         epiUse.verifyLoss("50", 1);
         epiUse.verifyStockAtEndOfMonth("60", 1);
         epiUse.verifyExpirationDate("11/2012", 1);
+
+        epiUse.checkUncheckStockAtFirstOfMonthNotRecorded(2);
+        epiUse.checkUncheckReceivedNotRecorded(2);
+        epiUse.checkUncheckDistributedNotRecorded(2);
+        epiUse.checkUncheckLossNotRecorded(2);
+        epiUse.checkUncheckStockAtEndOfMonthNotRecorded(2);
+        epiUse.checkUncheckExpirationDateNotRecorded(2);
+        epiUse.checkUncheckStockAtFirstOfMonthNotRecorded(3);
+        epiUse.checkUncheckReceivedNotRecorded(3);
+        epiUse.checkUncheckDistributedNotRecorded(3);
+        epiUse.checkUncheckLossNotRecorded(3);
+        epiUse.checkUncheckStockAtEndOfMonthNotRecorded(3);
+        epiUse.checkUncheckExpirationDateNotRecorded(3);
         epiUse.verifyOverallEPIUseIcon("GREEN");
     }
 
