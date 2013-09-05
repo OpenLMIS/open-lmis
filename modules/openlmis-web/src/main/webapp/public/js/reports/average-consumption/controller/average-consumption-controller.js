@@ -114,10 +114,10 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
 
         $scope.filterGrid = function (){
 
-            //$(".ngFooterPanel").css("margin-left",$(".span3").width() + ($(".span3").width()/3)) ;
+
             if ($scope.filterForm.$invalid) {
                 $scope.errorShown = true;
-                return;
+                //return;
             }
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
 
@@ -527,16 +527,23 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
         };
 
         $scope.$watch('pagingOptions.currentPage', function () {
-            $scope.currentPage = $scope.pagingOptions.currentPage;
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            if($scope.currentPage != $scope.pagingOptions.currentPage)  {
+                $scope.currentPage = $scope.pagingOptions.currentPage;
+                //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            }
+
         }, true);
 
         $scope.$watch('pagingOptions.pageSize', function () {
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            if($scope.pageSize != $scope.pagingOptions.pageSize)  {
+               $scope.pageSize = $scope.pagingOptions.pageSize;
+               //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            }
+
         }, true);
 
         $scope.$watch('sortInfo', function () {
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+            //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
         }, true);
 
     $scope.gridOptions = {

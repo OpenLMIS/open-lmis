@@ -7,6 +7,7 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.AverageConsumptionReportMapper;
 import org.openlmis.report.mapper.NonReportingFacilityReportMapper;
@@ -63,7 +64,7 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
     }
 
     @Override
-    public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
+    public AverageConsumptionReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
         AverageConsumptionReportFilter averageConsumptionReportFilter = null;
 
         if(filterCriteria != null){
@@ -71,29 +72,29 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
             Date originalStart =  new Date();
             Date originalEnd =  new Date();
 
-            averageConsumptionReportFilter.setZoneId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
-            averageConsumptionReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-            averageConsumptionReportFilter.setFacilityType( (filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "ALL Facilities" : filterCriteria.get("facilityType")[0]);
-            averageConsumptionReportFilter.setRgroup( (filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "ALL Reporting Groups" : filterCriteria.get("rgroup")[0]);
+            averageConsumptionReportFilter.setZoneId( StringUtils.isBlank(filterCriteria.get("zoneId")[0])  ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
+            averageConsumptionReportFilter.setFacilityTypeId( StringUtils.isBlank( filterCriteria.get("facilityTypeId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
+            averageConsumptionReportFilter.setFacilityType( StringUtils.isBlank( filterCriteria.get("facilityType")[0] ) ? "ALL Facilities" : filterCriteria.get("facilityType")[0]);
+            averageConsumptionReportFilter.setRgroup( StringUtils.isBlank(filterCriteria.get("rgroup")[0]) ? "ALL Reporting Groups" : filterCriteria.get("rgroup")[0]);
 
 
-            averageConsumptionReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
-            averageConsumptionReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
-            averageConsumptionReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
-            averageConsumptionReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
+            averageConsumptionReportFilter.setProductCategoryId( StringUtils.isBlank(filterCriteria.get("productCategoryId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
+            averageConsumptionReportFilter.setProductId( StringUtils.isBlank( filterCriteria.get("productId") [0] ) ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
+            averageConsumptionReportFilter.setRgroupId( StringUtils.isBlank( filterCriteria.get("rgroupId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
+            averageConsumptionReportFilter.setProgramId( StringUtils.isBlank( filterCriteria.get("programId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
 
             //monthly
-            averageConsumptionReportFilter.setYearFrom(filterCriteria.get("fromYear") == null ? originalStart.getYear() : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0
-            averageConsumptionReportFilter.setYearTo(filterCriteria.get("toYear") == null ? originalEnd.getYear() : Integer.parseInt(filterCriteria.get("toYear")[0])); //defaults to 0
-            averageConsumptionReportFilter.setMonthFrom(filterCriteria.get("fromMonth") == null ? originalStart.getMonth() : Integer.parseInt(filterCriteria.get("fromMonth")[0])); //defaults to 0
-            averageConsumptionReportFilter.setMonthTo(filterCriteria.get("toMonth") == null ? originalEnd.getMonth() : Integer.parseInt(filterCriteria.get("toMonth")[0])); //defaults to 0
+            averageConsumptionReportFilter.setYearFrom( StringUtils.isBlank( filterCriteria.get("fromYear")[0] ) ? originalStart.getYear() : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0
+            averageConsumptionReportFilter.setYearTo( StringUtils.isBlank( filterCriteria.get("toYear")[0] ) ? originalEnd.getYear() : Integer.parseInt(filterCriteria.get("toYear")[0])); //defaults to 0
+            averageConsumptionReportFilter.setMonthFrom( StringUtils.isBlank( filterCriteria.get("fromMonth")[0] ) ? originalStart.getMonth() : Integer.parseInt(filterCriteria.get("fromMonth")[0])); //defaults to 0
+            averageConsumptionReportFilter.setMonthTo( StringUtils.isBlank( filterCriteria.get("toMonth")[0] ) ? originalEnd.getMonth() : Integer.parseInt(filterCriteria.get("toMonth")[0])); //defaults to 0
 
-            averageConsumptionReportFilter.setPdformat(filterCriteria.get("pdformat") == null ? 0 : Integer.parseInt(filterCriteria.get("pdformat")[0]));  //defaults to 0
-            averageConsumptionReportFilter.setPeriodType(filterCriteria.get("periodType") == null ? "" : filterCriteria.get("periodType")[0].toString());
-            averageConsumptionReportFilter.setQuarterFrom(filterCriteria.get("fromQuarter") == null ? 1 : Integer.parseInt(filterCriteria.get("fromQuarter")[0]));
-            averageConsumptionReportFilter.setQuarterTo(filterCriteria.get("toQuarter") == null ? 1 : Integer.parseInt(filterCriteria.get("toQuarter")[0]));
-            averageConsumptionReportFilter.setSemiAnnualFrom(filterCriteria.get("fromSemiAnnual") == null ? 1 : Integer.parseInt(filterCriteria.get("fromSemiAnnual")[0]));
-            averageConsumptionReportFilter.setSemiAnnualTo(filterCriteria.get("toSemiAnnual") == null ? 1 : Integer.parseInt(filterCriteria.get("toSemiAnnual")[0]));
+            averageConsumptionReportFilter.setPdformat( StringUtils.isBlank( filterCriteria.get("pdformat")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("pdformat")[0]));  //defaults to 0
+            averageConsumptionReportFilter.setPeriodType( StringUtils.isBlank( filterCriteria.get("periodType")[0] ) ? "" : filterCriteria.get("periodType")[0].toString());
+            averageConsumptionReportFilter.setQuarterFrom( StringUtils.isBlank( filterCriteria.get("fromQuarter")[0] ) ? 1 : Integer.parseInt(filterCriteria.get("fromQuarter")[0]));
+            averageConsumptionReportFilter.setQuarterTo( StringUtils.isBlank( filterCriteria.get("toQuarter")[0] ) ? 1 : Integer.parseInt(filterCriteria.get("toQuarter")[0]));
+            averageConsumptionReportFilter.setSemiAnnualFrom( StringUtils.isBlank( filterCriteria.get("fromSemiAnnual")[0] ) ? 1 : Integer.parseInt(filterCriteria.get("fromSemiAnnual")[0]));
+            averageConsumptionReportFilter.setSemiAnnualTo( StringUtils.isBlank( filterCriteria.get("toSemiAnnual")[0] ) ? 1 : Integer.parseInt(filterCriteria.get("toSemiAnnual")[0]));
 
             int monthFrom = 0;
             int monthTo = 0;

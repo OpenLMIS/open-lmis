@@ -72,7 +72,10 @@ public class AverageConsumptionQueryBuilder {
         }
         GROUP_BY("li.product, li.productcategory,  f.name, ft.name, li.productcode");
         ORDER_BY( QueryHelpers.getSortOrder(params, "ft.name, f.name , li.productcategory, li.product, li.productcode"));
-        return SQL();
+
+        // copy the sql over to a variable, this makes the debugging much more possible.
+        String sql = SQL();
+        return sql;
     }
 
 
