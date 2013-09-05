@@ -1,4 +1,6 @@
 function RequisitionGroupListController($scope, $location, navigateBackService, RequisitionGroupCompleteList, RemoveRequisitionGroup,$dialog, messageService) {
+    $scope.reloadTheList = false;
+
     $scope.$on('$viewContentLoaded', function () {
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.showRequisitionGroupsList('txtFilterRequisitionGroups');
@@ -56,33 +58,8 @@ function RequisitionGroupListController($scope, $location, navigateBackService, 
         filterRequisitionGroupsByName(query);
     };
 
-
-    $scope.showRemoveRequisitionGroupMemberConfirmDialog = function (index) {
-        var requisitionGroup = $scope.filteredRequisitionGroups[index];
-        $scope.index = index;
-        $scope.selectedRequisitionGroup = requisitionGroup;
-        var options = {
-            id: "removeRequisitionGroupMemberConfirmDialog",
-            header: "Confirmation",
-            body: "Are you sure you want to remove the requisition group: " + $scope.selectedRequisitionGroup.name
-        };
-        OpenLmisDialog.newDialog(options, $scope.removeRequisitionGroupMemberConfirm, $dialog, messageService);
-    };
-
-    $scope.removeRequisitionGroupMemberConfirm = function (result) {
-        if (result) {
-            $scope.filteredRequisitionGroups.splice($scope.index,1);
-            $scope.removeRequisitionGroup($scope.selectedRequisitionGroup.id);
-            $scope.showRequisitionGroupsList('txtFilterRequisitionGroups');
-        }
-        $scope.selectedRequisitionGroup = undefined;
-    };
-
-    $scope.removeRequisitionGroup = function(id){
-        RemoveRequisitionGroup.get({id: id});
-    };
-    
-    
-    
-    
+    $scope.$watch('reloadTheList',function(){
+        $scope.$apply($scope.query = navigateBackService.query);
+        $scope.showRequisitionGroupsList('txtFilterRequisitionGroups');
+    })
 }
