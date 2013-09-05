@@ -25,8 +25,8 @@
                                     <label class="labels">Program <span class="label-required">*</span></label>
 
                                     <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="program" ng-change="ChangeSchedule()" ng-model="program" ng-options="option.id as option.name for option in programs">
-
+                                        <select ui-select2 style="width:200px;" class="large-input" name="program" ng-change="ChangeSchedule()" ng-model="program" >
+                                            <option  ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -35,8 +35,8 @@
                                     <label class="labels">Schedule <span class="label-required">*</span></label>
 
                                     <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="schedule" ng-options="option.id as option.name for option in schedules">
-
+                                        <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="schedule">
+                                            <option  ng-repeat="option in schedules" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -45,8 +45,8 @@
                                     <label class="labels">Period <span class="label-required">*</span></label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" ng-change="filterGrid()" class="input-large" ng-required="true"  name="period" ng-model="period" ng-options="option.id as option.name for option in periods">
-
+                                        <select ui-select2 style="width:200px;" ng-change="filterGrid()" class="input-large" ng-required="true"  name="period" ng-model="period">
+                                            <option  ng-repeat="option in periods" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -55,8 +55,8 @@
                                     <label class="labels">Reporting Groups</label>
 
                                     <div class="form-fields">
-                                        <select ui-select2 style="width:300px;" class="extra-large-input" ng-change="filterGrid()"  name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
-
+                                        <select ui-select2 style="width:300px;" class="extra-large-input" ng-change="filterGrid()"  name="requisitionGroup"  ng-model="rgroup" >
+                                            <option  ng-repeat="option in requisitionGroups" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -65,8 +65,8 @@
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="facilityTypeElement" ng-change="filterGrid()"   ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
-
+                                        <select ui-select2 style="width:200px;" name="facilityTypeElement" ng-change="filterGrid()"   ng-model="facilityType" >
+                                            <option  ng-repeat="option in facilityTypes" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
                                 </div>
