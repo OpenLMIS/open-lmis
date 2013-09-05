@@ -92,6 +92,7 @@ public class RecordEPIUse extends TestCaseHelper {
         epiUse.verifyProductGroup("PG1-Name", 1);
         epiUse.verifyProductGroup("PG2-Name",2);
         epiUse.verifyProductGroup("PG3-Name",3);
+        epiUse.verifyOverallEPIUseIcon("RED");
 
         epiUse.enterValueInStockAtFirstOfMonth("10",1);
         epiUse.enterValueInReceived("20", 1);
@@ -99,6 +100,7 @@ public class RecordEPIUse extends TestCaseHelper {
         epiUse.enterValueInLoss("40", 1);
         epiUse.enterValueInStockAtEndOfMonth("50",1);
         epiUse.enterValueInExpirationDate("10/2011",1);
+        epiUse.verifyOverallEPIUseIcon("AMBER");
 
         epiUse.checkUncheckStockAtFirstOfMonthNotRecorded(2);
         epiUse.checkUncheckReceivedNotRecorded(2);
@@ -160,7 +162,7 @@ public class RecordEPIUse extends TestCaseHelper {
         epiUse.verifyLoss("50", 1);
         epiUse.verifyStockAtEndOfMonth("60", 1);
         epiUse.verifyExpirationDate("11/2012", 1);
-
+        epiUse.verifyOverallEPIUseIcon("GREEN");
     }
 
 
