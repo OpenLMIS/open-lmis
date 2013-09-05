@@ -49,14 +49,18 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
         ReportSchedules.get(function(data){
             $scope.schedules = data.schedules;
             $scope.schedules.unshift({'name':'Select a Schedule'});
-        })
-
-        ReportFacilityTypes.get(function(data) {
-            $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.unshift({'name': 'All Facility Types'});
         });
 
         $scope.ChangeSchedule = function(){
+
+            if($scope.schedule == undefined || $scope.schedule == ''){
+                $scope.periods = [];
+                $scope.requisitionGroups = [];
+                $scope.periods.push({name:'<--'});
+                $scope.requisitionGroups.push({name:'<--'});
+                return;
+            }
+
             ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
                 $scope.periods = data.periods;
                 $scope.periods.unshift({'name': 'Select Period'});
@@ -68,7 +72,12 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
             });
         }
 
+        ReportFacilityTypes.get(function(data) {
+            $scope.facilityTypes = data.facilityTypes;
+            $scope.facilityTypes.unshift({'name': 'All Facility Types'});
+        });
 
+        $scope.ChangeSchedule();
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
@@ -138,9 +147,11 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
             var params = $scope.getParams(pageSize, page);
             $scope.data = [];
             NonReportingFacilities.get(params, function(data) {
-                $scope.setPagingData(data.pages.rows[0].details,page,pageSize,data.pages.total);
-                $scope.summaries    =  data.pages.rows[0].summary;
-                $scope.data = data.pages.rows[0].details;
+                if(data.pages != undefined){
+                    $scope.setPagingData(data.pages.rows[0].details,page,pageSize,data.pages.total);
+                    $scope.summaries    =  data.pages.rows[0].summary;
+                    $scope.data = data.pages.rows[0].details;
+                }
             });
 
         };
