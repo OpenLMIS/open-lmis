@@ -13,6 +13,7 @@ function SummaryReportController($scope,$filter ,ngTableParams , SummaryReport, 
             // slice array data on pages
             if($scope.data == undefined || $scope.data.pages == undefined || $scope.data.pages.rows == undefined){
                 $scope.datarows = [];
+                params.total = 0;
             }else{
                 var data = $scope.data.pages.rows;
                 var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
@@ -80,6 +81,10 @@ function SummaryReportController($scope,$filter ,ngTableParams , SummaryReport, 
         });
 
         $scope.ChangeSchedule = function(){
+            if($scope.schedule == undefined || $scope.schedule == ""){
+                return;
+            }
+
             ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
                 $scope.periods = data.periods;
                 $scope.periods.unshift({'name': 'Select Period'});
