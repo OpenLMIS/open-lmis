@@ -1,3 +1,4 @@
+/*
 DROP VIEW IF EXISTS vw_supply_status;
 
 CREATE OR REPLACE VIEW vw_supply_status AS
@@ -71,4 +72,4 @@ SELECT requisition_line_items.id AS li_id,
    JOIN program_products ON products.id = program_products.productid AND programs.id = program_products.programid AND program_products.id = facility_approved_products.programproductid;
 
 ALTER TABLE vw_supply_status
-  OWNER TO postgres;
+  OWNER TO postgres;*/
