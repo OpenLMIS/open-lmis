@@ -1,4 +1,4 @@
-function SupervisoryNodeController($scope, ReportFacilityTypes, $routeParams, $location, SupervisoryNodeCompleteList, SaveSupervisoryNode, GetSupervisoryNode, GeographicZoneCompleteList, GetFacilityCompleteList) {
+function SupervisoryNodeController($scope,$dialog,messageService, ReportFacilityTypes, $routeParams, $location, SupervisoryNodeCompleteList, SaveSupervisoryNode, GetSupervisoryNode, GeographicZoneCompleteList, GetFacilityCompleteList,RemoveSupervisoryNode) {
     $scope.geographicZoneNameInvalid = false;
     $scope.supervisoryNode = {};
     $scope.facilities = {};
@@ -89,6 +89,31 @@ function SupervisoryNodeController($scope, ReportFacilityTypes, $routeParams, $l
                 }
             });
         }
+    };
+
+    $scope.showRemoveSupervisoryNodeMemberConfirmDialog = function () {
+        $scope.selectedSupervisoryNode = $scope.supervisoryNode;
+        var options = {
+            id: "removeSupervisoryNodeMemberConfirmDialog",
+            header: "Confirmation",
+            body: "Are you sure you want to remove the supervisory node: " + $scope.selectedSupervisoryNode.name
+        };
+        OpenLmisDialog.newDialog(options, $scope.removeSupervisoryNodeMemberConfirm, $dialog, messageService);
+    };
+
+    $scope.removeSupervisoryNodeMemberConfirm = function (result) {
+        if (result) {
+            $scope.removeSupervisoryNode($scope.selectedSupervisoryNode.id);
+            $scope.$parent.reloadTheList = true;
+            $scope.$parent.message = "Supervisory node: " + $scope.selectedSupervisoryNode.name + " has been successfully removed. ";
+            $location.path('#/list');
+
+        }
+        $scope.selectedSupervisoryNode = undefined;
+    };
+
+    $scope.removeSupervisoryNode = function(id){
+        RemoveSupervisoryNode.get({id: id});
     };
 }
 
