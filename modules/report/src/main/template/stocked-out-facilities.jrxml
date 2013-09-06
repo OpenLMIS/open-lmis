@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stocked-out" language="groovy" pageWidth="812" pageHeight="595" orientation="Landscape" columnWidth="712" leftMargin="40" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="376"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -63,7 +63,7 @@ WHERE
 					<text><![CDATA[Code]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="6f22b5e8-59ea-4512-b209-ce093fe70dbe" mode="Transparent" x="256" y="20" width="160" height="20" forecolor="#000000" backcolor="#003333">
+					<reportElement uuid="6f22b5e8-59ea-4512-b209-ce093fe70dbe" mode="Transparent" x="247" y="20" width="239" height="20" forecolor="#000000" backcolor="#003333">
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -74,7 +74,7 @@ WHERE
 					<text><![CDATA[Facility Type]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="1138c634-4150-46c6-a83e-b93243223977" mode="Transparent" x="96" y="20" width="160" height="20" forecolor="#000000" backcolor="#003333">
+					<reportElement uuid="1138c634-4150-46c6-a83e-b93243223977" mode="Transparent" x="96" y="20" width="150" height="20" forecolor="#000000" backcolor="#003333">
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -85,7 +85,7 @@ WHERE
 					<text><![CDATA[Facility Name]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="2ba4a9ef-e063-4ecc-b8e9-bfd8f2d0ec15" mode="Transparent" x="416" y="20" width="160" height="20" forecolor="#000000" backcolor="#003333">
+					<reportElement uuid="2ba4a9ef-e063-4ecc-b8e9-bfd8f2d0ec15" mode="Transparent" x="488" y="20" width="160" height="20" forecolor="#000000" backcolor="#003333">
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -97,7 +97,7 @@ WHERE
 					<text><![CDATA[Location]]></text>
 				</staticText>
 				<textField>
-					<reportElement uuid="75d15a8b-70cb-49b9-ae5a-023d9afc262b" x="96" y="0" width="100" height="20"/>
+					<reportElement uuid="75d15a8b-70cb-49b9-ae5a-023d9afc262b" x="96" y="0" width="150" height="20"/>
 					<textElement verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{supplyingFacility}]]></textFieldExpression>
 				</textField>
@@ -124,7 +124,7 @@ WHERE
 		<groupExpression><![CDATA[$F{facility}]]></groupExpression>
 		<groupHeader>
 			<band height="46">
-				<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} == null]]></printWhenExpression>
+				<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} == null && $P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				<textField pattern="" isBlankWhenNull="true">
 					<reportElement uuid="737ff77e-08a6-46fa-87c6-90dde8a147f4" mode="Transparent" x="39" y="0" width="57" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
@@ -134,7 +134,7 @@ WHERE
 					<textFieldExpression><![CDATA[$F{facilitycode}]]></textFieldExpression>
 				</textField>
 				<textField pattern="" isBlankWhenNull="true">
-					<reportElement uuid="2ed64d73-ed87-4e35-a5ad-0d4f0d7d977a" mode="Transparent" x="96" y="0" width="160" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement uuid="2ed64d73-ed87-4e35-a5ad-0d4f0d7d977a" mode="Transparent" x="96" y="0" width="150" height="20" forecolor="#000000" backcolor="#FFFFFF">
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -145,7 +145,7 @@ WHERE
 					<textFieldExpression><![CDATA[$F{facility}]]></textFieldExpression>
 				</textField>
 				<textField pattern="" isBlankWhenNull="true">
-					<reportElement uuid="99773021-35ed-4897-bb47-a7a2e95ee643" mode="Transparent" x="256" y="0" width="160" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement uuid="99773021-35ed-4897-bb47-a7a2e95ee643" mode="Transparent" x="247" y="0" width="239" height="20" forecolor="#000000" backcolor="#FFFFFF">
 						<property name="local_mesure_unitx" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="local_mesure_unitwidth" value="pixel"/>
@@ -158,7 +158,7 @@ WHERE
 					<textFieldExpression><![CDATA[$F{facilitytypename}]]></textFieldExpression>
 				</textField>
 				<textField pattern="" isBlankWhenNull="true">
-					<reportElement uuid="56fa579b-f8be-4f08-bcb3-14f443e36267" mode="Transparent" x="416" y="0" width="160" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement uuid="56fa579b-f8be-4f08-bcb3-14f443e36267" mode="Transparent" x="488" y="0" width="160" height="20" forecolor="#000000" backcolor="#FFFFFF">
 						<property name="local_mesure_unitx" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
@@ -169,7 +169,7 @@ WHERE
 					<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement uuid="07a6ede6-7b80-42c0-9f61-e5307f47f3b8" mode="Transparent" x="143" y="26" width="175" height="20" forecolor="#000000" backcolor="#003333">
+					<reportElement uuid="07a6ede6-7b80-42c0-9f61-e5307f47f3b8" mode="Transparent" x="247" y="26" width="239" height="20" forecolor="#000000" backcolor="#003333">
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -182,7 +182,7 @@ WHERE
 					<text><![CDATA[Product]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="be392a9f-da0c-4777-b5b5-bf0cc2c7c343" mode="Transparent" x="416" y="26" width="175" height="20" forecolor="#000000" backcolor="#003333">
+					<reportElement uuid="be392a9f-da0c-4777-b5b5-bf0cc2c7c343" mode="Transparent" x="488" y="26" width="160" height="20" forecolor="#000000" backcolor="#003333">
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -250,7 +250,7 @@ WHERE
 				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="07a735d4-b5a1-4657-8d96-904364422795" mode="Transparent" x="143" y="0" width="175" height="20" forecolor="#000000" backcolor="#FFFFFF">
+				<reportElement uuid="07a735d4-b5a1-4657-8d96-904364422795" mode="Transparent" x="247" y="0" width="239" height="20" forecolor="#000000" backcolor="#FFFFFF">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -261,7 +261,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="e99e5c3c-3d6b-424a-b9f6-62d26870f910" mode="Transparent" x="416" y="-1" width="175" height="20" forecolor="#000000" backcolor="#FFFFFF">
+				<reportElement uuid="e99e5c3c-3d6b-424a-b9f6-62d26870f910" mode="Transparent" x="488" y="-1" width="160" height="20" forecolor="#000000" backcolor="#FFFFFF">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -279,48 +279,60 @@ WHERE
 				</textElement>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="270a3457-08bc-4754-9224-9d03a685426e" mode="Transparent" x="98" y="0" width="148" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "PDF"]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{facility}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<summary>
 		<band height="78">
 			<printWhenExpression><![CDATA[$P{SHOW_SUMMARY} == "Y"]]></printWhenExpression>
 			<staticText>
-				<reportElement uuid="cf81ba65-a8a9-4f37-bd20-a76e1a266c5b" x="495" y="4" width="130" height="21">
+				<reportElement uuid="cf81ba65-a8a9-4f37-bd20-a76e1a266c5b" x="490" y="4" width="130" height="21">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				</reportElement>
 				<textElement/>
 				<text><![CDATA[Stockedout facilities]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="3370c62c-7bd0-4de6-a17e-2cecf6a07ee3" x="495" y="27" width="130" height="20">
+				<reportElement uuid="3370c62c-7bd0-4de6-a17e-2cecf6a07ee3" x="490" y="27" width="130" height="20">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				</reportElement>
 				<textElement/>
 				<text><![CDATA[Total facilities]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="941cb60f-9901-4639-b87c-e41effd59267" x="495" y="49" width="130" height="20">
+				<reportElement uuid="941cb60f-9901-4639-b87c-e41effd59267" x="490" y="49" width="130" height="20">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				</reportElement>
 				<textElement/>
 				<text><![CDATA[% stocked out]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="26765415-03e2-43bb-b1f3-45ba4252a7eb" x="635" y="4" width="60" height="18">
+				<reportElement uuid="26765415-03e2-43bb-b1f3-45ba4252a7eb" x="624" y="4" width="60" height="18">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$P{TOTAL_STOCKEDOUT}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="a948b9dd-fa3c-40c1-a6cd-f509ef1cfc68" x="635" y="27" width="60" height="18">
+				<reportElement uuid="a948b9dd-fa3c-40c1-a6cd-f509ef1cfc68" x="624" y="27" width="60" height="18">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$P{TOTAL_FACILITIES}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="92cb6edc-592f-429b-bd78-762dd299eb78" x="635" y="49" width="60" height="18">
+				<reportElement uuid="92cb6edc-592f-429b-bd78-762dd299eb78" x="624" y="49" width="60" height="18">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right"/>
