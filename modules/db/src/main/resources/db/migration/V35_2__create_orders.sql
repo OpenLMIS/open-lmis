@@ -3,7 +3,7 @@
 
 CREATE TABLE orders (
   id           SERIAL PRIMARY KEY,
-  rnrId        INTEGER     NOT NULL REFERENCES requisitions (id),
+  rnrId        INTEGER     NOT NULL UNIQUE REFERENCES requisitions (id),
   shipmentId   INTEGER REFERENCES shipment_file_info (id),
   status       VARCHAR(20) NOT NULL,
   supplyLineId INTEGER     NOT NULL REFERENCES supply_lines (id),

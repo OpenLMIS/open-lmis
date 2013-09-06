@@ -6,10 +6,12 @@
 
 package org.openlmis.order.repository;
 
+import org.openlmis.core.exception.DataException;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.repository.mapper.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,7 +23,11 @@ public class OrderRepository {
   private OrderMapper orderMapper;
 
   public void save(Order order) {
-    orderMapper.insert(order);
+    try {
+      orderMapper.insert(order);
+    } catch (DuplicateKeyException dke) {
+      throw new DataException("msg.rnr.already.converted.to.order");
+    }
   }
 
   public List<Order> getOrders() {

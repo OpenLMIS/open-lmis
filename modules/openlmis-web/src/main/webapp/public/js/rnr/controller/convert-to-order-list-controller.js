@@ -66,24 +66,35 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
     showConfirmModal();
   };
 
+  var fetchPendingRequisitions = function () {
+    RequisitionForConvertToOrder.get({}, function (data) {
+      $scope.requisitions = data.rnr_list;
+      $scope.selectedItems.length = 0;
+      $scope.filterRequisitions();
+    });
+  };
+
   var convert = function () {
     var successHandler = function () {
-      RequisitionForConvertToOrder.get({}, function (data) {
-        $scope.requisitions = data.rnr_list;
-        $scope.selectedItems.length = 0;
-        $scope.filterRequisitions();
-      });
-
+      fetchPendingRequisitions();
       $scope.message = "msg.rnr.converted.to.order";
       $scope.error = "";
+
     };
 
-    var errorHandler = function () {
-      $scope.error = messageService.get("msg.error.occurred");
+    var errorHandler = function (response) {
+      $scope,message= "";
+      if (response.data.error) {
+        $scope.error = response.data.error;
+      } else {
+        $scope.error = "msg.error.occurred";
+      }
+
+      fetchPendingRequisitions();
     };
 
     Orders.post({}, $scope.gridOptions.selectedItems, successHandler, errorHandler);
-  }
+  };
 
   function contains(string, query) {
     return string.toLowerCase().indexOf(query.toLowerCase()) != -1;
