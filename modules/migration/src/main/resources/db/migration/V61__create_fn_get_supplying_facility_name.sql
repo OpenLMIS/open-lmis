@@ -2,10 +2,8 @@
 /*
 2013-09-05 - change incoming agrument from requisitions.supplylineid to requisitions.supervisorynodeid
 ??? Muhammad Ahmed - created
- 
 */
-DROP FUNCTION fn_get_supplying_facility_name(integer);
-
+DROP FUNCTION IF EXISTS fn_get_supplying_facility_name(integer);
 CREATE OR REPLACE FUNCTION fn_get_supplying_facility_name(v_supervisorynode_id integer)
   RETURNS character varying AS
 $BODY$

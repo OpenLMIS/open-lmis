@@ -1,4 +1,10 @@
+/*
 
+2013-09-05 - recreated to new name - older versions of this wiew will be removed
+
+??? Muhammad Ahmed - created
+
+*/
 DROP VIEW IF EXISTS vw_requisition_detail;
 
 CREATE OR REPLACE VIEW vw_requisition_detail AS 
@@ -40,6 +46,7 @@ requisition_line_items.packsize,
 requisition_line_items.fullsupply,
 facilities.id AS facility_id,
 requisitions.id AS req_id,
+requisitions.status req_status,
 requisition_line_items.id AS req_line_id,
 geographic_zones.id AS zone_id,
 geographic_zones.name AS region,
@@ -65,4 +72,3 @@ INNER JOIN product_forms ON product_forms.id = products.formid;
 
 ALTER TABLE vw_requisition_detail
   OWNER TO postgres;
-
