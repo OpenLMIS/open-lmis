@@ -182,9 +182,7 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
 }
 
 DistributionController.resolve = {
-  deliveryZones: function (UserDeliveryZones, $timeout, $q, $window) {
-
-    if (!navigator.onLine) $window.location = '/public/pages/logistics/distribution/offline.html#/list';
+  deliveryZones: function (UserDeliveryZones, $timeout, $q) {
 
     var deferred = $q.defer();
     $timeout(function () {
