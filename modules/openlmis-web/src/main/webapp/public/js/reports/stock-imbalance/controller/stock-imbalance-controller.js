@@ -80,6 +80,8 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
     Products.get(function (data) {
         $scope.products = data.productList;
         $scope.products.unshift({'name': '-- All Products --', 'id':'All'});
+        var ind_prod = $scope.IndicatorProductsDescription;
+        $scope.products.unshift({'name': '-- '.concat(ind_prod).concat(' --'), 'id':'-1'});
 
     });
 
@@ -139,6 +141,11 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
             $scope.filterObject.productCategoryId = -1;
         } else if (selection != undefined || selection == "") {
             $scope.filterObject.productCategoryId = selection;
+            $.each($scope.productCategories, function(item, idx){
+                if(idx.id == selection){
+                    $scope.filterObject.productCategory = idx.name;
+                }
+            })
         } else {
             $scope.filterObject.productCategoryId = 0;
         }
@@ -150,6 +157,8 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         ProductsByCategory.get({category: $scope.filterObject.productCategoryId}, function (data) {
             $scope.products = data.productList;
             $scope.products.unshift({'name': '-- All Products --','id':'All'});
+            var ind_prod = $scope.IndicatorProductsDescription;
+            $scope.products.unshift({'name': '-- '.concat(ind_prod).concat(' --'), 'id':'-1'});
         });
     }
 

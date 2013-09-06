@@ -1,3 +1,10 @@
+/*
+
+2013-09-05 - recreated to new name - older versions of this wiew will be removed
+
+??? Muhammad Ahmed - created
+
+*/
 DROP VIEW IF EXISTS public.vw_requisition_adjustment;
 CREATE VIEW public.vw_requisition_adjustment
 (
@@ -181,3 +188,6 @@ FROM ((((((((((((((((facilities
     ( (vw_program_facility_supplier.supervisory_node_id = requisition_groups.supervisorynodeid
       AND vw_program_facility_supplier.program_id = programs.id  )
     ));
+    
+  ALTER TABLE vw_requisition_adjustment
+  OWNER TO postgres;

@@ -1,7 +1,14 @@
-/*DROP VIEW IF EXISTS vw_supply_status;
+/*
+
+2013-09-05 - changed call agrument for fn_get_supplying_facility_name from requisitions.supplylineid to requisitions.supervisorynodeid. Used V56__create_vw_supply_status_rev_5.
+??? Issa Fikadu - ???
+??? Muhammad Ahmed - created
+ 
+*/
+DROP VIEW IF EXISTS vw_supply_status;
 
 CREATE OR REPLACE VIEW vw_supply_status AS
- SELECT requisition_line_items.id AS li_id,
+SELECT requisition_line_items.id AS li_id,
     requisition_line_items.rnrid AS li_rnrid,
     requisition_line_items.productcode AS li_productcode,
     requisition_line_items.product AS li_product,
@@ -43,14 +50,15 @@ CREATE OR REPLACE VIEW vw_supply_status AS
     products.id AS p_id, products.code AS p_code,
     products.primaryname AS p_primaryname,
     products.displayorder AS p_displayorder,
+    products.tracer AS indicator_product,
     products.description AS p_description, facility_types.name AS facility_type_name,
-    facility_types.id AS ft_id, facility_types.code AS ft_code,
+    facility_types.id AS ft_id, facility_types.code AS ft_code,facility_types.nominalmaxmonth AS ft_nominalmaxmonth, facility_types.nominaleop AS ft_nominaleop,
     facilities.id AS f_id, facilities.code AS f_code, facilities.name AS facility,
+    fn_get_supplying_facility_name(requisitions.supervisorynodeid) AS supplyingfacility,
     facilities.geographiczoneid AS f_zoneid,
     facility_approved_products.maxmonthsofstock AS fp_maxmonthsofstock,
     facility_approved_products.minmonthsofstock AS fp_minmonthsofstock,
     facility_approved_products.eop AS fp_eop, requisitions.status AS r_status,
-    requisitions.supplyingfacilityid AS r_supplyingfacilityid,
     requisitions.supervisorynodeid, processing_schedules.id AS ps_id,
     processing_periods.id AS pp_id,
     requisition_group_members.requisitiongroupid AS rgm_id
@@ -70,5 +78,3 @@ CREATE OR REPLACE VIEW vw_supply_status AS
 
 ALTER TABLE vw_supply_status
   OWNER TO postgres;
-
-  */

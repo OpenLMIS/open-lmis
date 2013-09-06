@@ -8,9 +8,11 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.StockImbalanceReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.filter.StockImbalanceReportFilter;
+import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +29,12 @@ import java.util.Map;
 public class StockImbalanceReportDataProvider extends ReportDataProvider {
 
     private StockImbalanceReportMapper reportMapper;
+    private ConfigurationSettingService configurationService;
 
     @Autowired
-    public StockImbalanceReportDataProvider(StockImbalanceReportMapper mapper) {
+    public StockImbalanceReportDataProvider(StockImbalanceReportMapper mapper, ConfigurationSettingService configurationService) {
         this.reportMapper = mapper;
+        this.configurationService = configurationService;
     }
 
     @Override
@@ -73,11 +77,22 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
             stockImbalanceReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
             stockImbalanceReportFilter.setProductCategory( (filterCriteria.get("productCategory") == null || filterCriteria.get("productCategory")[0].equals("")) ? "ALL Product Categories" : filterCriteria.get("productCategory")[0]);
             stockImbalanceReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
-            stockImbalanceReportFilter.setProduct( (filterCriteria.get("product") == null || filterCriteria.get("productId")[0].equals("")) ? "ALL Products" : (filterCriteria.get("productId")[0].equals("-1") ? "All Indicator Products" : filterCriteria.get("product")[0]));
+
+            if(stockImbalanceReportFilter.getProductId() == 0)
+                stockImbalanceReportFilter.setProduct("All Products");
+            else if(stockImbalanceReportFilter.getProductId() == -1)//Indicator Products
+                stockImbalanceReportFilter.setProduct(configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS).isEmpty() ? "Indicator Products" : configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS));
+            else
+                stockImbalanceReportFilter.setProduct(filterCriteria.get("product")[0]);
 
             stockImbalanceReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
             stockImbalanceReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0]));
-            stockImbalanceReportFilter.setProgram(filterCriteria.get("program") == null ? "" : filterCriteria.get("program")[0]);
+
+            if(stockImbalanceReportFilter.getProgramId() == 0 || stockImbalanceReportFilter.getProgramId() == -1)
+                stockImbalanceReportFilter.setProgram("All Programs");
+            else
+                stockImbalanceReportFilter.setProgram(filterCriteria.get("program")[0]);
+
             stockImbalanceReportFilter.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0]));
             stockImbalanceReportFilter.setSchedule(filterCriteria.get("schedule") == null ? "" : filterCriteria.get("schedule")[0]);
             stockImbalanceReportFilter.setPeriod(filterCriteria.get("period") == null ? "" : filterCriteria.get("period")[0]);

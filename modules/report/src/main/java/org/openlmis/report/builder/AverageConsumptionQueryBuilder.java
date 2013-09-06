@@ -44,6 +44,7 @@ public class AverageConsumptionQueryBuilder {
         LEFT_OUTER_JOIN("supply_lines sl on sl.supervisorynodeid = r.supervisorynodeid and r.programid = sl.programid");
         LEFT_OUTER_JOIN("facilities s on s.id = sl.supplyingfacilityid");
 
+        WHERE("r.status in ('APPROVED', 'RELEASED')");
         if(filter != null){
             if (filter.getFacilityTypeId() != 0) {
                 WHERE("ft.id = #{filterCriteria.facilityTypeId}");
@@ -72,7 +73,10 @@ public class AverageConsumptionQueryBuilder {
         }
         GROUP_BY("li.product, li.productcategory,  f.name, ft.name, li.productcode");
         ORDER_BY( QueryHelpers.getSortOrder(params, "ft.name, f.name , li.productcategory, li.product, li.productcode"));
-        return SQL();
+
+        // copy the sql over to a variable, this makes the debugging much more possible.
+        String sql = SQL();
+        return sql;
     }
 
 

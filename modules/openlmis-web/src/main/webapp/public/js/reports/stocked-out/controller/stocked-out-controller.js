@@ -6,7 +6,7 @@ function StockedOutController($scope, StockedOutReport, ReportPrograms, AllRepor
 
 
     $scope.defaultFlag = true;
-    $scope.reporting = "quarterly";
+    $scope.reporting = "monthly";
 
     AllReportPeriods.get(function (data) {
         $scope.periods = data.periods;
@@ -49,7 +49,7 @@ function StockedOutController($scope, StockedOutReport, ReportPrograms, AllRepor
         months[11] = "Dec";
 
         var current_date = new Date();
-        month_value = current_date.getMonth() - 6;
+        month_value = current_date.getMonth();
         day_value = current_date.getDate();
         year_value = current_date.getFullYear();
 

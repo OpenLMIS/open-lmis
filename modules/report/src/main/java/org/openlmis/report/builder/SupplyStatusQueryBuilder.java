@@ -36,7 +36,7 @@ public class SupplyStatusQueryBuilder {
     }
 
     private static String writePredicates(Map params){
-        String predicate = "WHERE r_status = 'RELEASED' ";
+        String predicate = "WHERE r_status in ('APPROVED', 'RELEASED') ";
         String facilityTypeId =  params.get("facilityTypeId") == null ? null :((String[])params.get("facilityTypeId"))[0];
         String facilityId = params.get("facilityId") == null ? null : ((String[])params.get("facilityId"))[0];
         String period =    params.get("periodId") == null ? null : ((String[])params.get("periodId"))[0];
