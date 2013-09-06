@@ -41,7 +41,7 @@ public class StockImbalanceQueryBuilder {
         if(filter != null){
 
             if (filter.getProgramId() != 0 && filter.getProgramId() != -1) {
-                WHERE("facilitytypeid = #{filterCriteria.facilityTypeId}");
+                WHERE("programid = #{filterCriteria.programId}");
             }
             if (filter.getFacilityTypeId() != 0 && filter.getFacilityTypeId() != -1) {
                 WHERE("facilitytypeid = #{filterCriteria.facilityTypeId}");

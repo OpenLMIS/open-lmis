@@ -141,6 +141,11 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
             $scope.filterObject.productCategoryId = -1;
         } else if (selection != undefined || selection == "") {
             $scope.filterObject.productCategoryId = selection;
+            $.each($scope.productCategories, function(item, idx){
+                if(idx.id == selection){
+                    $scope.filterObject.productCategory = idx.name;
+                }
+            })
         } else {
             $scope.filterObject.productCategoryId = 0;
         }

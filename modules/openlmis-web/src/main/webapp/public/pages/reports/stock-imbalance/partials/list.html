@@ -139,8 +139,9 @@
                                     <label class="labels">Product<span class="label-required"> *</span></label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:300px;" name="product" id="product" ng-model="product" ng-options="option.id as option.name for option in products">
-
+                                        <select ui-select2 style="width:200px;" name="product"  ng-model="product" >
+                                            <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>
+                                            <!-- <option value=" {{IndicatorProductsDescription}}">-- {{IndicatorProductsDescription}} --</option>-->
                                         </select>
                                     </div>
                                 </div>
@@ -149,7 +150,7 @@
 
                                     <div class="form-field">
                                         <select ui-select2 style="width:300px;" name="facilityTypeElement"   ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
-                                            <option value="">All Facility Types</option>
+                                            <option value="">-- All Facility Types --</option>
                                         </select>
                                     </div>
                                 </div>
@@ -165,7 +166,7 @@
 
                                     <div class="form-fields">
                                         <select ui-select2 style="width:300px;" name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
-                                            <option value="">All Requisition Groups</option>
+                                            <option value="">-- All Requisition Groups --</option>
                                         </select>
                                     </div>
                                 </div>
