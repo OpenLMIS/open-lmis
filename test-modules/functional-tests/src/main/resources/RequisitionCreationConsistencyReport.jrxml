@@ -231,7 +231,7 @@ ORDER BY f.code, p.name, sn.code]]>
 				<text><![CDATA[Facility Code - Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="a3153510-d287-46ad-835a-df817aa47786" x="238" y="0" width="90" height="20"/>
+				<reportElement uuid="a3153510-d287-46ad-835a-df817aa47786" x="238" y="0" width="89" height="20"/>
 				<textElement>
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
