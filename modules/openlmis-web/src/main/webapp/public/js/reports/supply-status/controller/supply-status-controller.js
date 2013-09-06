@@ -78,7 +78,7 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
 
     AllFacilites.get(function(data){
         $scope.allFacilities = data.allFacilities;
-        $scope.allFacilities.unshift({name:'-- All Facilities --',id:''});
+        $scope.allFacilities.unshift({name:'-- Select a Facility --',id:''});
     });
 
     ReportSchedules.get(function(data){
@@ -142,7 +142,7 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
     $scope.ChangeFacility = function(){
         GetFacilityByFacilityType.get({ facilityTypeId : $scope.filterObject.facilityTypeId },function(data) {
             $scope.allFacilities =  data.facilities;
-            $scope.allFacilities.unshift({name:'-- All Facilities --',id:''});
+            $scope.allFacilities.unshift({name:'-- Select a Facility --',id:''});
         });
     };
 

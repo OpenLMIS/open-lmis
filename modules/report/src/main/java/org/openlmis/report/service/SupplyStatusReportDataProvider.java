@@ -59,25 +59,11 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
 
     @Override
     public ReportData getReportFilterData(Map<String, String[]> params) {
-        String facilityTypeId =  params.get("facilityTypeId")[0];
-        String periodId = params.get("periodId")[0];
-        String facilityType =  "";
         String period = "";
         String productId = params.get("productId")[0];
         String product = params.get("product")[0];
         String program = params.get("program")[0];
         String schedule = params.get("schedule")[0];
-        String facilityId = params.get("facilityId")[0];
-        String facility = params.get("facility")[0];
-        String zoneId = params.get("zoneId")[0];
-        String zone = params.get("zone")[0];
-
-        if(facilityTypeId != null && !facilityTypeId.isEmpty()){
-            if(facilityTypeId.equals("-1") || facilityTypeId.equals("0"))
-                facilityType = "All Facility Types";
-            else
-                facilityType = params.get("facilityType")[0];
-        }
 
         period = params.get("period")[0];
 
@@ -90,19 +76,11 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
                 product = "All Products";
 
         }
-        if(facilityId != null && facilityId.isEmpty()){
-            facility = "All Facilities";
-        }
-        if(zoneId != null && (zoneId.isEmpty() || zoneId.equals("0"))){
-            zone = "All Zones";
-        }
-        final String finalFacilityType = "Facility Type : " + facilityType;
+
         final String finalPeriod = "Report Period : " + (period.isEmpty() ? " - " : period);
         final String finalProgram = "Program : " + (program.isEmpty() ? " - " : program);
         final String finalProduct = "Product : " + product;
         final String finalSchedule = "Schedule : " + schedule;
-        final String finalFacility = "Facility : " + (facility.isEmpty() ? " - " : facility);
-        final String finalZone = "Zone : " + zone;
 
         return new ReportData() {
            @Override
@@ -111,10 +89,7 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
                reportingFilter.append(finalPeriod).append("\n").
                        append(finalSchedule).append("\n").
                        append(finalProgram).append("\n").
-                       append(finalFacilityType).append("\n").
-                       append(finalFacility).append("\n").
-                       append(finalProduct).append("\n").
-                       append(finalZone);
+                       append(finalProduct).append("\n");
                return reportingFilter.toString();
            }
        };
