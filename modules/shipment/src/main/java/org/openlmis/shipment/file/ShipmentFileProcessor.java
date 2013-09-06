@@ -7,7 +7,11 @@
 package org.openlmis.shipment.file;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.Predicate;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.db.service.DbService;
+import org.openlmis.order.dto.ShipmentLineItemDTO;
+import org.openlmis.shipment.ShipmentLineItemTransformer;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.domain.ShipmentLineItem;
@@ -27,8 +31,10 @@ import org.supercsv.io.ICsvListReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.List;
 
+import static org.apache.commons.collections.CollectionUtils.filter;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
 @MessageEndpoint
@@ -54,37 +60,71 @@ public class ShipmentFileProcessor {
   @Autowired
   private ShipmentService shipmentService;
 
+  @Autowired
+  private ShipmentLineItemTransformer transformer;
 
-  public void process(Message message) throws IOException {
+
+  public void process(Message message) throws IOException, NoSuchFieldException, IllegalAccessException {
     File shipmentFile = (File) message.getPayload();
 
     ShipmentFileTemplate shipmentFileTemplate = shipmentFileTemplateService.get();
+
     List<ShipmentFileColumn> shipmentFileColumns = shipmentFileTemplate.getShipmentFileColumns();
+
+    filter(shipmentFileColumns, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((ShipmentFileColumn) o).getInclude();
+      }
+    });
 
     int maxPosition = findMaximumPosition(shipmentFileColumns);
 
     try (ICsvListReader listReader = new CsvListReader(new FileReader(shipmentFile), STANDARD_PREFERENCE)) {
 
-      if (shipmentFileTemplate.getShipmentConfiguration().isHeaderInFile()) {
-        listReader.getHeader(true);
-      }
+      ignoreFirstLineIfHeadersArePresent(shipmentFileTemplate, listReader);
 
       List<String> fieldsInOneRow;
+
       while ((fieldsInOneRow = listReader.read()) != null) {
         if (fieldsInOneRow.size() < maxPosition) {
           logger.warn("Shipment file should contain at least " + maxPosition + " columns");
+          throw new DataException("mandatory.data.missing");
         } else {
-          ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
-          shipmentService.insertShippedLineItem(shipmentLineItem);
+          ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, shipmentFileColumns);
+          ShipmentLineItem lineItem = transformer.transform(dto, null, null);
+          shipmentService.insertShippedLineItem(lineItem);
         }
       }
+    }
+  }
+
+  private ShipmentLineItemDTO populateDTO(List<String> fieldsInOneRow, List<ShipmentFileColumn> shipmentFileColumns)
+    throws NoSuchFieldException, IllegalAccessException {
+
+    ShipmentLineItemDTO dto = new ShipmentLineItemDTO();
+
+    for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
+      Integer position = shipmentFileColumn.getPosition();
+      String name = shipmentFileColumn.getName();
+      Field field = ShipmentLineItemDTO.class.getDeclaredField(name);
+      field.setAccessible(true);
+      field.set(dto, fieldsInOneRow.get(position - 1));
+    }
+    return dto;
+  }
+
+  private void ignoreFirstLineIfHeadersArePresent(ShipmentFileTemplate shipmentFileTemplate,
+                                                  ICsvListReader listReader) throws IOException {
+    if (shipmentFileTemplate.getShipmentConfiguration().isHeaderInFile()) {
+      listReader.getHeader(true);
     }
   }
 
   private int findMaximumPosition(List<ShipmentFileColumn> shipmentFileColumns) {
     int maxPosition = 0;
     for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
-      if (shipmentFileColumn.getInclude() && shipmentFileColumn.getPosition() > maxPosition) {
+      if (shipmentFileColumn.getPosition() > maxPosition) {
         maxPosition = shipmentFileColumn.getPosition();
       }
     }

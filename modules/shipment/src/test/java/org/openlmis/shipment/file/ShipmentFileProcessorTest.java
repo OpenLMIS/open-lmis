@@ -6,13 +6,18 @@
 package org.openlmis.shipment.file;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.db.service.DbService;
+import org.openlmis.order.dto.ShipmentLineItemDTO;
+import org.openlmis.shipment.ShipmentLineItemTransformer;
 import org.openlmis.shipment.domain.ShipmentConfiguration;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileTemplate;
@@ -32,6 +37,7 @@ import org.supercsv.io.CsvListReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -71,9 +77,14 @@ public class ShipmentFileProcessorTest {
   @Mock
   FileInputStream shipmentInputStream;
 
+  @Mock
+  ShipmentLineItemTransformer shipmentLineItemTransformer;
 
   @InjectMocks
   private ShipmentFileProcessor shipmentFileProcessor;
+
+  @Rule
+  public ExpectedException expectException = ExpectedException.none();
 
   ShipmentConfiguration shipmentConfiguration;
 
@@ -105,6 +116,9 @@ public class ShipmentFileProcessorTest {
     whenNew(FileReader.class).withArguments(shipmentFile).thenReturn(mockedFileReader);
     whenNew(CsvListReader.class).withArguments(mockedFileReader, STANDARD_PREFERENCE).thenReturn(mockedCsvListReader);
 
+    expectException.expect(DataException.class);
+    expectException.expectMessage("mandatory.data.missing");
+
     shipmentFileProcessor.process(message);
 
     verify(shipmentService, times(0)).insertShippedLineItem(any(ShipmentLineItem.class));
@@ -113,18 +127,18 @@ public class ShipmentFileProcessorTest {
   @Test
   public void shouldInsertLineItemsIfAllIncludedFieldsArePresent() throws Exception {
 
-    List<ShipmentFileColumn> shipmentFileColumnList = asList(
-      make(a(mandatoryShipmentFileColumn, with(columnPosition, 2))),
-      make(a(defaultShipmentFileColumn, with(columnPosition, 4), with(includeInShipmentFile, false))),
-      make(a(defaultShipmentFileColumn, with(columnPosition, 6), with(includeInShipmentFile, false)))
-    );
+    List<ShipmentFileColumn> shipmentFileColumnList = new ArrayList<ShipmentFileColumn>() {{
+      add(make(a(mandatoryShipmentFileColumn, with(fieldName, "orderId"), with(columnPosition, 2))));
+      add(make(a(defaultShipmentFileColumn, with(columnPosition, 4), with(includeInShipmentFile, false))));
+      add(make(a(defaultShipmentFileColumn, with(columnPosition, 6), with(includeInShipmentFile, false))));
+    }};
 
     ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumnList);
 
     when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
 
     CsvListReader mockedCsvListReader = mock(CsvListReader.class);
-    when(mockedCsvListReader.read()).thenReturn(asList("field1", "field2")).thenReturn(null);
+    when(mockedCsvListReader.read()).thenReturn(asList("", "field2")).thenReturn(null);
     FileReader mockedFileReader = mock(FileReader.class);
 
     whenNew(FileReader.class).withArguments(shipmentFile).thenReturn(mockedFileReader);
@@ -162,4 +176,40 @@ public class ShipmentFileProcessorTest {
 
   }
 
+  @Test
+  public void shouldInsertLineItemWithAllFieldsPresentInCsv() throws Exception {
+    List<ShipmentFileColumn> shipmentFileColumnList = asList(
+      make(a(mandatoryShipmentFileColumn,
+        with(columnPosition, 2),
+        with(fieldName, "orderId"),
+        with(dataFieldLabel, "label.order.id")
+      )),
+      make(a(mandatoryShipmentFileColumn,
+        with(columnPosition, 1),
+        with(fieldName, "productCode"),
+        with(dataFieldLabel, "label.shipment.field.label")
+      ))
+    );
+
+    ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumnList);
+
+    when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
+
+    CsvListReader mockedCsvListReader = mock(CsvListReader.class);
+    when(mockedCsvListReader.read()).thenReturn(asList("P_CODE_123", "123456")).thenReturn(null);
+    FileReader mockedFileReader = mock(FileReader.class);
+
+    whenNew(FileReader.class).withArguments(shipmentFile).thenReturn(mockedFileReader);
+    whenNew(CsvListReader.class).withArguments(mockedFileReader, STANDARD_PREFERENCE).thenReturn(mockedCsvListReader);
+    ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO();
+    shipmentLineItemDTO.setProductCode("P_CODE_123");
+    shipmentLineItemDTO.setOrderId("123456");
+    ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
+    when(shipmentLineItemTransformer.transform(shipmentLineItemDTO, null, null)).thenReturn(shipmentLineItem);
+
+    shipmentFileProcessor.process(message);
+
+    verify(shipmentService).insertShippedLineItem(shipmentLineItem);
+
+  }
 }

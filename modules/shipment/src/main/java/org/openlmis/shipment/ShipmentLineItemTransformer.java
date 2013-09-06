@@ -1,16 +1,16 @@
 /*
- * CShipment © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 package org.openlmis.shipment;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.order.dto.ShipmentLineItemDTO;
 import org.openlmis.shipment.domain.ShipmentLineItem;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -19,25 +19,21 @@ import java.text.SimpleDateFormat;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Component
 public class ShipmentLineItemTransformer {
 
-  private String orderId;
-  private String productCode;
-  private String quantityShipped;
-  private String cost;
-  private String packedDate;
-  private String shippedDate;
+  public ShipmentLineItem transform(ShipmentLineItemDTO shipmentLineItemDTO,
+                                    String packedDateFormat,
+                                    String shippedDateFormat) {
 
-  public ShipmentLineItem transform(String packedDateFormat, String shippedDateFormat) {
-    checkMandatory();
+
+    checkMandatory(shipmentLineItemDTO);
 
     ShipmentLineItem lineItem = new ShipmentLineItem();
 
     try {
-      setMandatoryFields(lineItem);
-      setOptionalFields(lineItem, packedDateFormat, shippedDateFormat);
+      setMandatoryFields(lineItem, shipmentLineItemDTO);
+      setOptionalFields(lineItem, shipmentLineItemDTO, packedDateFormat, shippedDateFormat);
     } catch (Exception e) {
       throw new DataException("wrong.data.type");
     }
@@ -45,32 +41,36 @@ public class ShipmentLineItemTransformer {
     return lineItem;
   }
 
-  private void setOptionalFields(ShipmentLineItem lineItem, String packedDateFormat, String shippedDateFormat)
+  private void setOptionalFields(ShipmentLineItem lineItem, ShipmentLineItemDTO dto,
+                                 String packedDateFormat, String shippedDateFormat)
     throws ParseException {
 
-    if (!isBlank(cost)) {
-      lineItem.setCost(new BigDecimal(cost.trim()));
+    if (!isBlank(dto.getCost())) {
+      lineItem.setCost(new BigDecimal(dto.getCost().trim()));
     }
 
-    if (!isBlank(packedDate)) {
-      lineItem.setPackedDate(new SimpleDateFormat(packedDateFormat).parse(packedDate.trim()));
+    if (!isBlank(dto.getPackedDate())) {
+      lineItem.setPackedDate(new SimpleDateFormat(packedDateFormat).parse(dto.getPackedDate().trim()));
     }
 
-    if (!isBlank(shippedDate)) {
-      lineItem.setShippedDate(new SimpleDateFormat(shippedDateFormat).parse(shippedDate.trim()));
+    if (!isBlank(dto.getShippedDate())) {
+      lineItem.setShippedDate(new SimpleDateFormat(shippedDateFormat).parse(dto.getShippedDate().trim()));
     }
 
   }
 
-  private void setMandatoryFields(ShipmentLineItem lineItem) {
-    lineItem.setProductCode(productCode.trim());
-    lineItem.setOrderId(Long.valueOf(orderId.trim()));
-    lineItem.setQuantityShipped(Integer.valueOf(quantityShipped.trim()));
+  private void setMandatoryFields(ShipmentLineItem lineItem, ShipmentLineItemDTO shipmentLineItemDTO) {
 
+    lineItem.setProductCode(shipmentLineItemDTO.getProductCode().trim());
+    lineItem.setOrderId(Long.valueOf(shipmentLineItemDTO.getOrderId().trim()));
+    lineItem.setQuantityShipped(Integer.valueOf(shipmentLineItemDTO.getQuantityShipped().trim()));
   }
 
-  private void checkMandatory() {
-    if (isBlank(productCode) || isBlank(orderId) || isBlank(quantityShipped)) {
+  private void checkMandatory(ShipmentLineItemDTO shipmentLineItemDTO) {
+    if (isBlank(shipmentLineItemDTO.getProductCode()) ||
+      isBlank(shipmentLineItemDTO.getOrderId()) ||
+      isBlank(shipmentLineItemDTO.getQuantityShipped())) {
+
       throw new DataException("mandatory.field.missing");
     }
   }
