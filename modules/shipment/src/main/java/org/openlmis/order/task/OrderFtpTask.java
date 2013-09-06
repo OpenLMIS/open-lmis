@@ -32,7 +32,7 @@ import static org.openlmis.order.domain.OrderStatus.RELEASED;
 import static org.openlmis.order.domain.OrderStatus.TRANSFER_FAILED;
 
 @Component
-public class OrderFtpTask1{
+public class OrderFtpTask {
 
   @Autowired
   private SupplyLineService supplyLineService;
