@@ -120,7 +120,7 @@ task cleanMinJs(type: Delete) {
     delete 'src/main/webapp/public/minJs/'
 }
 
-war.dependsOn uglify
+war
 
 war.doLast {
     tasks.cleanMinJs.execute()
