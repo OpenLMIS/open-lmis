@@ -7,7 +7,6 @@
 package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public abstract class Page {
@@ -23,5 +22,6 @@ public abstract class Page {
             locator.sendKeys("\u0008");
         locator.sendKeys(value);
     }
+
 
 }

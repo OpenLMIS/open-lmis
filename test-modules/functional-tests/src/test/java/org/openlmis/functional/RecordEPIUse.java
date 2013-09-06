@@ -26,10 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
-
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -68,7 +64,7 @@ public class RecordEPIUse extends TestCaseHelper {
     public void verifySavedEPIValues(DataTable tableData) {
         new RefrigeratorPage(testWebDriver).navigateToRefrigeratorTab();
         EPIUse epiUse = new EPIUse(testWebDriver);
-        epiUse.navigateToEPISUse();
+        epiUse.navigate();
         Map<String, String> epiData = tableData.asMaps().get(0);
 
         epiUse.verifyData(epiData);
@@ -83,13 +79,13 @@ public class RecordEPIUse extends TestCaseHelper {
     @Then("^Navigate to EPI tab$")
     public void navigateToEpiTab() throws IOException {
         EPIUse epiUse = new EPIUse(testWebDriver);
-        epiUse.navigateToEPISUse();
+        epiUse.navigate();
     }
 
     @Then("^Verify indicator should be \"([^\"]*)\"$")
     public void shouldVerifyIndicatorColor(String color) throws IOException, SQLException {
         EPIUse epiUse = new EPIUse(testWebDriver);
-        epiUse.verifyOverallEPIUseIcon(color);
+        epiUse.verifyIndicator(color);
     }
 
     @When("^I enter EPI end of month as \"([^\"]*)\"")
@@ -139,12 +135,12 @@ public class RecordEPIUse extends TestCaseHelper {
         FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
         facilityListPage.selectFacility("F10");
         EPIUse epiUse = new EPIUse(testWebDriver);
-        epiUse.navigateToEPISUse();
+        epiUse.navigate();
         epiUse.verifyProductGroup("PG3-Name",1);
-        epiUse.verifyOverallEPIUseIcon("RED");
+        epiUse.verifyIndicator("RED");
 
         epiUse.enterValueInStockAtFirstOfMonth("10",1);
-        epiUse.verifyOverallEPIUseIcon("AMBER");
+        epiUse.verifyIndicator("AMBER");
         epiUse.enterValueInReceived("20", 1);
         epiUse.enterValueInDistributed("30", 1);
         epiUse.enterValueInLoss("40", 1);
@@ -154,7 +150,7 @@ public class RecordEPIUse extends TestCaseHelper {
 
         RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
         refrigeratorPage.navigateToRefrigeratorTab();
-        epiUse.navigateToEPISUse();
+        epiUse.navigate();
 
         epiUse.verifyTotal("30",1);
         epiUse.verifyStockAtFirstOfMonth("10", 1);
@@ -172,7 +168,7 @@ public class RecordEPIUse extends TestCaseHelper {
         epiUse.checkUncheckExpirationDateNotRecorded(1);
 
         refrigeratorPage.navigateToRefrigeratorTab();
-        epiUse.navigateToEPISUse();
+        epiUse.navigate();
 
         epiUse.verifyStockAtFirstOfMonthStatus(false,1);
         epiUse.verifyReceivedStatus(false,1);
@@ -196,7 +192,7 @@ public class RecordEPIUse extends TestCaseHelper {
         epiUse.enterValueInExpirationDate("11/2012",1);
 
         refrigeratorPage.navigateToRefrigeratorTab();
-        epiUse.navigateToEPISUse();
+        epiUse.navigate();
         epiUse.checkApplyNRToAllFields(false);
         epiUse.verifyTotal("50",1);
 
@@ -213,11 +209,18 @@ public class RecordEPIUse extends TestCaseHelper {
         epiUse.verifyLossStatus(true, 1);
         epiUse.verifyStockAtEndOfMonthStatus(true, 1);
         epiUse.verifyExpirationDateStatus(true, 1);
-        epiUse.verifyOverallEPIUseIcon("GREEN");
+        epiUse.verifyIndicator("GREEN");
+        epiUse.verifyStockAtFirstOfMonthStatus(true,1);
+        epiUse.verifyReceivedStatus(true,1);
+        epiUse.verifyDistributedStatus(true,1);
+        epiUse.verifyLossStatus(true,1);
+        epiUse.verifyStockAtEndOfMonthStatus(true,1);
+        epiUse.verifyExpirationDateStatus(true,1);
+        epiUse.verifyIndicator("GREEN");
 
         epiUse.checkApplyNRToAllFields(true);
         refrigeratorPage.navigateToRefrigeratorTab();
-        epiUse.navigateToEPISUse();
+        epiUse.navigate();
 
         epiUse.verifyStockAtFirstOfMonthStatus(false,1);
         epiUse.verifyReceivedStatus(false,1);

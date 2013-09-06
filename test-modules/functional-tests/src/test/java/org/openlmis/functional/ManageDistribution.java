@@ -26,6 +26,7 @@ import org.testng.annotations.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +48,11 @@ public class ManageDistribution extends TestCaseHelper {
     deliveryZoneNameFirst, deliveryZoneNameSecond,
     facilityCodeFirst, facilityCodeSecond,
     programFirst, programSecond, schedule;
+
+  private HashMap<String, DistributionTab> tabMap = new HashMap<String, DistributionTab>() {{
+    put("epi use", new EPIUse(testWebDriver));
+    put("general observation", new GeneralObservation(testWebDriver));
+  }};
 
   @BeforeMethod(groups = "distribution")
   @Before
@@ -82,6 +88,22 @@ public class ManageDistribution extends TestCaseHelper {
     updateProductWithGroup(product, productGroup);
   }
 
+  @When("^I Enter \"([^\"]*)\" values:$")
+  public void enterEPIValues(String tabName, DataTable tableData) {
+    Map<String, String> data = tableData.asMaps().get(0);
+
+    tabMap.get(tabName).enterValues(data);
+  }
+
+  @When("^I verify saved \"([^\"]*)\" values:$")
+  public void verifySavedEPIValues(String tabName, DataTable tableData) {
+    new RefrigeratorPage(testWebDriver).navigateToRefrigeratorTab();
+    DistributionTab tab = tabMap.get(tabName);
+    tab.navigate();
+    Map<String, String> data = tableData.asMaps().get(0);
+
+    tab.verifyData(data);
+  }
 
   @Then("^I should see program \"([^\"]*)\"$")
   public void verifyProgram(String programs) throws IOException, SQLException {
@@ -190,7 +212,16 @@ public class ManageDistribution extends TestCaseHelper {
     facilityListPage.verifyNoFacilitySelected();
   }
 
+  @Then("^I navigate to general observations tab$")
+  public void navigateToGeneralObservationsTab() throws IOException {
+    GeneralObservation observation = new GeneralObservation(testWebDriver);
+    observation.navigate();
+  }
 
+  @Then("^Verify \"([^\"]*)\" indicator should be \"([^\"]*)\"$")
+  public void shouldVerifyIndicatorColor(String tabName, String color) throws IOException, SQLException {
+    tabMap.get(tabName).verifyIndicator(color);
+  }
 
   @And("^I should see \"([^\"]*)\" facilities that support the program \"([^\"]*)\" and delivery zone \"([^\"]*)\"$")
   public void shouldSeeNoFacilitySelected(String active, String program, String deliveryZone) throws IOException, SQLException {

@@ -61,6 +61,6 @@ function EpiUse(epiUse) {
 
     _this.status = statusClass || complete;
 
-    return statusClass;
+    return _this.status;
   }
 }

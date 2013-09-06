@@ -10,8 +10,6 @@ import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.util.Map;
 
@@ -19,7 +17,7 @@ import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
-public class EPIUse extends Page {
+public class EPIUse extends DistributionTab {
 
   @FindBy(how = XPATH, using = "//div[1]/div/div/ng-include/div/ul/li[4]/a/span[2]")
   private static WebElement epiUseTab;
@@ -38,11 +36,24 @@ public class EPIUse extends Page {
 
   public EPIUse(TestWebDriver driver) {
     super(driver);
-    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
-    testWebDriver.setImplicitWait(10);
   }
 
-  public void navigateToEPISUse() {
+  @Override
+  public void verifyIndicator(String color) {
+    verifyOverallIndicator(overallEPIUseIcon, color);
+  }
+
+  @Override
+  public void enterValues(Map<String, String> data) {
+    enterValueInDistributed(data.get("distributed"), 1);
+    enterValueInExpirationDate(data.get("expirationDate"), 1);
+    enterValueInLoss(data.get("loss"), 1);
+    enterValueInReceived(data.get("received"), 1);
+    enterValueInStockAtFirstOfMonth(data.get("firstOfMonth"), 1);
+  }
+
+  @Override
+  public void navigate() {
     testWebDriver.waitForElementToAppear(epiUseTab);
     epiUseTab.click();
   }
@@ -107,13 +118,13 @@ public class EPIUse extends Page {
     lossNotRecordedCheckBox.click();
   }
 
-    public void checkApplyNRToAllFields(boolean confirm) {
-        applyNRToAllFieldsCheckbox.click();
-        if (confirm)
-            okButton.click();
-        else
-            cancelButton.click();
-    }
+  public void checkApplyNRToAllFields(boolean confirm) {
+    applyNRToAllFieldsCheckbox.click();
+    if (confirm)
+      okButton.click();
+    else
+      cancelButton.click();
+  }
 
   public void checkUncheckStockAtEndOfMonthNotRecorded(int rownumber) {
     rownumber = rownumber - 1;
@@ -229,19 +240,7 @@ public class EPIUse extends Page {
     assertEquals(total, totalLbl.getText());
   }
 
-  public void verifyOverallEPIUseIcon(String color) {
-    testWebDriver.waitForElementToAppear(overallEPIUseIcon);
-    if (color.toLowerCase().equals("RED".toLowerCase()))
-      color = "rgba(203, 64, 64, 1)";
-    else if (color.toLowerCase().equals("GREEN".toLowerCase()))
-      color = "rgba(82, 168, 30, 1)";
-    else if (color.toLowerCase().equals("AMBER".toLowerCase()))
-      color = "rgba(240, 165, 19, 1)";
-
-    assertEquals(color, overallEPIUseIcon.getCssValue("background-color"));
-
-  }
-
+  @Override
   public void verifyData(Map<String, String> epiData) {
     verifyDistributed(epiData.get("distributed"), 1);
     verifyLoss(epiData.get("loss"), 1);
