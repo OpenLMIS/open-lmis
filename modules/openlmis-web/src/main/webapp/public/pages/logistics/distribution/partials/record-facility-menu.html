@@ -19,7 +19,7 @@
       </a>
     </li>
     <li ng-class="[isSelected('epi-inventory')]" class="is-complete">
-      <a href="">
+      <a href="" ng-click="changeRoute('general-observation')">
         <span class="status-icon"></span>
         <span openlmis-message="label.epi.inventory"></span>
       </a>
@@ -36,8 +36,8 @@
         <span openlmis-message="label.coverage"></span>
       </a>
     </li>
-    <li class="is-empty">
-      <a href="">
+    <li ng-class="[isSelected('general-observation'), distributionData.generalObservation.computeStatus()]">
+      <a href="" ng-click="changeRoute('general-observation')">
         <span class="status-icon"></span>
         <span openlmis-message="label.observations"></span>
       </a>
