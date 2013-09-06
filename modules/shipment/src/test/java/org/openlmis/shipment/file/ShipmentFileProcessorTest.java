@@ -80,6 +80,12 @@ public class ShipmentFileProcessorTest {
   @Mock
   ShipmentLineItemTransformer shipmentLineItemTransformer;
 
+  @Mock
+  FileReader mockedFileReader;
+
+  @Mock
+  CsvListReader mockedCsvListReader;
+
   @InjectMocks
   private ShipmentFileProcessor shipmentFileProcessor;
 
@@ -93,6 +99,9 @@ public class ShipmentFileProcessorTest {
 
     when(message.getPayload()).thenReturn(shipmentFile);
     whenNew(FileInputStream.class).withArguments(shipmentFile).thenReturn(shipmentInputStream);
+    whenNew(FileReader.class).withArguments(shipmentFile).thenReturn(mockedFileReader);
+    whenNew(CsvListReader.class).withArguments(mockedFileReader, STANDARD_PREFERENCE).thenReturn(mockedCsvListReader);
+
     shipmentConfiguration = new ShipmentConfiguration(false);
   }
 
@@ -109,12 +118,7 @@ public class ShipmentFileProcessorTest {
 
     when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
 
-    CsvListReader mockedCsvListReader = mock(CsvListReader.class);
     when(mockedCsvListReader.read()).thenReturn(asList("field1", "field2")).thenReturn(null);
-    FileReader mockedFileReader = mock(FileReader.class);
-
-    whenNew(FileReader.class).withArguments(shipmentFile).thenReturn(mockedFileReader);
-    whenNew(CsvListReader.class).withArguments(mockedFileReader, STANDARD_PREFERENCE).thenReturn(mockedCsvListReader);
 
     expectException.expect(DataException.class);
     expectException.expectMessage("mandatory.data.missing");
@@ -137,12 +141,7 @@ public class ShipmentFileProcessorTest {
 
     when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
 
-    CsvListReader mockedCsvListReader = mock(CsvListReader.class);
     when(mockedCsvListReader.read()).thenReturn(asList("", "field2")).thenReturn(null);
-    FileReader mockedFileReader = mock(FileReader.class);
-
-    whenNew(FileReader.class).withArguments(shipmentFile).thenReturn(mockedFileReader);
-    whenNew(CsvListReader.class).withArguments(mockedFileReader, STANDARD_PREFERENCE).thenReturn(mockedCsvListReader);
 
     shipmentFileProcessor.process(message);
 
@@ -162,13 +161,7 @@ public class ShipmentFileProcessorTest {
 
     when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
 
-    CsvListReader mockedCsvListReader = mock(CsvListReader.class);
     when(mockedCsvListReader.read()).thenReturn(null);
-    FileReader mockedFileReader = mock(FileReader.class);
-
-    whenNew(FileReader.class).withArguments(shipmentFile).thenReturn(mockedFileReader);
-    whenNew(CsvListReader.class).withArguments(mockedFileReader, STANDARD_PREFERENCE)
-      .thenReturn(mockedCsvListReader);
 
     shipmentFileProcessor.process(message);
 
@@ -177,35 +170,30 @@ public class ShipmentFileProcessorTest {
   }
 
   @Test
-  public void shouldInsertLineItemWithAllFieldsPresentInCsv() throws Exception {
+  public void shouldCreateDTOIfDateFieldsArePresent() throws Exception {
     List<ShipmentFileColumn> shipmentFileColumnList = asList(
       make(a(mandatoryShipmentFileColumn,
-        with(columnPosition, 2),
-        with(fieldName, "orderId"),
-        with(dataFieldLabel, "label.order.id")
-      )),
-      make(a(mandatoryShipmentFileColumn,
         with(columnPosition, 1),
-        with(fieldName, "productCode"),
-        with(dataFieldLabel, "label.shipment.field.label")
-      ))
-    );
+        with(fieldName, "packedDate"),
+        with(dateFormat, "MM/yy")
+      )),
+      make(a(defaultShipmentFileColumn,
+        with(columnPosition, 2),
+        with(fieldName, "shippedDate"),
+        with(dateFormat, "dd/MM/yyyy")
+      )));
 
     ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumnList);
 
     when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
 
-    CsvListReader mockedCsvListReader = mock(CsvListReader.class);
-    when(mockedCsvListReader.read()).thenReturn(asList("P_CODE_123", "123456")).thenReturn(null);
-    FileReader mockedFileReader = mock(FileReader.class);
+    when(mockedCsvListReader.read()).thenReturn(asList("11/13", "11/11/2011")).thenReturn(null);
 
-    whenNew(FileReader.class).withArguments(shipmentFile).thenReturn(mockedFileReader);
-    whenNew(CsvListReader.class).withArguments(mockedFileReader, STANDARD_PREFERENCE).thenReturn(mockedCsvListReader);
     ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO();
-    shipmentLineItemDTO.setProductCode("P_CODE_123");
-    shipmentLineItemDTO.setOrderId("123456");
-    ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
-    when(shipmentLineItemTransformer.transform(shipmentLineItemDTO, null, null)).thenReturn(shipmentLineItem);
+    shipmentLineItemDTO.setPackedDate("11/13");
+    shipmentLineItemDTO.setShippedDate("11/11/2011");
+    ShipmentLineItem shipmentLineItem = mock(ShipmentLineItem.class);
+    when(shipmentLineItemTransformer.transform(shipmentLineItemDTO, "MM/yy", "dd/MM/yyyy")).thenReturn(shipmentLineItem);
 
     shipmentFileProcessor.process(message);
 

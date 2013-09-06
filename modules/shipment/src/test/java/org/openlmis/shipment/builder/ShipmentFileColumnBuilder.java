@@ -30,7 +30,7 @@ public class ShipmentFileColumnBuilder {
       column.setPosition(lookup.valueOf(columnPosition, 1));
       column.setMandatory(true);
       column.setInclude(true);
-      column.setDatePattern(null);
+      column.setDatePattern(lookup.valueOf(dateFormat, "MM/yy"));
       return column;
     }
   };
@@ -45,7 +45,7 @@ public class ShipmentFileColumnBuilder {
       column.setPosition(lookup.valueOf(columnPosition, 1));
       column.setMandatory(lookup.valueOf(mandatory, true));
       column.setInclude(lookup.valueOf(includeInShipmentFile, true));
-      column.setDatePattern(null);
+      column.setDatePattern(lookup.valueOf(dateFormat, "dd/MM/yy"));
       return column;
     }
   };

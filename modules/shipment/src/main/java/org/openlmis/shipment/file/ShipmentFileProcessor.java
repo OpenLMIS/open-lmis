@@ -32,9 +32,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.List;
 
-import static org.apache.commons.collections.CollectionUtils.filter;
+import static org.apache.commons.collections.CollectionUtils.select;
+import static org.springframework.integration.support.MessageBuilder.withPayload;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
 @MessageEndpoint
@@ -71,14 +73,12 @@ public class ShipmentFileProcessor {
 
     List<ShipmentFileColumn> shipmentFileColumns = shipmentFileTemplate.getShipmentFileColumns();
 
-    filter(shipmentFileColumns, new Predicate() {
-      @Override
-      public boolean evaluate(Object o) {
-        return ((ShipmentFileColumn) o).getInclude();
-      }
-    });
+    String packedDateFormat = getFormatForField("packedDate", shipmentFileColumns);
+    String shippedDateFormat = getFormatForField("shippedDate", shipmentFileColumns);
 
-    int maxPosition = findMaximumPosition(shipmentFileColumns);
+    Collection<ShipmentFileColumn> includedColumns = filterIncludedColumns(shipmentFileColumns);
+
+    int maxPosition = findMaximumPosition(includedColumns);
 
     try (ICsvListReader listReader = new CsvListReader(new FileReader(shipmentFile), STANDARD_PREFERENCE)) {
 
@@ -91,15 +91,30 @@ public class ShipmentFileProcessor {
           logger.warn("Shipment file should contain at least " + maxPosition + " columns");
           throw new DataException("mandatory.data.missing");
         } else {
-          ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, shipmentFileColumns);
-          ShipmentLineItem lineItem = transformer.transform(dto, null, null);
+          ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns);
+
+          ShipmentLineItem lineItem = transformer.transform(dto, packedDateFormat, shippedDateFormat);
+
           shipmentService.insertShippedLineItem(lineItem);
         }
       }
+
+      logger.debug("Successfully processed file " + shipmentFile.getName());
+      sendArchiveToFtp(shipmentFile);
     }
   }
 
-  private ShipmentLineItemDTO populateDTO(List<String> fieldsInOneRow, List<ShipmentFileColumn> shipmentFileColumns)
+
+  private Collection<ShipmentFileColumn> filterIncludedColumns(List<ShipmentFileColumn> shipmentFileColumns) {
+    return select(shipmentFileColumns, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((ShipmentFileColumn) o).getInclude();
+      }
+    });
+  }
+
+  private ShipmentLineItemDTO populateDTO(List<String> fieldsInOneRow, Collection<ShipmentFileColumn> shipmentFileColumns)
     throws NoSuchFieldException, IllegalAccessException {
 
     ShipmentLineItemDTO dto = new ShipmentLineItemDTO();
@@ -121,7 +136,7 @@ public class ShipmentFileProcessor {
     }
   }
 
-  private int findMaximumPosition(List<ShipmentFileColumn> shipmentFileColumns) {
+  private int findMaximumPosition(Collection<ShipmentFileColumn> shipmentFileColumns) {
     int maxPosition = 0;
     for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
       if (shipmentFileColumn.getPosition() > maxPosition) {
@@ -130,6 +145,16 @@ public class ShipmentFileProcessor {
     }
     return maxPosition;
   }
+
+  private String getFormatForField(String fieldName, List<ShipmentFileColumn> shipmentFileColumns) {
+    for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
+      if (shipmentFileColumn.getName().equals(fieldName)) {
+        return shipmentFileColumn.getDatePattern();
+      }
+    }
+    return null;
+  }
+
 
 //  public void process(Message message) throws IOException {
 //    File shipmentFile = (File) message.getPayload();
@@ -156,10 +181,10 @@ public class ShipmentFileProcessor {
 //    }
 //  }
 
-//  private void sendArchiveToFtp(File file) {
-//    Message<File> message = withPayload(file).build();
-//    ftpArchiveOutputChannel.send(message);
-//    logger.debug("Shipment file " + file.getName() + " archived to FTP");
-//  }
+  private void sendArchiveToFtp(File file) {
+    Message<File> message = withPayload(file).build();
+    ftpArchiveOutputChannel.send(message);
+    logger.debug("Shipment file " + file.getName() + " archived to FTP");
+  }
 
 }
