@@ -64,7 +64,15 @@ describe('EPI Use', function () {
     expect(status).toEqual('is-complete');
   });
 
-  it('should set not recorded checkbox for epi use', function() {
+  it('should set status as incomplete if the only last form field valid', function () {
+    var epiUse = new EpiUse({productGroups: [{reading: {expirationDate: {value: '11/2012'}}}]});
+
+    var status = epiUse.computeStatus();
+
+    expect(status).toEqual('is-incomplete');
+  });
+
+  it('should set not recorded checkbox for epi use', function () {
     var epiUse = new EpiUse({productGroups: [
       {reading: {expirationDate: {value: '11/2012'}, stockAtFirstOfMonth: {notRecorded: true}, distributed: {value: 100},
         received: {value: 80}, stockAtEndOfMonth: {value: 200}, loss: {value: 50}

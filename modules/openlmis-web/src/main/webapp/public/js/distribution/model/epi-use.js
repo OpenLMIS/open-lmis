@@ -28,7 +28,7 @@ function EpiUse(epiUse) {
     var incomplete = 'is-incomplete';
     var empty = 'is-empty';
 
-    var statusClass = complete;
+    var statusClass;
 
     function isEmpty(field, obj) {
       if (isUndefined(obj[field])) {
@@ -38,16 +38,20 @@ function EpiUse(epiUse) {
     }
 
     function isValid(field, obj) {
-      return field != 'expirationDate' || (obj[field].notRecorded || DATE_REGEXP.test(obj[field].value));
+      return (field != 'expirationDate') ? !isEmpty(field, obj) : (obj[field].notRecorded || DATE_REGEXP.test(obj[field].value));
     }
 
-    statusClass = empty;
-
     $(_this.productGroups).each(function (i, productGroup) {
+      if (!productGroup.reading) {
+        statusClass = empty;
+        return;
+      }
       $(fieldList).each(function (i, fieldName) {
-        if (productGroup.reading && !isEmpty(fieldName, productGroup.reading) && isValid(fieldName, productGroup.reading) && statusClass != incomplete) {
+        if (isValid(fieldName, productGroup.reading) && (!statusClass || statusClass == complete)) {
           statusClass = complete;
-        } else if (productGroup.reading && (isEmpty(fieldName, productGroup.reading) || !isValid(fieldName, productGroup.reading)) && statusClass == complete) {
+        } else if (!isValid(fieldName, productGroup.reading) && (!statusClass || statusClass == empty)) {
+          statusClass = empty;
+        } else if ((!isValid(fieldName, productGroup.reading) && statusClass == complete) || (isValid(fieldName, productGroup.reading) && statusClass == empty)) {
           statusClass = incomplete;
           return false;
         }
@@ -55,7 +59,7 @@ function EpiUse(epiUse) {
       })
     });
 
-    _this.status = statusClass;
+    _this.status = statusClass || complete;
 
     return statusClass;
   }
