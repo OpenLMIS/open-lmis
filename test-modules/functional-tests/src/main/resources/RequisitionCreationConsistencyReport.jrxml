@@ -176,7 +176,7 @@ WHERE (pfwu.program_id NOT IN (SELECT
                          WHERE facility_id = pfwu.facility_id AND program_id = pfwu.program_id)
            END)
       AND rgm.requisitiongroupid = rgps.requisitiongroupid AND f.enabled = TRUE AND p.active = TRUE AND p.push = FALSE
-      AND f.virtualfacility = false
+      AND f.virtualfacility = false AND f.satellite <> true
 ORDER BY f.code, p.name, sn.code]]>
 	</queryString>
 	<field name="facility_code" class="java.lang.String"/>
@@ -196,10 +196,10 @@ ORDER BY f.code, p.name, sn.code]]>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="24" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[Requisition Creation Consistency Report]]></text>
+				<text><![CDATA[Unassigned Facilities - Create Requisition]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement uuid="2dd094dc-e4b5-43c0-89ab-02f2dda79bb5" x="710" y="0" width="72" height="32"/>
+				<reportElement uuid="2dd094dc-e4b5-43c0-89ab-02f2dda79bb5" x="709" y="0" width="73" height="32"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
@@ -217,11 +217,11 @@ ORDER BY f.code, p.name, sn.code]]>
 				<text><![CDATA[Program Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="9a07393f-5522-4bce-9f72-d87cd57c5a0d" x="428" y="0" width="149" height="20"/>
+				<reportElement uuid="9a07393f-5522-4bce-9f72-d87cd57c5a0d" x="428" y="0" width="205" height="20"/>
 				<textElement>
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[Supervisory Node Code]]></text>
+				<text><![CDATA[Supervisory Node Code - Name]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="d949733d-046b-41aa-a2a4-3d5c0bd9170a" x="61" y="0" width="176" height="20"/>
@@ -245,18 +245,11 @@ ORDER BY f.code, p.name, sn.code]]>
 				<text><![CDATA[S.No]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="d0326505-a9c7-4da3-a2cc-2e2e5eac30ba" x="577" y="0" width="149" height="20"/>
+				<reportElement uuid="7a2bce85-864e-42e7-9581-125974028476" x="633" y="0" width="149" height="20"/>
 				<textElement>
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[Supervisory Node Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="7a2bce85-864e-42e7-9581-125974028476" x="726" y="0" width="56" height="20"/>
-				<textElement textAlignment="Center">
-					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
-				</textElement>
-				<text><![CDATA[User Id]]></text>
+				<text><![CDATA[User Id - Unverified]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -285,17 +278,12 @@ ORDER BY f.code, p.name, sn.code]]>
 				<textFieldExpression><![CDATA[$F{program_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="a2f59c46-025d-4328-8b47-c18385282767" x="428" y="0" width="149" height="20"/>
+				<reportElement uuid="a2f59c46-025d-4328-8b47-c18385282767" x="428" y="0" width="205" height="20"/>
 				<textElement/>
-				<textFieldExpression><![CDATA[$F{supervisory_node_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{supervisory_node_code}+'-'+$F{supervisory_node_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="d6623e56-1dd2-46ae-a048-c79957f03724" x="577" y="0" width="149" height="20"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{supervisory_node_name}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="14e89f25-8081-42c8-be94-070ffee23547" x="726" y="0" width="56" height="20"/>
+				<reportElement uuid="14e89f25-8081-42c8-be94-070ffee23547" x="633" y="0" width="149" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{userid_unverified}]]></textFieldExpression>
 			</textField>
@@ -331,7 +319,7 @@ ORDER BY f.code, p.name, sn.code]]>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="24" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[Requisition Creation Consistency Report]]></text>
+				<text><![CDATA[Unassigned Facilities - Create Requisition]]></text>
 			</staticText>
 		</band>
 	</noData>

@@ -129,6 +129,7 @@ public class EPIUse extends Page {
 
   public void verifyProductGroup(String productGroup, int rownumber) {
     WebElement productGroupLbl = testWebDriver.getElementByXpath("//div[@id='epiUseTable']/div[2]/div[" + rownumber + "]/form/div[1]/span");
+    testWebDriver.waitForElementToAppear(productGroupLbl);
     assertEquals(productGroup, productGroupLbl.getText());
   }
 
