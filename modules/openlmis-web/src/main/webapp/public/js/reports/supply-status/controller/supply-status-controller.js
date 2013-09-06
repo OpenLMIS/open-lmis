@@ -1,8 +1,16 @@
-function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, ReportPrograms , ReportPeriods , Products ,ReportFacilityTypes, AllFacilites,GetFacilityByFacilityType, GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
+function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, ReportPrograms , ReportPeriods , Products ,ReportFacilityTypes, AllFacilites,GetFacilityByFacilityType, GeographicZones, RequisitionGroups,SettingsByKey, $http, $routeParams,$location) {
     //to minimize and maximize the filter section
     var section = 1;
     $scope.showMessage = true;
     $scope.message = "Indicates a required field."
+
+
+    $scope.IndicatorProductsKey = "INDICATOR_PRODUCTS";
+
+    SettingsByKey.get({key: $scope.IndicatorProductsKey},function (data){
+        $scope.IndicatorProductsDescription = data.settings.value;
+    });
+
 
     $scope.section = function (id) {
         section = id;
@@ -38,57 +46,64 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
         facilityTypeId : $scope.facilityType,
         facilityType : "",
         programId : $scope.program,
+        program : "",
         periodId : $scope.period,
         period : "",
         zoneId : $scope.zone,
+        zone : "",
         productId : $scope.productId,
+        product : "",
         scheduleId : $scope.schedule,
+        schedule : "",
         rgroupId : $scope.rgroup,
         rgroup : "",
-        facilityId : $scope.facility
+        facilityId : $scope.facility,
+        facility : ""
     };
 
     ReportPrograms.get(function(data){
         $scope.programs = data.programs;
-        $scope.programs.unshift({'name':'Select a Program'});
+        $scope.programs.unshift({'name':'-- Select a Program --'});
     });
 
     RequisitionGroups.get(function(data){
         $scope.requisitionGroups = data.requisitionGroupList;
-        $scope.requisitionGroups.unshift({'name':'All Reporting Groups','id':''});
+        $scope.requisitionGroups.unshift({'name':'-- All Reporting Groups --','id':''});
     });
 
     ReportFacilityTypes.get(function(data) {
         $scope.facilityTypes = data.facilityTypes;
-        $scope.facilityTypes.unshift({'name': 'All Facility Types', 'id' : ''});
+        $scope.facilityTypes.unshift({'name': '-- All Facility Types --', 'id' : 'All'});
     });
 
     AllFacilites.get(function(data){
         $scope.allFacilities = data.allFacilities;
-        $scope.allFacilities.unshift({name:'All Facilities',id:''});
+        $scope.allFacilities.unshift({name:'-- All Facilities --',id:''});
     });
 
     ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
-        $scope.schedules.unshift({'name':'Select a Schedule', 'id':''});
+        $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':''});
     });
 
     Products.get(function(data){
         $scope.products = data.productList;
-        $scope.products.unshift({'name': '<All Products>','id':'All'});
-        $scope.products.unshift({'name':'<Indicator Products>', id:''});
+        $scope.products.unshift({'name': '-- All Products --','id':'All'});
+        var ind_desc = $scope.IndicatorProductsDescription;
+        $scope.products.unshift({'name': '-- '.concat(ind_desc).concat(' --'),'id':'-1'});
+
     });
 
     $scope.ChangeSchedule = function(){
         ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
             $scope.periods = data.periods;
-            $scope.periods.unshift({'name': 'Select Period', 'id':''});
+            $scope.periods.unshift({'name': '-- Select Period --', 'id':''});
         });
     }
 
     GeographicZones.get(function(data) {
         $scope.zones = data.zones;
-        $scope.zones.unshift({'name': 'All Zones', 'id' : ''});
+        $scope.zones.unshift({'name': '-- All Zones --', 'id' : 'All'});
     });
 
     $scope.$watch('facilityType', function(selection){
@@ -127,7 +142,7 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
     $scope.ChangeFacility = function(){
         GetFacilityByFacilityType.get({ facilityTypeId : $scope.filterObject.facilityTypeId },function(data) {
             $scope.allFacilities =  data.facilities;
-            $scope.allFacilities.unshift({name:'All Facilities',id:''});
+            $scope.allFacilities.unshift({name:'-- All Facilities --',id:''});
         });
     };
 
@@ -136,6 +151,11 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
             $scope.filterObject.productId =  0;
         }else if(selection != undefined || selection == ""){
             $scope.filterObject.productId =  selection;
+            $.each($scope.products , function (item, idx) {
+                if (idx.id == selection) {
+                    $scope.filterObject.product = idx.name;
+                }
+            });
         }else{
             $scope.filterObject.productId =  -1;
         }
@@ -180,6 +200,12 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
             $scope.filterObject.programId =  -1;
         }else if(selection != undefined || selection == ""){
             $scope.filterObject.programId =  selection;
+            $.each($scope.programs , function (item, idx) {
+                if (idx.id == selection) {
+                    $scope.filterObject.program = idx.name;
+                }
+            });
+
         }else{
             $scope.filterObject.programId =  0;
         }
@@ -189,6 +215,11 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
     $scope.$watch('schedule', function(selection){
         if(selection != undefined || selection == ""){
             $scope.filterObject.scheduleId =  selection;
+            $.each($scope.schedules , function (item, idx) {
+                if (idx.id == selection) {
+                    $scope.filterObject.schedule = idx.name;
+                }
+            });
         }else{
             $scope.filterObject.scheduleId =  0;
         }
@@ -197,11 +228,16 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
 
     $scope.$watch('zone', function(selection){
         if(selection == "All"){
-            $scope.filterObject.zoneId =  -1;
+            $scope.filterObject.zoneId =  0;
         }else if(selection != undefined || selection == ""){
             $scope.filterObject.zoneId =  selection;
+            $.each($scope.zones, function(item, idx){
+                if(idx.id == selection){
+                    $scope.filterObject.zone = idx.name;
+                }
+            })
         }else{
-            $scope.filterObject.zoneId =  0;
+            $scope.filterObject.zoneId =  -1;
         }
         $scope.filterGrid();
     });
@@ -267,8 +303,9 @@ function SupplyStatusController($scope, SupplyStatusReport, ReportSchedules, Rep
             params[index] = value;
         });
         SupplyStatusReport.get(params, function(data) {
+
             $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
-            $scope.data = $data.pages.rows;
+            $scope.data = data.pages.rows;
         });
 
     };
