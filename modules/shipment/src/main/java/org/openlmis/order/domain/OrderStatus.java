@@ -10,5 +10,6 @@ public enum OrderStatus {
   PACKED,
   IN_ROUTE,
   READY_TO_PACK,
-  RECEIVED
+  RECEIVED,
+  TRANSFER_FAILED
 }

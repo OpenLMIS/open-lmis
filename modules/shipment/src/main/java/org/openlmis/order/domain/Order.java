@@ -25,6 +25,7 @@ public class Order extends BaseModel {
   private OrderStatus status;
   private SupplyLine supplyLine;
   private ShipmentFileInfo shipmentFileInfo;
+  private String ftpComment;
 
   public Order(Rnr rnr) {
     this.rnr = rnr;

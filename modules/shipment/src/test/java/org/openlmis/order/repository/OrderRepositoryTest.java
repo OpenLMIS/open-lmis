@@ -121,10 +121,13 @@ public class OrderRepositoryTest {
     verify(orderMapper).insert(order);
   }
 
-  private OrderFileColumn getOrderFileColumn(Long id, String label) {
-    OrderFileColumn orderFileColumn = new OrderFileColumn();
-    orderFileColumn.setId(id);
-    orderFileColumn.setColumnLabel(label);
-    return orderFileColumn;
+  @Test
+  public void shouldUpdateOrderStatusAndFtpComment() throws Exception {
+    Order order = new Order();
+
+    orderRepository.updateOrderStatus(order);
+
+    verify(orderMapper).updateOrderStatus(order);
   }
+
 }

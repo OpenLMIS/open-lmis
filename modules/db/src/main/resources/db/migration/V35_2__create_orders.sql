@@ -6,6 +6,7 @@ CREATE TABLE orders (
   rnrId        INTEGER     NOT NULL UNIQUE REFERENCES requisitions (id),
   shipmentId   INTEGER REFERENCES shipment_file_info (id),
   status       VARCHAR(20) NOT NULL,
+  ftpComment   VARCHAR(50),
   supplyLineId INTEGER     NOT NULL REFERENCES supply_lines (id),
   createdBy    INTEGER     NOT NULL REFERENCES users (id),
   createdDate  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -199,4 +199,11 @@ public class OrderServiceTest {
 
     assertThat(dateFormats, is(expectedDateFormats));
   }
+
+  @Test
+  public void shouldUpdateOrderStatusAndFtpComment() throws Exception {
+    Order order = new Order();
+    orderService.updateOrderStatus(order);
+    verify(orderRepository).updateOrderStatus(order);
+  }
 }

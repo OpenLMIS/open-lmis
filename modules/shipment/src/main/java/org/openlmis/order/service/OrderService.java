@@ -119,4 +119,8 @@ public class OrderService {
     dateFormats.addAll(asList(DateFormat.values()));
     return dateFormats;
   }
+
+  public void updateOrderStatus(Order order) {
+    orderRepository.updateOrderStatus(order);
+  }
 }

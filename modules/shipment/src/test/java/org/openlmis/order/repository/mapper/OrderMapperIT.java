@@ -48,6 +48,7 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessin
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 import static org.openlmis.order.domain.OrderStatus.PACKED;
+import static org.openlmis.order.domain.OrderStatus.TRANSFER_FAILED;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 
 @Category(IntegrationTests.class)
@@ -217,6 +218,20 @@ public class OrderMapperIT {
     mapper.insertOrderFileColumn(orderFileColumn);
     List<OrderFileColumn> orderFileColumns = mapper.getOrderFileColumns();
     assertThat(orderFileColumns.contains(orderFileColumn), is(true));
+  }
+
+  @Test
+  public void shouldUpdateOrderStatusAndFtpComments() throws Exception {
+    Order order = insertOrder(1L);
+    order.setStatus(TRANSFER_FAILED);
+    String ftpComment = "Supply line missing";
+    order.setFtpComment(ftpComment);
+
+    mapper.updateOrderStatus(order);
+
+    Order savedOrder = mapper.getById(order.getId());
+    assertThat(savedOrder.getStatus(), is(TRANSFER_FAILED));
+    assertThat(savedOrder.getFtpComment(), is(ftpComment));
   }
 
   private long updateOrderCreatedTime(Order order, Date date) throws SQLException {

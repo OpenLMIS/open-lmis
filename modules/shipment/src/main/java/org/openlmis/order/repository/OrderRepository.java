@@ -55,4 +55,8 @@ public class OrderRepository {
       orderMapper.insertOrderFileColumn(column);
     }
   }
+
+  public void updateOrderStatus(Order order) {
+    orderMapper.updateOrderStatus(order);
+  }
 }
