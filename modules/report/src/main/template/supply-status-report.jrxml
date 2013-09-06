@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="supply-status-report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="133"/>
+	<property name="ireport.x" value="138"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Users\\Issa\\JSI_Projects\\bitbucket\\open-lmis\\modules\\report\\src\\main\\template\\"]]></defaultValueExpression>
@@ -120,7 +120,7 @@ order by facilities.name asc,li.productcode asc,  li.product asc, li.productcate
 				<text><![CDATA[Type]]></text>
 			</staticText>
 			<textField pattern="#,###.#" isBlankWhenNull="false">
-				<reportElement uuid="3da376e3-6c8d-48f1-abbe-c21d6f4cc5c8" mode="Transparent" x="771" y="20" width="30" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="3da376e3-6c8d-48f1-abbe-c21d6f4cc5c8" mode="Transparent" x="771" y="20" width="31" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" rightIndent="5"/>
@@ -168,7 +168,7 @@ order by facilities.name asc,li.productcode asc,  li.product asc, li.productcate
 				<text><![CDATA[Facility]]></text>
 			</staticText>
 			<textField pattern="#,###.#" isBlankWhenNull="false">
-				<reportElement uuid="226bb1e2-dd45-4d64-93ba-268b1a5af64d" mode="Transparent" x="771" y="0" width="30" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="226bb1e2-dd45-4d64-93ba-268b1a5af64d" mode="Transparent" x="771" y="0" width="31" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" rightIndent="5"/>
@@ -184,7 +184,7 @@ order by facilities.name asc,li.productcode asc,  li.product asc, li.productcate
 				<text><![CDATA[Minimum Months of Stock]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="027748a1-2b55-42d0-a38f-f472bd7efe21" mode="Opaque" x="2" y="73" width="799" height="44" forecolor="#FFFFFF" backcolor="#F6F6F6">
+				<reportElement uuid="027748a1-2b55-42d0-a38f-f472bd7efe21" mode="Opaque" x="0" y="73" width="802" height="44" forecolor="#FFFFFF" backcolor="#F6F6F6">
 					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -315,7 +315,7 @@ order by facilities.name asc,li.productcode asc,  li.product asc, li.productcate
 				<text><![CDATA[Maximum Stock]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="5ec1e664-f92b-4d44-b71f-44d7c00a785c" mode="Transparent" x="749" y="73" width="50" height="44" forecolor="#000000" backcolor="#333333">
+				<reportElement uuid="5ec1e664-f92b-4d44-b71f-44d7c00a785c" mode="Transparent" x="749" y="73" width="53" height="44" forecolor="#000000" backcolor="#333333">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -471,7 +471,7 @@ order by facilities.name asc,li.productcode asc,  li.product asc, li.productcate
 				<textFieldExpression><![CDATA[$F{maximumStock}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="d05a3f5c-d185-477f-94ac-8b30cc160411" x="749" y="0" width="50" height="20">
+				<reportElement uuid="d05a3f5c-d185-477f-94ac-8b30cc160411" x="749" y="0" width="53" height="20">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
