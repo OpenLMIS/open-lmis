@@ -39,6 +39,7 @@ public class Constants {
     public static String OPERATOR_LOGO_FILE_NAME_KEY = "operator_logo_file_name";
     public static String START_YEAR = "start_year";
     public static String MONTHS = "months";
+    public static String CONF_INDICATOR_PRODUCTS = "INDICATOR_PRODUCTS";
 
     /**
      *  Miscellaneous

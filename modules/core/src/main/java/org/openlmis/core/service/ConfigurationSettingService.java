@@ -42,6 +42,13 @@ public class ConfigurationSettingService {
       return Integer.parseInt(configuration.getValue());
   }
 
+  public String getConfigurationStringValue(String key){
+      ConfigurationSetting configurationSetting = getByKey(key);
+      if (configurationSetting == null || configurationSetting.getValue() == null || configurationSetting.getValue().isEmpty())
+          return "";
+      return configurationSetting.getValue();
+  }
+
   public List<Object> getConfigurationListValue(String key, String delimiter){
     ConfigurationSetting configuration = getByKey(key);
 
