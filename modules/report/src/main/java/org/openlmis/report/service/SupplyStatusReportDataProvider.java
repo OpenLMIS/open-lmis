@@ -8,8 +8,10 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.SupplyStatusReportMapper;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,11 +26,13 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
 
 
     private SupplyStatusReportMapper reportMapper;
+    private ConfigurationSettingService configurationService;
 
 
     @Autowired
-    public SupplyStatusReportDataProvider(SupplyStatusReportMapper mapper) {
+    public SupplyStatusReportDataProvider(SupplyStatusReportMapper mapper, ConfigurationSettingService configurationService) {
         this.reportMapper = mapper;
+        this.configurationService = configurationService;
     }
 
     @Override
@@ -56,39 +60,61 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
     @Override
     public ReportData getReportFilterData(Map<String, String[]> params) {
         String facilityTypeId =  params.get("facilityTypeId")[0];
-        String rgroupId =     params.get("rgroupId")[0];
         String periodId = params.get("periodId")[0];
         String facilityType =  "";
-        String rgroup = "";
         String period = "";
+        String productId = params.get("productId")[0];
+        String product = params.get("product")[0];
+        String program = params.get("program")[0];
+        String schedule = params.get("schedule")[0];
+        String facilityId = params.get("facilityId")[0];
+        String facility = params.get("facility")[0];
+        String zoneId = params.get("zoneId")[0];
+        String zone = params.get("zone")[0];
 
         if(facilityTypeId != null && !facilityTypeId.isEmpty()){
             if(facilityTypeId.equals("-1") || facilityTypeId.equals("0"))
                 facilityType = "All Facility Types";
             else
-                facilityType = "Facility Type : " +params.get("facilityType")[0];
+                facilityType = params.get("facilityType")[0];
         }
 
-        if(rgroupId != null && !rgroupId.isEmpty()){
-            if(rgroupId.equals("-1") || rgroupId.equals("0"))
-                rgroup = "All Reporting Groups";
-            else
-                rgroup = "Reporting Groups : " +params.get("rgroup")[0];
-        }
+        period = params.get("period")[0];
 
-        if(periodId != null && !periodId.isEmpty()){
-            period = (periodId.equals("-1") || periodId.equals("0") )? "All Reporting Periods" : "Reporting Period : " + params.get("period")[0];
+        if(productId != null && !productId.isEmpty()){
+            if(productId.equals("-1")){
+                //Indicator Products
+                product = configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS).isEmpty() ? "Indicator Products" :
+                        configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS);
+            }else if(productId.equals("0"))//All Products
+                product = "All Products";
 
         }
-        final String finalFacilityType = facilityType;
-        final String finalRgroup = rgroup;
-        final String finalPeriod = period;
+        if(facilityId != null && facilityId.isEmpty()){
+            facility = "All Facilities";
+        }
+        if(zoneId != null && (zoneId.isEmpty() || zoneId.equals("0"))){
+            zone = "All Zones";
+        }
+        final String finalFacilityType = "Facility Type : " + facilityType;
+        final String finalPeriod = "Report Period : " + (period.isEmpty() ? " - " : period);
+        final String finalProgram = "Program : " + (program.isEmpty() ? " - " : program);
+        final String finalProduct = "Product : " + product;
+        final String finalSchedule = "Schedule : " + schedule;
+        final String finalFacility = "Facility : " + (facility.isEmpty() ? " - " : facility);
+        final String finalZone = "Zone : " + zone;
 
         return new ReportData() {
            @Override
            public String toString() {
                StringBuffer reportingFilter = new StringBuffer("");
-               reportingFilter.append(finalPeriod).append("\n").append(finalFacilityType).append("\n").append(finalRgroup).append("\n");
+               reportingFilter.append(finalPeriod).append("\n").
+                       append(finalSchedule).append("\n").
+                       append(finalProgram).append("\n").
+                       append(finalFacilityType).append("\n").
+                       append(finalFacility).append("\n").
+                       append(finalProduct).append("\n").
+                       append(finalZone);
                return reportingFilter.toString();
            }
        };
