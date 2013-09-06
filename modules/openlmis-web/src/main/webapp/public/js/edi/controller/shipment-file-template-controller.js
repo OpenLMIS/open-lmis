@@ -13,7 +13,8 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
     var positionList = _.pluck($scope.shipmentFileTemplate.shipmentFileColumns, "position");
     var uniquePositionList = _.uniq(positionList);
     if (uniquePositionList.length != positionList.length) {
-      $scope.message = "shipment.file.duplicate.position";
+      $scope.message = "";
+      $scope.error = "shipment.file.duplicate.position";
       return true;
     }
     return false;
@@ -24,7 +25,8 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
     angular.forEach($scope.shipmentFileTemplate.shipmentFileColumns, function (column) {
 
       if (column.includedInShipmentFile && isUndefined(column.position)) {
-        $scope.message = "shipment.file.empty.position";
+        $scope.message = "";
+        $scope.error = "shipment.file.empty.position";
         emptyPosition = true;
       }
       if (!isUndefined(column.position)) {
@@ -35,10 +37,7 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
     return emptyPosition;
   }
 
-
   $scope.saveShipmentFileTemplate = function () {
-
-
     if (isPositionEmptyForIncludedColumn()) {
       return;
     }
@@ -47,6 +46,7 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
     }
 
     ShipmentFileTemplate.save({}, $scope.shipmentFileTemplate, function (data) {
+      $scope.error = "";
       $scope.message = data.success;
       setTimeout(function () {
         $scope.$apply(function () {
