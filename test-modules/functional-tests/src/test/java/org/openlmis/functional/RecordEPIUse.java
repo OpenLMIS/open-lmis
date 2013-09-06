@@ -7,6 +7,7 @@
 package org.openlmis.functional;
 
 
+import cucumber.api.DataTable;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -45,6 +47,55 @@ public class RecordEPIUse extends TestCaseHelper {
   public void setUp() throws Exception {
     super.setup();
   }
+    @Then("^I should see product group \"([^\"]*)\"")
+    public void verifyProductGroup(String productGroup) {
+        new EPIUse(testWebDriver).verifyProductGroup(productGroup, 1);
+    }
+
+    @When("^I Enter EPI values without end of month:$")
+    public void enterEPIValues(DataTable tableData) {
+        EPIUse epiUse = new EPIUse(testWebDriver);
+        Map<String, String> epiData = tableData.asMaps().get(0);
+
+        epiUse.enterValueInDistributed(epiData.get("distributed"), 1);
+        epiUse.enterValueInExpirationDate(epiData.get("expirationDate"), 1);
+        epiUse.enterValueInLoss(epiData.get("loss"), 1);
+        epiUse.enterValueInReceived(epiData.get("received"), 1);
+        epiUse.enterValueInStockAtFirstOfMonth(epiData.get("firstOfMonth"), 1);
+    }
+
+    @When("^I verify saved EPI values:$")
+    public void verifySavedEPIValues(DataTable tableData) {
+        new RefrigeratorPage(testWebDriver).navigateToRefrigeratorTab();
+        EPIUse epiUse = new EPIUse(testWebDriver);
+        epiUse.navigateToEPISUse();
+        Map<String, String> epiData = tableData.asMaps().get(0);
+
+        epiUse.verifyData(epiData);
+    }
+
+    @And("^I verify total is \"([^\"]*)\"$")
+    public void verifyTotalField(String total) {
+        new EPIUse(testWebDriver).verifyTotal(total, 1);
+    }
+
+
+    @Then("^Navigate to EPI tab$")
+    public void navigateToEpiTab() throws IOException {
+        EPIUse epiUse = new EPIUse(testWebDriver);
+        epiUse.navigateToEPISUse();
+    }
+
+    @Then("^Verify indicator should be \"([^\"]*)\"$")
+    public void shouldVerifyIndicatorColor(String color) throws IOException, SQLException {
+        EPIUse epiUse = new EPIUse(testWebDriver);
+        epiUse.verifyOverallEPIUseIcon(color);
+    }
+
+    @When("^I enter EPI end of month as \"([^\"]*)\"")
+    public void enterEPIEndOfMonth(String endOfMonth) {
+        new EPIUse(testWebDriver).enterValueInStockAtEndOfMonth(endOfMonth, 1);
+    }
 
 
     @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
@@ -156,12 +207,12 @@ public class RecordEPIUse extends TestCaseHelper {
         epiUse.verifyStockAtEndOfMonth("60", 1);
         epiUse.verifyExpirationDate("11/2012", 1);
 
-        epiUse.verifyStockAtFirstOfMonthStatus(true,1);
-        epiUse.verifyReceivedStatus(true,1);
-        epiUse.verifyDistributedStatus(true,1);
-        epiUse.verifyLossStatus(true,1);
-        epiUse.verifyStockAtEndOfMonthStatus(true,1);
-        epiUse.verifyExpirationDateStatus(true,1);
+        epiUse.verifyStockAtFirstOfMonthStatus(true, 1);
+        epiUse.verifyReceivedStatus(true, 1);
+        epiUse.verifyDistributedStatus(true, 1);
+        epiUse.verifyLossStatus(true, 1);
+        epiUse.verifyStockAtEndOfMonthStatus(true, 1);
+        epiUse.verifyExpirationDateStatus(true, 1);
         epiUse.verifyOverallEPIUseIcon("GREEN");
 
         epiUse.checkApplyNRToAllFields(true);

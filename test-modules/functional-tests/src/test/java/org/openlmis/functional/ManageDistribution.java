@@ -82,37 +82,6 @@ public class ManageDistribution extends TestCaseHelper {
     updateProductWithGroup(product, productGroup);
   }
 
-  @Then("^I should see product group \"([^\"]*)\"")
-  public void verifyProductGroup(String productGroup) {
-    new EPIUse(testWebDriver).verifyProductGroup(productGroup, 1);
-  }
-
-  @When("^I Enter EPI values without end of month:$")
-  public void enterEPIValues(DataTable tableData) {
-    EPIUse epiUse = new EPIUse(testWebDriver);
-    Map<String, String> epiData = tableData.asMaps().get(0);
-
-    epiUse.enterValueInDistributed(epiData.get("distributed"), 1);
-    epiUse.enterValueInExpirationDate(epiData.get("expirationDate"), 1);
-    epiUse.enterValueInLoss(epiData.get("loss"), 1);
-    epiUse.enterValueInReceived(epiData.get("received"), 1);
-    epiUse.enterValueInStockAtFirstOfMonth(epiData.get("firstOfMonth"), 1);
-  }
-
-  @When("^I verify saved EPI values:$")
-  public void verifySavedEPIValues(DataTable tableData) {
-    new RefrigeratorPage(testWebDriver).navigateToRefrigeratorTab();
-    EPIUse epiUse = new EPIUse(testWebDriver);
-    epiUse.navigateToEPISUse();
-    Map<String, String> epiData = tableData.asMaps().get(0);
-
-    epiUse.verifyData(epiData);
-  }
-
-  @And("^I verify total is \"([^\"]*)\"$")
-  public void verifyTotalField(String total) {
-    new EPIUse(testWebDriver).verifyTotal(total, 1);
-  }
 
   @Then("^I should see program \"([^\"]*)\"$")
   public void verifyProgram(String programs) throws IOException, SQLException {
@@ -221,22 +190,7 @@ public class ManageDistribution extends TestCaseHelper {
     facilityListPage.verifyNoFacilitySelected();
   }
 
-  @Then("^Navigate to EPI tab$")
-  public void navigateToEpiTab() throws IOException {
-    EPIUse epiUse = new EPIUse(testWebDriver);
-    epiUse.navigateToEPISUse();
-  }
 
-  @Then("^Verify indicator should be \"([^\"]*)\"$")
-  public void shouldVerifyIndicatorColor(String color) throws IOException, SQLException {
-    EPIUse epiUse = new EPIUse(testWebDriver);
-    epiUse.verifyOverallEPIUseIcon(color);
-  }
-
-  @When("^I enter EPI end of month as \"([^\"]*)\"")
-  public void enterEPIEndOfMonth(String endOfMonth) {
-    new EPIUse(testWebDriver).enterValueInStockAtEndOfMonth(endOfMonth, 1);
-  }
 
   @And("^I should see \"([^\"]*)\" facilities that support the program \"([^\"]*)\" and delivery zone \"([^\"]*)\"$")
   public void shouldSeeNoFacilitySelected(String active, String program, String deliveryZone) throws IOException, SQLException {
