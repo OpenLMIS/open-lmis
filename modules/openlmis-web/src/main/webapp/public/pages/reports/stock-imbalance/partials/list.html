@@ -136,13 +136,12 @@
                                     </div>
                                 </div>
                                 <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Product<span class="label-required"> *</span></label>
+                                    <label class="labels">Product</label>
 
                                     <div class="form-field">
                                         <select ui-select2 style="width:200px;" name="product"  ng-model="product" >
                                             <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>
-                                            <!-- <option value=" {{IndicatorProductsDescription}}">-- {{IndicatorProductsDescription}} --</option>-->
-                                        </select>
+                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-cell horizontalFilters" >
