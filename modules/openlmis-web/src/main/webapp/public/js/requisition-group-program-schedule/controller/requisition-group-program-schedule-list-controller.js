@@ -154,12 +154,6 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
 
     $scope.setSelectedSchedule = function(schedule){
         $scope.selectedSchedule = schedule;
-        if($scope.selectedSchedule.id != $scope.selectedRequisitionGroupProgramSchedule.processingSchedule.id){
-            $scope.isDataChanged = true;
-        }
-        else{
-            $scope.isDataChanged = false;
-        }
     }
 
     $scope.saveRequisitionGroupProgramSchedule = function(){

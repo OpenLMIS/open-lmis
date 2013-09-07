@@ -84,19 +84,13 @@
                         <table class="table table-hover table-bordered">
                             <thead>
                             <tr class="gradient-header">
-                                <th style="text-align: center">Code
-                                </th>
                                 <th>Schedule Group
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="schedule in schedules"
-                                ng-style="getScheduleColor(program)">
-                                <td style="text-align: center">
-                                    <input type="radio" name="is-selected" value="{{schedule.id}}"
-                                           ng-model="selectedSchedule.id" ng-change="setSelectedSchedule(schedule)"/>
-                                </td>
+                                style="{{getScheduleColor(schedule)}}" ng-click="setSelectedSchedule(schedule)">
                                 <td>
                                     <div>{{schedule.code}} - {{schedule.name}}</div>
                                 </td>
@@ -106,11 +100,9 @@
                     </td>
                 </tr>
             </table>
-            <div form-toolbar id="action_buttons" class="action-buttons" ng-show="isDataChanged">
+            <div form-toolbar id="action_buttons" class="action-buttons">
                 <div class="form-cell button-row">
-                    <input type="submit" class="btn btn-primary save-button" value="Save"/>
-                    <a ng-href="#/list" class="btn btn-cancel cancel-button"><span
-                            openlmis-message="button.cancel"></span></a>
+                    <input ng-disabled="selectedSchedule.id == selectedRequisitionGroupProgramSchedule.processingSchedule.id" type="submit" class="btn btn-primary save-button" value="Save"/>
                 </div>
                 <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>
             </div>
