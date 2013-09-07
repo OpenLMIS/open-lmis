@@ -1,5 +1,6 @@
 /*
 
+2013-09-06 - mahmed - add geographic_zones.id
 2013-09-05 - changed call agrument for fn_get_supplying_facility_name from requisitions.supplylineid to requisitions.supervisorynodeid. Used V59__create_vw_stock_status_rev_6.sql
 ??? Issa Fikadu - ???
 ??? Muhammad Ahmed - created
@@ -33,7 +34,7 @@ CREATE OR REPLACE VIEW vw_stock_status AS
                 END
             END
         END AS status,
-    facility_types.name AS facilitytypename, geographic_zones.name AS location,
+    facility_types.name AS facilitytypename, geographic_zones.id AS gz_id, geographic_zones.name AS location,
     products.id AS productid, processing_periods.startdate,
     programs.id AS programid, processing_schedules.id AS psid,
     processing_periods.enddate, processing_periods.id AS periodid,
