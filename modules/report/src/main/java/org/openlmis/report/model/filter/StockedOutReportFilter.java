@@ -9,6 +9,7 @@ package org.openlmis.report.model.filter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.openlmis.report.model.ReportData;
 
 import java.text.DateFormat;
@@ -50,6 +51,8 @@ public class StockedOutReportFilter implements ReportData {
     private String facilityType;
     private int facilityId;
     private String facility;
+    private int zoneId;
+    private String zone;
 
     @Override
     public String toString(){
@@ -58,22 +61,18 @@ public class StockedOutReportFilter implements ReportData {
 
         StringBuilder filtersValue = new StringBuilder("");
 
-        String strProgram = this.getProgram() == null ? "All Programs" : this.getProgram();
-        String strReportingGroup = this.getRgroup() == null ? "All Requisition Groups" : this.getRgroup();
-        String strProductCategory = this.getProductCategory() == null ? "All Product Categories" : this.getProductCategory();
-        String strProduct = this.getProduct() == null ? "All Products" : this.getProduct();
-        String strFacilityType = this.getFacilityType() == null ? "All Facility Types" : this.getFacilityType();
-        String strFacility = this.getFacility() == null || this.getFacility() =="" ? "All Facilities" : this.getFacility();
-
         filtersValue.
                 append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
-                append("Program : ").append(strProgram).append("\n").
-                append("Reporting Groups : ").append(strReportingGroup).append("\n").
-                append("Product Category : ").append(strProductCategory).append("\n").
-                append("Product : ").append(strProduct).append("\n").
-                append("Facility Types : ").append(strFacilityType).append("\n").
-                append("Facility : ").append(strFacility).append("\n");
+                append("Program : ").append(this.getProgram()).append("\n").
+                append("Requisition Group : ").append(this.getRgroup()).append("\n").
+                append("Product Category : ").append(this.getProductCategory()).append("\n").
+                append("Product : ").append(this.getProduct()).append("\n").
+                append("Zone : ").append(this.getZone()).append("\n").
+                append("Facility Types : ").append(this.getFacilityType()).append("\n").
+                append("Facility : ").append(this.getFacility()).append("\n");
         return filtersValue.toString();
+
+
     }
 
 

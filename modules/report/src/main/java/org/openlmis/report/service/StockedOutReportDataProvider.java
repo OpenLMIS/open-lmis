@@ -7,6 +7,7 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.StockedOutReportMapper;
 import org.openlmis.report.model.ReportData;
@@ -16,7 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.lang.String;
 
 /**
  * User: mahmed
@@ -61,37 +67,44 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
 
         if(filterCriteria != null){
             stockedOutReportFilter = new StockedOutReportFilter();
-            Calendar originalStart = Calendar.getInstance();
-            Calendar originalEnd = Calendar.getInstance();
+            //Calendar originalStart = Calendar.getInstance();
+            //Calendar originalEnd = Calendar.getInstance();
 
-            stockedOutReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-            stockedOutReportFilter.setFacilityType( (filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "ALL Facilities Types" : filterCriteria.get("facilityType")[0]);
+            Date originalStart =  new Date();
+            Date originalEnd =  new Date();
 
-            stockedOutReportFilter.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
-            stockedOutReportFilter.setFacility(filterCriteria.get("facility") == null ? "" : filterCriteria.get("facility")[0]);
+            stockedOutReportFilter.setZoneId( StringUtils.isBlank(filterCriteria.get("zoneId")[0])  ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
+            stockedOutReportFilter.setZone( StringUtils.isBlank( filterCriteria.get("zone")[0] ) ? "All Zones" : filterCriteria.get("zone")[0]);
 
-            stockedOutReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
-            stockedOutReportFilter.setRgroup( (filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "ALL Reporting Groups" : filterCriteria.get("rgroup")[0]);
+            stockedOutReportFilter.setFacilityTypeId( StringUtils.isBlank( filterCriteria.get("facilityTypeId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
+            stockedOutReportFilter.setFacilityType( StringUtils.isBlank( filterCriteria.get("facilityType")[0] ) ? "All Facility Types" : filterCriteria.get("facilityType")[0]);
 
-            stockedOutReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
+           stockedOutReportFilter.setFacilityId( StringUtils.isBlank( filterCriteria.get("facilityId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
+           stockedOutReportFilter.setFacility( StringUtils.isBlank( filterCriteria.get("facility")[0] ) ? "All Facility Types" : filterCriteria.get("facility")[0]);
 
-            stockedOutReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
-            stockedOutReportFilter.setProductCategory( (filterCriteria.get("productCategory") == null || filterCriteria.get("productCategory")[0].equals("")) ? "ALL Product Categories" : filterCriteria.get("productCategory")[0]);
+            stockedOutReportFilter.setRgroupId( StringUtils.isBlank( filterCriteria.get("rgroupId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
+            stockedOutReportFilter.setRgroup( StringUtils.isBlank(filterCriteria.get("rgroup")[0]) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
 
-            stockedOutReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
+             stockedOutReportFilter.setProductCategoryId( StringUtils.isBlank(filterCriteria.get("productCategoryId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
+            stockedOutReportFilter.setProductCategory( StringUtils.isBlank(filterCriteria.get("productCategory")[0]) ? "All Product Categories" : filterCriteria.get("productCategory")[0]);
 
-            stockedOutReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0]));
-            stockedOutReportFilter.setProgram(filterCriteria.get("program") == null ? "" : filterCriteria.get("program")[0]);
+            stockedOutReportFilter.setProductId( StringUtils.isBlank( filterCriteria.get("productId") [0] ) ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
+            stockedOutReportFilter.setProduct( StringUtils.isBlank(filterCriteria.get("product")[0]) ? "All Products" : filterCriteria.get("product")[0]);
 
-            stockedOutReportFilter.setYearFrom(filterCriteria.get("fromYear") == null ? originalStart.get(Calendar.YEAR) : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0
-            stockedOutReportFilter.setYearTo(filterCriteria.get("toYear") == null ? originalEnd.get(Calendar.YEAR) : Integer.parseInt(filterCriteria.get("toYear")[0])); //defaults to 0
-            stockedOutReportFilter.setMonthFrom(filterCriteria.get("fromMonth") == null ? originalStart.get(Calendar.MONTH) : Integer.parseInt(filterCriteria.get("fromMonth")[0])); //defaults to 0
-            stockedOutReportFilter.setMonthTo(filterCriteria.get("toMonth") == null ? originalEnd.get(Calendar.MONTH) : Integer.parseInt(filterCriteria.get("toMonth")[0])); //defaults to 0
-            stockedOutReportFilter.setPeriodType(filterCriteria.get("periodType") == null ? "" : filterCriteria.get("periodType")[0].toString());
-            stockedOutReportFilter.setQuarterFrom(filterCriteria.get("fromQuarter") == null ? 1 : Integer.parseInt(filterCriteria.get("fromQuarter")[0]));
-            stockedOutReportFilter.setQuarterTo(filterCriteria.get("toQuarter") == null ? 1 : Integer.parseInt(filterCriteria.get("toQuarter")[0]));
-            stockedOutReportFilter.setSemiAnnualFrom(filterCriteria.get("fromSemiAnnual") == null ? 1 : Integer.parseInt(filterCriteria.get("fromSemiAnnual")[0]));
-            stockedOutReportFilter.setSemiAnnualTo(filterCriteria.get("toSemiAnnual") == null ? 1 : Integer.parseInt(filterCriteria.get("toSemiAnnual")[0]));
+            stockedOutReportFilter.setProgramId( StringUtils.isBlank( filterCriteria.get("programId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
+            stockedOutReportFilter.setProgram( StringUtils.isBlank(filterCriteria.get("program")[0]) ? "All Programs" : filterCriteria.get("program")[0]);
+
+            //monthly
+            stockedOutReportFilter.setYearFrom( StringUtils.isBlank( filterCriteria.get("fromYear")[0] ) ? originalStart.getYear() : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0
+            stockedOutReportFilter.setYearTo( StringUtils.isBlank( filterCriteria.get("toYear")[0] ) ? originalEnd.getYear() : Integer.parseInt(filterCriteria.get("toYear")[0])); //defaults to 0
+            stockedOutReportFilter.setMonthFrom( StringUtils.isBlank( filterCriteria.get("fromMonth")[0] ) ? originalStart.getMonth() : Integer.parseInt(filterCriteria.get("fromMonth")[0])); //defaults to 0
+            stockedOutReportFilter.setMonthTo( StringUtils.isBlank( filterCriteria.get("toMonth")[0] ) ? originalEnd.getMonth() : Integer.parseInt(filterCriteria.get("toMonth")[0])); //defaults to 0
+
+             stockedOutReportFilter.setPeriodType( StringUtils.isBlank( filterCriteria.get("periodType")[0] ) ? "" : filterCriteria.get("periodType")[0].toString());
+            stockedOutReportFilter.setQuarterFrom( StringUtils.isBlank( filterCriteria.get("fromQuarter")[0] ) ? 1 : Integer.parseInt(filterCriteria.get("fromQuarter")[0]));
+            stockedOutReportFilter.setQuarterTo( StringUtils.isBlank( filterCriteria.get("toQuarter")[0] ) ? 1 : Integer.parseInt(filterCriteria.get("toQuarter")[0]));
+            stockedOutReportFilter.setSemiAnnualFrom( StringUtils.isBlank( filterCriteria.get("fromSemiAnnual")[0] ) ? 1 : Integer.parseInt(filterCriteria.get("fromSemiAnnual")[0]));
+            stockedOutReportFilter.setSemiAnnualTo( StringUtils.isBlank( filterCriteria.get("toSemiAnnual")[0] ) ? 1 : Integer.parseInt(filterCriteria.get("toSemiAnnual")[0]));
 
             int monthFrom = 0;
             int monthTo = 0;
