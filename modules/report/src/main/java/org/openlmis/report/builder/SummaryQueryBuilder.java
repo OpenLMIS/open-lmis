@@ -34,9 +34,10 @@ public class SummaryQueryBuilder {
                         "    inner join programs ON  program_products.programid = programs.id   AND  programs.id = r.programid       \n" +
                         "    inner join requisition_group_members ON facilities.id = requisition_group_members.facilityid         \n" +
                         "    inner join requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid         \n" +
-                        "    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programid = programs.id   AND requisition_group_program_schedules.requisitiongroupid = requisition_groups.id         \n" +
+                        "    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programid = programs.id   " +
+                                        " AND requisition_group_program_schedules.requisitiongroupid = requisition_groups.id         \n" +
                         "    inner join processing_schedules ON processing_schedules.id = requisition_group_program_schedules.scheduleid         \n" +
-                        "    inner join processing_periods ON processing_periods.scheduleid = processing_schedules.id  \n" +
+                        "    inner join processing_periods ON processing_periods.id = r.periodid \n" +
 
                 writePredicates(params)+
 
