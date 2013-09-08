@@ -69,7 +69,7 @@ WHERE
 				</textField>
 				<staticText>
 					<reportElement uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b" mode="Transparent" x="0" y="20" width="40" height="20" forecolor="#000000" backcolor="#003333"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
@@ -79,7 +79,7 @@ WHERE
 					<reportElement uuid="23690320-d924-418f-934c-065083bf4cbf" mode="Transparent" x="0" y="0" width="130" height="20" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" rightIndent="5"/>
+						<paragraph lineSpacing="Single"/>
 					</textElement>
 					<text><![CDATA[Supplying Facility]]></text>
 				</staticText>
@@ -234,7 +234,7 @@ WHERE
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement uuid="fd7f9ba5-9b59-4cec-945b-626add06919f" mode="Opaque" x="2" y="0" width="748" height="20" backcolor="#F4F4F4">
+				<reportElement uuid="fd7f9ba5-9b59-4cec-945b-626add06919f" mode="Opaque" x="0" y="0" width="752" height="20" backcolor="#F4F4F4">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
 				</reportElement>
 				<textElement/>
@@ -260,9 +260,9 @@ WHERE
 				</textElement>
 				<textFieldExpression><![CDATA[$F{processing_period_name}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
+			<textField pattern="" isBlankWhenNull="false">
 				<reportElement uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60" mode="Transparent" x="0" y="0" width="40" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
