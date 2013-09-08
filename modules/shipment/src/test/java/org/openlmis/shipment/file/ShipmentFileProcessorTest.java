@@ -126,6 +126,8 @@ public class ShipmentFileProcessorTest {
     shipmentFileProcessor.process(message);
 
     verify(shipmentService, times(0)).insertShippedLineItem(any(ShipmentLineItem.class));
+    verify(shipmentFilePostProcessHandler).process(shipmentFile, true);
+
   }
 
   @Test
@@ -147,6 +149,8 @@ public class ShipmentFileProcessorTest {
 
     verify(mockedCsvListReader, times(0)).getHeader(true);
     verify(shipmentService, times(1)).insertShippedLineItem(any(ShipmentLineItem.class));
+    verify(shipmentFilePostProcessHandler).process(shipmentFile, false);
+
   }
 
   @Test
@@ -166,6 +170,8 @@ public class ShipmentFileProcessorTest {
     shipmentFileProcessor.process(message);
 
     verify(mockedCsvListReader).getHeader(true);
+    verify(shipmentFilePostProcessHandler).process(shipmentFile, false);
+
 
   }
 
@@ -198,6 +204,7 @@ public class ShipmentFileProcessorTest {
     shipmentFileProcessor.process(message);
 
     verify(shipmentService).insertShippedLineItem(shipmentLineItem);
+    verify(shipmentFilePostProcessHandler).process(shipmentFile, false);
 
   }
 }

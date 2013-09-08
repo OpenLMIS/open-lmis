@@ -78,6 +78,8 @@ public class ShipmentFileProcessor {
 
     Collection<ShipmentFileColumn> includedColumns = filterIncludedColumns(shipmentFileColumns);
 
+    boolean errorInFile = true;
+
     int maxPosition = findMaximumPosition(includedColumns);
 
     try (ICsvListReader listReader = new CsvListReader(new FileReader(shipmentFile), STANDARD_PREFERENCE)) {
@@ -99,8 +101,15 @@ public class ShipmentFileProcessor {
         }
       }
 
+      errorInFile = false;
       logger.debug("Successfully processed file " + shipmentFile.getName());
       sendArchiveToFtp(shipmentFile);
+
+    } catch (Exception e) {
+      logger.warn("Error processing file " + shipmentFile.getName() + " with error " + e.getMessage());
+      throw e;
+    } finally {
+      shipmentFilePostProcessHandler.process(shipmentFile, errorInFile);
     }
   }
 
