@@ -111,7 +111,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
         };
         $scope.filterGrid = function (){
             //fixes ngGrid footer alignment
-            $(".ngFooterPanel").css("margin-left",$(".span3").width() + ($(".span3").width()/3)) ;
+            //$(".ngFooterPanel").css("margin-left",$(".span3").width() + ($(".span3").width()/3)) ;
 
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
