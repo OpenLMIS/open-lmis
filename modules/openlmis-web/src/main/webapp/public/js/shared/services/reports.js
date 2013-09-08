@@ -1,8 +1,4 @@
-/**
- * User: Elias
- * Date: 5/4/13
- * Time: 2:33 PM
- */
+
 
 //var services = angular.module('openlmis.services', ['ngResource']);
 

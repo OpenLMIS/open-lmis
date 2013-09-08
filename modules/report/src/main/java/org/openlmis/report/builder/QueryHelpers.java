@@ -11,12 +11,6 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * e-lmis
- * Created by: Elias Muluneh
- * Date: 5/8/13
- * Time: 9:29 AM
- */
 public class QueryHelpers {
 
     public static String getSortOrder(Map params, String defaultColumn){

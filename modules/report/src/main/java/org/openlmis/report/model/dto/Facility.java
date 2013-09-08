@@ -12,12 +12,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-/**
- * e-lmis
- * Created by: Elias Muluneh
- * Date: 4/29/13
- * Time: 4:10 PM
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

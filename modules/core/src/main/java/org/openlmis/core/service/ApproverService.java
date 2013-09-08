@@ -15,12 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * e-lmis
- * Created by: Elias Muluneh
- * Date: 8/13/13
- * Time: 11:48 AM
- */
 @Service
 @NoArgsConstructor
 @AllArgsConstructor
