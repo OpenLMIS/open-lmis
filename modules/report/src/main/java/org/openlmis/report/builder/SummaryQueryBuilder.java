@@ -61,8 +61,9 @@ public class SummaryQueryBuilder {
         String zone =     (!params.containsKey("zoneId") || params.get("zoneId") == null) ? null : ((String[])params.get("zoneId"))[0];
         String rgroup =     (!params.containsKey("rgroupId") || params.get("rgroupId") == null) ? null : ((String[])params.get("rgroupId"))[0];
         String schedule = (!params.containsKey("facilityTypeId") || params.get("scheduleId") == null) ? null : ((String[])params.get("scheduleId"))[0];
+        String facilityId = (!params.containsKey("facilityId") || params.get("facilityId") == null) ? null : ((String[])params.get("facilityId"))[0];
 
-        if (period != null &&  !period.equals("undefined") && !period.isEmpty() && !period.equals("0")  && !period.equals("-1")){
+      if (period != null &&  !period.equals("undefined") && !period.isEmpty() && !period.equals("0")  && !period.equals("-1")){
             predicate += " and r.periodid = "+ period;
         }
         if (program != null &&  !program.equals("undefined") && !program.isEmpty() && !program.equals("0")  && !program.equals("-1")) {
@@ -93,7 +94,9 @@ public class SummaryQueryBuilder {
 
             predicate += " and facilities.name = '"+ facilityName +"'";
         }
-
+        if(facilityId != null && !facilityId.equals("") && !facilityId.equals( "undefined")){
+            predicate += " and facilities.id = "+ facilityId +"";
+        }
         return predicate;
     }
 
