@@ -618,13 +618,13 @@ function StockedOutController($scope, $window, StockedOutReport, Products , Repo
         data: 'myData',
         columnDefs:
             [
-                { field: 'supplyingFacility', displayName: 'Supplying Facility', width: "150px;"},
-                { field: 'facilitycode', displayName: 'Facility Code', width: "100px;" },
-                { field: 'facility', displayName: 'Facility Name', width: "150px;", resizable: false},
-                { field: 'facilitytypename', displayName: 'Facility Type', width: "150px;", resizable: false},
-                { field: 'location', displayName: 'Location', width: "100px;" },
-                { field: 'processing_period_name', displayName: 'Period', width: "100px;" },
-                { field: 'product', displayName: 'Product', width: "250px;" }
+                { field: 'supplyingFacility', displayName: 'Supplying Facility', width: "**"},
+                { field: 'facilitycode', displayName: 'Facility Code', width: "**" },
+                { field: 'facility', displayName: 'Facility Name', width: "**", resizable: false},
+                { field: 'facilitytypename', displayName: 'Facility Type', width: "**", resizable: false},
+                { field: 'location', displayName: 'Location', width: "**" },
+                { field: 'processing_period_name', displayName: 'Period', width: "**" },
+                { field: 'product', displayName: 'Product', width: "***" }
 
             ],
         enablePaging: true,

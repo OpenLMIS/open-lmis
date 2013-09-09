@@ -57,6 +57,7 @@ public class RnRFeedbackReportQueryBuilder {
         WHERE("program_id = "+filter.getProgramId());
         WHERE("facility_id = "+filter.getFacilityId());
         WHERE("processing_periods_id = "+filter.getPeriodId());
+        WHERE("req_status in ('APPROVED','RELEASED')");
 
         if (filter.getZoneId() != 0 && filter.getZoneId() != -1) {
             WHERE("zone_id = "+filter.getZoneId());
