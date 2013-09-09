@@ -1,4 +1,4 @@
-function RnRFeedbackController($scope, RnRFeedbackReport, Products ,ReportFacilityTypes,GeographicZones,AllReportPeriods,ReportFilteredPeriods, $http,OperationYears, Months, ReportPrograms,AllFacilites,GetFacilityByFacilityType, $routeParams,$location) {
+function RnRFeedbackController($scope, RnRFeedbackReport, Products ,ReportFacilityTypes,GeographicZones,AllReportPeriods,ReportFilteredPeriods, $http,OperationYears, Months, ReportPrograms,AllFacilites,GetFacilityByFacilityType,SettingsByKey, $routeParams,$location) {
     //to minimize and maximize the filter section
     var section = 1;
 
@@ -8,6 +8,12 @@ function RnRFeedbackController($scope, RnRFeedbackReport, Products ,ReportFacili
 
     $scope.showMessage = true;
     $scope.message = "Indicates a required field."
+
+    $scope.IndicatorProductsKey = "INDICATOR_PRODUCTS";
+
+    SettingsByKey.get({key: $scope.IndicatorProductsKey},function (data){
+        $scope.IndicatorProductsDescription = data.settings.value;
+    });
 
     $scope.show = function (id) {
         return section == id;
@@ -181,9 +187,11 @@ function RnRFeedbackController($scope, RnRFeedbackReport, Products ,ReportFacili
         toQuarter: $scope.toQuarter,
         toSemiAnnual:$scope.endHalf,
         programId : $scope.program,
+        program : "",
         periodId : $scope.period,
         zoneId : $scope.zone,
         productId : $scope.productId,
+        product : "",
         scheduleId : $scope.schedule,
         rgroupId : $scope.rgroup,
         rgroup : "",
@@ -208,7 +216,9 @@ function RnRFeedbackController($scope, RnRFeedbackReport, Products ,ReportFacili
 
     Products.get(function(data){
         $scope.products = data.productList;
-        $scope.products.push({'name': '-- All Products --','id':'All'});
+        $scope.products.unshift({'name': '-- All Products --', 'id':'All'});
+        var ind_prod = $scope.IndicatorProductsDescription;
+        $scope.products.unshift({'name': '-- '.concat(ind_prod).concat(' --'), 'id':'-1'});
     });
 
     GeographicZones.get(function(data) {
@@ -307,6 +317,11 @@ function RnRFeedbackController($scope, RnRFeedbackReport, Products ,ReportFacili
             $scope.filterObject.productId =  -1;
         }else if(selection != undefined || selection == ""){
             $scope.filterObject.productId =  selection;
+            $.each($scope.products, function(item, idx){
+               if(idx.id == selection){
+                   $scope.filterObject.product = idx.name;
+               }
+            });
         }else{
             $scope.filterObject.productId =  0;
         }

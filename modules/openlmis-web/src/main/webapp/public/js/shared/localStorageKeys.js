@@ -5,4 +5,4 @@
  */
 
 //Add the key constants for localStorage('key','value') pairs in the application
-var localStorageKeys = { RIGHT:"RIGHTS", CURRENCY:"CURRENCY",USERNAME:"USERNAME"};
+var localStorageKeys = { RIGHT:"RIGHTS", CURRENCY:"CURRENCY",USERNAME:"USERNAME", REPORTS:{STOCK_IMBALANCE:"REPORT_STOCK_IMBALANCE",SUPPLY_STATUS:"REPORT_SUPPLY_STATUS"}};

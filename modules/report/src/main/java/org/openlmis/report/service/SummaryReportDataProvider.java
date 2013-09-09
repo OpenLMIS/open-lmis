@@ -60,7 +60,7 @@ public class SummaryReportDataProvider extends ReportDataProvider {
         String rgroup = "";
 
         if(facilityTypeId != null && !facilityTypeId.isEmpty()){
-            if(facilityTypeId.equals("-1"))
+            if(facilityTypeId.equals("-1") || facilityTypeId.equals(""))
                 facilityType = "All Facility Types";
             else
                 facilityType = params.get("facilityType")[0];

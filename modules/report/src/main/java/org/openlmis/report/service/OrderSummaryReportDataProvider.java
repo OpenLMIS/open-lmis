@@ -68,8 +68,6 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
 
         if(filterCriteria != null){
             orderReportFilter = new OrderReportFilter();
-            Calendar originalStart = Calendar.getInstance();
-            Calendar originalEnd = Calendar.getInstance();
 
             orderReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
             orderReportFilter.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
@@ -77,64 +75,16 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
             orderReportFilter.setFacility(filterCriteria.get("facilityName") == null ? "" : filterCriteria.get("facilityName")[0]);
             orderReportFilter.setFacilityTypeId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0])); //defaults to 0
 
-            orderReportFilter.setRgroup( (filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "ALL Reporting Groups" : filterCriteria.get("rgroup")[0]);
-
+            orderReportFilter.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0])); //defaults to 0
 
             orderReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
+
             orderReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
-            //orderReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
-            orderReportFilter.setOrderType(filterCriteria.get("orderType") == null ? "" : filterCriteria.get("orderType")[0].toString());
+            orderReportFilter.setOrderType(filterCriteria.get("orderType") == null ? "" : filterCriteria.get("orderType")[0]);
             orderReportFilter.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0])); //defaults to 0
             orderReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
 
-            orderReportFilter.setStartDate(InteractiveReportPeriodFilterParser.getStartDateFilterValue(filterCriteria));
-            orderReportFilter.setEndDate(InteractiveReportPeriodFilterParser.getEndDateFilterValue(filterCriteria));
-
-            /*orderReportFilter.setYearFrom(filterCriteria.get("fromYear") == null ? originalStart.get(Calendar.YEAR) : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0
-            orderReportFilter.setYearTo(filterCriteria.get("toYear") == null ? originalEnd.get(Calendar.YEAR) : Integer.parseInt(filterCriteria.get("toYear")[0])); //defaults to 0
-            orderReportFilter.setMonthFrom(filterCriteria.get("fromMonth") == null ? originalStart.get(Calendar.MONTH) : Integer.parseInt(filterCriteria.get("fromMonth")[0])); //defaults to 0
-            orderReportFilter.setMonthTo(filterCriteria.get("toMonth") == null ? originalEnd.get(Calendar.MONTH) : Integer.parseInt(filterCriteria.get("toMonth")[0])); //defaults to 0
-            orderReportFilter.setPeriodType(filterCriteria.get("periodType") == null ? "" : filterCriteria.get("periodType")[0].toString());
-            orderReportFilter.setQuarterFrom(filterCriteria.get("fromQuarter") == null ? 1 : Integer.parseInt(filterCriteria.get("fromQuarter")[0]));
-            orderReportFilter.setQuarterTo(filterCriteria.get("toQuarter") == null ? 1 : Integer.parseInt(filterCriteria.get("toQuarter")[0]));
-            orderReportFilter.setSemiAnnualFrom(filterCriteria.get("fromSemiAnnual") == null ? 1 : Integer.parseInt(filterCriteria.get("fromSemiAnnual")[0]));
-            orderReportFilter.setSemiAnnualTo(filterCriteria.get("toSemiAnnual") == null ? 1 : Integer.parseInt(filterCriteria.get("toSemiAnnual")[0]));
-
-            int monthFrom = 0;
-            int monthTo = 0;
-
-            String periodType = orderReportFilter.getPeriodType();
-
-            if(periodType.equals(Constants.PERIOD_TYPE_QUARTERLY)){
-                monthFrom = 3 *(orderReportFilter.getQuarterFrom() - 1);
-                monthTo =  3 * orderReportFilter.getQuarterTo() - 1;
-
-            }else if(periodType.equals(Constants.PERIOD_TYPE_MONTHLY)){
-                monthFrom = orderReportFilter.getMonthFrom();
-                monthTo = orderReportFilter.getMonthTo();
-
-            }else if(periodType.equals(Constants.PERIOD_TYPE_SEMI_ANNUAL)){
-                monthFrom = 6 * (orderReportFilter.getSemiAnnualFrom() - 1);
-                monthTo = 6 *orderReportFilter.getSemiAnnualTo() - 1;
-            }else if(periodType.equals(Constants.PERIOD_TYPE_ANNUAL)){
-                monthFrom = 0;
-                monthTo = 11;
             }
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.YEAR, orderReportFilter.getYearFrom());
-            calendar.set(Calendar.MONTH, monthFrom);
-            calendar.set(Calendar.DAY_OF_MONTH, 1);
-            orderReportFilter.setStartDate(calendar.getTime());
-
-            calendar.set(Calendar.YEAR, orderReportFilter.getYearTo());
-            calendar.set(Calendar.MONTH, monthTo);
-            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-            orderReportFilter.setEndDate(calendar.getTime());*/
-
-
-
-        }
         return orderReportFilter;
     }
 }

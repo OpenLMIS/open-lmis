@@ -112,14 +112,19 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
             header += "Program : " + this.reportMapper.getProgram(Integer.parseInt(program)).get(0).getName();
         }
         if(reportingGroup != "" && !reportingGroup.endsWith( "undefined")){
-            header = "\nRequisition Group : " + this.requisitionGroupMapper.getById(Integer.parseInt(reportingGroup)).get(0).getName();
+            header += "\nRequisition Group : " + this.requisitionGroupMapper.getById(Integer.parseInt(reportingGroup)).get(0).getName();
         }
+
         if(facilityType != "" && !facilityType.endsWith( "undefined")){
             header += "\nFacility Type : " + this.reportMapper.getFacilityType(Integer.parseInt(facilityType)).get(0).getName();
+        } else{
+            header += "\nFacility Type : All Facility Types";
         }
+
         if(period != "" && !period.endsWith("undefined")){
             header += "\nPeriod : " + this.reportMapper.getPeriodId(Integer.parseInt(period)).get(0).getName();
         }
+
         result.put("REPORT_FILTER_PARAM_VALUES", header);
 
         return    result;
