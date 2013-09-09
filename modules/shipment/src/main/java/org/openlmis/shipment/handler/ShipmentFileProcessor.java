@@ -8,7 +8,6 @@ package org.openlmis.shipment.handler;
 
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.io.FileUtils;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.order.dto.ShipmentLineItemDTO;
 import org.openlmis.shipment.ShipmentLineItemTransformer;
@@ -21,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
-import org.springframework.integration.MessageChannel;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.supercsv.io.CsvListReader;
 import org.supercsv.io.ICsvListReader;
@@ -36,7 +34,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.apache.commons.collections.CollectionUtils.select;
-import static org.springframework.integration.support.MessageBuilder.withPayload;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
 @MessageEndpoint
@@ -46,9 +43,6 @@ public class ShipmentFileProcessor {
 
   @Autowired
   private ShipmentFilePostProcessHandler shipmentFilePostProcessHandler;
-
-  @Autowired
-  private MessageChannel ftpArchiveOutputChannel;
 
   @Autowired
   private ShipmentFileTemplateService shipmentFileTemplateService;
@@ -96,7 +90,6 @@ public class ShipmentFileProcessor {
 
       errorInFile = false;
       logger.debug("Successfully processed file " + shipmentFile.getName());
-      sendArchiveToFtp(shipmentFile);
 
     } catch (Exception e) {
       logger.warn("Error processing file " + shipmentFile.getName() + " with error " + e.getMessage());
@@ -104,9 +97,6 @@ public class ShipmentFileProcessor {
 
     } finally {
       shipmentFilePostProcessHandler.process(orderIds, shipmentFile, errorInFile);
-      if (!FileUtils.deleteQuietly(shipmentFile)) {
-        logger.error("Unable to delete temporary shipment file " + shipmentFile.getName());
-      }
     }
   }
 
@@ -174,11 +164,5 @@ public class ShipmentFileProcessor {
     return null;
   }
 
-
-  private void sendArchiveToFtp(File file) {
-    Message<File> message = withPayload(file).build();
-    ftpArchiveOutputChannel.send(message);
-    logger.debug("Shipment file " + file.getName() + " archived to FTP");
-  }
 
 }

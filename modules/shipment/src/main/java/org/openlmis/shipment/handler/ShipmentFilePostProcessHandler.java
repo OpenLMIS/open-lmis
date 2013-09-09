@@ -13,22 +13,27 @@ import org.openlmis.shipment.service.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Set;
+
+import static org.apache.commons.io.FileUtils.deleteQuietly;
+import static org.springframework.integration.support.MessageBuilder.withPayload;
 
 @Component
 @NoArgsConstructor
 public class ShipmentFilePostProcessHandler {
 
   @Autowired
-
   private ShipmentService shipmentService;
 
   @Autowired
   private MessageChannel ftpOutputChannel;
+
+  @Autowired
+  private MessageChannel ftpArchiveOutputChannel;
+
 
   private static final Logger logger = Logger.getLogger(ShipmentFilePostProcessHandler.class);
 
@@ -39,13 +44,20 @@ public class ShipmentFilePostProcessHandler {
 
     shipmentService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
 
-    if (error) sendErrorFileToFtp(shipmentFile);
+    Message<File> message = withPayload(shipmentFile).build();
+
+    if (!error) {
+      ftpArchiveOutputChannel.send(message);
+      logger.debug("Shipment file " + shipmentFile.getName() + " archived");
+    } else {
+      ftpOutputChannel.send(message);
+      logger.warn("Shipment file " + shipmentFile.getName() + " copied to error folder");
+    }
+
+    if (!deleteQuietly(shipmentFile)) {
+      logger.error("Unable to delete temporary shipment file " + shipmentFile.getName());
+    }
   }
 
-  private void sendErrorFileToFtp(File file) {
-    Message<File> message = MessageBuilder.withPayload(file).build();
-    ftpOutputChannel.send(message);
-    logger.info("Sent  error file to FTP " + file.getName());
-  }
 
 }
