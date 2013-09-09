@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.shipment.file;
+package org.openlmis.shipment.handler;
 
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
@@ -15,7 +15,6 @@ import org.openlmis.shipment.ShipmentLineItemTransformer;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.domain.ShipmentLineItem;
-import org.openlmis.shipment.file.csv.handler.ShipmentFilePostProcessHandler;
 import org.openlmis.shipment.service.ShipmentFileTemplateService;
 import org.openlmis.shipment.service.ShipmentService;
 import org.slf4j.Logger;
