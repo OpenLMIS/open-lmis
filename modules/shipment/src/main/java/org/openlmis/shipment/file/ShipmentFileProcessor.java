@@ -8,6 +8,7 @@ package org.openlmis.shipment.file;
 
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.io.FileUtils;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.service.DbService;
 import org.openlmis.order.dto.ShipmentLineItemDTO;
@@ -110,6 +111,9 @@ public class ShipmentFileProcessor {
       throw e;
     } finally {
       shipmentFilePostProcessHandler.process(shipmentFile, errorInFile);
+      if (!FileUtils.deleteQuietly(shipmentFile)) {
+        logger.error("Unable to delete temporary shipment file " + shipmentFile.getName());
+      }
     }
   }
 
@@ -164,31 +168,6 @@ public class ShipmentFileProcessor {
     return null;
   }
 
-
-//  public void process(Message message) throws IOException {
-//    File shipmentFile = (File) message.getPayload();
-//    boolean processingError = false;
-//    ModelClass modelClass = new ModelClass(ShippedLineItem.class, true);
-//    try (FileInputStream inputStream = new FileInputStream(shipmentFile)) {
-//
-//      Date currentTimestamp = dbService.getCurrentTimestamp();
-//      csvParser.process(inputStream, modelClass, shipmentRecordHandler, new AuditFields(currentTimestamp));
-//
-//      logger.debug("Successfully processed file " + shipmentFile.getName());
-//      sendArchiveToFtp(shipmentFile);
-//
-//    } catch (DataException | UploadException e) {
-//      logger.warn("Error processing file " + shipmentFile.getName() + " with error " + e.getMessage());
-//      processingError = true;
-//    } finally {
-//      shipmentFilePostProcessHandler.process(shipmentFile, processingError);
-//      logger.info("Updated order statuses for file " + shipmentFile.getName());
-//      boolean deleteStatus = deleteQuietly(shipmentFile);
-//      if (!deleteStatus) {
-//        logger.error("Unable to delete temporary shipment file " + shipmentFile.getName());
-//      }
-//    }
-//  }
 
   private void sendArchiveToFtp(File file) {
     Message<File> message = withPayload(file).build();
