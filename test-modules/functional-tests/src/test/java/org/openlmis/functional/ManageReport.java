@@ -36,12 +36,12 @@ public class ManageReport extends TestCaseHelper {
   }
 
 
-  @BeforeMethod(groups = {"functional2"})
+  @BeforeMethod(groups = {"admin"})
   public void setUp() throws Exception {
     super.setup();
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void invalidScenariosReports(String[] credentials) throws Exception {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -73,7 +73,7 @@ public class ManageReport extends TestCaseHelper {
     reportPage.verifyErrorMessageDivFooter();
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive", dependsOnMethods = "invalidScenariosReports")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive", dependsOnMethods = "invalidScenariosReports")
   public void uploadManageReport(String[] credentials) throws Exception {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -94,7 +94,7 @@ public class ManageReport extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive", dependsOnMethods = "uploadManageReport")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive", dependsOnMethods = "uploadManageReport")
   public void verifyDuplicateReport(String[] credentials) throws Exception {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -122,7 +122,7 @@ public class ManageReport extends TestCaseHelper {
   }
 
 
-  @AfterMethod(groups = {"functional2"})
+  @AfterMethod(groups = {"admin"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);

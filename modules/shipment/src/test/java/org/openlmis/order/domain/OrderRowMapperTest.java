@@ -31,11 +31,13 @@ public class OrderRowMapperTest {
   public void shouldCreateOrderFromResultSet() throws Exception {
     when(resultSet.getString("id")).thenReturn("5");
     when(resultSet.getString("rnrid")).thenReturn("4");
+    when(resultSet.getString("supplylineid")).thenReturn("55");
 
     Order order = orderRowMapper.mapRow(resultSet, 1);
 
     verify(resultSet).getString("id");
     assertThat(order.getId(), is(5L));
     assertThat(order.getRnr().getId(), is(4L));
+    assertThat(order.getSupplyLine().getId(), is(55L));
   }
 }

@@ -290,6 +290,7 @@ public class DBWrapper {
 
     update("delete from supervisory_nodes;");
     update("delete from refrigerators;");
+    update("delete from facility_ftp_details;");
     update("delete from facilities;");
     update("delete from geographic_zones where code not in ('Root','Arusha','Dodoma', 'Ngorongoro');");
     update("delete from processing_periods;");
@@ -297,7 +298,6 @@ public class DBWrapper {
     update("delete from atomfeed.event_records;");
     update("delete from regimens;");
     update("delete from program_regimen_columns;");
-    update("delete from facility_ftp_details;");
   }
 
 
@@ -446,17 +446,16 @@ public class DBWrapper {
 
   }
 
-    public void insertProductGroup(String group) throws SQLException, IOException {
+  public void insertProductGroup(String group) throws SQLException, IOException {
+    update("INSERT INTO product_groups (code, name) values ('" + group + "', '" + group + "-Name');");
+  }
 
-        update("INSERT INTO product_groups (code, name) values ('" + group + "', '" + group + "-Name');");
-    }
+  public void insertProductWithGroup(String product, String productName, String group, boolean status) throws SQLException, IOException {
+    update("INSERT INTO products\n" +
+      "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder, productgroupid) values\n" +
+      "('" + product + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    '" + productName + "', '" + productName + "',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          " + status + ",TRUE,       TRUE,         1,                    FALSE,      TRUE,    1, (Select id from product_groups where code='" + group + "'));\n");
 
-    public void insertProductWithGroup(String product, String productName, String group, boolean status) throws SQLException, IOException {
-         update("INSERT INTO products\n" +
-                "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder, productgroupid) values\n" +
-                "('" + product + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    '" + productName + "', '" + productName + "',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     " + status + ",       TRUE,         1,                    FALSE,      TRUE,    1, (Select id from product_groups where code='" + group + "'));\n");
-
-    }
+  }
 
   public void updateProgramToAPushType(String program, boolean flag) throws SQLException {
     update("update programs set push='" + flag + "' where code='" + program + "';");
@@ -703,10 +702,6 @@ public class DBWrapper {
       "('supplying node for HIV', (select id from supervisory_nodes where code = '" + supervisoryNode + "'), (select id from programs where code='" + programCode + "'),(select id from facilities where code = '" + facilityCode + "'),'t');\n");
   }
 
-  public void updateSupplyingFacilityForRequisition(String facilityCode) throws IOException, SQLException {
-    update("update requisitions set supplyLineId=(select id from supply_lines where supplyingFacilityId = (select id from facilities where code='" + facilityCode + "'));");
-
-  }
 
   public void insertValuesInRequisition() throws IOException, SQLException {
     update("update requisition_line_items set beginningbalance=1,  quantityreceived=1, quantitydispensed=1, newpatientcount=1, stockoutdays=1, quantityrequested=10, reasonforrequestedquantity='bad climate', normalizedconsumption=10, packstoship=1;");
@@ -1078,12 +1073,12 @@ public class DBWrapper {
       "  ('" + fileprefix + "', '" + headerinfile + "');");
   }
 
-    public void setupShipmentFileConfiguration(String headerinfile) throws IOException, SQLException {
-        update("DELETE FROM shipment_configuration;");
-        update("INSERT INTO shipment_configuration \n" +
-                "  (headerinfile) VALUES\n" +
-                "  ('" + headerinfile + "');");
-    }
+  public void setupShipmentFileConfiguration(String headerinfile) throws IOException, SQLException {
+    update("DELETE FROM shipment_configuration;");
+    update("INSERT INTO shipment_configuration \n" +
+      "  (headerinfile) VALUES\n" +
+      "  ('" + headerinfile + "');");
+  }
 
   public void defaultSetupOrderFileOpenLMISColumns() throws IOException, SQLException {
     update("DELETE FROM order_file_columns where openlmisfield=TRUE;");
@@ -1097,25 +1092,25 @@ public class DBWrapper {
 
   }
 
-    public void defaultSetupShipmentFileColumns() throws IOException, SQLException {
-        update("DELETE FROM shipment_file_columns;");
+  public void defaultSetupShipmentFileColumns() throws IOException, SQLException {
+    update("DELETE FROM shipment_file_columns;");
 
-        update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory) VALUES ('header.order.number', 1, TRUE, TRUE);");
-        update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory) VALUES ('header.product.code', 2, TRUE, TRUE);");
-        update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory) VALUES ('header.quantity.shipped', 3, TRUE, TRUE);");
-        update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory) VALUES ('header.cost', 4, FALSE, FALSE);");
-        update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory, datepattern) VALUES ('header.packed.date', 5, FALSE, FALSE, 'dd/MM/yy');");
-        update("INSERT INTO shipment_file_columns (dataFieldLabel, position, includedinshipmentfile, mandatory, datepattern) VALUES ('header.shipped.date', 6, FALSE, FALSE, 'dd/MM/yy');");
+    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('orderId', 'header.order.number', 1, TRUE, TRUE);");
+    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('productCode', 'header.product.code', 2, TRUE, TRUE);");
+    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('quantityShipped', 'header.quantity.shipped', 3, TRUE, TRUE);");
+    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('cost', 'header.cost', 4, FALSE, FALSE);");
+    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory, datepattern) VALUES ('packedDate', 'header.packed.date', 5, FALSE, FALSE, 'dd/MM/yy');");
+    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory, datepattern) VALUES ('shippedDate', 'header.shipped.date', 6, FALSE, FALSE, 'dd/MM/yy');");
 
-    }
+  }
 
   public void setupOrderFileOpenLMISColumns(String datafieldlabel, String includeinorderfile, String columnlabel, int position, String Format) throws IOException, SQLException {
     update("UPDATE order_file_columns SET \n" +
       "includeinorderfile='" + includeinorderfile + "', columnlabel='" + columnlabel + "', position=" + position + ", format='" + Format + "' where datafieldlabel='" + datafieldlabel + "';");
   }
 
-  public void deleteOrderFileNonOpenLMISColumns()throws SQLException {
-      update("DELETE FROM order_file_columns where openlmisfield=FALSE;");
+  public void deleteOrderFileNonOpenLMISColumns() throws SQLException {
+    update("DELETE FROM order_file_columns where openlmisfield=FALSE;");
   }
 
   public void setupOrderFileNonOpenLMISColumns(String datafieldlabel, String includeinorderfile, String columnlabel, int position) throws IOException, SQLException {
@@ -1132,7 +1127,11 @@ public class DBWrapper {
     return createdDate;
   }
 
-    public void setupFacilityFTPDetails(String facilitycode, String serverhost, String serverport, String username, String password, String localfolderpath) throws IOException, SQLException {
-        update("INSERT INTO facility_ftp_details (facilitycode, serverhost, serverport, username, password, localfolderpath) VALUES ('" + facilitycode + "','" + serverhost + "','" + serverport + "','" + username + "','" + password + "','" + localfolderpath + "');");
-    }
+  public void setupFacilityFTPDetails(String facilitycode, String serverhost, String serverport, String username, String password, String localfolderpath) throws IOException, SQLException {
+    update("INSERT INTO facility_ftp_details (facilitycode, serverhost, serverport, username, password, localfolderpath) VALUES ('" + facilitycode + "','" + serverhost + "','" + serverport + "','" + username + "','" + password + "','" + localfolderpath + "');");
+  }
+
+  public void updateProductToHaveGroup(String product, String productGroup) throws SQLException {
+    update("UPDATE products set productGroupId = (SELECT id from product_groups where code = '" + productGroup + "') where code = '" + product + "'");
+  }
 }

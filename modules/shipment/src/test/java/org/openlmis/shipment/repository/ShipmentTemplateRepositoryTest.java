@@ -36,7 +36,7 @@ public class ShipmentTemplateRepositoryTest {
 
   @Test
   public void shouldGetAllShipmentFileColumns() {
-    List<ShipmentFileColumn> expectedShipmentColumns = new ArrayList<ShipmentFileColumn>();
+    List<ShipmentFileColumn> expectedShipmentColumns = new ArrayList<>();
     when(shipmentFileColumnMapper.getAll()).thenReturn(expectedShipmentColumns);
     List<ShipmentFileColumn> shipmentFileColumns = repository.getAllShipmentFileColumns();
     assertThat(shipmentFileColumns, is(expectedShipmentColumns));

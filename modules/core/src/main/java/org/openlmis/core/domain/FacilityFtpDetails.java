@@ -25,8 +25,8 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FacilityFtpDetails extends BaseModel implements Importable {
 
-  @ImportField(mandatory = true, name = "Facility Code")
-  private String facilityCode;
+  @ImportField(mandatory = true, name = "Facility Code", nested = "code")
+  private Facility facility;
 
   @ImportField(mandatory = true, name = "Host")
   private String serverHost;

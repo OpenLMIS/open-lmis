@@ -32,12 +32,12 @@ public class RnRPagination extends ReportTestHelper {
   private static final String FULL_SUPPLY_BASE_LOCATOR="//table[@id='fullSupplyTable']";
   private static final String NON_FULL_SUPPLY_BASE_LOCATOR="//table[@id='nonFullSupplyTable']";
 
-  @BeforeMethod(groups = {"functional"})
+  @BeforeMethod(groups = {"requisition"})
   public void setUp() throws Exception {
     super.setup();
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testRnRPaginationAndSpecificDisplayOrder(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
     dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, false);
     dbWrapper.insertFacilities("F10", "F11");
@@ -115,7 +115,7 @@ public class RnRPagination extends ReportTestHelper {
 
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testProductDefaultDisplayOrder(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
     dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, true);
     dbWrapper.insertFacilities("F10", "F11");
@@ -146,7 +146,7 @@ public class RnRPagination extends ReportTestHelper {
     verifyDefaultDisplayOrderNonFullSupply();
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testCategoryDisplayOrder(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
     dbWrapper.setupMultipleCategoryProducts(program, "Lvl3 Hospital", 11, false);
     dbWrapper.insertFacilities("F10", "F11");
@@ -177,7 +177,7 @@ public class RnRPagination extends ReportTestHelper {
     verifyCategoryDisplayOrderNonFullSupply(10);
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testCategoryDefaultDisplayOrder(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
     dbWrapper.setupMultipleCategoryProducts(program, "Lvl3 Hospital", 11, true);
     dbWrapper.insertFacilities("F10", "F11");
@@ -335,7 +335,7 @@ public class RnRPagination extends ReportTestHelper {
 
   }
 
-  @AfterMethod(groups = {"functional"})
+  @AfterMethod(groups = {"requisition"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);

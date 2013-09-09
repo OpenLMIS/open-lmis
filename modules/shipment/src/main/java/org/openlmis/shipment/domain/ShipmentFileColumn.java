@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.domain.BaseModel;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -16,12 +17,14 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
-public class ShipmentFileColumn {
+public class ShipmentFileColumn extends BaseModel {
 
+  private String name;
   private String dataFieldLabel;
   private Integer position;
-  private Boolean includedInShipmentFile;
+  private Boolean include;
   private Boolean mandatory;
   private String datePattern;
+
 
 }

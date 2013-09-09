@@ -45,7 +45,7 @@ public class ManageISA extends TestCaseHelper {
   public String user, program, product, productName, category, whoratio, dosesperyear, wastageFactor,
     bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue, date_time;
 
-  @BeforeMethod(groups = "functional2")
+  @BeforeMethod(groups = "admin")
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -124,7 +124,7 @@ public class ManageISA extends TestCaseHelper {
     createFacilityPage.verifyOverriddenIsa(isa);
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void shouldOverrideIsaExistingFacility(String userSIC, String password, String program) throws Exception {
     setupProgramProductTestDataWithCategories("P1", "antibiotic1", "C1", "VACCINES");
     setupProgramProductISA(program, "P1", "1", "2", "3", "100", "100", "1000", "5");
@@ -174,7 +174,7 @@ public class ManageISA extends TestCaseHelper {
   }
 
 
-  @AfterMethod(groups = "functional2")
+  @AfterMethod(groups = "admin")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if(!testWebDriver.getElementById("username").isDisplayed()) {

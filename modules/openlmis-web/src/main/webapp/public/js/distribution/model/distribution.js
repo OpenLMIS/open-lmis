@@ -11,8 +11,15 @@ function Distribution(distributionJson) {
     $.each(this.facilityDistributionData, function (key, value) {
       value.epiUse = new EpiUse(value.epiUse);
       value.refrigerators = new Refrigerators(value.refrigerators);
+      value.generalObservation = new GeneralObservation(value.generalObservation);
     });
   }
-  
+
+  Distribution.prototype.setEpiNotRecorded = function(facilityId) {
+    this.facilityDistributionData[facilityId].epiUse.setNotRecorded();
+  };
+
   return this;
 }
+
+

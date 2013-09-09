@@ -9,9 +9,10 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
   $scope.program = program;
   $scope.regimens = programRegimens;
   $scope.regimenTemplate = regimenTemplate;
-  $scope.regimenTemplate.columns = _.reject($scope.regimenTemplate.columns, function (column) {
+  var hiddenColumns = _.filter($scope.regimenTemplate.columns, function (column) {
     return (column.name == 'name' || column.name == 'code');
   });
+  $scope.regimenTemplate.columns = _.difference($scope.regimenTemplate.columns,hiddenColumns);
   $scope.regimenCategories = regimenCategories;
   $scope.selectProgramUrl = "/public/pages/admin/regimen-template/index.html#/select-program";
   $scope.regimensByCategory = [];
@@ -157,7 +158,7 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
       regimenListToSave.push(regimen);
     });
     regimenForm.regimens = regimenListToSave;
-    regimenForm.regimenColumnList = $scope.regimenTemplate.columns;
+    regimenForm.regimenColumnList = _.union(hiddenColumns,$scope.regimenTemplate.columns);
     Regimens.save({programId: $scope.program.id}, regimenForm, function () {
       $scope.$parent.message = messageService.get('regimens.saved.successfully');
       $location.path('select-program');

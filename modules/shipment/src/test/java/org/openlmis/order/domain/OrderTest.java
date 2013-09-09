@@ -19,7 +19,6 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.order.domain.OrderStatus.IN_ROUTE;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,6 +32,5 @@ public class OrderTest {
     Order order = new Order(rnr);
 
     assertThat(order.getRnr(), is(rnr));
-    assertThat(order.getStatus(), is(IN_ROUTE));
   }
 }

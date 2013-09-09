@@ -14,7 +14,8 @@ import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 
-import static org.openlmis.order.domain.OrderStatus.*;
+import static org.openlmis.order.domain.OrderStatus.PACKED;
+import static org.openlmis.order.domain.OrderStatus.RELEASED;
 
 @Data
 @NoArgsConstructor
@@ -24,24 +25,26 @@ public class Order extends BaseModel {
   private OrderStatus status;
   private SupplyLine supplyLine;
   private ShipmentFileInfo shipmentFileInfo;
+  private String ftpComment;
 
   public Order(Rnr rnr) {
     this.rnr = rnr;
     this.createdBy = rnr.getModifiedBy();
-    this.status = IN_ROUTE;
   }
 
   public Order(Long id) {
     this.id = id;
   }
 
-  public Order(Long orderId, Rnr rnr) {
+  public Order(Long orderId, Rnr rnr, SupplyLine supplyLine) {
     this.id = orderId;
     this.rnr = rnr;
+    this.supplyLine = supplyLine;
   }
 
   public void updateShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {
     this.shipmentFileInfo = shipmentFileInfo;
+    //TODO why is status RELEASED in case of error?
     this.status = shipmentFileInfo.isProcessingError() ? RELEASED : PACKED;
   }
 }

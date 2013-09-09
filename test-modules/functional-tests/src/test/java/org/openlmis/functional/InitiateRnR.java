@@ -50,7 +50,7 @@ public class InitiateRnR extends TestCaseHelper {
   public LoginPage loginPage;
   public InitiateRnRPage initiateRnRPage;
 
-  @BeforeMethod(groups = "functional")
+  @BeforeMethod(groups = "requisition")
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -68,12 +68,13 @@ public class InitiateRnR extends TestCaseHelper {
     regimenCode2 = dataString.get(5);
     regimenName2 = dataString.get(6);
   }
-    @Given("^I have regimen template configured$")
-    public void configureRegimenTemplate() throws IOException, SQLException {
-        dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
-        dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
-        dbWrapper.insertRegimenTemplateColumnsForProgram(program);
-    }
+
+  @Given("^I have regimen template configured$")
+  public void configureRegimenTemplate() throws IOException, SQLException {
+    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
+    dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
+    dbWrapper.insertRegimenTemplateColumnsForProgram(program);
+  }
 
   @Given("^I access initiate requisition page$")
   public void onInitiateRnRScreen() throws IOException, SQLException {
@@ -81,14 +82,14 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.navigateAndInitiateRnr(program);
   }
 
-    @Given("I have \"([^\"]*)\" user with \"([^\"]*)\" rights and data to initiate requisition$")
-    public void setupUserWithRightsAndInitiateRequisitionData(String user, String rights) throws IOException, SQLException {
-        String[] rightList=rights.split(",");
-        List<String> rightsList = new ArrayList<String>();
-        for(int i=0;i<rightList.length;i++)
-            rightsList.add(rightList[i]);
-        setupTestDataToInitiateRnR(true, program, user, "200", "openLmis", rightsList);
-    }
+  @Given("I have \"([^\"]*)\" user with \"([^\"]*)\" rights and data to initiate requisition$")
+  public void setupUserWithRightsAndInitiateRequisitionData(String user, String rights) throws IOException, SQLException {
+    String[] rightList = rights.split(",");
+    List<String> rightsList = new ArrayList<String>();
+    for (int i = 0; i < rightList.length; i++)
+      rightsList.add(rightList[i]);
+    setupTestDataToInitiateRnR(true, program, user, "200", "openLmis", rightsList);
+  }
 
   @When("^I click proceed$")
   public void clickOnProceed() throws IOException {
@@ -109,69 +110,59 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @Then("^I should see regimen fields$")
-  public void shouldSeeRegimenFields()
-  {
+  public void shouldSeeRegimenFields() {
     verifyRegimenFieldsPresentOnRegimenTab(regimenCode, regimenName, initiateRnRPage);
   }
 
   @When("^I type patients on treatment \"([^\"]*)\"$")
-  public void typePatientsOnTreatment(String value)
-  {
+  public void typePatientsOnTreatment(String value) {
     initiateRnRPage.enterValuesOnRegimenScreen(3, 2, value);
   }
 
   @When("^I type patients initiated treatment \"([^\"]*)\"$")
-  public void typePatientsInitiatedTreatment(String value)
-  {
+  public void typePatientsInitiatedTreatment(String value) {
     initiateRnRPage.enterValuesOnRegimenScreen(4, 2, value);
   }
 
   @When("^I type patients stopped treatment \"([^\"]*)\"$")
-  public void typePatientsStoppedTreatment(String value)
-  {
+  public void typePatientsStoppedTreatment(String value) {
     initiateRnRPage.enterValuesOnRegimenScreen(5, 2, value);
   }
 
   @When("^I type remarks \"([^\"]*)\"$")
-  public void typeRemarks(String value)
-  {
+  public void typeRemarks(String value) {
     initiateRnRPage.enterValuesOnRegimenScreen(6, 2, value);
   }
 
   @When("^I click save$")
-  public void clickSave()
-  {
+  public void clickSave() {
     initiateRnRPage.clickSaveButton();
   }
 
   @When("^I should see saved successfully$")
-  public void shouldSeeSavedSuccessfully()
-  {
+  public void shouldSeeSavedSuccessfully() {
     initiateRnRPage.verifySaveSuccessMsg();
   }
 
   @When("^I click submit$")
-  public void clickSubmit()
-  {
+  public void clickSubmit() {
     initiateRnRPage.clickSubmitButton();
     testWebDriver.sleep(250);
   }
 
   @When("^I click ok$")
-  public void clickOk()
-  {
+  public void clickOk() {
     testWebDriver.sleep(250);
     initiateRnRPage.clickOk();
 
   }
 
   @When("^I should see submit successfully$")
-  public void shouldSeeSubmitSuccessfully()
-  {
+  public void shouldSeeSubmitSuccessfully() {
     initiateRnRPage.verifySubmitSuccessMsg();
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testSubmitAndAuthorizeRegimen(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(CREATE_REQUISITION);
@@ -211,7 +202,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage2.verifyAuthorizeRnrSuccessMsg();
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testApproveRegimen(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(CREATE_REQUISITION);
@@ -242,7 +233,7 @@ public class InitiateRnR extends TestCaseHelper {
     approvePageLowerSNUser.verifyNoRequisitionPendingMessage();
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testApproveRegimenWithoutSave(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(CREATE_REQUISITION);
@@ -273,7 +264,7 @@ public class InitiateRnR extends TestCaseHelper {
     approvePageLowerSNUser.verifyNoRequisitionPendingMessage();
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testRnRWithInvisibleProgramRegimenColumn(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(CREATE_REQUISITION);
@@ -293,7 +284,7 @@ public class InitiateRnR extends TestCaseHelper {
     assertEquals(initiateRnRPage.getRegimenTableColumnCount(), 6);
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testRnRWithInActiveRegimen(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(CREATE_REQUISITION);
@@ -339,13 +330,13 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
 
-  @AfterMethod(groups = "functional")
+  @AfterMethod(groups = "requisition")
   @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
-    if(!testWebDriver.getElementById("username").isDisplayed()) {
-    HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout(baseUrlGlobal);
+    if (!testWebDriver.getElementById("username").isDisplayed()) {
+      HomePage homePage = new HomePage(testWebDriver);
+      homePage.logout(baseUrlGlobal);
     }
     dbWrapper.deleteData();
     dbWrapper.closeConnection();

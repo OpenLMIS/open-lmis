@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.OrderConfiguration;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
@@ -31,10 +32,11 @@ import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.web.controller.OrderController.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(OrderDTO.class)
@@ -65,7 +67,19 @@ public class OrderControllerTest {
   @Test
   public void shouldConvertRequisitionsToOrder() throws Exception {
     RequisitionList rnrList = new RequisitionList();
-    orderController.convertToOrder(rnrList, request);
+    ResponseEntity<OpenLmisResponse> response = orderController.convertToOrder(rnrList, request);
+    assertThat(response.getStatusCode(), is(CREATED));
+    verify(orderService).convertToOrder(rnrList, 1L);
+  }
+
+  @Test
+  public void shouldReturnErrorMsgIfSomeRequisitionsAreAlreadyConverted() {
+    RequisitionList rnrList = new RequisitionList();
+    doThrow(new DataException("msg.rnr.already.converted.to.order")).
+      when(orderService).convertToOrder(rnrList, 1L);
+    ResponseEntity<OpenLmisResponse> response = orderController.convertToOrder(rnrList, request);
+    assertThat(response.getStatusCode(), is(CONFLICT));
+    assertThat(response.getBody().getErrorMsg(), is("msg.rnr.already.converted.to.order"));
     verify(orderService).convertToOrder(rnrList, 1L);
   }
 

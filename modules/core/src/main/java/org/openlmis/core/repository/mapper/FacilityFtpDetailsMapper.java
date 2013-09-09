@@ -6,23 +6,24 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityFtpDetails;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FacilityFtpDetailsMapper {
 
-  @Insert({"INSERT INTO facility_ftp_details (facilityCode, serverHost, serverPort, userName, password, localFolderPath, createdBy, modifiedBy, modifiedDate) ",
-    "VALUES (#{facilityCode}, #{serverHost}, #{serverPort}, #{userName}, #{password}, #{localFolderPath}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))"})
+  @Insert({"INSERT INTO facility_ftp_details (facilityId, serverHost, serverPort, userName, password, localFolderPath, createdBy, modifiedBy, modifiedDate) ",
+    "VALUES (#{facility.id}, #{serverHost}, #{serverPort}, #{userName}, #{password}, #{localFolderPath}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))"})
   @Options(useGeneratedKeys = true)
   public void insert(FacilityFtpDetails facilityFtpDetails);
 
-  @Select({"SELECT * FROM facility_ftp_details WHERE LOWER(facilityCode) = LOWER(#{facilityCode})"})
-  FacilityFtpDetails getByFacilityCode(String facilityCode);
+  @Select({"SELECT * FROM facility_ftp_details WHERE facilityId = #{id}"})
+  @Results(value = {
+    @Result(property = "facility.id", column = "facilityId")
+  })
+  FacilityFtpDetails getByFacilityId(Facility facility);
 
   @Update({"UPDATE facility_ftp_details SET serverHost = #{serverHost}, serverPort = #{serverPort}, userName = #{userName}, ",
     "password = #{password}, localFolderPath = #{localFolderPath}, ",

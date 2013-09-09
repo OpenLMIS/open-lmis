@@ -29,12 +29,12 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 public class E2EManageFacility extends TestCaseHelper {
 
 
-  @BeforeMethod(groups = {"functional"})
+  @BeforeMethod(groups = {"admin"})
   public void setUp() throws Exception {
     super.setup();
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EManageFacility(String user, String program, String[] credentials) throws Exception {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -78,7 +78,7 @@ public class E2EManageFacility extends TestCaseHelper {
 
   }
 
-  @AfterMethod(groups = {"functional"})
+  @AfterMethod(groups = {"admin"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
