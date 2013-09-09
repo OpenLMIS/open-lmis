@@ -1,4 +1,4 @@
-function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroupsByProgramSchedule, AllReportPeriods,ReportPeriodsByScheduleAndYear, Products, ProductCategories, ProductsByCategory, ReportFacilityTypes, RequisitionGroups,ReportSchedules,ReportPrograms,ReportPeriods, OperationYears, SettingsByKey, $http, $routeParams, $location) {
+function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroupsByProgramSchedule, AllReportPeriods,ReportPeriodsByScheduleAndYear, Products, ProductCategories, ProductsByCategory, ReportFacilityTypes, RequisitionGroups,ReportSchedules,ReportPrograms,ReportPeriods, OperationYears, SettingsByKey,localStorageService, $http, $routeParams, $location) {
     //to minimize and maximize the filter section
     var section = 1;
     $scope.showMessage = true;
@@ -12,18 +12,10 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
          $scope.IndicatorProductsDescription = data.settings.value;
     });
 
+
     AllReportPeriods.get(function (data) {
         $scope.periods = data.periods;
-        /*var startdt = parseJsonDate('/Date(' + $scope.periods[1].startdate + ')/');
-        var enddt = parseJsonDate('/Date(' + $scope.periods[1].enddate + ')/');
-        var diff = enddt.getMonth() - startdt.getMonth() + 1;
-
-        if (diff == 3) {
-            $scope.reporting = "quarterly";
-        } else {
-            $scope.reporting = "monthly";
-        }*/
-
+        $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
     });
 
     $scope.section = function (id) {
@@ -48,33 +40,31 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
     };
 
-    //filter form data section
-    $scope.filterOptions = {
-        period: $scope.period,
-        filterText: "",
-        useExternalFilter: false
-    };
-
-   $scope.startYears = [];
+    $scope.startYears = [];
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
+        $scope.startYears.unshift('-- All Years --');
     });
 
 
     ReportPrograms.get(function(data){
         $scope.programs = data.programs;
-    })
+        $scope.programs.unshift({'name':'-- All Programs --','id':'0'});
+    });
 
     ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
+        $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':'0'}) ;
     });
 
     RequisitionGroups.get(function (data) {
         $scope.requisitionGroups = data.requisitionGroupList;
+        $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
     });
 
     ReportFacilityTypes.get(function (data) {
         $scope.facilityTypes = data.facilityTypes;
+        $scope.facilityTypes.unshift({'name':'-- All Facility Types --','id':'0'});
     });
 
     Products.get(function (data) {
@@ -87,29 +77,34 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
 
     ProductCategories.get(function (data) {
         $scope.productCategories = data.productCategoryList;
+        $scope.productCategories.unshift({'name':'-- All Product Categories --','id':'0'});
     });
 
     $scope.ChangeSchedule = function(scheduleBy){
         if(scheduleBy == 'byYear'){
-            ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.schedule, year: $scope.year}, function(data){
+            ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
                 $scope.periods = data.periods;
+                $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
             });
 
         }else{
 
-            ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
+            ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
                 $scope.periods = data.periods;
+                $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
+
             });
 
         }
 
-        RequisitionGroupsByProgramSchedule.get({program: $scope.program, schedule:$scope.schedule}, function(data){
+        RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
+            $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
         });
     }
 
 
-    $scope.$watch('facilityType', function (selection) {
+    $scope.$watch('stockImbalance.facilityTypeId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.facilityTypeId = -1;
         } else if (selection != undefined || selection == "") {
@@ -126,7 +121,7 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
 
     });
 
-    $scope.$watch('facilityNameFilter', function (selection) {
+    $scope.$watch('stockImbalance.facilityName', function (selection) {
         if (selection != undefined || selection == "") {
             $scope.filterObject.facilityName = selection;
 
@@ -136,7 +131,7 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         $scope.filterGrid();
     });
 
-    $scope.$watch('productCategory', function (selection) {
+    $scope.$watch('stockImbalance.productCategoryId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.productCategoryId = -1;
         } else if (selection != undefined || selection == "") {
@@ -162,7 +157,7 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         });
     }
 
-    $scope.$watch('product', function (selection) {
+    $scope.$watch('stockImbalance.productId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.productId = 0;
         } else if (selection != undefined || selection == "") {
@@ -179,7 +174,7 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         $scope.filterGrid();
     });
 
-    $scope.$watch('rgroup', function (selection) {
+    $scope.$watch('stockImbalance.rgroupId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.rgroupId = -1;
         } else if (selection != undefined || selection == "") {
@@ -195,7 +190,7 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         $scope.filterGrid();
     });
 
-    $scope.$watch('program', function (selection) {
+    $scope.$watch('stockImbalance.programId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.programId = -1;
         } else if (selection != undefined || selection == "") {
@@ -212,7 +207,7 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         $scope.filterGrid();
     });
 
-    $scope.$watch('period', function (selection) {
+    $scope.$watch('stockImbalance.periodId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.periodId = -1;
         } else if (selection != undefined || selection == "") {
@@ -230,7 +225,7 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         $scope.filterGrid();
     });
 
-    $scope.$watch('schedule', function (selection) {
+    $scope.$watch('stockImbalance.scheduleId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.scheduleId = -1;
         } else if (selection != undefined || selection == "") {
@@ -248,8 +243,9 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
 
     });
 
-    $scope.$watch('year', function (selection) {
-        if (selection == "All") {
+    $scope.$watch('stockImbalance.year', function (selection) {
+
+        if (selection == "-- All Years --") {
             $scope.filterObject.year = -1;
         } else if (selection != undefined || selection == "") {
             $scope.filterObject.year = selection;
@@ -275,6 +271,9 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         $scope.filterObject.pdformat = 1;
         var params = jQuery.param($scope.filterObject);
         var url = '/reports/download/stock_imbalance/' + type + '?' + params;
+
+        localStorageService.remove(localStorageKeys.REPORTS.STOCK_IMBALANCE);
+        localStorageService.add(localStorageKeys.REPORTS.STOCK_IMBALANCE, JSON.stringify($scope.filterObject));
         window.open(url);
         //}
     }
@@ -311,23 +310,33 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
 
     //filter form data section
     $scope.filterObject = {
-        facilityTypeId: $scope.facilityType,
+        facilityTypeId: "",
         facilityType: "",
-        periodId : $scope.period,
+        periodId : "",
         period : "",
-        programId: $scope.program,
+        programId: "",
         program: "",
-        scheduleId: $scope.schedule,
+        scheduleId: "",
         schedule: "",
-        productId: $scope.productId,
+        productId: "",
         product : "",
-        productCategoryId: $scope.productCategoryId,
+        productCategoryId: "",
         productCategory : "",
-        rgroupId: $scope.rgroup,
-        year : $scope.year,
+        rgroupId: "",
+        year : "",
         rgroup: "",
-        facility: $scope.facilityNameFilter
+        facility: ""
     };
+
+    //filter form data section
+    $scope.filterOptions = {
+        period: $scope.filterObject.periodId,
+        filterText: "",
+        useExternalFilter: false
+    };
+
+    $scope.stockImbalance = {};
+    $scope.stockImbalance = angular.copy($scope.filterObject);
 
     $scope.getPagedDataAsync = function (pageSize, page) {
         var params = {};
@@ -338,7 +347,8 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
                 "page": page
             };
         }
-
+        localStorageService.remove(localStorageKeys.REPORTS.STOCK_IMBALANCE);
+        localStorageService.add(localStorageKeys.REPORTS.STOCK_IMBALANCE, JSON.stringify($scope.filterObject));
         $.each($scope.filterObject, function (index, value) {
             //if(value != undefined)
             params[index] = value;
@@ -461,5 +471,33 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         $scope.startYear = $scope.defaultSettings('Y');
     };
     init();*/
+
+    $scope.$on('$viewContentLoaded', function(){
+
+        var recentFilter = localStorageService.get(localStorageKeys.REPORTS.STOCK_IMBALANCE);
+
+
+         eval('var obj='+recentFilter);
+         if(recentFilter != undefined){
+         $scope.stockImbalance = angular.copy(obj);
+         recentFilter = JSON.parse(recentFilter);
+         var params = {};
+
+        /* $.each(obj, function (index, value) {
+             if(index == 'periodId'){
+                 $scope.period = value;
+             }else if(index == 'scheduleId'){
+                 $scope.schedule = value;
+             }
+         });*/
+
+
+         //StockImbalanceReport.get(params, function (data) {
+         //$scope.setPagingData(data.pages.rows, page, pageSize, data.pages.total);
+         //});
+         }
+    });
+
+
 
 }
