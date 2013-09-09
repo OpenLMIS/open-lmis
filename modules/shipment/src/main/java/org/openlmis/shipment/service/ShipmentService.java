@@ -73,14 +73,6 @@ public class ShipmentService {
 
   }
 
-  public ShipmentLineItem getShippedLineItem(ShipmentLineItem shipmentLineItem) {
-    return shipmentRepository.getShippedLineItem(shipmentLineItem);
-  }
-
-  public void updateShippedLineItem(ShipmentLineItem shipmentLineItem) {
-    shipmentRepository.updateShippedLineItem(shipmentLineItem);
-  }
-
   public Date getProcessedTimeStamp(ShipmentLineItem shipmentLineItem) {
     return shipmentRepository.getProcessedTimeStamp(shipmentLineItem);
   }

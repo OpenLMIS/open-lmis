@@ -44,6 +44,7 @@ public class Order extends BaseModel {
 
   public void updateShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {
     this.shipmentFileInfo = shipmentFileInfo;
+    //TODO why is status RELEASED in case of error?
     this.status = shipmentFileInfo.isProcessingError() ? RELEASED : PACKED;
   }
 }

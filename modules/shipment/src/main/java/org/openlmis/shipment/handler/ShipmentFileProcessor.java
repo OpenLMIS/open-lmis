@@ -62,6 +62,7 @@ public class ShipmentFileProcessor {
 
   public void process(Message message) throws IOException, NoSuchFieldException, IllegalAccessException {
     File shipmentFile = (File) message.getPayload();
+    logger.debug("processing Shipment File " + shipmentFile.getName());
 
     ShipmentFileTemplate shipmentFileTemplate = shipmentFileTemplateService.get();
 

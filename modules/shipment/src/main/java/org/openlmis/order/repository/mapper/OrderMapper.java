@@ -40,7 +40,10 @@ public interface OrderMapper {
   })
   Order getById(Long id);
 
-  @Update("UPDATE orders SET shipmentId=#{shipmentFileInfo.id},status=#{status} WHERE rnrid=#{rnr.id} AND STATUS='IN_ROUTE'")
+  @Update({"UPDATE orders SET",
+    "shipmentId = #{shipmentFileInfo.id},",
+    "status = #{status}",
+    "WHERE rnrId=#{rnr.id} AND status = 'RELEASED'"})
   void updateShipmentInfo(Order order);
 
   @Select("SELECT * FROM order_file_columns ORDER BY position")

@@ -29,6 +29,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static java.util.Arrays.asList;
+import static org.openlmis.order.domain.OrderStatus.IN_ROUTE;
+import static org.openlmis.order.domain.OrderStatus.READY_TO_PACK;
 
 @Service
 @NoArgsConstructor
@@ -56,7 +58,7 @@ public class OrderService {
       rnr.setModifiedBy(userId);
       order = new Order(rnr);
       order.setSupplyLine(supplyLineService.getSupplyLineBy(new SupervisoryNode(rnr.getSupervisoryNodeId()), rnr.getProgram()));
-      OrderStatus status = order.getSupplyLine().getExportOrders() ? OrderStatus.IN_ROUTE : OrderStatus.READY_TO_PACK;
+      OrderStatus status = order.getSupplyLine().getExportOrders() ? IN_ROUTE : READY_TO_PACK;
       order.setStatus(status);
       orderRepository.save(order);
     }
