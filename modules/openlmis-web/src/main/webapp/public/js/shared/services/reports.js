@@ -1,4 +1,8 @@
-
+/**
+ * User: Elias
+ * Date: 5/4/13
+ * Time: 2:33 PM
+ */
 
 //var services = angular.module('openlmis.services', ['ngResource']);
 
@@ -328,4 +332,8 @@ services.factory('GetApprovedProductForFacilityTypeDetail', function($resource){
 
 services.factory('SaveApprovedProductForFacilityType',function($resource){
     return $resource('/facilityApprovedProducts/insert.json',{},{})
+});
+
+services.factory('RemoveApprovedProductForFacilityType', function($resource){
+    return $resource('/facilityApprovedProducts/remove/facilityType/:facilityTypeId/program/:programId/product/:productId',{},{});
 });
