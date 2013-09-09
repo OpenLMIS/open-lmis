@@ -13,6 +13,7 @@ import org.openlmis.core.repository.mapper.ProductFormMapper;
 import org.openlmis.core.service.ProductGroupService;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.core.service.ProgramProductService;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,6 +59,9 @@ public class ProductController extends BaseController {
     private ProgramProductService programProductService;
 
     @Autowired
+    private ProgramService programService;
+
+    @Autowired
     private ProductGroupService productGroupService;
 
 
@@ -71,6 +75,13 @@ public class ProductController extends BaseController {
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> getProductsList() {
         return OpenLmisResponse.response(PRODUCTLIST, productListService.getProductList());
+    }
+
+
+    @RequestMapping(value="programProducts/program/{programId}/all")
+    public ResponseEntity<OpenLmisResponse> getProductsCompleteListByProgram(@PathVariable("programId") Long programId){
+        Program program = programService.getById(programId);
+        return OpenLmisResponse.response("products",programProductService.getByProgram(program));
     }
 
     @RequestMapping(value = "/productDetail/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
