@@ -41,7 +41,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   public ProgramProductISAPage programProductISAPage;
 
 
-  @BeforeMethod(groups = "functional2")
+  @BeforeMethod(groups = "admin")
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -80,7 +80,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
         programProductISAPage.cancelISA();
     }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testMinimumProgramProductISA(String userSIC, String password, String program) throws Exception {
     setUpTestDataForProgramProductISA();
     Login(userSIC,password);
@@ -94,7 +94,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     homePage.navigateHomePage();
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testMaximumProgramProductISA(String userSIC, String password, String program) throws Exception {
     setUpTestDataForProgramProductISA();
     Login(userSIC,password);
@@ -108,7 +108,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     homePage.navigateHomePage();
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testProgramProductISA(String userSIC, String password, String program) throws Exception {
     setUpTestDataForProgramProductISA();
     Login(userSIC,password);
@@ -123,7 +123,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testISAFormula(String userSIC, String password, String program) throws Exception {
     setUpTestDataForProgramProductISA();
     Login(userSIC,password);
@@ -140,7 +140,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Search")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Search")
   public void testSearchBox(String userSIC, String password, String program, String productName) throws Exception {
     setUpTestDataForProgramProductISA();
     Login(userSIC,password);
@@ -152,7 +152,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     homePage.navigateHomePage();
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Verify-Push-Type-Program")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Verify-Push-Type-Program")
   public void testPushTypeProgramsInDropDown(String userSIC, String password, String program1, String program2) throws Exception {
     setUpTestDataForProgramProductISA();
     Login(userSIC,password);
@@ -176,7 +176,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Multiple-Programs")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Multiple-Programs")
   public void testProgramProductsMappings(String userSIC, String password, String program1, String program2,
                                           String product1, String product2,
                                           String product3, String product4) throws Exception {
@@ -201,7 +201,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyMandatoryFields(String userSIC, String password, String program) throws Exception {
     setUpTestDataForProgramProductISA();
     Login(userSIC,password);
@@ -214,7 +214,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   }
 
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyMonthlyRestockAmountFieldAvailability(String userSIC, String password, String program) throws Exception {
     setUpTestDataForProgramProductISA();
     Login(userSIC,password);
@@ -265,7 +265,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
   }
 
-  @AfterMethod(groups = "functional2")
+  @AfterMethod(groups = "admin")
   @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);

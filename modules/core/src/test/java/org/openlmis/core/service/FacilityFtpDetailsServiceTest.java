@@ -44,10 +44,10 @@ public class FacilityFtpDetailsServiceTest {
   public void shouldUpdateIfExisting() throws Exception {
     FacilityFtpDetails facilityFtpDetails = new FacilityFtpDetails();
     facilityFtpDetails.setId(1L);
-    facilityFtpDetails.setFacilityCode("F10");
-
     Facility facility = new Facility();
     facility.setCode("F10");
+    facilityFtpDetails.setFacility(facility);
+
     when(facilityService.getByCode(facility)).thenReturn(facility);
 
     service.save(facilityFtpDetails);
@@ -58,10 +58,10 @@ public class FacilityFtpDetailsServiceTest {
   @Test
   public void shouldInsertIfNotExisting() throws Exception {
     FacilityFtpDetails facilityFtpDetails = new FacilityFtpDetails();
-    facilityFtpDetails.setFacilityCode("F10");
-
     Facility facility = new Facility();
     facility.setCode("F10");
+    facilityFtpDetails.setFacility(facility);
+
     when(facilityService.getByCode(facility)).thenReturn(facility);
 
     service.save(facilityFtpDetails);
@@ -73,10 +73,10 @@ public class FacilityFtpDetailsServiceTest {
   public void shouldThrowExceptionIfFacilityDoesNotExist() throws Exception {
 
     FacilityFtpDetails facilityFtpDetails = new FacilityFtpDetails();
-    facilityFtpDetails.setFacilityCode("F10");
-
     Facility facility = new Facility();
     facility.setCode("F10");
+    facilityFtpDetails.setFacility(facility);
+
     when(facilityService.getByCode(facility)).thenReturn(null);
 
     expectedEx.expect(DataException.class);
@@ -105,11 +105,14 @@ public class FacilityFtpDetailsServiceTest {
   @Test
   public void shouldGetFacilityFtpDetailsByFacilityCode() throws Exception {
     FacilityFtpDetails facilityFtpDetails = mock(FacilityFtpDetails.class);
-    String facilityCode = "F10";
-    when(repository.getByFacilityCode(facilityCode)).thenReturn(facilityFtpDetails);
-    FacilityFtpDetails result = service.getByFacilityCode(facilityCode);
+    Facility facility = new Facility();
+    facility.setCode("F10");
+    facilityFtpDetails.setFacility(facility);
+    when(facilityService.getByCode(facility)).thenReturn(facility);
+    when(repository.getByFacilityId(facility)).thenReturn(facilityFtpDetails);
+    FacilityFtpDetails result = service.getByFacilityCode(facility);
     assertThat(result, is(facilityFtpDetails));
-    verify(repository).getByFacilityCode(facilityCode);
+    verify(repository).getByFacilityId(facility);
   }
 
 

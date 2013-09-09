@@ -40,7 +40,10 @@ public interface OrderMapper {
   })
   Order getById(Long id);
 
-  @Update("UPDATE orders SET shipmentId=#{shipmentFileInfo.id},status=#{status} WHERE rnrid=#{rnr.id} AND STATUS='IN_ROUTE'")
+  @Update({"UPDATE orders SET",
+    "shipmentId = #{shipmentFileInfo.id},",
+    "status = #{status}",
+    "WHERE rnrId=#{rnr.id} AND status = 'RELEASED'"})
   void updateShipmentInfo(Order order);
 
   @Select("SELECT * FROM order_file_columns ORDER BY position")
@@ -52,4 +55,8 @@ public interface OrderMapper {
   @Insert("INSERT INTO order_file_columns (dataFieldLabel, includeInOrderFile, format, columnLabel, position, openLmisField, nested, keyPath, createdBy, modifiedBy)" +
     " VALUES (#{dataFieldLabel}, #{includeInOrderFile}, #{format}, #{columnLabel}, #{position}, #{openLmisField}, #{nested}, #{keyPath}, #{modifiedBy}, #{modifiedBy})")
   void insertOrderFileColumn(OrderFileColumn orderFileColumn);
+
+
+  @Update("UPDATE orders SET status = #{status}, ftpComment = #{ftpComment} WHERE id = #{id}")
+  void updateOrderStatus(Order order);
 }

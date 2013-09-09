@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityFtpDetails;
 import org.openlmis.core.repository.mapper.FacilityFtpDetailsMapper;
 import org.openlmis.db.categories.UnitTests;
@@ -47,11 +48,13 @@ public class FacilityFtpDetailsRepositoryTest {
   @Test
   public void shouldGetFacilityFtpDetailsByFacilityCode() throws Exception {
     FacilityFtpDetails facilityFtpDetails = mock(FacilityFtpDetails.class);
-    String facilityCode = "F10";
-    when(mapper.getByFacilityCode(facilityCode)).thenReturn(facilityFtpDetails);
-    FacilityFtpDetails result = repository.getByFacilityCode(facilityCode);
+    Facility facility = new Facility();
+    facility.setCode("F10");
+    facilityFtpDetails.setFacility(facility);
+    when(mapper.getByFacilityId(facility)).thenReturn(facilityFtpDetails);
+    FacilityFtpDetails result = repository.getByFacilityId(facility);
     assertThat(result, is(facilityFtpDetails));
-    verify(mapper).getByFacilityCode(facilityCode);
+    verify(mapper).getByFacilityId(facility);
   }
 
 

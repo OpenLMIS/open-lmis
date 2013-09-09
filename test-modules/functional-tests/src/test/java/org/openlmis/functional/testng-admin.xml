@@ -1,0 +1,42 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<suite name="Openlmis Functional Test" verbose="10" allow-return-values="true">
+    <test name="Openlmis functional test">
+        <groups>
+            <run>
+                <include name="admin"/>
+            </run>
+        </groups>
+        <classes preserver-order="true">
+            <class name="org.openlmis.functional.E2EManageFacility">
+            </class>
+            <class name="org.openlmis.functional.E2EUpload">
+            </class>
+            <class name="org.openlmis.functional.ManageRights">
+            </class>
+            <class name="org.openlmis.functional.ConfigureProgramTemplate">
+            </class>
+            <class name="org.openlmis.functional.ManageISA">
+            </class>
+            <class name="org.openlmis.functional.ConfigureOrderTemplate">
+            </class>
+            <class name="org.openlmis.functional.ManageProgramProductISA">
+            </class>
+            <class name="org.openlmis.functional.ManageRolesAndUsers">
+            </class>
+            <class name="org.openlmis.functional.ConfigureRegimenProgramTemplate">
+            </class>
+            <class name="org.openlmis.functional.ManageReport">
+            </class>
+            <class name="org.openlmis.functional.ForgotPassword">
+            </class>
+            <class name="org.openlmis.functional.ConfigureShipmentTemplate">
+            </class>
+        </classes>
+    </test>
+</suite>
+

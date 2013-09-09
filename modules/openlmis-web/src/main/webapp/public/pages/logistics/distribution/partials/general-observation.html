@@ -1,0 +1,60 @@
+<!--
+  ~ /*
+  ~  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~  *
+  ~  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  ~  */
+  -->
+
+<ng-include src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
+<div class="clearfix facility-container">
+  <ng-include src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
+
+  <div class="facility-info">
+    <div class="general-observation-container">
+      <h3>
+        <span openlmis-message="label.observations.signatures"></span>
+      </h3>
+
+      <form auto-save="distribution" object-store="distributions">
+        <div class="row-fluid">
+          <div>
+            <textarea id="observations" maxlength="1000"
+                      ng-model="distribution.facilityDistributionData[selectedFacility].generalObservation.observations"></textarea>
+          </div>
+        </div>
+        <div class="signatures row-fluid">
+          <div class="span3">
+            <span openlmis-message="label.verified.by" class="list-header-container"></span>
+
+            <div>
+              <label openlmis-message="label.name" for="verifiedByName"></label>
+              <input type="text" maxlength="50"
+                     ng-model="distribution.facilityDistributionData[selectedFacility].generalObservation.verifiedBy.name"
+                     id="verifiedByName"/>
+              <label openlmis-message="label.title" for="verifiedByTitle"></label>
+              <input type="text" maxlength="50"
+                     ng-model="distribution.facilityDistributionData[selectedFacility].generalObservation.verifiedBy.title"
+                     id="verifiedByTitle"/>
+            </div>
+          </div>
+
+
+          <div class="offset1 span3">
+            <span openlmis-message="label.confirmed.by" class="list-header-container"></span>
+            <div>
+              <label openlmis-message="label.name" for="confirmedByName"></label>
+              <input type="text" maxlength="50"
+                     ng-model="distribution.facilityDistributionData[selectedFacility].generalObservation.confirmedBy.name"
+                     id="confirmedByName"/>
+              <label openlmis-message="label.title" for="confirmedByTitle"></label>
+              <input type="text" maxlength="50"
+                     ng-model="distribution.facilityDistributionData[selectedFacility].generalObservation.confirmedBy.title"
+                     id="confirmedByTitle"/>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -93,7 +93,7 @@ FROM (SELECT
 
 WHERE F.enabled = TRUE
       AND F.virtualFacility = FALSE
-      AND F.satellite = FALSE
+      AND F.satellite <> true
       AND P.active = TRUE
       AND P.push = FALSE
 ORDER BY status, GZP.name, GZ.name, F.code;]]>

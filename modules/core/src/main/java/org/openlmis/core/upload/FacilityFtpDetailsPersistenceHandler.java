@@ -23,7 +23,7 @@ public class FacilityFtpDetailsPersistenceHandler extends AbstractModelPersisten
   @Override
   protected BaseModel getExisting(BaseModel record) {
     FacilityFtpDetails facilityFtpDetails = (FacilityFtpDetails) record;
-    return facilityFtpDetailsService.getByFacilityCode(facilityFtpDetails.getFacilityCode());
+    return facilityFtpDetailsService.getByFacilityCode(facilityFtpDetails.getFacility());
   }
 
   @Override

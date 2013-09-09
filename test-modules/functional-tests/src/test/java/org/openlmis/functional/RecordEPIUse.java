@@ -7,6 +7,7 @@
 package org.openlmis.functional;
 
 
+import cucumber.api.DataTable;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
@@ -23,10 +24,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import java.util.Map;
 
 
 @TransactionConfiguration(defaultRollback = true)
@@ -40,14 +38,63 @@ public class RecordEPIUse extends TestCaseHelper {
   public static final String periodDisplayedByDefault = "Period14";
   public static final String periodNotToBeDisplayedInDropDown = "Period1";
 
-  @BeforeMethod(groups = "functional2")
+  @BeforeMethod(groups = "distribution")
   @Before
   public void setUp() throws Exception {
     super.setup();
   }
+    @Then("^I should see product group \"([^\"]*)\"")
+    public void verifyProductGroup(String productGroup) {
+        new EPIUse(testWebDriver).verifyProductGroup(productGroup, 1);
+    }
+
+    @When("^I Enter EPI values without end of month:$")
+    public void enterEPIValues(DataTable tableData) {
+        EPIUse epiUse = new EPIUse(testWebDriver);
+        Map<String, String> epiData = tableData.asMaps().get(0);
+
+        epiUse.enterValueInDistributed(epiData.get("distributed"), 1);
+        epiUse.enterValueInExpirationDate(epiData.get("expirationDate"), 1);
+        epiUse.enterValueInLoss(epiData.get("loss"), 1);
+        epiUse.enterValueInReceived(epiData.get("received"), 1);
+        epiUse.enterValueInStockAtFirstOfMonth(epiData.get("firstOfMonth"), 1);
+    }
+
+    @When("^I verify saved EPI values:$")
+    public void verifySavedEPIValues(DataTable tableData) {
+        new RefrigeratorPage(testWebDriver).navigateToRefrigeratorTab();
+        EPIUse epiUse = new EPIUse(testWebDriver);
+        epiUse.navigate();
+        Map<String, String> epiData = tableData.asMaps().get(0);
+
+        epiUse.verifyData(epiData);
+    }
+
+    @And("^I verify total is \"([^\"]*)\"$")
+    public void verifyTotalField(String total) {
+        new EPIUse(testWebDriver).verifyTotal(total, 1);
+    }
 
 
-    @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+    @Then("^Navigate to EPI tab$")
+    public void navigateToEpiTab() throws IOException {
+        EPIUse epiUse = new EPIUse(testWebDriver);
+        epiUse.navigate();
+    }
+
+    @Then("^Verify indicator should be \"([^\"]*)\"$")
+    public void shouldVerifyIndicatorColor(String color) throws IOException, SQLException {
+        EPIUse epiUse = new EPIUse(testWebDriver);
+        epiUse.verifyIndicator(color);
+    }
+
+    @When("^I enter EPI end of month as \"([^\"]*)\"")
+    public void enterEPIEndOfMonth(String endOfMonth) {
+        new EPIUse(testWebDriver).enterValueInStockAtEndOfMonth(endOfMonth, 1);
+    }
+
+
+    @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
     public void testEditEPIUse(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                                     String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                     String facilityCodeFirst, String facilityCodeSecond,
@@ -88,38 +135,24 @@ public class RecordEPIUse extends TestCaseHelper {
         FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
         facilityListPage.selectFacility("F10");
         EPIUse epiUse = new EPIUse(testWebDriver);
-        epiUse.navigateToEPISUse();
-        epiUse.verifyProductGroup("PG1-Name", 1);
-        epiUse.verifyProductGroup("PG2-Name",2);
-        epiUse.verifyProductGroup("PG3-Name",3);
+        epiUse.navigate();
+        epiUse.verifyProductGroup("PG3-Name",1);
+        epiUse.verifyIndicator("RED");
 
         epiUse.enterValueInStockAtFirstOfMonth("10",1);
+        epiUse.verifyIndicator("AMBER");
         epiUse.enterValueInReceived("20", 1);
         epiUse.enterValueInDistributed("30", 1);
         epiUse.enterValueInLoss("40", 1);
         epiUse.enterValueInStockAtEndOfMonth("50",1);
         epiUse.enterValueInExpirationDate("10/2011",1);
 
-        epiUse.checkUncheckStockAtFirstOfMonthNotRecorded(2);
-        epiUse.checkUncheckReceivedNotRecorded(2);
-        epiUse.checkUncheckDistributedNotRecorded(2);
-        epiUse.checkUncheckLossNotRecorded(2);
-        epiUse.checkUncheckStockAtEndOfMonthNotRecorded(2);
-        epiUse.checkUncheckExpirationDateNotRecorded(2);
 
         RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
         refrigeratorPage.navigateToRefrigeratorTab();
-        epiUse.navigateToEPISUse();
-
-        epiUse.verifyStockAtFirstOfMonthStatus(false,2);
-        epiUse.verifyReceivedStatus(false,2);
-        epiUse.verifyDistributedStatus(false,2);
-        epiUse.verifyLossStatus(false,2);
-        epiUse.verifyStockAtEndOfMonthStatus(false,2);
-        epiUse.verifyExpirationDateStatus(false,2);
+        epiUse.navigate();
 
         epiUse.verifyTotal("30",1);
-
         epiUse.verifyStockAtFirstOfMonth("10", 1);
         epiUse.verifyReceived("20", 1);
         epiUse.verifyDistributed("30", 1);
@@ -127,6 +160,29 @@ public class RecordEPIUse extends TestCaseHelper {
         epiUse.verifyStockAtEndOfMonth("50", 1);
         epiUse.verifyExpirationDate("10/2011", 1);
 
+        epiUse.checkUncheckStockAtFirstOfMonthNotRecorded(1);
+        epiUse.checkUncheckReceivedNotRecorded(1);
+        epiUse.checkUncheckDistributedNotRecorded(1);
+        epiUse.checkUncheckLossNotRecorded(1);
+        epiUse.checkUncheckStockAtEndOfMonthNotRecorded(1);
+        epiUse.checkUncheckExpirationDateNotRecorded(1);
+
+        refrigeratorPage.navigateToRefrigeratorTab();
+        epiUse.navigate();
+
+        epiUse.verifyStockAtFirstOfMonthStatus(false,1);
+        epiUse.verifyReceivedStatus(false,1);
+        epiUse.verifyDistributedStatus(false,1);
+        epiUse.verifyLossStatus(false,1);
+        epiUse.verifyStockAtEndOfMonthStatus(false,1);
+        epiUse.verifyExpirationDateStatus(false,1);
+
+        epiUse.checkUncheckStockAtFirstOfMonthNotRecorded(1);
+        epiUse.checkUncheckReceivedNotRecorded(1);
+        epiUse.checkUncheckDistributedNotRecorded(1);
+        epiUse.checkUncheckLossNotRecorded(1);
+        epiUse.checkUncheckStockAtEndOfMonthNotRecorded(1);
+        epiUse.checkUncheckExpirationDateNotRecorded(1);
 
         epiUse.enterValueInStockAtFirstOfMonth("20",1);
         epiUse.enterValueInReceived("30", 1);
@@ -135,23 +191,9 @@ public class RecordEPIUse extends TestCaseHelper {
         epiUse.enterValueInStockAtEndOfMonth("60",1);
         epiUse.enterValueInExpirationDate("11/2012",1);
 
-        epiUse.checkUncheckStockAtFirstOfMonthNotRecorded(2);
-        epiUse.checkUncheckReceivedNotRecorded(2);
-        epiUse.checkUncheckDistributedNotRecorded(2);
-        epiUse.checkUncheckLossNotRecorded(2);
-        epiUse.checkUncheckStockAtEndOfMonthNotRecorded(2);
-        epiUse.checkUncheckExpirationDateNotRecorded(2);
-
         refrigeratorPage.navigateToRefrigeratorTab();
-        epiUse.navigateToEPISUse();
-
-        epiUse.verifyStockAtFirstOfMonthStatus(true,2);
-        epiUse.verifyReceivedStatus(true,2);
-        epiUse.verifyDistributedStatus(true,2);
-        epiUse.verifyLossStatus(true,2);
-        epiUse.verifyStockAtEndOfMonthStatus(true,2);
-        epiUse.verifyExpirationDateStatus(true,2);
-
+        epiUse.navigate();
+        epiUse.checkApplyNRToAllFields(false);
         epiUse.verifyTotal("50",1);
 
         epiUse.verifyStockAtFirstOfMonth("20", 1);
@@ -161,11 +203,37 @@ public class RecordEPIUse extends TestCaseHelper {
         epiUse.verifyStockAtEndOfMonth("60", 1);
         epiUse.verifyExpirationDate("11/2012", 1);
 
+        epiUse.verifyStockAtFirstOfMonthStatus(true, 1);
+        epiUse.verifyReceivedStatus(true, 1);
+        epiUse.verifyDistributedStatus(true, 1);
+        epiUse.verifyLossStatus(true, 1);
+        epiUse.verifyStockAtEndOfMonthStatus(true, 1);
+        epiUse.verifyExpirationDateStatus(true, 1);
+        epiUse.verifyIndicator("GREEN");
+        epiUse.verifyStockAtFirstOfMonthStatus(true,1);
+        epiUse.verifyReceivedStatus(true,1);
+        epiUse.verifyDistributedStatus(true,1);
+        epiUse.verifyLossStatus(true,1);
+        epiUse.verifyStockAtEndOfMonthStatus(true,1);
+        epiUse.verifyExpirationDateStatus(true,1);
+        epiUse.verifyIndicator("GREEN");
+
+        epiUse.checkApplyNRToAllFields(true);
+        refrigeratorPage.navigateToRefrigeratorTab();
+        epiUse.navigate();
+
+        epiUse.verifyStockAtFirstOfMonthStatus(false,1);
+        epiUse.verifyReceivedStatus(false,1);
+        epiUse.verifyDistributedStatus(false,1);
+        epiUse.verifyLossStatus(false,1);
+        epiUse.verifyStockAtEndOfMonthStatus(false,1);
+        epiUse.verifyExpirationDateStatus(false,1);
+
     }
 
 
 
-  @AfterMethod(groups = "functional2")
+  @AfterMethod(groups = "distribution")
   @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(250);

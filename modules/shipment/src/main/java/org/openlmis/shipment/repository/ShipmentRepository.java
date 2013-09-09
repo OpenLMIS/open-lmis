@@ -9,7 +9,7 @@ package org.openlmis.shipment.repository;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
-import org.openlmis.shipment.domain.ShippedLineItem;
+import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.repository.mapper.ShipmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,9 +28,9 @@ public class ShipmentRepository {
     this.shipmentMapper = shipmentMapper;
   }
 
-  public void insertShippedLineItem(ShippedLineItem shippedLineItem) {
+  public void insertShippedLineItem(ShipmentLineItem shipmentLineItem) {
     try {
-      shipmentMapper.insertShippedLineItem(shippedLineItem);
+      shipmentMapper.insertShippedLineItem(shipmentLineItem);
     } catch (DataIntegrityViolationException exception) {
       throw new DataException("error.incorrect.length");
     }
@@ -40,15 +40,15 @@ public class ShipmentRepository {
     shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
   }
 
-  public ShippedLineItem getShippedLineItem(ShippedLineItem shippedLineItem) {
-    return shipmentMapper.getShippedLineItem(shippedLineItem);
+  public ShipmentLineItem getShippedLineItem(ShipmentLineItem shipmentLineItem) {
+    return shipmentMapper.getShippedLineItem(shipmentLineItem);
   }
 
-  public void updateShippedLineItem(ShippedLineItem shippedLineItem) {
-    shipmentMapper.updateShippedLineItem(shippedLineItem);
+  public void updateShippedLineItem(ShipmentLineItem shipmentLineItem) {
+    shipmentMapper.updateShippedLineItem(shipmentLineItem);
   }
 
-  public Date getProcessedTimeStamp(ShippedLineItem shippedLineItem) {
-    return shipmentMapper.getProcessedTimeStamp(shippedLineItem);
+  public Date getProcessedTimeStamp(ShipmentLineItem shipmentLineItem) {
+    return shipmentMapper.getProcessedTimeStamp(shipmentLineItem);
   }
 }

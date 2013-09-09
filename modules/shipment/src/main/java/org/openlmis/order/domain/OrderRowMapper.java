@@ -1,5 +1,6 @@
 package org.openlmis.order.domain;
 
+import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.rnr.domain.Rnr;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ import java.sql.SQLException;
 public class OrderRowMapper implements RowMapper {
   @Override
   public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
-    return new Order(Long.parseLong(rs.getString("id")), new Rnr(Long.parseLong(rs.getString("rnrid"))));
+    return new Order(Long.parseLong(rs.getString("id")), new Rnr(Long.parseLong(rs.getString("rnrid"))),
+      new SupplyLine(Long.parseLong(rs.getString("supplylineid"))));
   }
 }
