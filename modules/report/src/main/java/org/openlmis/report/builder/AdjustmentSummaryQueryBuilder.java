@@ -25,9 +25,11 @@ public class AdjustmentSummaryQueryBuilder {
         FROM("vw_requisition_adjustment");
         writePredicates(filter);
         GROUP_BY("product, adjustment_type,product_category_name,facility_type_name,facility_name, supplying_facility_name");
-        ORDER_BY(QueryHelpers.getSortOrder(params, "facility_type_name,facility_name, supplying_facility_name, product, product_category_name , adjustment_type"));
-        String query = SQL();
-        return SQL();
+      ORDER_BY(QueryHelpers.getSortOrder(params, "facility_type_name,facility_name, supplying_facility_name, product, product_category_name , adjustment_type"));
+
+      // write the query to a variable, this is to make it easier to debug the query.
+      String query = SQL();
+      return query;
     }
 
     public static String SelectFilteredSortedPagedRecordsCount(Map params){

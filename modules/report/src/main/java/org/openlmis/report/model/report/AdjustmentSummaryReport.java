@@ -26,6 +26,6 @@ public class AdjustmentSummaryReport implements ReportData {
     private String facilityName;
     private String supplyingFacility;
     private String adjustmentType;
-    private Double adjustment;
+    private int adjustment;
 
 }
