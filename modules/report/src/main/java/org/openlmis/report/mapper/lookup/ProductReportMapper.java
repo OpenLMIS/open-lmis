@@ -17,7 +17,7 @@ import java.util.List;
 @Repository
 public interface ProductReportMapper {
 
-    @Select("SELECT id, genericname as name, code, " +
+    @Select("SELECT id, primaryname as name, code, " +
             "CASE WHEN tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +
             " " +
             "   FROM " +
@@ -29,7 +29,7 @@ public interface ProductReportMapper {
             "       products")
     List<ProductList> getFullProductList();
 
-    @Select("SELECT id, genericname as name, code, " +
+    @Select("SELECT id, primaryname as name, code, " +
             "CASE WHEN tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer  " +
             "FROM products " +
             "WHERE categoryid = #{categoryId} " +
