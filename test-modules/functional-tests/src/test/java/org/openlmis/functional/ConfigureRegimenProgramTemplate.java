@@ -52,7 +52,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   public String expectedProgramsString;
 
-  @BeforeMethod(groups = "functional2")
+  @BeforeMethod(groups = "admin")
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -140,7 +140,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     }
 
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyAtLeastOneColumnChecked(String program, String[] credentials) throws Exception {
 
     dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
@@ -160,7 +160,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testVerifyAlteredRegimensColumnsOnRnRScreen(String program,String adminUser, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     String newRemarksHeading = "Testing column";
 
@@ -197,7 +197,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   }
 
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyMultipleCategoriesAddition(String program, String[] credentials) throws Exception {
     dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -211,7 +211,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     verifyProgramConfigured(program);
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyDuplicateCategoriesInterCategory(String program, String[] credentials) throws Exception {
     dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -224,7 +224,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   }
 
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyDuplicateCategoriesAdditionForSameCategory(String program, String[] credentials) throws Exception {
     dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -236,7 +236,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     verifyErrorMessage(regimenTemplateConfigPage, duplicateErrorMessageSave);
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Multiple-Programs")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Multiple-Programs")
   public void testVerifyDuplicateCategoriesInterPrograms(String program1, String program2, String[] credentials) throws Exception {
     dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -255,7 +255,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     verifyProgramConfigured(program2);
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyEditCategory(String program, String[] credentials) throws Exception {
     dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -280,7 +280,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     verifyProgramConfigured(program);
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyDuplicateCategoryOnDone(String program, String[] credentials) throws Exception {
     dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -297,7 +297,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     verifyErrorMessage(regimenTemplateConfigPage, duplicateErrorMessageSave);
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyCategoryErrorOnDone(String program, String[] credentials) throws Exception {
     dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -314,7 +314,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     verifyDoneErrorMessage(regimenTemplateConfigPage, requiredErrorMessageSave);
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider")
   public void testVerifyCancelButtonFunctionality(String program, String[] credentials) throws Exception {
     dbWrapper.setRegimenTemplateConfiguredForAllPrograms(false);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -435,7 +435,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     dbWrapper.insertSupplyLines("N1", program, "F10");
   }
 
-  @AfterMethod(groups = "functional2")
+  @AfterMethod(groups = "admin")
   @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);

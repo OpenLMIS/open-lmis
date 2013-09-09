@@ -23,12 +23,13 @@ public class ShipmentFileTemplateService {
   public void update(ShipmentFileTemplate shipmentFileTemplate) {
     shipmentTemplateRepository.updateShipmentConfiguration(shipmentFileTemplate.getShipmentConfiguration());
     shipmentTemplateRepository.deleteAllShipmentFileColumns();
-    for(ShipmentFileColumn shipmentFileColumn : shipmentFileTemplate.getShipmentFileColumns()){
+    for (ShipmentFileColumn shipmentFileColumn : shipmentFileTemplate.getShipmentFileColumns()) {
       shipmentTemplateRepository.insertShipmentFileColumn(shipmentFileColumn);
     }
   }
 
   public ShipmentFileTemplate get() {
-    return new ShipmentFileTemplate(shipmentTemplateRepository.getShipmentConfiguration(), shipmentTemplateRepository.getAllShipmentFileColumns());
+    return new ShipmentFileTemplate(shipmentTemplateRepository.getShipmentConfiguration(),
+      shipmentTemplateRepository.getAllShipmentFileColumns());
   }
 }

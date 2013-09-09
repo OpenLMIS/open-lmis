@@ -31,12 +31,12 @@ import java.util.List;
 
 public class ConfigureProgramTemplate extends TestCaseHelper {
 
-  @BeforeMethod(groups = {"functional"})
+  @BeforeMethod(groups = {"admin"})
   public void setUp() throws Exception {
     super.setup();
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Program-Not-Configured")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Program-Not-Configured")
   public void testVerifyProgramNotConfigured(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
@@ -51,7 +51,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Verify-On-Rnr-Screen")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Verify-On-Rnr-Screen")
   public void testVerifyImpactOfChangesInConfigScreenOnRnRScreen(String program, String userSIC, String password, String[] credentials) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
@@ -81,7 +81,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
       initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, "Total", columns);
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Column-Label-Source")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Column-Label-Source")
   public void testVerifyColumnLabelsSourceAndMandatoryColumns(String program, String[] credentials) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -93,7 +93,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Column-Label-Source")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Column-Label-Source")
   public void testVerifyArithmeticValidationAndBusinessRules(String program, String[] credentials) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -105,7 +105,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
 
   }
 
-  @AfterMethod(groups = {"functional"})
+  @AfterMethod(groups = {"admin"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);

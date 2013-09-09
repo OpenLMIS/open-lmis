@@ -34,14 +34,14 @@ public class ForgotPassword extends TestCaseHelper {
 
   ForgotPasswordPage forgotPasswordPage;
 
-  @BeforeMethod(groups = "functional2")
+  @BeforeMethod(groups = "admin")
   @Before
   public void setUp() throws Exception {
     super.setup();
   }
 
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyValidEmail(String userName, String email) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
@@ -52,7 +52,7 @@ public class ForgotPassword extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyValidUsername(String userName, String email) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
@@ -63,7 +63,7 @@ public class ForgotPassword extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyValidEmailInvalidUsername(String userName, String email) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
@@ -75,7 +75,7 @@ public class ForgotPassword extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyValidUserNameInvalidEmail(String userName, String email) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
@@ -87,7 +87,7 @@ public class ForgotPassword extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyBlankUserNameInvalidEmail(String userName, String email) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
@@ -99,7 +99,7 @@ public class ForgotPassword extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyValidUserNameBlankEmail(String userName, String email) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
@@ -138,7 +138,7 @@ public class ForgotPassword extends TestCaseHelper {
     verifyEmailSendSuccessfullyMessage(forgotPasswordPage);
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyBlankEmailAndUserName(String userName, String email) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     ForgotPasswordPage forgotPasswordPage = loginPage.clickForgotPasswordLink();
@@ -173,7 +173,7 @@ public class ForgotPassword extends TestCaseHelper {
   }
 
 
-  @AfterMethod(groups = "functional2")
+  @AfterMethod(groups = "admin")
   @After
   public void tearDown() throws Exception {
     try{

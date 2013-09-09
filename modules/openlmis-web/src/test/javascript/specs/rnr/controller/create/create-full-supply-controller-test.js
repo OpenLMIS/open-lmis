@@ -90,7 +90,7 @@ describe('CreateFullSupplyController', function () {
 
     expect(rnrLineItem.reEvaluateTotalLossesAndAdjustments).not.toHaveBeenCalledWith(scope.$parent.rnr, scope.programRnrColumnList);
     expect(scope.lossesAndAdjustmentsModal).toBeTruthy();
-    expect(scope.modalError).toEqual('Please correct the highlighted fields before submitting');
+    expect(scope.modalError).toEqual('error.correct.highlighted');
   });
 });
 

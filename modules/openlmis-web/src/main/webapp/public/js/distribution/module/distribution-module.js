@@ -19,49 +19,47 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
       {controller: RefrigeratorController, templateUrl: 'partials/refrigerator.html', resolve: ResolveDistribution}).
       when('/record-facility-data/:distribution/:facility/epi-use',
       {controller: EPIUseController, templateUrl: 'partials/epi-use.html', resolve: ResolveDistribution}).
+      when('/record-facility-data/:distribution/:facility/general-observation',
+      {controller: GeneralObservationController, templateUrl: 'partials/general-observation.html', resolve: ResolveDistribution}).
       otherwise({redirectTo: '/manage'});
 
-  }]).directive('notRecorded',function ($timeout) {
-    return {
-      require: '?ngModel',
-      link: function (scope, element, attrs, ngModel) {
-        distributionModule["notRecordedDirective"](element, scope, ngModel, $timeout);
-      }
-    };
-  }).config(function (IndexedDBProvider) {
+  }]).config(function (IndexedDBProvider) {
     IndexedDBProvider
       .setDbName("open_lmis")
       .migration(4, migrationFunc);
   });
 
-distributionModule.notRecordedDirective = function (element, scope, ngModel, $timeout) {
+distributionModule.directive('notRecorded', function ($timeout) {
+  return {
+    require: '?ngModel',
+    link: function (scope, element, attrs, ctrl) {
+      $timeout(function () {
+        $.each(document.getElementsByName(element.attr('id')), function (index, ele) {
+          ele.disabled = ctrl.$modelValue;
+        });
+      }, 0);
 
-  $timeout(function () {
-    $.each(document.getElementsByName(element.attr('id')), function (index, ele) {
-      ele.disabled = ngModel.$modelValue;
-    });
-  }, 0);
+      scope.$watch(attrs.ngModel, function () {
+        $.each(document.getElementsByName(element.attr('id')), function (index, associatedElement) {
+          associatedElement.disabled = ctrl.$modelValue;
+          if (!isUndefined(attrs.notRecorded)) {
+            scope[attrs.notRecorded](ctrl.$modelValue);
+          }
 
-  if (!scope.$$phase) scope.$apply();
+          if(!ctrl.$modelValue) return;
 
-  element.bind('click', function () {
-    $.each(document.getElementsByName(element.attr('id')), function (index, associatedElement) {
-      associatedElement.disabled = element.is(":checked");
-      if (!isUndefined(element.attr('not-recorded'))) {
-        scope[element.attr('not-recorded')](element.is(":checked"));
-      }
-      var evaluatedVar = scope;
-
-      var ngModel = $(associatedElement).attr('ng-model').split('.');
-      $(ngModel).each(function (index, value) {
-        if (index == ngModel.length - 1) {
-          evaluatedVar[value] = undefined;
-          return false;
-        }
-        evaluatedVar = evaluatedVar[value];
-        return true;
+          var evaluatedVar = scope;
+          var ngModel = $(associatedElement).attr('ng-model').split('.');
+          $(ngModel).each(function (index, value) {
+            if (index == ngModel.length - 1) {
+              evaluatedVar[value] = undefined;
+              return false;
+            }
+            evaluatedVar = evaluatedVar[value];
+            return true;
+          });
+        });
       });
-    });
-    scope.$apply();
-  });
-};
+    }
+  };
+});

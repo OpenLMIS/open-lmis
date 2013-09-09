@@ -40,7 +40,7 @@ public class ManageRefrigerator extends TestCaseHelper {
   public static final String periodDisplayedByDefault = "Period14";
   public static final String periodNotToBeDisplayedInDropDown = "Period1";
 
-  @BeforeMethod(groups = "functional2")
+  @BeforeMethod(groups = "distribution")
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -208,7 +208,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     assertEquals(refrigeratorPage.getNotesTextAreaValue(), notes);
   }
 
-    @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+    @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
     public void testVerifyDuplicateRefrigerator(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                                     String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                     String facilityCodeFirst, String facilityCodeSecond,
@@ -265,7 +265,7 @@ public class ManageRefrigerator extends TestCaseHelper {
   }
 
 
-  @AfterMethod(groups = "functional2")
+  @AfterMethod(groups = "distribution")
   @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(250);

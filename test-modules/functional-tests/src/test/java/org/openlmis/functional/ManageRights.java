@@ -31,13 +31,13 @@ import java.util.List;
 
 public class ManageRights extends TestCaseHelper {
 
-  @BeforeMethod(groups = {"functional"})
+  @BeforeMethod(groups = {"admin"})
   public void setUp() throws Exception {
     super.setup();
   }
 
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testOnlyCreateRight(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
@@ -58,7 +58,7 @@ public class ManageRights extends TestCaseHelper {
     initiateRnRPage.verifyAuthorizeButtonNotPresent();
   }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testUserTryToAuthorizeUnSubmittedRnR(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
@@ -83,7 +83,7 @@ public class ManageRights extends TestCaseHelper {
   }
 
 
-  @AfterMethod(groups = {"functional"})
+  @AfterMethod(groups = {"admin"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);

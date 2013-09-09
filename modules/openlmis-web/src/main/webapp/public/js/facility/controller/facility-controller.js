@@ -100,16 +100,10 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       })
     };
 
-    var errorFn = function (data) {
-      $scope.showError = "true";
-      $scope.message = "";
-      $scope.error = data.data.error;
-    };
-
     if (!$scope.isEdit) {
-      Facility.save({}, $scope.facility, facilitySaveCallback, errorFn);
+      Facility.save({}, $scope.facility, facilitySaveCallback, errorFunc);
     } else {
-      Facility.update({id: $scope.facility.id}, $scope.facility, facilitySaveCallback, errorFn);
+      Facility.update({id: $scope.facility.id}, $scope.facility, facilitySaveCallback, errorFunc);
     }
   };
 

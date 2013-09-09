@@ -47,7 +47,7 @@ test {
 
 task buildOpenLmis(type: GradleBuild) {
     buildFile = '../../modules/openlmis-web/build.gradle'
-    tasks = ['jettyRunWarDaemon']
+    tasks = ['jettyDaemon']
 }
 
 
@@ -74,7 +74,7 @@ smokeTest.doFirst() {
     buildOpenLmis.execute()
 }
 
-task e2e(type: Test) {
+task e2eTestChrome(type: Test) {
     dependsOn assemble, compileTestJava
 
     doLast {
@@ -82,7 +82,7 @@ task e2e(type: Test) {
         htmlformat = "html:${buildDir}/reports/tests/bddTest-report-functional"
         jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
         javaexec {
-            System.properties.get('browser', 'firefox')
+            System.properties.get('browser', 'chrome')
             System.properties.get('dburl', "$dburl")
             System.properties.get('baseurl', "$baseurl")
             systemProperties System.properties
@@ -93,7 +93,7 @@ task e2e(type: Test) {
     }
 }
 
-e2e.doFirst() {
+e2eTestChrome.doFirst() {
     buildOpenLmis.execute()
 }
 
@@ -158,6 +158,29 @@ smokeTestIE2.doFirst() {
     buildOpenLmis.execute()
 }
 
+task offlineTest(type: Test) {
+    dependsOn assemble, compileTestJava
+
+    doLast {
+
+        htmlformat = "html:${buildDir}/reports/tests/bddTest-report-functional"
+        jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
+        javaexec {
+            System.properties.get('browser', 'firefox')
+            System.properties.get('dburl', "jdbc:postgresql://192.168.34.2/open_lmis")
+            System.properties.get('baseurl', "https://192.168.34.2/")
+            systemProperties System.properties
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@offline','--tags','~@WIP', 'src/test/resources']
+        }
+    }
+}
+
+offlineTest.doFirst() {
+    buildOpenLmis.execute()
+}
+
 configurations {
     cucumberRuntime {
         extendsFrom testRuntime
@@ -169,13 +192,13 @@ repositories {
 }
 
 
-task functionalTest(type: Test) {
+task adminTest(type: Test) {
     useTestNG() {
         systemProperties['browser'] = 'firefox'
         systemProperties['dburl'] = "$dburl"
         systemProperties['baseurl'] = "$baseurl"
 
-        suites 'src/test/java/org/openlmis/functional/testng-functional.xml'
+        suites 'src/test/java/org/openlmis/functional/testng-admin.xml'
     }
     options {
         listeners << 'org.uncommons.reportng.HTMLReporter'
@@ -184,36 +207,17 @@ task functionalTest(type: Test) {
     workingDir = 'build/'
 }
 
-functionalTest.doFirst() {
+adminTest.doFirst() {
     buildOpenLmis.execute()
 }
 
-task functionalTest2(type: Test) {
+task requisitionTest(type: Test) {
     useTestNG() {
         systemProperties['browser'] = 'firefox'
         systemProperties['dburl'] = "$dburl"
         systemProperties['baseurl'] = "$baseurl"
 
-        suites 'src/test/java/org/openlmis/functional/testng-functional2.xml'
-    }
-    options {
-        listeners << 'org.uncommons.reportng.HTMLReporter'
-        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
-    }
-    workingDir = 'build/'
-}
-functionalTest2.doFirst() {
-    buildOpenLmis.execute()
-}
-
-
-task functionalTest3(type: Test) {
-    useTestNG() {
-        systemProperties['browser'] = 'firefox'
-        systemProperties['dburl'] = "$dburl"
-        systemProperties['baseurl'] = "$baseurl"
-
-        suites 'src/test/java/org/openlmis/functional/testng-functional3.xml'
+        suites 'src/test/java/org/openlmis/functional/testng-requisition.xml'
     }
     options {
         listeners << 'org.uncommons.reportng.HTMLReporter'
@@ -222,10 +226,28 @@ task functionalTest3(type: Test) {
     workingDir = 'build/'
 }
 
-functionalTest3.doFirst() {
+requisitionTest.doFirst() {
     buildOpenLmis.execute()
 }
 
+task distributionTest(type: Test) {
+    useTestNG() {
+        systemProperties['browser'] = 'firefox'
+        systemProperties['dburl'] = "$dburl"
+        systemProperties['baseurl'] = "$baseurl"
+
+        suites 'src/test/java/org/openlmis/functional/testng-distribution.xml'
+    }
+    options {
+        listeners << 'org.uncommons.reportng.HTMLReporter'
+        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
+    }
+    workingDir = 'build/'
+}
+
+distributionTest.doFirst() {
+    buildOpenLmis.execute()
+}
 
 
 

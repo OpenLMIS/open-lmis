@@ -24,18 +24,23 @@ import org.openlmis.order.service.OrderService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
-import org.openlmis.shipment.domain.ShippedLineItem;
+import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.lang.Boolean.FALSE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.openlmis.shipment.builder.ShipmentLineItemBuilder.*;
+
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ShipmentServiceTest {
@@ -56,20 +61,29 @@ public class ShipmentServiceTest {
 
   @Test
   public void shouldInsertShipment() throws Exception {
-    ShippedLineItem shippedLineItem = spy(new ShippedLineItem(1l, "P10", 500));
+    ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
+      with(productCode, "P10"),
+      with(orderId, 1L),
+      with(quantityShipped, 500)));
+
+
     when(requisitionService.getLWById(1l)).thenReturn(new Rnr());
     when(productService.getIdForCode("P10")).thenReturn(1l);
 
-    shipmentService.insertShippedLineItem(shippedLineItem);
+    shipmentService.insertShippedLineItem(shipmentLineItem);
 
     verify(requisitionService).getLWById(1l);
     verify(productService).getIdForCode("P10");
-    verify(shipmentRepository).insertShippedLineItem(shippedLineItem);
+    verify(shipmentRepository).insertShippedLineItem(shipmentLineItem);
   }
 
   @Test
-  public void shouldNotInsertShipmentIfRnrIdIsNotValid() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem(1l, "P10", 500);
+  public void shouldNotInsertShipmentIfOrderIdIsNotValid() throws Exception {
+    ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
+      with(productCode, "P10"),
+      with(orderId, 1L),
+      with(quantityShipped, 500)));
+
     when(requisitionService.getLWById(1l)).thenReturn(null);
     when(productService.getIdForCode("P10")).thenReturn(1l);
 
@@ -77,12 +91,17 @@ public class ShipmentServiceTest {
     exException.expect(DataException.class);
     exException.expectMessage("error.unknown.order");
 
-    shipmentService.insertShippedLineItem(shippedLineItem);
+    shipmentService.insertShippedLineItem(shipmentLineItem);
   }
 
   @Test
   public void shouldNotInsertShipmentIfProductCodeIsNotValid() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem(1l, "P10", 500);
+
+    ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
+      with(productCode, "P10"),
+      with(orderId, 1L),
+      with(quantityShipped, 500)));
+
     when(requisitionService.getLWById(1l)).thenReturn(new Rnr());
     when(productService.getIdForCode("P10")).thenReturn(null);
 
@@ -90,17 +109,21 @@ public class ShipmentServiceTest {
     exException.expect(DataException.class);
     exException.expectMessage("error.unknown.product");
 
-    shipmentService.insertShippedLineItem(shippedLineItem);
+    shipmentService.insertShippedLineItem(shipmentLineItem);
   }
 
   @Test
   public void shouldNotInsertShipmentIfQuantityNegative() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem(1l, "P10", -1);
+    ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
+      with(productCode, "P10"),
+      with(orderId, 1L),
+      with(quantityShipped, -1)));
 
+    when(productService.getIdForCode("P10")).thenReturn(1l);
     exException.expect(DataException.class);
     exException.expectMessage("error.negative.shipped.quantity");
 
-    shipmentService.insertShippedLineItem(shippedLineItem);
+    shipmentService.insertShippedLineItem(shipmentLineItem);
   }
 
   @Test
@@ -115,7 +138,7 @@ public class ShipmentServiceTest {
     final ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
     shipmentFileInfo.setId(1L);
     shipmentFileInfo.setProcessingError(FALSE);
-    List<Long> orderIds = new ArrayList<>();
+    Set<Long> orderIds = new HashSet<>();
     orderIds.add(1L);
 
     shipmentService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
@@ -134,14 +157,14 @@ public class ShipmentServiceTest {
 
   @Test
   public void shouldGetProcessedTimeStampByOrderId() throws Exception {
-    ShippedLineItem shippedLineItem = new ShippedLineItem();
-    shippedLineItem.setRnrId(1L);
+    ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
+    shipmentLineItem.setOrderId(1L);
     Date expectedTimestamp = new Date();
-    when(shipmentRepository.getProcessedTimeStamp(shippedLineItem)).thenReturn(expectedTimestamp);
+    when(shipmentRepository.getProcessedTimeStamp(shipmentLineItem)).thenReturn(expectedTimestamp);
 
-    Date processTimeStamp = shipmentService.getProcessedTimeStamp(shippedLineItem);
+    Date processTimeStamp = shipmentService.getProcessedTimeStamp(shipmentLineItem);
 
     assertThat(processTimeStamp, is(expectedTimestamp));
-    verify(shipmentRepository).getProcessedTimeStamp(shippedLineItem);
+    verify(shipmentRepository).getProcessedTimeStamp(shipmentLineItem);
   }
 }

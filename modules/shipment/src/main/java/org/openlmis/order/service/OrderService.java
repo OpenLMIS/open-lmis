@@ -13,6 +13,7 @@ import org.openlmis.core.repository.OrderConfigurationRepository;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
@@ -28,6 +29,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static java.util.Arrays.asList;
+import static org.openlmis.order.domain.OrderStatus.IN_ROUTE;
+import static org.openlmis.order.domain.OrderStatus.READY_TO_PACK;
 
 @Service
 @NoArgsConstructor
@@ -55,6 +58,8 @@ public class OrderService {
       rnr.setModifiedBy(userId);
       order = new Order(rnr);
       order.setSupplyLine(supplyLineService.getSupplyLineBy(new SupervisoryNode(rnr.getSupervisoryNodeId()), rnr.getProgram()));
+      OrderStatus status = order.getSupplyLine().getExportOrders() ? IN_ROUTE : READY_TO_PACK;
+      order.setStatus(status);
       orderRepository.save(order);
     }
   }
@@ -115,5 +120,9 @@ public class OrderService {
     TreeSet<DateFormat> dateFormats = new TreeSet<>();
     dateFormats.addAll(asList(DateFormat.values()));
     return dateFormats;
+  }
+
+  public void updateOrderStatus(Order order) {
+    orderRepository.updateOrderStatus(order);
   }
 }

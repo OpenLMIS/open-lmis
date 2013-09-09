@@ -34,7 +34,7 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 public class ConfigureOrderTemplate extends TestCaseHelper {
 
 
-  @BeforeMethod(groups = "functional2")
+  @BeforeMethod(groups = "admin")
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -87,7 +87,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.verifySuccessMessage(message);
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyDefaultSelectionOfPeriodAndOrderDateDropdown(String user, String password) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
@@ -99,7 +99,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     assertEquals(orderDate, "dd/MM/yy");
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testEditPeriodAndOrderDateDropDown(String user, String password) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
@@ -119,7 +119,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyIncludeColumnHeaderONWithHeadersAltered(String user, String password) throws Exception {
     String facilityCode = "FC";
     String orderNumber = "ON";
@@ -153,7 +153,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     assertEquals(orderData, configureOrderPage.getOrderDate());
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyIncludeColumnHeaderONWithHeadersBlank(String user, String password) throws Exception {
     String facilityCode = "";
     String orderNumber = "";
@@ -187,7 +187,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     assertEquals(orderData, configureOrderPage.getOrderDate());
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyAllIncludeCheckBoxesUnchecked(String user, String password) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
@@ -207,7 +207,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyAddNewButtonFunctionality(String user, String password) throws Exception {
     String successMessage = "Order file configuration saved successfully!";
 
@@ -226,7 +226,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
 
 
   @After
-  @AfterMethod(groups = "functional2")
+  @AfterMethod(groups = "admin")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

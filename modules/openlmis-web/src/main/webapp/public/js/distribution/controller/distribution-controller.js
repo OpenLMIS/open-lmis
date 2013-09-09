@@ -122,14 +122,21 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
     function prepareDistribution(distribution, referenceData) {
       distribution.facilityDistributionData = {};
       $(referenceData.facilities).each(function (index, facility) {
+
+        var productGroups = [];
+        $(facility.supportedPrograms[0].programProducts).each(function (i, programProduct) {
+          if(!programProduct.active || !programProduct.product.active) return;
+          if(!programProduct.product.productGroup) return;
+          if(_.findWhere(productGroups, {id: programProduct.product.productGroup.id})) return;
+
+          productGroups.push(programProduct.product.productGroup);
+        });
+
         var refrigeratorReadings = [];
-        var productGroups = _.compact(_.uniq(_.pluck(_.pluck(facility.supportedPrograms[0].programProducts, 'product'), 'productGroup'), false, function (group) {
-          if (group == undefined) return;
-          return group.id;
-        }));
         $(_.where(referenceData.refrigerators, {facilityId: facility.id})).each(function (i, refrigerator) {
           refrigeratorReadings.push({'refrigerator': refrigerator});
         });
+
         distribution.facilityDistributionData[facility.id] = {};
         distribution.facilityDistributionData[facility.id].refrigerators = {refrigeratorReadings: refrigeratorReadings};
         distribution.facilityDistributionData[facility.id].epiUse = {productGroups: productGroups};
@@ -175,9 +182,7 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
 }
 
 DistributionController.resolve = {
-  deliveryZones: function (UserDeliveryZones, $timeout, $q, $window) {
-
-    if (!navigator.onLine) $window.location = '/public/pages/logistics/distribution/offline.html#/list';
+  deliveryZones: function (UserDeliveryZones, $timeout, $q) {
 
     var deferred = $q.defer();
     $timeout(function () {

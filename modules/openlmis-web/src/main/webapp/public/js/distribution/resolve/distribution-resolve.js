@@ -9,8 +9,9 @@
 ResolveDistribution = {
   distribution: function (distributionService, $q, IndexedDB, $route) {
     var distributionDefer = $q.defer();
-    if (!distributionService.distribution) {
-      IndexedDB.get('distributions', utils.parseIntWithBaseTen($route.current.params.distribution), function (e) {
+    var distributionId = utils.parseIntWithBaseTen($route.current.params.distribution);
+    if (!distributionService.distribution || distributionService.distribution.id != distributionId) {
+      IndexedDB.get('distributions', distributionId, function (e) {
         distributionService.distribution = new Distribution(e.target.result);
         distributionDefer.resolve(distributionService.distribution);
       }, {});
