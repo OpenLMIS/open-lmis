@@ -76,7 +76,7 @@ public class SummaryQueryBuilder {
         }
         if (product != null &&  !product.equals("undefined") && !product.isEmpty() && !product.equals("0") &&  !product.equals("-1")) {
 
-            predicate += " and program_products.productid = "+ product;
+            predicate += " and products.id = "+ product;
         }
         if (schedule != null &&  !schedule.equals("undefined") && !schedule.isEmpty() && !schedule.equals("0") &&  !schedule.equals("-1")) {
 
