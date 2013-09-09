@@ -52,6 +52,18 @@ public class FacilityApprovedProductService {
       return repository.getProductsCompleteListByFacilityAndProgram(facilityId, programId);
   }
 
+  public List<FacilityTypeApprovedProduct> getProductsCompleteListByFacilityTypeAndProgram(Long facilityTypeId, Long programId){
+      return repository.getProductsCompleteListByFacilityTypeAndProgram(facilityTypeId, programId);
+  }
+
+  public List<FacilityTypeApprovedProduct> getProductsAlreadyApprovedListByFacilityTypeAndProgram(Long facilityTypeId, Long programId){
+      return repository.getProductsAlreadyApprovedListByFacilityTypeAndProgram(facilityTypeId, programId);
+  }
+
+  public FacilityTypeApprovedProduct  getFacilityApprovedProductByProgramProductAndFacilityTypeId(Long facilityTypeId,Long programId,Long productId){
+      return repository.getFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeId,programId,productId);
+  }
+
   public void save(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     fillProgramProductIds(facilityTypeApprovedProduct);
     FacilityType facilityType = facilityService.getFacilityTypeByCode(facilityTypeApprovedProduct.getFacilityType());
@@ -64,6 +76,14 @@ public class FacilityApprovedProductService {
     } else {
       repository.insert(facilityTypeApprovedProduct);
     }
+  }
+
+  public void save_ext(FacilityTypeApprovedProduct facilityTypeApprovedProduct){
+      if (facilityTypeApprovedProduct.getId() != null) {
+          repository.update(facilityTypeApprovedProduct);
+      } else {
+          repository.insert(facilityTypeApprovedProduct);
+      }
   }
 
   public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
