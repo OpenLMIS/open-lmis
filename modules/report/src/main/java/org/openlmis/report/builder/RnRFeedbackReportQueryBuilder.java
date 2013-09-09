@@ -53,7 +53,7 @@ public class RnRFeedbackReportQueryBuilder {
     }
 
     private static void writePredicates(RnRFeedbackReportFilter  filter){
-
+        WHERE("req_status = 'RELEASED");
         WHERE("program_id = "+filter.getProgramId());
         WHERE("facility_id = "+filter.getFacilityId());
         WHERE("processing_periods_id = "+filter.getPeriodId());
