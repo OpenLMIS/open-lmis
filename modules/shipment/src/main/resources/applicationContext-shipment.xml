@@ -23,7 +23,7 @@
     <context:spring-configured/>
 
     <camel:camelContext id="camelContext">
-        <camel:template id="camelTemplate" />
+        <camel:template id="camelTemplate"/>
     </camel:camelContext>
 
 
@@ -49,7 +49,7 @@
                                      filename-pattern="*.csv"
                                      auto-create-local-directory="true"
                                      delete-remote-files="true"
-                                     remote-directory="/"
+                                     remote-directory="#{ftp.remote.directory}"
                                      local-directory="${ftp.local.directory}">
         <int:poller fixed-rate="30000" max-messages-per-poll="-1" task-executor=""/>
     </int-ftp:inbound-channel-adapter>
