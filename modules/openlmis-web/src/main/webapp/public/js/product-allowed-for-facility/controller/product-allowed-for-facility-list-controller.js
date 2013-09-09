@@ -1,4 +1,4 @@
-function ProductAllowedForFacilityListController($scope, $location, navigateBackService, ReportFacilityTypes, ProgramCompleteList,ScheduleCompleteList, GetFacilityTypeApprovedProductsCompleteList,GetFacilityTypeProgramProductAlreadyAllowedList,GetProductsCompleteListForAProgram, SaveApprovedProductForFacilityType, GetApprovedProductForFacilityTypeDetail, $dialog, messageService) {
+function ProductAllowedForFacilityListController($scope, $location, navigateBackService, ReportFacilityTypes, ProgramCompleteList,ScheduleCompleteList, GetFacilityTypeApprovedProductsCompleteList,GetFacilityTypeProgramProductAlreadyAllowedList,GetProductsCompleteListForAProgram, SaveApprovedProductForFacilityType, GetApprovedProductForFacilityTypeDetail,RemoveApprovedProductForFacilityType, $dialog, messageService) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.showFacilityTypeList('txtFilterFacilityTypeName');
@@ -138,32 +138,6 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
 
             });
         });
-
-
-
-
-        /*GetFacilityTypeApprovedProductsCompleteList.get({facilityTypeId:$scope.selectedFacilityType.id, programId: $scope.selectedProgram.id},function(data){
-            $scope.products = data.products;
-
-            if($scope.products==null){
-                $scope.message = "No products allowed for " + $scope.selectedFacilityType.name + " in program: " + $scope.selectedProgram.name;
-                $scope.showMessage = true;
-            }
-            else{
-                $scope.message="";
-                $scope.showMessage=false;
-
-                //$scope.setOriginallySelectedSchedule($scope.selectedRequisitionGroupProgramSchedule.processingSchedule)
-            }
-
-
-            angular.forEach($scope.products, function (product) {
-                if ($scope.alreadyAllowedProducts.indexOf(product) >= 0) {
-                    product.isSelected = true;
-                }
-            });
-
-        },{});*/
     };
 
     $scope.saveFacilityTypeAllowedProductTypes = function(){
@@ -191,10 +165,17 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
                         facilityTypeApprovedProduct.facilityType = $scope.selectedFacilityType;
                     }
 
-                    facilityTypeApprovedProduct.maxMonthsOfStock = programProduct.maxMonthsOfStock;
-                    facilityTypeApprovedProduct.minMonthsOfStock = programProduct.minMonthsOfStock;
+                    else if(facilityTypeApprovedProduct!=null && programProduct.isSelected == false){
+                        RemoveApprovedProductForFacilityType.get({facilityTypeId: $scope.selectedFacilityType.id,programId: $scope.selectedProgram.id,productId: programProduct.id});
+                    }
 
-                    SaveApprovedProductForFacilityType.save(facilityTypeApprovedProduct,successHandler,errorHandler);
+                    if(programProduct.isSelected == true){
+
+                        facilityTypeApprovedProduct.maxMonthsOfStock = programProduct.maxMonthsOfStock;
+                        facilityTypeApprovedProduct.minMonthsOfStock = programProduct.minMonthsOfStock;
+
+                        SaveApprovedProductForFacilityType.save(facilityTypeApprovedProduct,successHandler,errorHandler);
+                    }
 
                 });
 
