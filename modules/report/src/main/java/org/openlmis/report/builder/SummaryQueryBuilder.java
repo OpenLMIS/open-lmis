@@ -30,8 +30,8 @@ public class SummaryQueryBuilder {
                         "    inner join requisitions r ON  r.facilityid = facilities.id         \n" +
                         "    inner join requisition_line_items li ON li.rnrid = r.id         \n" +
                         "    inner join products ON products.code  ::text =   li.productcode  ::text       \n" +
-                        "    inner join program_products ON program_products.productid = products.id \n" +
-                        "    inner join programs ON  program_products.programid = programs.id   AND  programs.id = r.programid       \n" +
+                        "   -- inner join program_products ON program_products.productid = products.id \n" +
+                        "    inner join programs ON  r.programid = programs.id     \n" +
                         "    inner join requisition_group_members ON facilities.id = requisition_group_members.facilityid         \n" +
                         "    inner join requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid         \n" +
                         "    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programid = programs.id   " +
