@@ -312,4 +312,24 @@ services.factory('GetFacilityApprovedProductsCompleteList', function ($resource)
 
 services.factory('GetFacilityProgramProductAlreadyAllowedList',function($resource){
     return $resource('/facility/:facilityId/program/:programId/programProductList.json',{},{});
-})
+});
+
+services.factory('GetFacilityTypeApprovedProductsCompleteList', function ($resource) {
+    return $resource('/facilityApprovedProducts/facilityType/:facilityTypeId/program/:programId/all.json', {}, {});
+});
+
+services.factory('GetFacilityTypeProgramProductAlreadyAllowedList',function($resource){
+    return $resource('/facilityApprovedProducts/:facilityTypeId/program/:programId/programProductList.json',{},{});
+});
+
+services.factory('GetProductsCompleteListForAProgram',function($resource){
+    return $resource('/programProducts/program/:programId/all.json',{},{});
+});
+
+services.factory('GetApprovedProductForFacilityTypeDetail', function($resource){
+    return $resource('/facilityApprovedProducts/facilityType/:facilityTypeId/program/:programId/product/:productId',{},{});
+});
+
+services.factory('SaveApprovedProductForFacilityType',function($resource){
+    return $resource('/facilityApprovedProducts/insert.json',{},{})
+});
