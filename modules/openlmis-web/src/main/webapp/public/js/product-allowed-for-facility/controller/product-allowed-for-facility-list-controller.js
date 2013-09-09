@@ -1,4 +1,4 @@
-function ProductAllowedForFacilityListController($scope, $location, navigateBackService, ReportFacilityTypes, ProgramCompleteList,ScheduleCompleteList, ProgramProducts, GetFacilityApprovedProductsCompleteList,GetFacilityProgramProductAlreadyAllowedList, SaveRequisitionGroupProgramSchedule, $dialog, messageService) {
+function ProductAllowedForFacilityListController($scope, $location, navigateBackService, ReportFacilityTypes, ProgramCompleteList,ScheduleCompleteList, GetFacilityTypeApprovedProductsCompleteList,GetFacilityTypeProgramProductAlreadyAllowedList,GetProductsCompleteListForAProgram, SaveApprovedProductForFacilityType, GetApprovedProductForFacilityTypeDetail, $dialog, messageService) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.showFacilityTypeList('txtFilterFacilityTypeName');
@@ -57,7 +57,7 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
             $scope.filteredFacilityTypes = [];
             angular.forEach($scope.facilityTypeList, function (facilityType) {
 
-                if (facility.name.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0) {
+                if (facilityType.name.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0) {
                     $scope.filteredFacilityTypes.push(facilityType);
                 }
             });
@@ -110,16 +110,39 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
         $scope.selectedProgram = program;
     };
 
-    $scope.$watchCollection('[selectedFacility, selectedProgram]', function(){
-        $scope.loadFacilityProgramProducts();
+    $scope.$watchCollection('[selectedFacilityType, selectedProgram]', function(){
+        $scope.loadFacilityTypeProgramProducts();
     });
 
-    $scope.loadFacilityProgramProducts = function (){
+    $scope.loadFacilityTypeProgramProducts = function (){
         if($scope.selectedFacilityType == null || $scope.selectedProgram == null){
             return;
         }
 
-        ProgramProducts.get({programId: $scope.selectedProgram.id},function(data){
+        GetProductsCompleteListForAProgram.get({programId: $scope.selectedProgram.id},function(data){
+            $scope.products = data.products;
+
+            GetFacilityTypeProgramProductAlreadyAllowedList.get({facilityTypeId:$scope.selectedFacilityType.id, programId:$scope.selectedProgram.id},function(data){
+                $scope.alreadyAllowedProducts = data.products;
+
+                angular.forEach($scope.products, function (product) {
+                    angular.forEach($scope.alreadyAllowedProducts, function(allowedProducts){
+                        if (allowedProducts.programProduct.product.id  == product.id) {
+                            product.isSelected = true;
+                            product.maxMonthsOfStock = allowedProducts.maxMonthsOfStock;
+                            product.minMonthsOfStock = allowedProducts.minMonthsOfStock;
+                        }
+                    });
+
+                });
+
+            });
+        });
+
+
+
+
+        /*GetFacilityTypeApprovedProductsCompleteList.get({facilityTypeId:$scope.selectedFacilityType.id, programId: $scope.selectedProgram.id},function(data){
             $scope.products = data.products;
 
             if($scope.products==null){
@@ -132,32 +155,18 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
 
                 //$scope.setOriginallySelectedSchedule($scope.selectedRequisitionGroupProgramSchedule.processingSchedule)
             }
-        },{});
 
-        GetFacilityProgramProductAlreadyAllowedList.get({facilityId:$scope.selectedFacilityType.id, programId:$scope.selectedProgram.id},function(data){
-            $scope.alreadyAllowedProducts = data.programProductList;
-        });
 
-        angular.forEach($scope.products, function (product) {
-            if ($scope.alreadyAllowedProducts.indexOf(product) >= 0) {
-                product.isSelected = true;
-            }
-        });
+            angular.forEach($scope.products, function (product) {
+                if ($scope.alreadyAllowedProducts.indexOf(product) >= 0) {
+                    product.isSelected = true;
+                }
+            });
+
+        },{});*/
     };
 
-    $scope.setDataChanged = function(){
-        $scope.isDataChanged = true;
-    }
-
-    /*$scope.setOriginallySelectedSchedule = function (schedule){
-        angular.forEach($scope.schedules,function(scheduleEntry){
-            if(scheduleEntry.id == schedule.id){
-                $scope.selectedSchedule = scheduleEntry;
-            }
-        });
-    } */
-
-    $scope.saveRequisitionGroupProgramSchedule = function(){
+    $scope.saveFacilityTypeAllowedProductTypes = function(){
         var successHandler = function (response) {
             $scope.requisitionGroupProgramSchedule = response.requisitionGroupProgramSchedule;
             $scope.showError = false;
@@ -171,11 +180,32 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
             $scope.error = response.data.error;
         };
 
-        $scope.selectedRequisitionGroupProgramSchedule.requisitionGroup = $scope.selectedRequisitionGroup;
-        $scope.selectedRequisitionGroupProgramSchedule.program = $scope.selectedProgram;
-        $scope.selectedRequisitionGroupProgramSchedule.processingSchedule = $scope.selectedSchedule;
+        angular.forEach($scope.products,function(programProduct){
+            if(programProduct.isDataChanged){
+                GetApprovedProductForFacilityTypeDetail.get({facilityTypeId: $scope.selectedFacilityType.id,programId: $scope.selectedProgram.id,productId: programProduct.id}, function(data){
+                    var facilityTypeApprovedProduct = data.facilityTypeApprovedProduct;
 
-        SaveRequisitionGroupProgramSchedule.save($scope.selectedRequisitionGroupProgramSchedule,successHandler,errorHandler);
+                    if(facilityTypeApprovedProduct == null){
+                        facilityTypeApprovedProduct={};
+                        facilityTypeApprovedProduct.programProduct = programProduct;
+                        facilityTypeApprovedProduct.facilityType = $scope.selectedFacilityType;
+                    }
+
+                    facilityTypeApprovedProduct.maxMonthsOfStock = programProduct.maxMonthsOfStock;
+                    facilityTypeApprovedProduct.minMonthsOfStock = programProduct.minMonthsOfStock;
+
+                    SaveApprovedProductForFacilityType.save(facilityTypeApprovedProduct,successHandler,errorHandler);
+
+                });
+
+
+            }
+        })
+    }
+
+    $scope.setDataChanged = function(programProduct){
+        programProduct.isDataChanged = true;
+        $scope.isDataChanged = true;
     }
 
     
