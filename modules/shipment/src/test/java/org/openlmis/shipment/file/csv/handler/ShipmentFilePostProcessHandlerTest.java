@@ -19,12 +19,12 @@ import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
+
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ShipmentFilePostProcessHandler.class)
@@ -33,8 +33,6 @@ public class ShipmentFilePostProcessHandlerTest {
   private ShipmentService shipmentService;
   @Mock
   private MessageChannel ftpOutputChannel;
-  @Mock
-  private ShipmentFileReader shipmentFileReader;
 
   @InjectMocks
   private ShipmentFilePostProcessHandler shipmentFilePostProcessHandler;
@@ -50,12 +48,10 @@ public class ShipmentFilePostProcessHandlerTest {
     when(shipmentFile.getName()).thenReturn(fileName);
     whenNew(ShipmentFileInfo.class).withArguments(fileName, processingError).thenReturn(shipmentFileInfo);
 
-    when(shipmentFileReader.getOrderIds(shipmentFile)).thenReturn(orderIds);
-
-    shipmentFilePostProcessHandler.process(shipmentFile, processingError);
+    shipmentFilePostProcessHandler.process(orderIds, shipmentFile, processingError);
 
     verify(shipmentService).insertShipmentFileInfo(shipmentFileInfo);
-    verify(shipmentService).updateStatusAndShipmentIdForOrders(new ArrayList(orderIds), shipmentFileInfo);
+    verify(shipmentService).updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
     verify(ftpOutputChannel, never()).send(any(Message.class));
   }
 
@@ -69,12 +65,11 @@ public class ShipmentFilePostProcessHandlerTest {
 
     when(shipmentFile.getName()).thenReturn(fileName);
     whenNew(ShipmentFileInfo.class).withArguments(fileName, processingError).thenReturn(shipmentFileInfo);
-    when(shipmentFileReader.getOrderIds(shipmentFile)).thenReturn(orderIds);
 
-    shipmentFilePostProcessHandler.process(shipmentFile, processingError);
+    shipmentFilePostProcessHandler.process(orderIds, shipmentFile, processingError);
 
     verify(shipmentService).insertShipmentFileInfo(shipmentFileInfo);
-    verify(shipmentService).updateStatusAndShipmentIdForOrders(new ArrayList(orderIds), shipmentFileInfo);
+    verify(shipmentService).updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
     verify(ftpOutputChannel).send(any(Message.class));
   }
 }

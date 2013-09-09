@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @NoArgsConstructor
@@ -61,7 +62,7 @@ public class ShipmentService {
     shipmentRepository.insertShipmentFileInfo(shipmentFileInfo);
   }
 
-  public void updateStatusAndShipmentIdForOrders(List<Long> rnrIds, ShipmentFileInfo shipmentFileInfo) {
+  public void updateStatusAndShipmentIdForOrders(Set<Long> rnrIds, ShipmentFileInfo shipmentFileInfo) {
     List<Order> orders = new ArrayList<>();
     for (Long id : rnrIds) {
       Order order = new Order(new Rnr(id));

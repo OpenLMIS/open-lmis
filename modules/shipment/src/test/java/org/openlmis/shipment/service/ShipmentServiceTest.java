@@ -27,9 +27,10 @@ import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.lang.Boolean.FALSE;
@@ -137,7 +138,7 @@ public class ShipmentServiceTest {
     final ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
     shipmentFileInfo.setId(1L);
     shipmentFileInfo.setProcessingError(FALSE);
-    List<Long> orderIds = new ArrayList<>();
+    Set<Long> orderIds = new HashSet<>();
     orderIds.add(1L);
 
     shipmentService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);

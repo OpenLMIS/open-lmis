@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.io.FileUtils;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.db.service.DbService;
 import org.openlmis.order.dto.ShipmentLineItemDTO;
 import org.openlmis.shipment.ShipmentLineItemTransformer;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
@@ -19,7 +18,6 @@ import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.file.csv.handler.ShipmentFilePostProcessHandler;
 import org.openlmis.shipment.service.ShipmentFileTemplateService;
 import org.openlmis.shipment.service.ShipmentService;
-import org.openlmis.upload.parser.CSVParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +32,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.apache.commons.collections.CollectionUtils.select;
 import static org.springframework.integration.support.MessageBuilder.withPayload;
@@ -46,13 +46,7 @@ public class ShipmentFileProcessor {
   private static Logger logger = LoggerFactory.getLogger(ShipmentFileProcessor.class);
 
   @Autowired
-  private CSVParser csvParser;
-
-  @Autowired
   private ShipmentFilePostProcessHandler shipmentFilePostProcessHandler;
-
-  @Autowired
-  private DbService dbService;
 
   @Autowired
   private MessageChannel ftpArchiveOutputChannel;
@@ -80,6 +74,7 @@ public class ShipmentFileProcessor {
     Collection<ShipmentFileColumn> includedColumns = filterIncludedColumns(shipmentFileColumns);
 
     boolean errorInFile = true;
+    Set<Long> orderIds = new HashSet<>();
 
     int maxPosition = findMaximumPosition(includedColumns);
 
@@ -94,11 +89,8 @@ public class ShipmentFileProcessor {
           logger.warn("Shipment file should contain at least " + maxPosition + " columns");
           throw new DataException("mandatory.data.missing");
         } else {
-          ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns);
-
-          ShipmentLineItem lineItem = transformer.transform(dto, packedDateFormat, shippedDateFormat);
-
-          shipmentService.insertShippedLineItem(lineItem);
+          Long orderId = processLineItem(fieldsInOneRow, includedColumns, packedDateFormat, shippedDateFormat);
+          orderIds.add(orderId);
         }
       }
 
@@ -109,12 +101,26 @@ public class ShipmentFileProcessor {
     } catch (Exception e) {
       logger.warn("Error processing file " + shipmentFile.getName() + " with error " + e.getMessage());
       throw e;
+
     } finally {
-      shipmentFilePostProcessHandler.process(shipmentFile, errorInFile);
+      shipmentFilePostProcessHandler.process(orderIds, shipmentFile, errorInFile);
       if (!FileUtils.deleteQuietly(shipmentFile)) {
         logger.error("Unable to delete temporary shipment file " + shipmentFile.getName());
       }
     }
+  }
+
+  private Long processLineItem(List<String> fieldsInOneRow,
+                               Collection<ShipmentFileColumn> includedColumns,
+                               String packedDateFormat,
+                               String shippedDateFormat) throws NoSuchFieldException, IllegalAccessException {
+
+    ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns);
+
+    ShipmentLineItem lineItem = transformer.transform(dto, packedDateFormat, shippedDateFormat);
+
+    shipmentService.insertShippedLineItem(lineItem);
+    return lineItem.getOrderId();
   }
 
 
