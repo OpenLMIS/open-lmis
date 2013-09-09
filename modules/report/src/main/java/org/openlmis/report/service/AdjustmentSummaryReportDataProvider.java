@@ -7,6 +7,7 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.AdjustmentSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
@@ -31,14 +32,8 @@ import java.util.Map;
 @NoArgsConstructor
 public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
 
-
+  @Autowired
     private AdjustmentSummaryReportMapper reportMapper;
-
-
-    @Autowired
-    public AdjustmentSummaryReportDataProvider(AdjustmentSummaryReportMapper mapper) {
-        this.reportMapper = mapper;
-    }
 
     @Override
     protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
@@ -77,7 +72,7 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
      }*/
 
     @Override
-    public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
+    public AdjustmentSummaryReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
         AdjustmentSummaryReportFilter adjustmentSummaryReportFilter = null;
 
         if(filterCriteria != null){
@@ -85,28 +80,28 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
             Date originalStart =  new Date();
             Date originalEnd =  new Date();
 
-            adjustmentSummaryReportFilter.setZoneId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
-            adjustmentSummaryReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-            adjustmentSummaryReportFilter.setFacilityType( (filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "ALL Facilities" : filterCriteria.get("facilityType")[0]);
-            adjustmentSummaryReportFilter.setRgroup( (filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "ALL Reporting Groups" : filterCriteria.get("rgroup")[0]);
+            adjustmentSummaryReportFilter.setZoneId( StringUtils.isBlank(filterCriteria.get("zoneId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
+            adjustmentSummaryReportFilter.setFacilityTypeId( StringUtils.isBlank( filterCriteria.get("facilityTypeId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
+            adjustmentSummaryReportFilter.setFacilityType(  StringUtils.isBlank( filterCriteria.get("facilityType")[0] ) ? "All Facilities" : filterCriteria.get("facilityType")[0]);
+            adjustmentSummaryReportFilter.setRgroup(  StringUtils.isBlank( filterCriteria.get("rgroup")[0] )  ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
 
 
-            adjustmentSummaryReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
-            adjustmentSummaryReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
-            adjustmentSummaryReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
-            adjustmentSummaryReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
-            adjustmentSummaryReportFilter.setAdjustmentTypeId( (filterCriteria.get("adjustmentTypeId") == null || filterCriteria.get("adjustmentTypeId")[0].equals("")) ? "" : filterCriteria.get("adjustmentTypeId")[0]);
-            adjustmentSummaryReportFilter.setAdjustmentType( (filterCriteria.get("adjustmentType") == null || filterCriteria.get("adjustmentType")[0].equals("")) ? "All Adjustment Types" : filterCriteria.get("adjustmentType")[0]);
+            adjustmentSummaryReportFilter.setProductCategoryId( StringUtils.isBlank( filterCriteria.get("productCategoryId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
+            adjustmentSummaryReportFilter.setProductId( StringUtils.isBlank( filterCriteria.get("productId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
+            adjustmentSummaryReportFilter.setRgroupId( StringUtils.isBlank( filterCriteria.get("rgroupId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
+            adjustmentSummaryReportFilter.setProgramId( StringUtils.isBlank( filterCriteria.get("programId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
+            adjustmentSummaryReportFilter.setAdjustmentTypeId(  StringUtils.isBlank( filterCriteria.get("adjustmentTypeId")[0] ) ? "" : filterCriteria.get("adjustmentTypeId")[0]);
+            adjustmentSummaryReportFilter.setAdjustmentType(  StringUtils.isBlank( filterCriteria.get("adjustmentType")[0] ) ? "All Adjustment Types" : filterCriteria.get("adjustmentType")[0]);
 
-            adjustmentSummaryReportFilter.setYearFrom(filterCriteria.get("fromYear") == null ? originalStart.getYear() : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0
-            adjustmentSummaryReportFilter.setYearTo(filterCriteria.get("toYear") == null ? originalEnd.getYear() : Integer.parseInt(filterCriteria.get("toYear")[0])); //defaults to 0
-            adjustmentSummaryReportFilter.setMonthFrom(filterCriteria.get("fromMonth") == null ? originalStart.getMonth() : Integer.parseInt(filterCriteria.get("fromMonth")[0])); //defaults to 0
-            adjustmentSummaryReportFilter.setMonthTo(filterCriteria.get("toMonth") == null ? originalEnd.getMonth() : Integer.parseInt(filterCriteria.get("toMonth")[0])); //defaults to 0
-            adjustmentSummaryReportFilter.setPeriodType(filterCriteria.get("periodType") == null ? "" : filterCriteria.get("periodType")[0].toString());
-            adjustmentSummaryReportFilter.setQuarterFrom(filterCriteria.get("fromQuarter") == null ? 1 : Integer.parseInt(filterCriteria.get("fromQuarter")[0]));
-            adjustmentSummaryReportFilter.setQuarterTo(filterCriteria.get("toQuarter") == null ? 1 : Integer.parseInt(filterCriteria.get("toQuarter")[0]));
-            adjustmentSummaryReportFilter.setSemiAnnualFrom(filterCriteria.get("fromSemiAnnual") == null ? 1 : Integer.parseInt(filterCriteria.get("fromSemiAnnual")[0]));
-            adjustmentSummaryReportFilter.setSemiAnnualTo(filterCriteria.get("toSemiAnnual") == null ? 1 : Integer.parseInt(filterCriteria.get("toSemiAnnual")[0]));
+            adjustmentSummaryReportFilter.setYearFrom( StringUtils.isBlank( filterCriteria.get("fromYear")[0] ) ? originalStart.getYear() : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0
+            adjustmentSummaryReportFilter.setYearTo( StringUtils.isBlank( filterCriteria.get("toYear")[0] ) ? originalEnd.getYear() : Integer.parseInt(filterCriteria.get("toYear")[0])); //defaults to 0
+            adjustmentSummaryReportFilter.setMonthFrom( StringUtils.isBlank( filterCriteria.get("fromMonth")[0] ) ? originalStart.getMonth() : Integer.parseInt(filterCriteria.get("fromMonth")[0])); //defaults to 0
+            adjustmentSummaryReportFilter.setMonthTo( StringUtils.isBlank( filterCriteria.get("toMonth")[0] ) ? originalEnd.getMonth() : Integer.parseInt(filterCriteria.get("toMonth")[0])); //defaults to 0
+            adjustmentSummaryReportFilter.setPeriodType( StringUtils.isBlank( filterCriteria.get("periodType")[0] ) ? "" : filterCriteria.get("periodType")[0].toString());
+            adjustmentSummaryReportFilter.setQuarterFrom( StringUtils.isBlank( filterCriteria.get("fromQuarter")[0] ) ? 1 : Integer.parseInt(filterCriteria.get("fromQuarter")[0]));
+            adjustmentSummaryReportFilter.setQuarterTo( StringUtils.isBlank( filterCriteria.get("toQuarter")[0] ) ? 1 : Integer.parseInt(filterCriteria.get("toQuarter")[0]));
+            adjustmentSummaryReportFilter.setSemiAnnualFrom( StringUtils.isBlank( filterCriteria.get("fromSemiAnnual")[0] ) ? 1 : Integer.parseInt(filterCriteria.get("fromSemiAnnual")[0]));
+            adjustmentSummaryReportFilter.setSemiAnnualTo( StringUtils.isBlank( filterCriteria.get("toSemiAnnual")[0] ) ? 1 : Integer.parseInt(filterCriteria.get("toSemiAnnual")[0]));
 
             int monthFrom = 0;
             int monthTo = 0;

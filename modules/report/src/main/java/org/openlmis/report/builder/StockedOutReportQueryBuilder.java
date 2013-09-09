@@ -29,7 +29,10 @@ public class StockedOutReportQueryBuilder {
         WHERE("status = 'SO'");
         writePredicates(filter);
         ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, StockedOutReport.class,"supplyingfacility asc, facility asc, product asc, processing_period_name asc"));
-        return SQL();
+        // copy the sql over to a variable, this makes the debugging much more possible.
+        String sql = SQL();
+        return sql;
+
 
     }
     private static void writePredicates(StockedOutReportFilter filter){
@@ -38,8 +41,8 @@ public class StockedOutReportQueryBuilder {
             if (filter.getFacilityTypeId() != 0 && filter.getFacilityTypeId() != -1) {
                 WHERE("facilitytypeid = #{filterCriteria.facilityTypeId}");
             }
-            if(filter.getFacility() != null && !filter.getFacility().isEmpty()){
-                WHERE("facility = #{filterCriteria.facility}");
+            if (filter.getZoneId() != 0 && filter.getZoneId() != -1) {
+                WHERE("gz_id = #{filterCriteria.zoneId}");
             }
             if (filter.getStartDate() != null) {
                 WHERE("startdate >= #{filterCriteria.startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}");

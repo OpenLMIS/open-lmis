@@ -503,6 +503,10 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 
         $scope.getPagedDataAsync = function (pageSize, page) {
                         var params  = {};
+                        if($scope.program == null || $scope.program == undefined || $scope.program == ''){
+                            // do not send a request to the server before the basic selection was done.
+                            return;
+                        }
                         if(pageSize != undefined && page != undefined ){
                                 var params =  {
                                                 "max" : pageSize,

@@ -13,11 +13,6 @@ import java.util.Map;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
-/**
- * User: Elias
- * Date: 4/11/13
- * Time: 11:34 AM
- */
 public class AverageConsumptionQueryBuilder {
 
     public static String getQuery(Map params){

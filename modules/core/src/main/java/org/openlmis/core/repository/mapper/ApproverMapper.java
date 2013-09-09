@@ -8,12 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * e-lmis
- * Created by: Elias Muluneh
- * Date: 8/13/13
- * Time: 12:08 PM
- */
 @Repository
 public interface ApproverMapper {
 

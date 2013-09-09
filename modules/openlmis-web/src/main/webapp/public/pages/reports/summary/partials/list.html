@@ -91,11 +91,13 @@
                                         </select>
                                     </div>
                                 </div>
+                                <!-- Facility-->
                                 <div class="form-cell horizontalFilters">
-                                    <label class="labels">Facility Name</label>
-
+                                    <label class="labels">Facility Name<span  class="label-required"> *</span></label>
                                     <div class="form-field">
-                                        <input id="name" type="text"  ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
+                                        <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility" >
+                                            <option  ng-repeat="option in facilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
+                                        </select>
                                     </div>
                                 </div>
 

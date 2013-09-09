@@ -20,12 +20,6 @@ import org.openlmis.report.model.dto.*;
 
 import java.util.*;
 
-/**
- * e-lmis
- * Created by: Elias Muluneh
- * Date: 4/12/13
- * Time: 2:47 AM
- */
 @Service
 @NoArgsConstructor
 public class ReportLookupService {

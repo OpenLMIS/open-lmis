@@ -4,182 +4,179 @@
   ~ The U.S. Agency for International Development (USAID) funded this section of the application development under the terms of the USAID | DELIVER PROJECT contract no. GPO-I-00-06-00007-00.
   -->
 
-<div class="row-fluid sortable ui-sortable">
-    <div class="box span12">
+<div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+<div class="container-fluid">
+    <div class="box row-fluid">
         <div class="box-header">
             <h2><i class="icon-edit"></i><span class="break"></span>Stocked Out Facility Report</h2>
             <div class="box-icon">
-                <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
-                <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
+                <!--<a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>-->
+                <!--<a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>-->
                 <a id="pdf-button" href="#" ng-click="exportReport('PDF')" class='btn-small btn-info'>PDF</a>
-                <a id="xls-button" href="#" ng-click="exportReport('xls')" class='btn-small btn-info'>Excel</a>
+                <a id="xls-button" href="#" ng-click="exportReport('XLS')" class='btn-small btn-info'>Excel</a>
             </div>
         </div>
-
-        <div class="box-content"  ng-show="show(1)">
-            <div class="app-form" style="padding: 5px;">
-                <form ng-submit="filterGrid()"  name="filterForm" novalidate>
-                    <div class="clearfix ">
-  <table border="0"><tr><td>
-                        <div class="form-cell horizontalFilters">
-                            <div >
-                                <label class="labels">Period Type<span class="label-required"> *</span></label>
-                                <div class="form-field">
-                                    <select ui-select2 style="width:200px;" class="input-medium" ng-required="true" name="periodType" id="periodType" ng-model="periodType" ng-init="reporting"  ng-options="option.value as option.name for option in periodTypes">
-
-                                    </select>
+        <div class="container-fluid box-content">
+            <div class="row-fluid">
+                <div class="span3" ng-show="show(1)">
+                    <div class="app-form" style="padding: 5px;">
+                        <form ng-submit="filterGrid()"  name="filterForm" novalidate>
+                            <div class="clearfix ">
+                                <div class="form-cell horizontalFilters">
+                                    <div >
+                                        <label class="labels">Program <span class="label-required">*</span></label>
+                                        <div class="form-fields">
+                                            <select ui-select2 style="width:200px;" name="program"  ng-model="program" ng-required="true">
+                                                <option  ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
- </td><td>
-                        <div class="form-cell horizontalFilters" style="width:180px">
-                            <label class="labels">From<span class="label-required"> *</span></label>
 
-                            <div class="form-field">
 
-                                <select  style="width:80px;" class="input-small" ng-required="true"  name="startYear" id="startYear" ng-model="startYear"  ng-options="year for year in startYears">
+                                <div class="clearfix"></div>
+                                <br />
 
-                                </select>
+                                <div class="form-cell horizontalFilters">
+                                    <div >
+                                        <label class="labels">Period Type <span class="label-required">*</span></label>
+                                        <div class="form-field">
+                                            <select ui-select2 style="width:200px;" ng-required="true"  name="periodType" ng-model="periodType" >
+                                                <option  ng-repeat="option in periodTypes" value="{{ option.value }}">{{ option.name }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                        <span ng-show="isMonthly()">
-                                            <select  style="width:80px;" class="input-small" ng-required="true"  name="startMonth" id="startMonth" ng-model="startMonth"  ng-options="option.value as option.name for option in startMonths">
+                                <div class="form-cell horizontalFilters" style="width:180px">
+                                    <label class="labels">From <span class="label-required">*</span></label>
 
+                                    <div class="form-field">
+
+                                        <select ui-select2  style="width:80px;" class="input-small" ng-required="true"  name="startYear" ng-model="startYear" >
+                                            <option  ng-repeat="option in startYears" value="{{ option }}">{{ option }}</option>
+                                        </select>
+                                            <span ng-show="isMonthly()" >
+                                                <select ui-select2 style="width:80px;" class="input-small" ng-required="true"  name="startMonth" ng-model="startMonth" >
+                                                    <option  ng-repeat="option in startMonths" value="{{ option.value }}">{{ option.name }}</option>
+                                                </select>
+                                            </span>
+                                            <span ng-show="isQuarterly()">
+                                                <select ui-select2 style="width:80px;" class="input-small" ng-required="true"  name="startQuarter" ng-model="startQuarter" >
+                                                    <option  ng-repeat="option in startQuarters" value="{{ option.value }}">{{ option.name }}</option>
+                                                </select>
+                                            </span>
+                                             <span ng-show="isSemiAnnualy()">
+                                            <select ui-select2 style="width:80px;" ng-required="true"  name="startHalf" ng-model="startHalf" >
+                                                <option  ng-repeat="option in startSemiAnnuals" value="{{ option.value }}">{{ option.name }}</option>
                                             </select>
                                         </span>
-                                        <span ng-show="isQuarterly()">
+                                    </div>
+                                </div>
 
-                                            <select  style="width:80px;" class="input-small" ng-required="true"  name="startQuarter" ng-model="startQuarter" ng-options="option.value as option.name for option in startQuarters">
+                                <div class="form-cell horizontalFilters" style="width:180px">
+                                    <label class="labels">To <span class="label-required">*</span></label>
 
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:80px;" class="input-small" ng-required="true"  name="endYear" ng-model="endYear"  >
+                                            <option  ng-repeat="option in endYears" value="{{ option }}">{{ option }}</option>
+                                        </select>
+                                            <span ng-show="isMonthly()">
+                                                <select ui-select2 style="width:80px;" class="input-small" ng-required="true"  name="endMonth" ng-model="endMonth" >
+                                                    <option  ng-repeat="option in endMonths" value="{{ option.value }}">{{ option.name }}</option>
+                                                </select>
+                                            </span>
+                                            <span ng-show="isQuarterly()">
+                                                <select ui-select2 style="width:80px;" class="input-small" ng-required="true"  name="endQuarter" ng-model="endQuarter" >
+                                                    <option  ng-repeat="option in endQuarters" value="{{ option.value }}">{{ option.name }}</option>
+                                                </select>
+
+                                            </span>
+                                             <span ng-show="isSemiAnnualy()">
+                                            <select ui-select2 style="width:80px;" ng-required="true"  name="endHalf" ng-model="endHalf">
+                                                <option  ng-repeat="option in endSemiAnnuals" value="{{ option.value }}">{{ option.name }}</option>
                                             </select>
                                         </span>
-                                        <span ng-show="isSemiAnnualy()">
-                                            <select  style="width:80px;" ng-required="true"  name="startHalf" ng-model="startHalf" ng-options="option.value as option.name for option in startSemiAnnuals">
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <br />
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Requisition Group</label>
 
-                                            </select>
-                                        </span>
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" name="requisitionGroup"  ng-model="rgroup" >
+                                            <option  ng-repeat="option in requisitionGroups" value="{{ option.id }}">{{ option.name }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-cell horizontalFilters">
+                                    <label class="labels">Zone</label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone.value"  >
+                                            <option  ng-repeat="option in zones" value="{{ option.id }}">{{ option.name }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Facility Type</label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" name="facilityType"  ng-model="facilityType.value"  >
+                                            <option  ng-repeat="option in facilityTypes" value="{{ option.id }}">{{ option.name }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Facility</label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" name="facility"  ng-model="facility.value"  >
+                                            <option  ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.name }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Product Category</label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" name="productCategory"  ng-model="productCategory"  >
+                                            <option  ng-repeat="option in productCategories" value="{{ option.id }}">{{ option.name }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Product</label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" name="product"  ng-model="product"  >
+                                            <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                             </div>
-                        </div>
-</td><td>
-                        <div class="form-cell horizontalFilters" style="width:180px">
-                            <label class="labels">To</label>
-
-                            <div class="form-field">
-
-                                <select  style="width:80px;" class="input-small" ng-required="true"  name="endYear" ng-model="endYear" ng-options="year for year in endYears">
-
-                                </select>
-
-                                        <span ng-show="isMonthly()">
-
-                                            <select  style="width:80px;" class="input-small" ng-required="true"  name="endMonth" ng-model="endMonth" ng-options="option.value as option.name for option in endMonths">
-
-                                            </select>
-                                        </span>
-                                        <span ng-show="isQuarterly()">
-                                            <select  style="width:80px;" class="input-small" ng-required="true"  name="endQuarter" ng-model="endQuarter" ng-options="option.value as option.name for option in endQuarters">
-
-                                            </select>
-                                        </span>
-                                        <span ng-show="isSemiAnnualy()">
-                                            <select  style="width:80px;" ng-required="true"  name="endHalf" ng-model="endHalf" ng-options="option.value as option.name for option in endSemiAnnuals">
-
-                                            </select>
-                                        </span>
-                            </div>
-                        </div>
- </td><td>
-                        <div class="form-cell horizontalFilters" >
-                            <label class="labels">Program<span class="label-required"> *</span></label>
-
-                            <div class="form-fields">
-                                <select ui-select2 style="width:200px;" class="large-input" name="program"  id="program" ng-model="program" ng-options="option.id as option.name for option in programs" required="">
-                                    <option value="">Select a Program</option>
-                                </select>
-                            </div>
-                        </div>
- </td><td>
-                        <div class="form-cell horizontalFilters" >
-                            <label class="labels">Requisition Groups</label>
-
-                            <div class="form-fields">
-                                <select ui-select2 style="width:200px;" name="requisitionGroup"  ng-model="rgroup" ng-options="option.id as option.name for option in requisitionGroups">
-                                    <option value="">All Requisition Groups</option>
-                                </select>
-                            </div>
-                        </div>
-
- </td></tr><tr><td></td><td></td><td></td><td>
-                        <div class="form-cell horizontalFilters" >
-                            <label class="labels">Product Categories</label>
-
-                            <div class="form-field">
-                                <select ui-select2 style="width:200px;" name="productCategoryElement"   ng-model="productCategory" ng-options="option.id as option.name for option in productCategories">
-                                    <option id="All" value="">All Product Categories</option>
-                                </select>
-                            </div>
-                        </div>
-</td><td>
-                        <div class="form-cell horizontalFilters" >
-                            <label class="labels">Product<span class="label-required"> *</span></label>
-
-                            <div class="form-field">
-                                <select ui-select2 style="width:200px;" name="product" id="product" ng-model="product" ng-options="option.id as option.name for option in products">
-                                    <option value="">All Products</option>
-                                </select>
-                            </div>
-                        </div>
-</td></tr><tr><td></td><td></td><td></td><td>
-                        <div class="form-cell horizontalFilters" >
-                            <label class="labels">Facility Type</label>
-
-                            <div class="form-field">
-                                <select ui-select2 style="width:200px;" name="facilityTypeElement"   ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
-                                    <option value="">All Facility Types</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!--<div class="form-cell horizontalFilters">
-                            <label class="labels">Facility Name</label>
-
-                            <div class="form-field">
-                                <input id="name" type="text"  ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
-                            </div>
-                        </div>-->
-</td><td>
-      <div class="form-cell horizontalFilters">
-          <label class="labels">Facility Name<span class="label-required"> *</span></label>
-          <div class="form-field">
-              <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility" ng-options="option.id as option.code.concat('-').concat.(option.name) for option in allFacilities" required="">
-                  <option value="">All Facilities</option>
-              </select>
-          </div>
-
-      </div>
-
-  </td></tr></table>
-                        <div class="clearfix"></div>
-                        <br />
-                        <div class="form-cell horizontalFilters pull-right" style="text-align: center">
-                                     <span ng-repeat="summary in summaries">
-                                         <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
-                                     </span>
-
-                        </div>
+                        </form>
                     </div>
-                </form>
-                <span class="label-required">*</span> <span id="requiredMsgDiv" ng-bind="message" ng-show="showMessage"/>
+                </div>
+                <div class="span9">
+                    <div class="gridStyleReport" ng-show="data.length > 0" ng-grid="gridOptions"></div>
+
+                    <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                        <tr>
+                            <td>No data to show under selected filters</td>
+                        </tr>
+                    </table>
+                 </div>
             </div>
 
         </div>
 
-        <div class="gridStyleReport" ng-show="data.length > 0" ng-grid="gridOptions"></div>
-
-        <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
-            <tr>
-                <td>No data to show under selected filters</td>
-            </tr>
-        </table>
     </div>
+
 </div>
+
 

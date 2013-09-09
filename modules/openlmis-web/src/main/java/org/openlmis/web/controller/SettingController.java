@@ -19,12 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-/**
- * e-lmis
- * Created by: Elias Muluneh
- * Date: 8/5/13
- * Time: 1:57 PM
- */
 @Controller
 @NoArgsConstructor
 public class SettingController extends BaseController {

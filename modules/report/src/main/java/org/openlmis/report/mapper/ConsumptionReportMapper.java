@@ -20,12 +20,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
-/**
- * User: Elias
- * Date: 4/11/13
- * Time: 11:25 AM
- */
-
 @Repository
 public interface ConsumptionReportMapper {
 

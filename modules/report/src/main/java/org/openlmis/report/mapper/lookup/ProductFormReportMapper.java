@@ -12,10 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Elias Muluneh
- */
 @Repository
 public interface ProductFormReportMapper {
 
