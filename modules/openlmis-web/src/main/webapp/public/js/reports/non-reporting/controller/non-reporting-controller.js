@@ -171,7 +171,7 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
                 if(value != undefined)
                     $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
             });
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+          //  $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
         }, true);
 
     $scope.gridOptions = {

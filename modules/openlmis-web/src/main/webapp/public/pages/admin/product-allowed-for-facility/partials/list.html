@@ -9,7 +9,7 @@
     </div>
 
 
-    <form ng-submit="saveRequisitionGroupProgramSchedule()" id="manipulate-product-allowed-for-facility"
+    <form ng-submit="saveFacilityTypeAllowedProductTypes()" id="manipulate-product-allowed-for-facility"
           name="productAllowedForFacilityForm" novalidate select2-blur>
         <div> <!-- class="app-form">-->
             <input id="txtFilterFacilityTypeName" class="search-query input-xlarge" type="text" ng-model="query"
@@ -35,7 +35,7 @@
                         <table class="table table-hover table-bordered">
                             <thead>
                             <tr class="gradient-header">
-                                <th>Facility Type Name
+                                <th>Facility Type
                                 </th>
                             </tr>
                             </thead>
@@ -92,23 +92,23 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="product in products"
+                            <tr ng-repeat="programProduct in products"
                                 ng-style="getScheduleColor(program)">
                                 <td style="text-align: center">
                                     <input type="checkbox" name="is-selected"
-                                           ng-model="product.isSelected" ng-change="setDataChanged()"/>
+                                           ng-model="programProduct.isSelected" ng-change="setDataChanged(programProduct)"/>
                                 </td>
                                 <td>
-                                    <div>{{product.programProduct.product.code}}</div>
+                                    <div>{{programProduct.product.code}}</div>
                                 </td>
                                 <td>
-                                    <div>{{product.programProduct.product.primaryName}}</div>
+                                    <div>{{programProduct.product.primaryName}}</div>
                                 </td>
                                 <td>
-                                    <div>{{product.minMonthsOfStock}}</div>
+                                    <input type="text" ng-model="programProduct.minMonthsOfStock" ng-change="setDataChanged(programProduct)"/>
                                 </td>
                                 <td>
-                                    <div>{{product.maxMonthsOfStock}}</div>
+                                    <input type="text" ng-model="programProduct.maxMonthsOfStock" ng-change="setDataChanged(programProduct)"/>
                                 </td>
                             </tr>
                             </tbody>
@@ -116,11 +116,9 @@
                     </td>
                 </tr>
             </table>
-            <div form-toolbar id="action_buttons" class="action-buttons" ng-show="isDataChanged">
+            <div form-toolbar id="action_buttons" class="action-buttons">
                 <div class="form-cell button-row">
-                    <input type="submit" class="btn btn-primary save-button" value="Save"/>
-                    <a ng-href="#/list" class="btn btn-cancel cancel-button"><span
-                            openlmis-message="button.cancel"></span></a>
+                    <input type="submit" class="btn btn-primary save-button" ng-disabled="!isDataChanged" value="Save"/>
                 </div>
                 <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>
             </div>

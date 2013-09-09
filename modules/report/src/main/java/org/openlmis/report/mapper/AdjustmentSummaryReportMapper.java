@@ -13,6 +13,7 @@ import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.AdjustmentSummaryQueryBuilder;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.filter.AdjustmentSummaryReportFilter;
 import org.openlmis.report.model.report.AdjustmentSummaryReport;
 import org.springframework.stereotype.Repository;
 
@@ -29,12 +30,12 @@ public interface AdjustmentSummaryReportMapper {
     @SelectProvider(type=AdjustmentSummaryQueryBuilder.class, method="SelectFilteredSortedPagedRecords")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<AdjustmentSummaryReport> getFilteredSortedPagedAdjustmentSummaryReport(
-            @Param("filterCriteria") ReportData filterCriteria,
+            @Param("filterCriteria") AdjustmentSummaryReportFilter filterCriteria,
             @Param("SortCriteria") Map<String, String[]> SortCriteria ,
             @Param("RowBounds")RowBounds rowBounds
     );
 
     @SelectProvider(type=AdjustmentSummaryQueryBuilder.class, method="SelectFilteredSortedPagedRecordsCount")
-    public Integer getFilteredSortedPagedAdjustmentSummaryReportCount(@Param("filterCriteria") ReportData filterCriteria);
+    public Integer getFilteredSortedPagedAdjustmentSummaryReportCount(@Param("filterCriteria") AdjustmentSummaryReportFilter filterCriteria);
 
 }

@@ -52,15 +52,17 @@ public class AdjustmentSummaryReportFilter implements ReportData {
 
     @Override
     public String toString(){
+         if(this.getStartDate() != null && this.getEndDate() != null){
+            DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
+            StringBuilder filtersValue = new StringBuilder("");
+            filtersValue.append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
+                    append("Facility Types : ").append(this.getFacilityType()).append("\n").
+                    append("Adjustment Types : ").append(this.getAdjustmentType()).append("\n").
+                    append("Reporting Groups : ").append(this.getRgroup());
 
-        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
-
-        StringBuilder filtersValue = new StringBuilder("");
-        filtersValue.append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
-                append("Facility Types : ").append(this.getFacilityType()).append("\n").
-                append("Adjustment Types : ").append(this.getAdjustmentType()).append("\n").
-                append("Reporting Groups : ").append(this.getRgroup());
-
-        return filtersValue.toString();
+            return filtersValue.toString();
+         }   else{
+           return "No filters selected";
+         }
     }
 }

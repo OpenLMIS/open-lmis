@@ -1,4 +1,4 @@
-function SummaryReportController($scope,$filter ,ngTableParams , SummaryReport, ReportSchedules, ReportPrograms , ReportPeriods , Products ,ReportFacilityTypes,GeographicZones, RequisitionGroups, $http, $routeParams,$location) {
+function SummaryReportController($scope,$filter ,ngTableParams , SummaryReport, ReportSchedules, ReportPrograms , ReportPeriods , Products ,ReportFacilityTypes,GeographicZones, RequisitionGroups, AllFacilites , $http, $routeParams,$location) {
         //to minimize and maximize the filter section
 
 
@@ -78,6 +78,11 @@ function SummaryReportController($scope,$filter ,ngTableParams , SummaryReport, 
         Products.get(function(data){
             $scope.products = data.productList;
             $scope.products.unshift({'name': 'All Products'});
+        });
+
+        AllFacilites.get(function(data){
+            $scope.facilities = data.allFacilities;
+            $scope.facilities.unshift({name:'All facilities'})
         });
 
         $scope.ChangeSchedule = function(){
@@ -191,6 +196,11 @@ function SummaryReportController($scope,$filter ,ngTableParams , SummaryReport, 
             $scope.filterGrid();
         });
 
+        $scope.$watch('facility', function(selection){
+            $scope.filterGrid();
+        });
+
+
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
         $scope.exportReport   = function (type){
@@ -251,6 +261,7 @@ function SummaryReportController($scope,$filter ,ngTableParams , SummaryReport, 
                                 params[index] = value;
                         });
 
+                        params['facilityId'] = $scope.facility;
 
                         // put out the sort order
                         $.each($scope.sortInfo.fields, function(index, value) {

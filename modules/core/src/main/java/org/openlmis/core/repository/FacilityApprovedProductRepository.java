@@ -45,6 +45,22 @@ public class FacilityApprovedProductRepository {
       return facilityApprovedProductMapper.getProductsCompleteListByFacilityAndProgram(facilityId, programId);
   }
 
+  public List<FacilityTypeApprovedProduct> getProductsCompleteListByFacilityTypeAndProgram(Long facilityTypeId, Long programId) {
+      return facilityApprovedProductMapper.getProductsCompleteListByFacilityTypeAndProgram(facilityTypeId, programId);
+  }
+
+  public List<FacilityTypeApprovedProduct> getProductsAlreadyApprovedListByFacilityTypeAndProgram(Long facilityTypeId, Long programId) {
+      return facilityApprovedProductMapper.getProductsAlreadyApprovedListByFacilityTypeAndProgram(facilityTypeId, programId);
+  }
+
+  public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeId(Long facilityTypeId,Long programId,Long productId){
+      return facilityApprovedProductMapper.getFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeId,programId,productId);
+  }
+
+  public void removeFacilityApprovedProductByProgramProductAndFacilityTypeId(Long facilityTypeId,Long programId,Long productId){
+      facilityApprovedProductMapper.removeFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeId,programId,productId);
+  }
+
   public void insert(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
   }

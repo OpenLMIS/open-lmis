@@ -25,9 +25,11 @@ public class AdjustmentSummaryQueryBuilder {
         FROM("vw_requisition_adjustment");
         writePredicates(filter);
         GROUP_BY("product, adjustment_type,product_category_name,facility_type_name,facility_name, supplying_facility_name");
-        ORDER_BY(QueryHelpers.getSortOrder(params, "facility_type_name,facility_name, supplying_facility_name, product, product_category_name , adjustment_type"));
+      ORDER_BY(QueryHelpers.getSortOrder(params, "facility_type_name,facility_name, supplying_facility_name, product, product_category_name , adjustment_type"));
 
-        return SQL();
+      // write the query to a variable, this is to make it easier to debug the query.
+      String query = SQL();
+      return query;
     }
 
     public static String SelectFilteredSortedPagedRecordsCount(Map params){
@@ -69,13 +71,13 @@ public class AdjustmentSummaryQueryBuilder {
             if(filter.getRgroupId() != 0){
                 WHERE("requisition_group_id = #{filterCriteria.rgroupId}");
             }
-            if(filter.getProductId() != -1){
+            if(filter.getProductId() != -1 && filter.getProductId() != 0){
                 WHERE("product_id= #{filterCriteria.productId}");
             }
             if(filter.getProgramId() != -1){  //Unless All programs selected
                 WHERE("program_id = #{filterCriteria.programId}");
             }
-            if(!filter.getAdjustmentTypeId().equals("-1") ){
+            if(!filter.getAdjustmentTypeId().equals("-1") && filter.getAdjustmentTypeId().equals("0") ){
                 WHERE("adjustment_type = #{filterCriteria.adjustmentTypeId}");
             }
         }

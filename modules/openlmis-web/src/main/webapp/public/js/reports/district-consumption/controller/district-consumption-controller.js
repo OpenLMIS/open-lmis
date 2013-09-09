@@ -31,7 +31,8 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
        ];
         $scope.startYears = [];
         OperationYears.get(function(data){
-            $scope.startYears  = data.years;
+            $scope.startYears = $scope.endYears = data.years;
+            adjustEndYears();
         });
 
         Months.get(function(data){
@@ -111,7 +112,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
         };
         $scope.filterGrid = function (){
             //fixes ngGrid footer alignment
-            $(".ngFooterPanel").css("margin-left",$(".span3").width() + ($(".span3").width()/3)) ;
+            //$(".ngFooterPanel").css("margin-left",$(".span3").width() + ($(".span3").width()/3)) ;
 
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
@@ -172,12 +173,12 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
-            $scope.zones.push({'name': 'All Geographic Zones'});
+            $scope.zones.unshift({'name': 'All Geographic Zones'});
         });
 
         ReportPrograms.get(function(data){
             $scope.programs = data.programs;
-            $scope.programs.push({'name':'All Programs'});
+            $scope.programs.unshift({'name':'Select Programs'});
         });
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;

@@ -30,8 +30,8 @@ public class SummaryQueryBuilder {
                         "    inner join requisitions r ON  r.facilityid = facilities.id         \n" +
                         "    inner join requisition_line_items li ON li.rnrid = r.id         \n" +
                         "    inner join products ON products.code  ::text =   li.productcode  ::text       \n" +
-                        "    inner join program_products ON program_products.productid = products.id \n" +
-                        "    inner join programs ON  program_products.programid = programs.id   AND  programs.id = r.programid       \n" +
+                        "   -- inner join program_products ON program_products.productid = products.id \n" +
+                        "    inner join programs ON  r.programid = programs.id     \n" +
                         "    inner join requisition_group_members ON facilities.id = requisition_group_members.facilityid         \n" +
                         "    inner join requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid         \n" +
                         "    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programid = programs.id   " +
@@ -61,8 +61,9 @@ public class SummaryQueryBuilder {
         String zone =     (!params.containsKey("zoneId") || params.get("zoneId") == null) ? null : ((String[])params.get("zoneId"))[0];
         String rgroup =     (!params.containsKey("rgroupId") || params.get("rgroupId") == null) ? null : ((String[])params.get("rgroupId"))[0];
         String schedule = (!params.containsKey("facilityTypeId") || params.get("scheduleId") == null) ? null : ((String[])params.get("scheduleId"))[0];
+        String facilityId = (!params.containsKey("facilityId") || params.get("facilityId") == null) ? null : ((String[])params.get("facilityId"))[0];
 
-        if (period != null &&  !period.equals("undefined") && !period.isEmpty() && !period.equals("0")  && !period.equals("-1")){
+      if (period != null &&  !period.equals("undefined") && !period.isEmpty() && !period.equals("0")  && !period.equals("-1")){
             predicate += " and r.periodid = "+ period;
         }
         if (program != null &&  !program.equals("undefined") && !program.isEmpty() && !program.equals("0")  && !program.equals("-1")) {
@@ -75,7 +76,7 @@ public class SummaryQueryBuilder {
         }
         if (product != null &&  !product.equals("undefined") && !product.isEmpty() && !product.equals("0") &&  !product.equals("-1")) {
 
-            predicate += " and program_products.productid = "+ product;
+            predicate += " and products.id = "+ product;
         }
         if (schedule != null &&  !schedule.equals("undefined") && !schedule.isEmpty() && !schedule.equals("0") &&  !schedule.equals("-1")) {
 
@@ -93,7 +94,9 @@ public class SummaryQueryBuilder {
 
             predicate += " and facilities.name = '"+ facilityName +"'";
         }
-
+        if(facilityId != null && !facilityId.equals("") && !facilityId.equals( "undefined")){
+            predicate += " and facilities.id = "+ facilityId +"";
+        }
         return predicate;
     }
 

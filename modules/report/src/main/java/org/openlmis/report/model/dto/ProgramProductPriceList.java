@@ -31,8 +31,6 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonSerialize
-
-
 public class ProgramProductPriceList {
 
     private Integer id;
@@ -40,8 +38,8 @@ public class ProgramProductPriceList {
     private Integer productid;
     private Integer programproductid;
     private String programname;
-    private Integer priceperpack;
-    private Integer priceperdosage;
+    private Double priceperpack;
+    private Double priceperdosage;
     private Date  startdate;
     private Date  enddate;
     private String  source;
