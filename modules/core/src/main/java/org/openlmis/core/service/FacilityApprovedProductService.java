@@ -64,6 +64,10 @@ public class FacilityApprovedProductService {
       return repository.getFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeId,programId,productId);
   }
 
+  public void removeFacilityApprovedProductByProgramProductAndFacilityTypeId(Long facilityTypeId,Long programId,Long productId){
+      repository.removeFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeId,programId,productId);
+  }
+
   public void save(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     fillProgramProductIds(facilityTypeApprovedProduct);
     FacilityType facilityType = facilityService.getFacilityTypeByCode(facilityTypeApprovedProduct.getFacilityType());

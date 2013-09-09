@@ -57,6 +57,10 @@ public class FacilityApprovedProductRepository {
       return facilityApprovedProductMapper.getFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeId,programId,productId);
   }
 
+  public void removeFacilityApprovedProductByProgramProductAndFacilityTypeId(Long facilityTypeId,Long programId,Long productId){
+      facilityApprovedProductMapper.removeFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeId,programId,productId);
+  }
+
   public void insert(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
   }

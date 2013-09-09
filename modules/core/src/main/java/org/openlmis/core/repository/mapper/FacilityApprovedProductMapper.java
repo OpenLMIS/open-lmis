@@ -262,6 +262,18 @@ public interface FacilityApprovedProductMapper {
                                                                                             @Param("productId") Long productId);
 
 
+    @Delete({"delete from facility_approved_products where id in (select fap.id " +
+            "from program_products pp ",
+            "JOIN products p on pp.productId = p.id ",
+            "JOIN facility_approved_products fap on pp.id = fap.programProductId ",
+            "WHERE ",
+            "pp.programId = #{programId} " +
+                    "AND fap.facilityTypeId = #{facilityTypeId} ",
+            "AND p.id = #{productId})"})
+    FacilityTypeApprovedProduct removeFacilityApprovedProductByProgramProductAndFacilityTypeId(@Param("facilityTypeId") Long facilityTypeId,
+                                                                                            @Param("programId") Long programId,
+                                                                                            @Param("productId") Long productId);
+
 
 
 }
