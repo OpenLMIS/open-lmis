@@ -24,39 +24,28 @@ import java.util.Date;
 @NoArgsConstructor
 public class OrderReportFilter implements ReportData {
 
-    private String periodType;
-    private int yearFrom;
-    private int yearTo;
-    private int monthFrom;
-    private int monthTo;
-    private Date startDate;
-    private Date endDate;
-    private int quarterFrom;
-    private int quarterTo;
-    private int semiAnnualFrom;
-    private int semiAnnualTo;
-
     private int facilityTypeId;
     private String facilityType;
     private String facility;
     private int facilityId;
     private int productId;
+    private String product;
     private int productCategoryId;
-    private int rgroupId;
-    private String rgroup;
+    private String productCategory;
     private int programId;
+    private String program;
     private String orderType;
     private int zoneId;
     private int periodId;
+    private String period;
+    private int scheduleId;
+    private String schedule;
 
     @Override
     public String toString(){
-        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
 
         StringBuilder filtersValue = new StringBuilder("");
-        filtersValue.append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
-                append("Facility Types : ").append(this.getFacilityType()).append("\n").
-                append("Reporting Groups : ").append(this.getRgroup());
+        filtersValue.append("Facility Types : ").append(this.getFacilityType()).append("\n");
 
         return filtersValue.toString();
     }

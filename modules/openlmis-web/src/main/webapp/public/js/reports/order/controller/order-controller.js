@@ -1,4 +1,4 @@
-function OrderReportController($scope, OrderReport, Products ,ReportFacilityTypes,GeographicZones,AllReportPeriods,ReportFilteredPeriods, $http,OperationYears, Months, ReportPrograms,AllFacilites,GetFacilityByFacilityType,SettingsByKey, $routeParams,$location) {
+function OrderReportController($scope, OrderReport, Products ,ReportFacilityTypes,AllReportPeriods,ReportPeriods,ReportPeriodsByScheduleAndYear,ReportFilteredPeriods, $http,OperationYears, Months, ReportPrograms,AllFacilites,GetFacilityByFacilityType,SettingsByKey,ReportSchedules, $routeParams,$location) {
         //to minimize and maximize the filter section
         var section = 1;
 
@@ -27,138 +27,16 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             currentPage: 1
         };
 
-        $scope.reporting = "quarterly";
-
         $scope.orderTypes = [
             {'name':'Regular', 'value':'Regular'},
             {'name':'Emergency', 'value':'Emergency'}
          ];
 
-        //Order type defaults to Regular
-        $scope.orderType = 'Regular'
-
-        // default to the monthly period type
-
-        $scope.periodTypes = [
-            {'name':'Monthly', 'value':'monthly'},
-            {'name':'Quarterly', 'value':'quarterly'},
-            {'name':'Semi Anual', 'value':'semi-anual'},
-            {'name':'Annual', 'value':'annual'}
-        ];
         $scope.startYears = [];
-        OperationYears.get(function(data){
-            $scope.startYears  = data.years;
-            adjustEndYears();
+        OperationYears.get(function (data) {
+            $scope.startYears = data.years;
+            $scope.startYears.unshift('-- All Years --');
         });
-    $scope.defaultSettings = function (str) {
-
-        var retval = '';
-        var months = new Array(12);
-        months[0] = "Jan";
-        months[1] = "Feb";
-        months[2] = "Mar";
-        months[3] = "Apr";
-        months[4] = "May";
-        months[5] = "Jun";
-        months[6] = "Jul";
-        months[7] = "Aug";
-        months[8] = "Sep";
-        months[9] = "Oct";
-        months[10] = "Nov";
-        months[11] = "Dec";
-
-        var current_date = new Date();
-        month_value = current_date.getMonth() - 6;
-        day_value = current_date.getDate();
-        year_value = current_date.getFullYear();
-
-        retval = "";
-
-        if (str == "M") {
-            retval = month_value;
-        }
-        if (str == "Y") {
-            retval = year_value;
-        }
-        if (str == "P") {
-            retval = $scope.reporting;
-        }
-
-        if (str == "Q") {
-            var d = new Date();
-            retval = parseInt((d.getMonth() + 3) / 3) - 1;
-            retval = retval + "";
-        }
-        return retval;
-    };
-
-        Months.get(function(data){
-            var months = data.months;
-
-            if(months != null){
-                $scope.startMonths = [];
-                $scope.endMonths = [];
-                $.each(months,function(idx,obj){
-                    $scope.startMonths.push({'name':obj.toString(), 'value': idx+1});
-                    $scope.endMonths.push({'name':obj.toString(), 'value': idx+1});
-                });
-            }
-
-        });
-
-        $scope.startQuarters = function(){
-            return $scope.quarters;
-        };
-
-        $scope.endQuarters  = function(){
-            if($scope.startYear == $scope.endYear && $scope.startQuarter != '' ){
-                var arr = [];
-                for(var i=$scope.startQuarter - 1; i < $scope.quarters.length;i++){
-                    arr.push($scope.quarters[i]);
-                }
-                return arr;
-            }
-            return $scope.quarters;
-        };
-
-        $scope.quarters         = [
-            {'name':'One','value':'1'},
-            {'name':'Two','value':'2'},
-            {'name':'Three','value':'3'},
-            {'name':'Four','value':'4'}
-        ];
-
-        $scope.semiAnnuals= [
-            {'name':'First Half','value':'1'},
-            {'name':'Second Half','value':'2'}
-        ];
-
-        // copy over the start month and end months
-        // this is just for initial loading.
-        $(function (){
-            $scope.startQuarters  = $scope.quarters;
-            $scope.endQuarters  = $scope.quarters;
-            $scope.endYears     = $scope.startYears;
-            $scope.startSemiAnnuals = $scope.semiAnnuals;
-            $scope.endSemiAnnuals = $scope.semiAnnuals;
-            $scope.toQuarter = 1;
-            $scope.fromQuarter = 1;
-            $scope.startHalf = 1;
-            $scope.endHalf = 1;
-        });
-
-        $scope.isMonthly = function(){
-            return $scope.periodType == 'monthly';
-        };
-
-        $scope.isQuarterly = function(){
-            return $scope.periodType == 'quarterly';
-        };
-
-        $scope.isSemiAnnualy  = function(){
-            return $scope.periodType == 'semi-anual';
-        };
-
 
     $scope.filterGrid = function (){
            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
@@ -177,25 +55,15 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
         $scope.filterObject =  {
              facilityTypeId : $scope.facilityType,
              facilityType : "",
-             periodType: $scope.periodType,
-             fromYear: $scope.fromYear,
-             fromMonth: $scope.fromMonth,
-             fromQuarter: $scope.fromQuarter,
-             fromSemiAnnual:$scope.startHalf,
-             toYear: $scope.toYear,
-             toMonth: $scope.toMonth,
-             toQuarter: $scope.toQuarter,
-             toSemiAnnual:$scope.endHalf,
              programId : $scope.program,
              periodId : $scope.period,
              zoneId : $scope.zone,
              productId : $scope.productId,
              product : "",
              scheduleId : $scope.schedule,
-             rgroupId : $scope.rgroup,
-             rgroup : "",
              facilityName : $scope.facilityNameFilter,
              facilityId: $scope.facility,
+             year : "",
              orderType: ""
         };
 
@@ -203,13 +71,19 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             $scope.programs = data.programs;
         });
 
+        ReportSchedules.get(function(data){
+            $scope.schedules = data.schedules;
+            $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':'0'}) ;
+        });
+
         ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-          //  $scope.facilityTypes.push({'name': 'All Facility Types', 'id' : 'All'});
+            $scope.facilityTypes.unshift({'name': '-- All Facility Types --', 'id' : 'All'});
         });
 
         AllFacilites.get(function(data){
             $scope.allFacilities = data.allFacilities;
+            $scope.allFacilities.unshift({'name':'-- Select Facility --','id':'0'});
         });
 
 
@@ -220,23 +94,9 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             $scope.products.unshift({'name': '-- '.concat(ind_prod).concat(' --'),'id':'-1'});
         });
 
-        GeographicZones.get(function(data) {
-            $scope.zones = data.zones;
-          //  $scope.zones.push({'name': '- All Zones -', 'id' : 'All'});
-        });
-
         AllReportPeriods.get(function (data) {
             $scope.periods = data.periods;
-            var startdt = parseJsonDate('/Date(' + $scope.periods[1].startdate + ')/');
-            var enddt = parseJsonDate('/Date(' + $scope.periods[1].enddate + ')/');
-            var diff = enddt.getMonth() - startdt.getMonth() + 1;
-
-            if (diff == 3) {
-                $scope.reporting = "quarterly";
-            } else {
-                $scope.reporting = "monthly";
-            }
-
+            $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
         });
 
         $scope.ChangeReportingPeriods = function(){
@@ -249,8 +109,66 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
 
             ReportFilteredPeriods.get(params, function(data) {
                 $scope.periods = data.periods;
+                $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
             });
-        }
+        };
+
+        $scope.ChangeSchedule = function(scheduleBy){
+            if(scheduleBy == 'byYear'){
+                ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
+                    $scope.periods = data.periods;
+                    $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
+                });
+
+            }else{
+
+                ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
+                    $scope.periods = data.periods;
+                    $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
+
+                });
+
+            }
+
+        };
+
+        $scope.$watch('schedule', function (selection) {
+            if (selection == "All") {
+                $scope.filterObject.scheduleId = -1;
+            } else if (selection != undefined || selection == "") {
+                $scope.filterObject.scheduleId = selection;
+                $.each($scope.schedules , function (item, idx) {
+                    if (idx.id == selection) {
+                        $scope.filterObject.schedule = idx.name;
+                    }
+                });
+
+            } else {
+                $scope.filterObject.scheduleId = 0;
+            }
+            $scope.ChangeSchedule('');
+
+        });
+
+        $scope.$watch('year', function (selection) {
+
+            if (selection == "-- All Years --") {
+                $scope.filterObject.year = -1;
+            } else if (selection != undefined || selection == "") {
+                $scope.filterObject.year = selection;
+
+            } else {
+                $scope.filterObject.year = 0;
+            }
+
+            if($scope.filterObject.year == -1 || $scope.filterObject.year == 0){
+
+                $scope.ChangeSchedule('bySchedule');
+            }else{
+
+                $scope.ChangeSchedule('byYear');
+            }
+        });
 
         $scope.$watch('facilityType', function(selection){
             if(selection == "All"){
@@ -275,6 +193,7 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
         $scope.ChangeFacility = function(){
             GetFacilityByFacilityType.get({ facilityTypeId : $scope.filterObject.facilityTypeId },function(data) {
                 $scope.allFacilities =  data.facilities;
+                $scope.allFacilities.unshift({'name':'-- Select Facility --','id':'0'});
             });
         };
 
@@ -369,184 +288,6 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             $scope.filterGrid();
         });
 
-        $scope.$watch('startYear', function(selection){
-            var date = new Date();
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.fromYear =  selection;
-                adjustEndYears();
-                adjustEndMonths();
-                adjustEndQuarters();
-                adjustEndSemiAnnuals();
-            }else{
-                $scope.startYear  = date.getFullYear().toString();
-                $scope.filterObject.fromYear =  date.getFullYear();
-            }
-            $scope.ChangeReportingPeriods();
-            $scope.filterGrid();
-        });
-
-        $scope.$watch('endYear', function(selection){
-            var date = new Date();
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.toYear =  selection;
-                adjustEndMonths();
-                adjustEndQuarters();
-                adjustEndSemiAnnuals();
-            }else{
-                $scope.endYear  = date.getFullYear().toString();
-                $scope.filterObject.toYear =  date.getFullYear();
-            }
-            $scope.ChangeReportingPeriods();
-            $scope.filterGrid();
-        });
-
-        $scope.$watch('startQuarter', function(selection){
-            var date = new Date();
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.fromQuarter =  selection;
-                adjustEndQuarters();
-            }else{
-                var date = new Date();
-                $scope.filterObject.fromQuarter =  1;
-            }
-            $scope.ChangeReportingPeriods();
-            $scope.filterGrid();
-        });
-
-        $scope.$watch('endQuarter', function(selection){
-            var date = new Date();
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.toQuarter =  selection;
-            }else{
-                var date = new Date();
-                $scope.filterObject.toQuarter =  $scope.filterObject.fromQuarter;
-            }
-            $scope.ChangeReportingPeriods();
-            $scope.filterGrid();
-        });
-
-        $scope.$watch('startHalf', function(selection){
-
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.fromSemiAnnual =  selection;
-                adjustEndSemiAnnuals();
-            }else{
-                $scope.filterObject.fromSemiAnnual =  1;
-            }
-            $scope.ChangeReportingPeriods();
-            $scope.filterGrid();
-        });
-        $scope.$watch('endHalf', function(selection){
-
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.toSemiAnnual =  selection;
-            }else{
-                var date = new Date();
-                $scope.filterObject.toSemiAnnual =  1;
-            }
-            $scope.ChangeReportingPeriods();
-            $scope.filterGrid();
-        });
-        $scope.$watch('startMonth', function(selection){
-            var date = new Date();
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.fromMonth =  selection-1;
-                adjustEndMonths();
-            }else{
-                $scope.startMonth = (date.getMonth()+1 ).toString();
-                $scope.filterObject.fromMonth =  (date.getMonth()+1);
-            }
-            $scope.ChangeReportingPeriods();
-            $scope.filterGrid();
-        });
-
-        $scope.$watch('endMonth', function(selection){
-            var date = new Date();
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.toMonth =  selection-1;
-            }else{
-                $scope.endMonth = (date.getMonth() +1 ).toString();
-                $scope.filterObject.toMonth =  (date.getMonth()+1);
-            }
-            $scope.ChangeReportingPeriods();
-            $scope.filterGrid();
-        });
-
-        var adjustEndMonths = function(){
-            if($scope.startMonth != undefined && $scope.startMonths != undefined && $scope.startYear == $scope.endYear ){
-                $scope.endMonths = [];
-                $.each($scope.startMonths,function(idx,obj){
-                    if(obj.value >= $scope.startMonth){
-                        $scope.endMonths.push({'name':obj.name, 'value': obj.value});
-                    }
-                });
-                if($scope.endMonth < $scope.startMonth){
-                    $scope.endMonth = $scope.startMonth;
-                }
-            }else{
-                $scope.endMonths = $scope.startMonths;
-            }
-        }
-
-        var adjustEndQuarters = function(){
-            if($scope.startYear == $scope.endYear){
-                $scope.endQuarters = [];
-                $.each($scope.startQuarters, function(idx,obj){
-                    if(obj.value >= $scope.startQuarter){
-                        $scope.endQuarters.push({'name':obj.name, 'value': obj.value});
-                    }
-                });
-                if($scope.endQuarter < $scope.startQuarter){
-                    $scope.endQuarter =  $scope.startQuarter;
-                }
-            }else{
-                $scope.endQuarters = $scope.startQuarters;
-            }
-        }
-
-        var adjustEndSemiAnnuals = function(){
-
-            if($scope.startYear == $scope.endYear){
-                $scope.endSemiAnnuals = [];
-                $.each($scope.startSemiAnnuals, function(idx,obj){
-                    if(obj.value >= $scope.startHalf){
-                        $scope.endSemiAnnuals.push({'name':obj.name, 'value': obj.value});
-                    }
-                });
-                if($scope.endHalf < $scope.startHalf){
-                    $scope.endHalf =  $scope.startHalf;
-                }
-            }else{
-                $scope.endSemiAnnuals = $scope.startSemiAnnuals;
-            }
-        }
-
-        var adjustEndYears = function(){
-            $scope.endYears = [];
-            $.each( $scope.startYears,function( idx,obj){
-                if(obj >= $scope.startYear){
-                    $scope.endYears.push(obj);
-                }
-            });
-            if($scope.endYear < $scope.startYear){
-                $scope.endYear  = new Date().getFullYear();
-            }
-        }
-
-
-        $scope.$watch('periodType', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.periodType =  selection;
-
-            }else{
-                $scope.filterObject.periodType =  "monthly";
-            }
-            $scope.ChangeReportingPeriods();
-            $scope.filterGrid();
-        });
-
-
-
     $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
         $scope.exportReport   = function (type){
@@ -555,7 +296,7 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             var url = '/reports/download/order_summary/' + type +'?' + params;
             window.open(url);
 
-        }
+        };
 
         $scope.goToPage = function (page, event) {
             angular.element(event.target).parents(".dropdown").click();
@@ -665,27 +406,5 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
         plugins: [new ngGridFlexibleHeightPlugin()]
 
     };
-
-    function parseJsonDate(jsonDate) {
-        var offset = new Date().getTimezoneOffset() * 60000;
-        var parts = /\/Date\((-?\d+)([+-]\d{2})?(\d{2})?.*/.exec(jsonDate);
-        if (parts[2] == undefined) parts[2] = 0;
-        if (parts[3] == undefined) parts[3] = 0;
-        return new Date(+parts[1] + offset + parts[2] * 3600000 + parts[3] * 60000);
-    };
-
-    var init = function () {
-
-        $scope.periodType = $scope.defaultSettings('P');
-
-        if ($scope.periodType == 'quarterly') {
-            $scope.startQuarter = $scope.defaultSettings('Q');
-        } else {
-            $scope.startMonth = $scope.defaultSettings('M');
-        }
-        $scope.startYear = $scope.defaultSettings('Y');
-    };
-    init();
-
 
 }

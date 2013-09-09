@@ -37,78 +37,27 @@
  <br style="clear: both">
                     <div class="clearfix ">
          <table><tr><td>
-                        <!-- Period Type-->
-                        <div class="form-cell horizontalFilters">
-                            <div >
-                                <label class="labels">Period Type<span
-                                        class="label-required"> *</span></label>
-                                <div class="form-field">
-                                    <select ui-select2 style="width:200px;" class="input-medium" ng-required="true" name="periodType" ng-model="periodType" ng-options="option.value as option.name for option in periodTypes">
+                         <div class="form-cell horizontalFilters" >
+                             <label class="labels">Schedule <span class="label-required">*</span></label>
 
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- From-->
-                        <div class="form-cell horizontalFilters" style="width:180px">
-                            <label class="labels">From<span
-                                    class="label-required"> *</span></label>
+                             <div class="form-fields">
+                                 <select ui-select2 style="width:200px;" class="large-input" name="schedule"  ng-model="schedule">
+                                     <option  ng-repeat="option in schedules" value="{{ option.id }}">{{ option.name }}</option>
+                                 </select>
+                             </div>
+                         </div>
 
-                            <div class="form-field">
+                         <div class="form-cell horizontalFilters">
+                             <label class="labels">Year <span class="label-required"></span></label>
 
-                                <select  style="width:80px;" class="input-small" ng-required="true"  name="startYear" ng-model="startYear" ng-options="year for year in startYears">
+                             <div class="form-field">
+                                 <select ui-select2 style="width:200px;" class="input-small" ng-required="true"  name="year" id="startYear" ng-model="year">
+                                     <option ng-repeat="year in startYears" value="{{year}}">{{year}}</option>
+                                 </select>
 
-                                </select>
-
-                                        <span ng-show="isMonthly()">
-                                            <select  style="width:80px;" class="input-small" ng-required="true"  name="startMonth" ng-model="startMonth" ng-options="option.value as option.name for option in startMonths">
-
-                                            </select>
-                                        </span>
-                                        <span ng-show="isQuarterly()">
-
-                                            <select  style="width:80px;" class="input-small" ng-required="true"  name="startQuarter" ng-model="startQuarter" ng-options="option.value as option.name for option in startQuarters">
-
-                                            </select>
-                                        </span>
-                                        <span ng-show="isSemiAnnualy()">
-                                            <select  style="width:80px;" ng-required="true"  name="startHalf" ng-model="startHalf" ng-options="option.value as option.name for option in startSemiAnnuals">
-
-                                            </select>
-                                        </span>
-                            </div>
-                        </div>
-
-                        <!-- To-->
-                        <div class="form-cell horizontalFilters" style="width:180px">
-                            <label class="labels">To</label>
-
-                            <div class="form-field">
-
-                                <select  style="width:80px;" class="input-small" ng-required="true"  name="endYear" ng-model="endYear" ng-options="year for year in endYears">
-
-                                </select>
-
-                                        <span ng-show="isMonthly()">
-
-                                            <select  style="width:80px;" class="input-small" ng-required="true"  name="endMonth" ng-model="endMonth" ng-options="option.value as option.name for option in endMonths">
-
-                                            </select>
-                                        </span>
-                                        <span ng-show="isQuarterly()">
-                                            <select  style="width:80px;" class="input-small" ng-required="true"  name="endQuarter" ng-model="endQuarter" ng-options="option.value as option.name for option in endQuarters">
-
-                                            </select>
-                                        </span>
-                                        <span ng-show="isSemiAnnualy()">
-                                            <select  style="width:80px;" ng-required="true"  name="endHalf" ng-model="endHalf" ng-options="option.value as option.name for option in endSemiAnnuals">
-
-                                            </select>
-                                        </span>
-                            </div>
-                        </div>
-
-         </td><td>
+                             </div>
+                         </div>
+                                 </td><td>
                         <!-- Period-->
                         <div class="form-cell horizontalFilters">
                             <label class="labels">Period<span  class="label-required"> *</span></label>
@@ -121,8 +70,6 @@
                         </div>
 
          </td><td>
-
-
                         <!-- Program-->
 
                         <div class="form-cell horizontalFilters" >
@@ -151,7 +98,7 @@
                  </div>
              </div>
 
-                 </td></tr><tr><td></td><td>
+                 </td></tr><tr><td>
                         <!-- Zone
                         <div class="form-cell horizontalFilters" >
                             <label class="labels">Zone</label>
@@ -181,14 +128,14 @@
              <div class="form-cell horizontalFilters">
                  <label class="labels">Facility Name<span  class="label-required"> *</span></label>
                  <div class="form-field">
-                     <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility" ng-options="option.id as option.code.concat('-').concat.(option.name) for option in allFacilities">
-                         <option value="">-- Select Facility --</option>
+                     <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility">
+                         <option ng-repeat="option in allFacilities" value="{{option.id}}">{{option.code}}-{{option.name}}</option>
                      </select>
                  </div>
 
              </div>
 
-                   </td></tr></table>
+                   </td><td></td></tr></table>
                     </div>
                 </form>
                 <span class="label-required">*</span> <span id="requiredMsgDiv" ng-bind="message" ng-show="showMessage"/>
