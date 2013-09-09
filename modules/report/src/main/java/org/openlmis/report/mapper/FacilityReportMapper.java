@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.FacilityReportQueryBuilder;
+import org.openlmis.report.model.filter.FacilityReportFilter;
 import org.openlmis.report.model.report.FacilityReport;
 import org.openlmis.report.model.ReportData;
 import org.springframework.stereotype.Repository;
@@ -50,7 +51,7 @@ public interface FacilityReportMapper {
             @Result(column="fax", property="fax")
     })
     public  List<FacilityReport> SelectFilteredSortedPagedFacilities(
-            @Param("filterCriteria") ReportData filterCriteria,
+            @Param("filterCriteria") FacilityReportFilter filterCriteria,
             @Param("SortCriteria") ReportData SortCriteria ,
             @Param("RowBounds")RowBounds rowBounds
     );

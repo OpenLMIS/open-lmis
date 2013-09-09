@@ -93,7 +93,7 @@ public class FacilityReportDataProvider extends ReportDataProvider {
     }
 
     @Override
-    public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
+    public FacilityReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
         FacilityReportFilter facilityReportFilter = new FacilityReportFilter();
 
         if(filterCriteria != null){

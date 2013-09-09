@@ -61,31 +61,6 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
-        $scope.$watch('zone.value', function(selection){
-            if(selection != undefined || selection == ""){
-               $scope.filterObject.zoneId =  selection;
-            }else{
-                $scope.filterObject.zoneId = 0;
-            }
-            $scope.filterGrid();
-        });
-        $scope.$watch('status.value', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.statusId =  selection;
-            }else{
-                $scope.filterObject.statusId ='';
-            }
-            $scope.filterGrid();
-        });
-        $scope.$watch('facilityType.value', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.facilityTypeId =  selection;
-            }else{
-                $scope.filterObject.facilityTypeId =  0;
-            }
-            $scope.filterGrid();
-        });
-
         $scope.exportReport   = function (type){
             var url = '/reports/download/facilities/' + type +'?zoneId=' +  $scope.filterObject.zoneId + '&facilityTypeId=' +  $scope.filterObject.facilityTypeId + '&status=' +  $scope.filterObject.statusId;
             window.open(url);
@@ -119,8 +94,6 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
             $scope.myData = data; 
             $scope.pagingOptions.totalServerItems = total;
             $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
-
-          
         };
 
         $scope.getPagedDataAsync = function (pageSize, page) {
@@ -131,10 +104,9 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
                                                 "page" : page
                                                };
                         }
-                        $.each($scope.filterObject, function(index, value) {
-                            if(value != undefined)
-                                params[index] = value;
-                        });
+                        params['zoneId'] = $scope.zone;
+                        params['facilityTypeId'] = $scope.facilityType;
+                        params['statusId'] = $scope.status;
 
                         $scope.data = [];
 
@@ -149,12 +121,19 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
 
 
         $scope.$watch('pagingOptions.currentPage', function () {
-            $scope.currentPage = $scope.pagingOptions.currentPage;
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            if($scope.currentPage = $scope.pagingOptions.currentPage) {
+                $scope.currentPage = $scope.pagingOptions.currentPage;
+                $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            }
+
         }, true);
 
         $scope.$watch('pagingOptions.pageSize', function () {
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            if($scope.pageSize != $scope.pagingOptions.pageSize){
+                $scope.pageSize = $scope.pagingOptions.pageSize;
+                $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            }
+
         }, true);
         
         $scope.$watch('sortInfo', function () {
@@ -170,7 +149,8 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
                     
                 }
             });
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+
+            //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
         }, true);
 
     $scope.gridOptions = {

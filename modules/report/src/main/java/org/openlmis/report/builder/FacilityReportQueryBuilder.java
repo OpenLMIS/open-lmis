@@ -28,13 +28,13 @@ public class FacilityReportQueryBuilder {
         LEFT_OUTER_JOIN("Users U on U.facilityId = F.id ");
         if(filter != null){
             if (filter.getStatusId() != null) {
-                WHERE("F.active = #{filterCriteria.statusId}");
+                WHERE("F.active = " + filter.getStatusId().toString());
             }
             if (filter.getZoneId() != 0) {
                 WHERE("F.geographiczoneid = #{filterCriteria.zoneId}");
             }
             if (filter.getFacilityTypeId() != 0) {
-                WHERE("F.typeid = #{filterCriteria.facilityTypeId}");
+                WHERE("F.typeid = " + filter.getFacilityTypeId());
             }
         }
 
@@ -74,13 +74,13 @@ public class FacilityReportQueryBuilder {
         FROM("facilities F");
 
         if (filter.getStatusId() != null) {
-            WHERE("F.active = #{filterCriteria.statusId}");
+            WHERE("F.active = " + filter.getStatusId().toString());
         }
         if (filter.getZoneId() != 0) {
-            WHERE("geographiczoneid = #{filterCriteria.zoneId}");
+            WHERE("geographiczoneid = " + filter.getZoneId());
         }
         if (filter.getFacilityTypeId() != 0) {
-            WHERE("typeid = #{filterCriteria.facilityTypeId}");
+            WHERE("typeid = " + filter.getFacilityTypeId());
         }
         return SQL();
     }
