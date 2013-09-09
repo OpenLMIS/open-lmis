@@ -63,8 +63,8 @@
                             <label class="labels">Period<span  class="label-required"> *</span></label>
 
                             <div class="form-field">
-                                <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="period" ng-options="option.id as option.name for option in periods | orderBy:'id'">
-
+                                <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="period">
+                                    <option ng-repeat="option in periods" value="{{option.id}}">{{option.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -99,31 +99,16 @@
              </div>
 
                  </td></tr><tr><td>
-                        <!-- Zone
-                        <div class="form-cell horizontalFilters" >
-                            <label class="labels">Zone</label>
-
-                            <div class="form-field">
-                                <select  ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone"  ng-options="option.id as option.name for option in zones">
-                                    <option value="">-- All Zones --</option>
-                                </select>
-                            </div>
-                        </div>
-                     </td><td>-->
-
-             <!-- Facility Type-->
+                          <!-- Facility Type-->
              <div class="form-cell horizontalFilters" >
                  <label class="labels">Facility Type</label>
 
                  <div class="form-field">
-                     <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
-                         <option value="">-- All Facility Types --</option>
+                     <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityType">
+                        <option ng-repeat="option in facilityTypes" value="{{option.id}}">{{option.name}}</option>
                      </select>
                  </div>
              </div>
-
-               </td><td>
-
              <!-- Facility-->
              <div class="form-cell horizontalFilters">
                  <label class="labels">Facility Name<span  class="label-required"> *</span></label>
