@@ -27,6 +27,7 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             currentPage: 1
         };
 
+        $scope.orderType = 'Regular';
         $scope.orderTypes = [
             {'name':'Regular', 'value':'Regular'},
             {'name':'Emergency', 'value':'Emergency'}
@@ -183,10 +184,8 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             }else{
                 $scope.filterObject.facilityTypeId =  0;
             }
-            if($scope.filterObject.facilityTypeId !== -1 && $scope.filterObject.facilityTypeId !== 0){
+               $scope.ChangeFacility();
 
-                $scope.ChangeFacility();
-            }
            $scope.filterGrid();
         });
 

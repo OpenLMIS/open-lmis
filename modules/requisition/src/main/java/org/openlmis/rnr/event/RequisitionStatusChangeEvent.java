@@ -20,7 +20,6 @@ import java.util.UUID;
 
 public class RequisitionStatusChangeEvent extends Event {
 
-  @Autowired
   NotificationServices notificationService;
 
   public RequisitionStatusChangeEvent(Rnr requisition, Vendor vendor) throws URISyntaxException {

@@ -101,7 +101,7 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
             $scope.requisitionGroups = data.requisitionGroupList;
             $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
         });
-    }
+    };
 
 
     $scope.$watch('stockImbalance.facilityTypeId', function (selection) {
@@ -480,8 +480,8 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
          eval('var obj='+recentFilter);
          if(recentFilter != undefined){
          $scope.stockImbalance = angular.copy(obj);
-         recentFilter = JSON.parse(recentFilter);
-         var params = {};
+         //recentFilter = JSON.parse(recentFilter);
+         //var params = {};
 
         /* $.each(obj, function (index, value) {
              if(index == 'periodId'){
