@@ -6,6 +6,7 @@
 
 package org.openlmis.core.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import org.openlmis.upload.annotation.ImportField;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class ProductCategory extends BaseModel implements Importable {
   @ImportField(mandatory = true, name = "Category Code")

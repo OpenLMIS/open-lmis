@@ -80,7 +80,7 @@ public class ProgramProductRepository {
 
   public ProgramProduct getByProgramAndProductCode(ProgramProduct programProduct) {
     return getByProgramAndProductId(programRepository.getIdByCode(programProduct.getProgram().getCode()),
-        productRepository.getIdByCode(programProduct.getProduct().getCode()));
+      productRepository.getIdByCode(programProduct.getProduct().getCode()));
   }
 
   public ProgramProduct getByProgramAndProductId(Long programId, Long productId) {
@@ -111,5 +111,9 @@ public class ProgramProductRepository {
 
   public List<ProgramProduct> getByProductCode(String code) {
     return mapper.getByProductCode(code);
+  }
+
+  public List<ProgramProduct> getProgramProductsBy(Long programId, String facilityTypeCode) {
+    return mapper.getByProgramIdAndFacilityCode(programId, facilityTypeCode);
   }
 }

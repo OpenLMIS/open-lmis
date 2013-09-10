@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -27,5 +28,11 @@ public class ProgramProductController {
   public ResponseEntity<OpenLmisResponse> getProgramProductsByProgram(@PathVariable Long programId) {
     List<ProgramProduct> programProductsByProgram = service.getByProgram(new Program(programId));
     return OpenLmisResponse.response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
+  }
+
+  @RequestMapping(value = "/programProducts", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getProgramProductsBy(@RequestParam String programCode, @RequestParam(required = false) String facilityTypeCode) {
+    List<ProgramProduct> programProducts = service.getProgramProductsBy(programCode, facilityTypeCode);
+    return OpenLmisResponse.response(PROGRAM_PRODUCT_LIST, programProducts);
   }
 }

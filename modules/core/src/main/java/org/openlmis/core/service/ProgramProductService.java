@@ -7,11 +7,14 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramProductRepository;
+import org.openlmis.core.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +32,12 @@ public class ProgramProductService {
 
   @Autowired
   private ProductService productService;
+
+  @Autowired
+  private ProgramRepository programRepository;
+
+  @Autowired
+  private FacilityRepository facilityRepository;
 
   public Long getIdByProgramIdAndProductId(Long programId, Long productId) {
     return programProductRepository.getIdByProgramIdAndProductId(programId, productId);
@@ -85,5 +94,13 @@ public class ProgramProductService {
 
   public List<ProgramProduct> getByProductCode(String productCode) {
     return programProductRepository.getByProductCode(productCode);
+  }
+
+  public List<ProgramProduct> getProgramProductsBy(String programCode, String facilityTypeCode) {
+    FacilityType facilityType = new FacilityType();
+    if (facilityTypeCode != null) {
+      facilityType = facilityRepository.getFacilityTypeByCode(new FacilityType(facilityTypeCode));
+    }
+    return programProductRepository.getProgramProductsBy(programRepository.getIdByCode(programCode), facilityType.getCode());
   }
 }

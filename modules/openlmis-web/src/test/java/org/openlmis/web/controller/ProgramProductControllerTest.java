@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.service.ProgramProductService;
@@ -39,5 +40,20 @@ public class ProgramProductControllerTest {
 
     assertThat((List<ProgramProduct>) responseEntity.getBody().getData().get(PROGRAM_PRODUCT_LIST), is(expectedProgramProductList));
     verify(service).getByProgram(program);
+  }
+
+  @Test
+  public void shouldGetProgramProductsByProgramCodeAndFacilityTypeCode() throws Exception {
+    List<ProgramProduct> expectedProgramProductList = new ArrayList<>();
+    Program program = new Program(1l);
+    program.setCode("P1");
+
+    FacilityType facilityType = new FacilityType();
+    facilityType.setCode("warehouse");
+
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.getProgramProductsBy(program.getCode(), facilityType.getCode());
+
+    assertThat((List<ProgramProduct>) responseEntity.getBody().getData().get(PROGRAM_PRODUCT_LIST), is(expectedProgramProductList));
+    verify(service).getProgramProductsBy(program.getCode(), facilityType.getCode());
   }
 }

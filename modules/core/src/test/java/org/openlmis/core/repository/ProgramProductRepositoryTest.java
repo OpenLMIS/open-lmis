@@ -223,4 +223,16 @@ public class ProgramProductRepositoryTest {
     assertThat(programProducts, is(expectedProgramProducts));
   }
 
+  @Test
+  public void shouldGetProgramProductByProgramIdAndFacilityTypeCode() {
+    List<ProgramProduct> expectedProgramProducts = new ArrayList<>();
+    when(programProductMapper.getByProgramIdAndFacilityCode(10L, "warehouse")).thenReturn(expectedProgramProducts);
+
+    List<ProgramProduct> programProducts = programProductRepository.getProgramProductsBy(10L, "warehouse");
+
+    verify(programProductMapper).getByProgramIdAndFacilityCode(10L, "warehouse");
+    assertThat(programProducts, is(expectedProgramProducts));
+  }
+
+
 }

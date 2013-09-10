@@ -30,6 +30,7 @@ import static org.apache.commons.collections.CollectionUtils.exists;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.core.builder.ProductBuilder.code;
 import static org.openlmis.core.builder.ProductBuilder.displayOrder;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 
@@ -49,10 +50,19 @@ public class ProgramProductMapperIT {
   private Program program;
   @Autowired
   private ProgramProductIsaMapper programProductISAMapper;
+  @Autowired
+  private FacilityApprovedProductMapper facilityApprovedProductMapper;
+  @Autowired
+  private ProductCategoryMapper productCategoryMapper;
 
   @Before
   public void setup() {
     product = make(a(ProductBuilder.defaultProduct, with(displayOrder, 1)));
+
+    ProductCategory productCategory = new ProductCategory("10", "P1", 1);
+    productCategoryMapper.insert(productCategory);
+    product.setCategory(productCategory);
+
     productMapper.insert(product);
     program = make(a(defaultProgram));
     programMapper.insert(program);
@@ -159,6 +169,52 @@ public class ProgramProductMapperIT {
     programProductMapper.insert(programProduct2);
 
     List<ProgramProduct> returnedProducts = programProductMapper.getByProductCode(programProduct.getProduct().getCode());
+
+    assertThat(returnedProducts.size(), is(2));
+    assertContainsProgramProduct(returnedProducts, programProduct);
+    assertContainsProgramProduct(returnedProducts, programProduct2);
+  }
+
+  @Test
+  public void shouldGetByProgramProductIdAndFacilityTypeCode() throws Exception {
+
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+
+    programProductMapper.insert(programProduct);
+
+    String facilityTypeCode = "warehouse";
+
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct();
+
+    FacilityType facilityType = new FacilityType(facilityTypeCode);
+    facilityType.setId(1L);
+
+    facilityTypeApprovedProduct.setFacilityType(facilityType);
+    facilityTypeApprovedProduct.setProgramProduct(programProduct);
+
+    facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
+
+    List<ProgramProduct> returnedProducts = programProductMapper.getByProgramIdAndFacilityCode(program.getId(), facilityTypeCode);
+
+    assertThat(returnedProducts.size(), is(1));
+    assertContainsProgramProduct(returnedProducts, programProduct);
+  }
+
+  @Test
+  public void shouldGetAllProgramProductsForProgramIdWhenFacilityTypeCodeIsNull() throws Exception {
+
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+
+    Product product1 = make(a(ProductBuilder.defaultProduct, with(code, "P1")));
+    product1.setCategory(product.getCategory());
+    productMapper.insert(product1);
+
+    ProgramProduct programProduct2 = new ProgramProduct(program, product1, 10, true);
+
+    programProductMapper.insert(programProduct);
+    programProductMapper.insert(programProduct2);
+
+    List<ProgramProduct> returnedProducts = programProductMapper.getByProgramIdAndFacilityCode(program.getId(), null);
 
     assertThat(returnedProducts.size(), is(2));
     assertContainsProgramProduct(returnedProducts, programProduct);
