@@ -1,3 +1,11 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+apply plugin: 'cobertura'
+
 dependencies {
 
     compile "postgresql:postgresql:9.1-901.jdbc4",
@@ -17,7 +25,8 @@ dependencies {
             project(':modules:email'),
             project(':modules:upload')
 
-    testCompile 'org.springframework:spring-test:3.1.1.RELEASE'
+    testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
+            project(path: ':modules:email', configuration: 'testFixtures')
 
 
     configurations {
@@ -35,3 +44,4 @@ dependencies {
         testFixtures testJar
     }
 }
+

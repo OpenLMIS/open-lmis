@@ -53,8 +53,6 @@ task setupDB(dependsOn: ["createDB", clean]) << {
     ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword)
 
     tasks.migrateDB.execute()
-    ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword, table: newmigtable  )
-    //tasks.migrateDB.execute()
 }
 
 task createDB(dependsOn: "dropDB") << {
@@ -118,5 +116,4 @@ def executeSqlOnDatabase(String statement, String database) {
 
     sql.execute(statement)
 }
-
 
