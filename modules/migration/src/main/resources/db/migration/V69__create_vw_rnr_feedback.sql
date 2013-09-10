@@ -38,7 +38,7 @@ CREATE OR REPLACE VIEW vw_rnr_feedback AS
     vw_requisition_detail.maxstockquantity, vw_requisition_detail.packstoship, 
     vw_requisition_detail.packsize, vw_requisition_detail.fullsupply, 
     vw_requisition_detail.nominalmaxmonth, vw_requisition_detail.nominaleop, 
-    vw_requisition_detail.dispensingunit, shipped_line_items.quantityshipped, 
+    vw_requisition_detail.dispensingunit, shipment_line_items.quantityshipped,
         CASE
             WHEN vw_requisition_detail.previousstockinhandavailable THEN 
             CASE
@@ -52,7 +52,7 @@ CREATE OR REPLACE VIEW vw_rnr_feedback AS
             ELSE 1
         END AS err_qry_required, 
         CASE
-            WHEN vw_requisition_detail.quantityreceived <> shipped_line_items.quantityshipped THEN 0
+            WHEN vw_requisition_detail.quantityreceived <> shipment_line_items.quantityshipped THEN 0
             ELSE 1
         END AS err_qty_received, 
         CASE
@@ -60,7 +60,8 @@ CREATE OR REPLACE VIEW vw_rnr_feedback AS
             ELSE 0
         END AS err_qty_stockinhand
    FROM vw_requisition_detail
-   LEFT JOIN shipped_line_items ON vw_requisition_detail.req_id = shipped_line_items.rnrid;
+   LEFT JOIN Orders ON Orders.rnrId =  vw_requisition_detail.req_id
+   LEFT JOIN shipment_line_items ON Orders.id = shipment_line_items.orderId;
 
 ALTER TABLE vw_rnr_feedback
   OWNER TO postgres;
