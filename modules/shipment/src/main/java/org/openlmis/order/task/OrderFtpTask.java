@@ -53,6 +53,7 @@ public class OrderFtpTask {
   private static Logger logger = Logger.getLogger(OrderFtpTask.class);
 
   private static String CONNECTION_REFUSED = "Connection refused";
+  private static String CONNECTION_REFUSED_TIMEOUT = "connect timed out";
   private static String LOGIN_INCORRECT = "Login incorrect";
   private static String PERMISSION_DENIED = "Error writing file";
   private static String CONNECTION_REFUSED_COMMENT = "order.ftpComment.connection.refused";
@@ -99,7 +100,8 @@ public class OrderFtpTask {
 
   private void handleException(CamelExecutionException camelException, Order order) {
     logger.error("Error in ftp of order file", camelException);
-    if (!(updateOrderForException(CONNECTION_REFUSED, camelException, order, CONNECTION_REFUSED_COMMENT) ||
+    if (!(updateOrderForException(CONNECTION_REFUSED_TIMEOUT, camelException, order, CONNECTION_REFUSED_COMMENT) ||
+      updateOrderForException(CONNECTION_REFUSED, camelException, order, CONNECTION_REFUSED_COMMENT) ||
       updateOrderForException(LOGIN_INCORRECT, camelException, order, LOGIN_INCORRECT_COMMENT) ||
       updateOrderForException(PERMISSION_DENIED, camelException, order, PERMISSION_DENIED_COMMENT))) {
       order.setStatus(TRANSFER_FAILED);
