@@ -39,13 +39,17 @@ public class RequisitionEventServiceTest {
   @InjectMocks
   RequisitionEventService service;
 
+  @Mock
+  NotificationServices notificationServices;
+
   @Test
   public void shouldFetchVendorAndTriggerNotifyOnEventService() throws Exception {
     Rnr requisition = make(a(defaultRnr));
     Vendor vendor = new Vendor();
     when(vendorService.getByUserId(requisition.getModifiedBy())).thenReturn(vendor);
     RequisitionStatusChangeEvent event = mock(RequisitionStatusChangeEvent.class);
-    whenNew(RequisitionStatusChangeEvent.class).withArguments(requisition, vendor).thenReturn(event);
+
+    whenNew(RequisitionStatusChangeEvent.class).withArguments(requisition, vendor, notificationServices).thenReturn(event);
 
     service.notifyForStatusChange(requisition);
 
