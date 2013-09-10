@@ -60,33 +60,15 @@ public class ShipmentFileProcessor {
 
     ShipmentFileTemplate shipmentFileTemplate = shipmentFileTemplateService.get();
 
-    List<ShipmentFileColumn> shipmentFileColumns = shipmentFileTemplate.getShipmentFileColumns();
-
-    String packedDateFormat = getFormatForField("packedDate", shipmentFileColumns);
-    String shippedDateFormat = getFormatForField("shippedDate", shipmentFileColumns);
-
-    Collection<ShipmentFileColumn> includedColumns = filterIncludedColumns(shipmentFileColumns);
-
     boolean errorInFile = true;
-    Set<Long> orderIds = new HashSet<>();
 
-    int maxPosition = findMaximumPosition(includedColumns);
+    Set<Long> orderIds = new HashSet<>();
 
     try (ICsvListReader listReader = new CsvListReader(new FileReader(shipmentFile), STANDARD_PREFERENCE)) {
 
       ignoreFirstLineIfHeadersArePresent(shipmentFileTemplate, listReader);
 
-      List<String> fieldsInOneRow;
-
-      while ((fieldsInOneRow = listReader.read()) != null) {
-        if (fieldsInOneRow.size() < maxPosition) {
-          logger.warn("Shipment file should contain at least " + maxPosition + " columns");
-          throw new DataException("mandatory.data.missing");
-        } else {
-          Long orderId = processLineItem(fieldsInOneRow, includedColumns, packedDateFormat, shippedDateFormat);
-          orderIds.add(orderId);
-        }
-      }
+      orderIds = processShipmentLineItem(listReader, shipmentFileTemplate);
 
       errorInFile = false;
       logger.debug("Successfully processed file " + shipmentFile.getName());
@@ -100,17 +82,49 @@ public class ShipmentFileProcessor {
     }
   }
 
-  private Long processLineItem(List<String> fieldsInOneRow,
-                               Collection<ShipmentFileColumn> includedColumns,
-                               String packedDateFormat,
-                               String shippedDateFormat) throws NoSuchFieldException, IllegalAccessException {
+  private Set<Long> processShipmentLineItem(ICsvListReader listReader, ShipmentFileTemplate shipmentFileTemplate)
+    throws IOException, NoSuchFieldException, IllegalAccessException {
+
+    List<ShipmentFileColumn> shipmentFileColumns = shipmentFileTemplate.getShipmentFileColumns();
+
+
+    Collection<ShipmentFileColumn> includedColumns = filterIncludedColumns(shipmentFileColumns);
+
+    String packedDateFormat = getFormatForField("packedDate", shipmentFileColumns);
+    String shippedDateFormat = getFormatForField("shippedDate", shipmentFileColumns);
+
+    int maxPosition = findMaximumPosition(includedColumns);
+    List<String> fieldsInOneRow;
+    Set<Long> orderIds = new HashSet<>();
+    while ((fieldsInOneRow = listReader.read()) != null) {
+
+      if (fieldsInOneRow.size() < maxPosition) {
+        logger.warn("Shipment file should contain at least " + maxPosition + " columns");
+        throw new DataException("mandatory.data.missing");
+
+      } else {
+
+        ShipmentLineItem lineItem = generateLineItem(fieldsInOneRow, includedColumns, packedDateFormat, shippedDateFormat);
+        shipmentService.insertShippedLineItem(lineItem);
+
+        orderIds.add(lineItem.getOrderId());
+      }
+
+    }
+
+    return orderIds;
+  }
+
+  private ShipmentLineItem generateLineItem(List<String> fieldsInOneRow,
+                                            Collection<ShipmentFileColumn> includedColumns,
+                                            String packedDateFormat,
+                                            String shippedDateFormat) throws NoSuchFieldException, IllegalAccessException {
 
     ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns);
 
     ShipmentLineItem lineItem = transformer.transform(dto, packedDateFormat, shippedDateFormat);
 
-    shipmentService.insertShippedLineItem(lineItem);
-    return lineItem.getOrderId();
+    return lineItem;
   }
 
 
