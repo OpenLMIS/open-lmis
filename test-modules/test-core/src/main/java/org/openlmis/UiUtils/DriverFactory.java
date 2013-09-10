@@ -31,6 +31,7 @@ public class DriverFactory {
   private String INPUT_ZIP_FILE_IEDRIVER = null;
   private String INPUT_ZIP_FILE_CHROMEDRIVER = null;
   private String INPUT_ZIP_FILE_CHROMEDRIVER_MAC = null;
+  private String CHROME_FOLDER = null;
   private String OUTPUT_FOLDER = null;
   private String Separator = null;
   Unzip unZip;
@@ -38,10 +39,12 @@ public class DriverFactory {
   public WebDriver loadDriver(String browser) throws InterruptedException, IOException {
     Separator = getProperty("file.separator");
     File parentDir = new File(getProperty("user.dir"));
+
+    CHROME_FOLDER = parentDir.getParentFile().getParentFile().getPath() + Separator  + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;;
     OUTPUT_FOLDER = parentDir.getPath() + Separator + "test-modules" + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     INPUT_ZIP_FILE_IEDRIVER = OUTPUT_FOLDER + "IEDriverServer_Win32_2.33.0.zip";
     INPUT_ZIP_FILE_CHROMEDRIVER = OUTPUT_FOLDER + "chromedriver.zip";
-    INPUT_ZIP_FILE_CHROMEDRIVER_MAC = OUTPUT_FOLDER + "chromedriver_mac.zip";
+    INPUT_ZIP_FILE_CHROMEDRIVER_MAC = CHROME_FOLDER + "chromedriver_mac.zip";
 
     return loadDriver(true, browser);
   }
@@ -87,9 +90,9 @@ public class DriverFactory {
 
         case "chromeM":
             //unZip = new Unzip();
-            //unZip.unZipIt(INPUT_ZIP_FILE_CHROMEDRIVER_MAC, OUTPUT_FOLDER);
-            //Thread.sleep(5000);
-            driverType = setProperty("webdriver.chrome.driver", OUTPUT_FOLDER + "chromedriver");
+            //unZip.unZipIt(INPUT_ZIP_FILE_CHROMEDRIVER_MAC, CHROME_FOLDER);
+            //Thread.sleep(10000);
+            driverType = setProperty("webdriver.chrome.driver", CHROME_FOLDER + "chromedriver");
             driverType = getProperty("webdriver.chrome.driver");
             return createChromeDriver();
 

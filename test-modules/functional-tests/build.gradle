@@ -230,7 +230,7 @@ task offlineTest(type: Test) {
     useTestNG() {
         systemProperties['browser'] = 'chromeM'
         systemProperties['dburl'] = 'jdbc:postgresql://192.168.34.2/open_lmis'
-        systemProperties['baseurl'] = 'https://192.168.34.2/'
+        systemProperties['baseurl'] = 'https://qa-openlmis.org/'
 
         suites 'src/test/java/org/openlmis/functional/testng-offline.xml'
     }

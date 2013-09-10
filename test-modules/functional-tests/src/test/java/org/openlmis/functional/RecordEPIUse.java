@@ -7,6 +7,7 @@
 package org.openlmis.functional;
 
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import cucumber.api.DataTable;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
@@ -38,7 +39,7 @@ public class RecordEPIUse extends TestCaseHelper {
   public static final String periodDisplayedByDefault = "Period14";
   public static final String periodNotToBeDisplayedInDropDown = "Period1";
 
-  @BeforeMethod(groups = "distribution")
+  @BeforeMethod(groups = {"distribution","offline"})
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -231,9 +232,78 @@ public class RecordEPIUse extends TestCaseHelper {
 
     }
 
+    @Test(groups = {"offline"}, dataProvider = "Data-Provider-Function")
+    public void testEditEPIUseOffline(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                               String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                               String facilityCodeFirst, String facilityCodeSecond,
+                               String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+
+        List<String> rightsList = new ArrayList<String>();
+        rightsList.add("MANAGE_DISTRIBUTION");
+        setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+        setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+                deliveryZoneNameFirst, deliveryZoneNameSecond,
+                facilityCodeFirst, facilityCodeSecond,
+                programFirst, programSecond, schedule);
+        dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+        dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+        dbWrapper.insertProductGroup("PG1");
+        dbWrapper.insertProductGroup("PG2");
+        dbWrapper.insertProductGroup("PG3");
+        dbWrapper.insertProductWithGroup("Product1","ProdutName1","PG1",true);
+        dbWrapper.insertProductWithGroup("Product2","ProdutName2","PG1",false);
+        dbWrapper.insertProductWithGroup("Product3","ProdutName3","PG2",false);
+        dbWrapper.insertProductWithGroup("Product4","ProdutName4","PG2",false);
+        dbWrapper.insertProductWithGroup("Product5","ProdutName5","PG3",true);
+        dbWrapper.insertProductWithGroup("Product6","ProdutName6","PG3",true);
+        dbWrapper.insertProgramProduct("Product1",programFirst,"10","false");
+        dbWrapper.insertProgramProduct("Product2",programFirst,"10","true");
+        dbWrapper.insertProgramProduct("Product3",programFirst,"10","true");
+        dbWrapper.insertProgramProduct("Product4",programFirst,"10","true");
+        dbWrapper.insertProgramProduct("Product5",programFirst,"10","false");
+        dbWrapper.insertProgramProduct("Product6",programFirst,"10","true");
+
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(userSIC, password);
+        DistributionPage distributionPage = homePage.navigatePlanDistribution();
+        distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+        distributionPage.selectValueFromProgram(programFirst);
+        distributionPage.clickInitiateDistribution();
+        testWebDriver.sleep(10000);
+        switchOffNetwork();
+        homePage.navigatePlanDistribution();
+        distributionPage.clickRecordData();
+        FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+        facilityListPage.selectFacility("F10");
+        EPIUse epiUse = new EPIUse(testWebDriver);
+        epiUse.navigate();
+        epiUse.verifyProductGroup("PG3-Name",1);
+        epiUse.verifyIndicator("RED");
+
+        epiUse.enterValueInStockAtFirstOfMonth("10",1);
+        epiUse.verifyIndicator("AMBER");
+        epiUse.enterValueInReceived("20", 1);
+        epiUse.enterValueInDistributed("30", 1);
+        epiUse.enterValueInLoss("40", 1);
+        epiUse.enterValueInStockAtEndOfMonth("50",1);
+        epiUse.enterValueInExpirationDate("10/2011",1);
 
 
-  @AfterMethod(groups = "distribution")
+        RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+        refrigeratorPage.navigateToRefrigeratorTab();
+        epiUse.navigate();
+
+        epiUse.verifyTotal("30",1);
+        epiUse.verifyStockAtFirstOfMonth("10", 1);
+        epiUse.verifyReceived("20", 1);
+        epiUse.verifyDistributed("30", 1);
+        epiUse.verifyLoss("40", 1);
+        epiUse.verifyStockAtEndOfMonth("50", 1);
+        epiUse.verifyExpirationDate("10/2011", 1);
+    }
+
+
+  @AfterMethod(groups = {"distribution"})
   @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(250);
@@ -241,9 +311,19 @@ public class RecordEPIUse extends TestCaseHelper {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
     }
+
+    switchOnNetwork();
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
+
+    @AfterMethod(groups = {"offline"})
+    @After
+    public void tearDownNew() throws Exception {
+        switchOnNetwork();
+        dbWrapper.deleteData();
+        dbWrapper.closeConnection();
+    }
 
 
     @DataProvider(name = "Data-Provider-Function")
