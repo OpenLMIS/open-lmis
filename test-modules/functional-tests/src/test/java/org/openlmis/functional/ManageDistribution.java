@@ -49,15 +49,16 @@ public class ManageDistribution extends TestCaseHelper {
     facilityCodeFirst, facilityCodeSecond,
     programFirst, programSecond, schedule;
 
-  private HashMap<String, DistributionTab> tabMap = new HashMap<String, DistributionTab>() {{
-    put("epi use", new EPIUse(testWebDriver));
-    put("general observation", new GeneralObservation(testWebDriver));
-  }};
+  private HashMap<String, DistributionTab> tabMap;
 
   @BeforeMethod(groups = "distribution")
   @Before
   public void setUp() throws Exception {
     super.setup();
+    tabMap = new HashMap<String, DistributionTab>() {{
+      put("epi use", new EPIUse(testWebDriver));
+      put("general observation", new GeneralObservation(testWebDriver));
+    }};
   }
 
 
