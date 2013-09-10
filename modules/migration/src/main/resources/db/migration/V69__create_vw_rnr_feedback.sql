@@ -50,7 +50,7 @@ CREATE OR REPLACE VIEW vw_rnr_feedback AS
         CASE
             WHEN vw_requisition_detail.calculatedorderquantity <> vw_requisition_detail.quantityrequested THEN 0
             ELSE 1
-        END AS err_qry_required, 
+        END AS err_qty_required,
         CASE
             WHEN vw_requisition_detail.quantityreceived <> shipment_line_items.quantityshipped THEN 0
             ELSE 1
