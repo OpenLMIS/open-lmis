@@ -186,7 +186,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
         configureShipmentPage.setQuantityShipped("101") ;
         configureShipmentPage.setOrderNumber("101");
         configureShipmentPage.clickSaveButton();
-        configureShipmentPage.verifyMessage("Position numbers cannot have duplicate values");
+        configureShipmentPage.verifyErrorMessage("Position numbers cannot have duplicate values");
 
     }
 

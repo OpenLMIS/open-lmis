@@ -67,6 +67,9 @@ public class ConfigureShipmentPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='shipmentFileColumns']/div[2]/div[6]/div[4]/input")
   private static WebElement shippedDateTextField;
 
+  @FindBy(how = ID, using = "saveErrorMsgDiv")
+  private static WebElement saveErrorMessageDiv;
+
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement successMessageDiv;
 
@@ -304,6 +307,11 @@ public class ConfigureShipmentPage extends Page {
   public void verifyMessage(String message) {
     testWebDriver.waitForElementToAppear(successMessageDiv);
     assertEquals(message,successMessageDiv.getText());
+  }
+
+  public void verifyErrorMessage(String message) {
+    testWebDriver.waitForElementToAppear(saveErrorMessageDiv);
+    assertEquals(message,saveErrorMessageDiv.getText());
   }
 
     public void verifyDefaultIncludeCheckboxForAllDataFields() {

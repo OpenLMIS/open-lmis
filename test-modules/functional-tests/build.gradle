@@ -166,7 +166,7 @@ task offlineTest(type: Test) {
         htmlformat = "html:${buildDir}/reports/tests/bddTest-report-functional"
         jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
         javaexec {
-            System.properties.get('browser', 'firefox')
+            System.properties.get('browser', 'chromeM')
             System.properties.get('dburl', "jdbc:postgresql://192.168.34.2/open_lmis")
             System.properties.get('baseurl', "https://192.168.34.2/")
             systemProperties System.properties

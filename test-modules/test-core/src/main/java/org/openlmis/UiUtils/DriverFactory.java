@@ -30,6 +30,7 @@ public class DriverFactory {
   private String driverType;
   private String INPUT_ZIP_FILE_IEDRIVER = null;
   private String INPUT_ZIP_FILE_CHROMEDRIVER = null;
+  private String INPUT_ZIP_FILE_CHROMEDRIVER_MAC = null;
   private String OUTPUT_FOLDER = null;
   private String Separator = null;
   Unzip unZip;
@@ -40,6 +41,7 @@ public class DriverFactory {
     OUTPUT_FOLDER = parentDir.getPath() + Separator + "test-modules" + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     INPUT_ZIP_FILE_IEDRIVER = OUTPUT_FOLDER + "IEDriverServer_Win32_2.33.0.zip";
     INPUT_ZIP_FILE_CHROMEDRIVER = OUTPUT_FOLDER + "chromedriver.zip";
+    INPUT_ZIP_FILE_CHROMEDRIVER_MAC = OUTPUT_FOLDER + "chromedriver_mac.zip";
 
     return loadDriver(true, browser);
   }
@@ -83,6 +85,14 @@ public class DriverFactory {
         driverType = getProperty("webdriver.chrome.driver");
         return createChromeDriver();
 
+        case "chromeM":
+            unZip = new Unzip();
+            unZip.unZipIt(INPUT_ZIP_FILE_CHROMEDRIVER, OUTPUT_FOLDER);
+            Thread.sleep(1500);
+            driverType = setProperty("webdriver.chrome.driver", OUTPUT_FOLDER + "chromedriver 2");
+            driverType = getProperty("webdriver.chrome.driver");
+            return createChromeDriver();
+
       case "HTMLUnit":
         return new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_8);
 
@@ -100,6 +110,9 @@ public class DriverFactory {
     profile.setPreference("browser.helperApps.neverAsk.saveToDisk","text/csv");
     profile.setPreference("browser.download.dir",new File(System.getProperty("user.dir")).getParent());
     profile.setPreference("browser.download.folderList", 2);
+    profile.setPreference("dom.storage.enabled", true);
+    profile.setPreference("device.storage.enabled", true);
+    //profile.setPreference("network.manage-offline-status", true);
     return new FirefoxDriver(profile);
   }
 
