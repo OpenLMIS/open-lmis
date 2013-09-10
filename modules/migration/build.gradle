@@ -20,11 +20,11 @@ dependencies {
     classpath 'postgresql:postgresql:9.1-901.jdbc4'
 }
 
-task setupReportMigrationDB() << {
+task setupReportDB() << {
     ext.flyway_classpath = files(configurations.flyway)
     ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
     ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword, table: newmigtable  )
-    tasks.migratemoduleDB.execute()
+    tasks.migrateReportDB.execute()
 }
 
 jar.doFirst {
