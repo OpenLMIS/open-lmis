@@ -29,7 +29,7 @@ public class ShipmentFilePostProcessHandler {
   private ShipmentService shipmentService;
 
   @Autowired
-  private MessageChannel ftpOutputChannel;
+  private MessageChannel ftpErrorChannel;
 
   @Autowired
   private MessageChannel ftpArchiveOutputChannel;
@@ -40,18 +40,19 @@ public class ShipmentFilePostProcessHandler {
 
   public void process(Set<Long> orderIds, File shipmentFile, boolean error) {
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo(shipmentFile.getName(), error);
+
     shipmentService.insertShipmentFileInfo(shipmentFileInfo);
 
     shipmentService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
 
     Message<File> message = withPayload(shipmentFile).build();
 
-    if (!error) {
+    if (error) {
+      ftpErrorChannel.send(message);
+      logger.warn("Shipment file " + shipmentFile.getName() + " copied to error folder");
+    } else {
       ftpArchiveOutputChannel.send(message);
       logger.debug("Shipment file " + shipmentFile.getName() + " archived");
-    } else {
-      ftpOutputChannel.send(message);
-      logger.warn("Shipment file " + shipmentFile.getName() + " copied to error folder");
     }
 
     if (!deleteQuietly(shipmentFile)) {

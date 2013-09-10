@@ -36,8 +36,8 @@ public class ShipmentFilePostProcessHandlerTest {
   @Mock
   private ShipmentService shipmentService;
 
-  @Mock(name = "ftpOutputChannel")
-  private MessageChannel ftpOutputChannel;
+  @Mock(name = "ftpErrorChannel")
+  private MessageChannel ftpErrorChannel;
 
   @Mock(name = "ftpArchiveOutputChannel")
   private MessageChannel ftpArchiveOutputChannel;
@@ -65,7 +65,7 @@ public class ShipmentFilePostProcessHandlerTest {
 
     verify(shipmentService).insertShipmentFileInfo(shipmentFileInfo);
     verify(shipmentService).updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
-    verify(ftpOutputChannel, never()).send(any(Message.class));
+    verify(ftpErrorChannel, never()).send(any(Message.class));
     verify(ftpArchiveOutputChannel).send(any(Message.class));
   }
 
@@ -84,7 +84,7 @@ public class ShipmentFilePostProcessHandlerTest {
 
     verify(shipmentService).insertShipmentFileInfo(shipmentFileInfo);
     verify(shipmentService).updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
-    verify(ftpOutputChannel).send(any(Message.class));
+    verify(ftpErrorChannel).send(any(Message.class));
     verify(ftpArchiveOutputChannel, never()).send(any(Message.class));
   }
 }

@@ -54,10 +54,10 @@
         <int:poller fixed-rate="30000" max-messages-per-poll="-1" task-executor=""/>
     </int-ftp:inbound-channel-adapter>
 
-    <int:channel id="ftpOutputChannel"/>
+    <int:channel id="ftpErrorChannel"/>
 
     <int-ftp:outbound-channel-adapter cache-sessions="false"
-                                      channel="ftpOutputChannel"
+                                      channel="ftpErrorChannel"
                                       remote-directory="${ftp.remote.error.directory}"
                                       session-factory="ftpSessionFactory"
                                       auto-create-directory="true"
