@@ -8,6 +8,7 @@
 package org.openlmis.order.task;
 
 import org.apache.camel.CamelExecutionException;
+import org.apache.camel.FailedToCreateProducerException;
 import org.apache.log4j.Logger;
 import org.openlmis.core.domain.FacilityFtpDetails;
 import org.openlmis.core.domain.SupplyLine;
@@ -89,6 +90,8 @@ public class OrderFtpTask {
         fileWriter.flush();
         ftpSender.sendFile(supplyingFacilityFtpDetails, file);
         updateOrder(order, RELEASED, null);
+      } catch (FailedToCreateProducerException producerException) {
+        updateOrder(order, TRANSFER_FAILED, CONNECTION_REFUSED_COMMENT);
       } catch (CamelExecutionException camelException) {
         handleException(camelException, order);
       } catch (Exception e) {
