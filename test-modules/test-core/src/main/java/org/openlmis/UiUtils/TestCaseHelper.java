@@ -26,9 +26,9 @@ public class TestCaseHelper {
   protected static TestWebDriver testWebDriver;
   protected static boolean isSeleniumStarted = false;
   protected static DriverFactory driverFactory = new DriverFactory();
-  public static final String DEFAULT_BROWSER = "firefox";
-  public static final String DEFAULT_BASE_URL = "http://localhost:9091/";
-  public static final String DEFAULT_DB_URL = "jdbc:postgresql://localhost:5432/open_lmis";
+  public static final String DEFAULT_BROWSER = "chromeM";
+  public static final String DEFAULT_BASE_URL = "https://192.168.34.2/";
+  public static final String DEFAULT_DB_URL = "jdbc:postgresql://192.168.34.2/open_lmis";
 
 
   public void setup() throws Exception {
@@ -358,7 +358,17 @@ public class TestCaseHelper {
       throw new IllegalArgumentException("Delete: deletion failed");
   }
 
+    public void switchOffNetwork() throws IOException {
+        testWebDriver.sleep(2000);
+        Runtime.getRuntime().exec("sudo ifconfig en1 down");
+        testWebDriver.sleep(2000);
+    }
 
+    public void switchOnNetwork() throws IOException {
+        testWebDriver.sleep(2000);
+        Runtime.getRuntime().exec("sudo ifconfig en1 up");
+        testWebDriver.sleep(2000);
+    }
 }
 
 

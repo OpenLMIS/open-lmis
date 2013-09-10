@@ -193,20 +193,6 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.clickRecordData();
   }
 
-  @And("^I switch off network$")
-  public void switchOffNetwork() throws IOException {
-    testWebDriver.sleep(2000);
-    Runtime.getRuntime().exec("sudo ifconfig en1 down");
-    testWebDriver.sleep(2000);
-  }
-
-  @And("^I switch on network$")
-  public void switchOnNetwork() throws IOException {
-    testWebDriver.sleep(2000);
-    Runtime.getRuntime().exec("sudo ifconfig en1 up");
-    testWebDriver.sleep(2000);
-  }
-
   @Then("^I should see No facility selected$")
   public void shouldSeeNoFacilitySelected() throws IOException {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);

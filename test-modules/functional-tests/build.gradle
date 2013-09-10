@@ -158,29 +158,6 @@ smokeTestIE2.doFirst() {
     buildOpenLmis.execute()
 }
 
-task offlineTest(type: Test) {
-    dependsOn assemble, compileTestJava
-
-    doLast {
-
-        htmlformat = "html:${buildDir}/reports/tests/bddTest-report-functional"
-        jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
-        javaexec {
-            System.properties.get('browser', 'chromeM')
-            System.properties.get('dburl', "jdbc:postgresql://192.168.34.2/open_lmis")
-            System.properties.get('baseurl', "https://192.168.34.2/")
-            systemProperties System.properties
-            main = "cucumber.api.cli.Main"
-            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@offline','--tags','~@WIP', 'src/test/resources']
-        }
-    }
-}
-
-offlineTest.doFirst() {
-    buildOpenLmis.execute()
-}
-
 configurations {
     cucumberRuntime {
         extendsFrom testRuntime
@@ -249,6 +226,23 @@ distributionTest.doFirst() {
     buildOpenLmis.execute()
 }
 
+task offlineTest(type: Test) {
+    useTestNG() {
+        systemProperties['browser'] = 'chromeM'
+        systemProperties['dburl'] = 'jdbc:postgresql://192.168.34.2/open_lmis'
+        systemProperties['baseurl'] = 'https://192.168.34.2/'
 
+        suites 'src/test/java/org/openlmis/functional/testng-offline.xml'
+    }
+    options {
+        listeners << 'org.uncommons.reportng.HTMLReporter'
+        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
+    }
+    workingDir = 'build/'
+}
+
+offlineTest.doFirst() {
+    buildOpenLmis.execute()
+}
 
 
