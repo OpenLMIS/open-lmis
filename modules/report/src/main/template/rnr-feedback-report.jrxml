@@ -63,7 +63,7 @@
 		<groupHeader>
 			<band height="83">
 				<staticText>
-					<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="45" width="802" height="38" forecolor="#FFFFFF" backcolor="#F6F6F6">
+					<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="40" width="802" height="43" forecolor="#FFFFFF" backcolor="#F6F6F6">
 						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 					</reportElement>
 					<textElement/>
@@ -94,7 +94,7 @@
 					<text><![CDATA[Unit]]></text>
 				</staticText>
 				<textField pattern="" isBlankWhenNull="false">
-					<reportElement uuid="84fb0aa5-78bc-4086-a683-f926270f266e" mode="Transparent" x="72" y="1" width="317" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement uuid="84fb0aa5-78bc-4086-a683-f926270f266e" mode="Transparent" x="72" y="0" width="317" height="20" forecolor="#000000" backcolor="#FFFFFF">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
@@ -104,7 +104,7 @@
 					<textFieldExpression><![CDATA[($F{facility}== null?" - ":$F{facility})]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement uuid="0502ca62-a410-47a4-b9ff-5defeff263d4" mode="Transparent" x="0" y="1" width="72" height="20" forecolor="#000000" backcolor="#333333">
+					<reportElement uuid="0502ca62-a410-47a4-b9ff-5defeff263d4" mode="Transparent" x="0" y="0" width="72" height="20" forecolor="#000000" backcolor="#333333">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
@@ -114,7 +114,7 @@
 					<text><![CDATA[Facility]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="e011adc6-c2b4-44ef-a753-434ffcc53d9f" mode="Transparent" x="601" y="21" width="169" height="20" forecolor="#000000" backcolor="#333333">
+					<reportElement uuid="e011adc6-c2b4-44ef-a753-434ffcc53d9f" mode="Transparent" x="601" y="20" width="169" height="20" forecolor="#000000" backcolor="#333333">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
@@ -124,7 +124,7 @@
 					<text><![CDATA[Emergency Order Point]]></text>
 				</staticText>
 				<textField pattern="#,###.#" isBlankWhenNull="false">
-					<reportElement uuid="d00feb98-9d2f-48b2-a691-ce6b178e8bb8" mode="Transparent" x="770" y="21" width="30" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement uuid="d00feb98-9d2f-48b2-a691-ce6b178e8bb8" mode="Transparent" x="770" y="20" width="30" height="20" forecolor="#000000" backcolor="#FFFFFF">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
@@ -134,7 +134,7 @@
 					<textFieldExpression><![CDATA[($F{emergencyOrder}== null?" - ":$F{emergencyOrder})]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement uuid="0a73502f-69cd-4eb6-a67f-b0bc2bfe4e7c" mode="Transparent" x="601" y="1" width="169" height="20" forecolor="#000000" backcolor="#333333">
+					<reportElement uuid="0a73502f-69cd-4eb6-a67f-b0bc2bfe4e7c" mode="Transparent" x="601" y="0" width="169" height="20" forecolor="#000000" backcolor="#333333">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
@@ -144,7 +144,7 @@
 					<text><![CDATA[Maximum Stock Level]]></text>
 				</staticText>
 				<textField pattern="#,###.#" isBlankWhenNull="false">
-					<reportElement uuid="f8ac6a7a-0dac-433a-b8b7-d04c42f39d78" mode="Transparent" x="770" y="1" width="30" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement uuid="f8ac6a7a-0dac-433a-b8b7-d04c42f39d78" mode="Transparent" x="770" y="0" width="30" height="20" forecolor="#000000" backcolor="#FFFFFF">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
