@@ -57,12 +57,13 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
              facilityTypeId : $scope.facilityType,
              facilityType : "",
              programId : $scope.program,
+             program : "",
              periodId : $scope.period,
-             zoneId : $scope.zone,
+             period : "",
              productId : $scope.productId,
              product : "",
              scheduleId : $scope.schedule,
-             facilityName : $scope.facilityNameFilter,
+             schedule : "",
              facilityId: $scope.facility,
              year : "",
              orderType: ""
@@ -122,15 +123,12 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
                 });
 
             }else{
-
                 ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
                     $scope.periods = data.periods;
                     $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
 
                 });
-
             }
-
         };
 
         $scope.$watch('schedule', function (selection) {
@@ -221,16 +219,6 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             $scope.filterGrid();
         });
 
-        $scope.$watch('facilityNameFilter', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.facilityName =  selection;
-
-            }else{
-                $scope.filterObject.facilityName = "";
-            }
-            $scope.filterGrid();
-        });
-
         $scope.$watch('product', function(selection){
             if(selection == "All"){
                 $scope.filterObject.productId =  0;
@@ -247,23 +235,16 @@ function OrderReportController($scope, OrderReport, Products ,ReportFacilityType
             $scope.filterGrid();
         });
 
-
-        $scope.$watch('zone', function(selection){
-            if(selection == "All"){
-                $scope.filterObject.zoneId =  -1;
-            }else if(selection != undefined || selection == ""){
-                $scope.filterObject.zoneId =  selection;
-            }else{
-                $scope.filterObject.zoneId =  0;
-            }
-            $scope.filterGrid();
-        });
-
         $scope.$watch('program', function(selection){
             if(selection == "All"){
                 $scope.filterObject.programId =  -1;
             }else if(selection != undefined || selection == ""){
                 $scope.filterObject.programId =  selection;
+                $.each($scope.programs, function(item,indx){
+                   if(indx.id == selection){
+                       $scope.filterObject.program = indx.name;
+                   }
+                });
             }else{
                 $scope.filterObject.programId =  0;
             }

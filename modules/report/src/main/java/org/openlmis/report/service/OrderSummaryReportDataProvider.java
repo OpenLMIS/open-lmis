@@ -8,6 +8,7 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.OrderSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.filter.OrderReportFilter;
@@ -31,11 +32,13 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
 
 
     private OrderSummaryReportMapper reportMapper;
+    private ConfigurationSettingService configurationService;
 
 
     @Autowired
-    public OrderSummaryReportDataProvider(OrderSummaryReportMapper mapper) {
+    public OrderSummaryReportDataProvider(OrderSummaryReportMapper mapper, ConfigurationSettingService configurationService) {
         this.reportMapper = mapper;
+        this.configurationService = configurationService;
     }
 
     @Override
@@ -72,18 +75,22 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
             orderReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
             orderReportFilter.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
             orderReportFilter.setFacilityType( (filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "ALL Facilities" : filterCriteria.get("facilityType")[0]);
-            orderReportFilter.setFacility(filterCriteria.get("facilityName") == null ? "" : filterCriteria.get("facilityName")[0]);
-            orderReportFilter.setFacilityTypeId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0])); //defaults to 0
 
             orderReportFilter.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0])); //defaults to 0
-
-            orderReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
+            orderReportFilter.setSchedule(filterCriteria.get("schedule")[0]);
+            //orderReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
 
             orderReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
+            if(orderReportFilter.getProductId() == 0){
+                orderReportFilter.setProduct("All Products");
+            }else if(orderReportFilter.getProductId() == -1){
+                orderReportFilter.setProduct(configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS).isEmpty() ? "Indicator Products" : configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS));
+            }
             orderReportFilter.setOrderType(filterCriteria.get("orderType") == null ? "" : filterCriteria.get("orderType")[0]);
             orderReportFilter.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0])); //defaults to 0
+            orderReportFilter.setPeriod(filterCriteria.get("period")[0]);
             orderReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
-
+            orderReportFilter.setProgram(filterCriteria.get("program")[0]);
             }
         return orderReportFilter;
     }

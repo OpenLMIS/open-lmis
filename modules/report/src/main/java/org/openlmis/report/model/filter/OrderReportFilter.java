@@ -45,7 +45,10 @@ public class OrderReportFilter implements ReportData {
     public String toString(){
 
         StringBuilder filtersValue = new StringBuilder("");
-        filtersValue.append("Facility Types : ").append(this.getFacilityType()).append("\n");
+        filtersValue.append("Program : ").append(this.program).append("\n").
+                append("Schedule : ").append(this.schedule).append("\n").
+                append("Period : ").append(this.period).append("\n").
+                append("Product : ").append(this.product).append("\n");
 
         return filtersValue.toString();
     }
