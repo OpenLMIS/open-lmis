@@ -87,7 +87,7 @@ public class DriverFactory {
 
         case "chromeM":
             unZip = new Unzip();
-            unZip.unZipIt(INPUT_ZIP_FILE_CHROMEDRIVER, OUTPUT_FOLDER);
+            unZip.unZipIt(INPUT_ZIP_FILE_CHROMEDRIVER_MAC, OUTPUT_FOLDER);
             Thread.sleep(1500);
             driverType = setProperty("webdriver.chrome.driver", OUTPUT_FOLDER + "chromedriver 2");
             driverType = getProperty("webdriver.chrome.driver");

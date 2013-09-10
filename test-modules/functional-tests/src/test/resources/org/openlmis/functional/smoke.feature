@@ -471,3 +471,32 @@ Feature: Smoke Tests
     And I verify saved "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               | mai ka         | lal             |
+
+  @offline
+  Scenario: Offline User should fill general observation data
+    Given I have the following data for distribution:
+      | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I have data available for "Multiple" facilities attached to delivery zones
+    And I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
+    When I am logged in as "storeincharge"
+    And I access plan my distribution page
+    And I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period14"
+    And I initiate distribution
+    And I record data
+    And I choose facility "F10"
+    And I navigate to general observations tab
+    Then Verify "general observation" indicator should be "RED"
+    When I Enter "general observation" values:
+      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
+      | some observation | samuel          | fc               |                |                 |
+    Then Verify "general observation" indicator should be "AMBER"
+    When I Enter "general observation" values:
+      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
+      | some observation | samuel          | fc               | mai ka         | lal             |
+    Then Verify "general observation" indicator should be "GREEN"
+    And I verify saved "general observation" values:
+      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
+      | some observation | samuel          | fc               | mai ka         | lal             |
