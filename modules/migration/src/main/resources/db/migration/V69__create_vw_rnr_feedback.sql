@@ -4,7 +4,7 @@
 2013-09-09 Muhammad Ahmed - created
 
 */
-DROP VIEW vw_rnr_feedback;
+DROP VIEW IF EXISTS vw_rnr_feedback;
 
 CREATE OR REPLACE VIEW vw_rnr_feedback AS 
  SELECT vw_requisition_detail.program_id, vw_requisition_detail.program_name, 
