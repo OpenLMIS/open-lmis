@@ -21,12 +21,12 @@
             <div class="span2">
               <div ng-show="!regimen.editable"><span ng-bind="regimen.code"></span></div>
               <input name="regimenCode" type="text" ng-model="regimen.code" ng-required="true"
-                     ng-show="regimen.editable"/>
+                     ng-show="regimen.editable" maxlength="50"/>
             </div>
             <div class="span4">
               <div ng-show="!regimen.editable"><span ng-bind="regimen.name"></span></div>
               <input name="regimenName" type="text" ng-model="regimen.name" ng-required="true"
-                     ng-show="regimen.editable"/>
+                     ng-show="regimen.editable" maxlength="50"/>
             </div>
             <div class="span2">
               <input type="checkbox" ng-model="regimen.active" ng-disabled="!regimen.editable" />
