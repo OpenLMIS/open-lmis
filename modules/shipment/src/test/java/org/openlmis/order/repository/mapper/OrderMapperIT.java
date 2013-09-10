@@ -20,6 +20,7 @@ import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
+import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
@@ -46,7 +47,7 @@ import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
-import static org.openlmis.order.domain.OrderStatus.PACKED;
+import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 
 @Category(IntegrationTests.class)
@@ -101,6 +102,7 @@ public class OrderMapperIT {
   public void shouldInsertOrder() throws Exception {
     Rnr rnr = insertRequisition(1L);
     Order order = new Order(rnr);
+    order.setStatus(OrderStatus.IN_ROUTE);
     order.setSupplyLine(supplyLine);
     mapper.insert(order);
     List<Long> orderIds = new ArrayList();
@@ -134,14 +136,19 @@ public class OrderMapperIT {
 
   @Test
   public void shouldGetShipmentFileInfoWhileFetchingOrders() throws Exception {
-    Order order1 = insertOrder(3L);
+    Rnr rnr = insertRequisition(3L);
+    Order order = new Order(rnr);
+    order.setStatus(RELEASED);
+    order.setSupplyLine(supplyLine);
+    mapper.insert(order);
+
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
     shipmentFileInfo.setFileName("abc.csv");
     shipmentFileInfo.setProcessingError(false);
     shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
 
-    order1.updateShipmentFileInfo(shipmentFileInfo);
-    mapper.updateShipmentInfo(order1);
+    order.updateShipmentFileInfo(shipmentFileInfo);
+    mapper.updateShipmentInfo(order);
 
     List<Order> orders = mapper.getAll();
     assertThat(orders.get(0).getShipmentFileInfo().getFileName(), is("abc.csv"));
@@ -152,6 +159,7 @@ public class OrderMapperIT {
   public void shouldUpdateStatusAndShipmentIdForOrder() throws Exception {
     Rnr rnr = insertRequisition(1L);
     Order order = new Order(rnr);
+    order.setStatus(RELEASED);
     order.setSupplyLine(supplyLine);
     mapper.insert(order);
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
@@ -162,7 +170,7 @@ public class OrderMapperIT {
 
     mapper.updateShipmentInfo(order);
 
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE rnrid=?", asList(order.getRnr().getId()));
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE rnrId = ?", asList(order.getRnr().getId()));
 
     resultSet.next();
 
@@ -216,6 +224,20 @@ public class OrderMapperIT {
     assertThat(orderFileColumns.contains(orderFileColumn), is(true));
   }
 
+  @Test
+  public void shouldUpdateOrderStatusAndFtpComments() throws Exception {
+    Order order = insertOrder(1L);
+    order.setStatus(TRANSFER_FAILED);
+    String ftpComment = "Supply line missing";
+    order.setFtpComment(ftpComment);
+
+    mapper.updateOrderStatus(order);
+
+    Order savedOrder = mapper.getById(order.getId());
+    assertThat(savedOrder.getStatus(), is(TRANSFER_FAILED));
+    assertThat(savedOrder.getFtpComment(), is(ftpComment));
+  }
+
   private long updateOrderCreatedTime(Order order, Date date) throws SQLException {
     List paramList = new ArrayList();
     paramList.add(new java.sql.Date(date.getTime()));
@@ -226,6 +248,7 @@ public class OrderMapperIT {
   private Order insertOrder(Long programId) {
     Rnr rnr = insertRequisition(programId);
     Order order = new Order(rnr);
+    order.setStatus(OrderStatus.IN_ROUTE);
     order.setSupplyLine(supplyLine);
     mapper.insert(order);
     return order;

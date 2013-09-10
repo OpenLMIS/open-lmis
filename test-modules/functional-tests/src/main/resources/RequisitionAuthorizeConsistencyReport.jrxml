@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="782" pageHeight="555" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="782" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="a0a4e861-0726-422f-b3d5-54b1aefe96ce">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<queryString>
+		<![CDATA[WITH RECURSIVE sp_node(snid, snparentid) AS (
+  (SELECT
+     id,
+     parentid
+   FROM supervisory_nodes)
+  UNION ALL (SELECT
+               sn.id,
+               spn.snparentid
+             FROM supervisory_nodes sn
+               JOIN sp_node spn
+                 ON sn.parentid = spn.snid
+  )
+),
+    program_facility_with_users_in_hierarchy (program_id, facility_id, right_name, user_active, user_verified, user_id) AS (
+    SELECT
+      ps.programid,
+      f.id,
+      rr.rightname,
+      u.active,
+      u.verified,
+      u.id
+
+    FROM facilities f INNER JOIN requisition_group_members rgm
+        ON f.id = rgm.facilityid
+      INNER JOIN programs_supported ps
+        ON f.id = ps.facilityid
+      INNER JOIN requisition_groups rg
+        ON rgm.requisitiongroupid = rg.id
+      INNER JOIN requisition_group_program_schedules rgps
+        ON ps.programid = rgps.programid AND rgm.requisitiongroupid = rgps.requisitiongroupid
+      INNER JOIN (SELECT
+                    snid,
+                    CASE
+                    WHEN snparentid IS NULL THEN snid
+                    ELSE snparentid END AS supernodeid
+                  FROM sp_node
+                 ) AS nodes
+        ON rg.supervisorynodeid = nodes.snid
+      LEFT JOIN role_assignments ra
+        ON nodes.supernodeid = ra.SUPERVISORYNODEID AND ps.programid = ra.programid
+      LEFT JOIN users u
+        ON ra.userid = u.id
+      LEFT JOIN role_rights rr
+        ON ra.roleid = rr.roleid
+
+    UNION ALL
+
+    SELECT
+      ps.programid,
+      f.id,
+      rr.rightname,
+      u.active,
+      u.verified,
+      u.id
+    FROM facilities f
+      INNER JOIN programs_supported ps
+        ON f.id = ps.facilityid
+      LEFT JOIN users u
+        ON f.id = u.facilityid
+      LEFT JOIN role_assignments ra
+        ON ps.programid = ra.programid AND u.id = ra.userid AND ra.supervisorynodeid IS NULL
+      LEFT JOIN role_rights rr
+        ON ra.roleid = rr.roleid
+
+  ),
+    active_verified_users_for_supported_programs(programid, facilityid) AS (
+      SELECT
+        program_id,
+        facility_id
+      FROM program_facility_with_users_in_hierarchy
+      WHERE right_name = 'AUTHORIZE_REQUISITION' AND user_active = TRUE AND user_verified = TRUE
+  ),
+    active_unverified_users_for_supported_programs(program_id, facility_id, user_id) AS (
+      SELECT
+        program_id,
+        facility_id,
+        user_id
+      FROM program_facility_with_users_in_hierarchy
+      WHERE right_name = 'AUTHORIZE_REQUISITION' AND user_active = TRUE AND user_verified = FALSE
+
+  )
+
+SELECT
+  DISTINCT
+  f.code                                         AS facility_code,
+  f.name                                         AS facility_name,
+  f.active                                       AS facility_active,
+  p.name                                         AS program_name,
+  sn.code                                        AS supervisory_node_code,
+  sn.name                                        AS supervisory_node_name,
+  CASE WHEN u.active = FALSE THEN COALESCE('')
+  ELSE
+    COALESCE(u.username, '') END AS userId_unverified
+
+FROM program_facility_with_users_in_hierarchy pfwu INNER JOIN programs p
+    ON pfwu.program_id = p.id AND p.push = FALSE
+  LEFT JOIN users u
+    ON pfwu.user_id = u.id
+  INNER JOIN facilities f
+    ON pfwu.facility_id = f.id
+  LEFT JOIN requisition_group_members rgm
+    ON f.id = rgm.facilityid
+  LEFT JOIN requisition_group_program_schedules rgps
+    ON p.id = rgps.programid
+  LEFT JOIN requisition_groups rg
+    ON rgps.requisitiongroupid = rg.id
+  LEFT JOIN supervisory_nodes sn
+    ON rg.supervisorynodeid = sn.id
+WHERE (pfwu.program_id NOT IN (SELECT
+                                 programid
+                               FROM active_verified_users_for_supported_programs) OR pfwu.facility_id NOT IN (SELECT
+                                                                                                                facilityid
+                                                                                                              FROM
+                                                                                                                active_verified_users_for_supported_programs
+                                                                                                              WHERE
+                                                                                                                programid
+                                                                                                                =
+                                                                                                                pfwu.program_id))
+      AND (CASE WHEN (pfwu.program_id NOT IN (SELECT
+                                                program_id
+                                              FROM active_unverified_users_for_supported_programs) OR
+                      pfwu.facility_id NOT IN (SELECT
+                                                 facility_id
+                                               FROM active_unverified_users_for_supported_programs
+                                               WHERE program_id = pfwu.program_id)
+) THEN (u.active = FALSE OR u IS NULL)
+           ELSE u.id IN (SELECT
+                           user_id
+                         FROM active_unverified_users_for_supported_programs
+                         WHERE facility_id = pfwu.facility_id AND program_id = pfwu.program_id)
+           END)
+      AND rgm.requisitiongroupid = rgps.requisitiongroupid AND f.enabled = TRUE AND p.active = TRUE AND p.push = FALSE
+      AND f.virtualfacility = false AND f.satellite <> true
+ORDER BY f.code, p.name, sn.code]]>
+	</queryString>
+	<field name="facility_code" class="java.lang.String"/>
+	<field name="facility_name" class="java.lang.String"/>
+	<field name="facility_active" class="java.lang.Boolean"/>
+	<field name="program_name" class="java.lang.String"/>
+	<field name="supervisory_node_code" class="java.lang.String"/>
+	<field name="supervisory_node_name" class="java.lang.String"/>
+	<field name="userid_unverified" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="32">
+			<staticText>
+				<reportElement uuid="212194e9-72ca-4321-8f61-a735ab2074b7" x="-1" y="0" width="710" height="32"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="24" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Unassigned Facilities - Authorize Requisition]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="2dd094dc-e4b5-43c0-89ab-02f2dda79bb5" x="710" y="0" width="72" height="32"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="ef159a2f-33d9-42ba-9b59-6670c74bd785" x="327" y="0" width="101" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Program Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9a07393f-5522-4bce-9f72-d87cd57c5a0d" x="428" y="0" width="222" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Supervisory Node Code - Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d949733d-046b-41aa-a2a4-3d5c0bd9170a" x="61" y="0" width="176" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Facility Code - Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a3153510-d287-46ad-835a-df817aa47786" x="238" y="0" width="89" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Facility Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5a7f10ba-925c-4ca7-b48a-4feb4161ed64" x="0" y="0" width="61" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[S.No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7a2bce85-864e-42e7-9581-125974028476" x="650" y="0" width="132" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[User Id - Unverified]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="20">
+			<textField>
+				<reportElement uuid="0cb682e4-45b1-4bae-a3c3-5f9512886f9f" x="0" y="0" width="61" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="656d8893-0a9d-43ba-bc9d-337b6af09873" x="62" y="0" width="176" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{facility_code}+'-'+$F{facility_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2d97d1a7-f057-497d-98f4-376032bdf48f" x="238" y="0" width="89" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{facility_active}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3b6201ef-3bb6-4bb5-bf4b-5560f753e6ae" x="327" y="0" width="101" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{program_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a2f59c46-025d-4328-8b47-c18385282767" x="428" y="0" width="222" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{supervisory_node_code}+'-'+$F{supervisory_node_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="14e89f25-8081-42c8-be94-070ffee23547" x="650" y="0" width="132" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{userid_unverified}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20">
+			<textField>
+				<reportElement uuid="1abcd2c7-1ce1-4a4b-a6cd-4885e7254155" x="710" y="0" width="72" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2e4a2985-b901-4963-b62f-68c26194b7c3" x="0" y="0" width="710" height="20"/>
+				<textElement/>
+				<text><![CDATA[ ]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="52">
+			<staticText>
+				<reportElement uuid="488f93d8-d2fe-4df6-8769-af621a8e549b" x="0" y="32" width="782" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="15"/>
+				</textElement>
+				<text><![CDATA[No problems found.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6659ba1e-006b-4f7f-9238-092a1177a2f6" x="0" y="0" width="782" height="32"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="24" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Unassigned Facilities - Authorize Requisition]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

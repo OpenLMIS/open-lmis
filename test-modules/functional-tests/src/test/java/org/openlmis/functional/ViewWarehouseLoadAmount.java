@@ -58,7 +58,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   public String product = "P10";
   public String product2 = "P11";
 
-  @BeforeMethod(groups = "functional2")
+  @BeforeMethod(groups = "distribution")
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -156,7 +156,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     assertEquals(message, warehouseLoadAmountPage.getNoRecordFoundMessage());
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Multiple-Facilities")
+  @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function-Multiple-Facilities")
   public void testShouldVerifyAggregateISAForDeliveryZoneNegativeScenarios(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                                                            String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                                            String facilityCodeFirst, String facilityCodeSecond, String facilityCodeThird, String facilityCodeFourth,
@@ -221,7 +221,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Multiple-GeoZones")
+  @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function-Multiple-GeoZones")
   public void testShouldVerifyMultipleGeographicZones(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                                       String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                       String facilityCodeFirst, String facilityCodeSecond,
@@ -303,7 +303,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
 
-  @AfterMethod(groups = "functional2")
+  @AfterMethod(groups = "distribution")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

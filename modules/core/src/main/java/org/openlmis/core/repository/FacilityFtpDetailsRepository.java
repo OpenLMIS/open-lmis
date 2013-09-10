@@ -7,6 +7,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityFtpDetails;
 import org.openlmis.core.repository.mapper.FacilityFtpDetailsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ public class FacilityFtpDetailsRepository {
     mapper.insert(facilityFtpDetails);
   }
 
-  public FacilityFtpDetails getByFacilityCode(String facilityCode) {
-    return mapper.getByFacilityCode(facilityCode);
+  public FacilityFtpDetails getByFacilityId(Facility facility) {
+    return mapper.getByFacilityId(facility);
   }
 
 }

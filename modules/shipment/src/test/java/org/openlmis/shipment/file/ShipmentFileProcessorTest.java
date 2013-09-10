@@ -5,114 +5,207 @@
  */
 package org.openlmis.shipment.file;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.db.service.DbService;
-import org.openlmis.shipment.domain.ShippedLineItem;
-import org.openlmis.shipment.file.csv.handler.ShipmentFilePostProcessHandler;
-import org.openlmis.upload.RecordHandler;
-import org.openlmis.upload.exception.UploadException;
-import org.openlmis.upload.model.AuditFields;
-import org.openlmis.upload.model.ModelClass;
-import org.openlmis.upload.parser.CSVParser;
+import org.openlmis.order.dto.ShipmentLineItemDTO;
+import org.openlmis.shipment.ShipmentLineItemTransformer;
+import org.openlmis.shipment.domain.ShipmentConfiguration;
+import org.openlmis.shipment.domain.ShipmentFileColumn;
+import org.openlmis.shipment.domain.ShipmentFileTemplate;
+import org.openlmis.shipment.domain.ShipmentLineItem;
+import org.openlmis.shipment.handler.ShipmentFilePostProcessHandler;
+import org.openlmis.shipment.handler.ShipmentFileProcessor;
+import org.openlmis.shipment.service.ShipmentFileTemplateService;
+import org.openlmis.shipment.service.ShipmentService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
 import org.springframework.integration.support.MessageBuilder;
+import org.supercsv.io.CsvListReader;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.Date;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.doThrow;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.openlmis.shipment.builder.ShipmentFileColumnBuilder.*;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ShipmentFileProcessor.class, MessageBuilder.class})
 public class ShipmentFileProcessorTest {
-  @Mock
-  private CSVParser csvParser;
-  @Mock
-  private RecordHandler shipmentRecordHandler;
+
   @Mock
   private ShipmentFilePostProcessHandler shipmentFilePostProcessHandler;
-  @Mock
-  private DbService dbService;
+
   @Mock
   MessageChannel ftpArchiveOutputChannel;
+
+  @Mock
+  ShipmentFileTemplateService shipmentFileTemplateService;
+
+  @Mock
+  ShipmentService shipmentService;
+
+  @Mock
+  Message message;
+
+  @Mock
+  File shipmentFile;
+
+  @Mock
+  FileInputStream shipmentInputStream;
+
+  @Mock
+  ShipmentLineItemTransformer shipmentLineItemTransformer;
+
+  @Mock
+  FileReader mockedFileReader;
+
+  @Mock
+  CsvListReader mockedCsvListReader;
+
   @InjectMocks
   private ShipmentFileProcessor shipmentFileProcessor;
 
-  @Test
-  public void shouldProcessCsvFileFromMessage() throws Exception {
-    Message message = mock(Message.class);
-    mockStatic(MessageBuilder.class);
-    File shipmentFile = mock(File.class);
-    FileInputStream shipmentInputStream = mock(FileInputStream.class);
-    ModelClass shipmentModelClass = new ModelClass(ShippedLineItem.class, true);
-    AuditFields auditFields = new AuditFields();
-    Date currentTimeStamp = new Date();
+  ShipmentConfiguration shipmentConfiguration;
+
+  @Before
+  public void setUp() throws Exception {
 
     when(message.getPayload()).thenReturn(shipmentFile);
-    MessageBuilder<File> messageBuilder = mock(MessageBuilder.class);
-    when(MessageBuilder.withPayload(shipmentFile)).thenReturn(messageBuilder);
-    when(messageBuilder.build()).thenReturn(message);
-    when(dbService.getCurrentTimestamp()).thenReturn(currentTimeStamp);
     whenNew(FileInputStream.class).withArguments(shipmentFile).thenReturn(shipmentInputStream);
-    whenNew(ModelClass.class).withArguments(ShippedLineItem.class, true).thenReturn(shipmentModelClass);
-    whenNew(AuditFields.class).withArguments(currentTimeStamp).thenReturn(auditFields);
-    shipmentFileProcessor.process(message);
+    whenNew(FileReader.class).withArguments(shipmentFile).thenReturn(mockedFileReader);
+    whenNew(CsvListReader.class).withArguments(mockedFileReader, STANDARD_PREFERENCE).thenReturn(mockedCsvListReader);
 
-    verify(csvParser).process(shipmentInputStream, shipmentModelClass, shipmentRecordHandler, auditFields);
-    verify(shipmentFilePostProcessHandler).process(shipmentFile, false);
-    verify(ftpArchiveOutputChannel).send(message);
+    shipmentConfiguration = new ShipmentConfiguration(false);
   }
 
   @Test
-  public void shouldProcessInvalidFileWhenUploadExceptionIsEncountered() throws Exception {
-    Message message = mock(Message.class);
-    File shipmentFile = mock(File.class);
-    FileInputStream shipmentInputStream = mock(FileInputStream.class);
-    ModelClass shipmentModelClass = new ModelClass(ShippedLineItem.class, true);
+  public void shouldThrowErrorIfNotEnoughFieldsInShipmentFile() throws Exception {
 
-    when(message.getPayload()).thenReturn(shipmentFile);
-    whenNew(FileInputStream.class).withArguments(shipmentFile).thenReturn(shipmentInputStream);
-    whenNew(ModelClass.class).withArguments(ShippedLineItem.class, true).thenReturn(shipmentModelClass);
-    doThrow(new UploadException("message")).when(csvParser).
-      process(eq(shipmentInputStream), eq(shipmentModelClass), eq(shipmentRecordHandler), any(AuditFields.class));
+    List<ShipmentFileColumn> shipmentFileColumnList = asList(
+      make(a(mandatoryShipmentFileColumn, with(columnPosition, 1))),
+      make(a(mandatoryShipmentFileColumn, with(columnPosition, 2))),
+      make(a(mandatoryShipmentFileColumn, with(columnPosition, 3)))
+    );
 
-    shipmentFileProcessor.process(message);
+    ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumnList);
 
-    verify(shipmentFilePostProcessHandler).process(shipmentFile, true);
+    when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
+
+    when(mockedCsvListReader.read()).thenReturn(asList("field1", "field2")).thenReturn(null);
+
+    try {
+      shipmentFileProcessor.process(message);
+    } catch (Exception e) {
+      assertThat(e.getMessage(), is("mandatory.data.missing"));
+    }
+
+    verify(shipmentService, times(0)).insertShippedLineItem(any(ShipmentLineItem.class));
+
+    verify(shipmentFilePostProcessHandler).process(new HashSet<Long>(), shipmentFile, true);
   }
 
   @Test
-  public void shouldProcessInvalidFileWhenDataExceptionIsEncountered() throws Exception {
-    Message message = mock(Message.class);
-    File shipmentFile = mock(File.class);
-    FileInputStream shipmentInputStream = mock(FileInputStream.class);
-    ModelClass shipmentModelClass = new ModelClass(ShippedLineItem.class, true);
+  public void shouldInsertLineItemsIfAllIncludedFieldsArePresent() throws Exception {
 
-    when(message.getPayload()).thenReturn(shipmentFile);
-    whenNew(FileInputStream.class).withArguments(shipmentFile).thenReturn(shipmentInputStream);
-    whenNew(ModelClass.class).withArguments(ShippedLineItem.class, true).thenReturn(shipmentModelClass);
-    doThrow(new DataException("message")).when(csvParser).
-      process(eq(shipmentInputStream), eq(shipmentModelClass), eq(shipmentRecordHandler), any(AuditFields.class));
+    List<ShipmentFileColumn> shipmentFileColumnList = new ArrayList<ShipmentFileColumn>() {{
+      add(make(a(mandatoryShipmentFileColumn, with(fieldName, "orderId"), with(columnPosition, 2))));
+      add(make(a(defaultShipmentFileColumn, with(columnPosition, 4), with(includeInShipmentFile, false))));
+      add(make(a(defaultShipmentFileColumn, with(columnPosition, 6), with(includeInShipmentFile, false))));
+    }};
+
+    ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumnList);
+
+    when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
+
+    when(mockedCsvListReader.read()).thenReturn(asList("", "232")).thenReturn(null);
+    ShipmentLineItem lineItem = new ShipmentLineItem();
+    lineItem.setOrderId(232L);
+    when(shipmentLineItemTransformer.transform(any(ShipmentLineItemDTO.class), anyString(), anyString())).thenReturn(lineItem);
 
     shipmentFileProcessor.process(message);
 
-    verify(shipmentFilePostProcessHandler).process(shipmentFile, true);
+    verify(mockedCsvListReader, times(0)).getHeader(true);
+    verify(shipmentService, times(1)).insertShippedLineItem(any(ShipmentLineItem.class));
+
+    Set<Long> orderIds = new HashSet<>();
+    orderIds.add(232L);
+    verify(shipmentFilePostProcessHandler).process(orderIds, shipmentFile, false);
+  }
+
+  @Test
+  public void shouldRemoveHeadersIfPresentInCsv() throws Exception {
+
+    List<ShipmentFileColumn> shipmentFileColumnList = asList(
+      make(a(mandatoryShipmentFileColumn, with(columnPosition, 2)))
+    );
+
+    boolean headerInFile = true;
+    ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(new ShipmentConfiguration(headerInFile), shipmentFileColumnList);
+
+    when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
+
+    when(mockedCsvListReader.read()).thenReturn(null);
+
+    shipmentFileProcessor.process(message);
+
+    verify(mockedCsvListReader).getHeader(true);
+    verify(shipmentFilePostProcessHandler).process(new HashSet<Long>(), shipmentFile, false);
+
+
+  }
+
+  @Test
+  public void shouldCreateDTOIfDateFieldsArePresent() throws Exception {
+    List<ShipmentFileColumn> shipmentFileColumnList = asList(
+      make(a(mandatoryShipmentFileColumn,
+        with(columnPosition, 1),
+        with(fieldName, "packedDate"),
+        with(dateFormat, "MM/yy")
+      )),
+      make(a(defaultShipmentFileColumn,
+        with(columnPosition, 2),
+        with(fieldName, "shippedDate"),
+        with(dateFormat, "dd/MM/yyyy")
+      )));
+
+    ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumnList);
+
+    when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
+
+    when(mockedCsvListReader.read()).thenReturn(asList("11/13", "11/11/2011")).thenReturn(null);
+
+    ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO();
+    shipmentLineItemDTO.setPackedDate("11/13");
+    shipmentLineItemDTO.setShippedDate("11/11/2011");
+    ShipmentLineItem shipmentLineItem = mock(ShipmentLineItem.class);
+    when(shipmentLineItem.getOrderId()).thenReturn(111L);
+    when(shipmentLineItemTransformer.transform(shipmentLineItemDTO, "MM/yy", "dd/MM/yyyy")).thenReturn(shipmentLineItem);
+
+    shipmentFileProcessor.process(message);
+
+    verify(shipmentService).insertShippedLineItem(shipmentLineItem);
+
+    Set<Long> orderIds = new HashSet<>();
+    orderIds.add(111L);
+    verify(shipmentFilePostProcessHandler).process(orderIds, shipmentFile, false);
   }
 }

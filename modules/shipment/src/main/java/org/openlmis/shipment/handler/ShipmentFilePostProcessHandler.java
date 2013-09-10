@@ -4,13 +4,12 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.shipment.file.csv.handler;
+package org.openlmis.shipment.handler;
 
 import lombok.NoArgsConstructor;
+import org.apache.log4j.Logger;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.service.ShipmentService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
@@ -18,30 +17,29 @@ import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Set;
 
 @Component
 @NoArgsConstructor
 public class ShipmentFilePostProcessHandler {
 
-  private static Logger logger = LoggerFactory.getLogger(ShipmentFilePostProcessHandler.class);
   @Autowired
+
   private ShipmentService shipmentService;
+
   @Autowired
   private MessageChannel ftpOutputChannel;
-  @Autowired
-  private ShipmentFileReader shipmentFileReader;
+
+  private static final Logger logger = Logger.getLogger(ShipmentFilePostProcessHandler.class);
 
 
-  public void process(File shipmentFile, boolean processingError) {
-    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo(shipmentFile.getName(), processingError);
+  public void process(Set<Long> orderIds, File shipmentFile, boolean error) {
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo(shipmentFile.getName(), error);
     shipmentService.insertShipmentFileInfo(shipmentFileInfo);
 
-    Set<Long> orderIds = shipmentFileReader.getOrderIds(shipmentFile);
-    shipmentService.updateStatusAndShipmentIdForOrders(new ArrayList(orderIds), shipmentFileInfo);
+    shipmentService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
 
-    if (processingError) sendErrorFileToFtp(shipmentFile);
+    if (error) sendErrorFileToFtp(shipmentFile);
   }
 
   private void sendErrorFileToFtp(File file) {

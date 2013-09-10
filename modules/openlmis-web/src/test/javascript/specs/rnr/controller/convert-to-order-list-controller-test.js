@@ -19,10 +19,10 @@ describe('ConvertToOrderListController', function () {
     httpBackend = $httpBackend;
 
     requisitionList = [
-      {"facilityName":"first facility", "programName":"first program", "facilityCode":"first code", supplyingDepot:"supplying depot first "},
-      {"facilityName":"second facility", "programName":"second program", "facilityCode":"second code", supplyingDepot:"supplying depot second"}
+      {"facilityName": "first facility", "programName": "first program", "facilityCode": "first code", supplyingDepot: "supplying depot first "},
+      {"facilityName": "second facility", "programName": "second program", "facilityCode": "second code", supplyingDepot: "supplying depot second"}
     ];
-    ctrl = controller(ConvertToOrderListController, {$scope:scope, requisitionList:requisitionList});
+    ctrl = controller(ConvertToOrderListController, {$scope: scope, requisitionList: requisitionList});
   }));
 
   it('should show all requisitions if filter is not applied', function () {
@@ -90,7 +90,7 @@ describe('ConvertToOrderListController', function () {
   });
 
   it("should convert the selected requisitions to order", function () {
-    httpBackend.expectPOST('/orders.json', scope.gridOptions.selectedItems).respond(200);
+    httpBackend.expectPOST('/orders.json', scope.gridOptions.selectedItems).respond(201);
     httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list":[requisitionList[1]]});
     scope.dialogCloseCallback(true);
 
@@ -111,15 +111,30 @@ describe('ConvertToOrderListController', function () {
 
   it('should convert to order if ok is clicked on the confirm modal', function () {
     scope.gridOptions.selectedItems = [requisitionList[0]];
-    httpBackend.expectPOST('/orders.json', scope.gridOptions.selectedItems).respond(200);
+    httpBackend.expectPOST('/orders.json', scope.gridOptions.selectedItems).respond(201);
     httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list":[requisitionList[1]]});
     scope.dialogCloseCallback(true);
     httpBackend.flush();
     expect(scope.message).toEqual("msg.rnr.converted.to.order");
+    expect(scope.error).toEqual("");
     expect(scope.selectedItems.length).toEqual(0);
   });
 
-  it('should give message if no requisition selected', function() {
+  it('should show error message if ok is clicked on the confirm modal ' +
+    'and some requistions have already been converted to order', function () {
+    scope.gridOptions.selectedItems = [requisitionList[0]];
+    httpBackend.expectPOST('/orders.json', scope.gridOptions.selectedItems).
+      respond(409, {"error": "msg.rnr.already.converted.to.order"});
+    httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list": [requisitionList[1]]});
+    scope.dialogCloseCallback(true);
+    httpBackend.flush();
+    expect(scope.message).toEqual("");
+    expect(scope.error).toEqual("msg.rnr.already.converted.to.order");
+    expect(scope.selectedItems.length).toEqual(0);
+    expect(scope.requisitions).toEqual([requisitionList[1]]);
+  });
+
+  it('should give message if no requisition selected', function () {
     scope.gridOptions.selectedItems = [];
     scope.convertToOrder();
 

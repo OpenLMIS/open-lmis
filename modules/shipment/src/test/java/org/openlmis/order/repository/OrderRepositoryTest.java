@@ -6,16 +6,20 @@
 
 package org.openlmis.order.repository;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.repository.mapper.OrderMapper;
+import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +27,16 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class OrderRepositoryTest {
+
+  @Rule
+  public ExpectedException exception = none();
 
   @Mock
   private OrderMapper orderMapper;
@@ -99,11 +107,27 @@ public class OrderRepositoryTest {
     verify(orderMapper, times(1)).insertOrderFileColumn(orderFileColumn);
   }
 
+  @Test
+  public void shouldThrowDataExceptionForDuplicateRnrToOrderConversion() {
+    Order order = new Order();
 
-  private OrderFileColumn getOrderFileColumn(Long id, String label) {
-    OrderFileColumn orderFileColumn = new OrderFileColumn();
-    orderFileColumn.setId(id);
-    orderFileColumn.setColumnLabel(label);
-    return orderFileColumn;
+    doThrow(new DuplicateKeyException("Error updating database.")).when(orderMapper).insert(order);
+
+    exception.expect(DataException.class);
+    exception.expectMessage("msg.rnr.already.converted.to.order");
+
+    orderRepository.save(order);
+
+    verify(orderMapper).insert(order);
   }
+
+  @Test
+  public void shouldUpdateOrderStatusAndFtpComment() throws Exception {
+    Order order = new Order();
+
+    orderRepository.updateOrderStatus(order);
+
+    verify(orderMapper).updateOrderStatus(order);
+  }
+
 }

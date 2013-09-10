@@ -29,7 +29,7 @@ public class ReportData extends TestCaseHelper {
 
   private static String downloadedFilePath = new File(System.getProperty("user.dir")).getParent()+separator+"csv";
 
-  @BeforeMethod(groups = {"functional"})
+  @BeforeMethod(groups = {"distribution"})
   public void setUp() throws Exception {
     super.setup();
   }
@@ -50,7 +50,7 @@ public class ReportData extends TestCaseHelper {
     return (readCSVFile(downloadedFilePath));
   }
 
-  @AfterMethod(groups = {"functional"})
+  @AfterMethod(groups = {"distribution"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);

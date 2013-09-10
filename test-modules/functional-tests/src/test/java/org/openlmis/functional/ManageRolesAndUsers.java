@@ -54,7 +54,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public static final String facilityCodePrefix = "FCcode";
   public static final String facilityNamePrefix = "FCname";
 
-  @BeforeMethod(groups = {"functional2"})
+  @BeforeMethod(groups = {"admin"})
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -119,7 +119,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
         dbWrapper.updateUser("abc123", email);
     }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyRightsUponOK(String user, String program, String[] credentials) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -140,7 +140,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), true);
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyRightsUponCancel(String user, String program, String[] credentials) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -156,7 +156,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), false);
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyDuplicateRoleName(String user, String program, String[] credentials) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -167,7 +167,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertEquals(rolesPage.getSaveErrorMsgDiv().getText().trim(),"Duplicate Role found");
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EManageRolesAndFacility(String user, String program, String[] credentials, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                             String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                             String facilityCodeFirst, String facilityCodeSecond,
@@ -230,7 +230,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testCreateUserAndVerifyOnManageDistributionScreen(String user, String program, String[] credentials, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                             String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                             String facilityCodeFirst, String facilityCodeSecond,
@@ -256,7 +256,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   }
 
-    @Test(groups = {"functional2"}, dataProvider = "Data-Provider-Function")
+    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
     public void testCreateSearchResetPasswordUser(String user, String program, String[] credentials)throws Exception {
 
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);

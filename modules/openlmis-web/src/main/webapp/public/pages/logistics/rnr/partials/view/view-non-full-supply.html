@@ -5,9 +5,9 @@
   -->
 
 <div ng-controller="ViewNonFullSupplyController">
-  <div class="rnr-table">
+  <div class="rnr-table" custom-horizontal-scroll>
     <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="label.no.products"></div>
-    <table id="nonFullSupplyTable" class="table table-bordered">
+    <table id="nonFullSupplyTable" class="table table-bordered scrollable">
       <thead>
       <tr ng-show="pageLineItems.length">
         <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleNonFullSupplyColumns"

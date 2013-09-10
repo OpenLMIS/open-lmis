@@ -21,6 +21,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
+import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
@@ -71,22 +72,27 @@ public class OrderServiceTest {
   @Test
   public void shouldConvertRequisitionsToOrder() throws Exception {
     Program program = new Program();
+    Long userId = 1L;
     Rnr rnr = new Rnr();
     rnr.setId(1L);
     rnr.setSupervisoryNodeId(1L);
     rnr.setProgram(program);
+
+    SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setExportOrders(Boolean.TRUE);
+
     when(requisitionService.getLWById(1L)).thenReturn(rnr);
     SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
     whenNew(SupervisoryNode.class).withArguments(1l).thenReturn(supervisoryNode);
-    SupplyLine supplyLine = new SupplyLine();
     when(supplyLineService.getSupplyLineBy(supervisoryNode, program)).thenReturn(supplyLine);
+
     List<Rnr> rnrList = new ArrayList<>();
     rnrList.add(rnr);
-    Long userId = 1L;
 
     orderService.convertToOrder(rnrList, userId);
 
     Order order = new Order(rnr);
+    order.setStatus(OrderStatus.IN_ROUTE);
     order.setSupplyLine(supplyLine);
     verify(orderRepository).save(order);
     verify(supplyLineService).getSupplyLineBy(supervisoryNode, program);
@@ -192,5 +198,12 @@ public class OrderServiceTest {
     );
 
     assertThat(dateFormats, is(expectedDateFormats));
+  }
+
+  @Test
+  public void shouldUpdateOrderStatusAndFtpComment() throws Exception {
+    Order order = new Order();
+    orderService.updateOrderStatus(order);
+    verify(orderRepository).updateOrderStatus(order);
   }
 }

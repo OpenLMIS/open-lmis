@@ -26,7 +26,7 @@ app.directive('formToolbar',function () {
         content.css('min-height', $(window).height() - (headerHeight + navHeight + contentGutterHeight));
       }
 
-      fixToolbarWidth();
+      setTimeout(fixToolbarWidth, 0);
       $(window).on('resize', fixToolbarWidth);
 
     }

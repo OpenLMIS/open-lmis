@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityFtpDetails;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -31,18 +35,25 @@ public class FacilityFtpDetailsMapperIT {
   @Autowired
   FacilityFtpDetailsMapper mapper;
 
+  @Autowired
+  FacilityMapper facilityMapper;
+
   FacilityFtpDetails facilityFtpDetails;
+  Facility facility;
 
   @Before
   public void setUp() throws Exception {
-    facilityFtpDetails = new FacilityFtpDetails("F10", "ftp-host", "ftp-port", "ftp-user", "ftp-password", "ftp-local-path");
+    facility = make(a(FacilityBuilder.defaultFacility));
+    facilityMapper.insert(facility);
+    facilityFtpDetails = new FacilityFtpDetails(facility, "ftp-host", "ftp-port", "ftp-user", "ftp-password", "ftp-local-path");
     mapper.insert(facilityFtpDetails);
   }
 
   @Test
-  public void shouldGetByFacilityCode() throws Exception {
+  public void shouldGetByFacilityId() throws Exception {
 
-    FacilityFtpDetails result = mapper.getByFacilityCode("F10");
+    FacilityFtpDetails result = mapper.getByFacilityId(facility);
+    result.setFacility(facility);
 
     assertThat(result, is(facilityFtpDetails));
   }
@@ -62,7 +73,7 @@ public class FacilityFtpDetailsMapperIT {
 
     mapper.update(facilityFtpDetails);
 
-    FacilityFtpDetails result = mapper.getByFacilityCode(facilityFtpDetails.getFacilityCode());
+    FacilityFtpDetails result = mapper.getByFacilityId(facilityFtpDetails.getFacility());
 
     assertThat(result.getLocalFolderPath(), is("new-path"));
     assertThat(result.getServerHost(), is("new-host"));

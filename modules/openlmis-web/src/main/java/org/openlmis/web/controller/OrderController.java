@@ -6,6 +6,7 @@
 
 package org.openlmis.web.controller;
 
+import org.openlmis.core.exception.DataException;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.dto.OrderDTO;
@@ -25,6 +26,10 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
+import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.openlmis.web.response.OpenLmisResponse.response;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -40,14 +45,20 @@ public class OrderController extends BaseController {
   private OrderService orderService;
 
   @RequestMapping(value = "/orders", method = POST, headers = ACCEPT_JSON)
-  public void convertToOrder(@RequestBody RequisitionList rnrList, HttpServletRequest request) {
-    orderService.convertToOrder(rnrList, loggedInUserId(request));
+  public ResponseEntity<OpenLmisResponse> convertToOrder(@RequestBody RequisitionList rnrList,
+                                                         HttpServletRequest request) {
+    try {
+      orderService.convertToOrder(rnrList, loggedInUserId(request));
+    } catch (DataException de) {
+      return error("msg.rnr.already.converted.to.order", CONFLICT);
+    }
+    return new ResponseEntity<>(CREATED);
   }
 
   @RequestMapping(value = "/orders", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
   public ResponseEntity<OpenLmisResponse> getOrders() {
-    return OpenLmisResponse.response(ORDERS, OrderDTO.getOrdersForView(orderService.getOrders()));
+    return response(ORDERS, OrderDTO.getOrdersForView(orderService.getOrders()));
   }
 
   @RequestMapping(value = "/orders/{id}/download.csv", method = GET, headers = ACCEPT_CSV)
@@ -62,10 +73,10 @@ public class OrderController extends BaseController {
     return modelAndView;
   }
 
-  @RequestMapping(value = "/order-file-template", method = GET,  headers = ACCEPT_JSON)
+  @RequestMapping(value = "/order-file-template", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONFIGURE_EDI')")
   public ResponseEntity<OpenLmisResponse> getOrderFileTemplateDTO() {
-    return OpenLmisResponse.response(ORDER_FILE_TEMPLATE, orderService.getOrderFileTemplateDTO());
+    return response(ORDER_FILE_TEMPLATE, orderService.getOrderFileTemplateDTO());
   }
 
   @RequestMapping(value = "/order-file-template", method = POST, headers = ACCEPT_JSON)
@@ -79,6 +90,6 @@ public class OrderController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONFIGURE_EDI')")
   public ResponseEntity<OpenLmisResponse> getAllDateFormats() {
     Set<DateFormat> dateFormats = orderService.getAllDateFormats();
-    return OpenLmisResponse.response(DATE_FORMATS, dateFormats);
+    return response(DATE_FORMATS, dateFormats);
   }
 }

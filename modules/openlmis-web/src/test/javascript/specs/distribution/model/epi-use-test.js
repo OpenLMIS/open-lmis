@@ -39,4 +39,53 @@ describe('EPI Use', function () {
 
     expect(status).toEqual('is-incomplete');
   });
+
+  it('should set status as incomplete if expiration date is not recorded and rest of the form is valid', function () {
+    var epiUse = new EpiUse({productGroups: [
+      {reading: {expirationDate: {notRecorded: true}, stockAtFirstOfMonth: {notRecorded: true}, distributed: {value: 100},
+        received: {value: 80}, stockAtEndOfMonth: {value: 200}, loss: {value: 50}
+      }}
+    ]});
+
+    var status = epiUse.computeStatus();
+
+    expect(status).toEqual('is-complete');
+  });
+
+  it('should set status as complete if the form is valid', function () {
+    var epiUse = new EpiUse({productGroups: [
+      {reading: {expirationDate: {value: '11/2012'}, stockAtFirstOfMonth: {notRecorded: true}, distributed: {value: 100},
+        received: {value: 80}, stockAtEndOfMonth: {value: 200}, loss: {value: 50}
+      }}
+    ]});
+
+    var status = epiUse.computeStatus();
+
+    expect(status).toEqual('is-complete');
+  });
+
+  it('should set status as incomplete if the only last form field valid', function () {
+    var epiUse = new EpiUse({productGroups: [{reading: {expirationDate: {value: '11/2012'}}}]});
+
+    var status = epiUse.computeStatus();
+
+    expect(status).toEqual('is-incomplete');
+  });
+
+  it('should set not recorded checkbox for epi use', function () {
+    var epiUse = new EpiUse({productGroups: [
+      {reading: {expirationDate: {value: '11/2012'}, stockAtFirstOfMonth: {notRecorded: true}, distributed: {value: 100},
+        received: {value: 80}, stockAtEndOfMonth: {value: 200}, loss: {value: 50}
+      }}
+    ]});
+
+    epiUse.setNotRecorded();
+
+    expect(epiUse.productGroups[0].reading.expirationDate.notRecorded).toBeTruthy();
+    expect(epiUse.productGroups[0].reading.stockAtEndOfMonth.notRecorded).toBeTruthy();
+    expect(epiUse.productGroups[0].reading.stockAtFirstOfMonth.notRecorded).toBeTruthy();
+    expect(epiUse.productGroups[0].reading.distributed.notRecorded).toBeTruthy();
+    expect(epiUse.productGroups[0].reading.loss.notRecorded).toBeTruthy();
+    expect(epiUse.productGroups[0].reading.expirationDate.notRecorded).toBeTruthy();
+  });
 });

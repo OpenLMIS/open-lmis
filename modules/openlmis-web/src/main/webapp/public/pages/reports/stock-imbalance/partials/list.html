@@ -63,7 +63,7 @@
                                     <label class="labels">Product Categories</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:300px;" name="productCategoryElement"   ng-model="stockImbalance.productCategoryId">
+                                        <select ui-select2 style="width:200px;" name="productCategoryElement"   ng-model="stockImbalance.productCategoryId">
                                             <option ng-repeat="option in productCategories" value="{{option.id}}">{{option.name}}</option>
                                         </select>
                                     </div>
@@ -81,23 +81,16 @@
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:300px;" name="facilityTypeElement"   ng-model="stockImbalance.facilityTypeId">
+                                        <select ui-select2 style="width:200px;" name="facilityTypeElement"   ng-model="stockImbalance.facilityTypeId">
                                             <option ng-repeat="option in facilityTypes" value="{{option.id}}">{{option.name}}</option>
                                         </select>
                                     </div>
                                 </div>
-                                <!--<div class="form-cell horizontalFilters">
-                                    <label class="labels">Facility Name</label>
-
-                                    <div class="form-field">
-                                        <input id="name" type="text"  ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
-                                    </div>
-                                </div>-->
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Requisition Groups</label>
 
                                     <div class="form-fields">
-                                        <select ui-select2 style="width:300px;" name="requisitionGroup"  ng-model="stockImbalance.rgroupId">
+                                        <select ui-select2 style="width:200px;" name="requisitionGroup"  ng-model="stockImbalance.rgroupId">
                                             <option ng-repeat="option in requisitionGroups" value="{{option.id}}">{{option.name}}</option>
                                         </select>
                                     </div>

@@ -33,7 +33,7 @@ public class OrderSummaryQueryBuilder {
 
            BEGIN();
 
-            SELECT("facility_name AS facilityName, facility_code AS facilityCode, region, product_code AS productCode, product_description AS description, packstoship AS unitSize, packstoship AS unitQuantity, packsize AS packQuantity, requisition_line_item_losses_adjustments.quantity AS discrepancy");
+            SELECT("facility_name AS facilityName, facility_code AS facilityCode, region, product_code AS productCode, product_primaryname AS description, packstoship AS unitSize, packstoship AS unitQuantity, packsize AS packQuantity, requisition_line_item_losses_adjustments.quantity AS discrepancy");
             FROM("vw_requisition_detail");
             INNER_JOIN("orders ON orders.id = vw_requisition_detail.req_id ");
             LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments ON vw_requisition_detail.req_line_id = requisition_line_item_losses_adjustments.requisitionlineitemid");
@@ -47,7 +47,7 @@ public class OrderSummaryQueryBuilder {
 
             BEGIN();
 
-            SELECT("facility_name AS facilityName, facility_code AS facilityCode, region, product_code AS productCode, product_description AS description, packstoship AS unitSize, packstoship AS unitQuantity, packsize AS packQuantity, requisition_line_item_losses_adjustments.quantity AS discrepancy");
+            SELECT("facility_name AS facilityName, facility_code AS facilityCode, region, product_code AS productCode, product_primaryname AS description, packstoship AS unitSize, packstoship AS unitQuantity, packsize AS packQuantity, requisition_line_item_losses_adjustments.quantity AS discrepancy");
             FROM("vw_requisition_detail");
             INNER_JOIN("orders ON orders.id = vw_requisition_detail.req_id ");
             LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments ON vw_requisition_detail.req_line_id = requisition_line_item_losses_adjustments.requisitionlineitemid");
