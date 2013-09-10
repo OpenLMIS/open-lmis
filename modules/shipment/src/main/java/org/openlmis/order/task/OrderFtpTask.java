@@ -52,9 +52,14 @@ public class OrderFtpTask {
 
   private static Logger logger = Logger.getLogger(OrderFtpTask.class);
 
-  private static String CONNECTION_REFUSED = "order.status.connection.refused";
-  private static String LOGIN_INCORRECT = "order.status.incoorect.login";
-  private static String PERMISSION_DENIED = "order.status.permession.denied"; ;
+  private static String CONNECTION_REFUSED = "Connection refused";
+  private static String LOGIN_INCORRECT = "Login incorrect";
+  private static String PERMISSION_DENIED = "Error writing file";
+  private static String CONNECTION_REFUSED_COMMENT = "order.ftpComment.connection.refused";
+  private static String LOGIN_INCORRECT_COMMENT = "order.ftpComment.incorrect.login";
+  private static String PERMISSION_DENIED_COMMENT = "order.ftpComment.permission.denied";
+  public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
+  public static String FTP_CREDENTIAL_MISSING_COMMENT = "order.ftpComment.ftpcredential.missing";
 
   @ServiceActivator(inputChannel = "orderInputChannel")
   public void processOrder(List<Order> orders) {
@@ -63,14 +68,14 @@ public class OrderFtpTask {
 
       SupplyLine supplyLine = order.getSupplyLine();
       if (supplyLine == null) {
-        updateOrder(order, TRANSFER_FAILED, "Supply line missing");
+        updateOrder(order, TRANSFER_FAILED, SUPPLY_LINE_MISSING_COMMENT);
         continue;
       }
 
       supplyLine = supplyLineService.getById(supplyLine.getId());
       FacilityFtpDetails supplyingFacilityFtpDetails = facilityFtpDetailsService.getByFacilityId(supplyLine.getSupplyingFacility());
       if (supplyingFacilityFtpDetails == null) {
-        updateOrder(order, TRANSFER_FAILED, "FTP credentials are missing");
+        updateOrder(order, TRANSFER_FAILED, FTP_CREDENTIAL_MISSING_COMMENT);
         continue;
       }
 
@@ -94,11 +99,11 @@ public class OrderFtpTask {
 
   private void handleException(CamelExecutionException camelException, Order order) {
     logger.error("Error in ftp of order file", camelException);
-    if (!(updateOrderForException(CONNECTION_REFUSED, camelException, order, "Unable to connect") ||
-      updateOrderForException(LOGIN_INCORRECT, camelException, order, "Invalid credentials") ||
-      updateOrderForException(PERMISSION_DENIED, camelException, order, "Inappropriate permissions"))) {
+    if (!(updateOrderForException(CONNECTION_REFUSED, camelException, order, CONNECTION_REFUSED_COMMENT) ||
+      updateOrderForException(LOGIN_INCORRECT, camelException, order, LOGIN_INCORRECT_COMMENT) ||
+      updateOrderForException(PERMISSION_DENIED, camelException, order, PERMISSION_DENIED_COMMENT))) {
       order.setStatus(TRANSFER_FAILED);
-      order.setFtpComment("Unknown Reason");
+      order.setFtpComment(null);
     }
     orderService.updateOrderStatus(order);
   }
