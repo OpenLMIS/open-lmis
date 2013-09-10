@@ -9,8 +9,5 @@
 \i ../../test-data/sql/requisition-groups.sql
 \i ../../test-data/sql/regimens.sql
 
-
-\i ../../test-data/sql/report.sql
-
 \i ../../test-data/sql/delivery_zones.sql
 \i ../../test-data/sql/allocation_users.sql
