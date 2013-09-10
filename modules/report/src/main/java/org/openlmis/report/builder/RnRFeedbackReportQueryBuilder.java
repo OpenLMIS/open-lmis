@@ -32,8 +32,8 @@ public class RnRFeedbackReportQueryBuilder {
         if(orderType == null || orderType.isEmpty() || orderType.equals("Regular")){
 
             BEGIN();
-            SELECT("distinct facility_code AS facilityCode, facility_name AS facility, productcode AS productCode, product AS product, beginningBalance, quantityreceived AS totalQuantityReceived, quantitydispensed AS totalQuantityDispensed, stockinhand AS physicalCount, totallossesandadjustments AS adjustments, CASE stockoutdays when 30 then 0 else CASE amc when 0 then 0 else (vw_requisition_detail.amc * 30) / (30- stockoutdays) end end AS adjustedAMC, quantityrequested AS orderQuantity, 0 AS quantitySupplied, dispensingunit AS unit, amc * nominaleop AS newEOP, maxstockquantity maximumStock, 0 emergencyOrder");
-            FROM("vw_requisition_detail");
+            SELECT("distinct facility_code AS facilityCode, facility_name AS facility, productcode AS productCode, product AS product, beginningBalance, quantityreceived AS totalQuantityReceived, quantitydispensed AS totalQuantityDispensed, stockinhand AS physicalCount, totallossesandadjustments AS adjustments, CASE stockoutdays when 30 then 0 else CASE amc when 0 then 0 else (vw_rnr_feedback.amc * 30) / (30- stockoutdays) end end AS adjustedAMC, quantityrequested AS orderQuantity, 0 AS quantitySupplied, dispensingunit AS unit, amc * nominaleop AS newEOP, maxstockquantity maximumStock, 0 emergencyOrder");
+            FROM("vw_rnr_feedback");
             writePredicates(filter);
             ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, RnRFeedbackReport.class,"productcode asc,facility_name asc"));
 
@@ -43,8 +43,8 @@ public class RnRFeedbackReportQueryBuilder {
 
 
             BEGIN();
-            SELECT("distinct facility_code AS facilityCode, facility_name AS facility, productcode AS productCode, product AS product, beginningBalance, quantityreceived AS totalQuantityReceived, quantitydispensed AS totalQuantityDispensed, stockinhand AS physicalCount, totallossesandadjustments AS adjustments, CASE stockoutdays when 30 then 0 else CASE amc when 0 then 0 else (vw_requisition_detail.amc * 30) / (30- stockoutdays) end end AS adjustedAMC, quantityrequested AS orderQuantity, 0 AS quantitySupplied,dispensingunit AS unit,amc * nominaleop AS newEOP, maxstockquantity maximumStock, 0 emergencyOrder");
-            FROM("vw_requisition_detail");
+            SELECT("distinct facility_code AS facilityCode, facility_name AS facility, productcode AS productCode, product AS product, beginningBalance, quantityreceived AS totalQuantityReceived, quantitydispensed AS totalQuantityDispensed, stockinhand AS physicalCount, totallossesandadjustments AS adjustments, CASE stockoutdays when 30 then 0 else CASE amc when 0 then 0 else (vw_rnr_feedback.amc * 30) / (30- stockoutdays) end end AS adjustedAMC, quantityrequested AS orderQuantity, 0 AS quantitySupplied,dispensingunit AS unit,amc * nominaleop AS newEOP, maxstockquantity maximumStock, 0 emergencyOrder");
+            FROM("vw_rnr_feedback");
             writePredicates(filter);
             ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, RnRFeedbackReport.class,"productcode asc,facility_name asc"));
 
