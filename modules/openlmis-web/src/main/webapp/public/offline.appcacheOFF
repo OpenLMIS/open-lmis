@@ -56,8 +56,7 @@ CACHE:
 /public/js/distribution/model/epi-use.js
 /public/js/distribution/model/refrigerator-reading.js
 /public/js/distribution/model/general-observation.js
-/
-public/js/distribution/service/shared-distributions.js
+/public/js/distribution/service/shared-distributions.js
 /public/js/distribution/service/distribution-service.js
 
 /public/js/distribution/controller/distribution-list-controller.js
