@@ -269,7 +269,7 @@ public class ProgramProductServiceTest {
     when(facilityRepository.getFacilityTypeByCode(warehouse)).thenReturn(warehouse);
     when(programProductRepository.getProgramProductsBy(10L, "warehouse")).thenReturn(expectedProgramProducts);
 
-    List<ProgramProduct> programProducts = programProductService.getProgramProductsBy("P1", "warehouse");
+    List<ProgramProduct> programProducts = programProductService.getProgramProductsBy(" P1", " warehouse");
 
     assertThat(programProducts, is(expectedProgramProducts));
     verify(facilityRepository).getFacilityTypeByCode(warehouse);

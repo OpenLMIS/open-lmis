@@ -20,6 +20,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.trimToEmpty;
+import static org.apache.commons.lang3.StringUtils.trimToNull;
+
 @Component
 @NoArgsConstructor
 public class ProgramProductService {
@@ -98,9 +101,9 @@ public class ProgramProductService {
 
   public List<ProgramProduct> getProgramProductsBy(String programCode, String facilityTypeCode) {
     FacilityType facilityType = new FacilityType();
-    if (facilityTypeCode != null) {
+    if ((facilityTypeCode = trimToNull(facilityTypeCode)) != null) {
       facilityType = facilityRepository.getFacilityTypeByCode(new FacilityType(facilityTypeCode));
     }
-    return programProductRepository.getProgramProductsBy(programRepository.getIdByCode(programCode), facilityType.getCode());
+    return programProductRepository.getProgramProductsBy(programRepository.getIdByCode(trimToEmpty(programCode)), facilityType.getCode());
   }
 }

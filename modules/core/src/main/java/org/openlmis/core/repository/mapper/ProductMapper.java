@@ -8,6 +8,7 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.ProductGroup;
 import org.springframework.stereotype.Repository;
 
@@ -72,6 +73,10 @@ public interface ProductMapper {
   Long getIdByCode(String code);
 
   @Select("SELECT * FROM products WHERE LOWER(code)=LOWER(#{code})")
+  @Results({
+    @Result(property = "category", column = "categoryId", javaType = ProductCategory.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getProductCategoryById"))
+  })
   Product getByCode(String code);
 
   @Update({"UPDATE products SET  alternateItemCode=#{alternateItemCode}, ",
@@ -95,10 +100,10 @@ public interface ProductMapper {
   void update(Product product);
 
   @Select("SELECT * FROM products WHERE id=#{id}")
-    @Results({
-      @Result(property = "productGroup", column = "productGroupId", javaType = ProductGroup.class,
-        one = @One(select = "org.openlmis.core.repository.mapper.ProductGroupMapper.getById"))
-    })
+  @Results({
+    @Result(property = "productGroup", column = "productGroupId", javaType = ProductGroup.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductGroupMapper.getById"))
+  })
   Product getById(Long id);
 
 

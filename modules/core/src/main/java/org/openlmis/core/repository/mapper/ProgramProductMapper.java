@@ -16,8 +16,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.commons.lang3.StringUtils.trimToNull;
-
 @Repository
 public interface ProgramProductMapper {
 
@@ -81,7 +79,7 @@ public interface ProgramProductMapper {
   public class ProgramProductByFacilityTypeCodeAndProgramId {
 
     public static String getProgramProductByProgramIdAndFacilityTypeCode(Map<String, Object> params) {
-      String facilityTypeCode = trimToNull((String) params.get("facilityTypeCode"));
+      String facilityTypeCode = (String) params.get("facilityTypeCode");
       Long programId = (Long) params.get("programId");
 
       StringBuilder buffer = new StringBuilder();
