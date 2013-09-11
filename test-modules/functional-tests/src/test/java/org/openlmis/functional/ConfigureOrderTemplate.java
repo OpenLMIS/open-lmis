@@ -116,7 +116,6 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.selectValueFromPeriodDropDown("MM/yy");
     configureOrderPage.selectValueFromOrderDateDropDown("dd/MM/yy");
     configureOrderPage.clickSaveButton();
-    configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
