@@ -325,7 +325,7 @@ public class HomePage extends Page {
 
 
   public InitiateRnRPage clickProceed() throws IOException {
-    testWebDriver.handleScrollByPixels(0,2000);
+//    testWebDriver.handleScrollByPixels(0,2000);
     testWebDriver.waitForElementToAppear(proceedButton);
     proceedButton.click();
     testWebDriver.sleep(1000);

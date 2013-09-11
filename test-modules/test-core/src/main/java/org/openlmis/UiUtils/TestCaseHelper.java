@@ -20,7 +20,7 @@ import static java.lang.System.getProperty;
 
 public class TestCaseHelper {
 
-  protected DBWrapper dbWrapper;
+  public static DBWrapper dbWrapper;
   protected String baseUrlGlobal, dburlGlobal;
   protected String DOWNLOAD_FILE_PATH;
   protected static TestWebDriver testWebDriver;

@@ -180,10 +180,11 @@ public class ForgotPassword extends TestCaseHelper {
     if(!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
-    }
-    }catch(NoSuchElementException e){}
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
+    }
+    }catch(NoSuchElementException e){}
+
   }
 
 
