@@ -148,7 +148,7 @@ public class ShipmentServiceTest {
       public boolean matches(Object argument) {
         List<Order> orders = (List<Order>) argument;
         Order order = orders.get(0);
-        return order.getShipmentFileInfo().equals(shipmentFileInfo) && order.getRnr().getId().equals(1L);
+        return order.getShipmentFileInfo().equals(shipmentFileInfo) && order.getId().equals(1L);
       }
     };
     verify(orderService).updateFulfilledAndShipmentIdForOrders(argThat(argumentMatcher));

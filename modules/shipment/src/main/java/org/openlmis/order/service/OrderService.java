@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -132,5 +132,10 @@ public class OrderService {
 
   public void updateOrderStatus(Order order) {
     orderRepository.updateOrderStatus(order);
+  }
+
+  public boolean isShippable(Long orderId) {
+    List<OrderStatus> shippableOrderStatuses = asList(RELEASED, SHIPMENT_ERROR);
+    return shippableOrderStatuses.contains(orderRepository.getStatus(orderId));
   }
 }

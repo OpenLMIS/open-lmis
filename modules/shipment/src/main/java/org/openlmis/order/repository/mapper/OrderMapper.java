@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
+import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.springframework.stereotype.Repository;
 
@@ -43,7 +44,7 @@ public interface OrderMapper {
   @Update({"UPDATE orders SET",
     "shipmentId = #{shipmentFileInfo.id},",
     "status = #{status}",
-    "WHERE rnrId=#{rnr.id} AND status = 'RELEASED'"})
+    "WHERE id = #{id} AND status IN ('RELEASED', 'SHIPMENT_ERROR')"})
   void updateShipmentInfo(Order order);
 
   @Select("SELECT * FROM order_file_columns ORDER BY position")
@@ -59,4 +60,7 @@ public interface OrderMapper {
 
   @Update("UPDATE orders SET status = #{status}, ftpComment = #{ftpComment}, modifiedDate = DEFAULT WHERE id = #{id}")
   void updateOrderStatus(Order order);
+
+  @Select("SELECT status FROM orders WHERE id = #{id}")
+  OrderStatus getStatus(Long id);
 }

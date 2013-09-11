@@ -1,15 +1,16 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 20.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 package org.openlmis.order.domain;
 
 public enum OrderStatus {
-  RELEASED,
-  PACKED,
   IN_ROUTE,
   READY_TO_PACK,
-  RECEIVED,
-  TRANSFER_FAILED
+  RELEASED,
+  TRANSFER_FAILED,
+  PACKED,
+  SHIPMENT_ERROR
 }

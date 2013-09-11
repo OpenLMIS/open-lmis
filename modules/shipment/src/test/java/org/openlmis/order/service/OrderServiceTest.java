@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -37,11 +37,14 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.order.domain.DateFormat.*;
+import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
+
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(OrderService.class)
@@ -254,9 +257,9 @@ public class OrderServiceTest {
   @Test
   public void shouldGetAllDateFormats() throws Exception {
     List<DateFormat> dateFormats = new ArrayList<>(orderService.getAllDateFormats());
-    List<DateFormat> expectedDateFormats = asList(DATE_1,DATE_2,DATE_3,DATE_4,DATE_5,DATE_6,DATE_7,DATE_8,DATE_9,DATE_10,
-      DATE_11,DATE_12,DATE_13,DATE_14,DATE_15,DATE_16,DATE_17,DATE_18,DATE_19,DATE_20,
-      DATE_21,DATE_22,DATE_23,DATE_24,DATE_25,DATE_26,DATE_27,DATE_28,DATE_29,DATE_30
+    List<DateFormat> expectedDateFormats = asList(DATE_1, DATE_2, DATE_3, DATE_4, DATE_5, DATE_6, DATE_7, DATE_8, DATE_9, DATE_10,
+      DATE_11, DATE_12, DATE_13, DATE_14, DATE_15, DATE_16, DATE_17, DATE_18, DATE_19, DATE_20,
+      DATE_21, DATE_22, DATE_23, DATE_24, DATE_25, DATE_26, DATE_27, DATE_28, DATE_29, DATE_30
     );
 
     assertThat(dateFormats, is(expectedDateFormats));
@@ -267,5 +270,45 @@ public class OrderServiceTest {
     Order order = new Order();
     orderService.updateOrderStatus(order);
     verify(orderRepository).updateOrderStatus(order);
+  }
+
+  @Test
+  public void shouldReturnTrueIfOrderIsReleased() throws Exception {
+    long orderId = 123L;
+    when(orderRepository.getStatus(orderId)).thenReturn(RELEASED);
+
+    assertThat(orderService.isShippable(orderId), is(true));
+
+    verify(orderRepository).getStatus(123L);
+
+  }
+
+  @Test
+  public void shouldReturnTrueIfOrderIsShipmentError() throws Exception {
+    long orderId = 123L;
+    when(orderRepository.getStatus(orderId)).thenReturn(SHIPMENT_ERROR);
+
+    assertThat(orderService.isShippable(orderId), is(true));
+
+    verify(orderRepository).getStatus(123L);
+
+  }
+
+  @Test
+  public void shouldReturnTrueIfOrderIsNotShippable() throws Exception {
+    long orderId = 123L;
+    when(orderRepository.getStatus(orderId))
+      .thenReturn(IN_ROUTE)
+      .thenReturn(PACKED)
+      .thenReturn(TRANSFER_FAILED)
+      .thenReturn(READY_TO_PACK);
+
+    assertThat(orderService.isShippable(orderId), is(false));
+    assertThat(orderService.isShippable(orderId), is(false));
+    assertThat(orderService.isShippable(orderId), is(false));
+    assertThat(orderService.isShippable(orderId), is(false));
+
+    verify(orderRepository, times(4)).getStatus(123L);
+
   }
 }

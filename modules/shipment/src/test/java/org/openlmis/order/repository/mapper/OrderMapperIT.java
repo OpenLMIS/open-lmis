@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -238,6 +238,16 @@ public class OrderMapperIT {
     assertThat(savedOrder.getFtpComment(), is(ftpComment));
   }
 
+  @Test
+  public void shouldGetOrderStatusById() throws Exception {
+    long programId = 1L;
+    Order order = insertOrder(programId);
+
+    OrderStatus status = mapper.getStatus(order.getId());
+
+    assertThat(status, is(order.getStatus()));
+  }
+
   private long updateOrderCreatedTime(Order order, Date date) throws SQLException {
     List paramList = new ArrayList();
     paramList.add(new java.sql.Date(date.getTime()));
@@ -248,7 +258,7 @@ public class OrderMapperIT {
   private Order insertOrder(Long programId) {
     Rnr rnr = insertRequisition(programId);
     Order order = new Order(rnr);
-    order.setStatus(OrderStatus.IN_ROUTE);
+    order.setStatus(IN_ROUTE);
     order.setSupplyLine(supplyLine);
     mapper.insert(order);
     return order;

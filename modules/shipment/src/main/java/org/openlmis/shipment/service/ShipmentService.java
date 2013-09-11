@@ -11,7 +11,6 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
-import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShipmentLineItem;
@@ -65,12 +64,11 @@ public class ShipmentService {
   public void updateStatusAndShipmentIdForOrders(Set<Long> orderIds, ShipmentFileInfo shipmentFileInfo) {
     List<Order> orders = new ArrayList<>();
     for (Long id : orderIds) {
-      Order order = new Order(new Rnr(id));
+      Order order = new Order(id);
       order.updateShipmentFileInfo(shipmentFileInfo);
       orders.add(order);
     }
     orderService.updateFulfilledAndShipmentIdForOrders(orders);
-
   }
 
   public Date getProcessedTimeStamp(ShipmentLineItem shipmentLineItem) {
