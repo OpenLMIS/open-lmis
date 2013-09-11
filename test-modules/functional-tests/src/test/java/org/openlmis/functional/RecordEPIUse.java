@@ -261,13 +261,12 @@ public class RecordEPIUse extends TestCaseHelper {
 
         testWebDriver.sleep(10000);
         switchOffNetwork();
-        testWebDriver.sleep(5000);
+        testWebDriver.sleep(2000);
         homePage.navigateHomePage();
-        testWebDriver.sleep(5000);
-        homePage.navigatePlanDistribution();
-        assertFalse("Delivery Zone selectbox displayed.",distributionPage.IsDisplayedSelectDeliveryZoneSelectBox());
-        assertFalse("Period selectbox displayed.",distributionPage.IsDisplayedSelectPeriodSelectBox());
-        assertFalse("Program selectbox displayed.",distributionPage.IsDisplayedSelectProgramSelectBox());
+        homePage.navigateOfflineDistribution();
+        assertFalse("Delivery Zone selectbox displayed.",distributionPage.verifyDeliveryZoneSelectBoxNotPresent());
+        assertFalse("Period selectbox displayed.",distributionPage.verifyPeriodSelectBoxNotPresent());
+        assertFalse("Program selectbox displayed.",distributionPage.verifyProgramSelectBoxNotPresent());
 
         distributionPage.clickRecordData();
         FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
@@ -316,7 +315,7 @@ public class RecordEPIUse extends TestCaseHelper {
     @AfterMethod(groups = {"offline"})
     public void tearDownNew() throws Exception {
         switchOnNetwork();
-        testWebDriver.sleep(10000);
+        testWebDriver.sleep(5000);
         dbWrapper.deleteData();
         dbWrapper.closeConnection();
     }

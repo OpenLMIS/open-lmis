@@ -37,6 +37,7 @@ public class DriverFactory {
   Unzip unZip;
 
   public WebDriver loadDriver(String browser) throws InterruptedException, IOException {
+
     Separator = getProperty("file.separator");
     File parentDir = new File(getProperty("user.dir"));
 

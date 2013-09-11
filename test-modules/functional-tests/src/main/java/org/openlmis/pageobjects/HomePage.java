@@ -75,6 +75,9 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Manage')]")
   private static WebElement manageMenuItem;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Distributions')]")
+  private static WebElement offlineDistributions;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'View Orders')]")
   private static WebElement viewOrdersMenuItem;
 
@@ -439,6 +442,15 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(manageDistributionHeader);
     return new DistributionPage(testWebDriver);
   }
+
+    public DistributionPage navigateOfflineDistribution() throws IOException {
+        assertTrue(offlineDistributions.isDisplayed());
+        testWebDriver.waitForElementToAppear(offlineDistributions);
+        testWebDriver.keyPress(offlineDistributions);
+        testWebDriver.waitForElementToAppear(manageMenuItem);
+        testWebDriver.keyPress(manageMenuItem);
+        return new DistributionPage(testWebDriver);
+    }
 
   public ProgramProductISAPage navigateProgramProductISA() throws IOException {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
