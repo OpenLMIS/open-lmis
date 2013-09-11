@@ -3,10 +3,14 @@ package org.openlmis.core.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.ProgramProduct;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @EqualsAndHashCode
+@JsonSerialize(include = NON_EMPTY)
 public class ProgramProductDTO {
 
   private String programCode;
