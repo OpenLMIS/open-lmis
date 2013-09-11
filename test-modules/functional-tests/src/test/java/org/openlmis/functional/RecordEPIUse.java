@@ -8,7 +8,6 @@ package org.openlmis.functional;
 
 
 import cucumber.api.DataTable;
-import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
@@ -248,10 +247,10 @@ public class RecordEPIUse extends TestCaseHelper {
         dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
         dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
         dbWrapper.insertProductGroup("PG1");
-        dbWrapper.insertProductWithGroup("Product5", "ProdutName5", "PG1", true);
-        dbWrapper.insertProductWithGroup("Product6", "ProdutName6", "PG1", true);
-        dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
-        dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
+        dbWrapper.insertProductWithGroup("Product5","ProdutName5","PG1",true);
+        dbWrapper.insertProductWithGroup("Product6","ProdutName6","PG1",true);
+        dbWrapper.insertProgramProduct("Product5",programFirst,"10","false");
+        dbWrapper.insertProgramProduct("Product6",programFirst,"10","true");
 
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
         HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -267,8 +266,8 @@ public class RecordEPIUse extends TestCaseHelper {
         testWebDriver.sleep(5000);
         homePage.navigatePlanDistribution();
         assertFalse("Delivery Zone selectbox displayed.",distributionPage.IsDisplayedSelectDeliveryZoneSelectBox());
-        assertFalse("Period selectbox displayed.", distributionPage.IsDisplayedSelectPeriodSelectBox());
-        assertFalse("Program selectbox displayed.", distributionPage.IsDisplayedSelectProgramSelectBox());
+        assertFalse("Period selectbox displayed.",distributionPage.IsDisplayedSelectPeriodSelectBox());
+        assertFalse("Program selectbox displayed.",distributionPage.IsDisplayedSelectProgramSelectBox());
 
         distributionPage.clickRecordData();
         FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
@@ -303,14 +302,9 @@ public class RecordEPIUse extends TestCaseHelper {
 
   @AfterMethod(groups = {"distribution"})
   @After
-  public void tearDown(Scenario scenario) throws Exception {
+  public void tearDown() throws Exception {
     testWebDriver.sleep(250);
-
     if (!testWebDriver.getElementById("username").isDisplayed()) {
-      if(scenario.isFailed())
-      {
-        testWebDriver.captureScreenShotForCucumberRun();
-      }
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();

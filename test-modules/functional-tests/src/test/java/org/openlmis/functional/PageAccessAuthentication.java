@@ -7,7 +7,6 @@
 package org.openlmis.functional;
 
 
-import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Then;
@@ -55,12 +54,8 @@ public class PageAccessAuthentication extends TestCaseHelper {
     }
 
   @After
-  public void tearDown(Scenario scenario) throws Exception {
+  public void tearDown() throws Exception {
       if (!testWebDriver.getElementById("username").isDisplayed()) {
-        if(scenario.isFailed())
-        {
-          testWebDriver.captureScreenShotForCucumberRun();
-        }
           HomePage homePage = new HomePage(testWebDriver);
           homePage.logout(baseUrlGlobal);
         dbWrapper.deleteData();
