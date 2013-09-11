@@ -202,7 +202,7 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     configureOrderPage.clickSaveButton();
     configureOrderPage.verifySuccessMessage("Order file configuration saved successfully!");
     configureOrderPage.clickCancelButton();
-    assertTrue("User should be redirected to home page", testWebDriver.getCurrentUrl().contains("public/pages/index.html#/index.html"));
+    assertTrue("User should be redirected to home page", testWebDriver.getCurrentUrl().contains("public/pages/admin/edi/index.html#/configure-edi-file"));
 
   }
 

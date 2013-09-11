@@ -175,6 +175,10 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
         assertEquals("103", configureShipmentPage.getProductCode());
         assertEquals("5", configureShipmentPage.getPackedDate());
         assertEquals("6", configureShipmentPage.getShippedDate());
+
+        configureShipmentPage.clickCancelButton();
+        assertTrue("User should be redirected to home page", testWebDriver.getCurrentUrl().contains("public/pages/admin/edi/index.html#/configure-edi-file"));
+
     }
 
     @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
@@ -190,6 +194,30 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
 
     }
 
+    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
+    public void testVerifyZeroPosition(String user, String password) throws Exception {
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(user, password);
+        ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
+        ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
+        configureShipmentPage.setQuantityShipped("0") ;
+        configureShipmentPage.setOrderNumber("101");
+        configureShipmentPage.clickSaveButton();
+        configureShipmentPage.verifyErrorMessage("Position number cannot be blank or zero for an included field");
+
+    }
+    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
+    public void testVerifyBlankPosition(String user, String password) throws Exception {
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(user, password);
+        ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
+        ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
+        configureShipmentPage.setQuantityShipped("101") ;
+        configureShipmentPage.setOrderNumber("");
+        configureShipmentPage.clickSaveButton();
+        configureShipmentPage.verifyErrorMessage("Position number cannot be blank or zero for an included field");
+
+    }
     @After
     @AfterMethod(groups = "admin")
     public void tearDown() throws Exception {
