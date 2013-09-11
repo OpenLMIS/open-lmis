@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.shipment.builder;
 
 import com.natpryce.makeiteasy.Instantiator;
@@ -31,6 +37,7 @@ public class ShipmentFileColumnBuilder {
       column.setMandatory(true);
       column.setInclude(true);
       column.setDatePattern(lookup.valueOf(dateFormat, "MM/yy"));
+      column.setModifiedBy(1L);
       return column;
     }
   };

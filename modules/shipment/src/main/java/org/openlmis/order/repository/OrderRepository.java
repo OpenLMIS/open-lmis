@@ -47,6 +47,7 @@ public class OrderRepository {
     return orderMapper.getOrderFileColumns();
   }
 
+  //TODO update instead of delete and insert
   public void saveOrderFileColumns(List<OrderFileColumn> orderFileColumns, Long userId) {
     orderMapper.deleteOrderFileColumns();
     for (OrderFileColumn column : orderFileColumns) {

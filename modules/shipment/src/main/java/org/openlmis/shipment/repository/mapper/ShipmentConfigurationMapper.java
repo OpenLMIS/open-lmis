@@ -3,6 +3,7 @@
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+
 package org.openlmis.shipment.repository.mapper;
 
 import org.apache.ibatis.annotations.Select;
@@ -16,7 +17,7 @@ public interface ShipmentConfigurationMapper {
   @Select("SELECT * FROM shipment_configuration")
   ShipmentConfiguration get();
 
-  @Update({"UPDATE shipment_configuration set headerInFile =  #{headerInFile}"})
+  @Update({"UPDATE shipment_configuration set headerInFile =  #{headerInFile}, modifiedBy = #{modifiedBy}"})
   void update(ShipmentConfiguration shipmentConfiguration);
 
 }

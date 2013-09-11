@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.shipment.repository.mapper;
 
 import org.junit.Before;
@@ -44,12 +50,15 @@ public class ShipmentFileColumnMapperIT {
 
     List<ShipmentFileColumn> updatedColumns = mapper.getAll();
     assertThat(updatedColumns.size(), is(1));
-    assertThat(updatedColumns.get(0).getName(), is("name"));
-    assertThat(updatedColumns.get(0).getDataFieldLabel(), is("label"));
-    assertThat(updatedColumns.get(0).getDatePattern(), is("MM/yy"));
-    assertThat(updatedColumns.get(0).getInclude(), is(true));
-    assertThat(updatedColumns.get(0).getMandatory(), is(true));
-    assertThat(updatedColumns.get(0).getPosition(), is(10));
+    ShipmentFileColumn column = updatedColumns.get(0);
+    assertThat(column.getName(), is("name"));
+    assertThat(column.getDataFieldLabel(), is("label"));
+    assertThat(column.getDatePattern(), is("MM/yy"));
+    assertThat(column.getInclude(), is(true));
+    assertThat(column.getMandatory(), is(true));
+    assertThat(column.getPosition(), is(10));
+    assertThat(column.getModifiedBy(), is(1L));
+    assertThat(column.getCreatedBy(), is(1L));
   }
 
   @Test

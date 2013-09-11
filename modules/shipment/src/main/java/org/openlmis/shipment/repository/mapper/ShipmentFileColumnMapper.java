@@ -17,8 +17,9 @@ import java.util.List;
 @Repository
 public interface ShipmentFileColumnMapper {
 
-  @Insert({"INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory, datePattern) values",
-    "(#{name}, #{dataFieldLabel}, #{position}, #{include}, #{mandatory}, #{datePattern})"})
+  @Insert({"INSERT INTO shipment_file_columns",
+    "(name, dataFieldLabel, position, include, mandatory, datePattern, modifiedBy, createdBy) VALUES",
+    "(#{name}, #{dataFieldLabel}, #{position}, #{include}, #{mandatory}, #{datePattern}, #{modifiedBy}, #{modifiedBy})"})
   public void insert(ShipmentFileColumn shipmentFileColumn);
 
   @Select("SELECT * FROM shipment_file_columns")
