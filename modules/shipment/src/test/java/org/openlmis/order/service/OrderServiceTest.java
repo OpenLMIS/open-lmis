@@ -70,7 +70,7 @@ public class OrderServiceTest {
   }
 
   @Test
-  public void shouldConvertRequisitionsToOrder() throws Exception {
+  public void shouldConvertRequisitionsToOrderWithStatusInRoute() throws Exception {
     Program program = new Program();
     Long userId = 1L;
     Rnr rnr = new Rnr();
@@ -99,6 +99,68 @@ public class OrderServiceTest {
     verify(requisitionService).getLWById(rnr.getId());
     verify(requisitionService).releaseRequisitionsAsOrder(rnrList, userId);
     assertThat(order.getSupplyLine(), is(supplyLine));
+  }
+
+  @Test
+  public void shouldConvertRequisitionsToOrderWithStatusReadyToPack() throws Exception {
+    Program program = new Program();
+    Long userId = 1L;
+    Rnr rnr = new Rnr();
+    rnr.setId(1L);
+    rnr.setSupervisoryNodeId(1L);
+    rnr.setProgram(program);
+
+    SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setExportOrders(Boolean.FALSE);
+
+    when(requisitionService.getLWById(1L)).thenReturn(rnr);
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
+    whenNew(SupervisoryNode.class).withArguments(1l).thenReturn(supervisoryNode);
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, program)).thenReturn(supplyLine);
+
+    List<Rnr> rnrList = new ArrayList<>();
+    rnrList.add(rnr);
+
+    orderService.convertToOrder(rnrList, userId);
+
+    Order order = new Order(rnr);
+    order.setStatus(OrderStatus.READY_TO_PACK);
+    order.setSupplyLine(supplyLine);
+    verify(orderRepository).save(order);
+    verify(supplyLineService).getSupplyLineBy(supervisoryNode, program);
+    verify(requisitionService).getLWById(rnr.getId());
+    verify(requisitionService).releaseRequisitionsAsOrder(rnrList, userId);
+    assertThat(order.getSupplyLine(), is(supplyLine));
+  }
+
+  @Test
+  public void shouldConvertRequisitionsToOrderWithStatusTransferFailed() throws Exception {
+    String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
+    Program program = new Program();
+    Long userId = 1L;
+    Rnr rnr = new Rnr();
+    rnr.setId(1L);
+    rnr.setSupervisoryNodeId(1L);
+    rnr.setProgram(program);
+
+    when(requisitionService.getLWById(1L)).thenReturn(rnr);
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
+    whenNew(SupervisoryNode.class).withArguments(1l).thenReturn(supervisoryNode);
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, program)).thenReturn(null);
+
+    List<Rnr> rnrList = new ArrayList<>();
+    rnrList.add(rnr);
+
+    orderService.convertToOrder(rnrList, userId);
+
+    Order order = new Order(rnr);
+    order.setStatus(OrderStatus.TRANSFER_FAILED);
+    order.setFtpComment(SUPPLY_LINE_MISSING_COMMENT);
+    order.setSupplyLine(null);
+    verify(orderRepository).save(order);
+    verify(supplyLineService).getSupplyLineBy(supervisoryNode, program);
+    verify(requisitionService).getLWById(rnr.getId());
+    verify(requisitionService).releaseRequisitionsAsOrder(rnrList, userId);
   }
 
   @Test

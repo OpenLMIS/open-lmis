@@ -60,7 +60,6 @@ public class OrderFtpTask {
   private static String CONNECTION_REFUSED_COMMENT = "order.ftpComment.connection.refused";
   private static String LOGIN_INCORRECT_COMMENT = "order.ftpComment.incorrect.login";
   private static String PERMISSION_DENIED_COMMENT = "order.ftpComment.permission.denied";
-  public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
   public static String FTP_CREDENTIAL_MISSING_COMMENT = "order.ftpComment.ftpcredential.missing";
 
   @ServiceActivator(inputChannel = "orderInputChannel")
@@ -69,10 +68,6 @@ public class OrderFtpTask {
       order = orderService.getOrderForDownload(order.getId());
 
       SupplyLine supplyLine = order.getSupplyLine();
-      if (supplyLine == null) {
-        updateOrder(order, TRANSFER_FAILED, SUPPLY_LINE_MISSING_COMMENT);
-        continue;
-      }
 
       supplyLine = supplyLineService.getById(supplyLine.getId());
       FacilityFtpDetails supplyingFacilityFtpDetails = facilityFtpDetailsService.getByFacilityId(supplyLine.getSupplyingFacility());

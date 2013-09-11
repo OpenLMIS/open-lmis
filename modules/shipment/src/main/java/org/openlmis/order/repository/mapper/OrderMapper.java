@@ -18,7 +18,7 @@ import java.util.List;
 @Repository
 public interface OrderMapper {
 
-  @Insert("INSERT INTO orders(rnrId, status, supplyLineId, createdBy, modifiedBy) VALUES (#{rnr.id}, #{status}, #{supplyLine.id}, #{createdBy}, #{createdBy})")
+  @Insert("INSERT INTO orders(rnrId, status, ftpcomment, supplyLineId, createdBy, modifiedBy) VALUES (#{rnr.id}, #{status}, #{ftpComment}, #{supplyLine.id}, #{createdBy}, #{createdBy})")
   @Options(useGeneratedKeys = true)
   void insert(Order order);
 

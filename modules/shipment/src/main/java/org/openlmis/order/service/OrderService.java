@@ -29,8 +29,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static java.util.Arrays.asList;
-import static org.openlmis.order.domain.OrderStatus.IN_ROUTE;
-import static org.openlmis.order.domain.OrderStatus.READY_TO_PACK;
+import static org.openlmis.order.domain.OrderStatus.*;
 
 @Service
 @NoArgsConstructor
@@ -45,6 +44,8 @@ public class OrderService {
   @Autowired
   private SupplyLineService supplyLineService;
 
+  public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
+
   public void save(Order order) {
     orderRepository.save(order);
   }
@@ -58,7 +59,14 @@ public class OrderService {
       rnr.setModifiedBy(userId);
       order = new Order(rnr);
       order.setSupplyLine(supplyLineService.getSupplyLineBy(new SupervisoryNode(rnr.getSupervisoryNodeId()), rnr.getProgram()));
-      OrderStatus status = order.getSupplyLine().getExportOrders() ? IN_ROUTE : READY_TO_PACK;
+      OrderStatus status;
+      if (order.getSupplyLine()==null) {
+        status = TRANSFER_FAILED;
+        order.setFtpComment(SUPPLY_LINE_MISSING_COMMENT);
+      }
+      else {
+        status = order.getSupplyLine().getExportOrders() ? IN_ROUTE : READY_TO_PACK;
+      }
       order.setStatus(status);
       orderRepository.save(order);
     }

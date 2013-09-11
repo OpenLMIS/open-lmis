@@ -266,7 +266,7 @@ public class RequisitionService {
   private void fillSupplyingDepot(Rnr requisition) {
     if (requisition.getSupervisoryNodeId() != null && requisition.getStatus().equals(RnrStatus.APPROVED)) {
       SupplyLine supplyLine = supplyLineService.getSupplyLineBy(new SupervisoryNode(requisition.getSupervisoryNodeId()), requisition.getProgram());
-      requisition.setSupplyingDepot(supplyLine.getSupplyingFacility());
+      if (supplyLine != null) requisition.setSupplyingDepot(supplyLine.getSupplyingFacility());
     }
   }
 
