@@ -29,9 +29,11 @@ INSERT INTO VENDORS (name, active) VALUES ('commTrack', true);
 INSERT INTO users
   (userName, password,vendorId, facilityId, firstName, lastName, email, verified, active) VALUES
   ('StoreInCharge', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',(SELECT id FROM vendors WHERE name = 'openLmis'), (SELECT id FROM facilities WHERE code = 'F10'), 'Fatima', 'Doe', 'Fatima_Doe@openlmis.com', true, true),
-  ('FacilityHead', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',(SELECT id FROM vendors WHERE name = 'openLmis') ,(SELECT id FROM facilities WHERE code = 'F10'), 'Jane', 'Doe', 'Jane_Doe@openlmis.com', true, true),
+  ('FacilityHead', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',(SELECT id FROM vendors WHERE name = 'openLmis') ,(SELECT id FROM facilities WHERE code = 'F10'), 'Jane', 'Doe', 'Kutt_Doe@openlmis.com', true, true),
+  ('FacilityInCharge', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',(SELECT id FROM vendors WHERE name = 'openLmis') , (SELECT id FROM facilities WHERE code = 'F10'), 'Jane', 'Doe', 'Jane_Doe@openlmis.com', false, true),
   ('MedicalOfficer', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',(SELECT id FROM vendors WHERE name = 'openLmis'), (SELECT id FROM facilities WHERE code = 'F10'), 'John', 'Doe', 'Joh_Doe@openlmis.com', true, true),
   ('lmu', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',(SELECT id FROM vendors WHERE name = 'openLmis'), (SELECT id FROM facilities WHERE code = 'F10'), 'Frank', 'Doe', 'Frank_Doe@openlmis.com', true, true),
+  ('StoreHead', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',(SELECT id FROM vendors WHERE name = 'openLmis'),  (SELECT id FROM facilities WHERE code = 'F10'), 'Frank', 'Doe', 'Bhann_Doe@openlmis.com', false, true),
   ('lmuincharge', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',(SELECT id FROM vendors WHERE name = 'openLmis'), (SELECT id FROM facilities WHERE code = 'F10'), 'Jake', 'Doe', 'Jake_Doe@openlmis.com', true, true);
 
 INSERT INTO USERS
@@ -58,6 +60,8 @@ INSERT INTO role_assignments
   ((SELECT ID FROM USERS WHERE username='StoreInCharge'),  (SELECT id FROM roles WHERE name = 'Store In-Charge'), 4, null),
   ((SELECT ID FROM USERS WHERE username='StoreInCharge'),  (SELECT id FROM roles WHERE name = 'Store In-Charge'), 2, (SELECT id from supervisory_nodes WHERE code = 'N3')),
   ((SELECT ID FROM USERS WHERE username='StoreInCharge'),  (SELECT id FROM roles WHERE name = 'Store In-Charge'), 4, (SELECT id from supervisory_nodes WHERE code = 'N3')),
+  ((SELECT ID FROM USERS WHERE username='StoreHead'),  (SELECT id FROM roles WHERE name = 'Store In-Charge'), 1, (SELECT id from supervisory_nodes WHERE code = 'N3')),
+  ((SELECT ID FROM USERS WHERE username='FacilityInCharge'),  (SELECT id FROM roles WHERE name = 'FacilityHead'), 1, (SELECT id from supervisory_nodes WHERE code = 'N3')),
   ((SELECT ID FROM USERS WHERE username='FacilityHead'),   (SELECT id FROM roles WHERE name = 'FacilityHead'), 3, (SELECT id from supervisory_nodes WHERE code = 'N2')),
   ((SELECT ID FROM USERS WHERE username='FacilityHead'),   (SELECT id FROM roles WHERE name = 'FacilityHead'), 2, (SELECT id from supervisory_nodes WHERE code = 'N2')),
   ((SELECT ID FROM USERS WHERE username='FacilityHead'),   (SELECT id FROM roles WHERE name = 'FacilityHead'), 4, (SELECT id from supervisory_nodes WHERE code = 'N2')),

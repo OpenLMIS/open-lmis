@@ -27,7 +27,8 @@ insert into requisition_group_program_schedules ( requisitionGroupId , programId
 ((select id from requisition_groups where code='RG3'),(select id from programs where code='TB'),(select id from processing_schedules where code='M'),TRUE),
 ((select id from requisition_groups where code='RG4'),(select id from programs where code='TB'),(select id from processing_schedules where code='M'),TRUE),
 ((select id from requisition_groups where code='RG4'),(select id from programs where code='ESS_MEDS'),(select id from processing_schedules where code='M'),TRUE),
-((select id from requisition_groups where code='RG4'),(select id from programs where code='MALARIA'),(select id from processing_schedules where code='M'),TRUE);
+((select id from requisition_groups where code='RG4'),(select id from programs where code='MALARIA'),(select id from processing_schedules where code='M'),TRUE),
+((select id from requisition_groups where code='RG4'),(select id from programs where code='HIV'),(select id from processing_schedules where code='M'),TRUE);
 
 
 insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId,exportOrders) values

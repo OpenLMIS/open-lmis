@@ -88,6 +88,8 @@ INSERT INTO programs_supported(facilityId, programId, startDate, active, modifie
 ((SELECT id FROM facilities WHERE code = 'F14'), 2, '11/11/12', true, 1),
 ((SELECT id FROM facilities WHERE code = 'F100'), 2, '11/11/12', true, 1),
 ((SELECT id FROM facilities WHERE code = 'F100'), 4, '11/11/12', true, 1),
+((SELECT id FROM facilities WHERE code = 'F100'), 3, '11/11/12', true, 1),
+((SELECT id FROM facilities WHERE code = 'F100'), 1, '11/11/12', true, 1),
 
 ((SELECT id FROM facilities WHERE code = 'F8A'), 5, '11/11/12', true, 1),
 ((SELECT id FROM facilities WHERE code = 'F8B'), 5, '11/11/12', true, 1),
