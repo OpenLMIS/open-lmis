@@ -3,28 +3,28 @@
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<style name="err_open" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+	<style name="err_open" fontName="DejaVu Sans" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{err_open_balance} == 1]]></conditionExpression>
-			<style fontSize="11" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+			<style backcolor="#FFFFFF" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="true"/>
 		</conditionalStyle>
 	</style>
-	<style name="err_received" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+	<style name="err_received" fontName="DejaVu Sans" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{err_qty_received} == 1]]></conditionExpression>
-			<style fontSize="11" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+			<style backcolor="#FFFFFF" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="true"/>
 		</conditionalStyle>
 	</style>
-	<style name="err_required" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+	<style name="err_required" fontName="DejaVu Sans" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{err_qty_required} == 1]]></conditionExpression>
-			<style fontSize="11" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+			<style backcolor="#FFFFFF" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="true"/>
 		</conditionalStyle>
 	</style>
-	<style name="err_soh" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+	<style name="err_soh" fontName="DejaVu Sans" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{err_qty_stockinhand} == 1]]></conditionExpression>
-			<style fill="Solid" fontSize="11" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+			<style mode="Transparent" backcolor="#FFFFFF" fill="Solid" pattern="" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="true"/>
 		</conditionalStyle>
 	</style>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
