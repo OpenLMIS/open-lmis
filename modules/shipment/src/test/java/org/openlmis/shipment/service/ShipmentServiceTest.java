@@ -18,8 +18,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
@@ -40,10 +38,10 @@ public class ShipmentServiceTest {
   @Mock
   private ShipmentRepository shipmentRepository;
 
-  @Mock
-  private RequisitionService requisitionService;
+
   @Mock
   private ProductService productService;
+
   @InjectMocks
   private ShipmentService shipmentService;
 
@@ -58,31 +56,12 @@ public class ShipmentServiceTest {
       with(quantityShipped, 500)));
 
 
-    when(requisitionService.getLWById(1l)).thenReturn(new Rnr());
     when(productService.getIdForCode("P10")).thenReturn(1l);
 
     shipmentService.insertShippedLineItem(shipmentLineItem);
 
-    verify(requisitionService).getLWById(1l);
     verify(productService).getIdForCode("P10");
     verify(shipmentRepository).insertShippedLineItem(shipmentLineItem);
-  }
-
-  @Test
-  public void shouldNotInsertShipmentIfOrderIdIsNotValid() throws Exception {
-    ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
-      with(productCode, "P10"),
-      with(orderId, 1L),
-      with(quantityShipped, 500)));
-
-    when(requisitionService.getLWById(1l)).thenReturn(null);
-    when(productService.getIdForCode("P10")).thenReturn(1l);
-
-
-    exException.expect(DataException.class);
-    exException.expectMessage("error.unknown.order");
-
-    shipmentService.insertShippedLineItem(shipmentLineItem);
   }
 
   @Test
@@ -93,7 +72,6 @@ public class ShipmentServiceTest {
       with(orderId, 1L),
       with(quantityShipped, 500)));
 
-    when(requisitionService.getLWById(1l)).thenReturn(new Rnr());
     when(productService.getIdForCode("P10")).thenReturn(null);
 
 

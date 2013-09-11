@@ -9,7 +9,6 @@ package org.openlmis.shipment.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
-import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
@@ -25,8 +24,6 @@ public class ShipmentService {
   private ShipmentRepository shipmentRepository;
 
   @Autowired
-  private RequisitionService requisitionService;
-  @Autowired
   private ProductService productService;
 
 
@@ -37,9 +34,6 @@ public class ShipmentService {
   }
 
   private void validateShipment(ShipmentLineItem shipmentLineItem) {
-    if (requisitionService.getLWById(shipmentLineItem.getOrderId()) == null) {
-      throw new DataException("error.unknown.order");
-    }
     if (productService.getIdForCode(shipmentLineItem.getProductCode()) == null) {
       throw new DataException("error.unknown.product");
     }
