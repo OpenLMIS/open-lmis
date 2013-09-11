@@ -43,23 +43,18 @@ public class ProgramProductFeed extends TestCaseHelper {
   public void shouldVerifyProgramProductWithValidProgramCodeAndValidFacilityType() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    String programCode = "TB";
+    String programCode = "HIV";
     String facilityType = "lvl3_hospital";
 
-//    ResponseEntity responseEntity = client.SendJSON("{\"programCode\":\"" + programCode + "\"facilityTypeCode\":\"" + facilityType + "\"}",
-//      URL,
-//      GET,
-//      commTrackUser,
-//      dbWrapper.getAuthToken(commTrackUser));
 
-    ResponseEntity responseEntity = client.SendJSON("", URL+"?programCode="+programCode+"&facilityTypeCode="+facilityType+"", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode + "&facilityTypeCode=" + facilityType + "", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
 
-    List<String> productDetails = dbWrapper.getProductDetailsForProgramAndFacilityType(programCode,facilityType);
+    List<String> productDetails = dbWrapper.getProductDetailsForProgramAndFacilityType(programCode, facilityType);
     for (String product : productDetails) {
       String[] productDetailsArray = product.split(",");
-      assertTrue("Response entity : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("\"programCode\":\"" + productDetailsArray[0] + "\",\"programName\":\"" + productDetailsArray[1] + "\",\"productCode\":\"" + productDetailsArray[2] + "\"" +
-          ",\"productName\":\"" + productDetailsArray[3] + "\",\"description\":\"" + productDetailsArray[4] + "\",\"unit\":\"" + productDetailsArray[5] + "\",\"category\":\"" + productDetailsArray[6] + "\""));
+      assertTrue("Actual Response entity : " + responseEntity.getResponse(),
+        responseEntity.getResponse().contains("\"programCode\":\"" + programCode + "\",\"programName\":\"" + productDetailsArray[0] + "\",\"productCode\":\"" + productDetailsArray[1] + "\"," +
+          "\"productName\":\"" + productDetailsArray[2] + "\",\"description\":\"" + productDetailsArray[3] + "\",\"unit\":" + productDetailsArray[4] + ",\"category\":\"" + productDetailsArray[5] + "\""));
     }
   }
 
@@ -67,21 +62,18 @@ public class ProgramProductFeed extends TestCaseHelper {
   public void shouldVerifyProgramProductWithValidProgramCodeAndValidFacilityTypeAndLowerCase() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    String programCode = "tb";
-    String facilityType = "WAREHOUSE";
+    String programCode = "hiv";
+    String facilityType = "LVL3_HOSPITAL";
 
-    ResponseEntity responseEntity = client.SendJSON("{\"programCode\":\"" + programCode + "\"facilityTypeCode\":\"" + facilityType + "\"}",
-      URL,
-      GET,
-      commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode + "&facilityTypeCode=" + facilityType + "", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
 
-    List<String> productDetails = dbWrapper.getProductDetailsForProgramAndFacilityType(programCode,facilityType);
+    List<String> productDetails = dbWrapper.getProductDetailsForProgramAndFacilityType(programCode.toUpperCase(), facilityType.toLowerCase());
     for (String product : productDetails) {
       String[] productDetailsArray = product.split(",");
-      assertTrue("Response entity : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("\"programCode\":\"" + productDetailsArray[0] + "\",\"programName\":\"" + productDetailsArray[1] + "\",\"productCode\":\"" + productDetailsArray[2] + "\"" +
-          ",\"productName\":\"" + productDetailsArray[3] + "\",\"description\":\"" + productDetailsArray[4] + "\",\"unit\":\"" + productDetailsArray[5] + "\",\"category\":\"" + productDetailsArray[6] + "\""));
+      assertTrue("Actual Response entity : " + responseEntity.getResponse(),
+        responseEntity.getResponse().contains("\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"" + productDetailsArray[0] + "\",\"productCode\":\"" + productDetailsArray[1] + "\"," +
+          "\"productName\":\"" + productDetailsArray[2] + "\",\"description\":\"" + productDetailsArray[3] + "\",\"unit\":" + productDetailsArray[4] + ",\"category\":\"" + productDetailsArray[5] + "\""));
+
     }
   }
 
@@ -89,16 +81,13 @@ public class ProgramProductFeed extends TestCaseHelper {
   public void shouldVerifyProgramProductWithValidProgramCodeAndInvalidFacilityType() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    String programCode = "TB";
+    String programCode = "HIV";
     String facilityType = "testing";
 
-    ResponseEntity responseEntity = client.SendJSON("{\"programCode\":\"" + programCode + "\"facilityTypeCode\":\"" + facilityType + "\"}",
-      URL,
-      GET,
-      commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode + "&facilityTypeCode=" + facilityType + "", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
 
-    List<String> productDetails = dbWrapper.getProductDetailsForProgramAndFacilityType(programCode,facilityType);
+
+    List<String> productDetails = dbWrapper.getProductDetailsForProgramAndFacilityType(programCode, facilityType);
     for (String product : productDetails) {
       String[] productDetailsArray = product.split(",");
       assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Invalid facility type\"}"));
@@ -109,20 +98,18 @@ public class ProgramProductFeed extends TestCaseHelper {
   public void shouldVerifyProgramProductWithValidProgramCode() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    String programCode = "TB";
+    String programCode = "HIV";
 
-    ResponseEntity responseEntity = client.SendJSON("{\"programCode\":\"" + programCode + "\"}",
-      URL,
-      GET,
-      commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+
 
     List<String> productDetails = dbWrapper.getProductDetailsForProgram(programCode);
     for (String product : productDetails) {
       String[] productDetailsArray = product.split(",");
-      assertTrue("Response entity : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("\"programCode\":\"" + productDetailsArray[0] + "\",\"programName\":\"" + productDetailsArray[1] + "\",\"productCode\":\"" + productDetailsArray[2] + "\"" +
-          ",\"productName\":\"" + productDetailsArray[3] + "\",\"description\":\"" + productDetailsArray[4] + "\",\"unit\":\"" + productDetailsArray[5] + "\",\"category\":\"" + productDetailsArray[6] + "\""));
+      assertTrue("Actual Response entity : " + responseEntity.getResponse(),
+        responseEntity.getResponse().contains("\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"" + productDetailsArray[0] + "\",\"productCode\":\"" + productDetailsArray[1] + "\"," +
+          "\"productName\":\"" + productDetailsArray[2] + "\",\"description\":\"" + productDetailsArray[3] + "\",\"unit\":" + productDetailsArray[4] + ",\"category\":\"" + productDetailsArray[5] + "\""));
+
     }
   }
 
@@ -132,28 +119,22 @@ public class ProgramProductFeed extends TestCaseHelper {
     client.createContext();
     String programCode = "testing123";
 
-    ResponseEntity responseEntity = client.SendJSON("{\"programCode\":\"" + programCode + "\"}",
-      URL,
-      GET,
-      commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Invalid Program code\"}"));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+
+    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Invalid program code\"}"));
   }
 
   @Test(groups = {"webservice"})
   public void shouldVerifyProgramProductWhenProductIsInactiveGlobally() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    String programCode = "TB";
+    String programCode = "HIV";
     String productCode = "P10";
 
     dbWrapper.updateActiveStatusOfProduct(productCode, "false");
 
-    ResponseEntity responseEntity = client.SendJSON("{\"programCode\":\"" + programCode + "\"}",
-      URL,
-      GET,
-      commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"" + productCode));
   }
 
@@ -161,85 +142,67 @@ public class ProgramProductFeed extends TestCaseHelper {
   public void shouldVerifyProgramProductWhenProgramProductIsInactive() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    String programCode = "TB";
+    String programCode = "HIV";
     String productCode = "P10";
 
     dbWrapper.updateActiveStatusOfProgramProduct(productCode, programCode, "false");
 
-    ResponseEntity responseEntity = client.SendJSON("{\"programCode\":\"" + programCode + "\"}",
-      URL,
-      GET,
-      commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"" + productCode));
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWithSpaceInProgramCode() throws Exception {
+  public void shouldVerifyProgramProductWithProgramCodeNotAllowableLength() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    String programCode = "testing123";
+    String programCode = "HIVtestingtestingtestingHIVtestingtestingtestingHIVtestingtestingtestingHIVtestingtestingtesting";
 
-    ResponseEntity responseEntity = client.SendJSON("{\"programCode\":\"" + "  " + programCode + "   " + "\"}",
-      URL,
-      GET,
-      commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Invalid Program code\"}"));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+
+    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Invalid program code\"}"));
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWithBlankProgramCode() throws Exception {
+  public void shouldVerifyProgramProductWithBlankProgramCodeValue() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 
-    ResponseEntity responseEntity = client.SendJSON("{\"programCode\":\"\"}",
-      URL,
-      GET,
-      commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Bad request"));
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWithBlankJson() throws Exception {
+  public void shouldVerifyProgramProductWithProgramCodeAttributeNotPresent() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 
-    ResponseEntity responseEntity = client.SendJSON("{}",
-      URL,
-      GET,
-      commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Bad request"));
+    ResponseEntity responseEntity = client.SendJSON("", URL, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+
+    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Required String parameter programCode is not present\"}"));
   }
+
 
   @Test(groups = {"webservice"})
   public void shouldVerifyProgramProductWitInvalidAuthToken() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    String programCode = "testing123";
+    String programCode = "HIV";
 
-    ResponseEntity responseEntity = client.SendJSON("{\"programCode\":\"" + programCode + "\"}",
-      URL,
-      GET,
-      commTrackUser,
-      "testing");
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"Authentication Failed\""));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, "testing");
+
+    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
   }
 
   @Test(groups = {"webservice"})
   public void shouldVerifyProgramProductWitInvalidUser() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    String programCode = "testing123";
+    String programCode = "HIV";
 
-    ResponseEntity responseEntity = client.SendJSON("{\"programCode\":\"" + programCode + "\"}",
-      URL,
-      GET,
-      "testing",
-      dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"Authentication Failed\""));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, "testing", dbWrapper.getAuthToken(commTrackUser));
+    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
   }
 
 }
