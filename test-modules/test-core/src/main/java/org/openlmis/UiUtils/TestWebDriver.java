@@ -6,10 +6,8 @@
 
 package org.openlmis.UiUtils;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
@@ -19,6 +17,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +32,11 @@ public class TestWebDriver {
   private String BASE_URL;
   private String ERROR_MESSAGE_LOGIN;
   private int DEFAULT_WAIT_TIME = 30;
+
+  Date dObjnew = new Date();
+  SimpleDateFormat formatternew = new SimpleDateFormat("yyyyMMdd");
+  String dateFolder = formatternew.format(dObjnew);
+  String screenShotsFolder = null;
 
 
   public TestWebDriver(WebDriver driver) {
@@ -311,6 +315,37 @@ public class TestWebDriver {
         break;
       }
       element.sendKeys(Keys.RETURN);
+    }
+  }
+
+
+  private void createDirectory() {
+    String Separator = System.getProperty("file.separator");
+    File parentDir = new File(System.getProperty("user.dir"));
+    screenShotsFolder = parentDir.getParent() + Separator + "src" + Separator + "main" + Separator + "resources" + Separator + dateFolder + Separator;
+    if (!new File(screenShotsFolder).exists()) {
+      (new File(screenShotsFolder)).mkdir();
+    }
+  }
+
+  public void captureScreenShotForCucumberRun() {
+    WebDriver driver = TestWebDriver.getDriver();
+    createDirectory();
+    Date dObj = new Date();
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-hhmmss");
+    String time = formatter.format(dObj);
+    String name = "failure-";
+    String filename = screenShotsFolder
+      + name + "-"
+      + time + "-screenshot"
+      + ".png";
+
+    File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+
+    try {
+      FileUtils.copyFile(scrFile, new File(filename));
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 
