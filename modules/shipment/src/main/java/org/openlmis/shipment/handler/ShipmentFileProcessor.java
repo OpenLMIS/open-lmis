@@ -94,20 +94,14 @@ public class ShipmentFileProcessor {
     String packedDateFormat = getFormatForField("packedDate", shipmentFileColumns);
     String shippedDateFormat = getFormatForField("shippedDate", shipmentFileColumns);
 
-    int maxPosition = findMaximumPosition(includedColumns);
     List<String> fieldsInOneRow;
     while ((fieldsInOneRow = listReader.read()) != null) {
 
-      if (fieldsInOneRow.size() < maxPosition) {
-        //TODO: should we still update the order in this case??
-        logger.warn("Shipment file should contain at least " + maxPosition + " columns");
-        status = false;
-      } else {
-        ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns);
-        status = status && addShippableOrder(orderSet, dto);
-        if (status) {
-          status = saveLineItem(dto, packedDateFormat, shippedDateFormat);
-        }
+      ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns);
+      status = status && addShippableOrder(orderSet, dto);
+
+      if (status) {
+        status = saveLineItem(dto, packedDateFormat, shippedDateFormat);
       }
     }
 
@@ -186,16 +180,6 @@ public class ShipmentFileProcessor {
     if (shipmentFileTemplate.getShipmentConfiguration().isHeaderInFile()) {
       listReader.getHeader(true);
     }
-  }
-
-  private int findMaximumPosition(Collection<ShipmentFileColumn> shipmentFileColumns) {
-    int maxPosition = 0;
-    for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
-      if (shipmentFileColumn.getPosition() > maxPosition) {
-        maxPosition = shipmentFileColumn.getPosition();
-      }
-    }
-    return maxPosition;
   }
 
   private String getFormatForField(String fieldName, List<ShipmentFileColumn> shipmentFileColumns) {
