@@ -15,6 +15,7 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
+import org.openqa.selenium.JavascriptExecutor;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -247,8 +248,8 @@ public class RecordEPIUse extends TestCaseHelper {
         dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
         dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
         dbWrapper.insertProductGroup("PG1");
-        dbWrapper.insertProductWithGroup("Product5","ProdutName5","PG1",true);
-        dbWrapper.insertProductWithGroup("Product6","ProdutName6","PG1",true);
+        dbWrapper.insertProductWithGroup("Product5", "ProdutName5", "PG1", true);
+        dbWrapper.insertProductWithGroup("Product6", "ProdutName6", "PG1", true);
         dbWrapper.insertProgramProduct("Product5",programFirst,"10","false");
         dbWrapper.insertProgramProduct("Product6",programFirst,"10","true");
 
@@ -264,8 +265,8 @@ public class RecordEPIUse extends TestCaseHelper {
         testWebDriver.sleep(2000);
         homePage.navigateHomePage();
         homePage.navigateOfflineDistribution();
-        assertFalse("Delivery Zone selectbox displayed.",distributionPage.verifyDeliveryZoneSelectBoxNotPresent());
-        assertFalse("Period selectbox displayed.",distributionPage.verifyPeriodSelectBoxNotPresent());
+        assertFalse("Delivery Zone selectbox displayed.", distributionPage.verifyDeliveryZoneSelectBoxNotPresent());
+        assertFalse("Period selectbox displayed.", distributionPage.verifyPeriodSelectBoxNotPresent());
         assertFalse("Program selectbox displayed.",distributionPage.verifyProgramSelectBoxNotPresent());
 
         distributionPage.clickRecordData();
@@ -308,6 +309,7 @@ public class RecordEPIUse extends TestCaseHelper {
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
+        ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
     }
 
   }
@@ -318,6 +320,7 @@ public class RecordEPIUse extends TestCaseHelper {
         testWebDriver.sleep(5000);
         dbWrapper.deleteData();
         dbWrapper.closeConnection();
+        ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
     }
 
 
