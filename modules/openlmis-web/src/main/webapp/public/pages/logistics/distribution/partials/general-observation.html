@@ -23,9 +23,9 @@
                       ng-model="distribution.facilityDistributionData[selectedFacility].generalObservation.observations"></textarea>
           </div>
         </div>
-        <div class="signatures row-fluid">
-          <div class="span3">
-            <span openlmis-message="label.verified.by" class="list-header-container"></span>
+        <div class="signatures clearfix">
+          <div class="details-container">
+            <span openlmis-message="label.verified.by" class="list-header-container list-header"></span>
 
             <div>
               <label openlmis-message="label.name" for="verifiedByName"></label>
@@ -40,8 +40,8 @@
           </div>
 
 
-          <div class="offset1 span3">
-            <span openlmis-message="label.confirmed.by" class="list-header-container"></span>
+          <div class="details-container">
+            <span openlmis-message="label.confirmed.by" class="list-header-container list-header"></span>
             <div>
               <label openlmis-message="label.name" for="confirmedByName"></label>
               <input type="text" maxlength="50"

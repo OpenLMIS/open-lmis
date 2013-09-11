@@ -62,9 +62,9 @@ public class ShipmentService {
     shipmentRepository.insertShipmentFileInfo(shipmentFileInfo);
   }
 
-  public void updateStatusAndShipmentIdForOrders(Set<Long> rnrIds, ShipmentFileInfo shipmentFileInfo) {
+  public void updateStatusAndShipmentIdForOrders(Set<Long> orderIds, ShipmentFileInfo shipmentFileInfo) {
     List<Order> orders = new ArrayList<>();
-    for (Long id : rnrIds) {
+    for (Long id : orderIds) {
       Order order = new Order(new Rnr(id));
       order.updateShipmentFileInfo(shipmentFileInfo);
       orders.add(order);

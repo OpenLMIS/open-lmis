@@ -368,7 +368,17 @@ public class TestCaseHelper {
       throw new IllegalArgumentException("Delete: deletion failed");
   }
 
+    public void switchOffNetwork() throws IOException {
+        testWebDriver.sleep(2000);
+        Runtime.getRuntime().exec("sudo ifconfig en1 down");
+        testWebDriver.sleep(2000);
+    }
 
+    public void switchOnNetwork() throws IOException {
+        testWebDriver.sleep(2000);
+        Runtime.getRuntime().exec("sudo ifconfig en1 up");
+        testWebDriver.sleep(2000);
+    }
 }
 
 

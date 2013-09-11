@@ -79,6 +79,7 @@ public class DistributionPage extends Page {
   }
 
   public void clickInitiateDistribution() {
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(initiateDistributionButton);
     initiateDistributionButton.click();
      testWebDriver.sleep(200);
@@ -135,18 +136,21 @@ public class DistributionPage extends Page {
   }
 
   public WebElement getFirstSelectedOptionFromDeliveryZone() {
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(selectDeliveryZoneSelectBox);
     WebElement option = testWebDriver.getFirstSelectedOption(selectDeliveryZoneSelectBox);
     return option;
   }
 
   public WebElement getFirstSelectedOptionFromProgram() {
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(selectProgramSelectBox);
     WebElement option = testWebDriver.getFirstSelectedOption(selectProgramSelectBox);
     return option;
   }
 
   public WebElement getFirstSelectedOptionFromPeriod() {
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(selectPeriodSelectBox);
     testWebDriver.sleep(100);
     WebElement option = testWebDriver.getFirstSelectedOption(selectPeriodSelectBox);

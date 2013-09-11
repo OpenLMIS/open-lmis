@@ -31,6 +31,7 @@ abstract public class DistributionTab extends Page {
   abstract public void navigate();
 
   public void verifyOverallIndicator(WebElement element, String color) {
+    testWebDriver.sleep(500);
     if (color.toLowerCase().equals("RED".toLowerCase()))
       color = "rgba(203, 64, 64, 1)";
     else if (color.toLowerCase().equals("GREEN".toLowerCase()))

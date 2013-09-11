@@ -12,5 +12,6 @@ CREATE TABLE shipment_line_items (
   createdBy       INTEGER,
   createdDate     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedBy      INTEGER,
-  modifiedDate    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  modifiedDate    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (orderId, productCode)
 );

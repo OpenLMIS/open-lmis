@@ -25,7 +25,6 @@ import org.openlmis.shipment.service.ShipmentService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.integration.Message;
-import org.springframework.integration.MessageChannel;
 import org.springframework.integration.support.MessageBuilder;
 import org.supercsv.io.CsvListReader;
 
@@ -53,9 +52,6 @@ public class ShipmentFileProcessorTest {
 
   @Mock
   private ShipmentFilePostProcessHandler shipmentFilePostProcessHandler;
-
-  @Mock
-  MessageChannel ftpArchiveOutputChannel;
 
   @Mock
   ShipmentFileTemplateService shipmentFileTemplateService;
@@ -115,7 +111,7 @@ public class ShipmentFileProcessorTest {
     try {
       shipmentFileProcessor.process(message);
     } catch (Exception e) {
-      assertThat(e.getMessage(), is("mandatory.data.missing"));
+      assertThat(e.getMessage(), is("shipment.file.error"));
     }
 
     verify(shipmentService, times(0)).insertShippedLineItem(any(ShipmentLineItem.class));
@@ -197,15 +193,13 @@ public class ShipmentFileProcessorTest {
     shipmentLineItemDTO.setPackedDate("11/13");
     shipmentLineItemDTO.setShippedDate("11/11/2011");
     ShipmentLineItem shipmentLineItem = mock(ShipmentLineItem.class);
-    when(shipmentLineItem.getOrderId()).thenReturn(111L);
+    when(shipmentLineItem.getOrderId()).thenReturn(null);
     when(shipmentLineItemTransformer.transform(shipmentLineItemDTO, "MM/yy", "dd/MM/yyyy")).thenReturn(shipmentLineItem);
 
     shipmentFileProcessor.process(message);
 
     verify(shipmentService).insertShippedLineItem(shipmentLineItem);
 
-    Set<Long> orderIds = new HashSet<>();
-    orderIds.add(111L);
-    verify(shipmentFilePostProcessHandler).process(orderIds, shipmentFile, false);
+    verify(shipmentFilePostProcessHandler).process(new HashSet<Long>(), shipmentFile, false);
   }
 }

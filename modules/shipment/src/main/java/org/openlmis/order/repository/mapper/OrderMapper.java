@@ -57,6 +57,6 @@ public interface OrderMapper {
   void insertOrderFileColumn(OrderFileColumn orderFileColumn);
 
 
-  @Update("UPDATE orders SET status = #{status}, ftpComment = #{ftpComment} WHERE id = #{id}")
+  @Update("UPDATE orders SET status = #{status}, ftpComment = #{ftpComment}, modifiedDate = DEFAULT WHERE id = #{id}")
   void updateOrderStatus(Order order);
 }

@@ -29,6 +29,7 @@ public class OrderDTO {
   private RnrDTO rnr;
   private Boolean productsOrdered;
   private OrderStatus status;
+  private String ftpComment;
   private SupplyLine supplyLine;
   private Boolean shipmentError;
 
@@ -46,6 +47,7 @@ public class OrderDTO {
     orderDTO.setRnr(RnrDTO.prepareForOrderView(order.getRnr()));
     orderDTO.setCreatedDate(order.getCreatedDate());
     orderDTO.setStatus(order.getStatus());
+    orderDTO.setFtpComment(order.getFtpComment());
     orderDTO.setSupplyLine(order.getSupplyLine());
     ShipmentFileInfo shipmentFileInfo = order.getShipmentFileInfo();
     if(shipmentFileInfo != null) orderDTO.setShipmentError(shipmentFileInfo.isProcessingError());

@@ -471,3 +471,4 @@ Feature: Smoke Tests
     And I verify saved "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               | mai ka         | lal             |
+

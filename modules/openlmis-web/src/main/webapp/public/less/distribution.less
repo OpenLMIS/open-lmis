@@ -207,24 +207,45 @@
   }
 }
 
+
 .general-observation-container {
-  padding: 2px 15px 15px;
+  min-width: 600px;
+  padding: 2px 20px 15px;
   textarea {
-    width: 50%;
+    width: 550px;
     height: 150px;
   }
   .signatures {
-    margin-top: 40px;
-    div {
+    margin-top: 14px;
+    .details-container {
+      float: left;
+      width: 262px;
+      margin-left: 40px;
+      &:first-child {
+        margin-left: 0;
+      }
       span {
         padding: 6px 10px;
         display: inline-block;
         border-bottom: 0;
       }
       div {
-        padding: 5px;
+        padding: 15px 20px;
         background-color: #f9f9f9;
         border: 1px solid #ccc;
+
+        label {
+          font-size: 0.9em;
+          font-weight: bold;
+          margin-bottom: 3px;
+        }
+
+        input[type="text"] {
+          margin-bottom: 21px;
+          &:last-child {
+            margin-bottom: 9px;
+          }
+        }
       }
     }
   }
@@ -232,7 +253,7 @@
     margin: 0;
   }
   h3 {
-    margin: 0 0 12px;
+    margin: 4px 0 3px;
     a {
       margin-top: 10px;
       font-weight: normal;

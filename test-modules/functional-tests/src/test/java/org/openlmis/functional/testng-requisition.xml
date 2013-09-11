@@ -4,8 +4,8 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<suite name="Openlmis Functional Test" verbose="10" allow-return-values="true">
-    <test name="Openlmis functional test">
+<suite name="Openlmis Requisition Test" verbose="10" allow-return-values="true">
+    <test name="Openlmis requisition test">
         <groups>
             <run>
                 <include name="requisition"/>

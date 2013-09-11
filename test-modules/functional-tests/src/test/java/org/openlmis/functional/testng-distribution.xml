@@ -4,22 +4,22 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<suite name="Openlmis Funtional Test" verbose="10" allow-return-values="true">
-  <test name="Openlmis functional test">
+<suite name="Openlmis Distribution Test" verbose="10" allow-return-values="true">
+  <test name="Openlmis distribution test">
     <groups>
       <run>
         <include name="distribution"/>
       </run>
     </groups>
     <classes preserver-order="true">
+      <class name="org.openlmis.functional.RecordEPIUse">
+      </class>
       <class name="org.openlmis.functional.ManageDistribution">
       </class>
       <class name="org.openlmis.functional.ViewWarehouseLoadAmount">
       </class>
       <class name="org.openlmis.functional.ManageRefrigerator">
         </class>
-      <class name="org.openlmis.functional.RecordEPIUse">
-      </class>
     </classes>
   </test>
 </suite>

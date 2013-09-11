@@ -49,15 +49,16 @@ public class ManageDistribution extends TestCaseHelper {
     facilityCodeFirst, facilityCodeSecond,
     programFirst, programSecond, schedule;
 
-  private HashMap<String, DistributionTab> tabMap = new HashMap<String, DistributionTab>() {{
-    put("epi use", new EPIUse(testWebDriver));
-    put("general observation", new GeneralObservation(testWebDriver));
-  }};
+  private HashMap<String, DistributionTab> tabMap;
 
   @BeforeMethod(groups = "distribution")
   @Before
   public void setUp() throws Exception {
     super.setup();
+    tabMap = new HashMap<String, DistributionTab>() {{
+      put("epi use", new EPIUse(testWebDriver));
+      put("general observation", new GeneralObservation(testWebDriver));
+    }};
   }
 
 
@@ -190,20 +191,6 @@ public class ManageDistribution extends TestCaseHelper {
   public void clickRecordData() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
     distributionPage.clickRecordData();
-  }
-
-  @And("^I switch off network$")
-  public void switchOffNetwork() throws IOException {
-    testWebDriver.sleep(2000);
-    Runtime.getRuntime().exec("sudo ifconfig en1 down");
-    testWebDriver.sleep(2000);
-  }
-
-  @And("^I switch on network$")
-  public void switchOnNetwork() throws IOException {
-    testWebDriver.sleep(2000);
-    Runtime.getRuntime().exec("sudo ifconfig en1 up");
-    testWebDriver.sleep(2000);
   }
 
   @Then("^I should see No facility selected$")

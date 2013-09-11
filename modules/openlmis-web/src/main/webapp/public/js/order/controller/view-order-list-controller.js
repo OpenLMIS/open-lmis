@@ -21,11 +21,18 @@ function ViewOrderListController($scope, orders, messageService) {
       {field: 'supplyLine.supplyingFacility.name', displayName: messageService.get("label.supplying.depot")},
       {field: 'createdDate', displayName: messageService.get("label.order.date.time"), cellFilter: "date:'dd/MM/yyyy hh:mm:ss'"},
       {field: 'status', displayName: messageService.get("label.order.status"),
-        cellTemplate: "<div class='ngCellText'><span ng-cell-text><div id=\"orderStatus\">{{row.entity.status}} <span ng-show='row.entity.shipmentError' openlmis-message='error.shipment.file'></span></div> "},
+        cellTemplate: "<div class='ngCellText'><span ng-cell-text><div id=\"orderStatus\"><span ng-bind=\"getStatus(row.entity.status)\"></span><span ng-show='row.entity.shipmentError' openlmis-message='error.shipment.file'></span></div> "},
+      {field: 'ftpComment', displayName: messageService.get("label.comment"),
+        cellTemplate: "<div class='ngCellText'><span ng-cell-text><div id=\"ftpComment\"> <span ng-show='row.entity.ftpComment' openlmis-message='row.entity.ftpComment'></span></div>"},
       {cellTemplate: "<div class='ngCellText'><a ng-show=\"row.entity.productsOrdered\" ng-href='/orders/{{row.entity.id}}/download.csv' openlmis-message='link.download.csv'></a>" +
         "<span ng-show=\"!row.entity.productsOrdered\" openlmis-message='msg.no.product.in.order' ng-cell-text></span></div>"}
+
     ]
   };
+
+  $scope.getStatus = function(status) {
+    return messageService.get("label.order." + status);
+  }
 }
 
 ViewOrderListController.resolve = {

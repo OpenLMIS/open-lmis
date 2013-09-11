@@ -5,6 +5,7 @@
 
 package org.openlmis.shipment.file.csv.handler;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -24,19 +25,30 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ShipmentFilePostProcessHandler.class)
 public class ShipmentFilePostProcessHandlerTest {
+
   @Mock
   private ShipmentService shipmentService;
-  @Mock
-  private MessageChannel ftpOutputChannel;
+
+  @Mock(name = "ftpErrorChannel")
+  private MessageChannel ftpErrorChannel;
+
+  @Mock(name = "ftpArchiveOutputChannel")
+  private MessageChannel ftpArchiveOutputChannel;
 
   @InjectMocks
   private ShipmentFilePostProcessHandler shipmentFilePostProcessHandler;
+
+  @Before
+  public void setUp() throws Exception {
+    initMocks(this);
+  }
 
   @Test
   public void shouldAddShipmentFileInfo() throws Exception {
@@ -53,7 +65,8 @@ public class ShipmentFilePostProcessHandlerTest {
 
     verify(shipmentService).insertShipmentFileInfo(shipmentFileInfo);
     verify(shipmentService).updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
-    verify(ftpOutputChannel, never()).send(any(Message.class));
+    verify(ftpErrorChannel, never()).send(any(Message.class));
+    verify(ftpArchiveOutputChannel).send(any(Message.class));
   }
 
   @Test
@@ -71,6 +84,7 @@ public class ShipmentFilePostProcessHandlerTest {
 
     verify(shipmentService).insertShipmentFileInfo(shipmentFileInfo);
     verify(shipmentService).updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
-    verify(ftpOutputChannel).send(any(Message.class));
+    verify(ftpErrorChannel).send(any(Message.class));
+    verify(ftpArchiveOutputChannel, never()).send(any(Message.class));
   }
 }

@@ -8,7 +8,6 @@ package org.openlmis.shipment.handler;
 
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.io.FileUtils;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.order.dto.ShipmentLineItemDTO;
 import org.openlmis.shipment.ShipmentLineItemTransformer;
@@ -21,8 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
-import org.springframework.integration.MessageChannel;
 import org.springframework.integration.annotation.MessageEndpoint;
+import org.springframework.transaction.annotation.Transactional;
 import org.supercsv.io.CsvListReader;
 import org.supercsv.io.ICsvListReader;
 
@@ -35,8 +34,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.Long.parseLong;
 import static org.apache.commons.collections.CollectionUtils.select;
-import static org.springframework.integration.support.MessageBuilder.withPayload;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
 @MessageEndpoint
@@ -48,9 +47,6 @@ public class ShipmentFileProcessor {
   private ShipmentFilePostProcessHandler shipmentFilePostProcessHandler;
 
   @Autowired
-  private MessageChannel ftpArchiveOutputChannel;
-
-  @Autowired
   private ShipmentFileTemplateService shipmentFileTemplateService;
 
   @Autowired
@@ -60,67 +56,90 @@ public class ShipmentFileProcessor {
   private ShipmentLineItemTransformer transformer;
 
 
-  public void process(Message message) throws IOException, NoSuchFieldException, IllegalAccessException {
+  public void process(Message message) throws Exception {
     File shipmentFile = (File) message.getPayload();
     logger.debug("processing Shipment File " + shipmentFile.getName());
 
     ShipmentFileTemplate shipmentFileTemplate = shipmentFileTemplateService.get();
 
-    List<ShipmentFileColumn> shipmentFileColumns = shipmentFileTemplate.getShipmentFileColumns();
-
-    String packedDateFormat = getFormatForField("packedDate", shipmentFileColumns);
-    String shippedDateFormat = getFormatForField("shippedDate", shipmentFileColumns);
-
-    Collection<ShipmentFileColumn> includedColumns = filterIncludedColumns(shipmentFileColumns);
-
-    boolean errorInFile = true;
-    Set<Long> orderIds = new HashSet<>();
-
-    int maxPosition = findMaximumPosition(includedColumns);
-
     try (ICsvListReader listReader = new CsvListReader(new FileReader(shipmentFile), STANDARD_PREFERENCE)) {
 
       ignoreFirstLineIfHeadersArePresent(shipmentFileTemplate, listReader);
 
-      List<String> fieldsInOneRow;
+      processShipmentLineItem(listReader, shipmentFileTemplate, shipmentFile);
 
-      while ((fieldsInOneRow = listReader.read()) != null) {
-        if (fieldsInOneRow.size() < maxPosition) {
-          logger.warn("Shipment file should contain at least " + maxPosition + " columns");
-          throw new DataException("mandatory.data.missing");
-        } else {
-          Long orderId = processLineItem(fieldsInOneRow, includedColumns, packedDateFormat, shippedDateFormat);
-          orderIds.add(orderId);
-        }
-      }
-
-      errorInFile = false;
       logger.debug("Successfully processed file " + shipmentFile.getName());
-      sendArchiveToFtp(shipmentFile);
-
-    } catch (Exception e) {
-      logger.warn("Error processing file " + shipmentFile.getName() + " with error " + e.getMessage());
-      throw e;
-
-    } finally {
-      shipmentFilePostProcessHandler.process(orderIds, shipmentFile, errorInFile);
-      if (!FileUtils.deleteQuietly(shipmentFile)) {
-        logger.error("Unable to delete temporary shipment file " + shipmentFile.getName());
-      }
     }
   }
 
-  private Long processLineItem(List<String> fieldsInOneRow,
-                               Collection<ShipmentFileColumn> includedColumns,
+  @Transactional
+  private void processShipmentLineItem(ICsvListReader listReader,
+                                       ShipmentFileTemplate shipmentFileTemplate,
+                                       File shipmentFile) throws Exception {
+    Set<Long> orderIds = new HashSet<>();
+    boolean errorInFile = false;
+
+    try {
+
+      List<ShipmentFileColumn> shipmentFileColumns = shipmentFileTemplate.getShipmentFileColumns();
+
+      Collection<ShipmentFileColumn> includedColumns = filterIncludedColumns(shipmentFileColumns);
+
+      String packedDateFormat = getFormatForField("packedDate", shipmentFileColumns);
+      String shippedDateFormat = getFormatForField("shippedDate", shipmentFileColumns);
+
+      int maxPosition = findMaximumPosition(includedColumns);
+      List<String> fieldsInOneRow;
+      while ((fieldsInOneRow = listReader.read()) != null) {
+
+        if (fieldsInOneRow.size() < maxPosition) {
+          logger.warn("Shipment file should contain at least " + maxPosition + " columns");
+          errorInFile = true;
+        } else {
+          ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns);
+          errorInFile = saveLineItem(dto, orderIds, errorInFile, packedDateFormat, shippedDateFormat);
+        }
+      }
+
+      if (errorInFile) {
+        throw new DataException("shipment.file.error");
+      }
+
+    } finally {
+      shipmentFilePostProcessHandler.process(orderIds, shipmentFile, errorInFile);
+    }
+  }
+
+  private boolean saveLineItem(ShipmentLineItemDTO dto,
+                               Set<Long> orderIds,
+                               final boolean errorInFile,
                                String packedDateFormat,
-                               String shippedDateFormat) throws NoSuchFieldException, IllegalAccessException {
+                               String shippedDateFormat) {
+    try {
+      ShipmentLineItem lineItem = transformer.transform(dto, packedDateFormat, shippedDateFormat);
+      if (!errorInFile) {
+        shipmentService.insertShippedLineItem(lineItem);
+      }
+    } catch (DataException e) {
+      logger.warn("Error in processing shipment file for orderId: " + dto.getOrderId(), e);
+      return true;
+    } finally {
+      addOrderId(orderIds, dto);
+    }
 
-    ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns);
+    return errorInFile;
+  }
 
-    ShipmentLineItem lineItem = transformer.transform(dto, packedDateFormat, shippedDateFormat);
-
-    shipmentService.insertShippedLineItem(lineItem);
-    return lineItem.getOrderId();
+  private void addOrderId(Set<Long> orderIds, ShipmentLineItemDTO lineItemDTO) {
+    Long orderId = null;
+    try {
+      orderId = parseLong(lineItemDTO.getOrderId());
+    } catch (Exception e) {
+      logger.warn("invalid order id", e);
+    }
+    if (orderId != null) {
+      orderIds.add(orderId);
+    }
   }
 
 
@@ -133,18 +152,22 @@ public class ShipmentFileProcessor {
     });
   }
 
-  private ShipmentLineItemDTO populateDTO(List<String> fieldsInOneRow, Collection<ShipmentFileColumn> shipmentFileColumns)
-    throws NoSuchFieldException, IllegalAccessException {
+  private ShipmentLineItemDTO populateDTO(List<String> fieldsInOneRow, Collection<ShipmentFileColumn> shipmentFileColumns) {
 
     ShipmentLineItemDTO dto = new ShipmentLineItemDTO();
 
     for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
       Integer position = shipmentFileColumn.getPosition();
       String name = shipmentFileColumn.getName();
-      Field field = ShipmentLineItemDTO.class.getDeclaredField(name);
-      field.setAccessible(true);
-      field.set(dto, fieldsInOneRow.get(position - 1));
+      try {
+        Field field = ShipmentLineItemDTO.class.getDeclaredField(name);
+        field.setAccessible(true);
+        field.set(dto, fieldsInOneRow.get(position - 1));
+      } catch (Exception e) {
+        logger.error("Exception in creating DTO from shipment file", e);
+      }
     }
+
     return dto;
   }
 
@@ -174,11 +197,5 @@ public class ShipmentFileProcessor {
     return null;
   }
 
-
-  private void sendArchiveToFtp(File file) {
-    Message<File> message = withPayload(file).build();
-    ftpArchiveOutputChannel.send(message);
-    logger.debug("Shipment file " + file.getName() + " archived to FTP");
-  }
 
 }

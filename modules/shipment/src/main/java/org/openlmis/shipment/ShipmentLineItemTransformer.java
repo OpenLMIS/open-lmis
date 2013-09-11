@@ -24,7 +24,7 @@ public class ShipmentLineItemTransformer {
 
   public ShipmentLineItem transform(ShipmentLineItemDTO shipmentLineItemDTO,
                                     String packedDateFormat,
-                                    String shippedDateFormat) {
+                                    String shippedDateFormat) throws DataException {
 
 
     checkMandatory(shipmentLineItemDTO);
