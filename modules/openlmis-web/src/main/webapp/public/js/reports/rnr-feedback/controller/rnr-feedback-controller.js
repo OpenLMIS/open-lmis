@@ -202,7 +202,10 @@ function RnRFeedbackController($scope, RnRFeedbackReport, Products ,ReportFacili
 
     $scope.$watch('product', function(selection){
         if(selection == "All"){
-            $scope.filterObject.productId =  -1;
+            $scope.filterObject.productId =  0;
+
+        }else if(selection == "-1"){
+                $scope.filterObject.productId =  -1;
         }else if(selection != undefined || selection == ""){
             $scope.filterObject.productId =  selection;
             $.each($scope.products, function(item, idx){

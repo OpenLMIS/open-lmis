@@ -32,7 +32,7 @@ public class RnRFeedbackReportQueryBuilder {
         if(orderType == null || orderType.isEmpty() || orderType.equals("Regular")){
 
             BEGIN();
-            SELECT("distinct facility_code AS facilityCode, facility_name AS facility, productcode AS productCode, product AS product, beginningBalance, quantityreceived AS totalQuantityReceived, quantitydispensed AS totalQuantityDispensed, stockinhand AS physicalCount, totallossesandadjustments AS adjustments, CASE stockoutdays when 30 then 0 else CASE amc when 0 then 0 else (vw_rnr_feedback.amc * 30) / (30- stockoutdays) end end AS adjustedAMC, quantityrequested AS orderQuantity, 0 AS quantitySupplied, dispensingunit AS unit, amc * nominaleop AS newEOP, maxstockquantity maximumStock, 0 emergencyOrder");
+            SELECT("productCode, facility_code AS facilityCode, facility_name AS facility, product, dispensingunit AS unit, beginningBalance, quantityreceived AS totalQuantityReceived, quantitydispensed AS totalQuantityDispensed, totallossesandadjustments AS adjustments, stockinhand AS physicalCount, amc adjustedAMC, amc * nominaleop AS newEOP, maxstockquantity maximumStock, quantityrequested AS orderQuantity, quantityShipped AS quantitySupplied, 0 emergencyOrder, err_open_balance, err_qty_required, err_qty_received, err_qty_stockinhand");
             FROM("vw_rnr_feedback");
             writePredicates(filter);
             ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, RnRFeedbackReport.class,"productcode asc,facility_name asc"));
@@ -43,7 +43,7 @@ public class RnRFeedbackReportQueryBuilder {
 
 
             BEGIN();
-            SELECT("distinct facility_code AS facilityCode, facility_name AS facility, productcode AS productCode, product AS product, beginningBalance, quantityreceived AS totalQuantityReceived, quantitydispensed AS totalQuantityDispensed, stockinhand AS physicalCount, totallossesandadjustments AS adjustments, CASE stockoutdays when 30 then 0 else CASE amc when 0 then 0 else (vw_rnr_feedback.amc * 30) / (30- stockoutdays) end end AS adjustedAMC, quantityrequested AS orderQuantity, 0 AS quantitySupplied,dispensingunit AS unit,amc * nominaleop AS newEOP, maxstockquantity maximumStock, 0 emergencyOrder");
+            SELECT("productCode, facility_code AS facilityCode, facility_name AS facility, product, dispensingunit AS unit, beginningBalance, quantityreceived AS totalQuantityReceived, quantitydispensed AS totalQuantityDispensed, totallossesandadjustments AS adjustments, stockinhand AS physicalCount, amc adjustedAMC, amc * nominaleop AS newEOP, maxstockquantity maximumStock, quantityrequested AS orderQuantity, quantityShipped AS quantitySupplied, 0 emergencyOrder, err_open_balance, err_qty_required, err_qty_received, err_qty_stockinhand");
             FROM("vw_rnr_feedback");
             writePredicates(filter);
             ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, RnRFeedbackReport.class,"productcode asc,facility_name asc"));

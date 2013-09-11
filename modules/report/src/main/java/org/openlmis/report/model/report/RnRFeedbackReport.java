@@ -40,4 +40,8 @@ public class RnRFeedbackReport implements ReportData {
     private String unit;
     private Double maximumStock;
     private Double emergencyOrder;
+    private Integer err_open_balance;
+    private Integer err_qty_required;
+    private Integer err_qty_received;
+    private Integer err_qty_stockinhand;
 }
