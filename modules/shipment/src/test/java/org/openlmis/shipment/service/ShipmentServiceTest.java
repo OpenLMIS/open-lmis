@@ -22,11 +22,7 @@ import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
 
-import java.util.Date;
-
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.openlmis.shipment.builder.ShipmentLineItemBuilder.*;
@@ -49,7 +45,7 @@ public class ShipmentServiceTest {
   public ExpectedException exException = ExpectedException.none();
 
   @Test
-  public void shouldInsertShipment() throws Exception {
+  public void shouldInsertShipmentIfNewLineItem() throws Exception {
     ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
       with(productCode, "P10"),
       with(orderId, 1L),
@@ -57,11 +53,31 @@ public class ShipmentServiceTest {
 
 
     when(productService.getIdForCode("P10")).thenReturn(1l);
+    when(shipmentRepository.getShippedLineItem(shipmentLineItem)).thenReturn(null);
 
-    shipmentService.insertShippedLineItem(shipmentLineItem);
+    shipmentService.insertOrUpdate(shipmentLineItem);
 
     verify(productService).getIdForCode("P10");
+    verify(shipmentRepository).getShippedLineItem(shipmentLineItem);
     verify(shipmentRepository).insertShippedLineItem(shipmentLineItem);
+  }
+
+  @Test
+  public void shouldUpdateShipmentIfComesAgainInSameFile() throws Exception {
+    ShipmentLineItem shipmentLineItem = make(a(defaultShipmentLineItem,
+      with(productCode, "P10"),
+      with(orderId, 1L),
+      with(quantityShipped, 500)));
+
+
+    when(productService.getIdForCode("P10")).thenReturn(1l);
+    when(shipmentRepository.getShippedLineItem(shipmentLineItem)).thenReturn(shipmentLineItem);
+
+    shipmentService.insertOrUpdate(shipmentLineItem);
+
+    verify(productService).getIdForCode("P10");
+    verify(shipmentRepository).getShippedLineItem(shipmentLineItem);
+    verify(shipmentRepository).updateShippedLineItem(shipmentLineItem);
   }
 
   @Test
@@ -78,7 +94,7 @@ public class ShipmentServiceTest {
     exException.expect(DataException.class);
     exException.expectMessage("error.unknown.product");
 
-    shipmentService.insertShippedLineItem(shipmentLineItem);
+    shipmentService.insertOrUpdate(shipmentLineItem);
   }
 
   @Test
@@ -92,7 +108,7 @@ public class ShipmentServiceTest {
     exException.expect(DataException.class);
     exException.expectMessage("error.negative.shipped.quantity");
 
-    shipmentService.insertShippedLineItem(shipmentLineItem);
+    shipmentService.insertOrUpdate(shipmentLineItem);
   }
 
   @Test
@@ -102,17 +118,4 @@ public class ShipmentServiceTest {
     verify(shipmentRepository).insertShipmentFileInfo(shipmentFileInfo);
   }
 
-
-  @Test
-  public void shouldGetProcessedTimeStampByOrderId() throws Exception {
-    ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
-    shipmentLineItem.setOrderId(1L);
-    Date expectedTimestamp = new Date();
-    when(shipmentRepository.getProcessedTimeStamp(shipmentLineItem)).thenReturn(expectedTimestamp);
-
-    Date processTimeStamp = shipmentService.getProcessedTimeStamp(shipmentLineItem);
-
-    assertThat(processTimeStamp, is(expectedTimestamp));
-    verify(shipmentRepository).getProcessedTimeStamp(shipmentLineItem);
-  }
 }

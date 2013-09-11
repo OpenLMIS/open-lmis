@@ -15,8 +15,6 @@ import org.openlmis.shipment.repository.ShipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-
 @Service
 @NoArgsConstructor
 public class ShipmentService {
@@ -27,10 +25,14 @@ public class ShipmentService {
   private ProductService productService;
 
 
-  public void insertShippedLineItem(ShipmentLineItem shipmentLineItem) {
+  public void insertOrUpdate(ShipmentLineItem shipmentLineItem) {
     validateForSave(shipmentLineItem);
     validateShipment(shipmentLineItem);
-    shipmentRepository.insertShippedLineItem(shipmentLineItem);
+    if (shipmentRepository.getShippedLineItem(shipmentLineItem) == null) {
+      shipmentRepository.insertShippedLineItem(shipmentLineItem);
+    } else {
+      shipmentRepository.updateShippedLineItem(shipmentLineItem);
+    }
   }
 
   private void validateShipment(ShipmentLineItem shipmentLineItem) {
@@ -47,10 +49,6 @@ public class ShipmentService {
 
   public void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {
     shipmentRepository.insertShipmentFileInfo(shipmentFileInfo);
-  }
-
-  public Date getProcessedTimeStamp(ShipmentLineItem shipmentLineItem) {
-    return shipmentRepository.getProcessedTimeStamp(shipmentLineItem);
   }
 
 }

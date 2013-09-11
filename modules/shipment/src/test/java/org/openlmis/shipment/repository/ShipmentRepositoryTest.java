@@ -1,5 +1,6 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 20.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
@@ -19,12 +20,9 @@ import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.repository.mapper.ShipmentMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.util.Date;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
@@ -72,16 +70,4 @@ public class ShipmentRepositoryTest {
     verify(shipmentMapper).updateShippedLineItem(shipmentLineItem);
   }
 
-  @Test
-  public void shouldGetProcessedTimeStampByOrderId() throws Exception {
-    ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
-    shipmentLineItem.setOrderId(1L);
-    Date expectedTimestamp = new Date();
-    when(shipmentMapper.getProcessedTimeStamp(shipmentLineItem)).thenReturn(expectedTimestamp);
-
-    Date processTimeStamp = shipmentRepository.getProcessedTimeStamp(shipmentLineItem);
-
-    assertThat(processTimeStamp, is(expectedTimestamp));
-    verify(shipmentMapper).getProcessedTimeStamp(shipmentLineItem);
-  }
 }

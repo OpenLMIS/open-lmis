@@ -119,7 +119,7 @@ public class ShipmentFileProcessorTest {
       assertThat(e.getMessage(), is("shipment.file.error"));
     }
 
-    verify(shipmentService, times(0)).insertShippedLineItem(any(ShipmentLineItem.class));
+    verify(shipmentService, times(0)).insertOrUpdate(any(ShipmentLineItem.class));
 
     verify(shipmentFilePostProcessHandler).process(new HashSet<Long>(), shipmentFile, false);
   }
@@ -147,7 +147,7 @@ public class ShipmentFileProcessorTest {
     shipmentFileProcessor.process(message);
 
     verify(mockedCsvListReader, times(0)).getHeader(true);
-    verify(shipmentService, times(1)).insertShippedLineItem(any(ShipmentLineItem.class));
+    verify(shipmentService, times(1)).insertOrUpdate(any(ShipmentLineItem.class));
 
     Set<Long> orderIds = new HashSet<>();
     orderIds.add(232L);
@@ -210,7 +210,7 @@ public class ShipmentFileProcessorTest {
 
     shipmentFileProcessor.process(message);
 
-    verify(shipmentService).insertShippedLineItem(shipmentLineItem);
+    verify(shipmentService).insertOrUpdate(shipmentLineItem);
 
     HashSet<Long> orderIds = new HashSet<>();
     orderIds.add(333L);
