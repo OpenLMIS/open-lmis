@@ -14,7 +14,6 @@ import org.openlmis.core.domain.ProgramProductISA;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public interface ProgramProductMapper {
@@ -66,7 +65,24 @@ public interface ProgramProductMapper {
   })
   List<ProgramProduct> getByProductCode(String code);
 
-  @SelectProvider(type = ProgramProductByFacilityTypeCodeAndProgramId.class, method = "getProgramProductByProgramIdAndFacilityTypeCode")
+  @Select("SELECT pp.active, pr.code AS programCode, pr.name as programName, p.code as productCode, " +
+    "       p.primaryName as productName, p.description, p.dosesPerDispensingUnit as unit, pc.name as category " +
+    "FROM program_products pp "+
+    "INNER JOIN products p  ON pp.productid=p.id " +
+    "INNER JOIN programs pr ON pr.id=pp.programid " +
+    "INNER JOIN product_categories pc ON pc.id = p.categoryId  " +
+    "LEFT OUTER JOIN facility_approved_products fap ON fap.programproductid=pp.id " +
+    "LEFT OUTER JOIN facility_types ft  ON ft.id=fap.facilitytypeid " +
+    "WHERE " +
+    " CASE " +
+    "   WHEN COALESCE(#{facilityTypeCode}) IS NULL " +
+    " THEN " +
+    "   TRUE " +
+    " ELSE LOWER(ft.code)=LOWER(#{facilityTypeCode}) " +
+    " END " +
+    "AND pr.id=#{programId} "+
+    "AND p.active = TRUE "+
+    "AND pp.active = TRUE ")
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "program", column = "programCode", javaType = Program.class,
@@ -75,32 +91,5 @@ public interface ProgramProductMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getByCode"))
   })
   List<ProgramProduct> getByProgramIdAndFacilityCode(@Param("programId") Long programId, @Param("facilityTypeCode") String facilityTypeCode);
-
-  public class ProgramProductByFacilityTypeCodeAndProgramId {
-
-    public static String getProgramProductByProgramIdAndFacilityTypeCode(Map<String, Object> params) {
-      String facilityTypeCode = (String) params.get("facilityTypeCode");
-      Long programId = (Long) params.get("programId");
-
-      StringBuilder buffer = new StringBuilder();
-      buffer.append("SELECT pp.active, pr.code AS programCode, pr.name as programName, p.code as productCode, p.primaryName as productName, ");
-      buffer.append("p.description, p.dosesPerDispensingUnit as unit, pc.name as category ");
-      buffer.append("FROM program_products pp INNER JOIN products p ON pp.productId = p.id ");
-      buffer.append("INNER JOIN product_categories pc ON pc.id = p.categoryId ");
-      buffer.append("INNER JOIN programs pr ON pp.programId = pr.id ");
-      if (facilityTypeCode == null) {
-        buffer.append("WHERE pr.id = ").append(programId).append(" AND p.active = TRUE AND pp.active = TRUE ");
-      } else {
-        buffer.append("INNER JOIN facility_approved_products fap ON fap.programProductId = pp.id ");
-        buffer.append("INNER JOIN facility_types ft ON ft.id = fap.facilityTypeId ");
-        buffer.append("WHERE LOWER(ft.code) = LOWER('").append(facilityTypeCode).append("') AND pr.id = ")
-          .append(programId).append(" AND p.active = TRUE AND pp.active = TRUE");
-      }
-
-      return buffer.toString();
-    }
-
-  }
-
 }
 
